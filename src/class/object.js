@@ -19,6 +19,12 @@ Entry.EntryObject = class {
             this.pictures = Entry.Utils.copy(model.sprite.pictures || []);
             this.sounds = Entry.Utils.copy(model.sprite.sounds || []);
 
+            this._setFocused = Entry.Utils.setFocused;
+            this._setBlurredTimer = Entry.Utils.setBlurredTimer;
+            this.editObjectValueWhenEnterPress = Entry.Utils.whenEnter(() => {
+                this.editObjectValues(false);
+            });
+
             this.sounds.forEach((s) => {
                 if (!s.id) {
                     s.id = Entry.generateHash();
@@ -109,10 +115,9 @@ Entry.EntryObject = class {
      * @return {!Element}
      */
     generateView() {
-        var type = Entry.type;
-
-        if (type === 'workspace') return this.generateWorkspaceView.call(this);
-        else if (type === 'phone') return this.generatePhoneView.call(this);
+        const type = Entry.type;
+        if (type === 'workspace') return this.generateWorkspaceView(this);
+        else if (type === 'phone') return this.generatePhoneView(this);
     }
 
     /**
@@ -824,25 +829,361 @@ Entry.EntryObject = class {
     }
 
     generateWorkspaceView() {
-        //utilities
-        const _setFocused = Entry.Utils.setFocused;
-        const _whenEnter = Entry.Utils.whenEnter(() => {
-            this.editObjectValues(false);
-        });
-        const _setBlurredTimer = Entry.Utils.setBlurredTimer;
-        const CE = Entry.createElement; //alias
         const exceptionsForMouseDown = [];
-
-        //end of utilities
 
         const that = this;
         const objectId = this.id;
-        const objectView = CE('li', objectId).addClass('entryContainerListElementWorkspace');
-        const fragment = document.createDocumentFragment('div');
+
+        this.view_ = this.createObjectView(objectId, exceptionsForMouseDown);
+        this.view_.appendChild(this.createObjectInfoView());
+
+        const thumbnailView = this.createThumbnailView();
+        this.thumbnailView_ = thumbnailView;
+        this.view_.appendChild(thumbnailView);
+
+        //TODO 에딧버튼이 모바일에서 삭제되었습니다.
+        const editView = this.createEditView();
+        this.editView_ = editView;
+        this.view_.appendChild(editView);
+
+        if (Entry.objectEditable && Entry.objectDeletable) {
+            const deleteView = this.createDeleteView(exceptionsForMouseDown, that);
+            this.deleteView_ = deleteView;
+            this.view_.appendChild(deleteView);
+        }
+
+        const wrapperView = this.createWrapperView();
+        this.view_.appendChild(wrapperView);
+
+        const rotationWrapperView = this.createRotationWrapperView();
+        this.view_.appendChild(rotationWrapperView);
+
+        this.updateThumbnailView();
+        this.updateRotateMethodView();
+        this.updateInputViews();
+
+        this.updateCoordinateView(true);
+        this.updateRotationView(true);
+
+        return this.view_;
+    }
+
+    createRotationMethodWrapperView() {
+        const rotationMethodWrapper = Entry.createElement('div').addClass('rotationMethodWrapper');
+
+        const rotateMethodLabelView = Entry.createElement('span').addClass('entryObjectRotateMethodLabelWorkspace');
+        rotationMethodWrapper.appendChild(rotateMethodLabelView);
+        rotateMethodLabelView.innerHTML = Lang.Workspace.rotate_method + '';
+
+        const rotateModeAView = Entry.createElement('div').addClass('entryObjectRotateModeWorkspace entryObjectRotateModeAWorkspace');
+        this.rotateModeAView_ = rotateModeAView;
+        rotationMethodWrapper.appendChild(rotateModeAView);
+        rotationMethodWrapper.appendChild(rotateModeAView);
+        rotateModeAView.bindOnClick(
+            this._whenRotateEditable(() => {
+                Entry.do('objectUpdateRotateMethod', this.id, 'free');
+            }, this)
+        );
+
+        const rotateModeBView = Entry.createElement('div').addClass('entryObjectRotateModeWorkspace entryObjectRotateModeBWorkspace');
+        this.rotateModeBView_ = rotateModeBView;
+        rotationMethodWrapper.appendChild(rotateModeBView);
+        rotateModeBView.bindOnClick(
+            this._whenRotateEditable(() => {
+                Entry.do('objectUpdateRotateMethod', this.id, 'vertical');
+            }, this)
+        );
+
+        const rotateModeCView = Entry.createElement('div').addClass('entryObjectRotateModeWorkspace entryObjectRotateModeCWorkspace');
+        this.rotateModeCView_ = rotateModeCView;
+        rotationMethodWrapper.appendChild(rotateModeCView);
+        rotateModeCView.bindOnClick(
+            this._whenRotateEditable(() => {
+                Entry.do('objectUpdateRotateMethod', this.id, 'none');
+            }, this)
+        );
+
+        return rotationMethodWrapper;
+    }
+
+    createRotateLabelWrapperView() {
+        const rotateLabelWrapperView = Entry.createElement('div').addClass('entryObjectRotateLabelWrapperWorkspace');
+
+        const rotateSpan = Entry.createElement('span').addClass('entryObjectRotateSpanWorkspace');
+        rotateSpan.innerHTML = Lang.Workspace.rotation + '';
+        const rotateInput = Entry.createElement('input').addClass('entryObjectRotateInputWorkspace');
+        rotateInput.bindOnClick(function(e) {
+            e.stopPropagation();
+            this.select();
+        });
+
+        rotateInput.onkeypress = this.editObjectValueWhenEnterPress;
+        rotateInput.onfocus = this._setFocused;
+        rotateInput.onblur = this._setBlurredTimer(() => {
+            const object = Entry.container.getObject(this.id);
+            if (!object) {
+                return;
+            }
+            let value = rotateInput.value;
+            const idx = value.indexOf('˚');
+            if (~idx) {
+                value = value.substring(0, idx);
+            }
+
+            Entry.do('objectUpdateRotationValue', this.id, Entry.Utils.isNumber(value) ? value : this.entity.getRotation());
+        });
+
+        this.rotateSpan_ = rotateSpan;
+        this.rotateInput_ = rotateInput;
+
+        const directionSpan = Entry.createElement('span').addClass('entryObjectDirectionSpanWorkspace');
+        directionSpan.innerHTML = Lang.Workspace.direction + '';
+        const directionInput = Entry.createElement('input').addClass('entryObjectDirectionInputWorkspace');
+        directionInput.bindOnClick(function(e) {
+            e.stopPropagation();
+            this.select();
+        });
+
+        directionInput.onkeypress = this.editObjectValueWhenEnterPress;
+        directionInput.onfocus = this._setFocused;
+        directionInput.onblur = this._setBlurredTimer(() => {
+            const object = Entry.container.getObject(this.id);
+            if (!object) {
+                return;
+            }
+            let value = directionInput.value;
+            const idx = value.indexOf('˚');
+            if (~idx) {
+                value = value.substring(0, idx);
+            }
+
+            Entry.do('objectUpdateDirectionValue', this.id, Entry.Utils.isNumber(value) ? value : this.entity.getDirection());
+        });
+
+        this.directionInput_ = directionInput;
+
+        rotateLabelWrapperView.appendChild(rotateSpan);
+        rotateLabelWrapperView.appendChild(rotateInput);
+        rotateLabelWrapperView.appendChild(directionSpan);
+        rotateLabelWrapperView.appendChild(directionInput);
+        rotateLabelWrapperView.rotateInput_ = rotateInput;
+        rotateLabelWrapperView.directionInput_ = directionInput;
+
+        return rotateLabelWrapperView;
+    }
+
+    createCoordinationView() {
+        const coordinationView = Entry.createElement('span').addClass('entryObjectCoordinateWorkspace');
+
+        const xCoordi = Entry.createElement('span').addClass('entryObjectCoordinateSpanWorkspace');
+        xCoordi.innerHTML = 'X';
+        const xInput = Entry.createElement('input').addClass('entryObjectCoordinateInputWorkspace');
+        xInput.bindOnClick((e) => {
+            e.stopPropagation();
+            xInput.select();
+        });
+
+        xInput.onkeypress = this.editObjectValueWhenEnterPress;
+        xInput.onfocus = this._setFocused;
+        xInput.onblur = this._setBlurredTimer(() => {
+            const object = Entry.container.getObject(this.id);
+            if (!object) {
+                return;
+            }
+
+            const value = xInput.value;
+            Entry.do('objectUpdatePosX', this.id, Entry.Utils.isNumber(value) ? value : this.entity.getX());
+        });
+
+        const yCoordi = Entry.createElement('span').addClass('entryObjectCoordinateSpanWorkspace');
+        yCoordi.innerHTML = 'Y';
+        const yInput = Entry.createElement('input').addClass('entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right');
+        yInput.bindOnClick((e) => {
+            e.stopPropagation();
+            yInput.select();
+        });
+
+        yInput.onkeypress = this.editObjectValueWhenEnterPress;
+        yInput.onfocus = this._setFocused;
+        yInput.onblur = this._setBlurredTimer(() => {
+            const object = Entry.container.getObject(this.id);
+            if (!object) {
+                return;
+            }
+            const value = yInput.value;
+            Entry.do('objectUpdatePosY', this.id, Entry.Utils.isNumber(value) ? value : this.entity.getY());
+        });
+
+        const sizeSpan = Entry.createElement('span').addClass('entryObjectCoordinateSizeWorkspace');
+        sizeSpan.innerHTML = Lang.Workspace.Size + '';
+        const sizeInput = Entry.createElement('input').addClass(
+            'entryObjectCoordinateInputWorkspace',
+            'entryObjectCoordinateInputWorkspace_size');
+        sizeInput.bindOnClick((e) => {
+            e.stopPropagation();
+            sizeInput.select();
+        });
+
+        sizeInput.onkeypress = this.editObjectValueWhenEnterPress;
+        sizeInput.onfocus = this._setFocused;
+        sizeInput.onblur = this._setBlurredTimer(() => {
+            const object = Entry.container.getObject(this.id);
+            if (!object) {
+                return;
+            }
+            const value = sizeInput.value;
+            Entry.do('objectUpdateSize', this.id, Entry.Utils.isNumber(value) ? value : this.entity.getSize());
+        });
+
+
+        coordinationView.appendChild(xCoordi);
+        coordinationView.appendChild(xInput);
+        coordinationView.appendChild(yCoordi);
+        coordinationView.appendChild(yInput);
+        coordinationView.appendChild(sizeSpan);
+        coordinationView.appendChild(sizeInput);
+        coordinationView.xInput_ = xInput;
+        coordinationView.yInput_ = yInput;
+        coordinationView.sizeInput_ = sizeInput;
+
+        return coordinationView;
+    }
+
+    createRotationWrapperView() {
+        const rotationWrapperView = Entry.createElement('div').addClass('entryObjectRotationWrapperWorkspace');
+
+        const coordinationView = this.createCoordinationView();
+        this.coordinateView_ = coordinationView;
+        rotationWrapperView.appendChild(coordinationView);
+
+        const rotateLabelWrapperView = this.createRotateLabelWrapperView();
+        rotationWrapperView.appendChild(rotateLabelWrapperView);
+
+        const rotationMethodWrapperView = this.createRotationMethodWrapperView();
+        rotationWrapperView.appendChild(rotationMethodWrapperView);
+        this.rotationMethodWrapper_ = rotationMethodWrapperView;
+
+        return rotationWrapperView;
+    }
+
+    createInformationView() {
+        const informationView = Entry.createElement('div').addClass('entryObjectInformationWorkspace');
+        return informationView;
+    }
+
+    createDeleteView(exceptionsForMouseDown) {
+        const deleteView = Entry.createElement('div').addClass('entryObjectDeleteWorkspace');
+        exceptionsForMouseDown.push(deleteView);
+        deleteView.bindOnClick((e) => {
+            e.stopPropagation();
+            if (Entry.engine.isState('run')) return;
+            Entry.do('removeObject', this.id);
+        });
+        return deleteView;
+    }
+
+    createEditView() {
+        const editView = Entry.createElement('div').addClass('entryObjectEditWorkspace');
+        $(editView).mousedown((e) => {
+            e.stopPropagation();
+            Entry.documentMousedown.notify(e);
+            Entry.do('objectEditButtonClick', this.id);
+        });
+
+        $(editView).mouseup((e) => {
+            this.isEditing && this.nameView_.select();
+        });
+
+        return editView;
+    }
+
+    createNameView() {
+        const nameView = Entry.createElement('input').addClass('entryObjectNameWorkspace');
+        nameView.bindOnClick((e) => {
+            e.preventDefault();
+            nameView.focus();
+            nameView.select();
+        });
+
+        nameView.onkeypress = Entry.Utils.whenEnter(() => {
+            this.editObjectValues(false);
+        });
+
+        nameView.onfocus = Entry.Utils.setFocused;
+        nameView.onblur = Entry.Utils.setBlurredTimer(() => {
+            const object = Entry.container.getObject(this.id);
+            if (!object) {
+                return;
+            }
+
+            Entry.do('objectNameEdit', this.id, nameView.value);
+        });
+
+        nameView.value = this.name;
+        return nameView;
+    }
+
+    createWrapperView() {
+        const wrapperView = Entry.createElement('div').addClass('entryObjectWrapperWorkspace');
+
+        const nameView = this.createNameView();
+        wrapperView.appendChild(nameView);
+        this.nameView_ = nameView;
+
+        const informationView = this.createInformationView();
+        wrapperView.appendChild(informationView);
+        this.informationView_ = informationView;
+
+        return wrapperView;
+    }
+
+    createThumbnailView() {
+        return Entry.createElement('div').addClass('entryObjectThumbnailWorkspace');
+    }
+
+    createObjectInfoView() {
+        const objectInfoView = Entry.createElement('ul').addClass('objectInfoView');
+        if (!Entry.objectEditable) {
+            objectInfoView.addClass('entryHide');
+        }
+
+        const objectInfo_visible = Entry.createElement('li').addClass('objectInfo_visible');
+        if (!this.entity.getVisible()) objectInfo_visible.addClass('objectInfo_unvisible');
+
+        objectInfo_visible.bindOnClick((e) => {
+            if (Entry.engine.isState('run')) return;
+
+            const entity = this.entity;
+            const visible = entity.setVisible(!entity.getVisible());
+            if (visible) objectInfo_visible.removeClass('objectInfo_unvisible');
+            else objectInfo_visible.addClass('objectInfo_unvisible');
+        });
+
+        const objectInfo_lock = Entry.createElement('li').addClass('objectInfo_unlock');
+        if (this.getLock()) {
+            objectInfo_lock.addClass('objectInfo_lock');
+        }
+
+        objectInfo_lock.bindOnClick((e) => {
+            if (Entry.engine.isState('run')) return;
+
+            if (this.setLock(!this.getLock())) {
+                objectInfo_lock.addClass('objectInfo_lock');
+            } else objectInfo_lock.removeClass('objectInfo_lock');
+
+            this.updateInputViews(this.getLock());
+        });
+        objectInfoView.appendChild(objectInfo_visible);
+        objectInfoView.appendChild(objectInfo_lock);
+        return objectInfoView;
+    }
+
+    createObjectView(objectId, exceptionsForMouseDown) {
+        const objectView = Entry.createElement('li', objectId).addClass('entryContainerListElementWorkspace');
+        const fragment = document.createDocumentFragment();
         fragment.appendChild(objectView);
         // generate context menu
         Entry.Utils.disableContextmenu(objectView);
-        let longPressTimer = null;
 
         $(objectView).bind('mousedown touchstart', (e) => {
             if (
@@ -850,7 +1191,7 @@ Entry.EntryObject = class {
                 !_.includes(exceptionsForMouseDown, e.target)
             ) {
                 const currentObject = Entry.playground.object || {};
-                if (currentObject === that && currentObject.isEditing) {
+                if (currentObject === this && currentObject.isEditing) {
                     return;
                 }
                 Entry.do('containerSelectObject', objectId);
@@ -863,7 +1204,7 @@ Entry.EntryObject = class {
                 e.stopPropagation();
                 Entry.documentMousedown.notify(e);
                 handled = true;
-                that._rightClick(e);
+                this._rightClick(e);
                 return;
             }
 
@@ -873,337 +1214,35 @@ Entry.EntryObject = class {
                 e.stopPropagation();
                 Entry.documentMousedown.notify(e);
 
-                longPressTimer = setTimeout(function() {
-                    if (longPressTimer) {
-                        longPressTimer = null;
-                        that._rightClick(e);
+                this.longPressTimer = setTimeout(() => {
+                    if (this.longPressTimer) {
+                        this.longPressTimer = null;
+                        this._rightClick(e);
                     }
                 }, 1000);
 
-                doc.bind('mousemove.object touchmove.object', onMouseMove);
-                doc.bind('mouseup.object touchend.object', onMouseUp);
-            }
-
-            function onMouseMove(e) {
-                e.stopPropagation();
-                if (!mouseDownCoordinate) return;
-                const diff = Math.sqrt(
-                    Math.pow(e.pageX - mouseDownCoordinate.x, 2) +
-                    Math.pow(e.pageY - mouseDownCoordinate.y, 2));
-                if (diff > 5 && longPressTimer) {
-                    clearTimeout(longPressTimer);
-                    longPressTimer = null;
-                }
-            }
-
-            function onMouseUp(e) {
-                e.stopPropagation();
-                doc.unbind('.object');
-                if (longPressTimer) {
-                    clearTimeout(longPressTimer);
-                    longPressTimer = null;
-                }
+                doc.bind('mousemove.object touchmove.object', (e) => {
+                    e.stopPropagation();
+                    if (!mouseDownCoordinate) return;
+                    const diff = Math.sqrt(
+                        Math.pow(e.pageX - mouseDownCoordinate.x, 2) +
+                        Math.pow(e.pageY - mouseDownCoordinate.y, 2));
+                    if (diff > 5 && this.longPressTimer) {
+                        clearTimeout(this.longPressTimer);
+                        this.longPressTimer = null;
+                    }
+                });
+                doc.bind('mouseup.object touchend.object', (e) => {
+                    e.stopPropagation();
+                    doc.unbind('.object');
+                    if (this.longPressTimer) {
+                        clearTimeout(this.longPressTimer);
+                        this.longPressTimer = null;
+                    }
+                });
             }
         });
-
-        /** @type {!Element} */
-        this.view_ = objectView;
-
-        const objectInfoView = CE('ul').addClass('objectInfoView');
-        if (!Entry.objectEditable) {
-            objectInfoView.addClass('entryHide');
-        }
-
-        const objectInfo_visible = CE('li').addClass('objectInfo_visible');
-        if (!this.entity.getVisible()) objectInfo_visible.addClass('objectInfo_unvisible');
-
-        objectInfo_visible.bindOnClick(function(e) {
-            if (Entry.engine.isState('run')) return;
-
-            const entity = that.entity;
-            const visible = entity.setVisible(!entity.getVisible());
-            if (visible) this.removeClass('objectInfo_unvisible');
-            else this.addClass('objectInfo_unvisible');
-        });
-
-        const objectInfo_lock = CE('li').addClass('objectInfo_unlock');
-        if (this.getLock()) {
-            objectInfo_lock.addClass('objectInfo_lock');
-        }
-
-        objectInfo_lock.bindOnClick(function(e) {
-            if (Entry.engine.isState('run')) return;
-
-            if (that.setLock(!that.getLock())) {
-                this.addClass('objectInfo_lock');
-            } else this.removeClass('objectInfo_lock');
-
-            that.updateInputViews(that.getLock());
-        });
-        objectInfoView.appendChild(objectInfo_visible);
-        objectInfoView.appendChild(objectInfo_lock);
-        this.view_.appendChild(objectInfoView);
-
-        const thumbnailView = CE('div').addClass('entryObjectThumbnailWorkspace');
-        this.view_.appendChild(thumbnailView);
-        this.thumbnailView_ = thumbnailView;
-
-        const wrapperView = CE('div').addClass('entryObjectWrapperWorkspace');
-        this.view_.appendChild(wrapperView);
-
-        const nameView = CE('input').addClass('entryObjectNameWorkspace');
-        nameView.bindOnClick(function(e) {
-            e.preventDefault();
-            this.focus();
-            this.select();
-        });
-
-        wrapperView.appendChild(nameView);
-        this.nameView_ = nameView;
-
-        this.nameView_.onkeypress = _whenEnter;
-        this.nameView_.onfocus = _setFocused;
-        this.nameView_.onblur = _setBlurredTimer(function() {
-            const object = Entry.container.getObject(that.id);
-            if (!object) {
-                return;
-            }
-
-            Entry.do('objectNameEdit', that.id, this.value);
-        });
-
-        this.nameView_.value = this.name;
-
-        const editView = CE('div').addClass('entryObjectEditWorkspace');
-        this.editView_ = editView;
-        this.view_.appendChild(editView);
-
-        $(editView).mousedown(function(e) {
-            e.stopPropagation();
-            Entry.documentMousedown.notify(e);
-            Entry.do('objectEditButtonClick', that.id);
-        });
-
-        $(editView).mouseup(function(e) {
-            that.isEditing && that.nameView_.select();
-        });
-
-        if (Entry.objectEditable && Entry.objectDeletable) {
-            const deleteView = CE('div').addClass('entryObjectDeleteWorkspace');
-            exceptionsForMouseDown.push(deleteView);
-            this.deleteView_ = deleteView;
-            this.view_.appendChild(deleteView);
-            deleteView.bindOnClick((e) => {
-                e.stopPropagation();
-                if (Entry.engine.isState('run')) return;
-                Entry.do('removeObject', that.id);
-            });
-        }
-
-        const informationView = CE('div').addClass('entryObjectInformationWorkspace');
-        wrapperView.appendChild(informationView);
-        this.informationView_ = informationView;
-
-        const rotationWrapperView = CE('div').addClass('entryObjectRotationWrapperWorkspace');
-        this.view_.appendChild(rotationWrapperView);
-
-        const coordinateView = CE('span').addClass('entryObjectCoordinateWorkspace');
-        rotationWrapperView.appendChild(coordinateView);
-        const xCoordi = CE('span').addClass('entryObjectCoordinateSpanWorkspace');
-        xCoordi.innerHTML = 'X';
-        const xInput = CE('input').addClass('entryObjectCoordinateInputWorkspace');
-        xInput.bindOnClick(function(e) {
-            e.stopPropagation();
-            this.select();
-        });
-
-        const yCoordi = CE('span').addClass('entryObjectCoordinateSpanWorkspace');
-        yCoordi.innerHTML = 'Y';
-        const yInput = CE('input').addClass('entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right');
-        yInput.bindOnClick(function(e) {
-            e.stopPropagation();
-            this.select();
-        });
-        const sizeSpan = CE('span').addClass('entryObjectCoordinateSizeWorkspace');
-        sizeSpan.innerHTML = Lang.Workspace.Size + '';
-        const sizeInput = CE('input').addClass(
-            'entryObjectCoordinateInputWorkspace',
-            'entryObjectCoordinateInputWorkspace_size');
-        sizeInput.bindOnClick(function(e) {
-            e.stopPropagation();
-            this.select();
-        });
-        coordinateView.appendChild(xCoordi);
-        coordinateView.appendChild(xInput);
-        coordinateView.appendChild(yCoordi);
-        coordinateView.appendChild(yInput);
-        coordinateView.appendChild(sizeSpan);
-        coordinateView.appendChild(sizeInput);
-        coordinateView.xInput_ = xInput;
-        coordinateView.yInput_ = yInput;
-        coordinateView.sizeInput_ = sizeInput;
-        this.coordinateView_ = coordinateView;
-
-        xInput.onkeypress = _whenEnter;
-        xInput.onfocus = _setFocused;
-        xInput.onblur = _setBlurredTimer(function() {
-            const object = Entry.container.getObject(that.id);
-            if (!object) {
-                return;
-            }
-
-            const value = this.value;
-            Entry.do(
-                'objectUpdatePosX',
-                that.id,
-                Entry.Utils.isNumber(value) ? value : that.entity.getX()
-            );
-        });
-
-        yInput.onkeypress = _whenEnter;
-        yInput.onfocus = _setFocused;
-        yInput.onblur = _setBlurredTimer(function() {
-            const object = Entry.container.getObject(that.id);
-            if (!object) {
-                return;
-            }
-            const value = this.value;
-            Entry.do(
-                'objectUpdatePosY',
-                that.id,
-                Entry.Utils.isNumber(value) ? value : that.entity.getY()
-            );
-        });
-
-        sizeInput.onkeypress = _whenEnter;
-        sizeInput.onfocus = _setFocused;
-        sizeInput.onblur = _setBlurredTimer(function() {
-            const object = Entry.container.getObject(that.id);
-            if (!object) {
-                return;
-            }
-            const value = this.value;
-            Entry.do(
-                'objectUpdateSize',
-                that.id,
-                Entry.Utils.isNumber(value) ? value : that.entity.getSize()
-            );
-        });
-
-        const rotateLabelWrapperView = CE('div').addClass('entryObjectRotateLabelWrapperWorkspace');
-        rotationWrapperView.appendChild(rotateLabelWrapperView);
-        this.rotateLabelWrapperView_ = rotateLabelWrapperView;
-
-        const rotateSpan = CE('span').addClass('entryObjectRotateSpanWorkspace');
-        rotateSpan.innerHTML = Lang.Workspace.rotation + '';
-        const rotateInput = CE('input').addClass('entryObjectRotateInputWorkspace');
-        rotateInput.bindOnClick(function(e) {
-            e.stopPropagation();
-            this.select();
-        });
-        this.rotateSpan_ = rotateSpan;
-        this.rotateInput_ = rotateInput;
-
-        const directionSpan = CE('span').addClass('entryObjectDirectionSpanWorkspace');
-        directionSpan.innerHTML = Lang.Workspace.direction + '';
-        const directionInput = CE('input').addClass('entryObjectDirectionInputWorkspace');
-        directionInput.bindOnClick(function(e) {
-            e.stopPropagation();
-            this.select();
-        });
-        this.directionInput_ = directionInput;
-
-        rotateLabelWrapperView.appendChild(rotateSpan);
-        rotateLabelWrapperView.appendChild(rotateInput);
-        rotateLabelWrapperView.appendChild(directionSpan);
-        rotateLabelWrapperView.appendChild(directionInput);
-        rotateLabelWrapperView.rotateInput_ = rotateInput;
-        rotateLabelWrapperView.directionInput_ = directionInput;
-
-        rotateInput.onkeypress = _whenEnter;
-        rotateInput.onfocus = _setFocused;
-        rotateInput.onblur = _setBlurredTimer(function() {
-            const object = Entry.container.getObject(that.id);
-            if (!object) {
-                return;
-            }
-            let value = this.value;
-            const idx = value.indexOf('˚');
-            if (~idx) {
-                value = value.substring(0, idx);
-            }
-
-            Entry.do(
-                'objectUpdateRotationValue',
-                that.id,
-                Entry.Utils.isNumber(value) ? value : that.entity.getRotation()
-            );
-        });
-
-        directionInput.onkeypress = _whenEnter;
-        directionInput.onfocus = _setFocused;
-        directionInput.onblur = _setBlurredTimer(function() {
-            const object = Entry.container.getObject(that.id);
-            if (!object) {
-                return;
-            }
-            let value = this.value;
-            const idx = value.indexOf('˚');
-            if (~idx) {
-                value = value.substring(0, idx);
-            }
-
-            Entry.do(
-                'objectUpdateDirectionValue',
-                that.id,
-                Entry.Utils.isNumber(value) ? value : that.entity.getDirection()
-            );
-        });
-
-        const rotationMethodWrapper = CE('div').addClass('rotationMethodWrapper');
-        rotationWrapperView.appendChild(rotationMethodWrapper);
-        this.rotationMethodWrapper_ = rotationMethodWrapper;
-
-        const rotateMethodLabelView = CE('span').addClass('entryObjectRotateMethodLabelWorkspace');
-        rotationMethodWrapper.appendChild(rotateMethodLabelView);
-        rotateMethodLabelView.innerHTML = Lang.Workspace.rotate_method + '';
-
-        const rotateModeAView = CE('div').addClass('entryObjectRotateModeWorkspace entryObjectRotateModeAWorkspace');
-        this.rotateModeAView_ = rotateModeAView;
-        rotationMethodWrapper.appendChild(rotateModeAView);
-        rotationMethodWrapper.appendChild(rotateModeAView);
-        rotateModeAView.bindOnClick(
-            this._whenRotateEditable(function() {
-                Entry.do('objectUpdateRotateMethod', that.id, 'free');
-            }, this)
-        );
-
-        const rotateModeBView = CE('div').addClass('entryObjectRotateModeWorkspace entryObjectRotateModeBWorkspace');
-        this.rotateModeBView_ = rotateModeBView;
-        rotationMethodWrapper.appendChild(rotateModeBView);
-        rotateModeBView.bindOnClick(
-            this._whenRotateEditable(function() {
-                Entry.do('objectUpdateRotateMethod', that.id, 'vertical');
-            }, this)
-        );
-
-        const rotateModeCView = CE('div').addClass('entryObjectRotateModeWorkspace entryObjectRotateModeCWorkspace');
-        this.rotateModeCView_ = rotateModeCView;
-        rotationMethodWrapper.appendChild(rotateModeCView);
-        rotateModeCView.bindOnClick(
-            this._whenRotateEditable(function() {
-                Entry.do('objectUpdateRotateMethod', that.id, 'none');
-            }, this)
-        );
-
-        this.updateThumbnailView();
-        this.updateRotateMethodView();
-        this.updateInputViews();
-
-        this.updateCoordinateView(true);
-        this.updateRotationView(true);
-
-        return this.view_;
+        return objectView;
     }
 
     generatePhoneView() {
