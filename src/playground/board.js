@@ -338,7 +338,7 @@ Entry.Board = class Board {
         this.visible = true;
     }
 
-    alignComments() {
+    initCommentSchema() {
         const blockMap = this.code._blockMap;
         const keys = Object.keys(blockMap) || [];
 
@@ -356,7 +356,7 @@ Entry.Board = class Board {
             return;
         }
 
-        this.alignComments();
+        this.initCommentSchema();
 
         const verticalGap = 15;
         let acculmulatedTop = 15;
@@ -1120,7 +1120,7 @@ Entry.Board = class Board {
                     enable: !!Entry.clipboard && !this.readOnly,
                     callback() {
                         if (Entry.clipboard.type === 'comment') {
-                            Entry.do('createComment', Entry.clipboard, undefined, that);
+                            Entry.do('createComment', Entry.clipboard, that);
                         } else {
                             Entry.do('addThread', Entry.clipboard)
                                 .value.getFirstBlock()
@@ -1192,7 +1192,6 @@ Entry.Board = class Board {
                                 x: (Entry.ContextMenu.mouseCoordinate.x - x) / that.scale,
                                 y: (Entry.ContextMenu.mouseCoordinate.y - y) / that.scale,
                             },
-                            undefined,
                             that
                         );
                     },

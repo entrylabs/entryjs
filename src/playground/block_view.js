@@ -1457,7 +1457,7 @@ Entry.BlockView = class BlockView {
                 callback() {
                     hasComment
                         ? Entry.do('removeComment', block._comment)
-                        : Entry.do('createComment', { id: Entry.Utils.generateId() }, block, board);
+                        : Entry.do('createComment', { id: Entry.Utils.generateId() }, board, block);
                 },
             };
 

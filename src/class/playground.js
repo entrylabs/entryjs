@@ -23,10 +23,10 @@ Entry.Playground = function() {
      */
     this.viewMode_ = 'default';
     Entry.addEventListener('textEdited', () => {
-        this.injectText()
+        this.injectText();
     });
     Entry.addEventListener('hwChanged', () => {
-        this.updateHW()
+        this.updateHW();
     });
 };
 
@@ -56,10 +56,7 @@ Entry.Playground = function() {
             var curtainView = Entry.createElement('div', 'entryCurtain')
                 .addClass('entryPlaygroundCurtainWorkspace entryRemove')
                 .appendTo(this.view_);
-            var [
-                mentHead,
-                mentTail = '',
-            ] = Lang.Workspace.cannot_edit_click_to_stop.split('.');
+            var [mentHead, mentTail = ''] = Lang.Workspace.cannot_edit_click_to_stop.split('.');
             curtainView.innerHTML = mentHead + '.<br/>' + mentTail;
             curtainView.addEventListener('click', function() {
                 Entry.engine.toggleStop();
@@ -199,9 +196,7 @@ Entry.Playground = function() {
      */
     p.generateTabView = function(tabView) {
         var that = this;
-        var tabList = Entry.createElement('ul').addClass(
-            'entryTabListWorkspace'
-        );
+        var tabList = Entry.createElement('ul').addClass('entryTabListWorkspace');
         this.tabList_ = tabList;
         tabView.appendChild(tabList);
 
@@ -209,11 +204,7 @@ Entry.Playground = function() {
         var codeTab = Entry.createElement('li', 'entryCodeTab')
             .addClass('entryTabListItemWorkspace entryTabSelected')
             .bindOnClick(() => {
-                Entry.do(
-                    'playgroundChangeViewMode',
-                    'code',
-                    that.selectedViewMode
-                );
+                Entry.do('playgroundChangeViewMode', 'code', that.selectedViewMode);
             })
             .appendTo(tabList);
         codeTab.innerHTML = Lang.Workspace.tab_code;
@@ -223,11 +214,7 @@ Entry.Playground = function() {
         var pictureTab = Entry.createElement('li', 'entryPictureTab')
             .addClass('entryTabListItemWorkspace')
             .bindOnClick(() => {
-                Entry.do(
-                    'playgroundChangeViewMode',
-                    'picture',
-                    that.selectedViewMode
-                );
+                Entry.do('playgroundChangeViewMode', 'picture', that.selectedViewMode);
             })
             .appendTo(tabList);
         pictureTab.innerHTML = Lang.Workspace.tab_picture;
@@ -238,11 +225,7 @@ Entry.Playground = function() {
             .addClass('entryTabListItemWorkspace entryRemove')
             .appendTo(tabList)
             .bindOnClick(() => {
-                Entry.do(
-                    'playgroundChangeViewMode',
-                    'text',
-                    that.selectedViewMode
-                );
+                Entry.do('playgroundChangeViewMode', 'text', that.selectedViewMode);
             });
         textboxTab.innerHTML = Lang.Workspace.tab_text;
         this.tabViewElements.text = textboxTab;
@@ -252,11 +235,7 @@ Entry.Playground = function() {
             .addClass('entryTabListItemWorkspace')
             .appendTo(tabList)
             .bindOnClick(() => {
-                Entry.do(
-                    'playgroundChangeViewMode',
-                    'sound',
-                    that.selectedViewMode
-                );
+                Entry.do('playgroundChangeViewMode', 'sound', that.selectedViewMode);
             });
         soundTab.innerHTML = Lang.Workspace.tab_sound;
         this.tabViewElements.sound = soundTab;
@@ -266,11 +245,7 @@ Entry.Playground = function() {
             .addClass('entryTabListItemWorkspace entryVariableTabWorkspace')
             .appendTo(tabList)
             .bindOnClick(() => {
-                Entry.do(
-                    'playgroundChangeViewMode',
-                    'variable',
-                    that.selectedViewMode
-                );
+                Entry.do('playgroundChangeViewMode', 'variable', that.selectedViewMode);
             });
         variableTab.innerHTML = Lang.Workspace.tab_attribute;
         this.tabViewElements.variable = variableTab;
@@ -334,10 +309,7 @@ Entry.Playground = function() {
             var pictureAdd = Entry.createElement('div', 'entryAddPicture')
                 .addClass('entryPlaygroundAddPicture')
                 .bindOnClick(() => {
-                    if (
-                        !Entry.container ||
-                        Entry.container.isSceneObjectsExist()
-                    )
+                    if (!Entry.container || Entry.container.isSceneObjectsExist())
                         Entry.do('playgroundClickAddPicture');
                     else {
                         Entry.toast.alert(
@@ -348,10 +320,7 @@ Entry.Playground = function() {
                 })
                 .appendTo(PictureView);
 
-            var innerPictureAdd = Entry.createElement(
-                'div',
-                'entryAddPictureInner'
-            )
+            var innerPictureAdd = Entry.createElement('div', 'entryAddPictureInner')
                 .addClass('entryPlaygroundAddPictureInner')
                 .appendTo(pictureAdd);
             innerPictureAdd.innerHTML = Lang.Workspace.picture_add;
@@ -365,10 +334,7 @@ Entry.Playground = function() {
                     ui.item.data('start_pos', ui.item.index());
                 },
                 stop: (event, ui) => {
-                    Entry.playground.movePicture(
-                        ui.item.data('start_pos'),
-                        ui.item.index()
-                    );
+                    Entry.playground.movePicture(ui.item.data('start_pos'), ui.item.index());
                 },
                 axis: 'y',
             });
@@ -385,10 +351,7 @@ Entry.Playground = function() {
             pictureAdd.bindOnClick(function(e) {
                 Entry.dispatchEvent('openPictureManager');
             });
-            var innerPictureAdd = Entry.createElement(
-                'div',
-                'entryAddPictureInner'
-            );
+            var innerPictureAdd = Entry.createElement('div', 'entryAddPictureInner');
             innerPictureAdd.addClass('entryPlaygroundAddPictureInnerPhone');
             innerPictureAdd.innerHTML = Lang.Workspace.picture_add;
             pictureAdd.appendChild(innerPictureAdd);
@@ -420,19 +383,12 @@ Entry.Playground = function() {
     p.generateTextView = function(textView) {
         var that = this;
         var wrap = Entry.createElement('div').appendTo(textView);
-        var textProperties = Entry.createElement('div').addClass(
-            'textProperties'
-        );
+        var textProperties = Entry.createElement('div').addClass('textProperties');
         wrap.appendChild(textProperties);
-        var fontWrapper = Entry.createElement('div').addClass(
-            'entryTextFontSelect'
-        );
+        var fontWrapper = Entry.createElement('div').addClass('entryTextFontSelect');
         textProperties.appendChild(fontWrapper);
 
-        var fontName = Entry.createElement(
-            'select',
-            'entryPainterAttrFontName'
-        ).addClass(
+        var fontName = Entry.createElement('select', 'entryPainterAttrFontName').addClass(
             'entryPlaygroundPainterAttrFontName',
             'entryTextFontSelecter'
         );
@@ -441,8 +397,7 @@ Entry.Playground = function() {
             var font = target.value;
             if (font == 'Nanum Pen Script' || font == 'Jeju Hallasan') {
                 var textValue = textEditInput.value;
-                if (that.object.entity.getLineBreak())
-                    textValue = textEditArea.value;
+                if (that.object.entity.getLineBreak()) textValue = textEditArea.value;
 
                 if (/[\u4E00-\u9FFF]/.exec(textValue) != null) {
                     font = 'KoPub Batang';
@@ -464,9 +419,7 @@ Entry.Playground = function() {
         this.fontName_ = fontName;
         fontWrapper.appendChild(fontName);
 
-        var textButtons = Entry.createElement('ul').addClass(
-            'entryPlayground_text_buttons'
-        );
+        var textButtons = Entry.createElement('ul').addClass('entryPlayground_text_buttons');
         textProperties.appendChild(textButtons);
 
         var alignLeftBtn = Entry.createElement('li')
@@ -496,21 +449,15 @@ Entry.Playground = function() {
         var boldWrap = Entry.createElement('li');
         textButtons.appendChild(boldWrap);
         var boldButton = Entry.createElement('a').bindOnClick(function() {
-            var isBold =
-                Entry.playground.object.entity.toggleFontBold() || false;
+            var isBold = Entry.playground.object.entity.toggleFontBold() || false;
             if (isBold) {
-                boldImage.src =
-                    Entry.mediaFilePath + 'text_button_bold_true.png';
+                boldImage.src = Entry.mediaFilePath + 'text_button_bold_true.png';
             } else {
-                boldImage.src =
-                    Entry.mediaFilePath + 'text_button_bold_false.png';
+                boldImage.src = Entry.mediaFilePath + 'text_button_bold_false.png';
             }
         });
         boldWrap.appendChild(boldButton);
-        var boldImage = Entry.createElement(
-            'img',
-            'entryPlaygroundText_boldImage'
-        );
+        var boldImage = Entry.createElement('img', 'entryPlaygroundText_boldImage');
         boldButton.appendChild(boldImage);
         boldImage.src = Entry.mediaFilePath + 'text_button_bold_false.png';
 
@@ -520,38 +467,25 @@ Entry.Playground = function() {
         underLineWrap.appendChild(underLineButton);
         underLineButton.bindOnClick(function() {
             //toggle
-            var underLineState =
-                !Entry.playground.object.entity.getUnderLine() || false;
+            var underLineState = !Entry.playground.object.entity.getUnderLine() || false;
             underLineImage.src =
-                Entry.mediaFilePath +
-                'text_button_underline_' +
-                underLineState +
-                '.png';
+                Entry.mediaFilePath + 'text_button_underline_' + underLineState + '.png';
             Entry.playground.object.entity.setUnderLine(underLineState);
         });
-        var underLineImage = Entry.createElement(
-            'img',
-            'entryPlaygroundText_underlineImage'
-        );
+        var underLineImage = Entry.createElement('img', 'entryPlaygroundText_underlineImage');
         underLineButton.appendChild(underLineImage);
-        underLineImage.src =
-            Entry.mediaFilePath + 'text_button_underline_false.png';
+        underLineImage.src = Entry.mediaFilePath + 'text_button_underline_false.png';
 
         var italicWrap = Entry.createElement('li');
         textButtons.appendChild(italicWrap);
         var italicButton = Entry.createElement('a').bindOnClick(function() {
             //toggle
             var isItalic = Entry.playground.object.entity.toggleFontItalic();
-            italicImage.src = `${
-                Entry.mediaFilePath
-            }text_button_italic_${isItalic.toString()}.png`;
+            italicImage.src = `${Entry.mediaFilePath}text_button_italic_${isItalic.toString()}.png`;
         });
         italicWrap.appendChild(italicButton);
 
-        var italicImage = Entry.createElement(
-            'img',
-            'entryPlaygroundText_italicImage'
-        );
+        var italicImage = Entry.createElement('img', 'entryPlaygroundText_italicImage');
         italicButton.appendChild(italicImage);
         italicImage.src = Entry.mediaFilePath + 'text_button_italic_false.png';
 
@@ -559,26 +493,20 @@ Entry.Playground = function() {
         textButtons.appendChild(strikeWrap);
         var strikeButton = Entry.createElement('a').bindOnClick(function() {
             //toggle
-            var strikeState =
-                !Entry.playground.object.entity.getStrike() || false;
+            var strikeState = !Entry.playground.object.entity.getStrike() || false;
             Entry.playground.object.entity.setStrike(strikeState);
             strikeImage.src = `${
                 Entry.mediaFilePath
             }text_button_strike_${strikeState.toString()}.png`;
         });
         strikeWrap.appendChild(strikeButton);
-        var strikeImage = Entry.createElement(
-            'img',
-            'entryPlaygroundText_strikeImage'
-        );
+        var strikeImage = Entry.createElement('img', 'entryPlaygroundText_strikeImage');
         strikeButton.appendChild(strikeImage);
         strikeImage.src = Entry.mediaFilePath + 'text_button_strike_false.png';
 
         var foregroundWrap = Entry.createElement('li');
         textButtons.appendChild(foregroundWrap);
-        var foregroundButton = Entry.createElement('a').bindOnClick(function({
-            target,
-        }) {
+        var foregroundButton = Entry.createElement('a').bindOnClick(function({ target }) {
             if ($(target).hasClass('fontColorCell')) {
                 Entry.playground.setTextColour(target.getAttribute('colour'));
             } else {
@@ -586,20 +514,13 @@ Entry.Playground = function() {
             }
         });
         foregroundWrap.appendChild(foregroundButton);
-        var foregroundImage = Entry.createElement(
-            'img',
-            'playgroundTextColorButtonImg'
-        );
+        var foregroundImage = Entry.createElement('img', 'playgroundTextColorButtonImg');
         foregroundButton.appendChild(foregroundImage);
-        foregroundImage.src = `${
-            Entry.mediaFilePath
-        }text_button_color_false.png`;
+        foregroundImage.src = `${Entry.mediaFilePath}text_button_color_false.png`;
 
         var backgroundWrap = Entry.createElement('li');
         textButtons.appendChild(backgroundWrap);
-        var backgroundButton = Entry.createElement('a').bindOnClick(function({
-            target,
-        }) {
+        var backgroundButton = Entry.createElement('a').bindOnClick(function({ target }) {
             if ($(target).hasClass('fontColorCell')) {
                 that.setBackgroundColour(target.getAttribute('colour'));
             } else {
@@ -607,20 +528,12 @@ Entry.Playground = function() {
             }
         });
         backgroundWrap.appendChild(backgroundButton);
-        var backgroundImage = Entry.createElement(
-            'img',
-            'playgroundTextBgButtonImg'
-        );
+        var backgroundImage = Entry.createElement('img', 'playgroundTextBgButtonImg');
         backgroundButton.appendChild(backgroundImage);
-        backgroundImage.src =
-            Entry.mediaFilePath + 'text_button_background_false.png';
+        backgroundImage.src = Entry.mediaFilePath + 'text_button_background_false.png';
 
-        var fgColorDiv = Entry.createElement('div').addClass(
-            'entryPlayground_fgColorDiv'
-        );
-        var bgColorDiv = Entry.createElement('div').addClass(
-            'entryPlayground_bgColorDiv'
-        );
+        var fgColorDiv = Entry.createElement('div').addClass('entryPlayground_fgColorDiv');
+        var bgColorDiv = Entry.createElement('div').addClass('entryPlayground_bgColorDiv');
 
         foregroundButton.appendChild(fgColorDiv);
         backgroundButton.appendChild(bgColorDiv);
@@ -634,9 +547,7 @@ Entry.Playground = function() {
 
         var foregroundFragment = document.createDocumentFragment();
         colours.forEach((color, idx) => {
-            var cell = Entry.createElement('div').addClass(
-                'modal_colour fontColorCell'
-            );
+            var cell = Entry.createElement('div').addClass('modal_colour fontColorCell');
             cell.setAttribute('colour', color);
             cell.style.backgroundColor = color;
             if (idx === 0) cell.addClass('modalColourTrans');
@@ -655,18 +566,13 @@ Entry.Playground = function() {
         backgroundsWrapper.appendChild(backgroundFragment);
         backgroundsWrapper.style.display = 'none';
 
-        var textEditInput = Entry.createElement('input').addClass(
-            'entryPlayground_textBox'
-        );
+        var textEditInput = Entry.createElement('input').addClass('entryPlayground_textBox');
         var textChangeApply = function() {
             var object = Entry.playground.object;
             var entity = object.entity;
             var fontName = _.first($('.entryPlaygroundPainterAttrFontName'));
 
-            if (
-                fontName.value == 'Nanum Pen Script' ||
-                fontName.value == 'Jeju Hallasan'
-            ) {
+            if (fontName.value == 'Nanum Pen Script' || fontName.value == 'Jeju Hallasan') {
                 if (/[\u4E00-\u9FFF]/.exec(this.value) != null) {
                     var font = 'KoPub Batang';
                     fontName.value = font;
@@ -685,11 +591,7 @@ Entry.Playground = function() {
         });
         textEditInput.onblur = function() {
             if (textEditInput.value !== textEditInput.prevText) {
-                Entry.do(
-                    'editText',
-                    textEditInput.value,
-                    textEditInput.prevText
-                );
+                Entry.do('editText', textEditInput.value, textEditInput.prevText);
             }
             // Entry.dispatchEvent('textEdited');
         };
@@ -713,15 +615,11 @@ Entry.Playground = function() {
         this.textEditArea = textEditArea;
         wrap.appendChild(textEditArea);
 
-        var fontSizeWrapper = Entry.createElement('div').addClass(
-            'entryPlaygroundFontSizeWrapper'
-        );
+        var fontSizeWrapper = Entry.createElement('div').addClass('entryPlaygroundFontSizeWrapper');
         wrap.appendChild(fontSizeWrapper);
         this.fontSizeWrapper = fontSizeWrapper;
 
-        var fontSizeSlider = Entry.createElement('div').addClass(
-            'entryPlaygroundFontSizeSlider'
-        );
+        var fontSizeSlider = Entry.createElement('div').addClass('entryPlaygroundFontSizeSlider');
         fontSizeWrapper.appendChild(fontSizeSlider);
 
         var fontSizeIndiciator = Entry.createElement('div').addClass(
@@ -730,42 +628,35 @@ Entry.Playground = function() {
         fontSizeSlider.appendChild(fontSizeIndiciator);
         this.fontSizeIndiciator = fontSizeIndiciator;
 
-        var fontSizeKnob = Entry.createElement('div').addClass(
-            'entryPlaygroundFontSizeKnob'
-        );
+        var fontSizeKnob = Entry.createElement('div').addClass('entryPlaygroundFontSizeKnob');
         fontSizeSlider.appendChild(fontSizeKnob);
         this.fontSizeKnob = fontSizeKnob;
 
-        var fontSizeLabel = Entry.createElement('div').addClass(
-            'entryPlaygroundFontSizeLabel'
-        );
+        var fontSizeLabel = Entry.createElement('div').addClass('entryPlaygroundFontSizeLabel');
         fontSizeLabel.innerHTML = Lang.General.font_size;
         fontSizeWrapper.appendChild(fontSizeLabel);
 
-        $(fontSizeKnob).bind(
-            'mousedown.fontKnob touchstart.fontKnob',
-            function() {
-                var resizeOffset = $(fontSizeSlider).offset().left;
+        $(fontSizeKnob).bind('mousedown.fontKnob touchstart.fontKnob', function() {
+            var resizeOffset = $(fontSizeSlider).offset().left;
 
-                var doc = $(document);
-                doc.bind('mousemove.fontKnob touchmove.fontKnob', onMouseMove);
-                doc.bind('mouseup.fontKnob touchend.fontKnob', onMouseUp);
+            var doc = $(document);
+            doc.bind('mousemove.fontKnob touchmove.fontKnob', onMouseMove);
+            doc.bind('mouseup.fontKnob touchend.fontKnob', onMouseUp);
 
-                function onMouseMove(e) {
-                    var left = e.pageX - resizeOffset;
-                    left = Math.max(left, 5);
-                    left = Math.min(left, 88);
-                    fontSizeKnob.style.left = left + 'px';
-                    left /= 0.88;
-                    fontSizeIndiciator.style.width = left + '%';
-                    Entry.playground.object.entity.setFontSize(left);
-                }
-
-                function onMouseUp(e) {
-                    $(document).unbind('.fontKnob');
-                }
+            function onMouseMove(e) {
+                var left = e.pageX - resizeOffset;
+                left = Math.max(left, 5);
+                left = Math.min(left, 88);
+                fontSizeKnob.style.left = left + 'px';
+                left /= 0.88;
+                fontSizeIndiciator.style.width = left + '%';
+                Entry.playground.object.entity.setFontSize(left);
             }
-        );
+
+            function onMouseUp(e) {
+                $(document).unbind('.fontKnob');
+            }
+        });
 
         var linebreakWrapper = Entry.createElement('div').addClass(
             'entryPlaygroundLinebreakWrapper'
@@ -782,31 +673,25 @@ Entry.Playground = function() {
         );
         linebreakWrapper.appendChild(linebreakButtons);
 
-        var linebreakOffImage = Entry.createElement('img').bindOnClick(
-            function() {
-                Entry.playground.toggleLineBreak(false);
-                linebreakDescTitle.innerHTML = Lang.Menus.linebreak_off_desc_1;
-                linebreakDescList1.innerHTML = Lang.Menus.linebreak_off_desc_2;
-                linebreakDescList2.innerHTML = Lang.Menus.linebreak_off_desc_3;
-            }
-        );
+        var linebreakOffImage = Entry.createElement('img').bindOnClick(function() {
+            Entry.playground.toggleLineBreak(false);
+            linebreakDescTitle.innerHTML = Lang.Menus.linebreak_off_desc_1;
+            linebreakDescList1.innerHTML = Lang.Menus.linebreak_off_desc_2;
+            linebreakDescList2.innerHTML = Lang.Menus.linebreak_off_desc_3;
+        });
 
-        linebreakOffImage.src =
-            Entry.mediaFilePath + 'text-linebreak-off-true.png';
+        linebreakOffImage.src = Entry.mediaFilePath + 'text-linebreak-off-true.png';
         linebreakButtons.appendChild(linebreakOffImage);
         this.linebreakOffImage = linebreakOffImage;
 
-        var linebreakOnImage = Entry.createElement('img').bindOnClick(
-            function() {
-                Entry.playground.toggleLineBreak(true);
-                linebreakDescTitle.innerHTML = Lang.Menus.linebreak_on_desc_1;
-                linebreakDescList1.innerHTML = Lang.Menus.linebreak_on_desc_2;
-                linebreakDescList2.innerHTML = Lang.Menus.linebreak_on_desc_3;
-            }
-        );
+        var linebreakOnImage = Entry.createElement('img').bindOnClick(function() {
+            Entry.playground.toggleLineBreak(true);
+            linebreakDescTitle.innerHTML = Lang.Menus.linebreak_on_desc_1;
+            linebreakDescList1.innerHTML = Lang.Menus.linebreak_on_desc_2;
+            linebreakDescList2.innerHTML = Lang.Menus.linebreak_on_desc_3;
+        });
 
-        linebreakOnImage.src =
-            Entry.mediaFilePath + 'text-linebreak-on-false.png';
+        linebreakOnImage.src = Entry.mediaFilePath + 'text-linebreak-on-false.png';
         linebreakButtons.appendChild(linebreakOnImage);
         this.linebreakOnImage = linebreakOnImage;
 
@@ -849,26 +734,21 @@ Entry.Playground = function() {
                     );
                 }
             });
-            var innerSoundAdd = Entry.createElement(
-                'div',
-                'entryAddSoundInner'
-            ).addClass('entryPlaygroundAddSoundInner');
+            var innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner').addClass(
+                'entryPlaygroundAddSoundInner'
+            );
             innerSoundAdd.innerHTML = Lang.Workspace.sound_add;
             soundAdd.appendChild(innerSoundAdd);
             SoundView.appendChild(soundAdd);
-            var soundList = Entry.createElement(
-                'ul',
-                'entrySoundList'
-            ).addClass('entryPlaygroundSoundList');
+            var soundList = Entry.createElement('ul', 'entrySoundList').addClass(
+                'entryPlaygroundSoundList'
+            );
             $(soundList).sortable({
                 start: function(event, ui) {
                     ui.item.data('start_pos', ui.item.index());
                 },
                 stop: function(event, ui) {
-                    Entry.playground.moveSound(
-                        ui.item.data('start_pos'),
-                        ui.item.index()
-                    );
+                    Entry.playground.moveSound(ui.item.data('start_pos'), ui.item.index());
                 },
                 axis: 'y',
             });
@@ -881,10 +761,7 @@ Entry.Playground = function() {
             soundAdd.bindOnClick(function(e) {
                 Entry.dispatchEvent('openSoundManager');
             });
-            var innerSoundAdd = Entry.createElement(
-                'div',
-                'entryAddSoundInner'
-            );
+            var innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner');
             innerSoundAdd.addClass('entryPlaygroundAddSoundInnerPhone');
             innerSoundAdd.innerHTML = Lang.Workspace.sound_add;
             soundAdd.appendChild(innerSoundAdd);
@@ -942,15 +819,9 @@ Entry.Playground = function() {
             this.changeViewMode('code');
         } else if (viewMode == 'variable') {
             this.changeViewMode('variable');
-        } else if (
-            (viewMode == 'picture' || viewMode == 'text') &&
-            objectType == 'textBox'
-        ) {
+        } else if ((viewMode == 'picture' || viewMode == 'text') && objectType == 'textBox') {
             this.changeViewMode('text');
-        } else if (
-            (viewMode == 'text' || viewMode == 'picture') &&
-            objectType == 'sprite'
-        ) {
+        } else if ((viewMode == 'text' || viewMode == 'picture') && objectType == 'sprite') {
             this.changeViewMode('picture');
         } else if (viewMode == 'sound') {
             this.changeViewMode('sound');
@@ -979,9 +850,7 @@ Entry.Playground = function() {
         var engine = Entry.engine;
         workspace.changeBoardCode(
             object.script,
-            engine && engine.isState('run')
-                ? undefined
-                : board.adjustThreadsPosition.bind(board)
+            engine && engine.isState('run') ? undefined : board.adjustThreadsPosition.bind(board)
         );
     };
 
@@ -1030,11 +899,7 @@ Entry.Playground = function() {
 
         this.generatePictureElement(picture);
 
-        Entry.do(
-            'objectAddPicture',
-            picture.objectId || this.object.id,
-            picture
-        );
+        Entry.do('objectAddPicture', picture.objectId || this.object.id, picture);
         this.injectPicture();
         this.selectPicture(picture);
     };
@@ -1044,10 +909,7 @@ Entry.Playground = function() {
      * @param {picture}
      */
     p.setPicture = function(picture) {
-        var element = Entry.container.getPictureElement(
-            picture.id,
-            picture.objectId
-        );
+        var element = Entry.container.getPictureElement(picture.id, picture.objectId);
         var $element = $(element);
         if (element) {
             picture.view = element;
@@ -1055,8 +917,7 @@ Entry.Playground = function() {
 
             var thumbnailView = $element.find('#t_' + picture.id)[0];
             if (picture.fileurl) {
-                thumbnailView.style.backgroundImage =
-                    'url("' + picture.fileurl + '")';
+                thumbnailView.style.backgroundImage = 'url("' + picture.fileurl + '")';
             } else {
                 // deprecated
                 var fileName = picture.filename;
@@ -1072,8 +933,7 @@ Entry.Playground = function() {
                     '.png")';
             }
             var sizeView = $element.find('#s_' + picture.id)[0];
-            sizeView.innerHTML =
-                picture.dimension.width + ' X ' + picture.dimension.height;
+            sizeView.innerHTML = picture.dimension.width + ' X ' + picture.dimension.height;
         }
 
         Entry.container.setPicture(picture);
@@ -1129,10 +989,7 @@ Entry.Playground = function() {
 
         var objectId_;
         if (picture && picture.id)
-            objectId_ = Entry.container.selectPicture(
-                picture.id,
-                picture.objectId
-            );
+            objectId_ = Entry.container.selectPicture(picture.id, picture.objectId);
 
         if (this.object.id === objectId_) {
             if (!picture.objectId) picture.objectId = this.object.id;
@@ -1147,11 +1004,7 @@ Entry.Playground = function() {
      * @param {!number} end
      */
     p.movePicture = function(start, end) {
-        this.object.pictures.splice(
-            end,
-            0,
-            this.object.pictures.splice(start, 1)[0]
-        );
+        this.object.pictures.splice(end, 0, this.object.pictures.splice(start, 1)[0]);
         this.injectPicture();
     };
 
@@ -1186,10 +1039,7 @@ Entry.Playground = function() {
         var isUnderLine = entity.getUnderLine() || false;
         $('#entryPlaygroundText_underlineImage').attr(
             'src',
-            Entry.mediaFilePath +
-                'text_button_underline_' +
-                isUnderLine +
-                '.png'
+            Entry.mediaFilePath + 'text_button_underline_' + isUnderLine + '.png'
         );
 
         var isStrike = entity.getStrike() || false;
@@ -1205,9 +1055,7 @@ Entry.Playground = function() {
 
         if (entity.getLineBreak()) {
             var LANG = Lang.Menus;
-            $('.entryPlaygroundLinebreakDescription > p').html(
-                LANG.linebreak_on_desc_1
-            );
+            $('.entryPlaygroundLinebreakDescription > p').html(LANG.linebreak_on_desc_1);
             var pDoms = $('.entryPlaygroundLinebreakDescription > ul > li');
             pDoms.eq(0).text(LANG.linebreak_on_desc_2);
             pDoms.eq(1).text(LANG.linebreak_on_desc_3);
@@ -1253,11 +1101,7 @@ Entry.Playground = function() {
      * @param {!number} end
      */
     p.moveSound = function(start, end) {
-        this.object.sounds.splice(
-            end,
-            0,
-            this.object.sounds.splice(start, 1)[0]
-        );
+        this.object.sounds.splice(end, 0, this.object.sounds.splice(start, 1)[0]);
         this.updateListViewOrder('sound');
     };
 
@@ -1322,8 +1166,7 @@ Entry.Playground = function() {
         for (var i in this.tabViewElements) {
             this.tabViewElements[i].removeClass('entryTabSelected');
         }
-        if (viewType != 'default')
-            this.tabViewElements[viewType].addClass('entryTabSelected');
+        if (viewType != 'default') this.tabViewElements[viewType].addClass('entryTabSelected');
         if (viewType == 'variable') {
             Entry.playground.toggleOnVariableView();
             this.tabViewElements.code.removeClass('entryTabSelected');
@@ -1341,10 +1184,7 @@ Entry.Playground = function() {
         if (Entry.pictureEditable) {
             if (viewType == 'picture') {
                 this.painter.show();
-                if (
-                    !this.pictureView_.object ||
-                    this.pictureView_.object != this.object
-                ) {
+                if (!this.pictureView_.object || this.pictureView_.object != this.object) {
                     this.pictureView_.object = this.object;
                     this.injectPicture();
                 } else if (
@@ -1361,17 +1201,10 @@ Entry.Playground = function() {
         }
 
         if (viewType == 'sound') {
-            if (
-                !this.soundView_.object ||
-                this.soundView_.object != this.object
-            ) {
+            if (!this.soundView_.object || this.soundView_.object != this.object) {
                 this.soundView_.object = this.object;
                 this.injectSound();
-            } else if (
-                this.object &&
-                this.soundListView_ &&
-                !this.soundListView_.hasChildNodes()
-            ) {
+            } else if (this.object && this.soundListView_ && !this.soundListView_.hasChildNodes()) {
                 var sounds = this.object.sounds;
                 if (sounds && sounds.length) {
                     this.injectSound();
@@ -1391,8 +1224,7 @@ Entry.Playground = function() {
             this.resizeHandle_ && this.resizeHandle_.removeClass('entryRemove');
             this.blockMenu.reDraw();
         }
-        if (Entry.engine.isState('run'))
-            this.curtainView_.removeClass('entryRemove');
+        if (Entry.engine.isState('run')) this.curtainView_.removeClass('entryRemove');
         this.viewMode_ = viewType;
         this.selectedViewMode = viewType;
         this.toggleOffVariableView();
@@ -1447,9 +1279,7 @@ Entry.Playground = function() {
     };
 
     p.hideTabs = function() {
-        ['picture', 'text', 'sound', 'variable'].forEach(
-            this.hideTab.bind(this)
-        );
+        ['picture', 'text', 'sound', 'variable'].forEach(this.hideTab.bind(this));
     };
 
     p.hideTab = function(item) {
@@ -1460,9 +1290,7 @@ Entry.Playground = function() {
     };
 
     p.showTabs = function() {
-        ['picture', 'text', 'sound', 'variable'].forEach(
-            this.showTab.bind(this)
-        );
+        ['picture', 'text', 'sound', 'variable'].forEach(this.showTab.bind(this));
     };
 
     p.showTab = function(item) {
@@ -1483,28 +1311,22 @@ Entry.Playground = function() {
         $(handle).bind('mousedown touchstart', function(e) {
             that.resizing = true;
             if (Entry.documentMousemove) {
-                listener = Entry.documentMousemove.attach(this, function({
-                    clientX,
-                }) {
+                listener = Entry.documentMousemove.attach(this, function({ clientX }) {
                     if (that.resizing) {
                         Entry.resizeElement({
-                            menuWidth:
-                                clientX - Entry.interfaceState.canvasWidth,
+                            menuWidth: clientX - Entry.interfaceState.canvasWidth,
                         });
                     }
                 });
             }
-            $(document).bind(
-                'mouseup.resizeHandle touchend.resizeHandle',
-                function(e) {
-                    $(document).unbind('.resizeHandle');
-                    if (listener) {
-                        that.resizing = false;
-                        listener.destroy();
-                        listener = undefined;
-                    }
+            $(document).bind('mouseup.resizeHandle touchend.resizeHandle', function(e) {
+                $(document).unbind('.resizeHandle');
+                if (listener) {
+                    that.resizing = false;
+                    listener.destroy();
+                    listener = undefined;
                 }
-            );
+            });
         });
     };
 
@@ -1584,9 +1406,7 @@ Entry.Playground = function() {
                             Entry.dispatchEvent('removePicture', picture);
                             Entry.toast.success(
                                 Lang.Workspace.shape_remove_ok,
-                                picture.name +
-                                    ' ' +
-                                    Lang.Workspace.shape_remove_ok_msg
+                                picture.name + ' ' + Lang.Workspace.shape_remove_ok_msg
                             );
                         } else {
                             Entry.toast.alert(
@@ -1611,13 +1431,11 @@ Entry.Playground = function() {
             .addClass('entryPlaygroundPictureOrder')
             .appendTo(element);
 
-        var thumbnailView = Entry.createElement(
-            'div',
-            `t_${picture.id}`
-        ).addClass('entryPlaygroundPictureThumbnail');
+        var thumbnailView = Entry.createElement('div', `t_${picture.id}`).addClass(
+            'entryPlaygroundPictureThumbnail'
+        );
         if (picture.fileurl) {
-            thumbnailView.style.backgroundImage =
-                'url("' + picture.fileurl + '")';
+            thumbnailView.style.backgroundImage = 'url("' + picture.fileurl + '")';
         } else {
             // deptecated
             var fileName = picture.filename;
@@ -1651,10 +1469,7 @@ Entry.Playground = function() {
 
             var nameViewArray = $('.entryPlaygroundPictureName');
             for (var i = 0; i < nameViewArray.length; i++) {
-                if (
-                    nameViewArray.eq(i).val() == nameView.value &&
-                    nameViewArray[i] != this
-                ) {
+                if (nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
                     Entry.deAttachEventListener(this, 'blur', nameViewBlur);
                     entrylms.alert(Lang.Workspace.name_already_exists);
                     this.focus();
@@ -1685,7 +1500,10 @@ Entry.Playground = function() {
             .appendTo(element).innerHTML =
             picture.dimension.width + ' X ' + picture.dimension.height;
 
-        Entry.createElement('div').addClass('entryPlayground_del').appendTo(element).innerHTML = '삭제';
+        Entry.createElement('div')
+            .addClass('entryPlayground_del')
+            .appendTo(element).innerHTML =
+            '삭제';
     };
 
     p.generateSoundElement = function(sound) {
@@ -1723,15 +1541,10 @@ Entry.Playground = function() {
                             Entry.dispatchEvent('removeSound', sound);
                             Entry.toast.success(
                                 Lang.Workspace.sound_remove_ok,
-                                sound.name +
-                                    ' ' +
-                                    Lang.Workspace.sound_remove_ok_msg
+                                sound.name + ' ' + Lang.Workspace.sound_remove_ok_msg
                             );
                         } else {
-                            Entry.toast.alert(
-                                Lang.Workspace.sound_remove_fail,
-                                ''
-                            );
+                            Entry.toast.alert(Lang.Workspace.sound_remove_fail, '');
                         }
                         Entry.removeElement(element);
                     },
@@ -1795,10 +1608,7 @@ Entry.Playground = function() {
 
             var nameViewArray = $('.entryPlaygroundSoundName');
             for (var i = 0; i < nameViewArray.length; i++) {
-                if (
-                    nameViewArray.eq(i).val() == nameView.value &&
-                    nameViewArray[i] != this
-                ) {
+                if (nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
                     Entry.deAttachEventListener(this, 'blur', nameViewBlur);
                     entrylms.alert(Lang.Workspace.name_already_exists);
                     this.focus();
@@ -1816,7 +1626,10 @@ Entry.Playground = function() {
             .addClass('entryPlaygroundSoundLength')
             .appendTo(element).innerHTML =
             sound.duration + ' ' + Lang.General.second;
-        Entry.createElement('div').addClass('entryPlayground_del').appendTo(element).innerHTML = '삭제';
+        Entry.createElement('div')
+            .addClass('entryPlayground_del')
+            .appendTo(element).innerHTML =
+            '삭제';
     };
 
     p.toggleColourChooser = function(name) {
@@ -1881,11 +1694,11 @@ Entry.Playground = function() {
         var blockMenu = _.result(this.mainWorkspace, 'blockMenu');
         if (!blockMenu) return;
 
-        Object.values(Entry.EXPANSION_BLOCK_LIST).forEach(block => {
+        Object.values(Entry.EXPANSION_BLOCK_LIST).forEach((block) => {
             blockMenu.banClass(block.name, true);
-            blockMenu.banClass(block.name + "_legacy", true);
+            blockMenu.banClass(block.name + '_legacy', true);
         });
-    }
+    };
 
     p.updateHW = function() {
         var blockMenu = _.result(this.mainWorkspace, 'blockMenu');
@@ -1926,20 +1739,16 @@ Entry.Playground = function() {
             entity.setLineBreak(true);
             $('.entryPlayground_textArea').css('display', 'block');
             $('.entryPlayground_textBox').css('display', 'none');
-            this.linebreakOffImage.src =
-                Entry.mediaFilePath + 'text-linebreak-off-false.png';
-            this.linebreakOnImage.src =
-                Entry.mediaFilePath + 'text-linebreak-on-true.png';
+            this.linebreakOffImage.src = Entry.mediaFilePath + 'text-linebreak-off-false.png';
+            this.linebreakOnImage.src = Entry.mediaFilePath + 'text-linebreak-on-true.png';
             this.fontSizeWrapper.removeClass('entryHide');
             this._setFontFontUI();
         } else {
             entity.setLineBreak(false);
             $('.entryPlayground_textArea').css('display', 'none');
             $('.entryPlayground_textBox').css('display', 'block');
-            this.linebreakOffImage.src =
-                Entry.mediaFilePath + 'text-linebreak-off-true.png';
-            this.linebreakOnImage.src =
-                Entry.mediaFilePath + 'text-linebreak-on-false.png';
+            this.linebreakOffImage.src = Entry.mediaFilePath + 'text-linebreak-off-true.png';
+            this.linebreakOnImage.src = Entry.mediaFilePath + 'text-linebreak-on-false.png';
             this.fontSizeWrapper.addClass('entryHide');
         }
     };
@@ -2000,7 +1809,6 @@ Entry.Playground = function() {
             this.textboxTab.removeClass('entryRemove');
         }
         if (Entry.soundEditable) this.soundTab.removeClass('entryRemove');
-        if (Entry.hasVariableManager)
-            this.variableTab.removeClass('entryRemove');
+        if (Entry.hasVariableManager) this.variableTab.removeClass('entryRemove');
     };
 })(Entry.Playground.prototype);

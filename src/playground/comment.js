@@ -6,6 +6,8 @@ Entry.Comment = class Comment {
         id: null,
         x: 0,
         y: 0,
+        moveX: 0,
+        moveY: 0,
         parentWidth: 0,
         parentHeight: 0,
         width: 160,
@@ -548,16 +550,20 @@ Entry.Comment = class Comment {
             }
             const workspaceMode = this.board.workspace.getMode();
             if (this.dragMode !== Entry.DRAG_MODE_DRAG) {
-                this.moveX = this.x;
-                this.moveY = this.y;
+                this.set({
+                    moveX: this.x,
+                    moveY: this.y,
+                });
                 this.dragMode = Entry.DRAG_MODE_DRAG;
                 Entry.GlobalSvg.setComment(this, workspaceMode);
                 this.visible && this.set({ visible: false });
                 this.generateCommentableBlocks();
             }
 
-            this.moveX += (mouseEvent.pageX - this.dragInstance.offsetX) / this.scale;
-            this.moveY += (mouseEvent.pageY - this.dragInstance.offsetY) / this.scale;
+            this.set({
+                moveX: this.moveX + (mouseEvent.pageX - this.dragInstance.offsetX) / this.scale,
+                moveY: this.moveY + (mouseEvent.pageY - this.dragInstance.offsetY) / this.scale,
+            });
 
             this.checkConnectableBlock();
             this.dragInstance.set({
@@ -576,11 +582,13 @@ Entry.Comment = class Comment {
             this.renderTextArea();
         } else {
             this.destroyTextArea();
+            Entry.do('moveComment', this);
             if (this.connectableBlockView) {
-                Entry.do('connectComment', this.toJSON(), this.connectableBlockView.block);
+                Entry.do('connectComment', this.toJSON(), this.connectableBlockView.block).isPass(
+                    true,
+                    true
+                );
                 this.removeSelected();
-            } else {
-                Entry.do('moveComment', this);
             }
         }
         if (this.board) {
@@ -638,24 +646,22 @@ Entry.Comment = class Comment {
         let pos = null;
         let parentX = 0;
         let parentY = 0;
+        let x = this.moveX || this.x;
+        let y = this.moveY || this.y;
         if (this.mouseDownCoordinate) {
             parentX = this.mouseDownCoordinate.parentX;
             parentY = this.mouseDownCoordinate.parentY;
         }
-        if (dragMode === Entry.DRAG_MODE_DRAG) {
-            pos = {
-                x: this.moveX,
-                y: this.moveY,
-                scaleX: this.moveX + parentX / scale,
-                scaleY: this.moveY + parentY / scale,
-            };
-        } else {
-            pos = this.getThread().view.requestAbsoluteCoordinate(this);
-            pos.x += this.x;
-            pos.y += this.y;
-            pos.scaleX = pos.x / scale;
-            pos.scaleY = pos.y / scale;
+        if (this.blockView && dragMode !== Entry.DRAG_MODE_DRAG) {
+            x += this.blockView.getAbsoluteCoordinate().x;
+            y += this.blockView.getAbsoluteCoordinate().y;
         }
+        pos = {
+            x,
+            y,
+            scaleX: x + parentX / scale,
+            scaleY: y + parentY / scale,
+        };
         return pos;
     }
 
@@ -1001,6 +1007,8 @@ Entry.Comment = class Comment {
         json.type = 'comment';
         delete json.parentWidth;
         delete json.parentHeight;
+        delete json.moveX;
+        delete json.moveY;
         return json;
     }
 };
