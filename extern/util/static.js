@@ -1306,7 +1306,7 @@ EntryStatic.getAllBlocks = function() {
                 'jdkit_emergency',
                  //JDCode Blocks
                 'jdcode_takeoff',
-                'jdcode_landing',
+                'jdcode_landing',
                 'jdcode_altitude', 
                 'jdcode_throttle', 
                 'jdcode_velocity',  
@@ -1315,13 +1315,13 @@ EntryStatic.getAllBlocks = function() {
                 'jdcode_emergency',
                 'jdcode_connect',
                 'jdcode_ready', 
-                'jdcode_battery',,
+                'jdcode_battery',
                 'jdcode_dronealt',
                 'jdcode_gyroy', 
                 'jdcode_gyrox',
                 'jdcode_posy',
                 'jdcode_posx', 
-                'jdcode_led',
+                'jdcode_led',
                 'jdcode_tune', 
                 'jdcode_motor',
                 'jdcode_joystick',
