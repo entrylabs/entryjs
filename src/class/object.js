@@ -713,17 +713,6 @@ Entry.EntryObject = class {
         const container = Entry.container;
         const options = [
             {
-                text: Lang.Workspace.context_rename,
-                callback: function(e) {
-                    e.stopPropagation();
-                    (function(o) {
-                        o.setLock(false);
-                        o.editObjectValues(true);
-                        o.nameView_.select();
-                    })(object);
-                },
-            },
-            {
                 text: Lang.Workspace.context_duplicate,
                 enable: !Entry.engine.isState('run'),
                 callback: function() {
