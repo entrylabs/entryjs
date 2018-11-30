@@ -660,33 +660,24 @@ Entry.EntryObject = class {
     }
 
     editObjectValues(activate) {
-        let inputs;
-        if (this.getLock()) {
-            inputs = [this.nameView_];
-        } else {
-            inputs = [
-                this.coordinateView_.xInput_,
-                this.coordinateView_.yInput_,
-                this.rotateInput_,
-                this.directionInput_,
-                this.coordinateView_.sizeInput_,
-            ];
-        }
+        const inputs = [
+            this.nameView_,
+            this.coordinateView_.xInput_,
+            this.coordinateView_.yInput_,
+            this.rotateInput_,
+            this.directionInput_,
+            this.coordinateView_.sizeInput_,
+        ];
 
-        const nameView_ = this.nameView_;
         if (activate && !this.isEditing) {
-            nameView_.addClass('selectedEditingObject');
             for (let i = 0; i < inputs.length; i++) {
                 inputs[i].addClass('selectedEditingObject');
             }
             this.isEditing = true;
         } else {
-            // debugger;
             inputs.forEach(function(input) {
                 input.blur(true);
             });
-
-            nameView_.blur(true);
 
             this.isEditing = false;
         }
