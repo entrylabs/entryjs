@@ -52,7 +52,11 @@ Entry.FieldTrashcan = class FieldTrashcan {
         }
 
         if (block) {
-            this.dragBlockObserver = block.observe(this, 'checkBlock', ['x', 'y']);
+            if (block instanceof Entry.Comment) {
+                this.dragBlockObserver = block.observe(this, 'checkBlock', ['moveX', 'moveY']);
+            } else {
+                this.dragBlockObserver = block.observe(this, 'checkBlock', ['x', 'y']);
+            }
         } else {
             if (this.isOver && this.dragBlock) {
                 if (this.dragBlock instanceof Entry.BlockView) {

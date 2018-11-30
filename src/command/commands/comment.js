@@ -4,7 +4,7 @@
     const COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
 
     c[COMMAND_TYPES.createComment] = {
-        do(data, block, board) {
+        do(data, board, block) {
             const comment = new Entry.Comment(data, board, block);
             if (block) {
                 block.connectComment(comment);
@@ -29,7 +29,7 @@
         },
         state(target) {
             const comment = this.editor.board.findBlock(target);
-            return [comment.toJSON(), comment.block, comment.board];
+            return [comment.toJSON(), comment.board, comment.block];
         },
         log() {
             return [];
@@ -147,9 +147,9 @@
             const comment = this.editor.board.findBlock(target);
             comment.connectToBlock(block);
         },
-        state(comment) {
-            const data = comment instanceof Entry.Comment ? comment.toJSON() : comment;
-            return [data];
+        state(target) {
+            const comment = this.editor.board.findBlock(target);
+            return [comment.toJSON()];
         },
         log() {
             return [];
