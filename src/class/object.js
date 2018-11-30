@@ -1164,15 +1164,13 @@ Entry.EntryObject = class {
         Entry.Utils.disableContextmenu(objectView);
 
         $(objectView).bind('mousedown touchstart', (e) => {
-            if (
-                Entry.container.getObject(objectId) &&
-                !_.includes(exceptionsForMouseDown, e.target)
-            ) {
+            if (Entry.container.getObject(objectId) && !_.includes(exceptionsForMouseDown, e.target)) {
                 const currentObject = Entry.playground.object || {};
                 if (currentObject === this && currentObject.isEditing) {
                     return;
                 }
                 Entry.do('containerSelectObject', objectId);
+                this.editObjectValues(false);
             }
             const doc = $(document);
             const eventType = e.type;
