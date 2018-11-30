@@ -673,6 +673,9 @@ Entry.Board = class Board {
         let cursorY = offset.y;
         for (let i = 0; i < blocks.length; i++) {
             const block = blocks[i];
+            if (block instanceof Entry.Comment) {
+                break;
+            }
             const blockView = block.view;
             if (blockView.dragInstance) {
                 break;
