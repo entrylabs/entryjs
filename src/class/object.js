@@ -675,11 +675,6 @@ Entry.EntryObject = function(model) {
 
         const nameView_ = this.nameView_;
         if (activate && !this.isEditing) {
-            const $nameView_ = $(nameView_);
-
-            $(inputs).removeClass('selectedNotEditingObject');
-            $nameView_.removeClass('selectedNotEditingObject');
-
             nameView_.addClass('selectedEditingObject');
             for (let i = 0; i < inputs.length; i++) {
                 inputs[i].addClass('selectedEditingObject');
@@ -702,17 +697,6 @@ Entry.EntryObject = function(model) {
         $('.selectedEditingObject').removeClass('selectedEditingObject');
 
         const { xInput_, yInput_, sizeInput_ } = this.coordinateView_;
-
-        [
-            this.nameView_,
-            xInput_,
-            yInput_,
-            this.rotateInput_,
-            this.directionInput_,
-            sizeInput_,
-        ].forEach(function(input) {
-            input.addClass('selectedNotEditingObject');
-        });
     };
 
     /**
@@ -781,7 +765,7 @@ Entry.EntryObject = function(model) {
                     } else {
                         Entry.toast.alert(
                             Lang.Workspace.add_object_alert,
-                            Lang.Workspace.object_not_found_for_paste,
+                            Lang.Workspace.object_not_found_for_paste
                         );
                     }
                 },
@@ -798,10 +782,7 @@ Entry.EntryObject = function(model) {
         ];
 
         const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
-        Entry.ContextMenu.show(options, 'workspace-contextmenu', {
-            x,
-            y,
-        });
+        Entry.ContextMenu.show(options, 'workspace-contextmenu', { x, y, });
     };
 
     p.enableContextMenu = function() {
@@ -924,8 +905,7 @@ Entry.EntryObject = function(model) {
                 if (!mouseDownCoordinate) return;
                 const diff = Math.sqrt(
                     Math.pow(e.pageX - mouseDownCoordinate.x, 2) +
-                    Math.pow(e.pageY - mouseDownCoordinate.y, 2),
-                );
+                    Math.pow(e.pageY - mouseDownCoordinate.y, 2));
                 if (diff > 5 && longPressTimer) {
                     clearTimeout(longPressTimer);
                     longPressTimer = null;
@@ -1053,9 +1033,7 @@ Entry.EntryObject = function(model) {
 
         const yCoordi = CE('span').addClass('entryObjectCoordinateSpanWorkspace');
         yCoordi.innerHTML = 'Y';
-        const yInput = CE('input').addClass(
-            'entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right',
-        );
+        const yInput = CE('input').addClass('entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right');
         yInput.bindOnClick(function(e) {
             e.stopPropagation();
         });
@@ -1063,8 +1041,7 @@ Entry.EntryObject = function(model) {
         sizeSpan.innerHTML = Lang.Workspace.Size + '';
         const sizeInput = CE('input').addClass(
             'entryObjectCoordinateInputWorkspace',
-            'entryObjectCoordinateInputWorkspace_size',
-        );
+            'entryObjectCoordinateInputWorkspace_size');
         sizeInput.bindOnClick(function(e) {
             e.stopPropagation();
         });
@@ -1201,9 +1178,7 @@ Entry.EntryObject = function(model) {
         rotationMethodWrapper.appendChild(rotateMethodLabelView);
         rotateMethodLabelView.innerHTML = Lang.Workspace.rotate_method + '';
 
-        const rotateModeAView = CE('div').addClass(
-            'entryObjectRotateModeWorkspace entryObjectRotateModeAWorkspace',
-        );
+        const rotateModeAView = CE('div').addClass('entryObjectRotateModeWorkspace entryObjectRotateModeAWorkspace');
         this.rotateModeAView_ = rotateModeAView;
         rotationMethodWrapper.appendChild(rotateModeAView);
         rotationMethodWrapper.appendChild(rotateModeAView);
@@ -1213,9 +1188,7 @@ Entry.EntryObject = function(model) {
             }, this)
         );
 
-        const rotateModeBView = CE('div').addClass(
-            'entryObjectRotateModeWorkspace entryObjectRotateModeBWorkspace',
-        );
+        const rotateModeBView = CE('div').addClass('entryObjectRotateModeWorkspace entryObjectRotateModeBWorkspace');
         this.rotateModeBView_ = rotateModeBView;
         rotationMethodWrapper.appendChild(rotateModeBView);
         rotateModeBView.bindOnClick(
@@ -1224,9 +1197,7 @@ Entry.EntryObject = function(model) {
             }, this)
         );
 
-        const rotateModeCView = CE('div').addClass(
-            'entryObjectRotateModeWorkspace entryObjectRotateModeCWorkspace',
-        );
+        const rotateModeCView = CE('div').addClass('entryObjectRotateModeWorkspace entryObjectRotateModeCWorkspace');
         this.rotateModeCView_ = rotateModeCView;
         rotationMethodWrapper.appendChild(rotateModeCView);
         rotateModeCView.bindOnClick(
@@ -1381,7 +1352,7 @@ Entry.EntryObject = function(model) {
         thisPointer = this;
         rotateInput.onkeypress = function(e) {
             if (e.keyCode == 13) {
-                const value = rotateInput.value;
+                let value = rotateInput.value;
                 if (value.indexOf('˚') != -1) value = value.substring(0, value.indexOf('˚'));
                 if (Entry.Utils.isNumber(value)) {
                     thisPointer.entity.setRotation(Number(value));
@@ -1396,7 +1367,7 @@ Entry.EntryObject = function(model) {
         };
         directionInput.onkeypress = function(e) {
             if (e.keyCode == 13) {
-                const value = directionInput.value;
+                let value = directionInput.value;
                 if (value.indexOf('˚') != -1) value = value.substring(0, value.indexOf('˚'));
                 if (Entry.Utils.isNumber(value)) {
                     thisPointer.entity.setDirection(Number(value));
