@@ -955,6 +955,7 @@ Entry.EntryObject = class {
         nameView.bindOnClick(function(e) {
             e.preventDefault();
             this.focus();
+            this.select();
         });
 
         wrapperView.appendChild(nameView);
@@ -1013,6 +1014,7 @@ Entry.EntryObject = class {
         const xInput = CE('input').addClass('entryObjectCoordinateInputWorkspace');
         xInput.bindOnClick(function(e) {
             e.stopPropagation();
+            this.select();
         });
 
         const yCoordi = CE('span').addClass('entryObjectCoordinateSpanWorkspace');
@@ -1020,6 +1022,7 @@ Entry.EntryObject = class {
         const yInput = CE('input').addClass('entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right');
         yInput.bindOnClick(function(e) {
             e.stopPropagation();
+            this.select();
         });
         const sizeSpan = CE('span').addClass('entryObjectCoordinateSizeWorkspace');
         sizeSpan.innerHTML = Lang.Workspace.Size + '';
@@ -1028,6 +1031,7 @@ Entry.EntryObject = class {
             'entryObjectCoordinateInputWorkspace_size');
         sizeInput.bindOnClick(function(e) {
             e.stopPropagation();
+            this.select();
         });
         coordinateView.appendChild(xCoordi);
         coordinateView.appendChild(xInput);
@@ -1095,6 +1099,7 @@ Entry.EntryObject = class {
         const rotateInput = CE('input').addClass('entryObjectRotateInputWorkspace');
         rotateInput.bindOnClick(function(e) {
             e.stopPropagation();
+            this.select();
         });
         this.rotateSpan_ = rotateSpan;
         this.rotateInput_ = rotateInput;
@@ -1104,6 +1109,7 @@ Entry.EntryObject = class {
         const directionInput = CE('input').addClass('entryObjectDirectionInputWorkspace');
         directionInput.bindOnClick(function(e) {
             e.stopPropagation();
+            this.select();
         });
         this.directionInput_ = directionInput;
 
