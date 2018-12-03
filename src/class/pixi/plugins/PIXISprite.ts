@@ -17,7 +17,7 @@ import { AtlasTexture } from '../atlas/texture/AtlasTexture';
 
 class FilterData {
 
-    private _orgTex:AtlasTexture;
+    private _orgTex:AtlasTexture|RenderTexture;
     private _renderTex:RenderTexture;
 
     filters:any[];
@@ -28,7 +28,7 @@ class FilterData {
     }
 
 
-    get orgTex():AtlasTexture { return this._orgTex; }
+    get orgTex():AtlasTexture|RenderTexture { return this._orgTex; }
 
     getRenderTexture(w:number, h:number):RenderTexture {
         if(!this._renderTex) {
@@ -122,7 +122,9 @@ export class PIXISprite extends Sprite {
         var w = tex.orig.width;
         var h = tex.orig.height;
         var renderTex:RenderTexture = fd.getRenderTexture(w, h);
-        fd.orgTex.assignTextureScaleFactor(renderTex);
+        if(fd.orgTex instanceof AtlasTexture) {// filter 된 sprite 를 도장찍기 하면 sprite.texture 의 type 는 RenderTexture 가 된다.
+            fd.orgTex.assignTextureScaleFactor(renderTex);
+        }
         var sp = EMPTY_SP;
         sp.filters = this._filterData.filters;
         sp.texture = tex;
