@@ -288,21 +288,15 @@ Entry.Block = class Block {
             const comment = this.comment;
             if (comment instanceof Entry.Comment && !comment.svgGroup) {
                 comment.createComment(board, comment.toJSON());
-                console.log(this.comment, board);
             } else {
                 this.connectComment(new Entry.Comment(comment, board, this));
-                // if (this._comment instanceof Entry.Comment) {
-                //     comment = this._comment.toJSON();
-                // }
             }
         }
     }
 
     destroyView() {
         _.result(this.view, 'destroy');
-        // _.result(this.comment, 'destroyView');
         this.comment && this.comment.destroyView();
-        console.log(this.comment);
     }
 
     clone(thread) {
