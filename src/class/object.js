@@ -3,6 +3,9 @@
  */
 'use strict';
 
+
+import DomUtils from '../../src/util/domUtils';
+
 /**
  * Class for entry object.
  * @param {?object model} model for object
@@ -680,7 +683,7 @@ Entry.EntryObject = class {
             }
             this.isEditing = true;
         } else {
-            inputs.forEach(function(input) {
+            inputs.forEach((input) => {
                 input.blur(true);
             });
 
@@ -821,21 +824,20 @@ Entry.EntryObject = class {
         const that = this;
         const objectId = this.id;
 
-        this.view_ = this.createObjectView(objectId, exceptionsForMouseDown);
-        this.view_.appendChild(this.createObjectInfoView());
+        this.view_ = this.createObjectView(objectId, exceptionsForMouseDown); // container
+        this.view_.appendChild(this.createObjectInfoView()); // visible, lock
 
-        const thumbnailView = this.createThumbnailView();
+        const thumbnailView = this.createThumbnailView(); // thumbnail
         this.thumbnailView_ = thumbnailView;
         this.view_.appendChild(thumbnailView);
 
+        this.view_.appendChild(this.createWrapperView()); // name space
+
         if (Entry.objectEditable && Entry.objectDeletable) {
-            const deleteView = this.createDeleteView(exceptionsForMouseDown, that);
+            const deleteView = this.createDeleteView(exceptionsForMouseDown, that); // delete
             this.deleteView_ = deleteView;
             this.view_.appendChild(deleteView);
         }
-
-        const wrapperView = this.createWrapperView();
-        this.view_.appendChild(wrapperView);
 
         const rotationWrapperView = this.createRotationWrapperView();
         this.view_.appendChild(rotationWrapperView);
@@ -1152,7 +1154,11 @@ Entry.EntryObject = class {
         // generate context menu
         Entry.Utils.disableContextmenu(objectView);
 
-        $(objectView).bind('mousedown touchstart', (e) => {
+        DomUtils.addEventListenerMultiple(objectView, 'mousedown touchstart', (e) => {
+            if (!this.isObjectSelected()) {
+                e.preventDefault();
+            }
+
             if (Entry.container.getObject(objectId) && !_.includes(exceptionsForMouseDown, e.target)) {
                 const currentObject = Entry.playground.object || {};
                 if (currentObject === this && currentObject.isEditing) {
@@ -1161,6 +1167,7 @@ Entry.EntryObject = class {
                 Entry.do('containerSelectObject', objectId);
                 this.editObjectValues(false);
             }
+
             const doc = $(document);
             const eventType = e.type;
             let handled = false;
@@ -1206,7 +1213,10 @@ Entry.EntryObject = class {
                     }
                 });
             }
+        }, {
+            capture: true,
         });
+
         return objectView;
     }
 
@@ -1495,6 +1505,10 @@ Entry.EntryObject = class {
 
         this.updateInputViews();
         return this.view_;
+    }
+
+    isObjectSelected() {
+        return _.includes(this.view_.classList, 'selectedObject');
     }
 
     _getRotateView(type = 'free') {
