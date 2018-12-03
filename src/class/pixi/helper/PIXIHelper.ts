@@ -2,6 +2,7 @@
 import DestroyOptions = PIXI.DestroyOptions;
 import { PIXISprite } from '../plugins/PIXISprite';
 import Texture = PIXI.Texture;
+import { PIXIDebug } from '../debugs/Debugs';
 
 class PIXISpriteDebug extends PIXISprite {
     public __debugName:string;
@@ -9,7 +10,9 @@ class PIXISpriteDebug extends PIXISprite {
         super(texture);
     }
     destroy(options?: DestroyOptions | boolean) {
-        console.log(`[PIXISprite] destroy(${this.__debugName})`);
+        if(PIXIDebug.console.destroy) {
+            console.log(`[PIXISprite] destroy(${this.__debugName})`);
+        }
         super.destroy(options);
     }
 }
@@ -21,7 +24,9 @@ class PIXIContainer extends PIXI.Container {
         super();
     }
     destroy(options?: DestroyOptions | boolean) {
-        console.log(`[PIXIContainer] destroy(${this.__debugName})`);
+        if(PIXIDebug.console.destroy) {
+            console.log(`[PIXIContainer] destroy(${this.__debugName})`);
+        }
         super.destroy(options);
     }
 }

@@ -2,25 +2,29 @@ import { PIXIBaseAsset } from './PIXIBaseAsset';
 require("./../etc/PIXI-ndgmr.Collision");
 require("./../etc/PIXICanvasInput");
 require("../__testfiles/testcodes");
+
 import { PIXIAtlasManager } from '../atlas/PIXIAtlasManager';
 import { PIXIZeroAlphaNoneInteractionPlugins } from '../plugins/PIXIZeroAlphaNoneInteractionPlugins';
 import { PIXIPixelPerfectInteractionPlugIn } from '../plugins/PIXIPixelPerfectInteractionPlugIn';
 import { PIXITempStore } from '../etc/PIXITempStore';
 import { PIXITextMetricsPlugIn } from '../plugins/PIXITextMetricsPlugIn';
+import { PIXIDebug } from '../debugs/Debugs';
 
 
 declare let ndgmr:any;
 
 class _PIXIGlobal {
-
+    
     private _init:boolean;
     /** @readonly */
     baseAsset:PIXIBaseAsset;
     private _app:PIXI.Application;
 
     initOnce() {
+        
         if(this._init) return;
         this._init = true;
+        PIXIDebug.internal_init();
         this.baseAsset = new PIXIBaseAsset();
         ndgmr.initTempObject();
         PIXITempStore.init();
