@@ -73,7 +73,7 @@ Entry.JDCode = {
         	height: 355,
         	listPorts: {
             		'A6': {
-                		name: Lang.template.jdcode_connect,
+                		name: "드론연결상태",
                 		type: 'input',
                 		pos: {
                     			x: 0,
@@ -81,7 +81,7 @@ Entry.JDCode = {
                 		},
             		},
 			'A10': {
-                		name: Lang.template.jdcode_ready,
+                		name: "드론준비상태",
                 		type: 'input',
                 		pos: {
                     			x: 0,
@@ -89,7 +89,7 @@ Entry.JDCode = {
                 		},
             		},
 			'A15': {
-                		name: Lang.Blocks.jdcode_battery,
+                		name: "배터리(%)",
                 		type: 'input',
                 		pos: {
                     			x: 0,
@@ -97,7 +97,7 @@ Entry.JDCode = {
                 		},
             		},
 			'A8': {
-                		name: Lang.Blocks.jdcode_tiltx,
+                		name: "드론좌우기울기",
                 		type: 'input',
                 		pos: {
                     			x: 0,
@@ -105,7 +105,7 @@ Entry.JDCode = {
                 		},
             		},
 			'A9': {
-                		name: Lang.Blocks.jdcode_tilty,
+                		name: "드론앞뒤기울기",
                 		type: 'input',
                 		pos: {
                     			x: 0,
@@ -113,7 +113,7 @@ Entry.JDCode = {
                 		},
             		},
 			'A7': {
-                		name: Lang.Blocks.jdcode_alt,
+                		name: "드론높이",
                 		type: 'input',
                 		pos: {
                     			x: 0,
@@ -121,7 +121,7 @@ Entry.JDCode = {
                 		},
             		},
 			'A16': {
-                		name: Lang.template.jdcode_posx,
+                		name: "드론좌우이동",
                 		type: 'input',
                 		pos: {
                     			x: 0,
@@ -129,7 +129,7 @@ Entry.JDCode = {
                 		},
             		},
 			'A18': {
-                		name: Lang.template.jdcode_posy,
+                		name: "드론앞뒤이동",
                 		type: 'input',
                 		pos: {
                     			x: 0,
@@ -173,7 +173,7 @@ Entry.JDCode = {
                 		},
             		},
           		'A5': {
-                		name: Lang.Blocks.jdcode_button,
+                		name: "버튼",
                 		type: 'input',
                 		pos: {
                     			x: 430,
@@ -185,6 +185,78 @@ Entry.JDCode = {
 		},
            	mode: 'both',
     	},
+};
+
+
+Entry.JDCode.setLanguage = function() {
+    return {
+        ko: {
+            template: {
+                    "jdcode_takeoff": "드론 이륙하기 %1",
+    								"jdcode_landing": "드론 착륙하기 %1",
+								    "jdcode_altitude": "%1cm 높이로 비행%2",
+								    "jdcode_throttle": "프로펠러를 %1 % 세기로 돌리기 %2",
+								    "jdcode_velocity": "%1(으)로 %2속도(cm/s)로 비행%3", 
+								    "jdcode_distance": "%1(으)로 %2cm 거리를 %3속도(cm/s)로 비행%4", 
+								    "jdcode_degree": "%1으로 %2도를 %3각속도(deg/s)로 회전 %4",
+								    "jdcode_motor": "%1 모터를 %2 세기로 돌리기 %3",
+								    "jdcode_emergency": "드론 즉시멈추기 %1",
+								    "jdcode_connect": "드론 연결상태",
+								    "jdcode_ready": "드론 준비상태", 
+								    "jdcode_battery": "배터리(%)",
+								    "jdcode_dronealt": "드론 높이",
+								    "jdcode_gyrox": "드론 좌우 기울기",
+								    "jdcode_gyroy": "드론 앞뒤 기울기",
+								    "jdcode_posx": "드론 좌우 이동",
+								    "jdcode_posy": "드론 앞뒤 이동",
+								    "jdcode_led": "%1 LED %2 %3",
+								    "jdcode_tune": "%1 음을  %2 초동안 소리내기 %3", 
+								    "jdcode_joystick": "조이스틱 %1 읽기",
+								    "jdcode_button": "%1번 버튼 값 읽어오기",
+								    "jdcode_dir_front": "앞",
+										"jdcode_dir_back": "뒤",
+										"jdcode_dir_right": "오를쪽",
+										"jdcode_dir_left": "왼쪽",
+										"jdcode_alt": "드론 높이",
+										"jdcode_tiltx": "드론좌우기울기",
+										"jdcode_tilty": "드론앞뒤기울기", 		 		 		 	 		 		
+										"jdcode_battery": "배터리",	 		 		
+            }
+        },
+        en: {
+            template: {
+                		"jdcode_takeoff": "드론 이륙하기 %1",
+	  								"jdcode_landing": "드론 착륙하기 %1",
+								    "jdcode_altitude": "%1cm 높이로 비행%2",
+								    "jdcode_throttle": "프로펠러를 %1 % 세기로 돌리기 %2",
+								    "jdcode_velocity": "%1(으)로 %2속도(cm/s)로 비행%3", 
+								    "jdcode_distance": "%1(으)로 %2cm 거리를 %3속도(cm/s)로 비행%4", 
+								    "jdcode_degree": "%1으로 %2도를 %3각속도(deg/s)로 회전 %4",
+								    "jdcode_motor": "%1 모터를 %2 세기로 돌리기 %3",
+								    "jdcode_emergency": "드론 즉시멈추기 %1",
+								    "jdcode_connect": "드론 연결상태",
+								    "jdcode_ready": "드론 준비상태", 
+								    "jdcode_battery": "배터리(%)",
+								    "jdcode_dronealt": "드론 높이",
+								    "jdcode_gyrox": "드론 좌우 기울기",
+								    "jdcode_gyroy": "드론 앞뒤 기울기",
+								    "jdcode_posx": "드론 좌우 이동",
+								    "jdcode_posy": "드론 앞뒤 이동",
+								    "jdcode_led": "%1 LED %2 %3",
+								    "jdcode_tune": "%1 음을  %2 초동안 소리내기 %3", 
+								    "jdcode_joystick": "조이스틱 %1 읽기",
+								    "jdcode_button": "%1번 버튼 값 읽어오기",
+								    "jdcode_dir_front": "앞",
+										"jdcode_dir_back": "뒤",
+										"jdcode_dir_right": "오를쪽",
+										"jdcode_dir_left": "왼쪽",
+										"jdcode_alt": "드론 높이",
+										"jdcode_tiltx": "드론좌우기울기",
+										"jdcode_tilty": "드론앞뒤기울기", 		 		 		 			 		
+										"jdcode_battery": "배터리",	 		 		
+            }
+        },
+    };  
 };
 
 
@@ -369,10 +441,10 @@ Entry.JDCode.getBlocks = function() {
              	{
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.jdcode_dir_front, 0],
-                        [Lang.Blocks.jdcode_dir_back, 1],
-                        [Lang.Blocks.jdcode_dir_right, 2],
-                        [Lang.Blocks.jdcode_dir_left, 3],
+                        [Lang.template.jdcode_dir_front, 0],
+                        [Lang.template.jdcode_dir_back, 1],
+                        [Lang.template.jdcode_dir_right, 2],
+                        [Lang.template.jdcode_dir_left, 3],
                     ],
                     value: 0,
                     fontSize: 11,
@@ -434,10 +506,10 @@ Entry.JDCode.getBlocks = function() {
              		{
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.jdcode_dir_front, 0],
-                        [Lang.Blocks.jdcode_dir_back, 1],
-                        [Lang.Blocks.jdcode_dir_right, 2],
-                        [Lang.Blocks.jdcode_dir_left, 3],
+                        [Lang.template.jdcode_dir_front, 0],
+                        [Lang.template.jdcode_dir_back, 1],
+                        [Lang.template.jdcode_dir_right, 2],
+                        [Lang.template.jdcode_dir_left, 3],
                     ],
                     value: 0,
                     fontSize: 11,
