@@ -29,8 +29,6 @@ Entry.Comment = class Comment {
         }
         this.generateId(schema);
         this._block = block;
-        const { view } = block || {};
-        this._blockView = view;
         if (block) {
             this.createComment(board, schema);
         }
@@ -111,6 +109,8 @@ Entry.Comment = class Comment {
         if (board) {
             this._board = board;
         }
+        const { view } = this.block || {};
+        this._blockView = view;
         const { svgGroup, pathGroup } = this.blockView || {};
         this.pathGroup = pathGroup;
         this.parentGroup = svgGroup;
@@ -129,11 +129,13 @@ Entry.Comment = class Comment {
         this.toggleMouseUp = this.toggleMouseUp.bind(this);
 
         this.startRender();
+        this.initParentSize();
         if (schema) {
             this.initSchema(schema);
         }
         this.setFrame();
         this.addControl();
+        this.setPosition();
         this.code.registerBlock(this);
         this.setObservers();
     }
@@ -165,27 +167,29 @@ Entry.Comment = class Comment {
     }
 
     initSchema(schema = {}) {
-        let parentWidth = 0;
-        let parentHeight = 0;
-        let { titleHeight, defaultLineLength } = this;
-        if (this.pathGroup) {
-            parentWidth = this.pathGroup.getBBox().width;
-            const { topFieldHeight, height } = this._blockView;
-            parentHeight = topFieldHeight || height;
-        } else {
-            titleHeight = -60;
-            defaultLineLength = 50;
-        }
-        const x = parentWidth + defaultLineLength;
-        const y = parentHeight / 2 - titleHeight / 2;
+        const { titleHeight, defaultLineLength } = this;
+        const x = this.parentWidth + defaultLineLength;
+        const y = this.parentHeight / 2 - titleHeight / 2;
 
         schema.x = schema.x || x;
         schema.y = schema.y || y;
-        schema.parentWidth = schema.parentWidth || parentWidth;
-        schema.parentHeight = schema.parentHeight || parentHeight;
         schema.width = schema.width || 160;
         schema.height = schema.height || 160;
         this.set(schema);
+    }
+
+    initParentSize() {
+        if (!this.pathGroup) {
+            return;
+        }
+        const parentWidth = this.pathGroup.getBBox().width;
+        const { topFieldHeight, height } = this._blockView;
+        const parentHeight = topFieldHeight || height;
+
+        this.set({
+            parentWidth,
+            parentHeight,
+        });
     }
 
     setFrame() {
@@ -887,15 +891,21 @@ Entry.Comment = class Comment {
 
     destroy() {
         if (this.board) {
-            this.removeControl();
             this.destroyView();
             this._destroyObservers();
+            this.code.unregisterBlock(this);
         }
         if (this.block) {
             this.block.disconnectComment();
         } else {
             this.code.destroyThread(this.thread);
         }
+    }
+
+    destroyView() {
+        this.removeControl();
+        this.svgGroup && this.svgGroup.remove();
+        delete this.svgGroup;
     }
 
     getBlocksInThreads(threads) {
@@ -969,12 +979,6 @@ Entry.Comment = class Comment {
     }
 
     reDraw() {}
-
-    destroyView() {
-        this.svgGroup.remove();
-
-        this.code.unregisterBlock(this);
-    }
 
     _destroyObservers() {
         const observers = this._observers;

@@ -284,17 +284,25 @@ Entry.Block = class Block {
             });
             this._updatePos();
         }
-        if (this._comment) {
-            let comment = this._comment;
-            if (this._comment instanceof Entry.Comment) {
-                comment = this._comment.toJSON();
+        if (this.comment) {
+            const comment = this.comment;
+            if (comment instanceof Entry.Comment && !comment.svgGroup) {
+                comment.createComment(board, comment.toJSON());
+                console.log(this.comment, board);
+            } else {
+                this.connectComment(new Entry.Comment(comment, board, this));
+                // if (this._comment instanceof Entry.Comment) {
+                //     comment = this._comment.toJSON();
+                // }
             }
-            this.connectComment(new Entry.Comment(comment, board, this));
         }
     }
 
     destroyView() {
         _.result(this.view, 'destroy');
+        // _.result(this.comment, 'destroyView');
+        this.comment && this.comment.destroyView();
+        console.log(this.comment);
     }
 
     clone(thread) {
@@ -339,7 +347,9 @@ Entry.Block = class Block {
         }
 
         if (this._comment) {
-            json.comment = this._comment.toJSON();
+            const comment = this._comment.toJSON();
+            delete comment.id;
+            json.comment = comment;
         }
 
         return Object.assign(
@@ -353,7 +363,7 @@ Entry.Block = class Block {
             return;
         }
 
-        this.comment && this.comment.destroy();
+        this.comment && this.comment.destroy && this.comment.destroy();
 
         const blockType = this.getBlockType();
 
