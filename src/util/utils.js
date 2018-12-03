@@ -810,7 +810,7 @@ Entry.parseTexttoXML = function(xmlText) {
 /**
  * Create html element with some method
  * @param {!string} type
- * @param {string} elementId
+ * @param {string} [elementId=undefined]
  * @return {!Element}
  */
 Entry.createElement = function(type, elementId) {
