@@ -8,7 +8,7 @@
 /**
  * Function for construct html dom element.
  * @function
- * @param {string} tag or html to construct dom element.
+ * @param {string | HTMLElement} tag or html to construct dom element.
  * @param {?object} options include id, classes, parent etc.
  */
 Entry.Dom = function(tag, options) {

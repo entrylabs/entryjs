@@ -1,8 +1,10 @@
 /**
  * @fileoverview Container handle all object in entry.
  */
+'use strict';
 
 import Simplebar from 'simplebar';
+import DomUtils from '../util/domUtils';
 
 /**
  * Class for a container.
@@ -63,8 +65,6 @@ Entry.Container = class Container {
      * @param {?string} option for choose type of view.
      */
     generateView(containerView, option) {
-        /** @type {!Element} */
-        const that = this;
         this._view = containerView;
         this._view.addClass('entryContainer');
         this._view.addClass('entryContainerWorkspace');
@@ -76,7 +76,6 @@ Entry.Container = class Container {
                 Entry.dispatchEvent('openSpriteManager');
             });
         addButton.innerHTML = Lang.Workspace.add_object;
-        //this._view.appendChild(addButton);
 
         const ulWrapper = Entry.createElement('div');
         this._view.appendChild(ulWrapper);
@@ -89,58 +88,60 @@ Entry.Container = class Container {
             baseClass += ' lecture';
         }
         scrollWrapper.addClass(baseClass);
-
         Entry.Utils.disableContextmenu(scrollWrapper);
 
-        $(scrollWrapper).bind('mousedown touchstart', function(e) {
+        /*
+         * 오른쪽 버튼 클릭 시 컨텍스트메뉴 발생
+         */
+        scrollWrapper.addEventListener('mousedown', (e) => {
+            if (Entry.Utils.isRightButton(e)) {
+                this._rightClick(e);
+            }
+        });
+
+        /*
+         * 터치 디바이스의 롱클릭 대응. touch 1초간 유지시 컨텍스트메뉴 발생.
+         * 현재위치에서 일정 범위 이상 벗어난 경우취소
+         */
+        scrollWrapper.addEventListener('touchstart', (e) => {
             let longPressTimer = null;
             const doc = $(document);
-            const eventType = e.type;
-            let handled = false;
+            const event = Entry.Utils.convertMouseEvent(e);
 
-            if (Entry.Utils.isRightButton(e)) {
-                that._rightClick(e);
-                handled = true;
-                return;
-            }
+            // e.stopPropagation();
+            longPressTimer = setTimeout(() => {
+                if (longPressTimer) {
+                    longPressTimer = null;
+                    this._rightClick(event);
+                }
+            }, 1000);
 
-            const mouseDownCoordinate = { x: e.clientX, y: e.clientY };
-
-            if (eventType === 'touchstart' && !handled) {
-                e.stopPropagation();
-                const event = Entry.Utils.convertMouseEvent(e);
-                longPressTimer = setTimeout(function() {
-                    if (longPressTimer) {
-                        longPressTimer = null;
-                        that._rightClick(event);
-                    }
-                }, 1000);
-                doc.bind('mousemove.container touchmove.container', onMouseMove);
-                doc.bind('mouseup.container touchend.container', onMouseUp);
-            }
-
-            function onMouseMove(e) {
+            // 움직임 포착된 경우 타이머 종료
+            doc.bind('mousemove.container touchmove.container', (e) => {
+                const mouseDownCoordinate = { x: e.clientX, y: e.clientY };
+                const moveThreshold = 5;
                 if (!mouseDownCoordinate) {
                     return;
                 }
                 const diff = Math.sqrt(
                     Math.pow(e.pageX - mouseDownCoordinate.x, 2) +
-                        Math.pow(e.pageY - mouseDownCoordinate.y, 2)
+                    Math.pow(e.pageY - mouseDownCoordinate.y, 2)
                 );
-                if (diff > 5 && longPressTimer) {
+
+                if (diff > moveThreshold && longPressTimer) {
                     clearTimeout(longPressTimer);
                     longPressTimer = null;
                 }
-            }
+            });
 
-            function onMouseUp(e) {
-                e.stopPropagation();
+            // 터치가 끝난 경우 타이머 종료
+            doc.bind('mouseup.container touchend.container', (e) => {
                 doc.unbind('.container');
                 if (longPressTimer) {
                     clearTimeout(longPressTimer);
                     longPressTimer = null;
                 }
-            }
+            });
         });
 
         const extensionListView = Entry.createElement('ul');

@@ -253,7 +253,7 @@ Entry.BlockToPyParser = class {
                     const textParam = textParams && textParams[index];
 
                     let param;
-                    if (textParam.type) {
+                    if (textParam && textParam.type) {
                         param = this['Field' + textParam.type](dataParams[index], textParam);
                     } else {
                         param = this['Field' + schemaParams[index].type](dataParams[index], textParam);
