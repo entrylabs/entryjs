@@ -1080,8 +1080,10 @@ Entry.EntryObject = class {
         const nameView = Entry.createElement('input').addClass('entryObjectNameWorkspace');
         nameView.bindOnClick((e) => {
             e.preventDefault();
-            nameView.focus();
-            nameView.select();
+            if(!this.focusable) {
+                nameView.focus();
+                nameView.select();
+            }
         });
 
         nameView.onkeypress = Entry.Utils.whenEnter(() => {
@@ -1165,12 +1167,15 @@ Entry.EntryObject = class {
         Entry.Utils.disableContextmenu(objectView);
 
         DomUtils.addEventListenerMultiple(objectView, 'mousedown touchstart', (e) => {
+            const isFirstClick = !_.includes(this.view_.classList, 'selectedObject');
+
             if (Entry.container.getObject(objectId) && !_.includes(exceptionsForMouseDown, e.target)) {
                 Entry.do('containerSelectObject', objectId);
                 this.editObjectValues(false);
             }
 
             if (e.type === 'touchstart') {
+                this.focusable = isFirstClick;
                 e.preventDefault();
                 e.eventFromEntryObject = true;
                 Entry.documentMousedown.notify(e);
@@ -1208,6 +1213,11 @@ Entry.EntryObject = class {
                     }
                 });
             } else {
+                if (isFirstClick) {
+                    this.nameView_.focus();
+                    this.nameView_.select();
+                }
+
                 if (Entry.Utils.isRightButton(e)) {
                     e.stopPropagation();
                     Entry.documentMousedown.notify(e);
