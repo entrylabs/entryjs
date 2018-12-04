@@ -454,7 +454,6 @@ Entry.Comment = class Comment {
     }
 
     mouseDown(e) {
-        e.preventDefault();
         e.stopPropagation();
         let longPressTimer = null;
 
@@ -579,7 +578,6 @@ Entry.Comment = class Comment {
     }
 
     mouseUp(e) {
-        e.preventDefault();
         e.stopPropagation();
 
         if (!this.isEditing && this.isOpened && this.dragMode === Entry.DRAG_MODE_MOUSEDOWN) {
@@ -622,7 +620,7 @@ Entry.Comment = class Comment {
     addControl() {
         const bindEvent = (dom, func) => {
             dom.addEventListener('mousedown', func);
-            dom.addEventListener('ontouchstart', func);
+            dom.addEventListener('touchstart', func);
         };
         bindEvent(this._contentGroup, this.mouseDown);
         bindEvent(this._title, this.mouseDown);
@@ -745,7 +743,6 @@ Entry.Comment = class Comment {
     }
 
     resizeMouseDown(e) {
-        e.preventDefault();
         e.stopPropagation();
 
         if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
@@ -781,7 +778,6 @@ Entry.Comment = class Comment {
     }
 
     resizeMouseUp(e) {
-        e.preventDefault();
         e.stopPropagation();
 
         this.set({
@@ -793,7 +789,6 @@ Entry.Comment = class Comment {
     }
 
     toggleMouseDown(e) {
-        e.preventDefault();
         e.stopPropagation();
 
         if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
@@ -806,7 +801,6 @@ Entry.Comment = class Comment {
     }
 
     toggleMouseUp(e) {
-        e.preventDefault();
         e.stopPropagation();
 
         if (this.dragMode === Entry.DRAG_MODE_MOUSEDOWN) {

@@ -286,8 +286,12 @@ Entry.Block = class Block {
         }
         if (this.comment) {
             const comment = this.comment;
-            if (comment instanceof Entry.Comment && !comment.svgGroup) {
-                comment.createComment(board, comment.toJSON());
+            if (comment instanceof Entry.Comment) {
+                if (comment.svgGroup) {
+                    return;
+                } else {
+                    comment.createComment(board, comment.toJSON());
+                }
             } else {
                 this.connectComment(new Entry.Comment(comment, board, this));
             }
