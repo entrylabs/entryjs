@@ -36,7 +36,6 @@ Entry.EntryObject = class {
             });
 
             this.lock = model.lock ? model.lock : false;
-            this.isEditing = false;
 
             if (this.objectType === 'sprite') {
                 this.selectedPicture = !model.selectedPictureId ? this.pictures[0] : this.getPicture(model.selectedPictureId);
@@ -664,7 +663,6 @@ Entry.EntryObject = class {
             });
         }
 
-        this.isEditing = !isLocked;
     }
 
     editObjectValues(activate) {
@@ -677,17 +675,14 @@ Entry.EntryObject = class {
             this.coordinateView_.sizeInput_,
         ];
 
-        if (activate && !this.isEditing) {
+        if (activate) {
             for (let i = 0; i < inputs.length; i++) {
                 inputs[i].addClass('selectedEditingObject');
             }
-            this.isEditing = true;
         } else {
             inputs.forEach((input) => {
                 input.blur(true);
             });
-
-            this.isEditing = false;
         }
     }
 
@@ -779,7 +774,7 @@ Entry.EntryObject = class {
     }
 
     toggleEditObject() {
-        if (this.isEditing || Entry.engine.isState('run')) return;
+        if (Entry.engine.isState('run')) return;
 
         this.editObjectValues(true);
         if (Entry.playground.object !== this) Entry.container.selectObject(this.id);
@@ -1161,28 +1156,21 @@ Entry.EntryObject = class {
 
             if (Entry.container.getObject(objectId) && !_.includes(exceptionsForMouseDown, e.target)) {
                 const currentObject = Entry.playground.object || {};
-                if (currentObject === this && currentObject.isEditing) {
-                    return;
-                }
                 Entry.do('containerSelectObject', objectId);
                 this.editObjectValues(false);
             }
 
-            const doc = $(document);
-            const eventType = e.type;
-            let handled = false;
-
             if (Entry.Utils.isRightButton(e)) {
                 e.stopPropagation();
                 Entry.documentMousedown.notify(e);
-                handled = true;
                 this._rightClick(e);
                 return;
             }
 
+            const doc = $(document);
             let mouseDownCoordinate = { x: e.clientX, y: e.clientY };
 
-            if (eventType === 'touchstart' && !handled) {
+            if (e.type === 'touchstart') {
                 e.stopPropagation();
                 Entry.documentMousedown.notify(e);
 
@@ -1194,6 +1182,7 @@ Entry.EntryObject = class {
                 }, 1000);
 
                 doc.bind('mousemove.object touchmove.object', (e) => {
+                    console.log(`object ${e.type} ${this.longPressTimer}`);
                     e.stopPropagation();
                     if (!mouseDownCoordinate) return;
                     const diff = Math.sqrt(
@@ -1205,6 +1194,7 @@ Entry.EntryObject = class {
                     }
                 });
                 doc.bind('mouseup.object touchend.object', (e) => {
+                    console.log(`object ${e.type} ${this.longPressTimer}`);
                     e.stopPropagation();
                     doc.unbind('.object');
                     if (this.longPressTimer) {
