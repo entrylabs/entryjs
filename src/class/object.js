@@ -1155,7 +1155,6 @@ Entry.EntryObject = class {
             }
 
             if (Entry.container.getObject(objectId) && !_.includes(exceptionsForMouseDown, e.target)) {
-                const currentObject = Entry.playground.object || {};
                 Entry.do('containerSelectObject', objectId);
                 this.editObjectValues(false);
             }
@@ -1167,39 +1166,42 @@ Entry.EntryObject = class {
                 return;
             }
 
-            const doc = $(document);
-            let mouseDownCoordinate = { x: e.clientX, y: e.clientY };
-
             if (e.type === 'touchstart') {
                 e.stopPropagation();
                 Entry.documentMousedown.notify(e);
 
-                this.longPressTimer = setTimeout(() => {
-                    if (this.longPressTimer) {
-                        this.longPressTimer = null;
+                const doc = $(document);
+                const touchEvent = e.touches[0];
+                let mouseDownCoordinate = { x: touchEvent.clientX, y: touchEvent.clientY };
+                let longPressTimer = null;
+
+                longPressTimer = setTimeout(() => {
+                    if (longPressTimer) {
+                        longPressTimer = null;
                         this._rightClick(e);
                     }
                 }, 1000);
 
                 doc.bind('mousemove.object touchmove.object', (e) => {
-                    console.log(`object ${e.type} ${this.longPressTimer}`);
                     e.stopPropagation();
-                    if (!mouseDownCoordinate) return;
+                    // jquery event 이기 때문에, originalEvent 에서 touches 를 가져옴
+                    const touchEvent = e.type === 'touchmove' ? e.originalEvent.touches[0] : e;
+
                     const diff = Math.sqrt(
-                        Math.pow(e.pageX - mouseDownCoordinate.x, 2) +
-                        Math.pow(e.pageY - mouseDownCoordinate.y, 2));
-                    if (diff > 5 && this.longPressTimer) {
-                        clearTimeout(this.longPressTimer);
-                        this.longPressTimer = null;
+                        Math.pow(touchEvent.pageX - mouseDownCoordinate.x, 2) +
+                        Math.pow(touchEvent.pageY - mouseDownCoordinate.y, 2));
+
+                    if (diff > 5 && longPressTimer) {
+                        clearTimeout(longPressTimer);
+                        longPressTimer = null;
                     }
                 });
                 doc.bind('mouseup.object touchend.object', (e) => {
-                    console.log(`object ${e.type} ${this.longPressTimer}`);
                     e.stopPropagation();
                     doc.unbind('.object');
-                    if (this.longPressTimer) {
-                        clearTimeout(this.longPressTimer);
-                        this.longPressTimer = null;
+                    if (longPressTimer) {
+                        clearTimeout(longPressTimer);
+                        longPressTimer = null;
                     }
                 });
             }
