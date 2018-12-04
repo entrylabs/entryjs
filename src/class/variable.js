@@ -561,10 +561,12 @@ Entry.Variable.prototype.updateView = function() {
             this.rect_.width = this.width_;
             this.rect_.height = this.height_;
 
-            while (this.view_.children[4]) {
-                this.view_.removeChild(this.view_.children[4]);
-                PIXIHelper.needDestroy(this.view_.children[4]);
+            var listChild;
+            while (listChild = this.view_.children[4]) {
+                this.view_.removeChild(listChild);
+                listChild.destroy();
             }
+            
             var maxView = Math.floor((this.getHeight() - 20) / 20);
 
             var isOverFlow = maxView < arr.length;

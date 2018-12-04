@@ -111,9 +111,6 @@ export default class PIXIHelper {
         return strColor ? Number(strColor.replace("#", "0x")) : undefined;
     }
 
-    static needDestroy(target:any) {
-
-    }
 
     static todo(msg:string) {
 
