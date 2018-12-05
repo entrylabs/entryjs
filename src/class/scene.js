@@ -34,7 +34,7 @@ Entry.Scene = class {
         if (!option || option == 'workspace') {
             this.view_.addClass('entrySceneWorkspace');
 
-            $(this.view_).on('mousedown', (e) => {
+            $(this.view_).on('mousedown touchstart', (e) => {
                 const offset = $(this.view_).offset();
                 const $window = $(window);
 
@@ -56,8 +56,13 @@ Entry.Scene = class {
                 if (y > ret) {
                     const nextScene = this.getNextScene();
                     if (nextScene) {
-                        $(document).trigger('mouseup');
-                        $(nextScene.view).trigger('mousedown');
+                        if ($.support.touch) {
+                            $(document).trigger('touchend');
+                            $(nextScene.view).trigger('touchstart');
+                        } else {
+                            $(document).trigger('mouseup');
+                            $(nextScene.view).trigger('mousedown');
+                        }
                     }
                 }
             });
@@ -92,15 +97,17 @@ Entry.Scene = class {
 
         if (Entry.sceneEditable && $) {
             $(listView).sortable({
-                start: function(event, ui) {
+                start: (event, ui) => {
                     ui.item.data('start_pos', ui.item.index());
                 },
-                stop: function(event, ui) {
+                stop: (event, ui) => {
                     Entry.scene.moveScene(
                         ui.item.data('start_pos'), ui.item.index());
+                    this.isFirstTouch = false;
                 },
                 axis: 'x',
                 tolerance: 'pointer',
+                cancel: 'input:focus',
             });
         }
         return listView;
@@ -192,6 +199,16 @@ Entry.Scene = class {
         nameField.addClass('entrySceneFieldWorkspace');
         nameField.value = scene.name;
 
+        nameField.addEventListener('click', (e) => {
+            if (this.isFirstTouch) {
+                this.isFirstTouch = false;
+                return;
+            }
+
+            nameField.focus();
+        });
+
+
         nameField.addEventListener('keyup', ({ keyCode: code }) => {
             if (Entry.isArrowOrBackspace(code)) {
                 return;
@@ -227,13 +244,18 @@ Entry.Scene = class {
     createViewTemplate(scene) {
         const viewTemplate = Entry.createElement('li', scene.id);
         viewTemplate.addClass('entrySceneElementWorkspace  entrySceneButtonWorkspace minValue');
-        $(viewTemplate).on('mousedown', function(e) {
+        $(viewTemplate).on('mousedown touchstart', (e) => {
             if (Entry.engine.isState('run')) {
                 e.preventDefault();
                 return;
             }
-            if (Entry.scene.selectedScene !== scene)
+            if (Entry.scene.selectedScene !== scene) {
                 Entry.do('sceneSelect', scene.id);
+
+                if (e.type === 'touchstart') {
+                    this.isFirstTouch = true;
+                }
+            }
         });
         return viewTemplate;
     }
