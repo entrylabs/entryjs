@@ -17,7 +17,7 @@ Entry.Scene = class {
 
         this.disposeEvent = Entry.disposeEvent.attach(this, (e) => {
             const elem = document.activeElement;
-            if (elem && elem !== e.target && $(elem).hasClass('entrySceneFieldWorkspace')) {
+            if (e && elem && elem !== e.target && $(elem).hasClass('entrySceneFieldWorkspace')) {
                 elem.blur();
             }
         });
