@@ -167,9 +167,13 @@ Entry.Scene = class {
     createRemoveButton(scene, removeButtonCover) {
         return Entry.createElement('button')
             .addClass('entrySceneRemoveButtonWorkspace')
-            .bindOnClick(function(e) {
+            .bindOnClick((e) => {
                 e.stopPropagation();
                 if (Entry.engine.isState('run')) return;
+                if (this.isFirstTouch) {
+                    this.isFirstTouch = false;
+                    return;
+                }
 
                 Entry.do('sceneRemove', scene.id);
             })
@@ -254,6 +258,8 @@ Entry.Scene = class {
 
                 if (e.type === 'touchstart') {
                     this.isFirstTouch = true;
+                } else {
+                    this._focusSceneNameField(scene);
                 }
             }
         });
