@@ -192,26 +192,35 @@ Entry.Scene = class {
         nameField.addClass('entrySceneFieldWorkspace');
         nameField.value = scene.name;
 
-        nameField.onkeyup = function({ keyCode: code }) {
-            if (Entry.isArrowOrBackspace(code)) return;
+        nameField.addEventListener('keyup', ({ keyCode: code }) => {
+            if (Entry.isArrowOrBackspace(code)) {
+                return;
+            }
+
+            const applyValue = (value) => {
+                value !== scene.name && Entry.do('sceneRename', scene.id, value);
+                nameField.blur();
+            };
+
+            let value = nameField.value;
 
             if (code === 13) {
-                if (this.value !== scene.name)
-                    Entry.do('sceneRename', scene.id, this.value);
-                this.blur();
-            } else if (this.value.length > 10) {
-                this.value = this.value.substring(0, 10);
-                if (this.value !== scene.name)
-                    Entry.do('sceneRename', scene.id, this.value);
-                this.blur();
+                applyValue(value);
+            } else if (value.length > 10) {
+                value = value.substring(0, 10);
+                applyValue(value);
             }
-        };
-        nameField.onblur = function(e) {
-            if (this.value !== scene.name)
-                Entry.do('sceneRename', scene.id, this.value);
-        };
+        });
+        nameField.addEventListener('blur', (e) => {
+            if (nameField.value !== scene.name) {
+                Entry.do('sceneRename', scene.id, nameField.value);
+            }
+        });
 
-        if (!Entry.sceneEditable) nameField.disabled = 'disabled';
+        if (!Entry.sceneEditable) {
+            nameField.disabled = 'disabled';
+        }
+
         return nameField;
     }
 
