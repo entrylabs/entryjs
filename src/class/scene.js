@@ -111,40 +111,91 @@ Entry.Scene = class {
      * @param {!scene model} scene
      */
     generateElement(scene) {
-        var that = this;
-        var viewTemplate = Entry.createElement('li', scene.id);
-        var fragment = document.createDocumentFragment('div');
-        fragment.appendChild(viewTemplate);
-        var className =
-            'entrySceneElementWorkspace  entrySceneButtonWorkspace minValue';
-        viewTemplate.addClass(className);
-        $(viewTemplate).on('mousedown', function(e) {
-            if (Entry.engine.isState('run')) {
-                e.preventDefault();
-                return;
-            }
-            if (Entry.scene.selectedScene !== scene)
-                Entry.do('sceneSelect', scene.id);
-        });
-        var nameField = Entry.createElement('input');
-        nameField.addClass('entrySceneFieldWorkspace');
-        nameField.value = scene.name;
+        const viewTemplate = this.createViewTemplate(scene);
+        Entry.Utils.disableContextmenu(viewTemplate);
 
-        if (!Entry.sceneEditable) nameField.disabled = 'disabled';
+        const nameField = this.createNameField(scene);
+        viewTemplate.nameField = nameField;
 
-        var sceneLeft = Entry.createElement('span');
-        sceneLeft.addClass('entrySceneLeftWorkspace');
+        const sceneLeft = this.createSceneLeft();
         viewTemplate.appendChild(sceneLeft);
 
-        var divide = Entry.createElement('span');
-        divide.addClass('entrySceneInputCover');
+        const divide = this.createSceneDivider();
         viewTemplate.appendChild(divide);
         scene.inputWrapper = divide;
+        divide.appendChild(nameField);
+
+        const removeButtonCover = this.createRemoveButtonCover();
+        viewTemplate.appendChild(removeButtonCover);
+
+        if (Entry.sceneEditable) {
+            scene.removeButton = this.createRemoveButton(scene, removeButtonCover);
+
+            Entry.ContextMenu.onContextmenu(
+                $(viewTemplate),
+                (coordinate) => {
+                    const options = [
+                        {
+                            text: Lang.Workspace.duplicate_scene,
+                            enable: Entry.engine.isState('stop') && !this.isMax(),
+                            callback: function() {
+                                Entry.scene.cloneScene(scene);
+                            },
+                        },
+                    ];
+                    Entry.ContextMenu.show(
+                        options,
+                        'workspace-contextmenu',
+                        coordinate
+                    );
+                }
+            );
+        }
+
+        scene.view = viewTemplate;
+
+        return viewTemplate;
+    }
+
+    createRemoveButton(scene, removeButtonCover) {
+        return Entry.createElement('button')
+            .addClass('entrySceneRemoveButtonWorkspace')
+            .bindOnClick(function(e) {
+                e.stopPropagation();
+                if (Entry.engine.isState('run')) return;
+
+                Entry.do('sceneRemove', scene.id);
+            })
+            .appendTo(removeButtonCover);
+    }
+
+    createRemoveButtonCover() {
+        const removeButtonCover = Entry.createElement('span');
+        removeButtonCover.addClass('entrySceneRemoveButtonCoverWorkspace');
+        return removeButtonCover;
+    }
+
+    createSceneDivider() {
+        const divide = Entry.createElement('span');
+        divide.addClass('entrySceneInputCover');
+        return divide;
+    }
+
+    createSceneLeft() {
+        const sceneLeft = Entry.createElement('span');
+        sceneLeft.addClass('entrySceneLeftWorkspace');
+        return sceneLeft;
+    }
+
+    createNameField(scene) {
+        const nameField = Entry.createElement('input');
+        nameField.addClass('entrySceneFieldWorkspace');
+        nameField.value = scene.name;
 
         nameField.onkeyup = function({ keyCode: code }) {
             if (Entry.isArrowOrBackspace(code)) return;
 
-            if (code == 13) {
+            if (code === 13) {
                 if (this.value !== scene.name)
                     Entry.do('sceneRename', scene.id, this.value);
                 this.blur();
@@ -159,48 +210,22 @@ Entry.Scene = class {
             if (this.value !== scene.name)
                 Entry.do('sceneRename', scene.id, this.value);
         };
-        divide.appendChild(nameField);
-        viewTemplate.nameField = nameField;
-        var removeButtonCover = Entry.createElement('span');
-        removeButtonCover.addClass('entrySceneRemoveButtonCoverWorkspace');
-        viewTemplate.appendChild(removeButtonCover);
-        if (Entry.sceneEditable) {
-            scene.removeButton = Entry.createElement('button')
-                .addClass('entrySceneRemoveButtonWorkspace')
-                .bindOnClick(function(e) {
-                    e.stopPropagation();
-                    if (Entry.engine.isState('run')) return;
 
-                    Entry.do('sceneRemove', scene.id);
-                })
-                .appendTo(removeButtonCover);
-        }
+        if (!Entry.sceneEditable) nameField.disabled = 'disabled';
+        return nameField;
+    }
 
-        Entry.Utils.disableContextmenu(viewTemplate);
-        if (Entry.sceneEditable) {
-            Entry.ContextMenu.onContextmenu(
-                $(viewTemplate),
-                function(coordinate) {
-                    var options = [
-                        {
-                            text: Lang.Workspace.duplicate_scene,
-                            enable: Entry.engine.isState('stop') && !this.isMax(),
-                            callback: function() {
-                                Entry.scene.cloneScene(scene);
-                            },
-                        },
-                    ];
-                    Entry.ContextMenu.show(
-                        options,
-                        'workspace-contextmenu',
-                        coordinate
-                    );
-                }.bind(this)
-            );
-        }
-
-        scene.view = viewTemplate;
-
+    createViewTemplate(scene) {
+        const viewTemplate = Entry.createElement('li', scene.id);
+        viewTemplate.addClass('entrySceneElementWorkspace  entrySceneButtonWorkspace minValue');
+        $(viewTemplate).on('mousedown', function(e) {
+            if (Entry.engine.isState('run')) {
+                e.preventDefault();
+                return;
+            }
+            if (Entry.scene.selectedScene !== scene)
+                Entry.do('sceneSelect', scene.id);
+        });
         return viewTemplate;
     }
 
