@@ -10,20 +10,14 @@
  */
 Entry.Scene = class {
     constructor() {
-        var that = this;
         this.scenes_ = [];
         this.selectedScene = null;
         this.maxCount = 20;
-        $(window).on('resize', that.resize.bind(this));
+        $(window).on('resize', this.resize.bind(this));
 
-        that.disposeEvent = Entry.disposeEvent.attach(this, (e) => {
-            var elem = document.activeElement;
-            if (
-                e &&
-                elem &&
-                elem !== e.target &&
-                $(elem).hasClass('entrySceneFieldWorkspace')
-            ) {
+        this.disposeEvent = Entry.disposeEvent.attach(this, (e) => {
+            const elem = document.activeElement;
+            if (elem && elem !== e.target && $(elem).hasClass('entrySceneFieldWorkspace')) {
                 elem.blur();
             }
         });
@@ -35,74 +29,81 @@ Entry.Scene = class {
      * @param {?string} option for choose type of view.
      */
     generateView(sceneView, option) {
-        /** @type {!Element} */
-        var that = this;
         this.view_ = sceneView;
         this.view_.addClass('entryScene');
         if (!option || option == 'workspace') {
             this.view_.addClass('entrySceneWorkspace');
 
-            $(this.view_).on('mousedown', function(e) {
-                var offset = $(this).offset();
-                var $window = $(window);
-                var x = e.pageX - offset.left + $window.scrollLeft();
-                var y = e.pageY - offset.top + $window.scrollTop();
-                y = 40 - y;
-                var slope = -40 / 55;
-                var selectedScene = that.selectedScene;
-                var selectedLeft = $(selectedScene.view)
+            $(this.view_).on('mousedown', (e) => {
+                const offset = $(this.view_).offset();
+                const $window = $(window);
+
+                const slope = -40 / 55;
+                const selectedScene = this.selectedScene;
+                const selectedLeft = $(selectedScene.view)
                     .find('.entrySceneRemoveButtonCoverWorkspace')
                     .offset().left;
-                if (x < selectedLeft || x > selectedLeft + 55) return;
 
-                x -= selectedLeft;
-                var ret = 40 + slope * x;
+                const x = e.pageX - offset.left + $window.scrollLeft() - selectedLeft;
+                const y = 40 - (e.pageY - offset.top + $window.scrollTop());
+
+                if (x < selectedLeft || x > selectedLeft + 55) {
+                    return;
+                }
+
+                const ret = 40 + slope * x;
 
                 if (y > ret) {
-                    var nextScene = that.getNextScene();
+                    const nextScene = this.getNextScene();
                     if (nextScene) {
-                        var $sceneView = $(nextScene.view);
                         $(document).trigger('mouseup');
-                        $sceneView.trigger('mousedown');
+                        $(nextScene.view).trigger('mousedown');
                     }
                 }
             });
 
-            var listView = Entry.createElement('ul');
-            listView.addClass('entrySceneListWorkspace');
-
-            if (Entry.sceneEditable) {
-                if ($) {
-                    $(listView).sortable({
-                        start: function(event, ui) {
-                            ui.item.data('start_pos', ui.item.index());
-                            var clone = $(ui.item[0]).clone(true);
-                        },
-                        stop: function(event, ui) {
-                            Entry.scene.moveScene(
-                                ui.item.data('start_pos'),
-                                ui.item.index()
-                            );
-                        },
-                        axis: 'x',
-                        tolerance: 'pointer',
-                    });
-                }
-            }
-
+            const listView = this.createListView();
             this.view_.appendChild(listView);
             this.listView_ = listView;
+
             if (Entry.sceneEditable) {
-                this.addButton_ = Entry.createElement('span')
-                    .addClass('entrySceneElementWorkspace')
-                    .addClass('entrySceneAddButtonWorkspace')
-                    .bindOnClick((e) => {
-                        if (Entry.engine.isState('run')) return;
-                        Entry.do('sceneAdd', Entry.generateHash());
-                    })
-                    .appendTo(this.view_);
+                const addButton = this.createAddButton();
+                this.view_.appendChild(addButton);
+                this.addButton_ = addButton;
             }
         }
+    }
+
+    createAddButton() {
+        const addButton = Entry.createElement('span')
+            .addClass('entrySceneElementWorkspace entrySceneAddButtonWorkspace');
+
+        addButton.bindOnClick((e) => {
+            if (Entry.engine.isState('run')) return;
+            Entry.do('sceneAdd', Entry.generateHash());
+        });
+
+        return addButton;
+    }
+
+    createListView() {
+        const listView = Entry.createElement('ul');
+        listView.addClass('entrySceneListWorkspace');
+
+        if (Entry.sceneEditable && $) {
+            $(listView).sortable({
+                start: function(event, ui) {
+                    ui.item.data('start_pos', ui.item.index());
+                },
+                stop: function(event, ui) {
+                    Entry.scene.moveScene(
+                        ui.item.data('start_pos'), ui.item.index());
+                },
+                axis: 'x',
+                tolerance: 'pointer',
+            });
+        }
+        return listView;
     }
 
     /**
