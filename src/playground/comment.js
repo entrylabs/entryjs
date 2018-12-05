@@ -457,10 +457,7 @@ Entry.Comment = class Comment {
         e.stopPropagation();
         let longPressTimer = null;
 
-        if (
-            (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) &&
-            !this.board.readOnly
-        ) {
+        if (!this.board.readOnly) {
             this.setDragInstance(e);
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
             this.bindDomEvent(this.mouseMove, this.mouseUp);
@@ -468,11 +465,11 @@ Entry.Comment = class Comment {
             this.board.set({ dragBlock: this });
 
             if (eventType === 'touchstart') {
-                longPressTimer = setTimeout(function() {
+                longPressTimer = setTimeout(() => {
                     if (longPressTimer) {
                         longPressTimer = null;
-                        this.mouseUp();
-                        this._rightClick(e);
+                        this.mouseUp(e);
+                        this.rightClick(e);
                     }
                 }, 1000);
             }
