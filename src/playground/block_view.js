@@ -522,7 +522,7 @@ Entry.BlockView = class BlockView {
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
 
             if (eventType === 'touchstart') {
-                this.longPressTimer = setTimeout(function() {
+                this.longPressTimer = setTimeout(() => {
                     if (this.longPressTimer) {
                         this.longPressTimer = null;
                         this.onMouseUp();
