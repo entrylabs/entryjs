@@ -171,7 +171,7 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
     return {
         behaviorConductLifeSafety_title: {
             skeleton: 'basic_text',
-            color: '#e5e5e5',
+            color: '#ecf8ff',
             params: [
                 {
                     type: 'Text',
