@@ -2,8 +2,8 @@ module.exports = {
     getBlocks() {
         return {
             brush_stamp: {
-                color: '#FC7E01',
-                outerLine: '#FC5E01',
+                color: EntryStatic.colorSet.block.default.BRUSH,
+                outerLine: EntryStatic.colorSet.block.darken.BRUSH,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -28,8 +28,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.stamp()'] },
             },
             start_drawing: {
-                color: '#FC7E01',
-                outerLine: '#FC5E01',
+                color: EntryStatic.colorSet.block.default.BRUSH,
+                outerLine: EntryStatic.colorSet.block.darken.BRUSH,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -56,8 +56,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.start_drawing()'] },
             },
             stop_drawing: {
-                color: '#FC7E01',
-                outerLine: '#FC5E01',
+                color: EntryStatic.colorSet.block.default.BRUSH,
+                outerLine: EntryStatic.colorSet.block.darken.BRUSH,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -84,8 +84,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.stop_drawing()'] },
             },
             set_color: {
-                color: '#FC7E01',
-                outerLine: '#FC5E01',
+                color: EntryStatic.colorSet.block.default.BRUSH,
+                outerLine: EntryStatic.colorSet.block.darken.BRUSH,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -160,8 +160,8 @@ module.exports = {
                 },
             },
             set_random_color: {
-                color: '#FC7E01',
-                outerLine: '#FC5E01',
+                color: EntryStatic.colorSet.block.default.BRUSH,
+                outerLine: EntryStatic.colorSet.block.darken.BRUSH,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -207,8 +207,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.set_brush_color_to_random()'] },
             },
             change_thickness: {
-                color: '#FC7E01',
-                outerLine: '#FC5E01',
+                color: EntryStatic.colorSet.block.default.BRUSH,
+                outerLine: EntryStatic.colorSet.block.darken.BRUSH,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -273,8 +273,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.add_brush_size(%1)'] },
             },
             set_thickness: {
-                color: '#FC7E01',
-                outerLine: '#FC5E01',
+                color: EntryStatic.colorSet.block.default.BRUSH,
+                outerLine: EntryStatic.colorSet.block.darken.BRUSH,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -335,8 +335,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.set_brush_size(%1)'] },
             },
             change_brush_transparency: {
-                color: '#FC7E01',
-                outerLine: '#FC5E01',
+                color: EntryStatic.colorSet.block.default.BRUSH,
+                outerLine: EntryStatic.colorSet.block.darken.BRUSH,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -413,8 +413,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.add_brush_transparency(%1)'] },
             },
             set_brush_tranparency: {
-                color: '#FC7E01',
-                outerLine: '#FC5E01',
+                color: EntryStatic.colorSet.block.default.BRUSH,
+                outerLine: EntryStatic.colorSet.block.darken.BRUSH,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -490,8 +490,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.set_brush_transparency(%1)'] },
             },
             brush_erase_all: {
-                color: '#FC7E01',
-                outerLine: '#FC5E01',
+                color: EntryStatic.colorSet.block.default.BRUSH,
+                outerLine: EntryStatic.colorSet.block.darken.BRUSH,
                 skeleton: 'basic',
                 statements: [],
                 params: [

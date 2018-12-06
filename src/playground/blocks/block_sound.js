@@ -2,8 +2,8 @@ module.exports = {
     getBlocks() {
         return {
             sound_something_with_block: {
-                color: '#82D214',
-                outerLine: '#6EBC02',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -63,8 +63,8 @@ module.exports = {
                 },
             },
             sound_something_second_with_block: {
-                color: '#82D214',
-                outerLine: '#6EBC02',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -145,8 +145,8 @@ module.exports = {
                 },
             },
             sound_from_to: {
-                color: '#82D214',
-                outerLine: '#6EBC02',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -240,8 +240,8 @@ module.exports = {
                 },
             },
             sound_something_wait_with_block: {
-                color: '#82D214',
-                outerLine: '#6EBC02',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -313,8 +313,8 @@ module.exports = {
                 },
             },
             sound_something_second_wait_with_block: {
-                color: '#82D214',
-                outerLine: '#6EBC02',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -402,8 +402,8 @@ module.exports = {
                 },
             },
             sound_from_to_and_wait: {
-                color: '#82D214',
-                outerLine: '#6EBC02',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -509,8 +509,8 @@ module.exports = {
                 },
             },
             sound_volume_change: {
-                color: '#82D214',
-                outerLine: '#6EBC02',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -566,8 +566,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.add_sound_volume(%1)'] },
             },
             sound_volume_set: {
-                color: '#82D214',
-                outerLine: '#6EBC02',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -622,8 +622,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.set_sound_volume(%1)'] },
             },
             sound_silent_all: {
-                color: '#82D214',
-                outerLine: '#6EBC02',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [

@@ -199,8 +199,8 @@ Entry.Expansion_Weather.getBlocks = function() {
             events: {},
         },
         check_city_weather: {
-            color: '#ff8888',
-            outerLine: '#ef6d6d',
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_boolean_field',
             statements: [],
             params: [
@@ -331,8 +331,8 @@ Entry.Expansion_Weather.getBlocks = function() {
             },
         },
         check_city_finedust: {
-            color: '#ff8888',
-            outerLine: '#ef6d6d',
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_boolean_field',
             statements: [],
             params: [params.getLocation(), params.getSubLocation(0), params.getFineDust()],
@@ -414,8 +414,8 @@ Entry.Expansion_Weather.getBlocks = function() {
             },
         },
         get_city_weather_data: {
-            color: '#ff8888',
-            outerLine: '#ef6d6d',
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -534,8 +534,8 @@ Entry.Expansion_Weather.getBlocks = function() {
             },
         },
         get_current_city_weather_data: {
-            color: '#ff8888',
-            outerLine: '#ef6d6d',
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [params.getLocation(), params.getSubLocation(0), params.getNowWeatherElement()],
@@ -596,8 +596,8 @@ Entry.Expansion_Weather.getBlocks = function() {
             },
         },
         get_today_city_temperature: {
-            color: '#ff8888',
-            outerLine: '#ef6d6d',
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [params.getLocation(), params.getSubLocation(0), params.getTime()],
@@ -657,8 +657,8 @@ Entry.Expansion_Weather.getBlocks = function() {
 
         //시군구 추가로 인한 legacy code 기존 블럭유지를 위해 필요.
         check_weather: {
-            color: '#FF8888',
-            outerLine: '#EF6D6D',
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_boolean_field',
             statements: [],
             params: [params.getDate(), params.getLocation(), params.getSky()],
@@ -766,8 +766,8 @@ Entry.Expansion_Weather.getBlocks = function() {
             },
         },
         check_finedust: {
-            color: '#FF8888',
-            outerLine: '#EF6D6D',
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_boolean_field',
             statements: [],
             params: [params.getLocation(), params.getFineDust()],
@@ -828,8 +828,8 @@ Entry.Expansion_Weather.getBlocks = function() {
             },
         },
         get_weather_data: {
-            color: '#FF8888',
-            outerLine: '#EF6D6D',
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [params.getDate(), params.getLocation(), params.getWeatherElements()],
@@ -930,8 +930,8 @@ Entry.Expansion_Weather.getBlocks = function() {
             },
         },
         get_current_weather_data: {
-            color: '#FF8888',
-            outerLine: '#EF6D6D',
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [params.getLocation(), params.getNowWeatherElement()],
@@ -980,8 +980,8 @@ Entry.Expansion_Weather.getBlocks = function() {
             },
         },
         get_today_temperature: {
-            color: '#FF8888',
-            outerLine: '#EF6D6D',
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [params.getLocation(), params.getTime()],

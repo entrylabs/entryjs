@@ -186,8 +186,8 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
             events: {},
         },
         count_lifeSafety_behavior: {
-            color: '#ff8888',
-            outerLine: '#ef6d6d',
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [params.getCategory(), params.getSubCategory(0)],
@@ -221,8 +221,8 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
             },
         },
         get_lifeSafety_behavior: {
-            color: '#ff8888',
-            outerLine: '#ef6d6d',
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [

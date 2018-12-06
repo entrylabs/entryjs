@@ -182,8 +182,8 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function() {
             events: {},
         },
         count_disaster_behavior: {
-            color: '#ff8888',
-            outerLine: '#ef6d6d',
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [params.getCategory(), params.getSubCategory(0)],
@@ -217,8 +217,8 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function() {
             },
         },
         get_disaster_behavior: {
-            color: '#ff8888',
-            outerLine: '#ef6d6d',
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [

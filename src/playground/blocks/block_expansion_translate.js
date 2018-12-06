@@ -343,8 +343,8 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             events: {},
         },
         get_translated_string: {
-            color: '#ff8888',
-            outerLine: '#ef6d6d',
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -416,8 +416,8 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             },
         },
         check_language: {
-            color: '#ff8888',
-            outerLine: '#ef6d6d',
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [

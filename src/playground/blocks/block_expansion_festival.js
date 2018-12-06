@@ -501,8 +501,8 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
             events: {},
         },
         count_festival: {
-            color: '#ff8888',
-            outerLine: '#ef6d6d',
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [params.getLocation(), params.getMonth()],
@@ -546,8 +546,8 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
             },
         },
         get_festival_info: {
-            color: '#ff8888',
-            outerLine: '#ef6d6d',
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
