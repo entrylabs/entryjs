@@ -28,7 +28,8 @@ Entry.Expansion_Weather.getBlocks = function() {
                 ],
                 value: 'today',
                 fontSize: 11,
-                arrowColor: EntryStatic.colorSet.arrow.default.EXPANSION,
+                bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -41,7 +42,8 @@ Entry.Expansion_Weather.getBlocks = function() {
                 options: getStateOptions(),
                 value: 'Seoul',
                 fontSize: 11,
-                arrowColor: EntryStatic.colorSet.arrow.default.EXPANSION,
+                bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -66,7 +68,8 @@ Entry.Expansion_Weather.getBlocks = function() {
                 targetIndex,
                 needDeepCopy: true,
                 fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_EXPANSION,
+                bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -87,7 +90,8 @@ Entry.Expansion_Weather.getBlocks = function() {
                 ],
                 value: 'sunny',
                 fontSize: 11,
-                arrowColor: EntryStatic.colorSet.arrow.default.EXPANSION,
+                bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -105,7 +109,8 @@ Entry.Expansion_Weather.getBlocks = function() {
                 ],
                 value: 'good',
                 fontSize: 11,
-                arrowColor: EntryStatic.colorSet.arrow.default.EXPANSION,
+                bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -128,7 +133,8 @@ Entry.Expansion_Weather.getBlocks = function() {
                 ],
                 value: 'the_lowest_temperature',
                 fontSize: 11,
-                arrowColor: EntryStatic.colorSet.arrow.default.EXPANSION,
+                bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -144,7 +150,8 @@ Entry.Expansion_Weather.getBlocks = function() {
                 ],
                 value: 'temperature',
                 fontSize: 11,
-                arrowColor: EntryStatic.colorSet.arrow.default.EXPANSION,
+                bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -166,7 +173,8 @@ Entry.Expansion_Weather.getBlocks = function() {
                 ],
                 value: '00',
                 fontSize: 11,
-                arrowColor: EntryStatic.colorSet.arrow.default.EXPANSION,
+                bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringOrNumberByValue;

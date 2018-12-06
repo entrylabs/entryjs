@@ -172,7 +172,8 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                 ],
                 value: 'dictionary',
                 fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_EXPANSION,
+                bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -200,7 +201,8 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                 ],
                 value: 'ko',
                 fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_EXPANSION,
+                bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -230,7 +232,8 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                 targetIndex,
                 needDeepCopy: true,
                 fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_EXPANSION,
+                bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
