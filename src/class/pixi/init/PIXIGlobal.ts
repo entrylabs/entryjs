@@ -1,7 +1,7 @@
 import { PIXIBaseAsset } from './PIXIBaseAsset';
 require("./../etc/PIXI-ndgmr.Collision");
 require("./../etc/PIXICanvasInput");
-require("../__testfiles/testcodes");
+let entryIsWebGLSupported = require("./entryIsWebGLSupported").entryIsWebGLSupported;
 
 import { PIXIAtlasManager } from '../atlas/PIXIAtlasManager';
 import { PIXIZeroAlphaNoneInteractionPlugins } from '../plugins/PIXIZeroAlphaNoneInteractionPlugins';
@@ -18,11 +18,10 @@ class _PIXIGlobal {
     private _init:boolean;
     /** @readonly */
     baseAsset:PIXIBaseAsset;
-    private _app:PIXI.Application;
 
     initOnce() {
-        
         if(this._init) return;
+        entryIsWebGLSupported();
         this._init = true;
         PIXIDebug.internal_init();
         this.baseAsset = new PIXIBaseAsset();
