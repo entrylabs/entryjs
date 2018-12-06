@@ -1494,7 +1494,14 @@ Entry.EntityObject.prototype.eraseBrush = function() {
 
 Entry.EntityObject.prototype._removeShapes = function() {
     var container = Entry.stage.selectedObjectContainer;
-    this.shapes.map(container.removeChild, container);
+    const shapes = this.shapes;
+    const LEN = shapes.length;
+    var s;
+    for(var i = 0 ; i < LEN ; i++ ) {
+        s = shapes[i];
+        container.removeChild(s);
+        s.destroy(true);
+    }
     this.shapes = [];
 };
 
