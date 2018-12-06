@@ -3,16 +3,12 @@
  */
 'use strict';
 
-var {
-    createTooltip,
-    returnEmptyArr,
-    getExpectedData,
-} = require('../command_util');
+const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_util');
 
 (function(c) {
-    var { COMMAND_TYPES, RECORDABLE } = Entry.STATIC;
+    const { COMMAND_TYPES, RECORDABLE } = Entry.STATIC;
 
-    var {
+    const {
         variableContainerSelectFilter,
         variableContainerClickVariableAddButton,
         variableContainerAddVariable,
@@ -45,13 +41,13 @@ var {
     } = COMMAND_TYPES;
 
     c[variableContainerSelectFilter] = {
-        do: function(newType, oldType) {
+        do(newType) {
             getVC().selectFilter(newType);
         },
-        state: function(newType, oldType) {
+        state(newType, oldType) {
             return [oldType, newType];
         },
-        log: function(newType, oldType = 'all') {
+        log(newType, oldType = 'all') {
             return [['newType', newType], ['oldType', oldType]];
         },
         recordable: RECORDABLE.SUPPORT,
@@ -60,50 +56,49 @@ var {
     };
 
     c[variableContainerClickVariableAddButton] = {
-        do: function() {
+        do() {
             getVC().clickVariableAddButton();
         },
         state: returnEmptyArr,
         log: returnEmptyArr,
         recordable: RECORDABLE.SUPPORT,
         get undo() {
-            try{
-                getVC()._getAddPanel().view.name.value = ""
-            } catch(e) {}
+            try {
+                getVC()._getAddPanel().view.name.value = '';
+            } catch (e) {}
             return 'variableContainerClickVariableAddButton';
         },
         dom: ['variableContainer', 'variableAddButton'],
     };
 
     c[variableContainerAddVariable] = {
-        do: function(variable) {
-            var id = _.result(getExpectedData('variable'), 'id');
+        do(variable) {
+            const id = _.result(getExpectedData('variable'), 'id');
             if (id) {
                 variable.id_ = id;
             }
 
             getVC().addVariable(variable);
         },
-        state: function(variable) {
+        state(variable) {
             variable = _toJSON(variable);
-            variable.id =
-                _.result(getExpectedData('variable'), 'id') || variable.id;
+            variable.id = _.result(getExpectedData('variable'), 'id') || variable.id;
 
             return [variable];
         },
-        log: function(variable) {
+        log(variable) {
             return [['variable', _toJSON(variable)]];
         },
         recordable: RECORDABLE.SUPPORT,
         validate: false,
         undo: 'variableContainerRemoveVariable',
-        restrict: function(data, domQuery, callback) {
+        restrict(data, domQuery, callback) {
             getVC().clickVariableAddButton(true, true);
             $('.entryVariableAddSpaceInputWorkspace').val(
                 _.result(getExpectedData('variable'), 'name') || ''
             );
 
-            var { title, content } = data.tooltip;
+            const { title, content } = data.tooltip;
 
             callback();
             return createTooltip(title, content, domQuery, callback);
@@ -112,25 +107,25 @@ var {
     };
 
     c[variableAddSetName] = {
-        do: function(value) {
-            var { dom } = c[variableAddSetName];
+        do(value) {
+            let { dom } = c[variableAddSetName];
 
             dom = Entry.getDom(dom);
             dom._focused = false;
             dom.value = getExpectedData('value', value);
         },
-        state: function(value) {
+        state() {
             return [''];
         },
-        log: function(value) {
+        log(value) {
             return [['value', getExpectedData('value', value)]];
         },
-        restrict: function(data, domQuery, callback) {
+        restrict(data, domQuery, callback) {
             getVC().clickVariableAddButton(true);
-            var dom = Entry.getDom(this.dom);
+            const dom = Entry.getDom(this.dom);
             Entry.Utils.focusIfNotActive(dom);
             dom.enterKeyDisabled = true;
-            var { title, content } = data.tooltip;
+            const { title, content } = data.tooltip;
             return createTooltip(title, content, domQuery, callback, {
                 noDispose: true,
             });
@@ -142,13 +137,13 @@ var {
     };
 
     c[variableContainerRemoveVariable] = {
-        do: function(variable) {
+        do(variable) {
             getVC().removeVariable(variable);
         },
-        state: function(variable) {
+        state(variable) {
             return [_toJSON(variable)];
         },
-        log: function(variable) {
+        log(variable) {
             return [['variable', _toJSON(variable)]];
         },
         recordable: RECORDABLE.SUPPORT,
@@ -158,17 +153,15 @@ var {
     };
 
     c[variableContainerAddMessage] = {
-        do: function(message) {
-            message.id =
-                _.result(getExpectedData('message'), 'id') || message.id;
+        do(message) {
+            message.id = _.result(getExpectedData('message'), 'id') || message.id;
             getVC().addMessage(message);
         },
-        state: function(message) {
-            message.id =
-                _.result(getExpectedData('message'), 'id') || message.id;
+        state(message) {
+            message.id = _.result(getExpectedData('message'), 'id') || message.id;
             return [message];
         },
-        log: function({ name, id }) {
+        log({ name, id }) {
             return [['message', { name, id }]];
         },
         validate: false,
@@ -179,7 +172,7 @@ var {
 
     c[variableContainerRemoveMessage] = {
         do({ id }) {
-            var VC = getVC();
+            const VC = getVC();
             VC.removeMessage(VC.getMessage(id));
         },
         state({ id, name }) {
@@ -196,29 +189,26 @@ var {
 
     c[messageSetName] = {
         do(id, newName) {
-            var VC = getVC();
-            var message = VC.getMessage(id);
-            var nameField = message.listElement.nameField;
+            const VC = getVC();
+            const message = VC.getMessage(id);
+            const nameField = message.listElement.nameField;
 
             nameField._focused = false;
             VC.changeMessageName(message, newName);
         },
         state(id) {
-            var { name } = getVC().getMessage(id);
+            const { name } = getVC().getMessage(id);
             return [id, name];
         },
         log(id, newName) {
             return [['id', id], ['newName', newName]];
         },
         restrict(data, domQuery, callback) {
-            var {
-                content: contentData,
-                tooltip: { title, content },
-            } = data;
+            const { tooltip: { title, content } } = data;
 
             callback();
-            var VC = getVC();
-            var message = VC.getMessage(domQuery[2]);
+            const VC = getVC();
+            const message = VC.getMessage(domQuery[2]);
             delete message.listElement.nameField.isFirst;
             VC.activateMessageEditView(message);
             return createTooltip(title, content, domQuery, callback);
@@ -230,23 +220,23 @@ var {
 
     c[variableAddSetScope] = {
         do(type = 'global', isCloud = false) {
-            var VC = getVC();
-            var info = VC.variableAddPanel.info;
+            const VC = getVC();
+            const info = VC.variableAddPanel.info;
             if (type === 'global') {
                 info.object = null;
                 info.isCloud = isCloud;
             } else if (type === 'local') {
-                var { object } = Entry.playground;
-                if (!object) return;
+                const { object } = Entry.playground;
+                if (!object) {
+                    return;
+                }
                 info.object = object.id;
                 info.isCloud = false;
             }
             VC.updateVariableAddView('variable');
         },
         state() {
-            var {
-                variableAddPanel: { object, isCloud },
-            } = getVC();
+            const { variableAddPanel: { object, isCloud } } = getVC();
             return [object ? 'local' : 'global', isCloud];
         },
         log(type) {
@@ -259,16 +249,12 @@ var {
 
     c[variableAddSetCloud] = {
         do(value) {
-            var VC = getVC();
+            const VC = getVC();
             VC.variableAddPanel.info.isCloud = value;
             VC.updateVariableAddView('variable');
         },
         state() {
-            var {
-                variableAddPanel: {
-                    info: { isCloud },
-                },
-            } = getVC();
+            const { variableAddPanel: { info: { isCloud } } } = getVC();
             return [isCloud];
         },
         log(value) {
@@ -281,14 +267,14 @@ var {
 
     c[variableSetVisibility] = {
         do(id, value) {
-            var VC = getVC();
-            var variable = VC.getVariable(id);
+            const VC = getVC();
+            const variable = VC.getVariable(id);
             variable.setVisible(value);
             VC.updateVariableSettingView(variable);
         },
-        state(id, value) {
-            var VC = getVC();
-            var variable = VC.getVariable(id);
+        state(id) {
+            const VC = getVC();
+            const variable = VC.getVariable(id);
             return [id, variable.isVisible()];
         },
         log(id, value) {
@@ -301,32 +287,25 @@ var {
 
     c[variableSetDefaultValue] = {
         do(id, value) {
-            var VC = getVC();
-            var variable = VC.getVariable(id);
-            Entry.getDom([
-                'variableContainer',
-                'variableSetDefaultValue',
-            ])._focused = false;
+            const VC = getVC();
+            const variable = VC.getVariable(id);
+            Entry.getDom(['variableContainer', 'variableSetDefaultValue'])._focused = false;
             variable.setValue(value);
             VC.updateVariableSettingView(variable);
         },
-        state(id, value) {
-            var VC = getVC();
-            var variable = VC.getVariable(id);
+        state(id) {
+            const VC = getVC();
+            const variable = VC.getVariable(id);
             return [id, variable.getValue()];
         },
         log(id, value) {
             return [['id', id], ['value', value]];
         },
-        restrict({ tooltip, content }, domQuery, callback) {
-            var { title: tooltipTitle, content: tooltipContent } = tooltip;
-            return createTooltip(
-                tooltipTitle,
-                tooltipContent,
-                domQuery,
-                callback,
-                { noDispose: true }
-            );
+        restrict({ tooltip }, domQuery, callback) {
+            const { title: tooltipTitle, content: tooltipContent } = tooltip;
+            return createTooltip(tooltipTitle, tooltipContent, domQuery, callback, {
+                noDispose: true,
+            });
         },
         recordable: RECORDABLE.SUPPORT,
         undo: 'variableSetDefaultValue',
@@ -335,13 +314,13 @@ var {
 
     c[variableSetSlidable] = {
         do(id, type, cValue) {
-            var VC = getVC();
-            var variable = VC.getVariable(id);
+            const VC = getVC();
+            const variable = VC.getVariable(id);
             VC.setVariableSlidable(variable, type, cValue);
         },
-        state(id, value) {
-            var VC = getVC();
-            var variable = VC.getVariable(id);
+        state(id) {
+            const VC = getVC();
+            const variable = VC.getVariable(id);
             return [id, variable.getType(), variable.getValue()];
         },
         log(id, value) {
@@ -354,19 +333,19 @@ var {
 
     c[variableSetMinValue] = {
         do(id, value) {
-            var VC = getVC();
-            var variable = VC.getVariable(id);
+            const VC = getVC();
+            const variable = VC.getVariable(id);
             variable.setMinValue(value);
             VC.updateVariableSettingView(variable);
         },
-        state(id, value) {
-            var VC = getVC();
-            var variable = VC.getVariable(id);
+        state(id) {
+            const VC = getVC();
+            const variable = VC.getVariable(id);
             return [id, variable.getMinValue()];
         },
-        log(id, value) {
-            var VC = getVC();
-            var variable = VC.getVariable(id);
+        log(id) {
+            const VC = getVC();
+            const variable = VC.getVariable(id);
             return [['id', id], ['value', variable.getMinValue()]];
         },
         recordable: RECORDABLE.SUPPORT,
@@ -376,19 +355,19 @@ var {
 
     c[variableSetMaxValue] = {
         do(id, value) {
-            var VC = getVC();
-            var variable = VC.getVariable(id);
+            const VC = getVC();
+            const variable = VC.getVariable(id);
             variable.setMaxValue(value);
             VC.updateVariableSettingView(variable);
         },
-        state(id, value) {
-            var VC = getVC();
-            var variable = VC.getVariable(id);
+        state(id) {
+            const VC = getVC();
+            const variable = VC.getVariable(id);
             return [id, variable.getMaxValue()];
         },
-        log(id, value) {
-            var VC = getVC();
-            var variable = VC.getVariable(id);
+        log(id) {
+            const VC = getVC();
+            const variable = VC.getVariable(id);
             return [['id', id], ['value', variable.getMaxValue()]];
         },
         recordable: RECORDABLE.SUPPORT,
@@ -397,16 +376,16 @@ var {
     };
 
     c[variableContainerClickListAddButton] = {
-        do: function() {
+        do() {
             getVC().clickListAddButton();
         },
         state: returnEmptyArr,
         log: returnEmptyArr,
         recordable: RECORDABLE.SUPPORT,
         get undo() {
-            try{
-                getVC()._getAddPanel('list').view.name.value = ""
-            } catch(e) {}
+            try {
+                getVC()._getAddPanel('list').view.name.value = '';
+            } catch (e) {}
             return 'variableContainerClickListAddButton';
         },
         dom: ['variableContainer', 'listAddButton'],
@@ -414,7 +393,7 @@ var {
 
     c[variableContainerAddList] = {
         do(list) {
-            var id = _.result(getExpectedData('list'), 'id');
+            const id = _.result(getExpectedData('list'), 'id');
             if (id) {
                 if (list.setId) {
                     list.setId(id);
@@ -442,7 +421,7 @@ var {
             Entry.getDom(['variableContainer', 'listAddInput']).value =
                 _.result(getExpectedData('list'), 'name') || '';
 
-            var { title, content } = data.tooltip;
+            const { title, content } = data.tooltip;
             callback();
             return createTooltip(title, content, domQuery, callback);
         },
@@ -466,25 +445,25 @@ var {
     };
 
     c[listAddSetName] = {
-        do: function(value) {
-            var { dom } = c[listAddSetName];
+        do(value) {
+            let { dom } = c[listAddSetName];
 
             dom = Entry.getDom(dom);
             dom._focused = false;
             dom.value = getExpectedData('value', value);
         },
-        state: function(value) {
+        state() {
             return [''];
         },
-        log: function(value) {
+        log(value) {
             return [['value', getExpectedData('value', value)]];
         },
-        restrict: function(data, domQuery, callback) {
+        restrict(data, domQuery, callback) {
             getVC().clickListAddButton(true);
-            var dom = Entry.getDom(this.dom);
+            const dom = Entry.getDom(this.dom);
             Entry.Utils.focusIfNotActive(dom);
             dom.enterKeyDisabled = true;
-            var { title, content } = data.tooltip;
+            const { title, content } = data.tooltip;
             return createTooltip(title, content, domQuery, callback, {
                 noDispose: true,
             });
@@ -497,23 +476,23 @@ var {
 
     c[listAddSetScope] = {
         do(type = 'global', isCloud = false) {
-            var VC = getVC();
-            var info = VC.listAddPanel.info;
+            const VC = getVC();
+            const info = VC.listAddPanel.info;
             if (type === 'global') {
                 info.object = null;
                 info.isCloud = isCloud;
             } else if (type === 'local') {
-                var { object } = Entry.playground;
-                if (!object) return;
+                const { object } = Entry.playground;
+                if (!object) {
+                    return;
+                }
                 info.object = object.id;
                 info.isCloud = false;
             }
             VC.updateVariableAddView('list');
         },
         state() {
-            var {
-                listAddPanel: { object, isCloud },
-            } = getVC();
+            const { listAddPanel: { object, isCloud } } = getVC();
             return [object ? 'local' : 'global', isCloud];
         },
         log(type) {
@@ -526,16 +505,12 @@ var {
 
     c[listAddSetCloud] = {
         do(value) {
-            var VC = getVC();
+            const VC = getVC();
             VC.listAddPanel.info.isCloud = value;
             VC.updateVariableAddView('list');
         },
         state() {
-            var {
-                listAddPanel: {
-                    info: { isCloud },
-                },
-            } = getVC();
+            const { listAddPanel: { info: { isCloud } } } = getVC();
             return [isCloud];
         },
         log(value) {
@@ -548,12 +523,12 @@ var {
 
     c[listSetVisibility] = {
         do(id, value) {
-            var VC = getVC();
-            var list = VC.getList(id);
+            const VC = getVC();
+            const list = VC.getList(id);
             list.setVisible(value);
             VC.updateListSettingView(list);
         },
-        state(id, value) {
+        state(id) {
             return [
                 id,
                 getVC()
@@ -572,9 +547,9 @@ var {
 
     c[listChangeLength] = {
         do(id, value) {
-            var VC = getVC();
-            var list = VC.getList(id);
-            var length = list.array_.length;
+            const VC = getVC();
+            const list = VC.getList(id);
+            const length = list.array_.length;
 
             if (value === 'minus') {
                 value = Math.max(0, length - 1);
@@ -588,7 +563,7 @@ var {
 
             VC.setListLength(list, value);
         },
-        state(id, value) {
+        state(id) {
             return [id, getVC().getList(id).array_.length];
         },
         log(id, value) {
@@ -602,29 +577,25 @@ var {
         undo: 'listChangeLength',
         restrict({ tooltip, content }, domQuery, callback) {
             _updateSelected(content);
-            var { title: tooltipTitle, content: tooltipContent } = tooltip;
-            return createTooltip(
-                tooltipTitle,
-                tooltipContent,
-                domQuery,
-                callback,
-                { noDispose: true }
-            );
+            const { title: tooltipTitle, content: tooltipContent } = tooltip;
+            return createTooltip(tooltipTitle, tooltipContent, domQuery, callback, {
+                noDispose: true,
+            });
         },
         dom: ['variableContainer', 'listChangeLength', '&2'],
     };
 
     c[listSetDefaultValue] = {
         do(id, idx, data) {
-            var VC = getVC();
-            var list = VC.getList(id);
+            const VC = getVC();
+            const list = VC.getList(id);
             list.array_[idx] = { data };
 
             VC.updateListSettingView();
             list.updateView();
         },
-        state(id, idx, data) {
-            var { array_ } = getVC().getList(id);
+        state(id, idx) {
+            const { array_ } = getVC().getList(id);
             return [id, idx, array_[idx].data];
         },
         log(id, idx, data) {
@@ -635,7 +606,7 @@ var {
         restrict(data, domQuery, callback) {
             _updateSelected(data.content);
             Entry.Utils.focusIfNotActive(Entry.getDom(domQuery));
-            var { title, content } = data.tooltip;
+            const { title, content } = data.tooltip;
             return createTooltip(title, content, domQuery, callback, {
                 noDispose: true,
             });
@@ -645,8 +616,8 @@ var {
 
     c[setMessageEditable] = {
         do(id) {
-            var VC = getVC();
-            var message = VC.getMessage(id);
+            const VC = getVC();
+            const message = VC.getMessage(id);
             VC.activateMessageEditView(message);
             message.listElement.removeClass('activeForce');
         },
@@ -663,7 +634,7 @@ var {
             getVC()
                 .getMessage(data.content[1][1])
                 .listElement.addClass('activeForce');
-            var { title, content } = data.tooltip;
+            const { title, content } = data.tooltip;
             return createTooltip(title, content, domQuery, callback);
         },
         dom: ['variableContainer', 'messageEditButton', '&0'],
@@ -671,9 +642,9 @@ var {
 
     c[setVariableEditable] = {
         do(id, value = true) {
-            var VC = getVC();
-            var variable = VC.getVariable(id);
-            var { nameField } = variable.listElement;
+            const VC = getVC();
+            const variable = VC.getVariable(id);
+            const { nameField } = variable.listElement;
 
             if (value) {
                 nameField.removeAttribute('disabled');
@@ -695,12 +666,10 @@ var {
         undo: 'setVariableEditable',
         restrict(data, domQuery, callback) {
             Entry.Utils.blur();
-            var VC = getVC();
+            const VC = getVC();
             VC.updateSelectedVariable(null, 'variable');
-            VC.getVariable(data.content[1][1]).listElement.addClass(
-                'activeForce'
-            );
-            var { title, content } = data.tooltip;
+            VC.getVariable(data.content[1][1]).listElement.addClass('activeForce');
+            const { title, content } = data.tooltip;
             return createTooltip(title, content, domQuery, callback);
         },
         dom: ['variableContainer', 'variableEditButton', '&0'],
@@ -708,9 +677,9 @@ var {
 
     c[setListEditable] = {
         do(id) {
-            var VC = getVC();
-            var variable = VC.getList(id);
-            var { nameField } = variable.listElement;
+            const VC = getVC();
+            const variable = VC.getList(id);
+            const { nameField } = variable.listElement;
 
             nameField.removeAttribute('disabled');
             VC.updateSelectedVariable(variable);
@@ -729,7 +698,7 @@ var {
             getVC()
                 .getList(data.content[1][1])
                 .listElement.addClass('activeForce');
-            var { title, content } = data.tooltip;
+            const { title, content } = data.tooltip;
             return createTooltip(title, content, domQuery, callback);
         },
         dom: ['variableContainer', 'listEditButton', '&0'],
@@ -737,7 +706,7 @@ var {
 
     c[variableSetName] = {
         do(id, value) {
-            var VC = getVC();
+            const VC = getVC();
             VC.changeVariableName(VC.getVariable(id), value);
         },
         state(id) {
@@ -756,14 +725,10 @@ var {
 
             Entry.Utils.focusIfNotActive(domQuery);
 
-            var { title: tooltipTitle, content: tooltipContent } = tooltip;
-            return createTooltip(
-                tooltipTitle,
-                tooltipContent,
-                domQuery,
-                callback,
-                { noDispose: true }
-            );
+            const { title: tooltipTitle, content: tooltipContent } = tooltip;
+            return createTooltip(tooltipTitle, tooltipContent, domQuery, callback, {
+                noDispose: true,
+            });
         },
         recordable: RECORDABLE.SUPPORT,
         undo: 'variableSetName',
@@ -772,7 +737,7 @@ var {
 
     c[listSetName] = {
         do(id, value) {
-            var VC = getVC();
+            const VC = getVC();
             VC.changeListName(VC.getList(id), value);
         },
         state(id) {
@@ -791,14 +756,10 @@ var {
 
             Entry.Utils.focusIfNotActive(domQuery);
 
-            var { title: tooltipTitle, content: tooltipContent } = tooltip;
-            return createTooltip(
-                tooltipTitle,
-                tooltipContent,
-                domQuery,
-                callback,
-                { noDispose: true }
-            );
+            const { title: tooltipTitle, content: tooltipContent } = tooltip;
+            return createTooltip(tooltipTitle, tooltipContent, domQuery, callback, {
+                noDispose: true,
+            });
         },
         recordable: RECORDABLE.SUPPORT,
         undo: 'listSetName',
@@ -819,9 +780,9 @@ var {
     }
 
     function _updateSelected(content) {
-        var VC = getVC();
-        var vId = content[1][1];
-        var v = VC.getVariable(vId) || VC.getList(vId);
+        const VC = getVC();
+        const vId = content[1][1];
+        const v = VC.getVariable(vId) || VC.getList(vId);
         if (v) {
             VC.updateSelectedVariable(v);
         }
@@ -829,7 +790,7 @@ var {
 
     function _listActiveRestrictor({ tooltip, content }, domQuery, callback) {
         _updateSelected(content);
-        var { title: tooltipTitle, content: tooltipContent } = tooltip;
+        const { title: tooltipTitle, content: tooltipContent } = tooltip;
         return createTooltip(tooltipTitle, tooltipContent, domQuery, callback);
     }
 })(Entry.Command);

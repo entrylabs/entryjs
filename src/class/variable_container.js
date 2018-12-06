@@ -35,6 +35,9 @@ Entry.VariableContainer = class VariableContainer {
         this._messageRefs = [];
         this._functionRefs = [];
         this._filterTabs = {};
+        this.listView_ = null;
+        this.globalList = null;
+        this.globalListBox = null;
 
         Entry.addEventListener('workspaceChangeMode', this.updateList.bind(this));
     }
@@ -86,7 +89,8 @@ Entry.VariableContainer = class VariableContainer {
             selectTrView
         );
 
-        const listView = createElement('ul').addClass('entryVariableListWorkspace');
+        const listViewContainer = createElement('div').addClass('entryVariableListWorkspace');
+        const listView = createElement('div').addClass('entryVariableAdd_box');
 
         $(listView).on('mouseenter', '.entryVariableListElementWorkspace', function() {
             this.addClass('active');
@@ -96,10 +100,11 @@ Entry.VariableContainer = class VariableContainer {
             this.removeClass('active');
         });
 
-        this.view_.appendChild(listView);
+        listViewContainer.appendChild(listView);
+        this.view_.appendChild(listViewContainer);
         this.listView_ = listView;
 
-        const variableAddButton = createElement('li')
+        const variableAddButton = createElement('a')
             .addClass('entryVariableAddWorkspace')
             .addClass('entryVariableListElementWorkspace')
             .bindOnClick(() => {
@@ -113,7 +118,7 @@ Entry.VariableContainer = class VariableContainer {
         this.generateVariableSettingView();
         this.generateListSettingView();
 
-        const messageAddButton = createElement('li')
+        const messageAddButton = createElement('a')
             .addClass('entryVariableAddWorkspace')
             .addClass('entryVariableListElementWorkspace')
             .bindOnClick(() => {
@@ -125,22 +130,22 @@ Entry.VariableContainer = class VariableContainer {
         messageAddButton.innerHTML = `+ ${Lang.Workspace.message_create}`;
         this.messageAddButton_ = messageAddButton;
 
-        const listAddButton = createElement('li')
+        const listAddButton = createElement('a')
             .addClass('entryVariableAddWorkspace')
-            .addClass('entryVariableListElementWorkspace')
             .bindOnClick(() => {
                 return Entry.do('variableContainerClickListAddButton');
             });
-
-        listAddButton.innerHTML = `+ ${Lang.Workspace.list_create}`;
+        listAddButton.innerHTML = `${Lang.Workspace.list_create}`;
+        listAddButton.href = '#';
         this.listAddButton_ = listAddButton;
-        const functionAddButton = createElement('li')
+
+        const functionAddButton = createElement('a')
             .addClass('entryVariableListElementWorkspace')
             .addClass('entryVariableAddWorkspace')
             .bindOnClick(() => {
                 return Entry.do('funcCreateStart', Entry.generateHash());
             });
-        functionAddButton.innerHTML = `+ ${Lang.Workspace.function_add}`;
+        functionAddButton.innerHTML = `${Lang.Workspace.function_add}`;
         this.functionAddButton_ = functionAddButton;
 
         return view;
@@ -186,26 +191,26 @@ Entry.VariableContainer = class VariableContainer {
     updateVariableAddView(type = 'variable') {
         const { info: { isCloud, object }, view, isOpen } = this._getAddPanel(type);
 
-        view.addClass('entryRemove');
+        // view.addClass('entryRemove');
 
         const { cloudCheck, globalCheck, localCheck, cloudWrapper } = view;
 
         if (isCloud) {
-            cloudCheck.addClass('entryVariableAddChecked');
+            cloudCheck.addClass('on');
         } else {
-            cloudCheck.removeClass('entryVariableAddChecked');
+            cloudCheck.removeClass('on');
         }
 
-        if (isOpen) {
-            view.removeClass('entryRemove');
-        }
+        // if (isOpen) {
+        //     view.removeClass('entryRemove');
+        // }
         if (object) {
-            globalCheck.removeClass('entryVariableAddChecked');
-            localCheck.addClass('entryVariableAddChecked');
+            globalCheck.removeClass('on');
+            localCheck.addClass('on');
             cloudWrapper.addClass('entryVariableAddSpaceUnCheckedWorkspace');
         } else {
-            globalCheck.addClass('entryVariableAddChecked');
-            localCheck.removeClass('entryVariableAddChecked');
+            globalCheck.addClass('on');
+            localCheck.removeClass('on');
             cloudWrapper.removeClass('entryVariableAddSpaceUnCheckedWorkspace');
         }
     }
@@ -218,7 +223,7 @@ Entry.VariableContainer = class VariableContainer {
         if (this.selected) {
             this.selected.listElement.removeClass('selected');
             if (this.selected.callerListElement) {
-                this.listView_.removeChild(this.selected.callerListElement);
+                // this.listView_.removeChild(this.selected.callerListElement);
                 delete this.selected.callerListElement;
             }
             this.selected = null;
@@ -247,6 +252,7 @@ Entry.VariableContainer = class VariableContainer {
     /**
      * @param {object} message
      */
+    // 사용된 곳을 알려주는 뷰
     renderMessageReference(message) {
         const messageId = message.id;
 
@@ -351,8 +357,8 @@ Entry.VariableContainer = class VariableContainer {
         }
 
         variable.callerListElement = listView;
-        this.listView_.insertBefore(listView, variable.listElement);
-        this.listView_.insertBefore(variable.listElement, listView);
+        // this.listView_.insertBefore(listView, variable.listElement);
+        // this.listView_.insertBefore(variable.listElement, listView);
     }
 
     /**
@@ -378,7 +384,7 @@ Entry.VariableContainer = class VariableContainer {
                 );
                 nameElement.innerHTML = caller.object.name;
                 element.appendChild(nameElement);
-                element.bindOnClick(function(e) {
+                element.bindOnClick(function() {
                     if (Entry.playground.object != caller.object) {
                         Entry.container.selectObject();
                         Entry.container.selectObject(caller.object.id, true);
@@ -408,6 +414,7 @@ Entry.VariableContainer = class VariableContainer {
 
     /**
      * update list view
+     * todo
      */
     updateList() {
         const listView = this.listView_;
@@ -419,8 +426,8 @@ Entry.VariableContainer = class VariableContainer {
             this.generateVariableSplitterView();
         }
 
-        this.variableSettingView.addClass('entryRemove');
-        this.listSettingView.addClass('entryRemove');
+        // this.variableSettingView.addClass('entryRemove');
+        // this.listSettingView.addClass('entryRemove');
 
         const isPythonMode = this._isPythonMode();
         if (isPythonMode) {
@@ -429,111 +436,126 @@ Entry.VariableContainer = class VariableContainer {
             listView.removeClass('entryVariableContainerTextMode');
         }
 
-        while (listView.firstChild) {
-            listView.removeChild(listView.lastChild);
+        this.clearListElement();
+
+        switch (this.viewMode_) {
+            case 'all':
+                this.updateAllTab();
+                break;
+            case 'message':
+                this.updateMessageTab();
+                break;
+            case 'variable':
+                this.updateVariableTab();
+                break;
+            case 'list':
+                this.updateListTab();
+                break;
+            case 'func':
+                this.updateFuncTab();
+                break;
         }
 
-        const viewMode = this.viewMode_;
+        // listView.appendChild(this.variableSettingView);
+        // listView.appendChild(this.listSettingView);
+    }
 
-        if (viewMode == 'all' || viewMode == 'message') {
-            if (viewMode == 'message') {
-                listView.appendChild(this.messageAddButton_);
+    _each(arr, viewFunc, parent = this.listView_) {
+        return _.each(arr, (data) => {
+            !data.listElement && viewFunc(data);
+
+            parent.appendChild(data.listElement);
+            if (data.callerListElement) {
+                parent.appendChild(data.callerListElement);
             }
+        });
+    }
 
-            _each(this.messages_, this.createMessageView.bind(this));
-        }
-
-        if (viewMode == 'all' || viewMode == 'variable') {
-            if (viewMode == 'variable') {
-                const info = this.variableAddPanel.info;
-                if (info.object && !Entry.playground.object) {
-                    info.object = null;
-                }
-
-                listView.appendChild(this.variableAddButton_);
-                listView.appendChild(this.variableAddPanel.view);
-
-                this.variableSplitters.top.innerHTML = Lang.Workspace.Variable_used_at_all_objects;
-                listView.appendChild(this.variableSplitters.top);
-
-                const { globalV, localV } = _.groupBy(this.variables_, ({ object_ }) => {
-                    return object_ ? 'localV' : 'globalV';
-                });
-
-                _each(globalV, this.createVariableView.bind(this));
-
-                this.variableSplitters.bottom.innerHTML =
-                    Lang.Workspace.Variable_used_at_special_object;
-                listView.appendChild(this.variableSplitters.bottom);
-
-                _each(localV, this.createVariableView.bind(this));
-
-                this.updateVariableAddView('variable');
-            } else {
-                _each(this.variables_, this.createVariableView.bind(this));
+    clearListElement() {
+        const clearList = [this.listView_, this.globalListBox];
+        for (const elem of clearList) {
+            while (elem && elem.firstChild) {
+                elem.removeChild(elem.lastChild);
             }
         }
+    }
 
-        if (viewMode == 'all' || viewMode == 'list') {
-            if (viewMode == 'list') {
-                const info = this.listAddPanel.info;
-                if (info.object && !Entry.playground.object) {
-                    info.object = null;
-                }
-                listView.appendChild(this.listAddButton_);
-                listView.appendChild(this.listAddPanel.view);
+    updateAllTab() {
+        this._each(this.messages_, this.createMessageView.bind(this));
+        this._each(this.variables_, this.createVariableView.bind(this));
+        this._each(this.lists_, this.createListView.bind(this));
+        this._each(this.functions_, this.createFunctionView.bind(this));
+    }
 
-                const { localV, globalV } = _.groupBy(this.lists_, ({ object_ }) => {
-                    return object_ ? 'localV' : 'globalV';
-                });
-                this.variableSplitters.top.innerHTML = Lang.Workspace.List_used_all_objects;
-                listView.appendChild(this.variableSplitters.top);
+    updateMessageTab() {
+        const listView = this.listView_;
+        listView.appendChild(this.messageAddButton_);
+        this._each(this.messages_, this.createMessageView.bind(this));
+    }
 
-                _each(globalV, this.createListView.bind(this));
-
-                this.updateVariableAddView('list');
-                this.variableSplitters.bottom.innerHTML = Lang.Workspace.list_used_specific_objects;
-                listView.appendChild(this.variableSplitters.bottom);
-
-                _each(localV, this.createListView.bind(this));
-
-                this.updateVariableAddView('variable');
-            } else {
-                _each(this.lists_, this.createListView.bind(this));
-            }
+    updateVariableTab() {
+        const listView = this.listView_;
+        const info = this.variableAddPanel.info;
+        if (info.object && !Entry.playground.object) {
+            info.object = null;
         }
 
-        if (viewMode == 'all' || viewMode == 'func') {
-            if (viewMode == 'func') {
-                let mode = _.result(Entry.getMainWS(), 'getMode');
-                mode = _.isUndefined(mode) ? Entry.Workspace.MODE_BOARD : mode;
-                mode = mode === Entry.Workspace.MODE_OVERLAYBOARD || isPythonMode;
+        listView.appendChild(this.variableAddButton_);
+        listView.appendChild(this.variableAddPanel.view);
 
-                if (mode) {
-                    this.functionAddButton_.addClass('disable');
-                } else {
-                    this.functionAddButton_.removeClass('disable');
-                }
+        this.variableSplitters.top.innerHTML = Lang.Workspace.Variable_used_at_all_objects;
+        listView.appendChild(this.variableSplitters.top);
 
-                listView.appendChild(this.functionAddButton_);
-            }
+        const { globalV, localV } = _.groupBy(this.variables_, ({ object_ }) => {
+            return object_ ? 'localV' : 'globalV';
+        });
 
-            _each(this.functions_, this.createFunctionView.bind(this));
+        this._each(globalV, this.createVariableView.bind(this));
+
+        this.variableSplitters.bottom.innerHTML = Lang.Workspace.Variable_used_at_special_object;
+        listView.appendChild(this.variableSplitters.bottom);
+
+        this._each(localV, this.createVariableView.bind(this));
+
+        this.updateVariableAddView('variable');
+    }
+
+    updateListTab() {
+        const listView = this.listView_;
+        const info = this.listAddPanel.info;
+        if (info.object && !Entry.playground.object) {
+            info.object = null;
+        }
+        listView.appendChild(this.listAddButton_);
+        listView.appendChild(this.listAddPanel.view);
+
+        const { localV, globalV } = _.groupBy(this.lists_, ({ object_ }) => {
+            return object_ ? 'localV' : 'globalV';
+        });
+
+        this._each(globalV, this.createListView.bind(this), this.globalListBox);
+        this._each(localV, this.createListView.bind(this), this.localList);
+        // this.updateVariableAddView('list');
+        // this.updateVariableAddView('variable');
+
+        listView.appendChild(this.globalList);
+        listView.appendChild(this.localList);
+    }
+    updateFuncTab() {
+        const isPythonMode = this._isPythonMode();
+        const listView = this.listView_;
+        let mode = _.result(Entry.getMainWS(), 'getMode');
+        mode = _.isUndefined(mode) ? Entry.Workspace.MODE_BOARD : mode;
+        mode = mode === Entry.Workspace.MODE_OVERLAYBOARD || isPythonMode;
+
+        if (mode) {
+            this.functionAddButton_.addClass('disable');
+        } else {
+            this.functionAddButton_.removeClass('disable');
         }
 
-        listView.appendChild(this.variableSettingView);
-        listView.appendChild(this.listSettingView);
-
-        function _each(arr, viewFunc) {
-            return _.each(arr, (data) => {
-                !data.listElement && viewFunc(data);
-
-                listView.appendChild(data.listElement);
-                if (data.callerListElement) {
-                    listView.appendChild(data.callerListElement);
-                }
-            });
-        }
+        listView.appendChild(this.functionAddButton_);
+        this._each(this.functions_, this.createFunctionView.bind(this));
     }
 
     /**
@@ -627,7 +649,7 @@ Entry.VariableContainer = class VariableContainer {
                 variable.id_ = Entry.generateHash();
             }
             const type = variable.getType();
-            if (type == 'variable' || type == 'slide') {
+            if (type === 'variable' || type === 'slide') {
                 if (
                     this.variables_.some((item) => {
                         return item.id_ === variable.id_;
@@ -637,7 +659,7 @@ Entry.VariableContainer = class VariableContainer {
                 }
                 this.generateVariable(variable, this.variables_, 'variables_');
                 this.variables_.push(variable);
-            } else if (type == 'list') {
+            } else if (type === 'list') {
                 if (
                     this.lists_.some((item) => {
                         return item.id_ === variable.id_;
@@ -957,7 +979,7 @@ Entry.VariableContainer = class VariableContainer {
                 if (playground) {
                     playground.changeViewMode('code');
                     const blockMenu = this._getBlockMenu();
-                    if (blockMenu.lastSelector != 'func') {
+                    if (blockMenu.lastSelector !== 'func') {
                         blockMenu.selectMenu('func');
                     }
                 }
@@ -989,9 +1011,8 @@ Entry.VariableContainer = class VariableContainer {
             return;
         }
         const panel = this._getAddPanel(type);
-        const panelView = panel.view;
         const name = panel.view.name.value.trim();
-        panelView.addClass('entryRemove');
+        // panelView.addClass('entryRemove');
 
         if (Entry.isTextMode) {
             const alertMsg = Entry.TextCodingUtil.isNameIncludeSpace(name, type);
@@ -1069,9 +1090,9 @@ Entry.VariableContainer = class VariableContainer {
         }
 
         if (Entry.isTextMode) {
-            const alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(name, 'variable');
-            if (alert_msg) {
-                entrylms.alert(alert_msg);
+            const alertMsg = Entry.TextCodingUtil.isNameIncludeSpace(name, 'variable');
+            if (alertMsg) {
+                entrylms.alert(alertMsg);
                 variable.listElement.nameField.value = variable.name_;
                 return;
             }
@@ -1106,9 +1127,9 @@ Entry.VariableContainer = class VariableContainer {
         }
 
         if (Entry.isTextMode) {
-            const alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(name, 'list');
-            if (alert_msg) {
-                entrylms.alert(alert_msg);
+            const alertMsg = Entry.TextCodingUtil.isNameIncludeSpace(name, 'list');
+            if (alertMsg) {
+                entrylms.alert(alertMsg);
                 list.listElement.nameField.value = list.name_;
                 return;
             }
@@ -1171,7 +1192,7 @@ Entry.VariableContainer = class VariableContainer {
             className += ' entryVariableLocalElementWorkspace';
         }
 
-        view.addClass(className).bindOnClick((e) => {
+        view.addClass(className).bindOnClick(() => {
             return this.select(variable);
         });
 
@@ -1181,7 +1202,7 @@ Entry.VariableContainer = class VariableContainer {
                 e.stopPropagation();
                 Entry.do('variableContainerRemoveVariable', variable);
                 this.selectedVariable = null;
-                this.variableSettingView.addClass('entryRemove');
+                // this.variableSettingView.addClass('entryRemove');
             })
             .appendTo(wrapper);
 
@@ -1390,10 +1411,10 @@ Entry.VariableContainer = class VariableContainer {
     /**
      * @param {Entry.Variable} list
      */
-    createListView(list) {
+    createListView1(list) {
         const createElement = Entry.createElement;
         const that = this;
-        const view = createElement('li')
+        const view = createElement('div')
             .addClass('entryVariableListElementWorkspace')
             .bindOnClick(() => {
                 return that.select(list);
@@ -1418,7 +1439,7 @@ Entry.VariableContainer = class VariableContainer {
                 e.stopPropagation();
                 Entry.do('variableContainerRemoveList', list);
                 that.selectedList = null;
-                that.listSettingView.addClass('entryRemove');
+                // that.listSettingView.addClass('entryRemove');
             })
             .appendTo(wrapper);
 
@@ -1447,7 +1468,7 @@ Entry.VariableContainer = class VariableContainer {
         nameField.setAttribute('disabled', 'disabled');
         nameField.value = list.name_;
         nameField.onfocus = Entry.Utils.setFocused;
-        nameField.onblur = Entry.Utils.setBlurredTimer(function(e) {
+        nameField.onblur = Entry.Utils.setBlurredTimer(function() {
             const value = this.value.trim();
             if (!value) {
                 Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.list_can_not_space);
@@ -1461,6 +1482,94 @@ Entry.VariableContainer = class VariableContainer {
 
         view.nameField = nameField;
         list.listElement = view;
+    }
+
+    createListView(list) {
+        const that = this;
+        const createElement = Entry.createElement;
+
+        const listWrapper = createElement('div')
+            .addClass('list unfold')
+            .bindOnClick(() => {
+                const editBoxes = document.getElementsByClassName('list');
+                for (const box of editBoxes) {
+                    box.removeClass('unfold');
+                }
+                editBoxWrapper.addClass('unfold');
+            })
+            .appendTo(this.globalListBox);
+
+        if (!list.object_) {
+            if (list.isCloud_) {
+                listWrapper.addClass('global_list');
+            } else {
+                listWrapper.addClass('default_list');
+            }
+        } else {
+            listWrapper.addClass('local_list');
+        }
+
+        const editBoxWrapper = createElement('div')
+            .addClass('inpt_box')
+            .bindOnClick(function(e) {
+                e.stopPropagation();
+
+                if (that.selectedList === list) {
+                    editBoxInput.blur();
+                    that.select(list);
+                    that.updateSelectedVariable(null, 'list');
+                } else {
+                    Entry.do('setListEditable', list.id_);
+                }
+            })
+            .appendTo(listWrapper);
+        const editBoxInputWrapper = createElement('div')
+            .addClass('inpt')
+            .appendTo(editBoxWrapper);
+        const editBoxInput = createElement('input')
+            .addClass('input')
+            .appendTo(editBoxInputWrapper);
+        editBoxInput.setAttribute('type', 'text');
+        editBoxInput.setAttribute('name', 'inpt_name');
+        editBoxInput.value = list.name_;
+        editBoxInput.onblur = function() {
+            const value = this.value.trim();
+            if (!value) {
+                Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.list_can_not_space);
+                this.value = list.getName();
+                return this.focus();
+            }
+            const targetList = that.getList(list.getId());
+            targetList && Entry.do('listSetName', targetList.getId(), value);
+        };
+        editBoxInput.onkeydown = Entry.Utils.blurWhenEnter;
+        const watchButton = createElement('a')
+            .addClass('watch')
+            .bindOnClick(() => {
+                Entry.do('listSetVisibility', list.id_, !list.isVisible());
+                if (list.isVisible()) {
+                    watchButton.addClass('on');
+                } else {
+                    watchButton.removeClass('on');
+                }
+            })
+            .appendTo(editBoxWrapper);
+        if (list.isVisible()) {
+            watchButton.addClass('on');
+        } else {
+            watchButton.removeClass('on');
+        }
+        watchButton.href = '#';
+        const delButton = createElement('a')
+            .addClass('del')
+            .bindOnClick((e) => {
+                e.stopPropagation();
+                Entry.do('variableContainerRemoveList', list);
+            })
+            .appendTo(editBoxWrapper);
+        delButton.href = '#';
+        listWrapper.nameField = editBoxInput;
+        list.listElement = listWrapper;
     }
 
     /**
@@ -1548,9 +1657,10 @@ Entry.VariableContainer = class VariableContainer {
 
         const that = this;
 
-        const variableAddSpace = createElement('li').addClass(
-            'entryVariableAddSpaceWorkspace entryRemove'
-        );
+        // const variableAddSpace = createElement('li').addClass(
+        //     'entryVariableAddSpaceWorkspace entryRemove'
+        // );
+        const variableAddSpace = createElement('li').addClass('entryVariableAddSpaceWorkspace');
         this.variableAddPanel.view = variableAddSpace;
         this.variableAddPanel.isOpen = false;
 
@@ -1642,11 +1752,12 @@ Entry.VariableContainer = class VariableContainer {
         const addSpaceButtonWrapper = createElement('div')
             .addClass('entryVariableAddSpaceButtonWrapperWorkspace')
             .appendTo(variableAddSpace);
+
         createElement('span')
             .addClass('entryVariableAddSpaceCancelWorkspace')
             .addClass('entryVariableAddSpaceButtonWorkspace')
             .bindOnClick(() => {
-                that._getAddPanel().view.addClass('entryRemove');
+                // that._getAddPanel().view.addClass('entryRemove');
                 that.resetVariableAddPanel('variable');
             })
             .appendTo(addSpaceButtonWrapper).innerHTML =
@@ -1708,25 +1819,27 @@ Entry.VariableContainer = class VariableContainer {
         const _setFocused = Entry.Utils.setFocused;
         const _setBlurredTimer = Entry.Utils.setBlurredTimer;
 
-        const listAddSpace = createElement('li')
-            .addClass('entryVariableAddSpaceWorkspace')
-            .addClass('entryRemove');
+        // 리스트 만들기 폼
+        const listAddSpace = createElement('div').addClass('entryVariableAddSpaceWorkspace off');
         this.listAddPanel.view = listAddSpace;
         this.listAddPanel.isOpen = false;
 
+        // 리스트 만들기
         const addSpaceNameWrapper = createElement('div')
             .addClass('entryVariableAddSpaceNameWrapperWorkspace')
-            .addClass('entryListAddSpaceNameWrapperWorkspace')
             .appendTo(listAddSpace);
 
         const addSpaceInputLabel = createElement('label')
             .addClass('entryVariableAddSpaceInputLabelWorkspace')
             .appendTo(addSpaceNameWrapper);
         addSpaceInputLabel.innerText = Lang.Workspace.list_name;
+        addSpaceInputLabel.setAttribute('for', 'entryVariableAddSpaceInputWorkspace');
+
         const addSpaceInput = createElement('input')
             .addClass('entryVariableAddSpaceInputWorkspace')
             .appendTo(addSpaceNameWrapper);
         addSpaceInput.setAttribute('placeholder', Lang.Workspace.list_name);
+        addSpaceInput.id = 'entryVariableAddSpaceInputWorkspace';
         this.listAddPanel.view.name = addSpaceInput;
 
         addSpaceInput.onkeypress = Entry.Utils.whenEnter(function() {
@@ -1747,24 +1860,57 @@ Entry.VariableContainer = class VariableContainer {
             doBlur.apply(this);
         };
 
+        // 모든 오브젝트에서 사용
         const addSpaceGlobalWrapper = createElement('div')
-            .addClass('entryVariableAddSpaceGlobalWrapperWorkspace')
+            .addClass('entryVariableAddSpaceGlobalWrapperWorkspace on')
             .bindOnClick(() => {
+                addSpaceLocalWrapper.removeClass('on');
+                addSpaceGlobalWrapper.addClass('on');
                 return Entry.do('listAddSetScope', 'global');
             })
             .appendTo(listAddSpace);
 
-        createElement('span').appendTo(addSpaceGlobalWrapper).innerHTML =
+        createElement('span')
+            .addClass('Workspace_text')
+            .appendTo(addSpaceGlobalWrapper).innerHTML =
             Lang.Workspace.use_all_objects;
 
         this.listAddPanel.view.globalCheck = createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
-            .addClass(!this.listAddPanel.info.object ? 'entryVariableAddChecked' : '')
             .appendTo(addSpaceGlobalWrapper);
 
+        // 공유 리스트
+        const addSpaceCloudWrapper = createElement('div')
+            .appendTo(addSpaceGlobalWrapper)
+            .addClass('entryVariableAddSpaceCloudWrapperWorkspace')
+            .bindOnClick(() => {
+                const { object, isCloud } = this.listAddPanel.info;
+                !object && Entry.do('listAddSetCloud', !isCloud);
+                if (isCloud) {
+                    addSpaceCloudWrapper.removeClass('on');
+                } else {
+                    addSpaceCloudWrapper.addClass('on');
+                }
+            });
+        listAddSpace.cloudWrapper = addSpaceCloudWrapper;
+
+        createElement('span')
+            .addClass('entryVariableAddSpaceCloudSpanWorkspace')
+            .appendTo(addSpaceCloudWrapper).innerHTML =
+            Lang.Workspace.List_create_cloud;
+
+        const addListCloudCheck = createElement('span')
+            .addClass('entryVariableAddSpaceCheckWorkspace')
+            .appendTo(addSpaceCloudWrapper);
+        this.listAddPanel.view.cloudCheck = addListCloudCheck;
+
+        // 이 오브젝트에서 사용
         const addSpaceLocalWrapper = createElement('div')
-            .addClass('entryVariableAddSpaceLocalWrapperWorkspace')
-            .bindOnClick((e) => {
+            .addClass('entryVariableAddSpaceGlobalWrapperWorkspace')
+            .bindOnClick(() => {
+                addSpaceGlobalWrapper.removeClass('on');
+                addSpaceCloudWrapper.removeClass('on');
+                addSpaceLocalWrapper.addClass('on');
                 return Entry.do('listAddSetScope', 'local');
             })
             .appendTo(listAddSpace);
@@ -1777,62 +1923,63 @@ Entry.VariableContainer = class VariableContainer {
             .addClass(this.variableAddPanel.info.object ? 'entryVariableAddChecked' : '')
             .appendTo(addSpaceLocalWrapper);
 
-        const addSpaceCloudWrapper = createElement('div')
-            .appendTo(listAddSpace)
-            .addClass('entryVariableAddSpaceCloudWrapperWorkspace')
-            .bindOnClick(() => {
-                const { object, isCloud } = this.listAddPanel.info;
-                !object && Entry.do('listAddSetCloud', !isCloud);
-            });
-        listAddSpace.cloudWrapper = addSpaceCloudWrapper;
-        createElement('span')
-            .addClass('entryVariableAddSpaceCloudSpanWorkspace')
-            .appendTo(addSpaceCloudWrapper).innerHTML =
-            Lang.Workspace.List_create_cloud;
-
-        const addListCloudCheck = createElement('span')
-            .addClass('entryVariableAddSpaceCheckWorkspace')
-            .addClass('entryVariableAddSpaceCloudCheckWorkspace')
-            .addClass(this.listAddPanel.info.isCloud ? 'entryVariableAddChecked' : '')
-            .appendTo(addSpaceCloudWrapper);
-        this.listAddPanel.view.cloudCheck = addListCloudCheck;
-
+        // 확인 취소 버튼
         const addSpaceButtonWrapper = createElement('div')
             .addClass('entryVariableAddSpaceButtonWrapperWorkspace')
             .appendTo(listAddSpace);
 
-        createElement('span')
+        const addSpaceCancelButton = createElement('a')
             .addClass('entryVariableAddSpaceCancelWorkspace')
             .addClass('entryVariableAddSpaceButtonWorkspace')
             .bindOnClick(() => {
-                this.listAddPanel.view.addClass('entryRemove');
+                // this.listAddPanel.view.addClass('entryRemove');
                 this.resetVariableAddPanel('list');
             })
-            .appendTo(addSpaceButtonWrapper).innerHTML =
-            Lang.Buttons.cancel;
+            .appendTo(addSpaceButtonWrapper);
+        addSpaceCancelButton.href = '#';
+        addSpaceCancelButton.innerHTML = Lang.Buttons.cancel;
 
-        const addSpaceConfirmButton = createElement('span')
+        const addSpaceConfirmButton = createElement('a')
             .addClass('entryVariableAddSpaceConfirmWorkspace')
             .addClass('entryVariableAddSpaceButtonWorkspace')
             .bindOnClick(() => {
                 return that._addList();
             })
             .appendTo(addSpaceButtonWrapper);
+        addSpaceConfirmButton.href = '#';
         addSpaceConfirmButton.innerHTML = Lang.Buttons.save;
         this.listAddConfirmButton = addSpaceConfirmButton;
+
+        //global list container
+        this.globalList = createElement('div').addClass('entryVariableSplitterWorkspace unfold');
+
+        const globalListTitle = Entry.createElement('a').addClass('attr_link');
+        globalListTitle.innerHTML = Lang.Workspace.List_used_all_objects;
+        this.globalList.appendChild(globalListTitle);
+
+        this.globalListBox = createElement('div')
+            .addClass('attr_box')
+            .appendTo(this.globalList);
+
+        //local list container
+        this.localList = createElement('div').addClass('entryVariableSplitterWorkspace unfold');
+
+        const localListTitle = Entry.createElement('a').addClass('attr_link');
+        localListTitle.innerHTML = Lang.Workspace.list_used_specific_objects;
+        this.localList.appendChild(localListTitle);
     }
 
     generateVariableSplitterView() {
         this.variableSplitters = {
-            top: Entry.createElement('li').addClass('entryVariableSplitterWorkspace'),
-            bottom: Entry.createElement('li').addClass('entryVariableSplitterWorkspace'),
+            top: Entry.createElement('div').addClass('entryVariableSplitterWorkspace'),
+            bottom: Entry.createElement('div').addClass('entryVariableSplitterWorkspace'),
         };
     }
 
     openVariableAddPanel(type = 'variable') {
         Entry.playground.toggleOnVariableView();
         Entry.playground.changeViewMode('variable');
-        if (type == 'variable') {
+        if (type === 'variable') {
             this._getAddPanel().isOpen = true;
             this.selectFilter(type);
         } else {
@@ -1937,7 +2084,7 @@ Entry.VariableContainer = class VariableContainer {
 
         const element = createElement('div')
             .addClass('entryVariableSettingWorkspace')
-            .addClass('entryRemove')
+            // .addClass('entryRemove')
             .bindOnClick((e) => {
                 return e.stopPropagation();
             })
@@ -1971,7 +2118,7 @@ Entry.VariableContainer = class VariableContainer {
         initValueInput.value = 0;
         initValueInput.onkeypress = Entry.Utils.blurWhenEnter;
         initValueInput.onfocus = _setFocused;
-        initValueInput.onblur = _setBlurredTimer(function(e) {
+        initValueInput.onblur = _setBlurredTimer(function() {
             const v = that.selectedVariable;
             Entry.do('variableSetDefaultValue', v.id_, this.value);
         });
@@ -1987,7 +2134,7 @@ Entry.VariableContainer = class VariableContainer {
         createElement('span').appendTo(slideWrapper).innerHTML = Lang.Workspace.slide;
         element.slideCheck = createElement('span')
             .addClass('entryVariableSettingCheckWorkspace')
-            .bindOnClick((e) => {
+            .bindOnClick(() => {
                 const v = that.selectedVariable;
                 Entry.do(
                     'variableSetSlidable',
@@ -2009,14 +2156,14 @@ Entry.VariableContainer = class VariableContainer {
         const v = that.selectedVariable;
         const vType = _.result(v, 'type');
 
-        if (vType == 'slide') {
+        if (vType === 'slide') {
             minValueInput.value = v.minValue_;
         } else {
             minValueInput.value = 0;
         }
         minValueInput.onkeypress = Entry.Utils.blurWhenEnter;
         minValueInput.onfocus = _setFocused;
-        minValueInput.onblur = _setBlurredTimer(function(e) {
+        minValueInput.onblur = _setBlurredTimer(function() {
             const v = that.selectedVariable;
             let value = this.value;
             value = Entry.Utils.isNumber(value) ? value : v.getMinValue();
@@ -2031,7 +2178,7 @@ Entry.VariableContainer = class VariableContainer {
         const maxValueInput = createElement('input')
             .addClass('entryVariableSettingMaxValueInputWorkspace')
             .appendTo(minMaxWrapper);
-        if (vType == 'slide') {
+        if (vType === 'slide') {
             maxValueInput.value = v.maxValue_;
         } else {
             maxValueInput.value = 100;
@@ -2039,7 +2186,7 @@ Entry.VariableContainer = class VariableContainer {
 
         maxValueInput.onkeypress = Entry.Utils.blurWhenEnter;
         maxValueInput.onfocus = _setFocused;
-        maxValueInput.onblur = _setBlurredTimer(function(e) {
+        maxValueInput.onblur = _setBlurredTimer(function() {
             const v = that.selectedVariable;
             let value = this.value;
             value = Entry.Utils.isNumber(value) ? value : v.getMaxValue();
@@ -2069,7 +2216,7 @@ Entry.VariableContainer = class VariableContainer {
         }
 
         slide.removeClass('entryVariableSettingChecked');
-        if (v.getType() == 'slide') {
+        if (v.getType() === 'slide') {
             slide.addClass('entryVariableSettingChecked');
             minValue.removeAttribute('disabled');
             maxValue.removeAttribute('disabled');
@@ -2085,7 +2232,7 @@ Entry.VariableContainer = class VariableContainer {
         initValue.value = v.getValue();
         v.listElement.appendChild(view);
 
-        view.removeClass('entryRemove');
+        // view.removeClass('entryRemove');
     }
 
     /**
@@ -2098,7 +2245,7 @@ Entry.VariableContainer = class VariableContainer {
                 return e.stopPropagation();
             })
             .addClass('entryListSettingWorkspace')
-            .addClass('entryRemove')
+            // .addClass('entryRemove')
             .appendTo(this.listView_);
 
         this.listSettingView = element;
@@ -2141,7 +2288,7 @@ Entry.VariableContainer = class VariableContainer {
 
         const visibleWrapper = Entry.createElement('div')
             .addClass('entryListSettingVisibleWrapperWorkspace')
-            .bindOnClick((e) => {
+            .bindOnClick(() => {
                 const v = that.selectedList;
                 Entry.do('listSetVisibility', v.id_, !v.isVisible());
             })
@@ -2169,7 +2316,7 @@ Entry.VariableContainer = class VariableContainer {
 
         element.minus = Entry.createElement('span')
             .addClass('entryListSettingMinusWorkspace')
-            .bindOnClick((e) => {
+            .bindOnClick(() => {
                 const { selectedList: { id_ } } = that;
                 Entry.do('listChangeLength', id_, 'minus');
             })
@@ -2207,66 +2354,54 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     updateListSettingView(list) {
-        list = list || this.selectedList;
-        const view = this.listSettingView;
-        const _whenEnter = Entry.Utils.blurWhenEnter;
-        const { listValues, visibleCheck, lengthInput, seperator } = view;
-
-        if (list.isVisible()) {
-            visibleCheck.addClass('entryListSettingCheckedWorkspace');
-        } else {
-            visibleCheck.removeClass('entryListSettingCheckedWorkspace');
-        }
-
-        const arr = list.array_;
-        lengthInput.value = arr.length;
-        list.listElement.appendChild(view);
-
-        //remove element and event bindings
-        $(listValues).empty();
-
-        if (arr.length === 0) {
-            seperator.addClass('entryRemove');
-        } else {
-            seperator.removeClass('entryRemove');
-        }
-
-        const startIndex = Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD ? 0 : 1;
-
-        const fragment = document.createDocumentFragment();
-
-        arr.forEach(({ data }, i) => {
-            const wrapper = Entry.createElement('div')
-                .addClass('entryListSettingValueWrapperWorkspace')
-                .appendTo(fragment);
-
-            Entry.createElement('span')
-                .addClass('entryListSettingValueNumberSpanWorkspace')
-                .appendTo(wrapper).innerHTML =
-                i + startIndex;
-
-            const input = Entry.createElement('input')
-                .addClass('entryListSettingEachInputWorkspace')
-                .appendTo(wrapper);
-            input.value = data;
-            input.onfocus = Entry.Utils.setFocused;
-            input.onblur = Entry.Utils.setBlurredTimer(function() {
-                Entry.do('listSetDefaultValue', list.id_, i, this.value);
-            });
-            input.onkeypress = Entry.Utils.blurWhenEnter;
-
-            Entry.createElement('span')
-                .addClass('entryListSettingValueRemoveWorkspace')
-                .bindOnClick(() => {
-                    arr.splice(i, 1);
-                    this.updateListSettingView();
-                })
-                .appendTo(wrapper);
-        });
-        listValues.appendChild(fragment);
-
-        list.updateView();
-        view.removeClass('entryRemove');
+        // list = list || this.selectedList;
+        // const view = this.listSettingView;
+        // const { listValues, visibleCheck, lengthInput, seperator } = view;
+        // if (list.isVisible()) {
+        //     visibleCheck.addClass('entryListSettingCheckedWorkspace');
+        // } else {
+        //     visibleCheck.removeClass('entryListSettingCheckedWorkspace');
+        // }
+        // const arr = list.array_;
+        // lengthInput.value = arr.length;
+        // list.listElement.appendChild(view);
+        // //remove element and event bindings
+        // $(listValues).empty();
+        // if (arr.length === 0) {
+        //     seperator.addClass('entryRemove');
+        // } else {
+        //     seperator.removeClass('entryRemove');
+        // }
+        // const startIndex = Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD ? 0 : 1;
+        // const fragment = document.createDocumentFragment();
+        // arr.forEach(({ data }, i) => {
+        //     const wrapper = Entry.createElement('div')
+        //         .addClass('entryListSettingValueWrapperWorkspace')
+        //         .appendTo(fragment);
+        //     Entry.createElement('span')
+        //         .addClass('entryListSettingValueNumberSpanWorkspace')
+        //         .appendTo(wrapper).innerHTML =
+        //         i + startIndex;
+        //     const input = Entry.createElement('input')
+        //         .addClass('entryListSettingEachInputWorkspace')
+        //         .appendTo(wrapper);
+        //     input.value = data;
+        //     input.onfocus = Entry.Utils.setFocused;
+        //     input.onblur = Entry.Utils.setBlurredTimer(function() {
+        //         Entry.do('listSetDefaultValue', list.id_, i, this.value);
+        //     });
+        //     input.onkeypress = Entry.Utils.blurWhenEnter;
+        //     Entry.createElement('span')
+        //         .addClass('entryListSettingValueRemoveWorkspace')
+        //         .bindOnClick(() => {
+        //             arr.splice(i, 1);
+        //             this.updateListSettingView();
+        //         })
+        //         .appendTo(wrapper);
+        // });
+        // listValues.appendChild(fragment);
+        // list.updateView();
+        // view.removeClass('entryRemove');
     }
 
     setListLength(list, value) {
@@ -2294,17 +2429,17 @@ Entry.VariableContainer = class VariableContainer {
     updateSelectedVariable(object, type = 'variable') {
         const objectType = _.result(object, 'type');
         if (!object) {
-            if (type == 'variable') {
-                this.variableSettingView.addClass('entryRemove');
+            if (type === 'variable') {
+                // this.variableSettingView.addClass('entryRemove');
                 this.selectedVariable = null;
             } else {
-                this.listSettingView.addClass('entryRemove');
+                // this.listSettingView.addClass('entryRemove');
                 this.selectedList = null;
             }
-        } else if (objectType == 'variable' || objectType == 'slide') {
+        } else if (objectType === 'variable' || objectType === 'slide') {
             this.selectedVariable = object;
             this.updateVariableSettingView(object);
-        } else if (objectType == 'list') {
+        } else if (objectType === 'list') {
             this.selectedList = object;
             this.updateListSettingView(object);
         }
@@ -2513,7 +2648,7 @@ Entry.VariableContainer = class VariableContainer {
             }
         }
 
-        if (type == '_functionRefs') {
+        if (type === '_functionRefs') {
             const id = block.type.substr(5);
             const func = Entry.variableContainer.functions_[id];
             if (!func || func.isRemoved) {
@@ -2663,16 +2798,15 @@ Entry.VariableContainer = class VariableContainer {
         const panelView = panel.view;
         const panelViewName = panelView.name;
         const value = panelViewName.value.trim();
-
         if (panel.isOpen && !forceOpen) {
             if (_.isEmpty(value)) {
-                panelView.addClass('entryRemove');
+                panelView.addClass('off');
                 panel.isOpen = false;
             } else {
                 return doFunc();
             }
         } else {
-            panelView.removeClass('entryRemove');
+            panelView.removeClass('off');
             !doNotFocus && Entry.Utils.focusIfNotActive(panelViewName);
             panel.isOpen = true;
         }
@@ -2759,7 +2893,7 @@ Entry.VariableContainer = class VariableContainer {
         const variables = this.variables_;
         const variableJSON = v.toJSON();
 
-        if (type == 'slide') {
+        if (type === 'slide') {
             variableJSON.variableType = type;
             newVariable = new Entry.Variable(variableJSON);
             variables.splice(variables.indexOf(v), 0, newVariable);
@@ -2769,7 +2903,7 @@ Entry.VariableContainer = class VariableContainer {
             } else if (newVariable.getValue() > 100) {
                 newVariable.setValue(100);
             }
-        } else if (type == 'variable') {
+        } else if (type === 'variable') {
             variableJSON.variableType = type;
             if (value !== undefined) {
                 variableJSON.value = value;
