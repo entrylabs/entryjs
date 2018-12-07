@@ -40,7 +40,7 @@ export function entryIsWebGLSupported(userSend) {
         }
 
         var hasGL = !!gl;
-        var hasStencil  = !success;
+        var hasStencil  = success;
         if(userSend || !success) {
             let ec;
             if(!hasGL) {
@@ -78,16 +78,18 @@ function send(errorCode, userSend, vendor, renderer) {
     obj.agent = window.navigator.userAgent;
     obj.url = window.location.href;
 
-
     var alertMsg;
     if(userSend) {
         alertMsg = "로그가 전송 되었습니다."
     } else {
         alertMsg = "이 환경에서는 실행할 수 없습니다."
     }
-    alert(alertMsg);
 
-    console.log("Report", JSON.stringify(obj));
+    let url = "/api/webgl/log";
+    $.post(url, obj, (d)=>{
+        alert(alertMsg);
+    }, "json");
+
     if(!userSend) {
         throw new Error(alertMsg);
     }
