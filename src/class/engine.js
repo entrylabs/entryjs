@@ -318,9 +318,13 @@ Entry.Engine = function() {
             this.maximizeButton.addClass('entryRemove');
             this.mouseView.addClass('entryRemoveElement');
 
+            const speedBox = Entry.createElement('div', 'entrySpeedBox');
+            speedBox.addClass('entrySpeedBox');
+            this.view_.insertBefore(speedBox, this.maximizeButton);
+
             this.speedLabel_ = Entry.createElement('div', 'entrySpeedLabelWorkspace');
             this.speedLabel_.innerHTML = Lang.Workspace.speed;
-            this.view_.insertBefore(this.speedLabel_, this.maximizeButton);
+            speedBox.appendChild(this.speedLabel_);
 
             this.speedProgress_ = Entry.createElement('table', 'entrySpeedProgressWorkspace');
             var tr = Entry.createElement('tr').appendTo(this.speedProgress_);
@@ -331,7 +335,7 @@ Entry.Engine = function() {
                     .appendTo(tr);
             });
 
-            this.view_.insertBefore(this.speedProgress_, this.maximizeButton);
+            speedBox.appendChild(this.speedProgress_);
             this.speedHandle_ = Entry.createElement('div', 'entrySpeedHandleWorkspace');
             var canvasWidth = Entry.interfaceState.canvasWidth;
             var grid = (canvasWidth - 84) / 5;
@@ -359,7 +363,7 @@ Entry.Engine = function() {
                     $(document).unbind('.speedPanel');
                 }
             });
-            this.view_.insertBefore(this.speedHandle_, this.maximizeButton);
+            speedBox.appendChild(this.speedHandle_);
             this.setSpeedMeter(Entry.FPS);
         }
     };

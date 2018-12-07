@@ -18,7 +18,6 @@
 .entrySceneElementWorkspace {
     float: left;
     overflow: hidden;
-    position: relative;
     margin: 5px 0 0 -12px;
     list-style-type: none;
     color: white;
@@ -26,6 +25,7 @@
     z-index: 10;
 }
 .entrySceneElementWorkspace.selectedScene {
+    position: relative;
     margin-top: 0;
     z-index: 888;
 }
@@ -82,7 +82,6 @@
     border-radius: 4px;
     outline: 0;
     background-color: transparent;
-    padding: 7px 4px 6px;
     font-size: 12px;
     font-weight: 600;
     color: #fff;
@@ -108,6 +107,8 @@
 }
 
 .entrySceneRemoveButtonCoverWorkspace {
+    position: relative;
+    z-index: 15;
     border: 0;
     padding: 0;
     width: 20px;
