@@ -2,8 +2,8 @@ module.exports = {
     getBlocks() {
         return {
             show: {
-                color: '#FF5174',
-                outerLine: '#EE3157',
+                color: EntryStatic.colorSet.block.default.LOOKS,
+                outerLine: EntryStatic.colorSet.block.darken.LOOKS,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -27,8 +27,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.show()'] },
             },
             hide: {
-                color: '#FF5174',
-                outerLine: '#EE3157',
+                color: EntryStatic.colorSet.block.default.LOOKS,
+                outerLine: EntryStatic.colorSet.block.darken.LOOKS,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -52,8 +52,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.hide()'] },
             },
             dialog_time: {
-                color: '#FF5174',
-                outerLine: '#EE3157',
+                color: EntryStatic.colorSet.block.default.LOOKS,
+                outerLine: EntryStatic.colorSet.block.darken.LOOKS,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -190,8 +190,8 @@ module.exports = {
                 },
             },
             dialog: {
-                color: '#FF5174',
-                outerLine: '#EE3157',
+                color: EntryStatic.colorSet.block.default.LOOKS,
+                outerLine: EntryStatic.colorSet.block.darken.LOOKS,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -268,8 +268,8 @@ module.exports = {
                 },
             },
             remove_dialog: {
-                color: '#FF5174',
-                outerLine: '#EE3157',
+                color: EntryStatic.colorSet.block.default.LOOKS,
+                outerLine: EntryStatic.colorSet.block.darken.LOOKS,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -295,8 +295,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.clear_print()'] },
             },
             change_to_some_shape: {
-                color: '#FF5174',
-                outerLine: '#EE3157',
+                color: EntryStatic.colorSet.block.default.LOOKS,
+                outerLine: EntryStatic.colorSet.block.darken.LOOKS,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -354,8 +354,8 @@ module.exports = {
                 },
             },
             change_to_next_shape: {
-                color: '#FF5174',
-                outerLine: '#EE3157',
+                color: EntryStatic.colorSet.block.default.LOOKS,
+                outerLine: EntryStatic.colorSet.block.darken.LOOKS,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -424,8 +424,8 @@ module.exports = {
                 },
             },
             add_effect_amount: {
-                color: '#FF5174',
-                outerLine: '#EE3157',
+                color: EntryStatic.colorSet.block.default.LOOKS,
+                outerLine: EntryStatic.colorSet.block.darken.LOOKS,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -527,8 +527,8 @@ module.exports = {
                 },
             },
             change_effect_amount: {
-                color: '#FF5174',
-                outerLine: '#EE3157',
+                color: EntryStatic.colorSet.block.default.LOOKS,
+                outerLine: EntryStatic.colorSet.block.darken.LOOKS,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -630,8 +630,8 @@ module.exports = {
                 },
             },
             erase_all_effects: {
-                color: '#FF5174',
-                outerLine: '#EE3157',
+                color: EntryStatic.colorSet.block.default.LOOKS,
+                outerLine: EntryStatic.colorSet.block.darken.LOOKS,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -655,8 +655,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.clear_effect()'] },
             },
             change_scale_size: {
-                color: '#FF5174',
-                outerLine: '#EE3157',
+                color: EntryStatic.colorSet.block.default.LOOKS,
+                outerLine: EntryStatic.colorSet.block.darken.LOOKS,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -705,8 +705,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.add_size(%1)'] },
             },
             set_scale_size: {
-                color: '#FF5174',
-                outerLine: '#EE3157',
+                color: EntryStatic.colorSet.block.default.LOOKS,
+                outerLine: EntryStatic.colorSet.block.darken.LOOKS,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -755,8 +755,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.set_size(%1)'] },
             },
             flip_x: {
-                color: '#FF5174',
-                outerLine: '#EE3157',
+                color: EntryStatic.colorSet.block.default.LOOKS,
+                outerLine: EntryStatic.colorSet.block.darken.LOOKS,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -780,8 +780,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.flip_horizontal()'] },
             },
             flip_y: {
-                color: '#FF5174',
-                outerLine: '#EE3157',
+                color: EntryStatic.colorSet.block.default.LOOKS,
+                outerLine: EntryStatic.colorSet.block.darken.LOOKS,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -805,8 +805,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.flip_vertical()'] },
             },
             change_object_index: {
-                color: '#FF5174',
-                outerLine: '#EE3157',
+                color: EntryStatic.colorSet.block.default.LOOKS,
+                outerLine: EntryStatic.colorSet.block.darken.LOOKS,
                 skeleton: 'basic',
                 statements: [],
                 params: [

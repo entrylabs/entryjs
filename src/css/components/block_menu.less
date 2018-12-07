@@ -26,6 +26,7 @@
 }
 .entryCategoryListWorkspace li {
     margin-top: -1px;
+    background-color: #ecf8ff
 }
 .entryCategoryListWorkspace li:first-child {
     margin-top: 0;
@@ -126,68 +127,6 @@
     z-index: 100;
 }
 
-#entryCategorymoving {
-    .backgroundImage("movement.png");
-    background-repeat: no-repeat;
-}
-
-.entrySelectedCategory#entryCategorymoving {
-    .backgroundImage("movement_on.png");
-    background-repeat: no-repeat;
-    background-color: #bf63ff;
-    border-color: #bf63ff;
-    color: #fff;
-}
-
-#entryCategorylooks {
-    /*border-right: 4px solid #EC4466;*/
-    .backgroundImage("looks.png");
-    background-repeat: no-repeat;
-}
-
-.entrySelectedCategory#entryCategorylooks {
-    .backgroundImage("looks_on.png");
-    background-repeat: no-repeat;
-    background-color: #ff5174;
-    border-color: #ff5174;
-    color: #fff;
-}
-
-#entryCategorybrush {
-    .backgroundImage("brush.png");
-    background-repeat: no-repeat;
-}
-
-.entrySelectedCategory#entryCategorybrush {
-    .backgroundImage("brush_on.png");
-    background-repeat: no-repeat;
-    background-color: #fc7e01;
-    border-color: #fc7e01;
-    color: #fff;
-}
-
-#entryCategorytext {
-    .backgroundImage("postbox_new.png");
-    background-repeat: no-repeat;
-}
-
-.entrySelectedCategory#entryCategorytext {
-    border-right: none;
-}
-
-#entryCategorysound {
-    .backgroundImage("sound.png");
-    background-repeat: no-repeat;
-}
-
-.entrySelectedCategory#entryCategorysound {
-    .backgroundImage("sound_on.png");
-    background-repeat: no-repeat;
-    background-color: #82d214;
-    border-color: #82d214;
-    color: #fff;
-}
-
 #entryCategorystart {
     .backgroundImage("start.png");
     background-repeat: no-repeat;
@@ -208,6 +147,67 @@
     .backgroundImage("flow_on.png");
     background-color: #31c1ec;
     border-color: #31c1ec;
+    color: #fff;
+}
+
+#entryCategorymoving {
+    .backgroundImage("movement.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategorymoving {
+    .backgroundImage("movement_on.png");
+    background-color: #bf63ff;
+    border-color: #bf63ff;
+    color: #fff;
+}
+
+#entryCategorylooks {
+    /*border-right: 4px solid #EC4466;*/
+    .backgroundImage("looks.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategorylooks {
+    .backgroundImage("looks_on.png");
+    background-color: #ff5174;
+    border-color: #ff5174;
+    color: #fff;
+}
+
+#entryCategorybrush {
+    .backgroundImage("brush.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategorybrush {
+    .backgroundImage("brush_on.png");
+    background-color: #fc7e01;
+    border-color: #fc7e01;
+    color: #fff;
+}
+
+#entryCategorytext {
+    .backgroundImage("postbox.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategorytext {
+    .backgroundImage("postbox_on.png");
+    background-color: #fc5d01;
+    border-color: #fc5d01;
+    color: #fff;
+}
+
+#entryCategorysound {
+    .backgroundImage("sound.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategorysound {
+    .backgroundImage("sound_on.png");
+    background-color: #82d214;
+    border-color: #82d214;
     color: #fff;
 }
 
@@ -272,9 +272,9 @@
 }
 
 #entryCategoryscene {
-    border-right: none;
     .backgroundImage("scene.png");
     background-repeat: no-repeat;
+    border-right: none;
 }
 
 .entrySelectedCategory#entryCategoryscene {
@@ -307,8 +307,9 @@
 }
 
 #entryCategoryhw_led {
-    font-size: 10px;
     .backgroundImage("diode.png");
+    background-repeat: no-repeat;
+    font-size: 10px;
 }
 
 .entrySelectedCategory#entryCategoryhw_led {
@@ -343,16 +344,15 @@
 }
 
 #entryCategoryhw_robot {
-    &:not(.entrySelectedCategory){
-        background-color: #C7DCDD;
-    }
     .backgroundImage("robot.png");
     background-repeat: no-repeat;
-    border-bottom: #5494A3 solid 1px;
 }
 
 .entrySelectedCategory#entryCategoryhw_robot {
-    border-right: none;
+    .backgroundImage("robot_on.png");
+    background-color: #00cfca;
+    border-color: #00cfca;
+    color: #fff;
 }
 
 .entryBlocklyWorkspace {

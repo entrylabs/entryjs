@@ -459,12 +459,9 @@
     width: 157px;
     height: 32px;
     padding: 0;
-    background-color: #fff;
-    border: 1px solid #4f80ff;
+    border: 1px solid @baseblue;
     border-radius: 0 0 0 5px;
-    background-color: #fff;
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
+    background: #fff no-repeat 50% 50%;
     background-size: 14px auto;
     font-size: 0;
     text-align: center;
@@ -479,12 +476,10 @@
     width: 114px;
     height: 32px;
     padding: 0;
-    border: 1px solid #4f80ff;
+    border: 1px solid @baseblue;
     border-left: 0;
     border-radius: 0 0 5px 0;
-    background-color: #fff;
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
+    background: #fff no-repeat 50% 50%;
     background-size: 10px auto;
     font-size: 0;
     text-align: center;
@@ -529,9 +524,6 @@
 }
 
 .entryStopButtonWorkspace_w {
-    // position: absolute;
-    // top: 192px;
-    // left: 155px;
     flex: 1;
     order: 5;
     width: 114px;
@@ -540,12 +532,10 @@
     border: 1px solid #4f80ff;
     border-left: 0;
     border-radius: 0 0 5px 0;
-    background-color: #fff;
     padding: 0;
     font-size: 0;
     text-align: center;
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
+    background: #fff no-repeat 50% 50%;
     background-size: 12px auto;
     .backgroundImage('layers_icon_button_stop_nor_2.png');
 }
@@ -713,5 +703,25 @@
         right: 0;
         bottom: 5px;
         background-image: url('@{image_url}zoom_out_btn_big.png');
+    }
+}
+
+.practical_course_mode {
+    .entryRunButtonWorkspace_w {
+        .backgroundImage('layers_icon_button_play_nor_1_practical_course_mode.png');
+        border-color: @basePurple;
+    }
+    .entryAddButtonWorkspace_w {
+        .backgroundImage('layers_icon_button_plus_nor_practical_course_mode.png');
+        border-color: @basePurple;
+    }
+    .entryPauseButtonWorkspace_w {
+        .backgroundImage('layers_icon_button_pause_nor_practical_course_mode.png');
+        border-color: @basePurple;
+    }
+
+    .entryStopButtonWorkspace_w {
+        .backgroundImage('layers_icon_button_stop_nor_2_practical_course_mode.png');
+        border-color: @basePurple;
     }
 }

@@ -26,6 +26,7 @@
         },
         practical_course_motor_speed: {
             color: '#00B200',
+            outerLine: '#019101',
             skeleton: 'basic_string_field',
             statements: [],
             isNotFor: ['neobot'],
@@ -50,7 +51,8 @@
                     ['15', '15']
                 ],
                 value: '15',
-                fontsIze: 11
+                bgColor: '#019101',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }],
             events: {},
             def: {
@@ -64,7 +66,8 @@
             }
         },
         practical_course_set_servo2: {
-            color: '#D126BD',
+            color: '#D128BD',
+            outerLine: '#a2049e',
             skeleton: 'basic',
             statements: [],
             isNotFor: ['neobot'],
@@ -77,7 +80,9 @@
                     ['OUT3', '3']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#A2049E',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Block',
                 accept: 'string'
@@ -115,6 +120,7 @@
         },
         practical_course_move_for_secs: {
             color: '#00B200',
+            outerLine: '#019101',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -128,7 +134,9 @@
                     ['왼쪽', '3'],
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#019101',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -136,7 +144,9 @@
                     ['뒤로', '32']
                 ],
                 value: '16',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#019101',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Block',
                 accept: 'string'
@@ -233,6 +243,7 @@
         },
         practical_course_move_for_secs2: {
             color: '#00B200',
+            outerLine: '#019101',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -245,7 +256,9 @@
                     ['뒤로', '32']
                 ],
                 value: '16',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#019101',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Block',
                 accept: 'string'
@@ -256,7 +269,9 @@
                     ['뒤로', '32']
                 ],
                 value: '16',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#019101',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Block',
                 accept: 'string'
@@ -324,6 +339,7 @@
         },
         practical_course_move_for: {
             color: '#00B200',
+            outerLine: '#019101',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -337,7 +353,9 @@
                     ['왼쪽', '3'],
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#019101',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -345,7 +363,9 @@
                     ['뒤로', '32']
                 ],
                 value: '16',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#019101',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Block',
                 accept: 'string'
@@ -400,6 +420,7 @@
         },
         practical_course_move_for2: {
             color: '#00B200',
+            outerLine: '#019101',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -412,7 +433,9 @@
                     ['뒤로', '32']
                 ],
                 value: '16',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#019101',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Block',
                 accept: 'string'
@@ -423,7 +446,9 @@
                     ['뒤로', '32']
                 ],
                 value: '16',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#019101',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Block',
                 accept: 'string'
@@ -465,6 +490,7 @@
         },
         practical_course_stop_for: {
             color: '#00B200',
+            outerLine: '#019101',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -478,7 +504,9 @@
                     ['왼쪽', '3'],
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#019101',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Indicator',
                 img: 'block_icon/practical_course/dcmotor.png',
@@ -508,6 +536,7 @@
         },
         practical_course_touch_value: {
             color: '#2AB4D3',
+            outerLine: '#0e93b1',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -521,7 +550,9 @@
                     ['IN 3', '3']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#0e93b1',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }],
             events: {},
             def: {
@@ -540,6 +571,7 @@
         },
         practical_course_touch_value_boolean: {
             color: '#2AB4D3',
+            outerLine: '#0e93b1',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
             isNotFor: ['neobot'],
@@ -552,7 +584,9 @@
                     ['IN 3', '3']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#0e93b1',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -560,7 +594,9 @@
                     ['접촉 안되면', '0']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#0e93b1',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }],
             def: {
                 params: [null, null, null],
@@ -581,7 +617,8 @@
             }
         },
         practical_course_light_value: {
-            color: '#31C1EC',
+            color: '#ff8d0f',
+            outerLine: '#e37100',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -595,7 +632,9 @@
                     ['IN 3', '3']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#e37100',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }],
             events: {},
             def: {
@@ -612,7 +651,8 @@
             }
         },
         practical_course_light_value_boolean: {
-            color: '#31C1EC',
+            color: '#ff8d0f',
+            outerLine: '#e37100',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
             isNotFor: ['neobot'],
@@ -625,7 +665,9 @@
                     ['IN 3', '3']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#e37100',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -636,7 +678,9 @@
                     ['≤', 'LESS_OR_EQUAL']
                 ],
                 value: 'LESS',
-                fontsIze: 11,
+                fontSize: 11,
+                bgColor: '#e37100',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
                 noaRrow: true
             }, {
                 type: 'Block',
@@ -684,7 +728,8 @@
             }
         },
         practical_course_sound_value: {
-            color: '#00D67F',
+            color: '#01d67f',
+            outerLine: '#00b36a',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -698,7 +743,9 @@
                     ['IN 3', '3']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#00b36a',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }],
             events: {},
             def: {
@@ -715,7 +762,8 @@
             }
         },
         practical_course_sound_value_boolean: {
-            color: '#00D67F',
+            color: '#01d67f',
+            outerLine: '#00b36a',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
             isNotFor: ['neobot'],
@@ -728,7 +776,9 @@
                     ['IN 3', '3']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#00b36a',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -739,7 +789,9 @@
                     ['≤', 'LESS_OR_EQUAL']
                 ],
                 value: 'LESS',
-                fontsIze: 11,
+                fontSize: 11,
+                bgColor: '#00b36a',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
                 noaRrow: true
             }, {
                 type: 'Block',
@@ -788,6 +840,7 @@
         },
         practical_course_irs_value: {
             color: '#C4065C',
+            outerLine: '#9a0045',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -801,7 +854,9 @@
                     ['IN 3', '3']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#9a0045',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }],
             events: {},
             def: {
@@ -820,6 +875,7 @@
         },
         practical_course_irs_value_boolean: {
             color: '#C4065C',
+            outerLine: '#9a0045',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
             isNotFor: ['neobot'],
@@ -832,7 +888,9 @@
                     ['IN 3', '3']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#9a0045',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -843,7 +901,9 @@
                     ['≤', 'LESS_OR_EQUAL']
                 ],
                 value: 'LESS',
-                fontsIze: 11,
+                fontSize: 11,
+                bgColor: '#9a0045',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
                 noaRrow: true
             }, {
                 type: 'Block',
@@ -892,7 +952,8 @@
             }
         },
         practical_course_diode_secs_toggle: {
-            color: '#FF8D10',
+            color: '#ff8d0f',
+            outerLine: '#e37100',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -906,7 +967,9 @@
                     ['OUT 3', '3']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#e37100',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Block',
                 accept: 'string'
@@ -917,7 +980,9 @@
                     ['끄기', '0']
                 ],
                 value: '255',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#e37100',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Indicator',
                 img: 'block_icon/practical_course/diode.png',
@@ -979,7 +1044,8 @@
             }
         },
         practical_course_diode_toggle: {
-            color: '#FF8D10',
+            color: '#ff8d0f',
+            outerLine: '#e37100',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -993,7 +1059,9 @@
                     ['OUT 3', '3'],
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#e37100',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -1001,7 +1069,9 @@
                     ['끄기', '0']
                 ],
                 value: '255',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#e37100',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Indicator',
                 img: 'block_icon/practical_course/diode.png',
@@ -1040,7 +1110,8 @@
             }
         },
         practical_course_diode_inout_toggle: {
-            color: '#FF8D10',
+            color: '#ff8d0f',
+            outerLine: '#e37100',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -1054,7 +1125,9 @@
                     ['OUT 3', '3']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#e37100',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -1063,7 +1136,9 @@
                     ['IN 3', '3']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#e37100',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Block',
                 accept: 'string'
@@ -1118,7 +1193,8 @@
             }
         },
         practical_course_diode_set_output: {
-            color: '#FF8D10',
+            color: '#ff8d0f',
+            outerLine: '#e37100',
             skeleton: 'basic',
             statements: [],
             isNotFor: ['neobot'],
@@ -1131,7 +1207,9 @@
                     ['OUT 3', '3']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#e37100',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Block',
                 accept: 'string'
@@ -1172,7 +1250,8 @@
             }
         },
         practical_course_diode_input_value: {
-            color: '#FF8D10',
+            color: '#ff8d0f',
+            outerLine: '#e37100',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -1186,7 +1265,9 @@
                     ['IN 3', '3']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#e37100',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }],
             events: {},
             def: {
@@ -1226,7 +1307,9 @@
                     ['시', '12']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#ce105e',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -1238,7 +1321,9 @@
                     ['6', '5']
                 ],
                 value: '2',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#ce105e',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -1249,7 +1334,9 @@
                     ['16분음표', '16'],
                 ],
                 value: '4',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#ce105e',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Indicator',
                 img: 'block_icon/practical_course/melody.png',
@@ -1307,6 +1394,7 @@
         // roborobo_mini
         roborobo_motor_speed: {
             color: '#00B200',
+            outerLine: '#019101',
             skeleton: 'basic_string_field',
             statements: [],
             isNotFor: ['roborobo_schoolkit'],
@@ -1331,7 +1419,9 @@
                     ['15', '255'],
                 ],
                 value: '255',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#019101',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }],
             events: {},
             def: {
@@ -1346,6 +1436,7 @@
         },
         roborobo_move_for_secs: {
             color: '#00B200',
+            outerLine: '#019101',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -1359,7 +1450,9 @@
                     ['왼쪽', '3'],
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#019101',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -1367,7 +1460,9 @@
                     ['뒤로', '2']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#019101',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Block',
                 accept: 'string'
@@ -1470,6 +1565,7 @@
         },
         roborobo_move_for: {
             color: '#00B200',
+            outerLine: '#019101',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -1483,7 +1579,9 @@
                     ['왼쪽', '3'],
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#019101',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -1491,7 +1589,9 @@
                     ['뒤로', '2']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#019101',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Block',
                 accept: 'string'
@@ -1567,6 +1667,7 @@
         },
         roborobo_turn_for: {
             color: '#00B200',
+            outerLine: '#019101',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -1579,7 +1680,9 @@
                     ['뒤로', '2']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#019101',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Block',
                 accept: 'string'
@@ -1590,7 +1693,9 @@
                     ['뒤로', '2']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#019101',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Block',
                 accept: 'string'
@@ -1647,6 +1752,7 @@
         },
         roborobo_stop_for: {
             color: '#00B200',
+            outerLine: '#019101',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -1660,7 +1766,9 @@
                     ['왼쪽', '3'],
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#019101',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Indicator',
                 img: 'block_icon/practical_course/dcmotor.png',
@@ -1709,6 +1817,7 @@
         },
         roborobo_touch_value: {
             color: '#2AB4D3',
+            outerLine: '#0e93b1',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -1735,6 +1844,7 @@
         },
         roborobo_touch_value_boolean: {
             color: '#2AB4D3',
+            outerLine: '#0e93b1',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
             isNotFor: ['roborobo_schoolkit'],
@@ -1746,7 +1856,9 @@
                     ['접촉 안되면', '0']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#0e93b1',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }],
             def: {
                 params: [null],
@@ -1770,7 +1882,8 @@
             }
         },
         roborobo_light_value: {
-            color: '#31C1EC',
+            color: '#ff8d0f',
+            outerLine: '#e37100',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -1794,7 +1907,8 @@
             }
         },
         roborobo_light_value_boolean: {
-            color: '#31C1EC',
+            color: '#ff8d0f',
+            outerLine: '#e37100',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
             isNotFor: ['roborobo_schoolkit'],
@@ -1809,7 +1923,9 @@
                     ['≤', 'LESS_OR_EQUAL']
                 ],
                 value: 'LESS',
-                fontsIze: 11,
+                fontSize: 11,
+                bgColor: '#e37100',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
                 noaRrow: true
             }, {
                 type: 'Block',
@@ -1860,7 +1976,8 @@
             }
         },
         roborobo_sound_value: {
-            color: '#00D67F',
+            color: '#01d67f',
+            outerLine: '#00b36a',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -1884,7 +2001,8 @@
             }
         },
         roborobo_sound_value_boolean: {
-            color: '#00D67F',
+            color: '#01d67f',
+            outerLine: '#00b36a',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
             isNotFor: ['roborobo_schoolkit'],
@@ -1899,7 +2017,9 @@
                     ['≤', 'LESS_OR_EQUAL']
                 ],
                 value: 'LESS',
-                fontsIze: 11,
+                fontSize: 11,
+                bgColor: '#00b36a',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
                 noaRrow: true
             }, {
                 type: 'Block',
@@ -1953,6 +2073,7 @@
         },
         roborobo_irs_value: {
             color: '#C4065C',
+            outerLine: '#9a0045',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -1979,6 +2100,7 @@
         },
         roborobo_irs_value_boolean: {
             color: '#C4065C',
+            outerLine: '#9a0045',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
             isNotFor: ['roborobo_schoolkit'],
@@ -1990,7 +2112,9 @@
                     ['감지 안되면', '0']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#9a0045',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }],
             def: {
                 params: [null],
@@ -2015,7 +2139,8 @@
             }
         },
         roborobo_diode_secs_toggle: {
-            color: '#FF8D10',
+            color: '#ff8d0f',
+            outerLine: '#e37100',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -2030,7 +2155,9 @@
                     ['R - B', '2']
                 ],
                 value: '5',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#e37100',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Block',
                 accept: 'string'
@@ -2041,7 +2168,9 @@
                     ['끄기', '0']
                 ],
                 value: '255',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#e37100',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Indicator',
                 img: 'block_icon/practical_course/diode.png',
@@ -2091,7 +2220,8 @@
             }
         },
         roborobo_diode_toggle: {
-            color: '#FF8D10',
+            color: '#ff8d0f',
+            outerLine: '#e37100',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -2106,7 +2236,9 @@
                     ['R - B', '2']
                 ],
                 value: '5',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#e37100',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -2114,7 +2246,9 @@
                     ['끄기', '0']
                 ],
                 value: '255',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#e37100',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Indicator',
                 img: 'block_icon/practical_course/diode.png',
@@ -2146,7 +2280,8 @@
             }
         },
         roborobo_diode_inout_toggle: {
-            color: '#FF8D10',
+            color: '#ff8d0f',
+            outerLine: '#e37100',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -2161,7 +2296,9 @@
                     ['R - B', '2']
                 ],
                 value: '5',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#e37100',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -2169,7 +2306,9 @@
                     ['CDS', '10']
                 ],
                 value: '8',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#e37100',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Block',
                 accept: 'string'
@@ -2225,7 +2364,8 @@
             }
         },
         roborobo_diode_set_output: {
-            color: '#FF8D10',
+            color: '#ff8d0f',
+            outerLine: '#e37100',
             skeleton: 'basic',
             statements: [],
             isNotFor: ['roborobo_schoolkit'],
@@ -2239,7 +2379,9 @@
                     ['R - B', '2']
                 ],
                 value: '5',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#e37100',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Block',
                 accept: 'string'
@@ -2281,7 +2423,8 @@
             }
         },
         roborobo_diode_input_value: {
-            color: '#FF8D10',
+            color: '#ff8d0f',
+            outerLine: '#e37100',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -2296,7 +2439,9 @@
                     ['CDS', '10']
                 ],
                 value: '8',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#e37100',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }],
             events: {},
             def: {
@@ -2314,6 +2459,7 @@
         },
         robotis_set_led: {
             color: '#2AB4D3',
+            outerLine: '#0e93b1',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -2328,7 +2474,9 @@
                     ['PORT 6', '6']
                 ],
                 value: '3',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#0e93b1',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -2338,7 +2486,9 @@
                     ['모두 켜기', '3']
                 ],
                 value: '0',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#0e93b1',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Indicator',
                 img: 'block_icon/practical_course/light.png',
@@ -2383,6 +2533,7 @@
         },
         robotis_touch_value: {
             color: '#2AB4D3',
+            outerLine: '#0e93b1',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -2397,7 +2548,9 @@
                     ['PORT 6', '6']
                 ],
                 value: '3',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#0e93b1',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }],
             events: {},
             def: {
@@ -2432,6 +2585,7 @@
         },
         robotis_touch_value_boolean: {
             color: '#2AB4D3',
+            outerLine: '#0e93b1',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
             isNotFor: ['robotis_openCM70'],
@@ -2445,7 +2599,9 @@
                     ['PORT 6', '6']
                 ],
                 value: '3',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#0e93b1',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -2453,7 +2609,9 @@
                     ['접촉 안되면', '0']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#0e93b1',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }],
             def: {
                 params: [null, null, null],
@@ -2489,6 +2647,7 @@
         },
         robotis_irs_value: {
             color: '#C4065C',
+            outerLine: '#9a0045',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -2503,7 +2662,9 @@
                     ['PORT 6', '6']
                 ],
                 value: '3',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#9a0045',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }],
             events: {},
             def: {
@@ -2567,6 +2728,7 @@
         },
         robotis_irs_value_boolean: {
             color: '#C4065C',
+            outerLine: '#9a0045',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
             isNotFor: ['robotis_openCM70'],
@@ -2580,7 +2742,9 @@
                     ['PORT 6', '6']
                 ],
                 value: '3',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#9a0045',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -2591,7 +2755,9 @@
                     ['≤', 'LESS_OR_EQUAL']
                 ],
                 value: 'LESS',
-                fontsIze: 11,
+                fontSize: 11,
+                bgColor: '#9a0045',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
                 noaRrow: true
             }, {
                 type: 'Block',
@@ -2684,7 +2850,8 @@
             }
         },
         robotis_light_value: {
-            color: '#31C1EC',
+            color: '#ff8d0f',
+            outerLine: '#e37100',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -2699,7 +2866,10 @@
                     ['PORT 6', '3']
                 ],
                 value: '0',
-                fontsIze: 11
+                outerLine: '#e37100',
+                fontSize: 11,
+                bgColor: '#e37100',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }],
             events: {},
             def: {
@@ -2716,7 +2886,8 @@
             }
         },
         robotis_light_value_boolean: {
-            color: '#31C1EC',
+            color: '#ff8d0f',
+            outerLine: '#e37100',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
             isNotFor: ['robotis_openCM70'],
@@ -2730,7 +2901,9 @@
                     ['PORT 6', '3']
                 ],
                 value: '0',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#e37100',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -2741,7 +2914,9 @@
                     ['≤', 'LESS_OR_EQUAL']
                 ],
                 value: 'LESS',
-                fontsIze: 11,
+                fontSize: 11,
+                bgColor: '#e37100',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
                 noaRrow: true
             }, {
                 type: 'Block',
@@ -2789,7 +2964,8 @@
             }
         },
         robotis_detectedsound_value: {
-            color: '#00D67F',
+            color: '#01d67f',
+            outerLine: '#00b36a',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -2812,7 +2988,8 @@
             }
         },
         robotis_detectedsound_value_boolean: {
-            color: '#00D67F',
+            color: '#01d67f',
+            outerLine: '#00b36a',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
             isNotFor: ['robotis_openCM70'],
@@ -2827,7 +3004,9 @@
                     ['≤', 'LESS_OR_EQUAL']
                 ],
                 value: 'LESS',
-                fontsIze: 11,
+                fontSize: 11,
+                bgColor: '#00b36a',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
                 noaRrow: true
             }, {
                 type: 'Block',
@@ -2873,7 +3052,8 @@
             }
         },
         robotis_detectingsound_value: {
-            color: '#00D67F',
+            color: '#01d67f',
+            outerLine: '#00b36a',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -2896,7 +3076,8 @@
             }
         },
         robotis_detectingsound_value_boolean: {
-            color: '#00D67F',
+            color: '#01d67f',
+            outerLine: '#00b36a',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
             isNotFor: ['robotis_openCM70'],
@@ -2911,7 +3092,9 @@
                     ['≤', 'LESS_OR_EQUAL']
                 ],
                 value: 'LESS',
-                fontsIze: 11,
+                fontSize: 11,
+                bgColor: '#00b36a',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
                 noaRrow: true
             }, {
                 type: 'Block',
@@ -2958,6 +3141,7 @@
         },
         robotis_color_value: {
             color: '#2AB4D3',
+            outerLine: '#0e93b1',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -2972,7 +3156,9 @@
                     ['PORT 6', '6']
                 ],
                 value: '3',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#0e93b1',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }],
             events: {},
             def: {
@@ -3042,6 +3228,7 @@
         },
         robotis_color_value_boolean: {
             color: '#C4065C',
+            outerLine: '#9a0045',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
             isNotFor: ['robotis_openCM70'],
@@ -3055,7 +3242,9 @@
                     ['PORT 6', '6']
                 ],
                 value: '3',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#9a0045',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -3066,7 +3255,9 @@
                     ['≤', 'LESS_OR_EQUAL']
                 ],
                 value: 'LESS',
-                fontsIze: 11,
+                fontSize: 11,
+                bgColor: '#9a0045',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
                 noaRrow: true
             }, {
                 type: 'Dropdown',
@@ -3080,7 +3271,9 @@
                     ['노랑색 : 6', '6']
                 ],
                 value: '0',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#9a0045',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }],
             def: {
                 params: [null, null, null],
@@ -3150,6 +3343,7 @@
         },
         robotis_humidity_value: {
             color: '#2AB4D3',
+            outerLine: '#0e93b1',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -3164,7 +3358,9 @@
                     ['PORT 6', '6']
                 ],
                 value: '3',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#0e93b1',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }],
             events: {},
             def: {
@@ -3210,6 +3406,7 @@
         },
         robotis_humidity_value_boolean: {
             color: '#C4065C',
+            outerLine: '#9a0045',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
             isNotFor: ['robotis_openCM70'],
@@ -3223,7 +3420,9 @@
                     ['PORT 6', '6']
                 ],
                 value: '3',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#9a0045',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -3234,7 +3433,9 @@
                     ['≤', 'LESS_OR_EQUAL']
                 ],
                 value: 'LESS',
-                fontsIze: 11,
+                fontSize: 11,
+                bgColor: '#9a0045',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
                 noaRrow: true
             }, {
                 type: 'Block',
@@ -3310,6 +3511,7 @@
         },
         robotis_temperature_value: {
             color: '#2AB4D3',
+            outerLine: '#0e93b1',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -3324,7 +3526,9 @@
                     ['PORT 6', '6']
                 ],
                 value: '3',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#0e93b1',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }],
             events: {},
             def: {
@@ -3370,6 +3574,7 @@
         },
         robotis_temperature_value_boolean: {
             color: '#C4065C',
+            outerLine: '#9a0045',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
             isNotFor: ['robotis_openCM70'],
@@ -3383,7 +3588,9 @@
                     ['PORT 6', '6']
                 ],
                 value: '3',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#9a0045',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -3394,7 +3601,9 @@
                     ['≤', 'LESS_OR_EQUAL']
                 ],
                 value: 'LESS',
-                fontsIze: 11,
+                fontSize: 11,
+                bgColor: '#9a0045',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
                 noaRrow: true
             }, {
                 type: 'Block',
@@ -3470,6 +3679,7 @@
         },
         robotis_move_for_secs: {
             color: '#00B200',
+            outerLine: '#019101',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -3483,7 +3693,9 @@
                     ['양쪽', '3']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#019101',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -3491,7 +3703,9 @@
                     ['뒤로', 'CCW']
                 ],
                 value: 'CW',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#019101',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Block',
                 accept: 'string'
@@ -3588,7 +3802,7 @@
                 } else if (script.timeFlag == 1) {
 
                     //data_sendqueue = [[data_instruction, data_address, data_length, 0]];
-                    //Entry.Robotis_carCont.setRobotisData(data_sendqueue);                    
+                    //Entry.Robotis_carCont.setRobotisData(data_sendqueue);
                     return script;
                 } else {
 
@@ -3608,6 +3822,7 @@
         },
         robotis_aux_move_for: {
             color: '#00B200',
+            outerLine: '#019101',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -3621,7 +3836,9 @@
                     ['양쪽', '3']
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#019101',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -3629,7 +3846,9 @@
                     ['뒤로', 'CCW']
                 ],
                 value: 'CW',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#019101',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Block',
                 accept: 'string'
@@ -3704,6 +3923,7 @@
         },
         robotis_aux_stop_for: {
             color: '#00B200',
+            outerLine: '#019101',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -3717,7 +3937,9 @@
                     ['양쪽', '3'],
                 ],
                 value: '1',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#019101',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Indicator',
                 img: 'block_icon/practical_course/dcmotor.png',
@@ -3757,7 +3979,8 @@
             }
         },
         robotis_set_servo_wheel: {
-            color: '#D126BD',
+            color: '#D128BD',
+            outerLine: '#a2049e',
             skeleton: 'basic',
             statements: [],
             isNotFor: ['robotis_openCM70'],
@@ -3771,7 +3994,9 @@
                     ['PORT 6', '6']
                 ],
                 value: '3',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#A2049E',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -3779,7 +4004,9 @@
                     ['반시계방향', 'CCW']
                 ],
                 value: 'CW',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#A2049E',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -3800,7 +4027,9 @@
                     ['15', 15]
                 ],
                 value: 7,
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#A2049E',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Indicator',
                 img: 'block_icon/practical_course/servo.png',
@@ -3930,7 +4159,7 @@
                 } else if (script.timeFlag == 1) {
 
                     //data_sendqueue = [[data_instruction, data_address, data_length, 0]];
-                    //Entry.Robotis_carCont.setRobotisData(data_sendqueue);                    
+                    //Entry.Robotis_carCont.setRobotisData(data_sendqueue);
                     return script;
                 } else {
 
@@ -3950,7 +4179,8 @@
             }
         },
         robotis_set_servo_joint: {
-            color: '#D126BD',
+            color: '#D128BD',
+            outerLine: '#a2049e',
             skeleton: 'basic',
             statements: [],
             isNotFor: ['robotis_openCM70'],
@@ -3964,7 +4194,9 @@
                     ['PORT 6', '6']
                 ],
                 value: '3',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#A2049E',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Block',
                 accept: 'string'
@@ -3988,7 +4220,9 @@
                     ['15', 15]
                 ],
                 value: 7,
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#A2049E',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Indicator',
                 img: 'block_icon/practical_course/servo.png',
@@ -4142,7 +4376,9 @@
                     ['시', '11']
                 ],
                 value: '0',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#ce105e',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -4154,7 +4390,9 @@
                     ['6', '5']
                 ],
                 value: '2',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#ce105e',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Dropdown',
                 options: [
@@ -4168,7 +4406,9 @@
                     ['16분음표', '16'],*/
                 ],
                 value: '4',
-                fontsIze: 11
+                fontSize: 11,
+                bgColor: '#ce105e',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             }, {
                 type: 'Indicator',
                 img: 'block_icon/practical_course/melody.png',

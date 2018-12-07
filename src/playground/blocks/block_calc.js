@@ -2,8 +2,8 @@ module.exports = {
     getBlocks() {
         return {
             calc_basic: {
-                color: '#FEB71A',
-                outerLine: '#FF9C00',
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -175,8 +175,8 @@ module.exports = {
                 },
             },
             calc_rand: {
-                color: '#FEB71A',
-                outerLine: '#FF9C00',
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -301,8 +301,8 @@ module.exports = {
                 },
             },
             coordinate_mouse: {
-                color: '#FEB71A',
-                outerLine: '#FF9C00',
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -379,8 +379,8 @@ module.exports = {
                 },
             },
             coordinate_object: {
-                color: '#FEB71A',
-                outerLine: '#FF9C00',
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -504,8 +504,8 @@ module.exports = {
                 },
             },
             get_sound_volume: {
-                color: '#FEB71A',
-                outerLine: '#FF9C00',
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -541,8 +541,8 @@ module.exports = {
                 },
             },
             quotient_and_mod: {
-                color: '#FEB71A',
-                outerLine: '#FF9C00',
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -700,8 +700,8 @@ module.exports = {
                 },
             },
             calc_operation: {
-                color: '#FEB71A',
-                outerLine: '#FF9C00',
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -1069,8 +1069,8 @@ module.exports = {
                 },
             },
             get_project_timer_value: {
-                color: '#FEB71A',
-                outerLine: '#FF9C00',
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -1117,8 +1117,8 @@ module.exports = {
                 },
             },
             choose_project_timer_action: {
-                color: '#FEB71A',
-                outerLine: '#FF9C00',
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1251,8 +1251,8 @@ module.exports = {
                 },
             },
             set_visible_project_timer: {
-                color: '#FEB71A',
-                outerLine: '#FF9C00',
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1351,8 +1351,8 @@ module.exports = {
                 },
             },
             get_date: {
-                color: '#FEB71A',
-                outerLine: '#FF9C00',
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -1436,8 +1436,8 @@ module.exports = {
                 },
             },
             distance_something: {
-                color: '#FEB71A',
-                outerLine: '#FF9C00',
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -1513,8 +1513,8 @@ module.exports = {
                 },
             },
             get_sound_duration: {
-                color: '#FEB71A',
-                outerLine: '#FF9C00',
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -1581,9 +1581,9 @@ module.exports = {
                 },
             },
             get_user_name: {
-                color: '#FEB71A',
+                color: EntryStatic.colorSet.block.default.CALC,
                 fontColor: '#FFF',
-                outerLine: '#FF9C00',
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [],
@@ -1608,8 +1608,8 @@ module.exports = {
                 },
             },
             length_of_string: {
-                color: '#FEB71A',
-                outerLine: '#FF9C00',
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -1671,8 +1671,8 @@ module.exports = {
                 },
             },
             combine_something: {
-                color: '#FEB71A',
-                outerLine: '#FF9C00',
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -1757,8 +1757,8 @@ module.exports = {
                 },
             },
             char_at: {
-                color: '#FEB71A',
-                outerLine: '#FF9C00',
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -1871,8 +1871,8 @@ module.exports = {
                 },
             },
             substring: {
-                color: '#FEB71A',
-                outerLine: '#FF9C00',
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -2000,8 +2000,8 @@ module.exports = {
                 },
             },
             index_of_string: {
-                color: '#FEB71A',
-                outerLine: '#FF9C00',
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -2085,8 +2085,8 @@ module.exports = {
                 },
             },
             replace_string: {
-                color: '#FEB71A',
-                outerLine: '#FF9C00',
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -2192,8 +2192,8 @@ module.exports = {
                 },
             },
             change_string_case: {
-                color: '#FEB71A',
-                outerLine: '#FF9C00',
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [

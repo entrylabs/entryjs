@@ -91,7 +91,8 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function() {
                 options: getCategory(),
                 value: defaultCategory,
                 fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_EXPANSION,
+                bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -120,7 +121,8 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function() {
                 targetIndex,
                 needDeepCopy: true,
                 fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_EXPANSION,
+                bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -165,7 +167,7 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function() {
     return {
         behaviorConductDisaster_title: {
             skeleton: 'basic_text',
-            color: '#e5e5e5',
+            color: '#ecf8ff',
             params: [
                 {
                     type: 'Text',
@@ -182,8 +184,8 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function() {
             events: {},
         },
         count_disaster_behavior: {
-            color: '#ff8888',
-            outerLine: '#ef6d6d',
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [params.getCategory(), params.getSubCategory(0)],
@@ -217,8 +219,8 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function() {
             },
         },
         get_disaster_behavior: {
-            color: '#ff8888',
-            outerLine: '#ef6d6d',
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
