@@ -339,16 +339,15 @@
 }
 
 #entryCategoryhw_robot {
-    &:not(.entrySelectedCategory){
-        background-color: #C7DCDD;
-    }
     .backgroundImage("robot.png");
     background-repeat: no-repeat;
-    border-bottom: #5494A3 solid 1px;
 }
 
 .entrySelectedCategory#entryCategoryhw_robot {
-    border-right: none;
+    .backgroundImage("robot_on.png");
+    background-color: #00cfca;
+    border-color: #00cfca;
+    color: #fff;
 }
 
 .entryBlocklyWorkspace {
