@@ -627,8 +627,9 @@ Entry.BlockView = class BlockView {
         $doc.unbind('.block', this.onMouseUp);
         $doc.unbind('.block', this.onMouseMove);
         this.terminateDrag(e);
-        if (this.board) {
-            this.board.set({ dragBlock: null });
+        const board = this.getBoard();
+        if (board) {
+            board.set({ dragBlock: null });
         }
         this._setHoverBlockView({ that: this });
         Entry.GlobalSvg.remove();
