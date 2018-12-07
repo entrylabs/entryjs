@@ -715,14 +715,40 @@ Entry.Playground = function() {
     };
 
     /**
+     * 소리 편집 기능 신규 개발시 해당 로직 삭제
+     * @private
+     */
+    function _createSoundEditView() {
+        const soundEditView = Entry.createElement('div', 'entrySoundEdit')
+            .addClass('entryPlaygroundSoundEdit');
+
+        const tempNotificationWrapper = Entry.createElement('div')
+            .addClass('entryPlaygroundSoundEditWrapper');
+
+        const tempImage = Entry.createElement('div')
+            .addClass('entryPlaygroundSoundEditImage');
+
+        const tempNotification = Entry.createElement('span')
+            .addClass('entryPlaygroundSoundEditText');
+        tempNotification.innerHTML = Lang.Menus.sound_edit_warn;
+
+        tempNotificationWrapper.appendChild(tempImage);
+        tempNotificationWrapper.appendChild(tempNotification);
+
+        soundEditView.appendChild(tempNotificationWrapper);
+
+        return soundEditView;
+    }
+
+    /**
      * Generate sound view.
      * default view is shown when object is not selected.
-     * @param {!Element} codeView
      * @return {Element}
+     * @param soundView
      */
-    p.generateSoundView = function(SoundView) {
+    p.generateSoundView = function(soundView) {
         if (Entry.type == 'workspace') {
-            var soundAdd = Entry.createElement('div', 'entryAddSound');
+            const soundAdd = Entry.createElement('div', 'entryAddSound');
             soundAdd.addClass('entryPlaygroundAddSound');
             soundAdd.bindOnClick(function(e) {
                 if (!Entry.container || Entry.container.isSceneObjectsExist())
@@ -734,13 +760,13 @@ Entry.Playground = function() {
                     );
                 }
             });
-            var innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner').addClass(
+            const innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner').addClass(
                 'entryPlaygroundAddSoundInner'
             );
             innerSoundAdd.innerHTML = Lang.Workspace.sound_add;
             soundAdd.appendChild(innerSoundAdd);
-            SoundView.appendChild(soundAdd);
-            var soundList = Entry.createElement('ul', 'entrySoundList').addClass(
+            soundView.appendChild(soundAdd);
+            const soundList = Entry.createElement('ul', 'entrySoundList').addClass(
                 'entryPlaygroundSoundList'
             );
             $(soundList).sortable({
@@ -752,21 +778,24 @@ Entry.Playground = function() {
                 },
                 axis: 'y',
             });
-            SoundView.appendChild(soundList);
+            soundView.appendChild(soundList);
             this.soundListView_ = soundList;
             this._soundAddButton = innerSoundAdd;
+
+            const soundEditView = _createSoundEditView();
+            soundView.appendChild(soundEditView);
         } else if (Entry.type == 'phone') {
-            var soundAdd = Entry.createElement('div', 'entryAddSound');
-            soundAdd.addClass('entryPlaygroundAddSoundPhone');
+            const soundAdd = Entry.createElement('div', 'entryAddSound');
+            soundAdd.addClass('entryPlaygroundSoundEdit');
             soundAdd.bindOnClick(function(e) {
                 Entry.dispatchEvent('openSoundManager');
             });
-            var innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner');
+            const innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner');
             innerSoundAdd.addClass('entryPlaygroundAddSoundInnerPhone');
             innerSoundAdd.innerHTML = Lang.Workspace.sound_add;
             soundAdd.appendChild(innerSoundAdd);
-            SoundView.appendChild(soundAdd);
-            var soundList = Entry.createElement('ul', 'entrySoundList');
+            soundView.appendChild(soundAdd);
+            const soundList = Entry.createElement('ul', 'entrySoundList');
             soundList.addClass('entryPlaygroundSoundListPhone');
             if ($)
                 $(soundList).sortable({
@@ -780,7 +809,7 @@ Entry.Playground = function() {
                     },
                     axis: 'y',
                 });
-            SoundView.appendChild(soundList);
+            soundView.appendChild(soundList);
             this.soundListView_ = soundList;
         }
     };
