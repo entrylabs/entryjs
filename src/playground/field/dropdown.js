@@ -10,7 +10,7 @@ import EntryTool from 'entry-tool';
 Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
     constructor(content, blockView, index, renderMode, i, isDynamic) {
         super();
-        if(isDynamic) {
+        if (isDynamic) {
             return;
         }
         this._block = blockView.block;
@@ -47,9 +47,8 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
 
     renderStart() {
         var blockView = this._blockView;
-        var isBig = Entry.isMobile();
-        var X_PADDING = isBig ? 33 : 20;
-        var X_PADDING_SUBT = isBig ? 24 : 10;
+        var X_PADDING = 20;
+        var X_PADDING_SUBT = 10;
         var that = this;
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
         var arrowInfo = this.getArrow();
@@ -147,9 +146,8 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
     }
 
     resize() {
-        var isBig = Entry.isMobile();
-        var X_PADDING = isBig ? 33 : 20;
-        var X_PADDING_SUBT = isBig ? 24 : 10;
+        var X_PADDING = 20;
+        var X_PADDING_SUBT = 10;
         const board = this._blockView.getBoard() || {};
         const { scale = 1 } = board || {};
         var width = this.textElement.getBoundingClientRect().width / scale + X_PADDING;
@@ -239,12 +237,11 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
     }
 
     getArrow() {
-        var isBig = Entry.isMobile();
         return {
             color: this._arrowColor || this._blockView._schema.color,
-            points: isBig ? '0,0 19,0 9.5,13' : '0,0 6.4,0 3.2,4.2',
-            height: isBig ? 13 : 4.2,
-            width: isBig ? 19 : 6.4,
+            points: '0,0 6.4,0 3.2,4.2',
+            height: 4.2,
+            width: 6.4,
         };
     }
 
@@ -259,12 +256,12 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
     }
 
     destroyOption() {
-        if(this.dropdownWidget) {
+        if (this.dropdownWidget) {
             this.dropdownWidget.isShow && this.dropdownWidget.hide();
             this.dropdownWidget.remove();
             this.dropdownWidget = null;
         }
-        if(this.optionGroup) {
+        if (this.optionGroup) {
             this.optionGroup.remove();
         }
         super.destroyOption();
