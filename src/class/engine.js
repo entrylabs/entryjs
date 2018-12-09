@@ -299,11 +299,12 @@ Entry.Engine = function() {
     p.toggleSpeedPanel = function() {
         if (this.speedPanelOn) {
             this.speedPanelOn = false;
-            $(Entry.stage.canvas.canvas).animate({ top: '24px' });
             this.coordinateButton.removeClass('entryRemove');
             this.maximizeButton.removeClass('entryRemove');
             this.mouseView.removeClass('entryRemoveElement');
-            $(this.speedLabel_).remove();
+            $(this.speedLabel_)
+                .parent()
+                .remove();
             delete this.speedLabel_;
             $(this.speedProgress_).fadeOut(null, function(e) {
                 $(this).remove();
@@ -313,7 +314,6 @@ Entry.Engine = function() {
             delete this.speedHandle_;
         } else {
             this.speedPanelOn = true;
-            $(Entry.stage.canvas.canvas).animate({ top: '41px' });
             this.coordinateButton.addClass('entryRemove');
             this.maximizeButton.addClass('entryRemove');
             this.mouseView.addClass('entryRemoveElement');
