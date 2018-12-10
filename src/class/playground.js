@@ -715,14 +715,42 @@ Entry.Playground = function() {
     };
 
     /**
+     * 소리 편집 기능 신규 개발시 해당 로직 삭제
+     * @private
+     */
+    function _createSoundEditView() {
+        const soundEditView = Entry.createElement('div', 'entrySoundEdit').addClass(
+            'entryPlaygroundSoundEdit'
+        );
+
+        const tempNotificationWrapper = Entry.createElement('div').addClass(
+            'entryPlaygroundSoundEditWrapper'
+        );
+
+        const tempImage = Entry.createElement('div').addClass('entryPlaygroundSoundEditImage');
+
+        const tempNotification = Entry.createElement('span').addClass(
+            'entryPlaygroundSoundEditText'
+        );
+        tempNotification.innerHTML = Lang.Menus.sound_edit_warn;
+
+        tempNotificationWrapper.appendChild(tempImage);
+        tempNotificationWrapper.appendChild(tempNotification);
+
+        soundEditView.appendChild(tempNotificationWrapper);
+
+        return soundEditView;
+    }
+
+    /**
      * Generate sound view.
      * default view is shown when object is not selected.
-     * @param {!Element} codeView
      * @return {Element}
+     * @param soundView
      */
-    p.generateSoundView = function(SoundView) {
+    p.generateSoundView = function(soundView) {
         if (Entry.type == 'workspace') {
-            var soundAdd = Entry.createElement('div', 'entryAddSound');
+            const soundAdd = Entry.createElement('div', 'entryAddSound');
             soundAdd.addClass('entryPlaygroundAddSound');
             soundAdd.bindOnClick(function(e) {
                 if (!Entry.container || Entry.container.isSceneObjectsExist())
@@ -734,13 +762,13 @@ Entry.Playground = function() {
                     );
                 }
             });
-            var innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner').addClass(
+            const innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner').addClass(
                 'entryPlaygroundAddSoundInner'
             );
             innerSoundAdd.innerHTML = Lang.Workspace.sound_add;
             soundAdd.appendChild(innerSoundAdd);
-            SoundView.appendChild(soundAdd);
-            var soundList = Entry.createElement('ul', 'entrySoundList').addClass(
+            soundView.appendChild(soundAdd);
+            const soundList = Entry.createElement('ul', 'entrySoundList').addClass(
                 'entryPlaygroundSoundList'
             );
             $(soundList).sortable({
@@ -752,21 +780,24 @@ Entry.Playground = function() {
                 },
                 axis: 'y',
             });
-            SoundView.appendChild(soundList);
+            soundView.appendChild(soundList);
             this.soundListView_ = soundList;
             this._soundAddButton = innerSoundAdd;
+
+            const soundEditView = _createSoundEditView();
+            soundView.appendChild(soundEditView);
         } else if (Entry.type == 'phone') {
-            var soundAdd = Entry.createElement('div', 'entryAddSound');
-            soundAdd.addClass('entryPlaygroundAddSoundPhone');
+            const soundAdd = Entry.createElement('div', 'entryAddSound');
+            soundAdd.addClass('entryPlaygroundSoundEdit');
             soundAdd.bindOnClick(function(e) {
                 Entry.dispatchEvent('openSoundManager');
             });
-            var innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner');
+            const innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner');
             innerSoundAdd.addClass('entryPlaygroundAddSoundInnerPhone');
             innerSoundAdd.innerHTML = Lang.Workspace.sound_add;
             soundAdd.appendChild(innerSoundAdd);
-            SoundView.appendChild(soundAdd);
-            var soundList = Entry.createElement('ul', 'entrySoundList');
+            soundView.appendChild(soundAdd);
+            const soundList = Entry.createElement('ul', 'entrySoundList');
             soundList.addClass('entryPlaygroundSoundListPhone');
             if ($)
                 $(soundList).sortable({
@@ -780,7 +811,7 @@ Entry.Playground = function() {
                     },
                     axis: 'y',
                 });
-            SoundView.appendChild(soundList);
+            soundView.appendChild(soundList);
             this.soundListView_ = soundList;
         }
     };
@@ -1500,10 +1531,32 @@ Entry.Playground = function() {
             .appendTo(element).innerHTML =
             picture.dimension.width + ' X ' + picture.dimension.height;
 
-        Entry.createElement('div')
-            .addClass('entryPlayground_del')
-            .appendTo(element).innerHTML =
-            '삭제';
+        const removeButton = Entry.createElement('div').addClass('entryPlayground_del');
+        const { Buttons = {} } = Lang || {};
+        const { delete: delText = '삭제' } = Buttons;
+        removeButton.appendTo(element).innerText = delText;
+        removeButton.bindOnClick(() => {
+            try {
+                if (Entry.playground.object.removePicture(picture.id)) {
+                    Entry.removeElement(element);
+                    Entry.dispatchEvent('removePicture', picture);
+                    Entry.toast.success(
+                        Lang.Workspace.shape_remove_ok,
+                        picture.name + ' ' + Lang.Workspace.shape_remove_ok_msg
+                    );
+                } else {
+                    Entry.toast.alert(
+                        Lang.Workspace.shape_remove_fail,
+                        Lang.Workspace.shape_remove_fail_msg
+                    );
+                }
+            } catch (e) {
+                Entry.toast.alert(
+                    Lang.Workspace.shape_remove_fail,
+                    Lang.Workspace.shape_remove_fail_msg
+                );
+            }
+        });
     };
 
     p.generateSoundElement = function(sound) {
@@ -1626,10 +1679,27 @@ Entry.Playground = function() {
             .addClass('entryPlaygroundSoundLength')
             .appendTo(element).innerHTML =
             sound.duration + ' ' + Lang.General.second;
-        Entry.createElement('div')
-            .addClass('entryPlayground_del')
-            .appendTo(element).innerHTML =
-            '삭제';
+        const removeButton = Entry.createElement('div').addClass('entryPlayground_del');
+        const { Buttons = {} } = Lang || {};
+        const { delete: delText = '삭제' } = Buttons;
+        removeButton.appendTo(element).innerText = delText;
+        removeButton.bindOnClick(() => {
+            try {
+                var result = Entry.do('objectRemoveSound', Entry.playground.object.id, sound);
+                if (result) {
+                    Entry.dispatchEvent('removeSound', sound);
+                    Entry.toast.success(
+                        Lang.Workspace.sound_remove_ok,
+                        sound.name + ' ' + Lang.Workspace.sound_remove_ok_msg
+                    );
+                } else {
+                    Entry.toast.alert(Lang.Workspace.sound_remove_fail, '');
+                }
+                Entry.removeElement(element);
+            } catch (e) {
+                Entry.toast.alert(Lang.Workspace.sound_remove_fail, '');
+            }
+        });
     };
 
     p.toggleColourChooser = function(name) {

@@ -958,10 +958,10 @@ Entry.hex2rgb = function(hex) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
         ? {
-            r: parseInt(result[1], 16),
-            g: parseInt(result[2], 16),
-            b: parseInt(result[3], 16),
-        }
+              r: parseInt(result[1], 16),
+              g: parseInt(result[2], 16),
+              b: parseInt(result[3], 16),
+          }
         : null;
 };
 
@@ -1661,7 +1661,7 @@ Entry.Utils.isInInput = function({ target: { type } }) {
     return type == 'textarea' || type == 'text';
 };
 
-Entry.Utils.addFilters = function(boardSvgDom, suffix) {
+Entry.Utils.addFilters = function(boardSvgDom, suffix, isOnlyBlock) {
     const defs = boardSvgDom.elem('defs');
 
     //trashcan filter
@@ -1756,31 +1756,33 @@ Entry.Utils.addFilters = function(boardSvgDom, suffix) {
             values: '.45 0 0 0 0 0 .45 0 0 0 0 0 .45 0 0 0 0 0 1 0',
         });
 
-    const buttonShadow = defs.elem('filter', {
-        id: 'entryButtonShadowFilter',
-    });
-    buttonShadow.elem('feOffset', {
-        result: 'offOut',
-        in: 'SourceGraphic',
-        dx: 1,
-        dy: 1,
-    });
-    buttonShadow.elem('feColorMatrix', {
-        result: 'matrixOut',
-        in: 'offOut',
-        type: 'matrix',
-        values: '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0',
-    });
-    buttonShadow.elem('feGaussianBlur', {
-        result: 'blurOut',
-        in: 'matrixOut',
-        stdDeviation: '1',
-    });
-    buttonShadow.elem('feBlend', {
-        in: 'SourceGraphic',
-        in2: 'blurOut',
-        mode: 'normal',
-    });
+    if (!isOnlyBlock) {
+        const buttonShadow = defs.elem('filter', {
+            id: 'entryButtonShadowFilter',
+        });
+        buttonShadow.elem('feOffset', {
+            result: 'offOut',
+            in: 'SourceGraphic',
+            dx: 1,
+            dy: 1,
+        });
+        buttonShadow.elem('feColorMatrix', {
+            result: 'matrixOut',
+            in: 'offOut',
+            type: 'matrix',
+            values: '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0',
+        });
+        buttonShadow.elem('feGaussianBlur', {
+            result: 'blurOut',
+            in: 'matrixOut',
+            stdDeviation: '1',
+        });
+        buttonShadow.elem('feBlend', {
+            in: 'SourceGraphic',
+            in2: 'blurOut',
+            mode: 'normal',
+        });
+    }
 };
 
 Entry.Utils.addBlockPattern = function(boardSvgDom, suffix) {
