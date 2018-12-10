@@ -432,46 +432,120 @@ Entry.Playground = function() {
 
         //스타일 박스
         let alignBox = Entry.createElement('div').addClass('font_style_box');
-        let alignLeft = Entry.createElement('a').addClass('style_link');
-        let alignMiddle = Entry.createElement('a').addClass('style_link');
-        let alignRight = Entry.createElement('a').addClass('style_link');
-        alignBox.append(alignLeft);
-        alignBox.append(alignMiddle);
-        alignBox.append(alignRight);
         writeSet.append(alignBox);
 
+        let alignLeft = Entry.createElement('a').addClass('style_link imbtn_pop_font_align_left').bindOnClick((e) => {
+            Entry.playground.setFontAlign(Entry.TEXT_ALIGN_LEFT);
+        });
+        alignBox.append(alignLeft);
+        this.alignLeftBtn = alignLeft;
+        let alignMiddle = Entry.createElement('a').addClass('style_link imbtn_pop_font_align_middle').bindOnClick((e) => {
+            Entry.playground.setFontAlign(Entry.TEXT_ALIGN_CENTER);
+        });
+        alignBox.append(alignMiddle);
+        this.alignCenterBtn = alignMiddle;
+        let alignRight = Entry.createElement('a').addClass('style_link imbtn_pop_font_align_right').bindOnClick((e) => {
+            Entry.playground.setFontAlign(Entry.TEXT_ALIGN_RIGHT);
+        });
+        alignBox.append(alignRight);
+        this.alignRightBtn = alignRight;
+
         let styleBox = Entry.createElement('div').addClass('font_style_box');
-        let bold = Entry.createElement('a').addClass('style_link imbtn_pop_font_bold');
-        let underLine = Entry.createElement('a').addClass('style_link imbtn_pop_font_underline');
-        let italic = Entry.createElement('a').addClass('style_link imbtn_pop_font_underline');
-        let through = Entry.createElement('a').addClass('style_link imbtn_pop_font_underline');
-        let color = Entry.createElement('a').addClass('style_link imbtn_pop_font_underline');
-        let backgroundColor = Entry.createElement('a').addClass('style_link imbtn_pop_font_underline');
-        styleBox.append(bold);
-        styleBox.append(underLine);
-        styleBox.append(italic);
-        styleBox.append(through);
-        styleBox.append(color);
-        styleBox.append(backgroundColor);
         writeSet.append(styleBox);
+
+        let bold = Entry.createElement('a').addClass('style_link imbtn_pop_font_bold').bindOnClick(function(e) {
+            $(e.currentTarget).toggleClass("on");
+            var isBold = Entry.playground.object.entity.toggleFontBold() || false;
+        });
+        styleBox.append(bold);
+
+        let underLine = Entry.createElement('a').addClass('style_link imbtn_pop_font_underline').bindOnClick(function(e) {
+            var underLineState = !Entry.playground.object.entity.getUnderLine() || false;
+            $(e.currentTarget).toggleClass("on");
+            Entry.playground.object.entity.setUnderLine(underLineState);
+        });
+        styleBox.append(underLine);
+
+        let italic = Entry.createElement('a').addClass('style_link imbtn_pop_font_italic').bindOnClick((e) => {
+            $(e.currentTarget).toggleClass("on");
+            var isItalic = Entry.playground.object.entity.toggleFontItalic();
+        });
+        styleBox.append(italic);
+
+        let through = Entry.createElement('a').addClass('style_link imbtn_pop_font_through').bindOnClick((e) => {
+            $(e.currentTarget).toggleClass("on");
+            var strikeState = !Entry.playground.object.entity.getStrike() || false;
+            Entry.playground.object.entity.setStrike(strikeState);
+        });
+        styleBox.append(through);
+
+        let color = Entry.createElement('a').addClass('style_link imbtn_pop_font_color');
+        styleBox.append(color);
+        let backgroundColor = Entry.createElement('a').addClass('style_link imbtn_pop_font_backgroundcolor');
+        styleBox.append(backgroundColor);
 
         let writeTypeBox = Entry.createElement("div").addClass('write_type_box');
         let singleLine = Entry.createElement('a');
         singleLine.innerText = "한 줄 쓰기";
+        singleLine.bindOnClick(() => Entry.playground.toggleLineBreak(false));
         let multiLine = Entry.createElement('a');
         multiLine.innerText = "여러 줄 쓰기";
+        multiLine.bindOnClick(() => Entry.playground.toggleLineBreak(true));
         writeTypeBox.append(singleLine);
         writeTypeBox.append(multiLine);
         inputArea.append(writeTypeBox);
 
+        var fontSizeWrapper = Entry.createElement('div').addClass('entryPlaygroundFontSizeWrapper');
+        inputArea.appendChild(fontSizeWrapper);
+        this.fontSizeWrapper = fontSizeWrapper;
+
+        var fontSizeLabel = Entry.createElement('div').addClass('entryPlaygroundFontSizeLabel');
+        fontSizeLabel.innerHTML = Lang.General.font_size;
+        fontSizeWrapper.appendChild(fontSizeLabel);
+
+        var fontSizeSlider = Entry.createElement('div').addClass('entryPlaygroundFontSizeSlider');
+        fontSizeWrapper.appendChild(fontSizeSlider);
+
+        var fontSizeIndiciator = Entry.createElement('div').addClass(
+            'entryPlaygroundFontSizeIndicator'
+        );
+        fontSizeSlider.appendChild(fontSizeIndiciator);
+        this.fontSizeIndiciator = fontSizeIndiciator;
+
+        var fontSizeKnob = Entry.createElement('div').addClass('entryPlaygroundFontSizeKnob');
+        fontSizeSlider.appendChild(fontSizeKnob);
+        this.fontSizeKnob = fontSizeKnob;
+
+
+
+        $(fontSizeKnob).bind('mousedown.fontKnob touchstart.fontKnob', function() {
+            var resizeOffset = $(fontSizeSlider).offset().left;
+
+            var doc = $(document);
+            doc.bind('mousemove.fontKnob touchmove.fontKnob', onMouseMove);
+            doc.bind('mouseup.fontKnob touchend.fontKnob', onMouseUp);
+
+            function onMouseMove(e) {
+                var left = e.pageX - resizeOffset;
+                left = Math.max(left, 5);
+                left = Math.min(left, 136);
+                fontSizeKnob.style.left = left + 'px';
+                left /= 1.36;
+                fontSizeIndiciator.style.width = left + '%';
+                Entry.playground.object.entity.setFontSize(left);
+            }
+
+            function onMouseUp(e) {
+                $(document).unbind('.fontKnob');
+            }
+        });
+
         let inputInner = Entry.createElement("div").addClass("input_inner");
-        let label = Entry.createElement("label");
-        label.innerText = "써주세요";
-        inputInner.append(label);
         inputArea.append(inputInner);
 
         var textEditInput = Entry.createElement('input').addClass('entryPlayground_textBox');
         textEditInput.type="text";
+        textEditInput.placeholder="글상자의 내용을 입력해주세요.";
         var textChangeApply = function() {
             var object = Entry.playground.object;
             var entity = object.entity;
@@ -504,6 +578,7 @@ Entry.Playground = function() {
         inputInner.appendChild(textEditInput);
 
         var textEditArea = Entry.createElement('textarea');
+        textEditArea.placeholder="글상자의 내용을 입력해주세요.";
         textEditArea.addClass('entryPlayground_textArea');
         textEditArea.style.display = 'none';
         textEditArea.onkeyup = textChangeApply;
@@ -916,7 +991,7 @@ Entry.Playground = function() {
     p._setFontFontUI = function() {
         var fontSize = this.object.entity.getFontSize();
         this.fontSizeIndiciator.style.width = fontSize + '%';
-        this.fontSizeKnob.style.left = fontSize * 0.88 + 'px';
+        this.fontSizeKnob.style.left = fontSize * 1.36 + 'px';
     };
 
     /**
@@ -1626,36 +1701,38 @@ Entry.Playground = function() {
 
         if (isLineBreak) {
             entity.setLineBreak(true);
+            $(".input_inner").height("228px");
+            $(".write_type_box a").removeClass("on");
+            $(".write_type_box a").eq(1).addClass("on");
             $('.entryPlayground_textArea').css('display', 'block');
             $('.entryPlayground_textBox').css('display', 'none');
-            this.linebreakOffImage.src = Entry.mediaFilePath + 'text-linebreak-off-false.png';
-            this.linebreakOnImage.src = Entry.mediaFilePath + 'text-linebreak-on-true.png';
             this.fontSizeWrapper.removeClass('entryHide');
             this._setFontFontUI();
         } else {
             entity.setLineBreak(false);
+            $(".input_inner").height("40px");
+            $(".write_type_box a").removeClass("on");
+            $(".write_type_box a").eq(0).addClass("on");
             $('.entryPlayground_textArea').css('display', 'none');
             $('.entryPlayground_textBox').css('display', 'block');
-            this.linebreakOffImage.src = Entry.mediaFilePath + 'text-linebreak-off-true.png';
-            this.linebreakOnImage.src = Entry.mediaFilePath + 'text-linebreak-on-false.png';
             this.fontSizeWrapper.addClass('entryHide');
         }
     };
 
     p.setFontAlign = function(fontAlign) {
         if (this.object.objectType != 'textBox') return;
-        this.alignLeftBtn.removeClass('toggle');
-        this.alignCenterBtn.removeClass('toggle');
-        this.alignRightBtn.removeClass('toggle');
+        this.alignLeftBtn.removeClass('on');
+        this.alignCenterBtn.removeClass('on');
+        this.alignRightBtn.removeClass('on');
         switch (fontAlign) {
             case Entry.TEXT_ALIGN_LEFT:
-                this.alignLeftBtn.addClass('toggle');
+                this.alignLeftBtn.addClass('on');
                 break;
             case Entry.TEXT_ALIGN_CENTER:
-                this.alignCenterBtn.addClass('toggle');
+                this.alignCenterBtn.addClass('on');
                 break;
             case Entry.TEXT_ALIGN_RIGHT:
-                this.alignRightBtn.addClass('toggle');
+                this.alignRightBtn.addClass('on');
                 break;
         }
         this.object.entity.setTextAlign(fontAlign);

@@ -62,28 +62,29 @@
 }
 
 .entryPlaygroundFontSizeWrapper {
-    width: 400px;
-    height: 39px;
+    padding:13px;
+    display:inline-block;
+    width: 234px;
+    height: 40px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    margin-left: 213px;
 }
 
 .entryPlaygroundFontSizeLabel {
     display: inline-block;
-    float: right;
-    font-size: 9px;
+    width: 55px;
+    height: 15px;
     font-family: notoSansMedium;
-    color: #444;
-    line-height: 39px;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: -0.3px;
+    color: #2c313d;
 }
 
-.entryPlaygroundFontSizeSlider {
-    display: inline-block;
-    float: right;
-    width: 96px;
-    height: 3px;
-    margin: 18px 0px 18px 4px;
-    background-color: #cfcfcf;
-    border-radius: 1.5px;
-}
 
 #entryTextColourTable {
     margin-top: 12px;
@@ -642,8 +643,11 @@
     background-color: #fff;
     border-radius: 4px;
 }
+.entryPlaygroundTextWorkspace .write_box .write_set .font_style_box .style_link.on {
+    border: 1px solid #4f80ff;
+}
 .entryPlaygroundTextWorkspace .write_box .input_box .write_type_box {
-    overflow: hidden;
+    display:inline-block;
     border-radius: 4px;
     width: 207px;
     height: 40px;
@@ -699,6 +703,7 @@
     position: relative;
     overflow: hidden;
     height: 40px;
+    width:654px;
     padding: 0 16px;
     background-color: #fff;
     border: 1px solid #e2e2e2;
@@ -719,6 +724,7 @@
     width: 100%;
     height: 204px;
     margin: 12px 0;
+    font-size:14px;
     border: 0;
     line-height: 18px;
     outline: 0;
@@ -731,6 +737,73 @@
     top: 13px;
     color: #979797;
     letter-spacing: -0.3px;
+}
+
+.imbtn_pop_font_bold {
+    .backgroundImage("btn_pop_font_bold.png");
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage("btn_pop_font_bold_on.png");
+    }
+}
+.imbtn_pop_font_underline {
+    .backgroundImage("btn_pop_font_underline.png");
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage("btn_pop_font_underline_on.png");
+    }
+}
+.imbtn_pop_font_italic {
+    .backgroundImage("btn_pop_font_italic.png");
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage("btn_pop_font_italic_on.png");
+    }
+}
+.imbtn_pop_font_through {
+    .backgroundImage("btn_pop_font_through.png");
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage("btn_pop_font_through_on.png");
+    }
+}
+.imbtn_pop_font_color {
+    .backgroundImage("btn_pop_font_color.png");
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage("btn_pop_font_color_on.png");
+    }
+}
+.imbtn_pop_font_backgroundcolor {
+    .backgroundImage("btn_pop_font_paint.png");
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage("btn_pop_font_paint_on.png");
+    }
+}
+
+.imbtn_pop_font_align_left {
+    .backgroundImage("btn_pop_font_align_left.png");
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage("btn_pop_font_align_left_on.png");
+    }
+}
+
+.imbtn_pop_font_align_middle {
+    .backgroundImage("btn_pop_font_align_middle.png");
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage("btn_pop_font_align_middle_on.png");
+    }
+}
+
+.imbtn_pop_font_align_right {
+    .backgroundImage("btn_pop_font_align_right.png");
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage("btn_pop_font_align_right_on.png");
+    }
 }
 
 #entryFontColorToggle {
@@ -971,40 +1044,29 @@
     margin-left: 8px;
 }
 
-.entryPlaygroundFontSizeWrapper {
-    width: 400px;
-    height: 39px;
-}
-
-.entryPlaygroundFontSizeLabel {
-    display: inline-block;
-    float: right;
-    font-size: 9px;
-    font-family: notoSansMedium;
-    color: #444;
-    line-height: 39px;
-}
-
 .entryPlaygroundFontSizeSlider {
-    display: inline-block;
-    float: right;
-    width: 96px;
-    height: 3px;
-    margin: 18px 0px 18px 4px;
-    background-color: #cfcfcf;
-    border-radius: 1.5px;
+    display:inline-block;
+    margin-left:12px;
+    width: 136px;
+    height: 8px;
+    border-radius: 3px;
+    box-shadow: inset 1px 1px 1px 0 rgba(0, 0, 0, 0.03);
+    background-color: #d8d8d8;
 }
 
 .entryPlaygroundFontSizeIndicator {
     height: 100%;
     width: 45%;
+    border-radius: 3px;
     background-color: #643cd9;
 }
 
 .entryPlaygroundFontSizeKnob {
-    width: 16px; height: 16px;
+    width: 9px;
+    height: 20px;
+    object-fit: contain;
     position: relative;
-    margin-top: -10px;
+    margin-top: -14px;
     margin-left: -7px;
     .backgroundImage("text_size_knob.png");
     cursor: pointer;
