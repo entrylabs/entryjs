@@ -1,91 +1,87 @@
 {
-  "name": "entryjs",
-  "title": "EntryJS",
-  "description": "JavaScript library for visual programming",
-  "version": "0.1.0",
-  "main": "dist/entry.js",
-  "homepage": "http://play-entry.com",
-  "author": {
-    "name": "Entry Korea corp and other contributors"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/boolgom/entryjs.git"
-  },
-  "keywords": [
-    "entry",
-    "entryjs",
-    "javascript"
-  ],
-  "bugs": {
-    "url": "https://github.com/boolgom/entryjs/issues"
-  },
-  "scripts": {
-    "lint": "cross-env NODE_ENV=lint webpack -w",
-    "serve": "cross-env NODE_ENV=serve webpack-dev-server --open",
-    "dev": "webpack -w",
-    "test": "jest --colors",
-    "dist": "webpack"
-  },
-  "license": "MIT",
-  "dependencies": {
-    "autoprefixer": "^9.3.1",
-    "axios": "^0.18.0",
-    "babel-core": "^7.0.0-bridge.0",
-    "entry-tool": "^0.1.7",
-    "hyperid": "^1.4.1",
-    "jest": "^23.3.0",
-    "lodash": "^4.17.5",
-    "postcss-flexbugs-fixes": "^4.1.0",
-    "simplebar": "^3.1.0",
-    "uglifyjs-webpack-plugin": "^1.2.2",
-    "webpack": "^4.0.1"
-  },
-  "devDependencies": {
-    "@babel/core": "7.0.0",
-    "@babel/plugin-proposal-class-properties": "^7.0.0",
-    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
-    "@babel/plugin-syntax-dynamic-import": "7.0.0",
-    "@babel/plugin-transform-modules-commonjs": "^7.0.0",
-    "@babel/plugin-transform-object-assign": "7.0.0",
-    "@babel/plugin-transform-runtime": "7.0.0",
-    "@babel/preset-env": "7.0.0",
-    "@babel/runtime": "^7.0.0",
-    "babel-eslint": "^8.2.2",
-    "babel-loader": "^8.0.0-beta.0",
-    "babel-plugin-dynamic-import-node": "^2.0.0",
-    "chai": "^3.2.0",
-    "cross-env": "^5.1.4",
-    "css-loader": "^0.28.10",
-    "eslint": "^4.18.2",
-    "eslint-config-prettier": "^2.9.0",
-    "eslint-loader": "^2.0.0",
-    "eslint-plugin-prettier": "^2.6.0",
-    "extract-text-webpack-plugin": "^4.0.0-beta.0",
-    "file-loader": "^1.1.11",
-    "jest-jenkins-reporter": "^1.0.2",
-    "karma": "^0.13.0",
-    "karma-chai": "^0.1.0",
-    "karma-chrome-launcher": "^0.2.0",
-    "karma-mocha": "^0.2.0",
-    "less": "^3.0.1",
-    "less-loader": "^4.0.6",
-    "mocha": "^2.5.3",
-    "prettier": "^1.11.1",
-    "style-loader": "^0.20.2",
-    "url-loader": "^1.0.1",
-    "webpack-cli": "^2.0.10",
-    "webpack-dev-server": "^3.1.1",
-    "webpack-merge": "^4.1.2",
-    "webpack-strip-block": "^0.2.0"
-  },
-  "jest": {
-    "collectCoverage": true,
-    "testResultsProcessor": "jest-jenkins-reporter"
-  },
-  "jestSonar": {
-    "reportPath": "reports",
-    "reportFile": "report.xml",
-    "indent": 4
-  }
+    "name": "entryjs",
+    "title": "EntryJS",
+    "description": "JavaScript library for visual programming",
+    "version": "0.1.0",
+    "main": "dist/entry.js",
+    "homepage": "http://play-entry.com",
+    "author": {
+        "name": "Entry Korea corp and other contributors"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/boolgom/entryjs.git"
+    },
+    "keywords": ["entry", "entryjs", "javascript"],
+    "bugs": {
+        "url": "https://github.com/boolgom/entryjs/issues"
+    },
+    "scripts": {
+        "lint": "cross-env NODE_ENV=lint webpack -w",
+        "serve": "cross-env NODE_ENV=serve webpack-dev-server --open",
+        "dev": "webpack -w",
+        "test": "jest --colors",
+        "dist": "webpack"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "autoprefixer": "^9.3.1",
+        "axios": "^0.18.0",
+        "babel-core": "^7.0.0-bridge.0",
+        "entry-tool": "^0.1.8",
+        "hyperid": "^1.4.1",
+        "jest": "^23.3.0",
+        "lodash": "^4.17.5",
+        "postcss-flexbugs-fixes": "^4.1.0",
+        "simplebar": "^3.1.0",
+        "uglifyjs-webpack-plugin": "^1.2.2",
+        "webpack": "^4.0.1"
+    },
+    "devDependencies": {
+        "@babel/core": "7.0.0",
+        "@babel/plugin-proposal-class-properties": "^7.0.0",
+        "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+        "@babel/plugin-syntax-dynamic-import": "7.0.0",
+        "@babel/plugin-transform-modules-commonjs": "^7.0.0",
+        "@babel/plugin-transform-object-assign": "7.0.0",
+        "@babel/plugin-transform-runtime": "7.0.0",
+        "@babel/preset-env": "7.0.0",
+        "@babel/runtime": "^7.0.0",
+        "babel-eslint": "^8.2.2",
+        "babel-loader": "^8.0.0-beta.0",
+        "babel-plugin-dynamic-import-node": "^2.0.0",
+        "chai": "^3.2.0",
+        "cross-env": "^5.1.4",
+        "css-loader": "^0.28.10",
+        "eslint": "^4.18.2",
+        "eslint-config-prettier": "^2.9.0",
+        "eslint-loader": "^2.0.0",
+        "eslint-plugin-prettier": "^2.6.0",
+        "extract-text-webpack-plugin": "^4.0.0-beta.0",
+        "file-loader": "^1.1.11",
+        "jest-jenkins-reporter": "^1.0.2",
+        "karma": "^0.13.0",
+        "karma-chai": "^0.1.0",
+        "karma-chrome-launcher": "^0.2.0",
+        "karma-mocha": "^0.2.0",
+        "less": "^3.0.1",
+        "less-loader": "^4.0.6",
+        "mocha": "^2.5.3",
+        "prettier": "^1.11.1",
+        "style-loader": "^0.20.2",
+        "url-loader": "^1.0.1",
+        "webpack-cli": "^2.0.10",
+        "webpack-dev-server": "^3.1.1",
+        "webpack-merge": "^4.1.2",
+        "webpack-strip-block": "^0.2.0"
+    },
+    "jest": {
+        "collectCoverage": true,
+        "testResultsProcessor": "jest-jenkins-reporter"
+    },
+    "jestSonar": {
+        "reportPath": "reports",
+        "reportFile": "report.xml",
+        "indent": 4
+    }
 }
