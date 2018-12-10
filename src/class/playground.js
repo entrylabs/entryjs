@@ -417,191 +417,61 @@ Entry.Playground = function() {
      */
     p.generateTextView = function(textView) {
         var that = this;
-        var wrap = Entry.createElement('div').appendTo(textView);
-        var textProperties = Entry.createElement('div').addClass('textProperties');
-        wrap.appendChild(textProperties);
-        var fontWrapper = Entry.createElement('div').addClass('entryTextFontSelect');
-        textProperties.appendChild(fontWrapper);
+        var wrap = Entry.createElement('div').addClass('write_box').appendTo(textView);
+        const writeSet = Entry.createElement('div').addClass('write_set');
+        const inputArea = Entry.createElement('div').addClass('input_box');
+        wrap.append(writeSet);
+        wrap.append(inputArea);
 
-        var fontName = Entry.createElement('select', 'entryPainterAttrFontName').addClass(
-            'entryPlaygroundPainterAttrFontName',
-            'entryTextFontSelecter'
-        );
-        fontName.size = '1';
-        fontName.onchange = function({ target }) {
-            var font = target.value;
-            if (font == 'Nanum Pen Script' || font == 'Jeju Hallasan') {
-                var textValue = textEditInput.value;
-                if (that.object.entity.getLineBreak()) textValue = textEditArea.value;
+        //write set 글 속성 탭
+        let fontSelect = Entry.createElement('div').addClass('pop_selectbox');
+        let fontLink = Entry.createElement('a').addClass('select_link imico_pop_select_arr_down');
+        fontLink.innerText="바탕체";
+        fontSelect.append(fontLink);
+        writeSet.append(fontSelect);
 
-                if (/[\u4E00-\u9FFF]/.exec(textValue) != null) {
-                    font = 'KoPub Batang';
-                    fontName.value = font;
-                    entrylms.alert(Lang.Menus.not_supported_text);
-                }
-            }
-            that.object.entity.setFontType(font);
-        };
+        //스타일 박스
+        let alignBox = Entry.createElement('div').addClass('font_style_box');
+        let alignLeft = Entry.createElement('a').addClass('style_link');
+        let alignMiddle = Entry.createElement('a').addClass('style_link');
+        let alignRight = Entry.createElement('a').addClass('style_link');
+        alignBox.append(alignLeft);
+        alignBox.append(alignMiddle);
+        alignBox.append(alignRight);
+        writeSet.append(alignBox);
 
-        Entry.fonts.forEach((font) => {
-            var element = Entry.createElement('option');
-            element.value = font.family;
-            element.innerHTML = font.name;
+        let styleBox = Entry.createElement('div').addClass('font_style_box');
+        let bold = Entry.createElement('a').addClass('style_link imbtn_pop_font_bold');
+        let underLine = Entry.createElement('a').addClass('style_link imbtn_pop_font_underline');
+        let italic = Entry.createElement('a').addClass('style_link imbtn_pop_font_underline');
+        let through = Entry.createElement('a').addClass('style_link imbtn_pop_font_underline');
+        let color = Entry.createElement('a').addClass('style_link imbtn_pop_font_underline');
+        let backgroundColor = Entry.createElement('a').addClass('style_link imbtn_pop_font_underline');
+        styleBox.append(bold);
+        styleBox.append(underLine);
+        styleBox.append(italic);
+        styleBox.append(through);
+        styleBox.append(color);
+        styleBox.append(backgroundColor);
+        writeSet.append(styleBox);
 
-            fontName.appendChild(element);
-        });
+        let writeTypeBox = Entry.createElement("div").addClass('write_type_box');
+        let singleLine = Entry.createElement('a');
+        singleLine.innerText = "한 줄 쓰기";
+        let multiLine = Entry.createElement('a');
+        multiLine.innerText = "여러 줄 쓰기";
+        writeTypeBox.append(singleLine);
+        writeTypeBox.append(multiLine);
+        inputArea.append(writeTypeBox);
 
-        this.fontName_ = fontName;
-        fontWrapper.appendChild(fontName);
-
-        var textButtons = Entry.createElement('ul').addClass('entryPlayground_text_buttons');
-        textProperties.appendChild(textButtons);
-
-        var alignLeftBtn = Entry.createElement('li')
-            .addClass('entryPlaygroundTextAlignLeft')
-            .bindOnClick(() => {
-                Entry.playground.setFontAlign(Entry.TEXT_ALIGN_LEFT);
-            });
-        textButtons.appendChild(alignLeftBtn);
-        this.alignLeftBtn = alignLeftBtn;
-
-        var alignCenterBtn = Entry.createElement('li')
-            .addClass('entryPlaygroundTextAlignCenter')
-            .bindOnClick(function(e) {
-                Entry.playground.setFontAlign(Entry.TEXT_ALIGN_CENTER);
-            });
-        textButtons.appendChild(alignCenterBtn);
-        this.alignCenterBtn = alignCenterBtn;
-
-        var alignRightBtn = Entry.createElement('li')
-            .addClass('entryPlaygroundTextAlignRight')
-            .bindOnClick(function(e) {
-                Entry.playground.setFontAlign(Entry.TEXT_ALIGN_RIGHT);
-            });
-        textButtons.appendChild(alignRightBtn);
-        this.alignRightBtn = alignRightBtn;
-
-        var boldWrap = Entry.createElement('li');
-        textButtons.appendChild(boldWrap);
-        var boldButton = Entry.createElement('a').bindOnClick(function() {
-            var isBold = Entry.playground.object.entity.toggleFontBold() || false;
-            if (isBold) {
-                boldImage.src = Entry.mediaFilePath + 'text_button_bold_true.png';
-            } else {
-                boldImage.src = Entry.mediaFilePath + 'text_button_bold_false.png';
-            }
-        });
-        boldWrap.appendChild(boldButton);
-        var boldImage = Entry.createElement('img', 'entryPlaygroundText_boldImage');
-        boldButton.appendChild(boldImage);
-        boldImage.src = Entry.mediaFilePath + 'text_button_bold_false.png';
-
-        var underLineWrap = Entry.createElement('li');
-        textButtons.appendChild(underLineWrap);
-        var underLineButton = Entry.createElement('a');
-        underLineWrap.appendChild(underLineButton);
-        underLineButton.bindOnClick(function() {
-            //toggle
-            var underLineState = !Entry.playground.object.entity.getUnderLine() || false;
-            underLineImage.src =
-                Entry.mediaFilePath + 'text_button_underline_' + underLineState + '.png';
-            Entry.playground.object.entity.setUnderLine(underLineState);
-        });
-        var underLineImage = Entry.createElement('img', 'entryPlaygroundText_underlineImage');
-        underLineButton.appendChild(underLineImage);
-        underLineImage.src = Entry.mediaFilePath + 'text_button_underline_false.png';
-
-        var italicWrap = Entry.createElement('li');
-        textButtons.appendChild(italicWrap);
-        var italicButton = Entry.createElement('a').bindOnClick(function() {
-            //toggle
-            var isItalic = Entry.playground.object.entity.toggleFontItalic();
-            italicImage.src = `${Entry.mediaFilePath}text_button_italic_${isItalic.toString()}.png`;
-        });
-        italicWrap.appendChild(italicButton);
-
-        var italicImage = Entry.createElement('img', 'entryPlaygroundText_italicImage');
-        italicButton.appendChild(italicImage);
-        italicImage.src = Entry.mediaFilePath + 'text_button_italic_false.png';
-
-        var strikeWrap = Entry.createElement('li');
-        textButtons.appendChild(strikeWrap);
-        var strikeButton = Entry.createElement('a').bindOnClick(function() {
-            //toggle
-            var strikeState = !Entry.playground.object.entity.getStrike() || false;
-            Entry.playground.object.entity.setStrike(strikeState);
-            strikeImage.src = `${
-                Entry.mediaFilePath
-            }text_button_strike_${strikeState.toString()}.png`;
-        });
-        strikeWrap.appendChild(strikeButton);
-        var strikeImage = Entry.createElement('img', 'entryPlaygroundText_strikeImage');
-        strikeButton.appendChild(strikeImage);
-        strikeImage.src = Entry.mediaFilePath + 'text_button_strike_false.png';
-
-        var foregroundWrap = Entry.createElement('li');
-        textButtons.appendChild(foregroundWrap);
-        var foregroundButton = Entry.createElement('a').bindOnClick(function({ target }) {
-            if ($(target).hasClass('fontColorCell')) {
-                Entry.playground.setTextColour(target.getAttribute('colour'));
-            } else {
-                Entry.playground.toggleColourChooser('foreground');
-            }
-        });
-        foregroundWrap.appendChild(foregroundButton);
-        var foregroundImage = Entry.createElement('img', 'playgroundTextColorButtonImg');
-        foregroundButton.appendChild(foregroundImage);
-        foregroundImage.src = `${Entry.mediaFilePath}text_button_color_false.png`;
-
-        var backgroundWrap = Entry.createElement('li');
-        textButtons.appendChild(backgroundWrap);
-        var backgroundButton = Entry.createElement('a').bindOnClick(function({ target }) {
-            if ($(target).hasClass('fontColorCell')) {
-                that.setBackgroundColour(target.getAttribute('colour'));
-            } else {
-                that.toggleColourChooser('background');
-            }
-        });
-        backgroundWrap.appendChild(backgroundButton);
-        var backgroundImage = Entry.createElement('img', 'playgroundTextBgButtonImg');
-        backgroundButton.appendChild(backgroundImage);
-        backgroundImage.src = Entry.mediaFilePath + 'text_button_background_false.png';
-
-        var fgColorDiv = Entry.createElement('div').addClass('entryPlayground_fgColorDiv');
-        var bgColorDiv = Entry.createElement('div').addClass('entryPlayground_bgColorDiv');
-
-        foregroundButton.appendChild(fgColorDiv);
-        backgroundButton.appendChild(bgColorDiv);
-
-        var coloursWrapper = Entry.createElement('div').addClass(
-            'entryPlaygroundTextColoursWrapper'
-        );
-        this.coloursWrapper = coloursWrapper;
-        foregroundButton.appendChild(coloursWrapper);
-        var colours = Entry.getColourCodes();
-
-        var foregroundFragment = document.createDocumentFragment();
-        colours.forEach((color, idx) => {
-            var cell = Entry.createElement('div').addClass('modal_colour fontColorCell');
-            cell.setAttribute('colour', color);
-            cell.style.backgroundColor = color;
-            if (idx === 0) cell.addClass('modalColourTrans');
-            foregroundFragment.appendChild(cell);
-        });
-        var backgroundFragment = foregroundFragment.cloneNode(true);
-        coloursWrapper.appendChild(foregroundFragment);
-        coloursWrapper.style.display = 'none';
-
-        var backgroundsWrapper = Entry.createElement('div').addClass(
-            'entryPlaygroundTextBackgroundsWrapper'
-        );
-        this.backgroundsWrapper = backgroundsWrapper;
-        backgroundButton.appendChild(backgroundsWrapper);
-
-        backgroundsWrapper.appendChild(backgroundFragment);
-        backgroundsWrapper.style.display = 'none';
+        let inputInner = Entry.createElement("div").addClass("input_inner");
+        let label = Entry.createElement("label");
+        label.innerText = "써주세요";
+        inputInner.append(label);
+        inputArea.append(inputInner);
 
         var textEditInput = Entry.createElement('input').addClass('entryPlayground_textBox');
+        textEditInput.type="text";
         var textChangeApply = function() {
             var object = Entry.playground.object;
             var entity = object.entity;
@@ -631,7 +501,7 @@ Entry.Playground = function() {
             // Entry.dispatchEvent('textEdited');
         };
         this.textEditInput = textEditInput;
-        wrap.appendChild(textEditInput);
+        inputInner.appendChild(textEditInput);
 
         var textEditArea = Entry.createElement('textarea');
         textEditArea.addClass('entryPlayground_textArea');
@@ -648,105 +518,17 @@ Entry.Playground = function() {
             }
         };
         this.textEditArea = textEditArea;
-        wrap.appendChild(textEditArea);
+        inputInner.appendChild(textEditArea);
 
-        var fontSizeWrapper = Entry.createElement('div').addClass('entryPlaygroundFontSizeWrapper');
-        wrap.appendChild(fontSizeWrapper);
-        this.fontSizeWrapper = fontSizeWrapper;
 
-        var fontSizeSlider = Entry.createElement('div').addClass('entryPlaygroundFontSizeSlider');
-        fontSizeWrapper.appendChild(fontSizeSlider);
-
-        var fontSizeIndiciator = Entry.createElement('div').addClass(
-            'entryPlaygroundFontSizeIndicator'
-        );
-        fontSizeSlider.appendChild(fontSizeIndiciator);
-        this.fontSizeIndiciator = fontSizeIndiciator;
-
-        var fontSizeKnob = Entry.createElement('div').addClass('entryPlaygroundFontSizeKnob');
-        fontSizeSlider.appendChild(fontSizeKnob);
-        this.fontSizeKnob = fontSizeKnob;
-
-        var fontSizeLabel = Entry.createElement('div').addClass('entryPlaygroundFontSizeLabel');
-        fontSizeLabel.innerHTML = Lang.General.font_size;
-        fontSizeWrapper.appendChild(fontSizeLabel);
-
-        $(fontSizeKnob).bind('mousedown.fontKnob touchstart.fontKnob', function() {
-            var resizeOffset = $(fontSizeSlider).offset().left;
-
-            var doc = $(document);
-            doc.bind('mousemove.fontKnob touchmove.fontKnob', onMouseMove);
-            doc.bind('mouseup.fontKnob touchend.fontKnob', onMouseUp);
-
-            function onMouseMove(e) {
-                var left = e.pageX - resizeOffset;
-                left = Math.max(left, 5);
-                left = Math.min(left, 88);
-                fontSizeKnob.style.left = left + 'px';
-                left /= 0.88;
-                fontSizeIndiciator.style.width = left + '%';
-                Entry.playground.object.entity.setFontSize(left);
-            }
-
-            function onMouseUp(e) {
-                $(document).unbind('.fontKnob');
-            }
-        });
-
-        var linebreakWrapper = Entry.createElement('div').addClass(
-            'entryPlaygroundLinebreakWrapper'
-        );
-        wrap.appendChild(linebreakWrapper);
-
-        var linebreakHorizontal = Entry.createElement('hr').addClass(
-            'entryPlaygroundLinebreakHorizontal'
-        );
-        linebreakWrapper.appendChild(linebreakHorizontal);
-
-        var linebreakButtons = Entry.createElement('div').addClass(
-            'entryPlaygroundLinebreakButtons'
-        );
-        linebreakWrapper.appendChild(linebreakButtons);
-
-        var linebreakOffImage = Entry.createElement('img').bindOnClick(function() {
-            Entry.playground.toggleLineBreak(false);
-            linebreakDescTitle.innerHTML = Lang.Menus.linebreak_off_desc_1;
-            linebreakDescList1.innerHTML = Lang.Menus.linebreak_off_desc_2;
-            linebreakDescList2.innerHTML = Lang.Menus.linebreak_off_desc_3;
-        });
-
-        linebreakOffImage.src = Entry.mediaFilePath + 'text-linebreak-off-true.png';
-        linebreakButtons.appendChild(linebreakOffImage);
-        this.linebreakOffImage = linebreakOffImage;
-
-        var linebreakOnImage = Entry.createElement('img').bindOnClick(function() {
-            Entry.playground.toggleLineBreak(true);
-            linebreakDescTitle.innerHTML = Lang.Menus.linebreak_on_desc_1;
-            linebreakDescList1.innerHTML = Lang.Menus.linebreak_on_desc_2;
-            linebreakDescList2.innerHTML = Lang.Menus.linebreak_on_desc_3;
-        });
-
-        linebreakOnImage.src = Entry.mediaFilePath + 'text-linebreak-on-false.png';
-        linebreakButtons.appendChild(linebreakOnImage);
-        this.linebreakOnImage = linebreakOnImage;
-
-        var linebreakDescription = Entry.createElement('div').addClass(
-            'entryPlaygroundLinebreakDescription'
-        );
-        linebreakWrapper.appendChild(linebreakDescription);
-
-        var linebreakDescTitle = Entry.createElement('p');
-        linebreakDescTitle.innerHTML = Lang.Menus.linebreak_off_desc_1;
-        linebreakDescription.appendChild(linebreakDescTitle);
-
-        var linebreakDescUL = Entry.createElement('ul');
-        linebreakDescription.appendChild(linebreakDescUL);
-        var linebreakDescList1 = Entry.createElement('li');
-        linebreakDescList1.innerHTML = Lang.Menus.linebreak_off_desc_2;
-        linebreakDescUL.appendChild(linebreakDescList1);
-        var linebreakDescList2 = Entry.createElement('li');
-        linebreakDescList2.innerHTML = Lang.Menus.linebreak_off_desc_3;
-        linebreakDescUL.appendChild(linebreakDescList2);
+        let desc = Entry.createElement("ul").addClass("list");
+        let desc_1 = Entry.createElement("li");
+        desc_1.innerText = "text1";
+        let desc_2 = Entry.createElement("li");
+        desc_2.innerText = "text2";
+        desc.append(desc_1);
+        desc.append(desc_2);
+        inputArea.append(desc);
     };
 
     /**

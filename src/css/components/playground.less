@@ -543,55 +543,194 @@
 
 }
 
+.pop_selectbox {
+    position: relative;
+    .select_link {
+        display: block;
+        position: relative;
+        width: 142px;
+        height: 38px;
+        padding: 0 12px;
+        border: 1px solid #e2e2e2;
+        background-color: #fff;
+        border-radius: 4px;
+        font-weight: 600;
+        color: #555;
+        letter-spacing: -0.3px;
+        line-height: 40px;
+    }
+    .select_link:after {
+    @include PositionRT(absolute, 16px, 50%);
+        width: 8px;
+        height: 6px;
+        margin-top: -3px;
+        vertical-align: top;
+        content: '';
+    }
+    & + .pop_selectbox {
+        margin-top: 40px;
+    }
+    & + .on {
+        z-index: 10;
+    }
+    & + .pop_inpt_text {
+        margin-top: 40px;
+    }
+    &.error .select_link {
+        border-color: #f00;
+    }
+}
+.pop_selectbox * {
+    box-sizing: content-box;
+}
+.pop_selectbox .tooltip_box {
+    display: none;
+}
+.pop_selectbox.on .tooltip_box {
+    display: block;
+    z-index: 10;
+    top: 52px;
+}
+
 .entryPlaygroundTextWorkspace {
     position: absolute;
     top: 79px;
     height: 100%;
     width: 100%;
-    background-color: #ececec;
-    padding-left: 20px;
-    padding-top: 20px;
+    background-color: #ecf8ff;
 }
-
-.entryTextHead {
-    font-size: 18px;
+// 글상자
+.entryPlaygroundTextWorkspace .write_box {
+    height: 568px;
 }
-
-.entryTextEdit {
-    font-size: 17px;
-    width: 220px;
-    height: 30px;
-    border: 1px solid #808080;
-    border-radius: 3px;
+.entryPlaygroundTextWorkspace .write_box .write_set {
+    position: relative;
+    padding: 8px 18px;
+    background-color: #f9f9f9;
+    border: 1px solid #e2e2e2;
+    z-index: 10;
 }
-
-#entryTextProperty {
-    width: 220px;
-    height: 32px;
-    margin-top: 12px;
+.entryPlaygroundTextWorkspace .write_box .write_set:after {
+    display: block;
+    clear: both;
+    content: '';
 }
-
-.entryTextFontSelect {
-    display: inline-block;
-    height: 32px;
-    border: 1px solid #808080;
-    border-radius: 4px;
-    background-color: white;
+.entryPlaygroundTextWorkspace .write_box .write_set .pop_selectbox {
     float: left;
+    width: 168px;
+}
+.entryPlaygroundTextWorkspace .write_box .write_set .pop_selectbox .tooltip_inner {
+    max-height: 282px;
+    overflow: visible;
+    overflow-y: auto;
 }
 
-.entryTextFontSelecter {
-    margin-top: 5px;
-    margin-left: 2px;
-    width: 120px;
+.entryPlaygroundTextWorkspace .write_box .write_set .font_style_box {
+    position: relative;
+    float: left;
+    padding-left: 24px;
+    font-size: 0;
 }
 
-.entryFontToggle {
+.entryPlaygroundTextWorkspace .write_box .write_set .font_style_box .style_link {
     display: inline-block;
-    width: 96px;
-    width: 32px;
-    height: 32px;
-    float: right;
+    overflow: hidden;
+    width: 38px;
+    height: 38px;
+    margin-left: 10px;
+    border: 1px solid #e2e2e2;
+    background-color: #fff;
+    border-radius: 4px;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box .write_type_box {
+    overflow: hidden;
+    border-radius: 4px;
+    width: 207px;
+    height: 40px;
+    font-size: 0;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box .write_type_box a {
+    display: inline-block;
+    position: relative;
+    width: 102px;
+    height: 38px;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px 0 0 4px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #979797;
+    background-color: #fff;
+    text-align: center;
+    letter-spacing: -0.3px;
+    line-height: 40px;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box .write_type_box a + a {
+    margin-left: -1px;
+    border-radius: 0 4px 4px 0;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box .write_type_box .on {
+    color: #4f80ff;
+    border-color: #4f80ff;
+    z-index: 10;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box {
+    padding: 24px 38px 0;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box .list {
+    padding: 4px 0px;
+    list-style: none;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box .list li {
+    color: #555;
+    margin-top: 4px;
+    line-height: 18px;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box .list li:before {
+    display: inline-block;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background-color: #555;
+    margin: 6px 8px 0 0;
+    vertical-align: top;
+    content: '';
+}
+.entryPlaygroundTextWorkspace .write_box .input_inner {
+    position: relative;
+    overflow: hidden;
+    height: 40px;
+    padding: 0 16px;
+    background-color: #fff;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    margin-top: 24px;
+}
+
+.entryPlaygroundTextWorkspace .write_box .input_inner input[type='text'] {
+    display:none;
+    width: 100%;
+    border: 0;
+    line-height: 40px;
+    outline: 0;
+    font-size: 14px;
+    letter-spacing: -0.3px;
+}
+.entryPlaygroundTextWorkspace .write_box .input_inner textarea {
+    width: 100%;
+    height: 204px;
+    margin: 12px 0;
+    border: 0;
+    line-height: 18px;
+    outline: 0;
+    letter-spacing: -0.3px;
+}
+.entryPlaygroundTextWorkspace .write_box .input_inner label {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    top: 13px;
+    color: #979797;
+    letter-spacing: -0.3px;
 }
 
 #entryFontColorToggle {
@@ -830,17 +969,6 @@
     height: 4px;
     margin-top: -10px;
     margin-left: 8px;
-}
-.entryPlayground_textBox {
-    margin-top: 5px;
-    height: 33px;
-    width: 426px;
-}
-.entryPlayground_textArea {
-    margin-top: 5px;
-    height: 120px;
-    width: 426px;
-    resize: none;
 }
 
 .entryPlaygroundFontSizeWrapper {
