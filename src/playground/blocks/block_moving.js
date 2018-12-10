@@ -20,8 +20,8 @@ module.exports = {
 
         return {
             move_direction: {
-                color: '#CA7DFF',
-                outerLine: '#b13efe',
+                color: EntryStatic.colorSet.block.default.MOVING,
+                outerLine: EntryStatic.colorSet.block.darken.MOVING,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -90,8 +90,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.move_to_direction(%1)'] },
             },
             bounce_wall: {
-                color: '#CA7DFF',
-                outerLine: '#b13efe',
+                color: EntryStatic.colorSet.block.default.MOVING,
+                outerLine: EntryStatic.colorSet.block.darken.MOVING,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -345,8 +345,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.bounce_on_edge()'] },
             },
             move_x: {
-                color: '#CA7DFF',
-                outerLine: '#b13efe',
+                color: EntryStatic.colorSet.block.default.MOVING,
+                outerLine: EntryStatic.colorSet.block.darken.MOVING,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -398,8 +398,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.add_x(%1)'] },
             },
             move_y: {
-                color: '#CA7DFF',
-                outerLine: '#b13efe',
+                color: EntryStatic.colorSet.block.default.MOVING,
+                outerLine: EntryStatic.colorSet.block.darken.MOVING,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -451,8 +451,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.add_y(%1)'] },
             },
             move_xy_time: {
-                color: '#CA7DFF',
-                outerLine: '#b13efe',
+                color: EntryStatic.colorSet.block.default.MOVING,
+                outerLine: EntryStatic.colorSet.block.darken.MOVING,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -562,8 +562,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.add_xy_for_sec(%2, %3, %1)'] },
             },
             locate_x: {
-                color: '#CA7DFF',
-                outerLine: '#b13efe',
+                color: EntryStatic.colorSet.block.default.MOVING,
+                outerLine: EntryStatic.colorSet.block.darken.MOVING,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -615,8 +615,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.set_x(%1)'] },
             },
             locate_y: {
-                color: '#CA7DFF',
-                outerLine: '#b13efe',
+                color: EntryStatic.colorSet.block.default.MOVING,
+                outerLine: EntryStatic.colorSet.block.darken.MOVING,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -668,8 +668,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.set_y(%1)'] },
             },
             locate_xy: {
-                color: '#CA7DFF',
-                outerLine: '#b13efe',
+                color: EntryStatic.colorSet.block.default.MOVING,
+                outerLine: EntryStatic.colorSet.block.darken.MOVING,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -738,8 +738,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.set_xy(%1, %2)'] },
             },
             locate_xy_time: {
-                color: '#CA7DFF',
-                outerLine: '#b13efe',
+                color: EntryStatic.colorSet.block.default.MOVING,
+                outerLine: EntryStatic.colorSet.block.darken.MOVING,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -852,8 +852,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.set_xy_for_sec(%2, %3, %1)'] },
             },
             locate: {
-                color: '#CA7DFF',
-                outerLine: '#b13efe',
+                color: EntryStatic.colorSet.block.default.MOVING,
+                outerLine: EntryStatic.colorSet.block.darken.MOVING,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -925,8 +925,8 @@ module.exports = {
                 },
             },
             locate_object_time: {
-                color: '#CA7DFF',
-                outerLine: '#b13efe',
+                color: EntryStatic.colorSet.block.default.MOVING,
+                outerLine: EntryStatic.colorSet.block.darken.MOVING,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1056,8 +1056,8 @@ module.exports = {
                 },
             },
             rotate_relative: {
-                color: '#CA7DFF',
-                outerLine: '#b13efe',
+                color: EntryStatic.colorSet.block.default.MOVING,
+                outerLine: EntryStatic.colorSet.block.darken.MOVING,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1105,8 +1105,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.add_rotation(%1)'] },
             },
             direction_relative: {
-                color: '#CA7DFF',
-                outerLine: '#b13efe',
+                color: EntryStatic.colorSet.block.default.MOVING,
+                outerLine: EntryStatic.colorSet.block.darken.MOVING,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1155,8 +1155,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.add_direction(%1)'] },
             },
             rotate_by_time: {
-                color: '#CA7DFF',
-                outerLine: '#b13efe',
+                color: EntryStatic.colorSet.block.default.MOVING,
+                outerLine: EntryStatic.colorSet.block.darken.MOVING,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1242,8 +1242,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.add_rotation_for_sec(%2, %1)'] },
             },
             direction_relative_duration: {
-                color: '#CA7DFF',
-                outerLine: '#b13efe',
+                color: EntryStatic.colorSet.block.default.MOVING,
+                outerLine: EntryStatic.colorSet.block.darken.MOVING,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1333,8 +1333,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.add_direction_for_sec(%2, %1)'] },
             },
             rotate_absolute: {
-                color: '#CA7DFF',
-                outerLine: '#b13efe',
+                color: EntryStatic.colorSet.block.default.MOVING,
+                outerLine: EntryStatic.colorSet.block.darken.MOVING,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1383,8 +1383,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.set_rotation(%1)'] },
             },
             direction_absolute: {
-                color: '#CA7DFF',
-                outerLine: '#b13efe',
+                color: EntryStatic.colorSet.block.default.MOVING,
+                outerLine: EntryStatic.colorSet.block.darken.MOVING,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1433,8 +1433,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.set_direction(%1)'] },
             },
             see_angle_object: {
-                color: '#CA7DFF',
-                outerLine: '#b13efe',
+                color: EntryStatic.colorSet.block.default.MOVING,
+                outerLine: EntryStatic.colorSet.block.darken.MOVING,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1526,8 +1526,8 @@ module.exports = {
                 },
             },
             move_to_angle: {
-                color: '#CA7DFF',
-                outerLine: '#b13efe',
+                color: EntryStatic.colorSet.block.default.MOVING,
+                outerLine: EntryStatic.colorSet.block.darken.MOVING,
                 skeleton: 'basic',
                 statements: [],
                 params: [

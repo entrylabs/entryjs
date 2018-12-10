@@ -2,9 +2,9 @@ module.exports = {
     getBlocks() {
         return {
             text_read: {
-                color: '#FC5D01',
-                outerLine: '#E43500',
-                fontColor: '#FFFFFF',
+                color: EntryStatic.colorSet.block.default.TEXT,
+                outerLine: EntryStatic.colorSet.block.darken.TEXT,
+                fontColor: EntryStatic.colorSet.common.WHITE,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -69,8 +69,8 @@ module.exports = {
                 },
             },
             text_write: {
-                color: '#FC5D01',
-                outerLine: '#E43500',
+                color: EntryStatic.colorSet.block.default.TEXT,
+                outerLine: EntryStatic.colorSet.block.darken.TEXT,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -118,8 +118,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.write_text(%1)'] },
             },
             text_append: {
-                color: '#FC5D01',
-                outerLine: '#E43500',
+                color: EntryStatic.colorSet.block.default.TEXT,
+                outerLine: EntryStatic.colorSet.block.darken.TEXT,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -167,8 +167,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.append_text(%1)'] },
             },
             text_prepend: {
-                color: '#FC5D01',
-                outerLine: '#E43500',
+                color: EntryStatic.colorSet.block.default.TEXT,
+                outerLine: EntryStatic.colorSet.block.darken.TEXT,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -216,8 +216,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.prepend_text(%1)'] },
             },
             text_flush: {
-                color: '#FC5D01',
-                outerLine: '#E43500',
+                color: EntryStatic.colorSet.block.default.TEXT,
+                outerLine: EntryStatic.colorSet.block.darken.TEXT,
                 skeleton: 'basic',
                 statements: [],
                 params: [

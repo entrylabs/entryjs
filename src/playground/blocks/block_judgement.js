@@ -2,8 +2,8 @@ module.exports = {
     getBlocks() {
         return {
             is_clicked: {
-                color: '#7E8EFE',
-                outerLine: '#6173F5',
+                color: EntryStatic.colorSet.block.default.JUDGE,
+                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [
@@ -34,8 +34,8 @@ module.exports = {
                 },
             },
             is_press_some_key: {
-                color: '#7E8EFE',
-                outerLine: '#6173F5',
+                color: EntryStatic.colorSet.block.default.JUDGE,
+                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [
@@ -138,8 +138,8 @@ module.exports = {
                 },
             },
             reach_something: {
-                color: '#7E8EFE',
-                outerLine: '#6173F5',
+                color: EntryStatic.colorSet.block.default.JUDGE,
+                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [
@@ -276,8 +276,8 @@ module.exports = {
                 },
             },
             boolean_basic_operator: {
-                color: '#7E8EFE',
-                outerLine: '#6173F5',
+                color: EntryStatic.colorSet.block.default.JUDGE,
+                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [
@@ -471,8 +471,8 @@ module.exports = {
                 },
             },
             boolean_and_or: {
-                color: '#7E8EFE',
-                outerLine: '#6173F5',
+                color: EntryStatic.colorSet.block.default.JUDGE,
+                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [
@@ -577,8 +577,8 @@ module.exports = {
                 },
             },
             boolean_not: {
-                color: '#7E8EFE',
-                outerLine: '#6173F5',
+                color: EntryStatic.colorSet.block.default.JUDGE,
+                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [

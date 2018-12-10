@@ -9,9 +9,9 @@
 }
 
 .propertyTab {
+    overflow: hidden;
     width: 25px;
     height: 100%;
-    background-color: #fff;
 }
 .propertyTabElement {
     height: 38px;
@@ -35,6 +35,10 @@
 }
 .propertyTabobject.selected {
     .backgroundImage('property/container_on.png');
+
+    .practical_course_mode & {
+        .backgroundImage('property/container_on_practical_course.png');
+    }
 }
 
 .propertyTabhw {
@@ -42,6 +46,10 @@
 }
 .propertyTabhw.selected {
     .backgroundImage('property/hw_on.png');
+
+    .practical_course_mode & {
+        .backgroundImage('property/hw_on_practical_course.png');
+    }
 }
 
 .propertyTabtvCast {
@@ -77,9 +85,14 @@
 }
 .propertyTabconsole.selected {
     .backgroundImage('property/console_on.png');
+
+    .practical_course_mode & {
+        .backgroundImage('property/console_on_practical_course.png');
+    }
 }
 
 .propertyContent {
+    overflow: hidden;
     position: absolute;
     top: 0;
     bottom: 0;

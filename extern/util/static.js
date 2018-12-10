@@ -1449,14 +1449,14 @@ EntryStatic.getAllBlocks = function() {
                 'dash_eye',
                 'dash_animation',
                 //endregion dash
-		    
-		            //sciencecube start    
-            		"sciencecube_temper",  
+
+		            //sciencecube start
+            		"sciencecube_temper",
                 "sciencecube_voltage",
                 "sciencecube_current",
                 "sciencecube_pressue",
 		            //sciencecube end
-              
+
                 //Codingmachine Blocks
                 "codingmachine_led",
                 "codingmachine_tune",
@@ -1671,38 +1671,42 @@ EntryStatic.objectSubCategories = {
     ],
 };
 
-EntryStatic.fonts = [
-    {
-        name: Lang.Fonts.batang,
-        family: 'KoPub Batang',
-        url: '/css/kopubbatang.css',
-    },
-    {
-        name: Lang.Fonts.myeongjo,
-        family: 'Nanum Myeongjo',
-        url: '/css/nanummyeongjo.css',
-    },
-    {
-        name: Lang.Fonts.gothic,
-        family: 'Nanum Gothic',
-        url: '/css/nanumgothic.css',
-    },
-    {
-        name: Lang.Fonts.pen_script,
-        family: 'Nanum Pen Script',
-        url: '/css/nanumpenscript.css',
-    },
-    {
-        name: Lang.Fonts.jeju_hallasan,
-        family: 'Jeju Hallasan',
-        url: '/css/jejuhallasan.css',
-    },
-    {
-        name: Lang.Fonts.gothic_coding,
-        family: 'Nanum Gothic Coding',
-        url: '/css/nanumgothiccoding.css',
-    },
-];
+Object.defineProperty(EntryStatic, 'fonts', {
+    get: () => {
+        return [
+            {
+                name: Lang.Fonts.batang,
+                family: 'KoPub Batang',
+                url: '/css/kopubbatang.css',
+            },
+            {
+                name: Lang.Fonts.myeongjo,
+                family: 'Nanum Myeongjo',
+                url: '/css/nanummyeongjo.css',
+            },
+            {
+                name: Lang.Fonts.gothic,
+                family: 'Nanum Gothic',
+                url: '/css/nanumgothic.css',
+            },
+            {
+                name: Lang.Fonts.pen_script,
+                family: 'Nanum Pen Script',
+                url: '/css/nanumpenscript.css',
+            },
+            {
+                name: Lang.Fonts.jeju_hallasan,
+                family: 'Jeju Hallasan',
+                url: '/css/jejuhallasan.css',
+            },
+            {
+                name: Lang.Fonts.gothic_coding,
+                family: 'Nanum Gothic Coding',
+                url: '/css/nanumgothiccoding.css',
+            },
+        ];
+    }
+});
 
 EntryStatic.colorSet = {
     arrow: {

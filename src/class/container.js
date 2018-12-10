@@ -81,8 +81,6 @@ Entry.Container = class Container {
         this._view.appendChild(ulWrapper);
         const scroll = new Simplebar(ulWrapper, { autoHide: false });
         const scrollWrapper = scroll.contentEl;
-        console.log(scroll);
-        console.log(scroll);
         let baseClass = 'entryContainerListWorkspaceWrapper';
         if (Entry.isForLecture) {
             baseClass += ' lecture';
@@ -104,28 +102,32 @@ Entry.Container = class Container {
          * 현재위치에서 일정 범위 이상 벗어난 경우취소
          */
         scrollWrapper.addEventListener('touchstart', (e) => {
+            if(e.eventFromEntryObject) {
+                return;
+            }
             let longPressTimer = null;
             const doc = $(document);
-            const event = Entry.Utils.convertMouseEvent(e);
 
-            // e.stopPropagation();
             longPressTimer = setTimeout(() => {
                 if (longPressTimer) {
                     longPressTimer = null;
-                    this._rightClick(event);
+                    this._rightClick(e);
                 }
             }, 1000);
 
+            const event = Entry.Utils.convertMouseEvent(e);
+            const mouseDownCoordinate = { x: event.clientX, y: event.clientY };
+
             // 움직임 포착된 경우 타이머 종료
             doc.bind('mousemove.container touchmove.container', (e) => {
-                const mouseDownCoordinate = { x: e.clientX, y: e.clientY };
+                const event = Entry.Utils.convertMouseEvent(e);
                 const moveThreshold = 5;
                 if (!mouseDownCoordinate) {
                     return;
                 }
                 const diff = Math.sqrt(
-                    Math.pow(e.pageX - mouseDownCoordinate.x, 2) +
-                    Math.pow(e.pageY - mouseDownCoordinate.y, 2)
+                    Math.pow(event.pageX - mouseDownCoordinate.x, 2) +
+                    Math.pow(event.pageY - mouseDownCoordinate.y, 2)
                 );
 
                 if (diff > moveThreshold && longPressTimer) {
@@ -156,9 +158,7 @@ Entry.Container = class Container {
 
         this.enableSort();
     }
-    /**
-     * enable sort.
-     */
+
     enableSort() {
         const view = this.listView_;
 
@@ -167,6 +167,7 @@ Entry.Container = class Container {
         }
 
         $(view).sortable({
+            distance: 20,
             start(event, ui) {
                 ui.item.data('start_pos', ui.item.index());
             },
@@ -1075,9 +1076,9 @@ Entry.Container = class Container {
     }
 
     _rightClick(e) {
-        if (e.stopPropagation) {
-            e.stopPropagation();
-        }
+        e.stopPropagation();
+        const touchEvent = Entry.Utils.convertMouseEvent(e);
+
         const options = [
             {
                 text: Lang.Blocks.Paste_blocks,
@@ -1096,8 +1097,8 @@ Entry.Container = class Container {
         ];
 
         Entry.ContextMenu.show(options, 'workspace-contextmenu', {
-            x: e.clientX,
-            y: e.clientY,
+            x: touchEvent.clientX,
+            y: touchEvent.clientY,
         });
     }
 

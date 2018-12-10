@@ -47,8 +47,8 @@ module.exports = {
                 },
             },
             ask_and_wait: {
-                color: '#F57DF1',
-                outerLine: '#EC52E7',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
+                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -145,8 +145,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.input(%1)'] },
             },
             get_canvas_input_value: {
-                color: '#F57DF1',
-                outerLine: '#EC52E7',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
+                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -200,8 +200,8 @@ module.exports = {
                 },
             },
             set_visible_answer: {
-                color: '#F57DF1',
-                outerLine: '#EC52E7',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
+                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -284,8 +284,8 @@ module.exports = {
                 },
             },
             get_variable: {
-                color: '#F57DF1',
-                outerLine: '#EC52E7',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
+                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -362,8 +362,8 @@ module.exports = {
                 },
             },
             change_variable: {
-                color: '#F57DF1',
-                outerLine: '#EC52E7',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
+                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -500,8 +500,8 @@ module.exports = {
                 },
             },
             set_variable: {
-                color: '#F57DF1',
-                outerLine: '#EC52E7',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
+                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -602,8 +602,8 @@ module.exports = {
                 },
             },
             show_variable: {
-                color: '#F57DF1',
-                outerLine: '#EC52E7',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
+                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -679,8 +679,8 @@ module.exports = {
                 },
             },
             hide_variable: {
-                color: '#F57DF1',
-                outerLine: '#EC52E7',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
+                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -755,8 +755,8 @@ module.exports = {
                 },
             },
             value_of_index_from_list: {
-                color: '#F57DF1',
-                outerLine: '#EC52E7',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
+                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
                 fontColor: '#fff',
                 skeleton: 'basic_string_field',
                 statements: [],
@@ -883,8 +883,8 @@ module.exports = {
                 },
             },
             add_value_to_list: {
-                color: '#F57DF1',
-                outerLine: '#EC52E7',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
+                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -989,8 +989,8 @@ module.exports = {
                 },
             },
             remove_value_from_list: {
-                color: '#F57DF1',
-                outerLine: '#EC52E7',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
+                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1103,8 +1103,8 @@ module.exports = {
                 },
             },
             insert_value_to_list: {
-                color: '#F57DF1',
-                outerLine: '#EC52E7',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
+                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1234,8 +1234,8 @@ module.exports = {
                 },
             },
             change_value_list_index: {
-                color: '#F57DF1',
-                outerLine: '#EC52E7',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
+                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1364,8 +1364,8 @@ module.exports = {
                 },
             },
             length_of_list: {
-                color: '#F57DF1',
-                outerLine: '#EC52E7',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
+                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
                 fontColor: '#fff',
                 skeleton: 'basic_string_field',
                 statements: [],
@@ -1449,8 +1449,8 @@ module.exports = {
                 },
             },
             is_included_in_list: {
-                color: '#F57DF1',
-                outerLine: '#EC52E7',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
+                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
                 fontColor: '#fff',
                 skeleton: 'basic_boolean_field',
                 statements: [],
@@ -1577,8 +1577,8 @@ module.exports = {
                 },
             },
             show_list: {
-                color: '#F57DF1',
-                outerLine: '#EC52E7',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
+                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1654,8 +1654,8 @@ module.exports = {
                 },
             },
             hide_list: {
-                color: '#F57DF1',
-                outerLine: '#EC52E7',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
+                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [

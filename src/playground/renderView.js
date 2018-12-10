@@ -38,7 +38,7 @@ Entry.RenderView = class RenderView {
         this._setSize();
 
         this.svg = Entry.SVG(this._svgId, this.svgDom[0]);
-        Entry.Utils.addFilters(this.svg, this.suffix);
+        Entry.Utils.addFilters(this.svg, this.suffix, true);
 
         if (this.svg) {
             this.svgGroup = this.svg.elem('g');

@@ -168,6 +168,7 @@
 .entryObjectNameWorkspace {
     overflow: hidden;
     float: left;
+    box-sizing: border-box;
     width: 100%;
     padding: 7px 4px 6px;
     border: 1px solid #e2e2e2;
@@ -423,15 +424,26 @@
 .entryObjectDirectionInputWorkspace {
     width: 48px;
     height: 24px;
+    box-sizing: border-box;
+    margin-left: 8px;
     background-color: #fff;
     border: 1px solid #e2e2e2;
     border-radius: 4px;
-    margin-left: 8px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #2c313d;
+    letter-spacing: -0.4px;
     text-align: center;
 }
 
-.entryObjectDirectionSpanWorkspace {
+.entryObjectDirectionSpanWorkspace,
+.entryObjectRotateSpanWorkspace {
+    display: inline-block;
     margin-left: 12px;
+    vertical-align: top;
+}
+.entryObjectRotateSpanWorkspace {
+    margin-left: 0;
 }
 
 .entryObjectRotateModeWorkspace {
@@ -449,6 +461,10 @@
 
 .propertyTabhelper.selected {
     .backgroundImage('property/helper_on.png');
+
+    .practical_course_mode & {
+        .backgroundImage('property/helper_on_practical_course.png');
+    }
 }
 
 .propertyTabhint {
@@ -529,7 +545,7 @@
     width: 100%;
     top: 45px;
     bottom: 0px;
-    
+
     z-index: 1000;
 */
     position: absolute;

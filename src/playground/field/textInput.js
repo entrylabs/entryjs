@@ -121,18 +121,14 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
             parent: $('body'),
         });
 
-        switch (defaultType) {
-            case 'number':
-                this.optionWidget = this._getNumberOptionWidget();
-                break;
-            case 'angle':
-                this.optionInput = this._getInputFieldOption();
-                this.optionWidget = this._getAngleOptionWidget(this.optionInput[0]);
-                break;
-            default:
-                this.optionInput = this._getInputFieldOption();
-                this._attachDisposeEvent();
-                break;
+        if (defaultType === 'number' && Entry.isMobile()) {
+            this.optionWidget = this._getNumberOptionWidget();
+        } else if (defaultType === 'angle') {
+            this.optionInput = this._getInputFieldOption();
+            this.optionWidget = this._getAngleOptionWidget(this.optionInput[0]);
+        } else {
+            this.optionInput = this._getInputFieldOption();
+            this._attachDisposeEvent();
         }
 
         this._setTextValue();
@@ -185,22 +181,24 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
                 },
             },
             container: this.optionGroup[0],
-        }).on('click', (eventName, value) => {
-            let nextValue = 0;
-            switch (eventName) {
-                case 'buttonPressed': {
-                    nextValue = this._getNextValue(value);
-                    break;
+        })
+            .on('click', (eventName, value) => {
+                let nextValue = 0;
+                switch (eventName) {
+                    case 'buttonPressed': {
+                        nextValue = this._getNextValue(value);
+                        break;
+                    }
+                    case 'backButtonPressed': {
+                        nextValue = this._getSubstringValue();
+                        break;
+                    }
                 }
-                case 'backButtonPressed': {
-                    nextValue = this._getSubstringValue();
-                    break;
-                }
-            }
-            this.applyValue(nextValue);
-        }).on('change', (value) => {
-            this.applyValue(String(value));
-        });
+                this.applyValue(nextValue);
+            })
+            .on('change', (value) => {
+                this.applyValue(String(value));
+            });
     }
 
     _getInputFieldOption() {
@@ -252,19 +250,22 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
     //this.optionWidget = {} (type{}, object)
     applyValue(value) {
         let result = value;
-        if(this.optionWidget) {
+        if (this.optionWidget) {
             switch (this.optionWidget.type) {
                 case 'angleWidget':
                     this.optionWidget.data = {
                         angle: FieldTextInput._refineDegree(value),
                     };
-                    if (Entry.Utils.isNumber(value) && value.lastIndexOf('.') !== value.length - 1) {
+                    if (
+                        Entry.Utils.isNumber(value) &&
+                        value.lastIndexOf('.') !== value.length - 1
+                    ) {
                         result = String(result % 360);
                     }
                     break;
             }
         }
-        if(this.optionInput) {
+        if (this.optionInput) {
             this.optionInput.val(result);
         }
 
@@ -407,7 +408,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         if (reg.test(value)) return value;
 
         const numberOnlyValue = String(value).match(/[\d|\-|.|\+]+/g);
-        let refinedDegree = numberOnlyValue && numberOnlyValue[0] || '0';
+        let refinedDegree = (numberOnlyValue && numberOnlyValue[0]) || '0';
         if (refinedDegree > 360) {
             refinedDegree %= 360;
         } else if (refinedDegree < 0) {

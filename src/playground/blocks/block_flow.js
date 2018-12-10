@@ -2,8 +2,8 @@ module.exports = {
     getBlocks() {
         return {
             wait_second: {
-                color: '#31C1EC',
-                outerLine: '#08ACDD',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -81,8 +81,8 @@ module.exports = {
                 },
             },
             repeat_basic: {
-                color: '#31C1EC',
-                outerLine: '#08ACDD',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic_loop',
                 statements: [
                     {
@@ -160,8 +160,8 @@ module.exports = {
                 },
             },
             repeat_inf: {
-                color: '#31C1EC',
-                outerLine: '#08ACDD',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic_loop',
                 statements: [
                     {
@@ -221,8 +221,8 @@ module.exports = {
                 },
             },
             repeat_while_true: {
-                color: '#31C1EC',
-                outerLine: '#08ACDD',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic_loop',
                 statements: [
                     {
@@ -303,8 +303,8 @@ module.exports = {
                 },
             },
             stop_repeat: {
-                color: '#31C1EC',
-                outerLine: '#08ACDD',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -327,8 +327,8 @@ module.exports = {
                 syntax: { js: [], py: ['break'] },
             },
             _if: {
-                color: '#31C1EC',
-                outerLine: '#08ACDD',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic_loop',
                 statements: [
                     {
@@ -393,8 +393,8 @@ module.exports = {
                 },
             },
             if_else: {
-                color: '#31C1EC',
-                outerLine: '#08ACDD',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic_double_loop',
                 statements: [
                     {
@@ -481,8 +481,8 @@ module.exports = {
                 },
             },
             wait_until_true: {
-                color: '#31C1EC',
-                outerLine: '#08ACDD',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -532,8 +532,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.wait_until(%1)'] },
             },
             stop_object: {
-                color: '#31C1EC',
-                outerLine: '#08ACDD',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -650,8 +650,8 @@ module.exports = {
                 },
             },
             restart_project: {
-                color: '#31C1EC',
-                outerLine: '#08ACDD',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic_without_next',
                 statements: [],
                 params: [
@@ -675,8 +675,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.start_again()'] },
             },
             when_clone_start: {
-                color: '#31C1EC',
-                outerLine: '#08ACDD',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
@@ -712,8 +712,8 @@ module.exports = {
                 },
             },
             create_clone: {
-                color: '#31C1EC',
-                outerLine: '#08ACDD',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -778,8 +778,8 @@ module.exports = {
                 },
             },
             delete_clone: {
-                color: '#31C1EC',
-                outerLine: '#08ACDD',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic_without_next',
                 statements: [],
                 params: [
@@ -806,8 +806,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.remove_this_clone()'] },
             },
             remove_all_clones: {
-                color: '#31C1EC',
-                outerLine: '#08ACDD',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic',
                 statements: [],
                 params: [

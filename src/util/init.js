@@ -29,7 +29,7 @@ Entry.init = function(container, options) {
     /** @type {object} */
     this.options = options;
     this.parseOptions(options);
-    this.mediaFilePath = (options.libDir ? options.libDir : '/lib') + '/entryjs/images/';
+    this.mediaFilePath = (options.libDir ? options.libDir : '/lib') + '/entry-js/images/';
     this.defaultPath = options.defaultDir || '';
     this.blockInjectPath = options.blockInjectDir || '';
 
@@ -39,7 +39,7 @@ Entry.init = function(container, options) {
     this.view_ = container;
     $(this.view_).addClass('entry');
     if (this.type === 'minimize') $(this.view_).addClass(this.type);
-    if (this.device === 'tablet') $(this.view_).addClass('tablet');
+    // if (this.device === 'tablet') $(this.view_).addClass('tablet');
 
     Entry.initFonts(options.fonts);
     const { theme = 'default' } = options;

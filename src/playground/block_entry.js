@@ -446,7 +446,7 @@ const block = {
     //endregion hardware 하드웨어 기본
     //region basic 기본블록
     change_opacity: {
-        color: '#FC7E01',
+        color: EntryStatic.colorSet.block.default.BRUSH,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -500,7 +500,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     set_opacity: {
-        color: '#FC7E01',
+        color: EntryStatic.colorSet.block.default.BRUSH,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -553,7 +553,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     number: {
-        color: '#FFDE82',
+        color: EntryStatic.colorSet.block.lighten.CALC,
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -590,7 +590,7 @@ const block = {
         },
     },
     angle: {
-        color: '#FFDE82',
+        color: EntryStatic.colorSet.block.lighten.CALC,
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -628,7 +628,7 @@ const block = {
         },
     },
     get_x_coordinate: {
-        color: '#FFDE82',
+        color: EntryStatic.colorSet.block.lighten.CALC,
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -651,7 +651,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     get_y_coordinate: {
-        color: '#FFDE82',
+        color: EntryStatic.colorSet.block.lighten.CALC,
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -674,7 +674,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     get_angle: {
-        color: '#FFDE82',
+        color: EntryStatic.colorSet.block.lighten.CALC,
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -694,7 +694,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     get_rotation_direction: {
-        color: '#FFDE82',
+        color: EntryStatic.colorSet.block.lighten.CALC,
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -729,7 +729,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     calc_plus: {
-        color: '#FFDE82',
+        color: EntryStatic.colorSet.block.lighten.CALC,
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -763,7 +763,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     calc_minus: {
-        color: '#FFDE82',
+        color: EntryStatic.colorSet.block.lighten.CALC,
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -797,7 +797,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     calc_times: {
-        color: '#FFDE82',
+        color: EntryStatic.colorSet.block.lighten.CALC,
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -831,7 +831,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     calc_divide: {
-        color: '#FFDE82',
+        color: EntryStatic.colorSet.block.lighten.CALC,
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -865,7 +865,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     calc_mod: {
-        color: '#FFDE82',
+        color: EntryStatic.colorSet.block.lighten.CALC,
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -918,7 +918,7 @@ const block = {
         syntax: { js: [], py: ['Entry.get_remainder(%1, %3)'] },
     },
     calc_share: {
-        color: '#FFDE82',
+        color: EntryStatic.colorSet.block.lighten.CALC,
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -971,7 +971,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     reset_project_timer: {
-        color: '#FFDE82',
+        color: EntryStatic.colorSet.block.lighten.CALC,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -1010,7 +1010,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     set_visible_project_timer: {
-        color: '#FFDE82',
+        color: EntryStatic.colorSet.block.lighten.CALC,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -1115,7 +1115,7 @@ const block = {
         },
     },
     timer_variable: {
-        color: '#FFDE82',
+        color: EntryStatic.colorSet.block.lighten.CALC,
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -1140,7 +1140,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     stop_run: {
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -1187,7 +1187,7 @@ const block = {
     function_field_string: {
         skeleton: 'basic_param',
         isNotFor: ['functionEdit'],
-        color: '#FFDE82',
+        color: EntryStatic.colorSet.block.lighten.CALC,
         params: [
             {
                 type: 'Block',
@@ -1218,7 +1218,7 @@ const block = {
     function_field_boolean: {
         skeleton: 'basic_param',
         isNotFor: ['functionEdit'],
-        color: '#7E8EFE',
+        color: EntryStatic.colorSet.block.default.JUDGE,
         params: [
             {
                 type: 'Block',
@@ -1248,7 +1248,7 @@ const block = {
     },
     function_param_string: {
         skeleton: 'basic_string_field',
-        color: '#FFDE82',
+        color: EntryStatic.colorSet.block.lighten.CALC,
         fontColor: '#000',
         template: '%1 %2',
         events: {
@@ -1267,7 +1267,7 @@ const block = {
     },
     function_param_boolean: {
         skeleton: 'basic_boolean_field',
-        color: '#7E8EFE',
+        color: EntryStatic.colorSet.block.default.JUDGE,
         template: '%1 %2',
         events: {
             viewAdd: [
@@ -1285,8 +1285,8 @@ const block = {
     },
     function_create: {
         skeleton: 'basic_create',
-        color: '#DE6E22',
-        outerLine: '#C85404',
+        color: EntryStatic.colorSet.block.default.FUNC,
+        outerLine: EntryStatic.colorSet.block.darken.FUNC,
         event: 'funcDef',
         params: [
             {
@@ -1320,8 +1320,8 @@ const block = {
     },
     function_general: {
         skeleton: 'basic',
-        color: '#DE6E22',
-        outerLine: '#C85404',
+        color: EntryStatic.colorSet.block.default.FUNC,
+        outerLine: EntryStatic.colorSet.block.darken.FUNC,
         params: [
             {
                 type: 'Indicator',
@@ -1395,7 +1395,7 @@ const block = {
     //endregion basic 기본블록
     //region basic 기본
     change_to_nth_shape: {
-        color: '#FF5174',
+        color: EntryStatic.colorSet.block.default.LOOKS,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -1430,7 +1430,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     set_effect_volume: {
-        color: '#FF5174',
+        color: EntryStatic.colorSet.block.default.LOOKS,
         skeleton: 'basic',
         statements: [],
         deprecated: true,
@@ -1498,7 +1498,7 @@ const block = {
         syntax: { js: [], py: ['Entry.set_effect_volume(%1, %2)'] },
     },
     set_effect: {
-        color: '#FF5174',
+        color: EntryStatic.colorSet.block.default.LOOKS,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -1565,7 +1565,7 @@ const block = {
         syntax: { js: [], py: ['Entry.set_effect(%1, %2)'] },
     },
     change_scale_percent: {
-        color: '#FF5174',
+        color: EntryStatic.colorSet.block.default.LOOKS,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -1604,7 +1604,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     set_scale_percent: {
-        color: '#FF5174',
+        color: EntryStatic.colorSet.block.default.LOOKS,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -1644,7 +1644,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     set_object_order: {
-        color: '#FF5174',
+        color: EntryStatic.colorSet.block.default.LOOKS,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -1684,7 +1684,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     get_pictures: {
-        color: '#FF5174',
+        color: EntryStatic.colorSet.block.default.LOOKS,
         outerLine: EntryStatic.colorSet.block.darken.LOOKS,
         skeleton: 'basic_string_field',
         statements: [],
@@ -1729,7 +1729,7 @@ const block = {
         },
     },
     set_effect_amount: {
-        color: '#FF5174',
+        color: EntryStatic.colorSet.block.default.LOOKS,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -1791,7 +1791,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     set_entity_effect: {
-        color: '#FF5174',
+        color: EntryStatic.colorSet.block.default.LOOKS,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -1853,7 +1853,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     rotate_by_angle: {
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -1891,7 +1891,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     rotate_by_angle_dropdown: {
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -1925,7 +1925,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     see_angle: {
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -1963,7 +1963,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     see_direction: {
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -2001,7 +2001,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     rotate_by_angle_time: {
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -2058,7 +2058,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     flip_arrow_horizontal: {
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -2079,7 +2079,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     flip_arrow_vertical: {
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -2100,7 +2100,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     see_angle_direction: {
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -2139,7 +2139,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     rotate_direction: {
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -2179,7 +2179,7 @@ const block = {
     //endregion basic 기본
     //region basic 기본
     sound_something: {
-        color: '#82D214',
+        color: EntryStatic.colorSet.block.default.SOUND,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -2217,7 +2217,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     sound_something_second: {
-        color: '#82D214',
+        color: EntryStatic.colorSet.block.default.SOUND,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -2272,7 +2272,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     sound_something_wait: {
-        color: '#82D214',
+        color: EntryStatic.colorSet.block.default.SOUND,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -2325,7 +2325,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     sound_something_second_wait: {
-        color: '#82D214',
+        color: EntryStatic.colorSet.block.default.SOUND,
         skeleton: 'basic',
         statements: [],
         params: [
@@ -2392,7 +2392,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     get_sounds: {
-        color: '#82D214',
+        color: EntryStatic.colorSet.block.default.SOUND,
         outerLine: EntryStatic.colorSet.block.darken.SOUND,
         skeleton: 'basic_string_field',
         statements: [],
@@ -2438,7 +2438,7 @@ const block = {
         },
     },
     boolean_comparison: {
-        color: '#7E8EFE',
+        color: EntryStatic.colorSet.block.default.JUDGE,
         skeleton: 'basic_boolean_field',
         statements: [],
         params: [
@@ -2482,7 +2482,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     boolean_equal: {
-        color: '#7E8EFE',
+        color: EntryStatic.colorSet.block.default.JUDGE,
         skeleton: 'basic_boolean_field',
         statements: [],
         params: [
@@ -2529,7 +2529,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     boolean_bigger: {
-        color: '#7E8EFE',
+        color: EntryStatic.colorSet.block.default.JUDGE,
         skeleton: 'basic_boolean_field',
         statements: [],
         params: [
@@ -2576,7 +2576,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     boolean_smaller: {
-        color: '#7E8EFE',
+        color: EntryStatic.colorSet.block.default.JUDGE,
         skeleton: 'basic_boolean_field',
         statements: [],
         params: [
@@ -2623,7 +2623,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     boolean_and: {
-        color: '#7E8EFE',
+        color: EntryStatic.colorSet.block.default.JUDGE,
         skeleton: 'basic_boolean_field',
         statements: [],
         params: [
@@ -2692,7 +2692,7 @@ const block = {
         },
     },
     boolean_or: {
-        color: '#7E8EFE',
+        color: EntryStatic.colorSet.block.default.JUDGE,
         skeleton: 'basic_boolean_field',
         statements: [],
         params: [
@@ -2753,7 +2753,7 @@ const block = {
         },
     },
     true_or_false: {
-        color: '#7E8EFE',
+        color: EntryStatic.colorSet.block.default.JUDGE,
         skeleton: 'basic_boolean_field',
         statements: [],
         params: [
@@ -2781,7 +2781,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     True: {
-        color: '#7E8EFE',
+        color: EntryStatic.colorSet.block.default.JUDGE,
         skeleton: 'basic_boolean_field',
         statements: [],
         params: [
@@ -2803,14 +2803,14 @@ const block = {
         syntax: { js: ['Scope', 'true'], py: ['True'] },
     },
     False: {
-        color: '#7E8EFE',
+        color: EntryStatic.colorSet.block.default.JUDGE,
         skeleton: 'basic_boolean_field',
         statements: [],
         params: [
             {
                 type: 'Text',
                 text: Lang.Blocks.JUDGEMENT_false,
-                color: '#3D3D3D',
+                color: EntryStatic.colorSet.common.WHITE,
             },
         ],
         events: {},
@@ -2825,7 +2825,7 @@ const block = {
         syntax: { js: [], py: ['False'] },
     },
     press_some_key: {
-        color: '#10D35E',
+        color: EntryStatic.colorSet.block.default.START,
         skeleton: 'basic_event',
         statements: [],
         params: [
@@ -2877,7 +2877,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     when_some_key_click: {
-        color: '#10D35E',
+        color: EntryStatic.colorSet.block.default.START,
         skeleton: 'basic_event',
         statements: [],
         params: [
@@ -2902,7 +2902,7 @@ const block = {
         syntax: { js: [], py: ['Entry.on_key_press_down(%1)'] },
     },
     text: {
-        color: '#FFDE82',
+        color: EntryStatic.colorSet.block.lighten.CALC,
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -2940,7 +2940,7 @@ const block = {
         },
     },
     options_for_list: {
-        color: '#F57DF1',
+        color: EntryStatic.colorSet.block.default.VARIABLE,
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -2967,13 +2967,13 @@ const block = {
     //region basic 기본
     run: {
         skeleton: 'basic',
-        color: '#10D35E',
+        color: EntryStatic.colorSet.block.default.START,
         contents: ['this is', 'basic block'],
     },
     mutant: {
         skeleton: 'basic',
         event: 'start',
-        color: '#10D35E',
+        color: EntryStatic.colorSet.block.default.START,
         params: [],
         changeEvent: {
             _listeners: [],
@@ -2982,12 +2982,12 @@ const block = {
     jr_start: {
         skeleton: 'pebble_event',
         event: 'start',
-        color: '#10D35E',
+        color: EntryStatic.colorSet.block.default.START,
         params: [
             {
                 type: 'Indicator',
                 img: '../../../img/assets/ntry/bitmap/jr/block_play_image.png',
-                highlightColor: '#10D35E',
+                highlightColor: EntryStatic.colorSet.block.default.START,
                 position: {
                     x: 0,
                     y: 0,
@@ -3057,7 +3057,7 @@ const block = {
             {
                 type: 'Indicator',
                 img: '../../../img/assets/ntry/bitmap/jr/block_item_image.png',
-                highlightColor: '#FFF',
+                highlightColor: EntryStatic.colorSet.common.WHITE,
                 position: {
                     x: 83,
                     y: 0,
@@ -3091,7 +3091,7 @@ const block = {
             {
                 type: 'Indicator',
                 img: '../../../img/assets/ntry/bitmap/cpartyjr/pen.png',
-                highlightColor: '#FFF',
+                highlightColor: EntryStatic.colorSet.common.WHITE,
                 position: {
                     x: 83,
                     y: 0,
@@ -3120,7 +3120,7 @@ const block = {
     },
     jr_north: {
         skeleton: 'pebble_basic',
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         params: [
             {
                 type: 'Indicator',
@@ -3174,7 +3174,7 @@ const block = {
     },
     jr_east: {
         skeleton: 'pebble_basic',
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         params: [
             {
                 type: 'Indicator',
@@ -3231,7 +3231,7 @@ const block = {
     },
     jr_south: {
         skeleton: 'pebble_basic',
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         params: [
             {
                 type: 'Indicator',
@@ -3287,7 +3287,7 @@ const block = {
     },
     jr_west: {
         skeleton: 'pebble_basic',
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         params: [
             {
                 type: 'Indicator',
@@ -3344,13 +3344,13 @@ const block = {
     jr_start_basic: {
         skeleton: 'basic_event',
         event: 'start',
-        color: '#10D35E',
+        color: EntryStatic.colorSet.block.default.START,
         params: [
             {
                 type: 'Indicator',
                 boxMultiplier: 2,
                 img: '../../../img/assets/block_icon/start_icon_play.png',
-                highlightColor: '#10D35E',
+                highlightColor: EntryStatic.colorSet.block.default.START,
                 size: 17,
                 position: {
                     x: 0,
@@ -3374,7 +3374,7 @@ const block = {
     },
     jr_go_straight: {
         skeleton: 'basic',
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         params: [
             {
                 type: 'Image',
@@ -3405,7 +3405,7 @@ const block = {
     },
     jr_turn_left: {
         skeleton: 'basic',
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         params: [
             {
                 type: 'Image',
@@ -3437,7 +3437,7 @@ const block = {
     },
     jr_turn_right: {
         skeleton: 'basic',
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         params: [
             {
                 type: 'Image',
@@ -3501,7 +3501,7 @@ const block = {
     },
     jr_repeat_until_dest: {
         skeleton: 'basic_loop',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         syntax: ['BasicWhile', 'true'],
         params: [
             {
@@ -3532,7 +3532,7 @@ const block = {
     },
     jr_if_construction: {
         skeleton: 'basic_loop',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         syntax: ['BasicIf', "front == 'wall'"],
         params: [
             {
@@ -3595,7 +3595,7 @@ const block = {
     },
     jr_if_speed: {
         skeleton: 'basic_loop',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         syntax: ['BasicIf', "front == 'hump'"],
         params: [
             {
@@ -3660,14 +3660,14 @@ const block = {
         skeleton: 'basic_event',
         mode: 'maze',
         event: 'start',
-        color: '#10D35E',
+        color: EntryStatic.colorSet.block.default.START,
         syntax: ['Program'],
         params: [
             {
                 type: 'Indicator',
                 boxMultiplier: 2,
                 img: '../../../img/assets/block_icon/start_icon_play.png',
-                highlightColor: '#10D35E',
+                highlightColor: EntryStatic.colorSet.block.default.START,
                 size: 17,
                 position: {
                     x: 0,
@@ -3808,7 +3808,7 @@ const block = {
     maze_step_for: {
         skeleton: 'basic_loop',
         mode: 'maze',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         syntax: ['BasicIteration'],
         params: [
             {
@@ -3886,7 +3886,7 @@ const block = {
     maze_repeat_until_1: {
         skeleton: 'basic_loop',
         mode: 'maze',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         syntax: ['BasicWhile', 'true'],
         params: [
             {
@@ -3918,7 +3918,7 @@ const block = {
     maze_repeat_until_2: {
         skeleton: 'basic_loop',
         mode: 'maze',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         syntax: ['BasicWhile', 'true'],
         params: [
             {
@@ -3950,7 +3950,7 @@ const block = {
     maze_step_if_1: {
         skeleton: 'basic_loop',
         mode: 'maze',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         syntax: ['BasicIf', "front == 'wall'"],
         params: [
             {
@@ -4026,7 +4026,7 @@ const block = {
     maze_step_if_2: {
         skeleton: 'basic_loop',
         mode: 'maze',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         syntax: ['BasicIf', "front == 'bee'"],
         params: [
             {
@@ -4152,7 +4152,7 @@ const block = {
     maze_step_if_3: {
         skeleton: 'basic_loop',
         mode: 'maze',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         syntax: ['BasicIf', 'front == banana'],
         params: [
             {
@@ -4217,7 +4217,7 @@ const block = {
     maze_step_if_4: {
         skeleton: 'basic_loop',
         mode: 'maze',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         syntax: ['BasicIf', 'front == wall'],
         params: [
             {
@@ -4282,7 +4282,7 @@ const block = {
     maze_step_move_step: {
         skeleton: 'basic',
         mode: 'maze',
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         syntax: ['Scope', 'move'],
         params: [
             {
@@ -4314,7 +4314,7 @@ const block = {
     maze_step_rotate_left: {
         skeleton: 'basic',
         mode: 'maze',
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         syntax: ['Scope', 'left'],
         params: [
             {
@@ -4347,7 +4347,7 @@ const block = {
     maze_step_rotate_right: {
         skeleton: 'basic',
         mode: 'maze',
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         syntax: ['Scope', 'right'],
         params: [
             {
@@ -4380,7 +4380,7 @@ const block = {
     maze_step_forward: {
         skeleton: 'basic',
         mode: 'maze',
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         syntax: ['Scope', 'move'],
         params: [
             {
@@ -4412,7 +4412,7 @@ const block = {
     maze_turn_right: {
         skeleton: 'basic',
         mode: 'maze',
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         syntax: ['Scope', 'turn_right'],
         params: [
             {
@@ -4437,7 +4437,7 @@ const block = {
     maze_turn_left: {
         skeleton: 'basic',
         mode: 'maze',
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         syntax: ['Scope', 'turn_left'],
         params: [
             {
@@ -4462,7 +4462,7 @@ const block = {
     maze_step_if_left_monster: {
         skeleton: 'basic_double_loop',
         mode: 'maze',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         syntax: ['BasicIf', 'left == monster'],
         params: [
             {
@@ -4513,7 +4513,7 @@ const block = {
     maze_step_if_right_monster: {
         skeleton: 'basic_double_loop',
         mode: 'maze',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         syntax: ['BasicIf', 'right == monster'],
         params: [
             {
@@ -4564,7 +4564,7 @@ const block = {
     maze_step_if_yeti: {
         skeleton: 'basic_double_loop',
         mode: 'maze',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         syntax: ['BasicIf', 'front == yeti'],
         params: [
             {
@@ -5211,7 +5211,7 @@ const block = {
     maze_rotate_left: {
         skeleton: 'basic',
         mode: 'maze',
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         syntax: ['Scope', 'left'],
         params: [
             {
@@ -5244,7 +5244,7 @@ const block = {
     maze_rotate_right: {
         skeleton: 'basic',
         mode: 'maze',
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         syntax: ['Scope', 'right'],
         params: [
             {
@@ -5892,7 +5892,7 @@ const block = {
     maze_repeat_until_3: {
         skeleton: 'basic_loop',
         mode: 'maze',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         syntax: ['BasicWhile', 'true'],
         params: [
             {
@@ -6155,7 +6155,7 @@ const block = {
     maze_radar_check: {
         skeleton: 'basic_boolean_field',
         mode: 'maze',
-        color: '#7E8EFE',
+        color: EntryStatic.colorSet.block.default.JUDGE,
         params: [
             {
                 type: 'Dropdown',
@@ -6216,7 +6216,7 @@ const block = {
     maze_step_if_5: {
         skeleton: 'basic_loop',
         mode: 'maze',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         syntax: ['BasicIf', 'front == bee'],
         params: [
             {
@@ -6282,7 +6282,7 @@ const block = {
     maze_step_if_6: {
         skeleton: 'basic_loop',
         mode: 'maze',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         syntax: ['BasicIf', 'front == bee'],
         params: [
             {
@@ -6348,7 +6348,7 @@ const block = {
     maze_step_if_7: {
         skeleton: 'basic_loop',
         mode: 'maze',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         syntax: ['BasicIf', 'front == ice'],
         params: [
             {
@@ -6418,7 +6418,7 @@ const block = {
     maze_step_if_mushroom: {
         skeleton: 'basic_loop',
         mode: 'maze',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         syntax: ['BasicIf', 'front == mushroom'],
         params: [
             {
@@ -6476,7 +6476,7 @@ const block = {
     maze_step_if_lupin: {
         skeleton: 'basic_loop',
         mode: 'maze',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         syntax: ['BasicIf', 'front == lupin'],
         params: [
             {
@@ -6534,7 +6534,7 @@ const block = {
     maze_step_if_else_road: {
         skeleton: 'basic_double_loop',
         mode: 'maze',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         params: [
             {
                 type: 'Image',
@@ -6593,7 +6593,7 @@ const block = {
     maze_step_if_else_mushroom: {
         skeleton: 'basic_double_loop',
         mode: 'maze',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         params: [
             {
                 type: 'Image',
@@ -6657,7 +6657,7 @@ const block = {
     maze_step_if_else_lupin: {
         skeleton: 'basic_double_loop',
         mode: 'maze',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         params: [
             {
                 type: 'Image',
@@ -6721,7 +6721,7 @@ const block = {
     maze_step_if_else_ladder: {
         skeleton: 'basic_double_loop',
         mode: 'maze',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         params: [
             {
                 type: 'Image',
@@ -6793,7 +6793,7 @@ const block = {
     test_wrapper: {
         skeleton: 'basic',
         mode: 'maze',
-        color: '#10D35E',
+        color: EntryStatic.colorSet.block.default.START,
         params: [
             {
                 type: 'Block',
@@ -6866,7 +6866,7 @@ const block = {
     ai_move_right: {
         skeleton: 'basic',
         mode: 'maze',
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         syntax: ['Scope', 'move'],
         params: [
             {
@@ -6907,7 +6907,7 @@ const block = {
     ai_move_up: {
         skeleton: 'basic',
         mode: 'maze',
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         syntax: ['Scope', 'up'],
         params: [
             {
@@ -6949,7 +6949,7 @@ const block = {
     ai_move_down: {
         skeleton: 'basic',
         mode: 'maze',
-        color: '#CA7DFF',
+        color: EntryStatic.colorSet.block.lighten.MOVING,
         syntax: ['Scope', 'down'],
         params: [
             {
@@ -6991,7 +6991,7 @@ const block = {
     ai_repeat_until_reach: {
         skeleton: 'basic_loop',
         mode: 'maze',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         syntax: ['BasicWhile', 'true'],
         statements: [
             {
@@ -7017,7 +7017,7 @@ const block = {
     ai_if_else_1: {
         skeleton: 'basic_double_loop',
         mode: 'maze',
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         syntax: ['BasicIf', "front == 'stone'"],
         statements: [
             {
@@ -7063,7 +7063,7 @@ const block = {
         skeleton: 'basic_boolean_field',
         mode: 'maze',
         color: '#2fc9f0',
-        fontColor: '#fff',
+        fontColor: EntryStatic.colorSet.common.WHITE,
         syntax: ['Scope', 'radar_%1 %2 %3#'],
         params: [
             {
@@ -7137,7 +7137,7 @@ const block = {
     ai_distance_value: {
         skeleton: 'basic_string_field',
         mode: 'maze',
-        color: '#FFDE82',
+        color: EntryStatic.colorSet.block.lighten.CALC,
         syntax: ['Scope', 'radar_%1#'],
         params: [
             {
@@ -7170,7 +7170,7 @@ const block = {
     },
     ai_boolean_object: {
         skeleton: 'basic_boolean_field',
-        fontColor: '#fff',
+        fontColor: EntryStatic.colorSet.common.WHITE,
         mode: 'maze',
         color: '#2fc9f0',
         syntax: ['Scope', 'object_%1 == %2#'],
@@ -7270,7 +7270,7 @@ const block = {
     ai_boolean_and: {
         color: '#2fc9f0',
         skeleton: 'basic_boolean_field',
-        fontColor: '#fff',
+        fontColor: EntryStatic.colorSet.common.WHITE,
         statements: [],
         syntax: ['Scope', '%1 && %3#'],
         params: [
@@ -7281,7 +7281,7 @@ const block = {
             {
                 type: 'Text',
                 text: Lang.Blocks.JUDGEMENT_boolean_and,
-                color: '#fff',
+                color: EntryStatic.colorSet.common.WHITE,
             },
             {
                 type: 'Block',
@@ -7315,7 +7315,7 @@ const block = {
         isPrimitive: true,
     },
     ai_if_else: {
-        color: '#31C1EC',
+        color: EntryStatic.colorSet.block.default.FLOW,
         skeleton: 'basic_double_loop',
         statements: [
             {
@@ -7568,7 +7568,7 @@ const block = {
         color: '#7C7C7C',
         skeleton: 'basic_string_field',
         template: '    %1    ',
-        fontColor: '#fff',
+        fontColor: EntryStatic.colorSet.common.WHITE,
         statements: [],
         params: [
             {
@@ -7594,7 +7594,7 @@ const block = {
         color: '#7C7C7C',
         skeleton: 'basic_boolean_field',
         template: '    %1    ',
-        fontColor: '#fff',
+        fontColor: EntryStatic.colorSet.common.WHITE,
         statements: [],
         params: [
             {
@@ -7617,7 +7617,7 @@ const block = {
     //endregion basic 기본
     //region basic 기본
     boolean_shell: {
-        color: '#7E8EFE',
+        color: EntryStatic.colorSet.block.default.JUDGE,
         skeleton: 'basic_boolean_field',
         template: '%1',
         isPrimitive: true,
