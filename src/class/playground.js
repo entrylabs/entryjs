@@ -719,17 +719,19 @@ Entry.Playground = function() {
      * @private
      */
     function _createSoundEditView() {
-        const soundEditView = Entry.createElement('div', 'entrySoundEdit')
-            .addClass('entryPlaygroundSoundEdit');
+        const soundEditView = Entry.createElement('div', 'entrySoundEdit').addClass(
+            'entryPlaygroundSoundEdit'
+        );
 
-        const tempNotificationWrapper = Entry.createElement('div')
-            .addClass('entryPlaygroundSoundEditWrapper');
+        const tempNotificationWrapper = Entry.createElement('div').addClass(
+            'entryPlaygroundSoundEditWrapper'
+        );
 
-        const tempImage = Entry.createElement('div')
-            .addClass('entryPlaygroundSoundEditImage');
+        const tempImage = Entry.createElement('div').addClass('entryPlaygroundSoundEditImage');
 
-        const tempNotification = Entry.createElement('span')
-            .addClass('entryPlaygroundSoundEditText');
+        const tempNotification = Entry.createElement('span').addClass(
+            'entryPlaygroundSoundEditText'
+        );
         tempNotification.innerHTML = Lang.Menus.sound_edit_warn;
 
         tempNotificationWrapper.appendChild(tempImage);
@@ -1529,10 +1531,32 @@ Entry.Playground = function() {
             .appendTo(element).innerHTML =
             picture.dimension.width + ' X ' + picture.dimension.height;
 
-        Entry.createElement('div')
-            .addClass('entryPlayground_del')
-            .appendTo(element).innerHTML =
-            '삭제';
+        const removeButton = Entry.createElement('div').addClass('entryPlayground_del');
+        const { Buttons = {} } = Lang || {};
+        const { delete: delText = '삭제' } = Buttons;
+        removeButton.appendTo(element).innerText = delText;
+        removeButton.bindOnClick(() => {
+            try {
+                if (Entry.playground.object.removePicture(picture.id)) {
+                    Entry.removeElement(element);
+                    Entry.dispatchEvent('removePicture', picture);
+                    Entry.toast.success(
+                        Lang.Workspace.shape_remove_ok,
+                        picture.name + ' ' + Lang.Workspace.shape_remove_ok_msg
+                    );
+                } else {
+                    Entry.toast.alert(
+                        Lang.Workspace.shape_remove_fail,
+                        Lang.Workspace.shape_remove_fail_msg
+                    );
+                }
+            } catch (e) {
+                Entry.toast.alert(
+                    Lang.Workspace.shape_remove_fail,
+                    Lang.Workspace.shape_remove_fail_msg
+                );
+            }
+        });
     };
 
     p.generateSoundElement = function(sound) {
@@ -1655,10 +1679,27 @@ Entry.Playground = function() {
             .addClass('entryPlaygroundSoundLength')
             .appendTo(element).innerHTML =
             sound.duration + ' ' + Lang.General.second;
-        Entry.createElement('div')
-            .addClass('entryPlayground_del')
-            .appendTo(element).innerHTML =
-            '삭제';
+        const removeButton = Entry.createElement('div').addClass('entryPlayground_del');
+        const { Buttons = {} } = Lang || {};
+        const { delete: delText = '삭제' } = Buttons;
+        removeButton.appendTo(element).innerText = delText;
+        removeButton.bindOnClick(() => {
+            try {
+                var result = Entry.do('objectRemoveSound', Entry.playground.object.id, sound);
+                if (result) {
+                    Entry.dispatchEvent('removeSound', sound);
+                    Entry.toast.success(
+                        Lang.Workspace.sound_remove_ok,
+                        sound.name + ' ' + Lang.Workspace.sound_remove_ok_msg
+                    );
+                } else {
+                    Entry.toast.alert(Lang.Workspace.sound_remove_fail, '');
+                }
+                Entry.removeElement(element);
+            } catch (e) {
+                Entry.toast.alert(Lang.Workspace.sound_remove_fail, '');
+            }
+        });
     };
 
     p.toggleColourChooser = function(name) {
