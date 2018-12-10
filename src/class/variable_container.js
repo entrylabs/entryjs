@@ -106,7 +106,6 @@ Entry.VariableContainer = class VariableContainer {
 
         this.generateVariableAddView();
         this.generateListAddView();
-        this.generateListSettingView();
 
         return view;
     }
@@ -191,10 +190,7 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     updateVariableAddView(type = 'variable') {
-        const { info: { isCloud, object }, view, isOpen } = this._getAddPanel(type);
-
-        // view.addClass('entryRemove');
-
+        const { info: { isCloud, object }, view } = this._getAddPanel(type);
         const { cloudCheck, globalCheck, localCheck, cloudWrapper } = view;
 
         if (isCloud) {
@@ -203,9 +199,6 @@ Entry.VariableContainer = class VariableContainer {
             cloudCheck.removeClass('on');
         }
 
-        // if (isOpen) {
-        //     view.removeClass('entryRemove');
-        // }
         if (object) {
             globalCheck.removeClass('on');
             localCheck.addClass('on');
@@ -244,7 +237,7 @@ Entry.VariableContainer = class VariableContainer {
                 this.generateVariableSettingView();
                 this.renderVariableReference(object);
             } else if (object.type === 'list') {
-                // this.generateListSettingView();
+                this.generateListSettingView();
                 this.renderVariableReference(object);
             }
             if (object.object_) {
@@ -284,8 +277,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('div')
                     .addClass('entryVariableListCallerNameWorkspace')
                     .appendTo(element).innerHTML = `${object.name} : ${
-                    Lang.Blocks[`START_${block.type}`]
-                }`;
+                        Lang.Blocks[`START_${block.type}`]
+                    }`;
                 element.bindOnClick(() => {
                     if (Entry.playground.object !== object) {
                         Entry.container.selectObject();
@@ -347,8 +340,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('span')
                     .addClass('text')
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
-                    Lang.Blocks[`VARIABLE_${caller.block.type}`]
-                }`;
+                        Lang.Blocks[`VARIABLE_${caller.block.type}`]
+                    }`;
                 element.variable = variable;
                 element.bindOnClick(() => {
                     if (Entry.playground.object != caller.object) {
@@ -374,7 +367,8 @@ Entry.VariableContainer = class VariableContainer {
                 Lang.Workspace.no_use;
         }
 
-        this.variableSettingView.appendChild(usedWrapper);
+        this.variableSettingView && this.variableSettingView.appendChild(usedWrapper);
+        this.listSettingView && this.listSettingView.appendChild(usedWrapper);
     }
 
     /**
@@ -441,9 +435,6 @@ Entry.VariableContainer = class VariableContainer {
             this.generateVariableSplitterView();
         }
 
-        // this.variableSettingView.addClass('entryRemove');
-        // this.listSettingView.addClass('entryRemove');
-
         const isPythonMode = this._isPythonMode();
         if (isPythonMode) {
             listView.addClass('entryVariableContainerTextMode');
@@ -490,6 +481,14 @@ Entry.VariableContainer = class VariableContainer {
                 elem.removeChild(elem.lastChild);
             }
         }
+        if (this.listSettingView) {
+            $(this.listSettingView).remove();
+            delete this.listSettingView;
+        }
+        if (this.variableSettingView) {
+            $(this.variableSettingView).remove();
+            delete this.variableSettingView;
+        }
     }
 
     updateAllTab() {
@@ -516,7 +515,6 @@ Entry.VariableContainer = class VariableContainer {
         listView.appendChild(this.variableAddButton_);
         listView.appendChild(this.variableAddPanel.view);
 
-        // $(this.variableSplitters.top).empty();
         //global list container
         const globalList = createElement('div').addClass('entryVariableSplitterWorkspace');
         let isGlobalFolded = false;
@@ -549,31 +547,25 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('attr_box')
             .appendTo(localList);
 
-        // listView.appendChild(this.variableSplitters.top);
-        listView.appendChild(globalList);
-
         const { globalV, localV } = _.groupBy(this.variables_, ({ object_ }) => {
             return object_ ? 'localV' : 'globalV';
         });
 
         const gLength = (globalV || []).length;
         const lLength = (localV || []).length;
-        this.makeChildVariableViews(globalV, this.createVariableView.bind(this), globalListBox);
         globalListTitle.innerHTML = `${Lang.Workspace.Variable_used_at_all_objects} (${gLength})`;
         localListTitle.innerHTML = `${Lang.Workspace.Variable_used_at_special_object} (${lLength})`;
         this.foldTab(globalList, isGlobalFolded, gLength);
         this.foldTab(localList, isLocalFolded, lLength);
 
-        // listView.appendChild(this.variableSplitters.bottom);
+        listView.appendChild(globalList);
+        this.makeChildVariableViews(globalV, this.createVariableView.bind(this), globalListBox);
         listView.appendChild(localList);
-
         this.makeChildVariableViews(localV, this.createVariableView.bind(this), localListBox);
-
         this.updateVariableAddView('variable');
     }
 
     foldTab(tab, isFold, count = 0) {
-        console.log(...arguments);
         if (!count) {
             return;
         }
@@ -587,26 +579,66 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     updateListTab() {
+        const createElement = Entry.createElement;
         const listView = this.listView_;
         const info = this.listAddPanel.info;
         if (info.object && !Entry.playground.object) {
             info.object = null;
         }
+
         listView.appendChild(this.listAddButton_);
         listView.appendChild(this.listAddPanel.view);
+
+        //global list container
+        const globalList = createElement('div').addClass('entryVariableSplitterWorkspace');
+        let isGlobalFolded = false;
+
+        const globalListTitle = Entry.createElement('a')
+            .addClass('attr_link')
+            .bindOnClick(() => {
+                isGlobalFolded = !isGlobalFolded;
+                this.foldTab(globalList, isGlobalFolded, gLength);
+            })
+            .appendTo(globalList);
+
+        const globalListBox = createElement('div')
+            .addClass('attr_box')
+            .appendTo(globalList);
+
+        //local list container
+        const localList = createElement('div').addClass('entryVariableSplitterWorkspace');
+        let isLocalFolded = false;
+
+        const localListTitle = Entry.createElement('a')
+            .addClass('attr_link')
+            .bindOnClick(() => {
+                isLocalFolded = !isLocalFolded;
+                this.foldTab(localList, isLocalFolded, lLength);
+            })
+            .appendTo(localList);
+
+        const localListBox = createElement('div')
+            .addClass('attr_box')
+            .appendTo(localList);
 
         const { localV, globalV } = _.groupBy(this.lists_, ({ object_ }) => {
             return object_ ? 'localV' : 'globalV';
         });
 
-        this.makeChildVariableViews(globalV, this.createListView.bind(this), this.globalListBox);
-        this.makeChildVariableViews(localV, this.createListView.bind(this), this.localList);
-        // this.updateVariableAddView('list');
-        // this.updateVariableAddView('variable');
+        const gLength = (globalV || []).length;
+        const lLength = (localV || []).length;
+        globalListTitle.innerHTML = `${Lang.Workspace.List_used_all_objects} (${gLength})`;
+        localListTitle.innerHTML = `${Lang.Workspace.list_used_specific_objects} (${lLength})`;
+        this.foldTab(globalList, isGlobalFolded, gLength);
+        this.foldTab(localList, isLocalFolded, lLength);
 
-        listView.appendChild(this.globalList);
-        listView.appendChild(this.localList);
+        listView.appendChild(globalList);
+        this.makeChildVariableViews(globalV, this.createListView.bind(this), globalListBox);
+        listView.appendChild(localList);
+        this.makeChildVariableViews(localV, this.createListView.bind(this), localListBox);
+        this.updateVariableAddView('variable');
     }
+
     updateFuncTab() {
         const isPythonMode = this._isPythonMode();
         const listView = this.listView_;
@@ -826,7 +858,6 @@ Entry.VariableContainer = class VariableContainer {
                     type: 'string',
                     parent: parentParams,
                 };
-                // name += param;
             } else if (param instanceof Entry.Block) {
                 const { data = {} } = param;
                 const { params = [], type } = data;
@@ -893,7 +924,6 @@ Entry.VariableContainer = class VariableContainer {
             return;
         }
         Entry.Func.edit(new Entry.Func(data));
-        //this.saveFunction(func);
     }
 
     /**
@@ -1078,7 +1108,6 @@ Entry.VariableContainer = class VariableContainer {
         }
         const panel = this._getAddPanel(type);
         const name = panel.view.name.value.trim();
-        // panelView.addClass('entryRemove');
 
         if (Entry.isTextMode) {
             const alertMsg = Entry.TextCodingUtil.isNameIncludeSpace(name, type);
@@ -1244,18 +1273,6 @@ Entry.VariableContainer = class VariableContainer {
 
         const variableWrapper = createElement('div')
             .addClass('list fold')
-            .bindOnClick(() => {
-                // console.log(this.selected);
-                // const editBoxes = document.getElementsByClassName('list');
-                // for (const box of editBoxes) {
-                //     box.removeClass('unfold');
-                // }
-                // editBoxWrapper.addClass('unfold');
-                // // this.selected.removeClass('unfold');
-                // // this.selected.addClass('fold');
-                // // editBoxWrapper.removeClass('fold');
-                // // editBoxWrapper.addClass('unfold');
-            })
             .appendTo(this.globalVariableBox);
 
         if (!variable.object_) {
@@ -1515,14 +1532,7 @@ Entry.VariableContainer = class VariableContainer {
         const createElement = Entry.createElement;
 
         const listWrapper = createElement('div')
-            .addClass('list unfold')
-            .bindOnClick(() => {
-                const editBoxes = document.getElementsByClassName('list');
-                for (const box of editBoxes) {
-                    box.removeClass('unfold');
-                }
-                editBoxWrapper.addClass('unfold');
-            })
+            .addClass('list fold')
             .appendTo(this.globalListBox);
 
         if (!list.object_) {
@@ -1540,7 +1550,12 @@ Entry.VariableContainer = class VariableContainer {
             .bindOnClick(function(e) {
                 e.stopPropagation();
 
-                if (that.selectedList === list) {
+                if (that.listSettingView) {
+                    $(that.listSettingView).remove();
+                    delete that.listSettingView;
+                }
+
+                if (that.selected === list) {
                     editBoxInput.blur();
                     that.select(list);
                     that.updateSelectedVariable(null, 'list');
@@ -1553,7 +1568,6 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('inpt')
             .appendTo(editBoxWrapper);
         const editBoxInput = createElement('input')
-            .addClass('input')
             .bindOnClick((e) => {
                 e.stopPropagation();
             })
@@ -1698,6 +1712,7 @@ Entry.VariableContainer = class VariableContainer {
         const addSpaceNameWrapper = createElement('div')
             .addClass('entryVariableAddSpaceNameWrapperWorkspace')
             .appendTo(variableAddSpace);
+
         const addSpaceInputLabel = createElement('label')
             .addClass('entryVariableAddSpaceInputLabelWorkspace')
             .appendTo(addSpaceNameWrapper);
@@ -1868,10 +1883,10 @@ Entry.VariableContainer = class VariableContainer {
 
     generateListAddView() {
         const createElement = Entry.createElement;
-        const that = this;
-
         const _setFocused = Entry.Utils.setFocused;
         const _setBlurredTimer = Entry.Utils.setBlurredTimer;
+
+        const that = this;
 
         // 리스트 만들기 폼
         const listAddSpace = createElement('div').addClass('entryVariableAddSpaceWorkspace off');
@@ -1892,10 +1907,9 @@ Entry.VariableContainer = class VariableContainer {
         const addSpaceInput = createElement('input')
             .addClass('entryVariableAddSpaceInputWorkspace')
             .appendTo(addSpaceNameWrapper);
-        addSpaceInput.setAttribute('placeholder', Lang.Workspace.list_name);
+        addSpaceInput.setAttribute('type', 'text');
         addSpaceInput.id = 'entryVariableAddSpaceInputWorkspace';
-        this.listAddPanel.view.name = addSpaceInput;
-
+        addSpaceInput.setAttribute('placeholder', Lang.Workspace.list_name);
         addSpaceInput.onkeypress = Entry.Utils.whenEnter(function() {
             if (this.enterKeyDisabled) {
                 this.blur();
@@ -1913,6 +1927,7 @@ Entry.VariableContainer = class VariableContainer {
             this.isBlurred = true;
             doBlur.apply(this);
         };
+        this.listAddPanel.view.name = addSpaceInput;
 
         // 모든 오브젝트에서 사용
         const addSpaceGlobalWrapper = createElement('div')
@@ -1923,19 +1938,19 @@ Entry.VariableContainer = class VariableContainer {
                 return Entry.do('listAddSetScope', 'global');
             })
             .appendTo(listAddSpace);
+        this.listAddPanel.view.globalCheck = addSpaceGlobalWrapper;
 
         createElement('span')
             .addClass('Workspace_text')
             .appendTo(addSpaceGlobalWrapper).innerHTML =
             Lang.Workspace.use_all_objects;
 
-        this.listAddPanel.view.globalCheck = createElement('span')
+        createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
             .appendTo(addSpaceGlobalWrapper);
 
         // 공유 리스트
         const addSpaceCloudWrapper = createElement('div')
-            .appendTo(addSpaceGlobalWrapper)
             .addClass('entryVariableAddSpaceCloudWrapperWorkspace')
             .bindOnClick(() => {
                 const { object, isCloud } = this.listAddPanel.info;
@@ -1945,18 +1960,19 @@ Entry.VariableContainer = class VariableContainer {
                 } else {
                     addSpaceCloudWrapper.addClass('on');
                 }
-            });
+            })
+            .appendTo(addSpaceGlobalWrapper);
         listAddSpace.cloudWrapper = addSpaceCloudWrapper;
+        this.listAddPanel.view.cloudCheck = addSpaceCloudWrapper;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCloudSpanWorkspace')
             .appendTo(addSpaceCloudWrapper).innerHTML =
             Lang.Workspace.List_create_cloud;
 
-        const addListCloudCheck = createElement('span')
+        createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
             .appendTo(addSpaceCloudWrapper);
-        this.listAddPanel.view.cloudCheck = addListCloudCheck;
 
         // 이 오브젝트에서 사용
         const addSpaceLocalWrapper = createElement('div')
@@ -1968,13 +1984,15 @@ Entry.VariableContainer = class VariableContainer {
                 return Entry.do('listAddSetScope', 'local');
             })
             .appendTo(listAddSpace);
+        this.listAddPanel.view.localCheck = addSpaceLocalWrapper;
 
-        createElement('span').appendTo(addSpaceLocalWrapper).innerHTML =
+        createElement('span')
+            .addClass('Workspace_text')
+            .appendTo(addSpaceLocalWrapper).innerHTML =
             Lang.Workspace.Variable_use_this_object;
 
-        this.listAddPanel.view.localCheck = createElement('span')
+        createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
-            .addClass(this.variableAddPanel.info.object ? 'entryVariableAddChecked' : '')
             .appendTo(addSpaceLocalWrapper);
 
         // 확인 취소 버튼
@@ -1997,32 +2015,14 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('entryVariableAddSpaceConfirmWorkspace')
             .addClass('entryVariableAddSpaceButtonWorkspace')
             .bindOnClick(() => {
-                return that._addList();
+                that._addList();
+                this.listAddPanel.view.addClass('off');
+                this.resetVariableAddPanel('list');
             })
             .appendTo(addSpaceButtonWrapper);
         addSpaceConfirmButton.href = '#';
         addSpaceConfirmButton.innerHTML = Lang.Buttons.save;
         this.listAddConfirmButton = addSpaceConfirmButton;
-
-        //global list container
-        this.globalList = createElement('div').addClass('entryVariableSplitterWorkspace unfold');
-
-        const globalListTitle = Entry.createElement('a')
-            .addClass('attr_link')
-            .appendTo(this.globalList);
-        globalListTitle.innerHTML = Lang.Workspace.List_used_all_objects;
-
-        this.globalListBox = createElement('div')
-            .addClass('attr_box')
-            .appendTo(this.globalList);
-
-        //local list container
-        this.localList = createElement('div').addClass('entryVariableSplitterWorkspace unfold');
-
-        const localListTitle = Entry.createElement('a')
-            .addClass('attr_link')
-            .appendTo(this.localList);
-        localListTitle.innerHTML = Lang.Workspace.list_used_specific_objects;
     }
 
     generateVariableSplitterView() {
@@ -2284,35 +2284,37 @@ Entry.VariableContainer = class VariableContainer {
     /**
      * 속성 > 리스트 편집창 표기
      */
-    generateListSettingView(target) {
-        const that = this;
+    generateListSettingView() {
         const createElement = Entry.createElement;
-        const list = target || this.selectedList;
-        const attrInnerBox = createElement('div').addClass('attr_inner_box');
+
+        // 리스트 속성 설정
+        const element = createElement('div')
+            .addClass('attr_inner_box')
+            .bindOnClick((e) => {
+                return e.stopPropagation();
+            });
+        if (this.listSettingView) {
+            $(this.listSettingView).remove();
+            delete this.listSettingView;
+        }
+        this.listSettingView = element;
 
         const listAttr = createElement('div')
             .addClass('list_attr')
-            .appendTo(attrInnerBox);
-        this.listSettingView = listAttr;
-
+            .appendTo(element);
         const boxSubject = createElement('span')
             .addClass('box_sjt')
             .appendTo(listAttr);
         boxSubject.innerHTML = '리스트 속성';
 
-        // 전역에다 넣는다
-        // 넣은 후에 생성한다
-        this.generateListImportExportView();
-        this.generateListCountView();
-        this.generateListValuesView(list);
-
-        // padding wrapper (list wrapper) 영역 종료
+        this.generateListImportExportView(listAttr);
+        this.generateListCountView(listAttr);
+        this.generateListValuesView(listAttr);
     }
 
-    generateListImportExportView() {
+    generateListImportExportView(element) {
         const that = this;
         const createElement = Entry.createElement;
-        const element = this.listSettingView;
 
         const buttonBox = createElement('div')
             .addClass('btn_box')
@@ -2322,7 +2324,7 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('btn_list')
             .bindOnClick((e) => {
                 e.stopPropagation();
-                const { array_, name_ } = that.selectedList;
+                const { array_, name_ } = that.selected;
 
                 if (array_.length === 0) {
                     entrylms.alert(Lang.Menus.nothing_to_export);
@@ -2343,10 +2345,9 @@ Entry.VariableContainer = class VariableContainer {
         buttonImport.innerHTML = Lang.Workspace.list_import;
     }
 
-    generateListCountView() {
+    generateListCountView(element) {
         const that = this;
         const createElement = Entry.createElement;
-        const element = this.listSettingView;
 
         const listCount = createElement('div')
             .addClass('list_cnt')
@@ -2364,39 +2365,39 @@ Entry.VariableContainer = class VariableContainer {
         const buttonMinus = createElement('a')
             .addClass('btn_cnt')
             .bindOnClick(() => {
-                const { selectedList: { id_ } } = that;
+                const { selected: { id_ } } = that;
                 Entry.do('listChangeLength', id_, 'minus');
             })
             .appendTo(countInputBox);
         buttonMinus.innerHTML = '-';
         buttonMinus.href = '#';
-        element.minus = buttonMinus;
+        this.listSettingView.minus = buttonMinus;
 
         const buttonPlus = createElement('a')
             .addClass('btn_cnt')
             .bindOnClick(() => {
-                const { selectedList: { id_ } } = that;
+                const { selected: { id_ } } = that;
                 Entry.do('listChangeLength', id_, 'plus');
             })
             .appendTo(countInputBox);
         buttonPlus.innerHTML = '+';
         buttonPlus.href = '#';
-        element.plus = buttonPlus;
+        this.listSettingView.plus = buttonPlus;
 
         const countInput = createElement('input').appendTo(countInputBox);
+        countInput.setAttribute('type', 'text');
         countInput.onblur = () => {
-            const v = that.selectedList;
+            const v = that.selected;
             let value = this.value;
             value = Entry.Utils.isNumber(value) ? value : v.array_.length;
             Entry.do('listChangeLength', v.id_, Number(value));
         };
         countInput.onkeypress = Entry.Utils.blurWhenEnter;
-        element.lengthInput = countInput;
+        this.listSettingView.lengthInput = countInput;
     }
 
-    generateListValuesView() {
+    generateListValuesView(element) {
         const createElement = Entry.createElement;
-        const element = this.listSettingView;
 
         const countGroup = createElement('div')
             .addClass('cnt_group')
@@ -2408,44 +2409,36 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('cnt_list')
             .appendTo(scrollBox);
 
-        element.listValues = countList;
+        this.listSettingView.listValues = countList;
     }
 
     updateListSettingView(list) {
-        list = list || this.selectedList;
+        list = list || this.selected;
         const view = this.listSettingView;
         const { listValues, lengthInput } = view;
-        const arr = list.array_;
+        const arr = list.array_ || [];
         lengthInput.value = arr.length;
         list.listElement.appendChild(view);
         //remove element and event bindings
         $(listValues).empty();
-        // if (arr.length === 0) {
-        //     seperator.addClass('entryRemove');
-        // } else {
-        //     seperator.removeClass('entryRemove');
-        // }
         const startIndex = Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD ? 0 : 1;
         const fragment = document.createDocumentFragment();
         arr.forEach(({ data }, i) => {
-            const wrapper = Entry.createElement('div')
-                .addClass('entryListSettingValueWrapperWorkspace')
-                .appendTo(fragment);
+            const wrapper = Entry.createElement('li').appendTo(fragment);
             Entry.createElement('span')
-                .addClass('entryListSettingValueNumberSpanWorkspace')
+                .addClass('cnt')
                 .appendTo(wrapper).innerHTML =
                 i + startIndex;
-            const input = Entry.createElement('input')
-                .addClass('entryListSettingEachInputWorkspace')
-                .appendTo(wrapper);
+            const input = Entry.createElement('input').appendTo(wrapper);
             input.value = data;
+            input.setAttribute('type', 'text');
             input.onfocus = Entry.Utils.setFocused;
             input.onblur = Entry.Utils.setBlurredTimer(function() {
                 Entry.do('listSetDefaultValue', list.id_, i, this.value);
             });
             input.onkeypress = Entry.Utils.blurWhenEnter;
-            Entry.createElement('span')
-                .addClass('entryListSettingValueRemoveWorkspace')
+            Entry.createElement('a')
+                .addClass('del')
                 .bindOnClick(() => {
                     arr.splice(i, 1);
                     this.updateListSettingView();
@@ -2454,12 +2447,11 @@ Entry.VariableContainer = class VariableContainer {
         });
         listValues.appendChild(fragment);
         list.updateView();
-        // view.removeClass('entryRemove');
     }
 
     setListLength(list, value) {
         value = Number(value);
-        const arr = this.selectedList.array_;
+        const arr = this.selected.array_;
         const times = value - arr.length;
         if (times && Entry.Utils.isNumber(value)) {
             if (times > 0) {
@@ -2489,7 +2481,7 @@ Entry.VariableContainer = class VariableContainer {
             if (type === 'variable') {
                 this.selected = null;
             } else {
-                this.selectedList = null;
+                this.selected = null;
             }
         } else if (objectType === 'variable' || objectType === 'slide') {
             this.selected = object;
@@ -2497,12 +2489,17 @@ Entry.VariableContainer = class VariableContainer {
             this.selected.listElement.addClass('unfold');
             if (!this.variableSettingView) {
                 this.generateVariableSettingView();
-                // this.select(object);
                 this.renderVariableReference(object);
             }
             this.updateVariableSettingView(object);
         } else if (objectType === 'list') {
-            this.selectedList = object;
+            this.selected = object;
+            this.selected.listElement.removeClass('fold');
+            this.selected.listElement.addClass('unfold');
+            if (!this.listSettingView) {
+                this.generateListSettingView();
+                this.renderVariableReference(object);
+            }
             this.updateListSettingView(object);
         }
     }
