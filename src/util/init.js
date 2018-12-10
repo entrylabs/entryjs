@@ -29,7 +29,7 @@ Entry.init = function(container, options) {
     /** @type {object} */
     this.options = options;
     this.parseOptions(options);
-    this.mediaFilePath = (options.libDir ? options.libDir : '/lib') + '/entryjs/images/';
+    this.mediaFilePath = (options.libDir ? options.libDir : '/lib') + '/entry-js/images/';
     this.defaultPath = options.defaultDir || '';
     this.blockInjectPath = options.blockInjectDir || '';
 
