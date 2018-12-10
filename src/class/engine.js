@@ -331,39 +331,14 @@ Entry.Engine = function() {
 
             this.speeds.forEach((speed, i) => {
                 Entry.createElement('td', 'progressCell' + i)
-                    .bindOnClick(() => this.setSpeedMeter(speed))
+                    .addClass('progressCell')
+                    .bindOnClick(() => {
+                        this.setSpeedMeter(speed);
+                    })
                     .appendTo(tr);
             });
 
             speedBox.appendChild(this.speedProgress_);
-            this.speedHandle_ = Entry.createElement('div', 'entrySpeedHandleWorkspace');
-            var canvasWidth = Entry.interfaceState.canvasWidth;
-            var grid = (canvasWidth - 84) / 5;
-
-            $(this.speedHandle_).bind('mousedown.speedPanel touchstart.speedPanel', function(e) {
-                if (e.stopPropagation) e.stopPropagation();
-                if (e.preventDefault) e.preventDefault();
-
-                if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
-                    var mouseEvent = Entry.Utils.convertMouseEvent(e);
-                    var doc = $(document);
-                    doc.bind('mousemove.speedPanel touchmove.speedPanel', onMouseMove);
-                    doc.bind('mouseup.speedPanel touchend.speedPanel', onMouseUp);
-                }
-
-                function onMouseMove(e) {
-                    e.stopPropagation();
-                    var { clientX } = Entry.Utils.convertMouseEvent(e);
-                    var level = Math.floor((clientX - 80) / (grid * 5) * 5);
-                    if (level < 0 || level > 4) return;
-                    Entry.engine.setSpeedMeter(Entry.engine.speeds[level]);
-                }
-
-                function onMouseUp(e) {
-                    $(document).unbind('.speedPanel');
-                }
-            });
-            speedBox.appendChild(this.speedHandle_);
             this.setSpeedMeter(Entry.FPS);
         }
     };
@@ -374,9 +349,14 @@ Entry.Engine = function() {
         level = Math.min(4, level);
         level = Math.max(0, level);
         if (this.speedPanelOn) {
-            var canvasWidth = Entry.interfaceState.canvasWidth;
-            this.speedHandle_.style.left =
-                (canvasWidth - 80) / 10 * (level * 2 + 1) + 80 - 9 + 'px';
+            const elements = document.querySelectorAll(`.progressCell`);
+            elements.forEach((element, i) => {
+                if (level === i) {
+                    element.className = 'progressCell on';
+                } else if (element.className.indexOf('on') > -1) {
+                    element.className = 'progressCell';
+                }
+            });
         }
         if (Entry.FPS == FPS) return;
         clearInterval(this.ticker);
