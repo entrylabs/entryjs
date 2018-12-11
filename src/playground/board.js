@@ -247,7 +247,7 @@ Entry.Board = class Board {
             });
 
             if (eventType === 'touchstart') {
-                longPressTimer = setTimeout(function() {
+                longPressTimer = setTimeout(() => {
                     if (longPressTimer) {
                         longPressTimer = null;
                         onMouseUp();
@@ -1187,7 +1187,7 @@ Entry.Board = class Board {
                 option: {
                     text: '메모 추가하기',
                     enable: !this.readOnly,
-                    callback() {
+                    callback: () => {
                         Entry.do(
                             'createComment',
                             {

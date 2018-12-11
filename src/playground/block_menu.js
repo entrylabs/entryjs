@@ -135,6 +135,7 @@ class BlockMenu {
             class: 'blockMenuContainer',
             parent,
         });
+        Entry.Utils.disableContextmenu(this.blockMenuContainer);
 
         this.svgDom = Entry.Dom(
             $(

@@ -1,5 +1,7 @@
 'use strict';
 
+import EntryTool from 'entry-tool';
+
 Entry.ContextMenu = {};
 
 (function(ctx) {
@@ -18,14 +20,13 @@ Entry.ContextMenu = {};
     };
 
     ctx.show = function(options, className, coordinate) {
-        this._options = options;
-
-        if (!this.dom) {
-            this.createDom();
-        }
         if (!options.length) {
             return;
         }
+
+        this._options = options;
+
+        this.createDom();
 
         if (this._hideEvent) {
             this._hideEvent.destroy();
@@ -37,37 +38,21 @@ Entry.ContextMenu = {};
             this.dom.addClass(className);
         }
 
-        const parent = this.dom;
+        this.mouseCoordinate = coordinate || Entry.mouseCoordinate;
 
-        parent.empty();
-
-        const fragment = document.createDocumentFragment();
-
-        options.forEach((option, idx) => {
-            let { enable } = option;
-            const { text, divider } = option;
-            enable = option.enable !== false;
-            //set value for later use
-            option.enable = enable;
-
-            const elem = Entry.Dom('li').attr(ATTR_KEY, idx);
-            fragment.appendChild(elem.get(0));
-
-            if (divider) {
-                className = 'divider';
-            } else {
-                className = enable ? 'menuAble' : 'menuDisable';
-                Entry.Dom('span', { parent: elem }).text(text);
-            }
-
-            elem.addClass(className);
+        this.contextMenu = new EntryTool({
+            type: 'contextMenu',
+            data: {
+                items: options,
+                coordinate: this.mouseCoordinate,
+                onOutsideClick: () => {
+                    this.hide();
+                }
+            },
+            container: this.dom[0]
         });
 
-        parent.get(0).appendChild(fragment);
-        parent.removeClass('entryRemove');
         this.visible = true;
-        this.position(coordinate || Entry.mouseCoordinate);
-        this.mouseCoordinate = coordinate || Entry.mouseCoordinate;
     };
 
     ctx.position = function(pos) {
@@ -99,8 +84,7 @@ Entry.ContextMenu = {};
     ctx.hide = function() {
         this.visible = false;
         const dom = this.dom;
-
-        dom.empty().addClass('entryRemove');
+        dom.addClass('entryRemove');
 
         if (this._className) {
             dom.removeClass(this._className);
@@ -109,6 +93,11 @@ Entry.ContextMenu = {};
         if (this._hideEvent) {
             this._hideEvent.destroy();
             this._hideEvent = null;
+        }
+        if (this.contextMenu) {
+            this.contextMenu.isShow && this.contextMenu.hide();
+            this.contextMenu.remove();
+            this.contextMenu = null;
         }
     };
 
