@@ -432,7 +432,7 @@ Entry.Playground = function() {
             const options = EntryStatic.fonts.map(font => [font.name, font]);
             fontLink.addClass("imico_pop_select_arr_up");
             fontLink.removeClass("imico_pop_select_arr_down");
-            this.fontDropOptions = this.openDropDown(options, fontLink, value => {
+            this.openDropDown(options, fontLink, value => {
                 let font = value[1];
                 var textValue = textEditInput.value;
                 if (that.object.entity.getLineBreak()) textValue = textEditArea.value;
@@ -441,8 +441,8 @@ Entry.Playground = function() {
                     font = options[0][1];
                     entrylms.alert(Lang.Menus.not_supported_text);
                 }
-
                 fontLink.innerText = font.name;
+                $("#entryPainterAttrFontName").data("font", font);
                 this.object.entity.setFontType(font.family);
             }, () => {
                 fontLink.removeClass("imico_pop_select_arr_up");
@@ -569,17 +569,16 @@ Entry.Playground = function() {
 
         var textEditInput = Entry.createElement('input').addClass('entryPlayground_textBox single');
         textEditInput.type="text";
-        textEditInput.placeholder="글상자의 내용을 입력해주세요.";
+        textEditInput.placeholder=Lang.Workspace.textbox_input;
         var textChangeApply = function() {
             var object = Entry.playground.object;
             var entity = object.entity;
-            var fontName = _.first($('.entryPlaygroundPainterAttrFontName'));
-
-            if (fontName.value == 'Nanum Pen Script' || fontName.value == 'Jeju Hallasan') {
+            const selected = $("#entryPainterAttrFontName").data("font");
+            const defaultFont = EntryStatic.fonts[0];
+            if (selected.family == 'Nanum Pen Script' || selected.family == 'Jeju Hallasan') {
                 if (/[\u4E00-\u9FFF]/.exec(this.value) != null) {
-                    var font = 'KoPub Batang';
-                    fontName.value = font;
-                    entity.setFontType(font);
+                    $('#entryPainterAttrFontName').text(defaultFont.name);
+                    entity.setFontType(defaultFont.family);
                     entrylms.alert(Lang.Menus.not_supported_text);
                 }
             }
@@ -602,7 +601,7 @@ Entry.Playground = function() {
         inputInner.appendChild(textEditInput);
 
         var textEditArea = Entry.createElement('textarea');
-        textEditArea.placeholder="글상자의 내용을 입력해주세요.";
+        textEditArea.placeholder=Lang.Workspace.textbox_input;
         textEditArea.addClass('entryPlayground_textArea multi');
         textEditArea.style.display = 'none';
         textEditArea.onkeyup = textChangeApply;
@@ -975,6 +974,7 @@ Entry.Playground = function() {
         const font = EntryStatic.fonts.find(font => font.family === entity.getFontName());
         if(font) {
             $('#entryPainterAttrFontName').text(font.name);
+            $('#entryPainterAttrFontName').data("font", font);
         }
 
         $('.style_link.imbtn_pop_font_bold').toggleClass('on', entity.fontBold);
