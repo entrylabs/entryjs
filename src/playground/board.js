@@ -433,37 +433,43 @@ Entry.Board = class Board {
         this.btnWrapper = this.svg.elem('g');
         const btnWrapper = this.btnWrapper;
 
-        const TEXT_CLASS = 'entryFunctionButtonText';
-        const BUTTON_CLASS = 'entryFunctionButton';
+        const BLUE_CLASS = 'entryFunctionButtonText';
+        const WHITE_CLASS = 'entryFunctionButton';
+
+        const saveButton = btnWrapper.elem('rect', {
+            x: 74,
+            y: 12,
+            width: 64,
+            height: 32,
+            rx: 4,
+            ry: 4,
+            class: BLUE_CLASS,
+        });
+        this.saveButton = saveButton;
+
+        const cancelButton = btnWrapper.elem('rect', {
+            x: 0,
+            y: 12,
+            width: 64,
+            height: 32,
+            rx: 4,
+            ry: 4,
+            class: 'entryFunctionButtonBorder',
+        });
 
         const saveText = btnWrapper.elem('text', {
-            x: 102.5,
+            x: 106,
             y: 33,
-            class: TEXT_CLASS,
+            class: WHITE_CLASS,
         });
         saveText.textContent = Lang.Buttons.save;
 
         const cancelText = btnWrapper.elem('text', {
-            x: 27,
+            x: 32,
             y: 33,
-            class: TEXT_CLASS,
+            class: BLUE_CLASS,
         });
         cancelText.textContent = Lang.Buttons.cancel;
-
-        const saveButton = btnWrapper.elem('circle', {
-            cx: 102.5,
-            cy: 27.5,
-            r: 27.5,
-            class: BUTTON_CLASS,
-        });
-        this.saveButton = saveButton;
-
-        const cancelButton = btnWrapper.elem('circle', {
-            cx: 27.5,
-            cy: 27.5,
-            r: 27.5,
-            class: BUTTON_CLASS,
-        });
 
         const saveFunc = this.save.bind(this);
         const cancelFunc = this.cancelEdit.bind(this);
