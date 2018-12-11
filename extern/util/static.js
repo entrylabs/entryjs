@@ -1672,7 +1672,7 @@ EntryStatic.objectSubCategories = {
 };
 
 Object.defineProperty(EntryStatic, 'fonts', {
-    get: () => {
+    get: function() {
         return [
             {
                 name: Lang.Fonts.batang,
