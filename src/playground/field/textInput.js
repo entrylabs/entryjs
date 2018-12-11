@@ -121,14 +121,23 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
             parent: $('body'),
         });
 
-        if (defaultType === 'number' && Entry.isMobile()) {
-            this.optionWidget = this._getNumberOptionWidget();
-        } else if (defaultType === 'angle') {
-            this.optionInput = this._getInputFieldOption();
-            this.optionWidget = this._getAngleOptionWidget(this.optionInput[0]);
+        if (Entry.isMobile()) {
+            if (defaultType === 'number') {
+                this.optionWidget = this._getNumberOptionWidget();
+            } else if (defaultType === 'angle') {
+                this.optionWidget = this._getAngleOptionWidget();
+            } else {
+                this.optionInput = this._getInputFieldOption();
+                this._attachDisposeEvent();
+            }
         } else {
-            this.optionInput = this._getInputFieldOption();
-            this._attachDisposeEvent();
+            if (defaultType === 'angle') {
+                this.optionInput = this._getInputFieldOption();
+                this.optionWidget = this._getAngleOptionWidget(this.optionInput[0]);
+            } else {
+                this.optionInput = this._getInputFieldOption();
+                this._attachDisposeEvent();
+            }
         }
 
         this._setTextValue();
