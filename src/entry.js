@@ -83,6 +83,7 @@ require('./playground/trashcan');
 require('./playground/zoom_controller');
 require('./playground/vim');
 require('./playground/workspace');
+require('./playground/magnify');
 require('./textcoding/parser');
 require('./util/block_driver');
 require('./util/contextmenu');
