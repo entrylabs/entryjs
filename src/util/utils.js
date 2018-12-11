@@ -324,7 +324,7 @@ Entry.resizeElement = function(interfaceModel) {
             Entry.engine.toggleSpeedPanel();
         }
 
-        let canvasSize = interfaceModel.canvasWidth - 30;
+        let canvasSize = interfaceModel.canvasWidth;
         if (!canvasSize) {
             canvasSize = 296;
         } else if (canvasSize < 296) {
