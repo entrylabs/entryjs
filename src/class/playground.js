@@ -430,6 +430,8 @@ Entry.Playground = function() {
         let fontLink = Entry.createElement('a', "entryPainterAttrFontName").addClass('select_link imico_pop_select_arr_down');
         fontLink.bindOnClick(() => {
             const options = EntryStatic.fonts.map(font => [font.name, font]);
+            fontLink.addClass("imico_pop_select_arr_up");
+            fontLink.removeClass("imico_pop_select_arr_down");
             this.fontDropOptions = this.openDropDown(options, fontLink, value => {
                 let font = value[1];
                 var textValue = textEditInput.value;
@@ -442,6 +444,9 @@ Entry.Playground = function() {
 
                 fontLink.innerText = font.name;
                 this.object.entity.setFontType(font.family);
+            }, () => {
+                fontLink.removeClass("imico_pop_select_arr_up");
+                fontLink.addClass("imico_pop_select_arr_down");
             });
         });
         fontSelect.append(fontLink);
@@ -1606,7 +1611,7 @@ Entry.Playground = function() {
         });
     };
 
-    p.openDropDown = (options, target, callback) => {
+    p.openDropDown = (options, target, callback, closeCallback) => {
         const dropdownWidget = new EntryTool({
             type: 'dropdownWidget',
             data: {
@@ -1614,6 +1619,7 @@ Entry.Playground = function() {
                 positionDom: target,
                 onOutsideClick: () => {
                     if(dropdownWidget) {
+                        closeCallback();
                         dropdownWidget.hide();
                     }
                 },
@@ -1624,6 +1630,7 @@ Entry.Playground = function() {
             })[0],
         }).on('select', (item) => {
             callback(item);
+            closeCallback();
             dropdownWidget.hide();
         });
         return dropdownWidget;
