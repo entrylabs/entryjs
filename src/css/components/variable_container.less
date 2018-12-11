@@ -161,7 +161,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 16px 0 0;
+    padding: 0;
     margin: 0;
     border-top: 1px solid #d5d6e9f4;
 }
@@ -171,6 +171,7 @@
     width: 146px;
     height: 40px;
     margin: 0 auto 16px;
+    margin-top: 16px;
     border: 1px solid #4f80ff;
     border-radius: 4px;
     background-color: #fff;
@@ -222,6 +223,7 @@
     color: #2c313d;
     letter-spacing: -0.2px;
     line-height: 11px;
+    box-sizing: border-box;
 }
 .entryVariableAddSpaceNameWrapperWorkspace .entryVariableAddSpaceInputWorkspace::placeholder {
     color: #979797;
@@ -325,6 +327,9 @@
     border: 1px solid #d6e9f4;
     border-width: 1px 0;
 }
+.entryVariableSplitterWorkspace.all {
+    border: 0;
+}
 .entryVariableSplitterWorkspace + .entryVariableSplitterWorkspace {
     border-top: 0;
 }
@@ -387,6 +392,16 @@
     background-size: 8px auto;
     content: '';
 }
+.entryVariableSplitterWorkspace .list.fold .inpt:after {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 6px;
+    height: 8px;
+    margin-top: -4px;
+    background-size: 6px auto;
+    content: '';
+}
 .entryVariableSplitterWorkspace .list .inpt input[type='text'] {
     width: 100%;
     padding: 6px 8px 5px;
@@ -399,6 +414,7 @@
     color: #2c313d;
     letter-spacing: -0.2px;
     line-height: 11px;
+    box-sizing: border-box;
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box {
     display: none;
@@ -788,12 +804,12 @@
     cursor: pointer;
 }
 .entryVariableSplitterWorkspace.fold .attr_link:before {
-    width: 8px;
-    height: 6px;
+    width: 6px;
+    height: 8px;
     border-radius: 0;
-    .backgroundImage('layers_arrow_down_nor.png');
+    .backgroundImage('layers_arrow_right_nor.png');
     background-color: inherit;
-    background-size: 8px auto;
+    background-size: 6px auto;
 }
 .entryVariableSplitterWorkspace.unfold .attr_link:before {
     width: 8px;
@@ -816,5 +832,5 @@
     .backgroundImage('layers_arrow_up_nor.png');
 }
 .entryVariableSplitterWorkspace .list.fold .inpt:after {
-    .backgroundImage('layers_arrow_down_nor.png');
+    .backgroundImage('layers_arrow_right_nor.png');
 }

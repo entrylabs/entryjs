@@ -129,7 +129,7 @@ Entry.VariableContainer = class VariableContainer {
                     name: Entry.getOrderedName(Lang.Workspace.message, this.messages_, 'name'),
                 });
             });
-        messageAddButton.innerHTML = `+ ${Lang.Workspace.message_create}`;
+        messageAddButton.innerHTML = Lang.Workspace.message_create;
         messageAddButton.href = '#';
         this.messageAddButton_ = messageAddButton;
 
@@ -138,7 +138,7 @@ Entry.VariableContainer = class VariableContainer {
             .bindOnClick(() => {
                 return Entry.do('variableContainerClickListAddButton');
             });
-        listAddButton.innerHTML = `${Lang.Workspace.list_create}`;
+        listAddButton.innerHTML = Lang.Workspace.list_create;
         listAddButton.href = '#';
         this.listAddButton_ = listAddButton;
 
@@ -147,7 +147,7 @@ Entry.VariableContainer = class VariableContainer {
             .bindOnClick(() => {
                 return Entry.do('funcCreateStart', Entry.generateHash());
             });
-        functionAddButton.innerHTML = `${Lang.Workspace.function_add}`;
+        functionAddButton.innerHTML = Lang.Workspace.function_add;
         functionAddButton.href = '#';
         this.functionAddButton_ = functionAddButton;
     }
@@ -431,10 +431,6 @@ Entry.VariableContainer = class VariableContainer {
             return;
         }
 
-        if (!this.variableSplitters) {
-            this.generateVariableSplitterView();
-        }
-
         const isPythonMode = this._isPythonMode();
         if (isPythonMode) {
             listView.addClass('entryVariableContainerTextMode');
@@ -492,10 +488,20 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     updateAllTab() {
-        this.makeChildVariableViews(this.messages_, this.createMessageView.bind(this));
-        this.makeChildVariableViews(this.variables_, this.createVariableView.bind(this));
-        this.makeChildVariableViews(this.lists_, this.createListView.bind(this));
-        this.makeChildVariableViews(this.functions_, this.createFunctionView.bind(this));
+        const createElement = Entry.createElement;
+        const listView = this.listView_;
+        const listWrapper = createElement('div').addClass(
+            'entryVariableSplitterWorkspace unfold all'
+        );
+
+        const listBox = createElement('div')
+            .addClass('attr_box unfold')
+            .appendTo(listWrapper);
+        this.makeChildVariableViews(this.messages_, this.createMessageView.bind(this), listBox);
+        this.makeChildVariableViews(this.variables_, this.createVariableView.bind(this), listBox);
+        this.makeChildVariableViews(this.lists_, this.createListView.bind(this), listBox);
+        this.makeChildVariableViews(this.functions_, this.createFunctionView.bind(this), listBox);
+        listView.appendChild(listWrapper);
     }
 
     updateMessageTab() {
@@ -2023,13 +2029,6 @@ Entry.VariableContainer = class VariableContainer {
         addSpaceConfirmButton.href = '#';
         addSpaceConfirmButton.innerHTML = Lang.Buttons.save;
         this.listAddConfirmButton = addSpaceConfirmButton;
-    }
-
-    generateVariableSplitterView() {
-        this.variableSplitters = {
-            top: Entry.createElement('div').addClass('entryVariableSplitterWorkspace'),
-            bottom: Entry.createElement('div').addClass('entryVariableSplitterWorkspace'),
-        };
     }
 
     openVariableAddPanel(type = 'variable') {
