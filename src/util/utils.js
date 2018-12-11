@@ -2433,6 +2433,13 @@ Entry.Utils.recoverSoundInstances = function() {
         return _.head($(this).removeClass(classes.join(' ')));
     };
 
+    p.text = function(str) {
+        if(str) {
+            this.innerHTML = str;
+        }
+        return this;
+    };
+
     p.bindOnClick = function(func) {
         $(this).on('click tab', function(e) {
             if (this.disabled) {

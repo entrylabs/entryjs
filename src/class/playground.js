@@ -4,6 +4,8 @@
  */
 'use strict';
 
+import EntryTool from 'entry-tool';
+
 var Entry = require('../entry');
 
 /**
@@ -425,8 +427,23 @@ Entry.Playground = function() {
 
         //write set 글 속성 탭
         let fontSelect = Entry.createElement('div').addClass('pop_selectbox');
-        let fontLink = Entry.createElement('a').addClass('select_link imico_pop_select_arr_down');
-        fontLink.innerText="바탕체";
+        let fontLink = Entry.createElement('a', "entryPainterAttrFontName").addClass('select_link imico_pop_select_arr_down');
+        fontLink.bindOnClick(() => {
+            const options = EntryStatic.fonts.map(font => [font.name, font]);
+            this.fontDropOptions = this.openDropDown(options, fontLink, value => {
+                let font = value[1];
+                var textValue = textEditInput.value;
+                if (that.object.entity.getLineBreak()) textValue = textEditArea.value;
+
+                if (/[\u4E00-\u9FFF]/.exec(textValue) != null) {
+                    font = options[0][1];
+                    entrylms.alert(Lang.Menus.not_supported_text);
+                }
+
+                fontLink.innerText = font.name;
+                this.object.entity.setFontType(font.family);
+            });
+        });
         fontSelect.append(fontLink);
         writeSet.append(fontSelect);
 
@@ -480,22 +497,26 @@ Entry.Playground = function() {
         styleBox.append(through);
 
         let color = Entry.createElement('a').addClass('style_link imbtn_pop_font_color');
+        color.bindOnClick(() => this.openColourPicker(color, this.object.entity.getColour(), this.setTextColour.bind(this)));
         styleBox.append(color);
+
         let backgroundColor = Entry.createElement('a').addClass('style_link imbtn_pop_font_backgroundcolor');
+        backgroundColor.bindOnClick(() => this.openColourPicker(backgroundColor, this.object.entity.getBGColour(), this.setBackgroundColour.bind(this)));
         styleBox.append(backgroundColor);
 
         let writeTypeBox = Entry.createElement("div").addClass('write_type_box');
         let singleLine = Entry.createElement('a');
-        singleLine.innerText = "한 줄 쓰기";
+        singleLine.innerText = Lang.Buttons.single_line;
         singleLine.bindOnClick(() => Entry.playground.toggleLineBreak(false));
         let multiLine = Entry.createElement('a');
-        multiLine.innerText = "여러 줄 쓰기";
+        multiLine.innerText = Lang.Buttons.multi_line;
         multiLine.bindOnClick(() => Entry.playground.toggleLineBreak(true));
         writeTypeBox.append(singleLine);
         writeTypeBox.append(multiLine);
         inputArea.append(writeTypeBox);
 
-        var fontSizeWrapper = Entry.createElement('div').addClass('entryPlaygroundFontSizeWrapper');
+        //글자 크기 조절 슬라이드.
+        var fontSizeWrapper = Entry.createElement('div').addClass('entryPlaygroundFontSizeWrapper multi');
         inputArea.appendChild(fontSizeWrapper);
         this.fontSizeWrapper = fontSizeWrapper;
 
@@ -515,8 +536,6 @@ Entry.Playground = function() {
         var fontSizeKnob = Entry.createElement('div').addClass('entryPlaygroundFontSizeKnob');
         fontSizeSlider.appendChild(fontSizeKnob);
         this.fontSizeKnob = fontSizeKnob;
-
-
 
         $(fontSizeKnob).bind('mousedown.fontKnob touchstart.fontKnob', function() {
             var resizeOffset = $(fontSizeSlider).offset().left;
@@ -543,7 +562,7 @@ Entry.Playground = function() {
         let inputInner = Entry.createElement("div").addClass("input_inner");
         inputArea.append(inputInner);
 
-        var textEditInput = Entry.createElement('input').addClass('entryPlayground_textBox');
+        var textEditInput = Entry.createElement('input').addClass('entryPlayground_textBox single');
         textEditInput.type="text";
         textEditInput.placeholder="글상자의 내용을 입력해주세요.";
         var textChangeApply = function() {
@@ -579,7 +598,7 @@ Entry.Playground = function() {
 
         var textEditArea = Entry.createElement('textarea');
         textEditArea.placeholder="글상자의 내용을 입력해주세요.";
-        textEditArea.addClass('entryPlayground_textArea');
+        textEditArea.addClass('entryPlayground_textArea multi');
         textEditArea.style.display = 'none';
         textEditArea.onkeyup = textChangeApply;
         textEditArea.onchange = textChangeApply;
@@ -595,15 +614,18 @@ Entry.Playground = function() {
         this.textEditArea = textEditArea;
         inputInner.appendChild(textEditArea);
 
+        let singleDesc = Entry.createElement("ul").addClass("list single");
+        singleDesc.append(Entry.createElement("li").text(Lang.Menus.linebreak_off_desc_3));
+        singleDesc.append(Entry.createElement("li").text(Lang.Menus.linebreak_off_desc_2));
+        singleDesc.append(Entry.createElement("li").text(Lang.Menus.linebreak_off_desc_3));
 
-        let desc = Entry.createElement("ul").addClass("list");
-        let desc_1 = Entry.createElement("li");
-        desc_1.innerText = "text1";
-        let desc_2 = Entry.createElement("li");
-        desc_2.innerText = "text2";
-        desc.append(desc_1);
-        desc.append(desc_2);
-        inputArea.append(desc);
+        let multiDesc = Entry.createElement("ul").addClass("list multi");
+        multiDesc.append(Entry.createElement("li").text(Lang.Menus.linebreak_on_desc_3));
+        multiDesc.append(Entry.createElement("li").text(Lang.Menus.linebreak_on_desc_2));
+        multiDesc.append(Entry.createElement("li").text(Lang.Menus.linebreak_on_desc_3));
+
+        inputArea.append(singleDesc);
+        inputArea.append(multiDesc);
     };
 
     /**
@@ -945,34 +967,22 @@ Entry.Playground = function() {
         this.textEditInput.value = text;
         this.textEditArea.value = text;
 
-        $('#entryPainterAttrFontName').val(entity.getFontName());
+        const font = EntryStatic.fonts.find(font => font.family === entity.getFontName());
+        if(font) {
+            $('#entryPainterAttrFontName').text(font.name);
+        }
 
-        var isBold = entity.fontBold || false;
-        $('#entryPlaygroundText_boldImage').attr(
-            'src',
-            Entry.mediaFilePath + 'text_button_bold_' + isBold + '.png'
-        );
+        $('.style_link.imbtn_pop_font_bold').toggleClass('on', entity.fontBold);
+        $('.style_link.imbtn_pop_font_italic').toggleClass('on', entity.fontItalic);
+        $('.style_link.imbtn_pop_font_underline').toggleClass('on', entity.getUnderLine());
+        $('.style_link.imbtn_pop_font_through').toggleClass('on', entity.getStrike());
 
-        var isItalic = entity.fontItalic || false;
-        $('#entryPlaygroundText_italicImage').attr(
-            'src',
-            Entry.mediaFilePath + 'text_button_italic_' + isItalic + '.png'
-        );
-
-        var isUnderLine = entity.getUnderLine() || false;
-        $('#entryPlaygroundText_underlineImage').attr(
-            'src',
-            Entry.mediaFilePath + 'text_button_underline_' + isUnderLine + '.png'
-        );
-
-        var isStrike = entity.getStrike() || false;
-        $('#entryPlaygroundText_strikeImage').attr(
-            'src',
-            Entry.mediaFilePath + 'text_button_strike_' + isStrike + '.png'
-        );
-
-        if (entity.colour) this.setTextColour(entity.colour, true);
-        if (entity.bgColor) this.setBackgroundColour(entity.bgColor, true);
+        if(entity.colour) {
+            this.setTextColour(entity.colour, true);
+        }
+        if(entity.bgColor) {
+            this.setBackgroundColour(entity.bgColor, true);
+        }
 
         this.toggleLineBreak(entity.getLineBreak());
 
@@ -1596,42 +1606,63 @@ Entry.Playground = function() {
         });
     };
 
-    p.toggleColourChooser = function(name) {
-        if (name === 'foreground') {
-            if (this.coloursWrapper.style.display === 'none') {
-                this.coloursWrapper.style.display = 'block';
-                this.backgroundsWrapper.style.display = 'none';
-            } else {
-                this.coloursWrapper.style.display = 'none';
+    p.openDropDown = (options, target, callback) => {
+        const dropdownWidget = new EntryTool({
+            type: 'dropdownWidget',
+            data: {
+                items: options,
+                positionDom: target,
+                onOutsideClick: () => {
+                    if(dropdownWidget) {
+                        dropdownWidget.hide();
+                    }
+                },
+            },
+            container: Entry.Dom('div', {
+                class: 'entry-widget-dropdown',
+                parent: $('body'),
+            })[0],
+        }).on('select', (item) => {
+            callback(item);
+            dropdownWidget.hide();
+        });
+        return dropdownWidget;
+    };
+
+    p.openColourPicker = (target, color, callback) => {
+        const colorPicker = new EntryTool({
+            type: 'colorPicker',
+            data: {
+                color: color,
+                positionDom: target,
+                // boundrayDom: this.boundrayDom,
+                onOutsideClick:(color)=>{
+                    if(colorPicker) {
+                        colorPicker.hide();
+                        callback(color, true);
+                    }
+                }
+            },
+            container: Entry.Dom('div', {
+                class: 'entry-color-picker',
+                parent: $('body'),
+            })[0],
+        }).on('change', (color) => {
+            if(color) {
+                callback(color, true);
             }
-        } else if (name === 'background') {
-            if (this.backgroundsWrapper.style.display === 'none') {
-                this.backgroundsWrapper.style.display = 'block';
-                this.coloursWrapper.style.display = 'none';
-            } else {
-                this.backgroundsWrapper.style.display = 'none';
-            }
-        }
+        });
+        return colorPicker;
     };
 
     p.setTextColour = function(colour, doNotToggle) {
+        $('.style_link.imbtn_pop_font_color').toggleClass('on', colour !== "#000000");
         this.object.entity.setColour(colour);
-        if (doNotToggle !== true) this.toggleColourChooser('foreground');
-        $('.entryPlayground_fgColorDiv').css('backgroundColor', colour);
-        $('#playgroundTextColorButtonImg').attr(
-            'src',
-            Entry.mediaFilePath + 'text_button_color_true.png'
-        );
     };
 
     p.setBackgroundColour = function(colour, doNotToggle) {
+        $('.style_link.imbtn_pop_font_backgroundcolor').toggleClass('on', colour !== "#ffffff");
         this.object.entity.setBGColour(colour);
-        if (doNotToggle !== true) this.toggleColourChooser('background');
-        $('.entryPlayground_bgColorDiv').css('backgroundColor', colour);
-        $('#playgroundTextBgButtonImg').attr(
-            'src',
-            Entry.mediaFilePath + 'text_button_background_true.png'
-        );
     };
 
     p.isTextBGMode = function() {
@@ -1699,23 +1730,20 @@ Entry.Playground = function() {
         var { objectType, entity } = this.object || {};
         if (objectType != 'textBox') return;
 
+        $(".write_type_box a").removeClass("on");
         if (isLineBreak) {
             entity.setLineBreak(true);
             $(".input_inner").height("228px");
-            $(".write_type_box a").removeClass("on");
             $(".write_type_box a").eq(1).addClass("on");
-            $('.entryPlayground_textArea').css('display', 'block');
-            $('.entryPlayground_textBox').css('display', 'none');
-            this.fontSizeWrapper.removeClass('entryHide');
+            $(".input_box .single").hide();
+            $(".input_box .multi").show();
             this._setFontFontUI();
         } else {
             entity.setLineBreak(false);
             $(".input_inner").height("40px");
-            $(".write_type_box a").removeClass("on");
             $(".write_type_box a").eq(0).addClass("on");
-            $('.entryPlayground_textArea').css('display', 'none');
-            $('.entryPlayground_textBox').css('display', 'block');
-            this.fontSizeWrapper.addClass('entryHide');
+            $(".input_box .multi").hide();
+            $(".input_box .single").show();
         }
     };
 
