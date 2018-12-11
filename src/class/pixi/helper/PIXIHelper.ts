@@ -17,6 +17,18 @@ class PIXISpriteDebug extends PIXISprite {
     }
 }
 
+
+export class PIXIGraphics extends PIXI.Graphics {
+    
+    destroyied:boolean = false;
+    
+    destroy(options?: DestroyOptions | boolean) {
+        this.destroyied = true;
+        super.destroy(options);
+    }
+}
+
+
 /** for memory profiling */
 class PIXIContainer extends PIXI.Container {
     public __debugName:string;
@@ -117,7 +129,7 @@ export default class PIXIHelper {
     }
 
     static newPIXIGraphics() {
-        return new PIXI.Graphics(false);
+        return new PIXIGraphics(false);
     }
 
     static randomRGBAString(alpha:number=0.3):string {

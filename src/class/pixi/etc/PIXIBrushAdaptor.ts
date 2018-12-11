@@ -1,3 +1,5 @@
+import { PIXIGraphics } from '../helper/PIXIHelper';
+
 interface IRBG {
     r:number;
     g:number;
@@ -24,13 +26,13 @@ export class PIXIBrushAdaptor {
     private _thickness:number;
     private _color:number;
 
-    private _shape:PIXI.Graphics;
+    private _shape:PIXIGraphics;
 
     constructor() {
     }
 
     endStroke() {
-        if(!this._shape) return;
+        if(!this._shape || this._shape.destroyied) return;
         this._shape.closePath();
     }
 
@@ -60,25 +62,25 @@ export class PIXIBrushAdaptor {
     }
 
     moveTo(x:number, y:number) {
-        if(!this._shape) return;
+        if(!this._shape || this._shape.destroyied) return;
         this._shape.moveTo(Number(x), Number(y));
     }
 
     lineTo(x:number, y:number) {
-        if(!this._shape) return;
+        if (!this._shape || this._shape.destroyied) return;
         this._setStyle(); // pixi webgl 오류 때문에 이것을 함.
         this._shape.lineTo(Number(x), Number(y)); // 박봉배: #9374 x,y 좌표가 문자로 넘어와서 생긴 이슈
         this._shape.clearDirty++; // 박봉배: [issue](https://github.com/pixijs/pixi.js/issues/5047) 이 이슈 때문에 추가 코딩.
     }
 
     /** @param shape - drawing 을 할 대상을 지정 */
-    internal_setShape(shape:PIXI.Graphics) {
+    internal_setShape(shape:PIXIGraphics) {
         this._shape = shape;
         this._setStyle();
     }
 
     _setStyle() {
-        if(!this._shape) return;
+        if(!this._shape || this._shape.destroyied) return;
         this._shape.lineStyle(this._thickness, this._color, this._alpha);
     }
 
