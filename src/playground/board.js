@@ -1282,6 +1282,7 @@ Entry.Board = class Board {
         } else {
             this.view.addClass('invisibleComment');
         }
+        Entry.dispatchEvent('commentVisibleChanged');
     }
 
     getDom(query) {

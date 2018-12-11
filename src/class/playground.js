@@ -28,6 +28,7 @@ Entry.Playground = function() {
     Entry.addEventListener('hwChanged', () => {
         this.updateHW();
     });
+    Entry.addEventListener('commentVisibleChanged', this.toggleCommentButtonVisible.bind(this));
 };
 
 (function(p) {
@@ -52,6 +53,12 @@ Entry.Playground = function() {
                 .appendTo(this.view_);
             this.generateTabView(tabView);
             this.tabView_ = tabView;
+
+            const tabButtonView = Entry.createElement('div', 'entryButtonTab')
+                .addClass('entryPlaygroundButtonTabWorkspace')
+                .appendTo(this.view_);
+            this.createButtonTabView(tabButtonView);
+            this.tabButtonView_ = tabButtonView;
 
             var curtainView = Entry.createElement('div', 'entryCurtain')
                 .addClass('entryPlaygroundCurtainWorkspace entryRemove')
@@ -250,6 +257,34 @@ Entry.Playground = function() {
         variableTab.innerHTML = Lang.Workspace.tab_attribute;
         this.tabViewElements.variable = variableTab;
         this.variableTab = variableTab;
+    };
+
+    p.createButtonTabView = function(tabButtonView) {
+        const commentToggleButton = Entry.createElement('div')
+            .addClass('entryPlaygroundCommentButtonWorkspace showComment')
+            .appendTo(tabButtonView);
+
+        this.commentToggleButton_ = commentToggleButton;
+        commentToggleButton.bindOnClick((e) => {
+            this.toggleCommentButton();
+        });
+    };
+
+    p.toggleCommentButton = function() {
+        if (this.board.isVisibleComment) {
+            Entry.do('hideAllComment', this.board);
+        } else {
+            Entry.do('showAllComment', this.board);
+        }
+        this.toggleCommentButtonVisible();
+    };
+
+    p.toggleCommentButtonVisible = function() {
+        if (this.board.isVisibleComment) {
+            this.commentToggleButton_.addClass('showComment');
+        } else {
+            this.commentToggleButton_.removeClass('showComment');
+        }
     };
 
     /**
@@ -1253,8 +1288,12 @@ Entry.Playground = function() {
 
         if (viewType == 'code') {
             this.resizeHandle_ && this.resizeHandle_.removeClass('entryRemove');
+            this.tabButtonView_ && this.tabButtonView_.addClass('entryCode');
             this.blockMenu.reDraw();
+        } else {
+            this.tabButtonView_ && this.tabButtonView_.removeClass('entryCode');
         }
+
         if (Entry.engine.isState('run')) this.curtainView_.removeClass('entryRemove');
         this.viewMode_ = viewType;
         this.selectedViewMode = viewType;

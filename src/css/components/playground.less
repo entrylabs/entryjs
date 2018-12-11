@@ -162,6 +162,37 @@
     background-color: #f1f1f1;
 }
 
+.entryPlaygroundButtonTabWorkspace {
+    position: absolute;
+    right: 0;
+    top: 43px;
+    height: auto;
+    background-color: #fff;
+
+    .entryPlaygroundCommentButtonWorkspace {
+        .backgroundImage("btn-toggle-comment-off.png");
+        background-repeat: no-repeat;
+        background-size: 30px;
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        margin: 0 8px;
+        border-radius: 100%;
+        background-color: #fff;
+        border: 1px solid #e2e2e2;
+
+        &.showComment {
+            .backgroundImage("btn-toggle-comment-select.png");
+            background-color: @baseblue;
+            border: 1px solid @baseblue;
+        }
+    }
+
+    &.entryRemove.entryCode {
+        display: block !important;
+    }
+}
+
 .entryTabListWorkspace {
     overflow: hidden;
     list-style: none;
