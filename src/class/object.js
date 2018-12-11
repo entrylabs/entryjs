@@ -623,7 +623,7 @@ Entry.EntryObject = class {
     }
 
     addCloneVariables({ id }, entity, variables, lists) {
-        const _whereFunc = _.partial(_.where, _, { object_: id });
+        const _whereFunc = _.partial(_.filter, _, { object_: id });
         const _cloneFunc = (v) => v.clone();
         const { variables_, lists_ } = Entry.variableContainer;
 
