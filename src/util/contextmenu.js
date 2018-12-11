@@ -11,7 +11,7 @@ Entry.ContextMenu = {};
     ctx._hideEvent = null;
 
     ctx.createDom = function() {
-        this.dom = Entry.Dom('ul', {
+        this.dom = Entry.Dom('div', {
             id: 'entry-contextmenu',
             parent: $('body'),
         });

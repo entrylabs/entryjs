@@ -760,9 +760,6 @@ Entry.EntryObject = class {
                 },
             },
             {
-                divider: true,
-            },
-            {
                 text: Lang.Blocks.export_object,
                 callback: function() {
                     Entry.dispatchEvent('exportObject', object);

@@ -1486,7 +1486,6 @@ Entry.Playground = function() {
                         }
                     },
                 },
-                { divider: true },
                 {
                     text: Lang.Workspace.context_download,
                     callback: function() {
@@ -1641,7 +1640,6 @@ Entry.Playground = function() {
                         Entry.removeElement(element);
                     },
                 },
-                { divider: true },
                 {
                     text: Lang.Workspace.context_download,
                     callback: function() {
