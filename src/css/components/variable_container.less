@@ -409,7 +409,7 @@
 .entryVariableSplitterWorkspace .list .attr_inner_box {
     display: none;
     border-top: 1px solid #aac5d5;
-    padding: 12px 26px 10px 32px;
+    padding: 12px 26px 10px 26px;
     background-color: #bfd8e6;
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .box_sjt {
@@ -594,6 +594,63 @@
     color: #ff4b4b;
     padding-left: 4px;
 }
+.entryVariableSplitterWorkspace .list .use_block {
+    display: none;
+    padding: 4px 26px 4px 32px;
+    background-color: #d6e9f4;
+}
+.entryVariableSplitterWorkspace .list .use_block .obj_list li {
+    position: relative;
+    box-sizing: content-box;
+    list-style: none;
+    height: 33px;
+    margin: 0;
+    padding: 4px 4px 4px 42px;
+    border-top: 1px solid #ecf8ff;
+}
+.entryVariableSplitterWorkspace .list .use_block .obj_list li:first-child {
+    border-top: 0;
+}
+.entryVariableSplitterWorkspace .list .use_block .obj_list .thmb {
+    overflow: hidden;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    height: 33px;
+    width: 30px;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    background-color: #fff;
+    background-size: auto 80%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.entryVariableSplitterWorkspace .list .use_block .obj_list .text {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 33px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #2c313d;
+    letter-spacing: -0.4px;
+    word-break: break-all;
+    white-space: nowrap;
+    line-height: 34px;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .use_block .obj_list .text.red {
+    color: #ff4b4b;
+    padding-left: 4px;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .caution_dsc {
+    padding: 7px 10px 2px;
+    margin: 0;
+    font-size: 10px;
+    font-weight: 600;
+    color: #ff4b4b;
+    letter-spacing: -0.4px;
+    line-height: 11px;
+}
 .entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .btn_box {
     overflow: hidden;
     margin-top: 8px;
@@ -687,6 +744,7 @@
     font-weight: 600;
     line-height: 14px;
     text-align: center;
+    box-sizing: border-box;
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .cnt_group {
     margin-top: 8px;
@@ -723,6 +781,13 @@
     line-height: 12px;
     text-align: right;
 }
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .cnt_list .cnt.red {
+    color: #ff4b4b;
+    width: 100%;
+    height: 24px;
+    text-align: left;
+    box-sizing: border-box;
+}
 .entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .cnt_list .del {
     right: 0;
     top: 0;
@@ -739,6 +804,7 @@
     color: #2c313d;
     letter-spacing: -0.2px;
     line-height: 11px;
+    box-sizing: border-box;
 }
 
 .entryVariableSplitterWorkspace .list .watch {
@@ -818,9 +884,84 @@
 .entryVariableSplitterWorkspace .list.unfold .attr_inner_box {
     display: block;
 }
+.entryVariableSplitterWorkspace .list.unfold .use_block {
+    display: block;
+}
 .entryVariableSplitterWorkspace .list.unfold .inpt:after {
     .backgroundImage('layers_arrow_up_nor.png');
 }
 .entryVariableSplitterWorkspace .list.fold .inpt:after {
     .backgroundImage('layers_arrow_down_nor.png');
+}
+.entryVariableAdd_box .message_inpt {
+    padding: 16px 26px 16px 8px;
+    border-top: 1px solid #d6e9f4;
+}
+.entryVariableAdd_box .message_inpt.off {
+    display: none;
+}
+.entryVariableAdd_box .message_inpt input[type='text'] {
+    width: 100%;
+    padding: 6px 8px 5px;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    outline: 0;
+    background-color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    color: #2c313d;
+    letter-spacing: -0.2px;
+    line-height: 11px;
+}
+.entryVariableAdd_box .message_inpt input[type='text']::placeholder {
+    color: #979797;
+}
+.entryVariableAdd_box .message_inpt .entryVariableAddSpaceButtonWrapperWorkspace {
+    border: 0;
+    margin: 0;
+}
+.entryVariableSplitterWorkspace .list.default_message {
+    border-top: 1px solid #d6e9f4;
+}
+.entryVariableSplitterWorkspace .list.default_message .inpt_box:before {
+    left: 32px;
+    .backgroundImage('ic_attr_message_on.png');
+}
+.entryVariableSplitterWorkspace .list.default_func .inpt_box,
+.entryVariableSplitterWorkspace .list.default_message .inpt_box {
+    padding: 13px 58px 13px 60px;
+    background-color: #ecf8ff;
+}
+.entryVariableSplitterWorkspace .list.default_func .inpt_box:after,
+.entryVariableSplitterWorkspace .list.default_message .inpt_box:after {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    width: 6px;
+    height: 8px;
+    margin-top: -4px;
+    .backgroundImage('layers_arrow_right_nor.png');
+    background-size: 6px auto;
+    content: '';
+}
+.entryVariableSplitterWorkspace .list.default_func .inpt,
+.entryVariableSplitterWorkspace .list.default_message .inpt {
+    padding: 0;
+}
+.entryVariableSplitterWorkspace .list.default_func .inpt:after,
+.entryVariableSplitterWorkspace .list.default_message .inpt:after {
+    display: none;
+}
+.entryVariableSplitterWorkspace .list.default_func.unfold .inpt_box,
+.entryVariableSplitterWorkspace .list.default_message.unfold .inpt_box {
+    background-color: #fff;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+}
+.entryVariableSplitterWorkspace .list.default_func.unfold .inpt_box:after,
+.entryVariableSplitterWorkspace .list.default_message.unfold .inpt_box:after {
+    .backgroundImage('layers_arrow_up_nor.png');
+    width: 8px;
+    height: 6px;
+    margin-top: -3px;
+    background-size: 8px auto;
 }

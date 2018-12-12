@@ -1,8 +1,8 @@
 'use strict';
 
-var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
+const COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
 
-var obj = {
+const obj = {
     createTooltip(title, content, target, callback, option = {}) {
         return new Entry.Tooltip(
             [
@@ -29,8 +29,7 @@ var obj = {
         var { skipUndoStack } = Entry.Command[commandType];
         return (
             skipUndoStack === true ||
-            (!Entry.doCommandAll &&
-                _.includes(Entry.STATIC.COMMAND_TYPES_NOT_ALWAYS, commandType))
+            (!Entry.doCommandAll && _.includes(Entry.STATIC.COMMAND_TYPES_NOT_ALWAYS, commandType))
         );
     },
     getExpectedData(name, defaultValue) {

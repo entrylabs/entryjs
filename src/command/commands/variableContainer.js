@@ -38,6 +38,7 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
         setListEditable,
         variableSetName,
         listSetName,
+        variableContainerClickMessageAddButton,
     } = COMMAND_TYPES;
 
     c[variableContainerSelectFilter] = {
@@ -67,6 +68,22 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
                 getVC()._getAddPanel().view.name.value = '';
             } catch (e) {}
             return 'variableContainerClickVariableAddButton';
+        },
+        dom: ['variableContainer', 'variableAddButton'],
+    };
+
+    c[variableContainerClickMessageAddButton] = {
+        do() {
+            getVC().clickMessageAddButton();
+        },
+        state: returnEmptyArr,
+        log: returnEmptyArr,
+        recordable: RECORDABLE.SUPPORT,
+        get undo() {
+            try {
+                getVC()._getAddPanel().view.name.value = '';
+            } catch (e) {}
+            return 'variableContainerClickMessageAddButton';
         },
         dom: ['variableContainer', 'variableAddButton'],
     };

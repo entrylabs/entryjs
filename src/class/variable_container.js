@@ -30,6 +30,13 @@ Entry.VariableContainer = class VariableContainer {
                 isCloud: false,
             },
         };
+        this.messageAddPanel = {
+            isOpen: false,
+            info: {
+                object: null,
+                isCloud: false,
+            },
+        };
         this.selectedVariable = null;
         this._variableRefs = [];
         this._messageRefs = [];
@@ -106,6 +113,7 @@ Entry.VariableContainer = class VariableContainer {
 
         this.generateVariableAddView();
         this.generateListAddView();
+        this.generateMessageAddView();
 
         return view;
     }
@@ -124,10 +132,7 @@ Entry.VariableContainer = class VariableContainer {
         const messageAddButton = createElement('a')
             .addClass('entryVariableAddWorkspace')
             .bindOnClick(() => {
-                Entry.do('variableContainerAddMessage', {
-                    id: Entry.generateHash(),
-                    name: Entry.getOrderedName(Lang.Workspace.message, this.messages_, 'name'),
-                });
+                return Entry.do('variableContainerClickMessageAddButton');
             });
         messageAddButton.innerHTML = Lang.Workspace.message_create;
         messageAddButton.href = '#';
@@ -264,25 +269,30 @@ Entry.VariableContainer = class VariableContainer {
             return _.includes(params, messageId);
         });
 
-        const listView = Entry.createElement('div').addClass('use_obj');
+        message.usedView && $(message.usedView).remove();
+        const usedWrapper = Entry.createElement('div').addClass('use_block');
+        message.usedView = usedWrapper;
+        const listView = Entry.createElement('ul')
+            .addClass('obj_list')
+            .appendTo(usedWrapper);
 
         if (callers.length) {
             const fragment = document.createDocumentFragment();
-            callers.forEach(({ object, block }) => {
-                const element = Entry.createElement('li').addClass(
-                    'entryVariableListCallerWorkspace'
-                );
-                !object.thumbnailView_ && object.generateView();
-                element.appendChild(object.thumbnailView_.cloneNode());
-                Entry.createElement('div')
-                    .addClass('entryVariableListCallerNameWorkspace')
-                    .appendTo(element).innerHTML = `${object.name} : ${
-                        Lang.Blocks[`START_${block.type}`]
-                    }`;
+            callers.forEach((caller) => {
+                const element = Entry.createElement('li');
+                !caller.object.thumbnailView_ && caller.object.generateView();
+                const thumb = element.appendChild(caller.object.thumbnailView_.cloneNode());
+                thumb.addClass('thmb');
+                element.appendChild(thumb);
+                Entry.createElement('span')
+                    .addClass('text')
+                    .appendTo(element).innerHTML = `${caller.object.name} : ${
+                    Lang.Blocks[`START_${caller.block.type}`]
+                }`;
                 element.bindOnClick(() => {
-                    if (Entry.playground.object !== object) {
+                    if (Entry.playground.object !== caller.object) {
                         Entry.container.selectObject();
-                        Entry.container.selectObject(object.id, true);
+                        Entry.container.selectObject(caller.object.id, true);
                         this.select(null);
                         this.select(message);
                     }
@@ -295,17 +305,12 @@ Entry.VariableContainer = class VariableContainer {
             listView.appendChild(fragment);
         } else {
             Entry.createElement('li')
-                .addClass(
-                    'entryVariableListCallerWorkspace',
-                    'entryVariableListCallerNoneWorkspace'
-                )
+                .addClass('text red')
                 .appendTo(listView).innerHTML =
                 Lang.Workspace.no_use;
         }
-
-        message.callerListElement = listView;
-        this.listView_.insertBefore(listView, message.listElement);
-        this.listView_.insertBefore(message.listElement, listView);
+        // message.listElement.empty();
+        message.listElement.appendChild(usedWrapper);
     }
 
     /**
@@ -340,8 +345,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('span')
                     .addClass('text')
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
-                        Lang.Blocks[`VARIABLE_${caller.block.type}`]
-                    }`;
+                    Lang.Blocks[`VARIABLE_${caller.block.type}`]
+                }`;
                 element.variable = variable;
                 element.bindOnClick(() => {
                     if (Entry.playground.object != caller.object) {
@@ -505,9 +510,23 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     updateMessageTab() {
+        const createElement = Entry.createElement;
         const listView = this.listView_;
         listView.appendChild(this.messageAddButton_);
-        this.makeChildVariableViews(this.messages_, this.createMessageView.bind(this));
+        listView.appendChild(this.messageAddPanel.view);
+
+        const messageList = createElement('div').addClass('entryVariableSplitterWorkspace unfold');
+
+        const messageListBox = createElement('div')
+            .addClass('attr_box')
+            .appendTo(messageList);
+
+        this.makeChildVariableViews(
+            this.messages_,
+            this.createMessageView.bind(this),
+            messageListBox
+        );
+        listView.appendChild(messageList);
     }
 
     updateVariableTab() {
@@ -1468,38 +1487,30 @@ Entry.VariableContainer = class VariableContainer {
      * @param {object} message
      */
     createMessageView(message) {
-        const view = Entry.createElement('li')
-            .addClass('entryVariableListElementWorkspace')
-            .addClass('entryMessageElementWorkspace')
-            .bindOnClick(() => {
+        const createElement = Entry.createElement;
+
+        const view = Entry.createElement('div').addClass('list default_message');
+
+        const editBoxWrapper = createElement('div')
+            .addClass('inpt_box')
+            .bindOnClick((e) => {
+                e.stopPropagation();
                 return this.select(message);
-            });
-
-        Entry.createElement('button')
-            .addClass('entryVariableListElementDeleteWorkspace')
+            })
+            .appendTo(view);
+        const editBoxInputWrapper = createElement('div')
+            .addClass('inpt')
+            .appendTo(editBoxWrapper);
+        const editBoxInput = createElement('input')
+            .addClass('input')
             .bindOnClick((e) => {
                 e.stopPropagation();
-                Entry.do('variableContainerRemoveMessage', message);
             })
-            .appendTo(view);
-
-        Entry.createElement('button')
-            .addClass('entryVariableListElementEditWorkspace editButton')
-            .bindOnClick((e) => {
-                e.stopPropagation();
-                Entry.do('setMessageEditable', message.id);
-            })
-            .appendTo(view);
-
-        const nameField = Entry.createElement('input')
-            .addClass('entryVariableListElementNameWorkspace')
-            .bindOnClick((e) => {
-                return e.stopPropagation();
-            })
-            .appendTo(view);
-        nameField.value = message.name;
-        nameField.onfocus = Entry.Utils.setFocused;
-        nameField.onblur = Entry.Utils.setBlurredTimer(function(e) {
+            .appendTo(editBoxInputWrapper);
+        editBoxInput.setAttribute('type', 'text');
+        editBoxInput.value = message.name;
+        editBoxInput.onfocus = Entry.Utils.setFocused;
+        editBoxInput.onblur = Entry.Utils.setBlurredTimer(function() {
             const value = this.value;
             if (!value.trim()) {
                 Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.sign_can_not_space);
@@ -1513,11 +1524,19 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.do('messageSetName', message.id, value);
             }
             delete this.isFirst;
-            nameField.setAttribute('disabled', 'disabled');
+            editBoxInput.setAttribute('disabled', 'disabled');
         }, 200);
-        nameField.onkeydown = Entry.Utils.blurWhenEnter;
+        editBoxInput.onkeydown = Entry.Utils.blurWhenEnter;
 
-        view.nameField = nameField;
+        const delButton = createElement('a')
+            .addClass('del')
+            .bindOnClick((e) => {
+                e.stopPropagation();
+                Entry.do('variableContainerRemoveMessage', message);
+            })
+            .appendTo(editBoxWrapper);
+        delButton.href = '#';
+        view.nameField = editBoxInput;
         message.listElement = view;
     }
 
@@ -2031,17 +2050,78 @@ Entry.VariableContainer = class VariableContainer {
         this.listAddConfirmButton = addSpaceConfirmButton;
     }
 
+    generateMessageAddView() {
+        const createElement = Entry.createElement;
+
+        // 신호 만들기 폼
+        const msgAddSpace = createElement('div').addClass('message_inpt off');
+        this.messageAddPanel.view = msgAddSpace;
+        this.messageAddPanel.isOpen = false;
+
+        const msgNameInput = createElement('input').appendTo(msgAddSpace);
+        msgNameInput.setAttribute('type', 'text');
+        msgNameInput.setAttribute('placeholder', '신호의 이름을 입력해주세요.');
+        this.messageAddPanel.view.name = msgNameInput;
+
+        const buttonWrapper = createElement('div')
+            .addClass('entryVariableAddSpaceButtonWrapperWorkspace')
+            .appendTo(msgAddSpace);
+
+        const msgCancel = createElement('a')
+            .addClass('entryVariableAddSpaceCancelWorkspace')
+            .addClass('entryVariableAddSpaceButtonWorkspace')
+            .bindOnClick(() => {
+                msgAddSpace.addClass('off');
+                msgNameInput.value = '';
+                this.messageAddPanel.isOpen = false;
+            })
+            .appendTo(buttonWrapper);
+        msgCancel.href = '#';
+        msgCancel.innerHTML = Lang.Buttons.cancel;
+
+        const msgConfirm = createElement('a')
+            .addClass('entryVariableAddSpaceConfirmWorkspace')
+            .addClass('entryVariableAddSpaceButtonWorkspace')
+            .bindOnClick(() => {
+                const value = msgNameInput.value;
+                this.messageAddPanel.isOpen = false;
+                msgAddSpace.addClass('off');
+                msgNameInput.value = '';
+                Entry.do('variableContainerAddMessage', {
+                    id: Entry.generateHash(),
+                    name: Entry.getOrderedName(
+                        value || Lang.Workspace.message,
+                        this.messages_,
+                        'name'
+                    ),
+                });
+            })
+            .appendTo(buttonWrapper);
+        msgConfirm.href = '#';
+        msgConfirm.innerHTML = Lang.Buttons.save;
+
+        msgAddSpace.nameField = msgNameInput;
+    }
+
     openVariableAddPanel(type = 'variable') {
         Entry.playground.toggleOnVariableView();
         Entry.playground.changeViewMode('variable');
-        if (type === 'variable') {
-            this._getAddPanel().isOpen = true;
-            this.selectFilter(type);
-        } else {
-            this.listAddPanel.isOpen = true;
-            this.selectFilter(type);
+        switch (type) {
+            case 'variable':
+                this._getAddPanel().isOpen = true;
+                this.selectFilter(type);
+                this.updateVariableAddView(type);
+                break;
+            case 'list':
+                this.listAddPanel.isOpen = true;
+                this.selectFilter(type);
+                this.updateVariableAddView(type);
+                break;
+            case 'message':
+                this.messageAddPanel.isOpen = true;
+                this.selectFilter(type);
+                break;
         }
-        this.updateVariableAddView(type);
     }
 
     addCloneLocalVariables(param) {
@@ -2257,6 +2337,9 @@ Entry.VariableContainer = class VariableContainer {
      */
     updateVariableSettingView(v) {
         const view = this.variableSettingView;
+        if (!view) {
+            return;
+        }
         const {
             initValueInput: initValue,
             slideCheck: slide,
@@ -2404,16 +2487,17 @@ Entry.VariableContainer = class VariableContainer {
         const scrollBox = createElement('div')
             .addClass('scroll_box')
             .appendTo(countGroup);
-        const countList = createElement('ol')
-            .addClass('cnt_list')
-            .appendTo(scrollBox);
 
-        this.listSettingView.listValues = countList;
+        this.listSettingView.listValues = scrollBox;
     }
 
     updateListSettingView(list) {
-        list = list || this.selected;
         const view = this.listSettingView;
+        if (!view) {
+            return;
+        }
+        const createElement = Entry.createElement;
+        list = list || this.selected;
         const { listValues, lengthInput } = view;
         const arr = list.array_ || [];
         lengthInput.value = arr.length;
@@ -2421,29 +2505,40 @@ Entry.VariableContainer = class VariableContainer {
         //remove element and event bindings
         $(listValues).empty();
         const startIndex = Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD ? 0 : 1;
-        const fragment = document.createDocumentFragment();
-        arr.forEach(({ data }, i) => {
-            const wrapper = Entry.createElement('li').appendTo(fragment);
-            Entry.createElement('span')
-                .addClass('cnt')
-                .appendTo(wrapper).innerHTML =
-                i + startIndex;
-            const input = Entry.createElement('input').appendTo(wrapper);
-            input.value = data;
-            input.setAttribute('type', 'text');
-            input.onfocus = Entry.Utils.setFocused;
-            input.onblur = Entry.Utils.setBlurredTimer(function() {
-                Entry.do('listSetDefaultValue', list.id_, i, this.value);
+        let fragment;
+        if (arr.length === 0) {
+            fragment = document.createDocumentFragment();
+            Entry.createElement('p')
+                .addClass('caution_dsc')
+                .appendTo(fragment).innerHTML =
+                '추가된 항목이 없습니다.';
+        } else {
+            fragment = createElement('ol')
+                .addClass('cnt_list')
+                .appendTo(listValues);
+            arr.forEach(({ data }, i) => {
+                const wrapper = Entry.createElement('li').appendTo(fragment);
+                Entry.createElement('span')
+                    .addClass('cnt')
+                    .appendTo(wrapper).innerHTML =
+                    i + startIndex;
+                const input = Entry.createElement('input').appendTo(wrapper);
+                input.value = data;
+                input.setAttribute('type', 'text');
+                input.onfocus = Entry.Utils.setFocused;
+                input.onblur = Entry.Utils.setBlurredTimer(function() {
+                    Entry.do('listSetDefaultValue', list.id_, i, this.value);
+                });
+                input.onkeypress = Entry.Utils.blurWhenEnter;
+                Entry.createElement('a')
+                    .addClass('del')
+                    .bindOnClick(() => {
+                        arr.splice(i, 1);
+                        this.updateListSettingView();
+                    })
+                    .appendTo(wrapper);
             });
-            input.onkeypress = Entry.Utils.blurWhenEnter;
-            Entry.createElement('a')
-                .addClass('del')
-                .bindOnClick(() => {
-                    arr.splice(i, 1);
-                    this.updateListSettingView();
-                })
-                .appendTo(wrapper);
-        });
+        }
         listValues.appendChild(fragment);
         list.updateView();
     }
@@ -2892,6 +2987,20 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.do(
                     'variableContainerAddList',
                     new Entry.Variable(this._makeVariableData('list'))
+                );
+            },
+            ...args
+        );
+    }
+
+    clickMessageAddButton(...args) {
+        this._clickAddButton.call(
+            this,
+            'message',
+            () => {
+                Entry.do(
+                    'variableContainerAddMessage',
+                    new Entry.Variable(this._makeVariableData('message'))
                 );
             },
             ...args
