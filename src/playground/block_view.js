@@ -1219,7 +1219,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             text.setAttribute('font-family', fontFamily);
             var size = parseInt(text.getAttribute('font-size'));
             var content = $(text).text();
-            if (_.contains(boldTypes, content)) {
+            if (_.includes(boldTypes, content)) {
                 text.setAttribute('font-weight', '500');
             }
 
@@ -1228,7 +1228,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 text.setAttribute('y', y - 1);
             }
 
-            if (_.contains(notResizeTypes, content)) {
+            if (_.includes(notResizeTypes, content)) {
                 text.setAttribute('font-size', size + 'px');
             } else {
                 text.setAttribute('font-size', size * fontWeight + 'px');
