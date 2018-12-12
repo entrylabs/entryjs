@@ -182,6 +182,10 @@
     text-overflow: ellipsis;
     line-height: 11px;
 }
+.entryObjectNameWorkspace:focus,
+.entryObjectNameWorkspace:active {
+    border-color: #4f80ff;
+}
 .editButtonToggle {
     display: block;
 }
@@ -407,6 +411,7 @@
 
 .entryObjectRotateMethodLabelWorkspace {
     display: inline-block;
+    margin-top: 2px;
     font-size: 10px;
     font-weight: 600;
     color: #2c313d;
@@ -435,11 +440,17 @@
     letter-spacing: -0.4px;
     text-align: center;
 }
+.entryObjectRotateInputWorkspace:focus,
+.entryObjectRotateInputWorkspace:active,
+.entryObjectDirectionInputWorkspace:focus,
+.entryObjectDirectionInputWorkspace:active {
+    border-color: #4f80ff;
+}
 
 .entryObjectDirectionSpanWorkspace,
 .entryObjectRotateSpanWorkspace {
     display: inline-block;
-    margin-left: 12px;
+    margin: 2px 0 0 12px;
     vertical-align: top;
 }
 .entryObjectRotateSpanWorkspace {
