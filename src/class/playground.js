@@ -422,8 +422,8 @@ Entry.Playground = function() {
         var wrap = Entry.createElement('div').addClass('write_box').appendTo(textView);
         const writeSet = Entry.createElement('div').addClass('write_set');
         const inputArea = Entry.createElement('div').addClass('input_box');
-        wrap.append(writeSet);
-        wrap.append(inputArea);
+        wrap.appendChild(writeSet);
+        wrap.appendChild(inputArea);
 
         //write set 글 속성 탭
         let fontSelect = Entry.createElement('div').addClass('pop_selectbox');
@@ -449,65 +449,65 @@ Entry.Playground = function() {
                 fontLink.addClass("imico_pop_select_arr_down");
             });
         });
-        fontSelect.append(fontLink);
-        writeSet.append(fontSelect);
+        fontSelect.appendChild(fontLink);
+        writeSet.appendChild(fontSelect);
 
         //스타일 박스
         let alignBox = Entry.createElement('div').addClass('font_style_box');
-        writeSet.append(alignBox);
+        writeSet.appendChild(alignBox);
 
         let alignLeft = Entry.createElement('a').addClass('style_link imbtn_pop_font_align_left').bindOnClick((e) => {
             Entry.playground.setFontAlign(Entry.TEXT_ALIGN_LEFT);
         });
-        alignBox.append(alignLeft);
+        alignBox.appendChild(alignLeft);
         this.alignLeftBtn = alignLeft;
         let alignMiddle = Entry.createElement('a').addClass('style_link imbtn_pop_font_align_middle').bindOnClick((e) => {
             Entry.playground.setFontAlign(Entry.TEXT_ALIGN_CENTER);
         });
-        alignBox.append(alignMiddle);
+        alignBox.appendChild(alignMiddle);
         this.alignCenterBtn = alignMiddle;
         let alignRight = Entry.createElement('a').addClass('style_link imbtn_pop_font_align_right').bindOnClick((e) => {
             Entry.playground.setFontAlign(Entry.TEXT_ALIGN_RIGHT);
         });
-        alignBox.append(alignRight);
+        alignBox.appendChild(alignRight);
         this.alignRightBtn = alignRight;
 
         let styleBox = Entry.createElement('div').addClass('font_style_box');
-        writeSet.append(styleBox);
+        writeSet.appendChild(styleBox);
 
         let bold = Entry.createElement('a').addClass('style_link imbtn_pop_font_bold').bindOnClick(function(e) {
             $(e.currentTarget).toggleClass("on");
             var isBold = Entry.playground.object.entity.toggleFontBold() || false;
         });
-        styleBox.append(bold);
+        styleBox.appendChild(bold);
 
         let underLine = Entry.createElement('a').addClass('style_link imbtn_pop_font_underline').bindOnClick(function(e) {
             var underLineState = !Entry.playground.object.entity.getUnderLine() || false;
             $(e.currentTarget).toggleClass("on");
             Entry.playground.object.entity.setUnderLine(underLineState);
         });
-        styleBox.append(underLine);
+        styleBox.appendChild(underLine);
 
         let italic = Entry.createElement('a').addClass('style_link imbtn_pop_font_italic').bindOnClick((e) => {
             $(e.currentTarget).toggleClass("on");
             var isItalic = Entry.playground.object.entity.toggleFontItalic();
         });
-        styleBox.append(italic);
+        styleBox.appendChild(italic);
 
         let through = Entry.createElement('a').addClass('style_link imbtn_pop_font_through').bindOnClick((e) => {
             $(e.currentTarget).toggleClass("on");
             var strikeState = !Entry.playground.object.entity.getStrike() || false;
             Entry.playground.object.entity.setStrike(strikeState);
         });
-        styleBox.append(through);
+        styleBox.appendChild(through);
 
         let color = Entry.createElement('a').addClass('style_link imbtn_pop_font_color');
         color.bindOnClick(() => this.openColourPicker(color, this.object.entity.getColour(), this.setTextColour.bind(this)));
-        styleBox.append(color);
+        styleBox.appendChild(color);
 
         let backgroundColor = Entry.createElement('a').addClass('style_link imbtn_pop_font_backgroundcolor');
         backgroundColor.bindOnClick(() => this.openColourPicker(backgroundColor, this.object.entity.getBGColour(), this.setBackgroundColour.bind(this)));
-        styleBox.append(backgroundColor);
+        styleBox.appendChild(backgroundColor);
 
         let writeTypeBox = Entry.createElement("div").addClass('write_type_box');
         let singleLine = Entry.createElement('a');
@@ -516,9 +516,9 @@ Entry.Playground = function() {
         let multiLine = Entry.createElement('a');
         multiLine.innerText = Lang.Buttons.multi_line;
         multiLine.bindOnClick(() => Entry.playground.toggleLineBreak(true));
-        writeTypeBox.append(singleLine);
-        writeTypeBox.append(multiLine);
-        inputArea.append(writeTypeBox);
+        writeTypeBox.appendChild(singleLine);
+        writeTypeBox.appendChild(multiLine);
+        inputArea.appendChild(writeTypeBox);
 
         //글자 크기 조절 슬라이드.
         var fontSizeWrapper = Entry.createElement('div').addClass('entryPlaygroundFontSizeWrapper multi');
@@ -565,7 +565,7 @@ Entry.Playground = function() {
         });
 
         let inputInner = Entry.createElement("div").addClass("input_inner");
-        inputArea.append(inputInner);
+        inputArea.appendChild(inputInner);
 
         var textEditInput = Entry.createElement('input').addClass('entryPlayground_textBox single');
         textEditInput.type="text";
@@ -619,17 +619,17 @@ Entry.Playground = function() {
         inputInner.appendChild(textEditArea);
 
         let singleDesc = Entry.createElement("ul").addClass("list single");
-        singleDesc.append(Entry.createElement("li").text(Lang.Menus.linebreak_off_desc_3));
-        singleDesc.append(Entry.createElement("li").text(Lang.Menus.linebreak_off_desc_2));
-        singleDesc.append(Entry.createElement("li").text(Lang.Menus.linebreak_off_desc_3));
+        singleDesc.appendChild(Entry.createElement("li").text(Lang.Menus.linebreak_off_desc_3));
+        singleDesc.appendChild(Entry.createElement("li").text(Lang.Menus.linebreak_off_desc_2));
+        singleDesc.appendChild(Entry.createElement("li").text(Lang.Menus.linebreak_off_desc_3));
 
         let multiDesc = Entry.createElement("ul").addClass("list multi");
-        multiDesc.append(Entry.createElement("li").text(Lang.Menus.linebreak_on_desc_3));
-        multiDesc.append(Entry.createElement("li").text(Lang.Menus.linebreak_on_desc_2));
-        multiDesc.append(Entry.createElement("li").text(Lang.Menus.linebreak_on_desc_3));
+        multiDesc.appendChild(Entry.createElement("li").text(Lang.Menus.linebreak_on_desc_3));
+        multiDesc.appendChild(Entry.createElement("li").text(Lang.Menus.linebreak_on_desc_2));
+        multiDesc.appendChild(Entry.createElement("li").text(Lang.Menus.linebreak_on_desc_3));
 
-        inputArea.append(singleDesc);
-        inputArea.append(multiDesc);
+        inputArea.appendChild(singleDesc);
+        inputArea.appendChild(multiDesc);
     };
 
     /**
