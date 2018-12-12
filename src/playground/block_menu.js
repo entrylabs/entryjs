@@ -256,7 +256,7 @@ class BlockMenu {
 
         const lastSelector = this.lastSelector;
         const shouldReDraw = !this._renderedCategories[lastSelector];
-        visibles.forEach(({ view: blockView, type } = {}) => {
+        visibles.forEach(({ view: blockView, type } = {}, index) => {
             if (!blockView) {
                 return;
             }
@@ -278,6 +278,9 @@ class BlockMenu {
 
             marginFromTop -= blockView.offsetY;
             blockView.moveTo(left, marginFromTop, false);
+            if (index > 0) {
+                marginFromTop += blockView.marginBottom || 0;
+            }
             marginFromTop += blockView.height + vPadding;
         });
 

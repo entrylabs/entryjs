@@ -6,11 +6,7 @@
 /*
  *
  */
-Entry.FieldText = function(
-    { fontSize, align = 'left', text, color },
-    blockView,
-    index
-) {
+Entry.FieldText = function({ fontSize, align = 'left', text, color }, blockView, index) {
     this._block = blockView.block;
     this._blockView = blockView;
     this._index = index;
@@ -19,10 +15,7 @@ Entry.FieldText = function(
 
     this._font_size = fontSize || blockView.getSkeleton().fontSize || 12;
     this._color =
-        color ||
-        this._block.getSchema().fontColor ||
-        blockView.getSkeleton().color ||
-        'white';
+        color || this._block.getSchema().fontColor || blockView.getSkeleton().color || 'white';
     this._align = align;
     this._text = this.getValue() || text;
     this.setValue(null);
@@ -39,16 +32,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
         var { contentSvgGroup } = this._blockView;
 
         if (!this.textElement) {
-            this.svgGroup = this.textElement = contentSvgGroup
-                .elem('text')
-                .attr({
-                    style: 'white-space: pre;',
-                    'font-size': this._font_size + 'px',
-                    'font-weight': 'bold',
-                    'font-family': 'NanumGothic',
-                    class: 'dragNone',
-                    fill: this._color,
-                });
+            this.svgGroup = this.textElement = contentSvgGroup.elem('text').attr({
+                style: 'white-space: pre;',
+                'font-size': this._font_size + 'px',
+                'font-weight': 'bold',
+                'font-family': 'NanumGothic',
+                class: 'dragNone',
+                fill: this._color,
+            });
         }
 
         var old = this.textElement.textContent;
