@@ -15,6 +15,7 @@ Entry.BlockView = class BlockView {
         contentWidth: 0,
         contentHeight: 0,
         topFieldHeight: 0,
+        marginBottom: 0,
         magneting: false,
         visible: true,
         animating: false,
