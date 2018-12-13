@@ -344,8 +344,14 @@
 
 
 .entryPlaygroundCodeWorkspace {
-    height: 100%;
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 79px;
+    bottom: 8px;
     background-color: #fff;
+    border-radius: 0 0 0 6px;
 }
 
 .entryPlaygroundCodeWorkspace.entryRemove {
@@ -374,10 +380,11 @@
    position: absolute;
    left: 0;
    right: 0;
-   bottom: 0;
+   bottom: 8px;
    background-color: #f9f9f9;
    top: 79px;
    margin-left: 0;
+   border-radius: 0 0 0 6px;
 }
 
 .entryPlaygroundAddPicture {
@@ -433,10 +440,12 @@
     width: 254px;
     top: 56px;
     bottom: 0px;
-    overflow: auto;
+    overflow: hidden;
+    overflow-y: auto;
     list-style: none;
     background-color: #ecf8ff;
     border: 1px solid #d6e9f4;
+    border-radius: 0 0 0 6px;
 }
 
 .entryPlaygroundPictureListPhone {
@@ -838,18 +847,20 @@
 }
 
 .entryPlaygroundSoundWorkspace {
+    overflow: hidden;
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 8px;
     background-color: #f9f9f9;
+    border-radius: 0 0 0 6px;
     top: 79px;
     margin-left: 0;
 }
 
 .entryPlaygroundSoundEdit {
     position: absolute;
-    left: 240px;
+    left: 253px;
     top: 0;
     bottom: 0;
     right: 0;
@@ -952,10 +963,12 @@
     width: 254px;
     top: 57px;
     bottom: 0px;
-    overflow: auto;
+    overflow: hidden;
+    overflow-y: auto;
     list-style: none;
     background-color: #ecf8ff;
     border: 1px solid #d6e9f4;
+    border-radius: 0 0 0 6px;
 }
 
 .entryPlaygroundSoundElement {
