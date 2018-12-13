@@ -183,6 +183,12 @@
     line-height: 40px;
     cursor: pointer;
 }
+.entryVariableAdd_box .entryVariableAddWorkspace.disabled {
+    border: 1px solid #e2e2e2;
+    background-color: #f9f9f9;
+    color: #cbcbcb;
+    cursor: default;
+}
 .entryVariableAdd_box .entryVariableAddSpaceWorkspace {
     padding: 16px 10px;
     background-color: #d6e9f4;
@@ -354,9 +360,6 @@
     border: 1px solid #d6e9f4;
     border-width: 1px 0;
 }
-.entryVariableSplitterWorkspace.all {
-    border: 0;
-}
 .entryVariableSplitterWorkspace + .entryVariableSplitterWorkspace {
     border-top: 0;
 }
@@ -409,6 +412,11 @@
     height: 24px;
     padding-right: 16px;
 }
+.entryVariableSplitterWorkspace .list .inpt .editBoxInput {
+    border: 1px solid #e2e2e2;
+    background-color: #f9f9f9;
+    color: #cbcbcb;
+}
 .entryVariableSplitterWorkspace .list .inpt:after {
     position: absolute;
     right: 0;
@@ -460,6 +468,7 @@
     letter-spacing: -0.4px;
     vertical-align: top;
     line-height: 12px;
+    margin-bottom: 9px;
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .box_sjt:before {
     display: inline-block;
@@ -473,8 +482,13 @@
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .attr_inpt {
     position: relative;
-    margin-top: 9px;
     padding: 0 35px 0 46px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ecf8ff;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .attr_inpt.hidden {
+    display: none;
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .attr_inpt label {
     position: absolute;
@@ -501,9 +515,9 @@
     line-height: 11px;
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .slide_inpt {
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid #ecf8ff;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ecf8ff;
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .slide_inpt .chk_box {
     position: relative;
@@ -580,11 +594,6 @@
     letter-spacing: -0.2px;
     line-height: 11px;
 }
-.entryVariableSplitterWorkspace .list .attr_inner_box .use_obj {
-    margin-top: 10px;
-    padding-top: 15px;
-    border-top: 1px solid #ecf8ff;
-}
 .entryVariableSplitterWorkspace .list .attr_inner_box .use_obj .obj_list {
     overflow: hidden;
     margin: 6px 0 -4px 0;
@@ -629,6 +638,18 @@
     word-break: break-all;
     white-space: nowrap;
     line-height: 34px;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .use_obj .obj_list .text.red {
+    color: #ff4b4b;
+    padding-left: 10px;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ecf8ff;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr.hidden {
+    display: none;
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .btn_box {
     overflow: hidden;
@@ -856,7 +877,7 @@
     color: #ff4b4b;
     letter-spacing: -0.4px;
     line-height: 11px;
-    background-color: #d6e9f4;
+    background-color: #bfd8e6;
 }
 .entryVariableSplitterWorkspace .list .watch.on {
     .backgroundImage('layers_icon_visible24.png');

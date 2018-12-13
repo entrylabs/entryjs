@@ -120,38 +120,22 @@ Entry.VariableContainer = class VariableContainer {
 
     generateAddButtons() {
         const createElement = Entry.createElement;
-        const variableAddButton = createElement('a')
-            .addClass('entryVariableAddWorkspace')
-            .bindOnClick(() => {
-                return Entry.do('variableContainerClickVariableAddButton');
-            });
+        const variableAddButton = createElement('a').addClass('entryVariableAddWorkspace');
         variableAddButton.innerHTML = Lang.Workspace.variable_add;
         variableAddButton.href = '#';
         this.variableAddButton_ = variableAddButton;
 
-        const messageAddButton = createElement('a')
-            .addClass('entryVariableAddWorkspace')
-            .bindOnClick(() => {
-                return Entry.do('variableContainerClickMessageAddButton');
-            });
+        const messageAddButton = createElement('a').addClass('entryVariableAddWorkspace');
         messageAddButton.innerHTML = Lang.Workspace.message_create;
         messageAddButton.href = '#';
         this.messageAddButton_ = messageAddButton;
 
-        const listAddButton = createElement('a')
-            .addClass('entryVariableAddWorkspace')
-            .bindOnClick(() => {
-                return Entry.do('variableContainerClickListAddButton');
-            });
+        const listAddButton = createElement('a').addClass('entryVariableAddWorkspace');
         listAddButton.innerHTML = Lang.Workspace.list_create;
         listAddButton.href = '#';
         this.listAddButton_ = listAddButton;
 
-        const functionAddButton = createElement('a')
-            .addClass('entryVariableAddWorkspace')
-            .bindOnClick(() => {
-                return Entry.do('funcCreateStart', Entry.generateHash());
-            });
+        const functionAddButton = createElement('a').addClass('entryVariableAddWorkspace');
         functionAddButton.innerHTML = Lang.Workspace.function_add;
         functionAddButton.href = '#';
         this.functionAddButton_ = functionAddButton;
@@ -170,7 +154,7 @@ Entry.VariableContainer = class VariableContainer {
         textView.innerText = Lang.Workspace[type];
 
         if (isEnable === false) {
-            view.addClass('disable');
+            view.addClass('disabled');
             view.disabled = true;
         }
 
@@ -287,8 +271,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('span')
                     .addClass('text')
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
-                    Lang.Blocks[`START_${caller.block.type}`]
-                }`;
+                        Lang.Blocks[`START_${caller.block.type}`]
+                    }`;
                 element.bindOnClick(() => {
                     if (Entry.playground.object !== caller.object) {
                         Entry.container.selectObject();
@@ -343,8 +327,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('span')
                     .addClass('text')
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
-                    Lang.Blocks[`VARIABLE_${caller.block.type}`]
-                }`;
+                        Lang.Blocks[`VARIABLE_${caller.block.type}`]
+                    }`;
                 element.variable = variable;
                 element.bindOnClick(() => {
                     if (Entry.playground.object != caller.object) {
@@ -467,7 +451,19 @@ Entry.VariableContainer = class VariableContainer {
     makeChildVariableViews(arr, viewFunc, parent = this.listView_) {
         return _.each(arr, (data) => {
             !data.listElement && viewFunc(data);
-
+            if (this._isPythonMode()) {
+                $(data.listElement)
+                    .find('input')
+                    .each(function() {
+                        $(this).attr('disabled', 'disabled');
+                    });
+            } else {
+                $(data.listElement)
+                    .find('input')
+                    .each(function() {
+                        $(this).removeAttr('disabled');
+                    });
+            }
             parent.appendChild(data.listElement);
             if (data.callerListElement) {
                 parent.appendChild(data.callerListElement);
@@ -496,22 +492,37 @@ Entry.VariableContainer = class VariableContainer {
         const createElement = Entry.createElement;
         const listView = this.listView_;
         const listWrapper = createElement('div').addClass(
-            'entryVariableSplitterWorkspace unfold all'
+            'entryVariableSplitterWorkspace unfold'
         );
 
         const listBox = createElement('div')
             .addClass('attr_box unfold')
             .appendTo(listWrapper);
-        this.makeChildVariableViews(this.messages_, this.createMessageView.bind(this), listBox);
-        this.makeChildVariableViews(this.variables_, this.createVariableView.bind(this), listBox);
-        this.makeChildVariableViews(this.lists_, this.createListView.bind(this), listBox);
-        this.makeChildVariableViews(this.functions_, this.createFunctionView.bind(this), listBox);
+
+        const list = createElement('div')
+            .addClass('list')
+            .appendTo(listBox);
+
+        this.makeChildVariableViews(this.messages_, this.createMessageView.bind(this), list);
+        this.makeChildVariableViews(this.variables_, this.createVariableView.bind(this), list);
+        this.makeChildVariableViews(this.lists_, this.createListView.bind(this), list);
+        this.makeChildVariableViews(this.functions_, this.createFunctionView.bind(this), list);
         listView.appendChild(listWrapper);
     }
 
     updateMessageTab() {
         const createElement = Entry.createElement;
         const listView = this.listView_;
+
+        if (Entry.isTextMode) {
+            this.messageAddButton_.unBindOnClick().addClass('disabled');
+        } else {
+            this.messageAddButton_
+                .bindOnClick(() => {
+                    return Entry.do('variableContainerClickMessageAddButton');
+                })
+                .removeClass('disabled');
+        }
         listView.appendChild(this.messageAddButton_);
         listView.appendChild(this.messageAddPanel.view);
 
@@ -535,6 +546,16 @@ Entry.VariableContainer = class VariableContainer {
         const info = this.variableAddPanel.info;
         if (info.object && !Entry.playground.object) {
             info.object = null;
+        }
+
+        if (Entry.isTextMode) {
+            this.variableAddButton_.unBindOnClick().addClass('disabled');
+        } else {
+            this.variableAddButton_
+                .bindOnClick(() => {
+                    return Entry.do('variableContainerClickVariableAddButton');
+                })
+                .removeClass('disabled');
         }
 
         listView.appendChild(this.variableAddButton_);
@@ -611,6 +632,15 @@ Entry.VariableContainer = class VariableContainer {
             info.object = null;
         }
 
+        if (Entry.isTextMode) {
+            this.listAddButton_.unBindOnClick().addClass('disabled');
+        } else {
+            this.listAddButton_
+                .bindOnClick(() => {
+                    return Entry.do('variableContainerClickListAddButton');
+                })
+                .removeClass('disabled');
+        }
         listView.appendChild(this.listAddButton_);
         listView.appendChild(this.listAddPanel.view);
 
@@ -667,6 +697,16 @@ Entry.VariableContainer = class VariableContainer {
     updateFuncTab() {
         const createElement = Entry.createElement;
         const listView = this.listView_;
+
+        if (Entry.isTextMode) {
+            this.functionAddButton_.unBindOnClick().addClass('disabled');
+        } else {
+            this.functionAddButton_
+                .bindOnClick(() => {
+                    return Entry.do('funcCreateStart', Entry.generateHash());
+                })
+                .removeClass('disabled');
+        }
         listView.appendChild(this.functionAddButton_);
 
         const funcList = createElement('div').addClass('entryVariableSplitterWorkspace unfold');
@@ -1075,7 +1115,9 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('inpt_box')
             .bindOnClick((e) => {
                 e.stopPropagation();
-                Entry.Func.edit(func);
+                if (!Entry.isTextMode) {
+                    Entry.Func.edit(func);
+                }
                 return this.select(func);
             })
             .appendTo(view);
@@ -1283,9 +1325,7 @@ Entry.VariableContainer = class VariableContainer {
         const that = this;
         const createElement = Entry.createElement;
 
-        const variableWrapper = createElement('div')
-            .addClass('list fold')
-            .appendTo(this.globalVariableBox);
+        const variableWrapper = createElement('div').addClass('list fold');
 
         if (!variable.object_) {
             if (variable.isCloud_) {
@@ -1308,7 +1348,9 @@ Entry.VariableContainer = class VariableContainer {
                 }
 
                 if (that.selected === variable) {
-                    editBoxInput.blur();
+                    if (!that._isPythonMode()) {
+                        editBoxInput.blur();
+                    }
                     that.select(variable);
                     that.updateSelectedVariable(null, 'variable');
                 } else {
@@ -1320,7 +1362,7 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('inpt')
             .appendTo(editBoxWrapper);
         const editBoxInput = createElement('input')
-            .addClass('input')
+            .addClass('editBoxInput')
             .bindOnClick((e) => {
                 e.stopPropagation();
             })
@@ -1489,7 +1531,7 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('inpt')
             .appendTo(editBoxWrapper);
         const editBoxInput = createElement('input')
-            .addClass('input')
+            .addClass('editBoxInput')
             .bindOnClick((e) => {
                 e.stopPropagation();
             })
@@ -1511,7 +1553,6 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.do('messageSetName', message.id, value);
             }
             delete this.isFirst;
-            editBoxInput.setAttribute('disabled', 'disabled');
         }, 200);
         editBoxInput.onkeydown = Entry.Utils.blurWhenEnter;
 
@@ -1580,6 +1621,7 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('inpt')
             .appendTo(editBoxWrapper);
         const editBoxInput = createElement('input')
+            .addClass('editBoxInput')
             .bindOnClick((e) => {
                 e.stopPropagation();
             })
@@ -2226,6 +2268,9 @@ Entry.VariableContainer = class VariableContainer {
         const attrInputBox = createElement('div')
             .addClass('attr_inpt')
             .appendTo(varAttr);
+        if (this._isPythonMode()) {
+            attrInputBox.addClass('hidden');
+        }
 
         const attrInputLabel = createElement('label').appendTo(attrInputBox);
         attrInputLabel.setAttribute('for', 'attr_cnt');
@@ -2371,6 +2416,9 @@ Entry.VariableContainer = class VariableContainer {
         const listAttr = createElement('div')
             .addClass('list_attr')
             .appendTo(element);
+        if (this._isPythonMode()) {
+            listAttr.addClass('hidden');
+        }
         const boxSubject = createElement('span')
             .addClass('box_sjt')
             .appendTo(listAttr);

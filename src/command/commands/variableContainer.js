@@ -664,12 +664,10 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
             const { nameField } = variable.listElement;
 
             if (value) {
-                nameField.removeAttribute('disabled');
                 VC.updateSelectedVariable(variable);
                 Entry.Utils.focusIfNotActive(nameField);
             } else {
                 nameField.blur();
-                nameField.setAttribute('disabled', 'disabled');
                 VC.updateSelectedVariable(null, 'variable');
             }
         },
