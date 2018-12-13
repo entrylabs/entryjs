@@ -8,28 +8,33 @@ let EC_NO_GL_CONTEXT = addCode("1003", "can't get gl context");
 let EC_NP_BUT = addCode("1004", "no problem ,but...");
 let EC_1999 = addCode("1999", "");
 
-export function entryIsWebGLSupported(userSend) {
+export function entryIsWebGLSupported() {
+    let log = _getWebGLLog(false);
+    if(log.gl_enable) return;
+    sendLogAndThrowError(log);
+}
 
+function _getWebGLLog(userSend) {
     const contextOptions = { stencil: true, failIfMajorPerformanceCaveat: true };
-
+    let gl_enable = false;
     try
     {
         if (!window.WebGLRenderingContext)
         {
-            send(EC_NO_WebGL, userSend);
-            return false;
+            return _createLog(EC_NO_WebGL, gl_enable, userSend);
         }
 
         const canvas = document.createElement('canvas');
         let gl = canvas.getContext('webgl', contextOptions) || canvas.getContext('experimental-webgl', contextOptions);
 
-        const success = !!(gl && gl.getContextAttributes().stencil);
-
+        const hasStencil = !!(gl && gl.getContextAttributes().stencil);
+        gl_enable = hasStencil;
+        var vendor, renderer;
         if (gl)
         {
-            var debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-            var vendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
-            var renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+            let debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+            vendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
+            renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
 
             const loseContext = gl.getExtension('WEBGL_lose_context');
 
@@ -40,62 +45,52 @@ export function entryIsWebGLSupported(userSend) {
         }
 
         var hasGL = !!gl;
-        var hasStencil  = success;
-        if(userSend || !success) {
-            let ec;
-            if(!hasGL) {
-                ec = EC_NO_GL_CONTEXT;
-            }
-            else if( hasGL && !hasStencil ) {
-                ec = EC_HAS_GL_NO_STENCIL;
-            } else if ( hasGL && hasStencil ) {
-                ec = EC_NP_BUT;
-            }
-            send(ec, userSend, vendor, renderer);
+        let ec;
+        if (!hasGL) {
+            ec = EC_NO_GL_CONTEXT;
+        } else if (hasGL && !hasStencil) {
+            ec = EC_HAS_GL_NO_STENCIL;
+        } else if (hasGL && hasStencil) {
+            ec = EC_NP_BUT;
         }
+        return _createLog(ec, gl_enable, userSend, vendor, renderer);
 
-        gl = null;
-        return success;
     }
     catch (e)
     {
         let ec = EC_1999;
         ec.msg = e?e.toString() : "error occur, but no error object";
-        send(ec, userSend);
-        return false;
+        return _createLog(ec, false, userSend);
     }
 }
 
 
-
-function send(errorCode, userSend, vendor, renderer) {
+function _createLog(errorCode, gl_enable, userSend, vendor, renderer) {
     var obj = {};
     obj.code = errorCode.code;
     obj.msg = errorCode.msg;
     obj.userSend = userSend ? "Y" : "N";
-    obj.gl_vendor = vendor || "";
-    obj.gl_renderer = renderer || "";
+    obj.gl_enable = gl_enable ? "Y" : "N";
+    obj.gl_vendor = vendor || "NOPE";
+    obj.gl_renderer = renderer || "NOPE";
     obj.agent = window.navigator.userAgent;
     obj.url = window.location.href;
 
-    var alertMsg;
-    if(userSend) {
-        alertMsg = "로그가 전송 되었습니다."
-    } else {
-        alertMsg = "이 환경에서는 실행할 수 없습니다."
-    }
+    return obj;
+}
 
+let sendLogAndThrowError = (obj)=>{
+    let alertMsg = "이 환경에서는 실행할 수 없습니다.";
     let url = "/api/webgl/log";
     $.post(url, obj, (d)=>{
         alert(alertMsg);
     }, "json");
+    throw new Error(alertMsg);
+};
 
-    if(!userSend) {
-        throw new Error(alertMsg);
-    }
-}
 
-// 유저가 직접 보내야 할 때
-window.sendlog = function() {
-    entryIsWebGLSupported(true);
+
+
+Entry.getWebGLLog = ()=>{
+    return _getWebGLLog(true);
 };
