@@ -443,11 +443,6 @@ Entry.BlockView = class BlockView {
     _addControl() {
         this._mouseEnable = true;
 
-        $(this.svgGroup).bind(
-            'mousedown.blockViewMousedown touchstart.blockViewMousedown',
-            this.mouseHandler
-        );
-
         const dblclick = _.result(this.block.events, 'dblclick');
         if (dblclick) {
             const hammer = new Hammer(this.svgGroup);
@@ -472,6 +467,11 @@ Entry.BlockView = class BlockView {
                 });
             });
         }
+
+        $(this.svgGroup).bind(
+            'mousedown.blockViewMousedown touchstart.blockViewMousedown',
+            this.mouseHandler
+        );
     }
 
     removeControl() {
