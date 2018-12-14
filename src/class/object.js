@@ -821,7 +821,7 @@ Entry.EntryObject = class {
             return;
         }
         target._focused = false;
-    };
+    }
 
     generateWorkspaceView() {
         const exceptionsForMouseDown = [];
@@ -901,10 +901,6 @@ Entry.EntryObject = class {
         const rotateSpan = Entry.createElement('span').addClass('entryObjectRotateSpanWorkspace');
         rotateSpan.innerHTML = Lang.Workspace.rotation + '';
         const rotateInput = Entry.createElement('input').addClass('entryObjectRotateInputWorkspace');
-        rotateInput.bindOnClick(function(e) {
-            e.stopPropagation();
-            this.select();
-        });
 
         rotateInput.onkeypress = this.editObjectValueWhenEnterPress;
         rotateInput.onfocus = this._setFocused;
@@ -928,10 +924,6 @@ Entry.EntryObject = class {
         const directionSpan = Entry.createElement('span').addClass('entryObjectDirectionSpanWorkspace');
         directionSpan.innerHTML = Lang.Workspace.direction + '';
         const directionInput = Entry.createElement('input').addClass('entryObjectDirectionInputWorkspace');
-        directionInput.bindOnClick(function(e) {
-            e.stopPropagation();
-            this.select();
-        });
 
         directionInput.onkeypress = this.editObjectValueWhenEnterPress;
         directionInput.onfocus = this._setFocused;
@@ -967,10 +959,6 @@ Entry.EntryObject = class {
         const xCoordi = Entry.createElement('span').addClass('entryObjectCoordinateSpanWorkspace');
         xCoordi.innerHTML = 'X';
         const xInput = Entry.createElement('input').addClass('entryObjectCoordinateInputWorkspace');
-        xInput.bindOnClick((e) => {
-            e.stopPropagation();
-            xInput.select();
-        });
 
         xInput.onkeypress = this.editObjectValueWhenEnterPress;
         xInput.onfocus = this._setFocused;
@@ -987,10 +975,6 @@ Entry.EntryObject = class {
         const yCoordi = Entry.createElement('span').addClass('entryObjectCoordinateSpanWorkspace');
         yCoordi.innerHTML = 'Y';
         const yInput = Entry.createElement('input').addClass('entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right');
-        yInput.bindOnClick((e) => {
-            e.stopPropagation();
-            yInput.select();
-        });
 
         yInput.onkeypress = this.editObjectValueWhenEnterPress;
         yInput.onfocus = this._setFocused;
@@ -1008,10 +992,6 @@ Entry.EntryObject = class {
         const sizeInput = Entry.createElement('input').addClass(
             'entryObjectCoordinateInputWorkspace',
             'entryObjectCoordinateInputWorkspace_size');
-        sizeInput.bindOnClick((e) => {
-            e.stopPropagation();
-            sizeInput.select();
-        });
 
         sizeInput.onkeypress = this.editObjectValueWhenEnterPress;
         sizeInput.onfocus = this._setFocused;
@@ -1073,13 +1053,6 @@ Entry.EntryObject = class {
 
     createNameView() {
         const nameView = Entry.createElement('input').addClass('entryObjectNameWorkspace');
-        nameView.bindOnClick((e) => {
-            e.preventDefault();
-            if(!this.focusable) {
-                nameView.focus();
-                nameView.select();
-            }
-        });
 
         nameView.onkeypress = Entry.Utils.whenEnter(() => {
             this.editObjectValues(false);
@@ -1170,8 +1143,10 @@ Entry.EntryObject = class {
             }
 
             if (e.type === 'touchstart') {
-                this.focusable = isFirstClick;
-                e.preventDefault();
+                if (isFirstClick) {
+                    e.preventDefault();
+                    document.activeElement.blur();
+                }
                 e.eventFromEntryObject = true;
                 Entry.documentMousedown.notify(e);
 
@@ -1208,11 +1183,6 @@ Entry.EntryObject = class {
                     }
                 });
             } else {
-                if (isFirstClick) {
-                    this.nameView_.focus();
-                    this.nameView_.select();
-                }
-
                 if (Entry.Utils.isRightButton(e)) {
                     e.stopPropagation();
                     Entry.documentMousedown.notify(e);
