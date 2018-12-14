@@ -191,6 +191,7 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
         this.dropdownWidget = new EntryTool({
             type: 'dropdownWidget',
             data: {
+                eventTypes: ['mousedown', 'touchstart', 'wheel'],
                 items: options,
                 positionDom: this.svgGroup,
                 onOutsideClick: () => {
