@@ -271,8 +271,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('span')
                     .addClass('text')
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
-                        Lang.Blocks[`START_${caller.block.type}`]
-                    }`;
+                    Lang.Blocks[`START_${caller.block.type}`]
+                }`;
                 element.bindOnClick(() => {
                     if (Entry.playground.object !== caller.object) {
                         Entry.container.selectObject();
@@ -327,8 +327,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('span')
                     .addClass('text')
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
-                        Lang.Blocks[`VARIABLE_${caller.block.type}`]
-                    }`;
+                    Lang.Blocks[`VARIABLE_${caller.block.type}`]
+                }`;
                 element.variable = variable;
                 element.bindOnClick(() => {
                     if (Entry.playground.object != caller.object) {
@@ -491,9 +491,7 @@ Entry.VariableContainer = class VariableContainer {
     updateAllTab() {
         const createElement = Entry.createElement;
         const listView = this.listView_;
-        const listWrapper = createElement('div').addClass(
-            'entryVariableSplitterWorkspace unfold'
-        );
+        const listWrapper = createElement('div').addClass('entryVariableSplitterWorkspace unfold');
 
         const listBox = createElement('div')
             .addClass('attr_box unfold')
@@ -1127,6 +1125,7 @@ Entry.VariableContainer = class VariableContainer {
         const editBoxInput = createElement('span')
             .addClass('input')
             .appendTo(editBoxInputWrapper);
+        editBoxInput.innerHTML = func.description;
 
         const delButton = createElement('a')
             .addClass('del')
