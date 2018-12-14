@@ -793,12 +793,13 @@ class BlockMenu {
     }
 
     onMouseDown(e) {
-        if (e.stopPropagation) {
-            e.stopPropagation();
-        }
-        if (e.preventDefault) {
-            e.preventDefault();
-        }
+        // ISSUE:: 마우스이벤트1
+        // if (e.stopPropagation) {
+        //     e.stopPropagation();
+        // }
+        // if (e.preventDefault) {
+        //     e.preventDefault();
+        // }
 
         const blockMenu = this;
         if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {

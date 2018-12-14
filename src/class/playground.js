@@ -345,6 +345,10 @@ Entry.Playground = function() {
         if (Entry.type == 'workspace') {
             var pictureAdd = Entry.createElement('div', 'entryAddPicture')
                 .addClass('entryPlaygroundAddPicture')
+                .appendTo(PictureView);
+
+            var innerPictureAdd = Entry.createElement('div', 'entryAddPictureInner')
+                .addClass('entryPlaygroundAddPictureInner')
                 .bindOnClick(() => {
                     if (!Entry.container || Entry.container.isSceneObjectsExist())
                         Entry.do('playgroundClickAddPicture');
@@ -355,10 +359,6 @@ Entry.Playground = function() {
                         );
                     }
                 })
-                .appendTo(PictureView);
-
-            var innerPictureAdd = Entry.createElement('div', 'entryAddPictureInner')
-                .addClass('entryPlaygroundAddPictureInner')
                 .appendTo(pictureAdd);
             innerPictureAdd.innerHTML = Lang.Workspace.picture_add;
             this._pictureAddButton = innerPictureAdd;
@@ -670,7 +670,10 @@ Entry.Playground = function() {
         if (Entry.type == 'workspace') {
             const soundAdd = Entry.createElement('div', 'entryAddSound');
             soundAdd.addClass('entryPlaygroundAddSound');
-            soundAdd.bindOnClick(function(e) {
+            const innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner').addClass(
+                'entryPlaygroundAddSoundInner'
+            );
+            innerSoundAdd.bindOnClick(function(e) {
                 if (!Entry.container || Entry.container.isSceneObjectsExist())
                     Entry.do('playgroundClickAddSound');
                 else {
@@ -680,9 +683,6 @@ Entry.Playground = function() {
                     );
                 }
             });
-            const innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner').addClass(
-                'entryPlaygroundAddSoundInner'
-            );
             innerSoundAdd.innerHTML = Lang.Workspace.sound_add;
             soundAdd.appendChild(innerSoundAdd);
             soundView.appendChild(soundAdd);
