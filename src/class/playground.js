@@ -1289,9 +1289,8 @@ Entry.Playground = class Playgroud {
     toggleOnVariableView() {
         Entry.playground.changeViewMode('code');
         this.hideBlockMenu();
-        // Entry.variableContainer.updateList();
-        // this.variableView_.removeClass('entryRemove');
-        // this.resizeHandle_.removeClass('entryRemove');
+        this.variableView_.removeClass('entryRemove');
+        this.resizeHandle_.removeClass('entryRemove');
         this.viewMode_ = 'variable';
         this.selectedViewMode = 'variable';
     }
@@ -1542,8 +1541,8 @@ Entry.Playground = class Playgroud {
         Entry.createElement('div', `s_${picture.id}`)
             .addClass('entryPlaygroundPictureSize')
             .appendTo(element).innerHTML = `${picture.dimension.width} X ${
-            picture.dimension.height
-        }`;
+                picture.dimension.height
+            }`;
 
         const removeButton = Entry.createElement('div').addClass('entryPlayground_del');
         const { Buttons = {} } = Lang || {};
