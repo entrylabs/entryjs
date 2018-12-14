@@ -278,7 +278,7 @@ Entry.Stage.prototype.initCoordinator = function() {
         visible: false,
     }));
     coordinator.addChild(
-        Object.assign(new createjs.Bitmap(Entry.mediaFilePath + 'workspace_coordinate.svg'), {
+        Object.assign(new createjs.Bitmap(Entry.mediaFilePath + 'workspace_coordinate.png'), {
             scaleX: 0.5,
             scaleY: 0.5,
             x: -240,
