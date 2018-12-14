@@ -86,7 +86,7 @@ window.ndgmr = window.ndgmr || {};
     //--------- end of Class CollisionCanvas -------
 
 
-    var threshold = 2;
+    var threshold = 1;
 
     /** @type PIXI.Rectangle; **/
     var _RECT1, _RECT2;
@@ -164,7 +164,6 @@ window.ndgmr = window.ndgmr || {};
             return false;
         }
 
-        // threshold 가 왜 height 에는 없지요?
         var pixelIntersection = _compareAlphaValues(
             imgData1,
             imgData2,
@@ -221,10 +220,11 @@ window.ndgmr = window.ndgmr || {};
     };
 
     function _checkRectCollisionForPIXIRect(b1, b2) {
-        if (Math.min(b1.width, b1.height, b2.width, b2.height) < 2)
-            threshold = 1;
-        else
-            threshold = 1;
+        // 2018.12.14 박봉배 - 불필요한 연산이라 비활성화함. 상단에서 threshold 의 기본값을 1로 고정
+        // if (Math.min(b1.width, b1.height, b2.width, b2.height) < 2)
+        //     threshold = 1;
+        // else
+        //     threshold = 1;
         return ndgmr.calculateIntersection(b1,b2);
     }
 
@@ -262,20 +262,26 @@ window.ndgmr = window.ndgmr || {};
         var x, y, offset = 3,
             pixelRect = {x:Infinity,y:Infinity,x2:-Infinity,y2:-Infinity};
 
-        alphaThreshold *= 255;
+        var _alphaThreshold = Math.round(alphaThreshold * 255) | 0,
+            _width = width | 0,
+            _height = height | 0,
+            _imgData1 = imageData1,
+            _imgData2 = imageData2;
+        var LEN1 = _imgData1.length;
+        var LEN2 = _imgData2.length;
 
         // parsing through the pixels checking for an alpha match
         // TODO: intelligent parsing, not just from 0 to end!
-        var LEN1 = imageData1.length;
-        var LEN2 = imageData2.length;
+        for ( y = 0; y < _height; ++y) {
+            for ( x = 0; x < _width; ++x) {
 
-        for ( y = 0; y < height; ++y) {
-            for ( x = 0; x < width; ++x) {
-
-                if (
-                    (LEN1 > offset+1 ? imageData1[offset] : 0) > alphaThreshold &&
-                    (LEN2 > offset+1 ? imageData2[offset] : 0) > alphaThreshold
-                ) {
+                if(
+                    LEN1 > offset+1 &&
+                    LEN2 > offset+1 &&
+                    _imgData1[offset] > _alphaThreshold &&
+                    _imgData2[offset] > _alphaThreshold
+                )
+                {
                     if ( getRect ) {
                         if ( x < pixelRect.x  ) pixelRect.x  = x;
                         if ( x > pixelRect.x2 ) pixelRect.x2 = x;
