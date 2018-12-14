@@ -162,74 +162,41 @@ Entry.Container = class Container {
     }
 
     enableSort() {
-        const view = this.listView_;
-        const d = document.createElement('div');
-        d.innerText = 'dasjklhdasmjhdas';
-        this.aa = new EntryTool({
-            type: 'sortableWidget',
-            data: {
-                height: '100%',
-                sortableTarget: ['sortableTarget'],
-                lockAxis: 'y',
-                items: [
-                    d,
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>1<input type="text"/></div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>2</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>3</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>4</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>5</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                    '<div style="border: 1px solid black; width: 150px; height: 40px;background:white"><div class="sortableTarget" style="border: 1px solid black; width: 30px; height: 30px;margin:5px;display:inline-block;vertical-align:middle"></div>6</div>',
-                ],
-            },
-            container: view,
+        if (this.sortableListViewWidget) {
+            this.sortableListViewWidget.setData({
+                disabled: false,
+            });
+        } else {
+            this.sortableListViewWidget = new EntryTool({
+                type: 'sortableWidget',
+                data: {
+                    height: '100%',
+                    sortableTarget: ['entryObjectThumbnailWorkspace'],
+                    lockAxis: 'y',
+                    items: this._getSortableObjectList(),
+                },
+                container: this.listView_,
+            }).on('change', ([newIndex, oldIndex]) => {
+                this.moveElement(newIndex, oldIndex);
+            });
+        }
+    }
+
+    updateSortableObjectList(objects) {
+        this.sortableListViewWidget.setData({
+            items: this._getSortableObjectList(objects),
         });
-        // const view = this.listView_;
-        // if (!view) {
-        //     return;
-        // }
-        // $(view).sortable({
-        //     distance: 20,
-        //     start(event, ui) {
-        //         ui.item.data('start_pos', ui.item.index());
-        //     },
-        //     stop(event, ui) {
-        //         Entry.container.moveElement(ui.item.data('start_pos'), ui.item.index());
-        //     },
-        //     axis: 'y',
-        //     cancel: 'input.selectedEditingObject',
-        // });
+    }
+
+    _getSortableObjectList(objects) {
+        let targetObjects = objects || this.currentObjects_ || [];
+
+        return targetObjects.map((value) => {
+            return {
+                key: value.id,
+                item: value.view_,
+            };
+        });
     }
 
     /**
@@ -242,7 +209,7 @@ Entry.Container = class Container {
             return;
         }
 
-        $(view).sortable('destroy');
+        this.sortableListViewWidget.setData({ disabled: true });
     }
 
     /**
@@ -254,12 +221,6 @@ Entry.Container = class Container {
         if (!view) {
             return;
         }
-
-        while (view.hasChildNodes()) {
-            view.removeChild(view.lastChild);
-        }
-
-        const fragment = document.createDocumentFragment();
 
         let objs = this.getCurrentObjects().slice();
 
@@ -275,11 +236,10 @@ Entry.Container = class Container {
 
         objs.forEach(function(obj) {
             !obj.view_ && obj.generateView();
-            fragment.appendChild(obj.view_);
         });
 
-        view.appendChild(fragment);
         Entry.stage.sortZorder();
+        this.updateSortableObjectList(objs);
         return true;
     }
 
@@ -387,7 +347,6 @@ Entry.Container = class Container {
         } else {
             this.objects_.unshift(object);
         }
-
         if (!isNotRender) {
             object.generateView();
             this.setCurrentObjects();
@@ -529,14 +488,14 @@ Entry.Container = class Container {
                                 workspace._syncTextCode();
                             } catch (e) {}
                             if (parser && !parser._onError) {
-                                Entry.container.selectObject(object.id, true);
+                                this.selectObject(object.id, true);
                                 return;
                             } else {
-                                Entry.container.selectObject(sObject.id, true);
+                                this.selectObject(sObject.id, true);
                                 return;
                             }
                         } else {
-                            Entry.container.selectObject(sObject.id);
+                            this.selectObject(sObject.id);
                             return;
                         }
                     }
@@ -547,11 +506,11 @@ Entry.Container = class Container {
                                 workspace._syncTextCode();
                             } catch (e) {}
                             if (parser && parser._onError) {
-                                Entry.container.selectObject(sObject.id, true);
+                                this.selectObject(sObject.id, true);
                                 return;
                             }
                         } else {
-                            Entry.container.selectObject(sObject.id);
+                            this.selectObject(sObject.id);
                             return;
                         }
                     }
@@ -628,9 +587,9 @@ Entry.Container = class Container {
     /**
      * Move object in objects_
      * this method is for sortable
-     * @param {!number} start
-     * @param {!number} end
-     * @param {?boolean} isCallFromState
+     * @param {number!} start
+     * @param {number!} end
+     * @param {boolean?} isCallFromState
      * @return {Entry.State}
      */
     moveElement(start, end, isCallFromState) {
@@ -641,8 +600,8 @@ Entry.Container = class Container {
         if (!isCallFromState && Entry.stateManager) {
             Entry.stateManager.addCommand(
                 'reorder object',
-                Entry.container,
-                Entry.container.moveElement,
+                this,
+                this.moveElement,
                 endIndex,
                 startIndex,
                 true
@@ -651,11 +610,11 @@ Entry.Container = class Container {
 
         this.objects_.splice(endIndex, 0, this.objects_.splice(startIndex, 1)[0]);
         this.setCurrentObjects();
-        Entry.container.updateListView();
+        this.updateListView();
         Entry.requestUpdate = true;
         return new Entry.State(
-            Entry.container,
-            Entry.container.moveElement,
+            this,
+            this.moveElement,
             endIndex,
             startIndex,
             true
@@ -1066,7 +1025,7 @@ Entry.Container = class Container {
      *  @return {entry project} project
      */
     getProjectWithJSON(project) {
-        project.objects = Entry.container.toJSON();
+        project.objects = this.toJSON();
         project.variables = Entry.variableContainer.getVariableJSON();
         project.messages = Entry.variableContainer.getMessageJSON();
         project.scenes = Entry.scene.toJSON();
@@ -1095,7 +1054,7 @@ Entry.Container = class Container {
             return;
         }
 
-        const objects = Entry.container.getAllObjects();
+        const objects = this.getAllObjects();
         const answerTypes = ['ask_and_wait', 'get_canvas_input_value', 'set_visible_answer'];
 
         for (let i = 0, len = objects.length; i < len; i++) {
@@ -1135,10 +1094,10 @@ Entry.Container = class Container {
         const options = [
             {
                 text: Lang.Blocks.Paste_blocks,
-                enable: !Entry.engine.isState('run') && !!Entry.container.copiedObject,
+                enable: !Entry.engine.isState('run') && !!this.copiedObject,
                 callback() {
-                    if (Entry.container.copiedObject) {
-                        Entry.container.addCloneObject(Entry.container.copiedObject);
+                    if (this.copiedObject) {
+                        this.addCloneObject(this.copiedObject);
                     } else {
                         Entry.toast.alert(
                             Lang.Workspace.add_object_alert,
@@ -1196,7 +1155,7 @@ Entry.Container = class Container {
             return;
         }
 
-        Entry.container.selectObject(object.id);
+        this.selectObject(object.id);
     }
 
     getObjectIndex(objectId) {
