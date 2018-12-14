@@ -273,14 +273,17 @@ Entry.VariableContainer = class VariableContainer {
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
                         Lang.Blocks[`START_${caller.block.type}`]
                     }`;
-                element.bindOnClick(() => {
+                element.bindOnClick((e) => {
+                    e.stopPropagation();
                     if (Entry.playground.object !== caller.object) {
                         Entry.container.selectObject();
                         Entry.container.selectObject(caller.object.id, true);
-                        this.select(null);
-                        this.select(message);
                     }
-
+                    const block = caller.funcBlock || caller.block;
+                    const board = _.result(block.view, 'getBoard');
+                    if (board) {
+                        board.activateBlock(block);
+                    }
                     Entry.playground.toggleOnVariableView();
                     Entry.playground.changeViewMode('variable');
                 });
@@ -330,11 +333,11 @@ Entry.VariableContainer = class VariableContainer {
                         Lang.Blocks[`VARIABLE_${caller.block.type}`]
                     }`;
                 element.variable = variable;
-                element.bindOnClick(() => {
+                element.bindOnClick((e) => {
+                    e.stopPropagation();
                     if (Entry.playground.object != caller.object) {
                         Entry.container.selectObject();
                         Entry.container.selectObject(caller.object.id, true);
-                        that.select(null);
                     }
                     const block = caller.funcBlock || caller.block;
                     const board = _.result(block.view, 'getBoard');
@@ -390,8 +393,6 @@ Entry.VariableContainer = class VariableContainer {
                     if (Entry.playground.object != caller.object) {
                         Entry.container.selectObject();
                         Entry.container.selectObject(caller.object.id, true);
-                        that.select(null);
-                        that.select(func);
                     }
                     Entry.playground.toggleOnVariableView();
                     const block = caller.block;
