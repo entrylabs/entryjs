@@ -271,8 +271,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('span')
                     .addClass('text')
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
-                        Lang.Blocks[`START_${caller.block.type}`]
-                    }`;
+                    Lang.Blocks[`START_${caller.block.type}`]
+                }`;
                 element.bindOnClick((e) => {
                     e.stopPropagation();
                     if (Entry.playground.object !== caller.object) {
@@ -330,8 +330,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('span')
                     .addClass('text')
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
-                        Lang.Blocks[`VARIABLE_${caller.block.type}`]
-                    }`;
+                    Lang.Blocks[`VARIABLE_${caller.block.type}`]
+                }`;
                 element.variable = variable;
                 element.bindOnClick((e) => {
                     e.stopPropagation();
@@ -1888,8 +1888,6 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('entryVariableAddSpaceButtonWorkspace')
             .bindOnClick(() => {
                 that._addVariable();
-                this.variableAddPanel.view.addClass('off');
-                this.resetVariableAddPanel('variable');
             })
             .appendTo(addSpaceButtonWrapper);
         addSpaceConfirmButton.href = '#';
@@ -1899,6 +1897,8 @@ Entry.VariableContainer = class VariableContainer {
 
     _addVariable() {
         const variableInput = Entry.getDom(['variableContainer', 'variableAddInput']);
+        this.variableAddPanel.view.addClass('off');
+        this.resetVariableAddPanel('variable');
         const blurCallback = () => {
             delete variableInput.blurCallback;
             Entry.do(
@@ -1919,6 +1919,8 @@ Entry.VariableContainer = class VariableContainer {
 
     _addList() {
         const listInput = Entry.getDom(['variableContainer', 'listAddInput']);
+        this.listAddPanel.view.addClass('off');
+        this.resetVariableAddPanel('list');
         const blurCallback = () => {
             Entry.do(
                 'variableContainerAddList',
@@ -2072,8 +2074,6 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('entryVariableAddSpaceButtonWorkspace')
             .bindOnClick(() => {
                 that._addList();
-                this.listAddPanel.view.addClass('off');
-                this.resetVariableAddPanel('list');
             })
             .appendTo(addSpaceButtonWrapper);
         addSpaceConfirmButton.href = '#';
