@@ -1,6 +1,7 @@
 'use strict';
 
 import EntryTool from 'entry-tool';
+import DomUtils from './domUtils';
 
 Entry.ContextMenu = {};
 
@@ -102,7 +103,8 @@ Entry.ContextMenu = {};
     };
 
     ctx.onContextmenu = function(target, callback) {
-        target.on('touchstart mousemove mouseup contextmenu', function(e) {
+        DomUtils.addEventListenerMultiple(target, 'touchstart touchmove touchend mousemove mouseup mousedown', function(e) {
+            console.log(e.type);
             switch (e.type) {
                 case 'touchstart': {
                     const startEvent = Entry.Utils.convertMouseEvent(e);
@@ -110,6 +112,13 @@ Entry.ContextMenu = {};
                         x: startEvent.clientX,
                         y: startEvent.clientY,
                     };
+
+                    console.log(this.coordi.x, this.coordi.y);
+
+                    if (this.longTouchEvent) {
+                        clearTimeout(this.longTouchEvent);
+                        this.longTouchEvent = null;
+                    }
 
                     this.longTouchEvent = setTimeout(
                         function() {
@@ -120,19 +129,23 @@ Entry.ContextMenu = {};
                     );
                     break;
                 }
-                case 'mousemove': {
+                case 'mousemove':
+                case 'touchmove': {
+                    const startEvent = Entry.Utils.convertMouseEvent(e);
                     if (!this.coordi) {
                         return;
                     }
                     const diff = Math.sqrt(
-                        Math.pow(e.pageX - this.coordi.x, 2) + Math.pow(e.pageY - this.coordi.y, 2)
+                        Math.pow(startEvent.pageX - this.coordi.x, 2) + Math.pow(startEvent.pageY - this.coordi.y, 2)
                     );
+
                     if (diff > 5 && this.longTouchEvent) {
                         clearTimeout(this.longTouchEvent);
                         this.longTouchEvent = undefined;
                     }
                     break;
                 }
+                case 'touchend':
                 case 'mouseup':
                     // e.stopPropagation();
                     if (this.longTouchEvent) {
@@ -140,14 +153,17 @@ Entry.ContextMenu = {};
                         this.longTouchEvent = null;
                     }
                     break;
-                case 'contextmenu':
-                    clearTimeout(this.longTouchEvent);
-                    this.longTouchEvent = undefined;
-                    if (e.type === 'contextmenu') {
-                        // e.stopPropagation();
-                        // e.preventDefault();
-                        callback(this.coordi);
+                case 'mousedown':
+                    if (Entry.Utils.isRightButton(e) && Entry.Utils.isTouchEvent(e)) {
+                        clearTimeout(this.longTouchEvent);
+                        this.longTouchEvent = undefined;
+                        if (e.type === 'contextmenu') {
+                            // e.stopPropagation();
+                            // e.preventDefault();
+                            callback(this.coordi);
+                        }
                     }
+
                     break;
             }
         });
