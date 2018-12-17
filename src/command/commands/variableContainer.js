@@ -665,7 +665,6 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
 
             if (value) {
                 VC.updateSelectedVariable(variable);
-                Entry.Utils.focusIfNotActive(nameField);
             } else {
                 nameField.blur();
                 VC.updateSelectedVariable(null, 'variable');
