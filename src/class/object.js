@@ -433,7 +433,7 @@ Entry.EntryObject = class {
         else {
             this.sounds.splice(index, 0, sound);
         }
-        Entry.playground.injectSound(this);
+        Entry.playground.injectSound();
     }
 
     /**
@@ -447,7 +447,7 @@ Entry.EntryObject = class {
         index = this.sounds.indexOf(sound);
         this.sounds.splice(index, 1);
         Entry.playground.reloadPlayground();
-        Entry.playground.injectSound(this);
+        Entry.playground.injectSound();
     }
 
     /**
