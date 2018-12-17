@@ -1429,7 +1429,11 @@ Entry.Playground = class {
                 return;
             }
 
-            const nameViewArray = $('.entryPlaygroundPictureName');
+            let nameViewArray = $('.entryPlaygroundPictureName');
+            if (nameViewArray.length !== Entry.playground.object.pictures.length) {
+                nameViewArray = nameViewArray.slice(0, -1); // pop last element (드래그 시 발생하는 임시 엘리먼트임)
+            }
+
             for (let i = 0; i < nameViewArray.length; i++) {
                 if (nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
                     Entry.deAttachEventListener(this, 'blur', nameViewBlur);
