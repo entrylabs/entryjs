@@ -299,9 +299,8 @@ Entry.Engine = function() {
     p.toggleSpeedPanel = function() {
         if (this.speedPanelOn) {
             this.speedPanelOn = false;
-            this.coordinateButton.removeClass('entryRemove');
-            this.maximizeButton.removeClass('entryRemove');
-            this.mouseView.removeClass('entryRemoveElement');
+            this.speedButton.removeClass("on");
+
             $(this.speedLabel_)
                 .parent()
                 .remove();
@@ -314,13 +313,11 @@ Entry.Engine = function() {
             delete this.speedHandle_;
         } else {
             this.speedPanelOn = true;
-            this.coordinateButton.addClass('entryRemove');
-            this.maximizeButton.addClass('entryRemove');
-            this.mouseView.addClass('entryRemoveElement');
+            this.speedButton.addClass("on");
 
             const speedBox = Entry.createElement('div', 'entrySpeedBox');
             speedBox.addClass('entrySpeedBox');
-            this.view_.insertBefore(speedBox, this.maximizeButton);
+            this.view_.insertBefore(speedBox, Entry.stage.canvas.canvas);
 
             this.speedLabel_ = Entry.createElement('div', 'entrySpeedLabelWorkspace');
             this.speedLabel_.innerHTML = Lang.Workspace.speed;
@@ -777,6 +774,9 @@ Entry.Engine = function() {
     p.toggleFullScreen = function(popupClassName) {
         if (!this.popup) {
             this.popup = new Entry.Popup(popupClassName);
+            if(Entry.engine.speedPanelOn) {
+                Entry.engine.toggleSpeedPanel();
+            }
             if (Entry.type != 'workspace') {
                 var $doc = $(document);
                 var body = $(this.popup.body_);
