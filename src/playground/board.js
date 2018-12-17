@@ -194,7 +194,7 @@ Entry.Board = class Board {
         const scroller = that.scroller;
         if (scroller) {
             dom.mouseenter(function() {
-                scroller.setOpacity(1);
+                scroller.setOpacity(0.8);
             });
             dom.mouseleave(function() {
                 scroller.setOpacity(0);
@@ -1252,7 +1252,8 @@ Entry.Board = class Board {
 
     _rightClick(e) {
         const { target } = e;
-        if (this.workspace.zoomController.view.contains(target)) {
+        //SVGElement에서 contains가 없어서 jquery사용
+        if ($.contains(this.workspace.zoomController.view, target)) {
             return;
         }
         const disposeEvent = Entry.disposeEvent;

@@ -665,7 +665,6 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
 
             if (value) {
                 VC.updateSelectedVariable(variable);
-                Entry.Utils.focusIfNotActive(nameField);
             } else {
                 nameField.blur();
                 VC.updateSelectedVariable(null, 'variable');
@@ -694,11 +693,11 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
         do(id) {
             const VC = getVC();
             const variable = VC.getList(id);
-            const { nameField } = variable.listElement;
+            // const { nameField } = variable.listElement;
 
-            nameField.removeAttribute('disabled');
+            // nameField.removeAttribute('disabled');
             VC.updateSelectedVariable(variable);
-            nameField.focus();
+            // nameField.focus();
         },
         state(id) {
             return [id];

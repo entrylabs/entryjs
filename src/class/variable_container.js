@@ -1445,7 +1445,6 @@ Entry.VariableContainer = class VariableContainer {
         //focus first and value not changed
         //command will be skipped
         nameField.isFirst = true;
-        Entry.Utils.focusIfNotActive(nameField);
     }
 
     /**
@@ -1898,7 +1897,6 @@ Entry.VariableContainer = class VariableContainer {
     _addVariable() {
         const variableInput = Entry.getDom(['variableContainer', 'variableAddInput']);
         this.variableAddPanel.view.addClass('off');
-        this.resetVariableAddPanel('variable');
         const blurCallback = () => {
             delete variableInput.blurCallback;
             Entry.do(
@@ -1915,12 +1913,12 @@ Entry.VariableContainer = class VariableContainer {
         } else {
             blurCallback();
         }
+        this.resetVariableAddPanel('variable');
     }
 
     _addList() {
         const listInput = Entry.getDom(['variableContainer', 'listAddInput']);
         this.listAddPanel.view.addClass('off');
-        this.resetVariableAddPanel('list');
         const blurCallback = () => {
             Entry.do(
                 'variableContainerAddList',
@@ -1937,6 +1935,7 @@ Entry.VariableContainer = class VariableContainer {
         } else {
             blurCallback();
         }
+        this.resetVariableAddPanel('list');
     }
 
     generateListAddView() {
@@ -2083,6 +2082,7 @@ Entry.VariableContainer = class VariableContainer {
 
     generateMessageAddView() {
         const createElement = Entry.createElement;
+        const that = this;
 
         // 신호 만들기 폼
         const msgAddSpace = createElement('div').addClass('message_inpt off');
@@ -2092,6 +2092,24 @@ Entry.VariableContainer = class VariableContainer {
         const msgNameInput = createElement('input').appendTo(msgAddSpace);
         msgNameInput.setAttribute('type', 'text');
         msgNameInput.setAttribute('placeholder', '신호의 이름을 입력해주세요.');
+        msgNameInput.onkeydown = Entry.Utils.whenEnter(function() {
+            if (this.enterKeyDisabled) {
+                this.blur();
+            } else {
+                const value = msgNameInput.value;
+                that.messageAddPanel.isOpen = false;
+                msgAddSpace.addClass('off');
+                msgNameInput.value = '';
+                Entry.do('variableContainerAddMessage', {
+                    id: Entry.generateHash(),
+                    name: Entry.getOrderedName(
+                        value || Lang.Workspace.message,
+                        that.messages_,
+                        'name'
+                    ),
+                });
+            }
+        });
         this.messageAddPanel.view.name = msgNameInput;
 
         const buttonWrapper = createElement('div')
@@ -2983,19 +3001,15 @@ Entry.VariableContainer = class VariableContainer {
         }
     }
 
-    _clickAddButton(type, doFunc, forceOpen, doNotFocus) {
+    _clickAddButton(type, forceOpen, doNotFocus) {
         const panel = this._getAddPanel(type);
         const panelView = panel.view;
         const panelViewName = panelView.name;
-        const value = panelViewName.value.trim();
         if (panel.isOpen && !forceOpen) {
-            if (_.isEmpty(value)) {
-                panelView.addClass('off');
-                panel.isOpen = false;
-            } else {
-                return doFunc();
-            }
+            panelView.addClass('off');
+            panel.isOpen = false;
         } else {
+            panelViewName.value = '';
             panelView.removeClass('off');
             !doNotFocus && Entry.Utils.focusIfNotActive(panelViewName);
             panel.isOpen = true;
@@ -3003,45 +3017,15 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     clickVariableAddButton(...args) {
-        this._clickAddButton.call(
-            this,
-            'variable',
-            () => {
-                Entry.do(
-                    'variableContainerAddVariable',
-                    new Entry.Variable(this._makeVariableData('variable'))
-                );
-            },
-            ...args
-        );
+        this._clickAddButton.call(this, 'variable', ...args);
     }
 
     clickListAddButton(...args) {
-        this._clickAddButton.call(
-            this,
-            'list',
-            () => {
-                Entry.do(
-                    'variableContainerAddList',
-                    new Entry.Variable(this._makeVariableData('list'))
-                );
-            },
-            ...args
-        );
+        this._clickAddButton.call(this, 'list', ...args);
     }
 
     clickMessageAddButton(...args) {
-        this._clickAddButton.call(
-            this,
-            'message',
-            () => {
-                Entry.do(
-                    'variableContainerAddMessage',
-                    new Entry.Variable(this._makeVariableData('message'))
-                );
-            },
-            ...args
-        );
+        this._clickAddButton.call(this, 'message', ...args);
     }
 
     _makeVariableData(type = 'variable') {
