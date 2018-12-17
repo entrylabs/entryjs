@@ -194,7 +194,7 @@ Entry.Board = class Board {
         const scroller = that.scroller;
         if (scroller) {
             dom.mouseenter(function() {
-                scroller.setOpacity(1);
+                scroller.setOpacity(0.8);
             });
             dom.mouseleave(function() {
                 scroller.setOpacity(0);

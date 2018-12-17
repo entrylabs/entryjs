@@ -147,7 +147,7 @@ class BlockMenu {
         );
 
         this.svgDom.mouseenter(function(e) {
-            that._scroller && that._scroller.setOpacity(1);
+            that._scroller && that._scroller.setOpacity(0.8);
 
             const selectedBlockView = that.workspace.selectedBlockView;
             if (
