@@ -271,16 +271,19 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('span')
                     .addClass('text')
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
-                        Lang.Blocks[`START_${caller.block.type}`]
-                    }`;
-                element.bindOnClick(() => {
+                    Lang.Blocks[`START_${caller.block.type}`]
+                }`;
+                element.bindOnClick((e) => {
+                    e.stopPropagation();
                     if (Entry.playground.object !== caller.object) {
                         Entry.container.selectObject();
                         Entry.container.selectObject(caller.object.id, true);
-                        this.select(null);
-                        this.select(message);
                     }
-
+                    const block = caller.funcBlock || caller.block;
+                    const board = _.result(block.view, 'getBoard');
+                    if (board) {
+                        board.activateBlock(block);
+                    }
                     Entry.playground.toggleOnVariableView();
                     Entry.playground.changeViewMode('variable');
                 });
@@ -327,14 +330,14 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('span')
                     .addClass('text')
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
-                        Lang.Blocks[`VARIABLE_${caller.block.type}`]
-                    }`;
+                    Lang.Blocks[`VARIABLE_${caller.block.type}`]
+                }`;
                 element.variable = variable;
-                element.bindOnClick(() => {
+                element.bindOnClick((e) => {
+                    e.stopPropagation();
                     if (Entry.playground.object != caller.object) {
                         Entry.container.selectObject();
                         Entry.container.selectObject(caller.object.id, true);
-                        that.select(null);
                     }
                     const block = caller.funcBlock || caller.block;
                     const board = _.result(block.view, 'getBoard');
@@ -390,8 +393,6 @@ Entry.VariableContainer = class VariableContainer {
                     if (Entry.playground.object != caller.object) {
                         Entry.container.selectObject();
                         Entry.container.selectObject(caller.object.id, true);
-                        that.select(null);
-                        that.select(func);
                     }
                     Entry.playground.toggleOnVariableView();
                     const block = caller.block;
@@ -1887,8 +1888,6 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('entryVariableAddSpaceButtonWorkspace')
             .bindOnClick(() => {
                 that._addVariable();
-                this.variableAddPanel.view.addClass('off');
-                this.resetVariableAddPanel('variable');
             })
             .appendTo(addSpaceButtonWrapper);
         addSpaceConfirmButton.href = '#';
@@ -1898,6 +1897,8 @@ Entry.VariableContainer = class VariableContainer {
 
     _addVariable() {
         const variableInput = Entry.getDom(['variableContainer', 'variableAddInput']);
+        this.variableAddPanel.view.addClass('off');
+        this.resetVariableAddPanel('variable');
         const blurCallback = () => {
             delete variableInput.blurCallback;
             Entry.do(
@@ -1918,6 +1919,8 @@ Entry.VariableContainer = class VariableContainer {
 
     _addList() {
         const listInput = Entry.getDom(['variableContainer', 'listAddInput']);
+        this.listAddPanel.view.addClass('off');
+        this.resetVariableAddPanel('list');
         const blurCallback = () => {
             Entry.do(
                 'variableContainerAddList',
@@ -2071,8 +2074,6 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('entryVariableAddSpaceButtonWorkspace')
             .bindOnClick(() => {
                 that._addList();
-                this.listAddPanel.view.addClass('off');
-                this.resetVariableAddPanel('list');
             })
             .appendTo(addSpaceButtonWrapper);
         addSpaceConfirmButton.href = '#';

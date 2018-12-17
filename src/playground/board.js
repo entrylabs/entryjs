@@ -989,7 +989,7 @@ Entry.Board = class Board {
         const { width, height } = this.getSvgDomRect();
         this.scroller.scroll(width / 2 - blockX, height / 2 - blockY - 100);
 
-        view.addActivated();
+        this.setSelectedBlock(view);
 
         this._activatedBlockView = view;
     }
