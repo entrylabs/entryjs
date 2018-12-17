@@ -104,7 +104,6 @@ Entry.ContextMenu = {};
 
     ctx.onContextmenu = function(target, callback) {
         DomUtils.addEventListenerMultiple(target, 'touchstart touchmove touchend mousemove mouseup mousedown', function(e) {
-            console.log(e.type);
             switch (e.type) {
                 case 'touchstart': {
                     const startEvent = Entry.Utils.convertMouseEvent(e);
@@ -112,8 +111,6 @@ Entry.ContextMenu = {};
                         x: startEvent.clientX,
                         y: startEvent.clientY,
                     };
-
-                    console.log(this.coordi.x, this.coordi.y);
 
                     if (this.longTouchEvent) {
                         clearTimeout(this.longTouchEvent);
