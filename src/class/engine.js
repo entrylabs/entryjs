@@ -350,7 +350,7 @@ Entry.Engine = function() {
         level = Math.max(0, level);
         if (this.speedPanelOn) {
             const elements = document.querySelectorAll(`.progressCell`);
-            elements.forEach((element, i) => {
+            Array.from(elements).forEach((element, i) => {
                 if (level === i) {
                     element.className = 'progressCell on';
                 } else if (element.className.indexOf('on') > -1) {
