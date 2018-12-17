@@ -538,6 +538,7 @@ Entry.Playground = class Playgroud {
             return this.openColourPicker(
                 color,
                 this.object.entity.getColour(),
+                false,
                 this.setTextColour.bind(this)
             );
         });
@@ -550,6 +551,7 @@ Entry.Playground = class Playgroud {
             return this.openColourPicker(
                 backgroundColor,
                 this.object.entity.getBGColour(),
+                true,
                 this.setBackgroundColour.bind(this)
             );
         });
@@ -1738,17 +1740,16 @@ Entry.Playground = class Playgroud {
         return dropdownWidget;
     };
 
-    openColourPicker = (target, color, callback) => {
+    openColourPicker = (target, color ,canTransparent , callback) => {
         const colorPicker = new EntryTool({
             type: 'colorPicker',
             data: {
                 color,
                 positionDom: target,
-                // boundrayDom: this.boundrayDom,
+                canTransparent: canTransparent,
                 onOutsideClick: (color) => {
                     if (colorPicker) {
                         colorPicker.hide();
-                        callback(color, true);
                     }
                 },
             },
