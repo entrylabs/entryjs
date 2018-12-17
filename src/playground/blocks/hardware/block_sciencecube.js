@@ -55,21 +55,21 @@ Entry.sciencecube.setLanguage = () => {
 
 Entry.sciencecube.getBlocks = () => {
     return {
-        sciencecube_temper: { 
-            color: '#00979D', 
+        sciencecube_temper: {
+            color: '#00979D',
 	    fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [ 
+            params: [
                 {
                     type: "Text",
                     text : "온도 센서값",
                 },
             ],
             def: {
-                type: 'sciencecube_temper', 
+                type: 'sciencecube_temper',
             },
-            paramsKeyMap: { 
+            paramsKeyMap: {
                 VALUE: 0,
                 sensor : 1
             },
@@ -80,26 +80,26 @@ Entry.sciencecube.getBlocks = () => {
                 Entry.hw.update();
                 if(Entry.sciencecube.value["tempData"])
                     {
-                        return "온도 " + Entry.sciencecube.value["tempData"].toFixed(2) + " ℃";
+                        return Entry.sciencecube.value["tempData"].toFixed(2);
                     }
                     else return "현재 센서와 다릅니다. 다시 연결해주세요.";
             },
         },
-        sciencecube_current: { 
-            color: '#00979D', 
+        sciencecube_current: {
+            color: '#00979D',
 	    fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [ 
+            params: [
                 {
                     type: "Text",
                     text : "전류 센서값",
                 },
             ],
             def: {
-                type: 'sciencecube_current', 
+                type: 'sciencecube_current',
             },
-            paramsKeyMap: { 
+            paramsKeyMap: {
                 VALUE: 0,
                 sensor : 1
             },
@@ -110,26 +110,26 @@ Entry.sciencecube.getBlocks = () => {
                 Entry.hw.update();
                 if(Entry.sciencecube.value["currentData"])
                     {
-                        return "전류 " + Entry.sciencecube.value["currentData"].toFixed(2) + " A";
+                        return Entry.sciencecube.value["currentData"].toFixed(2);
                     }
                     else return "현재 센서와 다릅니다. 다시 연결해주세요.";
-            }, 
+            },
         },
-        sciencecube_pressue: { 
-            color: '#00979D', 
+        sciencecube_pressue: {
+            color: '#00979D',
 	    fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [ 
+            params: [
                 {
                     type: "Text",
                     text : "압력 센서값",
                 },
             ],
             def: {
-                type: 'sciencecube_pressue', 
+                type: 'sciencecube_pressue',
             },
-            paramsKeyMap: { 
+            paramsKeyMap: {
                 VALUE: 0,
                 sensor : 1
             },
@@ -140,26 +140,26 @@ Entry.sciencecube.getBlocks = () => {
                 Entry.hw.update();
                 if(Entry.sciencecube.value["pressueData"])
                     {
-                        return "압력 " + Entry.sciencecube.value["pressueData"].toFixed(2) + " hPa";
+                        return Entry.sciencecube.value["pressueData"].toFixed(2);
                     }
                     else return "현재 센서와 다릅니다. 다시 연결해주세요.";
             },
         },
-        sciencecube_voltage: { 
-            color: '#00979D', 
+        sciencecube_voltage: {
+            color: '#00979D',
 	    fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [ 
+            params: [
                 {
                     type: "Text",
                     text : "전압 센서값",
                 },
             ],
             def: {
-                type: 'sciencecube_voltage', 
+                type: 'sciencecube_voltage',
             },
-            paramsKeyMap: { 
+            paramsKeyMap: {
                 VALUE: 0,
                 sensor : 1
             },
@@ -170,10 +170,10 @@ Entry.sciencecube.getBlocks = () => {
                 Entry.hw.update();
                 if(Entry.sciencecube.value["voltageData"])
                     {
-                        return "전압 " + Entry.sciencecube.value["voltageData"].toFixed(2) + " V";
+                        return Entry.sciencecube.value["voltageData"].toFixed(2);
                     }
                     else return "현재 센서와 다릅니다. 다시 연결해주세요.";
-            }, 
+            },
         },
     }
 }

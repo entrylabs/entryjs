@@ -53,88 +53,100 @@ Entry.JDKit = {
         "en": "JDKit",
         "ko": "제이디키트"
     },
-    monitorTemplate: {
-        imgPath: 'hw/coconut.png',
-        width: 256,
-        height: 256,
-        listPorts: {
-            'CMD[1]': {
-                name: Lang.Blocks.coconut_sensor_temperature,
-                type: 'input',
-                pos: {
-                    x: 0,
-                    y: 0,
-                },
-            },
-            accelerationX: {
-                name: Lang.Blocks.coconut_sensor_acceleration_x,
-                type: 'input',
-                pos: {
-                    x: 0,
-                    y: 0,
-                },
-            },
-            accelerationY: {
-                name: Lang.Blocks.coconut_sensor_acceleration_y,
-                type: 'input',
-                pos: {
-                    x: 0,
-                    y: 0,
-                },
-            },
-            accelerationZ: {
-                name: Lang.Blocks.coconut_sensor_acceleration_z,
-                type: 'input',
-                pos: {
-                    x: 0,
-                    y: 0,
-                },
-            },
-        },
-        ports: {
-            leftProximityValue: {
-                name: Lang.Blocks.coconut_sensor_left_proximity,
-                type: 'input',
-                pos: {
-                    x: 122,
-                    y: 156,
-                },
-            },
-            rightProximityValue: {
-                name: Lang.Blocks.coconut_sensor_right_proximity,
-                type: 'input',
-                pos: {
-                    x: 10,
-                    y: 108,
-                },
-            },
-            leftFloorValue: {
-                name: Lang.Blocks.coconut_sensor_left_floor,
-                type: 'input',
-                pos: {
-                    x: 100,
-                    y: 234,
-                },
-            },
-            rightFloorValue: {
-                name: Lang.Blocks.coconut_sensor_right_floor,
-                type: 'input',
-                pos: {
-                    x: 13,
-                    y: 180,
-                },
-            },
-            light: {
-                name: Lang.Blocks.coconut_sensor_light,
-                type: 'input',
-                pos: {
-                    x: 56,
-                    y: 189,
-                },
-            },
-        },
-        mode: 'both',
-    },
+	monitorTemplate: {
+        	imgPath: 'hw/jdrc.png',
+        	width: 600,
+        	height: 355,
+        	listPorts: {
+            		'A6': {
+                		name: Lang.template.jdcode_connect,
+                		type: 'input',
+                		pos: {
+                    			x: 0,
+                    			y: 0,
+                		},
+            		},
+			'A10': {
+                		name: Lang.template.jdcode_ready,
+                		type: 'input',
+                		pos: {
+                    			x: 0,
+                    			y: 0,
+                		},
+            		},
+			'A8': {
+                		name: Lang.Blocks.jdcode_tiltx,
+                		type: 'input',
+                		pos: {
+                    			x: 0,
+                    			y: 0,
+                		},
+            		},
+			'A9': {
+                		name: Lang.Blocks.jdcode_tilty,
+                		type: 'input',
+                		pos: {
+                    			x: 0,
+                    			y: 0,
+                		},
+            		},
+			'A7': {
+                		name: Lang.Blocks.jdcode_alt,
+                		type: 'input',
+                		pos: {
+                    			x: 0,
+                    			y: 0,
+                		},
+            		},
+		},
+        	ports: {
+			'A1': {
+                		name: Lang.Blocks.jdkit_joystick_leftleftright,
+                		type: 'input',
+                		pos: {
+                    			x: 140,
+                    			y: 140,
+                		},
+            		},
+
+            		'A2': {
+                		name: Lang.Blocks.jdkit_joystick_lefttopbottom,
+                		type: 'input',
+                		pos: {
+                    			x: 140,
+                    			y: 140,
+                		},
+            		},
+			'A3': {
+                		name: Lang.Blocks.jdkit_joystick_rightleftright,
+                		type: 'input',
+                		pos: {
+                    			x: 450,
+                    			y: 140,
+                		},
+            		},
+
+            		'A4': {
+                		name: Lang.Blocks.jdkit_joystick_righttopbottom,
+                		type: 'input',
+                		pos: {
+                    			x: 450,
+                    			y: 140,
+                		},
+            		},
+          		'A5': {
+                		name: Lang.Blocks.jdcode_button,
+                		type: 'input',
+                		pos: {
+                    			x: 430,
+                    			y: 250,
+                		},
+            		},
+
+
+		},
+           	mode: 'both',
+    	},
 };
 
 Entry.JDKit.getBlocks = function() {
@@ -473,7 +485,7 @@ Entry.JDKit.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
 
-        jdkit_motor: {
+	jdkit_motor: {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
