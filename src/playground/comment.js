@@ -455,9 +455,13 @@ Entry.Comment = class Comment {
 
     mouseDown(e) {
         e.stopPropagation();
-        let longPressTimer = null;
+        e.preventDefault();
+        this.longPressTimer = null;
+        if (Entry.documentMousedown) {
+            Entry.documentMousedown.notify(e);
+        }
 
-        if (!this.board.readOnly) {
+        if ((e.button === 0 || e.type === 'touchstart') && !this.board.readOnly) {
             this.setDragInstance(e);
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
             this.bindDomEvent(this.mouseMove, this.mouseUp);
@@ -465,9 +469,9 @@ Entry.Comment = class Comment {
             this.board.set({ dragBlock: this });
 
             if (eventType === 'touchstart') {
-                longPressTimer = setTimeout(() => {
-                    if (longPressTimer) {
-                        longPressTimer = null;
+                this.longPressTimer = setTimeout(() => {
+                    if (this.longPressTimer) {
+                        this.longPressTimer = null;
                         this.mouseUp(e);
                         this.rightClick(e);
                     }
@@ -545,6 +549,10 @@ Entry.Comment = class Comment {
             this.dragMode === Entry.DRAG_MODE_DRAG ||
             this.getMouseMoveDiff(mouseEvent) > Entry.BlockView.DRAG_RADIUS
         ) {
+            if (this.longPressTimer) {
+                clearTimeout(this.longPressTimer);
+                this.longPressTimer = null;
+            }
             if (this.isEditing) {
                 this.destroyTextArea();
             }
@@ -576,6 +584,10 @@ Entry.Comment = class Comment {
 
     mouseUp(e) {
         e.stopPropagation();
+        if (this.longPressTimer) {
+            clearTimeout(this.longPressTimer);
+            this.longPressTimer = null;
+        }
 
         if (!this.isEditing && this.isOpened && this.dragMode === Entry.DRAG_MODE_MOUSEDOWN) {
             this.renderTextArea();
@@ -617,7 +629,7 @@ Entry.Comment = class Comment {
     addControl() {
         const bindEvent = (dom, func) => {
             dom.addEventListener('mousedown', func);
-            dom.addEventListener('touchstart', func);
+            dom.addEventListener('touchstart', func, false);
         };
         bindEvent(this._contentGroup, this.mouseDown);
         bindEvent(this._title, this.mouseDown);

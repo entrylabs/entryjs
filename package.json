@@ -12,7 +12,11 @@
         "type": "git",
         "url": "https://github.com/boolgom/entryjs.git"
     },
-    "keywords": ["entry", "entryjs", "javascript"],
+    "keywords": [
+        "entry",
+        "entryjs",
+        "javascript"
+    ],
     "bugs": {
         "url": "https://github.com/boolgom/entryjs/issues"
     },
@@ -29,6 +33,7 @@
         "axios": "^0.18.0",
         "babel-core": "^7.0.0-bridge.0",
         "entry-tool": "latest",
+        "hammerjs": "^2.0.8",
         "hyperid": "^1.4.1",
         "jest": "^23.3.0",
         "lodash": "^4.17.5",

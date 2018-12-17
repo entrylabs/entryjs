@@ -6,119 +6,120 @@
 
 import EntryTool from 'entry-tool';
 
-var Entry = require('../entry');
+const Entry = require('../entry');
 
 /**
  * Class for a playground.
  * This manage all view related with block.
  * @constructor
  */
-Entry.Playground = function() {
-    this.isTextBGMode_ = false;
-    console.log();
-    this.enableArduino = false;
+Entry.Playground = class {
+    constructor() {
+        this.isTextBGMode_ = false;
+        this.enableArduino = false;
 
-    /**
-     * playground's current view type
-     * View types are 'default', 'code', 'picture', 'text', sound'
-     * @type {string}
-     */
-    this.viewMode_ = 'default';
-    Entry.addEventListener('textEdited', () => {
-        this.injectText();
-    });
-    Entry.addEventListener('hwChanged', () => {
-        this.updateHW();
-    });
-    Entry.addEventListener('commentVisibleChanged', this.toggleCommentButtonVisible.bind(this));
-};
+        /**
+         * playground's current view type
+         * View types are 'default', 'code', 'picture', 'text', sound'
+         * @type {string}
+         */
+        this.viewMode_ = 'default';
+        Entry.addEventListener('textEdited', () => {
+            this.injectText();
+        });
+        Entry.addEventListener('hwChanged', () => {
+            this.updateHW();
+        });
+        Entry.addEventListener('commentVisibleChanged', this.toggleCommentButtonVisible.bind(this));
+    }
 
-(function(p) {
-    p.setMode = function(mode) {
+    setMode(mode) {
         this.mainWorkspace.setMode(mode);
-    };
+    }
 
     /**
      * Control bar view generator.
      * @param {!Element} playgroundView playgroundView from Entry.
      * @param {?string} option for choose type of view.
      */
-    p.generateView = function(playgroundView, option = 'workspace') {
+    generateView(playgroundView, option = 'workspace') {
         /** @type {!Element} */
         this.view_ = playgroundView;
         this.view_.addClass('entryPlayground');
-        this.view_.addClass('entryPlaygroundWorkspace');
+        if (option === 'workspace') {
+            this.view_.addClass('entryPlaygroundWorkspace');
 
-        var tabView = Entry.createElement('div', 'entryCategoryTab')
-            .addClass('entryPlaygroundTabWorkspace')
-            .appendTo(this.view_);
-        this.generateTabView(tabView);
-        this.tabView_ = tabView;
+            const tabView = Entry.createElement('div', 'entryCategoryTab')
+                .addClass('entryPlaygroundTabWorkspace')
+                .appendTo(this.view_);
+            this.generateTabView(tabView);
+            this.tabView_ = tabView;
 
-        const tabButtonView = Entry.createElement('div', 'entryButtonTab')
-            .addClass('entryPlaygroundButtonTabWorkspace')
-            .appendTo(this.view_);
-        this.createButtonTabView(tabButtonView);
-        this.tabButtonView_ = tabButtonView;
+            const tabButtonView = Entry.createElement('div', 'entryButtonTab')
+                .addClass('entryPlaygroundButtonTabWorkspace')
+                .appendTo(this.view_);
+            this.createButtonTabView(tabButtonView);
+            this.tabButtonView_ = tabButtonView;
 
-        var curtainView = Entry.createElement('div', 'entryCurtain')
-            .addClass('entryPlaygroundCurtainWorkspace entryRemove')
-            .appendTo(this.view_);
-        var [mentHead, mentTail = ''] = Lang.Workspace.cannot_edit_click_to_stop.split('.');
-        curtainView.innerHTML = mentHead + '.<br/>' + mentTail;
-        curtainView.addEventListener('click', function() {
-            Entry.engine.toggleStop();
-        });
-        this.curtainView_ = curtainView;
+            const curtainView = Entry.createElement('div', 'entryCurtain')
+                .addClass('entryPlaygroundCurtainWorkspace entryRemove')
+                .appendTo(this.view_);
+            const [mentHead, mentTail = ''] = Lang.Workspace.cannot_edit_click_to_stop.split('.');
+            curtainView.innerHTML = `${mentHead}.<br/>${mentTail}`;
+            curtainView.addEventListener('click', function() {
+                Entry.engine.toggleStop();
+            });
+            this.curtainView_ = curtainView;
 
-        var pictureView = Entry.createElement('div', 'entryPicture')
-            .addClass('entryPlaygroundPictureWorkspace entryRemove')
-            .appendTo(this.view_);
-        this.generatePictureView(pictureView);
-        this.pictureView_ = pictureView;
+            const pictureView = Entry.createElement('div', 'entryPicture')
+                .addClass('entryPlaygroundPictureWorkspace entryRemove')
+                .appendTo(this.view_);
+            this.generatePictureView(pictureView);
+            this.pictureView_ = pictureView;
 
-        var textView = Entry.createElement('div', 'entryText')
-            .addClass('entryPlaygroundTextWorkspace entryRemove')
-            .appendTo(this.view_);
-        this.generateTextView(textView);
-        this.textView_ = textView;
+            const textView = Entry.createElement('div', 'entryText')
+                .addClass('entryPlaygroundTextWorkspace entryRemove')
+                .appendTo(this.view_);
+            this.generateTextView(textView);
+            this.textView_ = textView;
 
-        var soundView = Entry.createElement('div', 'entrySound')
-            .addClass('entryPlaygroundSoundWorkspace entryRemove')
-            .appendTo(this.view_);
-        this.generateSoundView(soundView);
-        this.soundView_ = soundView;
+            const soundView = Entry.createElement('div', 'entrySound')
+                .addClass('entryPlaygroundSoundWorkspace entryRemove')
+                .appendTo(this.view_);
+            this.generateSoundView(soundView);
+            this.soundView_ = soundView;
 
-        var defaultView = Entry.createElement('div', 'entryDefault')
-            .addClass('entryPlaygroundDefaultWorkspace')
-            .appendTo(this.view_);
-        this.generateDefaultView(defaultView);
-        this.defaultView_ = defaultView;
+            const defaultView = Entry.createElement('div', 'entryDefault')
+                .addClass('entryPlaygroundDefaultWorkspace')
+                .appendTo(this.view_);
+            this.generateDefaultView(defaultView);
+            this.defaultView_ = defaultView;
 
-        //Code view must be append at last.
-        var codeView = Entry.createElement('div', 'entryCode')
-            .addClass('entryPlaygroundCodeWorkspace entryRemove')
-            .appendTo(this.view_);
-        this.generateCodeView(codeView);
-        this.codeView_ = codeView;
+            //Code view must be append at last.
+            const codeView = Entry.createElement('div', 'entryCode')
+                .addClass('entryPlaygroundCodeWorkspace entryRemove')
+                .appendTo(this.view_);
+            this.generateCodeView(codeView);
+            this.codeView_ = codeView;
 
-        var resizeHandle = Entry.createElement('div')
-            .addClass('entryPlaygroundResizeWorkspace', 'entryRemove')
-            .appendTo(this.view_);
-        this.resizeHandle_ = resizeHandle;
-        this.initializeResizeHandle(resizeHandle);
+            const resizeHandle = Entry.createElement('div')
+                .addClass('entryPlaygroundResizeWorkspace', 'entryRemove')
+                .appendTo(this.view_);
+            this.resizeHandle_ = resizeHandle;
+            this.initializeResizeHandle(resizeHandle);
 
-        /** @type {!Element} */
-        this.codeView_ = codeView;
+            /** @type {!Element} */
+            this.codeView_ = codeView;
 
-        Entry.addEventListener('run', () => {
-            Entry.playground.curtainView_.removeClass('entryRemove');
-        });
-        Entry.addEventListener('stop', () => {
-            Entry.playground.curtainView_.addClass('entryRemove');
-        });
-        this.applyTabOption();
-    };
+            Entry.addEventListener('run', () => {
+                Entry.playground.curtainView_.removeClass('entryRemove');
+            });
+            Entry.addEventListener('stop', () => {
+                Entry.playground.curtainView_.addClass('entryRemove');
+            });
+            this.applyTabOption();
+        }
+    }
 
     /**
      * Generate default view.
@@ -126,23 +127,23 @@ Entry.Playground = function() {
      * @param {!Element} defaultView
      * @return {Element}
      */
-    p.generateDefaultView = function(defaultView) {
+    generateDefaultView(defaultView) {
         return defaultView;
-    };
+    }
 
     /**
      * generate tab menus
      * @param {!Element} tabView
      * @return {Element}
      */
-    p.generateTabView = function(tabView) {
-        var that = this;
-        var tabList = Entry.createElement('ul').addClass('entryTabListWorkspace');
+    generateTabView(tabView) {
+        const that = this;
+        const tabList = Entry.createElement('ul').addClass('entryTabListWorkspace');
         this.tabList_ = tabList;
         tabView.appendChild(tabList);
 
         this.tabViewElements = {};
-        var codeTab = Entry.createElement('li', 'entryCodeTab')
+        const codeTab = Entry.createElement('li', 'entryCodeTab')
             .addClass('entryTabListItemWorkspace entryTabSelected')
             .bindOnClick(() => {
                 Entry.do('playgroundChangeViewMode', 'code', that.selectedViewMode);
@@ -152,7 +153,7 @@ Entry.Playground = function() {
         this.tabViewElements.code = codeTab;
         this._codeTab = codeTab;
 
-        var pictureTab = Entry.createElement('li', 'entryPictureTab')
+        const pictureTab = Entry.createElement('li', 'entryPictureTab')
             .addClass('entryTabListItemWorkspace')
             .bindOnClick(() => {
                 Entry.do('playgroundChangeViewMode', 'picture', that.selectedViewMode);
@@ -162,7 +163,7 @@ Entry.Playground = function() {
         this.tabViewElements.picture = pictureTab;
         this.pictureTab = pictureTab;
 
-        var textboxTab = Entry.createElement('li', 'entryTextboxTab')
+        const textboxTab = Entry.createElement('li', 'entryTextboxTab')
             .addClass('entryTabListItemWorkspace entryRemove')
             .appendTo(tabList)
             .bindOnClick(() => {
@@ -172,7 +173,7 @@ Entry.Playground = function() {
         this.tabViewElements.text = textboxTab;
         this.textboxTab = textboxTab;
 
-        var soundTab = Entry.createElement('li', 'entrySoundTab')
+        const soundTab = Entry.createElement('li', 'entrySoundTab')
             .addClass('entryTabListItemWorkspace')
             .appendTo(tabList)
             .bindOnClick(() => {
@@ -182,7 +183,7 @@ Entry.Playground = function() {
         this.tabViewElements.sound = soundTab;
         this.soundTab = soundTab;
 
-        var variableTab = Entry.createElement('li', 'entryVariableTab')
+        const variableTab = Entry.createElement('li', 'entryVariableTab')
             .addClass('entryTabListItemWorkspace entryVariableTabWorkspace')
             .appendTo(tabList)
             .bindOnClick(() => {
@@ -191,60 +192,60 @@ Entry.Playground = function() {
         variableTab.innerHTML = Lang.Workspace.tab_attribute;
         this.tabViewElements.variable = variableTab;
         this.variableTab = variableTab;
-    };
+    }
 
-    p.createButtonTabView = function(tabButtonView) {
+    createButtonTabView(tabButtonView) {
         const commentToggleButton = Entry.createElement('div')
             .addClass('entryPlaygroundCommentButtonWorkspace showComment')
             .appendTo(tabButtonView);
 
         this.commentToggleButton_ = commentToggleButton;
-        commentToggleButton.bindOnClick((e) => {
+        commentToggleButton.bindOnClick(() => {
             this.toggleCommentButton();
         });
-    };
+    }
 
-    p.toggleCommentButton = function() {
+    toggleCommentButton() {
         if (this.board.isVisibleComment) {
             Entry.do('hideAllComment', this.board);
         } else {
             Entry.do('showAllComment', this.board);
         }
         this.toggleCommentButtonVisible();
-    };
+    }
 
-    p.toggleCommentButtonVisible = function() {
+    toggleCommentButtonVisible() {
         if (this.board.isVisibleComment) {
             this.commentToggleButton_.addClass('showComment');
         } else {
             this.commentToggleButton_.removeClass('showComment');
         }
-    };
+    }
 
     /**
      * Inject and generate code view
      * @param {!Element} codeView
      * @return {Element}
      */
-    p.generateCodeView = function(codeView) {
-        var variableView = this.createVariableView();
+    generateCodeView(codeView) {
+        const variableView = this.createVariableView();
         codeView.appendChild(variableView);
         this.variableView_ = variableView;
 
         codeView = Entry.Dom(codeView);
-        var boardView = Entry.Dom('div', {
+        const boardView = Entry.Dom('div', {
             parent: codeView,
             id: 'entryWorkspaceBoard',
             class: 'entryWorkspaceBoard',
         });
 
-        var blockMenuView = Entry.Dom('div', {
+        const blockMenuView = Entry.Dom('div', {
             parent: codeView,
             id: 'entryWorkspaceBlockMenu',
             class: 'entryWorkspaceBlockMenu',
         });
 
-        var initOpts = {
+        const initOpts = {
             blockMenu: {
                 dom: blockMenuView,
                 align: 'LEFT',
@@ -256,7 +257,9 @@ Entry.Playground = function() {
             },
             readOnly: Entry.readOnly,
         };
-        if (Entry.textCodingEnable) initOpts.vimBoard = { dom: boardView };
+        if (Entry.textCodingEnable) {
+            initOpts.vimBoard = { dom: boardView };
+        }
 
         this.mainWorkspace = new Entry.Workspace(initOpts);
         this.blockMenu = this.mainWorkspace.blockMenu;
@@ -265,36 +268,38 @@ Entry.Playground = function() {
         this.banExpansionBlock();
         this.vimBoard = this.mainWorkspace.vimBoard;
 
-        if (Entry.hw) this.updateHW();
-    };
+        if (Entry.hw) {
+            this.updateHW();
+        }
+    }
 
     /**
      * Generate picture view.
      * @param {!Element} pictureView
      * @return {Element}
      */
-    p.generatePictureView = function(PictureView) {
-        if (Entry.type == 'workspace') {
-            var pictureAdd = Entry.createElement('div', 'entryAddPicture')
+    generatePictureView(PictureView) {
+        if (Entry.type === 'workspace') {
+            const pictureAdd = Entry.createElement('div', 'entryAddPicture')
                 .addClass('entryPlaygroundAddPicture')
+                .appendTo(PictureView);
+
+            const innerPictureAdd = Entry.createElement('div', 'entryAddPictureInner')
+                .addClass('entryPlaygroundAddPictureInner')
                 .bindOnClick(() => {
-                    if (!Entry.container || Entry.container.isSceneObjectsExist())
+                    if (!Entry.container || Entry.container.isSceneObjectsExist()) {
                         Entry.do('playgroundClickAddPicture');
-                    else {
+                    } else {
                         Entry.toast.alert(
                             Lang.Workspace.add_object_alert,
                             Lang.Workspace.add_object_alert_msg
                         );
                     }
                 })
-                .appendTo(PictureView);
-
-            var innerPictureAdd = Entry.createElement('div', 'entryAddPictureInner')
-                .addClass('entryPlaygroundAddPictureInner')
                 .appendTo(pictureAdd);
             innerPictureAdd.innerHTML = Lang.Workspace.picture_add;
             this._pictureAddButton = innerPictureAdd;
-            var pictureList = Entry.createElement('ul', 'entryPictureList')
+            const pictureList = Entry.createElement('ul', 'entryPictureList')
                 .addClass('entryPlaygroundPictureList')
                 .appendTo(PictureView);
 
@@ -319,17 +324,17 @@ Entry.Playground = function() {
                     .appendTo(PictureView)
             );
         }
-    };
+    }
 
-    p.updatePictureView = function() {
+    updatePictureView() {
         if (this.pictureSortableListWidget) {
             this.pictureSortableListWidget.setData({
                 items: this._getSortablePictureList(),
             });
         }
-    };
+    }
 
-    p._getSortablePictureList = function() {
+    _getSortablePictureList() {
         if (!this.object || !this.object.pictures) {
             return [];
         }
@@ -340,172 +345,221 @@ Entry.Playground = function() {
                 item: value.view,
             };
         });
-    };
+    }
 
     /**
      * Generate text view.
      * @param {!Element} textView
      * @return {Element}
      */
-    p.generateTextView = function(textView) {
-        var that = this;
-        var wrap = Entry.createElement('div').addClass('write_box').appendTo(textView);
+    generateTextView(textView) {
+        const that = this;
+        const wrap = Entry.createElement('div')
+            .addClass('write_box')
+            .appendTo(textView);
         const writeSet = Entry.createElement('div').addClass('write_set');
         const inputArea = Entry.createElement('div').addClass('input_box');
         wrap.appendChild(writeSet);
         wrap.appendChild(inputArea);
 
         //write set 글 속성 탭
-        let fontSelect = Entry.createElement('div').addClass('pop_selectbox');
-        let fontLink = Entry.createElement('a', "entryPainterAttrFontName").addClass('select_link imico_pop_select_arr_down');
+        const fontSelect = Entry.createElement('div').addClass('pop_selectbox');
+        const fontLink = Entry.createElement('a', 'entryPainterAttrFontName').addClass(
+            'select_link imico_pop_select_arr_down'
+        );
         fontLink.bindOnClick(() => {
-            const options = EntryStatic.fonts.map(font => [font.name, font]);
-            fontLink.addClass("imico_pop_select_arr_up");
-            fontLink.removeClass("imico_pop_select_arr_down");
-            this.openDropDown(options, fontLink, value => {
-                let font = value[1];
-                var textValue = textEditInput.value;
-                if (that.object.entity.getLineBreak()) textValue = textEditArea.value;
-
-                if (/[\u4E00-\u9FFF]/.exec(textValue) != null) {
-                    font = options[0][1];
-                    entrylms.alert(Lang.Menus.not_supported_text);
-                }
-                fontLink.innerText = font.name;
-                $("#entryPainterAttrFontName").data("font", font);
-                this.object.entity.setFontType(font.family);
-            }, () => {
-                fontLink.removeClass("imico_pop_select_arr_up");
-                fontLink.addClass("imico_pop_select_arr_down");
+            const options = EntryStatic.fonts.map((font) => {
+                return [font.name, font];
             });
+            fontLink.addClass('imico_pop_select_arr_up');
+            fontLink.removeClass('imico_pop_select_arr_down');
+            this.openDropDown(
+                options,
+                fontLink,
+                (value) => {
+                    let font = value[1];
+                    let textValue = textEditInput.value;
+                    if (that.object.entity.getLineBreak()) {
+                        textValue = textEditArea.value;
+                    }
+
+                    if (/[\u4E00-\u9FFF]/.exec(textValue) != null) {
+                        font = options[0][1];
+                        entrylms.alert(Lang.Menus.not_supported_text);
+                    }
+                    fontLink.innerText = font.name;
+                    $('#entryPainterAttrFontName').data('font', font);
+                    this.object.entity.setFontType(font.family);
+                },
+                () => {
+                    fontLink.removeClass('imico_pop_select_arr_up');
+                    fontLink.addClass('imico_pop_select_arr_down');
+                }
+            );
         });
         fontSelect.appendChild(fontLink);
         writeSet.appendChild(fontSelect);
 
         //스타일 박스
-        let alignBox = Entry.createElement('div').addClass('font_style_box');
+        const alignBox = Entry.createElement('div').addClass('font_style_box');
         writeSet.appendChild(alignBox);
 
-        let alignLeft = Entry.createElement('a').addClass('style_link imbtn_pop_font_align_left').bindOnClick((e) => {
-            Entry.playground.setFontAlign(Entry.TEXT_ALIGN_LEFT);
-        });
+        const alignLeft = Entry.createElement('a')
+            .addClass('style_link imbtn_pop_font_align_left')
+            .bindOnClick(() => {
+                Entry.playground.setFontAlign(Entry.TEXT_ALIGN_LEFT);
+            });
         alignBox.appendChild(alignLeft);
         this.alignLeftBtn = alignLeft;
-        let alignMiddle = Entry.createElement('a').addClass('style_link imbtn_pop_font_align_middle').bindOnClick((e) => {
-            Entry.playground.setFontAlign(Entry.TEXT_ALIGN_CENTER);
-        });
+        const alignMiddle = Entry.createElement('a')
+            .addClass('style_link imbtn_pop_font_align_middle')
+            .bindOnClick(() => {
+                Entry.playground.setFontAlign(Entry.TEXT_ALIGN_CENTER);
+            });
         alignBox.appendChild(alignMiddle);
         this.alignCenterBtn = alignMiddle;
-        let alignRight = Entry.createElement('a').addClass('style_link imbtn_pop_font_align_right').bindOnClick((e) => {
-            Entry.playground.setFontAlign(Entry.TEXT_ALIGN_RIGHT);
-        });
+        const alignRight = Entry.createElement('a')
+            .addClass('style_link imbtn_pop_font_align_right')
+            .bindOnClick(() => {
+                Entry.playground.setFontAlign(Entry.TEXT_ALIGN_RIGHT);
+            });
         alignBox.appendChild(alignRight);
         this.alignRightBtn = alignRight;
 
-        let styleBox = Entry.createElement('div').addClass('font_style_box');
+        const styleBox = Entry.createElement('div').addClass('font_style_box');
         writeSet.appendChild(styleBox);
 
-        let bold = Entry.createElement('a').addClass('style_link imbtn_pop_font_bold').bindOnClick(function(e) {
-            $(e.currentTarget).toggleClass("on");
-            var isBold = Entry.playground.object.entity.toggleFontBold() || false;
-        });
+        const bold = Entry.createElement('a')
+            .addClass('style_link imbtn_pop_font_bold')
+            .bindOnClick(function(e) {
+                $(e.currentTarget).toggleClass('on');
+                Entry.playground.object.entity.toggleFontBold();
+            });
         styleBox.appendChild(bold);
 
-        let underLine = Entry.createElement('a').addClass('style_link imbtn_pop_font_underline').bindOnClick(function(e) {
-            var underLineState = !Entry.playground.object.entity.getUnderLine() || false;
-            $(e.currentTarget).toggleClass("on");
-            Entry.playground.object.entity.setUnderLine(underLineState);
-        });
+        const underLine = Entry.createElement('a')
+            .addClass('style_link imbtn_pop_font_underline')
+            .bindOnClick(function(e) {
+                const underLineState = !Entry.playground.object.entity.getUnderLine() || false;
+                $(e.currentTarget).toggleClass('on');
+                Entry.playground.object.entity.setUnderLine(underLineState);
+            });
         styleBox.appendChild(underLine);
 
-        let italic = Entry.createElement('a').addClass('style_link imbtn_pop_font_italic').bindOnClick((e) => {
-            $(e.currentTarget).toggleClass("on");
-            var isItalic = Entry.playground.object.entity.toggleFontItalic();
-        });
+        const italic = Entry.createElement('a')
+            .addClass('style_link imbtn_pop_font_italic')
+            .bindOnClick((e) => {
+                $(e.currentTarget).toggleClass('on');
+                Entry.playground.object.entity.toggleFontItalic();
+            });
         styleBox.appendChild(italic);
 
-        let through = Entry.createElement('a').addClass('style_link imbtn_pop_font_through').bindOnClick((e) => {
-            $(e.currentTarget).toggleClass("on");
-            var strikeState = !Entry.playground.object.entity.getStrike() || false;
-            Entry.playground.object.entity.setStrike(strikeState);
-        });
+        const through = Entry.createElement('a')
+            .addClass('style_link imbtn_pop_font_through')
+            .bindOnClick((e) => {
+                $(e.currentTarget).toggleClass('on');
+                const strikeState = !Entry.playground.object.entity.getStrike() || false;
+                Entry.playground.object.entity.setStrike(strikeState);
+            });
         styleBox.appendChild(through);
 
-        let color = Entry.createElement('a').addClass('style_link imbtn_pop_font_color');
-        color.bindOnClick(() => this.openColourPicker(color, this.object.entity.getColour(), this.setTextColour.bind(this)));
+        const color = Entry.createElement('a').addClass('style_link imbtn_pop_font_color');
+        color.bindOnClick(() => {
+            return this.openColourPicker(
+                color,
+                this.object.entity.getColour(),
+                this.setTextColour.bind(this)
+            );
+        });
         styleBox.appendChild(color);
 
-        let backgroundColor = Entry.createElement('a').addClass('style_link imbtn_pop_font_backgroundcolor');
-        backgroundColor.bindOnClick(() => this.openColourPicker(backgroundColor, this.object.entity.getBGColour(), this.setBackgroundColour.bind(this)));
+        const backgroundColor = Entry.createElement('a').addClass(
+            'style_link imbtn_pop_font_backgroundcolor'
+        );
+        backgroundColor.bindOnClick(() => {
+            return this.openColourPicker(
+                backgroundColor,
+                this.object.entity.getBGColour(),
+                this.setBackgroundColour.bind(this)
+            );
+        });
         styleBox.appendChild(backgroundColor);
 
-        let writeTypeBox = Entry.createElement("div").addClass('write_type_box');
-        let singleLine = Entry.createElement('a');
+        const writeTypeBox = Entry.createElement('div').addClass('write_type_box');
+        const singleLine = Entry.createElement('a');
         singleLine.innerText = Lang.Buttons.single_line;
-        singleLine.bindOnClick(() => Entry.playground.toggleLineBreak(false));
-        let multiLine = Entry.createElement('a');
+        singleLine.bindOnClick(() => {
+            return Entry.playground.toggleLineBreak(false);
+        });
+        const multiLine = Entry.createElement('a');
         multiLine.innerText = Lang.Buttons.multi_line;
-        multiLine.bindOnClick(() => Entry.playground.toggleLineBreak(true));
+        multiLine.bindOnClick(() => {
+            return Entry.playground.toggleLineBreak(true);
+        });
         writeTypeBox.appendChild(singleLine);
         writeTypeBox.appendChild(multiLine);
         inputArea.appendChild(writeTypeBox);
 
         //글자 크기 조절 슬라이드.
-        var fontSizeWrapper = Entry.createElement('div').addClass('entryPlaygroundFontSizeWrapper multi');
+        const fontSizeWrapper = Entry.createElement('div').addClass(
+            'entryPlaygroundFontSizeWrapper multi'
+        );
         inputArea.appendChild(fontSizeWrapper);
         this.fontSizeWrapper = fontSizeWrapper;
 
-        var fontSizeLabel = Entry.createElement('div').addClass('entryPlaygroundFontSizeLabel');
+        const fontSizeLabel = Entry.createElement('div').addClass('entryPlaygroundFontSizeLabel');
         fontSizeLabel.innerHTML = Lang.General.font_size;
         fontSizeWrapper.appendChild(fontSizeLabel);
 
-        var fontSizeSlider = Entry.createElement('div').addClass('entryPlaygroundFontSizeSlider');
+        const fontSizeSlider = Entry.createElement('div').addClass('entryPlaygroundFontSizeSlider');
         fontSizeWrapper.appendChild(fontSizeSlider);
 
-        var fontSizeIndiciator = Entry.createElement('div').addClass(
+        const fontSizeIndiciator = Entry.createElement('div').addClass(
             'entryPlaygroundFontSizeIndicator'
         );
         fontSizeSlider.appendChild(fontSizeIndiciator);
         this.fontSizeIndiciator = fontSizeIndiciator;
 
-        var fontSizeKnob = Entry.createElement('div').addClass('entryPlaygroundFontSizeKnob');
+        const fontSizeKnob = Entry.createElement('div').addClass('entryPlaygroundFontSizeKnob');
         fontSizeSlider.appendChild(fontSizeKnob);
         this.fontSizeKnob = fontSizeKnob;
 
         $(fontSizeKnob).bind('mousedown.fontKnob touchstart.fontKnob', function() {
-            var resizeOffset = $(fontSizeSlider).offset().left;
+            const resizeOffset = $(fontSizeSlider).offset().left;
 
-            var doc = $(document);
+            const doc = $(document);
             doc.bind('mousemove.fontKnob touchmove.fontKnob', onMouseMove);
             doc.bind('mouseup.fontKnob touchend.fontKnob', onMouseUp);
 
             function onMouseMove(e) {
-                var left = e.pageX - resizeOffset;
+                let left = e.pageX - resizeOffset;
                 left = Math.max(left, 5);
                 left = Math.min(left, 136);
-                fontSizeKnob.style.left = left + 'px';
+                fontSizeKnob.style.left = `${left}px`;
                 left /= 1.36;
-                fontSizeIndiciator.style.width = left + '%';
+                fontSizeIndiciator.style.width = `${left}%`;
                 Entry.playground.object.entity.setFontSize(left);
             }
 
-            function onMouseUp(e) {
+            function onMouseUp() {
                 $(document).unbind('.fontKnob');
             }
         });
 
-        let inputInner = Entry.createElement("div").addClass("input_inner");
+        const inputInner = Entry.createElement('div').addClass('input_inner');
         inputArea.appendChild(inputInner);
 
-        var textEditInput = Entry.createElement('input').addClass('entryPlayground_textBox single');
-        textEditInput.type="text";
-        textEditInput.placeholder=Lang.Workspace.textbox_input;
-        var textChangeApply = function() {
-            var object = Entry.playground.object;
-            var entity = object.entity;
-            const selected = $("#entryPainterAttrFontName").data("font");
+        const textEditInput = Entry.createElement('input').addClass(
+            'entryPlayground_textBox single'
+        );
+        textEditInput.type = 'text';
+        textEditInput.placeholder = Lang.Workspace.textbox_input;
+        const textChangeApply = function() {
+            const object = Entry.playground.object;
+            const entity = object.entity;
+            const selected = $('#entryPainterAttrFontName').data('font');
             const defaultFont = EntryStatic.fonts[0];
-            if (selected.family == 'Nanum Pen Script' || selected.family == 'Jeju Hallasan') {
+            if (selected.family === 'Nanum Pen Script' || selected.family === 'Jeju Hallasan') {
                 if (/[\u4E00-\u9FFF]/.exec(this.value) != null) {
                     $('#entryPainterAttrFontName').text(defaultFont.name);
                     entity.setFontType(defaultFont.family);
@@ -530,8 +584,8 @@ Entry.Playground = function() {
         this.textEditInput = textEditInput;
         inputInner.appendChild(textEditInput);
 
-        var textEditArea = Entry.createElement('textarea');
-        textEditArea.placeholder=Lang.Workspace.textbox_input;
+        const textEditArea = Entry.createElement('textarea');
+        textEditArea.placeholder = Lang.Workspace.textbox_input;
         textEditArea.addClass('entryPlayground_textArea multi');
         textEditArea.style.display = 'none';
         textEditArea.onkeyup = textChangeApply;
@@ -548,25 +602,25 @@ Entry.Playground = function() {
         this.textEditArea = textEditArea;
         inputInner.appendChild(textEditArea);
 
-        let singleDesc = Entry.createElement("ul").addClass("list single");
-        singleDesc.appendChild(Entry.createElement("li").text(Lang.Menus.linebreak_off_desc_3));
-        singleDesc.appendChild(Entry.createElement("li").text(Lang.Menus.linebreak_off_desc_2));
-        singleDesc.appendChild(Entry.createElement("li").text(Lang.Menus.linebreak_off_desc_3));
+        const singleDesc = Entry.createElement('ul').addClass('list single');
+        singleDesc.appendChild(Entry.createElement('li').text(Lang.Menus.linebreak_off_desc_3));
+        singleDesc.appendChild(Entry.createElement('li').text(Lang.Menus.linebreak_off_desc_2));
+        singleDesc.appendChild(Entry.createElement('li').text(Lang.Menus.linebreak_off_desc_3));
 
-        let multiDesc = Entry.createElement("ul").addClass("list multi");
-        multiDesc.appendChild(Entry.createElement("li").text(Lang.Menus.linebreak_on_desc_3));
-        multiDesc.appendChild(Entry.createElement("li").text(Lang.Menus.linebreak_on_desc_2));
-        multiDesc.appendChild(Entry.createElement("li").text(Lang.Menus.linebreak_on_desc_3));
+        const multiDesc = Entry.createElement('ul').addClass('list multi');
+        multiDesc.appendChild(Entry.createElement('li').text(Lang.Menus.linebreak_on_desc_3));
+        multiDesc.appendChild(Entry.createElement('li').text(Lang.Menus.linebreak_on_desc_2));
+        multiDesc.appendChild(Entry.createElement('li').text(Lang.Menus.linebreak_on_desc_3));
 
         inputArea.appendChild(singleDesc);
         inputArea.appendChild(multiDesc);
-    };
+    }
 
     /**
      * 소리 편집 기능 신규 개발시 해당 로직 삭제
      * @private
      */
-    function _createSoundEditView() {
+    _createSoundEditView() {
         const soundEditView = Entry.createElement('div', 'entrySoundEdit').addClass(
             'entryPlaygroundSoundEdit'
         );
@@ -596,23 +650,23 @@ Entry.Playground = function() {
      * @return {Element}
      * @param soundView
      */
-    p.generateSoundView = function(soundView) {
+    generateSoundView(soundView) {
         if (Entry.type == 'workspace') {
             const soundAdd = Entry.createElement('div', 'entryAddSound');
             soundAdd.addClass('entryPlaygroundAddSound');
-            soundAdd.bindOnClick(function(e) {
-                if (!Entry.container || Entry.container.isSceneObjectsExist())
+            const innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner').addClass(
+                'entryPlaygroundAddSoundInner'
+            );
+            innerSoundAdd.bindOnClick(function() {
+                if (!Entry.container || Entry.container.isSceneObjectsExist()) {
                     Entry.do('playgroundClickAddSound');
-                else {
+                } else {
                     Entry.toast.alert(
                         Lang.Workspace.add_object_alert,
                         Lang.Workspace.add_object_alert_msg
                     );
                 }
             });
-            const innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner').addClass(
-                'entryPlaygroundAddSoundInner'
-            );
             innerSoundAdd.innerHTML = Lang.Workspace.sound_add;
             soundAdd.appendChild(innerSoundAdd);
             soundView.appendChild(soundAdd);
@@ -620,10 +674,10 @@ Entry.Playground = function() {
                 'entryPlaygroundSoundList'
             );
             $(soundList).sortable({
-                start: function(event, ui) {
+                start(event, ui) {
                     ui.item.data('start_pos', ui.item.index());
                 },
-                stop: function(event, ui) {
+                stop(event, ui) {
                     Entry.playground.moveSound(ui.item.data('start_pos'), ui.item.index());
                 },
                 axis: 'y',
@@ -632,12 +686,12 @@ Entry.Playground = function() {
             this.soundListView_ = soundList;
             this._soundAddButton = innerSoundAdd;
 
-            const soundEditView = _createSoundEditView();
+            const soundEditView = this._createSoundEditView();
             soundView.appendChild(soundEditView);
-        } else if (Entry.type == 'phone') {
+        } else if (Entry.type === 'phone') {
             const soundAdd = Entry.createElement('div', 'entryAddSound');
             soundAdd.addClass('entryPlaygroundSoundEdit');
-            soundAdd.bindOnClick(function(e) {
+            soundAdd.bindOnClick(function() {
                 Entry.dispatchEvent('openSoundManager');
             });
             const innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner');
@@ -647,98 +701,113 @@ Entry.Playground = function() {
             soundView.appendChild(soundAdd);
             const soundList = Entry.createElement('ul', 'entrySoundList');
             soundList.addClass('entryPlaygroundSoundListPhone');
-            if ($)
+            if ($) {
                 $(soundList).sortable({
-                    start: function(event, ui) {
+                    start(event, ui) {
                         ui.item.data('start_pos', ui.item.index());
                     },
-                    stop: function(event, ui) {
-                        var start = ui.item.data('start_pos');
-                        var end = ui.item.index();
+                    stop(event, ui) {
+                        const start = ui.item.data('start_pos');
+                        const end = ui.item.index();
                         Entry.playground.moveSound(start, end);
                     },
                     axis: 'y',
                 });
+            }
             soundView.appendChild(soundList);
             this.soundListView_ = soundList;
         }
-    };
+    }
 
     /**
      * Inject object
      * @param {?Entry.EntryObject} object
      */
-    p.injectObject = function(object) {
+    injectObject(object) {
         /** @type {Entry.Entryobject} */
         if (!object) {
             this.changeViewMode('code');
             this.object = null;
             return;
         }
-        if (object === this.object) return;
+        if (object === this.object) {
+            return;
+        }
 
         this.object = object;
 
-        var objectType = object.objectType;
+        const objectType = object.objectType;
         this.setMenu(objectType);
 
         this.injectCode();
 
-        var { text: textTab, picture: pictureTab } = this.tabViewElements;
-        if (objectType == 'sprite' && Entry.pictureEditable) {
-            if (textTab) textTab.addClass('entryRemove');
-            if (pictureTab) pictureTab.removeClass('entryRemove');
-        } else if (objectType == 'textBox') {
-            if (pictureTab) pictureTab.addClass('entryRemove');
-            if (textTab) textTab.removeClass('entryRemove');
+        const { text: textTab, picture: pictureTab } = this.tabViewElements;
+        if (objectType === 'sprite' && Entry.pictureEditable) {
+            if (textTab) {
+                textTab.addClass('entryRemove');
+            }
+            if (pictureTab) {
+                pictureTab.removeClass('entryRemove');
+            }
+        } else if (objectType === 'textBox') {
+            if (pictureTab) {
+                pictureTab.addClass('entryRemove');
+            }
+            if (textTab) {
+                textTab.removeClass('entryRemove');
+            }
         }
 
-        var viewMode = this.viewMode_;
-        if (viewMode == 'default') {
+        const viewMode = this.viewMode_;
+        if (viewMode === 'default') {
             this.changeViewMode('code');
-        } else if (viewMode == 'variable') {
+        } else if (viewMode === 'variable') {
             this.changeViewMode('variable');
-        } else if ((viewMode == 'picture' || viewMode == 'text') && objectType == 'textBox') {
+        } else if ((viewMode === 'picture' || viewMode === 'text') && objectType === 'textBox') {
             this.changeViewMode('text');
-        } else if ((viewMode == 'text' || viewMode == 'picture') && objectType == 'sprite') {
+        } else if ((viewMode === 'text' || viewMode === 'picture') && objectType === 'sprite') {
             this.changeViewMode('picture');
-        } else if (viewMode == 'sound') {
+        } else if (viewMode === 'sound') {
             this.changeViewMode('sound');
         }
 
         _.result(this.blockMenu, 'clearRendered');
         this.reloadPlayground();
-    };
+    }
 
     /**
      * Inject code
      */
-    p.injectCode = function() {
-        var workspace = Entry.getMainWS();
-        if (!workspace) return;
+    injectCode() {
+        const workspace = Entry.getMainWS();
+        if (!workspace) {
+            return;
+        }
 
-        var object = this.object;
-        var vimBoard = workspace.vimBoard;
+        const object = this.object;
+        const vimBoard = workspace.vimBoard;
 
         if (vimBoard && Entry.textCodingEnable && !vimBoard._parser._onError) {
             vimBoard._changedObject = object;
             vimBoard._currentScene = object.scene;
         }
 
-        var board = workspace.getBoard();
-        var engine = Entry.engine;
+        const board = workspace.getBoard();
+        const engine = Entry.engine;
         workspace.changeBoardCode(
             object.script,
             engine && engine.isState('run') ? undefined : board.adjustThreadsPosition.bind(board)
         );
-    };
+    }
 
     /**
      * Inject picture
      */
-    p.injectPicture = function() {
-        var view = this.pictureListView_;
-        if (!view) return;
+    injectPicture() {
+        const view = this.pictureListView_;
+        if (!view) {
+            return;
+        }
 
         if (!this.object) {
             return Entry.dispatchEvent('pictureClear');
@@ -752,20 +821,24 @@ Entry.Playground = function() {
 
         this.updatePictureView();
         this.selectPicture(this.object.selectedPicture);
-    };
+    }
 
     /**
      * Add picture
      * @param {picture model} picture
      */
-    p.addPicture = function(picture, isNew) {
-        var tempPicture = _.clone(picture);
+    addPicture(picture, isNew) {
+        const tempPicture = _.clone(picture);
 
-        if (isNew === true) delete tempPicture.id;
+        if (isNew === true) {
+            delete tempPicture.id;
+        }
         delete tempPicture.view;
 
         picture = Entry.Utils.copy(tempPicture);
-        if (!picture.id) picture.id = Entry.generateHash();
+        if (!picture.id) {
+            picture.id = Entry.generateHash();
+        }
 
         picture.name = Entry.getOrderedName(picture.name, this.object.pictures);
 
@@ -774,100 +847,98 @@ Entry.Playground = function() {
         Entry.do('objectAddPicture', picture.objectId || this.object.id, picture);
         this.injectPicture();
         this.selectPicture(picture);
-    };
+    }
 
     /**
      * set picture
      * @param {picture}
      */
-    p.setPicture = function(picture) {
-        var element = Entry.container.getPictureElement(picture.id, picture.objectId);
-        var $element = $(element);
+    setPicture(picture) {
+        const element = Entry.container.getPictureElement(picture.id, picture.objectId);
+        const $element = $(element);
         if (element) {
             picture.view = element;
             element.picture = picture;
 
-            var thumbnailView = $element.find('#t_' + picture.id)[0];
+            const thumbnailView = $element.find(`#t_${picture.id}`)[0];
             if (picture.fileurl) {
-                thumbnailView.style.backgroundImage = 'url("' + picture.fileurl + '")';
+                thumbnailView.style.backgroundImage = `url("${picture.fileurl}")`;
             } else {
                 // deprecated
-                var fileName = picture.filename;
-                thumbnailView.style.backgroundImage =
-                    'url("' +
-                    Entry.defaultPath +
-                    '/uploads/' +
-                    fileName.substring(0, 2) +
-                    '/' +
-                    fileName.substring(2, 4) +
-                    '/thumb/' +
-                    fileName +
-                    '.png")';
+                const fileName = picture.filename;
+                thumbnailView.style.backgroundImage = `url("${
+                    Entry.defaultPath
+                }/uploads/${fileName.substring(0, 2)}/${fileName.substring(
+                    2,
+                    4
+                )}/thumb/${fileName}.png")`;
             }
-            var sizeView = $element.find('#s_' + picture.id)[0];
-            sizeView.innerHTML = picture.dimension.width + ' X ' + picture.dimension.height;
+            const sizeView = $element.find(`#s_${picture.id}`)[0];
+            sizeView.innerHTML = `${picture.dimension.width} X ${picture.dimension.height}`;
         }
 
         Entry.container.setPicture(picture);
         // Entry.playground.object.setPicture(picture);
-    };
+    }
 
     /**
      * Download a picture
      * @param {!String} pictureId
      */
-    p.downloadPicture = function(pictureId) {
-        var picture = Entry.playground.object.getPicture(pictureId);
+    downloadPicture(pictureId) {
+        const picture = Entry.playground.object.getPicture(pictureId);
         if (picture.fileurl) {
             window.open(
-                '/api/sprite/download/entryjs/' +
-                    btoa(picture.fileurl) +
-                    '/' +
-                    encodeURIComponent(picture.name) +
-                    '.png'
+                `/api/sprite/download/entryjs/${btoa(picture.fileurl)}/${encodeURIComponent(
+                    picture.name
+                )}.png`
             );
         } else {
             window.open(
-                '/api/sprite/download/image/' +
-                    btoa(picture.filename) +
-                    '/' +
-                    encodeURIComponent(picture.name) +
-                    '.png'
+                `/api/sprite/download/image/${btoa(picture.filename)}/${encodeURIComponent(
+                    picture.name
+                )}.png`
             );
         }
-    };
+    }
 
     /**
      * Clone picture
      * @param {!String} pictureId
      */
-    p.clonePicture = function(pictureId) {
-        var sourcePicture = Entry.playground.object.getPicture(pictureId);
+    clonePicture(pictureId) {
+        const sourcePicture = Entry.playground.object.getPicture(pictureId);
         this.addPicture(sourcePicture, true);
-    };
+    }
 
     /**
      * Select picture
      * @param {picture}
      */
-    p.selectPicture = function(picture) {
-        var pictures = this.object.pictures;
-        for (var i = 0, len = pictures.length; i < len; i++) {
-            var target = pictures[i];
-            var view = target.view;
-            if (target.id === picture.id) view.addClass('entryPictureSelected');
-            else view.removeClass('entryPictureSelected');
+    selectPicture(picture) {
+        const pictures = this.object.pictures;
+        for (let i = 0, len = pictures.length; i < len; i++) {
+            const target = pictures[i];
+            const view = target.view;
+            if (target.id === picture.id) {
+                view.addClass('entryPictureSelected');
+            } else {
+                view.removeClass('entryPictureSelected');
+            }
         }
 
-        var objectId_;
-        if (picture && picture.id)
+        let objectId_;
+        if (picture && picture.id) {
             objectId_ = Entry.container.selectPicture(picture.id, picture.objectId);
+        }
 
         if (this.object.id === objectId_) {
-            if (!picture.objectId) picture.objectId = this.object.id;
+            if (!picture.objectId) {
+                picture.objectId = this.object.id;
+            }
             Entry.dispatchEvent('pictureSelected', picture);
         }
-    };
+    }
 
     /**
      * Move picture in this.object.pictures
@@ -875,29 +946,33 @@ Entry.Playground = function() {
      * @param {!number} start
      * @param {!number} end
      */
-    p.movePicture = function(start, end) {
+    movePicture(start, end) {
         this.object.pictures.splice(end, 0, this.object.pictures.splice(start, 1)[0]);
         this.injectPicture();
-    };
+    }
 
     /**
      * Inject text
      */
-    p.injectText = function() {
-        var object = this.object;
+    injectText() {
+        const object = this.object;
 
-        if (!object) return;
+        if (!object) {
+            return;
+        }
 
-        var entity = object.entity;
+        const entity = object.entity;
 
-        var text = entity.getText();
+        const text = entity.getText();
         this.textEditInput.value = text;
         this.textEditArea.value = text;
 
-        const font = EntryStatic.fonts.find(font => font.family === entity.getFontName());
-        if(font) {
+        const font = EntryStatic.fonts.find((font) => {
+            return font.family === entity.getFontName();
+        });
+        if (font) {
             $('#entryPainterAttrFontName').text(font.name);
-            $('#entryPainterAttrFontName').data("font", font);
+            $('#entryPainterAttrFontName').data('font', font);
         }
 
         $('.style_link.imbtn_pop_font_bold').toggleClass('on', entity.fontBold);
@@ -905,55 +980,61 @@ Entry.Playground = function() {
         $('.style_link.imbtn_pop_font_underline').toggleClass('on', entity.getUnderLine());
         $('.style_link.imbtn_pop_font_through').toggleClass('on', entity.getStrike());
 
-        if(entity.colour) {
+        if (entity.colour) {
             this.setTextColour(entity.colour, true);
         }
-        if(entity.bgColor) {
+        if (entity.bgColor) {
             this.setBackgroundColour(entity.bgColor, true);
         }
 
         this.toggleLineBreak(entity.getLineBreak());
 
         if (entity.getLineBreak()) {
-            var LANG = Lang.Menus;
+            const LANG = Lang.Menus;
             $('.entryPlaygroundLinebreakDescription > p').html(LANG.linebreak_on_desc_1);
-            var pDoms = $('.entryPlaygroundLinebreakDescription > ul > li');
+            const pDoms = $('.entryPlaygroundLinebreakDescription > ul > li');
             pDoms.eq(0).text(LANG.linebreak_on_desc_2);
             pDoms.eq(1).text(LANG.linebreak_on_desc_3);
             this._setFontFontUI();
         }
 
         this.setFontAlign(entity.getTextAlign());
-    };
+    }
 
-    p._setFontFontUI = function() {
-        var fontSize = this.object.entity.getFontSize();
-        this.fontSizeIndiciator.style.width = fontSize + '%';
-        this.fontSizeKnob.style.left = fontSize * 1.36 + 'px';
-    };
+    _setFontFontUI() {
+        const fontSize = this.object.entity.getFontSize();
+        this.fontSizeIndiciator.style.width = `${fontSize}%`;
+        this.fontSizeKnob.style.left = `${fontSize * 1.36}px`;
+    }
 
     /**
      * Inject sound
      */
-    p.injectSound = function() {
-        var view = this.soundListView_;
-        if (!view) return;
+    injectSound() {
+        const view = this.soundListView_;
+        if (!view) {
+            return;
+        }
 
-        while (view.hasChildNodes()) view.removeChild(view.lastChild);
+        while (view.hasChildNodes()) {
+            view.removeChild(view.lastChild);
+        }
 
-        if (!this.object) return;
+        if (!this.object) {
+            return;
+        }
 
-        var fragment = document.createDocumentFragment();
+        const fragment = document.createDocumentFragment();
 
-        var sounds = this.object.sounds || [];
+        const sounds = this.object.sounds || [];
         sounds.forEach((sound, i) => {
             !sound.view && Entry.playground.generateSoundElement(sound);
-            var element = sound.view;
+            const element = sound.view;
             element.orderHolder.innerHTML = i + 1;
             fragment.appendChild(element);
         });
         view.appendChild(fragment);
-    };
+    }
 
     /**
      * Move sound in this.object.sounds
@@ -961,89 +1042,99 @@ Entry.Playground = function() {
      * @param {!number} start
      * @param {!number} end
      */
-    p.moveSound = function(start, end) {
+    moveSound(start, end) {
         this.object.sounds.splice(end, 0, this.object.sounds.splice(start, 1)[0]);
         this.updateListViewOrder('sound');
-    };
+    }
 
-    p.addExpansionBlock = function(block, isNew) {
-        var tempBlock = _.clone(block);
+    addExpansionBlock(block, isNew) {
+        const tempBlock = _.clone(block);
         delete tempBlock.view;
-        if (isNew === true) delete tempBlock.id;
+        if (isNew === true) {
+            delete tempBlock.id;
+        }
 
         block = Entry.Utils.copy(tempBlock);
 
-        if (!block.id) block.id = Entry.generateHash();
+        if (!block.id) {
+            block.id = Entry.generateHash();
+        }
 
         Entry.do('objectAddExpansionBlock', block);
-    };
+    }
     /**
      * Add sound
      * @param {sound model} sound
      * @param {boolean} NotForView if this is true, add element into object also.
      */
-    p.addSound = function(sound, NotForView, isNew) {
-        var tempSound = _.clone(sound);
+    addSound(sound, NotForView, isNew) {
+        const tempSound = _.clone(sound);
         delete tempSound.view;
-        if (isNew === true) delete tempSound.id;
+        if (isNew === true) {
+            delete tempSound.id;
+        }
 
         sound = Entry.Utils.copy(tempSound);
-        if (!sound.id) sound.id = Entry.generateHash();
+        if (!sound.id) {
+            sound.id = Entry.generateHash();
+        }
         sound.name = Entry.getOrderedName(sound.name, this.object.sounds);
 
         this.generateSoundElement(sound);
         Entry.do('objectAddSound', this.object.id, sound);
         this.injectSound();
-    };
+    }
 
-    p.downloadSound = function(soundId) {
-        var sound = Entry.playground.object.getSound(soundId);
+    downloadSound(soundId) {
+        const sound = Entry.playground.object.getSound(soundId);
         if (sound.fileurl) {
             if (sound.fileurl.indexOf('bark.mp3') > -1) {
                 window.open(
-                    '/api/sprite/download/entryjs/' +
-                        btoa(sound.fileurl) +
-                        '/' +
-                        encodeURIComponent(sound.name + '.mp3')
+                    `/api/sprite/download/entryjs/${btoa(sound.fileurl)}/${encodeURIComponent(
+                        `${sound.name}.mp3`
+                    )}`
                 );
             } else {
                 window.open(sound.fileurl);
             }
         } else {
             window.open(
-                '/api/sprite/download/sound/' +
-                    encodeURIComponent(sound.filename) +
-                    '/' +
-                    encodeURIComponent(sound.name)
+                `/api/sprite/download/sound/${encodeURIComponent(
+                    sound.filename
+                )}/${encodeURIComponent(sound.name)}`
             );
         }
-    };
+    }
 
     /**
      * select view mode
      * @param {string} viewType
      */
-    p.changeViewMode = function(viewType) {
-        for (var i in this.tabViewElements) {
+    changeViewMode(viewType) {
+        for (const i in this.tabViewElements) {
             this.tabViewElements[i].removeClass('entryTabSelected');
         }
-        if (viewType != 'default') this.tabViewElements[viewType].addClass('entryTabSelected');
-        if (viewType == 'variable') {
+        if (viewType !== 'default') {
+            this.tabViewElements[viewType].addClass('entryTabSelected');
+        }
+        if (viewType === 'variable') {
             Entry.playground.toggleOnVariableView();
             this.tabViewElements.code.removeClass('entryTabSelected');
             this.tabViewElements[viewType].addClass('entryTabSelected');
             return;
         }
-        var views = this.view_.children;
-        for (var i = 0; i < views.length; i++) {
-            var view = views[i];
-            if (view.id.toUpperCase().indexOf(viewType.toUpperCase()) > -1)
+        const views = this.view_.children;
+        for (let i = 0; i < views.length; i++) {
+            const view = views[i];
+            if (view.id.toUpperCase().indexOf(viewType.toUpperCase()) > -1) {
                 view.removeClass('entryRemove');
-            else view.addClass('entryRemove');
+            } else {
+                view.addClass('entryRemove');
+            }
         }
 
         if (Entry.pictureEditable) {
-            if (viewType == 'picture') {
+            if (viewType === 'picture') {
                 this.painter.show();
                 if (!this.pictureView_.object || this.pictureView_.object != this.object) {
                     this.pictureView_.object = this.object;
@@ -1053,20 +1144,22 @@ Entry.Playground = function() {
                     this.pictureListView_ &&
                     !this.pictureListView_.hasChildNodes()
                 ) {
-                    var pictures = this.object.pictures;
+                    const pictures = this.object.pictures;
                     if (pictures && pictures.length) {
                         this.injectPicture();
                     }
                 }
-            } else this.painter.hide();
+            } else {
+                this.painter.hide();
+            }
         }
 
-        if (viewType == 'sound') {
+        if (viewType === 'sound') {
             if (!this.soundView_.object || this.soundView_.object != this.object) {
                 this.soundView_.object = this.object;
                 this.injectSound();
             } else if (this.object && this.soundListView_ && !this.soundListView_.hasChildNodes()) {
-                var sounds = this.object.sounds;
+                const sounds = this.object.sounds;
                 if (sounds && sounds.length) {
                     this.injectSound();
                 }
@@ -1074,14 +1167,14 @@ Entry.Playground = function() {
         }
 
         if (
-            (viewType == 'text' && this.object.objectType == 'textBox') ||
+            (viewType === 'text' && this.object.objectType === 'textBox') ||
             this.textView_.object != this.object
         ) {
             this.textView_.object = this.object;
             this.injectText();
         }
 
-        if (viewType == 'code') {
+        if (viewType === 'code') {
             this.resizeHandle_ && this.resizeHandle_.removeClass('entryRemove');
             this.tabButtonView_ && this.tabButtonView_.addClass('entryCode');
             this.blockMenu.reDraw();
@@ -1089,91 +1182,94 @@ Entry.Playground = function() {
             this.tabButtonView_ && this.tabButtonView_.removeClass('entryCode');
         }
 
-        if (Entry.engine.isState('run')) this.curtainView_.removeClass('entryRemove');
+        if (Entry.engine.isState('run')) {
+            this.curtainView_.removeClass('entryRemove');
+        }
         this.viewMode_ = viewType;
         this.selectedViewMode = viewType;
         this.toggleOffVariableView();
-    };
+    }
 
     /**
      * render variable view
      * @return {!Element}
      */
-    p.createVariableView = function() {
-        var view = Entry.createElement('div');
-        if (!Entry.type || Entry.type == 'workspace') {
+    createVariableView() {
+        const view = Entry.createElement('div');
+        if (!Entry.type || Entry.type === 'workspace') {
             view.addClass('entryVariablePanelWorkspace');
-        } else if (Entry.type == 'phone') {
+        } else if (Entry.type === 'phone') {
             view.addClass('entryVariablePanelPhone');
         }
         this.variableViewWrapper_ = view;
         Entry.variableContainer.createDom(view);
         return view;
-    };
+    }
 
     /**
      * toggle on variable view
      */
-    p.toggleOnVariableView = function() {
+    toggleOnVariableView() {
         Entry.playground.changeViewMode('code');
         this.hideBlockMenu();
-        Entry.variableContainer.updateList();
         this.variableView_.removeClass('entryRemove');
         this.resizeHandle_.removeClass('entryRemove');
         this.viewMode_ = 'variable';
         this.selectedViewMode = 'variable';
-    };
+    }
 
-    p.toggleOffVariableView = function() {
+    toggleOffVariableView() {
         this.showBlockMenu();
         this.variableView_.addClass('entryRemove');
-    };
+    }
 
     /**
      * Generate category menu with object type.
      * @param {!string} objectType
      */
-    p.setMenu = function(objectType) {
-        if (this.currentObjectType == objectType) return;
+    setMenu(objectType) {
+        if (this.currentObjectType == objectType) {
+            return;
+        }
 
-        var blockMenu = this.blockMenu;
+        const blockMenu = this.blockMenu;
         blockMenu.unbanClass(this.currentObjectType, true);
         blockMenu.banClass(objectType, true);
         blockMenu.setMenu(true);
         this.currentObjectType = objectType;
-    };
+    }
 
-    p.hideTabs = function() {
+    hideTabs() {
         ['picture', 'text', 'sound', 'variable'].forEach(this.hideTab.bind(this));
-    };
+    }
 
-    p.hideTab = function(item) {
+    hideTab(item) {
         if (this.tabViewElements[item]) {
             this.tabViewElements[item].addClass('hideTab');
             this.tabViewElements[item].removeClass('showTab');
         }
-    };
+    }
 
-    p.showTabs = function() {
+    showTabs() {
         ['picture', 'text', 'sound', 'variable'].forEach(this.showTab.bind(this));
-    };
+    }
 
-    p.showTab = function(item) {
+    showTab(item) {
         if (this.tabViewElements[item]) {
             this.tabViewElements[item].addClass('showTab');
             this.tabViewElements[item].removeClass('hideTab');
         }
-    };
+    }
 
     /**
      * Handle is resizing playground handle.
      * This add mouse move and mouse up event to document.
      * @param {!Element} handle
      */
-    p.initializeResizeHandle = function(handle) {
-        var listener;
-        var that = this;
-        $(handle).bind('mousedown touchstart', function(e) {
+    initializeResizeHandle(handle) {
+        let listener;
+        const that = this;
+        $(handle).bind('mousedown touchstart', function() {
             that.resizing = true;
             if (Entry.documentMousemove) {
                 listener = Entry.documentMousemove.attach(this, function({ clientX }) {
@@ -1184,7 +1280,7 @@ Entry.Playground = function() {
                     }
                 });
             }
-            $(document).bind('mouseup.resizeHandle touchend.resizeHandle', function(e) {
+            $(document).bind('mouseup.resizeHandle touchend.resizeHandle', function() {
                 $(document).unbind('.resizeHandle');
                 if (listener) {
                     that.resizing = false;
@@ -1193,42 +1289,48 @@ Entry.Playground = function() {
                 }
             });
         });
-    };
+    }
 
     /**
      * Reload playground
      */
-    p.reloadPlayground = function() {
-        var engine = Entry.engine;
+    reloadPlayground() {
+        const engine = Entry.engine;
 
-        if (engine && engine.isState('run')) return;
+        if (engine && engine.isState('run')) {
+            return;
+        }
         _.result(this.mainWorkspace, 'dReDraw');
-    };
+    }
 
     /**
      * flush playground when object is not exist
      */
-    p.flushPlayground = function() {
+    flushPlayground() {
         this.object = null;
         if (Entry.playground && Entry.playground.view_) {
             this.injectPicture();
             this.injectSound();
-            var board = Entry.playground.mainWorkspace.getBoard();
+            const board = Entry.playground.mainWorkspace.getBoard();
             board.clear();
             board.changeCode(null);
         }
-    };
+    }
 
-    p.refreshPlayground = function() {
+    refreshPlayground() {
         if (Entry.playground && Entry.playground.view_) {
-            if (this.getViewMode() === 'picture') this.injectPicture();
-            if (this.getViewMode() === 'sound') this.injectSound();
+            if (this.getViewMode() === 'picture') {
+                this.injectPicture();
+            }
+            if (this.getViewMode() === 'sound') {
+                this.injectSound();
+            }
         }
-    };
+    }
 
-    p.updateListViewOrder = function(type) {
-        var list;
-        if (type == 'picture') {
+    updateListViewOrder(type) {
+        let list;
+        if (type === 'picture') {
             list = this.pictureListView_.childNodes;
         } else {
             list = this.soundListView_.childNodes;
@@ -1237,12 +1339,12 @@ Entry.Playground = function() {
         list.forEach(({ orderHolder }, index) => {
             orderHolder.innerHTML = index + 1;
         });
-    };
+    }
 
-    p.generatePictureElement = function(picture) {
-        var element = Entry.createElement('li', picture.id)
+    generatePictureElement(picture) {
+        const element = Entry.createElement('li', picture.id)
             .addClass('entryPlaygroundPictureElement')
-            .bindOnClick(function(e) {
+            .bindOnClick(function() {
                 Entry.playground.selectPicture(this.picture);
             });
         picture.view = element;
@@ -1253,25 +1355,25 @@ Entry.Playground = function() {
             const options = [
                 {
                     text: Lang.Workspace.context_rename,
-                    callback: function() {
+                    callback() {
                         nameView.focus();
                     },
                 },
                 {
                     text: Lang.Workspace.context_duplicate,
-                    callback: function() {
+                    callback() {
                         Entry.playground.clonePicture(picture.id);
                     },
                 },
                 {
                     text: Lang.Workspace.context_remove,
-                    callback: function() {
+                    callback() {
                         if (Entry.playground.object.removePicture(picture.id)) {
                             Entry.removeElement(element);
                             Entry.dispatchEvent('removePicture', picture);
                             Entry.toast.success(
                                 Lang.Workspace.shape_remove_ok,
-                                picture.name + ' ' + Lang.Workspace.shape_remove_ok_msg
+                                `${picture.name} ${Lang.Workspace.shape_remove_ok_msg}`
                             );
                         } else {
                             Entry.toast.alert(
@@ -1283,7 +1385,7 @@ Entry.Playground = function() {
                 },
                 {
                     text: Lang.Workspace.context_download,
-                    callback: function() {
+                    callback() {
                         Entry.playground.downloadPicture(picture.id);
                     },
                 },
@@ -1295,27 +1397,23 @@ Entry.Playground = function() {
             .addClass('entryPlaygroundPictureOrder')
             .appendTo(element);
 
-        var thumbnailView = Entry.createElement('div', `t_${picture.id}`).addClass(
+        const thumbnailView = Entry.createElement('div', `t_${picture.id}`).addClass(
             'entryPlaygroundPictureThumbnail'
         );
         if (picture.fileurl) {
-            thumbnailView.style.backgroundImage = 'url("' + picture.fileurl + '")';
+            thumbnailView.style.backgroundImage = `url("${picture.fileurl}")`;
         } else {
             // deptecated
-            var fileName = picture.filename;
-            thumbnailView.style.backgroundImage =
-                'url("' +
-                Entry.defaultPath +
-                '/uploads/' +
-                fileName.substring(0, 2) +
-                '/' +
-                fileName.substring(2, 4) +
-                '/thumb/' +
-                fileName +
-                '.png")';
+            const fileName = picture.filename;
+            thumbnailView.style.backgroundImage = `url("${
+                Entry.defaultPath
+            }/uploads/${fileName.substring(0, 2)}/${fileName.substring(
+                2,
+                4
+            )}/thumb/${fileName}.png")`;
         }
         element.appendChild(thumbnailView);
-        var nameView = Entry.createElement('input')
+        const nameView = Entry.createElement('input')
             .addClass('entryPlaygroundPictureName')
             .addClass('entryEllipsis');
         nameView.picture = picture;
@@ -1331,8 +1429,8 @@ Entry.Playground = function() {
                 return;
             }
 
-            var nameViewArray = $('.entryPlaygroundPictureName');
-            for (var i = 0; i < nameViewArray.length; i++) {
+            const nameViewArray = $('.entryPlaygroundPictureName');
+            for (let i = 0; i < nameViewArray.length; i++) {
                 if (nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
                     Entry.deAttachEventListener(this, 'blur', nameViewBlur);
                     entrylms.alert(Lang.Workspace.name_already_exists);
@@ -1341,16 +1439,20 @@ Entry.Playground = function() {
                     return;
                 }
             }
-            var newValue = this.value;
+            const newValue = this.value;
             this.picture.name = newValue;
-            var playground = Entry.playground;
+            const playground = Entry.playground;
             if (playground) {
                 if (playground.object) {
-                    var pic = playground.object.getPicture(this.picture.id);
-                    if (pic) pic.name = newValue;
+                    const pic = playground.object.getPicture(this.picture.id);
+                    if (pic) {
+                        pic.name = newValue;
+                    }
                 }
-                var painter = playground.painter;
-                if (painter && painter.file) painter.file.name = newValue;
+                const painter = playground.painter;
+                if (painter && painter.file) {
+                    painter.file.name = newValue;
+                }
 
                 playground.reloadPlayground();
             }
@@ -1359,10 +1461,11 @@ Entry.Playground = function() {
 
         nameView.onkeypress = Entry.Utils.blurWhenEnter;
         element.appendChild(nameView);
-        Entry.createElement('div', 's_' + picture.id)
+        Entry.createElement('div', `s_${picture.id}`)
             .addClass('entryPlaygroundPictureSize')
-            .appendTo(element).innerHTML =
-            picture.dimension.width + ' X ' + picture.dimension.height;
+            .appendTo(element).innerHTML = `${picture.dimension.width} X ${
+                picture.dimension.height
+            }`;
 
         const removeButton = Entry.createElement('div').addClass('entryPlayground_del');
         const { Buttons = {} } = Lang || {};
@@ -1375,7 +1478,7 @@ Entry.Playground = function() {
                     Entry.dispatchEvent('removePicture', picture);
                     Entry.toast.success(
                         Lang.Workspace.shape_remove_ok,
-                        picture.name + ' ' + Lang.Workspace.shape_remove_ok_msg
+                        `${picture.name} ${Lang.Workspace.shape_remove_ok_msg}`
                     );
                 } else {
                     Entry.toast.alert(
@@ -1390,10 +1493,10 @@ Entry.Playground = function() {
                 );
             }
         });
-    };
+    }
 
-    p.generateSoundElement = function(sound) {
-        var element = Entry.createElement('sound', sound.id).addClass(
+    generateSoundElement(sound) {
+        const element = Entry.createElement('sound', sound.id).addClass(
             'entryPlaygroundSoundElement'
         );
         sound.view = element;
@@ -1401,23 +1504,23 @@ Entry.Playground = function() {
 
         Entry.Utils.disableContextmenu(sound.view);
         Entry.ContextMenu.onContextmenu($(sound.view), function() {
-            var options = [
+            const options = [
                 {
                     text: Lang.Workspace.context_rename,
-                    callback: function() {
+                    callback() {
                         nameView.focus();
                     },
                 },
                 {
                     text: Lang.Workspace.context_duplicate,
-                    callback: function() {
+                    callback() {
                         Entry.playground.addSound(sound, true, true);
                     },
                 },
                 {
                     text: Lang.Workspace.context_remove,
-                    callback: function() {
-                        var result = Entry.do(
+                    callback() {
+                        const result = Entry.do(
                             'objectRemoveSound',
                             Entry.playground.object.id,
                             sound
@@ -1427,7 +1530,7 @@ Entry.Playground = function() {
                             Entry.dispatchEvent('removeSound', sound);
                             Entry.toast.success(
                                 Lang.Workspace.sound_remove_ok,
-                                sound.name + ' ' + Lang.Workspace.sound_remove_ok_msg
+                                `${sound.name} ${Lang.Workspace.sound_remove_ok_msg}`
                             );
                         } else {
                             Entry.toast.alert(Lang.Workspace.sound_remove_fail, '');
@@ -1437,7 +1540,7 @@ Entry.Playground = function() {
                 },
                 {
                     text: Lang.Workspace.context_download,
-                    callback: function() {
+                    callback() {
                         Entry.playground.downloadSound(sound.id);
                     },
                 },
@@ -1449,11 +1552,11 @@ Entry.Playground = function() {
             .addClass('entryPlaygroundSoundOrder')
             .appendTo(element);
 
-        var thumbnailView = Entry.createElement('div')
+        const thumbnailView = Entry.createElement('div')
             .addClass('entryPlaygroundSoundThumbnail entryPlaygroundSoundPlay')
             .appendTo(element);
-        var isPlaying = false;
-        var soundInstance;
+        let isPlaying = false;
+        let soundInstance;
         thumbnailView.addEventListener('click', () => {
             if (isPlaying) {
                 isPlaying = false;
@@ -1468,14 +1571,14 @@ Entry.Playground = function() {
                 soundInstance = createjs.Sound.play(sound.id);
             }
 
-            soundInstance.addEventListener('complete', function(e) {
+            soundInstance.addEventListener('complete', function() {
                 thumbnailView.removeClass('entryPlaygroundSoundStop');
                 thumbnailView.addClass('entryPlaygroundSoundPlay');
                 isPlaying = false;
             });
         });
 
-        var nameView = Entry.createElement('input')
+        const nameView = Entry.createElement('input')
             .addClass('entryPlaygroundSoundName')
             .appendTo(element);
         nameView.sound = sound;
@@ -1491,8 +1594,8 @@ Entry.Playground = function() {
                 return;
             }
 
-            var nameViewArray = $('.entryPlaygroundSoundName');
-            for (var i = 0; i < nameViewArray.length; i++) {
+            const nameViewArray = $('.entryPlaygroundSoundName');
+            for (let i = 0; i < nameViewArray.length; i++) {
                 if (nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
                     Entry.deAttachEventListener(this, 'blur', nameViewBlur);
                     entrylms.alert(Lang.Workspace.name_already_exists);
@@ -1501,7 +1604,7 @@ Entry.Playground = function() {
                     return;
                 }
             }
-            var newValue = this.value;
+            const newValue = this.value;
             this.sound.name = newValue;
             Entry.playground.reloadPlayground();
         }
@@ -1509,20 +1612,19 @@ Entry.Playground = function() {
         nameView.onkeypress = Entry.Utils.blurWhenEnter;
         Entry.createElement('div')
             .addClass('entryPlaygroundSoundLength')
-            .appendTo(element).innerHTML =
-            sound.duration + ' ' + Lang.General.second;
+            .appendTo(element).innerHTML = `${sound.duration} ${Lang.General.second}`;
         const removeButton = Entry.createElement('div').addClass('entryPlayground_del');
         const { Buttons = {} } = Lang || {};
         const { delete: delText = '삭제' } = Buttons;
         removeButton.appendTo(element).innerText = delText;
         removeButton.bindOnClick(() => {
             try {
-                var result = Entry.do('objectRemoveSound', Entry.playground.object.id, sound);
+                const result = Entry.do('objectRemoveSound', Entry.playground.object.id, sound);
                 if (result) {
                     Entry.dispatchEvent('removeSound', sound);
                     Entry.toast.success(
                         Lang.Workspace.sound_remove_ok,
-                        sound.name + ' ' + Lang.Workspace.sound_remove_ok_msg
+                        `${sound.name} ${Lang.Workspace.sound_remove_ok_msg}`
                     );
                 } else {
                     Entry.toast.alert(Lang.Workspace.sound_remove_fail, '');
@@ -1532,16 +1634,16 @@ Entry.Playground = function() {
                 Entry.toast.alert(Lang.Workspace.sound_remove_fail, '');
             }
         });
-    };
+    }
 
-    p.openDropDown = (options, target, callback, closeCallback) => {
+    openDropDown = (options, target, callback, closeCallback) => {
         const dropdownWidget = new EntryTool({
             type: 'dropdownWidget',
             data: {
                 items: options,
                 positionDom: target,
                 onOutsideClick: () => {
-                    if(dropdownWidget) {
+                    if (dropdownWidget) {
                         closeCallback();
                         dropdownWidget.hide();
                     }
@@ -1559,77 +1661,89 @@ Entry.Playground = function() {
         return dropdownWidget;
     };
 
-    p.openColourPicker = (target, color, callback) => {
+    openColourPicker = (target, color, callback) => {
         const colorPicker = new EntryTool({
             type: 'colorPicker',
             data: {
-                color: color,
+                color,
                 positionDom: target,
                 // boundrayDom: this.boundrayDom,
-                onOutsideClick:(color)=>{
-                    if(colorPicker) {
+                onOutsideClick: (color) => {
+                    if (colorPicker) {
                         colorPicker.hide();
                         callback(color, true);
                     }
-                }
+                },
             },
             container: Entry.Dom('div', {
                 class: 'entry-color-picker',
                 parent: $('body'),
             })[0],
         }).on('change', (color) => {
-            if(color) {
+            if (color) {
                 callback(color, true);
             }
         });
         return colorPicker;
     };
 
-    p.setTextColour = function(colour, doNotToggle) {
-        $('.style_link.imbtn_pop_font_color').toggleClass('on', colour !== "#000000");
+    setTextColour(colour) {
+        $('.style_link.imbtn_pop_font_color').toggleClass('on', colour !== '#000000');
         this.object.entity.setColour(colour);
-    };
+    }
 
-    p.setBackgroundColour = function(colour, doNotToggle) {
-        $('.style_link.imbtn_pop_font_backgroundcolor').toggleClass('on', colour !== "#ffffff");
+    setBackgroundColour(colour) {
+        $('.style_link.imbtn_pop_font_backgroundcolor').toggleClass('on', colour !== '#ffffff');
         this.object.entity.setBGColour(colour);
-    };
+    }
 
-    p.isTextBGMode = function() {
+    isTextBGMode() {
         return this.isTextBGMode_;
-    };
+    }
 
-    p.checkVariables = function() {
-        if (Entry.forEBS) return;
-        var blockMenu = this.blockMenu;
-        var { lists_, variables_ } = Entry.variableContainer;
+    checkVariables() {
+        if (Entry.forEBS) {
+            return;
+        }
+        const blockMenu = this.blockMenu;
+        const { lists_, variables_ } = Entry.variableContainer;
 
-        if (lists_.length) blockMenu.unbanClass('listNotExist');
-        else blockMenu.banClass('listNotExist');
+        if (lists_.length) {
+            blockMenu.unbanClass('listNotExist');
+        } else {
+            blockMenu.banClass('listNotExist');
+        }
 
-        if (variables_.length) blockMenu.unbanClass('variableNotExist');
-        else blockMenu.banClass('variableNotExist');
-    };
+        if (variables_.length) {
+            blockMenu.unbanClass('variableNotExist');
+        } else {
+            blockMenu.banClass('variableNotExist');
+        }
+    }
 
-    p.getViewMode = function() {
+    getViewMode() {
         return this.viewMode_;
-    };
+    }
 
-    p.banExpansionBlock = function() {
-        var blockMenu = _.result(this.mainWorkspace, 'blockMenu');
-        if (!blockMenu) return;
+    banExpansionBlock() {
+        const blockMenu = _.result(this.mainWorkspace, 'blockMenu');
+        if (!blockMenu) {
+            return;
+        }
 
         Object.values(Entry.EXPANSION_BLOCK_LIST).forEach((block) => {
             blockMenu.banClass(block.name, true);
-            blockMenu.banClass(block.name + '_legacy', true);
+            blockMenu.banClass(`${block.name}_legacy`, true);
         });
-    };
+    }
 
-    p.updateHW = function() {
-        var blockMenu = _.result(this.mainWorkspace, 'blockMenu');
-        if (!blockMenu) return;
+    updateHW() {
+        const blockMenu = _.result(this.mainWorkspace, 'blockMenu');
+        if (!blockMenu) {
+            return;
+        }
 
-        var hw = Entry.hw;
+        const hw = Entry.hw;
         if (hw && hw.connected) {
             blockMenu.banClass('arduinoDisconnected', true);
 
@@ -1654,31 +1768,39 @@ Entry.Playground = function() {
         blockMenu.hwCodeOutdated = true;
         blockMenu._generateHwCode(true);
         blockMenu.reDraw();
-    };
+    }
 
-    p.toggleLineBreak = function(isLineBreak) {
-        var { objectType, entity } = this.object || {};
-        if (objectType != 'textBox') return;
+    toggleLineBreak(isLineBreak) {
+        const { objectType, entity } = this.object || {};
+        if (objectType !== 'textBox') {
+            return;
+        }
 
-        $(".write_type_box a").removeClass("on");
+        $('.write_type_box a').removeClass('on');
         if (isLineBreak) {
             entity.setLineBreak(true);
-            $(".input_inner").height("228px");
-            $(".write_type_box a").eq(1).addClass("on");
-            $(".input_box .single").hide();
-            $(".input_box .multi").show();
+            $('.input_inner').height('228px');
+            $('.write_type_box a')
+                .eq(1)
+                .addClass('on');
+            $('.input_box .single').hide();
+            $('.input_box .multi').show();
             this._setFontFontUI();
         } else {
             entity.setLineBreak(false);
-            $(".input_inner").height("40px");
-            $(".write_type_box a").eq(0).addClass("on");
-            $(".input_box .multi").hide();
-            $(".input_box .single").show();
+            $('.input_inner').height('40px');
+            $('.write_type_box a')
+                .eq(0)
+                .addClass('on');
+            $('.input_box .multi').hide();
+            $('.input_box .single').show();
         }
-    };
+    }
 
-    p.setFontAlign = function(fontAlign) {
-        if (this.object.objectType != 'textBox') return;
+    setFontAlign(fontAlign) {
+        if (this.object.objectType !== 'textBox') {
+            return;
+        }
         this.alignLeftBtn.removeClass('on');
         this.alignCenterBtn.removeClass('on');
         this.alignRightBtn.removeClass('on');
@@ -1694,17 +1816,17 @@ Entry.Playground = function() {
                 break;
         }
         this.object.entity.setTextAlign(fontAlign);
-    };
+    }
 
-    p.hideBlockMenu = function() {
+    hideBlockMenu() {
         this.mainWorkspace.getBlockMenu().hide();
-    };
+    }
 
-    p.showBlockMenu = function() {
+    showBlockMenu() {
         this.mainWorkspace.getBlockMenu().show();
-    };
+    }
 
-    p.getDom = function(query) {
+    getDom(query) {
         if (query.length) {
             switch (query.shift()) {
                 case 'tabViewElements':
@@ -1721,9 +1843,9 @@ Entry.Playground = function() {
             }
         } else {
         }
-    };
+    }
 
-    p.applyTabOption = function() {
+    applyTabOption() {
         this.textboxTab.addClass('entryRemove');
         this.pictureTab.addClass('entryRemove');
         this.soundTab.addClass('entryRemove');
@@ -1732,7 +1854,11 @@ Entry.Playground = function() {
             this.pictureTab.removeClass('entryRemove');
             this.textboxTab.removeClass('entryRemove');
         }
-        if (Entry.soundEditable) this.soundTab.removeClass('entryRemove');
-        if (Entry.hasVariableManager) this.variableTab.removeClass('entryRemove');
-    };
-})(Entry.Playground.prototype);
+        if (Entry.soundEditable) {
+            this.soundTab.removeClass('entryRemove');
+        }
+        if (Entry.hasVariableManager) {
+            this.variableTab.removeClass('entryRemove');
+        }
+    }
+};

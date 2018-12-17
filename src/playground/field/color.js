@@ -129,19 +129,21 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
             type: 'colorPicker',
             data: {
                 color: this.getValue(),
+                canTransparent: false,
+                canSpoid: false,
                 positionDom: this.svgGroup,
                 // boundrayDom: this.boundrayDom,
-                onOutsideClick:(color)=>{
-                    if(this.colorPicker) {
+                onOutsideClick: (color) => {
+                    if (this.colorPicker) {
                         this.colorPicker.hide();
                         this.applyValue(color);
                     }
                     this._attachDisposeEvent();
-                }
+                },
             },
             container: this.optionGroup[0],
         }).on('change', (color) => {
-            if(color) {
+            if (color) {
                 this.applyValue(color);
             }
         });
@@ -165,12 +167,12 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
     }
 
     destroyOption() {
-        if(this.colorPicker) {
+        if (this.colorPicker) {
             this.colorPicker.isShow && this.colorPicker.hide();
             this.colorPicker.remove();
             this.colorPicker = null;
         }
-        if(this.optionGroup) {
+        if (this.optionGroup) {
             this.optionGroup.remove();
         }
         super.destroyOption();

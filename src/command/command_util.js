@@ -1,8 +1,8 @@
 'use strict';
 
-var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
+const COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
 
-var obj = {
+const obj = {
     createTooltip(title, content, target, callback, option = {}) {
         return new Entry.Tooltip(
             [
@@ -26,22 +26,21 @@ var obj = {
         return [];
     },
     checkIsSkip(commandType) {
-        var { skipUndoStack } = Entry.Command[commandType];
+        const { skipUndoStack } = Entry.Command[commandType];
         return (
             skipUndoStack === true ||
-            (!Entry.doCommandAll &&
-                _.includes(Entry.STATIC.COMMAND_TYPES_NOT_ALWAYS, commandType))
+            (!Entry.doCommandAll && _.includes(Entry.STATIC.COMMAND_TYPES_NOT_ALWAYS, commandType))
         );
     },
     getExpectedData(name, defaultValue) {
-        var expected = (Entry.expectedAction || []).concat();
+        const expected = (Entry.expectedAction || []).concat();
         if (!name || _.isEmpty(expected)) {
             return defaultValue;
         }
 
         expected.shift();
 
-        var ret = _.find(expected, ([key]) => key === name);
+        const ret = _.find(expected, ([key]) => key === name);
         if (ret) {
             return ret[1];
         }

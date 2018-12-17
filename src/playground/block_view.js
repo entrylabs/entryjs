@@ -1,6 +1,7 @@
 'use strict';
 
 import _get from 'lodash/get';
+import Hammer from 'hammerjs';
 
 Entry.BlockView = class BlockView {
     schema = {
@@ -442,19 +443,23 @@ Entry.BlockView = class BlockView {
     _addControl() {
         this._mouseEnable = true;
 
-        $(this.svgGroup).bind(
-            'mousedown.blockViewMousedown touchstart.blockViewMousedown',
-            this.mouseHandler
-        );
-
         const dblclick = _.result(this.block.events, 'dblclick');
-
         if (dblclick) {
+            const hammer = new Hammer(this.svgGroup);
+            hammer.on('doubletap', () => {
+                if (this._board.readOnly) {
+                    return;
+                }
+                dblclick.forEach((fn) => {
+                    if (fn) {
+                        fn(this);
+                    }
+                });
+            });
             $(this.svgGroup).dblclick(() => {
                 if (this._board.readOnly) {
                     return;
                 }
-
                 dblclick.forEach((fn) => {
                     if (fn) {
                         fn(this);
@@ -462,6 +467,11 @@ Entry.BlockView = class BlockView {
                 });
             });
         }
+
+        $(this.svgGroup).bind(
+            'mousedown.blockViewMousedown touchstart.blockViewMousedown',
+            this.mouseHandler
+        );
     }
 
     removeControl() {
@@ -470,12 +480,13 @@ Entry.BlockView = class BlockView {
     }
 
     onMouseDown(e) {
+        // ISSUE:: 마우스이벤트1
         if (e.stopPropagation) {
             e.stopPropagation();
         }
-        if (e.preventDefault) {
-            e.preventDefault();
-        }
+        // if (e.preventDefault) {
+        //     e.preventDefault();
+        // }
         this.longPressTimer = null;
 
         const board = this.getBoard();
