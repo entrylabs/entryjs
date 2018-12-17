@@ -1658,7 +1658,7 @@ Entry.bindAnimationCallbackOnce = function($elem, func) {
 };
 
 Entry.Utils.isInInput = function({ target: { type } }) {
-    return type == 'textarea' || type == 'text';
+    return type == 'textarea' || type == 'text' || type == 'number';
 };
 
 Entry.Utils.addFilters = function(boardSvgDom, suffix, isOnlyBlock) {
