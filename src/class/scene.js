@@ -3,6 +3,8 @@
  */
 'use strict';
 
+import EntryTool from 'entry-tool';
+
 /**
  * Class for a scene controller.
  * This have view for scenes.
@@ -93,11 +95,11 @@ Entry.Scene = class {
     }
 
     createListView() {
-        const listView = Entry.createElement('ul');
+        const listView = Entry.createElement('div');
         listView.addClass('entrySceneListWorkspace');
 
         if (Entry.sceneEditable && $) {
-            $(listView).sortable({
+            /*$(listView).sortable({
                 start: (event, ui) => {
                     ui.item.data('start_pos', ui.item.index());
                 },
@@ -108,9 +110,44 @@ Entry.Scene = class {
                 axis: 'x',
                 tolerance: 'pointer',
                 cancel: 'input:focus',
+            });*/
+            this.sceneSortableListWidget = new EntryTool({
+                type: 'sortableWidget',
+                data: {
+                    height: '100%',
+                    sortableTarget: [],
+                    lockAxis: 'x',
+                    axis: 'x',
+                    items: this._getSortableSceneList(),
+                },
+                container: listView,
+            }).on('change', ([newIndex, oldIndex]) => {
+                Entry.scene.moveScene(newIndex, oldIndex);
+                this.isFirstTouch = false;
             });
         }
         return listView;
+    }
+
+    updateSceneView() {
+        if (this.sceneSortableListWidget) {
+            this.sceneSortableListWidget.setData({
+                items: this._getSortableSceneList(),
+            });
+        }
+    }
+
+    _getSortableSceneList() {
+        if (!this.scenes_ || this.scenes_.length === 0) {
+            return [];
+        }
+
+        return this.scenes_.map((value) => {
+            return {
+                key: value.id,
+                item: value.view,
+            };
+        });
     }
 
     /**
@@ -244,7 +281,7 @@ Entry.Scene = class {
     }
 
     createViewTemplate(scene) {
-        const viewTemplate = Entry.createElement('li', scene.id);
+        const viewTemplate = Entry.createElement('div', scene.id);
         viewTemplate.addClass('entrySceneElementWorkspace  entrySceneButtonWorkspace minValue');
         $(viewTemplate).on('mousedown touchstart', (e) => {
             if (Entry.engine.isState('run')) {
@@ -266,14 +303,15 @@ Entry.Scene = class {
 
     updateView() {
         if (!Entry.type || Entry.type == 'workspace') {
-            var parent = this.listView_;
-            this.getScenes().forEach(({ view }) => parent.appendChild(view));
+            // var parent = this.listView_;
+            // this.getScenes().forEach(({ view }) => parent.appendChild(view));
 
             if (this.addButton_) {
                 if (!this.isMax()) this.addButton_.removeClass('entryRemove');
                 else this.addButton_.addClass('entryRemove');
             }
         }
+        this.updateSceneView();
         this.resize();
     }
 
@@ -416,6 +454,7 @@ Entry.Scene = class {
         this.getScenes().splice(end, 0, this.getScenes().splice(start, 1)[0]);
         Entry.container.updateObjectsOrder();
         Entry.stage.sortZorder();
+        this.updateSceneView();
         //style properties are not removed sometimes
         $('.entrySceneElementWorkspace').removeAttr('style');
     }

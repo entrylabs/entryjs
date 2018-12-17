@@ -1,3 +1,9 @@
+body {
+    & > .sortableItem {
+        z-index: 250;
+    }
+}
+
 .entrySceneWorkspace {
     position: absolute;
     left: 0;
@@ -14,11 +20,24 @@
 }
 
 .entrySceneListWorkspace {
-    overflow: hidden;
+    overflow-y: hidden;
+    overflow-x: visible;
     float: left;
     margin: 0;
     padding: 0 0 0 18px;
+
+    .rcs-custom-scroll .rcs-outer-container {
+        overflow: visible;
+        .rcs-inner-container {
+            overflow: visible;
+        }
+    }
+
+    .sortableItem {
+        z-index: 15;
+    }
 }
+
 .entrySceneElementWorkspace {
     float: left;
     overflow: hidden;
@@ -28,6 +47,7 @@
     cursor: move;
     z-index: 10;
 }
+
 .entrySceneElementWorkspace.selectedScene {
     position: relative;
     margin-top: 0;
@@ -39,7 +59,7 @@
     margin: 8px 0 0 -18px;
     width: 55px;
     height: 34px;
-    z-index: 5;
+    z-index: -1;
     cursor: pointer;
     .backgroundImage("top_icon_add_b_nor.png");
     background-size: 55px auto;
