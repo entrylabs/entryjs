@@ -481,18 +481,19 @@ Entry.BlockView = class BlockView {
 
     onMouseDown(e) {
         // ISSUE:: 마우스이벤트1
-        if (e.stopPropagation) {
+        if (!this.isInBlockMenu && e.stopPropagation) {
             e.stopPropagation();
         }
         // if (e.preventDefault) {
         //     e.preventDefault();
         // }
-        this.longPressTimer = null;
 
-        const board = this.getBoard();
         if (Entry.documentMousedown) {
             Entry.documentMousedown.notify(e);
         }
+        this.longPressTimer = null;
+
+        const board = this.getBoard();
         if (this.readOnly || board.viewOnly) {
             return;
         }
@@ -553,6 +554,12 @@ Entry.BlockView = class BlockView {
         }
     }
 
+    getVerticalMove(mouseEvent, dragInstance) {
+        const dx = Math.abs(mouseEvent.pageX - dragInstance.offsetX);
+        const dy = Math.abs(mouseEvent.pageY - dragInstance.offsetY);
+        return dy / dx > 1.75;
+    }
+
     onMouseMove(e) {
         e.stopPropagation();
         const board = this.getBoard();
@@ -566,6 +573,17 @@ Entry.BlockView = class BlockView {
             mouseEvent = e.originalEvent.touches[0];
         } else {
             mouseEvent = e;
+        }
+        const blockView = this;
+        if (
+            blockView.isInBlockMenu &&
+            this.longPressTimer &&
+            this.getVerticalMove(mouseEvent, blockView.dragInstance)
+        ) {
+            this.isVerticalMove = true;
+            return;
+        } else {
+            $(document).unbind('.blockMenu');
         }
 
         const mouseDownCoordinate = this.mouseDownCoordinate;
@@ -647,6 +665,7 @@ Entry.BlockView = class BlockView {
         Entry.GlobalSvg.remove();
         this.mouseUpEvent.notify();
 
+        delete this.isVerticalMove;
         delete this.mouseDownCoordinate;
         delete this.dragInstance;
     }
@@ -1465,7 +1484,7 @@ Entry.BlockView = class BlockView {
 
             const hasComment = !!block._comment;
             const comment = {
-                text: hasComment ? '메모 삭제하기' : '메모 추가하기',
+                text: hasComment ? Lang.Blocks.delete_comment : Lang.Blocks.add_comment,
                 enable: block.isCommentable(),
                 callback() {
                     hasComment

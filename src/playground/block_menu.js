@@ -94,12 +94,12 @@ class BlockMenu {
 
         if (this._scroll) {
             this._scroller = new Entry.BlockMenuScroller(this);
-            this._addControl($dom);
+            this._addControl($dom.find('.blockMenuContainer'));
         }
 
-        if (Entry.documentMousedown) {
-            Entry.documentMousedown.attach(this, this.setSelectedBlock);
-        }
+        // if (Entry.documentMousedown) {
+        //     Entry.documentMousedown.attach(this, this.setSelectedBlock);
+        // }
         if (this.code && Entry.keyPressed) {
             Entry.keyPressed.attach(this, this._captureKeyEvent);
         }
@@ -804,7 +804,6 @@ class BlockMenu {
         const blockMenu = this;
         if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
             const mouseEvent = Entry.Utils.convertMouseEvent(e);
-
             if (Entry.documentMousedown) {
                 Entry.documentMousedown.notify(mouseEvent);
             }

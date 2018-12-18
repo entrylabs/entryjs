@@ -103,7 +103,7 @@ Entry.ContextMenu = {};
     };
 
     ctx.onContextmenu = function(target, callback) {
-        DomUtils.addEventListenerMultiple(target, 'touchstart touchmove touchend mousemove mouseup mousedown', function(e) {
+        DomUtils.addEventListenerMultiple(target, 'touchstart touchmove touchend mousedown', (e) => {
             switch (e.type) {
                 case 'touchstart': {
                     const startEvent = Entry.Utils.convertMouseEvent(e);
@@ -126,7 +126,6 @@ Entry.ContextMenu = {};
                     );
                     break;
                 }
-                case 'mousemove':
                 case 'touchmove': {
                     const startEvent = Entry.Utils.convertMouseEvent(e);
                     if (!this.coordi) {
@@ -143,24 +142,25 @@ Entry.ContextMenu = {};
                     break;
                 }
                 case 'touchend':
-                case 'mouseup':
                     // e.stopPropagation();
                     if (this.longTouchEvent) {
                         clearTimeout(this.longTouchEvent);
-                        this.longTouchEvent = null;
+                        this.longTouchEvent = undefined;
                     }
                     break;
                 case 'mousedown':
-                    if (Entry.Utils.isRightButton(e) && Entry.Utils.isTouchEvent(e)) {
+                    if (Entry.Utils.isRightButton(e)) {
+                        e.stopPropagation();
+
+                        this.coordi = {
+                            x: e.clientX,
+                            y: e.clientY,
+                        };
+
                         clearTimeout(this.longTouchEvent);
                         this.longTouchEvent = undefined;
-                        if (e.type === 'contextmenu') {
-                            // e.stopPropagation();
-                            // e.preventDefault();
-                            callback(this.coordi);
-                        }
+                        callback(this.coordi);
                     }
-
                     break;
             }
         });

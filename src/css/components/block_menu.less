@@ -16,6 +16,7 @@
     position: relative;
     min-width: 58px;
     overflow: hidden;
+    overflow-y: scroll;
     height: 100%;
     display: inline-block;
     background-color: #ecf8ff;
@@ -23,6 +24,11 @@
     border-radius: 0 0 6px 6px;
     margin: 0;
     padding: 0;
+    -ms-overflow-style: none;  // IE 10+
+    overflow: -moz-scrollbars-none;  // Firefox
+    &::-webkit-scrollbar { 
+        display: none;  // Safari and Chrome
+    }
 }
 .entryCategoryListWorkspace:before {
   position: absolute;
