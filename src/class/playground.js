@@ -13,10 +13,9 @@ const Entry = require('../entry');
  * This manage all view related with block.
  * @constructor
  */
-Entry.Playground = class Playgroud {
+Entry.Playground = class {
     constructor() {
         this.isTextBGMode_ = false;
-        console.log();
         this.enableArduino = false;
 
         /**
@@ -118,74 +117,8 @@ Entry.Playground = class Playgroud {
             Entry.addEventListener('stop', () => {
                 Entry.playground.curtainView_.addClass('entryRemove');
             });
-        } else if (option === 'phone') {
-            this.view_.addClass('entryPlaygroundPhone');
-
-            const tabView = Entry.createElement('div', 'entryCategoryTab');
-            tabView.addClass('entryPlaygroundTabPhone');
-            Entry.view_.insertBefore(tabView, this.view_);
-            this.generateTabView(tabView);
-            this.tabView_ = tabView;
-
-            const curtainView = Entry.createElement('div', 'entryCurtain');
-            curtainView.addClass('entryPlaygroundCurtainPhone');
-            curtainView.addClass('entryRemove');
-            curtainView.innerHTML = Lang.Workspace.cannot_edit_click_to_stop;
-            curtainView.bindOnClick(function() {
-                Entry.engine.toggleStop();
-            });
-            this.view_.appendChild(curtainView);
-            this.curtainView_ = curtainView;
-
-            if (Entry.pictureEditable) {
-                const pictureView = Entry.createElement('div', 'entryPicture');
-                pictureView.addClass('entryPlaygroundPicturePhone');
-                pictureView.addClass('entryRemove');
-                this.view_.appendChild(pictureView);
-                this.generatePictureView(pictureView);
-                this.pictureView_ = pictureView;
-            }
-
-            const textView = Entry.createElement('div', 'entryText');
-            //textView.addClass('entryPlaygroundTextWorkspace');
-            textView.addClass('entryRemove');
-            this.view_.appendChild(textView);
-            this.generateTextView(textView);
-            this.textView_ = textView;
-
-            if (Entry.soundEditable) {
-                const soundView = Entry.createElement('div', 'entrySound');
-                soundView.addClass('entryPlaygroundSoundWorkspacePhone');
-                soundView.addClass('entryRemove');
-                this.view_.appendChild(soundView);
-                this.generateSoundView(soundView);
-                this.soundView_ = soundView;
-            }
-
-            const defaultView = Entry.createElement('div', 'entryDefault');
-            //defaultView.addClass('entryPlaygroundDefaultWorkspace');
-            this.view_.appendChild(defaultView);
-            this.generateDefaultView(defaultView);
-            this.defaultView_ = defaultView;
-
-            //Code view must be append at last.
-            const codeView = Entry.createElement('div', 'entryCode');
-            codeView.addClass('entryPlaygroundCodePhone');
-            this.view_.appendChild(codeView);
-            this.generateCodeView(codeView);
-            this.codeView_ = codeView;
-
-            /** @type {!Element} */
-            this.codeView_ = codeView;
-            Entry.addEventListener('run', function() {
-                Entry.playground.curtainView_.removeClass('entryRemove');
-            });
-            Entry.addEventListener('stop', function() {
-                Entry.playground.curtainView_.addClass('entryRemove');
-            });
+            this.applyTabOption();
         }
-
-        this.applyTabOption();
     }
 
     /**
@@ -370,15 +303,19 @@ Entry.Playground = class Playgroud {
                 .addClass('entryPlaygroundPictureList')
                 .appendTo(PictureView);
 
-            $(pictureList).sortable({
-                start: (event, ui) => {
-                    ui.item.data('start_pos', ui.item.index());
+            this.pictureSortableListWidget = new EntryTool({
+                type: 'sortableWidget',
+                data: {
+                    height: '100%',
+                    sortableTarget: ['entryPlaygroundPictureThumbnail'],
+                    lockAxis: 'y',
+                    items: this._getSortablePictureList(),
                 },
-                stop: (event, ui) => {
-                    Entry.playground.movePicture(ui.item.data('start_pos'), ui.item.index());
-                },
-                axis: 'y',
+                container: pictureList,
+            }).on('change', ([newIndex, oldIndex]) => {
+                Entry.playground.movePicture(newIndex, oldIndex);
             });
+
             this.pictureListView_ = pictureList;
 
             this.painter = new Entry.Painter(
@@ -386,35 +323,28 @@ Entry.Playground = class Playgroud {
                     .addClass('entryPlaygroundPainter')
                     .appendTo(PictureView)
             );
-        } else if (Entry.type === 'phone') {
-            const pictureAdd = Entry.createElement('div', 'entryAddPicture');
-            pictureAdd.addClass('entryPlaygroundAddPicturePhone');
-            pictureAdd.bindOnClick(function() {
-                Entry.dispatchEvent('openPictureManager');
-            });
-            const innerPictureAdd = Entry.createElement('div', 'entryAddPictureInner');
-            innerPictureAdd.addClass('entryPlaygroundAddPictureInnerPhone');
-            innerPictureAdd.innerHTML = Lang.Workspace.picture_add;
-            pictureAdd.appendChild(innerPictureAdd);
-            PictureView.appendChild(pictureAdd);
-            const pictureList = Entry.createElement('ul', 'entryPictureList');
-            pictureList.addClass('entryPlaygroundPictureListPhone');
-            if ($) {
-                $(pictureList).sortable({
-                    start(event, ui) {
-                        ui.item.data('start_pos', ui.item.index());
-                    },
-                    stop(event, ui) {
-                        const start = ui.item.data('start_pos');
-                        const end = ui.item.index();
-                        Entry.playground.movePicture(start, end);
-                    },
-                    axis: 'y',
-                });
-            }
-            PictureView.appendChild(pictureList);
-            this.pictureListView_ = pictureList;
         }
+    }
+
+    updatePictureView() {
+        if (this.pictureSortableListWidget) {
+            this.pictureSortableListWidget.setData({
+                items: this._getSortablePictureList(),
+            });
+        }
+    }
+
+    _getSortablePictureList() {
+        if (!this.object || !this.object.pictures) {
+            return [];
+        }
+
+        return this.object.pictures.map((value) => {
+            return {
+                key: value.id,
+                item: value.view,
+            };
+        });
     }
 
     /**
@@ -742,53 +672,50 @@ Entry.Playground = class Playgroud {
             innerSoundAdd.innerHTML = Lang.Workspace.sound_add;
             soundAdd.appendChild(innerSoundAdd);
             soundView.appendChild(soundAdd);
-            const soundList = Entry.createElement('ul', 'entrySoundList').addClass(
-                'entryPlaygroundSoundList'
-            );
-            $(soundList).sortable({
-                start(event, ui) {
-                    ui.item.data('start_pos', ui.item.index());
+            const soundList = Entry.createElement('ul', 'entrySoundList')
+                .addClass('entryPlaygroundSoundList');
+
+            this.soundSortableListWidget = new EntryTool({
+                type: 'sortableWidget',
+                data: {
+                    height: '100%',
+                    sortableTarget: ['entryPlaygroundSoundThumbnail'],
+                    lockAxis: 'y',
+                    items: this._getSortableSoundList(),
                 },
-                stop(event, ui) {
-                    Entry.playground.moveSound(ui.item.data('start_pos'), ui.item.index());
-                },
-                axis: 'y',
+                container: soundList,
+            }).on('change', ([newIndex, oldIndex]) => {
+                Entry.playground.moveSound(newIndex, oldIndex);
             });
+
             soundView.appendChild(soundList);
             this.soundListView_ = soundList;
             this._soundAddButton = innerSoundAdd;
 
             const soundEditView = this._createSoundEditView();
             soundView.appendChild(soundEditView);
-        } else if (Entry.type === 'phone') {
-            const soundAdd = Entry.createElement('div', 'entryAddSound');
-            soundAdd.addClass('entryPlaygroundSoundEdit');
-            soundAdd.bindOnClick(function() {
-                Entry.dispatchEvent('openSoundManager');
-            });
-            const innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner');
-            innerSoundAdd.addClass('entryPlaygroundAddSoundInnerPhone');
-            innerSoundAdd.innerHTML = Lang.Workspace.sound_add;
-            soundAdd.appendChild(innerSoundAdd);
-            soundView.appendChild(soundAdd);
-            const soundList = Entry.createElement('ul', 'entrySoundList');
-            soundList.addClass('entryPlaygroundSoundListPhone');
-            if ($) {
-                $(soundList).sortable({
-                    start(event, ui) {
-                        ui.item.data('start_pos', ui.item.index());
-                    },
-                    stop(event, ui) {
-                        const start = ui.item.data('start_pos');
-                        const end = ui.item.index();
-                        Entry.playground.moveSound(start, end);
-                    },
-                    axis: 'y',
-                });
-            }
-            soundView.appendChild(soundList);
-            this.soundListView_ = soundList;
         }
+    }
+
+    updateSoundsView() {
+        if (this.soundSortableListWidget) {
+            this.soundSortableListWidget.setData({
+                items: this._getSortableSoundList(),
+            });
+        }
+    }
+
+    _getSortableSoundList() {
+        if (!this.object || !this.object.sounds) {
+            return [];
+        }
+
+        return this.object.sounds.map((value) => {
+            return {
+                key: value.id,
+                item: value.view,
+            };
+        });
     }
 
     /**
@@ -881,24 +808,17 @@ Entry.Playground = class Playgroud {
             return;
         }
 
-        while (view.hasChildNodes()) {
-            view.removeChild(view.lastChild);
-        }
-
         if (!this.object) {
             return Entry.dispatchEvent('pictureClear');
         }
-
-        const fragment = document.createDocumentFragment();
 
         (this.object.pictures || []).forEach((picture, i) => {
             !picture.view && Entry.playground.generatePictureElement(picture);
             const element = picture.view;
             element.orderHolder.innerHTML = i + 1;
-            fragment.appendChild(element);
         });
 
-        view.appendChild(fragment);
+        this.updatePictureView();
         this.selectPicture(this.object.selectedPicture);
     }
 
@@ -1091,28 +1011,17 @@ Entry.Playground = class Playgroud {
      */
     injectSound() {
         const view = this.soundListView_;
-        if (!view) {
+        if (!view || !this.object) {
             return;
         }
 
-        while (view.hasChildNodes()) {
-            view.removeChild(view.lastChild);
-        }
-
-        if (!this.object) {
-            return;
-        }
-
-        const fragment = document.createDocumentFragment();
-
-        const sounds = this.object.sounds || [];
-        sounds.forEach((sound, i) => {
+        (this.object.sounds || []).forEach((sound, i) => {
             !sound.view && Entry.playground.generateSoundElement(sound);
             const element = sound.view;
             element.orderHolder.innerHTML = i + 1;
-            fragment.appendChild(element);
         });
-        view.appendChild(fragment);
+
+        this.updateSoundsView();
     }
 
     /**
@@ -1123,7 +1032,7 @@ Entry.Playground = class Playgroud {
      */
     moveSound(start, end) {
         this.object.sounds.splice(end, 0, this.object.sounds.splice(start, 1)[0]);
-        this.updateListViewOrder('sound');
+        this.injectSound();
     }
 
     addExpansionBlock(block, isNew) {
@@ -1407,19 +1316,6 @@ Entry.Playground = class Playgroud {
         }
     }
 
-    updateListViewOrder(type) {
-        let list;
-        if (type === 'picture') {
-            list = this.pictureListView_.childNodes;
-        } else {
-            list = this.soundListView_.childNodes;
-        }
-
-        list.forEach(({ orderHolder }, index) => {
-            orderHolder.innerHTML = index + 1;
-        });
-    }
-
     generatePictureElement(picture) {
         const element = Entry.createElement('li', picture.id)
             .addClass('entryPlaygroundPictureElement')
@@ -1430,7 +1326,7 @@ Entry.Playground = class Playgroud {
         element.picture = picture;
 
         Entry.Utils.disableContextmenu(picture.view);
-        Entry.ContextMenu.onContextmenu($(picture.view), function() {
+        Entry.ContextMenu.onContextmenu(picture.view, function(coordinate) {
             const options = [
                 {
                     text: Lang.Workspace.context_rename,
@@ -1469,7 +1365,7 @@ Entry.Playground = class Playgroud {
                     },
                 },
             ];
-            Entry.ContextMenu.show(options, 'workspace-contextmenu');
+            Entry.ContextMenu.show(options, 'workspace-contextmenu', coordinate);
         });
 
         element.orderHolder = Entry.createElement('div')
@@ -1508,7 +1404,11 @@ Entry.Playground = class Playgroud {
                 return;
             }
 
-            const nameViewArray = $('.entryPlaygroundPictureName');
+            let nameViewArray = $('.entryPlaygroundPictureName');
+            if (nameViewArray.length !== Entry.playground.object.pictures.length) {
+                nameViewArray = nameViewArray.slice(0, -1); // pop last element (드래그 시 발생하는 임시 엘리먼트임)
+            }
+
             for (let i = 0; i < nameViewArray.length; i++) {
                 if (nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
                     Entry.deAttachEventListener(this, 'blur', nameViewBlur);
@@ -1582,7 +1482,7 @@ Entry.Playground = class Playgroud {
         element.sound = sound;
 
         Entry.Utils.disableContextmenu(sound.view);
-        Entry.ContextMenu.onContextmenu($(sound.view), function() {
+        Entry.ContextMenu.onContextmenu(sound.view, function(coordinate) {
             const options = [
                 {
                     text: Lang.Workspace.context_rename,
@@ -1624,7 +1524,7 @@ Entry.Playground = class Playgroud {
                     },
                 },
             ];
-            Entry.ContextMenu.show(options, 'workspace-contextmenu');
+            Entry.ContextMenu.show(options, 'workspace-contextmenu', coordinate);
         });
 
         element.orderHolder = Entry.createElement('div')
@@ -1673,7 +1573,11 @@ Entry.Playground = class Playgroud {
                 return;
             }
 
-            const nameViewArray = $('.entryPlaygroundSoundName');
+            let nameViewArray = $('.entryPlaygroundSoundName');
+            if (nameViewArray.length !== Entry.playground.object.sounds.length) {
+                nameViewArray = nameViewArray.slice(0, -1); // pop last element (드래그 시 발생하는 임시 엘리먼트임)
+            }
+
             for (let i = 0; i < nameViewArray.length; i++) {
                 if (nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
                     Entry.deAttachEventListener(this, 'blur', nameViewBlur);

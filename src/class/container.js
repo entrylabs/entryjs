@@ -5,6 +5,7 @@
 
 import Simplebar from 'simplebar';
 import DomUtils from '../util/domUtils';
+import EntryTool from 'entry-tool';
 
 /**
  * Class for a container.
@@ -79,8 +80,9 @@ Entry.Container = class Container {
 
         const ulWrapper = Entry.createElement('div');
         this._view.appendChild(ulWrapper);
-        const scroll = new Simplebar(ulWrapper, { autoHide: false });
-        const scrollWrapper = scroll.contentEl;
+
+        // const scroll = new Simplebar(ulWrapper, { autoHide: false });
+        const scrollWrapper = ulWrapper;
         let baseClass = 'entryContainerListWorkspaceWrapper';
         if (Entry.isForLecture) {
             baseClass += ' lecture';
@@ -102,7 +104,7 @@ Entry.Container = class Container {
          * 현재위치에서 일정 범위 이상 벗어난 경우취소
          */
         scrollWrapper.addEventListener('touchstart', (e) => {
-            if(e.eventFromEntryObject) {
+            if (e.eventFromEntryObject) {
                 return;
             }
             let longPressTimer = null;
@@ -127,7 +129,7 @@ Entry.Container = class Container {
                 }
                 const diff = Math.sqrt(
                     Math.pow(event.pageX - mouseDownCoordinate.x, 2) +
-                    Math.pow(event.pageY - mouseDownCoordinate.y, 2)
+                        Math.pow(event.pageY - mouseDownCoordinate.y, 2)
                 );
 
                 if (diff > moveThreshold && longPressTimer) {
@@ -160,22 +162,40 @@ Entry.Container = class Container {
     }
 
     enableSort() {
-        const view = this.listView_;
-
-        if (!view) {
-            return;
+        if (this.sortableListViewWidget) {
+            this.sortableListViewWidget.setData({
+                disabled: false,
+            });
+        } else {
+            this.sortableListViewWidget = new EntryTool({
+                type: 'sortableWidget',
+                data: {
+                    height: '100%',
+                    sortableTarget: ['entryObjectThumbnailWorkspace'],
+                    lockAxis: 'y',
+                    items: this._getSortableObjectList(),
+                },
+                container: this.listView_,
+            }).on('change', ([newIndex, oldIndex]) => {
+                this.moveElement(newIndex, oldIndex);
+            });
         }
+    }
 
-        $(view).sortable({
-            distance: 20,
-            start(event, ui) {
-                ui.item.data('start_pos', ui.item.index());
-            },
-            stop(event, ui) {
-                Entry.container.moveElement(ui.item.data('start_pos'), ui.item.index());
-            },
-            axis: 'y',
-            cancel: 'input.selectedEditingObject',
+    updateSortableObjectList(objects) {
+        this.sortableListViewWidget.setData({
+            items: this._getSortableObjectList(objects),
+        });
+    }
+
+    _getSortableObjectList(objects) {
+        let targetObjects = objects || this.currentObjects_ || [];
+
+        return targetObjects.map((value) => {
+            return {
+                key: value.id,
+                item: value.view_,
+            };
         });
     }
 
@@ -189,7 +209,7 @@ Entry.Container = class Container {
             return;
         }
 
-        $(view).sortable('destroy');
+        this.sortableListViewWidget.setData({ disabled: true });
     }
 
     /**
@@ -201,12 +221,6 @@ Entry.Container = class Container {
         if (!view) {
             return;
         }
-
-        while (view.hasChildNodes()) {
-            view.removeChild(view.lastChild);
-        }
-
-        const fragment = document.createDocumentFragment();
 
         let objs = this.getCurrentObjects().slice();
 
@@ -222,11 +236,10 @@ Entry.Container = class Container {
 
         objs.forEach(function(obj) {
             !obj.view_ && obj.generateView();
-            fragment.appendChild(obj.view_);
         });
 
-        view.appendChild(fragment);
         Entry.stage.sortZorder();
+        this.updateSortableObjectList(objs);
         return true;
     }
 
@@ -334,7 +347,6 @@ Entry.Container = class Container {
         } else {
             this.objects_.unshift(object);
         }
-
         if (!isNotRender) {
             object.generateView();
             this.setCurrentObjects();
@@ -476,14 +488,14 @@ Entry.Container = class Container {
                                 workspace._syncTextCode();
                             } catch (e) {}
                             if (parser && !parser._onError) {
-                                Entry.container.selectObject(object.id, true);
+                                this.selectObject(object.id, true);
                                 return;
                             } else {
-                                Entry.container.selectObject(sObject.id, true);
+                                this.selectObject(sObject.id, true);
                                 return;
                             }
                         } else {
-                            Entry.container.selectObject(sObject.id);
+                            this.selectObject(sObject.id);
                             return;
                         }
                     }
@@ -494,11 +506,11 @@ Entry.Container = class Container {
                                 workspace._syncTextCode();
                             } catch (e) {}
                             if (parser && parser._onError) {
-                                Entry.container.selectObject(sObject.id, true);
+                                this.selectObject(sObject.id, true);
                                 return;
                             }
                         } else {
-                            Entry.container.selectObject(sObject.id);
+                            this.selectObject(sObject.id);
                             return;
                         }
                     }
@@ -575,9 +587,9 @@ Entry.Container = class Container {
     /**
      * Move object in objects_
      * this method is for sortable
-     * @param {!number} start
-     * @param {!number} end
-     * @param {?boolean} isCallFromState
+     * @param {number!} start
+     * @param {number!} end
+     * @param {boolean?} isCallFromState
      * @return {Entry.State}
      */
     moveElement(start, end, isCallFromState) {
@@ -588,8 +600,8 @@ Entry.Container = class Container {
         if (!isCallFromState && Entry.stateManager) {
             Entry.stateManager.addCommand(
                 'reorder object',
-                Entry.container,
-                Entry.container.moveElement,
+                this,
+                this.moveElement,
                 endIndex,
                 startIndex,
                 true
@@ -598,11 +610,11 @@ Entry.Container = class Container {
 
         this.objects_.splice(endIndex, 0, this.objects_.splice(startIndex, 1)[0]);
         this.setCurrentObjects();
-        Entry.container.updateListView();
+        this.updateListView();
         Entry.requestUpdate = true;
         return new Entry.State(
-            Entry.container,
-            Entry.container.moveElement,
+            this,
+            this.moveElement,
             endIndex,
             startIndex,
             true
@@ -1013,7 +1025,7 @@ Entry.Container = class Container {
      *  @return {entry project} project
      */
     getProjectWithJSON(project) {
-        project.objects = Entry.container.toJSON();
+        project.objects = this.toJSON();
         project.variables = Entry.variableContainer.getVariableJSON();
         project.messages = Entry.variableContainer.getMessageJSON();
         project.scenes = Entry.scene.toJSON();
@@ -1042,7 +1054,7 @@ Entry.Container = class Container {
             return;
         }
 
-        const objects = Entry.container.getAllObjects();
+        const objects = this.getAllObjects();
         const answerTypes = ['ask_and_wait', 'get_canvas_input_value', 'set_visible_answer'];
 
         for (let i = 0, len = objects.length; i < len; i++) {
@@ -1082,10 +1094,10 @@ Entry.Container = class Container {
         const options = [
             {
                 text: Lang.Blocks.Paste_blocks,
-                enable: !Entry.engine.isState('run') && !!Entry.container.copiedObject,
+                enable: !Entry.engine.isState('run') && !!this.copiedObject,
                 callback() {
-                    if (Entry.container.copiedObject) {
-                        Entry.container.addCloneObject(Entry.container.copiedObject);
+                    if (this.copiedObject) {
+                        this.addCloneObject(this.copiedObject);
                     } else {
                         Entry.toast.alert(
                             Lang.Workspace.add_object_alert,
@@ -1143,7 +1155,7 @@ Entry.Container = class Container {
             return;
         }
 
-        Entry.container.selectObject(object.id);
+        this.selectObject(object.id);
     }
 
     getObjectIndex(objectId) {

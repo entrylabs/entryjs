@@ -114,13 +114,11 @@ Entry.EntryObject = class {
 
     /**
      * View generator for workspace or others.
+     * Entry.type === 'phone' 관련 뷰 삭제
      * @return {!Element}
      */
     generateView() {
-        var type = Entry.type;
-
-        if (type === 'workspace') return this.generateWorkspaceView();
-        else if (type === 'phone') return this.generatePhoneView();
+        return this.generateWorkspaceView();
     }
 
     /**
@@ -435,7 +433,7 @@ Entry.EntryObject = class {
         else {
             this.sounds.splice(index, 0, sound);
         }
-        Entry.playground.injectSound(this);
+        Entry.playground.injectSound();
     }
 
     /**
@@ -449,7 +447,7 @@ Entry.EntryObject = class {
         index = this.sounds.indexOf(sound);
         this.sounds.splice(index, 1);
         Entry.playground.reloadPlayground();
-        Entry.playground.injectSound(this);
+        Entry.playground.injectSound();
     }
 
     /**
@@ -823,7 +821,7 @@ Entry.EntryObject = class {
             return;
         }
         target._focused = false;
-    };
+    }
 
     generateWorkspaceView() {
         const exceptionsForMouseDown = [];
@@ -903,10 +901,6 @@ Entry.EntryObject = class {
         const rotateSpan = Entry.createElement('span').addClass('entryObjectRotateSpanWorkspace');
         rotateSpan.innerHTML = Lang.Workspace.rotation + '';
         const rotateInput = Entry.createElement('input').addClass('entryObjectRotateInputWorkspace');
-        rotateInput.bindOnClick(function(e) {
-            e.stopPropagation();
-            this.select();
-        });
 
         rotateInput.onkeypress = this.editObjectValueWhenEnterPress;
         rotateInput.onfocus = this._setFocused;
@@ -930,10 +924,6 @@ Entry.EntryObject = class {
         const directionSpan = Entry.createElement('span').addClass('entryObjectDirectionSpanWorkspace');
         directionSpan.innerHTML = Lang.Workspace.direction + '';
         const directionInput = Entry.createElement('input').addClass('entryObjectDirectionInputWorkspace');
-        directionInput.bindOnClick(function(e) {
-            e.stopPropagation();
-            this.select();
-        });
 
         directionInput.onkeypress = this.editObjectValueWhenEnterPress;
         directionInput.onfocus = this._setFocused;
@@ -969,10 +959,6 @@ Entry.EntryObject = class {
         const xCoordi = Entry.createElement('span').addClass('entryObjectCoordinateSpanWorkspace');
         xCoordi.innerHTML = 'X';
         const xInput = Entry.createElement('input').addClass('entryObjectCoordinateInputWorkspace');
-        xInput.bindOnClick((e) => {
-            e.stopPropagation();
-            xInput.select();
-        });
 
         xInput.onkeypress = this.editObjectValueWhenEnterPress;
         xInput.onfocus = this._setFocused;
@@ -989,10 +975,6 @@ Entry.EntryObject = class {
         const yCoordi = Entry.createElement('span').addClass('entryObjectCoordinateSpanWorkspace');
         yCoordi.innerHTML = 'Y';
         const yInput = Entry.createElement('input').addClass('entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right');
-        yInput.bindOnClick((e) => {
-            e.stopPropagation();
-            yInput.select();
-        });
 
         yInput.onkeypress = this.editObjectValueWhenEnterPress;
         yInput.onfocus = this._setFocused;
@@ -1010,10 +992,6 @@ Entry.EntryObject = class {
         const sizeInput = Entry.createElement('input').addClass(
             'entryObjectCoordinateInputWorkspace',
             'entryObjectCoordinateInputWorkspace_size');
-        sizeInput.bindOnClick((e) => {
-            e.stopPropagation();
-            sizeInput.select();
-        });
 
         sizeInput.onkeypress = this.editObjectValueWhenEnterPress;
         sizeInput.onfocus = this._setFocused;
@@ -1075,13 +1053,6 @@ Entry.EntryObject = class {
 
     createNameView() {
         const nameView = Entry.createElement('input').addClass('entryObjectNameWorkspace');
-        nameView.bindOnClick((e) => {
-            e.preventDefault();
-            if(!this.focusable) {
-                nameView.focus();
-                nameView.select();
-            }
-        });
 
         nameView.onkeypress = Entry.Utils.whenEnter(() => {
             this.editObjectValues(false);
@@ -1172,8 +1143,10 @@ Entry.EntryObject = class {
             }
 
             if (e.type === 'touchstart') {
-                this.focusable = isFirstClick;
-                e.preventDefault();
+                if (isFirstClick) {
+                    e.preventDefault();
+                    document.activeElement.blur();
+                }
                 e.eventFromEntryObject = true;
                 Entry.documentMousedown.notify(e);
 
@@ -1210,11 +1183,6 @@ Entry.EntryObject = class {
                     }
                 });
             } else {
-                if (isFirstClick) {
-                    this.nameView_.focus();
-                    this.nameView_.select();
-                }
-
                 if (Entry.Utils.isRightButton(e)) {
                     e.stopPropagation();
                     Entry.documentMousedown.notify(e);
@@ -1224,293 +1192,6 @@ Entry.EntryObject = class {
         });
 
         return objectView;
-    }
-
-    generatePhoneView() {
-        let thisPointer;
-        const objectView = Entry.createElement('li', this.id);
-        objectView.addClass('entryContainerListElementWorkspace');
-        objectView.object = this;
-        objectView.bindOnClick(function(e) {
-            if (Entry.container.getObject(this.id)) Entry.container.selectObject(this.id);
-        });
-
-        // generate context menu
-        if ($) {
-            const object = this;
-            context.attach('#' + this.id, [
-                {
-                    text: Lang.Workspace.context_rename,
-                    href: '/',
-                    action: function(e) {
-                        e.preventDefault();
-                    },
-                },
-                {
-                    text: Lang.Workspace.context_duplicate,
-                    href: '/',
-                    action: function(e) {
-                        e.preventDefault();
-                        Entry.container.addCloneObject(object);
-                    },
-                },
-                {
-                    text: Lang.Workspace.context_remove,
-                    href: '/',
-                    action: function(e) {
-                        e.preventDefault();
-                        Entry.container.removeObject(object);
-                    },
-                },
-            ]);
-        }
-        /** @type {!Element} */
-        this.view_ = objectView;
-
-        const objectInfoView = Entry.createElement('ul');
-        objectInfoView.addClass('objectInfoView');
-        const objectInfo_visible = Entry.createElement('li');
-        objectInfo_visible.addClass('objectInfo_visible');
-        const objectInfo_lock = Entry.createElement('li');
-        objectInfo_lock.addClass('objectInfo_lock');
-        objectInfoView.appendChild(objectInfo_visible);
-        objectInfoView.appendChild(objectInfo_lock);
-        this.view_.appendChild(objectInfoView);
-
-        const thumbnailView = Entry.createElement('div');
-        thumbnailView.addClass('entryObjectThumbnailWorkspace');
-        this.view_.appendChild(thumbnailView);
-        this.thumbnailView_ = thumbnailView;
-
-        const wrapperView = Entry.createElement('div');
-        wrapperView.addClass('entryObjectWrapperWorkspace');
-        this.view_.appendChild(wrapperView);
-
-        const nameView = Entry.createElement('input');
-        nameView.addClass('entryObjectNameWorkspace');
-        wrapperView.appendChild(nameView);
-        this.nameView_ = nameView;
-        this.nameView_.entryObject = this;
-        this.nameView_.onblur = function() {
-            this.entryObject.name = this.value;
-            Entry.playground.reloadPlayground();
-        };
-        this.nameView_.onkeypress = function(e) {
-            if (e.keyCode == 13) thisPointer.editObjectValues(false);
-        };
-        this.nameView_.value = this.name;
-
-        if (Entry.objectEditable && Entry.objectDeletable) {
-            const deleteView = Entry.createElement('div');
-            deleteView.addClass('entryObjectDeletePhone');
-            deleteView.object = this;
-            this.deleteView_ = deleteView;
-            this.view_.appendChild(deleteView);
-            deleteView.bindOnClick(function(e) {
-                if (Entry.engine.isState('run')) {
-                    return;
-                }
-
-                Entry.container.removeObject(this.object);
-            });
-        }
-
-        const editBtn = Entry.createElement('button');
-        editBtn.addClass('entryObjectEditPhone');
-        editBtn.object = this;
-        editBtn.bindOnClick(function(e) {
-            const object = Entry.container.getObject(this.id);
-            if (object) {
-                Entry.container.selectObject(object.id);
-                Entry.playground.injectObject(object);
-            }
-        });
-        this.view_.appendChild(editBtn);
-
-        const informationView = Entry.createElement('div');
-        informationView.addClass('entryObjectInformationWorkspace');
-        informationView.object = this;
-        wrapperView.appendChild(informationView);
-        this.informationView_ = informationView;
-
-        const rotateLabelWrapperView = Entry.createElement('div');
-        rotateLabelWrapperView.addClass('entryObjectRotateLabelWrapperWorkspace');
-        this.view_.appendChild(rotateLabelWrapperView);
-        this.rotateLabelWrapperView_ = rotateLabelWrapperView;
-
-        const rotateSpan = Entry.createElement('span');
-        rotateSpan.addClass('entryObjectRotateSpanWorkspace');
-        rotateSpan.innerHTML = Lang.Workspace.rotation + '';
-        const rotateInput = Entry.createElement('input');
-        rotateInput.addClass('entryObjectRotateInputWorkspace');
-        this.rotateSpan_ = rotateSpan;
-        this.rotateInput_ = rotateInput;
-
-        const directionSpan = Entry.createElement('span');
-        directionSpan.addClass('entryObjectDirectionSpanWorkspace');
-        directionSpan.innerHTML = Lang.Workspace.direction + '';
-        const directionInput = Entry.createElement('input');
-        directionInput.addClass('entryObjectDirectionInputWorkspace');
-        this.directionInput_ = directionInput;
-
-        rotateLabelWrapperView.appendChild(rotateSpan);
-        rotateLabelWrapperView.appendChild(rotateInput);
-        rotateLabelWrapperView.appendChild(directionSpan);
-        rotateLabelWrapperView.appendChild(directionInput);
-        rotateLabelWrapperView.rotateInput_ = rotateInput;
-        rotateLabelWrapperView.directionInput_ = directionInput;
-        thisPointer = this;
-        rotateInt.onkeypress = function(e) {
-            if (e.keyCode == 13) {
-                let value = rotateInput.value;
-                if (value.indexOf('˚') != -1) value = value.substring(0, value.indexOf('˚'));
-                if (Entry.Utils.isNumber(value)) {
-                    thisPointer.entity.setRotation(Number(value));
-                }
-                thisPointer.updateRotationView();
-                rotateInput.blur();
-            }
-        };
-        rotateInt.onblur = function(e) {
-            thisPointer.entity.setRotation(thisPointer.entity.getRotation());
-            Entry.stage.updateObject();
-        };
-        directionInt.onkeypress = function(e) {
-            if (e.keyCode == 13) {
-                let value = directionInput.value;
-                if (value.indexOf('˚') != -1) value = value.substring(0, value.indexOf('˚'));
-                if (Entry.Utils.isNumber(value)) {
-                    thisPointer.entity.setDirection(Number(value));
-                }
-                thisPointer.updateRotationView();
-                directionInput.blur();
-            }
-        };
-        directionInt.onblur = function(e) {
-            thisPointer.entity.setDirection(thisPointer.entity.getDirection());
-            Entry.stage.updateObject();
-        };
-
-        const rotationWrapperView = Entry.createElement('div');
-        rotationWrapperView.addClass('entryObjectRotationWrapperWorkspace');
-        rotationWrapperView.object = this;
-        this.view_.appendChild(rotationWrapperView);
-
-        const coordinateView = Entry.createElement('span');
-        coordinateView.addClass('entryObjectCoordinateWorkspace');
-        rotationWrapperView.appendChild(coordinateView);
-        const xCoordi = Entry.createElement('span');
-        xCoordi.addClass('entryObjectCoordinateSpanWorkspace');
-        xCoordi.innerHTML = 'X';
-        const xInput = Entry.createElement('input');
-        xInput.addClass('entryObjectCoordinateInputWorkspace');
-        const yCoordi = Entry.createElement('span');
-        yCoordi.addClass('entryObjectCoordinateSpanWorkspace');
-        yCoordi.innerHTML = 'Y';
-        const yInput = Entry.createElement('input');
-        yInput.addClass(
-            'entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right'
-        );
-        const sizeTitle = Entry.createElement('span');
-        sizeTitle.addClass('entryObjectCoordinateSpanWorkspace');
-        sizeTitle.innerHTML = Lang.Workspace.Size;
-        const sizeInput = Entry.createElement('input');
-        sizeInput.addClass(
-            'entryObjectCoordinateInputWorkspace',
-            'entryObjectCoordinateInputWorkspace_size'
-        );
-        coordinateView.appendChild(xCoordi);
-        coordinateView.appendChild(xInput);
-        coordinateView.appendChild(yCoordi);
-        coordinateView.appendChild(yInput);
-        coordinateView.appendChild(sizeTitle);
-        coordinateView.appendChild(sizeInput);
-        coordinateView.xInput_ = xInput;
-        coordinateView.yInput_ = yInput;
-        coordinateView.sizeInput_ = sizeInput;
-        this.coordinateView_ = coordinateView;
-        thisPointer = this;
-        xInt.onkeypress = function(e) {
-            if (e.keyCode == 13) {
-                if (Entry.Utils.isNumber(xInput.value)) {
-                    thisPointer.entity.setX(Number(xInput.value));
-                }
-                thisPointer.updateCoordinateView();
-                thisPointer.blur();
-            }
-        };
-        xInt.onblur = function(e) {
-            thisPointer.entity.setX(thisPointer.entity.getX());
-            Entry.stage.updateObject();
-        };
-
-        yInt.onkeypress = function(e) {
-            if (e.keyCode == 13) {
-                if (Entry.Utils.isNumber(yInput.value)) {
-                    thisPointer.entity.setY(Number(yInput.value));
-                }
-                thisPointer.updateCoordinateView();
-                thisPointer.blur();
-            }
-        };
-        yInt.onblur = function(e) {
-            thisPointer.entity.setY(thisPointer.entity.getY());
-            Entry.stage.updateObject();
-        };
-
-        const rotationMethodWrapper = Entry.createElement('div');
-        rotationMethodWrapper.addClass('rotationMethodWrapper');
-        rotationWrapperView.appendChild(rotationMethodWrapper);
-        this.rotationMethodWrapper_ = rotationMethodWrapper;
-
-        const rotateMethodLabelView = Entry.createElement('span');
-        rotateMethodLabelView.addClass('entryObjectRotateMethodLabelWorkspace');
-        rotationMethodWrapper.appendChild(rotateMethodLabelView);
-        rotateMethodLabelView.innerHTML = Lang.Workspace.rotate_method + ' : ';
-
-        const rotateModeAView = Entry.createElement('div');
-        rotateModeAView.addClass('entryObjectRotateModeWorkspace');
-        rotateModeAView.addClass('entryObjectRotateModeAWorkspace');
-        rotateModeAView.object = this;
-        this.rotateModeAView_ = rotateModeAView;
-        rotationMethodWrapper.appendChild(rotateModeAView);
-        rotateModeAView.bindOnClick(function(e) {
-            if (Entry.engine.isState('run')) {
-                return;
-            }
-            this.object.setRotateMethod('free');
-        });
-
-        const rotateModeBView = Entry.createElement('div');
-        rotateModeBView.addClass('entryObjectRotateModeWorkspace');
-        rotateModeBView.addClass('entryObjectRotateModeBWorkspace');
-        rotateModeBView.object = this;
-        this.rotateModeBView_ = rotateModeBView;
-        rotationMethodWrapper.appendChild(rotateModeBView);
-        rotateModeBView.bindOnClick(function(e) {
-            if (Entry.engine.isState('run')) {
-                return;
-            }
-            this.object.setRotateMethod('vertical');
-        });
-
-        const rotateModeCView = Entry.createElement('div');
-        rotateModeCView.addClass('entryObjectRotateModeWorkspace');
-        rotateModeCView.addClass('entryObjectRotateModeCWorkspace');
-        rotateModeCView.object = this;
-        this.rotateModeCView_ = rotateModeCView;
-        rotationMethodWrapper.appendChild(rotateModeCView);
-        rotateModeCView.bindOnClick(function(e) {
-            if (Entry.engine.isState('run')) return;
-            this.object.setRotateMethod('none');
-        });
-
-        this.updateThumbnailView();
-        this.updateCoordinateView();
-        this.updateRotateMethodView();
-
-        this.updateInputViews();
-        return this.view_;
     }
 
     _getRotateView(type = 'free') {
