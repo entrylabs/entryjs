@@ -21,7 +21,7 @@ Entry.loadProject = function(project) {
         project = Entry.getStartProject(Entry.mediaFilePath);
     }
 
-    if (this.type == 'workspace') {
+    if (this.type === 'workspace') {
         Entry.stateManager.startIgnore();
     }
     Entry.projectId = project._id;
@@ -39,7 +39,7 @@ Entry.loadProject = function(project) {
         for (const type in Entry.EXPANSION_BLOCK_LIST) {
             if (Entry.expansionBlocks.indexOf(type) > -1) {
                 Entry.EXPANSION_BLOCK[type].init();
-                if (Entry.type == 'workspace') {
+                if (Entry.type === 'workspace') {
                     Entry.playground.blockMenu.unbanClass(type);
                 }
             }
@@ -125,7 +125,6 @@ Entry.exportProject = function(project) {
     project.variables = Entry.variableContainer.getVariableJSON();
     project.messages = Entry.variableContainer.getMessageJSON();
     project.functions = Entry.variableContainer.getFunctionJSON();
-    project.scenes = Entry.scene.toJSON();
     project.speed = Entry.FPS;
     project.interface = Entry.captureInterfaceState();
     project.expansionBlocks = Entry.expansionBlocks;
@@ -158,7 +157,7 @@ Entry.enableArduino = function() {
 Entry.beforeUnload = function(e) {
     Entry.hw.closeConnection();
     Entry.variableContainer.updateCloudVariables();
-    if (Entry.type == 'workspace') {
+    if (Entry.type === 'workspace') {
         if (localStorage && Entry.interfaceState) {
             localStorage.setItem(
                 'workspace-interface',
@@ -174,7 +173,7 @@ Entry.beforeUnload = function(e) {
 Entry.captureInterfaceState = function() {
     const interfaceState = JSON.parse(JSON.stringify(Entry.interfaceState));
     const playground = Entry.playground;
-    if (Entry.type == 'workspace' && playground && playground.object) {
+    if (Entry.type === 'workspace' && playground && playground.object) {
         interfaceState.object = playground.object.id;
     }
 
@@ -185,7 +184,7 @@ Entry.captureInterfaceState = function() {
  * load interface state by localstorage
  */
 Entry.loadInterfaceState = function(interfaceState) {
-    if (Entry.type == 'workspace') {
+    if (Entry.type === 'workspace') {
         if (interfaceState) {
             Entry.container.selectObject(interfaceState.object, true);
         } else if (localStorage && localStorage.getItem('workspace-interface')) {
@@ -262,14 +261,14 @@ Entry.generateFunctionSchema = function(functionId) {
     if (Entry.block[functionId]) {
         return;
     }
-    let blockSchema = function() {};
+    let BlockSchema = function() {};
     const blockPrototype = Entry.block.function_general;
-    blockSchema.prototype = blockPrototype;
-    blockSchema = new blockSchema();
-    blockSchema.changeEvent = new Entry.Event();
-    blockSchema.template = Lang.template.function_general;
+    BlockSchema.prototype = blockPrototype;
+    BlockSchema = new BlockSchema();
+    BlockSchema.changeEvent = new Entry.Event();
+    BlockSchema.template = Lang.template.function_general;
 
-    Entry.block[functionId] = blockSchema;
+    Entry.block[functionId] = BlockSchema;
 };
 
 Entry.getMainWS = function() {
@@ -311,7 +310,7 @@ Entry.resizeElement = function(interfaceModel) {
         interfaceModel = this.interfaceState;
     }
 
-    if (Entry.type == 'workspace') {
+    if (Entry.type === 'workspace') {
         const interfaceState = this.interfaceState;
         if (!interfaceModel.canvasWidth && interfaceState.canvasWidth) {
             interfaceModel.canvasWidth = interfaceState.canvasWidth;
@@ -334,7 +333,6 @@ Entry.resizeElement = function(interfaceModel) {
         }
         interfaceModel.canvasWidth = canvasSize;
 
-        const canvasHeight = canvasSize * 9 / 16;
         const engineContainer = Entry.engine.view_.parentElement;
         engineContainer.style.width = `${canvasSize}px`;
         Entry.engine.view_.style.width = `${canvasSize - 24}px`;
@@ -436,7 +434,7 @@ Entry.Utils.isNumber = function(num) {
     }
 };
 
-Entry.Utils.generateId = function(object) {
+Entry.Utils.generateId = function() {
     return `0000${((Math.random() * Math.pow(36, 4)) << 0).toString(36)}`.substr(-4);
 };
 
@@ -665,7 +663,7 @@ Entry.Utils.bindIOSDeviceWatch = function() {
             lastHeight = nowHeight;
         }, 1000);
 
-        $(window).on('orientationchange', function(e) {
+        $(window).on('orientationchange', function() {
             Entry.windowResized.notify();
         });
     }
@@ -958,10 +956,10 @@ Entry.hex2rgb = function(hex) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
         ? {
-              r: parseInt(result[1], 16),
-              g: parseInt(result[2], 16),
-              b: parseInt(result[3], 16),
-          }
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16),
+        }
         : null;
 };
 
@@ -1658,7 +1656,7 @@ Entry.bindAnimationCallbackOnce = function($elem, func) {
 };
 
 Entry.Utils.isInInput = function({ target: { type } }) {
-    return type == 'textarea' || type == 'text' || type == 'number';
+    return type === 'textarea' || type === 'text' || type === 'number';
 };
 
 Entry.Utils.addFilters = function(boardSvgDom, suffix, isOnlyBlock) {
@@ -2434,7 +2432,7 @@ Entry.Utils.recoverSoundInstances = function() {
     };
 
     p.text = function(str) {
-        if(str) {
+        if (str) {
             this.innerHTML = str;
         }
         return this;
@@ -2451,7 +2449,7 @@ Entry.Utils.recoverSoundInstances = function() {
         return this;
     };
 
-    p.unBindOnClick = function(func) {
+    p.unBindOnClick = function() {
         $(this).off('click tab');
         return this;
     };
