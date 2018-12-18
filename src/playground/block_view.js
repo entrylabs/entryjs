@@ -481,18 +481,19 @@ Entry.BlockView = class BlockView {
 
     onMouseDown(e) {
         // ISSUE:: 마우스이벤트1
-        if(!this.isInBlockMenu && e.stopPropagation) {
+        if (!this.isInBlockMenu && e.stopPropagation) {
             e.stopPropagation();
         }
         // if (e.preventDefault) {
         //     e.preventDefault();
         // }
-        this.longPressTimer = null;
 
-        const board = this.getBoard();
         if (Entry.documentMousedown) {
             Entry.documentMousedown.notify(e);
         }
+        this.longPressTimer = null;
+
+        const board = this.getBoard();
         if (this.readOnly || board.viewOnly) {
             return;
         }
@@ -553,7 +554,7 @@ Entry.BlockView = class BlockView {
         }
     }
 
-    isVerticalMove(mouseEvent, dragInstance) {
+    getVerticalMove(mouseEvent, dragInstance) {
         const dx = Math.abs(mouseEvent.pageX - dragInstance.offsetX);
         const dy = Math.abs(mouseEvent.pageY - dragInstance.offsetY);
         return dy / dx > 1.75;
@@ -574,10 +575,14 @@ Entry.BlockView = class BlockView {
             mouseEvent = e;
         }
         const blockView = this;
-        if(blockView.isInBlockMenu && this.longPressTimer && this.isVerticalMove(mouseEvent, blockView.dragInstance)) {
-            this.onMouseUp();
-            return ;
-        }else {
+        if (
+            blockView.isInBlockMenu &&
+            this.longPressTimer &&
+            this.getVerticalMove(mouseEvent, blockView.dragInstance)
+        ) {
+            this.isVerticalMove = true;
+            return;
+        } else {
             $(document).unbind('.blockMenu');
         }
 
@@ -660,6 +665,7 @@ Entry.BlockView = class BlockView {
         Entry.GlobalSvg.remove();
         this.mouseUpEvent.notify();
 
+        delete this.isVerticalMove;
         delete this.mouseDownCoordinate;
         delete this.dragInstance;
     }

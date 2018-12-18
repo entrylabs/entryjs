@@ -223,6 +223,10 @@ Entry.Field = class Field {
             return false;
         }
 
+        if(selectedBlockView.isVerticalMove) {
+            return false;
+        }
+
         const root = blockView.getSvgRoot();
 
         return root == selectedBlockView.svgGroup || $(root).has($(blockView.svgGroup));
