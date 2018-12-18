@@ -1643,7 +1643,7 @@ Entry.Utils.isRightButton = function(e) {
 };
 
 Entry.Utils.isTouchEvent = function({ type }) {
-    return type.toLowerCase() !== 'mousedown';
+    return type.toLowerCase().includes('touch');
 };
 
 Entry.Utils.inherit = function(parent, child) {
@@ -2445,7 +2445,6 @@ Entry.Utils.recoverSoundInstances = function() {
             if (this.disabled) {
                 return;
             }
-            e.stopImmediatePropagation();
             func.call(this, e);
         });
         return this;
