@@ -287,9 +287,7 @@ Entry.Block = class Block {
         if (this.comment) {
             const comment = this.comment;
             if (comment instanceof Entry.Comment) {
-                if (comment.svgGroup) {
-                    return;
-                } else {
+                if (!comment.svgGroup) {
                     comment.createComment(board, comment.toJSON());
                 }
             } else {
