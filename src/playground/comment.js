@@ -928,6 +928,7 @@ Entry.Comment = class Comment {
 
     generateCommentableBlocks() {
         this.connectableBlocks = [];
+        this.connectableBlockCoordinate = null;
         if (this.block) {
             return;
         }
@@ -954,11 +955,18 @@ Entry.Comment = class Comment {
         if (this.block) {
             return;
         }
+        if (
+            this.connectableBlockCoordinate &&
+            this.isOnConnectableBlock(this.connectableBlockCoordinate)
+        ) {
+            return;
+        }
         this.removeSelected();
         for (const coordinate of this.connectableBlocks) {
             if (this.isOnConnectableBlock(coordinate)) {
                 this.connectableBlockView = this.code.findById(coordinate.id).view;
                 this.board.setSelectedBlock(this.connectableBlockView);
+                this.connectableBlockCoordinate = coordinate;
                 return;
             }
         }
@@ -969,6 +977,7 @@ Entry.Comment = class Comment {
             this.connectableBlockView.removeSelected();
             this.connectableBlockView = null;
         }
+        this.connectableBlockCoordinate = null;
     }
 
     isOnConnectableBlock(coordinate) {
