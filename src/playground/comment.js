@@ -249,6 +249,8 @@ Entry.Comment = class Comment {
         });
 
         this._resizeArrow.attr({
+            width: 8,
+            height: 8,
             href: `${path}resize_arrow.svg`,
         });
 
@@ -261,10 +263,14 @@ Entry.Comment = class Comment {
         });
 
         this._toggleArrow.attr({
+            width: 8,
+            height: 5,
             href: `${path}toggle_open_arrow.svg`,
         });
 
         this._commentIcon.attr({
+            width: 12,
+            height: 12,
             href: `${path}comment_icon.svg`,
         });
     }
