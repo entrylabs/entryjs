@@ -481,7 +481,7 @@ Entry.BlockView = class BlockView {
 
     onMouseDown(e) {
         // ISSUE:: 마우스이벤트1
-        if (e.stopPropagation) {
+        if(!this.isInBlockMenu && e.stopPropagation) {
             e.stopPropagation();
         }
         // if (e.preventDefault) {
@@ -553,6 +553,12 @@ Entry.BlockView = class BlockView {
         }
     }
 
+    isVerticalMove(mouseEvent, dragInstance) {
+        const dx = Math.abs(mouseEvent.pageX - dragInstance.offsetX);
+        const dy = Math.abs(mouseEvent.pageY - dragInstance.offsetY);
+        return dy / dx > 1.75;
+    }
+
     onMouseMove(e) {
         e.stopPropagation();
         const board = this.getBoard();
@@ -566,6 +572,13 @@ Entry.BlockView = class BlockView {
             mouseEvent = e.originalEvent.touches[0];
         } else {
             mouseEvent = e;
+        }
+        const blockView = this;
+        if(blockView.isInBlockMenu && this.longPressTimer && this.isVerticalMove(mouseEvent, blockView.dragInstance)) {
+            this.onMouseUp();
+            return ;
+        }else {
+            $(document).unbind('.blockMenu');
         }
 
         const mouseDownCoordinate = this.mouseDownCoordinate;

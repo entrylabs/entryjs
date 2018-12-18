@@ -94,7 +94,7 @@ class BlockMenu {
 
         if (this._scroll) {
             this._scroller = new Entry.BlockMenuScroller(this);
-            this._addControl($dom);
+            this._addControl($dom.find('.blockMenuContainer'));
         }
 
         if (Entry.documentMousedown) {
