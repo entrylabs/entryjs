@@ -1465,7 +1465,7 @@ Entry.BlockView = class BlockView {
 
             const hasComment = !!block._comment;
             const comment = {
-                text: hasComment ? '메모 삭제하기' : '메모 추가하기',
+                text: hasComment ? Lang.Blocks.delete_comment : Lang.Blocks.add_comment,
                 enable: block.isCommentable(),
                 callback() {
                     hasComment

@@ -497,7 +497,7 @@ Entry.Comment = class Comment {
             const readOnly = comment.readOnly;
 
             const copyAndPaste = {
-                text: '메모 복사 & 붙여넣기',
+                text: Lang.Blocks.copy_paste_comment,
                 enable: !readOnly,
                 callback() {
                     Entry.do('cloneComment', comment.copy(), board);
@@ -505,7 +505,7 @@ Entry.Comment = class Comment {
             };
 
             const copy = {
-                text: '메모 복사하기',
+                text: Lang.Blocks.copy_comment,
                 enable: !readOnly,
                 callback() {
                     comment.copyToClipboard();
@@ -513,7 +513,7 @@ Entry.Comment = class Comment {
             };
 
             const remove = {
-                text: '메모 삭제하기',
+                text: Lang.Blocks.delete_comment,
                 enable: !readOnly,
                 callback() {
                     Entry.do('removeComment', comment);
@@ -521,7 +521,7 @@ Entry.Comment = class Comment {
             };
 
             const toggle = {
-                text: comment.isOpened ? '메모 접기' : '메모 열기',
+                text: comment.isOpened ? Lang.Blocks.fold_comment : Lang.Blocks.open_comment,
                 enable: !readOnly,
                 callback() {
                     Entry.do('toggleComment', comment);
@@ -529,7 +529,7 @@ Entry.Comment = class Comment {
             };
 
             const separate = {
-                text: '메모 분리하기',
+                text: Lang.Blocks.separate_comment,
                 enable: !!comment.block,
                 callback() {
                     Entry.do('separateComment', comment);
