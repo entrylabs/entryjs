@@ -163,7 +163,7 @@ Entry.Scene = class {
         if (Entry.sceneEditable) {
             scene.removeButton = this.createRemoveButton(scene, removeButtonCover);
 
-            Entry.ContextMenu.onContextmenu($(viewTemplate), (coordinate) => {
+            Entry.ContextMenu.onContextmenu(viewTemplate, (coordinate) => {
                 const options = [
                     {
                         text: Lang.Workspace.duplicate_scene,

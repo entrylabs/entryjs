@@ -145,20 +145,22 @@ Entry.ContextMenu = {};
                     // e.stopPropagation();
                     if (this.longTouchEvent) {
                         clearTimeout(this.longTouchEvent);
-                        this.longTouchEvent = null;
+                        this.longTouchEvent = undefined;
                     }
                     break;
                 case 'mousedown':
-                    if (Entry.Utils.isRightButton(e) && Entry.Utils.isTouchEvent(e)) {
+                    if (Entry.Utils.isRightButton(e)) {
+                        e.stopPropagation();
+
+                        this.coordi = {
+                            x: e.clientX,
+                            y: e.clientY,
+                        };
+
                         clearTimeout(this.longTouchEvent);
                         this.longTouchEvent = undefined;
-                        if (e.type === 'contextmenu') {
-                            // e.stopPropagation();
-                            // e.preventDefault();
-                            callback(this.coordi);
-                        }
+                        callback(this.coordi);
                     }
-
                     break;
             }
         });
