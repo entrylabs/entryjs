@@ -345,8 +345,11 @@ Entry.Block = class Block {
         }
 
         if (this._comment) {
-            const comment = this._comment.toJSON();
-            delete comment.id;
+            let comment = this._comment;
+            if (this._comment instanceof Entry.Comment) {
+                comment = this._comment.toJSON();
+                delete comment.id;
+            }
             json.comment = comment;
         }
 
