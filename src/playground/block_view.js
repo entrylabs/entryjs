@@ -89,8 +89,11 @@ Entry.BlockView = class BlockView {
         }
 
         this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
-        this.mouseHandler = function() {
+        this.mouseHandler = function(e) {
             (_.result(that.block.events, 'mousedown') || []).forEach((fn) => {
+                if (Entry.documentMousedown) {
+                    Entry.documentMousedown.notify(e);
+                }
                 return fn(that);
             });
             that.onMouseDown(...arguments);
@@ -114,7 +117,7 @@ Entry.BlockView = class BlockView {
         this.dragMode = Entry.DRAG_MODE_NONE;
         Entry.Utils.disableContextmenu(this.svgGroup.node);
         const events = block.events.viewAdd || [];
-        if (Entry.type == 'workspace' && this._board instanceof Entry.Board) {
+        if (Entry.type === 'workspace' && this._board instanceof Entry.Board) {
             events.forEach((fn) => {
                 if (_.isFunction(fn)) {
                     fn(block);
