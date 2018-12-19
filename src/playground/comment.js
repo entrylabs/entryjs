@@ -478,10 +478,10 @@ Entry.Comment = class Comment {
                 this.longPressTimer = setTimeout(() => {
                     if (this.longPressTimer) {
                         this.longPressTimer = null;
-                        this.mouseUp(e);
                         this.rightClick(e);
+                        this.mouseUp(e);
                     }
-                }, 1000);
+                }, 700);
             }
         } else if (Entry.Utils.isRightButton(e)) {
             this.rightClick(e);
@@ -493,6 +493,7 @@ Entry.Comment = class Comment {
         if (disposeEvent) {
             disposeEvent.notify(e);
         }
+        this.dragMode = Entry.DRAG_MODE_NONE;
 
         const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
 
@@ -759,8 +760,12 @@ Entry.Comment = class Comment {
 
     resizeMouseDown(e) {
         e.stopPropagation();
+        e.preventDefault();
+        if (Entry.documentMousedown) {
+            Entry.documentMousedown.notify(e);
+        }
 
-        if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
+        if ((e.button === 0 || e.type === 'touchstart') && !this.board.readOnly) {
             this.setDragInstance(e);
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
             this.bindDomEvent(this.resizeMouseMove, this.resizeMouseUp);
@@ -805,8 +810,12 @@ Entry.Comment = class Comment {
 
     toggleMouseDown(e) {
         e.stopPropagation();
+        e.preventDefault();
+        if (Entry.documentMousedown) {
+            Entry.documentMousedown.notify(e);
+        }
 
-        if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
+        if ((e.button === 0 || e.type === 'touchstart') && !this.board.readOnly) {
             this.setDragInstance(e);
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
             this.bindDomEvent(this.mouseMove, this.toggleMouseUp);
