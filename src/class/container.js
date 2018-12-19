@@ -93,6 +93,7 @@ Entry.Container = class Container {
          */
         scrollWrapper.addEventListener('mousedown', (e) => {
             if (Entry.Utils.isRightButton(e)) {
+                e.stopPropagation();
                 this._rightClick(e);
             }
         });

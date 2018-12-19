@@ -12,11 +12,7 @@
         "type": "git",
         "url": "https://github.com/boolgom/entryjs.git"
     },
-    "keywords": [
-        "entry",
-        "entryjs",
-        "javascript"
-    ],
+    "keywords": ["entry", "entryjs", "javascript"],
     "bugs": {
         "url": "https://github.com/boolgom/entryjs/issues"
     },
@@ -38,7 +34,7 @@
         "jest": "^23.3.0",
         "lodash": "^4.17.5",
         "postcss-flexbugs-fixes": "^4.1.0",
-        "simplebar": "^3.1.0",
+        "simplebar": "^3.1.1",
         "uglifyjs-webpack-plugin": "^1.2.2",
         "webpack": "^4.0.1"
     },
