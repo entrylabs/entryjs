@@ -485,14 +485,14 @@ Entry.BlockView = class BlockView {
         // ISSUE:: 마우스이벤트1
         if (!this.isInBlockMenu && e.stopPropagation) {
             e.stopPropagation();
+            if (Entry.documentMousedown) {
+                Entry.documentMousedown.notify(e);
+            }
         }
         if (e.preventDefault) {
             e.preventDefault();
         }
 
-        if (Entry.documentMousedown) {
-            Entry.documentMousedown.notify(e);
-        }
         this.longPressTimer = null;
 
         const board = this.getBoard();
@@ -1347,8 +1347,8 @@ Entry.BlockView = class BlockView {
         function processSvg() {
             svgData = svgData
                 .replace('(svgGroup)', new XMLSerializer().serializeToString(svgGroup))
-                .replace('%W', bBox.width * scale)
-                .replace('%H', bBox.height * scale)
+                .replace('%W', bBox.width * scale + 5)
+                .replace('%H', bBox.height * scale + 5)
                 .replace('(defs)', new XMLSerializer().serializeToString(defs[0]))
                 .replace(/>\s+/g, '>')
                 .replace(/\s+</g, '<');

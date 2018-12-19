@@ -32,15 +32,14 @@ Entry.ContextMenu = {};
         if (this._hideEvent) {
             this._hideEvent.destroy();
         }
-
-        this._hideEvent = Entry.documentMousedown.attach(this, this.hide);
+        
         if (className !== undefined) {
             this._className = className;
             this.dom.addClass(className);
         }
 
+        this._hideEvent = Entry.documentMousedown.attach(this, this.hide);
         this.mouseCoordinate = coordinate || Entry.mouseCoordinate;
-
         this.contextMenu = new EntryTool({
             type: 'contextMenu',
             data: {
@@ -83,6 +82,7 @@ Entry.ContextMenu = {};
     };
 
     ctx.hide = function() {
+        console.log('hide');
         this.visible = false;
         const dom = this.dom;
         dom.addClass('entryRemove');

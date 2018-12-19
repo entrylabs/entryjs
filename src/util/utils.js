@@ -693,9 +693,9 @@ Entry.Utils.bindGlobalEvent = function(options) {
             Entry.documentMousedown.clear();
         }
         Entry.documentMousedown = new Entry.Event(window);
-        doc.on('mousedown', function(e) {
-            Entry.documentMousedown.notify(e);
-        });
+        // doc.on('mousedown', function(e) {
+        //     Entry.documentMousedown.notify(e);
+        // });
     }
 
     if (options.indexOf('mousemove') > -1) {
