@@ -119,6 +119,7 @@ Entry.ContextMenu = {};
 
                     this.longTouchEvent = setTimeout(
                         function() {
+                            e.stopPropagation();
                             callback(this.coordi);
                             this.longTouchEvent = undefined;
                         }.bind(this),

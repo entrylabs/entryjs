@@ -892,7 +892,7 @@ Entry.EntryObject = class {
         this.view_ = this.createObjectView(objectId, exceptionsForMouseDown); // container
         this.view_.appendChild(this.createObjectInfoView()); // visible, lock
 
-        const thumbnailView = this.createThumbnailView(); // thumbnail
+        const thumbnailView = this.createThumbnailView(objectId); // thumbnail
         this.thumbnailView_ = thumbnailView;
         this.view_.appendChild(thumbnailView);
 
@@ -1159,6 +1159,11 @@ Entry.EntryObject = class {
 
     createNameView() {
         const nameView = Entry.createElement('input').addClass('entryObjectNameWorkspace');
+        nameView.addEventListener('click', (e) => {
+            if (!_.includes(this.view_.classList, 'selectedObject')) {
+                e.preventDefault();
+            }
+        });
 
         nameView.onkeypress = Entry.Utils.whenEnter(() => {
             this.editObjectValues(false);
@@ -1192,8 +1197,14 @@ Entry.EntryObject = class {
         return wrapperView;
     }
 
-    createThumbnailView() {
-        return Entry.createElement('div').addClass('entryObjectThumbnailWorkspace');
+    createThumbnailView(objectId) {
+        const thumbnail = Entry.createElement('div').addClass('entryObjectThumbnailWorkspace');
+
+        DomUtils.addEventListenerMultiple(thumbnail, 'mousedown touchstart', (e) => {
+            Entry.do('containerSelectObject', objectId);
+        });
+
+        return thumbnail;
     }
 
     createObjectInfoView() {
@@ -1253,18 +1264,21 @@ Entry.EntryObject = class {
         // generate context menu
         Entry.Utils.disableContextmenu(objectView);
 
-        DomUtils.addEventListenerMultiple(objectView, 'mousedown touchstart', (e) => {
+        DomUtils.addEventListenerMultiple(objectView, 'click', (e) => {
             const isFirstClick = !_.includes(this.view_.classList, 'selectedObject');
+            if (isFirstClick) {
+                e.preventDefault();
+                document.activeElement.blur();
+            }
 
             if (
                 Entry.container.getObject(objectId) &&
                 !_.includes(exceptionsForMouseDown, e.target)
             ) {
                 Entry.do('containerSelectObject', objectId);
-                this.editObjectValues(false);
             }
 
-            if (e.type === 'touchstart') {
+            /*if (e.type === 'touchstart') {
                 if (isFirstClick) {
                     e.preventDefault();
                     document.activeElement.blur();
@@ -1311,7 +1325,7 @@ Entry.EntryObject = class {
                     Entry.documentMousedown.notify(e);
                     this._rightClick(e);
                 }
-            }
+            }*/
         });
 
         return objectView;
