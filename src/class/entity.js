@@ -983,7 +983,6 @@ Entry.EntityObject = class EntityObject {
                     v = v - Math.floor(v);
                 }
 
-                let matrixValue;
                 if (v > 0 && v <= 0.33) {
                     matrixValue = [
                         1,
