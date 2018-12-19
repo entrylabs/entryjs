@@ -455,8 +455,11 @@
 .entryObjectDirectionSpanWorkspace,
 .entryObjectRotateSpanWorkspace {
     display: inline-block;
-    margin: 2px 0 0 12px;
+    margin: 2px 0 0 0;
     vertical-align: top;
+}
+.entryObjectRotateInputWorkspace + .entryObjectDirectionSpanWorkspace {
+    margin-left: 12px;
 }
 .entryObjectRotateInputWorkspace.entryRemove + .entryObjectDirectionSpanWorkspace {
     margin-left: 0;

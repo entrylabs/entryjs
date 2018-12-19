@@ -1120,7 +1120,6 @@ Entry.Board = class Board {
 
     _initContextOptions() {
         const that = this;
-        const { x, y } = this.offset();
         this._contextOptions = [
             {
                 activated: true,
@@ -1194,6 +1193,7 @@ Entry.Board = class Board {
                     text: Lang.Blocks.add_comment,
                     enable: !this.readOnly,
                     callback: () => {
+                        const { left: x, top: y } = that.offset();
                         Entry.do(
                             'createComment',
                             {
