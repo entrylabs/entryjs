@@ -273,8 +273,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('span')
                     .addClass('text')
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
-                    Lang.Blocks[`START_${caller.block.type}`]
-                }`;
+                        Lang.Blocks[`START_${caller.block.type}`]
+                    }`;
                 element.bindOnClick((e) => {
                     e.stopPropagation();
                     if (Entry.playground.object !== caller.object) {
@@ -331,8 +331,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('span')
                     .addClass('text')
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
-                    Lang.Blocks[`VARIABLE_${caller.block.type}`]
-                }`;
+                        Lang.Blocks[`VARIABLE_${caller.block.type}`]
+                    }`;
                 element.variable = variable;
                 element.bindOnClick((e) => {
                     e.stopPropagation();
@@ -2526,7 +2526,7 @@ Entry.VariableContainer = class VariableContainer {
 
         const countInput = createElement('input').appendTo(countInputBox);
         countInput.setAttribute('type', 'text');
-        countInput.onblur = () => {
+        countInput.onblur = function() {
             const v = that.selected;
             let value = this.value;
             value = Entry.Utils.isNumber(value) ? value : v.array_.length;
