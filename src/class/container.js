@@ -1079,7 +1079,7 @@ Entry.Container = class Container {
         return;
     }
 
-    _rightClick(e) {
+    _rightClick = (e) => {
         e.stopPropagation();
         const touchEvent = Entry.Utils.convertMouseEvent(e);
 
@@ -1087,7 +1087,7 @@ Entry.Container = class Container {
             {
                 text: Lang.Blocks.Paste_blocks,
                 enable: !Entry.engine.isState('run') && !!this.copiedObject,
-                callback() {
+                callback: () => {
                     if (this.copiedObject) {
                         this.addCloneObject(this.copiedObject);
                     } else {
