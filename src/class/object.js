@@ -1264,7 +1264,7 @@ Entry.EntryObject = class {
         // generate context menu
         Entry.Utils.disableContextmenu(objectView);
 
-        DomUtils.addEventListenerMultiple(objectView, 'click', (e) => {
+        objectView.addEventListener('click', (e) => {
             const isFirstClick = !_.includes(this.view_.classList, 'selectedObject');
             if (isFirstClick) {
                 e.preventDefault();
@@ -1278,54 +1278,52 @@ Entry.EntryObject = class {
                 Entry.do('containerSelectObject', objectId);
             }
 
-            /*if (e.type === 'touchstart') {
-                if (isFirstClick) {
-                    e.preventDefault();
-                    document.activeElement.blur();
-                }
-                e.eventFromEntryObject = true;
-                Entry.documentMousedown.notify(e);
+        });
 
-                const doc = $(document);
-                const touchEvent = Entry.Utils.convertMouseEvent(e);
-                const mouseDownCoordinate = { x: touchEvent.clientX, y: touchEvent.clientY };
-                let longPressTimer = null;
+        objectView.addEventListener('mousedown', (e) => {
+            if (Entry.Utils.isRightButton(e)) {
+                e.stopPropagation();
+                this._rightClick(e);
+            }
+        });
 
-                longPressTimer = setTimeout(() => {
-                    if (longPressTimer) {
-                        longPressTimer = null;
-                        this._rightClick(e);
-                    }
-                }, 1000);
+        objectView.addEventListener('touchstart', (e) => {
+            e.eventFromEntryObject = true;
+            Entry.documentMousedown.notify(e);
 
-                doc.bind('mousemove.object touchmove.object', (e) => {
-                    const touchEvent = Entry.Utils.convertMouseEvent(e);
+            const doc = $(document);
+            const touchEvent = Entry.Utils.convertMouseEvent(e);
+            const mouseDownCoordinate = { x: touchEvent.clientX, y: touchEvent.clientY };
+            let longPressTimer = null;
 
-                    const diff = Math.sqrt(
-                        Math.pow(touchEvent.pageX - mouseDownCoordinate.x, 2) +
-                            Math.pow(touchEvent.pageY - mouseDownCoordinate.y, 2)
-                    );
-
-                    if (diff > 5 && longPressTimer) {
-                        clearTimeout(longPressTimer);
-                        longPressTimer = null;
-                    }
-                });
-                doc.bind('mouseup.object touchend.object', (e) => {
-                    e.stopPropagation();
-                    doc.unbind('.object');
-                    if (longPressTimer) {
-                        clearTimeout(longPressTimer);
-                        longPressTimer = null;
-                    }
-                });
-            } else {
-                if (Entry.Utils.isRightButton(e)) {
-                    e.stopPropagation();
-                    Entry.documentMousedown.notify(e);
+            longPressTimer = setTimeout(() => {
+                if (longPressTimer) {
+                    longPressTimer = null;
                     this._rightClick(e);
                 }
-            }*/
+            }, 1000);
+
+            doc.bind('mousemove.object touchmove.object', (e) => {
+                const touchEvent = Entry.Utils.convertMouseEvent(e);
+
+                const diff = Math.sqrt(
+                    Math.pow(touchEvent.pageX - mouseDownCoordinate.x, 2) +
+                    Math.pow(touchEvent.pageY - mouseDownCoordinate.y, 2)
+                );
+
+                if (diff > 5 && longPressTimer) {
+                    clearTimeout(longPressTimer);
+                    longPressTimer = null;
+                }
+            });
+            doc.bind('mouseup.object touchend.object', (e) => {
+                e.stopPropagation();
+                doc.unbind('.object');
+                if (longPressTimer) {
+                    clearTimeout(longPressTimer);
+                    longPressTimer = null;
+                }
+            });
         });
 
         return objectView;
