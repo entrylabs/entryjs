@@ -82,7 +82,6 @@ Entry.ContextMenu = {};
     };
 
     ctx.hide = function() {
-        console.log('hide');
         this.visible = false;
         const dom = this.dom;
         dom.addClass('entryRemove');
