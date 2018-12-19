@@ -271,8 +271,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('span')
                     .addClass('text')
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
-                    Lang.Blocks[`START_${caller.block.type}`]
-                }`;
+                        Lang.Blocks[`START_${caller.block.type}`]
+                    }`;
                 element.bindOnClick((e) => {
                     e.stopPropagation();
                     if (Entry.playground.object !== caller.object) {
@@ -330,8 +330,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('span')
                     .addClass('text')
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
-                    Lang.Blocks[`VARIABLE_${caller.block.type}`]
-                }`;
+                        Lang.Blocks[`VARIABLE_${caller.block.type}`]
+                    }`;
                 element.variable = variable;
                 element.bindOnClick((e) => {
                     e.stopPropagation();
@@ -519,6 +519,7 @@ Entry.VariableContainer = class VariableContainer {
             this.messageAddButton_.unBindOnClick().addClass('disabled');
         } else {
             this.messageAddButton_
+                .unBindOnClick()
                 .bindOnClick(() => {
                     return Entry.do('variableContainerClickMessageAddButton');
                 })
@@ -553,6 +554,7 @@ Entry.VariableContainer = class VariableContainer {
             this.variableAddButton_.unBindOnClick().addClass('disabled');
         } else {
             this.variableAddButton_
+                .unBindOnClick()
                 .bindOnClick(() => {
                     return Entry.do('variableContainerClickVariableAddButton');
                 })
@@ -637,6 +639,7 @@ Entry.VariableContainer = class VariableContainer {
             this.listAddButton_.unBindOnClick().addClass('disabled');
         } else {
             this.listAddButton_
+                .unBindOnClick()
                 .bindOnClick(() => {
                     return Entry.do('variableContainerClickListAddButton');
                 })
@@ -703,6 +706,7 @@ Entry.VariableContainer = class VariableContainer {
             this.functionAddButton_.unBindOnClick().addClass('disabled');
         } else {
             this.functionAddButton_
+                .unBindOnClick()
                 .bindOnClick(() => {
                     return Entry.do('funcCreateStart', Entry.generateHash());
                 })
