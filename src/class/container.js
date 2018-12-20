@@ -3,8 +3,6 @@
  */
 'use strict';
 
-import Simplebar from 'simplebar';
-import DomUtils from '../util/domUtils';
 import EntryTool from 'entry-tool';
 
 /**
@@ -65,7 +63,7 @@ Entry.Container = class Container {
      * @param {!Element} containerView containerView from Entry.
      * @param {?string} option for choose type of view.
      */
-    generateView(containerView, option) {
+    generateView(containerView) {
         this._view = containerView;
         this._view.addClass('entryContainer');
         this._view.addClass('entryContainerWorkspace');
@@ -73,7 +71,7 @@ Entry.Container = class Container {
 
         const addButton = Entry.createElement('div')
             .addClass('entryAddObjectWorkspace')
-            .bindOnClick((e) => {
+            .bindOnClick(() => {
                 Entry.dispatchEvent('openSpriteManager');
             });
         addButton.innerHTML = Lang.Workspace.add_object;
@@ -95,6 +93,7 @@ Entry.Container = class Container {
          */
         scrollWrapper.addEventListener('mousedown', (e) => {
             if (Entry.Utils.isRightButton(e)) {
+                e.stopPropagation();
                 this._rightClick(e);
             }
         });
@@ -139,7 +138,7 @@ Entry.Container = class Container {
             });
 
             // 터치가 끝난 경우 타이머 종료
-            doc.bind('mouseup.container touchend.container', (e) => {
+            doc.bind('mouseup.container touchend.container', () => {
                 doc.unbind('.container');
                 if (longPressTimer) {
                     clearTimeout(longPressTimer);
@@ -189,7 +188,7 @@ Entry.Container = class Container {
     }
 
     _getSortableObjectList(objects) {
-        let targetObjects = objects || this.currentObjects_ || [];
+        const targetObjects = objects || this.currentObjects_ || [];
 
         return targetObjects.map((value) => {
             return {
@@ -256,7 +255,7 @@ Entry.Container = class Container {
         this.updateListView();
         Entry.variableContainer.updateViews();
         const type = Entry.type;
-        if (type == 'workspace' || type == 'phone') {
+        if (type === 'workspace' || type === 'phone') {
             const target = this.getCurrentObjects()[0];
             target && this.selectObject(target.id);
         }
@@ -333,7 +332,7 @@ Entry.Container = class Container {
         object.scene = object.scene || Entry.scene.selectedScene;
 
         let isBackground = objectModel.sprite.category || {};
-        isBackground = isBackground.main == 'background';
+        isBackground = isBackground.main === 'background';
 
         if (typeof index === 'number') {
             if (isBackground) {
@@ -612,20 +611,14 @@ Entry.Container = class Container {
         this.setCurrentObjects();
         this.updateListView();
         Entry.requestUpdate = true;
-        return new Entry.State(
-            this,
-            this.moveElement,
-            endIndex,
-            startIndex,
-            true
-        );
+        return new Entry.State(this, this.moveElement, endIndex, startIndex, true);
     }
 
     /**
      * generate list for dropdown dynamic
      * @param {string} menuName
      */
-    getDropdownList(menuName, object) {
+    getDropdownList(menuName) {
         let result = [];
         switch (menuName) {
             case 'sprites':
@@ -1087,7 +1080,7 @@ Entry.Container = class Container {
         return;
     }
 
-    _rightClick(e) {
+    _rightClick = (e) => {
         e.stopPropagation();
         const touchEvent = Entry.Utils.convertMouseEvent(e);
 
@@ -1095,7 +1088,7 @@ Entry.Container = class Container {
             {
                 text: Lang.Blocks.Paste_blocks,
                 enable: !Entry.engine.isState('run') && !!this.copiedObject,
-                callback() {
+                callback: () => {
                     if (this.copiedObject) {
                         this.addCloneObject(this.copiedObject);
                     } else {

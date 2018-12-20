@@ -148,6 +148,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         return new EntryTool({
             type: 'numberWidget',
             data: {
+                eventTypes: ['mousedown', 'touchstart', 'wheel'],
                 positionDom: this.svgGroup,
                 onOutsideClick: () => {
                     this.destroyOption(undefined, true);
@@ -181,6 +182,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         return new EntryTool({
             type: 'angleWidget',
             data: {
+                eventTypes: ['mousedown', 'touchstart', 'wheel'],
                 angle: this.getValue(),
                 outsideExcludeDom: excludeDom,
                 positionDom: this.svgGroup,

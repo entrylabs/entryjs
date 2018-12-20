@@ -1120,7 +1120,6 @@ Entry.Board = class Board {
 
     _initContextOptions() {
         const that = this;
-        const { x, y } = this.offset();
         this._contextOptions = [
             {
                 activated: true,
@@ -1191,9 +1190,10 @@ Entry.Board = class Board {
             {
                 activated: true,
                 option: {
-                    text: '메모 추가하기',
+                    text: Lang.Blocks.add_comment,
                     enable: !this.readOnly,
                     callback: () => {
+                        const { left: x, top: y } = that.offset();
                         Entry.do(
                             'createComment',
                             {
@@ -1209,7 +1209,7 @@ Entry.Board = class Board {
             {
                 activated: true,
                 option: {
-                    text: '모든 메모 숨기기',
+                    text: Lang.Blocks.hide_all_comment,
                     enable: !this.readOnly,
                     callback() {
                         that.isVisibleComment
@@ -1267,8 +1267,8 @@ Entry.Board = class Board {
         contextOptions[Entry.Board.OPTION_DOWNLOAD].option.enable =
             this.code.getThreads().length !== 0;
         contextOptions[Entry.Board.VISIBLE_COMMENT].option.text = this.isVisibleComment
-            ? '모든 메모 숨기기'
-            : '모든 메모 보이기';
+            ? Lang.Blocks.hide_all_comment
+            : Lang.Blocks.show_all_comment;
 
         const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
         Entry.ContextMenu.show(

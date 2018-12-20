@@ -94,12 +94,12 @@ class BlockMenu {
 
         if (this._scroll) {
             this._scroller = new Entry.BlockMenuScroller(this);
-            this._addControl($dom);
+            this._addControl($dom.find('.blockMenuContainer'));
         }
 
-        if (Entry.documentMousedown) {
-            Entry.documentMousedown.attach(this, this.setSelectedBlock);
-        }
+        // if (Entry.documentMousedown) {
+        //     Entry.documentMousedown.attach(this, this.setSelectedBlock);
+        // }
         if (this.code && Entry.keyPressed) {
             Entry.keyPressed.attach(this, this._captureKeyEvent);
         }
@@ -366,9 +366,11 @@ class BlockMenu {
                 this._boardBlockView = newBlockView;
 
                 newBlockView.onMouseDown.call(newBlockView, e);
-                newBlockView.dragInstance.set({
-                    isNew: true,
-                });
+                if(newBlockView.dragInstance) {
+                    newBlockView.dragInstance.set({
+                        isNew: true,
+                    });
+                }
 
                 GS.setView(newBlockView, workspaceMode);
             }
@@ -791,54 +793,46 @@ class BlockMenu {
     removeControl(eventType) {
         this.svgDom.off(eventType);
     }
+    onMouseMove = (e) => {
+        if (e.stopPropagation) {
+            e.stopPropagation();
+        }
+
+        const { pageY } = Entry.Utils.convertMouseEvent(e);
+
+        const dragInstance = this.dragInstance;
+        this._scroller.scroll(-pageY + dragInstance.offsetY);
+        dragInstance.set({ offsetY: pageY });
+    };
+
+    onMouseUp = (e) => {
+        $(document).unbind('.blockMenu');
+        delete this.dragInstance;
+    };
 
     onMouseDown(e) {
         // ISSUE:: 마우스이벤트1
         // if (e.stopPropagation) {
         //     e.stopPropagation();
         // }
-        // if (e.preventDefault) {
-        //     e.preventDefault();
-        // }
+        if (e.preventDefault) {
+            e.preventDefault();
+        }
 
-        const blockMenu = this;
         if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
             const mouseEvent = Entry.Utils.convertMouseEvent(e);
-
             if (Entry.documentMousedown) {
                 Entry.documentMousedown.notify(mouseEvent);
             }
             const doc = $(document);
 
-            doc.bind('mousemove.blockMenu', onMouseMove);
-            doc.bind('mouseup.blockMenu', onMouseUp);
-            doc.bind('touchmove.blockMenu', onMouseMove);
-            doc.bind('touchend.blockMenu', onMouseUp);
+            doc.bind('mousemove.blockMenu touchmove.blockMenu', this.onMouseMove);
+            doc.bind('mouseup.blockMenu touchend.blockMenu', this.onMouseUp);
 
             this.dragInstance = new Entry.DragInstance({
                 startY: mouseEvent.pageY,
                 offsetY: mouseEvent.pageY,
             });
-        }
-
-        function onMouseMove(e) {
-            if (e.stopPropagation) {
-                e.stopPropagation();
-            }
-            if (e.preventDefault) {
-                e.preventDefault();
-            }
-
-            const { pageY } = Entry.Utils.convertMouseEvent(e);
-
-            const dragInstance = blockMenu.dragInstance;
-            blockMenu._scroller.scroll(-pageY + dragInstance.offsetY);
-            dragInstance.set({ offsetY: pageY });
-        }
-
-        function onMouseUp(e) {
-            $(document).unbind('.blockMenu');
-            delete blockMenu.dragInstance;
         }
     }
 

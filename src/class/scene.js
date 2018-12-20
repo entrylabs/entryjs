@@ -98,19 +98,7 @@ Entry.Scene = class {
         const listView = Entry.createElement('div');
         listView.addClass('entrySceneListWorkspace');
 
-        if (Entry.sceneEditable && $) {
-            /*$(listView).sortable({
-                start: (event, ui) => {
-                    ui.item.data('start_pos', ui.item.index());
-                },
-                stop: (event, ui) => {
-                    Entry.scene.moveScene(ui.item.data('start_pos'), ui.item.index());
-                    this.isFirstTouch = false;
-                },
-                axis: 'x',
-                tolerance: 'pointer',
-                cancel: 'input:focus',
-            });*/
+        if (Entry.sceneEditable) {
             this.sceneSortableListWidget = new EntryTool({
                 type: 'sortableWidget',
                 data: {
@@ -175,7 +163,7 @@ Entry.Scene = class {
         if (Entry.sceneEditable) {
             scene.removeButton = this.createRemoveButton(scene, removeButtonCover);
 
-            Entry.ContextMenu.onContextmenu($(viewTemplate), (coordinate) => {
+            Entry.ContextMenu.onContextmenu(viewTemplate, (coordinate) => {
                 const options = [
                     {
                         text: Lang.Workspace.duplicate_scene,
@@ -198,7 +186,6 @@ Entry.Scene = class {
         return Entry.createElement('button')
             .addClass('entrySceneRemoveButtonWorkspace')
             .bindOnClick((e) => {
-                e.stopPropagation();
                 if (Entry.engine.isState('run')) return;
                 if (this.isFirstTouch) {
                     this.isFirstTouch = false;
@@ -285,7 +272,6 @@ Entry.Scene = class {
         viewTemplate.addClass('entrySceneElementWorkspace  entrySceneButtonWorkspace minValue');
         $(viewTemplate).on('mousedown touchstart', (e) => {
             if (Entry.engine.isState('run')) {
-                e.preventDefault();
                 return;
             }
             if (Entry.scene.selectedScene !== scene) {

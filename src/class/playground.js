@@ -198,6 +198,8 @@ Entry.Playground = class {
         const commentToggleButton = Entry.createElement('div')
             .addClass('entryPlaygroundCommentButtonWorkspace showComment')
             .appendTo(tabButtonView);
+        commentToggleButton.setAttribute('alt', Lang.Blocks.show_all_comment);
+        commentToggleButton.setAttribute('title', Lang.Blocks.show_all_comment);
 
         this.commentToggleButton_ = commentToggleButton;
         commentToggleButton.bindOnClick(() => {
@@ -215,10 +217,16 @@ Entry.Playground = class {
     }
 
     toggleCommentButtonVisible() {
+        const button = this.commentToggleButton_;
+
         if (this.board.isVisibleComment) {
-            this.commentToggleButton_.addClass('showComment');
+            button.addClass('showComment');
+            button.setAttribute('alt', Lang.Blocks.show_all_comment);
+            button.setAttribute('title', Lang.Blocks.show_all_comment);
         } else {
-            this.commentToggleButton_.removeClass('showComment');
+            button.removeClass('showComment');
+            button.setAttribute('alt', Lang.Blocks.hide_all_comment);
+            button.setAttribute('title', Lang.Blocks.hide_all_comment);
         }
     }
 
@@ -1257,7 +1265,8 @@ Entry.Playground = class {
     initializeResizeHandle(handle) {
         let listener;
         const that = this;
-        $(handle).bind('mousedown touchstart', function() {
+        $(handle).bind('mousedown touchstart', function(e) {
+            e.preventDefault();
             that.resizing = true;
             if (Entry.documentMousemove) {
                 listener = Entry.documentMousemove.attach(this, function({ clientX }) {

@@ -3,6 +3,7 @@
  */
 'use strict';
 
+import SimpleBar from 'simplebar';
 /**
  * Block variable constructor
  * @param {variable model} variable
@@ -95,7 +96,11 @@ Entry.VariableContainer = class VariableContainer {
         );
 
         const listViewContainer = createElement('div').addClass('entryVariableListWorkspace');
-        const listView = createElement('div').addClass('entryVariableAdd_box');
+        this.view_.appendChild(listViewContainer);
+
+        const listView = createElement('div')
+            .addClass('entryVariableAdd_box')
+            .appendTo(listViewContainer);
 
         $(listView).on('mouseenter', '.entryVariableListElementWorkspace', function() {
             this.addClass('active');
@@ -105,12 +110,9 @@ Entry.VariableContainer = class VariableContainer {
             this.removeClass('active');
         });
 
-        listViewContainer.appendChild(listView);
-        this.view_.appendChild(listViewContainer);
         this.listView_ = listView;
 
         this.generateAddButtons();
-
         this.generateVariableAddView();
         this.generateListAddView();
         this.generateMessageAddView();
@@ -271,8 +273,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('span')
                     .addClass('text')
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
-                    Lang.Blocks[`START_${caller.block.type}`]
-                }`;
+                        Lang.Blocks[`START_${caller.block.type}`]
+                    }`;
                 element.bindOnClick((e) => {
                     e.stopPropagation();
                     if (Entry.playground.object !== caller.object) {
@@ -302,7 +304,6 @@ Entry.VariableContainer = class VariableContainer {
      * @param {object} variable
      */
     renderVariableReference(variable) {
-        const that = this;
         const variableId = variable.id_;
 
         const callers = this._variableRefs.filter(({ block: { params } }) => {
@@ -330,8 +331,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('span')
                     .addClass('text')
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
-                    Lang.Blocks[`VARIABLE_${caller.block.type}`]
-                }`;
+                        Lang.Blocks[`VARIABLE_${caller.block.type}`]
+                    }`;
                 element.variable = variable;
                 element.bindOnClick((e) => {
                     e.stopPropagation();
@@ -365,8 +366,6 @@ Entry.VariableContainer = class VariableContainer {
      * @param {object} variable
      */
     renderFunctionReference(func) {
-        const that = this;
-
         const callers = [...this._functionRefs];
 
         func.usedView && $(func.usedView).remove();
@@ -519,6 +518,7 @@ Entry.VariableContainer = class VariableContainer {
             this.messageAddButton_.unBindOnClick().addClass('disabled');
         } else {
             this.messageAddButton_
+                .unBindOnClick()
                 .bindOnClick(() => {
                     return Entry.do('variableContainerClickMessageAddButton');
                 })
@@ -553,6 +553,7 @@ Entry.VariableContainer = class VariableContainer {
             this.variableAddButton_.unBindOnClick().addClass('disabled');
         } else {
             this.variableAddButton_
+                .unBindOnClick()
                 .bindOnClick(() => {
                     return Entry.do('variableContainerClickVariableAddButton');
                 })
@@ -637,6 +638,7 @@ Entry.VariableContainer = class VariableContainer {
             this.listAddButton_.unBindOnClick().addClass('disabled');
         } else {
             this.listAddButton_
+                .unBindOnClick()
                 .bindOnClick(() => {
                     return Entry.do('variableContainerClickListAddButton');
                 })
@@ -703,6 +705,7 @@ Entry.VariableContainer = class VariableContainer {
             this.functionAddButton_.unBindOnClick().addClass('disabled');
         } else {
             this.functionAddButton_
+                .unBindOnClick()
                 .bindOnClick(() => {
                     return Entry.do('funcCreateStart', Entry.generateHash());
                 })
@@ -2523,7 +2526,7 @@ Entry.VariableContainer = class VariableContainer {
 
         const countInput = createElement('input').appendTo(countInputBox);
         countInput.setAttribute('type', 'text');
-        countInput.onblur = () => {
+        countInput.onblur = function() {
             const v = that.selected;
             let value = this.value;
             value = Entry.Utils.isNumber(value) ? value : v.array_.length;
@@ -2542,8 +2545,8 @@ Entry.VariableContainer = class VariableContainer {
         const scrollBox = createElement('div')
             .addClass('scroll_box')
             .appendTo(countGroup);
-
-        this.listSettingView.listValues = scrollBox;
+        const el = new SimpleBar(scrollBox, { autoHide: false });
+        this.listSettingView.listValues = el.getContentElement();
     }
 
     updateListSettingView(list) {
@@ -2728,7 +2731,7 @@ Entry.VariableContainer = class VariableContainer {
 
         this[type].push(datum);
 
-        if (type == '_functionRefs') {
+        if (type === '_functionRefs') {
             const id = blockData.type.substr(5);
             const func = Entry.variableContainer.functions_[id];
             if (func.isAdded) {

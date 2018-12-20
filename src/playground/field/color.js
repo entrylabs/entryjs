@@ -128,6 +128,7 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
         this.colorPicker = new EntryTool({
             type: 'colorPicker',
             data: {
+                eventTypes: ['mousedown', 'touchstart', 'wheel'],
                 color: this.getValue(),
                 canTransparent: false,
                 canSpoid: false,

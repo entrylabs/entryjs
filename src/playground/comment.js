@@ -249,6 +249,8 @@ Entry.Comment = class Comment {
         });
 
         this._resizeArrow.attr({
+            width: 8,
+            height: 8,
             href: `${path}resize_arrow.svg`,
         });
 
@@ -261,10 +263,14 @@ Entry.Comment = class Comment {
         });
 
         this._toggleArrow.attr({
+            width: 8,
+            height: 5,
             href: `${path}toggle_open_arrow.svg`,
         });
 
         this._commentIcon.attr({
+            width: 12,
+            height: 12,
             href: `${path}comment_icon.svg`,
         });
     }
@@ -472,10 +478,10 @@ Entry.Comment = class Comment {
                 this.longPressTimer = setTimeout(() => {
                     if (this.longPressTimer) {
                         this.longPressTimer = null;
-                        this.mouseUp(e);
                         this.rightClick(e);
+                        this.mouseUp(e);
                     }
-                }, 1000);
+                }, 700);
             }
         } else if (Entry.Utils.isRightButton(e)) {
             this.rightClick(e);
@@ -487,6 +493,7 @@ Entry.Comment = class Comment {
         if (disposeEvent) {
             disposeEvent.notify(e);
         }
+        this.dragMode = Entry.DRAG_MODE_NONE;
 
         const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
 
@@ -497,7 +504,7 @@ Entry.Comment = class Comment {
             const readOnly = comment.readOnly;
 
             const copyAndPaste = {
-                text: '메모 복사 & 붙여넣기',
+                text: Lang.Blocks.copy_paste_comment,
                 enable: !readOnly,
                 callback() {
                     Entry.do('cloneComment', comment.copy(), board);
@@ -505,7 +512,7 @@ Entry.Comment = class Comment {
             };
 
             const copy = {
-                text: '메모 복사하기',
+                text: Lang.Blocks.copy_comment,
                 enable: !readOnly,
                 callback() {
                     comment.copyToClipboard();
@@ -513,7 +520,7 @@ Entry.Comment = class Comment {
             };
 
             const remove = {
-                text: '메모 삭제하기',
+                text: Lang.Blocks.delete_comment,
                 enable: !readOnly,
                 callback() {
                     Entry.do('removeComment', comment);
@@ -521,7 +528,7 @@ Entry.Comment = class Comment {
             };
 
             const toggle = {
-                text: comment.isOpened ? '메모 접기' : '메모 열기',
+                text: comment.isOpened ? Lang.Blocks.fold_comment : Lang.Blocks.open_comment,
                 enable: !readOnly,
                 callback() {
                     Entry.do('toggleComment', comment);
@@ -529,7 +536,7 @@ Entry.Comment = class Comment {
             };
 
             const separate = {
-                text: '메모 분리하기',
+                text: Lang.Blocks.separate_comment,
                 enable: !!comment.block,
                 callback() {
                     Entry.do('separateComment', comment);
@@ -753,8 +760,12 @@ Entry.Comment = class Comment {
 
     resizeMouseDown(e) {
         e.stopPropagation();
+        e.preventDefault();
+        if (Entry.documentMousedown) {
+            Entry.documentMousedown.notify(e);
+        }
 
-        if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
+        if ((e.button === 0 || e.type === 'touchstart') && !this.board.readOnly) {
             this.setDragInstance(e);
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
             this.bindDomEvent(this.resizeMouseMove, this.resizeMouseUp);
@@ -799,8 +810,12 @@ Entry.Comment = class Comment {
 
     toggleMouseDown(e) {
         e.stopPropagation();
+        e.preventDefault();
+        if (Entry.documentMousedown) {
+            Entry.documentMousedown.notify(e);
+        }
 
-        if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
+        if ((e.button === 0 || e.type === 'touchstart') && !this.board.readOnly) {
             this.setDragInstance(e);
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
             this.bindDomEvent(this.mouseMove, this.toggleMouseUp);
@@ -928,6 +943,7 @@ Entry.Comment = class Comment {
 
     generateCommentableBlocks() {
         this.connectableBlocks = [];
+        this.connectableBlockCoordinate = null;
         if (this.block) {
             return;
         }
@@ -954,11 +970,18 @@ Entry.Comment = class Comment {
         if (this.block) {
             return;
         }
+        if (
+            this.connectableBlockCoordinate &&
+            this.isOnConnectableBlock(this.connectableBlockCoordinate)
+        ) {
+            return;
+        }
         this.removeSelected();
         for (const coordinate of this.connectableBlocks) {
             if (this.isOnConnectableBlock(coordinate)) {
                 this.connectableBlockView = this.code.findById(coordinate.id).view;
                 this.board.setSelectedBlock(this.connectableBlockView);
+                this.connectableBlockCoordinate = coordinate;
                 return;
             }
         }
@@ -969,6 +992,7 @@ Entry.Comment = class Comment {
             this.connectableBlockView.removeSelected();
             this.connectableBlockView = null;
         }
+        this.connectableBlockCoordinate = null;
     }
 
     isOnConnectableBlock(coordinate) {

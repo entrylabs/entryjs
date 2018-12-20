@@ -89,9 +89,11 @@ Entry.BlockView = class BlockView {
         }
 
         this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
-
-        this.mouseHandler = function() {
+        this.mouseHandler = function(e) {
             (_.result(that.block.events, 'mousedown') || []).forEach((fn) => {
+                if (Entry.documentMousedown) {
+                    Entry.documentMousedown.notify(e);
+                }
                 return fn(that);
             });
             that.onMouseDown(...arguments);
@@ -115,7 +117,7 @@ Entry.BlockView = class BlockView {
         this.dragMode = Entry.DRAG_MODE_NONE;
         Entry.Utils.disableContextmenu(this.svgGroup.node);
         const events = block.events.viewAdd || [];
-        if (Entry.type == 'workspace' && this._board instanceof Entry.Board) {
+        if (Entry.type === 'workspace' && this._board instanceof Entry.Board) {
             events.forEach((fn) => {
                 if (_.isFunction(fn)) {
                     fn(block);
@@ -481,33 +483,35 @@ Entry.BlockView = class BlockView {
 
     onMouseDown(e) {
         // ISSUE:: 마우스이벤트1
-        if (e.stopPropagation) {
+        if (!this.isInBlockMenu && e.stopPropagation) {
             e.stopPropagation();
+            if (Entry.documentMousedown) {
+                Entry.documentMousedown.notify(e);
+            }
         }
-        // if (e.preventDefault) {
-        //     e.preventDefault();
-        // }
+        if (e.preventDefault) {
+            e.preventDefault();
+        }
+
         this.longPressTimer = null;
 
         const board = this.getBoard();
-        if (Entry.documentMousedown) {
-            Entry.documentMousedown.notify(e);
-        }
         if (this.readOnly || board.viewOnly) {
             return;
         }
 
         board.setSelectedBlock(this);
-
         //left mousedown
         if (
-            (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) &&
+            (e.button === 0 || (e.originalEvent && e.originalEvent.touches) || e.touches) &&
             !this._board.readOnly
         ) {
             const eventType = e.type;
             let mouseEvent;
             if (e.originalEvent && e.originalEvent.touches) {
                 mouseEvent = e.originalEvent.touches[0];
+            } else if (e.touches) {
+                mouseEvent = e.touches[0];
             } else {
                 mouseEvent = e;
             }
@@ -517,10 +521,13 @@ Entry.BlockView = class BlockView {
                 y: mouseEvent.pageY,
             };
             const $doc = $(document);
+
             if (!this.disableMouseEvent) {
-                $doc.bind('mousemove.block touchmove.block', this.onMouseMove);
+                $doc.bind('mousemove.block', this.onMouseMove);
+                document.addEventListener('touchmove', this.onMouseMove, { passive: false });
             }
-            $doc.bind('mouseup.block touchend.block', this.onMouseUp);
+            $doc.bind('mouseup.block', this.onMouseUp);
+            document.addEventListener('touchend', this.onMouseUp, { passive: false });
             this.dragInstance = new Entry.DragInstance({
                 startX: mouseEvent.pageX,
                 startY: mouseEvent.pageY,
@@ -540,7 +547,7 @@ Entry.BlockView = class BlockView {
                         this.onMouseUp();
                         this._rightClick(e, 'longPress');
                     }
-                }, 1000);
+                }, 700);
             }
         } else if (Entry.Utils.isRightButton(e)) {
             this._rightClick(e);
@@ -553,8 +560,15 @@ Entry.BlockView = class BlockView {
         }
     }
 
+    getVerticalMove(mouseEvent, dragInstance) {
+        const dx = Math.abs(mouseEvent.pageX - dragInstance.offsetX);
+        const dy = Math.abs(mouseEvent.pageY - dragInstance.offsetY);
+        return dy / dx > 1.75;
+    }
+
     onMouseMove(e) {
         e.stopPropagation();
+        e.preventDefault();
         const board = this.getBoard();
         const workspaceMode = board.workspace.getMode();
 
@@ -564,6 +578,8 @@ Entry.BlockView = class BlockView {
         }
         if (e.originalEvent && e.originalEvent.touches) {
             mouseEvent = e.originalEvent.touches[0];
+        } else if (e.touches) {
+            mouseEvent = e.touches[0];
         } else {
             mouseEvent = e;
         }
@@ -574,6 +590,19 @@ Entry.BlockView = class BlockView {
                 Math.pow(mouseEvent.pageY - mouseDownCoordinate.y, 2)
         );
         if (this.dragMode == Entry.DRAG_MODE_DRAG || diff > Entry.BlockView.DRAG_RADIUS) {
+            const blockView = this;
+            if (
+                (blockView.isInBlockMenu &&
+                    this.longPressTimer &&
+                    this.getVerticalMove(mouseEvent, blockView.dragInstance)) ||
+                this.isVerticalMove
+            ) {
+                this.isVerticalMove = true;
+                return;
+            } else {
+                $(document).unbind('.blockMenu');
+            }
+
             if (this.longPressTimer) {
                 clearTimeout(this.longPressTimer);
                 this.longPressTimer = null;
@@ -626,8 +655,17 @@ Entry.BlockView = class BlockView {
                 this._updateCloseBlock();
             } else {
                 board.cloneToGlobal(e);
+                // this.terminateEvent();
             }
         }
+    }
+
+    terminateEvent() {
+        const $doc = $(document);
+        document.removeEventListener('touchmove', this.onMouseMove, { passive: false });
+        document.removeEventListener('touchend', this.onMouseUp, { passive: false });
+        $doc.unbind('.block', this.onMouseUp);
+        $doc.unbind('.block', this.onMouseMove);
     }
 
     onMouseUp(e) {
@@ -635,9 +673,7 @@ Entry.BlockView = class BlockView {
             clearTimeout(this.longPressTimer);
             this.longPressTimer = null;
         }
-        const $doc = $(document);
-        $doc.unbind('.block', this.onMouseUp);
-        $doc.unbind('.block', this.onMouseMove);
+        this.terminateEvent();
         this.terminateDrag(e);
         const board = this.getBoard();
         if (board) {
@@ -647,6 +683,7 @@ Entry.BlockView = class BlockView {
         Entry.GlobalSvg.remove();
         this.mouseUpEvent.notify();
 
+        delete this.isVerticalMove;
         delete this.mouseDownCoordinate;
         delete this.dragInstance;
     }
@@ -1310,8 +1347,8 @@ Entry.BlockView = class BlockView {
         function processSvg() {
             svgData = svgData
                 .replace('(svgGroup)', new XMLSerializer().serializeToString(svgGroup))
-                .replace('%W', bBox.width * scale)
-                .replace('%H', bBox.height * scale)
+                .replace('%W', bBox.width * scale + 5)
+                .replace('%H', bBox.height * scale + 5)
                 .replace('(defs)', new XMLSerializer().serializeToString(defs[0]))
                 .replace(/>\s+/g, '>')
                 .replace(/\s+</g, '<');
@@ -1465,7 +1502,7 @@ Entry.BlockView = class BlockView {
 
             const hasComment = !!block._comment;
             const comment = {
-                text: hasComment ? '메모 삭제하기' : '메모 추가하기',
+                text: hasComment ? Lang.Blocks.delete_comment : Lang.Blocks.add_comment,
                 enable: block.isCommentable(),
                 callback() {
                     hasComment
