@@ -381,9 +381,9 @@ Entry.VariableContainer = function() {
      */
     p.renderFunctionReference = function(func) {
         var that = this;
-        var funcId = func.id_;
+        var funcId = func.id_||func.id;
 
-        var callers = [...this._functionRefs];
+        var callers = [...this._functionRefs].filter((item) => item.block.data.type === 'func_'+funcId);
 
         var listView = Entry.createElement('ul').addClass(
             'entryVariableListCallerListWorkspace',
