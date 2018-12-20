@@ -440,8 +440,7 @@
     width: 254px;
     top: 56px;
     bottom: 0px;
-    overflow: hidden;
-    overflow-y: auto;
+    overflow-y: hidden;
     list-style: none;
     background-color: #ecf8ff;
     border: 1px solid #d6e9f4;
@@ -944,12 +943,12 @@
 
 .entryPlaygroundSoundList {
     position: absolute;
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
     width: 254px;
     top: 57px;
-    bottom: 0px;
-    overflow: auto;
+    bottom: 0;
+    overflow-y: hidden;
     list-style: none;
     background-color: #ecf8ff;
     border: 1px solid #d6e9f4;
@@ -1171,5 +1170,21 @@
         width: 15px;
         height: 42px;
         border-top: none;
+    }
+}
+
+.sortableWidget {
+    height: 100%;
+
+    .rcs-custom-scrollbar {
+        width: 8px;
+        right: 4px;
+        opacity: 0.8;
+    }
+
+    .rcs-inner-handle {
+        background-color: #aac5d5 !important;
+        border-radius: 2.5px !important;
+        opacity: 0.8;
     }
 }
