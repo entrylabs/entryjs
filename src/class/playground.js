@@ -1545,7 +1545,10 @@ Entry.Playground = class {
             .appendTo(element);
         let isPlaying = false;
         let soundInstance;
-        thumbnailView.addEventListener('click', () => {
+
+        element.addEventListener('click', () => {
+            this.selectSound(sound);
+
             if (isPlaying) {
                 isPlaying = false;
                 thumbnailView.removeClass('entryPlaygroundSoundStop');
@@ -1677,6 +1680,16 @@ Entry.Playground = class {
         });
         return colorPicker;
     };
+
+    selectSound(sound) {
+        this.object.sounds.forEach((item) => {
+            if (item.id !== sound.id) {
+                item.view.removeClass('entrySoundSelected');
+            } else {
+                item.view.addClass('entrySoundSelected');
+            }
+        })
+    }
 
     setTextColour(colour) {
         $('.style_link.imbtn_pop_font_color').toggleClass('on', colour !== '#000000');

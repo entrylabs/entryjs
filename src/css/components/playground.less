@@ -978,11 +978,10 @@
     height: 61px;
     color: #2c313d;
     cursor: pointer;
-}
 
-.entryPlaygroundSoundElement:hover {
-    background-color: #fff;
-    cursor: move;
+    &.entrySoundSelected {
+        background-color: #fff;
+    }
 }
 
 .entryPlaygroundSoundThumbnail {
@@ -991,6 +990,7 @@
     width: 40px;
     top: 8px;
     left: 16px;
+    cursor: move;
     border: 1px solid #e2e2e2;
     background-color: #fff;
     border-radius: 4px;
