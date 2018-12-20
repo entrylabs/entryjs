@@ -307,24 +307,10 @@ Entry.Playground = class {
                 .appendTo(pictureAdd);
             innerPictureAdd.innerHTML = Lang.Workspace.picture_add;
             this._pictureAddButton = innerPictureAdd;
-            const pictureList = Entry.createElement('ul', 'entryPictureList')
+
+            this.pictureListView_ = Entry.createElement('ul', 'entryPictureList')
                 .addClass('entryPlaygroundPictureList')
                 .appendTo(PictureView);
-
-            this.pictureSortableListWidget = new EntryTool({
-                type: 'sortableWidget',
-                data: {
-                    height: '100%',
-                    sortableTarget: ['entryPlaygroundPictureThumbnail'],
-                    lockAxis: 'y',
-                    items: this._getSortablePictureList(),
-                },
-                container: pictureList,
-            }).on('change', ([newIndex, oldIndex]) => {
-                Entry.playground.movePicture(newIndex, oldIndex);
-            });
-
-            this.pictureListView_ = pictureList;
 
             this.painter = new Entry.Painter(
                 Entry.createElement('div', 'entryPainter')
@@ -332,6 +318,25 @@ Entry.Playground = class {
                     .appendTo(PictureView)
             );
         }
+    }
+
+    initSortablePictureWidget() {
+        if (this.pictureSortableListWidget) {
+            return;
+        }
+
+        this.pictureSortableListWidget = new EntryTool({
+            type: 'sortableWidget',
+            data: {
+                height: '100%',
+                sortableTarget: ['entryPlaygroundPictureThumbnail'],
+                lockAxis: 'y',
+                items: this._getSortablePictureList(),
+            },
+            container: this.pictureListView_,
+        }).on('change', ([newIndex, oldIndex]) => {
+            Entry.playground.movePicture(newIndex, oldIndex);
+        });
     }
 
     updatePictureView() {
@@ -683,19 +688,6 @@ Entry.Playground = class {
             const soundList = Entry.createElement('ul', 'entrySoundList')
                 .addClass('entryPlaygroundSoundList');
 
-            this.soundSortableListWidget = new EntryTool({
-                type: 'sortableWidget',
-                data: {
-                    height: '100%',
-                    sortableTarget: ['entryPlaygroundSoundThumbnail'],
-                    lockAxis: 'y',
-                    items: this._getSortableSoundList(),
-                },
-                container: soundList,
-            }).on('change', ([newIndex, oldIndex]) => {
-                Entry.playground.moveSound(newIndex, oldIndex);
-            });
-
             soundView.appendChild(soundList);
             this.soundListView_ = soundList;
             this._soundAddButton = innerSoundAdd;
@@ -703,6 +695,25 @@ Entry.Playground = class {
             const soundEditView = this._createSoundEditView();
             soundView.appendChild(soundEditView);
         }
+    }
+
+    initSortableSoundWidget() {
+        if (this.soundSortableListWidget) {
+            return;
+        }
+
+        this.soundSortableListWidget = new EntryTool({
+            type: 'sortableWidget',
+            data: {
+                height: '100%',
+                sortableTarget: ['entryPlaygroundSoundThumbnail'],
+                lockAxis: 'y',
+                items: this._getSortableSoundList(),
+            },
+            container: this.soundListView_,
+        }).on('change', ([newIndex, oldIndex]) => {
+            Entry.playground.moveSound(newIndex, oldIndex);
+        });
     }
 
     updateSoundsView() {
@@ -826,8 +837,8 @@ Entry.Playground = class {
             element.orderHolder.innerHTML = i + 1;
         });
 
-        this.updatePictureView();
         this.selectPicture(this.object.selectedPicture);
+        this.updatePictureView();
     }
 
     /**
@@ -1132,6 +1143,7 @@ Entry.Playground = class {
         if (Entry.pictureEditable) {
             if (viewType === 'picture') {
                 this.painter.show();
+                this.initSortablePictureWidget();
                 if (!this.pictureView_.object || this.pictureView_.object != this.object) {
                     this.pictureView_.object = this.object;
                     this.injectPicture();
@@ -1151,6 +1163,7 @@ Entry.Playground = class {
         }
 
         if (viewType === 'sound') {
+            this.initSortableSoundWidget();
             if (!this.soundView_.object || this.soundView_.object != this.object) {
                 this.soundView_.object = this.object;
                 this.injectSound();
