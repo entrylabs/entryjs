@@ -273,8 +273,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('span')
                     .addClass('text')
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
-                        Lang.Blocks[`START_${caller.block.type}`]
-                    }`;
+                    Lang.Blocks[`START_${caller.block.type}`]
+                }`;
                 element.bindOnClick((e) => {
                     e.stopPropagation();
                     if (Entry.playground.object !== caller.object) {
@@ -331,8 +331,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('span')
                     .addClass('text')
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
-                        Lang.Blocks[`VARIABLE_${caller.block.type}`]
-                    }`;
+                    Lang.Blocks[`VARIABLE_${caller.block.type}`]
+                }`;
                 element.variable = variable;
                 element.bindOnClick((e) => {
                     e.stopPropagation();
@@ -416,7 +416,7 @@ Entry.VariableContainer = class VariableContainer {
      */
     updateList() {
         const listView = this.listView_;
-        if (!listView || !/^(variable|code)$/.test(_.result(Entry.playground, 'getViewMode'))) {
+        if (!listView) {
             return;
         }
 
@@ -1826,7 +1826,8 @@ Entry.VariableContainer = class VariableContainer {
         // 공유 리스트
         const addSpaceCloudWrapper = createElement('div')
             .addClass('entryVariableAddSpaceCloudWrapperWorkspace')
-            .bindOnClick(() => {
+            .bindOnClick((e) => {
+                e.stopImmediatePropagation();
                 const { object, isCloud } = this.variableAddPanel.info;
                 !object && Entry.do('variableAddSetCloud', !isCloud);
                 if (isCloud) {
@@ -2012,7 +2013,8 @@ Entry.VariableContainer = class VariableContainer {
         // 공유 리스트
         const addSpaceCloudWrapper = createElement('div')
             .addClass('entryVariableAddSpaceCloudWrapperWorkspace')
-            .bindOnClick(() => {
+            .bindOnClick((e) => {
+                e.stopImmediatePropagation();
                 const { object, isCloud } = this.listAddPanel.info;
                 !object && Entry.do('listAddSetCloud', !isCloud);
                 if (isCloud) {

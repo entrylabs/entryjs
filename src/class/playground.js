@@ -1559,7 +1559,11 @@ Entry.Playground = class {
         let isPlaying = false;
         let soundInstance;
 
-        element.addEventListener('click', () => {
+        element.bindOnClick(() => {
+            this.selectSound(sound);
+        });
+
+        thumbnailView.bindOnClick(() => {
             this.selectSound(sound);
 
             if (isPlaying) {
