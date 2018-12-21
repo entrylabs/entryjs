@@ -61,10 +61,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
             y: height * 0.25,
         });
 
-        if(this.textElement.children.length > 1) {
-            const {children} = this.textElement;
-            for(let i  = 0; i < children.length; i++) {
-                children[i].attr({
+        if(this.textElement.childElementCount > 1) {
+            const {childNodes} = this.textElement;
+            for(let i  = 0; i < childNodes.length; i++) {
+                childNodes[i].attr({
                     x,
                 })
             }
