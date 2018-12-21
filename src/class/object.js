@@ -1204,6 +1204,10 @@ Entry.EntryObject = class {
             Entry.do('containerSelectObject', objectId);
         });
 
+        thumbnail.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+        });
+
         return thumbnail;
     }
 
