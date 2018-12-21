@@ -481,17 +481,27 @@ Entry.BlockView = class BlockView {
         $(this.svgGroup).unbind('.blockViewMousedown');
     }
 
+    setSelectedBlock(board) {
+        const { workspace } = board;
+        const { selectedBlockView } = workspace;
+        const wsBoard = selectedBlockView ? selectedBlockView.getBoard() : board;
+        if (board !== wsBoard) {
+            wsBoard.setSelectedBlock(null);
+        }
+        board.setSelectedBlock(this);
+    }
+
     onMouseDown(e) {
         // ISSUE:: 마우스이벤트1
         if (!this.isInBlockMenu && e.stopPropagation) {
             e.stopPropagation();
-            if (Entry.documentMousedown) {
-                Entry.documentMousedown.notify(e);
-            }
         }
         if (e.preventDefault) {
             e.preventDefault();
         }
+        // if (Entry.documentMousedown) {
+        //     Entry.documentMousedown.notify(e);
+        // }
 
         this.longPressTimer = null;
 
@@ -499,8 +509,7 @@ Entry.BlockView = class BlockView {
         if (this.readOnly || board.viewOnly) {
             return;
         }
-
-        board.setSelectedBlock(this);
+        this.setSelectedBlock(board);
         //left mousedown
         if (
             (e.button === 0 || (e.originalEvent && e.originalEvent.touches) || e.touches) &&

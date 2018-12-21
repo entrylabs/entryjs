@@ -68,7 +68,7 @@ Entry.Field = class Field {
         const defaultFunc = (skipCommand) => {
             this.destroyOption(skipCommand);
         };
-        
+
         func = func || defaultFunc;
         this.disposeEvent = Entry.disposeEvent.attach(this, func);
     }
@@ -223,7 +223,7 @@ Entry.Field = class Field {
             return false;
         }
 
-        if(selectedBlockView.isVerticalMove) {
+        if (selectedBlockView.isVerticalMove) {
             return false;
         }
 
@@ -243,7 +243,8 @@ Entry.Field = class Field {
         }
 
         this.svgGroup._isBinded = true;
-        $(this.svgGroup).on('mouseup.fieldBindEvent touchend.fieldBindEvent', (e) => {
+        const { svgGroup = this.svgGroup } = this._blockView;
+        $(svgGroup).off('mouseup.fieldBindEvent touchend.fieldBindEvent').on('mouseup.fieldBindEvent touchend.fieldBindEvent', (e) => {
             if (this._isEditable()) {
                 this._code = this.getCode();
                 this.destroyOption();
@@ -363,11 +364,11 @@ Entry.Field = class Field {
             case 'dropdown':
             case 'dropdownDynamic':
                 return _.chain(this._contents.options)
-                .find(([, optionValue]) => {
-                    return optionValue === value;
-                })
-                .head()
-                .value();
+                    .find(([, optionValue]) => {
+                        return optionValue === value;
+                    })
+                    .head()
+                    .value();
             case 'textInput':
                 return value;
         }
@@ -399,7 +400,7 @@ Entry.Field = class Field {
             svg = Entry.Dom(
                 $(
                     '<svg id="invisibleBoard" class="entryBoard" width="1px" height="1px"' +
-                    'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'
+                        'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'
                 ),
                 { parent: $('body') }
             );
