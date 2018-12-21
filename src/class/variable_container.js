@@ -2551,6 +2551,8 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('scroll_box')
             .appendTo(countGroup);
         const el = new SimpleBar(scrollBox, { autoHide: false });
+        this.listSettingView.scrollBox = scrollBox;
+        this.listSettingView.simpleBar = el;
         this.listSettingView.listValues = el.getContentElement();
     }
 
@@ -2561,7 +2563,7 @@ Entry.VariableContainer = class VariableContainer {
         }
         const createElement = Entry.createElement;
         list = list || this.selected;
-        const { listValues, lengthInput } = view;
+        const { listValues, lengthInput, simpleBar, scrollBox } = view;
         const arr = list.array_ || [];
         lengthInput.value = arr.length;
         list.listElement.appendChild(view);
@@ -2579,6 +2581,11 @@ Entry.VariableContainer = class VariableContainer {
             fragment = createElement('ol')
                 .addClass('cnt_list')
                 .appendTo(listValues);
+            if (arr.length > 5) {
+                scrollBox.addClass('on');
+            } else {
+                scrollBox.removeClass('on');
+            }
             arr.forEach(({ data }, i) => {
                 const wrapper = Entry.createElement('li').appendTo(fragment);
                 Entry.createElement('span')
@@ -2603,6 +2610,7 @@ Entry.VariableContainer = class VariableContainer {
             });
         }
         listValues.appendChild(fragment);
+        simpleBar.recalculate();
         list.updateView();
     }
 
