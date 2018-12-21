@@ -44,7 +44,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 
         var old = this.textElement.textContent;
         // this._text = this._text.replace(/(\r\n|\n|\r)/gm, ' ');
-        if (old !== this._text.replace(/(\r\n|\n|\r)/gm, '')) {
+        const text = this._text || '';
+        if (old !== text.replace(/(\r\n|\n|\r)/gm, '')) {
             const textList = this._text.split(/\r\n|\n|\r/gm);
             textList.forEach((text, i) => {
                 this.textElement.elem('tspan').attr({

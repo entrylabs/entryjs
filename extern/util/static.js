@@ -1,6 +1,6 @@
 'use strict';
 
-const EntryStatic = {};
+var EntryStatic = {};
 
 EntryStatic.objectTypes = ['sprite', 'textBox'];
 
