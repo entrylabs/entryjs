@@ -323,12 +323,12 @@ Entry.EntryObject = class {
             this.rotateSpan_.removeClass(className);
             this.rotateInput_.removeClass(className);
 
-            this.rotateInput_.value = `${entity.getRotation(1)}˚`;
-            this.directionInput_.value = `${entity.getDirection(1)}˚`;
+            this.rotateInput_.value = `${entity.getRotation(1)}`;
+            this.directionInput_.value = `${entity.getDirection(1)}`;
         } else {
             this.rotateSpan_.addClass(className);
             this.rotateInput_.addClass(className);
-            this.directionInput_.value = `${entity.getDirection(1)}˚`;
+            this.directionInput_.value = `${entity.getDirection(1)}`;
         }
     }
 
@@ -973,7 +973,7 @@ Entry.EntryObject = class {
         const rotateInput = Entry.createElement('input').addClass(
             'entryObjectRotateInputWorkspace'
         );
-
+        rotateInput.setAttribute('type', 'number');
         rotateInput.onkeypress = this.editObjectValueWhenEnterPress;
         rotateInput.onfocus = this._setFocused;
         rotateInput.onblur = this._setBlurredTimer(() => {
@@ -1004,7 +1004,7 @@ Entry.EntryObject = class {
         const directionInput = Entry.createElement('input').addClass(
             'entryObjectDirectionInputWorkspace'
         );
-
+        directionInput.setAttribute('type', 'number');
         directionInput.onkeypress = this.editObjectValueWhenEnterPress;
         directionInput.onfocus = this._setFocused;
         directionInput.onblur = this._setBlurredTimer(() => {
@@ -1045,7 +1045,7 @@ Entry.EntryObject = class {
         const xCoordi = Entry.createElement('span').addClass('entryObjectCoordinateSpanWorkspace');
         xCoordi.innerHTML = 'X';
         const xInput = Entry.createElement('input').addClass('entryObjectCoordinateInputWorkspace');
-
+        xInput.setAttribute('type', 'number');
         xInput.onkeypress = this.editObjectValueWhenEnterPress;
         xInput.onfocus = this._setFocused;
         xInput.onblur = this._setBlurredTimer(() => {
@@ -1067,7 +1067,7 @@ Entry.EntryObject = class {
         const yInput = Entry.createElement('input').addClass(
             'entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right'
         );
-
+        yInput.setAttribute('type', 'number');
         yInput.onkeypress = this.editObjectValueWhenEnterPress;
         yInput.onfocus = this._setFocused;
         yInput.onblur = this._setBlurredTimer(() => {
@@ -1089,7 +1089,7 @@ Entry.EntryObject = class {
             'entryObjectCoordinateInputWorkspace',
             'entryObjectCoordinateInputWorkspace_size'
         );
-
+        sizeInput.setAttribute('type', 'number');
         sizeInput.onkeypress = this.editObjectValueWhenEnterPress;
         sizeInput.onfocus = this._setFocused;
         sizeInput.onblur = this._setBlurredTimer(() => {
