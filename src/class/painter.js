@@ -318,6 +318,7 @@ Entry.Painter = function(view) {
         painterTopMenuFile.addClass('entryPlaygroundPainterTopMenuFile painterTopHeader');
         painterTopMenuFile.innerHTML = Lang.Menus.offline_file;
         var painterTopMenuFileDropdown = ce('div');
+
         painterTopMenuFileDropdown.addClass('entryPlaygroundPainterTopMenuFileDropdown');
         painterTopMenu.appendChild(painterTopMenuFile);
         painterTopMenuFile.appendChild(painterTopMenuFileDropdown);
@@ -388,20 +389,10 @@ Entry.Painter = function(view) {
         });
         painterTopMenuEditDropdown.appendChild(painterTopMenuEditEraseAll);
 
-        $(painterTopMenuFile).on('click tab', function() {
-            $(this).addClass('active');
-        });
-        $(painterTopMenuEdit).on('click tab', function() {
-            $(this).addClass('active');
-        });
-        $(document).on('mousedown touchstart', (e) => {
-            const { target } = e;
-            const isChild = [$(painterTopMenuFile), $(painterTopMenuEdit)].some(($dom) => {
-                return $dom.find(target).length;
-            });
-            if (isChild) {
-                target.click();
-            }
+        $(painterTopMenuFile).on('click tab', menuClickEvent);
+        $(painterTopMenuEdit).on('click tab', menuClickEvent);
+        $(document).on('click tap', (e) => {
+            e.stopPropagation();
             $(painterTopMenuFile).removeClass('active');
             $(painterTopMenuEdit).removeClass('active');
         });
@@ -415,6 +406,15 @@ Entry.Painter = function(view) {
         painterTop.appendChild(painterTopStageXY);
 
         Entry.addEventListener('pictureSelected', this.changePicture.bind(this));
+
+        function menuClickEvent(e) {
+            $(painterTopMenuFile).removeClass('active');
+            $(painterTopMenuEdit).removeClass('active');
+            if(e.target === this) {
+                e.stopImmediatePropagation();
+                $(this).addClass('active');
+            }
+        }
     };
 
     p.stagemousemove = function(event) {
