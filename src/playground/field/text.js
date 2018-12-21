@@ -43,16 +43,32 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
         }
 
         var old = this.textElement.textContent;
-        this._text = this._text.replace(/(\r\n|\n|\r)/gm, ' ');
-        if (old !== this._text) {
-            this.textElement.textContent = this._text;
+        // this._text = this._text.replace(/(\r\n|\n|\r)/gm, ' ');
+        if (old !== this._text.replace(/(\r\n|\n|\r)/gm, '')) {
+            const textList = this._text.split(/\r\n|\n|\r/gm);
+            textList.forEach((text, i) => {
+                this.textElement.elem('tspan').attr({
+                    dy: `${i ? 14 : 0}px`,
+                }).textContent = text;
+            });
+            // this.textElement.textContent = this._text;
         }
 
         var { width, height } = this.getTextBBox();
+        const x = this._align == 'center' ? -width / 2 : 0;
         this.textElement.attr({
-            x: this._align == 'center' ? -width / 2 : 0,
+            x,
             y: height * 0.25,
         });
+
+        if(this.textElement.childElementCount > 1) {
+            const {childNodes} = this.textElement;
+            for(let i  = 0; i < childNodes.length; i++) {
+                childNodes[i].attr({
+                    x,
+                })
+            }
+        }
 
         this.box.set({
             x: 0,
