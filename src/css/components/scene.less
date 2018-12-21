@@ -24,6 +24,7 @@ body {
     float: left;
     margin: 0;
     padding: 0 0 0 5px;
+    max-width: calc(100% - 90px);
 
     .rcs-custom-scroll .rcs-outer-container {
         overflow: visible;
@@ -38,6 +39,8 @@ body {
 }
 
 .entrySceneElementWorkspace {
+    display: flex;
+    width: 100%;
     float: left;
     overflow: hidden;
     margin: 5px 0 0 -2px;
@@ -50,6 +53,7 @@ body {
 .entrySceneElementWorkspace.selectedScene {
     position: relative;
     margin-top: 0;
+    margin-right: 2px;
     z-index: 888;
 }
 .entrySceneAddButtonWorkspace{
@@ -71,26 +75,30 @@ body {
 }
 
 .entrySceneLeftWorkspace {
-    display: inline-block;
+    display: block;
     float: left;
-    width: 12px;
+    width: 10px;
     height: 34px;
     background: url("@{image_url}top_tab_b_nor_left_blue.png") no-repeat 0 100%;
     background-size: 12px auto;
 }
 
+.selectedScene {
+    .entrySceneInputCover {
+        min-width: 90px;
+    }   
+}
+
 .entrySceneInputCover {
-    display: inline-block;
+    display: block;
     float: left;
     height: 34px;
-    width: 76px;
     padding-top: 6px;
     background: url("@{image_url}top_tab_b_nor_middle_blue.png") repeat-x 0 100%;
     background-size: 2px auto;
-}
-
-.minValue .entrySceneInputCover {
-    min-width: 79px;
+    flex: 1;
+    min-width: 25px;
+    max-width: 90px;
 }
 
 .entrySceneFieldWorkspace {
@@ -132,9 +140,9 @@ body {
     position: relative;
     border: 0;
     padding: 0;
-    width: 12px;
+    width: 10px;
     background-color: transparent;
-    display: inline-block;
+    display: block;
     float: left;
     height: 34px;
     position: relative;
@@ -144,10 +152,11 @@ body {
 
 .selectedScene .entrySceneRemoveButtonCoverWorkspace {
     display: inline-block;
-    .backgroundImage("top_tab_b_sel_right.png");
+    .backgroundImage("top_tab_b_sel_right.png");    
     width: 10px;
     height: 39px;
     background-size: 10px auto;
+    margin-right: -2px;
 }
 
 .entrySceneRemoveButtonWorkspace {
@@ -166,14 +175,15 @@ body {
     background-color: transparent;
 }
 
+.minValue .entrySceneRemoveButtonWorkspace {
+    display: none;
+}
+
 .selectedScene .entrySceneRemoveButtonWorkspace {
+    display: block;
     top: 5px;
     background-color: transparent;
     .backgroundImage("scene_delete.png");
-}
-
-.minValue .entrySceneRemoveButtonWorkspace {
-    display: inline-block;
 }
 
 // .entrySceneRemoveButtonWorkspace:hover {

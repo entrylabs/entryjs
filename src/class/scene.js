@@ -103,7 +103,7 @@ Entry.Scene = class {
                 type: 'sortableWidget',
                 data: {
                     height: '100%',
-                    sortableTarget: [],
+                    sortableTarget: ['entrySceneRemoveButtonWorkspace', 'entrySceneInputCover'],
                     lockAxis: 'x',
                     axis: 'x',
                     items: this._getSortableSceneList(),
@@ -573,7 +573,7 @@ Entry.Scene = class {
             var width = parseFloat(Entry.computeInputWidth(scene.name));
             var adjusted = width * 10 / 9;
             if (scene === this.selectedScene) diff = adjusted - width;
-            $(scene.inputWrapper).width(adjusted + 'px');
+            // $(scene.inputWrapper).width(adjusted + 'px');
             var viewWidth = view.width();
             if (isSelectedView) selectedViewWidth = viewWidth;
             normWidth += viewWidth + LEFT_MARGIN;
@@ -595,7 +595,7 @@ Entry.Scene = class {
                 scene = scenes[i];
                 if (selectedScene.id != scene.id) {
                     scene.view.removeClass('minValue');
-                    $(scene.inputWrapper).width(fieldWidth);
+                    // $(scene.inputWrapper).width(fieldWidth);
                 } else scene.view.addClass('minValue');
             }
         }
