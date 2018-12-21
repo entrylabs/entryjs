@@ -572,7 +572,7 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
                 value = Math.max(0, length - 1);
             } else if (value === 'plus') {
                 value = length + 1;
-            } else if (Entry.Utils.isNumber(value)) {
+            } else if (Entry.Utils.isNumber(value) && value >= 0) {
                 value = value;
             } else {
                 value = length;
