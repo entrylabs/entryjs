@@ -25,6 +25,7 @@
     border: 0;
     padding: 0;
     margin: 0;
+    table-layout: fixed;
 }
 .entryVariableSelectorWorkspace tr:first-child td:first-child {
     width: 56px;
@@ -91,6 +92,9 @@
     right: -1px;
     border-radius: 6px 0 0 6px;
 }
+.entryVariableSelectButtonWorkspace.allButton div .text {
+    margin: 0;
+}
 .entryVariableSelectButtonWorkspace.variable div:after {
     right: -1px;
 }
@@ -107,12 +111,13 @@
 }
 
 .entryVariableSelectButtonWorkspace div:before {
-    display: inline-block;
+    position: absolute;
+    left: 8px;
+    top: 8px;
     width: 22px;
     height: 22px;
     background-size: 22px auto;
     vertical-align: top;
-    margin: 9px 12px 0 0;
     content: '';
 }
 
@@ -146,6 +151,14 @@
 }
 .entryVariableSelectButtonWorkspace.func.selected div:before {
     .backgroundImage('ic_attr_func_on.png');
+}
+
+.entryVariableSelectButtonWorkspace .text {
+    display: block;
+    overflow: hidden;
+    margin: 0 8px 0 34px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .entryVariableListElementWorkspace {
