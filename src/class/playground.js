@@ -1397,6 +1397,11 @@ Entry.Playground = class {
         const thumbnailView = Entry.createElement('div', `t_${picture.id}`).addClass(
             'entryPlaygroundPictureThumbnail'
         );
+
+        thumbnailView.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+        });
+
         if (picture.fileurl) {
             thumbnailView.style.backgroundImage = `url("${picture.fileurl}")`;
         } else {
@@ -1561,6 +1566,10 @@ Entry.Playground = class {
 
         element.bindOnClick(() => {
             this.selectSound(sound);
+        });
+
+        thumbnailView.addEventListener('touchmove', (e) => {
+            e.preventDefault();
         });
 
         thumbnailView.bindOnClick(() => {
