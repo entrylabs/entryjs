@@ -527,7 +527,7 @@ Entry.BlockView = class BlockView {
                 document.addEventListener('touchmove', this.onMouseMove, { passive: false });
             }
             $doc.bind('mouseup.block', this.onMouseUp);
-            document.addEventListener('touchend', this.onMouseUp, { passive: false });
+            document.addEventListener('touchend', this.onMouseUp);
             this.dragInstance = new Entry.DragInstance({
                 startX: mouseEvent.pageX,
                 startY: mouseEvent.pageY,
@@ -663,7 +663,7 @@ Entry.BlockView = class BlockView {
     terminateEvent() {
         const $doc = $(document);
         document.removeEventListener('touchmove', this.onMouseMove, { passive: false });
-        document.removeEventListener('touchend', this.onMouseUp, { passive: false });
+        document.removeEventListener('touchend', this.onMouseUp);
         $doc.unbind('.block', this.onMouseUp);
         $doc.unbind('.block', this.onMouseMove);
     }
