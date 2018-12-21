@@ -993,10 +993,17 @@
     border: 1px solid #e2e2e2;
     background-color: #fff;
     border-radius: 4px;
-    background-size: 40px auto;
+    background-size: 28px auto;
     background-repeat: no-repeat;
     background-position: 50% 50%;
-    .backgroundImage("workspace_sound_play.png");
+
+    &.entryPlaygroundSoundPlay {
+        .backgroundImage("workspace_sound_play.png");
+    }
+
+    &.entryPlaygroundSoundStop {
+        .backgroundImage("workspace_sound_stop.png");
+    }
 }
 
 .entryPlaygroundSoundName {
