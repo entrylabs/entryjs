@@ -150,10 +150,13 @@ Entry.VariableContainer = class VariableContainer {
     createSelectButton(type, isEnable = true) {
         const view = Entry.createElement('td').addClass('entryVariableSelectButtonWorkspace', type);
         const textView = Entry.createElement('div');
+        const text = Entry.createElement('span')
+            .addClass('text')
+            .appendTo(textView);
 
         view.setAttribute('data-type', type);
         view.appendChild(textView);
-        textView.innerText = Lang.Workspace[type];
+        text.innerText = Lang.Workspace[type];
 
         if (isEnable === false) {
             view.addClass('disabled');
