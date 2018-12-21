@@ -288,9 +288,16 @@ Entry.Painter = function(view) {
         var painterTopFullscreenButton = ce('div', 'entryPainterTopFullscreenButton');
         painterTopFullscreenButton.addClass('entryPlaygroundPainterFullscreenButton');
         painterTopFullscreenButton.bindOnClick(function() {
-            const { painter = {} } = Entry.playground;
+            const { painter = {}, pictureView_ } = Entry.playground;
             const { view = {} } = painter;
-            $(view).toggleClass('fullscreen');
+            const $view = $(view);
+            if($view.hasClass('fullscreen')) {
+                pictureView_.appendChild(view);
+                $(view).removeClass('fullscreen');
+            } else {
+                document.body.appendChild(view);
+                $(view).addClass('fullscreen');
+            }
             $(view)
                 .find('.lc-drawing.with-gui')
                 .trigger('resize');

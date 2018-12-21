@@ -405,6 +405,7 @@ EntryStatic.getAllBlocks = function() {
                 'arduino_reconnect',
                 'arduino_open',
                 'arduino_cloud_pc_open',
+                'arduino_noti',
                 'arduino_get_number_sensor_value',
                 'arduino_get_digital_value',
                 'arduino_toggle_led',
