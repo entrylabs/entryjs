@@ -20,6 +20,7 @@ Entry.Console = function() {
         });
 
         this.codeMirror = CodeMirror(this.view[0], {
+            readOnly: "nocursor",
             lineNumbers: false,
             lineWrapping: true,
             value: '',
