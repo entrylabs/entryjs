@@ -62,6 +62,7 @@
 }
 
 .entryPlaygroundFontSizeWrapper {
+    position:absolute;
     padding-left:13px;
     padding-top:10px;
     display:inline-block;
@@ -69,7 +70,8 @@
     height: 40px;
     border-radius: 4px;
     background-color: #ffffff;
-    margin-left: 213px;
+    right:0px;
+    top:0px;
 }
 
 .entryPlaygroundFontSizeLabel {
@@ -572,6 +574,7 @@
         color: #555;
         letter-spacing: -0.3px;
         line-height: 40px;
+        cursor:pointer;
     }
     .select_link:after {
     @include PositionRT(absolute, 16px, 50%);
@@ -655,6 +658,7 @@
     border: 1px solid #e2e2e2;
     background-color: #fff;
     border-radius: 4px;
+    cursor:pointer;
 }
 .entryPlaygroundTextWorkspace .write_box .write_set .font_style_box .style_link.on {
     border: 1px solid #4f80ff;
@@ -680,6 +684,7 @@
     text-align: center;
     letter-spacing: -0.3px;
     line-height: 40px;
+    cursor:pointer;
 }
 .entryPlaygroundTextWorkspace .write_box .input_box .write_type_box a + a {
     margin-left: -1px;
@@ -691,7 +696,9 @@
     z-index: 10;
 }
 .entryPlaygroundTextWorkspace .write_box .input_box {
-    padding: 24px 38px 0;
+    margin: 24px 38px 0;
+    max-width:654px;
+    position:relative;
 }
 .entryPlaygroundTextWorkspace .write_box .input_box .list {
     padding: 4px 0px;
@@ -716,7 +723,7 @@
     position: relative;
     overflow: hidden;
     height: 40px;
-    width:654px;
+    max-width:654px;
     padding: 0 16px;
     background-color: #fff;
     border: 1px solid #e2e2e2;

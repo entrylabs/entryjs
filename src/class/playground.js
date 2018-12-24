@@ -377,7 +377,7 @@ Entry.Playground = class {
 
         //write set 글 속성 탭
         const fontSelect = Entry.createElement('div').addClass('pop_selectbox');
-        const fontLink = Entry.createElement('a', 'entryPainterAttrFontName').addClass(
+        const fontLink = Entry.createElement('a', 'entryTextBoxAttrFontName').addClass(
             'select_link imico_pop_select_arr_down'
         );
         fontLink.bindOnClick(() => {
@@ -401,7 +401,7 @@ Entry.Playground = class {
                         entrylms.alert(Lang.Menus.not_supported_text);
                     }
                     fontLink.innerText = font.name;
-                    $('#entryPainterAttrFontName').data('font', font);
+                    $('#entryTextBoxAttrFontName').data('font', font);
                     this.object.entity.setFontType(font.family);
                 },
                 () => {
@@ -422,6 +422,7 @@ Entry.Playground = class {
             .bindOnClick(() => {
                 Entry.playground.setFontAlign(Entry.TEXT_ALIGN_LEFT);
             });
+        alignLeft.setAttribute("title", Lang.Workspace.align_left);
         alignBox.appendChild(alignLeft);
         this.alignLeftBtn = alignLeft;
         const alignMiddle = Entry.createElement('a')
@@ -429,6 +430,7 @@ Entry.Playground = class {
             .bindOnClick(() => {
                 Entry.playground.setFontAlign(Entry.TEXT_ALIGN_CENTER);
             });
+        alignMiddle.setAttribute("title", Lang.Workspace.align_center);
         alignBox.appendChild(alignMiddle);
         this.alignCenterBtn = alignMiddle;
         const alignRight = Entry.createElement('a')
@@ -436,6 +438,7 @@ Entry.Playground = class {
             .bindOnClick(() => {
                 Entry.playground.setFontAlign(Entry.TEXT_ALIGN_RIGHT);
             });
+        alignRight.setAttribute("title", Lang.Workspace.align_right);
         alignBox.appendChild(alignRight);
         this.alignRightBtn = alignRight;
 
@@ -448,6 +451,7 @@ Entry.Playground = class {
                 $(e.currentTarget).toggleClass('on');
                 Entry.playground.object.entity.toggleFontBold();
             });
+        bold.setAttribute("title", Lang.Workspace.bold);
         styleBox.appendChild(bold);
 
         const underLine = Entry.createElement('a')
@@ -457,6 +461,7 @@ Entry.Playground = class {
                 $(e.currentTarget).toggleClass('on');
                 Entry.playground.object.entity.setUnderLine(underLineState);
             });
+        underLine.setAttribute("title", Lang.Workspace.font_underline);
         styleBox.appendChild(underLine);
 
         const italic = Entry.createElement('a')
@@ -465,6 +470,7 @@ Entry.Playground = class {
                 $(e.currentTarget).toggleClass('on');
                 Entry.playground.object.entity.toggleFontItalic();
             });
+        italic.setAttribute("title", Lang.Workspace.font_tilt);
         styleBox.appendChild(italic);
 
         const through = Entry.createElement('a')
@@ -474,6 +480,7 @@ Entry.Playground = class {
                 const strikeState = !Entry.playground.object.entity.getStrike() || false;
                 Entry.playground.object.entity.setStrike(strikeState);
             });
+        through.setAttribute("title", Lang.Workspace.font_cancel);
         styleBox.appendChild(through);
 
         const color = Entry.createElement('a').addClass('style_link imbtn_pop_font_color');
@@ -485,11 +492,13 @@ Entry.Playground = class {
                 this.setTextColour.bind(this)
             );
         });
+        color.setAttribute("title", Lang.Workspace.font_color);
         styleBox.appendChild(color);
 
         const backgroundColor = Entry.createElement('a').addClass(
             'style_link imbtn_pop_font_backgroundcolor'
         );
+        backgroundColor.setAttribute("title", Lang.Workspace.font_fill);
         backgroundColor.bindOnClick(() => {
             return this.openColourPicker(
                 backgroundColor,
@@ -547,7 +556,11 @@ Entry.Playground = class {
             doc.bind('mouseup.fontKnob touchend.fontKnob', onMouseUp);
 
             function onMouseMove(e) {
-                let left = e.pageX - resizeOffset;
+                let x = e.pageX;
+                if(!x) {
+                    x = e.originalEvent.touches[0].pageX;
+                }
+                let left = x - resizeOffset;
                 left = Math.max(left, 5);
                 left = Math.min(left, 136);
                 fontSizeKnob.style.left = `${left}px`;
@@ -572,11 +585,11 @@ Entry.Playground = class {
         const textChangeApply = function() {
             const object = Entry.playground.object;
             const entity = object.entity;
-            const selected = $('#entryPainterAttrFontName').data('font');
+            const selected = $('#entryTextBoxAttrFontName').data('font');
             const defaultFont = EntryStatic.fonts[0];
             if (selected.family === 'Nanum Pen Script' || selected.family === 'Jeju Hallasan') {
                 if (/[\u4E00-\u9FFF]/.exec(this.value) != null) {
-                    $('#entryPainterAttrFontName').text(defaultFont.name);
+                    $('#entryTextBoxAttrFontName').text(defaultFont.name);
                     entity.setFontType(defaultFont.family);
                     entrylms.alert(Lang.Menus.not_supported_text);
                 }
@@ -989,8 +1002,8 @@ Entry.Playground = class {
             return font.family === entity.getFontName();
         });
         if (font) {
-            $('#entryPainterAttrFontName').text(font.name);
-            $('#entryPainterAttrFontName').data('font', font);
+            $('#entryText #entryTextBoxAttrFontName').text(font.name);
+            $('#entryText #entryTextBoxAttrFontName').data('font', font);
         }
 
         $('.style_link.imbtn_pop_font_bold').toggleClass('on', entity.fontBold);
