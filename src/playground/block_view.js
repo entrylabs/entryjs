@@ -486,9 +486,11 @@ Entry.BlockView = class BlockView {
         const { selectedBlockView } = workspace;
         const wsBoard = selectedBlockView ? selectedBlockView.getBoard() : board;
         if (board !== wsBoard) {
+            console.log('setSelectedBlock null');
             wsBoard.setSelectedBlock(null);
+        } else {
+            board.setSelectedBlock(this);
         }
-        board.setSelectedBlock(this);
     }
 
     onMouseDown(e) {

@@ -208,7 +208,7 @@ Entry.Field = class Field {
             return false;
         }
         const dragMode = this._block.view.dragMode;
-        if (dragMode == Entry.DRAG_MODE_DRAG) {
+        if (dragMode == Entry.DRAG_MODE_DRAG) {  
             return false;
         }
         const blockView = this._block.view;
@@ -243,8 +243,7 @@ Entry.Field = class Field {
         }
 
         this.svgGroup._isBinded = true;
-        const { svgGroup = this.svgGroup } = this._blockView;
-        $(svgGroup).off('mouseup.fieldBindEvent touchend.fieldBindEvent').on('mouseup.fieldBindEvent touchend.fieldBindEvent', (e) => {
+        $(this.svgGroup).off('mouseup.fieldBindEvent touchend.fieldBindEvent').on('mouseup.fieldBindEvent touchend.fieldBindEvent', (e) => {
             if (this._isEditable()) {
                 this._code = this.getCode();
                 this.destroyOption();
