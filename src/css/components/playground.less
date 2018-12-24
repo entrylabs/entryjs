@@ -1179,6 +1179,17 @@
     }
 }
 
+.entrySceneListWorkspace {
+    .rcs-inner-container {
+        > div > div > div {
+            display: flex;
+            .sortableItem {
+                flex: 1;
+            }
+        }
+    }
+}
+
 .sortableWidget {
     height: 100%;
 
@@ -1192,14 +1203,5 @@
         background-color: #aac5d5 !important;
         border-radius: 2.5px !important;
         opacity: 0.8;
-    }
-
-    .rcs-inner-container {
-        > div > div > div {
-            display: flex;
-            .sortableItem {
-                flex: 1;
-            }
-        }
-    }
+    }    
 }
