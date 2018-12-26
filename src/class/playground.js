@@ -447,19 +447,25 @@ Entry.Playground = class {
 
         const bold = Entry.createElement('a')
             .addClass('style_link imbtn_pop_font_bold')
-            .bindOnClick(function(e) {
+            .bindOnClick((e) => {
                 $(e.currentTarget).toggleClass('on');
                 Entry.playground.object.entity.toggleFontBold();
+                $(this.textEditArea).toggleClass('bold');
+                $(this.textEditInput).toggleClass('bold');
             });
         bold.setAttribute("title", Lang.Workspace.bold);
         styleBox.appendChild(bold);
 
         const underLine = Entry.createElement('a')
             .addClass('style_link imbtn_pop_font_underline')
-            .bindOnClick(function(e) {
+            .bindOnClick((e) => {
                 const underLineState = !Entry.playground.object.entity.getUnderLine() || false;
                 $(e.currentTarget).toggleClass('on');
                 Entry.playground.object.entity.setUnderLine(underLineState);
+
+                const effect = `${underLineState ? "underline" : ""} ${Entry.playground.object.entity.getStrike() ? "line-through" : ""}`.trim();
+                this.textEditArea.style.textDecoration = effect;
+                this.textEditInput.style.textDecoration = effect;
             });
         underLine.setAttribute("title", Lang.Workspace.font_underline);
         styleBox.appendChild(underLine);
@@ -469,6 +475,8 @@ Entry.Playground = class {
             .bindOnClick((e) => {
                 $(e.currentTarget).toggleClass('on');
                 Entry.playground.object.entity.toggleFontItalic();
+                $(this.textEditArea).toggleClass('italic');
+                $(this.textEditInput).toggleClass('italic');
             });
         italic.setAttribute("title", Lang.Workspace.font_tilt);
         styleBox.appendChild(italic);
@@ -479,6 +487,10 @@ Entry.Playground = class {
                 $(e.currentTarget).toggleClass('on');
                 const strikeState = !Entry.playground.object.entity.getStrike() || false;
                 Entry.playground.object.entity.setStrike(strikeState);
+
+                const effect = `${strikeState ? "line-through" : ""} ${Entry.playground.object.entity.getUnderLine() ? "underline" : ""}`.trim();
+                this.textEditArea.style.textDecoration = effect;
+                this.textEditInput.style.textDecoration = effect;
             });
         through.setAttribute("title", Lang.Workspace.font_cancel);
         styleBox.appendChild(through);
@@ -1735,11 +1747,15 @@ Entry.Playground = class {
     setTextColour(colour) {
         $('.style_link.imbtn_pop_font_color').toggleClass('on', colour !== '#000000');
         this.object.entity.setColour(colour);
+        this.textEditArea.style.color = colour;
+        this.textEditInput.style.color = colour;
     }
 
     setBackgroundColour(colour) {
         $('.style_link.imbtn_pop_font_backgroundcolor').toggleClass('on', colour !== '#ffffff');
         this.object.entity.setBGColour(colour);
+        this.textEditArea.style.backgroundColor = colour;
+        this.textEditInput.style.backgroundColor = colour;
     }
 
     isTextBGMode() {
