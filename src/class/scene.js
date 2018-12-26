@@ -52,21 +52,6 @@ Entry.Scene = class {
                 if (x < selectedLeft || x > selectedLeft + 55) {
                     return;
                 }
-
-                const ret = 40 + slope * x;
-
-                if (y > ret) {
-                    const nextScene = this.getNextScene();
-                    if (nextScene) {
-                        if ($.support.touch) {
-                            $(document).trigger('touchend');
-                            $(nextScene.view).trigger('touchstart');
-                        } else {
-                            $(document).trigger('mouseup');
-                            $(nextScene.view).trigger('mousedown');
-                        }
-                    }
-                }
             });
 
             const listView = this.createListView();
