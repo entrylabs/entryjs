@@ -501,6 +501,9 @@ Entry.BlockView = class BlockView {
         if (e.preventDefault) {
             e.preventDefault();
         }
+        if (Entry.disposeEvent) {
+            Entry.disposeEvent.notify();
+        }
         // if (Entry.documentMousedown) {
         //     Entry.documentMousedown.notify(e);
         // }
