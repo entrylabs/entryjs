@@ -1367,7 +1367,7 @@ Entry.BlockView = class BlockView {
         function processSvg() {
             svgData = svgData
                 .replace('(svgGroup)', new XMLSerializer().serializeToString(svgGroup))
-                .replace('%W', bBox.width * scale + 5)
+                .replace('%W', bBox.width * scale + 20)
                 .replace('%H', bBox.height * scale + 5)
                 .replace('(defs)', new XMLSerializer().serializeToString(defs[0]))
                 .replace(/>\s+/g, '>')
