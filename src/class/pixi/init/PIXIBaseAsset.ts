@@ -10,8 +10,6 @@ class PIXIBaseAssetSprite extends PIXI.Sprite {
 
 var atlasJson = require("./../../../entry_texture/base_asset.json");
 
-declare let Entry:any;
-
 export class PIXIBaseAsset {
 
     private _sheet:PIXI.Spritesheet;

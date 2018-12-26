@@ -16,88 +16,58 @@ import { AtlasImageLoader } from './loader/AtlasImageLoader';
 import { PIXIAtlasHelper } from './PIXIAtlasHelper';
 import { TimeoutTimer } from '../utils/TimeoutTimer';
 import { ImageRect } from '../../maxrect-packer/geom/ImageRect';
-import { autoFit } from '../utils/AutoFit';
+import { EntryTextureOption } from './EntryTextureOption';
+import { ISceneTextures } from './ISceneTextures';
 
 declare let _:any;
-declare let Entry:any;
-
-
-/** BaseTextureOption **/
-let OP = {
-    scaleMode: PIXI.SCALE_MODES.LINEAR,
-    mipmap: false,
-    useOffscreenCanvas: false
-};
-
 
 
 let TIMEOUT_INTERVAL = 250;
 
-/** base texture max pixel size */
-const BASE_TEX_MAX_SIZE = computeMaxTextureSize(4096);
-
-/** 텍스쳐의 최대 사이즈. 이미지가 이 크기보다 크면 리사이즈 하여 사용함. */
-const TEX_MAX_SIZE = Math.min(BASE_TEX_MAX_SIZE, 2048);
-
-/**
- * 텍스쳐를 최대 몇으로 할지의 값을 Canvas.width , height 기준으로 몇배로 할 지에 대한 값.
- */
-const RATIO:number = 1;
-
-//todo 640, 320을 리터럴이 아닌 canvas ( w, h ) 로 변경 필요.
-const TEX_MAX_SIZE_RECT = new ImageRect(
-    0,0,
-    Math.min(Math.round(640 * RATIO), TEX_MAX_SIZE),
-    Math.min(Math.round(320 * RATIO), TEX_MAX_SIZE)
-);
-
-const EXTRUDE_SIZE = 2;
-function newPacker():MaxRectsPacker{
-    //https://www.npmjs.com/package/maxrects-packer
-    const PADDING = 6; //텍스쳐 사이의 간격.
-    const BORDER = 2; //베이스 텍스쳐 테두리 간격
-    const OPTION = {
-        smart: false,
-        pot: true,
-        square: false,
-
-    };
-    return new MaxRectsPacker(BASE_TEX_MAX_SIZE, BASE_TEX_MAX_SIZE, BORDER, PADDING, OPTION);
-}
 
 /**
  * packing 이 되기전에 texture 객체를 생성하기 위한 BaseTexture
  */
-let EMPTY_BASE_TEX:AtlasBaseTexture = new AtlasBaseTexture();
-EMPTY_BASE_TEX.width = EMPTY_BASE_TEX.height = EMPTY_BASE_TEX.realHeight = EMPTY_BASE_TEX.realWidth = BASE_TEX_MAX_SIZE;
-EMPTY_BASE_TEX.dispose();
+let EMPTY_BASE_TEX:AtlasBaseTexture;
 
 
-export class SceneBins {
+export class SceneBins implements ISceneTextures {
+
+    private static initEmptyTex(maxSize:number) {
+        if (EMPTY_BASE_TEX) return;
+        const TEX = EMPTY_BASE_TEX = new AtlasBaseTexture();
+        TEX.width = TEX.height = TEX.realHeight = TEX.realWidth = maxSize;
+
+        const tex:any = TEX;
+        const emptyEmit = function(){};
+        tex.destroy = emptyEmit;
+        tex.on = emptyEmit;
+        tex.once = emptyEmit;
+        tex.emit = emptyEmit;
+    }
 
     //private _pathSet:PrimitiveSet = new PrimitiveSet();//패킹 전/후 pathf르 모두 저장.
     private _packedRects:ImageRect[] = [];
     private _notPackedRects:ImageRect[] = [];
     private _arrBaseTexture:AtlasBaseTexture[] = [];
-    private _packer:MaxRectsPacker = newPacker();
+    private _packer:MaxRectsPacker;
     private _path_tex_map:PrimitiveMap<AtlasTexture> = new PrimitiveMap();
     private _activated:boolean;
     private _imageRemoved:boolean;
     private _timer:TimeoutTimer = new TimeoutTimer();
 
-    constructor(public sceneID:string, private _loader:AtlasImageLoader, private _viewer:AtlasCanvasViewer) {
-
+    constructor(public sceneID:string, private _option:EntryTextureOption, private _loader:AtlasImageLoader, private _viewer:AtlasCanvasViewer) {
+        SceneBins.initEmptyTex(_option.atlasOption.atlasSize);
+        this._packer = _option.atlasOption.newPacker();
     }
 
     addPicInfo(pic:IRawPicture):void {
-        var path = PIXIAtlasHelper.getRawPath(pic);
+        let path = PIXIAtlasHelper.getRawPath(pic);
         if(this._path_tex_map.hasValue(path)) return;
 
-        var w = pic.dimension.width,
-            h = pic.dimension.height;
-        var rect:ImageRect = this._getNewImageRect(w, h );
+        let rect:ImageRect = PIXIAtlasHelper.getNewImageRect(pic, this._option.texMaxRect);
         this._loader.load(pic, rect);
-        var tex:AtlasTexture = this._newTexture(path, rect);
+        let tex:AtlasTexture = this._newTexture(path, rect);
         rect.data = { path: path, tex:tex };
         this._notPackedRects.push(rect);
 
@@ -118,7 +88,7 @@ export class SceneBins {
     }
 
     private _newTexture(path:string, rect:ImageRect):AtlasTexture {
-        var tex = new AtlasTexture(EMPTY_BASE_TEX, rect);
+        let tex = new AtlasTexture(EMPTY_BASE_TEX, rect);
         this._path_tex_map.add(path, tex);
         return tex;
     }
@@ -127,16 +97,16 @@ export class SceneBins {
     private _pack() {
         if(!this._notPackedRects.length) return;
 
-        var len = this._notPackedRects.length;
-        var time = new Date().getTime();
+        let len = this._notPackedRects.length;
+        let time = new Date().getTime();
         this._packer.addArray(this._notPackedRects);
-        var willUpdateBaseTextures:AtlasBaseTexture[] = [];
+        let willUpdateBaseTextures:AtlasBaseTexture[] = [];
 
         this._notPackedRects.forEach((r:ImageRect)=>{
-            var base:AtlasBaseTexture = this._getBaseTexture(r.binIndex);
+            let base:AtlasBaseTexture = this._getBaseTexture(r.binIndex);
             r.data.tex.updateBaseAndUVs(base);
 
-            var imgInfo = this._loader.getImageInfo(r.data.path);
+            let imgInfo = this._loader.getImageInfo(r.data.path);
             if(!imgInfo.isReady) return;
             
             this.putImage(imgInfo, false);
@@ -163,14 +133,16 @@ export class SceneBins {
 
         this._invalidate();
 
+        const BASE_TEX_MAX_SIZE = this._option.atlasOption.atlasSize;
         _.each(this._packer.bins, (bin:MaxRectsBin, index:number)=>{
-            var base:AtlasBaseTexture = this._arrBaseTexture[index];
+            let base:AtlasBaseTexture = this._arrBaseTexture[index];
             base.activate(BASE_TEX_MAX_SIZE);
             base.update();
         });
 
+        const EXTRUDE_SIZE = this._option.atlasOption.extrudeSize;
         this._path_tex_map.each((t:AtlasTexture, path:string)=>{
-            var info = this._loader.getImageInfo(path);
+            let info = this._loader.getImageInfo(path);
             if(!info || !info.isReady ) {
                 return;
             }
@@ -180,12 +152,13 @@ export class SceneBins {
 
 
     private _getBaseTexture(index:number):AtlasBaseTexture {
-        var base:AtlasBaseTexture = this._arrBaseTexture[index];
+        let base:AtlasBaseTexture = this._arrBaseTexture[index];
         if(base) return base;
+        const OP = this._option;
         base = new AtlasBaseTexture(this._viewer, OP.scaleMode);
-        base.setCanvas(PIXIHelper.getOffScreenCanvas(!OP.useOffscreenCanvas));
+        base.setCanvas(PIXIHelper.getOffScreenCanvas());
         base.imageType = "png";
-        base.realWidth = base.realHeight = base.width = base.height = BASE_TEX_MAX_SIZE;
+        base.realWidth = base.realHeight = base.width = base.height = OP.atlasOption.atlasSize;
         base.mipmap = OP.mipmap;
         this._arrBaseTexture[index] = base;
         return base;
@@ -213,19 +186,19 @@ export class SceneBins {
      */
     putImage(info:AtlasImageLoadingInfo, forceUpdateBaseTexture:boolean = true) {
         if(!info) return;
-        var t:AtlasTexture = this.getTexture(info.path);
+        let t:AtlasTexture = this.getTexture(info.path);
 
         if(!t) return;//이 Scene에서 사용안함
         if(t.isEmptyTexture) return;
 
         // console.log("put imgageData");
+        let atlasOption = this._option.atlasOption;
 
-        var base:AtlasBaseTexture = t.getBaseTexture();
-
+        let base:AtlasBaseTexture = t.getBaseTexture();
         if(!base.activated) {
-            base.activate(BASE_TEX_MAX_SIZE);
+            base.activate(atlasOption.atlasSize);
         }
-        t.drawImageAtBaseTexture(info, EXTRUDE_SIZE);
+        t.drawImageAtBaseTexture(info, atlasOption.extrudeSize);
         if(forceUpdateBaseTexture) {
             base.update();
         }
@@ -244,12 +217,12 @@ export class SceneBins {
         this._notPackedRects.length = 0;
         this._packedRects.length = 0;
 
-        var unusedPath:string[] = [];
+        let unusedPath:string[] = [];
 
         //사용안하는 path를 검색, 패킹을 다시 할 것이기 때문에 사용하는 텍스쳐의 rect 정보를 저장.
         this._path_tex_map.each((tex:AtlasTexture, path:string)=>{
             if( usedPathSet && usedPathSet.hasValue(path) ) {
-                this._notPackedRects.push(this._path_tex_map.getValue(path).imageRect);
+                this._notPackedRects.push(this._path_tex_map.getValue(path).imageRectForPacking);
             } else {
                 unusedPath.push(path);
             }
@@ -270,8 +243,8 @@ export class SceneBins {
 
 
     private _cleanCanvas() {
-        var LEN = this._arrBaseTexture.length;
-        for( var i = 0 ; i < LEN ; i++ ) {
+        let LEN = this._arrBaseTexture.length;
+        for( let i = 0 ; i < LEN ; i++ ) {
             this._arrBaseTexture[i].cleanCanvas();
         }
     }
@@ -282,8 +255,8 @@ export class SceneBins {
 
 
     private _destroyBaseTextureAfter(startIndex:number) {
-        var LEN = this._arrBaseTexture.length;
-        for( var i = startIndex ; i < LEN ; i++ ) {
+        let LEN = this._arrBaseTexture.length;
+        for( let i = startIndex ; i < LEN ; i++ ) {
             this._arrBaseTexture[i].destroy();
         }
         this._arrBaseTexture.length = startIndex;
@@ -308,25 +281,7 @@ export class SceneBins {
         this._notPackedRects = null;
     }
 
-    private _getNewImageRect(w:number, h:number):ImageRect {
-        var r = new ImageRect(0,0, w, h);
-        if(w > TEX_MAX_SIZE_RECT.width || h > TEX_MAX_SIZE_RECT.height ) {
-            autoFit.fit(TEX_MAX_SIZE_RECT, r, autoFit.ScaleMode.INSIDE, autoFit.AlignMode.TL);
-            r.width = Math.ceil(r.width);
-            r.height = Math.ceil(r.height);
-            r.scaleFactor = w / r.width;
-        }
-        return r;
-    }
-}
-
-
-function computeMaxTextureSize(LIMIT:number):number {
-    var canvas:HTMLCanvasElement = PIXIHelper.getOffScreenCanvas(true);
-    var ctx:WebGLRenderingContext = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-    var size = ctx ? ctx.getParameter(ctx.MAX_TEXTURE_SIZE) : 2048;
-    size = Math.min(size, LIMIT);
-    console.log("Max texture size : " + size);
-    return size;
 
 }
+
+

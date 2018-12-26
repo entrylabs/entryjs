@@ -1,8 +1,10 @@
 import { IRawPicture } from './model/IRawPicture';
 import { PrimitiveSet } from './structure/PrimitiveSet';
+import { ImageRect } from '../../maxrect-packer/geom/ImageRect';
+import { autoFit } from '../utils/AutoFit';
+import Rectangle = PIXI.Rectangle;
 
 
-declare let Entry:any;
 declare let _:any;
 
 class _PIXIAtlasHelper {
@@ -15,11 +17,10 @@ class _PIXIAtlasHelper {
     }
 
     /**
-     * EntryObject를 전부 조회하여 지정된 장명에서 사용하는 picture의 경로 set 객체를 리턴.
+     * EntryObject를 전부 조회하여 지정된 장면에서 사용하는 picture의 경로 set 객체를 리턴.
      * @param sceneID
      */
     getScenePathSet(sceneID:string):PrimitiveSet {
-
         var arrObj:any[] = Entry.container.getAllObjects();
         var pathSet = new PrimitiveSet();
 
@@ -37,6 +38,21 @@ class _PIXIAtlasHelper {
             }
         }
         return pathSet;
+    }
+
+    getNewImageRect(pic:IRawPicture, texMaxRect:Rectangle):ImageRect {
+        let w = pic.dimension.width,
+            h = pic.dimension.height;
+        let r = new ImageRect(0,0, w, h);
+        if(w > texMaxRect.width || h > texMaxRect.height ) {
+            autoFit.fit(texMaxRect, r, autoFit.ScaleMode.INSIDE, autoFit.AlignMode.TL);
+            r.width = Math.ceil(r.width);
+            r.height = Math.ceil(r.height);
+            r.scaleFactor = w / r.width;
+            r.scaleFactorX = w / r.width;
+            r.scaleFactorY = h / r.height;
+        }
+        return r;
     }
 
 

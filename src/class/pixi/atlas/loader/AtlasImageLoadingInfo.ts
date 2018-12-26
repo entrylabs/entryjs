@@ -2,6 +2,7 @@ import { IRawPicture } from '../model/IRawPicture';
 import { PIXIAtlasHelper } from '../PIXIAtlasHelper';
 import { ImageRect } from '../../../maxrect-packer/geom/ImageRect';
 import PIXIHelper from '../../helper/PIXIHelper';
+import { clog, cwarn } from '../../utils/logs';
 
 declare let Entry:any;
 declare let _:any;
@@ -56,7 +57,7 @@ export class AtlasImageLoadingInfo {
     load() {
         if(this.loadState != LoadingState.NONE) return;
         this.loadState = LoadingState.LOADING;
-        var img:HTMLImageElement = new Image();
+        let img:HTMLImageElement = new Image();
         this._img = img;
 
         img.onload = ()=>{
@@ -64,14 +65,14 @@ export class AtlasImageLoadingInfo {
             if( this.loadState == LoadingState.DESTROYED ) return;
             this.loadState = LoadingState.COMPLETE;
 
-            this._canvas = this._resizeIfOversized();
+            this._canvas = this._resizeIfNotValidSize();
             if(this._canvas) {
                 this._destroyImage();
             }
 
             this._onLoadCallback(this);
             this._onLoadCallback = null;
-            this._realPath = null;
+            // this._realPath = null;
         };
 
         img.onerror = (err) => {
@@ -110,7 +111,7 @@ export class AtlasImageLoadingInfo {
     private _getImageSrc(picture:IRawPicture) {
         if (picture.fileurl) return picture.fileurl;
 
-        var fileName = picture.filename;
+        let fileName = picture.filename;
         return (
             Entry.defaultPath +
             '/uploads/' +
@@ -138,20 +139,34 @@ export class AtlasImageLoadingInfo {
         this._img.onload = this._img.onerror = null;
         this._img = null;
     }
-
-    private _resizeIfOversized() {
-        var img:HTMLImageElement = this._img;
-        var sw = img.naturalWidth || img.width;
-        var sh = img.naturalHeight || img.height;
+    
+    
+    private _resizeIfNotValidSize() {
+        let img:HTMLImageElement = this._img;
+        let sw = img.naturalWidth || img.width;
+        let sh = img.naturalHeight || img.height;
         this.srcWidth = sw;
         this.srcHeight = sh;
-        var r = this._imgRect;
-        if(r.scaleFactor == 1 ) return;
-        console.log(`rezie (${sw},${sh})->(${r.width},${r.height}). factor:${r.scaleFactor}`);
-        var canvas = PIXIHelper.getOffScreenCanvas();
+        let r = this._imgRect;
+
+        let isScale1 = r.scaleFactorX == 1 && r.scaleFactorY == 1;
+        let isSameSizeWithData = r.dataWidth == sw && r.dataHeight == sh;
+
+        if(isScale1 && isSameSizeWithData) return null;
+
+        if(!isScale1) {
+            let sfx = r.scaleFactorX.toFixed(3);
+            let sfy = r.scaleFactorY.toFixed(3);
+            clog(`tex-rezie (${sw},${sh})->(${r.width},${r.height}). factor:(${sfx},${sfy})`);
+        }
+        if(!isSameSizeWithData) {
+            cwarn(`Image size not match. data(w=${r.dataWidth},h=${r.dataHeight}), real(w=${sw},h=${sh})`);
+        }
+
+        let canvas = PIXIHelper.getOffScreenCanvas();
         this.srcWidth = canvas.width = r.width;
         this.srcHeight = canvas.height = r.height;
-        var ctx:CanvasRenderingContext2D = canvas.getContext("2d");
+        let ctx:CanvasRenderingContext2D = canvas.getContext("2d");
         ctx.imageSmoothingEnabled = true;
         ctx.drawImage(img,0, 0, sw, sh,0, 0, r.width, r.height);
         return canvas;

@@ -10,10 +10,12 @@ import { AtlasTexture } from '../atlas/texture/AtlasTexture';
 import DisplayObject = PIXI.DisplayObject;
 import Sprite = PIXI.Sprite;
 
+type AdaptorConstructor = new ()=>ScaleFactorNormalAdaptor;
+
 export namespace PIXIScaleAdaptor {
 
     export function factory(target:DisplayObject):ScaleFactorNormalAdaptor {
-        var clazz:any = target instanceof Sprite ? ScaleFactorSpriteAdaptor : ScaleFactorNormalAdaptor;
+        var clazz:AdaptorConstructor = target instanceof Sprite ? ScaleFactorSpriteAdaptor : ScaleFactorNormalAdaptor;
         var adaptor:ScaleFactorNormalAdaptor = new clazz();
         adaptor._internal_init(target);
         return adaptor;
@@ -49,19 +51,20 @@ class ScaleFactorNormalAdaptor implements IDestroyer{
 class ScaleFactorSpriteAdaptor extends ScaleFactorNormalAdaptor{
 
     updateScaleFactor() {
-        var sp = this._target as Sprite;
-        var tex = sp.texture as AtlasTexture;
-        var sf = tex.textureScaleFactor;
-        if(!sf) return;
-        this.scale.internal_setScaleFactor(sf);
-        this.pivot.internal_setScaleFactor(1/sf);
+        let sp = this._target as Sprite;
+        let tex = sp.texture as AtlasTexture;
+        let sfx = tex.textureScaleFactorX;
+        let sfy = tex.textureScaleFactorY;
+        if(!sfx || !sfy) return;
+        this.scale.internal_setScaleFactor(sfx, sfy);
+        this.pivot.internal_setScaleFactor(1/sfx, 1/sfy);
     }
 }
 
 
 class ScaleFactorPoint {
-
-    private _scale:number = 1;
+    private _scaleX:number = 1;
+    private _scaleY:number = 1;
     private _x:number = 0;
     private _y:number = 0;
 
@@ -69,28 +72,28 @@ class ScaleFactorPoint {
 
     }
 
-    internal_setScaleFactor(value:number) {
-        this._scale = value;
+    internal_setScaleFactor(x:number, y:number) {
+        this._scaleX = x;
+        this._scaleY = y;
         this.set(this._x, this._y);
     }
 
     setX(value:number):void {
         this._x = value;
-        this._point.x = value * this._scale;
+        this._point.x = value * this._scaleX;
     }
 
     setY(value:number):void {
         this._y = value;
-        this._point.y = value * this._scale;
+        this._point.y = value * this._scaleY;
     }
 
     set(x:number, y:number):void {
         this._x = x;
         this._y = y || ((y != 0) ? x : 0);
-        var sf = this._scale;
         this._point.set(
-            this._x * sf,
-            this._y * sf
+            this._x * this._scaleX,
+            this._y * this._scaleY
         );
     }
 

@@ -12,23 +12,23 @@ import DestroyOptions = PIXI.DestroyOptions;
 import Sprite = PIXI.Sprite;
 import WebGLRenderer = PIXI.WebGLRenderer;
 import RenderTexture = PIXI.RenderTexture;
-import { AtlasTexture } from '../atlas/texture/AtlasTexture';
+import { EntryTextureBase } from '../atlas/texture/EntryTextureBase';
 
 
 class FilterData {
 
-    private _orgTex:AtlasTexture|RenderTexture;
+    private _orgTex:EntryTextureBase|RenderTexture;
     private _renderTex:RenderTexture;
 
     filters:any[];
     invalidate:boolean;
 
-    constructor(orgTex:AtlasTexture) {
+    constructor(orgTex:EntryTextureBase) {
         this._orgTex = orgTex;
     }
 
 
-    get orgTex():AtlasTexture|RenderTexture { return this._orgTex; }
+    get orgTex():EntryTextureBase|RenderTexture { return this._orgTex; }
 
     getRenderTexture(w:number, h:number):RenderTexture {
         if(!this._renderTex) {
@@ -82,7 +82,7 @@ export class PIXISprite extends Sprite {
             }
         } else {
             if(!this._filterData) {
-                this._filterData = new FilterData(this.texture as AtlasTexture);
+                this._filterData = new FilterData(this.texture as EntryTextureBase);
             }
             this._filterData.filters = filters;
             this._filterData.invalidate = true;
@@ -122,7 +122,7 @@ export class PIXISprite extends Sprite {
         var w = tex.orig.width;
         var h = tex.orig.height;
         var renderTex:RenderTexture = fd.getRenderTexture(w, h);
-        if(fd.orgTex instanceof AtlasTexture) {// filter 된 sprite 를 도장찍기 하면 sprite.texture 의 type 는 RenderTexture 가 된다.
+        if(fd.orgTex instanceof EntryTextureBase) {// filter 된 sprite 를 도장찍기 하면 sprite.texture 의 type 는 RenderTexture 가 된다.
             fd.orgTex.assignTextureScaleFactor(renderTex);
         }
         var sp = EMPTY_SP;

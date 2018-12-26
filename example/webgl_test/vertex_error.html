@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.8.4/pixi.min.js"></script>
+
+<div>
+    <button onclick="clickHandle('top')">top visible</button>
+    <button onclick="clickHandle('bottom')">bottom visible</button>
+    <button onclick="clickHandle('alpha')">toggle topTexture.premultipliedAlpha</button>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+    var clog = console.log.bind(console);
+
+    var app = new PIXI.Application({
+        width: 1024, height: 600, antialias: true, view: document.getElementById('canvas'), backgroundColor: 0,
+        transparent: false,
+        resolution: 1,
+    });
+
+    var w = 400;
+    var h = 400;
+    var back = newSprite(w, h, '#ff0000');
+    var cover = newSprite(w, h, '#ffffff');
+
+    function newSprite(w, h, color) {
+        var canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        ctx.fillStyle = color;
+        ctx.fillRect(0, 0, w, h);
+        var sp = PIXI.Sprite.from(canvas);
+        sp.position.set(40, 40);
+        app.stage.addChild(sp);
+        return sp;
+    }
+
+    function clickHandle(type) {
+        switch (type) {
+            case 'top':
+                cover.visible = !cover.visible;
+                clog("cover.visible", cover.visible);
+                break;
+            case 'bottom':
+                back.visible = !back.visible;
+                clog("back.visible", back.visible);
+                break;
+            case 'alpha':
+                cover.texture.baseTexture.premultipliedAlpha = !cover.texture.baseTexture.premultipliedAlpha;
+                clog("cover.texture.baseTexture.premultipliedAlpha", cover.texture.baseTexture.premultipliedAlpha);
+                break;
+        }
+    }
+
+</script>
+
+</body>
+</html>

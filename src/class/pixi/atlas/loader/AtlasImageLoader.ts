@@ -4,6 +4,7 @@ import { PrimitiveSet } from '../structure/PrimitiveSet';
 import { TimeoutTimer } from '../../utils/TimeoutTimer';
 import { PIXIAtlasHelper } from '../PIXIAtlasHelper';
 import { ImageRect } from '../../../maxrect-packer/geom/ImageRect';
+import { clog } from '../../utils/logs';
 
 var TIME_OUT_DELAY:number = 1000;
 
@@ -63,11 +64,17 @@ export class AtlasImageLoader {
             }
         }
 
+        let deleteCnt = 0;
         _.each(this._path_info_map, (info:AtlasImageLoadingInfo, path:string)=>{
             if(allPathSet.hasValue(path)) return;
             info.destroy();
+            deleteCnt++;
             delete this._path_info_map[path];
         });
+
+        if(deleteCnt>0) {
+            clog(`${deleteCnt} image item(s) deleted`);
+        }
     }
 
     /**
