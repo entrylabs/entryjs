@@ -598,7 +598,7 @@ Entry.Comment = class Comment {
 
         if (!this.isEditing && this.isOpened && this.dragMode === Entry.DRAG_MODE_MOUSEDOWN) {
             this.renderTextArea();
-        } else {
+        } else if (this.dragMode === Entry.DRAG_MODE_DRAG) {
             this.destroyTextArea();
             Entry.do('moveComment', this);
             if (this.connectableBlockView) {
