@@ -111,7 +111,6 @@ Entry.Scene = class {
                 container: listView,
             }).on('change', ([newIndex, oldIndex]) => {
                 Entry.scene.moveScene(newIndex, oldIndex);
-                this.isFirstTouch = false;
             });
         }
         return listView;
@@ -187,11 +186,6 @@ Entry.Scene = class {
             .addClass('entrySceneRemoveButtonWorkspace')
             .bindOnClick((e) => {
                 if (Entry.engine.isState('run')) return;
-                if (this.isFirstTouch) {
-                    this.isFirstTouch = false;
-                    return;
-                }
-
                 Entry.do('sceneRemove', scene.id);
             })
             .appendTo(removeButtonCover);
@@ -219,15 +213,6 @@ Entry.Scene = class {
         const nameField = Entry.createElement('input');
         nameField.addClass('entrySceneFieldWorkspace');
         nameField.value = scene.name;
-
-        nameField.addEventListener('click', (e) => {
-            if (this.isFirstTouch) {
-                this.isFirstTouch = false;
-                return;
-            }
-
-            nameField.focus();
-        });
 
         nameField.addEventListener('keyup', ({ keyCode: code }) => {
             if (Entry.isArrowOrBackspace(code)) {
@@ -276,11 +261,8 @@ Entry.Scene = class {
             }
             if (Entry.scene.selectedScene !== scene) {
                 Entry.do('sceneSelect', scene.id);
-
                 if (e.type === 'touchstart') {
-                    this.isFirstTouch = true;
-                } else {
-                    this._focusSceneNameField(scene);
+                    e.preventDefault();
                 }
             }
         });
@@ -288,7 +270,7 @@ Entry.Scene = class {
     }
 
     updateView() {
-        if (!Entry.type || Entry.type == 'workspace') {
+        if (!Entry.type || Entry.type === 'workspace') {
             // var parent = this.listView_;
             // this.getScenes().forEach(({ view }) => parent.appendChild(view));
 
@@ -530,7 +512,6 @@ Entry.Scene = class {
             container.adjustClonedValues(oldIds, newIds);
             var WS = Entry.getMainWS();
             WS && WS.board && WS.board.reDraw();
-            this._focusSceneNameField(clonedScene);
             this.isSceneCloning = false;
             container.setCurrentObjects();
             container.updateObjectsOrder();
@@ -615,11 +596,6 @@ Entry.Scene = class {
         $(this.listView_).html('');
         this.scenes_ = [];
         this.selectedScene = null;
-    }
-
-    _focusSceneNameField(scene) {
-        var input = scene.view && scene.view.nameField;
-        input && input.focus && input.focus();
     }
 
     getDom(query) {
