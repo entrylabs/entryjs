@@ -220,7 +220,7 @@ Entry.Board = class Board {
             e.preventDefault();
         }
 
-        if(this.workingEvent) {
+        if (this.workingEvent) {
             return;
         }
 
@@ -1258,6 +1258,7 @@ Entry.Board = class Board {
     }
 
     _rightClick(e) {
+        delete this.workingEvent;
         const { target } = e;
         //SVGElement에서 contains가 없어서 jquery사용
         if ($.contains(this.workspace.zoomController.view, target)) {

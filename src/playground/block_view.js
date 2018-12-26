@@ -510,7 +510,7 @@ Entry.BlockView = class BlockView {
 
         const board = this.getBoard();
         console.log('event', board.workingEvent);
-        if(board.workingEvent) {
+        if (board.workingEvent) {
             return;
         }
 
@@ -1469,7 +1469,8 @@ Entry.BlockView = class BlockView {
         }
 
         const block = this.block;
-
+        const board = this.getBoard();
+        delete board.workingEvent;
         //if long pressed block is function_general block
         //edit function
         if (this.isInBlockMenu && eventSource === 'longPress' && block.getFuncId()) {
@@ -1478,13 +1479,12 @@ Entry.BlockView = class BlockView {
 
         const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
 
-        const board = this.getBoard();
         return Entry.ContextMenu.show(_getOptions(this), null, { x, y });
 
         //helper functon get get context options
         function _getOptions(blockView) {
             const isBoardReadOnly = blockView._board.readOnly;
-            const { block, isInBlockMenu, copyable, _board } = blockView;
+            const { block, isInBlockMenu, copyable } = blockView;
             const {
                 Blocks: { Duplication_option, CONTEXT_COPY_option, Delete_Blocks },
                 Menus: { save_as_image },
@@ -1544,7 +1544,7 @@ Entry.BlockView = class BlockView {
             return options;
 
             function _isDownloadable() {
-                return Entry.Utils.isChrome() && Entry.type == 'workspace' && !Entry.isMobile();
+                return Entry.Utils.isChrome() && Entry.type === 'workspace' && !Entry.isMobile();
             }
         }
     }
