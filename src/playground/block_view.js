@@ -508,20 +508,18 @@ Entry.BlockView = class BlockView {
         //     Entry.documentMousedown.notify(e);
         // }
 
-        this.workingEvent = true;
         this.longPressTimer = null;
 
         const board = this.getBoard();
-        console.log('event', board.workingEvent);
         if (board.workingEvent) {
             return;
         }
-
-        board.workingEvent = true;
-
+        
         if (this.readOnly || board.viewOnly) {
             return;
         }
+        
+        board.workingEvent = true;
         this.setSelectedBlock(board);
         //left mousedown
         if (
