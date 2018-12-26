@@ -220,6 +220,12 @@ Entry.Board = class Board {
             e.preventDefault();
         }
 
+        if(this.workingEvent) {
+            return;
+        }
+
+        this.workingEvent = true;
+
         const board = this;
         let longPressTimer = null;
         if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
@@ -296,6 +302,7 @@ Entry.Board = class Board {
                 longPressTimer = null;
             }
             $(document).unbind('.entryBoard');
+            delete board.workingEvent;
             delete board.mouseDownCoordinate;
             delete board.dragInstance;
         }
