@@ -688,7 +688,6 @@ Entry.BlockView = class BlockView {
     }
 
     onMouseUp(e) {
-        console.log('??? up');
         if (this.longPressTimer) {
             clearTimeout(this.longPressTimer);
             this.longPressTimer = null;
