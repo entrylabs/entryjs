@@ -706,12 +706,10 @@ Entry.EntryObject = class {
 
         if (isLocked) {
             inputs.forEach(function(input) {
-                input.removeClass('selectedEditingObject');
                 input.setAttribute('disabled', 'disabled');
             });
         } else {
             inputs.forEach(function(input) {
-                input.addClass('selectedEditingObject');
                 input.removeAttribute('disabled');
             });
         }
@@ -730,22 +728,14 @@ Entry.EntryObject = class {
         ];
 
         if (activate && !this.isEditing) {
-            for (let i = 0; i < inputs.length; i++) {
-                inputs[i].addClass('selectedEditingObject');
-            }
             this.isEditing = true;
         } else {
             inputs.forEach(function(input) {
                 input.blur(true);
             });
 
-            this.blurAllInput();
             this.isEditing = false;
         }
-    }
-
-    blurAllInput() {
-        $('.selectedEditingObject').removeClass('selectedEditingObject');
     }
 
     /**
