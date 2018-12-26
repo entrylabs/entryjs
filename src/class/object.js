@@ -476,11 +476,9 @@ Entry.EntryObject = class {
     /**
      * Remove sound object.
      * @param {string} soundId
-     * @return {boolean} return true if success
      */
     removeSound(soundId) {
-        const index = this.sounds.indexOf(sound);
-        const sound = this.getSound(soundId);
+        const index = this.sounds.findIndex((sound) => sound.id === soundId);
         this.sounds.splice(index, 1);
         Entry.playground.reloadPlayground();
         Entry.playground.injectSound();

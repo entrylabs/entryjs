@@ -1050,8 +1050,10 @@ Entry.Playground = class {
      * @param {!number} end
      */
     moveSound(start, end) {
-        this.object.sounds.splice(end, 0, this.object.sounds.splice(start, 1)[0]);
-        this.injectSound();
+        if (this.object.sounds) {
+            this.object.sounds.splice(end, 0, this.object.sounds.splice(start, 1)[0]);
+            this.injectSound();
+        }
     }
 
     addExpansionBlock(block, isNew) {
