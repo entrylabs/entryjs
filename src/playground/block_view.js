@@ -505,9 +505,17 @@ Entry.BlockView = class BlockView {
         //     Entry.documentMousedown.notify(e);
         // }
 
+        this.workingEvent = true;
         this.longPressTimer = null;
 
         const board = this.getBoard();
+        console.log('event', board.workingEvent);
+        if(board.workingEvent) {
+            return;
+        }
+
+        board.workingEvent = true;
+
         if (this.readOnly || board.viewOnly) {
             return;
         }
@@ -680,6 +688,7 @@ Entry.BlockView = class BlockView {
     }
 
     onMouseUp(e) {
+        console.log('??? up');
         if (this.longPressTimer) {
             clearTimeout(this.longPressTimer);
             this.longPressTimer = null;
@@ -689,6 +698,7 @@ Entry.BlockView = class BlockView {
         const board = this.getBoard();
         if (board) {
             board.set({ dragBlock: null });
+            delete board.workingEvent;
         }
         this._setHoverBlockView({ that: this });
         Entry.GlobalSvg.remove();
