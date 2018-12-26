@@ -9,6 +9,9 @@
     c[COMMAND_TYPES.playgroundChangeViewMode] = {
         do: function(newType, oldType) {
             Entry.playground.changeViewMode(newType);
+            if (Entry.disposeEvent){
+                Entry.disposeEvent.notify();
+            }
         },
         state: function(newType, oldType) {
             return [oldType, newType];
