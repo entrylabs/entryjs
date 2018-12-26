@@ -353,6 +353,7 @@ Entry.Container = class Container {
             this.updateObjectsOrder();
             this.updateListView();
             Entry.variableContainer.updateViews();
+            Entry.variableContainer.updateList();
         }
     }
 
