@@ -617,6 +617,7 @@ Entry.Comment = class Comment {
     }
 
     removeMoveSetting(mouseMove, mouseUp) {
+        const dragMode = this.dragMode;
         this.dragMode = Entry.DRAG_MODE_NONE;
         this.board.set({ dragBlock: null });
         delete this.connectableBlocks;
@@ -625,7 +626,7 @@ Entry.Comment = class Comment {
         this.removeDomEvent(mouseMove, mouseUp);
         const gs = Entry.GlobalSvg;
         const gsRet = gs.terminateDrag(this);
-        if (gsRet === gs.REMOVE) {
+        if (gsRet === gs.REMOVE && dragMode === Entry.DRAG_MODE_DRAG) {
             Entry.do('removeComment', this).isPass(true, true);
         }
         Entry.GlobalSvg.remove();
@@ -686,6 +687,7 @@ Entry.Comment = class Comment {
     renderTextArea() {
         this.isEditing = true;
         const { top, left } = this._comment.getBoundingClientRect();
+        const scrollTop = document.documentElement.scrollTop;
         this.event = Entry.disposeEvent.attach(this, () => {
             this._textPath.textContent = this.value;
             this.destroyTextArea();
@@ -698,7 +700,7 @@ Entry.Comment = class Comment {
         this.textArea.val(this.value);
         this.textArea.css({
             left: left - (1 - this.scale) * 0.2 + 2,
-            top: this.titleHeight * this.scale + top + 1,
+            top: this.titleHeight * this.scale + top + 1 + scrollTop,
             'font-size': `${this.fontSize}px`,
             width: (this.width - 16) * this.scale,
             height: (this.height - this.titleHeight - 10) * this.scale,
