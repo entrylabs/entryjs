@@ -369,7 +369,7 @@ Entry.VariableContainer = class VariableContainer {
      * @param {object} variable
      */
     renderFunctionReference(func) {
-        const callers = [...this._functionRefs].filter((item) => item.block.data.type === 'func_'+func.Id);
+        const callers = [...this._functionRefs].filter((item) => item.block.data.type === 'func_' + func.id);
 
         func.usedView && $(func.usedView).remove();
         let usedWrapper;
