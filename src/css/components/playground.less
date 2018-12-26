@@ -577,7 +577,9 @@
         cursor:pointer;
     }
     .select_link:after {
-    @include PositionRT(absolute, 16px, 50%);
+        position: absolute;
+        right: 16px;
+        top: 50%;
         width: 8px;
         height: 6px;
         margin-top: -3px;
@@ -724,16 +726,26 @@
     overflow: hidden;
     height: 40px;
     max-width:654px;
-    padding: 0 16px;
     background-color: #fff;
     border: 1px solid #e2e2e2;
     border-radius: 4px;
     margin-top: 24px;
 }
 
+.entryPlaygroundTextWorkspace .write_box .input_inner .bold {
+    font-weight:bold;
+}
+
+.entryPlaygroundTextWorkspace .write_box .input_inner .italic {
+    font-style:italic;
+}
+
 .entryPlaygroundTextWorkspace .write_box .input_inner input[type='text'] {
     display:none;
     width: 100%;
+    height:100%;
+    margin:0;
+    padding:15px;
     border: 0;
     line-height: 40px;
     outline: 0;
@@ -742,8 +754,9 @@
 }
 .entryPlaygroundTextWorkspace .write_box .input_inner textarea {
     width: 100%;
-    height: 204px;
-    margin: 12px 0;
+    height:100%;
+    margin:0;
+    padding:12px;
     font-size:14px;
     border: 0;
     line-height: 18px;
