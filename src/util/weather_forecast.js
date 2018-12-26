@@ -6,7 +6,7 @@ const { locationData } = require('../util/location');
 
 Entry.EXPANSION_BLOCK.weather = {
     isInitialized: false,
-    baseUrl: '/api/expansionBlock/weather/',
+    api: '/api/expansionBlock/weather/',
     date : new Date(),
     apiFail: {},
     init: function() {
@@ -398,7 +398,7 @@ Entry.EXPANSION_BLOCK.weather.getData = function(type, location, dateStr) {
             cityCode = this.locationMap[location.parent].sub[location.sub];
         }
     }
-    const url = this.baseUrl + type;
+    const url = this.api + type;
     return new PromiseManager().Promise(function(resolve) {
         callApi(url, { url }).then((response) => {
             resolve(resolveData(response.data[cityCode], type, dateStr));
