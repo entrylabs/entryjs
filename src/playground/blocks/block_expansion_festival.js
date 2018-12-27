@@ -299,6 +299,7 @@ Entry.EXPANSION_BLOCK.festival = {
     title: {
         ko: '행사',
         en: 'festival',
+        jp: 'イベント',
     },
     description: Lang.Msgs.expansion_festival_description,
     descriptionKey: "Msgs.expansion_festival_description",

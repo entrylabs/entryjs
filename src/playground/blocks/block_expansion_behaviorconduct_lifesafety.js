@@ -69,6 +69,7 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety = {
     title: {
         ko: '생활안전',
         en: 'LifeSafety',
+        jp: '生活安全',
     },
     description: Lang.Msgs.expansion_behaviorConductLifeSafety_description,
     descriptionKey: "Msgs.expansion_behaviorConductLifeSafety_description",
