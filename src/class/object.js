@@ -1258,7 +1258,7 @@ Entry.EntryObject = class {
 
         objectView.addEventListener('click', (e) => {
             const isFirstClick = !_.includes(this.view_.classList, 'selectedObject');
-            if (isFirstClick) {
+            if (isFirstClick && Entry.isMobile()) {
                 e.preventDefault();
                 document.activeElement.blur();
             }
