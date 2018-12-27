@@ -486,7 +486,6 @@ Entry.BlockView = class BlockView {
         const { selectedBlockView } = workspace;
         const wsBoard = selectedBlockView ? selectedBlockView.getBoard() : board;
         if (board !== wsBoard) {
-            console.log('setSelectedBlock null');
             wsBoard.setSelectedBlock(null);
         } else {
             board.setSelectedBlock(this);
@@ -494,19 +493,16 @@ Entry.BlockView = class BlockView {
     }
 
     onMouseDown(e) {
-        // ISSUE:: 마우스이벤트1
         if (!this.isInBlockMenu && e.stopPropagation) {
             e.stopPropagation();
         }
         if (e.preventDefault) {
             e.preventDefault();
         }
+
         if (Entry.disposeEvent) {
             Entry.disposeEvent.notify();
         }
-        // if (Entry.documentMousedown) {
-        //     Entry.documentMousedown.notify(e);
-        // }
 
         this.longPressTimer = null;
 
@@ -514,13 +510,14 @@ Entry.BlockView = class BlockView {
         if (board.workingEvent) {
             return;
         }
-        
+
         if (this.readOnly || board.viewOnly) {
             return;
         }
-        
+
         board.workingEvent = true;
         this.setSelectedBlock(board);
+
         //left mousedown
         if (
             (e.button === 0 || (e.originalEvent && e.originalEvent.touches) || e.touches) &&
@@ -916,7 +913,7 @@ Entry.BlockView = class BlockView {
         (this._statements || []).forEach(_destroyFunc);
 
         const block = this.block;
-        if (Entry.type == 'workspace' && !this.isInBlockMenu) {
+        if (Entry.type === 'workspace' && !this.isInBlockMenu) {
             (block.events.viewDestroy || []).forEach((fn) => {
                 if (_.isFunction(fn)) {
                     fn(block);
@@ -1059,6 +1056,16 @@ Entry.BlockView = class BlockView {
     removeSelected() {
         $(this.pathGroup).insertBefore(this._nextGroup);
         this.svgGroup.removeClass('selected');
+    }
+
+    addActivated() {
+        $(this.pathGroup).insertAfter(this._nextGroup);
+        this.svgGroup.addClass('activated');
+    }
+
+    removeActivated() {
+        $(this.pathGroup).insertBefore(this._nextGroup);
+        this.svgGroup.removeClass('activated');
     }
 
     getSkeleton() {
@@ -1249,14 +1256,6 @@ Entry.BlockView = class BlockView {
         while (observers.length) {
             observers.pop().destroy();
         }
-    }
-
-    addActivated() {
-        this.svgGroup.addClass('activated');
-    }
-
-    removeActivated() {
-        this.svgGroup.removeClass('activated');
     }
 
     reDraw() {
