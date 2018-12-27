@@ -9,6 +9,7 @@ Entry.Expansion_Weather = {
         en: 'weather',
     },
     description: Lang.Msgs.expansion_weather_description,
+    descriptionKey: "Msgs.expansion_weather_description"
 };
 
 Entry.Expansion_Weather.getBlocks = function() {

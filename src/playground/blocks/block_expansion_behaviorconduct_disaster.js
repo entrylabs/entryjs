@@ -2,25 +2,8 @@
 
 const PromiseManager = require('../../core/promiseManager');
 const { callApi } = require('../../util/common');
-
-Entry.EXPANSION_BLOCK.behaviorConductDisaster = {
-    name: 'behaviorConductDisaster',
-    imageName: 'disaster.png',
-    title: {
-        ko: '자연재난',
-        en: 'Disaster',
-    },
-    description: Lang.Msgs.expansion_behaviorConductDisaster_description,
-    isInitialized: false,
-    init() {
-        if (this.isInitialized) {
-            return;
-        }
-        Entry.EXPANSION_BLOCK.behaviorConductDisaster.isInitialized = true;
-    },
-    api: '/api/expansionBlock/behaviorConduct',
-    apiType: '01',
-    categoryMap: {
+function getInitialCategoryMap() {
+    return {
         '01001': {
             lang: Lang.Blocks.behaviorConduct01001,
             sub: ['01001002', '01001003', '01001004', '01001005'],
@@ -73,11 +56,30 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster = {
             lang: Lang.Blocks.behaviorConduct01014,
             sub: ['01014001', '01014002'],
         },
+    };
+}
+Entry.EXPANSION_BLOCK.behaviorConductDisaster = {
+    name: 'behaviorConductDisaster',
+    imageName: 'disaster.png',
+    title: {
+        ko: '자연재난',
+        en: 'Disaster',
     },
+    description: Lang.Msgs.expansion_behaviorConductDisaster_description,
+    descriptionKey: "Msgs.expansion_behaviorConductDisaster_description",
+    isInitialized: false,
+    init() {
+        if (this.isInitialized) {
+            return;
+        }
+        Entry.EXPANSION_BLOCK.behaviorConductDisaster.isInitialized = true;
+    },
+    api: '/api/expansionBlock/behaviorConduct',
+    apiType: '01'
 };
 
 Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function() {
-    const categoryMap = Entry.EXPANSION_BLOCK.behaviorConductDisaster.categoryMap;
+    const categoryMap = getInitialCategoryMap();
     const getCategory = function() {
         return Object.keys(categoryMap).map((category) => {
             return [categoryMap[category].lang, category];
