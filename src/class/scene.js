@@ -83,18 +83,19 @@ Entry.Scene = class {
         const listView = Entry.createElement('div');
         listView.addClass('entrySceneListWorkspace');
 
+        this.sceneSortableListWidget = new EntryTool({
+            type: 'sortableWidget',
+            data: {
+                height: '100%',
+                sortableTarget: ['entrySceneRemoveButtonWorkspace', 'entrySceneInputCover'],
+                lockAxis: 'x',
+                axis: 'x',
+                items: this._getSortableSceneList(),
+            },
+            container: listView,
+        });
         if (Entry.sceneEditable) {
-            this.sceneSortableListWidget = new EntryTool({
-                type: 'sortableWidget',
-                data: {
-                    height: '100%',
-                    sortableTarget: ['entrySceneRemoveButtonWorkspace', 'entrySceneInputCover'],
-                    lockAxis: 'x',
-                    axis: 'x',
-                    items: this._getSortableSceneList(),
-                },
-                container: listView,
-            }).on('change', ([newIndex, oldIndex]) => {
+            this.sceneSortableListWidget.on('change', ([newIndex, oldIndex]) => {
                 Entry.scene.moveScene(newIndex, oldIndex);
             });
         }
