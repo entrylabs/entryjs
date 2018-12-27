@@ -564,6 +564,9 @@ class BlockMenu {
     }
 
     selectMenu(selector, doNotFold, doNotAlign) {
+        if(Entry.disposeEvent) {
+            Entry.disposeEvent.notify();
+        }
         if (!this._isOn() || !this._categoryData) {
             return;
         }
