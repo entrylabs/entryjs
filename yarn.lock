@@ -3510,10 +3510,10 @@ entities@~1.1.1:
   resolved "https://registry.yarnpkg.com/entities/-/entities-1.1.2.tgz#bdfa735299664dfafd34529ed4f8522a275fea56"
   integrity sha512-f2LZMYl1Fzu7YSBKg+RoROelpOaNrcGmE9AZubeDfrCEia483oW4MI4VyFd5VNHIgQ/7qm1I0wUHK1eJnn2y2w==
 
-entry-tool@^0.1.24:
-  version "0.1.24"
-  resolved "https://registry.yarnpkg.com/entry-tool/-/entry-tool-0.1.24.tgz#0338cde71aeb762ed54f2ce0b2d9870a3f92b94b"
-  integrity sha512-+psoC/sO6Kai5ckbIH+CiYZSmjPuvDcmzrMuPcw9wGBA+zv1siVZo7/cFEj5pb8nuHSzntxeAXk2PBq8sdHagg==
+entry-tool@^0.1.25:
+  version "0.1.25"
+  resolved "https://registry.yarnpkg.com/entry-tool/-/entry-tool-0.1.25.tgz#3918aee141d6f3ddb7846ad5675a0a335946b29d"
+  integrity sha512-/jDbXZCMfALShsRvQmINmGujJbVubAbzhreU1AmqKcRA2Cac0xU0qJn2eq7CNlMeBGUHEJtVjBd8T57L8S/Q8Q==
   dependencies:
     axios "^0.18.0"
     chroma-js "^1.4.0"
