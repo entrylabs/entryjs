@@ -325,7 +325,6 @@ Entry.VariableContainer = class VariableContainer {
             usedSubject.innerHTML = Lang.Workspace.List_used_objects;
         }
 
-
         const listView = Entry.createElement('ul')
             .addClass('obj_list')
             .appendTo(usedWrapper);
@@ -377,7 +376,9 @@ Entry.VariableContainer = class VariableContainer {
      * @param {object} variable
      */
     renderFunctionReference(func) {
-        const callers = [...this._functionRefs].filter((item) => item.block.data.type === 'func_' + func.id);
+        const callers = [...this._functionRefs].filter(
+            (item) => item.block.data.type === 'func_' + func.id
+        );
 
         func.usedView && $(func.usedView).remove();
         let usedWrapper;
@@ -394,9 +395,7 @@ Entry.VariableContainer = class VariableContainer {
                 const thumb = element.appendChild(caller.object.thumbnailView_.cloneNode());
                 thumb.addClass('thmb');
                 element.appendChild(thumb);
-                const nameElement = Entry.createElement('div').addClass(
-                    'entryVariableListCallerNameWorkspace'
-                );
+                const nameElement = Entry.createElement('span').addClass('text');
                 nameElement.innerHTML = caller.object.name;
                 element.appendChild(nameElement);
                 element.bindOnClick(function() {
