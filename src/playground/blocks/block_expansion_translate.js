@@ -147,6 +147,7 @@ Entry.EXPANSION_BLOCK.translate = {
         en: 'translate',
         jp: '翻訳',
     },
+    titleKey: "template.translate_title_text",
     description: Lang.Msgs.expansion_translate_description,
     descriptionKey: "Msgs.expansion_translate_description",
     isInitialized: false,

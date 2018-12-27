@@ -71,6 +71,7 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety = {
         en: 'LifeSafety',
         jp: '生活安全',
     },
+    titleKey: "template.behaviorConductLifeSafety_title_text",
     description: Lang.Msgs.expansion_behaviorConductLifeSafety_description,
     descriptionKey: "Msgs.expansion_behaviorConductLifeSafety_description",
     isInitialized: false,

@@ -301,6 +301,7 @@ Entry.EXPANSION_BLOCK.festival = {
         en: 'festival',
         jp: 'イベント',
     },
+    titleKey: "template.festival_title_text",
     description: Lang.Msgs.expansion_festival_description,
     descriptionKey: "Msgs.expansion_festival_description",
     isInitialized: false,

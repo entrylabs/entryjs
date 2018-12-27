@@ -66,6 +66,7 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster = {
         en: 'Disaster',
         jp: '自然災害',
     },
+    titleKey: "template.behaviorConductDisaster_title_text",
     description: Lang.Msgs.expansion_behaviorConductDisaster_description,
     descriptionKey: "Msgs.expansion_behaviorConductDisaster_description",
     isInitialized: false,

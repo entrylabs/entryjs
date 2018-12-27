@@ -9,6 +9,7 @@ Entry.Expansion_Weather = {
         en: 'weather',
         jp: '拡張ブロックを追加する',
     },
+    titleKey: "template.weather_title_text",
     description: Lang.Msgs.expansion_weather_description,
     descriptionKey: "Msgs.expansion_weather_description"
 };
