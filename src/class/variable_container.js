@@ -317,7 +317,15 @@ Entry.VariableContainer = class VariableContainer {
         const usedSubject = Entry.createElement('span')
             .addClass('box_sjt')
             .appendTo(usedWrapper);
-        usedSubject.innerHTML = '사용된 오브젝트';
+
+        if (variable.type === 'variable') {
+            usedSubject.innerHTML = Lang.Workspace.Variable_used_objects;
+        } else {
+            // variable.type === 'list'
+            usedSubject.innerHTML = Lang.Workspace.List_used_objects;
+        }
+
+
         const listView = Entry.createElement('ul')
             .addClass('obj_list')
             .appendTo(usedWrapper);
@@ -1785,7 +1793,7 @@ Entry.VariableContainer = class VariableContainer {
             .appendTo(addSpaceNameWrapper);
         addSpaceInput.setAttribute('type', 'text');
         addSpaceInput.id = 'entryVariableAddSpaceInputWorkspace';
-        addSpaceInput.setAttribute('placeholder', '변수의 이름을 입력해주세요.');
+        addSpaceInput.setAttribute('placeholder', Lang.Workspace.Variable_placeholder_content);
         addSpaceInput.variableContainer = this;
         addSpaceInput.onkeypress = _whenEnter(function() {
             if (this.enterKeyDisabled) {
@@ -1973,7 +1981,7 @@ Entry.VariableContainer = class VariableContainer {
             .appendTo(addSpaceNameWrapper);
         addSpaceInput.setAttribute('type', 'text');
         addSpaceInput.id = 'entryVariableAddSpaceInputWorkspace';
-        addSpaceInput.setAttribute('placeholder', '리스트의 이름을 입력해주세요.');
+        addSpaceInput.setAttribute('placeholder', Lang.Workspace.list_create_placeholder);
         addSpaceInput.onkeypress = Entry.Utils.whenEnter(function() {
             if (this.enterKeyDisabled) {
                 this.blur();
@@ -2099,7 +2107,7 @@ Entry.VariableContainer = class VariableContainer {
 
         const msgNameInput = createElement('input').appendTo(msgAddSpace);
         msgNameInput.setAttribute('type', 'text');
-        msgNameInput.setAttribute('placeholder', '신호의 이름을 입력해주세요.');
+        msgNameInput.setAttribute('placeholder', Lang.Workspace.message_create_placeholder);
         msgNameInput.onkeydown = Entry.Utils.whenEnter(function() {
             if (this.enterKeyDisabled) {
                 this.blur();
@@ -2290,7 +2298,7 @@ Entry.VariableContainer = class VariableContainer {
         const boxSubject = createElement('span')
             .addClass('box_sjt')
             .appendTo(varAttr);
-        boxSubject.innerHTML = '변수 속성';
+        boxSubject.innerHTML = Lang.Workspace.Variable_property;
 
         // 기본 값 입력 창
         const attrInputBox = createElement('div')
@@ -2337,7 +2345,7 @@ Entry.VariableContainer = class VariableContainer {
         const slideCheckText = createElement('span')
             .addClass('chk_text')
             .appendTo(slideCheckBox);
-        slideCheckText.innerHTML = '슬라이드';
+        slideCheckText.innerHTML = Lang.Workspace.slide;
 
         // 최소 최대 영역
         const slideCountBox = createElement('div')
@@ -2450,7 +2458,7 @@ Entry.VariableContainer = class VariableContainer {
         const boxSubject = createElement('span')
             .addClass('box_sjt')
             .appendTo(listAttr);
-        boxSubject.innerHTML = '리스트 속성';
+        boxSubject.innerHTML = Lang.Workspace.list_property;
 
         this.generateListImportExportView(listAttr);
         this.generateListCountView(listAttr);
@@ -2576,7 +2584,7 @@ Entry.VariableContainer = class VariableContainer {
             Entry.createElement('p')
                 .addClass('caution_dsc')
                 .appendTo(fragment).innerHTML =
-                '추가된 항목이 없습니다.';
+                Lang.Workspace.empty_of_list;
         } else {
             fragment = createElement('ol')
                 .addClass('cnt_list')
