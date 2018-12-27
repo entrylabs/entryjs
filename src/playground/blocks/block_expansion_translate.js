@@ -4,29 +4,8 @@ const PromiseManager = require('../../core/promiseManager');
 const { callApi } = require('../../util/common');
 const _uniqueId = require('lodash/uniqueId');
 
-Entry.EXPANSION_BLOCK.translate = {
-    name: 'translate',
-    imageName: 'papago.png',
-    title: {
-        ko: '번역',
-        en: 'translate',
-    },
-    description: Lang.Msgs.expansion_translate_description,
-    isInitialized: false,
-    init() {
-        if (this.isInitialized) {
-            return;
-        }
-        Entry.EXPANSION_BLOCK.translate.delayKey = Entry.projectId;
-        Entry.EXPANSION_BLOCK.translate.isInitialized = true;
-    },
-    api: '/api/expansionBlock/papago/',
-    typeMap: {
-        dictionary: 'nsmt',
-        artificial_intelligence: 'n2mt',
-    },
-    apiType: 'nsmt',
-    langCodeMap: {
+function getInitialCodeMap() {
+    return {
         auto: {
             lang: Lang.Blocks.auto,
             sub: [
@@ -158,7 +137,33 @@ Entry.EXPANSION_BLOCK.translate = {
             lang: Lang.Blocks.hindi,
             sub: ['ko', 'en', 'ja', 'zh-CN', 'zh-TW', 'de', 'ru', 'pt'],
         },
+    };
+}
+Entry.EXPANSION_BLOCK.translate = {
+    name: 'translate',
+    imageName: 'papago.png',
+    title: {
+        ko: '번역',
+        en: 'translate',
+        jp: '翻訳',
     },
+    titleKey: "template.translate_title_text",
+    description: Lang.Msgs.expansion_translate_description,
+    descriptionKey: "Msgs.expansion_translate_description",
+    isInitialized: false,
+    init() {
+        if (this.isInitialized) {
+            return;
+        }
+        Entry.EXPANSION_BLOCK.translate.delayKey = Entry.projectId;
+        Entry.EXPANSION_BLOCK.translate.isInitialized = true;
+    },
+    api: '/api/expansionBlock/papago/',
+    typeMap: {
+        dictionary: 'nsmt',
+        artificial_intelligence: 'n2mt',
+    },
+    apiType: 'nsmt'
 };
 
 Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
@@ -214,7 +219,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                 type: 'DropdownDynamic',
                 value: null,
                 menuName(value) {
-                    const langCodeMap = Entry.EXPANSION_BLOCK.translate.langCodeMap;
+                    const langCodeMap = getInitialCodeMap();
                     if (value) {
                         return langCodeMap[value].sub.map((code) => {
                             return [langCodeMap[code].lang, code];
@@ -279,7 +284,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
     };
 
     const checkLang = (query, defaultValue) => {
-        const langCodeMap = Entry.EXPANSION_BLOCK.translate.langCodeMap;
+        const langCodeMap = getInitialCodeMap();
         return new PromiseManager()
             .Promise(function(resolve) {
                 callApi(`translate-detect-${query}`, {

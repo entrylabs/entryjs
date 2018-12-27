@@ -167,19 +167,22 @@ Entry.Scroller = class Scroller {
 
         const sWidth = svgRect.width;
         const sHeight = svgRect.height;
-        if (sWidth / 2 > bBox.width) {
-            x = Math.max(-bBox.x + 1, x);
-            x = Math.min(sWidth - bBox.width - bBox.x - 1, x);
-        } else {
-            x = Math.max(sWidth / 2 - bBox.x - bBox.width, x);
-            x = Math.min(sWidth / 2 - bBox.x, x);
-        }
-        if (sHeight / 2 > bBox.height) {
-            y = Math.max(-bBox.y + 1, y);
-            y = Math.min(sHeight - bBox.height - bBox.y - 1, y);
-        } else {
-            y = Math.max(sHeight / 2 - bBox.y - bBox.height, y);
-            y = Math.min(sHeight / 2 - bBox.y, y);
+
+        if (bBox.width && bBox.height) {
+            if (sWidth / 2 > bBox.width) {
+                x = Math.max(-bBox.x + 1, x);
+                x = Math.min(sWidth - bBox.width - bBox.x - 1, x);
+            } else {
+                x = Math.max(sWidth / 2 - bBox.x - bBox.width, x);
+                x = Math.min(sWidth / 2 - bBox.x, x);
+            }
+            if (sHeight / 2 > bBox.height) {
+                y = Math.max(-bBox.y + 1, y);
+                y = Math.min(sHeight - bBox.height - bBox.y - 1, y);
+            } else {
+                y = Math.max(sHeight / 2 - bBox.y - bBox.height, y);
+                y = Math.min(sHeight / 2 - bBox.y, y);
+            }
         }
 
         this._scroll(x, y);

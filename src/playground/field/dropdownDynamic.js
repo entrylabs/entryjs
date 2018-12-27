@@ -94,11 +94,14 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
             parent: $('body'),
         });
         const { options = [] } = this._contents;
+        const convertedOptions = options.map(([key, value]) => {
+           return [this._convert(key, value), value];
+        });
         this.dropdownWidget = new EntryTool({
             type: 'dropdownWidget',
             data: {
                 eventTypes: ['mousedown', 'touchstart', 'wheel'],
-                items: options,
+                items: convertedOptions,
                 positionDom: this.svgGroup,
                 onOutsideClick: () => {
                     this.destroyOption();
