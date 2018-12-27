@@ -51,6 +51,10 @@ Entry.BlockToPyParser = class {
         }
         const blocks = thread.getBlocks();
 
+        if (blocks.length === 0) {
+            return '';
+        }
+
         if (blocks[0] instanceof Entry.Comment) {
             this.Comment(blocks[0]);
         } else if (this._parseMode === Entry.Parser.PARSE_SYNTAX) {
