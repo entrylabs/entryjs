@@ -10,6 +10,7 @@ Entry.EXPANSION_BLOCK.translate = {
     title: {
         ko: '번역',
         en: 'translate',
+        jp: '翻訳',
     },
     description: Lang.Msgs.expansion_translate_description,
     isInitialized: false,
