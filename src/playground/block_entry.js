@@ -245,12 +245,12 @@ if (Entry && Entry.block) {
 
 const blocks = require('./blocks');
 
-function getBlocks () {
+function getBlocks() {
     return {
         expansionBlockAddButton: {
             skeleton: 'basic_button',
             color: '#eee',
-            isNotFor: [],
+            isNotFor: ['functionInit'],
             params: [
                 {
                     type: 'Text',
@@ -1231,7 +1231,6 @@ function getBlocks () {
                 ],
                 type: 'function_field_string',
             },
-            //"syntax": {"js": [], "py": ["%1function_field_string#"]}
             syntax: { js: [], py: ['value'] },
         },
         function_field_boolean: {
@@ -1262,7 +1261,6 @@ function getBlocks () {
                 ],
                 type: 'function_field_boolean',
             },
-            //"syntax": {"js": [], "py": ["%1function_field_boolean#"]}
             syntax: { js: [], py: ['boolean'] },
         },
         function_param_string: {
@@ -1280,7 +1278,9 @@ function getBlocks () {
                 ],
             },
             func() {
-                return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
+                return this.executor.register.params[
+                    this.executor.register.paramMap[this.block.type]
+                ];
             },
             syntax: { js: [], py: [''] },
         },
@@ -1298,7 +1298,9 @@ function getBlocks () {
                 ],
             },
             func() {
-                return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
+                return this.executor.register.params[
+                    this.executor.register.paramMap[this.block.type]
+                ];
             },
             syntax: { js: [], py: [''] },
         },
@@ -1691,7 +1693,6 @@ function getBlocks () {
             isNotFor: [],
             func(sprite, script) {
                 const targetIndex = script.getField('VALUE', script);
-                //var currentIndex = Entry.container.getBelongedObjectsToScene().indexOf(sprite.parent);
                 const currentIndex = Entry.container.getCurrentObjects().indexOf(sprite.parent);
 
                 if (currentIndex > -1) {
@@ -4762,9 +4763,13 @@ function getBlocks () {
                         }
                     }
                     if (isFoundMushroom) {
-                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.WRONG_ATTACK_OBSTACLE, function() {
-                            script.isAction = false;
-                        });
+                        Ntry.dispatchEvent(
+                            'unitAction',
+                            Ntry.STATIC.WRONG_ATTACK_OBSTACLE,
+                            function() {
+                                script.isAction = false;
+                            }
+                        );
                         return Entry.STATIC.BREAK;
                     }
                     const unitGrid = $.extend(
@@ -5077,7 +5082,6 @@ function getBlocks () {
                                 script.isAction = false;
                             }
                         );
-                        // Ntry.dispatchEvent("unitAction", Ntry.STATIC.NOT_FOUND_MEAT, callBack);
                         return Entry.STATIC.BREAK;
                     }
                     const callBack = function() {
@@ -5306,8 +5310,6 @@ function getBlocks () {
                 },
             ],
             func() {
-                // TODO: func 내용은 변경해야 함.
-
                 if (!this.isContinue) {
                     const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                     let unitId;
@@ -5386,9 +5388,11 @@ function getBlocks () {
                         {},
                         Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID)
                     );
-                    const isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [
-                        Ntry.STATIC.OBSTACLE_SPIDER,
-                    ]);
+                    const isCollisionPossible = Ntry.checkCollisionTile(
+                        unitGrid,
+                        unitComp.direction,
+                        [Ntry.STATIC.OBSTACLE_SPIDER]
+                    );
                     let particleZIndex = 550;
                     if (unitComp.direction === Ntry.STATIC.NORTH) {
                         particleZIndex = 450;
@@ -5551,12 +5555,16 @@ function getBlocks () {
                         {},
                         Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID)
                     );
-                    const isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [
-                        Ntry.STATIC.OBSTACLE_ENERMY1,
-                        Ntry.STATIC.OBSTACLE_ENERMY2,
-                        Ntry.STATIC.OBSTACLE_ENERMY3,
-                        Ntry.STATIC.OBSTACLE_ENERMY5,
-                    ]);
+                    const isCollisionPossible = Ntry.checkCollisionTile(
+                        unitGrid,
+                        unitComp.direction,
+                        [
+                            Ntry.STATIC.OBSTACLE_ENERMY1,
+                            Ntry.STATIC.OBSTACLE_ENERMY2,
+                            Ntry.STATIC.OBSTACLE_ENERMY3,
+                            Ntry.STATIC.OBSTACLE_ENERMY5,
+                        ]
+                    );
                     let particleZIndex = 550;
                     if (unitComp.direction === Ntry.STATIC.NORTH) {
                         particleZIndex = 450;
@@ -5630,7 +5638,8 @@ function getBlocks () {
                 if (!this.isContinue) {
                     const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
-                    let unitId, components;
+                    let unitId
+                    let components;
                     $.each(entities, function(id, entity) {
                         unitId = id;
                         components = entity.components;
@@ -5725,12 +5734,14 @@ function getBlocks () {
                     const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.OBSTACLE);
 
                     for (const id in entities) {
-                        const obstacleComp = Ntry.entityManager.getComponent(id, Ntry.STATIC.OBSTACLE);
+                        const obstacleComp = Ntry.entityManager.getComponent(
+                            id,
+                            Ntry.STATIC.OBSTACLE
+                        );
                         if (obstacleComp.tileType === Ntry.STATIC.OBSTACLE_IRON) {
-                            const obstacleGrid = Ntry.entityManager.getComponent(id, Ntry.STATIC.GRID);
-                            const obstaclePosition = Ntry.entityManager.getComponent(
+                            const obstacleGrid = Ntry.entityManager.getComponent(
                                 id,
-                                Ntry.STATIC.POSITION
+                                Ntry.STATIC.GRID
                             );
                             const grid = {
                                 x: obstacleGrid.x,
@@ -5767,7 +5778,10 @@ function getBlocks () {
                             }
 
                             (function(_id, _deltaPos, _deltaPos2, _targetPos, obstacleGrid) {
-                                const comp = Ntry.entityManager.getComponent(_id, Ntry.STATIC.ANIMATE);
+                                const comp = Ntry.entityManager.getComponent(
+                                    _id,
+                                    Ntry.STATIC.ANIMATE
+                                );
                                 if (comp) {
                                     if (eventCount === 0) {
                                         self.isAction = false;
@@ -5821,13 +5835,10 @@ function getBlocks () {
                                                         obstacleGrid.x == unitGrid.x &&
                                                         obstacleGrid.y == unitGrid.y
                                                     ) {
-                                                        console.log('충돌');
-                                                        // Ntry.dispatchEvent("playSound", Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
                                                         Ntry.dispatchEvent(
                                                             'unitAction',
                                                             Ntry.STATIC.CONTACT_IRON2
                                                         );
-                                                        // Ntry.dispatchEvent("complete", false, Ntry.STATIC.CONTACT_IRON2);
                                                     }
                                                 },
                                             });
@@ -5863,7 +5874,7 @@ function getBlocks () {
                     const self = this;
                     const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                     let unitId;
-                    $.each(entities, function(id, entity) {
+                    $.each(entities, function(id) {
                         unitId = id;
                     });
                     const unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
@@ -5970,7 +5981,6 @@ function getBlocks () {
                     this.executor.stepInto(statement);
                     return Entry.STATIC.BREAK;
                 }
-                // Ntry.dispatchEvent('executeEnd');
             },
         },
         maze_repeat_until_4: {
@@ -6919,7 +6929,6 @@ function getBlocks () {
                 } else {
                     delete script.isAction;
                     delete script.isStart;
-                    //Entry.engine.isContinue = false;
                 }
             },
         },
@@ -7112,7 +7121,7 @@ function getBlocks () {
                     accept: 'string',
                 },
             ],
-            func(entity, script) {
+            func(entity) {
                 const radar = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.RADAR);
 
                 const params = this.block.params;
@@ -7184,7 +7193,9 @@ function getBlocks () {
                         radarValue = radar.right;
                         break;
                 }
-                return radarValue.type == Ntry.STATIC.AI_GOAL ? Number.MAX_VALUE : radarValue.distance;
+                return radarValue.type == Ntry.STATIC.AI_GOAL
+                    ? Number.MAX_VALUE
+                    : radarValue.distance;
             },
         },
         ai_boolean_object: {
@@ -7216,7 +7227,7 @@ function getBlocks () {
                     fontSize: 11,
                 },
             ],
-            func(entity, script) {
+            func(entity) {
                 const radar = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.RADAR);
 
                 const params = this.block.params;
@@ -7281,7 +7292,6 @@ function getBlocks () {
                 } else {
                     delete script.isAction;
                     delete script.isStart;
-                    //Entry.engine.isContinue = false;
                     return script.callReturn();
                 }
             },
@@ -7328,7 +7338,7 @@ function getBlocks () {
                 params: [null],
                 type: 'True',
             },
-            func(sprite, script) {
+            func() {
                 return true;
             },
             isPrimitive: true,
@@ -7405,7 +7415,7 @@ function getBlocks () {
             },
             class: 'etc',
             isNotFor: [],
-            func(sprite, script) {},
+            func() {},
         },
         hidden_event: {
             color: '#7C7C7C',
@@ -7435,7 +7445,7 @@ function getBlocks () {
             },
             class: 'etc',
             isNotFor: [],
-            func(sprite, script) {},
+            func() {},
         },
         hidden_loop: {
             color: '#7C7C7C',
@@ -7467,7 +7477,7 @@ function getBlocks () {
             },
             class: 'etc',
             isNotFor: [],
-            func(sprite, script) {},
+            func() {},
         },
         hidden_loop2: {
             color: '#7C7C7C',
@@ -7501,7 +7511,7 @@ function getBlocks () {
             },
             class: 'etc',
             isNotFor: [],
-            func(sprite, script) {},
+            func() {},
         },
         hidden_if_else: {
             color: '#7C7C7C',
@@ -7538,7 +7548,7 @@ function getBlocks () {
             },
             class: 'etc',
             isNotFor: [],
-            func(sprite, script) {},
+            func() {},
         },
         hidden_if_else2: {
             color: '#7C7C7C',
@@ -7581,7 +7591,7 @@ function getBlocks () {
             },
             class: 'etc',
             isNotFor: [],
-            func(sprite, script) {},
+            func() {},
         },
         hidden_string: {
             color: '#7C7C7C',
@@ -7607,7 +7617,7 @@ function getBlocks () {
             },
             class: 'etc',
             isNotFor: [],
-            func(sprite, script) {},
+            func() {},
         },
         hidden_boolean: {
             color: '#7C7C7C',
@@ -7631,7 +7641,7 @@ function getBlocks () {
             paramsKeyMap: {},
             class: 'etc',
             isNotFor: [],
-            func(sprite, script) {},
+            func() {},
         },
         //endregion basic 기본
         //region basic 기본
@@ -7647,7 +7657,7 @@ function getBlocks () {
                     color: '#3D3D3D',
                 },
             ],
-            func(sprite, script) {},
+            func() {},
         },
         //endregion basic 기본
     };
@@ -7657,17 +7667,15 @@ setHardwareLanguage();
 assignBlocks();
 
 (function() {
-    // console.log('hw', Entry.HW, Entry.Arduino);
-
     for (const type in Entry.block) {
         const block = Entry.block[type];
         if (!block.isNotFor) {
             block.isNotFor = [];
         }
         if (block.parent) {
-            const f = function() {};
-            f.prototype = Entry.block[block.parent];
-            const schema = new f();
+            const F = function() {};
+            F.prototype = Entry.block[block.parent];
+            const schema = new F();
             schema.syntax = undefined;
             for (const key in block) {
                 schema[key] = block[key];
@@ -7699,7 +7707,7 @@ function setHardwareLanguage() {
 
 Entry.reloadBlock = assignBlocks;
 
-if (typeof exports == 'object') {
+if (typeof exports === 'object') {
     exports.block = Entry.block;
     exports.assignBlocks = assignBlocks;
 }
