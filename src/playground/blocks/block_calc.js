@@ -1216,7 +1216,7 @@ module.exports = {
                                 {
                                     type: 'Text',
                                     text: 'Entry.timer(',
-                                    color: '#000',
+                                    color: EntryStatic.colorSet.common.WHITE,
                                 },
                                 {
                                     type: 'Dropdown',
@@ -1243,7 +1243,7 @@ module.exports = {
                                 {
                                     type: 'Text',
                                     text: ')',
-                                    color: '#000',
+                                    color: EntryStatic.colorSet.common.WHITE,
                                 },
                             ],
                         },
@@ -1326,7 +1326,7 @@ module.exports = {
                                 {
                                     type: 'Text',
                                     text: 'Entry.timer_view(',
-                                    color: '#000',
+                                    color: EntryStatic.colorSet.common.WHITE,
                                 },
                                 {
                                     type: 'Dropdown',
@@ -1343,7 +1343,7 @@ module.exports = {
                                 {
                                     type: 'Text',
                                     text: ')',
-                                    color: '#000',
+                                    color: EntryStatic.colorSet.common.WHITE,
                                 },
                             ],
                         },
