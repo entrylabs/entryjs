@@ -1015,10 +1015,15 @@ Entry.EntryObject = class {
 
         this.directionInput_ = directionInput;
 
-        rotateLabelWrapperView.appendChild(rotateSpan);
-        rotateLabelWrapperView.appendChild(rotateInput);
-        rotateLabelWrapperView.appendChild(directionSpan);
-        rotateLabelWrapperView.appendChild(directionInput);
+        const wrapperLeft = Entry.createElement('span')
+        const wrapperRight = Entry.createElement('span')
+
+        wrapperLeft.appendChild(rotateSpan);
+        wrapperLeft.appendChild(rotateInput);
+        wrapperRight.appendChild(directionSpan);
+        wrapperRight.appendChild(directionInput);
+        rotateLabelWrapperView.appendChild(wrapperLeft);
+        rotateLabelWrapperView.appendChild(wrapperRight);
         rotateLabelWrapperView.rotateInput_ = rotateInput;
         rotateLabelWrapperView.directionInput_ = directionInput;
 
@@ -1093,12 +1098,14 @@ Entry.EntryObject = class {
             );
         });
 
-        coordinationView.appendChild(xCoordi);
-        coordinationView.appendChild(xInput);
-        coordinationView.appendChild(yCoordi);
-        coordinationView.appendChild(yInput);
-        coordinationView.appendChild(sizeSpan);
-        coordinationView.appendChild(sizeInput);
+        const inputList = [[xCoordi, xInput], [yCoordi, yInput], [sizeSpan, sizeInput]];
+        inputList.forEach((item) => {
+            const wrapper = Entry.createElement('span');
+            const [label, input] = item;
+            wrapper.appendChild(label);
+            wrapper.appendChild(input);
+            coordinationView.appendChild(wrapper);
+        });
         coordinationView.xInput_ = xInput;
         coordinationView.yInput_ = yInput;
         coordinationView.sizeInput_ = sizeInput;
