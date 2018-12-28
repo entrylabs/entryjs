@@ -325,9 +325,9 @@ Entry.resizeElement = function(interfaceModel) {
 
         let canvasSize = interfaceModel.canvasWidth;
         if (!canvasSize) {
-            canvasSize = 296;
-        } else if (canvasSize < 296) {
-            canvasSize = 296;
+            canvasSize = 324;
+        } else if (canvasSize < 324) {
+            canvasSize = 324;
         } else if (canvasSize > 404) {
             canvasSize = 404;
         }
