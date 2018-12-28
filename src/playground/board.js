@@ -963,7 +963,6 @@ Entry.Board = class Board {
             const svgGroup = _.result(block && block.view, 'svgGroup');
             if (this.svgBlockGroup && svgGroup) {
                 this.svgBlockGroup.appendChild(svgGroup);
-                // block.getCode().pushBackThread(block.getThread());
             }
         });
 
