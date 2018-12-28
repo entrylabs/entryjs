@@ -323,13 +323,13 @@ Entry.resizeElement = function(interfaceModel) {
             Entry.engine.toggleSpeedPanel();
         }
 
+        const misSize = 296;
+        const maxSize = 404;
         let canvasSize = interfaceModel.canvasWidth;
-        if (!canvasSize) {
-            canvasSize = 296;
-        } else if (canvasSize < 296) {
-            canvasSize = 296;
-        } else if (canvasSize > 404) {
-            canvasSize = 404;
+        if (!canvasSize || canvasSize < misSize) {
+            canvasSize = misSize;
+        } else if (canvasSize > maxSize) {
+            canvasSize = maxSize;
         }
         interfaceModel.canvasWidth = canvasSize;
 
@@ -339,12 +339,10 @@ Entry.resizeElement = function(interfaceModel) {
         Entry.stage.canvas.canvas.style.width = `${canvasSize - 26}px`;
 
         let menuWidth = interfaceModel.menuWidth;
-        if (!menuWidth) {
-            menuWidth = 258;
-        } else if (menuWidth < 258) {
-            menuWidth = 258;
-        } else if (menuWidth > 308) {
-            menuWidth = 308;
+        if (!menuWidth || menuWidth < misSize - 38) {
+            menuWidth = misSize - 38;
+        } else if (menuWidth > maxSize - 96) {
+            menuWidth = maxSize - 96;
         }
         interfaceModel.menuWidth = menuWidth;
 
@@ -956,10 +954,10 @@ Entry.hex2rgb = function(hex) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
         ? {
-            r: parseInt(result[1], 16),
-            g: parseInt(result[2], 16),
-            b: parseInt(result[3], 16),
-        }
+              r: parseInt(result[1], 16),
+              g: parseInt(result[2], 16),
+              b: parseInt(result[3], 16),
+          }
         : null;
 };
 
