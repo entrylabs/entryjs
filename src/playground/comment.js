@@ -708,7 +708,10 @@ Entry.Comment = class Comment {
             'border-radius': `0 0 ${4 * this.scale}px ${4 * this.scale}px`,
             padding: `${2 * this.scale}px ${4 * this.scale}px`,
         });
-        this.textArea.focus && this.textArea.focus();
+        const length = this.value.length;
+        this.textArea.focus &&
+            this.textArea.focus() &&
+            this.textArea[0].setSelectionRange(length, length);
     }
 
     bindDomEventTextArea() {

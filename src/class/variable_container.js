@@ -287,7 +287,7 @@ Entry.VariableContainer = class VariableContainer {
                     const block = caller.funcBlock || caller.block;
                     const board = _.result(block.view, 'getBoard');
                     if (board) {
-                        board.activateBlock(block);
+                        board.setSelectedBlock(block.view);
                     }
                     Entry.playground.toggleOnVariableView();
                     Entry.playground.changeViewMode('variable');
@@ -353,7 +353,7 @@ Entry.VariableContainer = class VariableContainer {
                     const block = caller.funcBlock || caller.block;
                     const board = _.result(block.view, 'getBoard');
                     if (board) {
-                        board.activateBlock(block);
+                        board.setSelectedBlock(block.view);
                     }
                     Entry.playground.toggleOnVariableView();
                     Entry.playground.changeViewMode('variable');
@@ -406,7 +406,7 @@ Entry.VariableContainer = class VariableContainer {
                     Entry.playground.toggleOnVariableView();
                     const block = caller.block;
                     const blockView = block.view;
-                    blockView && blockView.getBoard().activateBlock(block);
+                    blockView && blockView.getBoard().setSelectedBlock(block.view);
                     Entry.playground.changeViewMode('variable');
                 });
                 fragment.appendChild(element);
