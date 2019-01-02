@@ -276,9 +276,6 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
                     break;
             }
         }
-        if (this.optionInput) {
-            this.optionInput.val(result);
-        }
 
         this.setValue(result);
         this._setTextValue();
