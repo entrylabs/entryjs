@@ -162,7 +162,8 @@ Entry.Bitbrick.getBlocks = function () {
     return {
         //region bitbrick 비트브릭
         bitbrick_sensor_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -171,7 +172,7 @@ Entry.Bitbrick.getBlocks = function () {
                     type: 'DropdownDynamic',
                     value: null,
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                     menuName: Entry.Bitbrick.sensorList,
                 },
             ],
@@ -192,7 +193,8 @@ Entry.Bitbrick.getBlocks = function () {
             syntax: { js: [], py: ['Bitbrick.sensor_value(%1)'] },
         },
         bitbrick_is_touch_pressed: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -222,13 +224,14 @@ Entry.Bitbrick.getBlocks = function () {
             syntax: { js: [], py: ['Bitbrick.is_touch_pressed(%1)'] },
         },
         bitbrick_turn_off_color_led: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -249,7 +252,8 @@ Entry.Bitbrick.getBlocks = function () {
             syntax: { js: [], py: ['Bitbrick.turn_off_color_led()'] },
         },
         bitbrick_turn_on_color_led_by_rgb: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -267,7 +271,7 @@ Entry.Bitbrick.getBlocks = function () {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -314,7 +318,8 @@ Entry.Bitbrick.getBlocks = function () {
             syntax: { js: [], py: ['Bitbrick.color_led_by_rgb(%1, %2, %3)'] },
         },
         bitbrick_turn_on_color_led_by_picker: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -323,7 +328,7 @@ Entry.Bitbrick.getBlocks = function () {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -347,7 +352,8 @@ Entry.Bitbrick.getBlocks = function () {
             syntax: { js: [], py: ['Bitbrick.color_led_by_picker(%1)'] },
         },
         bitbrick_turn_on_color_led_by_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -357,7 +363,7 @@ Entry.Bitbrick.getBlocks = function () {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -404,7 +410,8 @@ Entry.Bitbrick.getBlocks = function () {
             syntax: { js: [], py: ['Bitbrick.color_led_by_value(%1)'] },
         },
         bitbrick_buzzer: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -414,7 +421,7 @@ Entry.Bitbrick.getBlocks = function () {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -449,13 +456,14 @@ Entry.Bitbrick.getBlocks = function () {
             syntax: { js: [], py: ['Bitbrick.buzzer(%1)'] },
         },
         bitbrick_turn_off_all_motors: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -480,7 +488,8 @@ Entry.Bitbrick.getBlocks = function () {
             syntax: { js: [], py: ['Bitbrick.turn_off_all_motors()'] },
         },
         bitbrick_dc_speed: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -496,7 +505,7 @@ Entry.Bitbrick.getBlocks = function () {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -529,7 +538,8 @@ Entry.Bitbrick.getBlocks = function () {
             syntax: { js: [], py: ['Bitbrick.dc_speed(%1, %2)'] },
         },
         bitbrick_dc_direction_speed: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -554,7 +564,7 @@ Entry.Bitbrick.getBlocks = function () {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -592,7 +602,8 @@ Entry.Bitbrick.getBlocks = function () {
             syntax: { js: [], py: ['Bitbrick.dc_direction_speed(%1, %2, %3)'] },
         },
         bitbrick_servomotor_angle: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -608,7 +619,7 @@ Entry.Bitbrick.getBlocks = function () {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -642,7 +653,8 @@ Entry.Bitbrick.getBlocks = function () {
             syntax: { js: [], py: ['Bitbrick.servomotor_angle(%1, %2)'] },
         },
         bitbrick_convert_scale: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],

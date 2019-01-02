@@ -1,103 +1,105 @@
-/*
- *
- */
 'use strict';
 
-/*
- *
- */
-Entry.ThreadView = function(thread, board) {
-    Entry.Model(this, false);
-
-    this.thread = thread;
-
-    this.svgGroup = board.svgThreadGroup.elem('g');
-
-    this.board = board;
-
-    this.parent = board; // statement
-
-    this._hasGuide = false;
-};
-
-(function(p) {
-    p.schema = {
+Entry.ThreadView = class ThreadView {
+    schema = {
         height: 0,
         zIndex: 0,
     };
 
-    p.destroy = function() {
+    constructor(thread, board) {
+        Entry.Model(this, false);
+
+        this.thread = thread;
+
+        this.svgGroup = board.svgThreadGroup.elem('g');
+
+        this.board = board;
+
+        this.parent = board; // statement
+
+        this._hasGuide = false;
+    }
+
+    destroy() {
         this.svgGroup.remove();
-    };
+    }
 
-    p.setParent = function(parent) {
+    setParent(parent) {
         this.parent = parent;
-    };
+    }
 
-    p.getParent = function() {
+    getParent() {
         return this.parent;
-    };
+    }
 
-    p.renderText = function() {
-        var blocks = this.thread.getBlocks();
-        for (var i = 0; i < blocks.length; i++) blocks[i].view.renderText();
-    };
+    renderText() {
+        const blocks = this.thread.getBlocks();
+        for (let i = 0; i < blocks.length; i++) {
+            blocks[i].view.renderText();
+        }
+    }
 
-    p.renderBlock = function() {
-        var blocks = this.thread.getBlocks();
-        for (var i = 0; i < blocks.length; i++) blocks[i].view.renderBlock();
-    };
+    renderBlock() {
+        const blocks = this.thread.getBlocks();
+        for (let i = 0; i < blocks.length; i++) {
+            blocks[i].view.renderBlock();
+        }
+    }
 
-    p.requestAbsoluteCoordinate = function(blockView) {
-        var blocks = this.thread.getBlocks();
-        var block = blocks.shift();
-        var pos = {
+    requestAbsoluteCoordinate(blockView) {
+        const board = this.board;
+        const { scale = 1 } = board || {};
+        const blocks = this.thread.getBlocks();
+        let block = blocks.shift();
+        let pos = {
             x: 0,
             y: 0,
         };
-        var parent = this.parent;
+        const parent = this.parent;
         if (
-            !(
-                parent instanceof Entry.Board ||
-                parent instanceof Entry.BlockMenu
-            ) &&
+            !(parent instanceof Entry.Board || parent instanceof Entry.BlockMenu) &&
             parent.requestAbsoluteCoordinate
         ) {
             pos = parent.requestAbsoluteCoordinate();
         }
 
         while (block && block.view !== blockView && block.view) {
-            var prevBlockView = block.view;
-            pos.x += prevBlockView.x + prevBlockView.magnet.next.x;
-            pos.y += prevBlockView.y + prevBlockView.magnet.next.y;
+            const prevBlockView = block.view;
+            pos.x += prevBlockView.x + prevBlockView.magnet.next.x * scale;
+            pos.y += prevBlockView.y + prevBlockView.magnet.next.y * scale;
             block = blocks.shift();
         }
         return pos;
-    };
+    }
 
-    p.requestPartHeight = function(blockView, forAll) {
-        var blocks = this.thread.getBlocks();
-        var block = blocks.pop();
-        var height = blockView
-            ? blockView.magnet.next ? blockView.magnet.next.y : blockView.height
-            : 0;
+    requestPartHeight(blockView) {
+        const blocks = this.thread.getBlocks();
+        let block = blocks.pop();
+        let height = 0;
+        if (blockView) {
+            height = blockView.magnet.next ? blockView.magnet.next.y : blockView.height;
+        }
         while (block && block.view !== blockView && block.view) {
-            var prevBlockView = block.view;
-            if (prevBlockView.magnet.next)
+            const prevBlockView = block.view;
+            if (prevBlockView.magnet.next) {
                 height += prevBlockView.magnet.next.y;
-            else height += prevBlockView.height;
-            if (prevBlockView.dragMode === Entry.DRAG_MODE_DRAG) height = 0;
+            } else {
+                height += prevBlockView.height;
+            }
+            if (prevBlockView.dragMode === Entry.DRAG_MODE_DRAG) {
+                height = 0;
+            }
             block = blocks.pop();
         }
         return height;
-    };
+    }
 
-    p.getMagnet = function(selector) {
+    getMagnet() {
         return {
             getBoundingClientRect: function() {
-                var halfWidth = 20,
-                    coord = this.parent.requestAbsoluteCoordinate(),
-                    boardOffset = this.board.relativeOffset;
+                const halfWidth = 20;
+                const coord = this.parent.requestAbsoluteCoordinate();
+                const boardOffset = this.board.relativeOffset;
                 return {
                     top: coord.y + boardOffset.top - halfWidth,
                     left: coord.x + boardOffset.left - halfWidth,
@@ -106,17 +108,17 @@ Entry.ThreadView = function(thread, board) {
                 };
             }.bind(this),
         };
-    };
+    }
 
-    p.dominate = function() {
+    dominate() {
         !this._hasGuide && this.parent.dominate(this.thread);
-    };
+    }
 
-    p.isGlobal = function() {
+    isGlobal() {
         return this.parent instanceof Entry.Board;
-    };
+    }
 
-    p.reDraw = function() {
+    reDraw() {
         const blocks = this.thread._data;
 
         for (let i = blocks.length - 1; i >= 0; i--) {
@@ -127,18 +129,18 @@ Entry.ThreadView = function(thread, board) {
                 b.createView(this.thread._code.view.board);
             }
         }
-    };
+    }
 
-    p.setZIndex = function(zIndex) {
-        this.set({ zIndex: zIndex });
-    };
+    setZIndex(zIndex) {
+        this.set({ zIndex });
+    }
 
-    p.setHasGuide = function(bool) {
+    setHasGuide(bool) {
         this._hasGuide = bool;
-    };
+    }
 
-    p.getFields = function() {
-        var BLOCK = Entry.Block;
+    getFields() {
+        const BLOCK = Entry.Block;
 
         return this.thread.getBlocks().reduce(function(fields, block) {
             if (!(block instanceof BLOCK)) {
@@ -147,5 +149,5 @@ Entry.ThreadView = function(thread, board) {
 
             return fields.concat(block.view.getFields());
         }, []);
-    };
-})(Entry.ThreadView.prototype);
+    }
+};

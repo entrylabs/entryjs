@@ -23,14 +23,18 @@ Entry.Collection = function(data) {
 (function(p, ap) {
     /* setters */
     p.set = function(data) {
-        while (this.length) ap.pop.call(this);
+        while (this.length) {
+            ap.pop.call(this);
+        }
 
-        var hashMap = this._hashMap;
-        for (var key in hashMap) delete hashMap[key];
+        const hashMap = this._hashMap;
+        for (const key in hashMap) {
+            delete hashMap[key];
+        }
 
         if (data !== undefined) {
-            for (var i = 0, len = data.length; i < len; i++) {
-                var datum = data[i];
+            for (let i = 0, len = data.length; i < len; i++) {
+                const datum = data[i];
                 hashMap[datum.id] = datum;
                 ap.push.call(this, datum);
             }
@@ -43,10 +47,10 @@ Entry.Collection = function(data) {
     };
 
     p.unshift = function() {
-        var args = Array.prototype.slice.call(arguments, 0);
-        var hashMap = this._hashMap;
-        for (var i = args.length - 1; i >= 0; i--) {
-            var datum = args[i];
+        const args = Array.prototype.slice.call(arguments, 0);
+        const hashMap = this._hashMap;
+        for (let i = args.length - 1; i >= 0; i--) {
+            const datum = args[i];
             ap.unshift.call(this, datum);
             hashMap[datum.id] = datum;
         }
@@ -70,9 +74,11 @@ Entry.Collection = function(data) {
     };
 
     p.getAll = function() {
-        var len = this.length;
-        var ret = [];
-        for (var i = 0; i < len; i++) ret.push(this[i]);
+        const len = this.length;
+        const ret = [];
+        for (let i = 0; i < len; i++) {
+            ret.push(this[i]);
+        }
         return ret;
     };
 
@@ -81,44 +87,48 @@ Entry.Collection = function(data) {
     };
 
     p.find = function(cond) {
-        var ret = [];
-        var flag;
+        const ret = [];
+        let flag;
 
-        for (var i = 0, len = this.length; i < len; i++) {
+        for (let i = 0, len = this.length; i < len; i++) {
             flag = true;
-            var datum = this[i];
-            for (var key in cond) {
+            const datum = this[i];
+            for (const key in cond) {
                 if (cond[key] != datum[key]) {
                     flag = false;
                     break;
                 }
             }
-            if (flag) ret.push(datum);
+            if (flag) {
+                ret.push(datum);
+            }
         }
         return ret;
     };
 
     p.pop = function() {
-        var datum = ap.pop.call(this);
+        const datum = ap.pop.call(this);
         delete this._hashMap[datum.id];
         return datum;
     };
 
     p.shift = function() {
-        var datum = ap.shift.call(this);
+        const datum = ap.shift.call(this);
         delete this._hashMap[datum.id];
         return datum;
     };
 
     p.slice = function(index, amount) {
-        var data = ap.slice.call(this, index, amount);
-        var hashMap = this._hashMap;
-        for (var i in data) delete hashMap[data[i].id];
+        const data = ap.slice.call(this, index, amount);
+        const hashMap = this._hashMap;
+        for (const i in data) {
+            delete hashMap[data[i].id];
+        }
         return data;
     };
 
     p.remove = function(datum) {
-        var index = this.indexOf(datum);
+        const index = this.indexOf(datum);
         if (index > -1) {
             delete this._hashMap[datum.id];
             this.splice(index, 1);
@@ -126,17 +136,18 @@ Entry.Collection = function(data) {
     };
 
     p.splice = function(index, amount) {
-        var args = ap.slice.call(arguments, 2);
-        var hashMap = this._hashMap;
+        const args = ap.slice.call(arguments, 2);
+        const hashMap = this._hashMap;
         amount = amount === undefined ? this.length - index : amount;
 
-        var splicedData = ap.splice.call(this, index, amount);
+        const splicedData = ap.splice.call(this, index, amount);
 
-        for (var i = 0, len = splicedData.length; i < len; i++)
+        for (let i = 0, len = splicedData.length; i < len; i++) {
             delete hashMap[splicedData[i].id];
+        }
 
-        for (i = 0, len = args.length; i < len; i++) {
-            var datum = args[i];
+        for (let i = 0, len = args.length; i < len; i++) {
+            const datum = args[i];
             ap.splice.call(this, index++, 0, datum);
             this._hashMap[datum.id] = datum;
         }
@@ -145,20 +156,25 @@ Entry.Collection = function(data) {
     };
 
     p.clear = function() {
-        while (this.length) ap.pop.call(this);
+        while (this.length) {
+            ap.pop.call(this);
+        }
         this._hashMap = {};
     };
 
     p.map = function(fn, param) {
-        var array = [];
-        for (var i = 0, len = this.length; i < len; i++)
+        const array = [];
+        for (let i = 0, len = this.length; i < len; i++) {
             array.push(fn(this[i], param));
+        }
         return array;
     };
 
     p.moveFromTo = function(from, to) {
-        var max = this.length - 1;
-        if (from < 0 || to < 0 || from > max || to > max) return;
+        const max = this.length - 1;
+        if (from < 0 || to < 0 || from > max || to > max) {
+            return;
+        }
         ap.splice.call(this, to, 0, ap.splice.call(this, from, 1)[0]);
     };
 
@@ -168,9 +184,10 @@ Entry.Collection = function(data) {
     p.fromJSON = function() {};
 
     p.toJSON = function() {
-        var json = [];
-        for (var i = 0, len = this.length; i < len; i++)
+        const json = [];
+        for (let i = 0, len = this.length; i < len; i++) {
             json.push(this[i].toJSON());
+        }
         return json;
     };
 

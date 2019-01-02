@@ -65,7 +65,7 @@ Entry.Func.registerFunction = function(func) {
 
     this._targetFuncBlock = menuCode.createThread([
         {
-            type: `func_${  func.id}`,
+            type: `func_${func.id}`,
             category: 'func',
             x: -9999,
         },
@@ -99,9 +99,7 @@ Entry.Func.edit = function(func) {
     }
 
     if (typeof func === 'string') {
-        func = Entry.variableContainer.getFunction(
-            /(func_)?(.*)/.exec(func)[2]
-        );
+        func = Entry.variableContainer.getFunction(/(func_)?(.*)/.exec(func)[2]);
     }
 
     this.unbindFuncChangeEvent();
@@ -118,7 +116,7 @@ Entry.Func.edit = function(func) {
     this.updateMenu();
     setTimeout(
         function() {
-            const schema = Entry.block[`func_${  func.id}`];
+            const schema = Entry.block[`func_${func.id}`];
             if (schema && schema.paramsBackupEvent) {
                 schema.paramsBackupEvent.notify();
             }
@@ -140,15 +138,12 @@ Entry.Func.initEditView = function(content) {
     }
     workspace.changeOverlayBoardCode(content);
 
-    this._workspaceStateEvent = workspace.changeEvent.attach(
-        this,
-        (message = 'cancelEdit') => {
-            this.endEdit(message);
-            if (workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
-                workspace.blockMenu.banClass('functionInit');
-            }
+    this._workspaceStateEvent = workspace.changeEvent.attach(this, (message = 'cancelEdit') => {
+        this.endEdit(message);
+        if (workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
+            workspace.blockMenu.banClass('functionInit');
         }
-    );
+    });
     content.board.alignThreads();
 };
 
@@ -173,7 +168,7 @@ Entry.Func.endEdit = function(message) {
     this._backupContent = null;
 
     delete this.targetFunc;
-    const blockSchema = Entry.block[`func_${  targetFuncId}`];
+    const blockSchema = Entry.block[`func_${targetFuncId}`];
     if (blockSchema && blockSchema.destroyParamsBackupEvent) {
         blockSchema.destroyParamsBackupEvent.notify();
     }
@@ -297,12 +292,8 @@ Entry.Func.requestParamBlock = function(type) {
             return null;
     }
 
-    const blockType = `${type  }Param_${  Entry.generateHash()}`;
-    Entry.block[blockType] = Entry.Func.createParamBlock(
-        blockType,
-        blockPrototype,
-        type
-    );
+    const blockType = `${type}Param_${Entry.generateHash()}`;
+    Entry.block[blockType] = Entry.Func.createParamBlock(blockType, blockPrototype, type);
     return blockType;
 };
 
@@ -335,6 +326,7 @@ Entry.Func.createParamBlock = function(type, blockPrototype, originalType) {
     blockSchema = new blockSchema();
     blockSchema.changeEvent = new Entry.Event();
     blockSchema.template = Lang.template[originalType];
+    blockSchema.fontColor = blockPrototype.fontColor || '#FFF';
 
     Entry.block[type] = blockSchema;
     return blockSchema;
@@ -370,7 +362,7 @@ Entry.Func.prototype.edit = function() {
 };
 
 Entry.Func.generateBlock = function(func) {
-    const blockSchema = Entry.block[`func_${  func.id}`];
+    const blockSchema = Entry.block[`func_${func.id}`];
     const block = {
         template: blockSchema.template,
         params: blockSchema.params,
@@ -389,13 +381,11 @@ Entry.Func.generateBlock = function(func) {
             if (param.type === 'Indicator') {
             } else if (param.accept === 'boolean') {
                 description +=
-                    Lang.template.function_param_boolean +
-                    (booleanIndex ? booleanIndex : '');
+                    Lang.template.function_param_boolean + (booleanIndex ? booleanIndex : '');
                 booleanIndex++;
             } else {
                 description +=
-                    Lang.template.function_param_string +
-                    (stringIndex ? stringIndex : '');
+                    Lang.template.function_param_string + (stringIndex ? stringIndex : '');
                 stringIndex++;
             }
         } else {
@@ -435,14 +425,11 @@ Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
         const valueType = value.type;
         switch (outputBlock.type) {
             case 'function_field_label':
-                schemaTemplate = `${schemaTemplate  } ${  value}`;
+                schemaTemplate = `${schemaTemplate} ${value}`;
                 break;
             case 'function_field_boolean':
                 Entry.Mutator.mutate(valueType, {
-                    template:
-                        `${Lang.Blocks.FUNCTION_logical_variable 
-                        } ${ 
-                            booleanIndex + 1}`,
+                    template: `${Lang.Blocks.FUNCTION_logical_variable} ${booleanIndex + 1}`,
                 });
                 hashMap[valueType] = false;
                 paramMap[valueType] = booleanIndex + stringIndex;
@@ -451,20 +438,17 @@ Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
                     type: 'Block',
                     accept: 'boolean',
                 });
-                schemaTemplate += ` %${  booleanIndex + stringIndex}`;
+                schemaTemplate += ` %${booleanIndex + stringIndex}`;
                 blockIds.push(outputBlock.id);
                 break;
             case 'function_field_string':
                 Entry.Mutator.mutate(valueType, {
-                    template:
-                        `${Lang.Blocks.FUNCTION_character_variable 
-                        } ${ 
-                            stringIndex + 1}`,
+                    template: `${Lang.Blocks.FUNCTION_character_variable} ${stringIndex + 1}`,
                 });
                 hashMap[valueType] = false;
                 paramMap[valueType] = booleanIndex + stringIndex;
                 stringIndex++;
-                schemaTemplate += ` %${  booleanIndex + stringIndex}`;
+                schemaTemplate += ` %${booleanIndex + stringIndex}`;
                 schemaParams.push({
                     type: 'Block',
                     accept: 'string',
@@ -475,14 +459,14 @@ Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
         outputBlock = outputBlock.getOutputBlock();
     }
 
-    schemaTemplate += ` %${  booleanIndex + stringIndex + 1}`;
+    schemaTemplate += ` %${booleanIndex + stringIndex + 1}`;
     schemaParams.push({
         type: 'Indicator',
         img: 'block_icon/function_03.png',
         size: 12,
     });
 
-    const funcName = `func_${  targetFunc.id}`;
+    const funcName = `func_${targetFunc.id}`;
     const block = Entry.block[funcName];
 
     const originParams = block.params.slice(0, block.params.length - 1);
@@ -555,10 +539,7 @@ Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
 
 Entry.Func.bindFuncChangeEvent = function(targetFunc) {
     targetFunc = targetFunc ? targetFunc : this.targetFunc;
-    if (
-        !this._funcChangeEvent &&
-        targetFunc.content.getEventMap('funcDef')[0].view
-    ) {
+    if (!this._funcChangeEvent && targetFunc.content.getEventMap('funcDef')[0].view) {
         this._funcChangeEvent = targetFunc.content
             .getEventMap('funcDef')[0]
             .view._contents[1].changeEvent.attach(this, this.generateWsBlock);

@@ -148,7 +148,8 @@ Entry.Creamo.getBlocks = function() {
             syntax: { js: [], py: ['creamo.get_number_sensor_value(%1)'] },
         },
         creamo_get_port_number: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -157,7 +158,7 @@ Entry.Creamo.getBlocks = function() {
                     options: [['7', '7'], ['8', '8'], ['12', '12']],
                     value: '7',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -181,7 +182,7 @@ Entry.Creamo.getBlocks = function() {
                                 options: [['7', '7'], ['8', '8'], ['12', '12']],
                                 value: '7',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
                         keyOption: 'arduino_get_port_number',
@@ -224,7 +225,8 @@ Entry.Creamo.getBlocks = function() {
             syntax: { js: [], py: ['creamo.toggle_led(%1)'] },
         },
         creamo_motor_port_number: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -233,7 +235,7 @@ Entry.Creamo.getBlocks = function() {
                     options: [['6', '6'], ['9', '9']],
                     value: '6',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -257,7 +259,7 @@ Entry.Creamo.getBlocks = function() {
                                 options: [['6', '6'], ['9', '9']],
                                 value: '6',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
                         keyOption: 'arduino_get_port_number',
@@ -266,7 +268,8 @@ Entry.Creamo.getBlocks = function() {
             },
         },
         creamo_toggle_pwm: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -280,7 +283,7 @@ Entry.Creamo.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -333,7 +336,8 @@ Entry.Creamo.getBlocks = function() {
             },
         },
         creamo_get_pwm_port_number: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -342,7 +346,7 @@ Entry.Creamo.getBlocks = function() {
                     options: [['5', '5'], ['6', '6'], ['9', '9']],
                     value: '5',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -366,7 +370,7 @@ Entry.Creamo.getBlocks = function() {
                                 options: [['5', '5'], ['6', '6'], ['9', '9']],
                                 value: '3',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,

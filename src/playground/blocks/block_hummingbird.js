@@ -64,7 +64,8 @@ Entry.hummingbird.getBlocks = function() {
         //Hummingbird parts
         //범용 센서
         hummingbird_sensorValue: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -102,7 +103,8 @@ Entry.hummingbird.getBlocks = function() {
 
         //온도센서
         hummingbird_temperatureValue: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -141,7 +143,8 @@ Entry.hummingbird.getBlocks = function() {
         },
         // 빛 블럭
         hummingbird_lightValue: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -180,7 +183,8 @@ Entry.hummingbird.getBlocks = function() {
 
         // 거리센서 블럭
         hummingbird_distanceValue: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -239,7 +243,8 @@ Entry.hummingbird.getBlocks = function() {
 
         // 소음 센서 블럭
         hummingbird_soundValue: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -284,7 +289,8 @@ Entry.hummingbird.getBlocks = function() {
 
         // 회전센서
         hummingbird_rotaryValue: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -324,7 +330,8 @@ Entry.hummingbird.getBlocks = function() {
 
         //진동모터
         hummingbird_vibeMotor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             template: 'HB 진동모터 %1번 세기: %2 %3',
@@ -341,7 +348,7 @@ Entry.hummingbird.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -381,7 +388,8 @@ Entry.hummingbird.getBlocks = function() {
 
         //서보모터
         hummingbird_servo: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             template: 'HB 서보모터 %1번 각도: %2 %3',
@@ -403,7 +411,7 @@ Entry.hummingbird.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -444,7 +452,8 @@ Entry.hummingbird.getBlocks = function() {
 
         //기어모터
         hummingbird_dcMotor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             template: 'HB 기어모터 %1번 속도: %2 %3',
@@ -461,7 +470,7 @@ Entry.hummingbird.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -502,7 +511,8 @@ Entry.hummingbird.getBlocks = function() {
 
         // 단색LED
         hummingbird_led: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             template: 'HB 단색LED %1번 밝기: %2 %3',
@@ -524,7 +534,7 @@ Entry.hummingbird.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -565,7 +575,8 @@ Entry.hummingbird.getBlocks = function() {
 
         // 삼색LED
         hummingbird_triLED: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             template: 'HB 삼색LED %1번 빨강%2 초록%3 파랑%4 %5',
@@ -590,7 +601,7 @@ Entry.hummingbird.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],

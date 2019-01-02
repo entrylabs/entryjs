@@ -13,9 +13,7 @@ Entry.Stage = function() {
     /** @type {Dictionary} */
     this.variables = {};
     this.background = new createjs.Shape();
-    this.background.graphics
-        .beginFill('#ffffff')
-        .drawRect(-480, -240, 960, 480);
+    this.background.graphics.beginFill('#ffffff').drawRect(-480, -240, 960, 480);
     this.objectContainers = [];
     this.selectedObjectContainer = null;
     this.variableContainer = new createjs.Container();
@@ -98,14 +96,10 @@ Entry.Stage.prototype.initStage = function(canvas) {
         var scrollPos = Entry.Utils.getScrollPos();
         this.mouseCoordinate = {
             x: Entry.Utils.toFixed(
-                ((pageX - roundRect.left - scrollPos.left) / roundRect.width -
-                    0.5) *
-                    480
+                ((pageX - roundRect.left - scrollPos.left) / roundRect.width - 0.5) * 480
             ),
             y: Entry.Utils.toFixed(
-                ((pageY - roundRect.top - scrollPos.top) / roundRect.height -
-                    0.5) *
-                    -270
+                ((pageY - roundRect.top - scrollPos.top) / roundRect.height - 0.5) * -270
             ),
         };
         Entry.dispatchEvent('stageMouseMove');
@@ -116,12 +110,8 @@ Entry.Stage.prototype.initStage = function(canvas) {
 
     canvas.onmouseout = () => Entry.dispatchEvent('stageMouseOut');
     _addEventListener('updateObject', updateObjectFunc);
-    _addEventListener('run', () =>
-        Entry.removeEventListener('updateObject', updateObjectFunc)
-    );
-    _addEventListener('stop', () =>
-        _addEventListener('updateObject', updateObjectFunc)
-    );
+    _addEventListener('run', () => Entry.removeEventListener('updateObject', updateObjectFunc));
+    _addEventListener('stop', () => _addEventListener('updateObject', updateObjectFunc));
 
     var updateObjectFunc = () => {
         if (Entry.engine.isState('stop')) Entry.stage.updateObject();
@@ -149,10 +139,7 @@ Entry.Stage.prototype.render = function stageRender() {
     var time = _.now();
     Entry.stage.update();
     time = _.now() - time;
-    Entry.stage.timer = setTimeout(
-        stageRender,
-        16 - time % 16 + 16 * Math.floor(time / 16)
-    );
+    Entry.stage.timer = setTimeout(stageRender, 16 - time % 16 + 16 * Math.floor(time / 16));
 };
 
 /**
@@ -266,9 +253,7 @@ Entry.Stage.prototype.sortZorder = function() {
         index = 0;
 
     for (var i = length - 1; i >= 0; i--) {
-        var {
-            entity: { object },
-        } = objects[i];
+        var { entity: { object } } = objects[i];
         container.setChildIndex(object, index++);
     }
 
@@ -286,27 +271,19 @@ Entry.Stage.prototype.sortZorderRun = function() {
  * Initialize coordinate on canvas. It is toggle by Engine.
  */
 Entry.Stage.prototype.initCoordinator = function() {
-    var coordinator = (this.coordinator = Object.assign(
-        new createjs.Container(),
-        {
-            mouseEnabled: false,
-            tickEnabled: false,
-            tickChildren: false,
-            visible: false,
-        }
-    ));
+    var coordinator = (this.coordinator = Object.assign(new createjs.Container(), {
+        mouseEnabled: false,
+        tickEnabled: false,
+        tickChildren: false,
+        visible: false,
+    }));
     coordinator.addChild(
-        Object.assign(
-            new createjs.Bitmap(
-                Entry.mediaFilePath + 'workspace_coordinate.png'
-            ),
-            {
-                scaleX: 0.5,
-                scaleY: 0.5,
-                x: -240,
-                y: -135,
-            }
-        )
+        Object.assign(new createjs.Bitmap(Entry.mediaFilePath + 'workspace_coordinate.png'), {
+            scaleX: 0.5,
+            scaleY: 0.5,
+            x: -240,
+            y: -135,
+        })
     );
     this.canvas.addChild(coordinator);
 };
@@ -410,16 +387,8 @@ Entry.Stage.prototype.updateObject = function() {
 
         var rotation = entity.getRotation() / 180 * Math.PI;
 
-        this.handle.setX(
-            entity.getX() -
-                regX * Math.cos(rotation) -
-                regY * Math.sin(rotation)
-        );
-        this.handle.setY(
-            -entity.getY() -
-                regX * Math.sin(rotation) +
-                regY * Math.cos(rotation)
-        );
+        this.handle.setX(entity.getX() - regX * Math.cos(rotation) - regY * Math.sin(rotation));
+        this.handle.setY(-entity.getY() - regX * Math.sin(rotation) + regY * Math.cos(rotation));
         this.handle.setRegX((entity.regX - entity.width / 2) * entity.scaleX);
         this.handle.setRegY((entity.regY - entity.height / 2) * entity.scaleY);
         this.handle.setRotation(entity.getRotation());
@@ -452,8 +421,7 @@ Entry.Stage.prototype.updateHandle = function() {
             entity.setScaleX(scaleX);
         }
 
-        if (entity.height !== 0)
-            entity.setScaleY(handle.height / entity.height);
+        if (entity.height !== 0) entity.setScaleY(handle.height / entity.height);
     }
     var direction = handle.rotation / 180 * Math.PI;
     if (entity.type == 'textBox') {
@@ -467,40 +435,28 @@ Entry.Stage.prototype.updateHandle = function() {
         } else {
             switch (entity.getTextAlign()) {
                 case Entry.TEXT_ALIGN_LEFT:
-                    entity.setX(
-                        handle.x - handle.width / 2 * Math.cos(direction)
-                    );
-                    entity.setY(
-                        -handle.y + handle.width / 2 * Math.sin(direction)
-                    );
+                    entity.setX(handle.x - handle.width / 2 * Math.cos(direction));
+                    entity.setY(-handle.y + handle.width / 2 * Math.sin(direction));
                     break;
                 case Entry.TEXT_ALIGN_CENTER:
                     entity.setX(handle.x);
                     entity.setY(-handle.y);
                     break;
                 case Entry.TEXT_ALIGN_RIGHT:
-                    entity.setX(
-                        handle.x + handle.width / 2 * Math.cos(direction)
-                    );
-                    entity.setY(
-                        -handle.y - handle.width / 2 * Math.sin(direction)
-                    );
+                    entity.setX(handle.x + handle.width / 2 * Math.cos(direction));
+                    entity.setY(-handle.y - handle.width / 2 * Math.sin(direction));
                     break;
             }
         }
     } else {
         var newRegX = entity.width / 2 + handle.regX / entity.scaleX;
         entity.setX(
-            handle.x +
-                handle.regX * Math.cos(direction) -
-                handle.regY * Math.sin(direction)
+            handle.x + handle.regX * Math.cos(direction) - handle.regY * Math.sin(direction)
         );
         entity.setRegX(newRegX);
         var newRegY = entity.height / 2 + handle.regY / entity.scaleY;
         entity.setY(
-            -handle.y -
-                handle.regX * Math.sin(direction) -
-                handle.regY * Math.cos(direction)
+            -handle.y - handle.regX * Math.sin(direction) - handle.regY * Math.cos(direction)
         );
         entity.setRegY(newRegY);
     }
@@ -603,7 +559,7 @@ Entry.Stage.prototype.showInputField = function() {
     inputSubmitButton.addChild(button);
 
     inputSubmitButton.on('mousedown', () => {
-        if(this.inputField._readonly == false) {
+        if (this.inputField._readonly == false) {
             Entry.dispatchEvent('canvasInputComplete');
         }
     });
@@ -648,8 +604,7 @@ Entry.Stage.prototype.initObjectContainers = function() {
         this.objectContainers.push(obj);
         this.selectedObjectContainer = obj;
     }
-    if (Entry.type !== 'invisible')
-        this.canvas.addChild(this.selectedObjectContainer);
+    if (Entry.type !== 'invisible') this.canvas.addChild(this.selectedObjectContainer);
     this.selectObjectContainer(Entry.scene.selectedScene);
 };
 

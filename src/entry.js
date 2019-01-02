@@ -1,9 +1,11 @@
-'use strict';
+import 'simplebar/dist/simplebar.css';
 
 const Entry = {};
 
 module.exports = Entry;
 global.Entry = Entry;
+
+require('core-js/fn/object/values');
 
 require('./css/entry.less');
 require('./class/time_wait');
@@ -62,6 +64,7 @@ require('./playground/block_entry_mini');
 require('./playground/block_menu');
 require('./playground/block_menu_scroll');
 require('./playground/block_view');
+require('./playground/comment');
 require('./playground/board');
 require('./playground/code');
 require('./playground/code_view');
@@ -77,6 +80,7 @@ require('./playground/skinner');
 require('./playground/thread');
 require('./playground/thread_view');
 require('./playground/trashcan');
+require('./playground/zoom_controller');
 require('./playground/vim');
 require('./playground/workspace');
 require('./textcoding/parser');
@@ -96,6 +100,7 @@ require('./util/utils');
 require('./util/youtube');
 require('./util/weather_forecast');
 require('./command/commands/block');
+require('./command/commands/comment');
 require('./command/commands/container');
 require('./command/commands/engine');
 require('./command/commands/function');
@@ -108,12 +113,12 @@ require('./command/commands/scene');
 require('./playground/extension/extension');
 require('./playground/extension/guide');
 require('./playground/extension/side_tag');
+require('./playground/field/field');
 require('./playground/field/angle');
 require('./playground/field/block');
 require('./playground/field/color');
 require('./playground/field/dropdown');
 require('./playground/field/dropdownDynamic');
-require('./playground/field/field');
 require('./playground/field/image');
 require('./playground/field/indicator');
 require('./playground/field/keyboardInput');

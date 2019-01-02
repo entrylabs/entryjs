@@ -5,31 +5,35 @@
  * @param {object} obj
  */
 Entry.Model = function(obj, isSeal) {
-    var model = Entry.Model;
+    const model = Entry.Model;
     model.generateSchema(obj);
     model.generateSetter(obj);
     model.generateObserve(obj);
-    if (isSeal === undefined || isSeal) Object.seal(obj);
+    if (isSeal === undefined || isSeal) {
+        Object.seal(obj);
+    }
 
     return obj;
 };
 
 (function(m) {
     m.generateSchema = function(obj) {
-        var schema = obj.schema;
-        if (schema === undefined) return;
-        try{
+        let schema = obj.schema;
+        if (schema === undefined) {
+            return;
+        }
+        try {
             schema = JSON.parse(JSON.stringify(schema));
-        } catch(e) {
+        } catch (e) {
             console.log(schema);
             console.error(e);
         }
         obj.data = {};
-        for (var key in schema) {
+        for (const key in schema) {
             (function(localKey) {
                 obj.data[localKey] = schema[localKey];
                 Object.defineProperty(obj, localKey, {
-                    get: function() {
+                    get() {
                         return obj.data[localKey];
                     },
                 });
@@ -43,21 +47,25 @@ Entry.Model = function(obj, isSeal) {
     };
 
     m.set = function(data, isSilent) {
-        var oldValue = {};
-        var keys = Object.keys(data);
-        for (var key in this.data) {
+        const oldValue = {};
+        const keys = Object.keys(data);
+        for (const key in this.data) {
             if (data[key] !== undefined) {
                 if (data[key] === this.data[key]) {
                     keys.splice(keys.indexOf(key), 1);
                 } else {
                     oldValue[key] = this.data[key];
-                    if (data[key] instanceof Array)
+                    if (data[key] instanceof Array) {
                         this.data[key] = data[key].concat();
-                    else this.data[key] = data[key];
+                    } else {
+                        this.data[key] = data[key];
+                    }
                 }
             }
         }
-        if (!isSilent) this.notify(keys, oldValue);
+        if (!isSilent) {
+            this.notify(keys, oldValue);
+        }
     };
 
     m.generateObserve = function(obj) {
@@ -74,13 +82,10 @@ Entry.Model = function(obj, isSeal) {
      * @param {boolean} isNotify
      */
     m.observe = function(object, funcName, attrs, isNotify) {
-        var observer = new Entry.Observer(
-            this.observers,
-            object,
-            funcName,
-            attrs
-        );
-        if (isNotify !== false) object[funcName]([]);
+        const observer = new Entry.Observer(this.observers, object, funcName, attrs);
+        if (isNotify !== false) {
+            object[funcName]([]);
+        }
         return observer;
     };
 
@@ -93,19 +98,26 @@ Entry.Model = function(obj, isSeal) {
      * @param {} oldValue
      */
     m.notify = function(keys, oldValue) {
-        if (typeof keys === 'string') keys = [keys];
+        if (typeof keys === 'string') {
+            keys = [keys];
+        }
 
-        var that = this;
-        var observers = that.observers;
+        const that = this;
+        const observers = that.observers;
 
-        if (!observers.length) return;
+        if (!observers.length) {
+            return;
+        }
 
         observers.forEach((observeData) => {
-            var attrs = keys;
-            if (observeData.attrs !== undefined)
+            let attrs = keys;
+            if (observeData.attrs !== undefined) {
                 attrs = _.intersection(observeData.attrs, keys);
+            }
 
-            if (!attrs.length) return;
+            if (!attrs.length) {
+                return;
+            }
 
             observeData.object[observeData.funcName](
                 attrs.forEach((key) => {
@@ -120,8 +132,10 @@ Entry.Model = function(obj, isSeal) {
     };
 
     m._toJSON = function() {
-        var json = {};
-        for (var key in this.data) json[key] = this.data[key];
+        const json = {};
+        for (const key in this.data) {
+            json[key] = this.data[key];
+        }
         return json;
     };
 })(Entry.Model);
