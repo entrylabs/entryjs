@@ -643,12 +643,12 @@ Entry.Playground = class {
         inputInner.appendChild(textEditArea);
 
         const singleDesc = Entry.createElement('ul').addClass('list single');
-        singleDesc.appendChild(Entry.createElement('li').text(Lang.Menus.linebreak_off_desc_3));
+        singleDesc.appendChild(Entry.createElement('li').text(Lang.Menus.linebreak_off_desc_1));
         singleDesc.appendChild(Entry.createElement('li').text(Lang.Menus.linebreak_off_desc_2));
         singleDesc.appendChild(Entry.createElement('li').text(Lang.Menus.linebreak_off_desc_3));
 
         const multiDesc = Entry.createElement('ul').addClass('list multi');
-        multiDesc.appendChild(Entry.createElement('li').text(Lang.Menus.linebreak_on_desc_3));
+        multiDesc.appendChild(Entry.createElement('li').text(Lang.Menus.linebreak_on_desc_1));
         multiDesc.appendChild(Entry.createElement('li').text(Lang.Menus.linebreak_on_desc_2));
         multiDesc.appendChild(Entry.createElement('li').text(Lang.Menus.linebreak_on_desc_3));
 
