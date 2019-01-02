@@ -2,7 +2,8 @@ module.exports = {
     getBlocks() {
         return {
             sound_something_with_block: {
-                color: '#A4D01D',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -12,8 +13,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -39,7 +40,7 @@ module.exports = {
                 paramsKeyMap: {
                     VALUE: 0,
                 },
-                class: 'sound_play', 
+                class: 'sound_play',
                 isNotFor: [],
                 func(sprite, script) {
                     const soundId = script.getStringValue('VALUE', script);
@@ -62,7 +63,8 @@ module.exports = {
                 },
             },
             sound_something_second_with_block: {
-                color: '#A4D01D',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -73,11 +75,12 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -142,7 +145,8 @@ module.exports = {
                 },
             },
             sound_from_to: {
-                color: '#A4D01D',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -153,15 +157,17 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -216,7 +222,7 @@ module.exports = {
                         start = Number(start) * 1000;
                         end = Number(end) * 1000;
 
-                        createjs.Sound.play(sound.id, { 
+                        createjs.Sound.play(sound.id, {
                             startTime: Math.min(start, end),
                             duration: Math.max(start, end) - Math.min(start, end),
                         });
@@ -234,7 +240,8 @@ module.exports = {
                 },
             },
             sound_something_wait_with_block: {
-                color: '#A4D01D',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -244,8 +251,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -306,7 +313,8 @@ module.exports = {
                 },
             },
             sound_something_second_wait_with_block: {
-                color: '#A4D01D',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -317,11 +325,12 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -393,7 +402,8 @@ module.exports = {
                 },
             },
             sound_from_to_and_wait: {
-                color: '#A4D01D',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -404,15 +414,17 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -497,18 +509,20 @@ module.exports = {
                 },
             },
             sound_volume_change: {
-                color: '#A4D01D',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -552,18 +566,20 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.add_sound_volume(%1)'] },
             },
             sound_volume_set: {
-                color: '#A4D01D',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -606,14 +622,15 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.set_sound_volume(%1)'] },
             },
             sound_silent_all: {
-                color: '#A4D01D',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},

@@ -209,7 +209,8 @@ Entry.mechatro.getBlocks = function() {
     return {
         //region mechatro
         mechatro_get_digital: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -282,7 +283,8 @@ Entry.mechatro.getBlocks = function() {
             syntax: { js: [], py: ['mechatro.get_digital(%1)'] },
         },
         mechatro_get_sensor_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -330,7 +332,8 @@ Entry.mechatro.getBlocks = function() {
             syntax: { js: [], py: ['mechatro.sensor_value(%1)'] },
         },
         mechatro_set_threshold: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -353,7 +356,7 @@ Entry.mechatro.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -390,7 +393,8 @@ Entry.mechatro.getBlocks = function() {
             syntax: { js: [], py: ['mechatro.set_threshold(%1, %2)'] },
         },
         mechatro_get_ultrasonic_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -470,7 +474,8 @@ Entry.mechatro.getBlocks = function() {
             },
         },
         mechatro_set_digital: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -495,7 +500,7 @@ Entry.mechatro.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -522,7 +527,8 @@ Entry.mechatro.getBlocks = function() {
             syntax: { js: [], py: ['mechatro.set_digital(%1, %2)'] },
         },
         mechatro_set_pwm: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -538,7 +544,7 @@ Entry.mechatro.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -576,7 +582,8 @@ Entry.mechatro.getBlocks = function() {
             syntax: { js: [], py: ['mechatro.mechatro_set_pwm(%1, %2)'] },
         },
         mechatro_set_tone_time: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -632,7 +639,7 @@ Entry.mechatro.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -739,7 +746,8 @@ Entry.mechatro.getBlocks = function() {
             },
         },
         mechatro_set_tone: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -791,7 +799,7 @@ Entry.mechatro.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -848,7 +856,8 @@ Entry.mechatro.getBlocks = function() {
             },
         },
         mechatro_set_dc_motor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -864,7 +873,7 @@ Entry.mechatro.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -902,7 +911,8 @@ Entry.mechatro.getBlocks = function() {
             },
         },
         mechatro_get_dc_motor_current: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -946,7 +956,8 @@ Entry.mechatro.getBlocks = function() {
             },
         },
         mechatro_set_servo_position: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -967,7 +978,7 @@ Entry.mechatro.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1008,7 +1019,8 @@ Entry.mechatro.getBlocks = function() {
             },
         },
         mechatro_set_servo_speed: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1029,7 +1041,7 @@ Entry.mechatro.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1070,7 +1082,8 @@ Entry.mechatro.getBlocks = function() {
             },
         },
         mechatro_set_blue_pw: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1092,7 +1105,7 @@ Entry.mechatro.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1117,7 +1130,7 @@ Entry.mechatro.getBlocks = function() {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/hardware_03.png',
+                        img: 'block_icon/hardware_icon.svg',
                         size: 12,
                     },
                 ],

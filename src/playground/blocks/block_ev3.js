@@ -118,7 +118,8 @@ Entry.EV3.getBlocks = function() {
     return {
         //region ev3 이브이3
         ev3_color_sensor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -194,7 +195,8 @@ Entry.EV3.getBlocks = function() {
             },
         },
         ev3_get_sensor_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -229,7 +231,8 @@ Entry.EV3.getBlocks = function() {
             },
         },
         ev3_motor_degrees: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -251,10 +254,11 @@ Entry.EV3.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -295,7 +299,8 @@ Entry.EV3.getBlocks = function() {
             },
         },
         ev3_motor_power: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -308,10 +313,11 @@ Entry.EV3.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -344,7 +350,8 @@ Entry.EV3.getBlocks = function() {
             },
         },
         ev3_motor_power_on_time: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -357,14 +364,16 @@ Entry.EV3.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -426,7 +435,8 @@ Entry.EV3.getBlocks = function() {
             },
         },
         ev3_touch_sensor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -464,7 +474,8 @@ Entry.EV3.getBlocks = function() {
             },
         },
         ev3_button_pressed: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -498,7 +509,8 @@ Entry.EV3.getBlocks = function() {
             },
         },
         ev3_status_led: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
@@ -515,7 +527,7 @@ Entry.EV3.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 }
             ],
