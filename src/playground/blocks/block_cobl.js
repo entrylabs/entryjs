@@ -20,7 +20,8 @@ Entry.Cobl.getBlocks = function() {
     return {
         //region cobl 코블
         cobl_read_ultrason: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '1. 초음파거리(0~400)',
@@ -34,7 +35,8 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_read_potenmeter: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '2.가변저항(0~1023)',
@@ -48,7 +50,8 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_read_irread1: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '3.적외선센서1(0~1023)',
@@ -62,7 +65,8 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_read_irread2: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '4.적외선센서2(0~1023)',
@@ -76,7 +80,8 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_read_joyx: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '5.조이스틱X축(1, 0, -1)',
@@ -90,7 +95,8 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_read_joyy: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '6.조이스틱Y축(1, 0, -1)',
@@ -104,7 +110,8 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_read_tilt: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '7.기울기센서(0~4)',
@@ -118,7 +125,8 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_read_color: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '8.색상센서',
@@ -137,7 +145,8 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_read_humid: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '9.습도센서',
@@ -151,7 +160,8 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_read_temps: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '10.온도센서@포트%1',
@@ -186,7 +196,8 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_read_light: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '11.빛센서@포트%1',
@@ -218,7 +229,8 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_read_btn: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             template: '12.버튼스위치@포트%1',
@@ -250,7 +262,8 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_led_control: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic',
             template: '13-1.무지개LED%1%2 %3',
@@ -277,7 +290,7 @@ Entry.Cobl.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -301,7 +314,8 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_rgb_boardled: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic',
             template: '13-2.무지개LED%1R%2G%3B%4 %5',
@@ -364,7 +378,7 @@ Entry.Cobl.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -401,7 +415,8 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_servo_angle_control: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic',
             template: '14.각도모터 각도%1(15~165) %2',
@@ -412,7 +427,7 @@ Entry.Cobl.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -438,7 +453,8 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_melody: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic',
             template: '15.멜로디%1 시간%2(초) %3',
@@ -478,7 +494,7 @@ Entry.Cobl.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -507,7 +523,8 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_dcmotor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic',
             template: '16.회전모터%1%2속도%3 %4',
@@ -539,7 +556,7 @@ Entry.Cobl.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -579,7 +596,8 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_extention_port: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic',
             template: '17.USB포트%1단계%2 %3',
@@ -603,7 +621,7 @@ Entry.Cobl.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -636,7 +654,8 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_external_RainBowled: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic',
             template: '18-1.외부LED%1 (1~64)%2 %3',
@@ -663,7 +682,7 @@ Entry.Cobl.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -729,7 +748,8 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_external_led: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic',
             template: '18-2.외부LED%1(1~64)R%2G%3B%4 %5',
@@ -792,7 +812,7 @@ Entry.Cobl.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -829,7 +849,8 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_7_segment: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic',
             template: '19.숫자전광판%1(0~9999) %2',
@@ -840,7 +861,7 @@ Entry.Cobl.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],

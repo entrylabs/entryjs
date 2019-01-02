@@ -3,24 +3,8 @@
 const PromiseManager = require('../../core/promiseManager');
 const { callApi } = require('../../util/common');
 
-Entry.EXPANSION_BLOCK.behaviorConductLifeSafety = {
-    name: 'behaviorConductLifeSafety',
-    imageName: 'firstaid.png',
-    title: {
-        'ko': '생활안전',
-        'en': 'LifeSafety',
-    },
-    description: Lang.Msgs.expansion_behaviorConductLifeSafety_description,
-    isInitialized: false,
-    init: function() {
-        if (this.isInitialized) {
-            return;
-        }
-        Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.isInitialized = true;
-    },
-    api: '/api/expansionBlock/behaviorConduct',
-    apiType: '03',
-    categoryMap: {
+function getInitialCategoryMap() {
+    return {
         '03002': {
             lang: Lang.Blocks.behaviorConduct03002,
             sub: ['03002002', '03002003', '03002004', '03002005', '03002006'],
@@ -73,43 +57,65 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety = {
             lang: Lang.Blocks.behaviorConduct03014,
             sub: ['03014001', '03014003', '03014004'],
         },
-        '03015' : {
+        '03015': {
             lang: Lang.Blocks.behaviorConduct03015,
             sub: ['03015007', '03015003'],
-        }
+        },
+    };
+}
+Entry.EXPANSION_BLOCK.behaviorConductLifeSafety = {
+    name: 'behaviorConductLifeSafety',
+    imageName: 'firstaid.png',
+    title: {
+        ko: '생활안전',
+        en: 'LifeSafety',
+        jp: '生活安全',
     },
+    titleKey: "template.behaviorConductLifeSafety_title_text",
+    description: Lang.Msgs.expansion_behaviorConductLifeSafety_description,
+    descriptionKey: "Msgs.expansion_behaviorConductLifeSafety_description",
+    isInitialized: false,
+    init() {
+        if (this.isInitialized) {
+            return;
+        }
+        Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.isInitialized = true;
+    },
+    api: '/api/expansionBlock/behaviorConduct',
+    apiType: '03'
 };
 
 Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
-    const categoryMap = Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.categoryMap;
+    const categoryMap = getInitialCategoryMap();
     const getCategory = function() {
-        return Object.keys(categoryMap).map(category => {
+        return Object.keys(categoryMap).map((category) => {
             return [categoryMap[category].lang, category];
         });
     };
     const defaultCategory = Object.keys(categoryMap)[0];
-    let params = {
-        getCategory: function(isPython) {
-            let param = {
+    const params = {
+        getCategory(isPython) {
+            const param = {
                 type: 'Dropdown',
                 options: getCategory(),
                 value: defaultCategory,
                 fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_EXPANSION,
+                bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
             }
             return param;
         },
-        getSubCategory: function(targetIndex = 0, isPython = false) {
-            let param = {
+        getSubCategory(targetIndex = 0, isPython = false) {
+            const param = {
                 type: 'DropdownDynamic',
                 value: null,
-                menuName: function(value) {
+                menuName(value) {
                     if (value) {
                         return categoryMap[value].sub.map((category) => {
-                            return [Lang.Blocks["behaviorConduct" + category], category];
+                            return [Lang.Blocks[`behaviorConduct${category}`], category];
                         });
                     }
 
@@ -117,14 +123,15 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
                         return this._contents.options;
                     } else {
                         return categoryMap[defaultCategory].sub.map((category) => {
-                            return [Lang.Blocks["behaviorConduct" + category], category];
+                            return [Lang.Blocks[`behaviorConduct${category}`], category];
                         });
                     }
                 },
-                targetIndex: targetIndex,
+                targetIndex,
                 needDeepCopy: true,
                 fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_EXPANSION,
+                bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -135,30 +142,41 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
 
     const getBehavior = (params, defaultValue, index = null) => {
         const key = `behaviorConduct-${params.category}/${params.subCategory}`;
-        return new PromiseManager().Promise(function(resolve) {
-            callApi(key, {
-                url: `${Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.api}/${params.category}/${params.subCategory}`
-            }).then((result) => {
-                if (result) {
-                    let items = result.data.response.body.items.item.filter(i => {
-                        return i.hasOwnProperty("actRmks") && i.safetyCate3 == params.subCategory2;
+        return new PromiseManager()
+            .Promise(function(resolve) {
+                callApi(key, {
+                    url: `${Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.api}/${
+                        params.category
+                    }/${params.subCategory}`,
+                })
+                    .then((result) => {
+                        if (result) {
+                            const items = result.data.response.body.items.item.filter((i) => {
+                                return (
+                                    i.hasOwnProperty('actRmks') &&
+                                    i.safetyCate3 == params.subCategory2
+                                );
+                            });
+                            if (index) {
+                                return resolve(items[index - 1].actRmks);
+                            }
+                            return resolve(items.length);
+                        }
+                        return resolve(defaultValue);
+                    })
+                    .catch(() => {
+                        return resolve(defaultValue);
                     });
-                    if(index) {
-                        return resolve(items[index -1].actRmks);
-                    }
-                    return resolve(items.length);
-                }
-                return resolve(defaultValue);
-            }).catch(() => {
-                return resolve(defaultValue);
+            })
+            .catch(() => {
+                return defaultValue;
             });
-        }).catch(() => defaultValue);
     };
 
     return {
         behaviorConductLifeSafety_title: {
             skeleton: 'basic_text',
-            color: '#e5e5e5',
+            color: '#ecf8ff',
             params: [
                 {
                     type: 'Text',
@@ -175,19 +193,14 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
             events: {},
         },
         count_lifeSafety_behavior: {
-            color: '#ff8888',
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
-            params: [
-                params.getCategory(),
-                params.getSubCategory(0)
-            ],
+            params: [params.getCategory(), params.getSubCategory(0)],
             events: {},
             def: {
-                params: [
-                    params.getCategory().value,
-                    null,
-                ],
+                params: [params.getCategory().value, null],
                 type: 'count_lifeSafety_behavior',
             },
             pyHelpDef: {
@@ -196,15 +209,15 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
             },
             paramsKeyMap: {
                 CATEGORY: 0,
-                SUB_CATEGORY: 1
+                SUB_CATEGORY: 1,
             },
             class: 'behaviorConductLifeSafety',
             isNotFor: ['behaviorConductLifeSafety'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 const params = {
                     category: Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.apiType,
                     subCategory: script.getField('CATEGORY', script),
-                    subCategory2: script.getField('SUB_CATEGORY', script)
+                    subCategory2: script.getField('SUB_CATEGORY', script),
                 };
 
                 return getBehavior(params, 0);
@@ -215,7 +228,8 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
             },
         },
         get_lifeSafety_behavior: {
-            color: '#ff8888',
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -224,15 +238,12 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
             ],
             events: {},
             def: {
-                params: [
-                    params.getCategory().value,
-                    null,
-                    1
-                ],
+                params: [params.getCategory().value, null, 1],
                 type: 'get_lifeSafety_behavior',
             },
             pyHelpDef: {
@@ -242,17 +253,17 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
             paramsKeyMap: {
                 CATEGORY: 0,
                 SUB_CATEGORY: 1,
-                NUMBER: 2
+                NUMBER: 2,
             },
             class: 'behaviorConductLifeSafety',
             isNotFor: ['behaviorConductLifeSafety'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 const number = script.getStringValue('NUMBER', script);
                 const defaultValue = Lang.Blocks.no_data;
                 const params = {
                     category: Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.apiType,
                     subCategory: script.getField('CATEGORY', script),
-                    subCategory2: script.getField('SUB_CATEGORY', script)
+                    subCategory2: script.getField('SUB_CATEGORY', script),
                 };
 
                 return getBehavior(params, defaultValue, number);

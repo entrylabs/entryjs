@@ -71,7 +71,8 @@ Entry.EduMaker.getBlocks = function() {
     return {
         //region edumaker 에듀메이커
         edumaker_analog_list: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -103,7 +104,8 @@ Entry.EduMaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         edumaker_get_analog_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -136,7 +138,8 @@ Entry.EduMaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         edumaker_get_analog_value_map: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -248,7 +251,8 @@ Entry.EduMaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         edumaker_get_ultrasonic_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -306,7 +310,8 @@ Entry.EduMaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         edumaker_get_digital: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             params: [
@@ -347,7 +352,8 @@ Entry.EduMaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         edumaker_digital_toggle: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -359,7 +365,7 @@ Entry.EduMaker.getBlocks = function() {
                     ],
                     value: 'on',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -375,7 +381,8 @@ Entry.EduMaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         edumaker_toggle_led: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -389,7 +396,7 @@ Entry.EduMaker.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -441,7 +448,8 @@ Entry.EduMaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         edumaker_digital_pwm: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -455,7 +463,7 @@ Entry.EduMaker.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -498,7 +506,8 @@ Entry.EduMaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         edumaker_tone_list: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -537,7 +546,8 @@ Entry.EduMaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         edumaker_tone_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -565,7 +575,8 @@ Entry.EduMaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         edumaker_octave_list: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -597,7 +608,8 @@ Entry.EduMaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         edumaker_set_tone: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -619,7 +631,7 @@ Entry.EduMaker.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -733,7 +745,8 @@ Entry.EduMaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         edumaker_set_servo: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -747,7 +760,7 @@ Entry.EduMaker.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],

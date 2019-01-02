@@ -173,7 +173,8 @@ Entry.Neobot.getBlocks = function() {
     return {
         //region neobot 네오봇
         neobot_sensor_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -209,7 +210,8 @@ Entry.Neobot.getBlocks = function() {
             syntax: { js: [], py: ['Neobot.sensor_value(%1)'] },
         },
         neobot_sensor_convert_scale: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -306,7 +308,8 @@ Entry.Neobot.getBlocks = function() {
             },
         },
         neobot_sensor_color: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -342,7 +345,8 @@ Entry.Neobot.getBlocks = function() {
         },
         neobot_equal_with_sensor: {
             //MinjuneL
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#ffffff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -410,7 +414,8 @@ Entry.Neobot.getBlocks = function() {
             syntax: { js: [], py: ['Entry.neobot_equal_check()'] },
         },
         get_motor_speed: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -436,7 +441,7 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: '15',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -452,7 +457,8 @@ Entry.Neobot.getBlocks = function() {
             syntax: { js: [], py: ['%1get_motor_speed#'] },
         },
         neobot_left_motor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -461,7 +467,7 @@ Entry.Neobot.getBlocks = function() {
                     options: [[Lang.Blocks.neobot_direction_forward, '16'], [Lang.Blocks.neobot_direction_backward, '32']],
                     value: '16',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -469,7 +475,7 @@ Entry.Neobot.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -500,13 +506,14 @@ Entry.Neobot.getBlocks = function() {
             syntax: { js: [], py: ['Neobot.turn_left(%1, %2)'] },
         },
         neobot_stop_left_motor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -524,7 +531,8 @@ Entry.Neobot.getBlocks = function() {
             syntax: { js: [], py: ['Neobot.stop_left()'] },
         },
         neobot_right_motor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -533,7 +541,7 @@ Entry.Neobot.getBlocks = function() {
                     options: [[Lang.Blocks.neobot_direction_forward, '16'], [Lang.Blocks.neobot_direction_backward, '32']],
                     value: '16',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -541,7 +549,7 @@ Entry.Neobot.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -572,13 +580,14 @@ Entry.Neobot.getBlocks = function() {
             syntax: { js: [], py: ['Neobot.turn_right(%1, %2)'] },
         },
         neobot_stop_right_motor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -596,7 +605,8 @@ Entry.Neobot.getBlocks = function() {
             syntax: { js: [], py: ['Neobot.stop_right()'] },
         },
         neobot_all_motor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -612,7 +622,7 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -624,7 +634,7 @@ Entry.Neobot.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -714,13 +724,14 @@ Entry.Neobot.getBlocks = function() {
             },
         },
         neobot_stop_all_motor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -739,7 +750,8 @@ Entry.Neobot.getBlocks = function() {
             syntax: { js: [], py: ['Neobot.run_motor(%1, %2, %3, %4)'] },
         },
         neobot_set_servo: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -752,7 +764,7 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: 'OUT1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -760,7 +772,7 @@ Entry.Neobot.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -794,7 +806,8 @@ Entry.Neobot.getBlocks = function() {
             syntax: { js: [], py: ['Neobot.servo_1(%1, %2)'] },
         },
         neobot_set_output: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -808,7 +821,7 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: 'OUT1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -816,7 +829,7 @@ Entry.Neobot.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -857,7 +870,8 @@ Entry.Neobot.getBlocks = function() {
             syntax: { js: [], py: ['Neobot.servo_2(%1, %2)'] },
         },
         neobot_set_fnd: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -867,7 +881,7 @@ Entry.Neobot.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -898,13 +912,14 @@ Entry.Neobot.getBlocks = function() {
             },
         },
         neobot_set_fnd_off: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -925,7 +940,8 @@ Entry.Neobot.getBlocks = function() {
             },
         },
         neobot_play_note_for: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -975,7 +991,7 @@ Entry.Neobot.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1024,7 +1040,8 @@ Entry.Neobot.getBlocks = function() {
         },
         neobot_play_note_with_sensor: {
             //MinjuneL
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1050,7 +1067,7 @@ Entry.Neobot.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1137,7 +1154,8 @@ Entry.Neobot.getBlocks = function() {
         },
         neobot_change_color_with_color_picker: {
             //MinjuneL
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1151,14 +1169,14 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: 'OUT1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Color',
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1183,7 +1201,8 @@ Entry.Neobot.getBlocks = function() {
             },
         },
         neobot_change_color_with_sensor_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1197,7 +1216,7 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: 'OUT1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -1214,7 +1233,7 @@ Entry.Neobot.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],

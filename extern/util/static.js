@@ -1,6 +1,6 @@
 'use strict';
 
-const EntryStatic = {};
+var EntryStatic = {};
 
 EntryStatic.objectTypes = ['sprite', 'textBox'];
 
@@ -391,7 +391,7 @@ EntryStatic.getAllBlocks = function() {
                 'get_disaster_behavior',
                 'behaviorConductLifeSafety_title',
                 'count_lifeSafety_behavior',
-                'get_lifeSafety_behavior'
+                'get_lifeSafety_behavior',
             ],
         },
         {
@@ -405,6 +405,7 @@ EntryStatic.getAllBlocks = function() {
                 'arduino_reconnect',
                 'arduino_open',
                 'arduino_cloud_pc_open',
+                'arduino_noti',
                 'arduino_get_number_sensor_value',
                 'arduino_get_digital_value',
                 'arduino_toggle_led',
@@ -450,20 +451,20 @@ EntryStatic.getAllBlocks = function() {
                 'arduino_nano_set_servo',
                 'arduino_nano_set_tone',
                 //blacksmith
-                "blacksmith_get_analog_value",
-                "blacksmith_get_analog_mapping",
-                "blacksmith_get_digital_bluetooth",
-                "blacksmith_get_digital_ultrasonic",
-                "blacksmith_get_digital_toggle",
-                "blacksmith_set_digital_toggle",
-                "blacksmith_set_digital_pwm",
-                "blacksmith_set_digital_rgbled",
-                "blacksmith_set_digital_servo",
-                "blacksmith_set_digital_buzzer",
-                "blacksmith_set_digital_dcmotor",
-                "blacksmith_module_digital_lcd",
-                "blacksmith_module_digital_bluetooth",
-                "blacksmith_module_digital_oled",
+                'blacksmith_get_analog_value',
+                'blacksmith_get_analog_mapping',
+                'blacksmith_get_digital_bluetooth',
+                'blacksmith_get_digital_ultrasonic',
+                'blacksmith_get_digital_toggle',
+                'blacksmith_set_digital_toggle',
+                'blacksmith_set_digital_pwm',
+                'blacksmith_set_digital_rgbled',
+                'blacksmith_set_digital_servo',
+                'blacksmith_set_digital_buzzer',
+                'blacksmith_set_digital_dcmotor',
+                'blacksmith_module_digital_lcd',
+                'blacksmith_module_digital_bluetooth',
+                'blacksmith_module_digital_oled',
                 //joystick
                 'joystick_get_number_sensor_value',
                 'joystick_get_digital_value',
@@ -541,21 +542,21 @@ EntryStatic.getAllBlocks = function() {
                 'neobot_change_color_with_sensor_value',
 
                 //neobot_robot_theme '18.09.05
-                "neobot_port_value",
-                "neobot_ir_sensor_value",
-                "neobot_light_sensor_value",
-                "neobot_sound_sensor_value",
-                "neobot_motor_type1",
-                "neobot_motor_type2",
-                "neobot_motor_type3",
-                "neobot_motor_stop",
-                "neobot_led_on_type1",
-                "neobot_led_on_type2",
-                "neobot_led_off",
-                "neobot_ir_decision",
-                "neobot_light_decision",
-                "neobot_sound_decision",
-                "neobot_port_decision",
+                'neobot_port_value',
+                'neobot_ir_sensor_value',
+                'neobot_light_sensor_value',
+                'neobot_sound_sensor_value',
+                'neobot_motor_type1',
+                'neobot_motor_type2',
+                'neobot_motor_type3',
+                'neobot_motor_stop',
+                'neobot_led_on_type1',
+                'neobot_led_on_type2',
+                'neobot_led_off',
+                'neobot_ir_decision',
+                'neobot_light_decision',
+                'neobot_sound_decision',
+                'neobot_port_decision',
 
                 'bitbrick_sensor_value',
                 'bitbrick_convert_scale',
@@ -754,25 +755,25 @@ EntryStatic.getAllBlocks = function() {
                 'sensorBoard_toggle_pwm',
                 'sensorBoard_convert_scale',
                 //truetrue
-                "truetrue_get_linesensor",
-                "truetrue_get_proxisensor",
-                "truetrue_get_accsensor",
-                "truetrue_get_bottomcolorsensor",
-                "truetrue_get_frontcolorsensor",
-                "truetrue_set_singlemotor",
-                "truetrue_set_dualmotor",
-                "truetrue_set_colorled",
-                "truetrue_set_led_proxi",
-                "truetrue_set_led_colorsensor",
-                "truetrue_set_led_linesensor",
-                "truetrue_set_linetracer",
-                "truetrue_set_head_colorled",
-                "truetrue_set_move",
-                "truetrue_set_sec_move",
-                "truetrue_set_rotate",
-                "truetrue_set_sec_rotate",
-                "truetrue_set_grid_block",
-                "truetrue_set_grid_rotate",
+                'truetrue_get_linesensor',
+                'truetrue_get_proxisensor',
+                'truetrue_get_accsensor',
+                'truetrue_get_bottomcolorsensor',
+                'truetrue_get_frontcolorsensor',
+                'truetrue_set_singlemotor',
+                'truetrue_set_dualmotor',
+                'truetrue_set_colorled',
+                'truetrue_set_led_proxi',
+                'truetrue_set_led_colorsensor',
+                'truetrue_set_led_linesensor',
+                'truetrue_set_linetracer',
+                'truetrue_set_head_colorled',
+                'truetrue_set_move',
+                'truetrue_set_sec_move',
+                'truetrue_set_rotate',
+                'truetrue_set_sec_rotate',
+                'truetrue_set_grid_block',
+                'truetrue_set_grid_rotate',
                 //CODEino
                 'CODEino_get_named_sensor_value',
                 'CODEino_get_sound_status',
@@ -1452,61 +1453,61 @@ EntryStatic.getAllBlocks = function() {
 
                 //region proboconnect
                 ////input
-                "connect_senser_setting",
-                "connect_remote_input",
-                "connect_digital_input",
-                "connect_analog_input",
-                "connect_value_mapping",
+                'connect_senser_setting',
+                'connect_remote_input',
+                'connect_digital_input',
+                'connect_analog_input',
+                'connect_value_mapping',
                 //"connect_ultrasonic_cm",
-                "connect_color_input_b",
-                "connect_color_input_r",
-                "connect_infinite_reset",
-                "connect_infinite_transform_input",
-                "connect_infinite_mm_diameter",
-                
+                'connect_color_input_b',
+                'connect_color_input_r',
+                'connect_infinite_reset',
+                'connect_infinite_transform_input',
+                'connect_infinite_mm_diameter',
+
                 ////output
-                "connect_port_output",
-                "connect_servo_output",
-                "connect_dc_output",
-                "connect_mel_sec_output",
-                "connect_melody_output",
-                "connect_melody_off",
-                "connect_fnd_output",
-                "connect_fnd_off",
+                'connect_port_output',
+                'connect_servo_output',
+                'connect_dc_output',
+                'connect_mel_sec_output',
+                'connect_melody_output',
+                'connect_melody_off',
+                'connect_fnd_output',
+                'connect_fnd_off',
 
                 //// EEPROM
-                "connect_eeprom_write",
-                "connect_eeprom_buffset",
-                "connect_buff_read",
+                'connect_eeprom_write',
+                'connect_eeprom_buffset',
+                'connect_buff_read',
                 //endregion proboconnect
- 		    
-		            //sciencecube start    
-            		"sciencecube_temper",  
-                "sciencecube_voltage",
-                "sciencecube_current",
-                "sciencecube_pressue",
-		            //sciencecube end
-              
+
+                //sciencecube start
+                'sciencecube_temper',
+                'sciencecube_voltage',
+                'sciencecube_current',
+                'sciencecube_pressue',
+                //sciencecube end
+
                 //Codingmachine Blocks
-                "codingmachine_led",
-                "codingmachine_tune",
-                "codingmachine_motor",
-                "codingmachine_joystick",
-                "codingmachine_button",
-                "codingmachine_gyro",
-                "codingmachine_ultrasonic",
-                "codingmachine_connect",
-                "codingmachine_ready",
-                "codingmachine_throttle",
-                "codingmachine_altitude",
-                "codingmachine_rollpitch",
-                "codingmachine_yaw",
-                "codingmachine_emergency",
-                "codingmachine_digital_out",
-                "codingmachine_digital_in",
-                "codingmachine_analog_in",
-                "codingmachine_digital_pwm",
-                "codingmachine_servo",
+                'codingmachine_led',
+                'codingmachine_tune',
+                'codingmachine_motor',
+                'codingmachine_joystick',
+                'codingmachine_button',
+                'codingmachine_gyro',
+                'codingmachine_ultrasonic',
+                'codingmachine_connect',
+                'codingmachine_ready',
+                'codingmachine_throttle',
+                'codingmachine_altitude',
+                'codingmachine_rollpitch',
+                'codingmachine_yaw',
+                'codingmachine_emergency',
+                'codingmachine_digital_out',
+                'codingmachine_digital_in',
+                'codingmachine_analog_in',
+                'codingmachine_digital_pwm',
+                'codingmachine_servo',
                 //Added 2018-09-24
             ],
         },
@@ -1701,50 +1702,125 @@ EntryStatic.objectSubCategories = {
     ],
 };
 
-EntryStatic.fonts = [
-    {
-        name: Lang.Fonts.batang,
-        family: 'KoPub Batang',
-        url: '/css/kopubbatang.css',
+Object.defineProperty(EntryStatic, 'fonts', {
+    get: function() {
+        return [
+            {
+                name: Lang.Fonts.batang,
+                family: 'KoPub Batang',
+                url: '/css/kopubbatang.css',
+            },
+            {
+                name: Lang.Fonts.myeongjo,
+                family: 'Nanum Myeongjo',
+                url: '/css/nanummyeongjo.css',
+            },
+            {
+                name: Lang.Fonts.gothic,
+                family: 'Nanum Gothic',
+                url: '/css/nanumgothic.css',
+            },
+            {
+                name: Lang.Fonts.pen_script,
+                family: 'Nanum Pen Script',
+                url: '/css/nanumpenscript.css',
+            },
+            {
+                name: Lang.Fonts.jeju_hallasan,
+                family: 'Jeju Hallasan',
+                url: '/css/jejuhallasan.css',
+            },
+            {
+                name: Lang.Fonts.gothic_coding,
+                family: 'Nanum Gothic Coding',
+                url: '/css/nanumgothiccoding.css',
+            },
+        ];
     },
-    {
-        name: Lang.Fonts.myeongjo,
-        family: 'Nanum Myeongjo',
-        url: '/css/nanummyeongjo.css',
-    },
-    {
-        name: Lang.Fonts.gothic,
-        family: 'Nanum Gothic',
-        url: '/css/nanumgothic.css',
-    },
-    {
-        name: Lang.Fonts.pen_script,
-        family: 'Nanum Pen Script',
-        url: '/css/nanumpenscript.css',
-    },
-    {
-        name: Lang.Fonts.jeju_hallasan,
-        family: 'Jeju Hallasan',
-        url: '/css/jejuhallasan.css',
-    },
-    {
-        name: Lang.Fonts.gothic_coding,
-        family: 'Nanum Gothic Coding',
-        url: '/css/nanumgothiccoding.css',
-    },
-];
+});
 
-EntryStatic.ARROW_COLOR_START = '#2f975a';
-EntryStatic.ARROW_COLOR_FLOW = '#3a71bc';
-EntryStatic.ARROW_COLOR_MOVING = '#8641b6';
-EntryStatic.ARROW_COLOR_LOOKS = '#d8234e';
-EntryStatic.ARROW_COLOR_TEXT = '#dc9c32';
-EntryStatic.ARROW_COLOR_SOUNDS = '#83a617';
-EntryStatic.ARROW_COLOR_JUDGE = '#89a1f7';
-EntryStatic.ARROW_COLOR_CALC = '#e8b349';
-EntryStatic.ARROW_COLOR_VARIABLE = '#ce38ce';
-EntryStatic.ARROW_COLOR_HW = '#097e84';
-EntryStatic.ARROW_COLOR_EXPANSION = '#ff8888';
+EntryStatic.colorSet = {
+    arrow: {
+        default: {
+            DEFAULT: '#FFFFFF',
+            START: '#FFFFFF',
+            FLOW: '#3A71BC',
+            MOVING: '#8641B6',
+            LOOKS: '#D8234E',
+            TEXT: '#DC9C32',
+            SOUND: '#83A617',
+            JUDGE: '#89A1F7',
+            CALC: '#E8B349',
+            VARIABLE: '#CE38CE',
+            HARDWARE: '#097E84',
+            EXPANSION: '#FF8888',
+        },
+    },
+    block: {
+        default: {
+            START: '#10D35E',
+            FLOW: '#31C1EC',
+            MOVING: '#BF63FF',
+            LOOKS: '#FF5174',
+            BRUSH: '#FC7E01',
+            SOUND: '#82D214',
+            HARDWARE: '#00CFCA',
+            CALC: '#FEB71A',
+            VARIABLE: '#F57DF1',
+            FUNC: '#DE6E22',
+            JUDGE: '#7E8EFE',
+            TEXT: '#FC5D01',
+            EXPANSION: '#FF8888',
+        },
+        lighten: {
+            //NOTE not have boolean, extension block color
+            START: '#53E68E',
+            FLOW: '#4ADAFB',
+            MOVING: '#CA7DFF',
+            LOOKS: '#FF7792',
+            BRUSH: '#FF9831',
+            SOUND: '#9FEC35',
+            HARDWARE: '#65E3E0',
+            CALC: '#FFDE82',
+            VARIABLE: '#FAA0F7',
+            FUNC: '#F3853B',
+            TEXT: '#FF9354',
+        },
+        darken: {
+            START: '#13BF68',
+            FLOW: '#08ACDD',
+            MOVING: '#B13EFE',
+            LOOKS: '#EE3157',
+            BRUSH: '#FC5E01',
+            SOUND: '#6EBC02',
+            HARDWARE: '#04B5B0',
+            CALC: '#FF9C00',
+            VARIABLE: '#EC52E7',
+            FUNC: '#C85404',
+            JUDGE: '#6173F5',
+            TEXT: '#E43500',
+            EXPANSION: '#EF6D6D',
+        },
+        emphasize: {
+            '#10D35E': '#5BC982',
+            '#31C1EC': '#62A5F4',
+            '#BF63FF': '#C08FF7',
+            '#FF5174': '#F46487',
+            '#FC7E01': '#FFB05A',
+            '#82D214': '#C4DD31',
+            '#00CFCA': '#09BAB5',
+            '#FEB71A': '#FCDA90',
+            '#F57DF1': '#F279F2',
+            '#DE6E22': '#DD884E',
+            '#7E8EFE': '#C0CBFF',
+            '#FC5D01': '#F2C670',
+        },
+    },
+    common: {
+        WHITE: '#FFFFFF',
+        DARK: '#000000',
+    },
+};
 
 EntryStatic.COMMAND_TYPES = {
     addThread: 101,
