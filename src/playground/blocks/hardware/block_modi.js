@@ -204,7 +204,8 @@ Entry.MODI = {
 Entry.MODI.getBlocks = function() {
     return {
         modi_microphone_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '마이크 %1번의 볼륨',
@@ -249,7 +250,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_environment_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '환경센서 %1번의 %2',
@@ -311,7 +313,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_dial_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '다이얼 %1번의 각도',
@@ -359,7 +362,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_gyroscope_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '자이로센서 %1번의 %2',
@@ -418,7 +422,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_button_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '버튼 %1번의 %2',
@@ -485,7 +490,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_button_true: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '눌림',
@@ -500,7 +506,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_button_false: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '안눌림',
@@ -515,7 +522,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_infrared_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '적외선 %1번 센서의 거리(%)',
@@ -560,7 +568,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_ultrasonic_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '초음파 %1번 센서의 거리(%)',
@@ -607,7 +616,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_set_motor_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic',
             template: '모터 %1번 %2의 상단값은 %3 하단값은 %4 (으)로 정하기 %5',
@@ -637,7 +647,7 @@ Entry.MODI.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -688,7 +698,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_change_motor_upper_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             template: '모터 %1번 %2의 상단값을 %3만큼 바꾸기 %4',
             params: [
@@ -713,7 +724,7 @@ Entry.MODI.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -769,7 +780,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_change_motor_bottom_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             template: '모터 %1번 %2의 하단값을 %3만큼 바꾸기 %4',
             params: [
@@ -794,7 +806,7 @@ Entry.MODI.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -851,7 +863,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_clear_led: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             template: 'LED %1번의 색 끄기 %2',
             params: [
@@ -863,7 +876,7 @@ Entry.MODI.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -898,7 +911,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_set_led_rgb: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             template: 'LED %1번 R %2 G %3 B %4  %5',
             params: [
@@ -922,7 +936,7 @@ Entry.MODI.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -976,7 +990,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_set_led_color: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             template: 'LED %1번 색 %2로 정하기 %3',
             params: [
@@ -991,7 +1006,7 @@ Entry.MODI.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1032,7 +1047,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_set_basic_speaker: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             template: '스피커 %1번을 %2음으로 크기는 %3(으)로 정하기 %4',
             params: [
@@ -1078,7 +1094,7 @@ Entry.MODI.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1124,7 +1140,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_set_custom_speaker: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             template: '스피커 %1번의 진동수는 %2 크기는 %3(으)로 정하기 %4',
             params: [
@@ -1144,7 +1161,7 @@ Entry.MODI.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1192,7 +1209,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_print_display_by_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             template: '디스플레이 %1번의 화면에 %2 보이기 %3',
             params: [
@@ -1208,7 +1226,7 @@ Entry.MODI.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],

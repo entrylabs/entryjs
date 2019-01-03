@@ -201,7 +201,8 @@ Entry.Hamster.getBlocks = function() {
     return {
         //region hamster 햄스터
         hamster_hand_found: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -228,7 +229,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1097,13 +1099,14 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_move_forward_once: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1195,7 +1198,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_turn_once: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1210,7 +1214,7 @@ Entry.Hamster.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1403,7 +1407,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_move_forward_for_secs: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1413,7 +1418,7 @@ Entry.Hamster.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1479,7 +1484,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_move_backward_for_secs: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1489,7 +1495,7 @@ Entry.Hamster.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1555,7 +1561,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_turn_for_secs: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1574,7 +1581,7 @@ Entry.Hamster.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1688,7 +1695,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_change_both_wheels_by: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1702,7 +1710,7 @@ Entry.Hamster.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1761,7 +1769,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_set_both_wheels_to: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1775,7 +1784,7 @@ Entry.Hamster.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1830,7 +1839,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_change_wheel_by: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1850,7 +1860,7 @@ Entry.Hamster.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1976,7 +1986,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_set_wheel_to: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1996,7 +2007,7 @@ Entry.Hamster.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2110,7 +2121,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_follow_line_using: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2135,7 +2147,7 @@ Entry.Hamster.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2409,7 +2421,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_follow_line_until: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2435,7 +2448,7 @@ Entry.Hamster.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2788,7 +2801,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_set_following_speed_to: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2809,7 +2823,7 @@ Entry.Hamster.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2859,13 +2873,14 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_stop: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2896,7 +2911,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_set_led_to: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2926,7 +2942,7 @@ Entry.Hamster.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3678,7 +3694,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_clear_led: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3694,7 +3711,7 @@ Entry.Hamster.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3894,13 +3911,14 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_beep: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3946,7 +3964,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_change_buzzer_by: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3956,7 +3975,7 @@ Entry.Hamster.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3994,7 +4013,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_set_buzzer_to: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4004,7 +4024,7 @@ Entry.Hamster.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4041,13 +4061,14 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_clear_buzzer: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4076,7 +4097,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_play_note_for: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4119,7 +4141,7 @@ Entry.Hamster.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4237,7 +4259,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_rest_for: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4247,7 +4270,7 @@ Entry.Hamster.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4319,7 +4342,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_change_tempo_by: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4329,7 +4353,7 @@ Entry.Hamster.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4371,7 +4395,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_set_tempo_to: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4381,7 +4406,7 @@ Entry.Hamster.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4423,7 +4448,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_set_port_to: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4451,7 +4477,7 @@ Entry.Hamster.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4650,7 +4676,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_change_output_by: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4670,7 +4697,7 @@ Entry.Hamster.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4784,7 +4811,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_set_output_to: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4804,7 +4832,7 @@ Entry.Hamster.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4914,7 +4942,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_gripper: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4929,7 +4958,7 @@ Entry.Hamster.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -5011,13 +5040,14 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_release_gripper: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],

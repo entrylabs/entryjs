@@ -1407,7 +1407,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
         //region byrobot 바이로봇
         /* BYROBOT PetroneV2 Drive Start */
         byrobot_petrone_v2_drive_drone_value_attitude: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -1446,7 +1447,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_drone_value_imu: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -1497,7 +1499,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_drone_value_sensor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -1548,7 +1551,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_drone_value_etc: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -1593,7 +1597,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_value_button: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -1630,7 +1635,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_value_joystick: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -1697,7 +1703,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_if_button_press: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -1795,7 +1802,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         byrobot_petrone_v2_drive_controller_if_joystick_direction: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -1890,13 +1898,14 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_light_manual_single_off: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1919,7 +1928,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_light_manual_single: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2004,7 +2014,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2031,7 +2041,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_light_manual_single_input: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2045,7 +2056,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2083,7 +2094,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_light_color_rgb_input: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2128,7 +2140,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2177,7 +2189,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_light_color_rgb_select: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2247,7 +2260,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2314,13 +2327,14 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_drone_light_manual_single_off: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2342,7 +2356,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_drone_light_manual_single: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2422,7 +2437,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2449,7 +2464,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_drone_light_manual_single_input: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2463,7 +2479,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2501,7 +2517,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_drone_light_color_rgb_input: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2563,7 +2580,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2615,7 +2632,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_drone_light_color_rgb_select: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2702,7 +2720,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2771,7 +2789,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_display_clear_all: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2794,7 +2813,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2823,7 +2842,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_display_clear: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2862,7 +2882,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2918,7 +2938,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_display_invert: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2940,7 +2961,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2992,7 +3013,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_display_draw_point: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3023,7 +3045,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3064,7 +3086,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_display_draw_line: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3125,7 +3148,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3184,7 +3207,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_display_draw_rect: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3262,7 +3286,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3325,7 +3349,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_display_draw_circle: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3377,7 +3402,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3429,7 +3454,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_display_draw_string: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3481,7 +3507,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3533,7 +3559,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_display_draw_string_align: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3611,7 +3638,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3675,13 +3702,14 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_buzzer_off: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3698,7 +3726,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_buzzer_scale: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3776,7 +3805,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3814,7 +3843,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_buzzer_scale_delay: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3896,7 +3926,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3944,7 +3974,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_buzzer_scale_reserve: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4026,7 +4057,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4075,7 +4106,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_buzzer_hz: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4085,7 +4117,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4117,7 +4149,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_buzzer_hz_delay: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4131,7 +4164,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4169,7 +4202,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_buzzer_hz_reserve: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4183,7 +4217,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4221,13 +4255,14 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_vibrator_off: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4244,7 +4279,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_vibrator_on_delay: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4254,7 +4290,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4287,7 +4323,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_vibrator_on_reserve: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4297,7 +4334,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4330,7 +4367,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_vibrator_delay: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4348,7 +4386,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4393,7 +4431,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_controller_vibrator_reserve: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4411,7 +4450,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4456,7 +4495,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_drone_irmessage: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4466,7 +4506,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4497,13 +4537,14 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_drone_motor_stop: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4520,7 +4561,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_drone_motorsingle: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4536,7 +4578,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4574,7 +4616,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_drone_motorsingle_input: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4588,7 +4631,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4630,7 +4673,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_drone_motorsingle_rotation: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4663,7 +4707,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4703,7 +4747,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_drone_command_mode_vehicle_car: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4725,7 +4770,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4748,13 +4793,14 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_drone_control_car_stop: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4771,7 +4817,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_drone_control_double_one: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4798,7 +4845,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4834,7 +4881,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_drone_control_double_one_delay: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4865,7 +4913,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4909,7 +4957,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_drone_control_double: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4923,7 +4972,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -4962,7 +5011,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_drive_drone_control_double_delay: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4980,7 +5030,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],

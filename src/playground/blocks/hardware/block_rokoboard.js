@@ -122,7 +122,8 @@ Entry.rokoboard.getBlocks = function() {
         //region rokoboard 로코보드
         // rokoboard Implementation
         rokoboard_get_sensor_value_by_name: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -159,7 +160,8 @@ Entry.rokoboard.getBlocks = function() {
             },
         },
         rokoboard_is_button_pressed: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],

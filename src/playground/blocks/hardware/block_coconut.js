@@ -1003,7 +1003,8 @@ Entry.coconut.getBlocks = function() {
     return {
         //region coconut 코코넛
         coconut_move_motor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1018,7 +1019,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1069,7 +1070,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         coconut_turn_motor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1084,7 +1086,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1134,14 +1136,15 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         coconut_stop_motor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1186,7 +1189,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_move_for_secs: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1205,7 +1209,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1264,7 +1268,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_turn_for_secs: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1283,7 +1288,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1341,7 +1346,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         coconut_turn_to_led: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1370,7 +1376,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1422,7 +1428,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_move_outmotor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1443,7 +1450,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1501,7 +1508,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_set_led_to: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1531,7 +1539,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1586,7 +1594,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_clear_led: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1602,7 +1611,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1651,7 +1660,8 @@ Entry.coconut.getBlocks = function() {
             },
         },
         coconut_set_led_clear: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1681,7 +1691,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1734,7 +1744,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_set_led_time: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1768,7 +1779,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1829,13 +1840,14 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_beep: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1880,7 +1892,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_buzzer_time: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1890,7 +1903,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1944,7 +1957,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_buzzer_set_hz: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1958,7 +1972,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2018,13 +2032,14 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_clear_buzzer: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2069,7 +2084,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_play_buzzer: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2119,7 +2135,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2178,7 +2194,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_rest_buzzer: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2197,7 +2214,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2247,7 +2264,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_play_buzzer_led: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2321,7 +2339,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2394,7 +2412,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_play_midi: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2412,7 +2431,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2463,7 +2482,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_floor_sensor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -2501,7 +2521,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_floor_sensing: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -2583,13 +2604,14 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_following_line: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2636,7 +2658,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_front_sensor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -2674,7 +2697,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_front_sensing: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -2768,7 +2792,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_obstruct_sensing: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -2792,13 +2817,14 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_avoid_mode: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2846,7 +2872,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_dotmatrix_set: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2894,7 +2921,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2950,13 +2977,14 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_dotmatrix_on: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3002,13 +3030,14 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_dotmatrix_off: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3054,7 +3083,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_dotmatrix_num: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3077,7 +3107,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3133,7 +3163,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_dotmatrix_small_eng: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3172,7 +3203,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3222,7 +3253,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_dotmatrix_big_eng: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3261,7 +3293,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3311,7 +3343,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_dotmatrix_kor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3338,7 +3371,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3388,7 +3421,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_light_sensor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -3410,7 +3444,8 @@ Entry.coconut.getBlocks = function() {
         },
         coconut_tmp_senser: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -3431,7 +3466,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_ac_sensor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -3473,7 +3509,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_outled_sensor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3496,7 +3533,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3553,7 +3590,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_outspk_sensor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3573,7 +3611,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3636,7 +3674,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_outspk_sensor_off: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3648,7 +3687,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3697,7 +3736,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_outinfrared_sensor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -3733,7 +3773,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_outcds_sensor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -3769,7 +3810,8 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_servomotor_angle: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3792,7 +3834,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],

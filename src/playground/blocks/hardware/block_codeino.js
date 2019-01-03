@@ -6,8 +6,8 @@ Entry.CODEino = {
     url: 'http://www.kcsi.co.kr/ko/bbs/content.php?co_id=CODEino1',
     imageName: 'codeino.png',
     title: {
-        "ko": "코드이노",
-        "en": "CODEino"
+        'ko': '코드이노',
+        'en': 'CODEino',
     },
     getSensorKey: function() {
         return 'xxxxxxxx'
@@ -163,7 +163,8 @@ Entry.CODEino.getBlocks = function() {
         //region codeino 코드이노
         CODEino_get_sensor_number: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -195,7 +196,8 @@ Entry.CODEino.getBlocks = function() {
         },
         CODEino_get_named_sensor_value: {
             // Block UI : <아날로그센서> 센서값
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -228,7 +230,7 @@ Entry.CODEino.getBlocks = function() {
             func: function(sprite, script) {
                 var port = script.getField('PORT', script);
                 var nowTime = Entry.CODEino.getSensorTime(
-                    Entry.CODEino.sensorTypes.ANALOG
+                    Entry.CODEino.sensorTypes.ANALOG,
                 );
                 var hardwareTime = Entry.hw.portData['TIME'] || 0;
                 var scope = script.executor.scope;
@@ -241,10 +243,10 @@ Entry.CODEino.getBlocks = function() {
                     }
                     Entry.hw.sendQueue['GET'][
                         Entry.CODEino.sensorTypes.ANALOG
-                    ] = {
+                        ] = {
                         port: port,
                         time: Entry.CODEino.getSensorTime(
-                            Entry.CODEino.sensorTypes.ANALOG
+                            Entry.CODEino.sensorTypes.ANALOG,
                         ),
                     };
                     throw new Entry.Utils.AsyncError();
@@ -265,7 +267,8 @@ Entry.CODEino.getBlocks = function() {
         },
         CODEino_get_sound_status: {
             // Block UI : 소리센서 <음량>
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -294,7 +297,7 @@ Entry.CODEino.getBlocks = function() {
                 var value1 = script.getField('STATUS', script);
                 var value2 = 1;
                 var nowTime = Entry.CODEino.getSensorTime(
-                    Entry.CODEino.sensorTypes.ANALOG
+                    Entry.CODEino.sensorTypes.ANALOG,
                 );
                 var hardwareTime = Entry.hw.portData['TIME'] || 0;
                 var scope = script.executor.scope;
@@ -307,10 +310,10 @@ Entry.CODEino.getBlocks = function() {
                     }
                     Entry.hw.sendQueue['GET'][
                         Entry.CODEino.sensorTypes.ANALOG
-                    ] = {
+                        ] = {
                         port: 0,
                         time: Entry.CODEino.getSensorTime(
-                            Entry.CODEino.sensorTypes.ANALOG
+                            Entry.CODEino.sensorTypes.ANALOG,
                         ),
                     };
                     throw new Entry.Utils.AsyncError();
@@ -333,7 +336,8 @@ Entry.CODEino.getBlocks = function() {
         },
         CODEino_get_light_status: {
             // Block UI : 빛센서 <밝기>
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -362,7 +366,7 @@ Entry.CODEino.getBlocks = function() {
                 var value1 = script.getField('STATUS', script);
                 var value2 = 1;
                 var nowTime = Entry.CODEino.getSensorTime(
-                    Entry.CODEino.sensorTypes.ANALOG
+                    Entry.CODEino.sensorTypes.ANALOG,
                 );
                 var hardwareTime = Entry.hw.portData['TIME'] || 0;
                 var scope = script.executor.scope;
@@ -375,10 +379,10 @@ Entry.CODEino.getBlocks = function() {
                     }
                     Entry.hw.sendQueue['GET'][
                         Entry.CODEino.sensorTypes.ANALOG
-                    ] = {
+                        ] = {
                         port: 1,
                         time: Entry.CODEino.getSensorTime(
-                            Entry.CODEino.sensorTypes.ANALOG
+                            Entry.CODEino.sensorTypes.ANALOG,
                         ),
                     };
                     throw new Entry.Utils.AsyncError();
@@ -401,7 +405,8 @@ Entry.CODEino.getBlocks = function() {
         },
         CODEino_is_button_pressed: {
             // Block UI : 보드의 <버튼누름/저항연결>
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -433,7 +438,7 @@ Entry.CODEino.getBlocks = function() {
                 var port = script.getNumberField('PORT', script);
                 if (port < 10) {
                     var nowTime = Entry.CODEino.getSensorTime(
-                        Entry.CODEino.sensorTypes.DIGITAL
+                        Entry.CODEino.sensorTypes.DIGITAL,
                     );
                     var hardwareTime = Entry.hw.portData['TIME'] || 0;
                     var scope = script.executor.scope;
@@ -446,10 +451,10 @@ Entry.CODEino.getBlocks = function() {
                         }
                         Entry.hw.sendQueue['GET'][
                             Entry.CODEino.sensorTypes.DIGITAL
-                        ] = {
+                            ] = {
                             port: 4,
                             time: Entry.CODEino.getSensorTime(
-                                Entry.CODEino.sensorTypes.DIGITAL
+                                Entry.CODEino.sensorTypes.DIGITAL,
                             ),
                         };
                         throw new Entry.Utils.AsyncError();
@@ -468,7 +473,7 @@ Entry.CODEino.getBlocks = function() {
                     }
                 } else {
                     var nowTime = Entry.CODEino.getSensorTime(
-                        Entry.CODEino.sensorTypes.ANALOG
+                        Entry.CODEino.sensorTypes.ANALOG,
                     );
                     var hardwareTime = Entry.hw.portData['TIME'] || 0;
                     var scope = script.executor.scope;
@@ -481,10 +486,10 @@ Entry.CODEino.getBlocks = function() {
                         }
                         Entry.hw.sendQueue['GET'][
                             Entry.CODEino.sensorTypes.ANALOG
-                        ] = {
+                            ] = {
                             port: port - 14,
                             time: Entry.CODEino.getSensorTime(
-                                Entry.CODEino.sensorTypes.ANALOG
+                                Entry.CODEino.sensorTypes.ANALOG,
                             ),
                         };
                         throw new Entry.Utils.AsyncError();
@@ -506,7 +511,8 @@ Entry.CODEino.getBlocks = function() {
         },
         CODEino_get_accelerometer_direction: {
             // Block UI : 3축 가속도센서 <기울기>
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -538,7 +544,7 @@ Entry.CODEino.getBlocks = function() {
                 var value1 = script.getField('DIRECTION', script);
                 var port = 0;
                 var nowTime = Entry.CODEino.getSensorTime(
-                    Entry.CODEino.sensorTypes.ANALOG
+                    Entry.CODEino.sensorTypes.ANALOG,
                 );
                 var hardwareTime = Entry.hw.portData['TIME'] || 0;
                 var scope = script.executor.scope;
@@ -560,10 +566,10 @@ Entry.CODEino.getBlocks = function() {
                     }
                     Entry.hw.sendQueue['GET'][
                         Entry.CODEino.sensorTypes.ANALOG
-                    ] = {
+                        ] = {
                         port: port,
                         time: Entry.CODEino.getSensorTime(
-                            Entry.CODEino.sensorTypes.ANALOG
+                            Entry.CODEino.sensorTypes.ANALOG,
                         ),
                     };
                     throw new Entry.Utils.AsyncError();
@@ -606,7 +612,8 @@ Entry.CODEino.getBlocks = function() {
         },
         CODEino_get_accelerometer_value: {
             // Block UI : 3축 가속도센서 <방향> 축의 센서값
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -631,7 +638,7 @@ Entry.CODEino.getBlocks = function() {
             func: function(sprite, script) {
                 var port = script.getNumberField('PORT', script);
                 var nowTime = Entry.CODEino.getSensorTime(
-                    Entry.CODEino.sensorTypes.ANALOG
+                    Entry.CODEino.sensorTypes.ANALOG,
                 );
                 var hardwareTime = Entry.hw.portData['TIME'] || 0;
                 var scope = script.executor.scope;
@@ -645,10 +652,10 @@ Entry.CODEino.getBlocks = function() {
                     }
                     Entry.hw.sendQueue['GET'][
                         Entry.CODEino.sensorTypes.ANALOG
-                    ] = {
+                        ] = {
                         port: port,
                         time: Entry.CODEino.getSensorTime(
-                            Entry.CODEino.sensorTypes.ANALOG
+                            Entry.CODEino.sensorTypes.ANALOG,
                         ),
                     };
                     throw new Entry.Utils.AsyncError();
@@ -677,7 +684,8 @@ Entry.CODEino.getBlocks = function() {
         },
         CODEino_get_analog_value: {
             // Block UI : 아날로그 <핀번호> 센서의 값
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -710,7 +718,7 @@ Entry.CODEino.getBlocks = function() {
             func: function(sprite, script) {
                 var port = script.getField('PORT', script);
                 var nowTime = Entry.CODEino.getSensorTime(
-                    Entry.CODEino.sensorTypes.ANALOG
+                    Entry.CODEino.sensorTypes.ANALOG,
                 );
                 var hardwareTime = Entry.hw.portData['TIME'] || 0;
                 var scope = script.executor.scope;
@@ -723,10 +731,10 @@ Entry.CODEino.getBlocks = function() {
                     }
                     Entry.hw.sendQueue['GET'][
                         Entry.CODEino.sensorTypes.ANALOG
-                    ] = {
+                        ] = {
                         port: port,
                         time: Entry.CODEino.getSensorTime(
-                            Entry.CODEino.sensorTypes.ANALOG
+                            Entry.CODEino.sensorTypes.ANALOG,
                         ),
                     };
                     throw new Entry.Utils.AsyncError();
@@ -747,7 +755,8 @@ Entry.CODEino.getBlocks = function() {
         },
         CODEino_get_digital_value: {
             // Block UI : 디지털 <핀번호> 핀의 값
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             params: [
@@ -773,7 +782,7 @@ Entry.CODEino.getBlocks = function() {
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT', script);
                 var nowTime = Entry.CODEino.getSensorTime(
-                    Entry.CODEino.sensorTypes.DIGITAL
+                    Entry.CODEino.sensorTypes.DIGITAL,
                 );
                 var hardwareTime = Entry.hw.portData['TIME'] || 0;
                 var scope = script.executor.scope;
@@ -786,10 +795,10 @@ Entry.CODEino.getBlocks = function() {
                     }
                     Entry.hw.sendQueue['GET'][
                         Entry.CODEino.sensorTypes.DIGITAL
-                    ] = {
+                        ] = {
                         port: port,
                         time: Entry.CODEino.getSensorTime(
-                            Entry.CODEino.sensorTypes.DIGITAL
+                            Entry.CODEino.sensorTypes.DIGITAL,
                         ),
                     };
                     throw new Entry.Utils.AsyncError();
@@ -810,7 +819,8 @@ Entry.CODEino.getBlocks = function() {
         },
         CODEino_set_digital_value: {
             // Block UI : 디지털 <핀번호> 핀의 <켜기/끄기>
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -825,11 +835,11 @@ Entry.CODEino.getBlocks = function() {
                         [Lang.Blocks.ARDUINO_off, '0'],
                     ],
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -861,7 +871,7 @@ Entry.CODEino.getBlocks = function() {
                     type: Entry.CODEino.sensorTypes.DIGITAL,
                     data: value,
                     time: Entry.CODEino.getSensorTime(
-                        Entry.CODEino.sensorTypes.DIGITAL
+                        Entry.CODEino.sensorTypes.DIGITAL,
                     ),
                 };
                 return script.callReturn();
@@ -887,7 +897,8 @@ Entry.CODEino.getBlocks = function() {
         },
         CODEino_set_pwm_value: {
             // Block UI : 디지털 <핀번호> 번 핀을 <숫자> (으)로 정하기
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -901,7 +912,7 @@ Entry.CODEino.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -938,7 +949,7 @@ Entry.CODEino.getBlocks = function() {
                     type: Entry.CODEino.sensorTypes.PWM,
                     data: value,
                     time: Entry.CODEino.getSensorTime(
-                        Entry.CODEino.sensorTypes.PWM
+                        Entry.CODEino.sensorTypes.PWM,
                     ),
                 };
                 return script.callReturn();
@@ -964,7 +975,8 @@ Entry.CODEino.getBlocks = function() {
         },
         CODEino_convert_scale: {
             // Block UI : 아날로그 <핀번호> 센서의 값 값의 범위를 0~1023에서 0~100 (으)로 바꾼 값
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1052,7 +1064,8 @@ Entry.CODEino.getBlocks = function() {
         },
         CODEino_set_rgb_value: {
             // Block UI : 컬러 LED의 <색> 색상을 <숫자> (으)로 정하기
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1072,7 +1085,7 @@ Entry.CODEino.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1111,7 +1124,7 @@ Entry.CODEino.getBlocks = function() {
                         type: Entry.CODEino.sensorTypes.RGBLED_PIN,
                         data: value,
                         time: Entry.CODEino.getSensorTime(
-                            Entry.CODEino.sensorTypes.RGBLED_PIN
+                            Entry.CODEino.sensorTypes.RGBLED_PIN,
                         ),
                     };
                     return script.callReturn();
@@ -1138,7 +1151,8 @@ Entry.CODEino.getBlocks = function() {
         },
         CODEino_set_rgb_add_value: {
             // Block UI : 컬러 LED의 <색> 색상에 <숫자> 만큼 더하기
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1158,7 +1172,7 @@ Entry.CODEino.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1183,11 +1197,11 @@ Entry.CODEino.getBlocks = function() {
                         Entry.CODEino.LED_RED_VALUE + value;
                     Entry.CODEino.LED_RED_VALUE = Math.min(
                         255,
-                        Entry.CODEino.LED_RED_VALUE
+                        Entry.CODEino.LED_RED_VALUE,
                     );
                     Entry.CODEino.LED_RED_VALUE = Math.max(
                         0,
-                        Entry.CODEino.LED_RED_VALUE
+                        Entry.CODEino.LED_RED_VALUE,
                     );
                     value = Entry.CODEino.LED_RED_VALUE;
                 }
@@ -1196,11 +1210,11 @@ Entry.CODEino.getBlocks = function() {
                         Entry.CODEino.LED_GREEN_VALUE + value;
                     Entry.CODEino.LED_GREEN_VALUE = Math.min(
                         255,
-                        Entry.CODEino.LED_GREEN_VALUE
+                        Entry.CODEino.LED_GREEN_VALUE,
                     );
                     Entry.CODEino.LED_GREEN_VALUE = Math.max(
                         0,
-                        Entry.CODEino.LED_GREEN_VALUE
+                        Entry.CODEino.LED_GREEN_VALUE,
                     );
                     value = Entry.CODEino.LED_GREEN_VALUE;
                 }
@@ -1209,11 +1223,11 @@ Entry.CODEino.getBlocks = function() {
                         Entry.CODEino.LED_BLUE_VALUE + value;
                     Entry.CODEino.LED_BLUE_VALUE = Math.min(
                         255,
-                        Entry.CODEino.LED_BLUE_VALUE
+                        Entry.CODEino.LED_BLUE_VALUE,
                     );
                     Entry.CODEino.LED_BLUE_VALUE = Math.max(
                         0,
-                        Entry.CODEino.LED_BLUE_VALUE
+                        Entry.CODEino.LED_BLUE_VALUE,
                     );
                     value = Entry.CODEino.LED_BLUE_VALUE;
                 }
@@ -1225,7 +1239,7 @@ Entry.CODEino.getBlocks = function() {
                     type: Entry.CODEino.sensorTypes.RGBLED_PIN,
                     data: value,
                     time: Entry.CODEino.getSensorTime(
-                        Entry.CODEino.sensorTypes.RGBLED_PIN
+                        Entry.CODEino.sensorTypes.RGBLED_PIN,
                     ),
                 };
                 return script.callReturn();
@@ -1233,7 +1247,8 @@ Entry.CODEino.getBlocks = function() {
         },
         CODEino_rgb_set_color: {
             // Block UI : 컬러 LED의 색상을 <색상표> (으)로 정하기
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1263,7 +1278,7 @@ Entry.CODEino.getBlocks = function() {
                 Entry.CODEino.LED_RED_VALUE = parseInt(value.substr(1, 2), 16);
                 Entry.CODEino.LED_GREEN_VALUE = parseInt(
                     value.substr(3, 2),
-                    16
+                    16,
                 );
                 Entry.CODEino.LED_BLUE_VALUE = parseInt(value.substr(5, 2), 16);
 
@@ -1275,7 +1290,7 @@ Entry.CODEino.getBlocks = function() {
                     type: Entry.CODEino.sensorTypes.RGBLED_PIN,
                     data: Entry.CODEino.LED_RED_VALUE,
                     time: Entry.CODEino.getSensorTime(
-                        Entry.CODEino.sensorTypes.RGBLED_PIN
+                        Entry.CODEino.sensorTypes.RGBLED_PIN,
                     ),
                 };
 
@@ -1287,7 +1302,7 @@ Entry.CODEino.getBlocks = function() {
                     type: Entry.CODEino.sensorTypes.RGBLED_PIN,
                     data: Entry.CODEino.LED_GREEN_VALUE,
                     time: Entry.CODEino.getSensorTime(
-                        Entry.CODEino.sensorTypes.RGBLED_PIN
+                        Entry.CODEino.sensorTypes.RGBLED_PIN,
                     ),
                 };
 
@@ -1299,7 +1314,7 @@ Entry.CODEino.getBlocks = function() {
                     type: Entry.CODEino.sensorTypes.RGBLED_PIN,
                     data: Entry.CODEino.LED_BLUE_VALUE,
                     time: Entry.CODEino.getSensorTime(
-                        Entry.CODEino.sensorTypes.RGBLED_PIN
+                        Entry.CODEino.sensorTypes.RGBLED_PIN,
                     ),
                 };
                 return script.callReturn();
@@ -1307,13 +1322,14 @@ Entry.CODEino.getBlocks = function() {
         },
         CODEino_set_rgb_off: {
             // Block UI : 컬러 LED 끄기
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1336,7 +1352,7 @@ Entry.CODEino.getBlocks = function() {
                     type: Entry.CODEino.sensorTypes.RGBLED_PIN,
                     data: Entry.CODEino.LED_RED_VALUE,
                     time: Entry.CODEino.getSensorTime(
-                        Entry.CODEino.sensorTypes.RGBLED_PIN
+                        Entry.CODEino.sensorTypes.RGBLED_PIN,
                     ),
                 };
 
@@ -1349,7 +1365,7 @@ Entry.CODEino.getBlocks = function() {
                     type: Entry.CODEino.sensorTypes.RGBLED_PIN,
                     data: Entry.CODEino.LED_GREEN_VALUE,
                     time: Entry.CODEino.getSensorTime(
-                        Entry.CODEino.sensorTypes.RGBLED_PIN
+                        Entry.CODEino.sensorTypes.RGBLED_PIN,
                     ),
                 };
 
@@ -1362,7 +1378,7 @@ Entry.CODEino.getBlocks = function() {
                     type: Entry.CODEino.sensorTypes.RGBLED_PIN,
                     data: Entry.CODEino.LED_BLUE_VALUE,
                     time: Entry.CODEino.getSensorTime(
-                        Entry.CODEino.sensorTypes.RGBLED_PIN
+                        Entry.CODEino.sensorTypes.RGBLED_PIN,
                     ),
                 };
                 return script.callReturn();
@@ -1387,7 +1403,8 @@ Entry.CODEino.getBlocks = function() {
             },
         },
         CODEino_set__led_by_rgb: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1405,7 +1422,7 @@ Entry.CODEino.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1450,7 +1467,7 @@ Entry.CODEino.getBlocks = function() {
                     type: Entry.CODEino.sensorTypes.RGBLED_PIN,
                     data: Entry.CODEino.LED_RED_VALUE,
                     time: Entry.CODEino.getSensorTime(
-                        Entry.CODEino.sensorTypes.RGBLED_PIN
+                        Entry.CODEino.sensorTypes.RGBLED_PIN,
                     ),
                 };
 
@@ -1462,7 +1479,7 @@ Entry.CODEino.getBlocks = function() {
                     type: Entry.CODEino.sensorTypes.RGBLED_PIN,
                     data: Entry.CODEino.LED_GREEN_VALUE,
                     time: Entry.CODEino.getSensorTime(
-                        Entry.CODEino.sensorTypes.RGBLED_PIN
+                        Entry.CODEino.sensorTypes.RGBLED_PIN,
                     ),
                 };
 
@@ -1474,7 +1491,7 @@ Entry.CODEino.getBlocks = function() {
                     type: Entry.CODEino.sensorTypes.RGBLED_PIN,
                     data: Entry.CODEino.LED_BLUE_VALUE,
                     time: Entry.CODEino.getSensorTime(
-                        Entry.CODEino.sensorTypes.RGBLED_PIN
+                        Entry.CODEino.sensorTypes.RGBLED_PIN,
                     ),
                 };
                 return script.callReturn();
@@ -1482,13 +1499,14 @@ Entry.CODEino.getBlocks = function() {
         },
         CODEino_led_by_value: {
             // Block UI : 컬러 LED 켜기
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1511,7 +1529,7 @@ Entry.CODEino.getBlocks = function() {
                     type: Entry.CODEino.sensorTypes.RGBLED_PIN,
                     data: Entry.CODEino.LED_RED_VALUE,
                     time: Entry.CODEino.getSensorTime(
-                        Entry.CODEino.sensorTypes.RGBLED_PIN
+                        Entry.CODEino.sensorTypes.RGBLED_PIN,
                     ),
                 };
 
@@ -1524,7 +1542,7 @@ Entry.CODEino.getBlocks = function() {
                     type: Entry.CODEino.sensorTypes.RGBLED_PIN,
                     data: Entry.CODEino.LED_GREEN_VALUE,
                     time: Entry.CODEino.getSensorTime(
-                        Entry.CODEino.sensorTypes.RGBLED_PIN
+                        Entry.CODEino.sensorTypes.RGBLED_PIN,
                     ),
                 };
 
@@ -1537,7 +1555,7 @@ Entry.CODEino.getBlocks = function() {
                     type: Entry.CODEino.sensorTypes.RGBLED_PIN,
                     data: Entry.CODEino.LED_BLUE_VALUE,
                     time: Entry.CODEino.getSensorTime(
-                        Entry.CODEino.sensorTypes.RGBLED_PIN
+                        Entry.CODEino.sensorTypes.RGBLED_PIN,
                     ),
                 };
                 return script.callReturn();

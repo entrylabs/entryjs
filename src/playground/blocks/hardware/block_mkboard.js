@@ -371,7 +371,8 @@ Entry.mkboard.getBlocks = function() {
         //region mkboard 몽키보드
         mkboard_analog_list: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -405,7 +406,8 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_get_analog_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -438,7 +440,8 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_get_analog_value_map: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -532,7 +535,8 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_get_ultrasonic_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -590,7 +594,8 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_get_digital: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             params: [
@@ -628,7 +633,8 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_toggle_led: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -642,7 +648,7 @@ Entry.mkboard.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -693,7 +699,8 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_digital_pwm: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -707,7 +714,7 @@ Entry.mkboard.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -751,7 +758,8 @@ Entry.mkboard.getBlocks = function() {
         },
         mkboard_tone_list: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -791,7 +799,8 @@ Entry.mkboard.getBlocks = function() {
         },
         mkboard_tone_value: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -820,7 +829,8 @@ Entry.mkboard.getBlocks = function() {
         },
         mkboard_octave_list: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -852,7 +862,8 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_set_tone: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -874,7 +885,7 @@ Entry.mkboard.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -989,7 +1000,8 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_set_servo: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1003,7 +1015,7 @@ Entry.mkboard.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1046,7 +1058,8 @@ Entry.mkboard.getBlocks = function() {
         },
         mkboard_list_digital_lcd_line: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -1071,7 +1084,8 @@ Entry.mkboard.getBlocks = function() {
         },
         mkboard_list_digital_lcd_column: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -1112,7 +1126,8 @@ Entry.mkboard.getBlocks = function() {
             },
         },
         mkboard_set_lcd: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic',
             template: Lang.template.mkboard_set_lcd,
@@ -1132,7 +1147,7 @@ Entry.mkboard.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1239,7 +1254,8 @@ Entry.mkboard.getBlocks = function() {
         },
         mkboard_list_lcd_command: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -1271,7 +1287,8 @@ Entry.mkboard.getBlocks = function() {
             },
         },
         mkboard_lcd_command: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             template: Lang.template.mkboard_lcd_command,
             //"template": "%1 %2",
@@ -1283,7 +1300,7 @@ Entry.mkboard.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],

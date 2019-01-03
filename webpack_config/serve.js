@@ -3,13 +3,14 @@
 const merge = require('webpack-merge');
 const common = require('./common.js');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const autoprefixer = require('autoprefixer');
 
 module.exports = merge(common, {
     mode: 'development',
     module: {
         rules: [
             {
-                test: /\.less$/,
+                test: /\.(css|less)$/,
                 use: ExtractTextPlugin.extract({
                     fallback: 'style-loader',
                     use: [
@@ -19,6 +20,25 @@ module.exports = merge(common, {
                                 url: false,
                                 minimize: true,
                                 sourceMap: true,
+                            },
+                        },
+                        {
+                            loader: require.resolve('postcss-loader'),
+                            options: {
+                                ident: 'postcss',
+                                plugins: () => [
+                                    require('postcss-flexbugs-fixes'),
+                                    autoprefixer({
+                                        browsers: [
+                                            '>1%',
+                                            'last 4 versions',
+                                            'Firefox ESR',
+                                            'not ie < 9', // React doesn't support IE8 anyway
+                                        ],
+                                        flexbox: 'no-2009',
+                                        remove: false,
+                                    }),
+                                ],
                             },
                         },
                         {
@@ -39,15 +59,15 @@ module.exports = merge(common, {
             index: '/example/example.html',
             rewrites: [
                 { from: /^\/$/, to: '/example/example.html' },
-                { from: /^\/lib\/entryjs/, to: '/' },
+                { from: /^\/lib\/entry-js/, to: '/' },
             ],
         },
         proxy: {
-            '/lib/entryjs': {
+            '/lib/entry-js': {
                 target: 'http://localhost:8080',
-                pathRewrite: { '^/lib/entryjs': '' },
+                pathRewrite: { '^/lib/entry-js': '' },
             },
-        }
+        },
     },
     devtool: 'source-map',
 });

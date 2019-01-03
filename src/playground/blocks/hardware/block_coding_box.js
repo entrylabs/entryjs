@@ -177,7 +177,8 @@ Entry.CodingBox.getBlocks = function() {
     return {
         coding_box_analog_list: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -237,7 +238,8 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_arduino_get_analog_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -284,7 +286,8 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_arduino_get_analog_value_map: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -426,7 +429,8 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_arudino_read_ultrasonic_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -502,7 +506,8 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_arduino_read_digital: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             params: [
@@ -568,7 +573,8 @@ Entry.CodingBox.getBlocks = function() {
         },
         arduino_get_digital_toggle: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -580,7 +586,7 @@ Entry.CodingBox.getBlocks = function() {
                     ],
                     value: 'on',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -607,7 +613,7 @@ Entry.CodingBox.getBlocks = function() {
                                 ],
                                 value: 'on',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringValueUpperCase,
@@ -621,7 +627,8 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_arduino_toggle_led: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -635,7 +642,7 @@ Entry.CodingBox.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -704,7 +711,8 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_arduino_digital_pwm: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -718,7 +726,7 @@ Entry.CodingBox.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -779,7 +787,8 @@ Entry.CodingBox.getBlocks = function() {
         },
         coding_box_tone_list: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -852,7 +861,8 @@ Entry.CodingBox.getBlocks = function() {
         },
         coding_box_tone_value: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -889,7 +899,8 @@ Entry.CodingBox.getBlocks = function() {
         },
         coding_box_octave_list: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -929,7 +940,8 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_arduino_write_tone: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -951,7 +963,7 @@ Entry.CodingBox.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1090,7 +1102,8 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_arduino_write_servo: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1104,7 +1117,7 @@ Entry.CodingBox.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1167,7 +1180,8 @@ Entry.CodingBox.getBlocks = function() {
         //CodingBox Only
         //////
         cbx_read_ultrasonic: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1216,7 +1230,8 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_read_switch: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1272,7 +1287,8 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_read_potentiometer: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             //      statements: [],
@@ -1310,7 +1326,8 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_read_mic: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1348,7 +1365,8 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_read_line: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             params: [
@@ -1395,7 +1413,8 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_write_led: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1409,7 +1428,7 @@ Entry.CodingBox.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1452,7 +1471,8 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_write_lcd: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1470,7 +1490,7 @@ Entry.CodingBox.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1553,13 +1573,14 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_clear_lcd: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1597,7 +1618,8 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_write_rgb_led: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1615,7 +1637,7 @@ Entry.CodingBox.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1701,7 +1723,8 @@ Entry.CodingBox.getBlocks = function() {
         },
         cbx_led_number_list: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -1711,7 +1734,7 @@ Entry.CodingBox.getBlocks = function() {
                     options: [['LED1', '10'], ['LED2', '11']],
                     value: '10',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1735,7 +1758,7 @@ Entry.CodingBox.getBlocks = function() {
                                 options: [['LED1', '10'], ['LED2', '11']],
                                 value: '3',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -1748,7 +1771,8 @@ Entry.CodingBox.getBlocks = function() {
         },
         cbx_rgb_led_value_list: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -1761,7 +1785,7 @@ Entry.CodingBox.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1788,7 +1812,7 @@ Entry.CodingBox.getBlocks = function() {
                                 ],
                                 value: '3',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -1801,7 +1825,8 @@ Entry.CodingBox.getBlocks = function() {
         },
         cbx_led_value_list: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -1818,7 +1843,7 @@ Entry.CodingBox.getBlocks = function() {
                     ],
                     value: '255',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1851,7 +1876,7 @@ Entry.CodingBox.getBlocks = function() {
                                 ],
                                 value: '3',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -1864,7 +1889,8 @@ Entry.CodingBox.getBlocks = function() {
         },
         cbx_dcm_speed_list: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -1881,7 +1907,7 @@ Entry.CodingBox.getBlocks = function() {
                     ],
                     value: '255',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1912,7 +1938,7 @@ Entry.CodingBox.getBlocks = function() {
                                 ],
                                 value: '3',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -1925,7 +1951,8 @@ Entry.CodingBox.getBlocks = function() {
         },
         cbx_servo_angle_list: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -1943,7 +1970,7 @@ Entry.CodingBox.getBlocks = function() {
                     ],
                     value: '255',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1974,7 +2001,7 @@ Entry.CodingBox.getBlocks = function() {
                                 ],
                                 value: '3',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -1987,7 +2014,8 @@ Entry.CodingBox.getBlocks = function() {
         },
         cbx_lcd_column_list: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -2014,7 +2042,7 @@ Entry.CodingBox.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -2055,7 +2083,7 @@ Entry.CodingBox.getBlocks = function() {
                                 ],
                                 value: '3',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -2068,7 +2096,8 @@ Entry.CodingBox.getBlocks = function() {
         },
         cbx_lcd_row_list: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -2078,7 +2107,7 @@ Entry.CodingBox.getBlocks = function() {
                     options: [['1', '0'], ['2', '1']],
                     value: '0',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -2102,7 +2131,7 @@ Entry.CodingBox.getBlocks = function() {
                                 options: [['1', '0'], ['2', '1']],
                                 value: '3',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -2115,7 +2144,8 @@ Entry.CodingBox.getBlocks = function() {
         },
         cbx_switch_list: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -2128,7 +2158,7 @@ Entry.CodingBox.getBlocks = function() {
                     ],
                     value: Entry.CodingBox.pins.SWITCH_1,
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -2155,7 +2185,7 @@ Entry.CodingBox.getBlocks = function() {
                                 ],
                                 value: Entry.CodingBox.pins.SWITCH_1,
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -2168,7 +2198,8 @@ Entry.CodingBox.getBlocks = function() {
         },
         cbx_dcm_direction_list: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -2181,7 +2212,7 @@ Entry.CodingBox.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -2205,7 +2236,7 @@ Entry.CodingBox.getBlocks = function() {
                                 options: [['forward', '1'], ['reverse', '0']],
                                 value: '1',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -2217,7 +2248,8 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_write_servo: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2227,7 +2259,7 @@ Entry.CodingBox.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2286,7 +2318,8 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_write_tone: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2304,7 +2337,7 @@ Entry.CodingBox.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2438,7 +2471,8 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_write_dcm: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2452,7 +2486,7 @@ Entry.CodingBox.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],

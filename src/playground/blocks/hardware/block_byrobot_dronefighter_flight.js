@@ -389,13 +389,13 @@ Entry.byrobot_dronefighter_flight = {
     },
 
     // 버저 설정(함수 호출 시 시간은 모두 ms 단위 사용)
-    /*  
+    /*
         MuteInstantally     = 1,    // 묵음 즉시 적용
         MuteContinually     = 2,    // 묵음 예약
-        
+
         ScaleInstantally    = 3,    // 음계 즉시 적용
         ScaleContinually    = 4,    // 음계 예약
-        
+
         HzInstantally       = 5,    // 주파수 즉시 적용
         HzContinually       = 6,    // 주파수 예약
      */
@@ -643,14 +643,14 @@ Entry.byrobot_dronefighter_flight = {
     },
     /*
         None = 0,           ///< 없음
-        
+
         Flight = 0x10,      ///< 비행(가드 포함)
         FlightNoGuard,      ///< 비행(가드 없음)
         FlightFPV,          ///< 비행(FPV)
-        
+
         Drive = 0x20,       ///< 주행
         DriveFPV,           ///< 주행(FPV)
-        
+
         Test = 0x30,        ///< 테스트
      */
     setModeVehicle: function(script, modeVehicle) {
@@ -783,7 +783,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
         //region byrobot 바이로봇
         /* BYROBOT DroneFighter Flight Start */
         byrobot_dronefighter_flight_drone_value_attitude: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -824,7 +825,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_value_etc: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -875,7 +877,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_value_button: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -912,7 +915,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_value_joystick: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -989,7 +993,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_if_button_press: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -1087,7 +1092,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         byrobot_dronefighter_flight_controller_if_joystick_direction: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -1182,13 +1188,14 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_light_manual_single_off: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1211,7 +1218,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_light_manual_single: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1306,7 +1314,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1334,7 +1342,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_light_manual_single_input: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1348,7 +1357,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1386,13 +1395,14 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_light_manual_single_off: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1415,7 +1425,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_light_manual_single: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1500,7 +1511,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1527,7 +1538,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_light_manual_single_input: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1541,7 +1553,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1579,13 +1591,14 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_buzzer_off: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1602,7 +1615,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_buzzer_scale: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1692,7 +1706,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1730,7 +1744,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_buzzer_scale_delay: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1824,7 +1839,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1873,7 +1888,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_buzzer_scale_reserve: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1967,7 +1983,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2016,7 +2032,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_buzzer_hz: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2026,7 +2043,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2058,7 +2075,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_buzzer_hz_delay: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2072,7 +2090,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2110,7 +2128,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_buzzer_hz_reserve: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2124,7 +2143,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2163,13 +2182,14 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_vibrator_off: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2188,7 +2208,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_vibrator_on_delay: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2198,7 +2219,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2232,7 +2253,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_vibrator_on_reserve: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2242,7 +2264,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2276,7 +2298,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_vibrator_delay: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2294,7 +2317,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2339,7 +2362,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_vibrator_reserve: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2357,7 +2381,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2402,7 +2426,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_irmessage: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2412,7 +2437,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2441,13 +2466,14 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_motor_stop: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2464,7 +2490,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_motorsingle: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2480,7 +2507,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2518,7 +2545,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_motorsingle_input: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2532,7 +2560,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2575,13 +2603,14 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
         },
         byrobot_dronefighter_flight_drone_command_mode_vehicle_drone: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2603,13 +2632,14 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
         },
         byrobot_dronefighter_flight_drone_control_drone_takeoff: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2631,13 +2661,14 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
         },
         byrobot_dronefighter_flight_drone_control_drone_landing: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2658,13 +2689,14 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_control_drone_stop: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2681,7 +2713,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_control_coordinate: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2704,7 +2737,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2729,13 +2762,14 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_control_drone_reset_heading: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2758,7 +2792,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_control_quad_one: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2795,7 +2830,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2831,7 +2866,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_control_quad_one_delay: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2872,7 +2908,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2917,7 +2953,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_control_quad: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2939,7 +2976,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],

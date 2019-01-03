@@ -22,13 +22,13 @@ Entry.TextCodingUtil = {};
             var code = new Entry.Code(content);
             var paramBlock = code.getEventMap('funcDef')[0];
             paramBlock = paramBlock && paramBlock.params[0];
-        
+
             if (!paramBlock) return true;
-        
+
             if (paramBlock.type !== 'function_field_label') return false;
-        
+
             var params = paramBlock.params;
-        
+
             if (!params[1]) {
                 if (test(params[0])) return false;
             } else if (this.hasFunctionFieldLabel(params[1])) {
@@ -944,21 +944,15 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isEntryEventFunc = function(name) {
-        if (
-            name == 'def when_start' ||
-            name == 'def when_press_key' ||
-            name == 'def when_click_mouse_on' ||
-            name == 'def when_click_mouse_off' ||
-            name == 'def when_click_object_on' ||
-            name == 'def when_click_object_off' ||
-            name == 'def when_get_signal' ||
-            name == 'def when_start_scene' ||
-            name == 'def when_make_clone'
-        ) {
-            return true;
-        }
-
-        return false;
+        return name === 'def when_start' ||
+            name === 'def when_press_key' ||
+            name === 'def when_click_mouse_on' ||
+            name === 'def when_click_mouse_off' ||
+            name === 'def when_click_object_on' ||
+            name === 'def when_click_object_off' ||
+            name === 'def when_get_signal' ||
+            name === 'def when_start_scene' ||
+            name === 'def when_make_clone';
     };
 
     /////////////////////////////////////////////////////
@@ -1596,21 +1590,21 @@ Entry.TextCodingUtil = {};
     };
 
     tu.assembleRepeatWhileTrueBlock = function(block, syntax) {
-        var result = '';
-        if (block.data.type == 'repeat_while_true') {
-            var blockArr = syntax.split(' ');
-            var lastIndex = blockArr.length - 1;
-            var option = blockArr[lastIndex];
+        let result = '';
+        if (block.data.type === 'repeat_while_true') {
+            const blockToken = syntax.split(/(?=:)|[ ]/gi); // space 로 split 하되, : 도 자르지만 토큰에 포함
+            var lastIndex = blockToken.length - 2;
+            var option = blockToken[lastIndex];
 
             if (option == 'until') {
                 var condition = 'not';
-                blockArr.splice(1, 0, condition);
+                blockToken.splice(1, 0, condition);
                 lastIndex += 1;
-                blockArr.splice(lastIndex, 1);
-                result = blockArr.join(' ');
+                blockToken.splice(lastIndex, 1);
+                result = blockToken.join(' ').replace(/[ ]+:/, ':');
             } else if (option == 'while') {
-                blockArr.splice(lastIndex, 1);
-                result = blockArr.join(' ');
+                blockToken.splice(lastIndex, 1);
+                result = blockToken.join(' ').replace(/[ ]+:/, ':');
             } else {
                 result = syntax;
             }
@@ -1856,7 +1850,7 @@ Entry.TextCodingUtil = {};
                 }
             }
         };
-        
+
         return hasWhiteSpace(vc.lists_ || [] , Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT]) ||
             hasWhiteSpace(vc.variables_ || [] , Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT]);
     };
@@ -1879,7 +1873,7 @@ Entry.TextCodingUtil = {};
             };
         }
     };
-    
+
     tu.validateVariableToPython = function() {
         return this.isNamesIncludeSpace() || this.isNameIncludeNotValidChar();
     };
@@ -1949,7 +1943,7 @@ Entry.TextCodingUtil = {};
     tu.isNameIncludeNotValidChar = function() {
         const vc = Entry.variableContainer;
         if (!vc) return;
-        
+
         const validateList = (targets, errorSuffix) => {
             const result = {
                 message : undefined,

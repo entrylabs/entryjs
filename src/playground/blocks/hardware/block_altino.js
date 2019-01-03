@@ -58,7 +58,8 @@ Entry.Altino.getBlocks = function() {
     return {
         //region Altino 알티노
         altino_analogValue: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -112,7 +113,8 @@ Entry.Altino.getBlocks = function() {
             syntax: { js: [], py: ['Altino.analog_value(%1)'] },
         },
         altino_steering: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -134,7 +136,7 @@ Entry.Altino.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -176,7 +178,8 @@ Entry.Altino.getBlocks = function() {
             syntax: { js: [], py: ['Altino.steering(%1,%2)'] },
         },
         altino_rear_wheel: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -190,7 +193,7 @@ Entry.Altino.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -226,7 +229,8 @@ Entry.Altino.getBlocks = function() {
             syntax: { js: [], py: ['Altino.rear_wheel(%1, %2)'] },
         },
         altino_sound: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -265,7 +269,7 @@ Entry.Altino.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -364,7 +368,8 @@ Entry.Altino.getBlocks = function() {
             syntax: { js: [], py: ['Altino.sound(%1, %2)'] },
         },
         altino_light: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -391,7 +396,7 @@ Entry.Altino.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -447,7 +452,8 @@ Entry.Altino.getBlocks = function() {
             syntax: { js: [], py: ['Altino.light(%1, %2)'] },
         },
         altino_dot_display: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -457,7 +463,7 @@ Entry.Altino.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -500,7 +506,8 @@ Entry.Altino.getBlocks = function() {
             },
         },
         altino_dot_display_line: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -538,7 +545,7 @@ Entry.Altino.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],

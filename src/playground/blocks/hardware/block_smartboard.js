@@ -136,7 +136,8 @@ Entry.SmartBoard.getBlocks = function() {
     return {
         //region smartBoard 스마트보드
         smartBoard_get_named_sensor_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -174,7 +175,8 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_convert_scale: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -264,7 +266,8 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_is_button_pressed: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -298,7 +301,8 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_set_dc_motor_direction: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -316,7 +320,7 @@ Entry.SmartBoard.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -340,7 +344,8 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_set_dc_motor_speed: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -365,7 +370,7 @@ Entry.SmartBoard.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -389,7 +394,8 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_set_dc_motor_pwm: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -405,7 +411,7 @@ Entry.SmartBoard.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -438,7 +444,8 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_set_servo_speed: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -460,7 +467,7 @@ Entry.SmartBoard.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -497,7 +504,8 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_set_servo_angle: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -513,7 +521,7 @@ Entry.SmartBoard.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -546,7 +554,8 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_set_number_eight_pin: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -564,7 +573,7 @@ Entry.SmartBoard.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -588,7 +597,8 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_set_gs1_pwm: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -598,7 +608,7 @@ Entry.SmartBoard.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],

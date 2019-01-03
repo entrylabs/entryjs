@@ -65,7 +65,8 @@ Entry.robotori.getBlocks = function() {
     return {
         //region robotori 로보토리
         robotori_digitalInput: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_boolean_field',
             statements: [],
             params: [
@@ -77,7 +78,7 @@ Entry.robotori.getBlocks = function() {
                     ],
                     value: 'D2',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -97,7 +98,8 @@ Entry.robotori.getBlocks = function() {
             },
         },
         robotori_analogInput: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -132,7 +134,8 @@ Entry.robotori.getBlocks = function() {
             },
         },
         robotori_digitalOutput: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -158,7 +161,7 @@ Entry.robotori.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -206,7 +209,8 @@ Entry.robotori.getBlocks = function() {
             },
         },
         robotori_analogOutput: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -226,7 +230,7 @@ Entry.robotori.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -265,7 +269,8 @@ Entry.robotori.getBlocks = function() {
             },
         },
         robotori_servo: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -275,7 +280,7 @@ Entry.robotori.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -303,7 +308,8 @@ Entry.robotori.getBlocks = function() {
             },
         },
         robotori_dc_direction: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -328,7 +334,7 @@ Entry.robotori.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],

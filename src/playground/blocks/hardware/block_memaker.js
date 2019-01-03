@@ -371,7 +371,8 @@ Entry.memaker.getBlocks = function() {
         //region memaker 미메이커
         memaker_analog_list: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -405,7 +406,8 @@ Entry.memaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         memaker_get_analog_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -438,7 +440,8 @@ Entry.memaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         memaker_get_analog_value_map: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -532,7 +535,8 @@ Entry.memaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         memaker_get_ultrasonic_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -590,7 +594,8 @@ Entry.memaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         memaker_get_digital: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             params: [
@@ -628,7 +633,8 @@ Entry.memaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         memaker_toggle_led: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -642,7 +648,7 @@ Entry.memaker.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -693,7 +699,8 @@ Entry.memaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         memaker_digital_pwm: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -707,7 +714,7 @@ Entry.memaker.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -750,7 +757,8 @@ Entry.memaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         memaker_set_servo: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -764,7 +772,7 @@ Entry.memaker.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -807,7 +815,8 @@ Entry.memaker.getBlocks = function() {
         },
         memaker_list_digital_lcd_line: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -832,7 +841,8 @@ Entry.memaker.getBlocks = function() {
         },
         memaker_list_digital_lcd_column: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -873,7 +883,8 @@ Entry.memaker.getBlocks = function() {
             },
         },
         memaker_set_lcd: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic',
             template: Lang.template.memaker_set_lcd,
@@ -893,7 +904,7 @@ Entry.memaker.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -993,7 +1004,8 @@ Entry.memaker.getBlocks = function() {
         },
         memaker_list_lcd_command: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -1022,7 +1034,8 @@ Entry.memaker.getBlocks = function() {
         },
 
         memaker_lcd_command: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             template: Lang.template.memaker_lcd_command,
             statements: [],
@@ -1033,7 +1046,7 @@ Entry.memaker.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],

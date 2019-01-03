@@ -52,7 +52,8 @@ Entry.Dash.getBlocks = function() {
     return {
         // 소리
         dash_sound_say: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -75,7 +76,7 @@ Entry.Dash.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -134,7 +135,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_sound_animal: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -157,7 +159,7 @@ Entry.Dash.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -218,7 +220,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_sound_move: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -241,7 +244,7 @@ Entry.Dash.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -302,7 +305,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_sound_strange: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -323,7 +327,7 @@ Entry.Dash.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -384,7 +388,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_my_sound: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -408,7 +413,7 @@ Entry.Dash.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -465,7 +470,8 @@ Entry.Dash.getBlocks = function() {
         },
         // LED
         dash_light_color: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -486,7 +492,7 @@ Entry.Dash.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -540,7 +546,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_tail_light_color: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -556,7 +563,7 @@ Entry.Dash.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -606,7 +613,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_eye: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -626,7 +634,7 @@ Entry.Dash.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -677,7 +685,8 @@ Entry.Dash.getBlocks = function() {
         },
         // 머리
         dash_v_head: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -694,7 +703,7 @@ Entry.Dash.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -743,7 +752,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_h_head: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -778,7 +788,7 @@ Entry.Dash.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -833,7 +843,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_forward_head: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -841,7 +852,7 @@ Entry.Dash.getBlocks = function() {
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -890,7 +901,8 @@ Entry.Dash.getBlocks = function() {
         },
         dash_voice_head: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -898,7 +910,7 @@ Entry.Dash.getBlocks = function() {
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -949,7 +961,8 @@ Entry.Dash.getBlocks = function() {
         },
         // 움직임
         dash_turn_drive: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -966,7 +979,7 @@ Entry.Dash.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1020,7 +1033,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_turn_drive_360: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -1033,7 +1047,7 @@ Entry.Dash.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1085,7 +1099,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_drive: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -1113,7 +1128,7 @@ Entry.Dash.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1173,7 +1188,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_wheel_speed: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -1214,7 +1230,7 @@ Entry.Dash.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1273,7 +1289,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_drive_stop: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -1281,7 +1298,7 @@ Entry.Dash.getBlocks = function() {
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1329,7 +1346,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_sensor1: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_boolean_field',
             template: '%1',
             params: [
@@ -1384,7 +1402,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_sensor2: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_boolean_field',
             template: '%1',
             params: [
@@ -1439,7 +1458,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_animation: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -1468,7 +1488,7 @@ Entry.Dash.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],

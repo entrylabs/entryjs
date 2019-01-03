@@ -307,7 +307,8 @@ Entry.Roborobo_Roduino.getBlocks = function() {
     return {
         //region roduino 로두이노
         roduino_on_block: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -332,7 +333,8 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
         },
         roduino_off_block: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -358,23 +360,26 @@ Entry.Roborobo_Roduino.getBlocks = function() {
         },
         roduino_get_analog_number: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [{
-                type: 'Dropdown',
-                options: [
-                    ['0', '0'],
-                    ['1', '1'],
-                    ['2', '2'],
-                    ['3', '3'],
-                    ['4', '4'],
-                    ['5', '5'],
-                ],
-                value: '0',
-                fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_HW,
-            }, ],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['0', '0'],
+                        ['1', '1'],
+                        ['2', '2'],
+                        ['3', '3'],
+                        ['4', '4'],
+                        ['5', '5'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
             events: {},
             def: {
                 params: [null],
@@ -409,24 +414,27 @@ Entry.Roborobo_Roduino.getBlocks = function() {
         },
         roduino_get_port_number: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [{
-                type: 'Dropdown',
-                options: [
-                    ['2', '2'],
-                    ['3', '3'],
-                    ['4', '4'],
-                    ['5', '5'],
-                    ['6', '6'],
-                    ['7', '7'],
-                    ['8', '8'],
-                ],
-                value: '2',
-                fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_HW,
-            }, ],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['2', '2'],
+                        ['3', '3'],
+                        ['4', '4'],
+                        ['5', '5'],
+                        ['6', '6'],
+                        ['7', '7'],
+                        ['8', '8'],
+                    ],
+                    value: '2',
+                    fontSize: 11,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
             events: {},
             def: {
                 params: [null],
@@ -461,7 +469,8 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
         },
         roduino_get_analog_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -498,7 +507,8 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
         },
         roduino_get_digital_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -541,22 +551,25 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
         },
         roduino_get_color: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [{
-                type: 'Dropdown',
-                options: [
-                    [Lang.Blocks.roborobo_color_red, 'red'],
-                    [Lang.Blocks.roborobo_color_green, 'green'],
-                    [Lang.Blocks.roborobo_color_blue, 'blue'],
-                    [Lang.Blocks.roborobo_color_yellow, 'yellow'],
-                ],
-                value: 'red',
-                fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_HW,
-            }, ],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.roborobo_color_red, 'red'],
+                        [Lang.Blocks.roborobo_color_green, 'green'],
+                        [Lang.Blocks.roborobo_color_blue, 'blue'],
+                        [Lang.Blocks.roborobo_color_yellow, 'yellow'],
+                    ],
+                    value: 'red',
+                    fontSize: 11,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
             events: {},
             def: {
                 params: [null],
@@ -624,7 +637,8 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
         },
         roduino_get_sensor_analog_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -746,7 +760,8 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
         },
         roduino_get_sensor_digital_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -821,7 +836,8 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
         },
         roduino_set_digital: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [{
@@ -836,11 +852,11 @@ Entry.Roborobo_Roduino.getBlocks = function() {
                     ],
                     value: 'on',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -898,7 +914,8 @@ Entry.Roborobo_Roduino.getBlocks = function() {
         },
         roduino_get_pwm_port_number: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -944,7 +961,8 @@ Entry.Roborobo_Roduino.getBlocks = function() {
         },
         roduino_get_pwm_output_value: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -1015,7 +1033,8 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
         },
         roduino_set_pwm_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [{
@@ -1082,7 +1101,8 @@ Entry.Roborobo_Roduino.getBlocks = function() {
         },
         roduino_get_servo_port_number: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -1128,7 +1148,8 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
         },
         roduino_set_servo_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [{
@@ -1201,7 +1222,8 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
         },
         roduino_motor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [{
@@ -1212,7 +1234,7 @@ Entry.Roborobo_Roduino.getBlocks = function() {
                     ],
                     value: 'motor1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -1223,11 +1245,11 @@ Entry.Roborobo_Roduino.getBlocks = function() {
                     ],
                     value: 'cw',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1314,7 +1336,8 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
         },
         roduino_set_color_pin: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [{
@@ -1331,7 +1354,7 @@ Entry.Roborobo_Roduino.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1391,7 +1414,8 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
     return {
         //region schoolkit 스쿨키트
         schoolkit_on_block: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1416,7 +1440,8 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             },
         },
         schoolkit_off_block: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1442,22 +1467,25 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
         },
         schoolkit_get_out_port_number: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [{
-                type: 'Dropdown',
-                options: [
-                    ['OUT1', 2],
-                    ['OUT2', 3],
-                    ['OUT3', 4],
-                    ['OUT4', 5],
-                    ['OUT5', 6],
-                ],
-                value: 2,
-                fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_HW,
-            }, ],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['OUT1', 2],
+                        ['OUT2', 3],
+                        ['OUT3', 4],
+                        ['OUT4', 5],
+                        ['OUT5', 6],
+                    ],
+                    value: 2,
+                    fontSize: 11,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
             events: {},
             def: {
                 params: [null],
@@ -1492,20 +1520,19 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
         },
         schoolkit_get_servo_port_number: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [{
-                type: 'Dropdown',
-                options: [
-                    ['OUT1', 2],
-                    ['OUT2', 3],
-                    ['OUT3', 4]
-                ],
-                value: 2,
-                fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_HW,
-            }, ],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [['OUT1', 2], ['OUT2', 3], ['OUT3', 4]],
+                    value: 2,
+                    fontSize: 11,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
             events: {},
             def: {
                 params: [null],
@@ -1538,24 +1565,27 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
         },
         schoolkit_get_in_port_number: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [{
-                type: 'Dropdown',
-                options: [
-                    ['IN1', 7],
-                    ['IN2', 8],
-                    ['IN3', 9],
-                    ['IN4', 10],
-                    ['IN5', 11],
-                    ['IN6', 12],
-                    ['IN7', 13],
-                ],
-                value: 7,
-                fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_HW,
-            }, ],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['IN1', 7],
+                        ['IN2', 8],
+                        ['IN3', 9],
+                        ['IN4', 10],
+                        ['IN5', 11],
+                        ['IN6', 12],
+                        ['IN7', 13],
+                    ],
+                    value: 7,
+                    fontSize: 11,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
             events: {},
             def: {
                 params: [null],
@@ -1591,7 +1621,8 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             },
         },
         schoolkit_set_output: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [{
@@ -1606,11 +1637,11 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
                     ],
                     value: 'on',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1668,7 +1699,8 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             },
         },
         schoolkit_get_input_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1704,7 +1736,8 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             },
         },
         schoolkit_motor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [{
@@ -1715,7 +1748,7 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
                     ],
                     value: 'motor1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -1750,11 +1783,11 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
                     ],
                     value: 'cw',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1861,7 +1894,8 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             },
         },
         schoolkit_set_servo_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [{
@@ -1874,7 +1908,7 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],

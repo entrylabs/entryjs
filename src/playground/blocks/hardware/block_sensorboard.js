@@ -23,7 +23,8 @@ Entry.SensorBoard.getBlocks = function() {
     return {
         //region sensorBoard e센서보드
         sensorBoard_get_named_sensor_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -58,7 +59,8 @@ Entry.SensorBoard.getBlocks = function() {
             syntax: { js: [], py: ['Sensorboard.sensor_value(%1)'] },
         },
         sensorBoard_is_button_pressed: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -93,7 +95,8 @@ Entry.SensorBoard.getBlocks = function() {
             syntax: { js: [], py: ['Sensorboard.is_button_pressed(%1)'] },
         },
         sensorBoard_led: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -116,7 +119,7 @@ Entry.SensorBoard.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],

@@ -237,7 +237,8 @@ Entry.Turtle.getBlocks = function() {
     return {
         //region turtle 터틀
         turtle_touching_color: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -306,7 +307,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_is_color_pattern: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -404,7 +406,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_button_state: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -517,7 +520,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -825,7 +829,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_move_forward_unit: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -845,7 +850,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -929,7 +934,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_move_backward_unit: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -949,7 +955,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1033,7 +1039,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_turn_unit_in_place: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1062,7 +1069,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1198,7 +1205,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_turn_unit_with_radius_in_direction: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1240,7 +1248,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1425,7 +1433,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_pivot_around_wheel_unit_in_direction: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1463,7 +1472,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1634,7 +1643,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_change_wheels_by_left_right: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1648,7 +1658,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1708,7 +1718,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_set_wheels_to_left_right: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1722,7 +1733,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1778,7 +1789,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_change_wheel_by: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1798,7 +1810,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1925,7 +1937,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_set_wheel_to: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1945,7 +1958,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2060,7 +2073,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_follow_line: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2078,7 +2092,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2132,7 +2146,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_follow_line_until: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2152,7 +2167,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2223,7 +2238,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_follow_line_until_black: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2240,7 +2256,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2308,13 +2324,14 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_cross_intersection: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2361,7 +2378,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_turn_at_intersection: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2377,7 +2395,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2479,7 +2497,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_set_following_speed_to: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2500,7 +2519,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2552,13 +2571,14 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_stop: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2590,7 +2610,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_set_head_led_to: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2612,7 +2633,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2668,7 +2689,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_change_head_led_by_rgb: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2686,7 +2708,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2752,7 +2774,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_set_head_led_to_rgb: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2770,7 +2793,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2832,13 +2855,14 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_clear_head_led: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2867,7 +2891,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_play_sound_times: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2893,7 +2918,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -2961,7 +2986,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_play_sound_times_until_done: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2987,7 +3013,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3078,7 +3104,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_change_buzzer_by: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3088,7 +3115,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3127,7 +3154,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_set_buzzer_to: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3137,7 +3165,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3175,13 +3203,14 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_clear_sound: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3219,7 +3248,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_play_note: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3258,7 +3288,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3336,7 +3366,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_play_note_for_beats: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3379,7 +3410,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3497,7 +3528,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_rest_for_beats: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3507,7 +3539,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3581,7 +3613,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_change_tempo_by: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3591,7 +3624,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -3634,7 +3667,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_set_tempo_to: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3644,7 +3678,7 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],

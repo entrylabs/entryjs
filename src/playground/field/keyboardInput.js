@@ -43,6 +43,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
             x: X_PADDING / 2,
             y: TEXT_Y_PADDING,
             'font-size': '11px',
+            'font-family': 'NanumGothic',
         });
 
         this._setTextValue();

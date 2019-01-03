@@ -50,110 +50,111 @@ Entry.JDKit = {
     url: 'http://www.junilab.co.kr',
     imageName: 'jdkit.png',
     title: {
-        "en": "JDKit",
-        "ko": "제이디키트"
+        'en': 'JDKit',
+        'ko': '제이디키트',
     },
-	monitorTemplate: {
-        	imgPath: 'hw/jdrc.png',
-        	width: 600,
-        	height: 355,
-        	listPorts: {
-            		'A6': {
-                		name: Lang.template.jdcode_connect,
-                		type: 'input',
-                		pos: {
-                    			x: 0,
-                    			y: 0,
-                		},
-            		},
-			'A10': {
-                		name: Lang.template.jdcode_ready,
-                		type: 'input',
-                		pos: {
-                    			x: 0,
-                    			y: 0,
-                		},
-            		},
-			'A8': {
-                		name: Lang.Blocks.jdcode_tiltx,
-                		type: 'input',
-                		pos: {
-                    			x: 0,
-                    			y: 0,
-                		},
-            		},
-			'A9': {
-                		name: Lang.Blocks.jdcode_tilty,
-                		type: 'input',
-                		pos: {
-                    			x: 0,
-                    			y: 0,
-                		},
-            		},
-			'A7': {
-                		name: Lang.Blocks.jdcode_alt,
-                		type: 'input',
-                		pos: {
-                    			x: 0,
-                    			y: 0,
-                		},
-            		},
-		},
-        	ports: {
-			'A1': {
-                		name: Lang.Blocks.jdkit_joystick_leftleftright,
-                		type: 'input',
-                		pos: {
-                    			x: 140,
-                    			y: 140,
-                		},
-            		},
+    monitorTemplate: {
+        imgPath: 'hw/jdrc.png',
+        width: 600,
+        height: 355,
+        listPorts: {
+            'A6': {
+                name: Lang.template.jdcode_connect,
+                type: 'input',
+                pos: {
+                    x: 0,
+                    y: 0,
+                },
+            },
+            'A10': {
+                name: Lang.template.jdcode_ready,
+                type: 'input',
+                pos: {
+                    x: 0,
+                    y: 0,
+                },
+            },
+            'A8': {
+                name: Lang.Blocks.jdcode_tiltx,
+                type: 'input',
+                pos: {
+                    x: 0,
+                    y: 0,
+                },
+            },
+            'A9': {
+                name: Lang.Blocks.jdcode_tilty,
+                type: 'input',
+                pos: {
+                    x: 0,
+                    y: 0,
+                },
+            },
+            'A7': {
+                name: Lang.Blocks.jdcode_alt,
+                type: 'input',
+                pos: {
+                    x: 0,
+                    y: 0,
+                },
+            },
+        },
+        ports: {
+            'A1': {
+                name: Lang.Blocks.jdkit_joystick_leftleftright,
+                type: 'input',
+                pos: {
+                    x: 140,
+                    y: 140,
+                },
+            },
 
-            		'A2': {
-                		name: Lang.Blocks.jdkit_joystick_lefttopbottom,
-                		type: 'input',
-                		pos: {
-                    			x: 140,
-                    			y: 140,
-                		},
-            		},
-			'A3': {
-                		name: Lang.Blocks.jdkit_joystick_rightleftright,
-                		type: 'input',
-                		pos: {
-                    			x: 450,
-                    			y: 140,
-                		},
-            		},
+            'A2': {
+                name: Lang.Blocks.jdkit_joystick_lefttopbottom,
+                type: 'input',
+                pos: {
+                    x: 140,
+                    y: 140,
+                },
+            },
+            'A3': {
+                name: Lang.Blocks.jdkit_joystick_rightleftright,
+                type: 'input',
+                pos: {
+                    x: 450,
+                    y: 140,
+                },
+            },
 
-            		'A4': {
-                		name: Lang.Blocks.jdkit_joystick_righttopbottom,
-                		type: 'input',
-                		pos: {
-                    			x: 450,
-                    			y: 140,
-                		},
-            		},
-          		'A5': {
-                		name: Lang.Blocks.jdcode_button,
-                		type: 'input',
-                		pos: {
-                    			x: 430,
-                    			y: 250,
-                		},
-            		},
+            'A4': {
+                name: Lang.Blocks.jdkit_joystick_righttopbottom,
+                type: 'input',
+                pos: {
+                    x: 450,
+                    y: 140,
+                },
+            },
+            'A5': {
+                name: Lang.Blocks.jdcode_button,
+                type: 'input',
+                pos: {
+                    x: 430,
+                    y: 250,
+                },
+            },
 
 
-		},
-           	mode: 'both',
-    	},
+        },
+        mode: 'both',
+    },
 };
 
 Entry.JDKit.getBlocks = function() {
     return {
         //region JDKit
         jdkit_joystick: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -195,7 +196,8 @@ Entry.JDKit.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdkit_button: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -236,7 +238,8 @@ Entry.JDKit.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdkit_gyro: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -273,7 +276,8 @@ Entry.JDKit.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdkit_ultrasonic: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -292,7 +296,8 @@ Entry.JDKit.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdkit_connect: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -311,7 +316,8 @@ Entry.JDKit.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdkit_ready: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -331,7 +337,8 @@ Entry.JDKit.getBlocks = function() {
         },
 
         jdkit_led: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -355,7 +362,7 @@ Entry.JDKit.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -402,7 +409,8 @@ Entry.JDKit.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdkit_tune: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -438,7 +446,7 @@ Entry.JDKit.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -485,8 +493,9 @@ Entry.JDKit.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
 
-	jdkit_motor: {
-            color: '#00979D',
+        jdkit_motor: {
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -509,7 +518,7 @@ Entry.JDKit.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -554,7 +563,8 @@ Entry.JDKit.getBlocks = function() {
         },
 
         jdkit_throttle: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -566,7 +576,7 @@ Entry.JDKit.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -609,7 +619,8 @@ Entry.JDKit.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdkit_altitude: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -621,7 +632,7 @@ Entry.JDKit.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -664,7 +675,8 @@ Entry.JDKit.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdkit_rollpitch: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -685,7 +697,7 @@ Entry.JDKit.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -732,7 +744,8 @@ Entry.JDKit.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdkit_yaw: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -744,7 +757,7 @@ Entry.JDKit.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -786,13 +799,14 @@ Entry.JDKit.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdkit_emergency: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],

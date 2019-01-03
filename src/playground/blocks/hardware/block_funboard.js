@@ -7,12 +7,12 @@ Entry.FunBoard = {
     url: 'http://www.thinkfunedu.com',
     imageName: 'funboard.png',
     title: {
-        "en": "funboard",
-        "ko": "펀보드"
+        'en': 'funboard',
+        'ko': '펀보드',
     },
     Static: {
-        FUNBOARD_BLOCK_COLOR: '#00979D', // gray(#848484)
-        FUNBOARD_ARROW_COLOR_HW: '#00979D',
+        FUNBOARD_BLOCK_COLOR: '#00CFCA', // gray(#848484)
+        FUNBOARD_ARROW_COLOR_HW: '#00CFCA',
         FUNBOARD_FONT_COLOR: '#000f0f', // cyan(#000f0f), lightgray(#000113), reddish-brown(#982600)
         FUNBOARD_LED_ON: 255,
         BUTTON_PRESS_VALUE: 0, // 버튼 눌림 값
@@ -36,10 +36,12 @@ Entry.FunBoard = {
                 data: Entry.FunBoard.EventTypes.RESET,
                 time: new Date().getTime(),
             };
-            for (var i = 0; i < 50000; i++) {}
+            for (var i = 0; i < 50000; i++) {
+            }
             Entry.hw.update();
             delete Entry.hw.sendQueue[port];
-            for (var i = 0; i < 500000; i++) {}
+            for (var i = 0; i < 500000; i++) {
+            }
         }
         //-------------------------------------------------
         if (!Entry.hw.sendQueue.SET) {
@@ -237,7 +239,7 @@ Entry.FunBoard = {
         //즉, 비교할 수 있는 문자들만(기호는 문자비교를 할 수 없으니...)...
         // \ 는 앞에 \ 를 붙인다.
         var displayCharSet =
-            "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz !?#$%&*+-/~^_@<>=()[]{},.:;'`\\|";
+            '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz !?#$%&*+-/~^_@<>=()[]{},.:;\'`\\|';
         var not_found = 62; //62 == space 문자 위치
         if (k < 0 || k >= str.length) return not_found;
         var pos = displayCharSet.indexOf(str[k]);
@@ -282,7 +284,8 @@ Entry.FunBoard.getBlocks = function() {
     return {
         //region FunBoard
         funboard_list_pushbutton_basic: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -311,7 +314,8 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_touchbutton_basic: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -343,7 +347,8 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_analogsensor_basic: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -371,7 +376,8 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_2_state_basic: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -398,7 +404,8 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_ledcolor_basic: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -429,7 +436,8 @@ Entry.FunBoard.getBlocks = function() {
         },
         funboard_list_ledcolor_pwm_basic: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -456,7 +464,8 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_onoff_basic: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -484,7 +493,8 @@ Entry.FunBoard.getBlocks = function() {
         },
         funboard_list_digital_octave: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -518,7 +528,8 @@ Entry.FunBoard.getBlocks = function() {
         },
         funboard_list_digital_tone: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -557,7 +568,8 @@ Entry.FunBoard.getBlocks = function() {
         },
         funboard_list_matrix_rows: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -591,7 +603,8 @@ Entry.FunBoard.getBlocks = function() {
         },
         funboard_list_matrix_row_or_column: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -619,7 +632,8 @@ Entry.FunBoard.getBlocks = function() {
         },
         funboard_list_matrix_scroll_option: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -650,7 +664,8 @@ Entry.FunBoard.getBlocks = function() {
         },
         funboard_list_matrix_char: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -748,7 +763,7 @@ Entry.FunBoard.getBlocks = function() {
                         ['.', '.'],
                         [':', ':'],
                         [';', ';'],
-                        ["'", "'"],
+                        ['\'', '\''],
                         ['`', '`'],
                         ['\\', '\\'],
                         ['|', '|'],
@@ -769,7 +784,8 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_what_button_pressed: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -829,7 +845,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_what_touch_button_pressed: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -879,7 +896,7 @@ Entry.FunBoard.getBlocks = function() {
                 } else {
                     var DIGITAL = Entry.hw.portData.DIGITAL;
                     value = DIGITAL ? DIGITAL[port] || 0 : 0;
-                    /*                
+                    /*
                 if(!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
@@ -899,7 +916,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_get_digital_button_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -957,7 +975,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_get_touch_button_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1011,7 +1030,7 @@ Entry.FunBoard.getBlocks = function() {
                     }
                 } else {
                     var DIGITAL = Entry.hw.portData.DIGITAL;
-                    /*                
+                    /*
                 if(!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
@@ -1033,7 +1052,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_get_number_sensor_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1071,7 +1091,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_get_analog_sensor_2state: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -1123,7 +1144,7 @@ Entry.FunBoard.getBlocks = function() {
                     Math.max(
                         0,
                         Math.abs(vmax - vmin) *
-                            Entry.FunBoard.Static.ANALOG_STATE_PERCENT
+                        Entry.FunBoard.Static.ANALOG_STATE_PERCENT,
                     );
 
                 var ret = 0;
@@ -1140,7 +1161,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_convert_scale: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1256,7 +1278,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_set_digital_buzzer: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
@@ -1378,7 +1401,8 @@ Entry.FunBoard.getBlocks = function() {
         },
         funboard_buzzer_second: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1461,7 +1485,8 @@ Entry.FunBoard.getBlocks = function() {
         },
         funboard_buzzer_tone_simple: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1544,7 +1569,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_buzzer_onoff: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1602,7 +1628,7 @@ Entry.FunBoard.getBlocks = function() {
                     var fps = Entry.FPS || 60;
                     var timeValue = Math.max(
                         1,
-                        3 * Entry.FunBoard.Static.DELAY_SECOND
+                        3 * Entry.FunBoard.Static.DELAY_SECOND,
                     );
                     timeValue = Entry.FunBoard.Static.DELAY_SECOND;
                     timeValue = 60 / fps * timeValue * 1000;
@@ -1622,7 +1648,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_color_led_onoff: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1693,7 +1720,7 @@ Entry.FunBoard.getBlocks = function() {
                                 }
                                 Entry.hw.sendQueue['SET'][
                                     Entry.FunBoard.PORT_MAP['led_red']
-                                ] = {
+                                    ] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portR,
                                     time: new Date().getTime(),
@@ -1705,7 +1732,7 @@ Entry.FunBoard.getBlocks = function() {
                                 }
                                 Entry.hw.sendQueue['SET'][
                                     Entry.FunBoard.PORT_MAP['led_yellow']
-                                ] = {
+                                    ] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portY,
                                     time: new Date().getTime(),
@@ -1717,7 +1744,7 @@ Entry.FunBoard.getBlocks = function() {
                                 }
                                 Entry.hw.sendQueue['SET'][
                                     Entry.FunBoard.PORT_MAP['led_green']
-                                ] = {
+                                    ] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portG,
                                     time: new Date().getTime(),
@@ -1729,7 +1756,7 @@ Entry.FunBoard.getBlocks = function() {
                                 }
                                 Entry.hw.sendQueue['SET'][
                                     Entry.FunBoard.PORT_MAP['led_blue']
-                                ] = {
+                                    ] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portB,
                                     time: new Date().getTime(),
@@ -1759,7 +1786,7 @@ Entry.FunBoard.getBlocks = function() {
                                 }
                                 Entry.hw.sendQueue['SET'][
                                     Entry.FunBoard.PORT_MAP['led_red']
-                                ] = {
+                                    ] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portR,
                                     time: new Date().getTime(),
@@ -1771,7 +1798,7 @@ Entry.FunBoard.getBlocks = function() {
                                 }
                                 Entry.hw.sendQueue['SET'][
                                     Entry.FunBoard.PORT_MAP['led_yellow']
-                                ] = {
+                                    ] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portY,
                                     time: new Date().getTime(),
@@ -1783,7 +1810,7 @@ Entry.FunBoard.getBlocks = function() {
                                 }
                                 Entry.hw.sendQueue['SET'][
                                     Entry.FunBoard.PORT_MAP['led_green']
-                                ] = {
+                                    ] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portG,
                                     time: new Date().getTime(),
@@ -1795,7 +1822,7 @@ Entry.FunBoard.getBlocks = function() {
                                 }
                                 Entry.hw.sendQueue['SET'][
                                     Entry.FunBoard.PORT_MAP['led_blue']
-                                ] = {
+                                    ] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portB,
                                     time: new Date().getTime(),
@@ -1825,7 +1852,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_color_led_on_pwm: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1879,7 +1907,7 @@ Entry.FunBoard.getBlocks = function() {
                 var li_percent = script.getNumberValue('PERCENT');
                 li_percent = Entry.FunBoard.MinMax(li_percent, 0, 100);
                 var pwm_value = Math.round(
-                    Entry.FunBoard.Static.FUNBOARD_LED_ON * (li_percent / 100)
+                    Entry.FunBoard.Static.FUNBOARD_LED_ON * (li_percent / 100),
                 );
 
                 if (!script.isStart) {
@@ -1895,7 +1923,7 @@ Entry.FunBoard.getBlocks = function() {
                             }
                             Entry.hw.sendQueue['SET'][
                                 Entry.FunBoard.PORT_MAP['led_red']
-                            ] = {
+                                ] = {
                                 type: Entry.FunBoard.sensorTypes.PWM,
                                 data: portR,
                                 time: new Date().getTime(),
@@ -1907,7 +1935,7 @@ Entry.FunBoard.getBlocks = function() {
                             }
                             Entry.hw.sendQueue['SET'][
                                 Entry.FunBoard.PORT_MAP['led_yellow']
-                            ] = {
+                                ] = {
                                 type: Entry.FunBoard.sensorTypes.PWM,
                                 data: portY,
                                 time: new Date().getTime(),
@@ -1936,7 +1964,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_intensity: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2018,7 +2047,8 @@ Entry.FunBoard.getBlocks = function() {
         },
         funboard_dotmatrix_scroll_option: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2084,7 +2114,8 @@ Entry.FunBoard.getBlocks = function() {
         },
         funboard_dotmatrix_scroll_rapid: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2165,7 +2196,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_onoff: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2234,7 +2266,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_char_display: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2335,7 +2368,8 @@ Entry.FunBoard.getBlocks = function() {
         },
         funboard_dotmatrix_string_display: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2382,7 +2416,7 @@ Entry.FunBoard.getBlocks = function() {
                 }
                 var char_tot = Math.min(
                     string.length,
-                    Entry.FunBoard.Static.FUNBOARD_MATRIX_STRING_MAX
+                    Entry.FunBoard.Static.FUNBOARD_MATRIX_STRING_MAX,
                 );
 
                 if (!script.isStart) {
@@ -2448,7 +2482,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_string_display_scroll: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2507,7 +2542,7 @@ Entry.FunBoard.getBlocks = function() {
 
                 var char_tot = Math.min(
                     string.length,
-                    Entry.FunBoard.Static.FUNBOARD_MATRIX_STRING_MAX
+                    Entry.FunBoard.Static.FUNBOARD_MATRIX_STRING_MAX,
                 );
 
                 if (!script.isStart) {
@@ -2586,7 +2621,8 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_dotmatrix_symbol: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2668,7 +2704,8 @@ Entry.FunBoard.getBlocks = function() {
         },
         funboard_dotmatrix_num: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2713,7 +2750,7 @@ Entry.FunBoard.getBlocks = function() {
                 }
                 var char_tot = Math.min(
                     string.length,
-                    Entry.FunBoard.Static.FUNBOARD_MATRIX_STRING_MAX
+                    Entry.FunBoard.Static.FUNBOARD_MATRIX_STRING_MAX,
                 );
 
                 if (!script.isStart) {
@@ -2779,7 +2816,8 @@ Entry.FunBoard.getBlocks = function() {
         },
         funboard_dotmatrix_big_eng: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2839,7 +2877,7 @@ Entry.FunBoard.getBlocks = function() {
                 }
                 var char_tot = Math.min(
                     string.length,
-                    Entry.FunBoard.Static.FUNBOARD_MATRIX_STRING_MAX
+                    Entry.FunBoard.Static.FUNBOARD_MATRIX_STRING_MAX,
                 );
 
                 if (!script.isStart) {
@@ -2905,7 +2943,8 @@ Entry.FunBoard.getBlocks = function() {
         },
         funboard_dotmatrix_small_eng: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2965,7 +3004,7 @@ Entry.FunBoard.getBlocks = function() {
                 }
                 var char_tot = Math.min(
                     string.length,
-                    Entry.FunBoard.Static.FUNBOARD_MATRIX_STRING_MAX
+                    Entry.FunBoard.Static.FUNBOARD_MATRIX_STRING_MAX,
                 );
 
                 if (!script.isStart) {
@@ -3031,7 +3070,8 @@ Entry.FunBoard.getBlocks = function() {
         },
         funboard_dotmatrix_extra_char: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3100,7 +3140,7 @@ Entry.FunBoard.getBlocks = function() {
                 }
                 var char_tot = Math.min(
                     string.length,
-                    Entry.FunBoard.Static.FUNBOARD_MATRIX_STRING_MAX
+                    Entry.FunBoard.Static.FUNBOARD_MATRIX_STRING_MAX,
                 );
 
                 if (!script.isStart) {
@@ -3164,7 +3204,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_1row: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3281,7 +3322,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_1column: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3400,7 +3442,8 @@ Entry.FunBoard.getBlocks = function() {
         },
         funboard_dotmatrix_1row_1column: {
             ignore: true,
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3531,7 +3574,8 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_dotmatrix_set: {
-            color: '#00979D',
+            color: '#00CFCA',
+            outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
