@@ -56,7 +56,21 @@ Entry.Xbot = {
         "en": "XBOT(OneTouch Dongle/USB)"
     },
 };
-
+Entry.Xbot.blockMenuBlocks = [
+    //XBOT Blocks added
+    'xbot_analogValue',
+    'xbot_digitalInput',
+    'xbot_digitalOutput',
+    'xbot_analogOutput',
+    'xbot_rgb',
+    'xbot_rgb_picker',
+    'xbot_buzzer',
+    'xbot_servo',
+    'xbot_oneWheel',
+    'xbot_twoWheel',
+    'xbot_lcd',
+    //end of XBOT Blocks added
+];
 Entry.Xbot.getBlocks = function() {
     return {
         //region xbot 엑스봇

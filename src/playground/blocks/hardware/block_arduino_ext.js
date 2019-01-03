@@ -105,11 +105,21 @@ Entry.ArduinoExt.setLanguage = function() {
     };
 };
 
+Entry.ArduinoExt.blockMenuBlocks = [
+    'arduino_ext_get_analog_value',
+    'arduino_ext_get_analog_value_map',
+    'arduino_ext_get_ultrasonic_value',
+    'arduino_ext_get_digital',
+    'arduino_ext_toggle_led',
+    'arduino_ext_digital_pwm',
+    'arduino_ext_set_servo',
+    'arduino_ext_set_tone',
+];
+
 //region arduinoExt 아두이노 확장모드
 Entry.ArduinoExt.getBlocks = function() {
     return {
         arduino_ext_analog_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -510,7 +520,6 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_get_digital_toggle: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -727,7 +736,6 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_tone_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -801,7 +809,6 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_tone_value: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -839,7 +846,6 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_octave_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',

@@ -159,6 +159,21 @@ Entry.Bitbrick = {
     },
 };
 
+Entry.Bitbrick.blockMenuBlocks = [
+    'bitbrick_sensor_value',
+    'bitbrick_convert_scale',
+    'bitbrick_is_touch_pressed',
+    'bitbrick_turn_off_color_led',
+    'bitbrick_turn_on_color_led_by_rgb',
+    'bitbrick_turn_on_color_led_by_picker',
+    'bitbrick_turn_on_color_led_by_value',
+    'bitbrick_buzzer',
+    'bitbrick_turn_off_all_motors',
+    'bitbrick_dc_speed',
+    'bitbrick_dc_direction_speed',
+    'bitbrick_servomotor_angle',
+];
+
 Entry.Bitbrick.getBlocks = function () {
     return {
         //region bitbrick 비트브릭

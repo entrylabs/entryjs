@@ -279,13 +279,13 @@ Entry.byrobot_dronefighter_controller = {
     },
 
     // 버저 설정(함수 호출 시 시간은 모두 ms 단위 사용)
-    /*  
+    /*
         MuteInstantally     = 1,    // 묵음 즉시 적용
         MuteContinually     = 2,    // 묵음 예약
-        
+
         ScaleInstantally    = 3,    // 음계 즉시 적용
         ScaleContinually    = 4,    // 음계 예약
-        
+
         HzInstantally       = 5,    // 주파수 즉시 적용
         HzContinually       = 6,    // 주파수 예약
      */
@@ -505,7 +505,29 @@ Entry.byrobot_dronefighter_controller = {
         }
     },
 };
-
+Entry.byrobot_dronefighter_controller.blockMenuBlocks = [
+    'byrobot_dronefighter_controller_controller_value_button',
+    'byrobot_dronefighter_controller_controller_value_joystick',
+    'byrobot_dronefighter_controller_controller_if_button_press',
+    'byrobot_dronefighter_controller_controller_if_joystick_direction',
+    'byrobot_dronefighter_controller_controller_light_manual_single_off',
+    'byrobot_dronefighter_controller_controller_light_manual_single',
+    'byrobot_dronefighter_controller_controller_light_manual_single_input',
+    'byrobot_dronefighter_controller_controller_buzzer_off',
+    'byrobot_dronefighter_controller_controller_buzzer_scale',
+    'byrobot_dronefighter_controller_controller_buzzer_scale_delay',
+    'byrobot_dronefighter_controller_controller_buzzer_scale_reserve',
+    'byrobot_dronefighter_controller_controller_buzzer_hz',
+    'byrobot_dronefighter_controller_controller_buzzer_hz_delay',
+    'byrobot_dronefighter_controller_controller_buzzer_hz_reserve',
+    'byrobot_dronefighter_controller_controller_vibrator_off',
+    'byrobot_dronefighter_controller_controller_vibrator_on_delay',
+    'byrobot_dronefighter_controller_controller_vibrator_on_reserve',
+    'byrobot_dronefighter_controller_controller_vibrator_delay',
+    'byrobot_dronefighter_controller_controller_vibrator_reserve',
+    'byrobot_dronefighter_controller_controller_userinterface_preset',
+    'byrobot_dronefighter_controller_controller_userinterface',
+];
 Entry.byrobot_dronefighter_controller.getBlocks = function() {
     return {
         //region byrobot 바이로봇

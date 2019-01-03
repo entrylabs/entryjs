@@ -261,6 +261,31 @@ Entry.JDCode.setLanguage = function() {
 };
 
 
+Entry.JDCode.blockMenuBlocks = [
+    'jdcode_takeoff',
+    'jdcode_landing',
+    'jdcode_altitude',
+    'jdcode_throttle',
+    'jdcode_velocity',
+    'jdcode_distance',
+    'jdcode_degree',
+    'jdcode_emergency',
+    'jdcode_connect',
+    'jdcode_ready',
+    'jdcode_battery',
+    'jdcode_dronealt',
+    'jdcode_gyrox',
+    'jdcode_gyroy',
+    'jdcode_posx',
+    'jdcode_posy',
+    'jdcode_led',
+    'jdcode_tune',
+    'jdcode_motor',
+    'jdcode_joystick',
+    'jdcode_button',
+];
+
+
 Entry.JDCode.getBlocks = function() {
     return {
         //region JDCode

@@ -171,12 +171,32 @@ Entry.CodingBox.setLanguage = function() {
         },
     };
 };
-
+Entry.CodingBox.blockMenuBlocks = [
+    'cbx_read_line',
+    'cbx_read_mic',
+    'cbx_read_switch',
+    'cbx_read_potentiometer',
+    'cbx_read_ultrasonic',
+    'cbx_write_led',
+    'cbx_write_rgb_led',
+    'cbx_write_tone',
+    'cbx_write_dcm',
+    'cbx_write_servo',
+    'cbx_write_lcd',
+    'cbx_clear_lcd',
+    'cbx_arduino_get_analog_value',
+    'cbx_arduino_get_analog_value_map',
+    'cbx_arudino_read_ultrasonic_value',
+    'cbx_arduino_read_digital',
+    'cbx_arduino_toggle_led',
+    'cbx_arduino_digital_pwm',
+    'cbx_arduino_write_servo',
+    'cbx_arduino_write_tone',
+];
 //region CodingBox 아두이노 확장모드
 Entry.CodingBox.getBlocks = function() {
     return {
         coding_box_analog_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -572,7 +592,6 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         arduino_get_digital_toggle: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -786,7 +805,6 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         coding_box_tone_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -860,7 +878,6 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         coding_box_tone_value: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -898,7 +915,6 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         coding_box_octave_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -1722,7 +1738,6 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_led_number_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -1770,7 +1785,6 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_rgb_led_value_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -1824,7 +1838,6 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_led_value_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -1888,7 +1901,6 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_dcm_speed_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -1950,7 +1962,6 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_servo_angle_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -2013,7 +2024,6 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_lcd_column_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -2095,7 +2105,6 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_lcd_row_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -2143,7 +2152,6 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_switch_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -2197,7 +2205,6 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_dcm_direction_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',

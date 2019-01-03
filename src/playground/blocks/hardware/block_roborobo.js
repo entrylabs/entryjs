@@ -303,6 +303,21 @@ Entry.Roborobo_SchoolKit = {
     },
 };
 
+Entry.Roborobo_Roduino.blockMenuBlocks = [
+    'roduino_on_block',
+    'roduino_off_block',
+    'roduino_get_sensor_analog_value',
+    'roduino_get_sensor_digital_value',
+    'roduino_get_analog_value',
+    'roduino_get_digital_value',
+    'roduino_get_color',
+    'roduino_set_digital',
+    'roduino_motor',
+    'roduino_set_color_pin',
+    'roduino_set_servo_value',
+    'roduino_set_pwm_value',
+];
+
 Entry.Roborobo_Roduino.getBlocks = function() {
     return {
         //region roduino 로두이노
@@ -359,7 +374,6 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
         },
         roduino_get_analog_number: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -413,7 +427,6 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
         },
         roduino_get_port_number: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -913,7 +926,6 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
         },
         roduino_get_pwm_port_number: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -960,7 +972,6 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
         },
         roduino_get_pwm_output_value: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -1100,7 +1111,6 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
         },
         roduino_get_servo_port_number: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -1410,6 +1420,15 @@ Entry.Roborobo_Roduino.getBlocks = function() {
     };
 };
 
+Entry.Roborobo_SchoolKit.blockMenuBlocks = [
+    'schoolkit_on_block',
+    'schoolkit_off_block',
+    'schoolkit_get_input_value',
+    'schoolkit_set_output',
+    'schoolkit_motor',
+    'schoolkit_set_servo_value',
+];
+
 Entry.Roborobo_SchoolKit.getBlocks = function() {
     return {
         //region schoolkit 스쿨키트
@@ -1466,7 +1485,6 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             },
         },
         schoolkit_get_out_port_number: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -1519,7 +1537,6 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             },
         },
         schoolkit_get_servo_port_number: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -1564,7 +1581,6 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             },
         },
         schoolkit_get_in_port_number: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',

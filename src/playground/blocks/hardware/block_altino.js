@@ -54,6 +54,16 @@ Entry.Altino = {
     },
 };
 
+Entry.Altino.blockMenuBlocks = [
+    'altino_analogValue',
+    'altino_rear_wheel',
+    'altino_steering',
+    'altino_sound',
+    'altino_light',
+    'altino_dot_display',
+    'altino_dot_display_line',
+];
+
 Entry.Altino.getBlocks = function() {
     return {
         //region Altino 알티노

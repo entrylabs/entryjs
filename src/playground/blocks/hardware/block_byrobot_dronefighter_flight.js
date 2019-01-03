@@ -777,7 +777,42 @@ Entry.byrobot_dronefighter_flight = {
         }
     },
 };
-
+Entry.byrobot_dronefighter_flight.blockMenuBlocks = [
+     'byrobot_dronefighter_flight_drone_value_attitude',
+     'byrobot_dronefighter_flight_drone_value_etc',
+     'byrobot_dronefighter_flight_controller_value_button',
+     'byrobot_dronefighter_flight_controller_value_joystick',
+     'byrobot_dronefighter_flight_controller_if_button_press',
+     'byrobot_dronefighter_flight_controller_if_joystick_direction',
+     'byrobot_dronefighter_flight_drone_control_drone_stop',
+     'byrobot_dronefighter_flight_drone_control_coordinate',
+     'byrobot_dronefighter_flight_drone_control_drone_reset_heading',
+     'byrobot_dronefighter_flight_drone_control_quad_one',
+     'byrobot_dronefighter_flight_drone_control_quad_one_delay',
+     'byrobot_dronefighter_flight_drone_control_quad',
+     'byrobot_dronefighter_flight_drone_motor_stop',
+     'byrobot_dronefighter_flight_drone_motorsingle',
+     'byrobot_dronefighter_flight_drone_motorsingle_input',
+     'byrobot_dronefighter_flight_drone_irmessage',
+     'byrobot_dronefighter_flight_drone_light_manual_single_off',
+     'byrobot_dronefighter_flight_drone_light_manual_single',
+     'byrobot_dronefighter_flight_drone_light_manual_single_input',
+     'byrobot_dronefighter_flight_controller_light_manual_single_off',
+     'byrobot_dronefighter_flight_controller_light_manual_single',
+     'byrobot_dronefighter_flight_controller_light_manual_single_input',
+     'byrobot_dronefighter_flight_controller_buzzer_off',
+     'byrobot_dronefighter_flight_controller_buzzer_scale',
+     'byrobot_dronefighter_flight_controller_buzzer_scale_delay',
+     'byrobot_dronefighter_flight_controller_buzzer_scale_reserve',
+     'byrobot_dronefighter_flight_controller_buzzer_hz',
+     'byrobot_dronefighter_flight_controller_buzzer_hz_delay',
+     'byrobot_dronefighter_flight_controller_buzzer_hz_reserve',
+     'byrobot_dronefighter_flight_controller_vibrator_off',
+     'byrobot_dronefighter_flight_controller_vibrator_on_delay',
+     'byrobot_dronefighter_flight_controller_vibrator_on_reserve',
+     'byrobot_dronefighter_flight_controller_vibrator_delay',
+     'byrobot_dronefighter_flight_controller_vibrator_reserve',
+ ];
 Entry.byrobot_dronefighter_flight.getBlocks = function() {
     return {
         //region byrobot 바이로봇
@@ -2602,7 +2637,6 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_command_mode_vehicle_drone: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic',
@@ -2631,7 +2665,6 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_control_drone_takeoff: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic',
@@ -2660,7 +2693,6 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_control_drone_landing: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic',

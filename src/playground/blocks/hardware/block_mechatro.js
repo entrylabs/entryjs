@@ -205,7 +205,23 @@ Entry.mechatro = {
         }
     },
 };
-
+Entry.mechatro.blockMenuBlocks = [
+    // mechatro Added 2018-02-12
+    'mechatro_set_threshold',
+    'mechatro_get_digital',
+    'mechatro_get_sensor_value',
+    'mechatro_get_dc_motor_current',
+    'mechatro_get_ultrasonic_value',
+    'mechatro_set_digital',
+    'mechatro_set_pwm',
+    'mechatro_set_tone',
+    'mechatro_set_tone_time',
+    'mechatro_set_dc_motor',
+    'mechatro_set_servo_position',
+    'mechatro_set_servo_speed',
+    'mechatro_set_blue_pw',
+    // mechatro Added 2018-02-12
+];
 Entry.mechatro.getBlocks = function() {
     return {
         //region mechatro

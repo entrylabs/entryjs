@@ -75,11 +75,28 @@ Entry.ardublock = {
     BlockState: {},
 };
 
+Entry.ardublock.blockMenuBlocks = [
+    'ardublock_get_analog_value',
+    'ardublock_get_analog_value_map',
+    'ardublock_get_ultrasonic_value',
+    'ardublock_get_digital',
+    'ardublock_toggle_led',
+    'ardublock_digital_pwm',
+    'ardublock_set_servo',
+    'ardublock_set_tone',
+    'ardublock_set_left_motor',
+    'ardublock_set_right_motor',
+    'ardublock_get_left_cds_analog_value',
+    'ardublock_get_right_cds_analog_value',
+    'ardublock_toggle_left_led',
+    'ardublock_toggle_right_led',
+    'ardublock_get_sound_analog_value',
+];
+
 Entry.ardublock.getBlocks = function() {
     return {
         //region ardublock 아두블록
         ardublock_analog_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -466,7 +483,6 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_tone_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -507,7 +523,6 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_tone_value: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -537,7 +552,6 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_octave_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -766,7 +780,6 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_motor_direction_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',

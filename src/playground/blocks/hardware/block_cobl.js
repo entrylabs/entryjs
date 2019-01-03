@@ -16,7 +16,29 @@ Entry.Cobl = {
         Entry.hw.update();
     },
 };
-
+Entry.Cobl.blockMenuBlocks = [
+    'cobl_read_ultrason',
+    'cobl_read_potenmeter',
+    'cobl_read_irread1',
+    'cobl_read_irread2',
+    'cobl_read_joyx',
+    'cobl_read_joyy',
+    //"cobl_read_sens1",
+    //"cobl_read_sens2",
+    'cobl_read_tilt',
+    'cobl_read_temps',
+    'cobl_read_light',
+    'cobl_read_btn',
+    'cobl_led_control',
+    'cobl_rgb_boardled',
+    'cobl_servo_angle_control',
+    'cobl_melody',
+    'cobl_dcmotor',
+    'cobl_extention_port',
+    'cobl_external_RainBowled',
+    'cobl_external_led',
+    'cobl_7_segment',
+];
 Entry.Cobl.getBlocks = function() {
     return {
         //region cobl 코블
@@ -126,7 +148,6 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_read_color: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             fontColor: '#fff',
@@ -147,7 +168,6 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_read_humid: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             fontColor: '#fff',

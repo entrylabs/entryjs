@@ -62,7 +62,23 @@ Entry.Chocopi = {
         }
     },
 };
-
+Entry.Chocopi.blockMenuBlocks = [
+    'chocopi_sensor',
+    'chocopi_touch_event',
+    'chocopi_touch_status',
+    'chocopi_touch_value',
+    'chocopi_control_event',
+    'chocopi_control_joystick',
+    'chocopi_control_button',
+    'chocopi_motion_photogate_event',
+    'chocopi_motion_photogate_time',
+    'chocopi_motion_photogate_status',
+    'chocopi_motion_value',
+    'chocopi_led',
+    'chocopi_dc_motor',
+    'chocopi_servo_motor',
+    'chocopi_map_range',
+];
 Entry.Chocopi.getBlocks = function () {
     return {
         //region chocopi 초코파이
@@ -975,7 +991,7 @@ Entry.Chocopi.getBlocks = function () {
                 return script.callReturn();
             },
             syntax: { js: [], py: ['Chocopi.servo(%1, %2, %3)'] },
-        },        
+        },
         chocopi_map_range: {
             color: '#00979D',
             fontColor: '#fff',

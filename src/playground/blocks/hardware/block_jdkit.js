@@ -148,7 +148,22 @@ Entry.JDKit = {
         mode: 'both',
     },
 };
-
+Entry.JDKit.blockMenuBlocks = [
+    'jdkit_led',
+    'jdkit_tune',
+    'jdkit_motor',
+    'jdkit_joystick',
+    'jdkit_button',
+    'jdkit_gyro',
+    'jdkit_ultrasonic',
+    'jdkit_connect',
+    'jdkit_ready',
+    'jdkit_throttle',
+    'jdkit_altitude',
+    'jdkit_rollpitch',
+    'jdkit_yaw',
+    'jdkit_emergency',
+];
 Entry.JDKit.getBlocks = function() {
     return {
         //region JDKit

@@ -232,6 +232,42 @@ Entry.Turtle = {
     },
 };
 
+Entry.Turtle.blockMenuBlocks = [
+    'turtle_touching_color',
+    'turtle_is_color_pattern',
+    'turtle_button_state',
+    'turtle_value',
+    'turtle_move_forward_unit',
+    'turtle_move_backward_unit',
+    'turtle_turn_unit_in_place',
+    'turtle_turn_unit_with_radius_in_direction',
+    'turtle_pivot_around_wheel_unit_in_direction',
+    'turtle_change_wheels_by_left_right',
+    'turtle_set_wheels_to_left_right',
+    'turtle_change_wheel_by',
+    'turtle_set_wheel_to',
+    'turtle_follow_line',
+    'turtle_follow_line_until',
+    'turtle_follow_line_until_black',
+    'turtle_cross_intersection',
+    'turtle_turn_at_intersection',
+    'turtle_set_following_speed_to',
+    'turtle_stop',
+    'turtle_set_head_led_to',
+    'turtle_change_head_led_by_rgb',
+    'turtle_set_head_led_to_rgb',
+    'turtle_clear_head_led',
+    'turtle_play_sound_times',
+    'turtle_play_sound_times_until_done',
+    'turtle_change_buzzer_by',
+    'turtle_set_buzzer_to',
+    'turtle_clear_sound',
+    'turtle_play_note',
+    'turtle_play_note_for_beats',
+    'turtle_rest_for_beats',
+    'turtle_change_tempo_by',
+    'turtle_set_tempo_to',
+];
 
 Entry.Turtle.getBlocks = function() {
     return {

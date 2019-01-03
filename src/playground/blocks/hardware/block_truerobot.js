@@ -61,6 +61,29 @@ Entry.trueRobot = {
 
 };
 
+Entry.trueRobot.blockMenuBlocks = [
+    //truetrue
+    'truetrue_get_linesensor',
+    'truetrue_get_proxisensor',
+    'truetrue_get_accsensor',
+    'truetrue_get_bottomcolorsensor',
+    'truetrue_get_frontcolorsensor',
+    'truetrue_set_singlemotor',
+    'truetrue_set_dualmotor',
+    'truetrue_set_colorled',
+    'truetrue_set_led_proxi',
+    'truetrue_set_led_colorsensor',
+    'truetrue_set_led_linesensor',
+    'truetrue_set_linetracer',
+    'truetrue_set_head_colorled',
+    'truetrue_set_move',
+    'truetrue_set_sec_move',
+    'truetrue_set_rotate',
+    'truetrue_set_sec_rotate',
+    'truetrue_set_grid_block',
+    'truetrue_set_grid_rotate',
+];
+
 Entry.trueRobot.getBlocks = function() {
     return {
         //region TrueTrueRobot 뚜루뚜루로봇

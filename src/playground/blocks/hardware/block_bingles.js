@@ -20,12 +20,12 @@ Entry.BINGLES = {
     ledG: 0,
     ledB: 0,
     lcdNum: 0,
-    lcdTxt: ' ',   
+    lcdTxt: ' ',
     note: 'C4',
     duration: 0,
     motor_direction: 'Forward',
     motor_duration: 0,
-    OLEDImage: 0,       
+    OLEDImage: 0,
     },
     setZero: function() {
         var portMap = Entry.BINGLES.PORT_MAP;
@@ -122,7 +122,21 @@ Entry.BINGLES.setLanguage = function() {
                 }
             },
         };
-    },
+    };
+
+Entry.BINGLES.blockMenuBlocks = [
+    'bingles_analogValue',
+    'bingles_digitalOutput',
+    'bingles_rgb',
+    'bingles_rgb_picker',
+    'bingles_buzzer',
+    'bingles_servo',
+    'bingles_twoWheel',
+    'bingles_lcd',
+    'bingles_remotecontrol',
+    'bingles_oled',
+    'bingles_motorgo',
+];
 
 Entry.BINGLES.getBlocks = function() {
     return {
@@ -163,7 +177,7 @@ Entry.BINGLES.getBlocks = function() {
             },
             syntax: { js: [], py: ['bingles.analog_value(%1)'] },
         },
-        
+
         bingles_remotecontrol: {
             color: '#00979D',
             skeleton: 'basic_string_field',
@@ -251,7 +265,7 @@ Entry.BINGLES.getBlocks = function() {
             },
             syntax: { js: [], py: ['bingles.digital_output(%1, %2)'] },
         },
-        
+
         bingles_servo: {
             color: '#00979D',
             skeleton: 'basic',
@@ -311,7 +325,7 @@ Entry.BINGLES.getBlocks = function() {
             },
             syntax: { js: [], py: ['bingles.servo(%1, %2)'] },
         },
-        
+
         bingles_lcd: {
             color: '#00979D',
             skeleton: 'basic',
@@ -359,7 +373,7 @@ Entry.BINGLES.getBlocks = function() {
 
                 sq.lcdNum = line;
                 sq.lcdTxt = str;
-                return script.callReturn();                     
+                return script.callReturn();
             },
             syntax: { js: [], py: ['bingles.lcd(%1, %2)'] },
         },
@@ -437,7 +451,7 @@ Entry.BINGLES.getBlocks = function() {
                     //console.log('xbot_buzzer ' + noteOctave + ' ' + duration);
 
                     sq.note = noteOctave;
-                    
+
                     sq.duration = duration * 10;//  convert to 100mSec
 
                     script.isStart = true;
@@ -526,7 +540,7 @@ Entry.BINGLES.getBlocks = function() {
             },
             syntax: { js: [], py: ['bingles.rgb(%1, %2, %3)'] },
         },
-        
+
         bingles_rgb_picker: {
             color: '#00979D',
             skeleton: 'basic',
@@ -745,7 +759,7 @@ Entry.BINGLES.getBlocks = function() {
                 sq.OLEDImage = OLEDImage;
                 return script.callReturn();
 
-                
+
             },
             syntax: { js: [], py: ['bingles.lcd(%1, %2)'] },
         },

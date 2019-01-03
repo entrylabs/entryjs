@@ -130,7 +130,13 @@ Entry.Creamo = {
         mode: 'both',
     },
 };
-
+Entry.Creamo.blockMenuBlocks = [
+    //creamo
+    'creamo_toggle_led',
+    'creamo_get_number_sensor_value',
+    'creamo_toggle_pwm',
+    'creamo_toggle_motor',
+];
 Entry.Creamo.getBlocks = function() {
     return {
         //region creamo
@@ -149,7 +155,6 @@ Entry.Creamo.getBlocks = function() {
             syntax: { js: [], py: ['creamo.get_number_sensor_value(%1)'] },
         },
         creamo_get_port_number: {
-            ignore: true,
             color: '#00CFCA',
             outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -227,7 +232,6 @@ Entry.Creamo.getBlocks = function() {
             syntax: { js: [], py: ['creamo.toggle_led(%1)'] },
         },
         creamo_motor_port_number: {
-            ignore: true,
             color: '#00CFCA',
             outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -339,7 +343,6 @@ Entry.Creamo.getBlocks = function() {
             },
         },
         creamo_get_pwm_port_number: {
-            ignore: true,
             color: '#00CFCA',
             outerLine: '#04B5B0',
             skeleton: 'basic_string_field',

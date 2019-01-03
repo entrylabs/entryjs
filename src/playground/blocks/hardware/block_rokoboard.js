@@ -117,6 +117,12 @@ Entry.rokoboard = {
     },
 };
 
+Entry.rokoboard.blockMenuBlocks = [
+    //rokoboard Blocks
+    'rokoboard_get_sensor_value_by_name',
+    'rokoboard_is_button_pressed',
+];
+
 Entry.rokoboard.getBlocks = function() {
     return {
         //region rokoboard 로코보드

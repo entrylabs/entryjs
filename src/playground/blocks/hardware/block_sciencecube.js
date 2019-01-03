@@ -51,7 +51,16 @@ Entry.sciencecube.setLanguage = () => {
  			}
  		}
  	}
- }
+ };
+
+Entry.sciencecube.blockMenuBlocks = [
+    //sciencecube start
+    'sciencecube_temper',
+    'sciencecube_voltage',
+    'sciencecube_current',
+    'sciencecube_pressue',
+    //sciencecube end
+];
 
 Entry.sciencecube.getBlocks = () => {
     return {

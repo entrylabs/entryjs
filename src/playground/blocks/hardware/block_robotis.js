@@ -222,6 +222,15 @@ Entry.Robotis_openCM70 = {
     delay: 15,
 };
 
+Entry.Robotis_carCont.blockMenuBlocks = [
+    'robotis_carCont_sensor_value',
+    'robotis_carCont_cm_led',
+    'robotis_carCont_cm_sound_detected_clear',
+    'robotis_carCont_aux_motor_speed',
+    'robotis_carCont_aux_motor_speed2',
+    'robotis_carCont_cm_calibration',
+];
+
 Entry.Robotis_carCont.getBlocks = function() {
     return {
         //region robotis 로보티즈 carCont
@@ -846,6 +855,25 @@ Entry.Robotis_carCont.getBlocks = function() {
         //endregion robotis 로보티즈
     };
 };
+
+Entry.Robotis_openCM70.blockMenuBlocks = [
+    //robotis_openCM70
+    'robotis_openCM70_sensor_value',
+    'robotis_openCM70_aux_sensor_value',
+    'robotis_openCM70_cm_buzzer_index',
+    'robotis_openCM70_cm_buzzer_melody',
+    'robotis_openCM70_cm_sound_detected_clear',
+    'robotis_openCM70_cm_led',
+    'robotis_openCM70_cm_motion',
+    'robotis_openCM70_aux_motor_speed',
+    'robotis_openCM70_aux_servo_mode',
+    'robotis_openCM70_aux_servo_speed',
+    'robotis_openCM70_aux_servo_position',
+    'robotis_openCM70_aux_led_module',
+    'robotis_openCM70_aux_custom',
+    'robotis_openCM70_cm_custom_value',
+    'robotis_openCM70_cm_custom',
+];
 
 Entry.Robotis_openCM70.getBlocks = function() {
     return {

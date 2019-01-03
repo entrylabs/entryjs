@@ -68,12 +68,27 @@ Entry.iboard = {
     lowList: ['low', '0', 'off'],
     BlockState: {},
 };
-
+Entry.iboard.blockMenuBlocks = [
+    'iboard_tmp',
+    'iboard_var_res',
+    'iboard_cds',
+    'iboard_mic',
+    'iboard_button',
+    'iboard_led',
+    'iboard_rgb_led',
+    'iboard_pwm_led',
+    'iboard_set_tone',
+    'iboard_motor',
+    'iboard_get_analog_value',
+    'iboard_get_analog_value_map',
+    'iboard_get_digital',
+    'iboard_toggle_led',
+    'iboard_digital_pwm',
+];
 Entry.iboard.getBlocks = function() {
     return {
         //region iboard 아이보드
         iboard_analog_list: {
-            ignore: true,
             parent: 'arduino_ext_analog_list',
             params: [
                 {
@@ -125,7 +140,6 @@ Entry.iboard.getBlocks = function() {
             },
         },
         iboard_temp_sensor_get_value: {
-            ignore: true,
             parent: 'arduino_ext_analog_list',
             params: [
                 {
@@ -159,7 +173,6 @@ Entry.iboard.getBlocks = function() {
             },
         },
         iboard_cds_sensor_get_value: {
-            ignore: true,
             parent: 'arduino_ext_analog_list',
             params: [
                 {
@@ -193,7 +206,6 @@ Entry.iboard.getBlocks = function() {
             },
         },
         iboard_mic_get_value: {
-            ignore: true,
             parent: 'arduino_ext_analog_list',
             params: [
                 {
@@ -227,7 +239,6 @@ Entry.iboard.getBlocks = function() {
             },
         },
         iboard_button_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -254,7 +265,6 @@ Entry.iboard.getBlocks = function() {
             },
         },
         iboard_pwm_led_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -281,7 +291,6 @@ Entry.iboard.getBlocks = function() {
             },
         },
         iboard_led_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -308,7 +317,6 @@ Entry.iboard.getBlocks = function() {
             },
         },
         iboard_rgb_led_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -335,7 +343,6 @@ Entry.iboard.getBlocks = function() {
             },
         },
         iboard_motor_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -361,7 +368,6 @@ Entry.iboard.getBlocks = function() {
             },
         },
         iboard_motor_list2: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',

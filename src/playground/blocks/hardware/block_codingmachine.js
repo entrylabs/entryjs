@@ -205,7 +205,30 @@ Entry.Codingmachine.setLanguage = function () {
             }
         }
     }
-}
+};
+Entry.Codingmachine.blockMenuBlocks = [
+    //Codingmachine Blocks
+    'codingmachine_led',
+    'codingmachine_tune',
+    'codingmachine_motor',
+    'codingmachine_joystick',
+    'codingmachine_button',
+    'codingmachine_gyro',
+    'codingmachine_ultrasonic',
+    'codingmachine_connect',
+    'codingmachine_ready',
+    'codingmachine_throttle',
+    'codingmachine_altitude',
+    'codingmachine_rollpitch',
+    'codingmachine_yaw',
+    'codingmachine_emergency',
+    'codingmachine_digital_out',
+    'codingmachine_digital_in',
+    'codingmachine_analog_in',
+    'codingmachine_digital_pwm',
+    'codingmachine_servo',
+    //Added 2018-09-24
+];
 Entry.Codingmachine.getBlocks = function () {
     return {
         //region JDKit
@@ -258,8 +281,8 @@ Entry.Codingmachine.getBlocks = function () {
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
         },
-            
-       
+
+
         /* ----------- 추가 --------- */
         codingmachine_digital_in: {
             color: '#00979D',
@@ -318,11 +341,11 @@ Entry.Codingmachine.getBlocks = function () {
                 type: 'codingmachine_button',
             },
            isNotFor: ['Codingmachine'],
-           
+
             syntax: { js: [], py: [] },
         },
-            
-        
+
+
         codingmachine_gyro: {
             template: Lang.template.jdkit_gyro,
             parent: 'jdkit_gyro',
@@ -332,9 +355,9 @@ Entry.Codingmachine.getBlocks = function () {
             },
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
-        },        
-           
-       
+        },
+
+
         codingmachine_ultrasonic: {
             template: Lang.template.jdkit_ultrasonic,
             parent:'jdkit_ultrasonic',
@@ -345,8 +368,8 @@ Entry.Codingmachine.getBlocks = function () {
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
             },
-            
-        
+
+
         codingmachine_connect: {
             template: Lang.template.jdkit_connect,
             parent: 'jdkit_connect',
@@ -358,8 +381,8 @@ Entry.Codingmachine.getBlocks = function () {
             syntax: { js: [], py: [] },
 
         },
-            
-        
+
+
         codingmachine_ready: {
             template: Lang.template.jdkit_ready,
             parent: 'jdkit_ready',
@@ -367,12 +390,12 @@ Entry.Codingmachine.getBlocks = function () {
                 params: [null],
                 type: 'codingmachine_ready',
             },
-           
+
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
             },
-           
-        
+
+
         /* -------- 추가 ------- */
         codingmachine_servo: {
             color: '#00979D',
@@ -646,12 +669,12 @@ Entry.Codingmachine.getBlocks = function () {
                 params: [null],
                 type: 'codingmachine_led',
             },
-            
+
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
         },
-           
-        
+
+
         codingmachine_tune: {
             template: Lang.template.jdkit_tune,
             parent:'jdkit_tune',
@@ -659,12 +682,12 @@ Entry.Codingmachine.getBlocks = function () {
                 params: [null],
                 type: 'codingmachine_tune',
             },
-            
+
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
             },
-            
-        
+
+
         codingmachine_motor: {
             template: Lang.template.jdkit_motor,
             parent: 'jdkit_motor',
@@ -672,12 +695,12 @@ Entry.Codingmachine.getBlocks = function () {
                 params: [null],
                 type: 'codingmachine_motor',
             },
-           
+
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
             },
-            
-        
+
+
         codingmachine_throttle: {
             template: Lang.template.jdkit_throttle,
             parent:'jdkit_throttle',
@@ -685,12 +708,12 @@ Entry.Codingmachine.getBlocks = function () {
                 params: [null],
                 type: 'codingmachine_throttle',
             },
-           
+
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
             },
-           
-        
+
+
         codingmachine_altitude: {
             template: Lang.template.jdkit_altitude,
             parent: 'jdkit_altitude',
@@ -698,12 +721,12 @@ Entry.Codingmachine.getBlocks = function () {
                 params: [null],
                 type: 'codingmachine_altitude',
             },
-            
+
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
             },
-           
-        
+
+
         codingmachine_rollpitch: {
             template: Lang.template.jdkit_rollpitch,
             parent: 'jdkit_rollpitch',
@@ -711,12 +734,12 @@ Entry.Codingmachine.getBlocks = function () {
                 params: [null],
                 type: 'codingmachine_rollpitch',
             },
-            
+
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
             },
-           
-        
+
+
         codingmachine_yaw: {
             template: Lang.template.jdkit_yaw,
             parent: 'jdkit_yaw',
@@ -724,12 +747,12 @@ Entry.Codingmachine.getBlocks = function () {
                 params: [null],
                 type: 'codingmachine_yaw',
             },
-            
+
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
             },
-           
-        
+
+
         codingmachine_emergency: {
             template: Lang.template.jdkit_emergency,
             parent:'jdkit_emergency',
@@ -737,12 +760,12 @@ Entry.Codingmachine.getBlocks = function () {
                 params: [null],
                 type: 'codingmachine_emergency',
             },
-            
+
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
             },
-            
-        
+
+
         //endregion JDKit
     };
 };

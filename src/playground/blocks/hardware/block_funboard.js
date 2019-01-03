@@ -279,7 +279,33 @@ Entry.FunBoard = {
         return bin;
     },
 };
-
+Entry.FunBoard.blockMenuBlocks = [
+    'funboard_list_pushbutton_basic',
+    'funboard_list_touchbutton_basic',
+    'funboard_list_analogsensor_basic',
+    'funboard_list_2_state_basic',
+    'funboard_list_ledcolor_basic',
+    'funboard_list_onoff_basic',
+    'funboard_what_button_pressed',
+    'funboard_what_touch_button_pressed',
+    'funboard_get_analog_sensor_2state',
+    'funboard_get_digital_button_value',
+    'funboard_get_touch_button_value',
+    'funboard_get_number_sensor_value',
+    'funboard_convert_scale',
+    'funboard_set_digital_buzzer',
+    'funboard_buzzer_onoff',
+    'funboard_color_led_onoff',
+    'funboard_color_led_on_pwm',
+    'funboard_dotmatrix_intensity',
+    'funboard_dotmatrix_onoff',
+    'funboard_dotmatrix_symbol',
+    'funboard_dotmatrix_char_display',
+    'funboard_dotmatrix_string_display_scroll',
+    'funboard_dotmatrix_set',
+    'funboard_dotmatrix_1row',
+    'funboard_dotmatrix_1column',
+];
 Entry.FunBoard.getBlocks = function() {
     return {
         //region FunBoard
@@ -435,7 +461,6 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_ledcolor_pwm_basic: {
-            ignore: true,
             color: '#00CFCA',
             outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -492,7 +517,6 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_digital_octave: {
-            ignore: true,
             color: '#00CFCA',
             outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -527,7 +551,6 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_digital_tone: {
-            ignore: true,
             color: '#00CFCA',
             outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -567,7 +590,6 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_matrix_rows: {
-            ignore: true,
             color: '#00CFCA',
             outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -602,7 +624,6 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_matrix_row_or_column: {
-            ignore: true,
             color: '#00CFCA',
             outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -631,7 +652,6 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_matrix_scroll_option: {
-            ignore: true,
             color: '#00CFCA',
             outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -663,7 +683,6 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_matrix_char: {
-            ignore: true,
             color: '#00CFCA',
             outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -1400,7 +1419,6 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_buzzer_second: {
-            ignore: true,
             color: '#00CFCA',
             outerLine: '#04B5B0',
             skeleton: 'basic',
@@ -1484,7 +1502,6 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_buzzer_tone_simple: {
-            ignore: true,
             color: '#00CFCA',
             outerLine: '#04B5B0',
             skeleton: 'basic',
@@ -2046,7 +2063,6 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_scroll_option: {
-            ignore: true,
             color: '#00CFCA',
             outerLine: '#04B5B0',
             skeleton: 'basic',
@@ -2113,7 +2129,6 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_scroll_rapid: {
-            ignore: true,
             color: '#00CFCA',
             outerLine: '#04B5B0',
             skeleton: 'basic',
@@ -2367,7 +2382,6 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_string_display: {
-            ignore: true,
             color: '#00CFCA',
             outerLine: '#04B5B0',
             skeleton: 'basic',
@@ -2703,7 +2717,6 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_num: {
-            ignore: true,
             color: '#00CFCA',
             outerLine: '#04B5B0',
             skeleton: 'basic',
@@ -2815,7 +2828,6 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_big_eng: {
-            ignore: true,
             color: '#00CFCA',
             outerLine: '#04B5B0',
             skeleton: 'basic',
@@ -2942,7 +2954,6 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_small_eng: {
-            ignore: true,
             color: '#00CFCA',
             outerLine: '#04B5B0',
             skeleton: 'basic',
@@ -3069,7 +3080,6 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_extra_char: {
-            ignore: true,
             color: '#00CFCA',
             outerLine: '#04B5B0',
             skeleton: 'basic',
@@ -3441,7 +3451,6 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_1row_1column: {
-            ignore: true,
             color: '#00CFCA',
             outerLine: '#04B5B0',
             skeleton: 'basic',

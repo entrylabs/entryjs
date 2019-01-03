@@ -334,6 +334,35 @@ Entry.Albert = {
     },
 };
 
+Entry.Albert.blockMenuBlocks = [
+    'albert_hand_found',
+    'albert_is_oid_value',
+    'albert_value',
+    'albert_move_forward_for_secs',
+    'albert_move_backward_for_secs',
+    'albert_turn_for_secs',
+    'albert_change_both_wheels_by',
+    'albert_set_both_wheels_to',
+    'albert_change_wheel_by',
+    'albert_set_wheel_to',
+    'albert_stop',
+    'albert_set_pad_size_to',
+    'albert_move_to_x_y_on_board',
+    'albert_set_orientation_on_board',
+    'albert_set_eye_to',
+    'albert_clear_eye',
+    'albert_body_led',
+    'albert_front_led',
+    'albert_beep',
+    'albert_change_buzzer_by',
+    'albert_set_buzzer_to',
+    'albert_clear_buzzer',
+    'albert_play_note_for',
+    'albert_rest_for',
+    'albert_change_tempo_by',
+    'albert_set_tempo_to',
+];
+
 Entry.Albert.getBlocks = function() {
     return {
         //region albert 알버트
@@ -1786,7 +1815,6 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.set_tempo(%1)'] },
         },
         albert_move_forward: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic',
@@ -1828,7 +1856,6 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.move_forward()'] },
         },
         albert_move_backward: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic',
@@ -1870,7 +1897,6 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.move_backward()'] },
         },
         albert_turn_around: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic',
@@ -1930,7 +1956,6 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.turn_around()'] },
         },
         albert_set_led_to: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic',
@@ -1989,7 +2014,6 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.set_led(%1, %2)'] },
         },
         albert_clear_led: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic',
@@ -2032,7 +2056,6 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.clear_led(%1)'] },
         },
         albert_change_wheels_by: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic',
@@ -2098,7 +2121,6 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.change_wheels(%1, %2)'] },
         },
         albert_set_wheels_to: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic',

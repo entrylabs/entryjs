@@ -103,7 +103,31 @@ Entry.DaduBlock_Car = {
     },
     BlockState: {},
 };
-
+Entry.DaduBlock.blockMenuBlocks = [
+    //dadublock 2016-12-19
+    'dadublock_get_analog_value',
+    'dadublock_get_analog_value_map',
+    'dadublock_get_ultrasonic_value',
+    'dadublock_get_digital',
+    'dadublock_toggle_led',
+    'dadublock_digital_pwm',
+    'dadublock_set_servo',
+    'dadublock_set_tone',
+];
+Entry.DaduBlock_Car.blockMenuBlocks = [
+    //dadublock_car
+    'dadublock_car_get_analog_value',
+    'dadublock_car_get_analog_value_map',
+    'dadublock_car_get_ultrasonic_value',
+    'dadublock_car_get_digital',
+    'dadublock_car_toggle_led',
+    'dadublock_car_digital_pwm',
+    'dadublock_car_set_servo',
+    'dadublock_car_set_tone',
+    'dadublock_car_motor_stop',
+    'dadublock_car_motor',
+    'dadublock_car_get_irsensor',
+];
 Entry.DaduBlock.getBlocks = function() {
     return {
         //region dadublock 다두블록

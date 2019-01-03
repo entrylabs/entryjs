@@ -114,7 +114,16 @@ Entry.EV3.setLanguage = function() {
         },
     };
 };
-
+Entry.EV3.blockMenuBlocks = [
+    'ev3_get_sensor_value',
+    'ev3_touch_sensor',
+    'ev3_button_pressed',
+    'ev3_color_sensor',
+    'ev3_motor_power',
+    'ev3_motor_power_on_time',
+    'ev3_motor_degrees',
+    'ev3_status_led',
+];
 Entry.EV3.getBlocks = function() {
     return {
         //region ev3 이브이3

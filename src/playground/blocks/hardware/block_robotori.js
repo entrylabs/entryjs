@@ -61,6 +61,17 @@ Entry.robotori = {
     },
 };
 
+Entry.robotori.blockMenuBlocks = [
+    //robotori Add 20161129 begin
+    'robotori_digitalInput',
+    'robotori_analogInput',
+    'robotori_digitalOutput',
+    'robotori_analogOutput',
+    'robotori_servo',
+    'robotori_dc_direction',
+    //robotori add 20161129 end
+];
+
 Entry.robotori.getBlocks = function() {
     return {
         //region robotori 로보토리

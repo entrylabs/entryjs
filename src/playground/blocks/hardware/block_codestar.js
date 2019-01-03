@@ -75,7 +75,22 @@ Entry.Codestar = {
         mode: 'both',
     },
 };
-
+Entry.Codestar.blockMenuBlocks = [
+    'codestar_color_single',
+    'codestar_3color',
+    'codestar_vibration',
+    'codestar_buzzer',
+    'codestar_buzzer_stop',
+    'codestar_drive',
+    'codestar_wheel',
+    'codestar_light',
+    'codestar_button',
+    'codestar_ir',
+    'codestar_sonar',
+    'codestar_mic',
+    'codestar_temperature',
+    'codestar_tilt',
+];
 Entry.Codestar.getBlocks = function() {
     return {
         //region codestar 코드스타
@@ -277,7 +292,6 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_servo: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic',
@@ -528,7 +542,6 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_variable_R: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             fontColor: '#fff',
@@ -602,7 +615,6 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_gyroscope: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             fontColor: '#fff',
@@ -635,7 +647,6 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_geomagnetic: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             fontColor: '#fff',
@@ -668,7 +679,6 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_irR: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             fontColor: '#fff',

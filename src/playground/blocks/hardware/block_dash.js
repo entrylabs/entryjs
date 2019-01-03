@@ -47,7 +47,29 @@ Entry.Dash = {
     isStarted: false,
     state: DashState.STATE_DONE,
 };
-
+Entry.Dash.blockMenuBlocks = [
+    //region dash
+    'dash_sensor1',
+    'dash_sensor2',
+    'dash_turn_drive',
+    'dash_turn_drive_360',
+    'dash_drive',
+    'dash_wheel_speed',
+    'dash_drive_stop',
+    'dash_v_head',
+    'dash_h_head',
+    'dash_forward_head',
+    'dash_sound_say',
+    'dash_sound_animal',
+    'dash_sound_move',
+    'dash_sound_strange',
+    'dash_my_sound',
+    'dash_light_color',
+    'dash_tail_light_color',
+    'dash_eye',
+    'dash_animation',
+    //endregion dash
+];
 Entry.Dash.getBlocks = function() {
     return {
         // 소리
@@ -900,7 +922,6 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_voice_head: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic',

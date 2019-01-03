@@ -157,12 +157,33 @@ Entry.CODEino = {
     LED_GREEN_VALUE: 0,
     LED_BLUE_VALUE: 0,
 };
-
+Entry.CODEino.blockMenuBlocks = [
+    'CODEino_get_named_sensor_value',
+    'CODEino_get_sound_status',
+    'CODEino_get_light_status',
+    'CODEino_is_button_pressed',
+    'CODEino_get_accelerometer_direction',
+    'CODEino_get_accelerometer_value',
+    //"CODEino_get_number_sensor_value",
+    'CODEino_get_digital_value',
+    //"CODEino_toggle_led",
+    //"CODEino_toggle_pwm",
+    'CODEino_convert_scale',
+    //2016-09-23
+    'CODEino_get_analog_value',
+    'CODEino_set_digital_value',
+    'CODEino_set_pwm_value',
+    'CODEino_led_by_value',
+    'CODEino_set_rgb_off',
+    'CODEino_set__led_by_rgb',
+    'CODEino_rgb_set_color',
+    'CODEino_set_rgb_value',
+    'CODEino_set_rgb_add_value',
+];
 Entry.CODEino.getBlocks = function() {
     return {
         //region codeino 코드이노
         CODEino_get_sensor_number: {
-            ignore: true,
             color: '#00CFCA',
             outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -1562,7 +1583,6 @@ Entry.CODEino.getBlocks = function() {
             },
         },
         CODEino_get_number_sensor_value: {
-            ignore: true,
             parent: 'arduino_get_number_sensor_value',
             isNotFor: ['CODEino'],
             def: {
@@ -1577,7 +1597,6 @@ Entry.CODEino.getBlocks = function() {
             syntax: { js: [], py: ['CODEino.get_number_sensor_value(%1)'] },
         },
         CODEino_toggle_led: {
-            ignore: true,
             parent: 'arduino_toggle_led',
             isNotFor: ['CODEino'],
             def: {
@@ -1594,7 +1613,6 @@ Entry.CODEino.getBlocks = function() {
             syntax: { js: [], py: ['CODEino.toggle_led(%1)'] },
         },
         CODEino_toggle_pwm: {
-            ignore: true,
             parent: 'arduino_toggle_pwm',
             isNotFor: ['CODEino'],
             def: {

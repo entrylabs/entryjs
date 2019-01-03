@@ -18,6 +18,20 @@ Entry.nemoino = {
     },
 };
 
+Entry.nemoino.blockMenuBlocks = [
+    //nemoino
+    'nemoino_get_named_sensor_value',
+    'nemoino_get_sound_status',
+    'nemoino_is_button_pressed',
+    'nemoino_get_accelerometer_direction',
+    'nemoino_get_accelerometer_value',
+    'nemoino_get_number_sensor_value',
+    'nemoino_get_digital_value',
+    'nemoino_toggle_led',
+    'nemoino_toggle_pwm',
+    'nemoino_convert_scale',
+];
+
 Entry.nemoino.getBlocks = function() {
     return {
         //region nemoino 네모이노

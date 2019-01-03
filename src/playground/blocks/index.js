@@ -49,24 +49,25 @@ function getBlockObject(items) {
  *
  * block 자체에 ignore: true 프로퍼티가 존재하는 경우 스킵한다.
  *
- * @param {Object} blockList
+ * @param {Object} hardwareModules
  * @return {void}
  */
-function registerHardwareBlockToStatic(blockList) {
-    for (let blockName in blockList) {
-        if(blockList[blockName].ignore !== true &&
-            EntryStatic.DynamicHardwareBlocks.indexOf(blockName) === -1) {
-            EntryStatic.DynamicHardwareBlocks.push(blockName);
+function registerHardwareBlockToStatic(hardwareModules) {
+    hardwareModules.forEach((hardware) => {
+        if (hardware.blockMenuBlocks) {
+            EntryStatic.DynamicHardwareBlocks.push.apply(
+                EntryStatic.DynamicHardwareBlocks, hardware.blockMenuBlocks);
         }
-    }
+    });
 }
 
 module.exports = {
     getBlocks() {
-        const basicAndExpansionBlockObjectList = getBlockObject(basicBlockList.concat(Object.values(Entry.EXPANSION_BLOCK_LIST)));
-        const hardwareBlockObjectList = getBlockObject(hardware.getHardwareModuleList());
-        registerHardwareBlockToStatic(hardwareBlockObjectList);
+        const hardwareModules = hardware.getHardwareModuleList();
+        registerHardwareBlockToStatic(hardwareModules);
 
+        const basicAndExpansionBlockObjectList = getBlockObject(basicBlockList.concat(Object.values(Entry.EXPANSION_BLOCK_LIST)));
+        const hardwareBlockObjectList = getBlockObject(hardwareModules);
         return Object.assign({}, basicAndExpansionBlockObjectList, hardwareBlockObjectList);
     },
 };

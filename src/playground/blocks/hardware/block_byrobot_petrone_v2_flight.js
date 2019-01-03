@@ -1030,13 +1030,13 @@ Entry.byrobot_petrone_v2_flight = {
     },
 
     // 버저 설정(함수 호출 시 시간은 모두 ms 단위 사용)
-    /*  
+    /*
         MuteInstantally     = 1,    // 묵음 즉시 적용
         MuteContinually     = 2,    // 묵음 예약
-        
+
         ScaleInstantally    = 3,    // 음계 즉시 적용
         ScaleContinually    = 4,    // 음계 예약
-        
+
         HzInstantally       = 5,    // 주파수 즉시 적용
         HzContinually       = 6,    // 주파수 예약
      */
@@ -1285,14 +1285,14 @@ Entry.byrobot_petrone_v2_flight = {
     },
     /*
         None = 0,           ///< 없음
-        
+
         Flight = 0x10,      ///< 비행(가드 포함)
         FlightNoGuard,      ///< 비행(가드 없음)
         FlightFPV,          ///< 비행(FPV)
-        
+
         Drive = 0x20,       ///< 주행
         DriveFPV,           ///< 주행(FPV)
-        
+
         Test = 0x30,        ///< 테스트
      */
     setModeVehicle: function(script, modeVehicle) {
@@ -1419,7 +1419,62 @@ Entry.byrobot_petrone_v2_flight = {
         }
     },
 };
-
+Entry.byrobot_petrone_v2_flight.blockMenuBlocks = [
+    'byrobot_petrone_v2_flight_drone_value_attitude',
+    'byrobot_petrone_v2_flight_drone_value_imu',
+    'byrobot_petrone_v2_flight_drone_value_sensor',
+    'byrobot_petrone_v2_flight_drone_value_etc',
+    'byrobot_petrone_v2_flight_controller_value_button',
+    'byrobot_petrone_v2_flight_controller_value_joystick',
+    'byrobot_petrone_v2_flight_controller_if_button_press',
+    'byrobot_petrone_v2_flight_controller_if_joystick_direction',
+    'byrobot_petrone_v2_flight_drone_command_mode_vehicle_drone',
+    'byrobot_petrone_v2_flight_drone_control_drone_takeoff',
+    'byrobot_petrone_v2_flight_drone_control_drone_landing',
+    'byrobot_petrone_v2_flight_drone_control_drone_stop',
+    'byrobot_petrone_v2_flight_drone_control_coordinate',
+    'byrobot_petrone_v2_flight_drone_control_drone_reset_heading',
+    'byrobot_petrone_v2_flight_drone_control_quad_one',
+    'byrobot_petrone_v2_flight_drone_control_quad_one_delay',
+    'byrobot_petrone_v2_flight_drone_control_quad',
+    'byrobot_petrone_v2_flight_drone_control_quad_delay',
+    'byrobot_petrone_v2_flight_drone_motor_stop',
+    'byrobot_petrone_v2_flight_drone_motorsingle',
+    'byrobot_petrone_v2_flight_drone_motorsingle_input',
+    'byrobot_petrone_v2_flight_drone_motorsingle_rotation',
+    'byrobot_petrone_v2_flight_drone_irmessage',
+    'byrobot_petrone_v2_flight_drone_light_manual_single_off',
+    'byrobot_petrone_v2_flight_drone_light_manual_single',
+    'byrobot_petrone_v2_flight_drone_light_manual_single_input',
+    'byrobot_petrone_v2_flight_drone_light_color_rgb_input',
+    'byrobot_petrone_v2_flight_drone_light_color_rgb_select',
+    'byrobot_petrone_v2_flight_controller_light_manual_single_off',
+    'byrobot_petrone_v2_flight_controller_light_manual_single',
+    'byrobot_petrone_v2_flight_controller_light_manual_single_input',
+    'byrobot_petrone_v2_flight_controller_light_color_rgb_input',
+    'byrobot_petrone_v2_flight_controller_light_color_rgb_select',
+    'byrobot_petrone_v2_flight_controller_display_clear_all',
+    'byrobot_petrone_v2_flight_controller_display_clear',
+    'byrobot_petrone_v2_flight_controller_display_invert',
+    'byrobot_petrone_v2_flight_controller_display_draw_point',
+    'byrobot_petrone_v2_flight_controller_display_draw_line',
+    'byrobot_petrone_v2_flight_controller_display_draw_rect',
+    'byrobot_petrone_v2_flight_controller_display_draw_circle',
+    'byrobot_petrone_v2_flight_controller_display_draw_string',
+    'byrobot_petrone_v2_flight_controller_display_draw_string_align',
+    'byrobot_petrone_v2_flight_controller_buzzer_off',
+    'byrobot_petrone_v2_flight_controller_buzzer_scale',
+    'byrobot_petrone_v2_flight_controller_buzzer_scale_delay',
+    'byrobot_petrone_v2_flight_controller_buzzer_scale_reserve',
+    'byrobot_petrone_v2_flight_controller_buzzer_hz',
+    'byrobot_petrone_v2_flight_controller_buzzer_hz_delay',
+    'byrobot_petrone_v2_flight_controller_buzzer_hz_reserve',
+    'byrobot_petrone_v2_flight_controller_vibrator_off',
+    'byrobot_petrone_v2_flight_controller_vibrator_on_delay',
+    'byrobot_petrone_v2_flight_controller_vibrator_on_reserve',
+    'byrobot_petrone_v2_flight_controller_vibrator_delay',
+    'byrobot_petrone_v2_flight_controller_vibrator_reserve',
+];
 Entry.byrobot_petrone_v2_flight.getBlocks = function() {
     return {
         //region byrobot 바이로봇

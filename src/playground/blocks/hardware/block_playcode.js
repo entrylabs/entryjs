@@ -366,11 +366,20 @@ Entry.playcode = {
     BlockState: {},
 };
 
+Entry.playcode.blockMenuBlocks = [
+    // playcode Added 2018-01-02
+    'playcode_get_light_value',
+    'playcode_get_mic_value',
+    'playcode_gpio',
+    'playcode_servo',
+    'playcode_speed',
+    // playcode Added 2018-01-02
+];
+
 Entry.playcode.getBlocks = function() {
     return {
         //region playcode
         playcode_port_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -405,7 +414,6 @@ Entry.playcode.getBlocks = function() {
             },
         },
         playcode_first_port_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',

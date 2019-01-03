@@ -170,6 +170,28 @@ Entry.Neobot.setLanguage = function () {
     }
 };
 
+Entry.Neobot.blockMenuBlocks = [
+    'neobot_sensor_value',
+    'neobot_sensor_convert_scale',
+    'neobot_equal_with_sensor',
+    'neobot_boolean_equal',
+    'neobot_left_motor',
+    'neobot_stop_left_motor',
+    'neobot_right_motor',
+    'neobot_stop_right_motor',
+    'neobot_all_motor',
+    'neobot_all_motor_iternally',
+    'neobot_stop_all_motor',
+    'neobot_set_servo',
+    'neobot_set_output',
+    'neobot_set_fnd',
+    'neobot_set_fnd_off',
+    'neobot_play_note_for',
+    'neobot_play_note_with_sensor',
+    'neobot_change_color_with_color_picker',
+    'neobot_change_color_with_sensor_value',
+];
+
 Entry.Neobot.getBlocks = function() {
     return {
         //region neobot 네오봇
@@ -309,7 +331,6 @@ Entry.Neobot.getBlocks = function() {
             },
         },
         neobot_sensor_color: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -416,7 +437,6 @@ Entry.Neobot.getBlocks = function() {
             syntax: { js: [], py: ['Entry.neobot_equal_check()'] },
         },
         get_motor_speed: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',

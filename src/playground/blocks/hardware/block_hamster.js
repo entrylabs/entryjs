@@ -196,7 +196,38 @@ Entry.Hamster.setLanguage = function() {
         },
     };
 };
-
+Entry.Hamster.blockMenuBlocks = [
+    'hamster_hand_found',
+    'hamster_value',
+    'hamster_move_forward_once',
+    'hamster_turn_once',
+    'hamster_move_forward_for_secs',
+    'hamster_move_backward_for_secs',
+    'hamster_turn_for_secs',
+    'hamster_change_both_wheels_by',
+    'hamster_set_both_wheels_to',
+    'hamster_change_wheel_by',
+    'hamster_set_wheel_to',
+    'hamster_follow_line_using',
+    'hamster_follow_line_until',
+    'hamster_set_following_speed_to',
+    'hamster_stop',
+    'hamster_set_led_to',
+    'hamster_clear_led',
+    'hamster_beep',
+    'hamster_change_buzzer_by',
+    'hamster_set_buzzer_to',
+    'hamster_clear_buzzer',
+    'hamster_play_note_for',
+    'hamster_rest_for',
+    'hamster_change_tempo_by',
+    'hamster_set_tempo_to',
+    'hamster_set_port_to',
+    'hamster_change_output_by',
+    'hamster_set_output_to',
+    'hamster_gripper',
+    'hamster_release_gripper',
+];
 Entry.Hamster.getBlocks = function() {
     return {
         //region hamster 햄스터

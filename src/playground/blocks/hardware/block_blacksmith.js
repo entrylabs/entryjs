@@ -130,11 +130,26 @@ Entry.Blacksmith.setLanguage = function() {
         }
     }
 };
+Entry.Blacksmith.blockMenuBlocks = [
+    'blacksmith_get_analog_value',
+    'blacksmith_get_analog_mapping',
+    'blacksmith_get_digital_bluetooth',
+    'blacksmith_get_digital_ultrasonic',
+    'blacksmith_get_digital_toggle',
+    'blacksmith_set_digital_toggle',
+    'blacksmith_set_digital_pwm',
+    'blacksmith_set_digital_rgbled',
+    'blacksmith_set_digital_servo',
+    'blacksmith_set_digital_buzzer',
+    'blacksmith_set_digital_dcmotor',
+    'blacksmith_module_digital_lcd',
+    'blacksmith_module_digital_bluetooth',
+    'blacksmith_module_digital_oled',
+];
 Entry.Blacksmith.getBlocks = function() {
     return {
         //region blacksmith 대장장이보드
         blacksmith_list_analog_basic: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -167,7 +182,6 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_basic: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -209,7 +223,6 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_octave: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -244,7 +257,6 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_pwm: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -278,7 +290,6 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_toggle: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -308,7 +319,6 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_tone: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -348,7 +358,6 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_lcd: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',

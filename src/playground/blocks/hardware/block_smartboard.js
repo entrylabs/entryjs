@@ -132,6 +132,21 @@ Entry.SmartBoard = {
     },
 };
 
+Entry.SmartBoard.blockMenuBlocks = [
+    //jeil science smartBoard. 2016-11-03
+    //smartBoard
+    'smartBoard_get_named_sensor_value',
+    'smartBoard_convert_scale',
+    'smartBoard_is_button_pressed',
+    'smartBoard_set_dc_motor_direction',
+    'smartBoard_set_dc_motor_speed',
+    'smartBoard_set_dc_motor_pwm',
+    'smartBoard_set_servo_speed',
+    'smartBoard_set_servo_angle',
+    'smartBoard_set_number_eight_pin',
+    'smartBoard_set_gs1_pwm',
+];
+
 Entry.SmartBoard.getBlocks = function() {
     return {
         //region smartBoard 스마트보드

@@ -382,13 +382,13 @@ Entry.byrobot_dronefighter_drive = {
     },
 
     // 버저 설정(함수 호출 시 시간은 모두 ms 단위 사용)
-    /*  
+    /*
         MuteInstantally     = 1,    // 묵음 즉시 적용
         MuteContinually     = 2,    // 묵음 예약
-        
+
         ScaleInstantally    = 3,    // 음계 즉시 적용
         ScaleContinually    = 4,    // 음계 예약
-        
+
         HzInstantally       = 5,    // 주파수 즉시 적용
         HzContinually       = 6,    // 주파수 예약
      */
@@ -636,14 +636,14 @@ Entry.byrobot_dronefighter_drive = {
     },
     /*
         None = 0,           ///< 없음
-        
+
         Flight = 0x10,      ///< 비행(가드 포함)
         FlightNoGuard,      ///< 비행(가드 없음)
         FlightFPV,          ///< 비행(FPV)
-        
+
         Drive = 0x20,       ///< 주행
         DriveFPV,           ///< 주행(FPV)
-        
+
         Test = 0x30,        ///< 테스트
      */
     setModeVehicle: function(script, modeVehicle) {
@@ -758,7 +758,40 @@ Entry.byrobot_dronefighter_drive = {
         }
     },
 };
-
+Entry.byrobot_dronefighter_drive.blockMenuBlocks = [
+    'byrobot_dronefighter_drive_drone_value_attitude',
+    'byrobot_dronefighter_drive_drone_value_etc',
+    'byrobot_dronefighter_drive_controller_value_button',
+    'byrobot_dronefighter_drive_controller_value_joystick',
+    'byrobot_dronefighter_drive_controller_if_button_press',
+    'byrobot_dronefighter_drive_controller_if_joystick_direction',
+    'byrobot_dronefighter_drive_drone_control_car_stop',
+    'byrobot_dronefighter_drive_drone_control_double_one',
+    'byrobot_dronefighter_drive_drone_control_double_one_delay',
+    'byrobot_dronefighter_drive_drone_control_double',
+    'byrobot_dronefighter_drive_drone_motor_stop',
+    'byrobot_dronefighter_drive_drone_motorsingle',
+    'byrobot_dronefighter_drive_drone_motorsingle_input',
+    'byrobot_dronefighter_drive_drone_irmessage',
+    'byrobot_dronefighter_drive_drone_light_manual_single_off',
+    'byrobot_dronefighter_drive_drone_light_manual_single',
+    'byrobot_dronefighter_drive_drone_light_manual_single_input',
+    'byrobot_dronefighter_drive_controller_light_manual_single_off',
+    'byrobot_dronefighter_drive_controller_light_manual_single',
+    'byrobot_dronefighter_drive_controller_light_manual_single_input',
+    'byrobot_dronefighter_drive_controller_buzzer_off',
+    'byrobot_dronefighter_drive_controller_buzzer_scale',
+    'byrobot_dronefighter_drive_controller_buzzer_scale_delay',
+    'byrobot_dronefighter_drive_controller_buzzer_scale_reserve',
+    'byrobot_dronefighter_drive_controller_buzzer_hz',
+    'byrobot_dronefighter_drive_controller_buzzer_hz_delay',
+    'byrobot_dronefighter_drive_controller_buzzer_hz_reserve',
+    'byrobot_dronefighter_drive_controller_vibrator_off',
+    'byrobot_dronefighter_drive_controller_vibrator_on_delay',
+    'byrobot_dronefighter_drive_controller_vibrator_on_reserve',
+    'byrobot_dronefighter_drive_controller_vibrator_delay',
+    'byrobot_dronefighter_drive_controller_vibrator_reserve',
+];
 Entry.byrobot_dronefighter_drive.getBlocks = function() {
     return {
         //region byrobot 바이로봇

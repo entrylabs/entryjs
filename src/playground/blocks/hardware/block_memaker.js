@@ -365,12 +365,23 @@ Entry.memaker = {
     lowList: ['low', '0', 'off'],
     BlockState: {},
 };
-
+Entry.memaker.blockMenuBlocks = [
+    // memaker Added 2017-10-01
+    'memaker_get_analog_value',
+    'memaker_get_analog_value_map',
+    'memaker_get_ultrasonic_value',
+    'memaker_get_digital',
+    'memaker_toggle_led',
+    'memaker_digital_pwm',
+    'memaker_set_servo',
+    'memaker_set_lcd',
+    'memaker_lcd_command',
+    // memaker Added 2017-10-01
+];
 Entry.memaker.getBlocks = function() {
     return {
         //region memaker 미메이커
         memaker_analog_list: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -814,7 +825,6 @@ Entry.memaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         memaker_list_digital_lcd_line: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -840,7 +850,6 @@ Entry.memaker.getBlocks = function() {
             },
         },
         memaker_list_digital_lcd_column: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -1003,7 +1012,6 @@ Entry.memaker.getBlocks = function() {
             syntax: { js: [], py: ['memaker.memaker_set_lcd(%1, %2, %3)'] },
         },
         memaker_list_lcd_command: {
-            ignore: true,
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',

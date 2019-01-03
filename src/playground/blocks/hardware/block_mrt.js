@@ -92,7 +92,24 @@ Entry.MRT.setLanguage = function() {
                 }
             },
         };
-    },
+    };
+
+Entry.MRT.blockMenuBlocks = [
+    //region MRT-X Blocks added
+    'mrt_digitalInput',
+    'mrt_digitalOutput',
+    'mrt_analogValue',
+    'mrt_ultra',
+    'mrt_color',
+    'mrt_gyro',
+    'mrt_remotecontrol',
+    'mrt_keyvalue',
+    'mrt_buzzer',
+    'mrt_servo',
+    'mrt_oneWheel',
+    'mrt_lcd',
+    //endregion end of MRT-X Blocks added
+];
 
 Entry.MRT.getBlocks = function() {
     return {
@@ -383,7 +400,7 @@ Entry.MRT.getBlocks = function() {
             },
             syntax: { js: [], py: ['MRT.digital_output(%1, %2)'] },
         },
-        
+
         mrt_servo: {
             color: '#00CFCA',
 			outerLine: '#04B5B0',
@@ -501,13 +518,13 @@ Entry.MRT.getBlocks = function() {
                 if (dir == 'LEFT_WHEEL1') sq.LEFT_WHEEL1 = speed;
                 if (dir == 'RIGHT_WHEEL2') sq.RIGHT_WHEEL2 = speed;
                 if (dir == 'LEFT_WHEEL2') sq.LEFT_WHEEL2 = speed;
-               
+
 
                 return script.callReturn();
             },
             syntax: { js: [], py: ['MRT.one_wheel(%1, %2)'] },
         },
-        
+
         mrt_lcd: {
             color: '#00CFCA',
 			outerLine: '#04B5B0',

@@ -174,6 +174,38 @@ Entry.ProboConnect.setLanguage = function () {
     }
 };
 
+Entry.ProboConnect.blockMenuBlocks = [
+    //region proboconnect
+    ////input
+    'connect_senser_setting',
+    'connect_remote_input',
+    'connect_digital_input',
+    'connect_analog_input',
+    'connect_value_mapping',
+    //"connect_ultrasonic_cm",
+    'connect_color_input_b',
+    'connect_color_input_r',
+    'connect_infinite_reset',
+    'connect_infinite_transform_input',
+    'connect_infinite_mm_diameter',
+
+    ////output
+    'connect_port_output',
+    'connect_servo_output',
+    'connect_dc_output',
+    'connect_mel_sec_output',
+    'connect_melody_output',
+    'connect_melody_off',
+    'connect_fnd_output',
+    'connect_fnd_off',
+
+    //// EEPROM
+    'connect_eeprom_write',
+    'connect_eeprom_buffset',
+    'connect_buff_read',
+    //endregion proboconnect
+];
+
 // 블록 생성
 Entry.ProboConnect.getBlocks = function () {
     return {

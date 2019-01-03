@@ -128,7 +128,30 @@ Entry.dplay = {
         mode: 'both',
     },
 };
-
+Entry.dplay.blockMenuBlocks = [
+    //dplay
+    'dplay_get_number_sensor_value',
+    'dplay_get_value',
+    'dplay_get_gas_sensor_value',
+    'dplay_get_dust_sensor_value',
+    'dplay_get_CO2_sensor_value',
+    'dplay_convert_scale',
+    'dplay_get_digital_value',
+    'dplay_get_switch_status',
+    'dplay_get_tilt',
+    'dplay_toggle_led',
+    'dplay_toggle_pwm',
+    'dplay_select_led',
+    'dplay_DCmotor',
+    'dplay_DCmotor_speed',
+    'dplay_buzzer',
+    'dplay_servo',
+    'dplay_Robot_run',
+    'dplay_Robot_run_sec',
+    'dplay_robot_speed_sel',
+    'dplay_robot_speed_set',
+    'dplay_robot_stop',
+];
 Entry.dplay.getBlocks = function() {
     return {
         //region dplay 디플레이

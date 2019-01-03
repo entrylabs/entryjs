@@ -199,7 +199,27 @@ Entry.MODI = {
         return list;
     },
 };
-
+Entry.MODI.blockMenuBlocks = [
+    //MODI
+    'modi_microphone_value',
+    'modi_environment_value',
+    'modi_dial_value',
+    'modi_gyroscope_value',
+    'modi_button_value',
+    'modi_button_true',
+    'modi_button_false',
+    'modi_infrared_value',
+    'modi_ultrasonic_value',
+    'modi_set_motor_value',
+    'modi_change_motor_upper_value',
+    'modi_change_motor_bottom_value',
+    'modi_clear_led',
+    'modi_set_led_rgb',
+    'modi_set_led_color',
+    'modi_set_basic_speaker',
+    'modi_set_custom_speaker',
+    'modi_print_display_by_value',
+];
 //region modi 모디
 Entry.MODI.getBlocks = function() {
     return {
@@ -974,7 +994,7 @@ Entry.MODI.getBlocks = function() {
                 var red = script.getNumberValue('rValue');
                 var green = script.getNumberValue('gValue');
                 var blue = script.getNumberValue('bValue');
-                
+
                 var moduleID = JSON.parse(Entry.hw.portData.module['led'][key]).id;
 
                 var sq = Entry.hw.sendQueue.moduleValue;

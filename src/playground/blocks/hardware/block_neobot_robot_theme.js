@@ -174,6 +174,25 @@ Entry.NeobotRobotTheme.setLanguage = function () {
     }
 };
 
+Entry.NeobotRobotTheme.blockMenuBlocks = [
+    //neobot_robot_theme '18.09.05
+    'neobot_port_value',
+    'neobot_ir_sensor_value',
+    'neobot_light_sensor_value',
+    'neobot_sound_sensor_value',
+    'neobot_motor_type1',
+    'neobot_motor_type2',
+    'neobot_motor_type3',
+    'neobot_motor_stop',
+    'neobot_led_on_type1',
+    'neobot_led_on_type2',
+    'neobot_led_off',
+    'neobot_ir_decision',
+    'neobot_light_decision',
+    'neobot_sound_decision',
+    'neobot_port_decision',
+];
+
 Entry.NeobotRobotTheme.getBlocks = function() {
     return {
         // class sensor

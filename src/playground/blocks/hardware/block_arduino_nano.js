@@ -106,11 +106,21 @@ Entry.ArduinoNano.setLanguage = function() {
     };
 };
 
+Entry.ArduinoNano.blockMenuBlocks = [
+    'arduino_nano_get_analog_value',
+    'arduino_nano_get_analog_value_map',
+    'arduino_nano_get_ultrasonic_value',
+    'arduino_nano_get_digital',
+    'arduino_nano_toggle_led',
+    'arduino_nano_digital_pwm',
+    'arduino_nano_set_servo',
+    'arduino_nano_set_tone',
+];
+
 Entry.ArduinoNano.getBlocks = function() {
     return {
         //region arduinoNano 아두이노 나노
         arduino_nano_analog_list: {
-            ignore: true,
             parent: 'arduino_ext_analog_list',
             params: [
                 {

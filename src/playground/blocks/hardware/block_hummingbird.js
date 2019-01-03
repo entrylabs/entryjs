@@ -58,7 +58,20 @@ Entry.hummingbird = {
         "ko": "허밍버드 듀오"
     },
 };
-
+Entry.hummingbird.blockMenuBlocks = [
+    //hummingbirdduo
+    'hummingbird_sensorValue',
+    'hummingbird_temperatureValue',
+    'hummingbird_lightValue',
+    'hummingbird_distanceValue',
+    'hummingbird_rotaryValue',
+    'hummingbird_soundValue',
+    'hummingbird_vibeMotor',
+    'hummingbird_servo',
+    'hummingbird_dcMotor',
+    'hummingbird_triLED',
+    'hummingbird_led',
+];
 Entry.hummingbird.getBlocks = function() {
     return {
         //region hummingbird 허밍버드
@@ -231,9 +244,9 @@ Entry.hummingbird.getBlocks = function() {
                         var sensor_val_square = reading * reading;
                         distance = sensor_val_square*sensor_val_square*reading*-0.000000000004789
 				               + sensor_val_square*sensor_val_square*0.000000010057143
-				               - sensor_val_square*reading*0.000008279033021 
-				               + sensor_val_square*0.003416264518201 
-				               - reading*0.756893112198934 
+				               - sensor_val_square*reading*0.000008279033021
+				               + sensor_val_square*0.003416264518201
+				               - reading*0.756893112198934
 				               + 90.707167605683000;
                     }
                 }

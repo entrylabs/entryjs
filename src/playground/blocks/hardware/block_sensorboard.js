@@ -19,6 +19,18 @@ Entry.SensorBoard = {
     },
 };
 
+Entry.SensorBoard.blockMenuBlocks = [
+    //sensorBoard
+    'sensorBoard_get_named_sensor_value',
+    'sensorBoard_is_button_pressed',
+    'sensorBoard_led',
+    'sensorBoard_get_number_sensor_value',
+    'sensorBoard_get_digital_value',
+    'sensorBoard_toggle_led',
+    'sensorBoard_toggle_pwm',
+    'sensorBoard_convert_scale',
+];
+
 Entry.SensorBoard.getBlocks = function() {
     return {
         //region sensorBoard e센서보드

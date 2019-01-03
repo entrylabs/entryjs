@@ -811,13 +811,13 @@ Entry.byrobot_petrone_v2_controller = {
     },
 
     // 버저 설정(함수 호출 시 시간은 모두 ms 단위 사용)
-    /*  
+    /*
         MuteInstantally     = 1,    // 묵음 즉시 적용
         MuteContinually     = 2,    // 묵음 예약
-        
+
         ScaleInstantally    = 3,    // 음계 즉시 적용
         ScaleContinually    = 4,    // 음계 예약
-        
+
         HzInstantally       = 5,    // 주파수 즉시 적용
         HzContinually       = 6,    // 주파수 예약
      */
@@ -1018,7 +1018,38 @@ Entry.byrobot_petrone_v2_controller = {
         }
     },
 };
-
+Entry.byrobot_petrone_v2_controller.blockMenuBlocks = [
+    'byrobot_petrone_v2_controller_controller_value_button',
+    'byrobot_petrone_v2_controller_controller_value_joystick',
+    'byrobot_petrone_v2_controller_controller_if_button_press',
+    'byrobot_petrone_v2_controller_controller_if_joystick_direction',
+    'byrobot_petrone_v2_controller_controller_light_manual_single_off',
+    'byrobot_petrone_v2_controller_controller_light_manual_single',
+    'byrobot_petrone_v2_controller_controller_light_manual_single_input',
+    'byrobot_petrone_v2_controller_controller_light_color_rgb_input',
+    'byrobot_petrone_v2_controller_controller_light_color_rgb_select',
+    'byrobot_petrone_v2_controller_controller_display_clear_all',
+    'byrobot_petrone_v2_controller_controller_display_clear',
+    'byrobot_petrone_v2_controller_controller_display_invert',
+    'byrobot_petrone_v2_controller_controller_display_draw_point',
+    'byrobot_petrone_v2_controller_controller_display_draw_line',
+    'byrobot_petrone_v2_controller_controller_display_draw_rect',
+    'byrobot_petrone_v2_controller_controller_display_draw_circle',
+    'byrobot_petrone_v2_controller_controller_display_draw_string',
+    'byrobot_petrone_v2_controller_controller_display_draw_string_align',
+    'byrobot_petrone_v2_controller_controller_buzzer_off',
+    'byrobot_petrone_v2_controller_controller_buzzer_scale',
+    'byrobot_petrone_v2_controller_controller_buzzer_scale_delay',
+    'byrobot_petrone_v2_controller_controller_buzzer_scale_reserve',
+    'byrobot_petrone_v2_controller_controller_buzzer_hz',
+    'byrobot_petrone_v2_controller_controller_buzzer_hz_delay',
+    'byrobot_petrone_v2_controller_controller_buzzer_hz_reserve',
+    'byrobot_petrone_v2_controller_controller_vibrator_off',
+    'byrobot_petrone_v2_controller_controller_vibrator_on_delay',
+    'byrobot_petrone_v2_controller_controller_vibrator_on_reserve',
+    'byrobot_petrone_v2_controller_controller_vibrator_delay',
+    'byrobot_petrone_v2_controller_controller_vibrator_reserve',
+];
 Entry.byrobot_petrone_v2_controller.getBlocks = function() {
     return {
         //region byrobot 바이로봇
