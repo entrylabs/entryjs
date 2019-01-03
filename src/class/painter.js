@@ -286,6 +286,8 @@ Entry.Painter = function(view) {
         painterTop.addClass('entryPainterTop');
 
         var painterTopFullscreenButton = ce('div', 'entryPainterTopFullscreenButton');
+        painterTopFullscreenButton.setAttribute("title", Lang.Painter.fullscreen);
+        painterTopFullscreenButton.setAttribute("alt", Lang.Painter.fullscreen);
         painterTopFullscreenButton.addClass('entryPlaygroundPainterFullscreenButton');
         painterTopFullscreenButton.bindOnClick(function() {
             const { painter = {}, pictureView_ } = Entry.playground;
@@ -294,9 +296,13 @@ Entry.Painter = function(view) {
             if($view.hasClass('fullscreen')) {
                 pictureView_.appendChild(view);
                 $(view).removeClass('fullscreen');
+                painterTopFullscreenButton.setAttribute("title", Lang.Painter.fullscreen);
+                painterTopFullscreenButton.setAttribute("alt", Lang.Painter.fullscreen);
             } else {
                 document.body.appendChild(view);
                 $(view).addClass('fullscreen');
+                painterTopFullscreenButton.setAttribute("title", Lang.Painter.exit_fullscreen);
+                painterTopFullscreenButton.setAttribute("alt", Lang.Painter.exit_fullscreen);
             }
             $(view)
                 .find('.lc-drawing.with-gui')

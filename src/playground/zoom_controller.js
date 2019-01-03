@@ -65,6 +65,7 @@ Entry.ZoomController = class ZoomController {
             style: 'cursor: zoom-out;',
         });
         this.zoomReset = this.svgGroup.elem('image', {
+            id: 'zoom_reset',
             href: `${Entry.mediaFilePath}btn_zoom_reset.svg`,
             x: 44,
             y: 3,
