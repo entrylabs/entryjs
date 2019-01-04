@@ -133,9 +133,11 @@ Entry.FieldTrashcan = class FieldTrashcan {
         isOver = isOver === undefined ? true : isOver;
         const trashTop = this.trashcanTop;
         if (isOver) {
-            $(trashTop).attr('class', 'trashcanOpen');
+            $(trashTop).attr('transform', 'translate(20, -25) rotate(30)');
+            // $(trashTop).attr('class', 'trashcanOpen');
         } else {
-            $(trashTop).attr('class', 'trashcanClose');
+            $(trashTop).attr('transform', 'translate(0, 0) rotate(0)');
+            // $(trashTop).attr('class', 'trashcanClose');
         }
 
         this.isOver = isOver;

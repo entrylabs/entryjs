@@ -121,14 +121,23 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
             parent: $('body'),
         });
 
-        if (defaultType === 'number' && Entry.isMobile()) {
-            this.optionWidget = this._getNumberOptionWidget();
-        } else if (defaultType === 'angle') {
-            this.optionInput = this._getInputFieldOption();
-            this.optionWidget = this._getAngleOptionWidget(this.optionInput[0]);
+        if (Entry.isMobile()) {
+            if (defaultType === 'number') {
+                this.optionWidget = this._getNumberOptionWidget();
+            } else if (defaultType === 'angle') {
+                this.optionWidget = this._getAngleOptionWidget();
+            } else {
+                this.optionInput = this._getInputFieldOption();
+                this._attachDisposeEvent();
+            }
         } else {
-            this.optionInput = this._getInputFieldOption();
-            this._attachDisposeEvent();
+            if (defaultType === 'angle') {
+                this.optionInput = this._getInputFieldOption();
+                this.optionWidget = this._getAngleOptionWidget(this.optionInput[0]);
+            } else {
+                this.optionInput = this._getInputFieldOption();
+                this._attachDisposeEvent();
+            }
         }
 
         this._setTextValue();
@@ -139,6 +148,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         return new EntryTool({
             type: 'numberWidget',
             data: {
+                eventTypes: ['mousedown', 'touchstart', 'wheel'],
                 positionDom: this.svgGroup,
                 onOutsideClick: () => {
                     this.destroyOption(undefined, true);
@@ -172,6 +182,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         return new EntryTool({
             type: 'angleWidget',
             data: {
+                eventTypes: ['mousedown', 'touchstart', 'wheel'],
                 angle: this.getValue(),
                 outsideExcludeDom: excludeDom,
                 positionDom: this.svgGroup,
@@ -214,7 +225,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         });
 
         inputField.on('keyup', (e) => {
-            this.applyValue(inputField[0].value);
+            this.applyValue(inputField[0].value, true);
             if (_.includes([13, 27], e.keyCode || e.which)) {
                 this.destroyOption(undefined, true);
             }
@@ -247,8 +258,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         return inputField;
     }
 
-    //this.optionWidget = {} (type{}, object)
-    applyValue(value) {
+    applyValue(value, isNotUpdate) {
         let result = value;
         if (this.optionWidget) {
             switch (this.optionWidget.type) {
@@ -265,7 +275,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
                     break;
             }
         }
-        if (this.optionInput) {
+        if (this.optionInput && !isNotUpdate) {
             this.optionInput.val(result);
         }
 
@@ -395,7 +405,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
      * @private
      */
     _getSubstringValue() {
-        let returnValue = String(this.getValue());
+        const returnValue = String(this.getValue());
         if (returnValue.length === 1) {
             return '0';
         } else {
@@ -405,7 +415,9 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
 
     static _refineDegree(value) {
         const reg = /&value/gm;
-        if (reg.test(value)) return value;
+        if (reg.test(value)) {
+            return value;
+        }
 
         const numberOnlyValue = String(value).match(/[\d|\-|.|\+]+/g);
         let refinedDegree = (numberOnlyValue && numberOnlyValue[0]) || '0';

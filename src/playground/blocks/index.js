@@ -55,6 +55,7 @@ require('./block_microbit');
 require('./block_mrt');
 require('./block_dash');
 require('./block_bingles');
+require('./block_proboconnect');
 require('./block_sciencecube');
 require('./block_codingmachine');
 
@@ -77,7 +78,7 @@ Entry.HARDWARE_LIST = {
     '2.9': Entry.Turtle,
     '2.FF': Entry.Roboid,
     '3.1': Entry.Bitbrick,
-    '4.2': Entry.Arduino,
+    '4.2': Entry.ArduinoExt,
     '5.1': Entry.Neobot,
     '5.2': Entry.NeobotSensorTheme,
     '5.3': Entry.NeobotRobotTheme,
@@ -121,6 +122,7 @@ Entry.HARDWARE_LIST = {
     '1.D': Entry.BINGLES,
     '25.1': Entry.sciencecube,
     '26.1': Entry.Codingmachine,
+    '27.1': Entry.ProboConnect,
 };
 
 const startBlock = require('./block_start');

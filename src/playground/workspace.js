@@ -130,6 +130,7 @@ Entry.Workspace = class Workspace {
         if (this.oldMode === this.mode) {
             return;
         }
+        Entry.variableContainer.updateList();
 
         const VIM = Entry.Vim;
         const WORKSPACE = Entry.Workspace;

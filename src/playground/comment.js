@@ -249,6 +249,8 @@ Entry.Comment = class Comment {
         });
 
         this._resizeArrow.attr({
+            width: 8,
+            height: 8,
             href: `${path}resize_arrow.svg`,
         });
 
@@ -261,10 +263,14 @@ Entry.Comment = class Comment {
         });
 
         this._toggleArrow.attr({
+            width: 8,
+            height: 5,
             href: `${path}toggle_open_arrow.svg`,
         });
 
         this._commentIcon.attr({
+            width: 12,
+            height: 12,
             href: `${path}comment_icon.svg`,
         });
     }
@@ -455,9 +461,13 @@ Entry.Comment = class Comment {
 
     mouseDown(e) {
         e.stopPropagation();
-        let longPressTimer = null;
+        e.preventDefault();
+        this.longPressTimer = null;
+        if (Entry.documentMousedown) {
+            Entry.documentMousedown.notify(e);
+        }
 
-        if (!this.board.readOnly) {
+        if ((e.button === 0 || e.type === 'touchstart') && !this.board.readOnly) {
             this.setDragInstance(e);
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
             this.bindDomEvent(this.mouseMove, this.mouseUp);
@@ -465,13 +475,13 @@ Entry.Comment = class Comment {
             this.board.set({ dragBlock: this });
 
             if (eventType === 'touchstart') {
-                longPressTimer = setTimeout(() => {
-                    if (longPressTimer) {
-                        longPressTimer = null;
-                        this.mouseUp(e);
+                this.longPressTimer = setTimeout(() => {
+                    if (this.longPressTimer) {
+                        this.longPressTimer = null;
                         this.rightClick(e);
+                        this.mouseUp(e);
                     }
-                }, 1000);
+                }, 700);
             }
         } else if (Entry.Utils.isRightButton(e)) {
             this.rightClick(e);
@@ -483,6 +493,7 @@ Entry.Comment = class Comment {
         if (disposeEvent) {
             disposeEvent.notify(e);
         }
+        this.dragMode = Entry.DRAG_MODE_NONE;
 
         const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
 
@@ -493,7 +504,7 @@ Entry.Comment = class Comment {
             const readOnly = comment.readOnly;
 
             const copyAndPaste = {
-                text: '메모 복사 & 붙여넣기',
+                text: Lang.Blocks.copy_paste_comment,
                 enable: !readOnly,
                 callback() {
                     Entry.do('cloneComment', comment.copy(), board);
@@ -501,7 +512,7 @@ Entry.Comment = class Comment {
             };
 
             const copy = {
-                text: '메모 복사하기',
+                text: Lang.Blocks.copy_comment,
                 enable: !readOnly,
                 callback() {
                     comment.copyToClipboard();
@@ -509,7 +520,7 @@ Entry.Comment = class Comment {
             };
 
             const remove = {
-                text: '메모 삭제하기',
+                text: Lang.Blocks.delete_comment,
                 enable: !readOnly,
                 callback() {
                     Entry.do('removeComment', comment);
@@ -517,7 +528,7 @@ Entry.Comment = class Comment {
             };
 
             const toggle = {
-                text: comment.isOpened ? '메모 접기' : '메모 열기',
+                text: comment.isOpened ? Lang.Blocks.fold_comment : Lang.Blocks.open_comment,
                 enable: !readOnly,
                 callback() {
                     Entry.do('toggleComment', comment);
@@ -525,7 +536,7 @@ Entry.Comment = class Comment {
             };
 
             const separate = {
-                text: '메모 분리하기',
+                text: Lang.Blocks.separate_comment,
                 enable: !!comment.block,
                 callback() {
                     Entry.do('separateComment', comment);
@@ -545,6 +556,10 @@ Entry.Comment = class Comment {
             this.dragMode === Entry.DRAG_MODE_DRAG ||
             this.getMouseMoveDiff(mouseEvent) > Entry.BlockView.DRAG_RADIUS
         ) {
+            if (this.longPressTimer) {
+                clearTimeout(this.longPressTimer);
+                this.longPressTimer = null;
+            }
             if (this.isEditing) {
                 this.destroyTextArea();
             }
@@ -576,10 +591,14 @@ Entry.Comment = class Comment {
 
     mouseUp(e) {
         e.stopPropagation();
+        if (this.longPressTimer) {
+            clearTimeout(this.longPressTimer);
+            this.longPressTimer = null;
+        }
 
         if (!this.isEditing && this.isOpened && this.dragMode === Entry.DRAG_MODE_MOUSEDOWN) {
             this.renderTextArea();
-        } else {
+        } else if (this.dragMode === Entry.DRAG_MODE_DRAG) {
             this.destroyTextArea();
             Entry.do('moveComment', this);
             if (this.connectableBlockView) {
@@ -598,6 +617,7 @@ Entry.Comment = class Comment {
     }
 
     removeMoveSetting(mouseMove, mouseUp) {
+        const dragMode = this.dragMode;
         this.dragMode = Entry.DRAG_MODE_NONE;
         this.board.set({ dragBlock: null });
         delete this.connectableBlocks;
@@ -606,7 +626,7 @@ Entry.Comment = class Comment {
         this.removeDomEvent(mouseMove, mouseUp);
         const gs = Entry.GlobalSvg;
         const gsRet = gs.terminateDrag(this);
-        if (gsRet === gs.REMOVE) {
+        if (gsRet === gs.REMOVE && dragMode === Entry.DRAG_MODE_DRAG) {
             Entry.do('removeComment', this).isPass(true, true);
         }
         Entry.GlobalSvg.remove();
@@ -617,7 +637,7 @@ Entry.Comment = class Comment {
     addControl() {
         const bindEvent = (dom, func) => {
             dom.addEventListener('mousedown', func);
-            dom.addEventListener('touchstart', func);
+            dom.addEventListener('touchstart', func, false);
         };
         bindEvent(this._contentGroup, this.mouseDown);
         bindEvent(this._title, this.mouseDown);
@@ -667,6 +687,7 @@ Entry.Comment = class Comment {
     renderTextArea() {
         this.isEditing = true;
         const { top, left } = this._comment.getBoundingClientRect();
+        const scrollTop = document.documentElement.scrollTop;
         this.event = Entry.disposeEvent.attach(this, () => {
             this._textPath.textContent = this.value;
             this.destroyTextArea();
@@ -679,7 +700,7 @@ Entry.Comment = class Comment {
         this.textArea.val(this.value);
         this.textArea.css({
             left: left - (1 - this.scale) * 0.2 + 2,
-            top: this.titleHeight * this.scale + top + 1,
+            top: this.titleHeight * this.scale + top + 1 + scrollTop,
             'font-size': `${this.fontSize}px`,
             width: (this.width - 16) * this.scale,
             height: (this.height - this.titleHeight - 10) * this.scale,
@@ -687,7 +708,10 @@ Entry.Comment = class Comment {
             'border-radius': `0 0 ${4 * this.scale}px ${4 * this.scale}px`,
             padding: `${2 * this.scale}px ${4 * this.scale}px`,
         });
-        this.textArea.focus && this.textArea.focus();
+        const length = this.value.length;
+        this.textArea.focus &&
+            this.textArea.focus() &&
+            this.textArea[0].setSelectionRange(length, length);
     }
 
     bindDomEventTextArea() {
@@ -741,8 +765,12 @@ Entry.Comment = class Comment {
 
     resizeMouseDown(e) {
         e.stopPropagation();
+        e.preventDefault();
+        if (Entry.documentMousedown) {
+            Entry.documentMousedown.notify(e);
+        }
 
-        if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
+        if ((e.button === 0 || e.type === 'touchstart') && !this.board.readOnly) {
             this.setDragInstance(e);
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
             this.bindDomEvent(this.resizeMouseMove, this.resizeMouseUp);
@@ -787,8 +815,12 @@ Entry.Comment = class Comment {
 
     toggleMouseDown(e) {
         e.stopPropagation();
+        e.preventDefault();
+        if (Entry.documentMousedown) {
+            Entry.documentMousedown.notify(e);
+        }
 
-        if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
+        if ((e.button === 0 || e.type === 'touchstart') && !this.board.readOnly) {
             this.setDragInstance(e);
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
             this.bindDomEvent(this.mouseMove, this.toggleMouseUp);
@@ -916,6 +948,7 @@ Entry.Comment = class Comment {
 
     generateCommentableBlocks() {
         this.connectableBlocks = [];
+        this.connectableBlockCoordinate = null;
         if (this.block) {
             return;
         }
@@ -942,11 +975,18 @@ Entry.Comment = class Comment {
         if (this.block) {
             return;
         }
+        if (
+            this.connectableBlockCoordinate &&
+            this.isOnConnectableBlock(this.connectableBlockCoordinate)
+        ) {
+            return;
+        }
         this.removeSelected();
         for (const coordinate of this.connectableBlocks) {
             if (this.isOnConnectableBlock(coordinate)) {
                 this.connectableBlockView = this.code.findById(coordinate.id).view;
                 this.board.setSelectedBlock(this.connectableBlockView);
+                this.connectableBlockCoordinate = coordinate;
                 return;
             }
         }
@@ -957,6 +997,7 @@ Entry.Comment = class Comment {
             this.connectableBlockView.removeSelected();
             this.connectableBlockView = null;
         }
+        this.connectableBlockCoordinate = null;
     }
 
     isOnConnectableBlock(coordinate) {

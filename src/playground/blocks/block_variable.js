@@ -8,7 +8,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Workspace.variable_create,
-                        color: '#333',
+                        color: '#4f80ff',
                         align: 'center',
                     },
                 ],
@@ -31,7 +31,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Workspace.create_list_block,
-                        color: '#333',
+                        color: '#4f80ff',
                         align: 'center',
                     },
                 ],
@@ -783,6 +783,7 @@ module.exports = {
                         type: 'Block',
                         isListIndex: true,
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Text',
@@ -998,6 +999,7 @@ module.exports = {
                         type: 'Block',
                         isListIndex: true,
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'DropdownDynamic',
@@ -1124,6 +1126,7 @@ module.exports = {
                         type: 'Block',
                         isListIndex: true,
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
@@ -1251,6 +1254,7 @@ module.exports = {
                         type: 'Block',
                         isListIndex: true,
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Block',

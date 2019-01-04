@@ -1,6 +1,7 @@
 'use strict';
 
 import _get from 'lodash/get';
+import Hammer from 'hammerjs';
 
 Entry.BlockView = class BlockView {
     schema = {
@@ -15,6 +16,7 @@ Entry.BlockView = class BlockView {
         contentWidth: 0,
         contentHeight: 0,
         topFieldHeight: 0,
+        marginBottom: 0,
         magneting: false,
         visible: true,
         animating: false,
@@ -87,9 +89,11 @@ Entry.BlockView = class BlockView {
         }
 
         this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
-
-        this.mouseHandler = function() {
+        this.mouseHandler = function(e) {
             (_.result(that.block.events, 'mousedown') || []).forEach((fn) => {
+                if (Entry.documentMousedown) {
+                    Entry.documentMousedown.notify(e);
+                }
                 return fn(that);
             });
             that.onMouseDown(...arguments);
@@ -113,7 +117,7 @@ Entry.BlockView = class BlockView {
         this.dragMode = Entry.DRAG_MODE_NONE;
         Entry.Utils.disableContextmenu(this.svgGroup.node);
         const events = block.events.viewAdd || [];
-        if (Entry.type == 'workspace' && this._board instanceof Entry.Board) {
+        if (Entry.type === 'workspace' && this._board instanceof Entry.Board) {
             events.forEach((fn) => {
                 if (_.isFunction(fn)) {
                     fn(block);
@@ -441,19 +445,23 @@ Entry.BlockView = class BlockView {
     _addControl() {
         this._mouseEnable = true;
 
-        $(this.svgGroup).bind(
-            'mousedown.blockViewMousedown touchstart.blockViewMousedown',
-            this.mouseHandler
-        );
-
         const dblclick = _.result(this.block.events, 'dblclick');
-
         if (dblclick) {
+            const hammer = new Hammer(this.svgGroup);
+            hammer.on('doubletap', () => {
+                if (this._board.readOnly) {
+                    return;
+                }
+                dblclick.forEach((fn) => {
+                    if (fn) {
+                        fn(this);
+                    }
+                });
+            });
             $(this.svgGroup).dblclick(() => {
                 if (this._board.readOnly) {
                     return;
                 }
-
                 dblclick.forEach((fn) => {
                     if (fn) {
                         fn(this);
@@ -461,6 +469,11 @@ Entry.BlockView = class BlockView {
                 });
             });
         }
+
+        $(this.svgGroup).bind(
+            'mousedown.blockViewMousedown touchstart.blockViewMousedown',
+            this.mouseHandler
+        );
     }
 
     removeControl() {
@@ -468,34 +481,54 @@ Entry.BlockView = class BlockView {
         $(this.svgGroup).unbind('.blockViewMousedown');
     }
 
+    setSelectedBlock(board) {
+        const { workspace } = board;
+        const { selectedBlockView } = workspace;
+        const wsBoard = selectedBlockView ? selectedBlockView.getBoard() : board;
+        if (board !== wsBoard) {
+            wsBoard.setSelectedBlock(null);
+        } else {
+            board.setSelectedBlock(this);
+        }
+    }
+
     onMouseDown(e) {
-        if (e.stopPropagation) {
+        if (!this.isInBlockMenu && e.stopPropagation) {
             e.stopPropagation();
         }
         if (e.preventDefault) {
             e.preventDefault();
         }
+
+        if (Entry.disposeEvent) {
+            Entry.disposeEvent.notify();
+        }
+
         this.longPressTimer = null;
 
         const board = this.getBoard();
-        if (Entry.documentMousedown) {
-            Entry.documentMousedown.notify(e);
+        if (board.workingEvent) {
+            return;
         }
+
         if (this.readOnly || board.viewOnly) {
             return;
         }
 
-        board.setSelectedBlock(this);
+        board.workingEvent = true;
+        this.setSelectedBlock(board);
 
         //left mousedown
         if (
-            (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) &&
+            (e.button === 0 || (e.originalEvent && e.originalEvent.touches) || e.touches) &&
             !this._board.readOnly
         ) {
             const eventType = e.type;
             let mouseEvent;
             if (e.originalEvent && e.originalEvent.touches) {
                 mouseEvent = e.originalEvent.touches[0];
+            } else if (e.touches) {
+                mouseEvent = e.touches[0];
             } else {
                 mouseEvent = e;
             }
@@ -505,10 +538,13 @@ Entry.BlockView = class BlockView {
                 y: mouseEvent.pageY,
             };
             const $doc = $(document);
+
             if (!this.disableMouseEvent) {
-                $doc.bind('mousemove.block touchmove.block', this.onMouseMove);
+                $doc.bind('mousemove.block', this.onMouseMove);
+                document.addEventListener('touchmove', this.onMouseMove, { passive: false });
             }
-            $doc.bind('mouseup.block touchend.block', this.onMouseUp);
+            $doc.bind('mouseup.block', this.onMouseUp);
+            document.addEventListener('touchend', this.onMouseUp);
             this.dragInstance = new Entry.DragInstance({
                 startX: mouseEvent.pageX,
                 startY: mouseEvent.pageY,
@@ -528,7 +564,7 @@ Entry.BlockView = class BlockView {
                         this.onMouseUp();
                         this._rightClick(e, 'longPress');
                     }
-                }, 1000);
+                }, 700);
             }
         } else if (Entry.Utils.isRightButton(e)) {
             this._rightClick(e);
@@ -541,8 +577,15 @@ Entry.BlockView = class BlockView {
         }
     }
 
+    getVerticalMove(mouseEvent, dragInstance) {
+        const dx = Math.abs(mouseEvent.pageX - dragInstance.offsetX);
+        const dy = Math.abs(mouseEvent.pageY - dragInstance.offsetY);
+        return dy / dx > 1.75;
+    }
+
     onMouseMove(e) {
         e.stopPropagation();
+        e.preventDefault();
         const board = this.getBoard();
         const workspaceMode = board.workspace.getMode();
 
@@ -552,6 +595,8 @@ Entry.BlockView = class BlockView {
         }
         if (e.originalEvent && e.originalEvent.touches) {
             mouseEvent = e.originalEvent.touches[0];
+        } else if (e.touches) {
+            mouseEvent = e.touches[0];
         } else {
             mouseEvent = e;
         }
@@ -562,6 +607,19 @@ Entry.BlockView = class BlockView {
                 Math.pow(mouseEvent.pageY - mouseDownCoordinate.y, 2)
         );
         if (this.dragMode == Entry.DRAG_MODE_DRAG || diff > Entry.BlockView.DRAG_RADIUS) {
+            const blockView = this;
+            if (
+                (blockView.isInBlockMenu &&
+                    this.longPressTimer &&
+                    this.getVerticalMove(mouseEvent, blockView.dragInstance)) ||
+                this.isVerticalMove
+            ) {
+                this.isVerticalMove = true;
+                return;
+            } else {
+                $(document).unbind('.blockMenu');
+            }
+
             if (this.longPressTimer) {
                 clearTimeout(this.longPressTimer);
                 this.longPressTimer = null;
@@ -614,8 +672,17 @@ Entry.BlockView = class BlockView {
                 this._updateCloseBlock();
             } else {
                 board.cloneToGlobal(e);
+                // this.terminateEvent();
             }
         }
+    }
+
+    terminateEvent() {
+        const $doc = $(document);
+        document.removeEventListener('touchmove', this.onMouseMove, { passive: false });
+        document.removeEventListener('touchend', this.onMouseUp);
+        $doc.unbind('.block', this.onMouseUp);
+        $doc.unbind('.block', this.onMouseMove);
     }
 
     onMouseUp(e) {
@@ -623,18 +690,18 @@ Entry.BlockView = class BlockView {
             clearTimeout(this.longPressTimer);
             this.longPressTimer = null;
         }
-        const $doc = $(document);
-        $doc.unbind('.block', this.onMouseUp);
-        $doc.unbind('.block', this.onMouseMove);
+        this.terminateEvent();
         this.terminateDrag(e);
         const board = this.getBoard();
         if (board) {
             board.set({ dragBlock: null });
+            delete board.workingEvent;
         }
         this._setHoverBlockView({ that: this });
         Entry.GlobalSvg.remove();
         this.mouseUpEvent.notify();
 
+        delete this.isVerticalMove;
         delete this.mouseDownCoordinate;
         delete this.dragInstance;
     }
@@ -846,7 +913,7 @@ Entry.BlockView = class BlockView {
         (this._statements || []).forEach(_destroyFunc);
 
         const block = this.block;
-        if (Entry.type == 'workspace' && !this.isInBlockMenu) {
+        if (Entry.type === 'workspace' && !this.isInBlockMenu) {
             (block.events.viewDestroy || []).forEach((fn) => {
                 if (_.isFunction(fn)) {
                     fn(block);
@@ -989,6 +1056,16 @@ Entry.BlockView = class BlockView {
     removeSelected() {
         $(this.pathGroup).insertBefore(this._nextGroup);
         this.svgGroup.removeClass('selected');
+    }
+
+    addActivated() {
+        $(this.pathGroup).insertAfter(this._nextGroup);
+        this.svgGroup.addClass('activated');
+    }
+
+    removeActivated() {
+        $(this.pathGroup).insertBefore(this._nextGroup);
+        this.svgGroup.removeClass('activated');
     }
 
     getSkeleton() {
@@ -1181,14 +1258,6 @@ Entry.BlockView = class BlockView {
         }
     }
 
-    addActivated() {
-        this.svgGroup.addClass('activated');
-    }
-
-    removeActivated() {
-        this.svgGroup.removeClass('activated');
-    }
-
     reDraw() {
         if (!(this.visible && this.display)) {
             return;
@@ -1298,8 +1367,8 @@ Entry.BlockView = class BlockView {
         function processSvg() {
             svgData = svgData
                 .replace('(svgGroup)', new XMLSerializer().serializeToString(svgGroup))
-                .replace('%W', bBox.width * scale)
-                .replace('%H', bBox.height * scale)
+                .replace('%W', bBox.width * scale + 20)
+                .replace('%H', bBox.height * scale + 5)
                 .replace('(defs)', new XMLSerializer().serializeToString(defs[0]))
                 .replace(/>\s+/g, '>')
                 .replace(/\s+</g, '<');
@@ -1399,7 +1468,8 @@ Entry.BlockView = class BlockView {
         }
 
         const block = this.block;
-
+        const board = this.getBoard();
+        delete board.workingEvent;
         //if long pressed block is function_general block
         //edit function
         if (this.isInBlockMenu && eventSource === 'longPress' && block.getFuncId()) {
@@ -1408,13 +1478,12 @@ Entry.BlockView = class BlockView {
 
         const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
 
-        const board = this.getBoard();
         return Entry.ContextMenu.show(_getOptions(this), null, { x, y });
 
         //helper functon get get context options
         function _getOptions(blockView) {
             const isBoardReadOnly = blockView._board.readOnly;
-            const { block, isInBlockMenu, copyable, _board } = blockView;
+            const { block, isInBlockMenu, copyable } = blockView;
             const {
                 Blocks: { Duplication_option, CONTEXT_COPY_option, Delete_Blocks },
                 Menus: { save_as_image },
@@ -1453,7 +1522,7 @@ Entry.BlockView = class BlockView {
 
             const hasComment = !!block._comment;
             const comment = {
-                text: hasComment ? '메모 삭제하기' : '메모 추가하기',
+                text: hasComment ? Lang.Blocks.delete_comment : Lang.Blocks.add_comment,
                 enable: block.isCommentable(),
                 callback() {
                     hasComment
@@ -1474,7 +1543,7 @@ Entry.BlockView = class BlockView {
             return options;
 
             function _isDownloadable() {
-                return Entry.Utils.isChrome() && Entry.type == 'workspace' && !Entry.isMobile();
+                return Entry.Utils.isChrome() && Entry.type === 'workspace' && !Entry.isMobile();
             }
         }
     }

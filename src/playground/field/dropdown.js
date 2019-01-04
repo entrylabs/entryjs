@@ -188,10 +188,14 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
             parent: $('body'),
         });
         const { options = [] } = this._contents;
+        const convertedOptions = options.map(([key, value]) => {
+            return [this._convert(key, value), value];
+        });
         this.dropdownWidget = new EntryTool({
             type: 'dropdownWidget',
             data: {
-                items: options,
+                eventTypes: ['mousedown', 'touchstart', 'wheel'],
+                items: convertedOptions,
                 positionDom: this.svgGroup,
                 onOutsideClick: () => {
                     this.destroyOption();
@@ -201,6 +205,11 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
         }).on('select', (item) => {
             this.applyValue(item[1]);
             this.destroyOption();
+            $(this._blockView.contentSvgGroup).trigger('optionChanged', {
+                block: this._block,
+                value: this.getValue(),
+                index: this._index,
+            });
         });
         this.optionDomCreated();
     }

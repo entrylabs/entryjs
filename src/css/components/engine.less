@@ -78,23 +78,91 @@
 }
 
 .entryPopupWindow > .entryEngineWorkspace_w > .entryCoordinateButtonWorkspace_w {
+    position: absolute;
+    right: 53px;
+    bottom: 12px;
+    margin: 0;
     background-image: url('@{image_url}grid.png') !important;
-    right: 34px;
-    color: @bora;
+    background-size: 16px auto;
+}
+.entryPopupWindow > .entryEngineWorkspace_w > .entryCoordinateButtonWorkspace_w.toggleOn {
+    position: absolute;
+    right: 53px;
+    bottom: 12px;
+    margin: 0;
+    background-image: url('@{image_url}layers_icon_grid_nor_1.png') !important;
+    background-size: 16px auto;
 }
 
 .entryPopupWindow > .entryEngineWorkspace_w > .entryMaximizeButtonWorkspace_w {
+    position: absolute;
+    right: 6px;
+    bottom: 12px;
     background-image: url('@{image_url}zoom_out_btn.png');
-    background-repeat: no-repeat;
-    right: 5px;
+    background-repeat: no-repeat; 
+    background-size: 16px auto;
+}
+.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper {
+    display: block;
+    height: 48px;
+    border-top: 1px solid #d6e9f4;
+    box-sizing: border-box;
 }
 
-// .entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWorkspace_w {
-//     position: absolute;
-//     bottom: 3px;
-// }
+.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryRunButtonWorkspace_w,
+.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryStopButtonWorkspace_w,
+.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryPauseButtonWorkspace_full,
+.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryRestartButtonWorkspace_full,{
+    display: inline-block;
+    overflow: hidden;
+    flex: none;
+    width: auto;
+    height: auto;
+    border: 0;
+    margin-left: 24px;
+    border-radius: 0;
+    background: none;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4f80ff;
+    line-height: 48px;
+}
+.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryRunButtonWorkspace_w:before,
+.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryRestartButtonWorkspace_full:before {
+    display: inline-block;
+    width: 14px;
+    height: 18px;
+    margin-right: 8px;
+    vertical-align: middle;
+    background-image: url('@{image_url}layers_icon_button_play_norx2.png');
+    background-repeat: no-repeat; 
+    background-size: 14px auto;
+    content: '';
+}
+.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryStopButtonWorkspace_w:before {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    vertical-align: middle;
+    background-image: url('@{image_url}layers_icon_button_stop_norx2.png');
+    background-repeat: no-repeat; 
+    background-size: 16px auto;
+    content: '';
+}
+.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryPauseButtonWorkspace_full:before {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    vertical-align: middle;
+    background-image: url('@{image_url}layers_icon_button_pause_norx2.png');
+    background-repeat: no-repeat; 
+    background-size: 16px auto;
+    content: '';
+}
 
-.entryPopupWindow > .entryEngineWorkspace_w > .entryAddButtonWorkspace_w {
+.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper > .entryAddButtonWorkspace_w {
     display: none;
 }
 
@@ -235,6 +303,7 @@
 .entryMouseViewWorkspace_w {
     height: 32px;
     font-size: 12px;
+    font-weight: bold;
     margin: 0 auto;
     padding: 10px 0 8px;
     color: #4f80ff;
@@ -306,22 +375,28 @@
     background-size: 18px auto;
 }
 
+.entrySpeedButtonWorkspace.on {
+    .backgroundImage('speed_edit_on.png');
+}
+
 .entryPopupWindow > div > .entrySpeedButtonWorkspace {
     display: none;
 }
 
 .entryPopupWindow .entryMouseViewWorkspace_w {
-    font-size: 9pt;
-    margin: 0 auto;
-    width: 40%;
-    margin-left: -20%;
-    left: 50%;
-    color: @bora;
-    line-height: 24px;
-    text-align: center;
-    bottom: 1px;
     position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 40%;
+    height: 48px;
+    margin: 0 auto;
+    padding: 0;
+    margin-left: -20%;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4f80ff;
     text-align: center;
+    line-height: 48px;
 }
 
 #entrySpeedProgressWorkspace {
@@ -373,16 +448,27 @@
     line-height: 11px;
 }
 
+#entrySpeedHandleWorkspace {
+    position: absolute !important;
+    cursor: pointer;
+    width: 18px;
+    height: 16px;
+    top: 21px;
+    z-index: 100;
+    .backgroundImage('speed_handle.png');
+}
 .entrySpeedBox {
-    position: relative;
+    position: absolute;
     box-sizing: border-box;
     height: 39px;
-    margin-top: 32px;
+    margin: 0px 0 -1px;
     padding: 0 10px 0 60px;
     border: 1px solid #e2e2e2;
     border-width: 1px 0;
     background-color: #f9f9f9;
     clear: both;
+    z-index: 10;
+
 }
 
 .entryCoordinateButtonWorkspace {
@@ -416,7 +502,7 @@
 
 .entryEngineButtonWrapper {
     display: flex;
-    margin: 0 -1px;
+    margin: 0 -1px -1px;
     // :not([style*='display:none']):not([style*='display: none']):not(:first-child) {
     //     border-left: 0;
     // }
@@ -595,36 +681,6 @@
     display: none;
 }
 
-.entryPopupWindow .entryPauseButtonWorkspace_full {
-    display: inline-block;
-    background: url('@{image_url}pause_btn.png');
-    background-repeat: no-repeat;
-    color: transparent;
-    padding-left: 20px;
-    left: 103px;
-    color: @bora;
-    background-position: center left;
-    border: none;
-    font-size: 14px;
-    font-family: ng;
-    width: auto;
-}
-
-.entryPopupWindow .entryRestartButtonWorkspace_full {
-    display: inline-block;
-    background: url('@{image_url}play_full_btn.png');
-    background-repeat: no-repeat;
-    color: transparent;
-    padding-left: 20px;
-    left: 103px;
-    color: @bora;
-    background-position: center left;
-    border: none;
-    font-size: 14px;
-    font-family: ng;
-    width: auto;
-}
-
 .nav_right_wrapper {
     right: 0;
 }
@@ -671,6 +727,10 @@
         width: 27px;
         height: 19px;
         margin-top: 2px;
+        .backgroundImage('speed_edit_big.png');
+    }
+
+    .entrySpeedButtonWorkspace.on {
         .backgroundImage('speed_edit_big.png');
     }
 

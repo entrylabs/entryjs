@@ -12,7 +12,11 @@
         "type": "git",
         "url": "https://github.com/boolgom/entryjs.git"
     },
-    "keywords": ["entry", "entryjs", "javascript"],
+    "keywords": [
+        "entry",
+        "entryjs",
+        "javascript"
+    ],
     "bugs": {
         "url": "https://github.com/boolgom/entryjs/issues"
     },
@@ -25,15 +29,17 @@
     },
     "license": "MIT",
     "dependencies": {
-        "autoprefixer": "^9.3.1",
+        "autoprefixer": "^9.4.3",
         "axios": "^0.18.0",
         "babel-core": "^7.0.0-bridge.0",
-        "entry-tool": "^0.1.8",
+        "entry-tool": "^1.0.1",
+        "events": "^3.0.0",
+        "hammerjs": "^2.0.8",
         "hyperid": "^1.4.1",
         "jest": "^23.3.0",
         "lodash": "^4.17.5",
         "postcss-flexbugs-fixes": "^4.1.0",
-        "simplebar": "^3.1.0",
+        "simplebar": "^3.1.1",
         "uglifyjs-webpack-plugin": "^1.2.2",
         "webpack": "^4.0.1"
     },
@@ -53,6 +59,7 @@
         "chai": "^3.2.0",
         "cross-env": "^5.1.4",
         "css-loader": "^0.28.10",
+        "cssnano": "^4.1.7",
         "eslint": "^4.18.2",
         "eslint-config-prettier": "^2.9.0",
         "eslint-loader": "^2.0.0",
@@ -67,8 +74,12 @@
         "less": "^3.0.1",
         "less-loader": "^4.0.6",
         "mocha": "^2.5.3",
+        "postcss-cssnext": "^3.1.0",
+        "postcss-import": "^12.0.1",
+        "postcss-loader": "^3.0.0",
         "prettier": "^1.11.1",
         "style-loader": "^0.20.2",
+        "sugarss": "^2.0.0",
         "url-loader": "^1.0.1",
         "webpack-cli": "^2.0.10",
         "webpack-dev-server": "^3.1.1",

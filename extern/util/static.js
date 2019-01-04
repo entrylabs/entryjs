@@ -1,6 +1,6 @@
 'use strict';
 
-const EntryStatic = {};
+var EntryStatic = {};
 
 EntryStatic.objectTypes = ['sprite', 'textBox'];
 
@@ -391,7 +391,7 @@ EntryStatic.getAllBlocks = function() {
                 'get_disaster_behavior',
                 'behaviorConductLifeSafety_title',
                 'count_lifeSafety_behavior',
-                'get_lifeSafety_behavior'
+                'get_lifeSafety_behavior',
             ],
         },
         {
@@ -405,6 +405,7 @@ EntryStatic.getAllBlocks = function() {
                 'arduino_reconnect',
                 'arduino_open',
                 'arduino_cloud_pc_open',
+                'arduino_noti',
                 'arduino_get_number_sensor_value',
                 'arduino_get_digital_value',
                 'arduino_toggle_led',
@@ -450,20 +451,20 @@ EntryStatic.getAllBlocks = function() {
                 'arduino_nano_set_servo',
                 'arduino_nano_set_tone',
                 //blacksmith
-                "blacksmith_get_analog_value",
-                "blacksmith_get_analog_mapping",
-                "blacksmith_get_digital_bluetooth",
-                "blacksmith_get_digital_ultrasonic",
-                "blacksmith_get_digital_toggle",
-                "blacksmith_set_digital_toggle",
-                "blacksmith_set_digital_pwm",
-                "blacksmith_set_digital_rgbled",
-                "blacksmith_set_digital_servo",
-                "blacksmith_set_digital_buzzer",
-                "blacksmith_set_digital_dcmotor",
-                "blacksmith_module_digital_lcd",
-                "blacksmith_module_digital_bluetooth",
-                "blacksmith_module_digital_oled",
+                'blacksmith_get_analog_value',
+                'blacksmith_get_analog_mapping',
+                'blacksmith_get_digital_bluetooth',
+                'blacksmith_get_digital_ultrasonic',
+                'blacksmith_get_digital_toggle',
+                'blacksmith_set_digital_toggle',
+                'blacksmith_set_digital_pwm',
+                'blacksmith_set_digital_rgbled',
+                'blacksmith_set_digital_servo',
+                'blacksmith_set_digital_buzzer',
+                'blacksmith_set_digital_dcmotor',
+                'blacksmith_module_digital_lcd',
+                'blacksmith_module_digital_bluetooth',
+                'blacksmith_module_digital_oled',
                 //joystick
                 'joystick_get_number_sensor_value',
                 'joystick_get_digital_value',
@@ -541,21 +542,21 @@ EntryStatic.getAllBlocks = function() {
                 'neobot_change_color_with_sensor_value',
 
                 //neobot_robot_theme '18.09.05
-                "neobot_port_value",
-                "neobot_ir_sensor_value",
-                "neobot_light_sensor_value",
-                "neobot_sound_sensor_value",
-                "neobot_motor_type1",
-                "neobot_motor_type2",
-                "neobot_motor_type3",
-                "neobot_motor_stop",
-                "neobot_led_on_type1",
-                "neobot_led_on_type2",
-                "neobot_led_off",
-                "neobot_ir_decision",
-                "neobot_light_decision",
-                "neobot_sound_decision",
-                "neobot_port_decision",
+                'neobot_port_value',
+                'neobot_ir_sensor_value',
+                'neobot_light_sensor_value',
+                'neobot_sound_sensor_value',
+                'neobot_motor_type1',
+                'neobot_motor_type2',
+                'neobot_motor_type3',
+                'neobot_motor_stop',
+                'neobot_led_on_type1',
+                'neobot_led_on_type2',
+                'neobot_led_off',
+                'neobot_ir_decision',
+                'neobot_light_decision',
+                'neobot_sound_decision',
+                'neobot_port_decision',
 
                 'bitbrick_sensor_value',
                 'bitbrick_convert_scale',
@@ -754,25 +755,25 @@ EntryStatic.getAllBlocks = function() {
                 'sensorBoard_toggle_pwm',
                 'sensorBoard_convert_scale',
                 //truetrue
-                "truetrue_get_linesensor",
-                "truetrue_get_proxisensor",
-                "truetrue_get_accsensor",
-                "truetrue_get_bottomcolorsensor",
-                "truetrue_get_frontcolorsensor",
-                "truetrue_set_singlemotor",
-                "truetrue_set_dualmotor",
-                "truetrue_set_colorled",
-                "truetrue_set_led_proxi",
-                "truetrue_set_led_colorsensor",
-                "truetrue_set_led_linesensor",
-                "truetrue_set_linetracer",
-                "truetrue_set_head_colorled",
-                "truetrue_set_move",
-                "truetrue_set_sec_move",
-                "truetrue_set_rotate",
-                "truetrue_set_sec_rotate",
-                "truetrue_set_grid_block",
-                "truetrue_set_grid_rotate",
+                'truetrue_get_linesensor',
+                'truetrue_get_proxisensor',
+                'truetrue_get_accsensor',
+                'truetrue_get_bottomcolorsensor',
+                'truetrue_get_frontcolorsensor',
+                'truetrue_set_singlemotor',
+                'truetrue_set_dualmotor',
+                'truetrue_set_colorled',
+                'truetrue_set_led_proxi',
+                'truetrue_set_led_colorsensor',
+                'truetrue_set_led_linesensor',
+                'truetrue_set_linetracer',
+                'truetrue_set_head_colorled',
+                'truetrue_set_move',
+                'truetrue_set_sec_move',
+                'truetrue_set_rotate',
+                'truetrue_set_sec_rotate',
+                'truetrue_set_grid_block',
+                'truetrue_set_grid_rotate',
                 //CODEino
                 'CODEino_get_named_sensor_value',
                 'CODEino_get_sound_status',
@@ -1450,33 +1451,63 @@ EntryStatic.getAllBlocks = function() {
                 'dash_animation',
                 //endregion dash
 
-		            //sciencecube start
-            		"sciencecube_temper",
-                "sciencecube_voltage",
-                "sciencecube_current",
-                "sciencecube_pressue",
-		            //sciencecube end
+                //region proboconnect
+                ////input
+                'connect_senser_setting',
+                'connect_remote_input',
+                'connect_digital_input',
+                'connect_analog_input',
+                'connect_value_mapping',
+                //"connect_ultrasonic_cm",
+                'connect_color_input_b',
+                'connect_color_input_r',
+                'connect_infinite_reset',
+                'connect_infinite_transform_input',
+                'connect_infinite_mm_diameter',
+
+                ////output
+                'connect_port_output',
+                'connect_servo_output',
+                'connect_dc_output',
+                'connect_mel_sec_output',
+                'connect_melody_output',
+                'connect_melody_off',
+                'connect_fnd_output',
+                'connect_fnd_off',
+
+                //// EEPROM
+                'connect_eeprom_write',
+                'connect_eeprom_buffset',
+                'connect_buff_read',
+                //endregion proboconnect
+
+                //sciencecube start
+                'sciencecube_temper',
+                'sciencecube_voltage',
+                'sciencecube_current',
+                'sciencecube_pressue',
+                //sciencecube end
 
                 //Codingmachine Blocks
-                "codingmachine_led",
-                "codingmachine_tune",
-                "codingmachine_motor",
-                "codingmachine_joystick",
-                "codingmachine_button",
-                "codingmachine_gyro",
-                "codingmachine_ultrasonic",
-                "codingmachine_connect",
-                "codingmachine_ready",
-                "codingmachine_throttle",
-                "codingmachine_altitude",
-                "codingmachine_rollpitch",
-                "codingmachine_yaw",
-                "codingmachine_emergency",
-                "codingmachine_digital_out",
-                "codingmachine_digital_in",
-                "codingmachine_analog_in",
-                "codingmachine_digital_pwm",
-                "codingmachine_servo",
+                'codingmachine_led',
+                'codingmachine_tune',
+                'codingmachine_motor',
+                'codingmachine_joystick',
+                'codingmachine_button',
+                'codingmachine_gyro',
+                'codingmachine_ultrasonic',
+                'codingmachine_connect',
+                'codingmachine_ready',
+                'codingmachine_throttle',
+                'codingmachine_altitude',
+                'codingmachine_rollpitch',
+                'codingmachine_yaw',
+                'codingmachine_emergency',
+                'codingmachine_digital_out',
+                'codingmachine_digital_in',
+                'codingmachine_analog_in',
+                'codingmachine_digital_pwm',
+                'codingmachine_servo',
                 //Added 2018-09-24
             ],
         },
@@ -1705,7 +1736,7 @@ Object.defineProperty(EntryStatic, 'fonts', {
                 url: '/css/nanumgothiccoding.css',
             },
         ];
-    }
+    },
 });
 
 EntryStatic.colorSet = {
@@ -1787,8 +1818,8 @@ EntryStatic.colorSet = {
     },
     common: {
         WHITE: '#FFFFFF',
-        DARK: '#000000'
-    }
+        DARK: '#000000',
+    },
 };
 
 EntryStatic.COMMAND_TYPES = {

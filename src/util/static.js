@@ -156,6 +156,7 @@ Entry.STATIC = {
         setListEditable: 827,
         variableSetName: 828,
         listSetName: 829,
+        variableContainerClickMessageAddButton: 830,
 
         dismissModal: 900,
 

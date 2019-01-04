@@ -20,9 +20,15 @@ Entry.BlockToPyParser = class {
 
     Code(code, parseMode) {
         this._parseMode = parseMode;
-        if (!code) return;
-        if (code instanceof Entry.Thread) return this.Thread(code);
-        if (code instanceof Entry.Block) return this.Block(code);
+        if (!code) {
+            return;
+        }
+        if (code instanceof Entry.Thread) {
+            return this.Thread(code);
+        }
+        if (code instanceof Entry.Block) {
+            return this.Block(code);
+        }
 
         const resultTextCode = [];
         const threads = code.getThreads();
@@ -40,15 +46,21 @@ Entry.BlockToPyParser = class {
     }
 
     Thread(thread) {
-        if (thread instanceof Entry.Block) return this.Block(thread);
+        if (thread instanceof Entry.Block) {
+            return this.Block(thread);
+        }
         const blocks = thread.getBlocks();
+
+        if (blocks.length === 0) {
+            return '';
+        }
 
         if (blocks[0] instanceof Entry.Comment) {
             this.Comment(blocks[0]);
         } else if (this._parseMode === Entry.Parser.PARSE_SYNTAX) {
             return blocks
                 .map((block) => {
-                    return this.Block(block) + '\n';
+                    return `${this.Block(block)}\n`;
                 })
                 .trim();
         } else if (this._parseMode === Entry.Parser.PARSE_GENERAL) {
@@ -57,9 +69,9 @@ Entry.BlockToPyParser = class {
 
             blocks.forEach((block, index) => {
                 if (index === 0 && Entry.TextCodingUtil.isEventBlock(block)) {
-                    rootResult = this.Block(block) + '\n';
+                    rootResult = `${this.Block(block)}\n`;
                 } else {
-                    contentResult += this.Block(block) + '\n';
+                    contentResult += `${this.Block(block)}\n`;
                 }
             });
 
@@ -67,18 +79,20 @@ Entry.BlockToPyParser = class {
                 contentResult = Entry.TextCodingUtil.indent(contentResult);
             }
 
-            return (rootResult + contentResult).trim() + '\n';
+            return `${(rootResult + contentResult).trim()}\n`;
         }
     }
 
     Block(block) {
-        if (!block || !(block instanceof Entry.Block)) return '';
+        if (!block || !(block instanceof Entry.Block)) {
+            return '';
+        }
         !block._schema && block.loadSchema();
 
         const results = [];
-        let syntaxObj, syntax;
+        const syntaxObj = this.searchSyntax(block);
+        let syntax;
 
-        syntaxObj = this.searchSyntax(block);
         if (syntaxObj) {
             syntax = syntaxObj.syntax;
         }
@@ -90,9 +104,12 @@ Entry.BlockToPyParser = class {
                 this.funcDefMap[block.data.type] = this.makeFuncDef(block, this._hasRootFunc);
                 this._hasRootFunc = false;
             }
-            if (this.isRegisteredFunc(block))
+            if (this.isRegisteredFunc(block)) {
                 syntax = this.makeFuncSyntax(block);
-            if (this._parseMode === Entry.Parser.PARSE_SYNTAX) return syntax;
+            }
+            if (this._parseMode === Entry.Parser.PARSE_SYNTAX) {
+                return syntax;
+            }
         } else if (this.isFuncStmtParam(block)) {
             results.push(block.data.type);
         }
@@ -124,7 +141,9 @@ Entry.BlockToPyParser = class {
                     }
                 });
 
-                resultTextCode += token.replace(/%(\d)/gim, (_, groupMatch) => paramsValue[groupMatch]);
+                resultTextCode += token.replace(/%(\d)/gim, (_, groupMatch) => {
+                    return paramsValue[groupMatch];
+                });
             }
 
             // $1 과 같이 statement 를 포함하는 경우
@@ -147,31 +166,38 @@ Entry.BlockToPyParser = class {
             if (syntaxObj) {
                 switch (syntaxObj.key) {
                     case 'repeat_while_true':
-                        resultTextCode = Entry.TextCodingUtil.assembleRepeatWhileTrueBlock(block, resultTextCode);
+                        resultTextCode = Entry.TextCodingUtil.assembleRepeatWhileTrueBlock(
+                            block,
+                            resultTextCode
+                        );
                         break;
-                    case 'repeat_basic':
+                    case 'repeat_basic': {
                         const forStmtTokens = resultTextCode.split(' ');
 
                         if (_includes(forStmtTokens, 'for', 'i', 'in')) {
-                            forStmtTokens[1] = Entry.TextCodingUtil.generateForStmtIndex(this._forIdCharIndex++);
+                            forStmtTokens[1] = Entry.TextCodingUtil.generateForStmtIndex(
+                                this._forIdCharIndex++
+                            );
                             resultTextCode = forStmtTokens.join(' ');
                         }
                         break;
-                    case 'substring':
+                    }
+                    case 'substring': {
                         // "안녕 엔트리"[1:5] -> "안녕 엔트리", [1:5]
                         const tokens = resultTextCode.split(/(?=\[)/);
                         if (tokens.length === 2 && Entry.Utils.isNumber(tokens[0])) {
                             tokens[0] = `"${tokens[0]}"`;
                         }
                         resultTextCode = tokens.join('');
-                        console.log(resultTextCode);
                         break;
+                    }
                 }
             }
 
             // 코멘트 처리
             const commentValue = block.getCommentValue();
-            if (isFirstCommentToken && !statements && commentValue !== undefined) { // '' 도 표기한다.
+            if (isFirstCommentToken && !statements && commentValue !== undefined) {
+                // '' 도 표기한다.
                 resultTextCode += ` # ${commentValue}`;
                 isFirstCommentToken = !isFirstCommentToken;
             }
@@ -227,8 +253,9 @@ Entry.BlockToPyParser = class {
                     }
 
                     if (textParam && textParam.paramType === 'index') {
-                        if (Entry.Utils.isNumber(param)) param = param - 1;
-                        else {
+                        if (Entry.Utils.isNumber(param)) {
+                            param = param - 1;
+                        } else {
                             const tokens = param.split('+');
                             if (tokens[tokens.length - 1] === ' 1)') {
                                 delete tokens[tokens.length - 1];
@@ -254,14 +281,17 @@ Entry.BlockToPyParser = class {
 
                     let param;
                     if (textParam && textParam.type) {
-                        param = this['Field' + textParam.type](dataParams[index], textParam);
+                        param = this[`Field${textParam.type}`](dataParams[index], textParam);
                     } else {
-                        param = this['Field' + schemaParams[index].type](dataParams[index], textParam);
+                        param = this[`Field${schemaParams[index].type}`](
+                            dataParams[index],
+                            textParam
+                        );
                     }
 
                     // 필드 블록이 아닌 블록에 내재된 파라미터 처리
                     if (!Entry.Utils.isNumber(param) && block.type === 'when_some_key_pressed') {
-                        result += '"' + param + '"';
+                        result += `"${param}"`;
                     } else {
                         result += param;
                     }
@@ -282,28 +312,30 @@ Entry.BlockToPyParser = class {
         } else if (datum instanceof Entry.Block) {
             schema = datum._schema;
             appliedParams = datum.params;
-        } else schema = datum;
+        } else {
+            schema = datum;
+        }
 
         if (schema && schema.syntax) {
             const syntaxes = schema.syntax.py.concat();
             while (syntaxes.length) {
                 let isFail = false;
                 const syntax = syntaxes.shift();
-                if (typeof syntax === 'string')
-                    return { syntax: syntax, template: syntax };
+                if (typeof syntax === 'string') {
+                    return { syntax, template: syntax };
+                }
 
                 if (syntax.params) {
                     for (let i = 0; i < syntax.params.length; i++) {
-                        if (
-                            syntax.params[i] &&
-                            syntax.params[i] !== appliedParams[i]
-                        ) {
+                        if (syntax.params[i] && syntax.params[i] !== appliedParams[i]) {
                             isFail = true;
                             break;
                         }
                     }
                 }
-                if (!syntax.template) syntax.template = syntax.syntax;
+                if (!syntax.template) {
+                    syntax.template = syntax.syntax;
+                }
                 if (isFail) {
                     continue;
                 }
@@ -314,26 +346,30 @@ Entry.BlockToPyParser = class {
     }
 
     FieldAngle(dataParam, textParam) {
-        if (textParam && textParam.converter)
+        if (textParam && textParam.converter) {
             dataParam = textParam.converter(dataParam);
+        }
 
         return dataParam;
     }
 
     FieldColor(dataParam, textParam) {
-        if (textParam && textParam.converter)
+        if (textParam && textParam.converter) {
             dataParam = textParam.converter(null, dataParam);
+        }
         return dataParam;
     }
 
     FieldDropdown(dataParam, textParam) {
-        if (typeof dataParam == 'object') return 'None'.replace(/\"/gm, '');
+        if (typeof dataParam === 'object') {
+            return 'None'.replace(/\"/gm, '');
+        }
 
         if (textParam && textParam.converter && textParam.options) {
-            var options = textParam.options;
-            for (var i in options) {
-                var key = options[i][0];
-                var value = options[i][1];
+            const options = textParam.options;
+            for (const i in options) {
+                const key = options[i][0];
+                const value = options[i][1];
                 if (dataParam == value) {
                     return (dataParam = textParam.converter(key, value));
                 }
@@ -345,30 +381,37 @@ Entry.BlockToPyParser = class {
     }
 
     FieldDropdownDynamic(dataParam, textParam) {
-        if (typeof dataParam == 'object') return 'None'.replace(/\"/gm, '');
+        if (typeof dataParam === 'object') {
+            return 'None'.replace(/\"/gm, '');
+        }
 
         if (textParam && textParam.converter && textParam.options) {
-            var options = textParam.options;
-            for (var i in options) {
-                var key = options[i][0];
-                var value = options[i][1];
+            const options = textParam.options;
+            for (const i in options) {
+                let key = options[i][0];
+                const value = options[i][1];
                 if (dataParam == value) {
-                    var name = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(
+                    const name = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(
                         value,
                         textParam.menuName
                     );
-                    if (name) key = name;
+                    if (name) {
+                        key = name;
+                    }
                     return (dataParam = textParam.converter(key, value));
                 }
             }
-            var value = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(
+            const value = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(
                 dataParam,
                 textParam.menuName
             );
-            if (value) dataParam = textParam.converter(value, value);
-            else dataParam = textParam.converter(dataParam, dataParam);
+            if (value) {
+                dataParam = textParam.converter(value, value);
+            } else {
+                dataParam = textParam.converter(dataParam, dataParam);
+            }
 
-            var reg = /None/;
+            const reg = /None/;
             if (reg.test(dataParam)) {
                 dataParam = dataParam.replace(/\"/gm, '');
             }
@@ -378,8 +421,9 @@ Entry.BlockToPyParser = class {
     }
 
     FieldImage(dataParam, textParam) {
-        if (textParam && textParam.converter)
+        if (textParam && textParam.converter) {
             dataParam = textParam.converter(null, dataParam);
+        }
 
         return dataParam;
     }
@@ -389,22 +433,23 @@ Entry.BlockToPyParser = class {
     }
 
     FieldKeyboard(dataParam, textParam) {
-        var reg = /None/;
+        const reg = /None/;
         if (reg.test(dataParam)) {
             return dataParam.replace(/\"/gm, '');
         }
 
-        var map = Entry.KeyboardCode.map;
-        for (var key in map) {
-            var value = map[key];
+        const map = Entry.KeyboardCode.map;
+        for (const key in map) {
+            const value = map[key];
             if (value == dataParam) {
                 dataParam = key;
                 break;
             }
         }
 
-        if (textParam && textParam.converter)
+        if (textParam && textParam.converter) {
             dataParam = textParam.converter(dataParam, null);
+        }
 
         dataParam = dataParam.toLowerCase();
         return dataParam;
@@ -415,36 +460,42 @@ Entry.BlockToPyParser = class {
     }
 
     FieldText(dataParam, textParam) {
-        if (textParam && textParam.converter)
+        if (textParam && textParam.converter) {
             dataParam = textParam.converter(null, dataParam);
+        }
 
         return dataParam;
     }
 
     FieldTextInput(dataParam, textParam) {
-        if (typeof dataParam != 'number') {
+        if (typeof dataParam !== 'number') {
             dataParam = dataParam.replace('\t', '    ');
-            var spaces = dataParam.split(/ /);
+            const spaces = dataParam.split(/ /);
 
-            if (dataParam.length == spaces.length - 1)
+            if (dataParam.length == spaces.length - 1) {
                 dataParam = '"()"'.replace('()', dataParam);
+            }
         }
 
-        if (textParam && textParam.converter)
+        if (textParam && textParam.converter) {
             dataParam = textParam.converter(null, dataParam);
+        }
 
         return dataParam;
     }
 
     FieldNumber(dataParam, textParam) {
-        if (textParam && textParam.converter)
+        if (textParam && textParam.converter) {
             dataParam = textParam.converter(null, dataParam);
+        }
 
         return dataParam;
     }
 
     isFunc(block) {
-        if (!block || !block.data || !block.data.type) return false;
+        if (!block || !block.data || !block.data.type) {
+            return false;
+        }
 
         const tokens = block.data.type.split('_');
         const prefix = tokens[0];
@@ -464,7 +515,9 @@ Entry.BlockToPyParser = class {
     }
 
     isFuncStmtParam(block) {
-        if (!block || !block.data || !block.data.type) return false;
+        if (!block || !block.data || !block.data.type) {
+            return false;
+        }
         const blockType = block.data.type;
         const tokens = blockType.split('_');
         const prefix = tokens[0];
@@ -473,69 +526,77 @@ Entry.BlockToPyParser = class {
     }
 
     makeFuncSyntax(funcBlock) {
-        var syntax = '';
-        if (funcBlock && funcBlock._schema)
-            if (funcBlock._schema.template)
-                var schemaTemplate = funcBlock._schema.template.trim();
-            else if (funcBlock._schema.params)
-                var schemaParams = funcBlock._schema.params;
-            else if (funcBlock && !funcBlock._schema) {
+        let syntax = '';
+        let schemaTemplate;
+        let schemaParams;
+        if (funcBlock && funcBlock._schema) {
+            if (funcBlock._schema.template) {
+                schemaTemplate = funcBlock._schema.template.trim();
+            } else if (funcBlock._schema.params) {
+                schemaParams = funcBlock._schema.params;
+            } else if (funcBlock && !funcBlock._schema) {
                 if (this._hasRootFunc) {
-                    var rootFunc = Entry.block[this._rootFuncId];
-                    var schemaParams = rootFunc.block.params;
-                    var schemaTemplate = rootFunc.block.template;
+                    const rootFunc = Entry.block[this._rootFuncId];
+                    schemaParams = rootFunc.block.params;
+                    schemaTemplate = rootFunc.block.template;
                 }
             }
+        }
 
-        var paramReg = /(%.)/im;
-        if (schemaTemplate)
+        const paramReg = /(%.)/im;
+        if (schemaTemplate) {
             var funcTokens = schemaTemplate.trim().split(paramReg);
+        }
 
-        var funcName = '';
-        var funcParams = '';
+        let funcName = '';
+        let funcParams = '';
 
-        for (var f in funcTokens) {
-            var funcToken = funcTokens[f].trim();
+        for (const f in funcTokens) {
+            const funcToken = funcTokens[f].trim();
             if (paramReg.test(funcToken)) {
-                var num = funcToken.split('%')[1];
-                if (num == 1) continue;
-                else num -= 1;
-                var index = num - 1;
+                let num = funcToken.split('%')[1];
+                if (num == 1) {
+                    continue;
+                } else {
+                    num -= 1;
+                }
+                const index = num - 1;
                 if (
                     schemaParams &&
                     schemaParams[index] &&
-                    schemaParams[index].type == 'Indicator'
-                )
+                    schemaParams[index].type === 'Indicator'
+                ) {
                     continue;
+                }
 
                 funcParams += '%'.concat(num).concat(', ');
             } else {
-                var funcTokenArr = funcToken.split(' ');
+                const funcTokenArr = funcToken.split(' ');
                 funcName += funcTokenArr.join('__');
             }
         }
 
-        var index = funcParams.lastIndexOf(',');
+        const index = funcParams.lastIndexOf(',');
         funcParams = funcParams.substring(0, index);
 
         syntax = funcName
-        .trim()
-        .concat('(')
-        .concat(funcParams.trim())
-        .concat(')');
+            .trim()
+            .concat('(')
+            .concat(funcParams.trim())
+            .concat(')');
 
         return syntax;
     }
 
     makeFuncDef(funcBlock, isExpression) {
-        if (!this.isRegisteredFunc(funcBlock)){
+        if (!this.isRegisteredFunc(funcBlock)) {
             return;
         }
 
         let result = '';
         const func = this.getFuncInfo(funcBlock);
 
-        if (func){
+        if (func) {
             result += func.name;
         } else {
             return;
@@ -561,7 +622,7 @@ Entry.BlockToPyParser = class {
             // 함수 선언 중인 경우
             this._hasRootFunc = true;
 
-            result = 'def ' + result;
+            result = `def ${result}`;
             result = result.concat(':');
             if (func.comment || func.comment === '') {
                 result += ` # ${func.comment}`;
@@ -570,7 +631,7 @@ Entry.BlockToPyParser = class {
 
             if (func.statements && func.statements.length) {
                 let stmtResult = '';
-                for (let s in func.statements) {
+                for (const s in func.statements) {
                     const block = func.statements[s];
 
                     if (this.getFuncInfo(block)) {
@@ -591,7 +652,9 @@ Entry.BlockToPyParser = class {
         const funcId = funcBlock.getFuncId();
 
         const func = funcId && Entry.variableContainer.getFunction(funcId);
-        if (!func) return null;
+        if (!func) {
+            return null;
+        }
 
         const funcName = func.block.template
             .split(/%\d/)[0]
@@ -617,13 +680,14 @@ Entry.BlockToPyParser = class {
         if (!this._hasRootFunc) {
             const funcDefParams = [];
             let param;
-            while ((param = Entry.TextCodingUtil._funcParamQ.dequeue()))
+            while ((param = Entry.TextCodingUtil._funcParamQ.dequeue())) {
                 funcDefParams.push(param);
+            }
 
             funcDefParams.forEach(function(value, index) {
                 if (/(string|boolean)Param/.test(value)) {
                     index += 1;
-                    const name = 'param' + index;
+                    const name = `param${index}`;
                     funcParams.push(name);
                     that._funcParamMap.put(value, name);
                 }
@@ -635,7 +699,9 @@ Entry.BlockToPyParser = class {
                 })
                 .forEach(function(p) {
                     let paramText = that.Block(p);
-                    if (!paramText) return;
+                    if (!paramText) {
+                        return;
+                    }
                     paramText = that._funcParamMap.get(paramText) || paramText;
                     funcParams.push(paramText);
                 });
@@ -643,10 +709,18 @@ Entry.BlockToPyParser = class {
 
         Entry.TextCodingUtil.clearQueue();
 
-        if (funcName) result.name = funcName;
-        if (funcComment || funcComment === '') result.comment = funcComment;
-        if (funcParams.length !== 0) result.params = funcParams;
-        if (funcContents.length !== 0) result.statements = funcContents;
+        if (funcName) {
+            result.name = funcName;
+        }
+        if (funcComment || funcComment === '') {
+            result.comment = funcComment;
+        }
+        if (funcParams.length !== 0) {
+            result.params = funcParams;
+        }
+        if (funcContents.length !== 0) {
+            result.statements = funcContents;
+        }
 
         return result;
     }

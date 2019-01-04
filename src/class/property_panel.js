@@ -142,6 +142,7 @@ Entry.PropertyPanel = function() {
     p.initializeSplitter = function(splitter) {
         var that = this;
         splitter.bind('mousedown touchstart', function(e) {
+            e.preventDefault();
             var container = Entry.container;
             that._cover.removeClass('entryRemove');
             that._cover._isVisible = true;

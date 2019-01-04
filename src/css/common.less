@@ -22,7 +22,7 @@ body,
     float: left;
     width: 294px;
     height: 100%;
-    padding: 45px 16px 8px 8px;
+    padding: 46px 16px 8px 8px;
 }
 .backgroundImage(@imageName) {
     background-image: url('@{image_url2}@{imageName}');
@@ -77,4 +77,13 @@ body,
     position: fixed;
     left: -9999px;
     top: -9999px;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
 }

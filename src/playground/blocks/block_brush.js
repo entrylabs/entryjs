@@ -125,15 +125,7 @@ module.exports = {
                         sprite.brush.rgb = rgb;
                         sprite.brush.endStroke();
                         sprite.brush.beginStroke(
-                            `rgba(${ 
-                                rgb.r 
-                            },${ 
-                                rgb.g 
-                            },${ 
-                                rgb.b 
-                            },${ 
-                                1 - sprite.brush.opacity / 100 
-                            })`
+                            `rgba(${rgb.r},${rgb.g},${rgb.b},${1 - sprite.brush.opacity / 100})`
                         );
 
                         sprite.brush.moveTo(sprite.getX(), sprite.getY() * -1);
@@ -149,9 +141,7 @@ module.exports = {
                             textParams: [
                                 {
                                     type: 'Color',
-                                    converter:
-                                        Entry.block.converters
-                                            .returnStringValueUpperCase,
+                                    converter: Entry.block.converters.returnStringValueUpperCase,
                                     codeMap: 'Entry.CodeMap.Entry.set_color[0]',
                                 },
                             ],
@@ -189,15 +179,7 @@ module.exports = {
                         sprite.brush.rgb = rgb;
                         sprite.brush.endStroke();
                         sprite.brush.beginStroke(
-                            `rgba(${ 
-                                rgb.r 
-                            },${ 
-                                rgb.g 
-                            },${ 
-                                rgb.b 
-                            },${ 
-                                1 - sprite.brush.opacity / 100 
-                            })`
+                            `rgba(${rgb.r},${rgb.g},${rgb.b},${1 - sprite.brush.opacity / 100})`
                         );
 
                         sprite.brush.moveTo(sprite.getX(), sprite.getY() * -1);
@@ -384,26 +366,14 @@ module.exports = {
                         Entry.setBasicBrush(sprite);
                         sprite.brush.stop = true;
                     }
-                    opacity = Entry.adjustValueWithMaxMin(
-                        sprite.brush.opacity + opacity,
-                        0,
-                        100
-                    );
+                    opacity = Entry.adjustValueWithMaxMin(sprite.brush.opacity + opacity, 0, 100);
 
                     if (sprite.brush) {
                         sprite.brush.opacity = opacity;
                         sprite.brush.endStroke();
                         const rgb = sprite.brush.rgb;
                         sprite.brush.beginStroke(
-                            `rgba(${ 
-                                rgb.r 
-                            },${ 
-                                rgb.g 
-                            },${ 
-                                rgb.b 
-                            },${ 
-                                1 - sprite.brush.opacity / 100 
-                            })`
+                            `rgba(${rgb.r},${rgb.g},${rgb.b},${1 - sprite.brush.opacity / 100})`
                         );
                         sprite.brush.moveTo(sprite.getX(), sprite.getY() * -1);
                     }
@@ -464,23 +434,11 @@ module.exports = {
                     }
 
                     if (sprite.brush) {
-                        sprite.brush.opacity = Entry.adjustValueWithMaxMin(
-                            opacity,
-                            0,
-                            100
-                        );
+                        sprite.brush.opacity = Entry.adjustValueWithMaxMin(opacity, 0, 100);
                         sprite.brush.endStroke();
                         const rgb = sprite.brush.rgb;
                         sprite.brush.beginStroke(
-                            `rgba(${ 
-                                rgb.r 
-                            },${ 
-                                rgb.g 
-                            },${ 
-                                rgb.b 
-                            },${ 
-                                1 - sprite.brush.opacity / 100 
-                            })`
+                            `rgba(${rgb.r},${rgb.g},${rgb.b},${1 - sprite.brush.opacity / 100})`
                         );
                         sprite.brush.moveTo(sprite.getX(), sprite.getY() * -1);
                     }
@@ -512,6 +470,10 @@ module.exports = {
                     sprite.eraseBrush && sprite.eraseBrush();
 
                     sprite.removeStamps();
+
+                    if (sprite.brush && sprite.shapes.length) {
+                        sprite.brush.stop = true;
+                    }
 
                     return script.callReturn();
                 },

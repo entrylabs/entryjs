@@ -194,7 +194,7 @@ Entry.Board = class Board {
         const scroller = that.scroller;
         if (scroller) {
             dom.mouseenter(function() {
-                scroller.setOpacity(1);
+                scroller.setOpacity(0.8);
             });
             dom.mouseleave(function() {
                 scroller.setOpacity(0);
@@ -219,6 +219,12 @@ Entry.Board = class Board {
         if (e.preventDefault) {
             e.preventDefault();
         }
+
+        if (this.workingEvent) {
+            return;
+        }
+
+        this.workingEvent = true;
 
         const board = this;
         let longPressTimer = null;
@@ -247,7 +253,7 @@ Entry.Board = class Board {
             });
 
             if (eventType === 'touchstart') {
-                longPressTimer = setTimeout(function() {
+                longPressTimer = setTimeout(() => {
                     if (longPressTimer) {
                         longPressTimer = null;
                         onMouseUp();
@@ -296,6 +302,7 @@ Entry.Board = class Board {
                 longPressTimer = null;
             }
             $(document).unbind('.entryBoard');
+            delete board.workingEvent;
             delete board.mouseDownCoordinate;
             delete board.dragInstance;
         }
@@ -433,37 +440,43 @@ Entry.Board = class Board {
         this.btnWrapper = this.svg.elem('g');
         const btnWrapper = this.btnWrapper;
 
-        const TEXT_CLASS = 'entryFunctionButtonText';
-        const BUTTON_CLASS = 'entryFunctionButton';
+        const BLUE_CLASS = 'entryFunctionButtonText';
+        const WHITE_CLASS = 'entryFunctionButton';
+
+        const saveButton = btnWrapper.elem('rect', {
+            x: 74,
+            y: 12,
+            width: 64,
+            height: 32,
+            rx: 4,
+            ry: 4,
+            class: BLUE_CLASS,
+        });
+        this.saveButton = saveButton;
+
+        const cancelButton = btnWrapper.elem('rect', {
+            x: 0,
+            y: 12,
+            width: 64,
+            height: 32,
+            rx: 4,
+            ry: 4,
+            class: 'entryFunctionButtonBorder',
+        });
 
         const saveText = btnWrapper.elem('text', {
-            x: 102.5,
+            x: 106,
             y: 33,
-            class: TEXT_CLASS,
+            class: WHITE_CLASS,
         });
         saveText.textContent = Lang.Buttons.save;
 
         const cancelText = btnWrapper.elem('text', {
-            x: 27,
+            x: 32,
             y: 33,
-            class: TEXT_CLASS,
+            class: BLUE_CLASS,
         });
         cancelText.textContent = Lang.Buttons.cancel;
-
-        const saveButton = btnWrapper.elem('circle', {
-            cx: 102.5,
-            cy: 27.5,
-            r: 27.5,
-            class: BUTTON_CLASS,
-        });
-        this.saveButton = saveButton;
-
-        const cancelButton = btnWrapper.elem('circle', {
-            cx: 27.5,
-            cy: 27.5,
-            r: 27.5,
-            class: BUTTON_CLASS,
-        });
 
         const saveFunc = this.save.bind(this);
         const cancelFunc = this.cancelEdit.bind(this);
@@ -950,7 +963,6 @@ Entry.Board = class Board {
             const svgGroup = _.result(block && block.view, 'svgGroup');
             if (this.svgBlockGroup && svgGroup) {
                 this.svgBlockGroup.appendChild(svgGroup);
-                block.getCode().pushBackThread(block.getThread());
             }
         });
 
@@ -1114,7 +1126,6 @@ Entry.Board = class Board {
 
     _initContextOptions() {
         const that = this;
-        const { x, y } = this.offset();
         this._contextOptions = [
             {
                 activated: true,
@@ -1185,9 +1196,10 @@ Entry.Board = class Board {
             {
                 activated: true,
                 option: {
-                    text: '메모 추가하기',
+                    text: Lang.Blocks.add_comment,
                     enable: !this.readOnly,
-                    callback() {
+                    callback: () => {
+                        const { left: x, top: y } = that.offset();
                         Entry.do(
                             'createComment',
                             {
@@ -1203,7 +1215,7 @@ Entry.Board = class Board {
             {
                 activated: true,
                 option: {
-                    text: '모든 메모 숨기기',
+                    text: Lang.Blocks.hide_all_comment,
                     enable: !this.readOnly,
                     callback() {
                         that.isVisibleComment
@@ -1245,8 +1257,10 @@ Entry.Board = class Board {
     }
 
     _rightClick(e) {
+        delete this.workingEvent;
         const { target } = e;
-        if (this.workspace.zoomController.view.contains(target)) {
+        //SVGElement에서 contains가 없어서 jquery사용
+        if ($.contains(this.workspace.zoomController.view, target)) {
             return;
         }
         const disposeEvent = Entry.disposeEvent;
@@ -1260,8 +1274,8 @@ Entry.Board = class Board {
         contextOptions[Entry.Board.OPTION_DOWNLOAD].option.enable =
             this.code.getThreads().length !== 0;
         contextOptions[Entry.Board.VISIBLE_COMMENT].option.text = this.isVisibleComment
-            ? '모든 메모 숨기기'
-            : '모든 메모 보이기';
+            ? Lang.Blocks.hide_all_comment
+            : Lang.Blocks.show_all_comment;
 
         const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
         Entry.ContextMenu.show(
@@ -1282,6 +1296,7 @@ Entry.Board = class Board {
         } else {
             this.view.addClass('invisibleComment');
         }
+        Entry.dispatchEvent('commentVisibleChanged');
     }
 
     getDom(query) {

@@ -5,6 +5,8 @@
  */
 'use strict';
 
+import ColorSpoid from '../playground/colorSpoid';
+
 /**
  * class for a canvas
  * @constructor
@@ -132,6 +134,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
 
     this.initWall();
     this.render();
+    this.colorSpoid = new ColorSpoid(canvas);
 };
 
 Entry.Stage.prototype.render = function stageRender() {

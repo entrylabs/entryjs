@@ -62,28 +62,32 @@
 }
 
 .entryPlaygroundFontSizeWrapper {
-    width: 400px;
-    height: 39px;
+    position:absolute;
+    padding-left:13px;
+    padding-top:10px;
+    display:inline-block;
+    width: 244px;
+    height: 40px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    right:0px;
+    top:0px;
 }
 
 .entryPlaygroundFontSizeLabel {
     display: inline-block;
-    float: right;
-    font-size: 9px;
+    width: 65px;
+    height: 15px;
     font-family: notoSansMedium;
-    color: #444;
-    line-height: 39px;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: -0.3px;
+    color: #2c313d;
 }
 
-.entryPlaygroundFontSizeSlider {
-    display: inline-block;
-    float: right;
-    width: 96px;
-    height: 3px;
-    margin: 18px 0px 18px 4px;
-    background-color: #cfcfcf;
-    border-radius: 1.5px;
-}
 
 #entryTextColourTable {
     margin-top: 12px;
@@ -147,7 +151,7 @@
 .entryPlaygroundTabWorkspace {
     position: absolute;
     left: 0;
-    top: 45px;
+    top: 46px;
     background-color: #fff;
 }
 
@@ -162,6 +166,40 @@
     background-color: #f1f1f1;
 }
 
+.entryPlaygroundButtonTabWorkspace {
+    position: absolute;
+    right: 0;
+    top: 43px;
+    height: auto;
+    background-color: #fff;
+
+    .entryPlaygroundCommentButtonWorkspace {
+        .backgroundImage("btn-toggle-comment-off.png");
+        background-repeat: no-repeat;
+        background-size: 30px auto;
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        margin: 0 8px;
+        border-radius: 50%;
+        background-color: #fff;
+        border: 1px solid #e2e2e2;
+
+        &.showComment {
+            .backgroundImage("btn-toggle-comment-select.png");
+            background-size: 32px auto;
+            width: 32px;
+            height: 32px;
+            border: 0;
+            background-color: inherit;
+        }
+    }
+
+    &.entryRemove.entryCode {
+        display: block !important;
+    }
+}
+
 .entryTabListWorkspace {
     overflow: hidden;
     list-style: none;
@@ -173,7 +211,7 @@
     float: left;
     min-width: 58px;
     margin: 4px 0 0 2px;
-    padding: 9px 0 5px;
+    padding: 7px 0;
     cursor: pointer;
     background-color: #d6e9f4;
     border-top-right-radius: 6px;
@@ -191,7 +229,7 @@
 
 .entryTabSelected {
     margin-top: 0;
-    padding: 10px 0 7px;
+    padding: 9px 0 8px;
     color: #fff;
     background-color: #8274ff;
     font-size: 14px;
@@ -285,13 +323,12 @@
     padding-top: 270px;
     text-align: center;
     font-size: 40px;
-    height: 100%;
-    top: 39px;
+    top: 38px;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 8px;
     opacity: 0.5;
-    z-index: 1000;
+    z-index: 255;
     cursor: pointer;
 }
 
@@ -311,8 +348,14 @@
 
 
 .entryPlaygroundCodeWorkspace {
-    height: 100%;
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 80px;
+    bottom: 8px;
     background-color: #fff;
+    border-radius: 0 0 0 6px;
 }
 
 .entryPlaygroundCodeWorkspace.entryRemove {
@@ -341,15 +384,16 @@
    position: absolute;
    left: 0;
    right: 0;
-   bottom: 0;
+   bottom: 8px;
    background-color: #f9f9f9;
-   top: 79px;
+   top: 80px;
    margin-left: 0;
+   border-radius: 0 0 0 6px;
 }
 
 .entryPlaygroundAddPicture {
     width:254px;
-    padding: 8px 0;
+    padding: 8px 0 7px;
     background-color: #ecf8ff;
     border: 1px  solid #d6e9f4;
 }
@@ -398,12 +442,13 @@
     padding: 0px;
     margin: 0px;
     width: 254px;
-    top: 57px;
+    top: 56px;
     bottom: 0px;
-    overflow: auto;
+    overflow-y: hidden;
     list-style: none;
     background-color: #ecf8ff;
     border: 1px solid #d6e9f4;
+    border-radius: 0 0 0 6px;
 }
 
 .entryPlaygroundPictureListPhone {
@@ -411,7 +456,7 @@
     padding: 0px;
     margin: 0px;
     width: 254px;
-    top: 57px;
+    top: 56px;
     bottom: 0px;
     overflow: auto;
     list-style: none;
@@ -430,7 +475,7 @@
     cursor: pointer;
 }
 
-.entryPlaygroundPictureElement:hover {
+.entryPlaygroundPictureElement::selection {
     cursor: move;
     background-color: #fff;
 }
@@ -478,7 +523,7 @@
     padding: 0 4px;
     background-color: #fff;
     outline: 0;
-    font-size: 10px;
+    font-size: 12px;
     text-overflow: ellipsis;
     color: #2c313d;
     font-weight: 600;
@@ -486,6 +531,10 @@
     border: 1px solid #e2e2e2;
     border-radius: 4px;
     box-sizing: border-box;
+}
+.entryPlaygroundPictureName:focus,
+.entryPlaygroundPictureName:active {
+    border-color: #4f80ff;
 }
 
 .entryPlaygroundPictureSize {
@@ -512,55 +561,295 @@
 
 }
 
+.pop_selectbox {
+    position: relative;
+    .select_link {
+        display: block;
+        position: relative;
+        width: 142px;
+        height: 38px;
+        padding: 0 12px;
+        border: 1px solid #e2e2e2;
+        background-color: #fff;
+        border-radius: 4px;
+        font-weight: 600;
+        color: #555;
+        letter-spacing: -0.3px;
+        line-height: 40px;
+        cursor:pointer;
+    }
+    .select_link:after {
+        position: absolute;
+        right: 16px;
+        top: 50%;
+        width: 8px;
+        height: 6px;
+        margin-top: -3px;
+        vertical-align: top;
+        content: '';
+    }
+    & + .pop_selectbox {
+        margin-top: 40px;
+    }
+    & + .on {
+        z-index: 10;
+    }
+    & + .pop_inpt_text {
+        margin-top: 40px;
+    }
+    &.error .select_link {
+        border-color: #f00;
+    }
+}
+.pop_selectbox * {
+    box-sizing: content-box;
+}
+.pop_selectbox .tooltip_box {
+    display: none;
+}
+.pop_selectbox.on .tooltip_box {
+    display: block;
+    z-index: 10;
+    top: 52px;
+}
+
 .entryPlaygroundTextWorkspace {
     position: absolute;
-    top: 79px;
-    height: 100%;
-    width: 100%;
-    background-color: #ececec;
-    padding-left: 20px;
-    padding-top: 20px;
+    top: 80px;
+    left: 0;
+    right: 0;
+    bottom: 8px;
+    background-color: #ecf8ff;
+    border-radius: 0 0 0 6px;
 }
-
-.entryTextHead {
-    font-size: 18px;
+// 글상자
+.entryPlaygroundTextWorkspace .write_box {
+    height: 568px;
 }
-
-.entryTextEdit {
-    font-size: 17px;
-    width: 220px;
-    height: 30px;
-    border: 1px solid #808080;
-    border-radius: 3px;
+.entryPlaygroundTextWorkspace .write_box .write_set {
+    position: relative;
+    padding: 8px 18px;
+    background-color: #f9f9f9;
+    border: 1px solid #e2e2e2;
+    z-index: 10;
 }
-
-#entryTextProperty {
-    width: 220px;
-    height: 32px;
-    margin-top: 12px;
+.entryPlaygroundTextWorkspace .write_box .write_set:after {
+    display: block;
+    clear: both;
+    content: '';
 }
-
-.entryTextFontSelect {
-    display: inline-block;
-    height: 32px;
-    border: 1px solid #808080;
-    border-radius: 4px;
-    background-color: white;
+.entryPlaygroundTextWorkspace .write_box .write_set .pop_selectbox {
     float: left;
+    width: 168px;
+}
+.entryPlaygroundTextWorkspace .write_box .write_set .pop_selectbox .tooltip_inner {
+    max-height: 282px;
+    overflow: visible;
+    overflow-y: auto;
 }
 
-.entryTextFontSelecter {
-    margin-top: 5px;
-    margin-left: 2px;
-    width: 120px;
+.entryPlaygroundTextWorkspace .write_box .write_set .font_style_box {
+    position: relative;
+    float: left;
+    padding-left: 24px;
+    font-size: 0;
 }
 
-.entryFontToggle {
+.entryPlaygroundTextWorkspace .write_box .write_set .font_style_box .style_link {
     display: inline-block;
-    width: 96px;
-    width: 32px;
-    height: 32px;
-    float: right;
+    overflow: hidden;
+    width: 38px;
+    height: 38px;
+    margin-left: 10px;
+    border: 1px solid #e2e2e2;
+    background-color: #fff;
+    border-radius: 4px;
+    cursor:pointer;
+}
+.entryPlaygroundTextWorkspace .write_box .write_set .font_style_box .style_link.on {
+    border: 1px solid #4f80ff;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box .write_type_box {
+    display:inline-block;
+    border-radius: 4px;
+    width: 207px;
+    height: 40px;
+    font-size: 0;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box .write_type_box a {
+    display: inline-block;
+    position: relative;
+    width: 102px;
+    height: 38px;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px 0 0 4px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #979797;
+    background-color: #fff;
+    text-align: center;
+    letter-spacing: -0.3px;
+    line-height: 36px;
+    cursor:pointer;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box .write_type_box a + a {
+    margin-left: -1px;
+    border-radius: 0 4px 4px 0;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box .write_type_box .on {
+    color: #4f80ff;
+    border-color: #4f80ff;
+    z-index: 10;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box {
+    margin: 24px 38px 0;
+    max-width:654px;
+    position:relative;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box .list {
+    padding: 4px 0px;
+    list-style: none;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box .list li {
+    color: #555;
+    margin-top: 4px;
+    line-height: 18px;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box .list li:before {
+    display: inline-block;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background-color: #555;
+    margin: 6px 8px 0 0;
+    vertical-align: top;
+    content: '';
+}
+.entryPlaygroundTextWorkspace .write_box .input_inner {
+    position: relative;
+    overflow: hidden;
+    height: 40px;
+    max-width:654px;
+    background-color: #fff;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    margin-top: 24px;
+}
+
+.entryPlaygroundTextWorkspace .write_box .input_inner .bold {
+    font-weight:bold;
+}
+
+.entryPlaygroundTextWorkspace .write_box .input_inner .italic {
+    font-style:italic;
+}
+
+.entryPlaygroundTextWorkspace .write_box .input_inner input[type='text'] {
+    display:none;
+    width: 100%;
+    height:100%;
+    margin:0;
+    padding-left:15px;
+    border: 0;
+    line-height: 40px;
+    outline: 0;
+    font-size: 14px;
+    letter-spacing: -0.3px;
+}
+.entryPlaygroundTextWorkspace .write_box .input_inner textarea {
+    width: 100%;
+    height:100%;
+    margin:0;
+    padding:12px;
+    font-size:14px;
+    border: 0;
+    line-height: 18px;
+    outline: 0;
+    letter-spacing: -0.3px;
+}
+.entryPlaygroundTextWorkspace .write_box .input_inner label {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    top: 13px;
+    color: #979797;
+    letter-spacing: -0.3px;
+}
+
+.imbtn_pop_font_bold {
+    .backgroundImage("btn_pop_font_bold.png");
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage("btn_pop_font_bold_on.png");
+    }
+}
+.imbtn_pop_font_underline {
+    .backgroundImage("btn_pop_font_underline.png");
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage("btn_pop_font_underline_on.png");
+    }
+}
+.imbtn_pop_font_italic {
+    .backgroundImage("btn_pop_font_italic.png");
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage("btn_pop_font_italic_on.png");
+    }
+}
+.imbtn_pop_font_through {
+    .backgroundImage("btn_pop_font_through.png");
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage("btn_pop_font_through_on.png");
+    }
+}
+.imbtn_pop_font_color {
+    .backgroundImage("btn_pop_font_color.png");
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage("btn_pop_font_color_on.png");
+    }
+}
+.imbtn_pop_font_backgroundcolor {
+    .backgroundImage("btn_pop_font_paint.png");
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage("btn_pop_font_paint_on.png");
+    }
+}
+
+.imbtn_pop_font_align_left {
+    .backgroundImage("btn_pop_font_align_left.png");
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage("btn_pop_font_align_left_on.png");
+    }
+}
+
+.imbtn_pop_font_align_middle {
+    .backgroundImage("btn_pop_font_align_middle.png");
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage("btn_pop_font_align_middle_on.png");
+    }
+}
+
+.imbtn_pop_font_align_right {
+    .backgroundImage("btn_pop_font_align_right.png");
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage("btn_pop_font_align_right_on.png");
+    }
+}
+
+.imico_pop_select_arr_down:after {
+    .backgroundImage("ico_pop_select_arr_down.png");
+    background-size: 8px auto;
+}
+.imico_pop_select_arr_up:after {
+    .backgroundImage("ico_pop_select_arr_up.png");
+    background-size: 8px auto;
 }
 
 #entryFontColorToggle {
@@ -581,18 +870,20 @@
 }
 
 .entryPlaygroundSoundWorkspace {
+    overflow: hidden;
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 8px;
     background-color: #f9f9f9;
-    top: 79px;
+    border-radius: 0 0 0 6px;
+    top: 80px;
     margin-left: 0;
 }
 
 .entryPlaygroundSoundEdit {
     position: absolute;
-    left: 240px;
+    left: 253px;
     top: 0;
     bottom: 0;
     right: 0;
@@ -605,7 +896,6 @@
 
     .entryPlaygroundSoundEditWrapper {
         text-align: center;
-        position: absolute;
     }
 
     .entryPlaygroundSoundEditImage {
@@ -613,9 +903,8 @@
         width: 160px;
         height: 160px;
         object-fit: contain;
-        margin-left: auto;
-        margin-right: auto;
-        margin-bottom: 24px;
+        margin: 0 auto 24px;
+        background-size: 160px auto;
     }
 
     .entryPlaygroundSoundEditText {
@@ -677,12 +966,12 @@
 
 .entryPlaygroundSoundList {
     position: absolute;
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
     width: 254px;
     top: 57px;
-    bottom: 0px;
-    overflow: auto;
+    bottom: 0;
+    overflow-y: hidden;
     list-style: none;
     background-color: #ecf8ff;
     border: 1px solid #d6e9f4;
@@ -695,10 +984,12 @@
     width: 254px;
     top: 57px;
     bottom: 0px;
-    overflow: auto;
+    overflow: hidden;
+    overflow-y: auto;
     list-style: none;
     background-color: #ecf8ff;
     border: 1px solid #d6e9f4;
+    border-radius: 0 0 0 6px;
 }
 
 .entryPlaygroundSoundElement {
@@ -710,11 +1001,10 @@
     height: 61px;
     color: #2c313d;
     cursor: pointer;
-}
 
-.entryPlaygroundSoundElement:hover {
-    background-color: #fff;
-    cursor: move;
+    &.entrySoundSelected {
+        background-color: #fff;
+    }
 }
 
 .entryPlaygroundSoundThumbnail {
@@ -726,10 +1016,17 @@
     border: 1px solid #e2e2e2;
     background-color: #fff;
     border-radius: 4px;
-    background-size: 40px auto;
+    background-size: 28px auto;
     background-repeat: no-repeat;
     background-position: 50% 50%;
-    .backgroundImage("workspace_sound_play.png");
+
+    &.entryPlaygroundSoundPlay {
+        .backgroundImage("workspace_sound_play.png");
+    }
+
+    &.entryPlaygroundSoundStop {
+        .backgroundImage("workspace_sound_stop.png");
+    }
 }
 
 .entryPlaygroundSoundName {
@@ -740,13 +1037,17 @@
     padding: 0 4px;
     background-color: #fff;
     outline: 0;
-    font-size: 10px;
+    font-size: 12px;
     text-overflow: ellipsis;
     color: #2c313d;
     font-weight: 600;
     cursor: text;
     border: 1px solid #e2e2e2;
     border-radius: 4px;
+}
+.entryPlaygroundSoundName:focus,
+.entryPlaygroundSoundName:active {
+    border-color: #4f80ff;
 }
 
 .entryPlayground_text_buttons {
@@ -800,52 +1101,30 @@
     margin-top: -10px;
     margin-left: 8px;
 }
-.entryPlayground_textBox {
-    margin-top: 5px;
-    height: 33px;
-    width: 426px;
-}
-.entryPlayground_textArea {
-    margin-top: 5px;
-    height: 120px;
-    width: 426px;
-    resize: none;
-}
-
-.entryPlaygroundFontSizeWrapper {
-    width: 400px;
-    height: 39px;
-}
-
-.entryPlaygroundFontSizeLabel {
-    display: inline-block;
-    float: right;
-    font-size: 9px;
-    font-family: notoSansMedium;
-    color: #444;
-    line-height: 39px;
-}
 
 .entryPlaygroundFontSizeSlider {
-    display: inline-block;
-    float: right;
-    width: 96px;
-    height: 3px;
-    margin: 18px 0px 18px 4px;
-    background-color: #cfcfcf;
-    border-radius: 1.5px;
+    display:inline-block;
+    margin-left:12px;
+    width: 136px;
+    height: 8px;
+    border-radius: 3px;
+    box-shadow: inset 1px 1px 1px 0 rgba(0, 0, 0, 0.03);
+    background-color: #d8d8d8;
 }
 
 .entryPlaygroundFontSizeIndicator {
     height: 100%;
     width: 45%;
+    border-radius: 3px;
     background-color: #643cd9;
 }
 
 .entryPlaygroundFontSizeKnob {
-    width: 16px; height: 16px;
+    width: 9px;
+    height: 20px;
+    object-fit: contain;
     position: relative;
-    margin-top: -10px;
+    margin-top: -14px;
     margin-left: -7px;
     .backgroundImage("text_size_knob.png");
     cursor: pointer;
@@ -920,5 +1199,35 @@
         width: 15px;
         height: 42px;
         border-top: none;
+    }
+}
+
+.entrySceneListWorkspace {
+    .rcs-inner-container {
+        > div > div > div {
+            display: table;
+            table-layout: fixed;
+            .sortableItem {
+                display: table-cell;
+                vertical-align: top;
+                width: 76px;
+            }
+        }
+    }
+}
+
+.sortableWidget {
+    height: 100%;
+
+    .rcs-custom-scrollbar {
+        width: 8px;
+        right: 4px;
+        opacity: 0.8;
+    }
+
+    .rcs-inner-handle {
+        background-color: #aac5d5 !important;
+        border-radius: 2.5px !important;
+        opacity: 0.8;
     }
 }

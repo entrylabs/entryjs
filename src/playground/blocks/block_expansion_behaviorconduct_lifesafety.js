@@ -3,24 +3,8 @@
 const PromiseManager = require('../../core/promiseManager');
 const { callApi } = require('../../util/common');
 
-Entry.EXPANSION_BLOCK.behaviorConductLifeSafety = {
-    name: 'behaviorConductLifeSafety',
-    imageName: 'firstaid.png',
-    title: {
-        ko: '생활안전',
-        en: 'LifeSafety',
-    },
-    description: Lang.Msgs.expansion_behaviorConductLifeSafety_description,
-    isInitialized: false,
-    init() {
-        if (this.isInitialized) {
-            return;
-        }
-        Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.isInitialized = true;
-    },
-    api: '/api/expansionBlock/behaviorConduct',
-    apiType: '03',
-    categoryMap: {
+function getInitialCategoryMap() {
+    return {
         '03002': {
             lang: Lang.Blocks.behaviorConduct03002,
             sub: ['03002002', '03002003', '03002004', '03002005', '03002006'],
@@ -77,11 +61,32 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety = {
             lang: Lang.Blocks.behaviorConduct03015,
             sub: ['03015007', '03015003'],
         },
+    };
+}
+Entry.EXPANSION_BLOCK.behaviorConductLifeSafety = {
+    name: 'behaviorConductLifeSafety',
+    imageName: 'firstaid.png',
+    title: {
+        ko: '생활안전',
+        en: 'LifeSafety',
+        jp: '生活安全',
     },
+    titleKey: "template.behaviorConductLifeSafety_title_text",
+    description: Lang.Msgs.expansion_behaviorConductLifeSafety_description,
+    descriptionKey: "Msgs.expansion_behaviorConductLifeSafety_description",
+    isInitialized: false,
+    init() {
+        if (this.isInitialized) {
+            return;
+        }
+        Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.isInitialized = true;
+    },
+    api: '/api/expansionBlock/behaviorConduct',
+    apiType: '03'
 };
 
 Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
-    const categoryMap = Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.categoryMap;
+    const categoryMap = getInitialCategoryMap();
     const getCategory = function() {
         return Object.keys(categoryMap).map((category) => {
             return [categoryMap[category].lang, category];

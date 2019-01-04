@@ -94,12 +94,12 @@ class BlockMenu {
 
         if (this._scroll) {
             this._scroller = new Entry.BlockMenuScroller(this);
-            this._addControl($dom);
+            this._addControl($dom.find('.blockMenuContainer'));
         }
 
-        if (Entry.documentMousedown) {
-            Entry.documentMousedown.attach(this, this.setSelectedBlock);
-        }
+        // if (Entry.documentMousedown) {
+        //     Entry.documentMousedown.attach(this, this.setSelectedBlock);
+        // }
         if (this.code && Entry.keyPressed) {
             Entry.keyPressed.attach(this, this._captureKeyEvent);
         }
@@ -135,6 +135,7 @@ class BlockMenu {
             class: 'blockMenuContainer',
             parent,
         });
+        Entry.Utils.disableContextmenu(this.blockMenuContainer);
 
         this.svgDom = Entry.Dom(
             $(
@@ -146,7 +147,7 @@ class BlockMenu {
         );
 
         this.svgDom.mouseenter(function(e) {
-            that._scroller && that._scroller.setOpacity(1);
+            that._scroller && that._scroller.setOpacity(0.8);
 
             const selectedBlockView = that.workspace.selectedBlockView;
             if (
@@ -255,7 +256,7 @@ class BlockMenu {
 
         const lastSelector = this.lastSelector;
         const shouldReDraw = !this._renderedCategories[lastSelector];
-        visibles.forEach(({ view: blockView, type } = {}) => {
+        visibles.forEach(({ view: blockView, type } = {}, index) => {
             if (!blockView) {
                 return;
             }
@@ -277,6 +278,9 @@ class BlockMenu {
 
             marginFromTop -= blockView.offsetY;
             blockView.moveTo(left, marginFromTop, false);
+            if (index > 0) {
+                marginFromTop += blockView.marginBottom || 0;
+            }
             marginFromTop += blockView.height + vPadding;
         });
 
@@ -362,9 +366,11 @@ class BlockMenu {
                 this._boardBlockView = newBlockView;
 
                 newBlockView.onMouseDown.call(newBlockView, e);
-                newBlockView.dragInstance.set({
-                    isNew: true,
-                });
+                if(newBlockView.dragInstance) {
+                    newBlockView.dragInstance.set({
+                        isNew: true,
+                    });
+                }
 
                 GS.setView(newBlockView, workspaceMode);
             }
@@ -558,6 +564,9 @@ class BlockMenu {
     }
 
     selectMenu(selector, doNotFold, doNotAlign) {
+        if(Entry.disposeEvent) {
+            Entry.disposeEvent.notify();
+        }
         if (!this._isOn() || !this._categoryData) {
             return;
         }
@@ -787,53 +796,46 @@ class BlockMenu {
     removeControl(eventType) {
         this.svgDom.off(eventType);
     }
-
-    onMouseDown(e) {
+    onMouseMove = (e) => {
         if (e.stopPropagation) {
             e.stopPropagation();
         }
+
+        const { pageY } = Entry.Utils.convertMouseEvent(e);
+
+        const dragInstance = this.dragInstance;
+        this._scroller.scroll(-pageY + dragInstance.offsetY);
+        dragInstance.set({ offsetY: pageY });
+    };
+
+    onMouseUp = (e) => {
+        $(document).unbind('.blockMenu');
+        delete this.dragInstance;
+    };
+
+    onMouseDown(e) {
+        // ISSUE:: 마우스이벤트1
+        // if (e.stopPropagation) {
+        //     e.stopPropagation();
+        // }
         if (e.preventDefault) {
             e.preventDefault();
         }
 
-        const blockMenu = this;
         if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
             const mouseEvent = Entry.Utils.convertMouseEvent(e);
-
             if (Entry.documentMousedown) {
                 Entry.documentMousedown.notify(mouseEvent);
             }
             const doc = $(document);
 
-            doc.bind('mousemove.blockMenu', onMouseMove);
-            doc.bind('mouseup.blockMenu', onMouseUp);
-            doc.bind('touchmove.blockMenu', onMouseMove);
-            doc.bind('touchend.blockMenu', onMouseUp);
+            doc.bind('mousemove.blockMenu touchmove.blockMenu', this.onMouseMove);
+            doc.bind('mouseup.blockMenu touchend.blockMenu', this.onMouseUp);
 
             this.dragInstance = new Entry.DragInstance({
                 startY: mouseEvent.pageY,
                 offsetY: mouseEvent.pageY,
             });
-        }
-
-        function onMouseMove(e) {
-            if (e.stopPropagation) {
-                e.stopPropagation();
-            }
-            if (e.preventDefault) {
-                e.preventDefault();
-            }
-
-            const { pageY } = Entry.Utils.convertMouseEvent(e);
-
-            const dragInstance = blockMenu.dragInstance;
-            blockMenu._scroller.scroll(-pageY + dragInstance.offsetY);
-            dragInstance.set({ offsetY: pageY });
-        }
-
-        function onMouseUp(e) {
-            $(document).unbind('.blockMenu');
-            delete blockMenu.dragInstance;
         }
     }
 

@@ -38,7 +38,9 @@ Entry.EntryObject = class {
             this.isEditing = false;
 
             if (this.objectType === 'sprite') {
-                this.selectedPicture = !model.selectedPictureId ? this.pictures[0] : this.getPicture(model.selectedPictureId);
+                this.selectedPicture = !model.selectedPictureId
+                    ? this.pictures[0]
+                    : this.getPicture(model.selectedPictureId);
             }
 
             this.scene = Entry.scene.getSceneById(model.scene) || Entry.scene.selectedScene;
@@ -60,30 +62,33 @@ Entry.EntryObject = class {
             const cachePicture = Entry.container.cachePicture.bind(Entry.container);
             const pictures = this.pictures;
 
-            for (let i in pictures) {
+            for (const i in pictures) {
                 ((picture) => {
                     picture.objectId = this.id;
-                    if (!picture.id) picture.id = Entry.generateHash();
+                    if (!picture.id) {
+                        picture.id = Entry.generateHash();
+                    }
 
                     const image = new Image();
                     Entry.Loader.addQueue();
 
-                    image.onload = function(e) {
+                    image.onload = function() {
                         delete this.triedCnt;
                         cachePicture(picture.id + entityId, this);
                         Entry.Loader.removeQueue();
                         this.onload = null;
                     };
 
-                    image.onerror = function(err) {
+                    image.onerror = function() {
                         if (!this.triedCnt) {
-                            if (Entry.type !== 'invisible')
+                            if (Entry.type !== 'invisible') {
                                 console.log('err=', picture.name, 'load failed');
+                            }
                             this.triedCnt = 1;
                             this.src = getImageSrc(picture);
                         } else if (this.triedCnt < 3) {
                             this.triedCnt++;
-                            this.src = Entry.mediaFilePath + '_1x1.png';
+                            this.src = `${Entry.mediaFilePath}_1x1.png`;
                         } else {
                             //prevent infinite call
                             delete this.triedCnt;
@@ -101,26 +106,25 @@ Entry.EntryObject = class {
         this._isContextMenuEnabled = true;
 
         function getImageSrc(picture) {
-            if (picture.fileurl) return picture.fileurl;
+            if (picture.fileurl) {
+                return picture.fileurl;
+            }
 
             const fileName = picture.filename;
-            return (
-                Entry.defaultPath + '/uploads/' +
-                fileName.substring(0, 2) + '/' +
-                fileName.substring(2, 4) + '/image/' +
-                fileName + '.png');
+            return `${Entry.defaultPath}/uploads/${fileName.substring(0, 2)}/${fileName.substring(
+                2,
+                4
+            )}/image/${fileName}.png`;
         }
     }
 
     /**
      * View generator for workspace or others.
+     * Entry.type === 'phone' 관련 뷰 삭제
      * @return {!Element}
      */
     generateView() {
-        var type = Entry.type;
-
-        if (type === 'workspace') return this.generateWorkspaceView();
-        else if (type === 'phone') return this.generatePhoneView();
+        return this.generateWorkspaceView();
     }
 
     /**
@@ -128,10 +132,12 @@ Entry.EntryObject = class {
      * @param {!string} name
      */
     setName(name) {
-        Entry.assert(typeof name == 'string', 'object name must be string');
+        Entry.assert(typeof name === 'string', 'object name must be string');
 
         this.name = name;
-        if (this.nameView_) this.nameView_.value = name;
+        if (this.nameView_) {
+            this.nameView_.value = name;
+        }
     }
 
     getName() {
@@ -143,7 +149,7 @@ Entry.EntryObject = class {
      * @param {!string} name
      */
     setText(text) {
-        Entry.assert(typeof text == 'string', 'object text must be string');
+        Entry.assert(typeof text === 'string', 'object text must be string');
         this.text = text;
     }
 
@@ -174,15 +180,18 @@ Entry.EntryObject = class {
         json.direction = 90;
 
         if (this.objectType == 'sprite') {
-            var dimension = model.sprite.pictures[0].dimension;
+            const dimension = model.sprite.pictures[0].dimension;
             json.regX = dimension.width / 2;
             json.regY = dimension.height / 2;
-            var scale;
-            var mainCategory = model.sprite.category.main;
-            if (mainCategory == 'background' || mainCategory == 'new')
+            let scale;
+            const mainCategory = model.sprite.category.main;
+            if (mainCategory == 'background' || mainCategory == 'new') {
                 scale = Math.max(270 / dimension.height, 480 / dimension.width);
-            else if (mainCategory == 'new') scale = 1;
-            else scale = 200 / (dimension.width + dimension.height);
+            } else if (mainCategory == 'new') {
+                scale = 1;
+            } else {
+                scale = 200 / (dimension.width + dimension.height);
+            }
 
             json.scaleX = json.scaleY = scale;
             json.width = dimension.width;
@@ -195,8 +204,8 @@ Entry.EntryObject = class {
             json.height = 24;
             json.text = model.text;
             if (model.options) {
-                var options = model.options;
-                var fontStyle = '';
+                const options = model.options;
+                let fontStyle = '';
                 const {
                     fontSize = 20,
                     textAlign = 0,
@@ -206,15 +215,19 @@ Entry.EntryObject = class {
                     width,
                     height,
                 } = options;
-                if (options.bold) fontStyle += 'bold ';
-                if (options.italic) fontStyle += 'italic ';
+                if (options.bold) {
+                    fontStyle += 'bold ';
+                }
+                if (options.italic) {
+                    fontStyle += 'italic ';
+                }
 
                 json.underLine = options.underLine;
                 json.strike = options.strike;
                 if (typeof options.font === 'string') {
                     json.font = options.font;
                 } else {
-                    json.font = fontStyle + `${fontSize}px ` + options.font.family;
+                    json.font = `${fontStyle}${fontSize}px ${options.font.family}`;
                 }
                 json.colour = options.colour;
                 json.bgColor = options.bgColor || options.background;
@@ -247,25 +260,21 @@ Entry.EntryObject = class {
         const picture = this.entity.picture;
         const objectType = this.objectType;
 
-        if (objectType == 'sprite') {
+        if (objectType === 'sprite') {
             if (picture.fileurl) {
-                thumb.style.backgroundImage = 'url("' + picture.fileurl + '")';
+                thumb.style.backgroundImage = `url("${picture.fileurl}")`;
             } else {
-                var fileName = picture.filename;
-                thumb.style.backgroundImage =
-                    'url("' +
-                    Entry.defaultPath +
-                    '/uploads/' +
-                    fileName.substring(0, 2) +
-                    '/' +
-                    fileName.substring(2, 4) +
-                    '/thumb/' +
-                    fileName +
-                    '.png")';
+                const fileName = picture.filename;
+                thumb.style.backgroundImage = `url("${
+                    Entry.defaultPath
+                }/uploads/${fileName.substring(0, 2)}/${fileName.substring(
+                    2,
+                    4
+                )}/thumb/${fileName}.png")`;
             }
-        } else if (objectType == 'textBox') {
-            const textIconPath = Entry.mediaFilePath + '/text_icon.png';
-            thumb.style.backgroundImage = 'url(' + textIconPath + ')';
+        } else if (objectType === 'textBox') {
+            const textIconPath = `${Entry.mediaFilePath}/text_icon.png`;
+            thumb.style.backgroundImage = `url(${textIconPath})`;
         }
     }
 
@@ -273,21 +282,29 @@ Entry.EntryObject = class {
      * Update coordinate view;
      */
     updateCoordinateView(isForced) {
-        if (!this.isSelected() && !isForced) return;
+        if (!this.isSelected() && !isForced) {
+            return;
+        }
 
         const view = this.coordinateView_;
         if (view && view.xInput_ && view.yInput_) {
-            const originX = view.xInput_.value,
-                originY = view.yInput_.value,
-                size = view.sizeInput_.value,
-                entity = this.entity,
-                newX = entity.getX(1),
-                newY = entity.getY(1),
-                newSize = entity.getSize(1);
+            const originX = view.xInput_.value;
+            const originY = view.yInput_.value;
+            const size = view.sizeInput_.value;
+            const entity = this.entity;
+            const newX = entity.getX(1);
+            const newY = entity.getY(1);
+            const newSize = entity.getSize(1);
 
-            if (originX != newX) view.xInput_.value = newX;
-            if (originY != newY) view.yInput_.value = newY;
-            if (size != newSize) view.sizeInput_.value = newSize;
+            if (originX != newX) {
+                view.xInput_.value = newX;
+            }
+            if (originY != newY) {
+                view.yInput_.value = newY;
+            }
+            if (size != newSize) {
+                view.sizeInput_.value = newSize;
+            }
         }
     }
 
@@ -295,21 +312,23 @@ Entry.EntryObject = class {
      * Update rotation view;
      */
     updateRotationView(isForced) {
-        if ((!this.isSelected() || !this.view_) && !isForced) return;
+        if ((!this.isSelected() || !this.view_) && !isForced) {
+            return;
+        }
         const rotateMethod = this.getRotateMethod();
         const entity = this.entity;
         const className = 'entryRemove';
 
-        if (rotateMethod == 'free') {
+        if (rotateMethod === 'free') {
             this.rotateSpan_.removeClass(className);
             this.rotateInput_.removeClass(className);
 
-            this.rotateInput_.value = entity.getRotation(1) + '˚';
-            this.directionInput_.value = entity.getDirection(1) + '˚';
+            this.rotateInput_.value = `${entity.getRotation(1)}`;
+            this.directionInput_.value = `${entity.getDirection(1)}`;
         } else {
             this.rotateSpan_.addClass(className);
             this.rotateInput_.addClass(className);
-            this.directionInput_.value = entity.getDirection(1) + '˚';
+            this.directionInput_.value = `${entity.getDirection(1)}`;
         }
     }
 
@@ -320,8 +339,9 @@ Entry.EntryObject = class {
     addPicture(picture, index) {
         picture.objectId = this.id;
 
-        if (typeof index === 'undefined') this.pictures.push(picture);
-        else {
+        if (typeof index === 'undefined') {
+            this.pictures.push(picture);
+        } else {
             this.pictures.splice(index, 0, picture);
         }
 
@@ -335,13 +355,17 @@ Entry.EntryObject = class {
      */
     removePicture(pictureId) {
         const pictures = this.pictures;
-        if (pictures.length < 2) return false;
+        if (pictures.length < 2) {
+            return false;
+        }
 
         const playground = Entry.playground;
         const picture = this.getPicture(pictureId);
 
         pictures.splice(pictures.indexOf(picture), 1);
-        if (picture === this.selectedPicture) playground.selectPicture(pictures[0]);
+        if (picture === this.selectedPicture) {
+            playground.selectPicture(pictures[0]);
+        }
 
         Entry.container.unCachePictures(this.entity, picture);
 
@@ -360,22 +384,28 @@ Entry.EntryObject = class {
         //1. pictureId
         //2. pictureName
         //3. index
-        if (!value) return this.selectedPicture;
+        if (!value) {
+            return this.selectedPicture;
+        }
 
-        value = (value + '').trim();
-        const pictures = this.pictures,
-            len = pictures.length;
+        value = `${value}`.trim();
+        const pictures = this.pictures;
+        const len = pictures.length;
 
         for (let i = 0; i < len; i++) {
-            if (pictures[i].id == value) return pictures[i];
+            if (pictures[i].id == value) {
+                return pictures[i];
+            }
         }
 
         for (let i = 0; i < len; i++) {
-            if (pictures[i].name == value) return pictures[i];
+            if (pictures[i].name == value) {
+                return pictures[i];
+            }
         }
 
-        var checker = Entry.parseNumber(value);
-        if (!(checker === false && typeof checker == 'boolean') && len >= checker && checker > 0) {
+        const checker = Entry.parseNumber(value);
+        if (!(checker === false && typeof checker === 'boolean') && len >= checker && checker > 0) {
             return pictures[checker - 1];
         }
         return null;
@@ -392,7 +422,7 @@ Entry.EntryObject = class {
      */
     getPrevPicture(pictureId) {
         const pictures = this.pictures;
-        var idx = this.getPictureIndex(pictureId);
+        let idx = this.getPictureIndex(pictureId);
         return pictures[idx === 0 ? pictures.length - 1 : --idx];
     }
 
@@ -404,7 +434,7 @@ Entry.EntryObject = class {
     getNextPicture(pictureId) {
         const pictures = this.pictures;
         const len = pictures.length;
-        var idx = this.getPictureIndex(pictureId);
+        let idx = this.getPictureIndex(pictureId);
         return pictures[idx == len - 1 ? 0 : ++idx];
     }
 
@@ -415,7 +445,9 @@ Entry.EntryObject = class {
      */
     selectPicture(pictureId) {
         const picture = this.getPicture(pictureId);
-        if (!picture) throw new Error('No picture with pictureId : ' + pictureId);
+        if (!picture) {
+            throw new Error(`No picture with pictureId : ${pictureId}`);
+        }
 
         this.selectedPicture = picture;
         this.entity.setImage(picture);
@@ -427,29 +459,29 @@ Entry.EntryObject = class {
      * @param {sound model} sound
      */
     addSound(sound, index) {
-        if (!sound.id) sound.id = Entry.generateHash();
+        if (!sound.id) {
+            sound.id = Entry.generateHash();
+        }
 
         Entry.initSound(sound, index);
 
-        if (typeof index === 'undefined') this.sounds.push(sound);
-        else {
+        if (typeof index === 'undefined') {
+            this.sounds.push(sound);
+        } else {
             this.sounds.splice(index, 0, sound);
         }
-        Entry.playground.injectSound(this);
+        Entry.playground.injectSound();
     }
 
     /**
      * Remove sound object.
      * @param {string} soundId
-     * @return {boolean} return true if success
      */
     removeSound(soundId) {
-        let index, sound;
-        sound = this.getSound(soundId);
-        index = this.sounds.indexOf(sound);
+        const index = this.sounds.findIndex((sound) => sound.id === soundId);
         this.sounds.splice(index, 1);
         Entry.playground.reloadPlayground();
-        Entry.playground.injectSound(this);
+        Entry.playground.injectSound();
     }
 
     /**
@@ -457,7 +489,9 @@ Entry.EntryObject = class {
      * @return {string}
      */
     getRotateMethod() {
-        if (!this.rotateMethod) this.rotateMethod = 'free';
+        if (!this.rotateMethod) {
+            this.rotateMethod = 'free';
+        }
 
         return this.rotateMethod;
     }
@@ -504,9 +538,13 @@ Entry.EntryObject = class {
         this.rotateModeCView_.removeClass(SELECTED);
 
         const rotateMethod = this.rotateMethod;
-        if (rotateMethod == 'free') this.rotateModeAView_.addClass(SELECTED);
-        else if (rotateMethod == 'vertical') this.rotateModeBView_.addClass(SELECTED);
-        else this.rotateModeCView_.addClass(SELECTED);
+        if (rotateMethod === 'free') {
+            this.rotateModeAView_.addClass(SELECTED);
+        } else if (rotateMethod === 'vertical') {
+            this.rotateModeBView_.addClass(SELECTED);
+        } else {
+            this.rotateModeCView_.addClass(SELECTED);
+        }
 
         this.updateRotationView();
     }
@@ -520,7 +558,9 @@ Entry.EntryObject = class {
      * @param {?xml block} script
      */
     addCloneEntity(object, entity, script) {
-        if (this.clonedEntities.length > Entry.maxCloneLimit) return;
+        if (this.clonedEntities.length > Entry.maxCloneLimit) {
+            return;
+        }
 
         const clonedEntity = new Entry.EntityObject(this);
         clonedEntity.isClone = true;
@@ -550,7 +590,9 @@ Entry.EntryObject = class {
         targetIndex -= (entity.shapes.length ? 1 : 0) + entity.stamps.length;
         Entry.stage.loadEntity(clonedEntity, targetIndex);
 
-        if (entity.brush) Entry.setCloneBrush(clonedEntity, entity.brush);
+        if (entity.brush) {
+            Entry.setCloneBrush(clonedEntity, entity.brush);
+        }
     }
 
     /**
@@ -577,7 +619,7 @@ Entry.EntryObject = class {
             pictures: Entry.getPicturesJSON(this.pictures, isClone),
             sounds: Entry.getSoundsJSON(this.sounds, isClone),
         };
-        if (this.objectType == 'textBox') {
+        if (this.objectType === 'textBox') {
             json.text = this.text;
         } else {
             json.selectedPictureId =
@@ -607,15 +649,23 @@ Entry.EntryObject = class {
         //2. soundName
         //3. index
         value = String(value).trim();
-        const sounds = this.sounds,
-            len = sounds.length;
+        const sounds = this.sounds;
+        const len = sounds.length;
 
-        for (let i = 0; i < len; i++) if (sounds[i].id == value) return sounds[i];
+        for (let i = 0; i < len; i++) {
+            if (sounds[i].id == value) {
+                return sounds[i];
+            }
+        }
 
-        for (let i = 0; i < len; i++) if (sounds[i].name == value) return sounds[i];
+        for (let i = 0; i < len; i++) {
+            if (sounds[i].name == value) {
+                return sounds[i];
+            }
+        }
 
-        let checker = Entry.parseNumber(value);
-        if (!(checker === false && typeof checker == 'boolean') && len >= checker && checker > 0) {
+        const checker = Entry.parseNumber(value);
+        if (!(checker === false && typeof checker === 'boolean') && len >= checker && checker > 0) {
             return sounds[checker - 1];
         }
 
@@ -623,8 +673,10 @@ Entry.EntryObject = class {
     }
 
     addCloneVariables({ id }, entity, variables, lists) {
-        const _whereFunc = _.partial(_.where, _, { object_: id });
-        const _cloneFunc = (v) => v.clone();
+        const _whereFunc = _.partial(_.filter, _, { object_: id });
+        const _cloneFunc = (v) => {
+            return v.clone();
+        };
         const { variables_, lists_ } = Entry.variableContainer;
 
         entity.variables = (variables || _whereFunc(variables_)).map(_cloneFunc);
@@ -652,14 +704,12 @@ Entry.EntryObject = class {
             this.coordinateView_.sizeInput_,
         ];
 
-        if (isLocked){
+        if (isLocked) {
             inputs.forEach(function(input) {
-                input.removeClass('selectedEditingObject');
                 input.setAttribute('disabled', 'disabled');
             });
         } else {
             inputs.forEach(function(input) {
-                input.addClass('selectedEditingObject');
                 input.removeAttribute('disabled');
             });
         }
@@ -678,24 +728,14 @@ Entry.EntryObject = class {
         ];
 
         if (activate && !this.isEditing) {
-            for (let i = 0; i < inputs.length; i++) {
-                inputs[i].addClass('selectedEditingObject');
-            }
             this.isEditing = true;
         } else {
             inputs.forEach(function(input) {
                 input.blur(true);
             });
 
-            this.blurAllInput();
             this.isEditing = false;
         }
-    }
-
-    blurAllInput() {
-        $('.selectedEditingObject').removeClass('selectedEditingObject');
-
-        const { xInput_, yInput_, sizeInput_ } = this.coordinateView_;
     }
 
     /**
@@ -717,7 +757,9 @@ Entry.EntryObject = class {
     }
 
     _rightClick(e) {
-        if (!this.isContextMenuEnabled()) return;
+        if (!this.isContextMenuEnabled()) {
+            return;
+        }
         e.stopPropagation();
 
         const object = this;
@@ -726,29 +768,29 @@ Entry.EntryObject = class {
             {
                 text: Lang.Workspace.context_duplicate,
                 enable: !Entry.engine.isState('run'),
-                callback: function() {
+                callback() {
                     container.addCloneObject(object);
                 },
             },
             {
                 text: Lang.Workspace.context_remove,
-                callback: function() {
+                callback() {
                     Entry.dispatchEvent('removeObject', object);
-                    var { id } = object;
+                    const { id } = object;
                     Entry.do('removeObject', id);
                 },
             },
             {
                 text: Lang.Workspace.copy_file,
-                callback: function() {
+                callback() {
                     container.setCopiedObject(object);
                 },
             },
             {
                 text: Lang.Blocks.Paste_blocks,
                 enable: !Entry.engine.isState('run') && !!container.copiedObject,
-                callback: function() {
-                    var container = Entry.container;
+                callback() {
+                    const container = Entry.container;
                     if (container.copiedObject) {
                         container.addCloneObject(container.copiedObject);
                     } else {
@@ -760,18 +802,15 @@ Entry.EntryObject = class {
                 },
             },
             {
-                divider: true,
-            },
-            {
                 text: Lang.Blocks.export_object,
-                callback: function() {
+                callback() {
                     Entry.dispatchEvent('exportObject', object);
                 },
             },
         ];
 
         const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
-        Entry.ContextMenu.show(options, 'workspace-contextmenu', { x, y, });
+        Entry.ContextMenu.show(options, 'workspace-contextmenu', { x, y });
     }
 
     enableContextMenu() {
@@ -787,10 +826,14 @@ Entry.EntryObject = class {
     }
 
     toggleEditObject() {
-        if (this.isEditing || Entry.engine.isState('run')) return;
+        if (this.isEditing || Entry.engine.isState('run')) {
+            return;
+        }
 
         this.editObjectValues(true);
-        if (Entry.playground.object !== this) Entry.container.selectObject(this.id);
+        if (Entry.playground.object !== this) {
+            Entry.container.selectObject(this.id);
+        }
     }
 
     getDom(query) {
@@ -826,7 +869,7 @@ Entry.EntryObject = class {
             return;
         }
         target._focused = false;
-    };
+    }
 
     generateWorkspaceView() {
         const exceptionsForMouseDown = [];
@@ -837,7 +880,7 @@ Entry.EntryObject = class {
         this.view_ = this.createObjectView(objectId, exceptionsForMouseDown); // container
         this.view_.appendChild(this.createObjectInfoView()); // visible, lock
 
-        const thumbnailView = this.createThumbnailView(); // thumbnail
+        const thumbnailView = this.createThumbnailView(objectId); // thumbnail
         this.thumbnailView_ = thumbnailView;
         this.view_.appendChild(thumbnailView);
 
@@ -865,11 +908,15 @@ Entry.EntryObject = class {
     createRotationMethodWrapperView() {
         const rotationMethodWrapper = Entry.createElement('div').addClass('rotationMethodWrapper');
 
-        const rotateMethodLabelView = Entry.createElement('span').addClass('entryObjectRotateMethodLabelWorkspace');
+        const rotateMethodLabelView = Entry.createElement('span').addClass(
+            'entryObjectRotateMethodLabelWorkspace'
+        );
         rotationMethodWrapper.appendChild(rotateMethodLabelView);
-        rotateMethodLabelView.innerHTML = Lang.Workspace.rotate_method + '';
+        rotateMethodLabelView.innerHTML = `${Lang.Workspace.rotate_method}`;
 
-        const rotateModeAView = Entry.createElement('div').addClass('entryObjectRotateModeWorkspace entryObjectRotateModeAWorkspace');
+        const rotateModeAView = Entry.createElement('div').addClass(
+            'entryObjectRotateModeWorkspace entryObjectRotateModeAWorkspace'
+        );
         this.rotateModeAView_ = rotateModeAView;
         rotationMethodWrapper.appendChild(rotateModeAView);
         rotationMethodWrapper.appendChild(rotateModeAView);
@@ -879,7 +926,9 @@ Entry.EntryObject = class {
             }, this)
         );
 
-        const rotateModeBView = Entry.createElement('div').addClass('entryObjectRotateModeWorkspace entryObjectRotateModeBWorkspace');
+        const rotateModeBView = Entry.createElement('div').addClass(
+            'entryObjectRotateModeWorkspace entryObjectRotateModeBWorkspace'
+        );
         this.rotateModeBView_ = rotateModeBView;
         rotationMethodWrapper.appendChild(rotateModeBView);
         rotateModeBView.bindOnClick(
@@ -888,7 +937,9 @@ Entry.EntryObject = class {
             }, this)
         );
 
-        const rotateModeCView = Entry.createElement('div').addClass('entryObjectRotateModeWorkspace entryObjectRotateModeCWorkspace');
+        const rotateModeCView = Entry.createElement('div').addClass(
+            'entryObjectRotateModeWorkspace entryObjectRotateModeCWorkspace'
+        );
         this.rotateModeCView_ = rotateModeCView;
         rotationMethodWrapper.appendChild(rotateModeCView);
         rotateModeCView.bindOnClick(
@@ -901,16 +952,16 @@ Entry.EntryObject = class {
     }
 
     createRotateLabelWrapperView() {
-        const rotateLabelWrapperView = Entry.createElement('div').addClass('entryObjectRotateLabelWrapperWorkspace');
+        const rotateLabelWrapperView = Entry.createElement('div').addClass(
+            'entryObjectRotateLabelWrapperWorkspace'
+        );
 
         const rotateSpan = Entry.createElement('span').addClass('entryObjectRotateSpanWorkspace');
-        rotateSpan.innerHTML = Lang.Workspace.rotation + '';
-        const rotateInput = Entry.createElement('input').addClass('entryObjectRotateInputWorkspace');
-        rotateInput.bindOnClick(function(e) {
-            e.stopPropagation();
-            this.select();
-        });
-
+        rotateSpan.innerHTML = `${Lang.Workspace.rotation}`;
+        const rotateInput = Entry.createElement('input').addClass(
+            'entryObjectRotateInputWorkspace'
+        );
+        rotateInput.setAttribute('type', 'number');
         rotateInput.onkeypress = this.editObjectValueWhenEnterPress;
         rotateInput.onfocus = this._setFocused;
         rotateInput.onblur = this._setBlurredTimer(() => {
@@ -924,20 +975,24 @@ Entry.EntryObject = class {
                 value = value.substring(0, idx);
             }
 
-            Entry.do('objectUpdateRotationValue', this.id, Entry.Utils.isNumber(value) ? value : this.entity.getRotation());
+            Entry.do(
+                'objectUpdateRotationValue',
+                this.id,
+                Entry.Utils.isNumber(value) ? value : this.entity.getRotation()
+            );
         });
 
         this.rotateSpan_ = rotateSpan;
         this.rotateInput_ = rotateInput;
 
-        const directionSpan = Entry.createElement('span').addClass('entryObjectDirectionSpanWorkspace');
-        directionSpan.innerHTML = Lang.Workspace.direction + '';
-        const directionInput = Entry.createElement('input').addClass('entryObjectDirectionInputWorkspace');
-        directionInput.bindOnClick(function(e) {
-            e.stopPropagation();
-            this.select();
-        });
-
+        const directionSpan = Entry.createElement('span').addClass(
+            'entryObjectDirectionSpanWorkspace'
+        );
+        directionSpan.innerHTML = `${Lang.Workspace.direction}`;
+        const directionInput = Entry.createElement('input').addClass(
+            'entryObjectDirectionInputWorkspace'
+        );
+        directionInput.setAttribute('type', 'number');
         directionInput.onkeypress = this.editObjectValueWhenEnterPress;
         directionInput.onfocus = this._setFocused;
         directionInput.onblur = this._setBlurredTimer(() => {
@@ -951,11 +1006,14 @@ Entry.EntryObject = class {
                 value = value.substring(0, idx);
             }
 
-            Entry.do('objectUpdateDirectionValue', this.id, Entry.Utils.isNumber(value) ? value : this.entity.getDirection());
+            Entry.do(
+                'objectUpdateDirectionValue',
+                this.id,
+                Entry.Utils.isNumber(value) ? value : this.entity.getDirection()
+            );
         });
 
         this.directionInput_ = directionInput;
-
         rotateLabelWrapperView.appendChild(rotateSpan);
         rotateLabelWrapperView.appendChild(rotateInput);
         rotateLabelWrapperView.appendChild(directionSpan);
@@ -967,16 +1025,14 @@ Entry.EntryObject = class {
     }
 
     createCoordinationView() {
-        const coordinationView = Entry.createElement('span').addClass('entryObjectCoordinateWorkspace');
+        const coordinationView = Entry.createElement('span').addClass(
+            'entryObjectCoordinateWorkspace'
+        );
 
         const xCoordi = Entry.createElement('span').addClass('entryObjectCoordinateSpanWorkspace');
         xCoordi.innerHTML = 'X';
         const xInput = Entry.createElement('input').addClass('entryObjectCoordinateInputWorkspace');
-        xInput.bindOnClick((e) => {
-            e.stopPropagation();
-            xInput.select();
-        });
-
+        xInput.setAttribute('type', 'number');
         xInput.onkeypress = this.editObjectValueWhenEnterPress;
         xInput.onfocus = this._setFocused;
         xInput.onblur = this._setBlurredTimer(() => {
@@ -986,17 +1042,19 @@ Entry.EntryObject = class {
             }
 
             const value = xInput.value;
-            Entry.do('objectUpdatePosX', this.id, Entry.Utils.isNumber(value) ? value : this.entity.getX());
+            Entry.do(
+                'objectUpdatePosX',
+                this.id,
+                Entry.Utils.isNumber(value) ? value : this.entity.getX()
+            );
         });
 
         const yCoordi = Entry.createElement('span').addClass('entryObjectCoordinateSpanWorkspace');
         yCoordi.innerHTML = 'Y';
-        const yInput = Entry.createElement('input').addClass('entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right');
-        yInput.bindOnClick((e) => {
-            e.stopPropagation();
-            yInput.select();
-        });
-
+        const yInput = Entry.createElement('input').addClass(
+            'entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right'
+        );
+        yInput.setAttribute('type', 'number');
         yInput.onkeypress = this.editObjectValueWhenEnterPress;
         yInput.onfocus = this._setFocused;
         yInput.onblur = this._setBlurredTimer(() => {
@@ -1005,19 +1063,20 @@ Entry.EntryObject = class {
                 return;
             }
             const value = yInput.value;
-            Entry.do('objectUpdatePosY', this.id, Entry.Utils.isNumber(value) ? value : this.entity.getY());
+            Entry.do(
+                'objectUpdatePosY',
+                this.id,
+                Entry.Utils.isNumber(value) ? value : this.entity.getY()
+            );
         });
 
         const sizeSpan = Entry.createElement('span').addClass('entryObjectCoordinateSizeWorkspace');
-        sizeSpan.innerHTML = Lang.Workspace.Size + '';
+        sizeSpan.innerHTML = `${Lang.Workspace.Size}`;
         const sizeInput = Entry.createElement('input').addClass(
             'entryObjectCoordinateInputWorkspace',
-            'entryObjectCoordinateInputWorkspace_size');
-        sizeInput.bindOnClick((e) => {
-            e.stopPropagation();
-            sizeInput.select();
-        });
-
+            'entryObjectCoordinateInputWorkspace_size'
+        );
+        sizeInput.setAttribute('type', 'number');
         sizeInput.onkeypress = this.editObjectValueWhenEnterPress;
         sizeInput.onfocus = this._setFocused;
         sizeInput.onblur = this._setBlurredTimer(() => {
@@ -1026,9 +1085,12 @@ Entry.EntryObject = class {
                 return;
             }
             const value = sizeInput.value;
-            Entry.do('objectUpdateSize', this.id, Entry.Utils.isNumber(value) ? value : this.entity.getSize());
+            Entry.do(
+                'objectUpdateSize',
+                this.id,
+                Entry.Utils.isNumber(value) ? value : this.entity.getSize()
+            );
         });
-
 
         coordinationView.appendChild(xCoordi);
         coordinationView.appendChild(xInput);
@@ -1044,7 +1106,9 @@ Entry.EntryObject = class {
     }
 
     createRotationWrapperView() {
-        const rotationWrapperView = Entry.createElement('div').addClass('entryObjectRotationWrapperWorkspace');
+        const rotationWrapperView = Entry.createElement('div').addClass(
+            'entryObjectRotationWrapperWorkspace'
+        );
 
         const coordinationView = this.createCoordinationView();
         this.coordinateView_ = coordinationView;
@@ -1061,7 +1125,9 @@ Entry.EntryObject = class {
     }
 
     createInformationView() {
-        const informationView = Entry.createElement('div').addClass('entryObjectInformationWorkspace');
+        const informationView = Entry.createElement('div').addClass(
+            'entryObjectInformationWorkspace'
+        );
         return informationView;
     }
 
@@ -1070,7 +1136,9 @@ Entry.EntryObject = class {
         exceptionsForMouseDown.push(deleteView);
         deleteView.bindOnClick((e) => {
             e.stopPropagation();
-            if (Entry.engine.isState('run')) return;
+            if (Entry.engine.isState('run')) {
+                return;
+            }
             Entry.do('removeObject', this.id);
         });
         return deleteView;
@@ -1078,11 +1146,9 @@ Entry.EntryObject = class {
 
     createNameView() {
         const nameView = Entry.createElement('input').addClass('entryObjectNameWorkspace');
-        nameView.bindOnClick((e) => {
-            e.preventDefault();
-            if(!this.focusable) {
-                nameView.focus();
-                nameView.select();
+        nameView.addEventListener('click', (e) => {
+            if (!_.includes(this.view_.classList, 'selectedObject')) {
+                e.preventDefault();
             }
         });
 
@@ -1118,8 +1184,18 @@ Entry.EntryObject = class {
         return wrapperView;
     }
 
-    createThumbnailView() {
-        return Entry.createElement('div').addClass('entryObjectThumbnailWorkspace');
+    createThumbnailView(objectId) {
+        const thumbnail = Entry.createElement('div').addClass('entryObjectThumbnailWorkspace');
+
+        DomUtils.addEventListenerMultiple(thumbnail, 'mousedown touchstart', (e) => {
+            Entry.do('containerSelectObject', objectId);
+        });
+
+        thumbnail.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+        });
+
+        return thumbnail;
     }
 
     createObjectInfoView() {
@@ -1128,392 +1204,120 @@ Entry.EntryObject = class {
             objectInfoView.addClass('entryHide');
         }
 
-        const objectInfo_visible = Entry.createElement('li').addClass('objectInfo_visible');
-        if (!this.entity.getVisible()) objectInfo_visible.addClass('objectInfo_unvisible');
+        const objectInfoVisible = Entry.createElement('li').addClass('objectInfo_visible');
+        if (!this.entity.getVisible()) {
+            objectInfoVisible.addClass('objectInfo_unvisible');
+        }
 
-        objectInfo_visible.bindOnClick((e) => {
-            if (Entry.engine.isState('run')) return;
+        objectInfoVisible.bindOnClick(() => {
+            if (Entry.engine.isState('run')) {
+                return;
+            }
 
             const entity = this.entity;
             const visible = entity.setVisible(!entity.getVisible());
-            if (visible) objectInfo_visible.removeClass('objectInfo_unvisible');
-            else objectInfo_visible.addClass('objectInfo_unvisible');
+            if (visible) {
+                objectInfoVisible.removeClass('objectInfo_unvisible');
+            } else {
+                objectInfoVisible.addClass('objectInfo_unvisible');
+            }
         });
 
-        const objectInfo_lock = Entry.createElement('li').addClass('objectInfo_unlock');
+        const objectInfoLock = Entry.createElement('li').addClass('objectInfo_unlock');
         if (this.getLock()) {
-            objectInfo_lock.addClass('objectInfo_lock');
+            objectInfoLock.addClass('objectInfo_lock');
         }
 
-        objectInfo_lock.bindOnClick((e) => {
-            if (Entry.engine.isState('run')) return;
+        objectInfoLock.bindOnClick(() => {
+            if (Entry.engine.isState('run')) {
+                return;
+            }
 
             if (this.setLock(!this.getLock())) {
-                objectInfo_lock.addClass('objectInfo_lock');
-            } else objectInfo_lock.removeClass('objectInfo_lock');
+                objectInfoLock.addClass('objectInfo_lock');
+            } else {
+                objectInfoLock.removeClass('objectInfo_lock');
+            }
 
             this.updateInputViews(this.getLock());
         });
-        objectInfoView.appendChild(objectInfo_visible);
-        objectInfoView.appendChild(objectInfo_lock);
+        objectInfoView.appendChild(objectInfoVisible);
+        objectInfoView.appendChild(objectInfoLock);
         return objectInfoView;
     }
 
     createObjectView(objectId, exceptionsForMouseDown) {
-        const objectView = Entry.createElement('li', objectId).addClass('entryContainerListElementWorkspace');
+        const objectView = Entry.createElement('li', objectId).addClass(
+            'entryContainerListElementWorkspace'
+        );
         const fragment = document.createDocumentFragment();
         fragment.appendChild(objectView);
         // generate context menu
         Entry.Utils.disableContextmenu(objectView);
 
-        DomUtils.addEventListenerMultiple(objectView, 'mousedown touchstart', (e) => {
+        objectView.addEventListener('click', (e) => {
             const isFirstClick = !_.includes(this.view_.classList, 'selectedObject');
-
-            if (Entry.container.getObject(objectId) && !_.includes(exceptionsForMouseDown, e.target)) {
-                Entry.do('containerSelectObject', objectId);
-                this.editObjectValues(false);
+            if (isFirstClick && Entry.isMobile()) {
+                e.preventDefault();
+                document.activeElement.blur();
             }
 
-            if (e.type === 'touchstart') {
-                this.focusable = isFirstClick;
-                e.preventDefault();
-                e.eventFromEntryObject = true;
-                Entry.documentMousedown.notify(e);
+            if (
+                Entry.container.getObject(objectId) &&
+                !_.includes(exceptionsForMouseDown, e.target)
+            ) {
+                Entry.do('containerSelectObject', objectId);
+            }
 
-                const doc = $(document);
-                const touchEvent = Entry.Utils.convertMouseEvent(e);
-                let mouseDownCoordinate = { x: touchEvent.clientX, y: touchEvent.clientY };
-                let longPressTimer = null;
+        });
 
-                longPressTimer = setTimeout(() => {
-                    if (longPressTimer) {
-                        longPressTimer = null;
-                        this._rightClick(e);
-                    }
-                }, 1000);
+        objectView.addEventListener('mousedown', (e) => {
+            if (Entry.Utils.isRightButton(e)) {
+                e.stopPropagation();
+                this._rightClick(e);
+            }
+        });
 
-                doc.bind('mousemove.object touchmove.object', (e) => {
-                    const touchEvent = Entry.Utils.convertMouseEvent(e);
+        objectView.addEventListener('touchstart', (e) => {
+            e.eventFromEntryObject = true;
+            Entry.documentMousedown.notify(e);
 
-                    const diff = Math.sqrt(
-                        Math.pow(touchEvent.pageX - mouseDownCoordinate.x, 2) +
-                        Math.pow(touchEvent.pageY - mouseDownCoordinate.y, 2));
+            const doc = $(document);
+            const touchEvent = Entry.Utils.convertMouseEvent(e);
+            const mouseDownCoordinate = { x: touchEvent.clientX, y: touchEvent.clientY };
+            let longPressTimer = null;
 
-                    if (diff > 5 && longPressTimer) {
-                        clearTimeout(longPressTimer);
-                        longPressTimer = null;
-                    }
-                });
-                doc.bind('mouseup.object touchend.object', (e) => {
-                    e.stopPropagation();
-                    doc.unbind('.object');
-                    if (longPressTimer) {
-                        clearTimeout(longPressTimer);
-                        longPressTimer = null;
-                    }
-                });
-            } else {
-                if (isFirstClick) {
-                    this.nameView_.focus();
-                    this.nameView_.select();
-                }
-
-                if (Entry.Utils.isRightButton(e)) {
-                    e.stopPropagation();
-                    Entry.documentMousedown.notify(e);
+            longPressTimer = setTimeout(() => {
+                if (longPressTimer) {
+                    longPressTimer = null;
                     this._rightClick(e);
                 }
-            }
+            }, 1000);
+
+            doc.bind('mousemove.object touchmove.object', (e) => {
+                const touchEvent = Entry.Utils.convertMouseEvent(e);
+
+                const diff = Math.sqrt(
+                    Math.pow(touchEvent.pageX - mouseDownCoordinate.x, 2) +
+                    Math.pow(touchEvent.pageY - mouseDownCoordinate.y, 2)
+                );
+
+                if (diff > 5 && longPressTimer) {
+                    clearTimeout(longPressTimer);
+                    longPressTimer = null;
+                }
+            });
+            doc.bind('mouseup.object touchend.object', (e) => {
+                e.stopPropagation();
+                doc.unbind('.object');
+                if (longPressTimer) {
+                    clearTimeout(longPressTimer);
+                    longPressTimer = null;
+                }
+            });
         });
 
         return objectView;
-    }
-
-    generatePhoneView() {
-        let thisPointer;
-        const objectView = Entry.createElement('li', this.id);
-        objectView.addClass('entryContainerListElementWorkspace');
-        objectView.object = this;
-        objectView.bindOnClick(function(e) {
-            if (Entry.container.getObject(this.id)) Entry.container.selectObject(this.id);
-        });
-
-        // generate context menu
-        if ($) {
-            const object = this;
-            context.attach('#' + this.id, [
-                {
-                    text: Lang.Workspace.context_rename,
-                    href: '/',
-                    action: function(e) {
-                        e.preventDefault();
-                    },
-                },
-                {
-                    text: Lang.Workspace.context_duplicate,
-                    href: '/',
-                    action: function(e) {
-                        e.preventDefault();
-                        Entry.container.addCloneObject(object);
-                    },
-                },
-                {
-                    text: Lang.Workspace.context_remove,
-                    href: '/',
-                    action: function(e) {
-                        e.preventDefault();
-                        Entry.container.removeObject(object);
-                    },
-                },
-            ]);
-        }
-        /** @type {!Element} */
-        this.view_ = objectView;
-
-        const objectInfoView = Entry.createElement('ul');
-        objectInfoView.addClass('objectInfoView');
-        const objectInfo_visible = Entry.createElement('li');
-        objectInfo_visible.addClass('objectInfo_visible');
-        const objectInfo_lock = Entry.createElement('li');
-        objectInfo_lock.addClass('objectInfo_lock');
-        objectInfoView.appendChild(objectInfo_visible);
-        objectInfoView.appendChild(objectInfo_lock);
-        this.view_.appendChild(objectInfoView);
-
-        const thumbnailView = Entry.createElement('div');
-        thumbnailView.addClass('entryObjectThumbnailWorkspace');
-        this.view_.appendChild(thumbnailView);
-        this.thumbnailView_ = thumbnailView;
-
-        const wrapperView = Entry.createElement('div');
-        wrapperView.addClass('entryObjectWrapperWorkspace');
-        this.view_.appendChild(wrapperView);
-
-        const nameView = Entry.createElement('input');
-        nameView.addClass('entryObjectNameWorkspace');
-        wrapperView.appendChild(nameView);
-        this.nameView_ = nameView;
-        this.nameView_.entryObject = this;
-        this.nameView_.onblur = function() {
-            this.entryObject.name = this.value;
-            Entry.playground.reloadPlayground();
-        };
-        this.nameView_.onkeypress = function(e) {
-            if (e.keyCode == 13) thisPointer.editObjectValues(false);
-        };
-        this.nameView_.value = this.name;
-
-        if (Entry.objectEditable && Entry.objectDeletable) {
-            const deleteView = Entry.createElement('div');
-            deleteView.addClass('entryObjectDeletePhone');
-            deleteView.object = this;
-            this.deleteView_ = deleteView;
-            this.view_.appendChild(deleteView);
-            deleteView.bindOnClick(function(e) {
-                if (Entry.engine.isState('run')) {
-                    return;
-                }
-
-                Entry.container.removeObject(this.object);
-            });
-        }
-
-        const editBtn = Entry.createElement('button');
-        editBtn.addClass('entryObjectEditPhone');
-        editBtn.object = this;
-        editBtn.bindOnClick(function(e) {
-            const object = Entry.container.getObject(this.id);
-            if (object) {
-                Entry.container.selectObject(object.id);
-                Entry.playground.injectObject(object);
-            }
-        });
-        this.view_.appendChild(editBtn);
-
-        const informationView = Entry.createElement('div');
-        informationView.addClass('entryObjectInformationWorkspace');
-        informationView.object = this;
-        wrapperView.appendChild(informationView);
-        this.informationView_ = informationView;
-
-        const rotateLabelWrapperView = Entry.createElement('div');
-        rotateLabelWrapperView.addClass('entryObjectRotateLabelWrapperWorkspace');
-        this.view_.appendChild(rotateLabelWrapperView);
-        this.rotateLabelWrapperView_ = rotateLabelWrapperView;
-
-        const rotateSpan = Entry.createElement('span');
-        rotateSpan.addClass('entryObjectRotateSpanWorkspace');
-        rotateSpan.innerHTML = Lang.Workspace.rotation + '';
-        const rotateInput = Entry.createElement('input');
-        rotateInput.addClass('entryObjectRotateInputWorkspace');
-        this.rotateSpan_ = rotateSpan;
-        this.rotateInput_ = rotateInput;
-
-        const directionSpan = Entry.createElement('span');
-        directionSpan.addClass('entryObjectDirectionSpanWorkspace');
-        directionSpan.innerHTML = Lang.Workspace.direction + '';
-        const directionInput = Entry.createElement('input');
-        directionInput.addClass('entryObjectDirectionInputWorkspace');
-        this.directionInput_ = directionInput;
-
-        rotateLabelWrapperView.appendChild(rotateSpan);
-        rotateLabelWrapperView.appendChild(rotateInput);
-        rotateLabelWrapperView.appendChild(directionSpan);
-        rotateLabelWrapperView.appendChild(directionInput);
-        rotateLabelWrapperView.rotateInput_ = rotateInput;
-        rotateLabelWrapperView.directionInput_ = directionInput;
-        thisPointer = this;
-        rotateInt.onkeypress = function(e) {
-            if (e.keyCode == 13) {
-                let value = rotateInput.value;
-                if (value.indexOf('˚') != -1) value = value.substring(0, value.indexOf('˚'));
-                if (Entry.Utils.isNumber(value)) {
-                    thisPointer.entity.setRotation(Number(value));
-                }
-                thisPointer.updateRotationView();
-                rotateInput.blur();
-            }
-        };
-        rotateInt.onblur = function(e) {
-            thisPointer.entity.setRotation(thisPointer.entity.getRotation());
-            Entry.stage.updateObject();
-        };
-        directionInt.onkeypress = function(e) {
-            if (e.keyCode == 13) {
-                let value = directionInput.value;
-                if (value.indexOf('˚') != -1) value = value.substring(0, value.indexOf('˚'));
-                if (Entry.Utils.isNumber(value)) {
-                    thisPointer.entity.setDirection(Number(value));
-                }
-                thisPointer.updateRotationView();
-                directionInput.blur();
-            }
-        };
-        directionInt.onblur = function(e) {
-            thisPointer.entity.setDirection(thisPointer.entity.getDirection());
-            Entry.stage.updateObject();
-        };
-
-        const rotationWrapperView = Entry.createElement('div');
-        rotationWrapperView.addClass('entryObjectRotationWrapperWorkspace');
-        rotationWrapperView.object = this;
-        this.view_.appendChild(rotationWrapperView);
-
-        const coordinateView = Entry.createElement('span');
-        coordinateView.addClass('entryObjectCoordinateWorkspace');
-        rotationWrapperView.appendChild(coordinateView);
-        const xCoordi = Entry.createElement('span');
-        xCoordi.addClass('entryObjectCoordinateSpanWorkspace');
-        xCoordi.innerHTML = 'X';
-        const xInput = Entry.createElement('input');
-        xInput.addClass('entryObjectCoordinateInputWorkspace');
-        const yCoordi = Entry.createElement('span');
-        yCoordi.addClass('entryObjectCoordinateSpanWorkspace');
-        yCoordi.innerHTML = 'Y';
-        const yInput = Entry.createElement('input');
-        yInput.addClass(
-            'entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right'
-        );
-        const sizeTitle = Entry.createElement('span');
-        sizeTitle.addClass('entryObjectCoordinateSpanWorkspace');
-        sizeTitle.innerHTML = Lang.Workspace.Size;
-        const sizeInput = Entry.createElement('input');
-        sizeInput.addClass(
-            'entryObjectCoordinateInputWorkspace',
-            'entryObjectCoordinateInputWorkspace_size'
-        );
-        coordinateView.appendChild(xCoordi);
-        coordinateView.appendChild(xInput);
-        coordinateView.appendChild(yCoordi);
-        coordinateView.appendChild(yInput);
-        coordinateView.appendChild(sizeTitle);
-        coordinateView.appendChild(sizeInput);
-        coordinateView.xInput_ = xInput;
-        coordinateView.yInput_ = yInput;
-        coordinateView.sizeInput_ = sizeInput;
-        this.coordinateView_ = coordinateView;
-        thisPointer = this;
-        xInt.onkeypress = function(e) {
-            if (e.keyCode == 13) {
-                if (Entry.Utils.isNumber(xInput.value)) {
-                    thisPointer.entity.setX(Number(xInput.value));
-                }
-                thisPointer.updateCoordinateView();
-                thisPointer.blur();
-            }
-        };
-        xInt.onblur = function(e) {
-            thisPointer.entity.setX(thisPointer.entity.getX());
-            Entry.stage.updateObject();
-        };
-
-        yInt.onkeypress = function(e) {
-            if (e.keyCode == 13) {
-                if (Entry.Utils.isNumber(yInput.value)) {
-                    thisPointer.entity.setY(Number(yInput.value));
-                }
-                thisPointer.updateCoordinateView();
-                thisPointer.blur();
-            }
-        };
-        yInt.onblur = function(e) {
-            thisPointer.entity.setY(thisPointer.entity.getY());
-            Entry.stage.updateObject();
-        };
-
-        const rotationMethodWrapper = Entry.createElement('div');
-        rotationMethodWrapper.addClass('rotationMethodWrapper');
-        rotationWrapperView.appendChild(rotationMethodWrapper);
-        this.rotationMethodWrapper_ = rotationMethodWrapper;
-
-        const rotateMethodLabelView = Entry.createElement('span');
-        rotateMethodLabelView.addClass('entryObjectRotateMethodLabelWorkspace');
-        rotationMethodWrapper.appendChild(rotateMethodLabelView);
-        rotateMethodLabelView.innerHTML = Lang.Workspace.rotate_method + ' : ';
-
-        const rotateModeAView = Entry.createElement('div');
-        rotateModeAView.addClass('entryObjectRotateModeWorkspace');
-        rotateModeAView.addClass('entryObjectRotateModeAWorkspace');
-        rotateModeAView.object = this;
-        this.rotateModeAView_ = rotateModeAView;
-        rotationMethodWrapper.appendChild(rotateModeAView);
-        rotateModeAView.bindOnClick(function(e) {
-            if (Entry.engine.isState('run')) {
-                return;
-            }
-            this.object.setRotateMethod('free');
-        });
-
-        const rotateModeBView = Entry.createElement('div');
-        rotateModeBView.addClass('entryObjectRotateModeWorkspace');
-        rotateModeBView.addClass('entryObjectRotateModeBWorkspace');
-        rotateModeBView.object = this;
-        this.rotateModeBView_ = rotateModeBView;
-        rotationMethodWrapper.appendChild(rotateModeBView);
-        rotateModeBView.bindOnClick(function(e) {
-            if (Entry.engine.isState('run')) {
-                return;
-            }
-            this.object.setRotateMethod('vertical');
-        });
-
-        const rotateModeCView = Entry.createElement('div');
-        rotateModeCView.addClass('entryObjectRotateModeWorkspace');
-        rotateModeCView.addClass('entryObjectRotateModeCWorkspace');
-        rotateModeCView.object = this;
-        this.rotateModeCView_ = rotateModeCView;
-        rotationMethodWrapper.appendChild(rotateModeCView);
-        rotateModeCView.bindOnClick(function(e) {
-            if (Entry.engine.isState('run')) return;
-            this.object.setRotateMethod('none');
-        });
-
-        this.updateThumbnailView();
-        this.updateCoordinateView();
-        this.updateRotateMethodView();
-
-        this.updateInputViews();
-        return this.view_;
     }
 
     _getRotateView(type = 'free') {
@@ -1533,7 +1337,6 @@ Entry.EntryObject = class {
     _whenRotateEditable(func, obj) {
         return Entry.Utils.when(function() {
             return !(Entry.engine.isState('run') || obj.getLock());
-
         }, func);
     }
 };

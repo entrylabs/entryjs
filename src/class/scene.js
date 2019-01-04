@@ -3,6 +3,8 @@
  */
 'use strict';
 
+import EntryTool from 'entry-tool';
+
 /**
  * Class for a scene controller.
  * This have view for scenes.
@@ -50,21 +52,6 @@ Entry.Scene = class {
                 if (x < selectedLeft || x > selectedLeft + 55) {
                     return;
                 }
-
-                const ret = 40 + slope * x;
-
-                if (y > ret) {
-                    const nextScene = this.getNextScene();
-                    if (nextScene) {
-                        if ($.support.touch) {
-                            $(document).trigger('touchend');
-                            $(nextScene.view).trigger('touchstart');
-                        } else {
-                            $(document).trigger('mouseup');
-                            $(nextScene.view).trigger('mousedown');
-                        }
-                    }
-                }
             });
 
             const listView = this.createListView();
@@ -80,8 +67,9 @@ Entry.Scene = class {
     }
 
     createAddButton() {
-        const addButton = Entry.createElement('span')
-            .addClass('entrySceneElementWorkspace entrySceneAddButtonWorkspace');
+        const addButton = Entry.createElement('span').addClass(
+            'entrySceneElementWorkspace entrySceneAddButtonWorkspace'
+        );
 
         addButton.bindOnClick((e) => {
             if (Entry.engine.isState('run')) return;
@@ -92,25 +80,47 @@ Entry.Scene = class {
     }
 
     createListView() {
-        const listView = Entry.createElement('ul');
+        const listView = Entry.createElement('div');
         listView.addClass('entrySceneListWorkspace');
 
-        if (Entry.sceneEditable && $) {
-            $(listView).sortable({
-                start: (event, ui) => {
-                    ui.item.data('start_pos', ui.item.index());
-                },
-                stop: (event, ui) => {
-                    Entry.scene.moveScene(
-                        ui.item.data('start_pos'), ui.item.index());
-                    this.isFirstTouch = false;
-                },
+        this.sceneSortableListWidget = new EntryTool({
+            type: 'sortableWidget',
+            data: {
+                height: '100%',
+                sortableTarget: ['entrySceneRemoveButtonWorkspace', 'entrySceneInputCover'],
+                lockAxis: 'x',
                 axis: 'x',
-                tolerance: 'pointer',
-                cancel: 'input:focus',
+                items: this._getSortableSceneList(),
+            },
+            container: listView,
+        });
+        if (Entry.sceneEditable) {
+            this.sceneSortableListWidget.on('change', ([newIndex, oldIndex]) => {
+                Entry.scene.moveScene(newIndex, oldIndex);
             });
         }
         return listView;
+    }
+
+    updateSceneView() {
+        if (this.sceneSortableListWidget) {
+            this.sceneSortableListWidget.setData({
+                items: this._getSortableSceneList(),
+            });
+        }
+    }
+
+    _getSortableSceneList() {
+        if (!this.scenes_ || this.scenes_.length === 0) {
+            return [];
+        }
+
+        return this.scenes_.map((value) => {
+            return {
+                key: value.id,
+                item: value.view,
+            };
+        });
     }
 
     /**
@@ -138,25 +148,18 @@ Entry.Scene = class {
         if (Entry.sceneEditable) {
             scene.removeButton = this.createRemoveButton(scene, removeButtonCover);
 
-            Entry.ContextMenu.onContextmenu(
-                $(viewTemplate),
-                (coordinate) => {
-                    const options = [
-                        {
-                            text: Lang.Workspace.duplicate_scene,
-                            enable: Entry.engine.isState('stop') && !this.isMax(),
-                            callback: function() {
-                                Entry.scene.cloneScene(scene);
-                            },
+            Entry.ContextMenu.onContextmenu(viewTemplate, (coordinate) => {
+                const options = [
+                    {
+                        text: Lang.Workspace.duplicate_scene,
+                        enable: Entry.engine.isState('stop') && !this.isMax(),
+                        callback: function() {
+                            Entry.scene.cloneScene(scene);
                         },
-                    ];
-                    Entry.ContextMenu.show(
-                        options,
-                        'workspace-contextmenu',
-                        coordinate
-                    );
-                }
-            );
+                    },
+                ];
+                Entry.ContextMenu.show(options, 'workspace-contextmenu', coordinate);
+            });
         }
 
         scene.view = viewTemplate;
@@ -168,13 +171,7 @@ Entry.Scene = class {
         return Entry.createElement('button')
             .addClass('entrySceneRemoveButtonWorkspace')
             .bindOnClick((e) => {
-                e.stopPropagation();
                 if (Entry.engine.isState('run')) return;
-                if (this.isFirstTouch) {
-                    this.isFirstTouch = false;
-                    return;
-                }
-
                 Entry.do('sceneRemove', scene.id);
             })
             .appendTo(removeButtonCover);
@@ -203,16 +200,6 @@ Entry.Scene = class {
         nameField.addClass('entrySceneFieldWorkspace');
         nameField.value = scene.name;
 
-        nameField.addEventListener('click', (e) => {
-            if (this.isFirstTouch) {
-                this.isFirstTouch = false;
-                return;
-            }
-
-            nameField.focus();
-        });
-
-
         nameField.addEventListener('keyup', ({ keyCode: code }) => {
             if (Entry.isArrowOrBackspace(code)) {
                 return;
@@ -236,6 +223,12 @@ Entry.Scene = class {
             if (nameField.value !== scene.name) {
                 Entry.do('sceneRename', scene.id, nameField.value);
             }
+
+            const { playground = {} } = Entry;
+            const { mainWorkspace } = playground;
+            if (mainWorkspace) {
+                mainWorkspace.reDraw();
+            }
         });
 
         if (!Entry.sceneEditable) {
@@ -246,20 +239,16 @@ Entry.Scene = class {
     }
 
     createViewTemplate(scene) {
-        const viewTemplate = Entry.createElement('li', scene.id);
+        const viewTemplate = Entry.createElement('div', scene.id);
         viewTemplate.addClass('entrySceneElementWorkspace  entrySceneButtonWorkspace minValue');
         $(viewTemplate).on('mousedown touchstart', (e) => {
             if (Entry.engine.isState('run')) {
-                e.preventDefault();
                 return;
             }
             if (Entry.scene.selectedScene !== scene) {
                 Entry.do('sceneSelect', scene.id);
-
                 if (e.type === 'touchstart') {
-                    this.isFirstTouch = true;
-                } else {
-                    this._focusSceneNameField(scene);
+                    e.preventDefault();
                 }
             }
         });
@@ -267,15 +256,16 @@ Entry.Scene = class {
     }
 
     updateView() {
-        if (!Entry.type || Entry.type == 'workspace') {
-            var parent = this.listView_;
-            this.getScenes().forEach(({ view }) => parent.appendChild(view));
+        if (!Entry.type || Entry.type === 'workspace') {
+            // var parent = this.listView_;
+            // this.getScenes().forEach(({ view }) => parent.appendChild(view));
 
             if (this.addButton_) {
                 if (!this.isMax()) this.addButton_.removeClass('entryRemove');
                 else this.addButton_.addClass('entryRemove');
             }
         }
+        this.updateSceneView();
         this.resize();
     }
 
@@ -289,8 +279,7 @@ Entry.Scene = class {
             this.scenes_ = [];
             this.scenes_.push(this.createScene());
         } else {
-            for (var i = 0, len = scenes.length; i < len; i++)
-                this.generateElement(scenes[i]);
+            for (var i = 0, len = scenes.length; i < len; i++) this.generateElement(scenes[i]);
         }
 
         this.selectScene(this.getScenes()[0]);
@@ -300,8 +289,7 @@ Entry.Scene = class {
      * @param {scene model} scene
      */
     addScene(scene, index) {
-        if (scene === undefined || typeof scene === 'string')
-            scene = this.createScene(scene);
+        if (scene === undefined || typeof scene === 'string') scene = this.createScene(scene);
 
         if (!scene.view) this.generateElement(scene);
 
@@ -321,11 +309,7 @@ Entry.Scene = class {
      */
     removeScene(scene) {
         if (this.getScenes().length <= 1) {
-            Entry.toast.alert(
-                Lang.Msgs.runtime_error,
-                Lang.Workspace.Scene_delete_error,
-                false
-            );
+            Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.Scene_delete_error, false);
             return;
         }
 
@@ -424,6 +408,7 @@ Entry.Scene = class {
         this.getScenes().splice(end, 0, this.getScenes().splice(start, 1)[0]);
         Entry.container.updateObjectsOrder();
         Entry.stage.sortZorder();
+        this.updateSceneView();
         //style properties are not removed sometimes
         $('.entrySceneElementWorkspace').removeAttr('style');
     }
@@ -466,11 +451,7 @@ Entry.Scene = class {
      */
     createScene(sceneId) {
         var regex = /[0-9]/;
-        var name = Entry.getOrderedName(
-            Lang.Blocks.SCENE + ' ',
-            this.scenes_,
-            'name'
-        );
+        var name = Entry.getOrderedName(Lang.Blocks.SCENE + ' ', this.scenes_, 'name');
         if (!regex.test(name)) {
             name += '1';
         }
@@ -489,11 +470,7 @@ Entry.Scene = class {
      */
     cloneScene(scene) {
         if (this.isMax()) {
-            Entry.toast.alert(
-                Lang.Msgs.runtime_error,
-                Lang.Workspace.Scene_add_error,
-                false
-            );
+            Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.Scene_add_error, false);
             return;
         }
 
@@ -521,7 +498,6 @@ Entry.Scene = class {
             container.adjustClonedValues(oldIds, newIds);
             var WS = Entry.getMainWS();
             WS && WS.board && WS.board.reDraw();
-            this._focusSceneNameField(clonedScene);
             this.isSceneCloning = false;
             container.setCurrentObjects();
             container.updateObjectsOrder();
@@ -564,7 +540,7 @@ Entry.Scene = class {
             var width = parseFloat(Entry.computeInputWidth(scene.name));
             var adjusted = width * 10 / 9;
             if (scene === this.selectedScene) diff = adjusted - width;
-            $(scene.inputWrapper).width(adjusted + 'px');
+            // $(scene.inputWrapper).width(adjusted + 'px');
             var viewWidth = view.width();
             if (isSelectedView) selectedViewWidth = viewWidth;
             normWidth += viewWidth + LEFT_MARGIN;
@@ -586,7 +562,7 @@ Entry.Scene = class {
                 scene = scenes[i];
                 if (selectedScene.id != scene.id) {
                     scene.view.removeClass('minValue');
-                    $(scene.inputWrapper).width(fieldWidth);
+                    // $(scene.inputWrapper).width(fieldWidth);
                 } else scene.view.addClass('minValue');
             }
         }
@@ -606,11 +582,6 @@ Entry.Scene = class {
         $(this.listView_).html('');
         this.scenes_ = [];
         this.selectedScene = null;
-    }
-
-    _focusSceneNameField(scene) {
-        var input = scene.view && scene.view.nameField;
-        input && input.focus && input.focus();
     }
 
     getDom(query) {
