@@ -13,7 +13,7 @@ class ColorSpoid extends EventEmitter {
     }
 
     get DRAW_OFFSET_Y() {
-        return Entry.isMobile() ? -23 : 28;
+        return Entry.isMobile() ? 49 : 0;
     }
 
     get TRANSFORM_OFFSET_Y() {
@@ -89,7 +89,7 @@ class ColorSpoid extends EventEmitter {
     drawCloneImage(mousePos) {
         const { left = 0, top = 0, width, height } = this.canvasPosition;
         let x = Math.floor((mousePos.clientX - left) * 640 / width) + 29;
-        let y = Math.floor((mousePos.clientY - top) * 360 / height) + this.DRAW_OFFSET_Y;
+        let y = Math.floor((mousePos.clientY - top - this.DRAW_OFFSET_Y) * 360 / height) + 28;
         this.colorSpoidCtx.drawImage(this.clonedCanvas, x, y, 57, 57, 0, 0, 114, 114);
     }
 
