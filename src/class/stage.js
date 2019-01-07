@@ -134,7 +134,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
 
     this.initWall();
     this.render();
-    this.colorSpoid = new ColorSpoid(canvas);
+    this.colorSpoid = new ColorSpoid(this, canvas);
 };
 
 Entry.Stage.prototype.render = function stageRender() {
@@ -705,5 +705,5 @@ Entry.Stage.prototype.setEntitySelectable = function(value) {
 };
 
 Entry.Stage.prototype.isEntitySelectable = function() {
-    return Entry.engine.isState('stop') && this._entitySelectable;
+    return Entry.engine.isState('stop') && this._entitySelectable && !this.colorSpoid.isRunning;
 };

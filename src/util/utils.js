@@ -956,10 +956,10 @@ Entry.hex2rgb = function(hex) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
         ? {
-            r: parseInt(result[1], 16),
-            g: parseInt(result[2], 16),
-            b: parseInt(result[3], 16),
-        }
+              r: parseInt(result[1], 16),
+              g: parseInt(result[2], 16),
+              b: parseInt(result[3], 16),
+          }
         : null;
 };
 
@@ -2624,4 +2624,17 @@ Entry.Utils.focusIfNotActive = function(dom) {
     if (!Entry.Utils.isDomActive(dom)) {
         dom.focus && dom.focus();
     }
+};
+
+// 터치와 마우스의 이벤트를 맞춰주는 함수
+Entry.Utils.getMouseEvent = function(event) {
+    let mouseEvent;
+    if (event.originalEvent && event.originalEvent.touches) {
+        mouseEvent = event.originalEvent.touches[0];
+    } else if (event.touches) {
+        mouseEvent = event.touches[0];
+    } else {
+        mouseEvent = event;
+    }
+    return mouseEvent;
 };
