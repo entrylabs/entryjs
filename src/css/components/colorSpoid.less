@@ -44,12 +44,23 @@
         width: 114px;
         height: 114px;
         border-radius: 57px;
+        -webkit-mask-image: -webkit-radial-gradient(circle, white 100%, black 100%);
         overflow: hidden;
-        .magnify {
+        .innerCanvasWrapper {
             position: absolute;
-            top: 58px;
-            left: 58px;
-            box-shadow: -1px 1px 1px 0 rgba(0, 0, 0, 0.19);
+            top: 2px;
+            left: 2px;
+            width: 110px;
+            height: 110px;
+            border-radius: 57px;
+            -webkit-mask-image: -webkit-radial-gradient(circle, white 100%, black 100%);
+            overflow: hidden;
+            .magnify {
+                position: absolute;
+                top: 56px;
+                left: 56px;
+                box-shadow: -1px 1px 1px 0 rgba(0, 0, 0, 0.19);
+            }
         }
     }
 

@@ -7,31 +7,21 @@ class ColorSpoid extends EventEmitter {
         super();
         this.stage = stage;
         this.mainCanvas = canvas;
+        this.mainCanvasCtx = canvas.getContext('2d');
         this.canUpdate = true;
         this.color = '';
-        // this.renderComponet();
-    }
-
-    get DRAW_OFFSET_Y() {
-        return Entry.isMobile() ? 49 : 0;
     }
 
     get TRANSFORM_OFFSET_Y() {
         return Entry.isMobile() ? 107 : 57;
     }
 
-    get CLIENT_OFFSET_Y() {
-        return Entry.isMobile() ? 50 : 0;
+    get INNER_TRANSFORM_OFFSET_Y() {
+        return Entry.isMobile() ? 156 : 0;
     }
 
-    cloneCanvas() {
-        this.clonedCanvas = document.createElement('canvas');
-        this.clonedContext = this.clonedCanvas.getContext('2d');
-        this.clonedCanvas.width = 760;
-        this.clonedCanvas.height = 480;
-        this.clonedContext.fillStyle = 'white';
-        this.clonedContext.fillRect(0, 0, 760, 480);
-        this.clonedContext.drawImage(this.mainCanvas, 57, 57);
+    get CLIENT_OFFSET_Y() {
+        return Entry.isMobile() ? 52 : 0;
     }
 
     renderComponet() {
@@ -41,7 +31,9 @@ class ColorSpoid extends EventEmitter {
         this.mainCanvas.addClass('isPickerMode');
         const magnify = `
             <div class="canvasWrapper">
-                <canvas width="640" height="360" class="magnify"/>
+                <div class="innerCanvasWrapper">
+                    <canvas width="640" height="360" class="magnify"/>
+                </div>
             </div>
             <div class="canvasCircle"/>
             <div class="colorPreview">
@@ -58,20 +50,17 @@ class ColorSpoid extends EventEmitter {
 
         this.canvasPosition = this.mainCanvas.getBoundingClientRect();
         const { width, height } = this.canvasPosition;
-        const width2x = width * 2;
-        const height2x = height * 2;
+        const width2x = width * 3;
+        const height2x = height * 3;
+        $canvas.attr('width', width2x);
+        $canvas.attr('height', height2x);
         /** @type {CanvasRenderingContext2D} */
         this.colorSpoidCtx = $canvas.get(0).getContext('2d');
-        this.colorSpoidCtx.fillStyle = 'white';
-        this.colorSpoidCtx.fillRect(0, 0, 640, 360);
-        this.colorSpoidCtx.drawImage(this.mainCanvas, 0, 0);
         this.colorSpoidCtx.imageSmoothingEnabled = false;
-        $canvas.css('width', width2x);
-        $canvas.css('height', height2x);
+        this.colorSpoidCtx.drawImage(this.mainCanvas, 0, 0, width2x, height2x);
         $('body').append(this.$curtain);
         $('body').append(this.$colorSpoid);
         this.addEventListner();
-        this.$colorSpoid.addClass('isShow');
     }
 
     run() {
@@ -96,51 +85,36 @@ class ColorSpoid extends EventEmitter {
         this.stage.handle.setVisible(true);
     }
 
-    drawCloneImage(mousePos) {
-        const { left = 0, top = 0, width, height } = this.canvasPosition;
-        this.$canvas.css(
-            'transform',
-            `translate3d(${mousePos.pageX - 57}px, ${mousePos.pageY -
-                this.TRANSFORM_OFFSET_Y}px, 0)`
-        );
-        // let x = Math.floor((mousePos.clientX - left) * 640 / width) + 29;
-        // let y = Math.floor((mousePos.clientY - top - this.DRAW_OFFSET_Y) * 360 / height) + 28;
-        // this.colorSpoidCtx.drawImage(this.clonedCanvas, x, y, 57, 57, 0, 0, 114, 114);
-    }
-
-    updateMagnifier({ isShow, transform, position, transform2 }) {
+    updateMagnifier({ isShow, wrapperTransform, innerTransform, colorPos }) {
         if (isShow) {
-            // this.$colorSpoid.addClass('isShow');
-            this.$colorSpoid[0].style.transform = transform; //.css('transform', transform);
-            // this.$colorSpoid.css('transform', transform);
-            this.$canvas.css('transform', transform2);
+            this.$colorSpoid.addClass('isShow');
+            this.$colorSpoid.css('transform', wrapperTransform);
+            this.$canvas.css('transform', innerTransform);
         } else {
-            // this.$colorSpoid.removeClass('isShow');
+            this.$colorSpoid.removeClass('isShow');
         }
-        // if (this.canUpdate) {
-        //     this.canUpdate = false;
-        //     requestAnimationFrame(() => {
-        //         if (this.colorSpoidCtx && position) {
-        //             // this.drawCloneImage(event);
-        //             const { x = 0, y = 0 } = position;
-        //             const imageData = this.colorSpoidCtx.getImageData(x, y, 1, 1);
-        //             const [red, green, blue] = imageData.data;
-        //             const background = 'rgb(' + red + ',' + green + ',' + blue + ')';
-        //             this.$colorPreview.css('background-color', background);
-        //             this.$magnifyRect.css('background-color', background);
-        //             this.color = `#${_padStart(red.toString(16), 2, '0')}${_padStart(
-        //                 green.toString(16),
-        //                 2,
-        //                 '0'
-        //             )}${_padStart(blue.toString(16), 2, '0')}`;
-        //         }
-        //         this.canUpdate = true;
-        //     });
-        // }
+        if (this.canUpdate) {
+            this.canUpdate = false;
+            requestAnimationFrame(() => {
+                if (this.colorSpoidCtx && colorPos) {
+                    const { x = 0, y = 0 } = colorPos;
+                    const imageData = this.mainCanvasCtx.getImageData(x, y, 1, 1);
+                    const [red, green, blue] = imageData.data;
+                    const background = 'rgb(' + red + ',' + green + ',' + blue + ')';
+                    this.$colorPreview.css('background-color', background);
+                    this.$magnifyRect.css('background-color', background);
+                    this.color = `#${_padStart(red.toString(16), 2, '0')}${_padStart(
+                        green.toString(16),
+                        2,
+                        '0'
+                    )}${_padStart(blue.toString(16), 2, '0')}`;
+                }
+                this.canUpdate = true;
+            });
+        }
     }
 
     moveMagnifer(event) {
-        console.time('a');
         const { left = 0, top = 0, width, height } = this.canvasPosition;
         const mouseEvent = Entry.Utils.getMouseEvent(event);
         if (
@@ -150,19 +124,18 @@ class ColorSpoid extends EventEmitter {
             mouseEvent.clientY > top + this.CLIENT_OFFSET_Y &&
             mouseEvent.clientY < height + top + this.CLIENT_OFFSET_Y
         ) {
-            const a = mouseEvent.clientX - left;
-            const b = mouseEvent.clientY - top;
-
-            let x = Math.floor((mouseEvent.clientX - left) * 640 / width); // + 29;
-            let y = Math.floor((mouseEvent.clientY - top) * 360 / height); // + 28;
-
+            const innerX = mouseEvent.clientX - left;
+            const innerY = mouseEvent.clientY - top;
+            const x = Math.floor(innerX * 640 / width); // + 29;
+            const y = Math.floor((innerY - this.CLIENT_OFFSET_Y) * 360 / height); // + 28;
             this.updateMagnifier({
                 event: mouseEvent,
                 isShow: true,
-                transform: `translate3d(${mouseEvent.pageX - 57}px, ${mouseEvent.pageY -
+                wrapperTransform: `translate3d(${mouseEvent.pageX - 57}px, ${mouseEvent.pageY -
                     this.TRANSFORM_OFFSET_Y}px, 0)`,
-                transform2: `translate3d(${-a * 2}px, ${-b * 2}px, 0)`,
-                position: {
+                innerTransform: `translate3d(${-innerX * 3}px, ${-innerY * 3 +
+                    this.INNER_TRANSFORM_OFFSET_Y}px, 0)`,
+                colorPos: {
                     x,
                     y,
                 },
@@ -173,7 +146,6 @@ class ColorSpoid extends EventEmitter {
                 isShow: false,
             });
         }
-        console.timeEnd('a');
     }
 
     addEventListner() {
