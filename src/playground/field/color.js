@@ -135,8 +135,6 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
                 positionDom: this.svgGroup,
                 // boundrayDom: this.boundrayDom,
                 onOutsideClick: (color) => {
-                    console.log(color);
-                    console.log('???onOutsideClick');
                     if (this.isRunSpoid) {
                         return;
                     }
