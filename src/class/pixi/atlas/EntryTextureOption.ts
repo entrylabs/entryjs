@@ -3,6 +3,8 @@ import Rectangle = PIXI.Rectangle;
 import { MaxRectsPacker } from '../../maxrect-packer/maxrects_packer';
 import { clog } from '../utils/logs';
 
+declare let $:any;
+
 interface ITexOption {
 }
 
@@ -15,7 +17,8 @@ interface IAtlasOption extends ITexOption {
 
 export class EntryTextureOption {
 
-    readonly USE_ATLAS:boolean = false;
+    private _USE_ATLAS:boolean = false;
+    get USE_ATLAS():boolean { return this._USE_ATLAS; }
 
     private readonly GPU_TEX_MAX_SIZE:number;
 
@@ -30,8 +33,21 @@ export class EntryTextureOption {
     readonly texMaxRect:Rectangle;
 
     constructor(stageWidth:number, stageHeight:number) {
-        clog("USE_ATLAS", this.USE_ATLAS);
+
+        this._USE_ATLAS = this._isSpriteSheetEnabled();
+
+
+        //for debug
+        setTimeout(()=>{
+            if(this.USE_ATLAS) {
+                $(".workspace_name_wrapper>input").css("color","yellow")
+            }
+            clog(`%c  USE_ATLAS = ${this.USE_ATLAS}  `, 'background: #222; color: #bada55');
+        }, 2000);
+
+
         this.GPU_TEX_MAX_SIZE = this.computeMaxTextureSize(4096);
+
         this._texStageRatio = 1;
         this.texMaxRect = this.getTexRect(stageWidth, stageHeight, this._texStageRatio, this.GPU_TEX_MAX_SIZE);
 
@@ -73,4 +89,17 @@ export class EntryTextureOption {
         clog("Max texture size : " + size);
         return size;
     }
+
+    private _isSpriteSheetEnabled():boolean {
+        let spriteSheetString = "ss=1";
+        let url = window.location.href;
+        let query = url.split("?")[1];
+        if(!query) return false;
+        let arr = query.split("&");
+        for (let i = 0 ; i < arr.length ; i++) {
+            if(arr[i] == spriteSheetString) return true;
+        }
+        return false;
+    }
+
 }

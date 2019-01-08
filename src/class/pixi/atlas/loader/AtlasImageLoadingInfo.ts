@@ -154,11 +154,12 @@ export class AtlasImageLoadingInfo {
 
         if(isScale1 && isSameSizeWithData) return null;
 
-        if(!isScale1) {
-            let sfx = r.scaleFactorX.toFixed(3);
-            let sfy = r.scaleFactorY.toFixed(3);
-            clog(`tex-rezie (${sw},${sh})->(${r.width},${r.height}). factor:(${sfx},${sfy})`);
-        }
+        // if(!isScale1) {
+        //     let sfx = r.scaleFactorX.toFixed(3);
+        //     let sfy = r.scaleFactorY.toFixed(3);
+        //     clog(`tex-rezie (${sw},${sh})->(${r.width},${r.height}). factor:(${sfx},${sfy})`);
+        // }
+
         if(!isSameSizeWithData) {
             cwarn(`Image size not match. data(w=${r.dataWidth},h=${r.dataHeight}), real(w=${sw},h=${sh})`);
         }
