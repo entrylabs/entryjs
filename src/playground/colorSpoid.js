@@ -35,12 +35,14 @@ class ColorSpoid extends EventEmitter {
     }
 
     renderComponet() {
-        this.cloneCanvas();
+        // this.cloneCanvas();
         this.stage.handle.setVisible(false);
         this.isRunning = true;
         this.mainCanvas.addClass('isPickerMode');
         const magnify = `
-            <canvas width="114px" height="114px" class="magnify"/>
+            <div class="canvasWrapper">
+                <canvas width="640" height="360" class="magnify"/>
+            </div>
             <div class="canvasCircle"/>
             <div class="colorPreview">
                 <div class="colorCircle"/>
@@ -50,18 +52,26 @@ class ColorSpoid extends EventEmitter {
         this.$curtain = $('<div class="entryMagnifyCurtain">');
         this.$colorSpoid = $('<div class="entryMagnify" />').html(magnify);
         const $canvas = this.$colorSpoid.find('canvas');
+        this.$canvas = $canvas;
         this.$colorPreview = this.$colorSpoid.find('.colorPreview');
         this.$magnifyRect = this.$colorSpoid.find('.magnifyRect');
+
+        this.canvasPosition = this.mainCanvas.getBoundingClientRect();
+        const { width, height } = this.canvasPosition;
+        const width2x = width * 2;
+        const height2x = height * 2;
         /** @type {CanvasRenderingContext2D} */
         this.colorSpoidCtx = $canvas.get(0).getContext('2d');
         this.colorSpoidCtx.fillStyle = 'white';
-        this.colorSpoidCtx.fillRect(0, 0, 120, 120);
+        this.colorSpoidCtx.fillRect(0, 0, 640, 360);
+        this.colorSpoidCtx.drawImage(this.mainCanvas, 0, 0);
         this.colorSpoidCtx.imageSmoothingEnabled = false;
-        this.canvasPosition = this.mainCanvas.getBoundingClientRect();
+        $canvas.css('width', width2x);
+        $canvas.css('height', height2x);
         $('body').append(this.$curtain);
         $('body').append(this.$colorSpoid);
-        this.$colorSpoid.css('will-change', 'transform');
         this.addEventListner();
+        this.$colorSpoid.addClass('isShow');
     }
 
     run() {
@@ -88,40 +98,49 @@ class ColorSpoid extends EventEmitter {
 
     drawCloneImage(mousePos) {
         const { left = 0, top = 0, width, height } = this.canvasPosition;
-        let x = Math.floor((mousePos.clientX - left) * 640 / width) + 29;
-        let y = Math.floor((mousePos.clientY - top - this.DRAW_OFFSET_Y) * 360 / height) + 28;
-        this.colorSpoidCtx.drawImage(this.clonedCanvas, x, y, 57, 57, 0, 0, 114, 114);
+        this.$canvas.css(
+            'transform',
+            `translate3d(${mousePos.pageX - 57}px, ${mousePos.pageY -
+                this.TRANSFORM_OFFSET_Y}px, 0)`
+        );
+        // let x = Math.floor((mousePos.clientX - left) * 640 / width) + 29;
+        // let y = Math.floor((mousePos.clientY - top - this.DRAW_OFFSET_Y) * 360 / height) + 28;
+        // this.colorSpoidCtx.drawImage(this.clonedCanvas, x, y, 57, 57, 0, 0, 114, 114);
     }
 
-    updateMagnifier({ isShow, transform, event }) {
+    updateMagnifier({ isShow, transform, position, transform2 }) {
         if (isShow) {
-            this.$colorSpoid.addClass('isShow');
-            this.$colorSpoid.css('transform', transform);
+            // this.$colorSpoid.addClass('isShow');
+            this.$colorSpoid[0].style.transform = transform; //.css('transform', transform);
+            // this.$colorSpoid.css('transform', transform);
+            this.$canvas.css('transform', transform2);
         } else {
-            this.$colorSpoid.removeClass('isShow');
+            // this.$colorSpoid.removeClass('isShow');
         }
-        if (this.canUpdate) {
-            this.canUpdate = false;
-            requestAnimationFrame(() => {
-                if (this.colorSpoidCtx) {
-                    this.drawCloneImage(event);
-                    const imageData = this.colorSpoidCtx.getImageData(57, 57, 1, 1);
-                    const [red, green, blue] = imageData.data;
-                    const background = 'rgb(' + red + ',' + green + ',' + blue + ')';
-                    this.$colorPreview.css('background-color', background);
-                    this.$magnifyRect.css('background-color', background);
-                    this.color = `#${_padStart(red.toString(16), 2, '0')}${_padStart(
-                        green.toString(16),
-                        2,
-                        '0'
-                    )}${_padStart(blue.toString(16), 2, '0')}`;
-                }
-                this.canUpdate = true;
-            });
-        }
+        // if (this.canUpdate) {
+        //     this.canUpdate = false;
+        //     requestAnimationFrame(() => {
+        //         if (this.colorSpoidCtx && position) {
+        //             // this.drawCloneImage(event);
+        //             const { x = 0, y = 0 } = position;
+        //             const imageData = this.colorSpoidCtx.getImageData(x, y, 1, 1);
+        //             const [red, green, blue] = imageData.data;
+        //             const background = 'rgb(' + red + ',' + green + ',' + blue + ')';
+        //             this.$colorPreview.css('background-color', background);
+        //             this.$magnifyRect.css('background-color', background);
+        //             this.color = `#${_padStart(red.toString(16), 2, '0')}${_padStart(
+        //                 green.toString(16),
+        //                 2,
+        //                 '0'
+        //             )}${_padStart(blue.toString(16), 2, '0')}`;
+        //         }
+        //         this.canUpdate = true;
+        //     });
+        // }
     }
 
     moveMagnifer(event) {
+        console.time('a');
         const { left = 0, top = 0, width, height } = this.canvasPosition;
         const mouseEvent = Entry.Utils.getMouseEvent(event);
         if (
@@ -131,11 +150,22 @@ class ColorSpoid extends EventEmitter {
             mouseEvent.clientY > top + this.CLIENT_OFFSET_Y &&
             mouseEvent.clientY < height + top + this.CLIENT_OFFSET_Y
         ) {
+            const a = mouseEvent.clientX - left;
+            const b = mouseEvent.clientY - top;
+
+            let x = Math.floor((mouseEvent.clientX - left) * 640 / width); // + 29;
+            let y = Math.floor((mouseEvent.clientY - top) * 360 / height); // + 28;
+
             this.updateMagnifier({
                 event: mouseEvent,
                 isShow: true,
                 transform: `translate3d(${mouseEvent.pageX - 57}px, ${mouseEvent.pageY -
                     this.TRANSFORM_OFFSET_Y}px, 0)`,
+                transform2: `translate3d(${-a * 2}px, ${-b * 2}px, 0)`,
+                position: {
+                    x,
+                    y,
+                },
             });
         } else {
             this.updateMagnifier({
@@ -143,6 +173,7 @@ class ColorSpoid extends EventEmitter {
                 isShow: false,
             });
         }
+        console.timeEnd('a');
     }
 
     addEventListner() {

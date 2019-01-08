@@ -39,14 +39,18 @@
         box-shadow: 0.5px 0.5px 1px 0 rgba(0, 0, 0, 0.5);
     }
 
-    .magnify {
+    .canvasWrapper {
         position: absolute;
-        top: 1px;
-        left: 1px;
-        width: 112px;
-        height: 112px;
-        border-radius: 56px;
-        box-shadow: -1px 1px 1px 0 rgba(0, 0, 0, 0.19);
+        width: 114px;
+        height: 114px;
+        border-radius: 57px;
+        overflow: hidden;
+        .magnify {
+            position: absolute;
+            top: 58px;
+            left: 58px;
+            box-shadow: -1px 1px 1px 0 rgba(0, 0, 0, 0.19);
+        }
     }
 
     .canvasCircle {
