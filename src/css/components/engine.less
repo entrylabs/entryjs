@@ -99,7 +99,7 @@
     right: 6px;
     bottom: 12px;
     background-image: url('@{image_url}zoom_out_btn.png');
-    background-repeat: no-repeat; 
+    background-repeat: no-repeat;
     background-size: 16px auto;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper {
@@ -111,8 +111,14 @@
 
 .entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryRunButtonWorkspace_w,
 .entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryStopButtonWorkspace_w,
-.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryPauseButtonWorkspace_full,
-.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryRestartButtonWorkspace_full,{
+.entryPopupWindow
+    > .entryEngineWorkspace_w
+    > .entryEngineButtonWrapper
+    .entryPauseButtonWorkspace_full,
+.entryPopupWindow
+    > .entryEngineWorkspace_w
+    > .entryEngineButtonWrapper
+    .entryRestartButtonWorkspace_full {
     display: inline-block;
     overflow: hidden;
     flex: none;
@@ -127,42 +133,57 @@
     color: #4f80ff;
     line-height: 48px;
 }
-.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryRunButtonWorkspace_w:before,
-.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryRestartButtonWorkspace_full:before {
+.entryPopupWindow
+    > .entryEngineWorkspace_w
+    > .entryEngineButtonWrapper
+    .entryRunButtonWorkspace_w:before,
+.entryPopupWindow
+    > .entryEngineWorkspace_w
+    > .entryEngineButtonWrapper
+    .entryRestartButtonWorkspace_full:before {
     display: inline-block;
     width: 14px;
     height: 18px;
     margin-right: 8px;
     vertical-align: middle;
     background-image: url('@{image_url}layers_icon_button_play_norx2.png');
-    background-repeat: no-repeat; 
+    background-repeat: no-repeat;
     background-size: 14px auto;
     content: '';
 }
-.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryStopButtonWorkspace_w:before {
+.entryPopupWindow
+    > .entryEngineWorkspace_w
+    > .entryEngineButtonWrapper
+    .entryStopButtonWorkspace_w:before {
     display: inline-block;
     width: 16px;
     height: 16px;
     margin-right: 8px;
     vertical-align: middle;
     background-image: url('@{image_url}layers_icon_button_stop_norx2.png');
-    background-repeat: no-repeat; 
+    background-repeat: no-repeat;
     background-size: 16px auto;
     content: '';
 }
-.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryPauseButtonWorkspace_full:before {
+.entryPopupWindow
+    > .entryEngineWorkspace_w
+    > .entryEngineButtonWrapper
+    .entryPauseButtonWorkspace_full:before {
     display: inline-block;
     width: 16px;
     height: 16px;
     margin-right: 8px;
     vertical-align: middle;
     background-image: url('@{image_url}layers_icon_button_pause_norx2.png');
-    background-repeat: no-repeat; 
+    background-repeat: no-repeat;
     background-size: 16px auto;
     content: '';
 }
 
-.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper > .entryAddButtonWorkspace_w {
+.entryPopupWindow
+    > .entryEngineWorkspace_w
+    > .entryEngineButtonWrapper
+    > .entryAddButtonWorkspace_w {
     display: none;
 }
 
@@ -310,6 +331,17 @@
     text-align: center;
     letter-spacing: -0.4px;
     line-height: 14px;
+
+    > input {
+        font-size: 12px;
+        line-height: 14px;
+        border: none;
+        font-weight: bold;
+        color: #4f80ff;
+        text-align: center;
+        letter-spacing: -0.4px;
+        user-select: none;
+    }
 }
 
 .entryEngineBlueWorkspace > .entryMouseViewWorkspace {
@@ -468,7 +500,6 @@
     background-color: #f9f9f9;
     clear: both;
     z-index: 10;
-
 }
 
 .entryCoordinateButtonWorkspace {
