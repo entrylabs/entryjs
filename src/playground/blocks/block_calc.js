@@ -2174,12 +2174,11 @@ module.exports = {
                 class: 'calc_string',
                 isNotFor: [],
                 func: function(sprite, script) {
-                    return script
-                        .getStringValue('STRING', script)
-                        .replace(
-                            new RegExp(script.getStringValue('OLD_WORD', script), 'gm'),
-                            script.getStringValue('NEW_WORD', script)
-                        );
+                    const old_word = script.getStringValue('OLD_WORD', script).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+                    return script.getStringValue('STRING', script).replace(
+                        new RegExp(old_word, "gm"), script.getStringValue('NEW_WORD', script)
+                    );
                 },
                 syntax: {
                     js: [],
