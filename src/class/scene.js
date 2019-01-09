@@ -103,10 +103,9 @@ Entry.Scene = class {
     }
 
     updateSceneView() {
+        const items = this._getSortableSceneList();
         if (this.sceneSortableListWidget) {
-            this.sceneSortableListWidget.setData({
-                items: this._getSortableSceneList(),
-            });
+            setTimeout(() => this.sceneSortableListWidget.setData({ items }), 300);
         }
     }
 
@@ -538,7 +537,7 @@ Entry.Scene = class {
             view = $(view);
 
             var width = parseFloat(Entry.computeInputWidth(scene.name));
-            var adjusted = width * 10 / 9;
+            var adjusted = (width * 10) / 9;
             if (scene === this.selectedScene) diff = adjusted - width;
             // $(scene.inputWrapper).width(adjusted + 'px');
             var viewWidth = view.width();
@@ -579,9 +578,9 @@ Entry.Scene = class {
 
     clear() {
         this.scenes_.forEach((s) => Entry.stage.removeObjectContainer(s));
-        $(this.listView_).html('');
         this.scenes_ = [];
         this.selectedScene = null;
+        this.updateView();
     }
 
     getDom(query) {
