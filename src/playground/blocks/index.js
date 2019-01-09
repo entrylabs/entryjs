@@ -73,6 +73,7 @@ Entry.HARDWARE_LIST = {
     '1.A': Entry.Cobl,
     '1.B': Entry.Blacksmith,
     '1.C': Entry.CodingBox,
+    '1.D': Entry.BINGLES,
     '2.4': Entry.Hamster,
     '2.5': Entry.Albert,
     '2.9': Entry.Turtle,
@@ -119,7 +120,6 @@ Entry.HARDWARE_LIST = {
     '22.1': Entry.Microbit,
     '23.1': Entry.MRT,
     '24.1': Entry.Dash,
-    '1.D': Entry.BINGLES,
     '25.1': Entry.sciencecube,
     '26.1': Entry.Codingmachine,
     '27.1': Entry.ProboConnect,
@@ -147,15 +147,15 @@ require('./block_expansion_behaviorconduct_lifesafety');
 Entry.EXPANSION_BLOCK_LIST = {
     weather: Entry.Expansion_Weather,
     festival: Entry.EXPANSION_BLOCK.festival,
-    translate : Entry.EXPANSION_BLOCK.translate,
-    behaviorConductDisaster : Entry.EXPANSION_BLOCK.behaviorConductDisaster,
-    behaviorConductLifeSafety : Entry.EXPANSION_BLOCK.behaviorConductLifeSafety
+    translate: Entry.EXPANSION_BLOCK.translate,
+    behaviorConductDisaster: Entry.EXPANSION_BLOCK.behaviorConductDisaster,
+    behaviorConductLifeSafety: Entry.EXPANSION_BLOCK.behaviorConductLifeSafety,
 };
 
 function getBlockObject(items) {
     const blockObject = {};
-    items.forEach((item)=> {
-        if('getBlocks' in item) {
+    items.forEach((item) => {
+        if ('getBlocks' in item) {
             Object.assign(blockObject, item.getBlocks());
         }
     });
@@ -175,10 +175,10 @@ module.exports = {
             judgementBlock,
             calcBlock,
             variableBlock,
-            funcBlock
+            funcBlock,
         ];
         const expansionBlockList = Object.values(Entry.EXPANSION_BLOCK_LIST);
         const hardwareList = Object.values(Entry.HARDWARE_LIST);
         return getBlockObject(basicBlockList.concat(hardwareList).concat(expansionBlockList));
-    }
-}
+    },
+};

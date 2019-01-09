@@ -4,8 +4,8 @@ Entry.Codingmachine = {
     url: 'http://wonn.co.kr/',
     imageName: 'codingmachine.png', //thumbnail
     title: {
-        "ko": '코딩머신',
-        "en": 'Codingmachine'
+        ko: '코딩머신',
+        en: 'Codingmachine',
     },
     Cmd: {
         LED: 1,
@@ -45,7 +45,7 @@ Entry.Codingmachine = {
         ANALOG_A5: 14,
         /*추가*/
     },
-    setZero: function () {
+    setZero: function() {
         Entry.hw.sendQueue.CMD = [
             0xf0,
             0x00,
@@ -155,7 +155,7 @@ Entry.Codingmachine = {
         mode: 'both',
     },
 };
-Entry.Codingmachine.setLanguage = function () {
+Entry.Codingmachine.setLanguage = function() {
     return {
         ko: {
             template: {
@@ -178,7 +178,7 @@ Entry.Codingmachine.setLanguage = function () {
                 codingmachine_analog_in: '아날로그 %1 번 센서값',
                 codingmachine_digital_pwm: '디지털 출력 %1 번 세기로 출력하기 %2 %3',
                 codingmachine_servo: '디지털  %1 핀의 서보모터를 %2 각도로 정하기 %3',
-            }
+            },
         },
         en: {
             template: {
@@ -201,28 +201,28 @@ Entry.Codingmachine.setLanguage = function () {
                 codingmachine_analog_in: 'analog %1 sensor',
                 codingmachine_digital_pwm: '디지털 출력 %1 번 세기로 출력하기 %2 %3',
                 codingmachine_servo: '디지털  %1 핀의 서보모터를 %2 각도로 정하기 %3',
-            }
-        }
-    }
-}
-Entry.Codingmachine.getBlocks = function () {
+            },
+        },
+    };
+};
+Entry.Codingmachine.getBlocks = function() {
     return {
         //region JDKit
         /* ----------- 추가 --------- */
         codingmachine_analog_in: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['A4', 1],
-                        ['A5', 2],
-                    ],
+                    options: [['A4', 1], ['A5', 2]],
                     value: 1,
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -235,13 +235,11 @@ Entry.Codingmachine.getBlocks = function () {
             },
             class: 'codingmachine_arduino',
             isNotFor: ['Codingmachine'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 var sensorData = Entry.hw.portData.CMD;
                 var analog_sel = script.getField('ANALOG_SENSOR');
-                if (analog_sel == 1)
-                    return sensorData[Entry.Codingmachine.Sensor.ANALOG_A4];
-                else if (analog_sel == 2)
-                    return sensorData[Entry.Codingmachine.Sensor.ANALOG_A5];
+                if (analog_sel == 1) return sensorData[Entry.Codingmachine.Sensor.ANALOG_A4];
+                else if (analog_sel == 2) return sensorData[Entry.Codingmachine.Sensor.ANALOG_A5];
                 else return sensorData[Entry.Codingmachine.Sensor.ANALOG_A4];
             },
             syntax: { js: [], py: [] },
@@ -257,11 +255,11 @@ Entry.Codingmachine.getBlocks = function () {
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
         },
-            
-       
+
         /* ----------- 추가 --------- */
         codingmachine_digital_in: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -270,10 +268,10 @@ Entry.Codingmachine.getBlocks = function () {
                     type: 'Dropdown',
                     options: [
                         //3,4,5,6,7,11,12,13
-                        ['D3', 0],/*D3,D7*/
-                        ['D4', 1],/*D4*/
-                        ['D5', 2],/*D5*/
-                        ['D6', 3],/*D6*/
+                        ['D3', 0] /*D3,D7*/,
+                        ['D4', 1] /*D4*/,
+                        ['D5', 2] /*D5*/,
+                        ['D6', 3] /*D6*/,
                         ['D7', 4],
                         ['D11', 5],
                         ['D12', 6],
@@ -281,6 +279,8 @@ Entry.Codingmachine.getBlocks = function () {
                     ],
                     value: 0,
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -293,17 +293,21 @@ Entry.Codingmachine.getBlocks = function () {
             },
             class: 'codingmachine_arduino',
             isNotFor: ['Codingmachine'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 var sensorData = Entry.hw.portData.CMD;
                 var digital_pin = script.getField('DIGITAL_PIN');
                 if (digital_pin <= 3) {
-                    return sensorData[Entry.Codingmachine.Sensor.DIGITAL_IN1] & (0x01 << digital_pin) ? 0 : 1;
-                }
-                else if (digital_pin == 4) {
+                    return sensorData[Entry.Codingmachine.Sensor.DIGITAL_IN1] &
+                        (0x01 << digital_pin)
+                        ? 0
+                        : 1;
+                } else if (digital_pin == 4) {
                     return sensorData[Entry.JDKit.Codingmachine.DIGITAL_IN2] & (0x01 << 0) ? 0 : 1;
-                }
-                else {
-                    return sensorData[Entry.Codingmachine.Sensor.DIGITAL_IN2] & (0x01 << (digital_pin - 4)) ? 0 : 1;
+                } else {
+                    return sensorData[Entry.Codingmachine.Sensor.DIGITAL_IN2] &
+                        (0x01 << (digital_pin - 4))
+                        ? 0
+                        : 1;
                 }
             },
             syntax: { js: [], py: [] },
@@ -316,12 +320,11 @@ Entry.Codingmachine.getBlocks = function () {
                 params: [null],
                 type: 'codingmachine_button',
             },
-           isNotFor: ['Codingmachine'],
-           
+            isNotFor: ['Codingmachine'],
+
             syntax: { js: [], py: [] },
         },
-            
-        
+
         codingmachine_gyro: {
             template: Lang.template.jdkit_gyro,
             parent: 'jdkit_gyro',
@@ -331,21 +334,19 @@ Entry.Codingmachine.getBlocks = function () {
             },
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
-        },        
-           
-       
+        },
+
         codingmachine_ultrasonic: {
             template: Lang.template.jdkit_ultrasonic,
-            parent:'jdkit_ultrasonic',
+            parent: 'jdkit_ultrasonic',
             def: {
                 params: [null],
                 type: 'codingmachine_ultrasonic',
             },
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
-            },
-            
-        
+        },
+
         codingmachine_connect: {
             template: Lang.template.jdkit_connect,
             parent: 'jdkit_connect',
@@ -355,10 +356,8 @@ Entry.Codingmachine.getBlocks = function () {
             },
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
-
         },
-            
-        
+
         codingmachine_ready: {
             template: Lang.template.jdkit_ready,
             parent: 'jdkit_ready',
@@ -366,15 +365,15 @@ Entry.Codingmachine.getBlocks = function () {
                 params: [null],
                 type: 'codingmachine_ready',
             },
-           
+
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
-            },
-           
-        
+        },
+
         /* -------- 추가 ------- */
         codingmachine_servo: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -392,6 +391,8 @@ Entry.Codingmachine.getBlocks = function () {
                     ],
                     value: 3,
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -401,7 +402,7 @@ Entry.Codingmachine.getBlocks = function () {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -416,7 +417,7 @@ Entry.Codingmachine.getBlocks = function () {
             },
             class: 'codingmachine_arduino',
             isNotFor: ['Codingmachine'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 if (typeof Entry.hw.sendQueue.CMD == 'undefined')
                     Entry.hw.sendQueue.CMD = [
                         0xf0,
@@ -454,20 +455,18 @@ Entry.Codingmachine.getBlocks = function () {
         /* -------- 추가 ------- */
         /* -------- 추가 ------- */
         codingmachine_digital_pwm: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['D3', 1],
-                        ['D5', 2],
-                        ['D6', 3],
-                        ['D11', 4],
-                    ],
+                    options: [['D3', 1], ['D5', 2], ['D6', 3], ['D11', 4]],
                     value: 1,
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -477,7 +476,7 @@ Entry.Codingmachine.getBlocks = function () {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -492,7 +491,7 @@ Entry.Codingmachine.getBlocks = function () {
             },
             class: 'codingmachine_arduino',
             isNotFor: ['Codingmachine'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 if (typeof Entry.hw.sendQueue.CMD == 'undefined')
                     Entry.hw.sendQueue.CMD = [
                         0xf0,
@@ -521,7 +520,7 @@ Entry.Codingmachine.getBlocks = function () {
                 var cmd = Entry.hw.sendQueue.CMD;
                 var digital_pin = script.getField('DIGITAL_PIN', script);
                 var act_value = script.getNumberValue('ACTION_VALUE', script);
-                cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT3] = ((digital_pin << 4) & 0xf0);
+                cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT3] = (digital_pin << 4) & 0xf0;
                 cmd[Entry.Codingmachine.Cmd.DIGITAL_PWM] = act_value;
                 return script.callReturn();
             },
@@ -530,7 +529,8 @@ Entry.Codingmachine.getBlocks = function () {
         /* -------- 추가 ------- */
         /* -------- 추가 ------- */
         codingmachine_digital_out: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -538,10 +538,10 @@ Entry.Codingmachine.getBlocks = function () {
                     type: 'Dropdown',
                     options: [
                         //3,4,5,6,7,11,12,13
-                        ['D3', 0],/*D3,D7*/
-                        ['D4', 1],/*D4*/
-                        ['D5', 2],/*D5*/
-                        ['D6', 3],/*D6*/
+                        ['D3', 0] /*D3,D7*/,
+                        ['D4', 1] /*D4*/,
+                        ['D5', 2] /*D5*/,
+                        ['D6', 3] /*D6*/,
                         ['D7', 4],
                         ['D11', 5],
                         ['D12', 6],
@@ -549,6 +549,8 @@ Entry.Codingmachine.getBlocks = function () {
                     ],
                     value: 0,
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -558,10 +560,12 @@ Entry.Codingmachine.getBlocks = function () {
                     ],
                     value: 3,
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -576,7 +580,7 @@ Entry.Codingmachine.getBlocks = function () {
             },
             class: 'codingmachine_arduino',
             isNotFor: ['Codingmachine'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 if (typeof Entry.hw.sendQueue.CMD == 'undefined')
                     Entry.hw.sendQueue.CMD = [
                         0xf0,
@@ -606,31 +610,41 @@ Entry.Codingmachine.getBlocks = function () {
                 var digital_pin = script.getField('DIGITAL_PIN', script);
                 var act = script.getField('ACTION', script);
                 if (act == 3) {
-                    if (digital_pin <= 2) {//D3, D4, D5
-                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT1] |= (0x01 << (digital_pin * 2 + 1));
-                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT1] |= (0x01 << digital_pin * 2);
-                    }
-                    else if (digital_pin <= 5) {//D6, D7, D11
-                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT2] |= (0x01 << ((digital_pin - 3) * 2 + 1));
-                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT2] |= (0x01 << (digital_pin - 3) * 2);
-                    }
-                    else {   //D12, D13
-                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT3] |= (0x01 << ((digital_pin - 6) * 2 + 1));
-                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT3] |= (0x01 << (digital_pin - 6) * 2);
-                    }
-                }
-                else {
                     if (digital_pin <= 2) {
-                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT1] |= (0x01 << (digital_pin * 2 + 1));
-                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT1] &= ~(0x01 << digital_pin * 2);
+                        //D3, D4, D5
+                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT1] |= 0x01 << (digital_pin * 2 + 1);
+                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT1] |= 0x01 << (digital_pin * 2);
+                    } else if (digital_pin <= 5) {
+                        //D6, D7, D11
+                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT2] |=
+                            0x01 << ((digital_pin - 3) * 2 + 1);
+                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT2] |=
+                            0x01 << ((digital_pin - 3) * 2);
+                    } else {
+                        //D12, D13
+                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT3] |=
+                            0x01 << ((digital_pin - 6) * 2 + 1);
+                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT3] |=
+                            0x01 << ((digital_pin - 6) * 2);
                     }
-                    else if (digital_pin <= 5) {
-                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT2] |= (0x01 << ((digital_pin - 3) * 2 + 1));
-                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT2] &= ~(0x01 << (digital_pin - 3) * 2);
-                    }
-                    else {
-                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT3] |= (0x01 << ((digital_pin - 6) * 2 + 1));
-                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT3] &= ~(0x01 << (digital_pin - 6) * 2);
+                } else {
+                    if (digital_pin <= 2) {
+                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT1] |= 0x01 << (digital_pin * 2 + 1);
+                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT1] &= ~(0x01 << (digital_pin * 2));
+                    } else if (digital_pin <= 5) {
+                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT2] |=
+                            0x01 << ((digital_pin - 3) * 2 + 1);
+                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT2] &= ~(
+                            0x01 <<
+                            ((digital_pin - 3) * 2)
+                        );
+                    } else {
+                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT3] |=
+                            0x01 << ((digital_pin - 6) * 2 + 1);
+                        cmd[Entry.Codingmachine.Cmd.DIGITAL_OUT3] &= ~(
+                            0x01 <<
+                            ((digital_pin - 6) * 2)
+                        );
                     }
                 }
                 return script.callReturn();
@@ -645,25 +659,23 @@ Entry.Codingmachine.getBlocks = function () {
                 params: [null],
                 type: 'codingmachine_led',
             },
-            
+
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
         },
-           
-        
+
         codingmachine_tune: {
             template: Lang.template.jdkit_tune,
-            parent:'jdkit_tune',
+            parent: 'jdkit_tune',
             def: {
                 params: [null],
                 type: 'codingmachine_tune',
             },
-            
+
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
-            },
-            
-        
+        },
+
         codingmachine_motor: {
             template: Lang.template.jdkit_motor,
             parent: 'jdkit_motor',
@@ -671,25 +683,23 @@ Entry.Codingmachine.getBlocks = function () {
                 params: [null],
                 type: 'codingmachine_motor',
             },
-           
+
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
-            },
-            
-        
+        },
+
         codingmachine_throttle: {
             template: Lang.template.jdkit_throttle,
-            parent:'jdkit_throttle',
+            parent: 'jdkit_throttle',
             def: {
                 params: [null],
                 type: 'codingmachine_throttle',
             },
-           
+
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
-            },
-           
-        
+        },
+
         codingmachine_altitude: {
             template: Lang.template.jdkit_altitude,
             parent: 'jdkit_altitude',
@@ -697,12 +707,11 @@ Entry.Codingmachine.getBlocks = function () {
                 params: [null],
                 type: 'codingmachine_altitude',
             },
-            
+
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
-            },
-           
-        
+        },
+
         codingmachine_rollpitch: {
             template: Lang.template.jdkit_rollpitch,
             parent: 'jdkit_rollpitch',
@@ -710,12 +719,11 @@ Entry.Codingmachine.getBlocks = function () {
                 params: [null],
                 type: 'codingmachine_rollpitch',
             },
-            
+
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
-            },
-           
-        
+        },
+
         codingmachine_yaw: {
             template: Lang.template.jdkit_yaw,
             parent: 'jdkit_yaw',
@@ -723,25 +731,23 @@ Entry.Codingmachine.getBlocks = function () {
                 params: [null],
                 type: 'codingmachine_yaw',
             },
-            
+
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
-            },
-           
-        
+        },
+
         codingmachine_emergency: {
             template: Lang.template.jdkit_emergency,
-            parent:'jdkit_emergency',
+            parent: 'jdkit_emergency',
             def: {
                 params: [null],
                 type: 'codingmachine_emergency',
             },
-            
+
             isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
-            },
-            
-        
+        },
+
         //endregion JDKit
     };
 };

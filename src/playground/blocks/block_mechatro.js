@@ -13,8 +13,8 @@ Entry.mechatro = {
     url: 'http://cafe.naver.com/easybread',
     imageName: 'mechatronics_4d.png',
     title: {
-        "en": "4D Mechatronics",
-        "ko": "4D 메카트로닉스"
+        en: '4D Mechatronics',
+        ko: '4D 메카트로닉스',
     },
     setZero: function() {
         Entry.hw.sendQueue = {};
@@ -209,8 +209,8 @@ Entry.mechatro.getBlocks = function() {
     return {
         //region mechatro
         mechatro_get_digital: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -233,6 +233,8 @@ Entry.mechatro.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -270,10 +272,7 @@ Entry.mechatro.getBlocks = function() {
                 if (Entry.hw.portData[portNo] !== undefined) {
                     value = Entry.hw.portData[portNo];
                     if (portNo > 14) {
-                        value =
-                            value > Entry.mechatro.state.THRESHOLD[portNo]
-                                ? 1
-                                : 0;
+                        value = value > Entry.mechatro.state.THRESHOLD[portNo] ? 1 : 0;
                     }
                     return value;
                 } else {
@@ -283,8 +282,8 @@ Entry.mechatro.getBlocks = function() {
             syntax: { js: [], py: ['mechatro.get_digital(%1)'] },
         },
         mechatro_get_sensor_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -301,6 +300,8 @@ Entry.mechatro.getBlocks = function() {
                     ],
                     value: '16',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -332,8 +333,8 @@ Entry.mechatro.getBlocks = function() {
             syntax: { js: [], py: ['mechatro.sensor_value(%1)'] },
         },
         mechatro_set_threshold: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -349,6 +350,8 @@ Entry.mechatro.getBlocks = function() {
                     ],
                     value: '16',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -393,8 +396,8 @@ Entry.mechatro.getBlocks = function() {
             syntax: { js: [], py: ['mechatro.set_threshold(%1, %2)'] },
         },
         mechatro_get_ultrasonic_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -411,6 +414,8 @@ Entry.mechatro.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -424,6 +429,8 @@ Entry.mechatro.getBlocks = function() {
                     ],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -474,8 +481,8 @@ Entry.mechatro.getBlocks = function() {
             },
         },
         mechatro_set_digital: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -491,12 +498,16 @@ Entry.mechatro.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [['켜기', '1'], ['끄기', '0']],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -527,8 +538,8 @@ Entry.mechatro.getBlocks = function() {
             syntax: { js: [], py: ['mechatro.set_digital(%1, %2)'] },
         },
         mechatro_set_pwm: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -537,6 +548,8 @@ Entry.mechatro.getBlocks = function() {
                     options: [['D5', '5'], ['D6', '6']],
                     value: '5',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -582,8 +595,8 @@ Entry.mechatro.getBlocks = function() {
             syntax: { js: [], py: ['mechatro.mechatro_set_pwm(%1, %2)'] },
         },
         mechatro_set_tone_time: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -599,6 +612,8 @@ Entry.mechatro.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -619,6 +634,8 @@ Entry.mechatro.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -632,6 +649,8 @@ Entry.mechatro.getBlocks = function() {
                     ],
                     value: '3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -678,8 +697,7 @@ Entry.mechatro.getBlocks = function() {
                     var note = script.getNumberField('NOTE', script);
 
                     if (duration === 0 || note === 0) {
-                        Entry.hw.sendQueue[mPortNo] =
-                            Entry.mechatro.portMode.COM_NO_TONE;
+                        Entry.hw.sendQueue[mPortNo] = Entry.mechatro.portMode.COM_NO_TONE;
                         Entry.hw.update();
                         delete Entry.hw.sendQueue[mPortNo];
                         return script.callReturn();
@@ -691,8 +709,7 @@ Entry.mechatro.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
 
-                    Entry.hw.sendQueue[mPortNo] =
-                        Entry.mechatro.portMode.SET_TONE;
+                    Entry.hw.sendQueue[mPortNo] = Entry.mechatro.portMode.SET_TONE;
                     Entry.hw.sendQueue[portNo] = (octave << 4) | (note - 1);
                     Entry.hw.update();
                     delete Entry.hw.sendQueue[mPortNo];
@@ -705,8 +722,7 @@ Entry.mechatro.getBlocks = function() {
                 } else if (script.timeFlag == 1) {
                     return script;
                 } else {
-                    Entry.hw.sendQueue[mPortNo] =
-                        Entry.mechatro.portMode.COM_NO_TONE;
+                    Entry.hw.sendQueue[mPortNo] = Entry.mechatro.portMode.COM_NO_TONE;
                     delete Entry.hw.sendQueue[portNo];
                     Entry.hw.update();
                     delete Entry.hw.sendQueue[mPortNo];
@@ -746,8 +762,8 @@ Entry.mechatro.getBlocks = function() {
             },
         },
         mechatro_set_tone: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -763,6 +779,8 @@ Entry.mechatro.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -783,6 +801,8 @@ Entry.mechatro.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -796,6 +816,8 @@ Entry.mechatro.getBlocks = function() {
                     ],
                     value: '3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -856,8 +878,8 @@ Entry.mechatro.getBlocks = function() {
             },
         },
         mechatro_set_dc_motor: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -866,6 +888,8 @@ Entry.mechatro.getBlocks = function() {
                     options: [['MA', '3'], ['MB', '11']],
                     value: '3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -911,8 +935,8 @@ Entry.mechatro.getBlocks = function() {
             },
         },
         mechatro_get_dc_motor_current: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -922,6 +946,8 @@ Entry.mechatro.getBlocks = function() {
                     options: [['MA', '14'], ['MB', '15']],
                     value: '14',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -956,21 +982,18 @@ Entry.mechatro.getBlocks = function() {
             },
         },
         mechatro_set_servo_position: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['D2', '2'],
-                        ['D5', '5'],
-                        ['D6', '6'],
-                        ['D10', '10'],
-                    ],
+                    options: [['D2', '2'], ['D5', '5'], ['D6', '6'], ['D10', '10']],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1019,21 +1042,18 @@ Entry.mechatro.getBlocks = function() {
             },
         },
         mechatro_set_servo_speed: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['D2', '22'],
-                        ['D5', '23'],
-                        ['D6', '24'],
-                        ['D10', '25'],
-                    ],
+                    options: [['D2', '22'], ['D5', '23'], ['D6', '24'], ['D10', '25']],
                     value: '22',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1082,8 +1102,8 @@ Entry.mechatro.getBlocks = function() {
             },
         },
         mechatro_set_blue_pw: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [

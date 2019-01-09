@@ -5,8 +5,8 @@ Entry.Arduino = {
     url: 'http://www.arduino.cc/',
     imageName: 'arduino.png',
     title: {
-        "ko": "아두이노",
-        "en": "Arduino"
+        ko: '아두이노',
+        en: 'Arduino',
     },
     setZero: function() {
         Entry.hw.sendQueue.readablePorts = [];
@@ -125,13 +125,13 @@ Entry.Arduino.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'TextInput',
-                    value: 10,
+                    type: 'Block',
+                    accept: 'string',
                 },
             ],
             events: {},
             def: {
-                params: [],
+                params: ['10'],
             },
             paramsKeyMap: {
                 NAME: 0,
@@ -146,11 +146,10 @@ Entry.Arduino.getBlocks = function() {
                         syntax: '%1',
                         textParams: [
                             {
-                                type: 'TextInput',
+                                type: 'Block',
+                                accept: 'string',
                                 value: 10,
-                                converter:
-                                    Entry.block.converters
-                                        .returnStringOrNumberByValue,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
                             },
                         ],
                         keyOption: 'arduino_text',
@@ -159,8 +158,8 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_send: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -186,8 +185,8 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_get_number: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -214,8 +213,8 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_get_string: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -242,8 +241,8 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_get_sensor_number: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -259,6 +258,7 @@ Entry.Arduino.getBlocks = function() {
                     ],
                     value: 'A0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
@@ -291,9 +291,9 @@ Entry.Arduino.getBlocks = function() {
                                 ],
                                 value: 'A0',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
                         keyOption: 'arduino_get_sensor_number',
@@ -302,8 +302,8 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_get_port_number: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -327,6 +327,7 @@ Entry.Arduino.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
@@ -366,6 +367,7 @@ Entry.Arduino.getBlocks = function() {
                                 ],
                                 value: '0',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
@@ -375,8 +377,8 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_get_pwm_port_number: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -392,6 +394,7 @@ Entry.Arduino.getBlocks = function() {
                     ],
                     value: '3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
@@ -423,10 +426,9 @@ Entry.Arduino.getBlocks = function() {
                                 ],
                                 value: '3',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter:
-                                    Entry.block.converters
-                                        .returnStringOrNumberByValue,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
                             },
                         ],
                         keyOption: 'arduino_get_pwm_port_number',
@@ -435,8 +437,8 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_get_number_sensor_value: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -482,8 +484,8 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_get_digital_value: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -511,7 +513,7 @@ Entry.Arduino.getBlocks = function() {
             func: function(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
-                if(name === 'ArduinoExt') {
+                if (name === 'ArduinoExt') {
                     return Entry.block.arduino_ext_get_digital.func(sprite, script);
                 } else {
                     var signal = script.getNumberValue('PORT', script);
@@ -536,8 +538,8 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_toggle_led: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -548,12 +550,10 @@ Entry.Arduino.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.ARDUINO_on, 'on'],
-                        [Lang.Blocks.ARDUINO_off, 'off'],
-                    ],
+                    options: [[Lang.Blocks.ARDUINO_on, 'on'], [Lang.Blocks.ARDUINO_off, 'off']],
                     value: 'on',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
@@ -604,9 +604,9 @@ Entry.Arduino.getBlocks = function() {
                                 ],
                                 value: 'on',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
                     },
@@ -614,8 +614,8 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_toggle_pwm: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -684,8 +684,8 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_convert_scale: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -768,10 +768,8 @@ Entry.Arduino.getBlocks = function() {
                 var isFloat = false;
 
                 if (
-                    (Entry.Utils.isNumber(stringValue4) &&
-                        stringValue4.indexOf('.') > -1) ||
-                    (Entry.Utils.isNumber(stringValue5) &&
-                        stringValue5.indexOf('.') > -1)
+                    (Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) ||
+                    (Entry.Utils.isNumber(stringValue5) && stringValue5.indexOf('.') > -1)
                 ) {
                     isFloat = true;
                 }

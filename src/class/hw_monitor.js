@@ -53,7 +53,9 @@ Entry.HWMonitor = function(hwModule) {
         var monitorTemplate = this._hwModule.monitorTemplate;
 
         var imgObj = {
-            href: Entry.mediaFilePath + monitorTemplate.imgPath,
+            href: monitorTemplate.imgPath
+                ? Entry.mediaFilePath + monitorTemplate.imgPath
+                : undefined,
             x: -monitorTemplate.width / 2,
             y: -monitorTemplate.height / 2,
 
@@ -62,8 +64,10 @@ Entry.HWMonitor = function(hwModule) {
         };
 
         this._portViews = {};
-        this.hwView = this._svgGroup.elem('image');
-        this.hwView = this.hwView.attr(imgObj);
+        if (imgObj.href) {
+            this.hwView = this._svgGroup.elem('image');
+            this.hwView = this.hwView.attr(imgObj);
+        }
         this._template = monitorTemplate;
         var ports = monitorTemplate.ports;
         this.pathGroup = null;
@@ -296,16 +300,14 @@ Entry.HWMonitor = function(hwModule) {
             portView = this._listPortViews;
 
             if (this._portViews)
-                for (var item in this._portViews)
-                    portView[item] = this._portViews[item];
+                for (var item in this._portViews) portView[item] = this._portViews[item];
         } else {
             portView = this._portViews;
         }
 
         if (sendQueue) {
             for (var item in sendQueue) {
-                if (sendQueue[item] != 0 && portView[item])
-                    portView[item].type = 'output';
+                if (sendQueue[item] != 0 && portView[item]) portView[item].type = 'output';
             }
         }
 
@@ -323,14 +325,10 @@ Entry.HWMonitor = function(hwModule) {
                         }
                     });
                     port.value.textContent = value ? value : 0;
-                    port.group
-                        .getElementsByTagName('rect')[1]
-                        .attr({ fill: '#00CFCA' });
+                    port.group.getElementsByTagName('rect')[1].attr({ fill: '#00CFCA' });
                 } else {
                     port.value.textContent = value ? value : 0;
-                    port.group
-                        .getElementsByTagName('rect')[1]
-                        .attr({ fill: '#00CFCA' });
+                    port.group.getElementsByTagName('rect')[1].attr({ fill: '#00CFCA' });
                 }
             } else {
                 var value = sendQueue[key];
@@ -343,26 +341,16 @@ Entry.HWMonitor = function(hwModule) {
                         }
                     });
                     port.value.textContent = value ? value : 0;
-                    port.group
-                        .getElementsByTagName('rect')[1]
-                        .attr({ fill: '#CA7DFF' });
+                    port.group.getElementsByTagName('rect')[1].attr({ fill: '#CA7DFF' });
                 } else {
                     port.value.textContent = value ? value : 0;
-                    port.group
-                        .getElementsByTagName('rect')[1]
-                        .attr({ fill: '#CA7DFF' });
+                    port.group.getElementsByTagName('rect')[1].attr({ fill: '#CA7DFF' });
                 }
             }
         }
     };
 
     p.resize = function() {
-        if (this.hwView) {
-            this.hwView.attr({
-                transform: 'scale(' + this.scale + ')',
-            });
-        }
-
         if (this.svgDom) {
             var bRect = this.svgDom.get(0).getBoundingClientRect();
         }
@@ -370,8 +358,7 @@ Entry.HWMonitor = function(hwModule) {
         var mode = this._hwModule.monitorTemplate.mode;
 
         this._svgGroup.attr({
-            transform:
-                'translate(' + bRect.width / 2 + ',' + bRect.height / 1.8 + ')',
+            transform: 'translate(' + bRect.width / 2 + ',' + bRect.height / 1.8 + ')',
         });
 
         this._rect = bRect;
@@ -380,19 +367,21 @@ Entry.HWMonitor = function(hwModule) {
             return;
         }
 
-        this.scale =
-            this._template.height *
-            (bRect.height / this._template.height) /
-            1000;
-        var temp = (1 - this.scale) / 2;
+        this.scale = this._template.height * (bRect.height / this._template.height) / 1000;
+
+        if (this.hwView && this.scale) {
+            this.hwView.attr({
+                transform: 'scale(' + this.scale + ')',
+            });
+        }
+
         this.align();
     };
 
     p.resizeList = function() {
         var bRect = this.svgDom.get(0).getBoundingClientRect();
         this._svglistGroup.attr({
-            transform:
-                'translate(' + bRect.width / 2 + ',' + bRect.height / 2 + ')',
+            transform: 'translate(' + bRect.width / 2 + ',' + bRect.height / 2 + ')',
         });
         this._rect = bRect;
         this.alignList();
@@ -405,7 +394,7 @@ Entry.HWMonitor = function(hwModule) {
         this._alignNS(ports, this._template.height * (this.scale / 3) + 5, 27);
 
         ports = this._portMap.n.concat();
-        this._alignNS(ports, - this._template.height * this.scale / 3 - 32, - 27);
+        this._alignNS(ports, -this._template.height * this.scale / 3 - 32, -27);
     };
 
     p.alignList = function() {
@@ -427,11 +416,7 @@ Entry.HWMonitor = function(hwModule) {
         }
 
         ports = this._portMapList.n.concat();
-        this._alignNSList(
-            ports,
-            -this._template.width * this.scale / 2 - 32,
-            -27
-        );
+        this._alignNSList(ports, -this._template.width * this.scale / 2 - 32, -27);
     };
 
     p._alignNS = function(ports, yCursor, gap) {
@@ -477,21 +462,16 @@ Entry.HWMonitor = function(hwModule) {
         }
 
         if (ports.length) {
-            this._movePort(
-                ports[0],
-                (rP + lP - ports[0].width) / 2,
-                yCursor,
-                100
-            );
+            this._movePort(ports[0], (rP + lP - ports[0].width) / 2, yCursor, 100);
         }
     };
 
-     p._alignNSList = function(ports, yCursor) {
+    p._alignNSList = function(ports, yCursor) {
         var length = ports.length;
         var width = this._rect.width;
         var height = this._rect.height;
-        var initX = - this._rect.width / 2 + 10;
-        var initY = - this._rect.height/ 2 + 10;
+        var initX = -this._rect.width / 2 + 10;
+        var initY = -this._rect.height / 2 + 10;
         var wholeWidth = 0;
         var listLine = 0;
 
