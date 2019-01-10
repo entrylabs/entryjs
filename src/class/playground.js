@@ -275,7 +275,7 @@ Entry.Playground = class {
         this.mainWorkspace = new Entry.Workspace(initOpts);
         this.blockMenu = this.mainWorkspace.blockMenu;
         this.board = this.mainWorkspace.board;
-        this.toast = new Toast();
+        this.toast = new Toast(this.board);
         this.blockMenu.banClass('checker');
         this.banExpansionBlock();
         this.vimBoard = this.mainWorkspace.vimBoard;

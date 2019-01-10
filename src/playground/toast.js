@@ -5,16 +5,9 @@ export default class Toast {
             return Toast.instance;
         }
         this.board = board;
+        this.$boardView = $(board.view);
         this.generateView();
         Toast.instance = this;
-    }
-
-    get TOAST_WIDTH() {
-        return 88;
-    }
-
-    get TOAST_HEIGHT() {
-        return 44;
     }
 
     generateView() {
@@ -26,10 +19,12 @@ export default class Toast {
         this.$view = $('<div class="entryMobileToastWrapper">').append(template);
         this.$toast = this.$view.find('.entryMobileToast');
         this.$content = this.$view.find('.content');
+        if (!this.$boardView.has(this.$view).length) {
+            this.$boardView.append(this.$view);
+        }
     }
 
     show(message) {
-        $('#entryWorkspaceBoard').append(this.$view);
         this.$content.text(message);
         this.$toast.removeClass('fadeToast');
         $(this.$toast).width();
@@ -43,7 +38,11 @@ export default class Toast {
     }, 3000);
 
     destroy() {
+        delete this.$boardView;
         delete this.board;
+        delete this.$view;
+        delete this.$toast;
+        delete this.$content;
         delete Toast.instance;
     }
 }
