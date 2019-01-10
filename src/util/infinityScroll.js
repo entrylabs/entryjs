@@ -12,7 +12,7 @@ Entry.InfinityScroll = class InfinityScroll {
         this._itemHeight = itemHeight || 0;
         this.dataWrapper = dataWrapper;
         this.scroll = this.scroll.bind(this);
-        dom.addEventListener('scroll', this.scroll);
+        dom.addEventListener('scroll', _.throttle(this.scroll, 16));
     }
 
     get groupSize() {
