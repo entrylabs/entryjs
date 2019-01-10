@@ -20,9 +20,11 @@ Entry.InfinityScroll = class InfinityScroll {
             return this._groupSize;
         }
         if (this._itemHeight) {
-            return this.height / this._itemHeight * 1.5;
+            this._groupSize = parseInt(this.height / this._itemHeight * 1.5, 10);
+            return this._groupSize;
         }
-        return Math.max(this.height / 15, 1);
+        const itemMinHeight = 15;
+        return Math.max(this.height / itemMinHeight, 1);
     }
 
     get itemHeight() {
