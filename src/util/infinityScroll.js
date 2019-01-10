@@ -27,7 +27,10 @@ Entry.InfinityScroll = class InfinityScroll {
 
     get itemHeight() {
         if (!this._itemHeight && this.data.length) {
-            this._itemHeight = this.convertElement(this.data[0]).offsetHeight;
+            const dom = this.convertElement(this.wrap([this.data[0]]));
+            this.dom.appendChild(dom);
+            this._itemHeight = dom.offsetHeight;
+            $(dom).remove();
         }
         return this._itemHeight || this.height;
     }
@@ -72,7 +75,7 @@ Entry.InfinityScroll = class InfinityScroll {
 
     wrap(data) {
         if (!this.dataWrapper) {
-            return;
+            return data;
         }
         return this.dataWrapper.replace(/\{(\d+)\}/g, this.arrayToString(data));
     }
