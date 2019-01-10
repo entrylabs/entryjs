@@ -463,9 +463,10 @@ Entry.Comment = class Comment {
         e.stopPropagation();
         e.preventDefault();
         this.longPressTimer = null;
-        if (Entry.documentMousedown) {
-            Entry.documentMousedown.notify(e);
+        if (this.board.workingEvent) {
+            return;
         }
+        this.board.workingEvent = true;
 
         if ((e.button === 0 || e.type === 'touchstart') && !this.board.readOnly) {
             this.setDragInstance(e);
@@ -493,6 +494,7 @@ Entry.Comment = class Comment {
         if (disposeEvent) {
             disposeEvent.notify(e);
         }
+        delete this.board.workingEvent;
         this.dragMode = Entry.DRAG_MODE_NONE;
 
         const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
@@ -611,6 +613,7 @@ Entry.Comment = class Comment {
         }
         if (this.board) {
             this.board.set({ dragBlock: null });
+            delete this.board.workingEvent;
         }
 
         this.removeMoveSetting(this.mouseMove, this.mouseUp);
