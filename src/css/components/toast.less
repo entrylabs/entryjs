@@ -60,12 +60,27 @@
     text-align: center;
     pointer-events: none;
     .entryMobileToast {
+        &::before {
+            content: '';
+            display: inline-block;
+            .backgroundImage('toast_left.svg');
+            width: 17px;
+            height: 38px;
+            margin-right: -4px;
+        }
+        &::after {
+            content: '';
+            display: inline-block;
+            .backgroundImage('toast_right.svg');
+            width: 20px;
+            height: 38px;
+            margin-left: -4px;
+        }
         display: inline-block;
-        .backgroundImage('zoom_size_bg.svg');
-        width: 90px;
-        height: 32px;
+        // width: 90px;
+        height: 38px;
         font-size: 14px;
-        padding: 12px 0;
+        vertical-align: top;
         font-weight: bold;
         font-style: normal;
         font-stretch: normal;
@@ -73,5 +88,13 @@
         letter-spacing: -0.5px;
         text-align: center;
         color: #4f80ff;
+
+        .content {
+            display: inline-block;
+            height: 38px;
+            padding: 8px 8px;
+            vertical-align: top;
+            .backgroundImage('toast_bg.svg');
+        }
     }
 }

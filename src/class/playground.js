@@ -210,10 +210,10 @@ Entry.Playground = class {
 
     toggleCommentButton() {
         if (this.board.isVisibleComment) {
-            this.toast.show('숨겨');
+            this.toast.show(Lang.Blocks.hide_all_comment);
             Entry.do('hideAllComment', this.board);
         } else {
-            this.toast.show('보여');
+            this.toast.show(Lang.Blocks.show_all_comment);
             Entry.do('showAllComment', this.board);
         }
         this.toggleCommentButtonVisible();

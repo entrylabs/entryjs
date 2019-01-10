@@ -30,7 +30,6 @@ export default class Toast {
 
     show(message) {
         $('#entryWorkspaceBoard').append(this.$view);
-        this.$view.css('display', 'block');
         this.$content.text(message);
         this.$toast.removeClass('fadeToast');
         $(this.$toast).width();
@@ -41,7 +40,6 @@ export default class Toast {
     // 애니메이션 Debounce 처리
     removeToast = _.debounce((toast) => {
         toast.$toast.removeClass('fadeToast');
-        toast.$view.css('display', 'none');
     }, 3000);
 
     destroy() {
