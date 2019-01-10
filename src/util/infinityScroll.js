@@ -2,17 +2,27 @@
 
 Entry.InfinityScroll = class InfinityScroll {
     constructor(dom = document.body, option = {}) {
-        const { itemHeight, dataWrapper, data } = option;
+        const { itemHeight, dataWrapper, data, groupSize } = option;
         this.dom = dom;
         this._currGroup = -1;
-        this.groupSize = 10;
         this.scrollTop = 0;
         this.data = data || [];
         this.eventData = [];
+        this._groupSize = groupSize;
         this._itemHeight = itemHeight || 0;
         this.dataWrapper = dataWrapper;
         this.scroll = this.scroll.bind(this);
         dom.addEventListener('scroll', this.scroll);
+    }
+
+    get groupSize() {
+        if (this._groupSize) {
+            return this._groupSize;
+        }
+        if (this._itemHeight) {
+            return this.height / this._itemHeight * 1.5;
+        }
+        return Math.max(this.height / 15, 1);
     }
 
     get itemHeight() {

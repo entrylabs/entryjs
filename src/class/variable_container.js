@@ -2567,12 +2567,14 @@ Entry.VariableContainer = class VariableContainer {
             {
                 dataWrapper: parent,
                 itemHeight: 35,
+                groupSize: 10,
             }
         );
     }
 
     updateListSettingView(list) {
         const view = this.listSettingView;
+        const that = this;
         if (!view) {
             return;
         }
@@ -2580,7 +2582,7 @@ Entry.VariableContainer = class VariableContainer {
         const { infinityScroll, listValues, lengthInput, simpleBar, scrollBox } = view;
         const arr = list.array_ || [];
         lengthInput.value = arr.length;
-        if (arr.length > 5) {
+        if (arr.length > 4) {
             scrollBox.addClass('on');
         } else {
             scrollBox.removeClass('on');
@@ -2605,7 +2607,7 @@ Entry.VariableContainer = class VariableContainer {
                 <li>
                     <span class='cnt'>${i + startIndex}</span>
                     <input value='${value}' type='text' data-index='${i}'/>
-                    <a class='del'></a>
+                    <a class='del' data-index='${i}'></a>
                 </li>`.trim();
                 data.push(item);
             });
@@ -2622,10 +2624,10 @@ Entry.VariableContainer = class VariableContainer {
             );
             $listValues.on('focus', 'input', Entry.Utils.setFocused);
             $listValues.on('keypress', 'input', Entry.Utils.blurWhenEnter);
-            $listValues.on('click', 'a', () => {
+            $listValues.on('click', 'a', function() {
                 const index = this.getAttribute('data-index');
                 arr.splice(index, 1);
-                this.updateListSettingView();
+                that.updateListSettingView();
             });
         }
         simpleBar.recalculate();
