@@ -1258,11 +1258,6 @@ Entry.Board = class Board {
 
     _rightClick(e) {
         delete this.workingEvent;
-        const { target } = e;
-        //SVGElement에서 contains가 없어서 jquery사용
-        if ($.contains(this.workspace.zoomController.view, target)) {
-            return;
-        }
         const disposeEvent = Entry.disposeEvent;
         disposeEvent && disposeEvent.notify(e);
         if (!this.visible) {

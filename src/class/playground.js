@@ -5,6 +5,7 @@
 'use strict';
 
 import EntryTool from 'entry-tool';
+import Toast from '../playground/toast';
 
 const Entry = require('../entry');
 
@@ -209,8 +210,10 @@ Entry.Playground = class {
 
     toggleCommentButton() {
         if (this.board.isVisibleComment) {
+            this.toast.show('숨겨');
             Entry.do('hideAllComment', this.board);
         } else {
+            this.toast.show('보여');
             Entry.do('showAllComment', this.board);
         }
         this.toggleCommentButtonVisible();
@@ -272,6 +275,7 @@ Entry.Playground = class {
         this.mainWorkspace = new Entry.Workspace(initOpts);
         this.blockMenu = this.mainWorkspace.blockMenu;
         this.board = this.mainWorkspace.board;
+        this.toast = new Toast();
         this.blockMenu.banClass('checker');
         this.banExpansionBlock();
         this.vimBoard = this.mainWorkspace.vimBoard;
@@ -422,7 +426,7 @@ Entry.Playground = class {
             .bindOnClick(() => {
                 Entry.playground.setFontAlign(Entry.TEXT_ALIGN_LEFT);
             });
-        alignLeft.setAttribute("title", Lang.Workspace.align_left);
+        alignLeft.setAttribute('title', Lang.Workspace.align_left);
         alignBox.appendChild(alignLeft);
         this.alignLeftBtn = alignLeft;
         const alignMiddle = Entry.createElement('a')
@@ -430,7 +434,7 @@ Entry.Playground = class {
             .bindOnClick(() => {
                 Entry.playground.setFontAlign(Entry.TEXT_ALIGN_CENTER);
             });
-        alignMiddle.setAttribute("title", Lang.Workspace.align_center);
+        alignMiddle.setAttribute('title', Lang.Workspace.align_center);
         alignBox.appendChild(alignMiddle);
         this.alignCenterBtn = alignMiddle;
         const alignRight = Entry.createElement('a')
@@ -438,7 +442,7 @@ Entry.Playground = class {
             .bindOnClick(() => {
                 Entry.playground.setFontAlign(Entry.TEXT_ALIGN_RIGHT);
             });
-        alignRight.setAttribute("title", Lang.Workspace.align_right);
+        alignRight.setAttribute('title', Lang.Workspace.align_right);
         alignBox.appendChild(alignRight);
         this.alignRightBtn = alignRight;
 
@@ -453,7 +457,7 @@ Entry.Playground = class {
                 $(this.textEditArea).toggleClass('bold');
                 $(this.textEditInput).toggleClass('bold');
             });
-        bold.setAttribute("title", Lang.Workspace.bold);
+        bold.setAttribute('title', Lang.Workspace.bold);
         styleBox.appendChild(bold);
 
         const underLine = Entry.createElement('a')
@@ -463,11 +467,13 @@ Entry.Playground = class {
                 $(e.currentTarget).toggleClass('on');
                 Entry.playground.object.entity.setUnderLine(underLineState);
 
-                const effect = `${underLineState ? "underline" : ""} ${Entry.playground.object.entity.getStrike() ? "line-through" : ""}`.trim();
+                const effect = `${underLineState ? 'underline' : ''} ${
+                    Entry.playground.object.entity.getStrike() ? 'line-through' : ''
+                }`.trim();
                 this.textEditArea.style.textDecoration = effect;
                 this.textEditInput.style.textDecoration = effect;
             });
-        underLine.setAttribute("title", Lang.Workspace.font_underline);
+        underLine.setAttribute('title', Lang.Workspace.font_underline);
         styleBox.appendChild(underLine);
 
         const italic = Entry.createElement('a')
@@ -478,7 +484,7 @@ Entry.Playground = class {
                 $(this.textEditArea).toggleClass('italic');
                 $(this.textEditInput).toggleClass('italic');
             });
-        italic.setAttribute("title", Lang.Workspace.font_tilt);
+        italic.setAttribute('title', Lang.Workspace.font_tilt);
         styleBox.appendChild(italic);
 
         const through = Entry.createElement('a')
@@ -488,11 +494,13 @@ Entry.Playground = class {
                 const strikeState = !Entry.playground.object.entity.getStrike() || false;
                 Entry.playground.object.entity.setStrike(strikeState);
 
-                const effect = `${strikeState ? "line-through" : ""} ${Entry.playground.object.entity.getUnderLine() ? "underline" : ""}`.trim();
+                const effect = `${strikeState ? 'line-through' : ''} ${
+                    Entry.playground.object.entity.getUnderLine() ? 'underline' : ''
+                }`.trim();
                 this.textEditArea.style.textDecoration = effect;
                 this.textEditInput.style.textDecoration = effect;
             });
-        through.setAttribute("title", Lang.Workspace.font_cancel);
+        through.setAttribute('title', Lang.Workspace.font_cancel);
         styleBox.appendChild(through);
 
         const color = Entry.createElement('a').addClass('style_link imbtn_pop_font_color');
@@ -504,13 +512,13 @@ Entry.Playground = class {
                 this.setTextColour.bind(this)
             );
         });
-        color.setAttribute("title", Lang.Workspace.font_color);
+        color.setAttribute('title', Lang.Workspace.font_color);
         styleBox.appendChild(color);
 
         const backgroundColor = Entry.createElement('a').addClass(
             'style_link imbtn_pop_font_backgroundcolor'
         );
-        backgroundColor.setAttribute("title", Lang.Workspace.font_fill);
+        backgroundColor.setAttribute('title', Lang.Workspace.font_fill);
         backgroundColor.bindOnClick(() => {
             return this.openColourPicker(
                 backgroundColor,
@@ -569,7 +577,7 @@ Entry.Playground = class {
 
             function onMouseMove(e) {
                 let x = e.pageX;
-                if(!x) {
+                if (!x) {
                     x = e.originalEvent.touches[0].pageX;
                 }
                 let left = x - resizeOffset;
@@ -710,8 +718,9 @@ Entry.Playground = class {
             innerSoundAdd.innerHTML = Lang.Workspace.sound_add;
             soundAdd.appendChild(innerSoundAdd);
             soundView.appendChild(soundAdd);
-            const soundList = Entry.createElement('ul', 'entrySoundList')
-                .addClass('entryPlaygroundSoundList');
+            const soundList = Entry.createElement('ul', 'entrySoundList').addClass(
+                'entryPlaygroundSoundList'
+            );
 
             soundView.appendChild(soundList);
             this.soundListView_ = soundList;
@@ -1497,8 +1506,8 @@ Entry.Playground = class {
         Entry.createElement('div', `s_${picture.id}`)
             .addClass('entryPlaygroundPictureSize')
             .appendTo(element).innerHTML = `${picture.dimension.width} X ${
-                picture.dimension.height
-            }`;
+            picture.dimension.height
+        }`;
 
         const removeButton = Entry.createElement('div').addClass('entryPlayground_del');
         const { Buttons = {} } = Lang || {};
@@ -1709,7 +1718,7 @@ Entry.Playground = class {
         return dropdownWidget;
     };
 
-    openColourPicker = (target, color ,canTransparent , callback) => {
+    openColourPicker = (target, color, canTransparent, callback) => {
         const colorPicker = new EntryTool({
             type: 'colorPicker',
             data: {
@@ -1741,7 +1750,7 @@ Entry.Playground = class {
             } else {
                 item.view.addClass('entrySoundSelected');
             }
-        })
+        });
     }
 
     setTextColour(colour) {
