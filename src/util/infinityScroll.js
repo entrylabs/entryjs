@@ -48,8 +48,9 @@ Entry.InfinityScroll = class InfinityScroll {
     }
 
     get afterHeight() {
-        const shownDataCount = this.data.slice(0, (this.currGroup + 2) * this.groupSize).length;
-        return (this.data.length - shownDataCount) * this.itemHeight;
+        const dataLength = this.data.length;
+        const shownDataCount = Math.min((this.currGroup + 2) * this.groupSize, dataLength);
+        return (dataLength - shownDataCount) * this.itemHeight;
     }
 
     get height() {
