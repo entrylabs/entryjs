@@ -2604,11 +2604,11 @@ Entry.VariableContainer = class VariableContainer {
             const data = [];
             arr.forEach(({ data: value }, i) => {
                 const item = /* html */ `
-                <li>
-                    <span class='cnt'>${i + startIndex}</span>
-                    <input value='${value}' type='text' data-index='${i}'/>
-                    <a class='del' data-index='${i}'></a>
-                </li>`.trim();
+                    <li>
+                        <span class='cnt'>${i + startIndex}</span>
+                        <input value='${value}' type='text' data-index='${i}'/>
+                        <a class='del' data-index='${i}'></a>
+                    </li>`.trim();
                 data.push(item);
             });
             // if (view.infinityScroll) {

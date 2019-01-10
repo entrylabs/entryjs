@@ -62,7 +62,7 @@ Entry.InfinityScroll = class InfinityScroll {
         const data = this.getData(this.currGroup);
 
         $(this.dom).empty();
-        this.dom.innerHTML = this.convertDom(beforeSpace, this.wrap(data), afterSpace);
+        this.dom.innerHTML = this.combineItems(beforeSpace, this.wrap(data), afterSpace);
     }
 
     scroll() {
@@ -97,7 +97,7 @@ Entry.InfinityScroll = class InfinityScroll {
         return this.data.slice(startIndex, endIndex);
     }
 
-    convertDom(...items) {
+    combineItems(...items) {
         let htmlText = '';
         items.forEach((item) => {
             if (item instanceof Array) {
