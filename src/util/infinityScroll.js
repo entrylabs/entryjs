@@ -118,9 +118,8 @@ Entry.InfinityScroll = class InfinityScroll {
         return wrapper.children[0];
     }
 
-    append(item, event) {
+    append(item) {
         this.data.push(item);
-        this.eventData.push(event);
     }
 
     remove(index = this.data.length - 1) {
