@@ -466,11 +466,14 @@ EntryStatic.getAllBlocks = function() {
                 'blacksmith_module_digital_bluetooth',
                 'blacksmith_module_digital_oled',
                 //joystick
-                'joystick_get_number_sensor_value',
-                'joystick_get_digital_value',
+                'joystick_get_analog_value',
+                'joystick_get_analog_value_map',
+                'joystick_get_ultrasonic_value',
+                'joystick_get_digital',
                 'joystick_toggle_led',
-                'joystick_toggle_pwm',
-                'joystick_convert_scale',
+                'joystick_digital_pwm',
+                'joystick_set_servo',
+                'joystick_set_tone',
                 //dplay
                 'dplay_get_number_sensor_value',
                 'dplay_get_value',
