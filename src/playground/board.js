@@ -53,6 +53,9 @@ Entry.Board = class Board {
     static get DRAG_RADIUS() {
         return 5;
     }
+    static get FIRST_DRAG_RADIUS() {
+        return 10;
+    }
 
     schema = {
         code: null,
@@ -228,12 +231,14 @@ Entry.Board = class Board {
 
         const board = this;
         let longPressTimer = null;
+        let dragMode = Entry.DRAG_MODE_NONE;
         if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
             const eventType = e.type;
             const mouseEvent = Entry.Utils.convertMouseEvent(e);
             if (Entry.documentMousedown) {
                 Entry.documentMousedown.notify(mouseEvent);
             }
+            dragMode = Entry.DRAG_MODE_MOUSEDOWN;
             const doc = $(document);
 
             this.mouseDownCoordinate = {
@@ -282,18 +287,21 @@ Entry.Board = class Board {
                 Math.pow(pageX - mouseDownCoordinate.x, 2) +
                     Math.pow(pageY - mouseDownCoordinate.y, 2)
             );
-            if (diff < Entry.Board.DRAG_RADIUS) {
-                return;
-            }
 
-            if (longPressTimer) {
-                clearTimeout(longPressTimer);
-                longPressTimer = null;
-            }
+            if (
+                (dragMode === Entry.DRAG_MODE_DRAG && diff > Entry.Board.DRAG_RADIUS) ||
+                (dragMode === Entry.DRAG_MODE_MOUSEDOWN && diff > Entry.Board.FIRST_DRAG_RADIUS)
+            ) {
+                dragMode = Entry.DRAG_MODE_DRAG;
+                if (longPressTimer) {
+                    clearTimeout(longPressTimer);
+                    longPressTimer = null;
+                }
 
-            const dragInstance = board.dragInstance;
-            board.scroller.scroll(pageX - dragInstance.offsetX, pageY - dragInstance.offsetY);
-            dragInstance.set({ offsetX: pageX, offsetY: pageY });
+                const dragInstance = board.dragInstance;
+                board.scroller.scroll(pageX - dragInstance.offsetX, pageY - dragInstance.offsetY);
+                dragInstance.set({ offsetX: pageX, offsetY: pageY });
+            }
         }
 
         function onMouseUp() {
