@@ -1,6 +1,6 @@
 'use strict';
 
-Entry.InfinityScroll = class InfinityScroll {
+Entry.VirtualScroll = class VirtualScroll {
     constructor(dom = document.body, option = {}) {
         const { itemHeight, dataWrapper, data, groupSize } = option;
         this.dom = dom;
