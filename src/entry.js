@@ -96,6 +96,7 @@ require('./util/static');
 require('./util/toast');
 require('./util/tooltip');
 require('./util/tvCast');
+require('./util/infinityScroll');
 require('./util/utils');
 require('./util/youtube');
 require('./util/weather_forecast');
