@@ -447,7 +447,7 @@ Entry.BlockView = class BlockView {
 
         const dblclick = _.result(this.block.events, 'dblclick');
         if (dblclick) {
-            const hammer = new Hammer(this.svgGroup);
+            const hammer = new Hammer(this.pathGroup);
             hammer.on('doubletap', () => {
                 if (this._board.readOnly) {
                     return;
@@ -458,7 +458,7 @@ Entry.BlockView = class BlockView {
                     }
                 });
             });
-            $(this.svgGroup).dblclick(() => {
+            $(this.pathGroup).dblclick(() => {
                 if (this._board.readOnly) {
                     return;
                 }
