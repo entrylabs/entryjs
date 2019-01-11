@@ -74,6 +74,9 @@ Entry.Console = function() {
     p.print = function(message, mode) {
         if (!this.visible) return;
 
+        if (mode !== 'ask') {
+            this._doc.cm.options.readOnly = 'nocursor';
+        }
         this.setEditing(true);
         this.codeMirror.execCommand('goDocEnd');
         var cursor = this._doc.getCursor();
@@ -86,6 +89,7 @@ Entry.Console = function() {
         if (mode === 'speak') this.setEditing(false);
         this.codeMirror.execCommand('goDocEnd');
         if (mode === 'ask') {
+            this._doc.cm.options.readOnly = false;
             this._doc.addLineClass(cursor.line + 1, 'text', 'answer');
             this.codeMirror.focus();
         }
