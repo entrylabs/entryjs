@@ -524,13 +524,20 @@ Entry.Utils.initEntryEvent_ = function() {
  */
 Entry.initSound = function(sound) {
     if (!sound || !sound.duration || sound.duration == 0) return;
-    sound.path = sound.fileurl ||
-        Entry.defaultPath + '/uploads/' + sound.filename.substring(0,2) + '/' +
-        sound.filename.substring(2,4) + '/' + sound.filename + sound.ext;
+    sound.path =
+        sound.fileurl ||
+        Entry.defaultPath +
+            '/uploads/' +
+            sound.filename.substring(0, 2) +
+            '/' +
+            sound.filename.substring(2, 4) +
+            '/' +
+            sound.filename +
+            sound.ext;
 
     Entry.soundQueue.loadFile({
         id: sound.id,
         src: sound.path,
-        type: createjs.LoadQueue.SOUND
+        type: createjs.LoadQueue.SOUND,
     });
 };

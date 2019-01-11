@@ -97,9 +97,6 @@ class BlockMenu {
             this._addControl($dom.find('.blockMenuContainer'));
         }
 
-        // if (Entry.documentMousedown) {
-        //     Entry.documentMousedown.attach(this, this.setSelectedBlock);
-        // }
         if (this.code && Entry.keyPressed) {
             Entry.keyPressed.attach(this, this._captureKeyEvent);
         }
@@ -150,7 +147,7 @@ class BlockMenu {
             { parent: this.blockMenuWrapper }
         );
 
-        this.svgDom.mouseenter(function(e) {
+        this.svgDom.mouseenter(function() {
             that._scroller && that._scroller.setOpacity(0.8);
 
             const selectedBlockView = that.workspace.selectedBlockView;
@@ -172,7 +169,7 @@ class BlockMenu {
             }
         });
 
-        this.svgDom.mouseleave(function(e) {
+        this.svgDom.mouseleave(function() {
             const playground = Entry.playground;
             if (!playground || playground.resizing) {
                 return;
@@ -240,7 +237,7 @@ class BlockMenu {
 
         const vPadding = 15;
         let marginFromTop = 10;
-        const hPadding = this._align == 'LEFT' ? 10 : this.svgDom.width() / 2;
+        const hPadding = this._align === 'LEFT' ? 10 : this.svgDom.width() / 2;
 
         let pastClass;
         const blocks = this._getSortedBlocks();
@@ -272,7 +269,7 @@ class BlockMenu {
             pastClass = className;
 
             let left = hPadding - blockView.offsetX;
-            if (this._align == 'CENTER') {
+            if (this._align === 'CENTER') {
                 left -= blockView.width / 2;
             }
 
@@ -396,7 +393,7 @@ class BlockMenu {
         return left < boardBlockView.getBoard().offset().left - width / 2;
     }
 
-    getCode(thread) {
+    getCode() {
         return this.code;
     }
 
@@ -425,7 +422,7 @@ class BlockMenu {
             return;
         }
 
-        var blocks = blocks || this._getSortedBlocks();
+        blocks = blocks || this._getSortedBlocks();
         const targetMode = Entry.BlockView.RENDER_MODE_TEXT;
 
         blocks[0].forEach((block) => {
@@ -473,7 +470,7 @@ class BlockMenu {
                 y1: topPos,
                 x2: this._svgWidth - splitterHPadding,
                 y2: topPos,
-                stroke: '#b5b5b5',
+                stroke: '#AAC5D5',
             })
         );
     }
@@ -686,7 +683,7 @@ class BlockMenu {
         this._categories.push(category);
 
         let index;
-        if (category == 'func') {
+        if (category === 'func') {
             const threads = this.code.getThreadsByCategory('func');
             if (threads.length) {
                 index = this.code.getThreadIndex(threads[0]);
@@ -698,7 +695,7 @@ class BlockMenu {
                 return;
             }
             t[0].x = -99999;
-            const thread = this._createThread(t, index);
+            this._createThread(t, index);
             if (index !== undefined) {
                 index++;
             }
@@ -812,7 +809,7 @@ class BlockMenu {
         dragInstance.set({ offsetY: pageY });
     };
 
-    onMouseUp = (e) => {
+    onMouseUp = () => {
         if (Entry.isMobile()) {
             this._scroller.setOpacity(0);
         }
@@ -821,10 +818,6 @@ class BlockMenu {
     };
 
     onMouseDown(e) {
-        // ISSUE:: 마우스이벤트1
-        // if (e.stopPropagation) {
-        //     e.stopPropagation();
-        // }
         if (e.preventDefault) {
             e.preventDefault();
         }
@@ -888,7 +881,7 @@ class BlockMenu {
     _captureKeyEvent(e) {
         const keyCode = e.keyCode;
 
-        if (e.ctrlKey && Entry.type == 'workspace' && keyCode > 48 && keyCode < 58) {
+        if (e.ctrlKey && Entry.type === 'workspace' && keyCode > 48 && keyCode < 58) {
             e.preventDefault();
             setTimeout(() => {
                 this._cancelDynamic(true);
@@ -977,7 +970,7 @@ class BlockMenu {
                 visible === false ? 'entryRemoveCategory' : '',
             ],
         })
-            .bindOnClick((e) => {
+            .bindOnClick(() => {
                 this._cancelDynamic(true, () => {
                     this.selectMenu(name, undefined, true);
                     this.align();

@@ -2625,3 +2625,16 @@ Entry.Utils.focusIfNotActive = function(dom) {
         dom.focus && dom.focus();
     }
 };
+
+// 터치와 마우스의 이벤트를 맞춰주는 함수
+Entry.Utils.getMouseEvent = function(event) {
+    let mouseEvent;
+    if (event.originalEvent && event.originalEvent.touches) {
+        mouseEvent = event.originalEvent.touches[0];
+    } else if (event.touches) {
+        mouseEvent = event.touches[0];
+    } else {
+        mouseEvent = event;
+    }
+    return mouseEvent;
+};
