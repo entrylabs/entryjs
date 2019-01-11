@@ -1050,6 +1050,7 @@ Entry.BlockView = class BlockView {
 
     addSelected() {
         $(this.pathGroup).insertAfter(this._nextGroup);
+        this.svgGroup.removeClass('activated');
         this.svgGroup.addClass('selected');
     }
 
@@ -1060,6 +1061,7 @@ Entry.BlockView = class BlockView {
 
     addActivated() {
         $(this.pathGroup).insertAfter(this._nextGroup);
+        this.svgGroup.removeClass('selected');
         this.svgGroup.addClass('activated');
     }
 
