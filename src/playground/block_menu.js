@@ -470,7 +470,7 @@ class BlockMenu {
                 y1: topPos,
                 x2: this._svgWidth - splitterHPadding,
                 y2: topPos,
-                stroke: '#b5b5b5',
+                stroke: '#AAC5D5',
             })
         );
     }
