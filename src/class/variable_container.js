@@ -2562,7 +2562,7 @@ Entry.VariableContainer = class VariableContainer {
         this.listSettingView.scrollBox = scrollBox;
         this.listSettingView.simpleBar = el;
         this.listSettingView.listValues = el.getContentElement();
-        this.listSettingView.infinityScroll = new Entry.InfinityScroll(
+        this.listSettingView.infinityScroll = new Entry.VirtualScroll(
             this.listSettingView.listValues,
             {
                 dataWrapper: parent,
