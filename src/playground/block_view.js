@@ -447,7 +447,7 @@ Entry.BlockView = class BlockView {
 
         const dblclick = _.result(this.block.events, 'dblclick');
         if (dblclick) {
-            const hammer = new Hammer(this.svgGroup);
+            const hammer = new Hammer(this.pathGroup);
             hammer.on('doubletap', () => {
                 if (this._board.readOnly) {
                     return;
@@ -458,7 +458,7 @@ Entry.BlockView = class BlockView {
                     }
                 });
             });
-            $(this.svgGroup).dblclick(() => {
+            $(this.pathGroup).dblclick(() => {
                 if (this._board.readOnly) {
                     return;
                 }
@@ -1050,6 +1050,7 @@ Entry.BlockView = class BlockView {
 
     addSelected() {
         $(this.pathGroup).insertAfter(this._nextGroup);
+        this.svgGroup.removeClass('activated');
         this.svgGroup.addClass('selected');
     }
 
@@ -1060,6 +1061,7 @@ Entry.BlockView = class BlockView {
 
     addActivated() {
         $(this.pathGroup).insertAfter(this._nextGroup);
+        this.svgGroup.removeClass('selected');
         this.svgGroup.addClass('activated');
     }
 

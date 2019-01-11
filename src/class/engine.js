@@ -117,6 +117,9 @@ Entry.Engine = function() {
                 .addClass('entryHide')
                 .appendTo(this.view_);
 
+            this.mouseViewInput = Entry.createElement('input').appendTo(this.mouseView);
+            $(this.mouseViewInput).attr('readonly', 'readonly');
+
             this.buttonWrapper = Entry.createElement('div')
                 .addClass('entryEngineButtonWrapper')
                 .appendTo(this.view_);
@@ -299,7 +302,7 @@ Entry.Engine = function() {
     p.toggleSpeedPanel = function() {
         if (this.speedPanelOn) {
             this.speedPanelOn = false;
-            this.speedButton.removeClass("on");
+            this.speedButton.removeClass('on');
 
             $(this.speedLabel_)
                 .parent()
@@ -313,7 +316,7 @@ Entry.Engine = function() {
             delete this.speedHandle_;
         } else {
             this.speedPanelOn = true;
-            this.speedButton.addClass("on");
+            this.speedButton.addClass('on');
 
             const speedBox = Entry.createElement('div', 'entrySpeedBox');
             speedBox.addClass('entrySpeedBox');
@@ -757,7 +760,7 @@ Entry.Engine = function() {
      */
     p.updateMouseView = function() {
         var { x, y } = Entry.stage.mouseCoordinate;
-        this.mouseView.textContent = 'X : ' + x + ', Y : ' + y;
+        this.mouseViewInput.value = 'X : ' + x + ', Y : ' + y;
         this.mouseView.removeClass('entryHide');
     };
 
@@ -774,7 +777,7 @@ Entry.Engine = function() {
     p.toggleFullScreen = function(popupClassName) {
         if (!this.popup) {
             this.popup = new Entry.Popup(popupClassName);
-            if(Entry.engine.speedPanelOn) {
+            if (Entry.engine.speedPanelOn) {
                 Entry.engine.toggleSpeedPanel();
             }
             if (Entry.type != 'workspace') {

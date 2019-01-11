@@ -600,7 +600,7 @@ Entry.skeleton.basic_param = {
     box(blockView) {
         const width = blockView ? blockView.contentWidth : 5;
         return {
-            offsetX: 0,
+            offsetX: -8,
             offsetY: 0,
             width: width + 11,
             height: 22,

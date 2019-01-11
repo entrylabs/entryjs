@@ -1,5 +1,8 @@
+import Toast from './toast';
+
 Entry.ZoomController = class ZoomController {
     constructor(board) {
+        this.boardMap = new Map();
         if (board) {
             this.setBoard(board);
         }
@@ -14,14 +17,6 @@ Entry.ZoomController = class ZoomController {
 
     get CONTROLLER_HEIGHT() {
         return 38;
-    }
-
-    get TOAST_WIDTH() {
-        return 88;
-    }
-
-    get TOAST_HEIGHT() {
-        return 44;
     }
 
     get ZOOM_RANGE() {
@@ -43,19 +38,22 @@ Entry.ZoomController = class ZoomController {
     ZOOM_LEVEL = 2;
 
     generateView() {
-        this.svgGroup = this.board.svg.elem('g');
-        this.toastGroup = this.board.svg.elem('g');
-        this.renderStart();
-        this.addControl();
+        const zoomGroup = {
+            svgZoom: this.nowBoard.svg.elem('g'),
+        };
+        this.renderStart(zoomGroup);
+        this.addControl(zoomGroup);
+        zoomGroup.toast = new Toast(this.nowBoard);
+        return zoomGroup;
     }
 
-    renderStart() {
-        this.svgGroup.elem('image', {
+    renderStart(zoomGroup) {
+        zoomGroup.svgZoom.elem('image', {
             href: `${Entry.mediaFilePath}btn_zoom_bg.svg`,
             width: this.CONTROLLER_WIDTH,
             height: this.CONTROLLER_HEIGHT,
         });
-        this.zoomOut = this.svgGroup.elem('image', {
+        zoomGroup.zoomOut = zoomGroup.svgZoom.elem('image', {
             href: `${Entry.mediaFilePath}btn_zoom_out.svg`,
             x: 4,
             y: 3,
@@ -64,7 +62,7 @@ Entry.ZoomController = class ZoomController {
             filter: 'url(#entryButtonShadowFilter)',
             style: 'cursor: zoom-out;',
         });
-        this.zoomReset = this.svgGroup.elem('image', {
+        zoomGroup.zoomReset = zoomGroup.svgZoom.elem('image', {
             id: 'zoom_reset',
             href: `${Entry.mediaFilePath}btn_zoom_reset.svg`,
             x: 44,
@@ -74,7 +72,7 @@ Entry.ZoomController = class ZoomController {
             filter: 'url(#entryButtonShadowFilter)',
             style: 'cursor: pointer;',
         });
-        this.zoomIn = this.svgGroup.elem('image', {
+        zoomGroup.zoomIn = zoomGroup.svgZoom.elem('image', {
             href: `${Entry.mediaFilePath}btn_zoom_in.svg`,
             x: 92,
             y: 3,
@@ -83,36 +81,20 @@ Entry.ZoomController = class ZoomController {
             filter: 'url(#entryButtonShadowFilter)',
             style: 'cursor: zoom-in;',
         });
-
-        this.toast = this.toastGroup.elem('g', {
-            class: 'hideToast',
-        });
-        this.toastBG = this.toast.elem('image', {
-            href: `${Entry.mediaFilePath}zoom_size_bg.svg`,
-            width: this.TOAST_WIDTH,
-            height: this.TOAST_HEIGHT,
-        });
-        this.toastText = this.toast.elem('text', {
-            width: this.TOAST_WIDTH,
-            height: this.TOAST_HEIGHT,
-            x: this.TOAST_HEIGHT,
-            y: 25,
-            fill: '#4f80ff',
-            'text-anchor': 'middle',
-            class: 'toastText',
-        });
-        this.toastText.textContent = '100%';
     }
 
-    addControl() {
-        if (this.board) {
-            $(this.zoomOut).bind('mousedown touchstart', (e) => {
+    addControl(zoomGroup) {
+        if (this.nowBoard) {
+            $(zoomGroup.svgZoom).bind('mousedown touchstart', (e) => {
+                e.stopImmediatePropagation();
+            });
+            $(zoomGroup.zoomOut).bind('mousedown touchstart', (e) => {
                 this.zoomChange(this.ZOOM_MODE.OUT);
             });
-            $(this.zoomReset).bind('mousedown touchstart', (e) => {
+            $(zoomGroup.zoomReset).bind('mousedown touchstart', (e) => {
                 this.zoomChange(this.ZOOM_MODE.RESET);
             });
-            $(this.zoomIn).bind('mousedown touchstart', (e) => {
+            $(zoomGroup.zoomIn).bind('mousedown touchstart', (e) => {
                 this.zoomChange(this.ZOOM_MODE.IN);
             });
         }
@@ -144,31 +126,21 @@ Entry.ZoomController = class ZoomController {
     }
 
     setScale(scale = 1) {
-        this.toastText.textContent = `${scale * 100}%`;
-        const { workspace } = this.board;
+        const zoomGroup = this.boardMap.get(this.nowBoard);
+        const { workspace } = this.nowBoard;
         workspace.setScale(scale);
-        this.toast.removeClass('fadeToast');
-        $(this.toast).width();
-        this.toast.addClass('fadeToast');
-        this.removeToast();
-        const { scroller } = this.board;
+        zoomGroup.toast.show(`${scale * 100}%`);
+        const { scroller } = this.nowBoard;
         scroller.resizeScrollBar && scroller.resizeScrollBar.call(scroller);
     }
 
-    // 애니메이션 Debounce 처리
-    removeToast = _.debounce(() => {
-        this.toast.removeClass('fadeToast');
-    }, 3000);
-
     setPosition() {
-        if (!this.board) {
+        if (!this.nowBoard) {
             return;
         }
-        var svgDom = this.board.svgDom;
+        var svgDom = this.nowBoard.svgDom;
         this.x = svgDom.width() - (this.CONTROLLER_WIDTH + 22.5);
         this.y = 8;
-        this.toastX = (svgDom.width() - this.TOAST_WIDTH) / 2;
-        this.toastY = 19;
         this.align();
     }
 
@@ -176,26 +148,34 @@ Entry.ZoomController = class ZoomController {
         return {
             x: this.x,
             y: this.y,
-            toastX: this.toastX,
-            toastY: this.toastY,
         };
     }
 
     align() {
         var position = this.getPosition();
-        this.svgGroup.attr({
-            transform: `translate(${position.x}, ${position.y})`,
-        });
-        this.toastGroup.attr({
-            transform: `translate(${position.toastX}, ${position.toastY})`,
+        this.boardMap.forEach((zoomGroup) => {
+            zoomGroup.svgZoom.attr({
+                transform: `translate(${position.x}, ${position.y})`,
+            });
         });
     }
 
     setBoard(board) {
-        this.board = board;
-        if (!this.svgGroup) {
-            this.generateView();
+        this.nowBoard = board;
+        const zoomGroup = this.boardMap.get(board);
+        if (!zoomGroup) {
+            this.boardMap.set(board, this.generateView());
         }
         this.setPosition();
+    }
+
+    destroy() {
+        this.boardMap.forEach((zoomGroup) => {
+            if (zoomGroup.toast) {
+                zoomGroup.toast.destroy();
+            }
+        });
+        delete this.nowBoard;
+        delete this.boardMap;
     }
 };
