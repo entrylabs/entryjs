@@ -57,7 +57,6 @@
 
 .blockMenuContainer {
     display: inline-block;
-    overflow: hidden;
     vertical-align: top;
     width: 194px;
     margin-left:2px;
@@ -65,6 +64,12 @@
     background-color: #ecf8ff;
     border:1px solid #d6e9f4;
     border-radius: 0 0 0 6px;
+
+    .blockMenuWrapper {
+        overflow: hidden;
+        height: 100%;
+        transition: width ease 0.2s;
+    }
 
     .block.selected > g > .blockPath,
     .block.selected > g > .blockBackgroundPath {
@@ -82,7 +87,7 @@
 
 .blockMenu {
     height: 100%;
-    width: 100%;
+    min-width: 500px;
 }
 
 .entryCategoryListPhone {

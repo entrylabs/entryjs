@@ -352,7 +352,7 @@ Entry.resizeElement = function(interfaceModel) {
         const adjust = blockMenu.hasCategory() ? -64 : 0;
 
         $('.blockMenuContainer').css({ width: `${menuWidth + adjust}px` });
-        $('.blockMenuContainer>svg').css({ width: `${menuWidth + adjust - 2}px` });
+        $('.blockMenuContainer>div').css({ width: `${menuWidth + adjust - 2}px` });
         blockMenu.setWidth();
         $('.entryWorkspaceBoard').css({ left: `${menuWidth - 4}px` });
         Entry.playground.resizeHandle_.style.left = `${menuWidth - 4}px`;
@@ -956,10 +956,10 @@ Entry.hex2rgb = function(hex) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
         ? {
-            r: parseInt(result[1], 16),
-            g: parseInt(result[2], 16),
-            b: parseInt(result[3], 16),
-        }
+              r: parseInt(result[1], 16),
+              g: parseInt(result[2], 16),
+              b: parseInt(result[3], 16),
+          }
         : null;
 };
 

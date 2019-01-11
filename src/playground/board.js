@@ -226,6 +226,9 @@ Entry.Board = class Board {
 
         this.workingEvent = true;
 
+        if (Entry.isMobile()) {
+            this.scroller.setOpacity(0.8);
+        }
         const board = this;
         let longPressTimer = null;
         if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
@@ -300,6 +303,9 @@ Entry.Board = class Board {
             if (longPressTimer) {
                 clearTimeout(longPressTimer);
                 longPressTimer = null;
+            }
+            if (Entry.isMobile()) {
+                board.scroller.setOpacity(0);
             }
             $(document).unbind('.entryBoard');
             delete board.workingEvent;

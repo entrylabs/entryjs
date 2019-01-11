@@ -136,6 +136,10 @@ class BlockMenu {
             parent,
         });
         Entry.Utils.disableContextmenu(this.blockMenuContainer);
+        this.blockMenuWrapper = Entry.Dom('div', {
+            class: 'blockMenuWrapper',
+            parent: this.blockMenuContainer,
+        });
 
         this.svgDom = Entry.Dom(
             $(
@@ -143,7 +147,7 @@ class BlockMenu {
                     this._svgId
                 }" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>`
             ),
-            { parent: this.blockMenuContainer }
+            { parent: this.blockMenuWrapper }
         );
 
         this.svgDom.mouseenter(function(e) {
@@ -164,9 +168,7 @@ class BlockMenu {
             const { menuWidth } = Entry.interfaceState;
             if (expandWidth > menuWidth) {
                 this.widthBackup = menuWidth - adjust - 2;
-                $(this)
-                    .stop()
-                    .animate({ width: expandWidth - adjust }, 200);
+                $(that.blockMenuWrapper).css('width', expandWidth - adjust);
             }
         });
 
@@ -182,9 +184,7 @@ class BlockMenu {
 
             const widthBackup = this.widthBackup;
             if (widthBackup) {
-                $(this)
-                    .stop()
-                    .animate({ width: widthBackup }, 200);
+                $(that.blockMenuWrapper).css('width', widthBackup);
             }
             delete this.widthBackup;
             delete playground.focusBlockMenu;
@@ -366,7 +366,7 @@ class BlockMenu {
                 this._boardBlockView = newBlockView;
 
                 newBlockView.onMouseDown.call(newBlockView, e);
-                if(newBlockView.dragInstance) {
+                if (newBlockView.dragInstance) {
                     newBlockView.dragInstance.set({
                         isNew: true,
                     });
@@ -564,7 +564,7 @@ class BlockMenu {
     }
 
     selectMenu(selector, doNotFold, doNotAlign) {
-        if(Entry.disposeEvent) {
+        if (Entry.disposeEvent) {
             Entry.disposeEvent.notify();
         }
         if (!this._isOn() || !this._categoryData) {
@@ -801,6 +801,10 @@ class BlockMenu {
             e.stopPropagation();
         }
 
+        if (Entry.isMobile()) {
+            this._scroller.setOpacity(0.8);
+        }
+
         const { pageY } = Entry.Utils.convertMouseEvent(e);
 
         const dragInstance = this.dragInstance;
@@ -809,6 +813,9 @@ class BlockMenu {
     };
 
     onMouseUp = (e) => {
+        if (Entry.isMobile()) {
+            this._scroller.setOpacity(0);
+        }
         $(document).unbind('.blockMenu');
         delete this.dragInstance;
     };
