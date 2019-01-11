@@ -352,7 +352,7 @@ Entry.resizeElement = function(interfaceModel) {
         const adjust = blockMenu.hasCategory() ? -64 : 0;
 
         $('.blockMenuContainer').css({ width: `${menuWidth + adjust}px` });
-        $('.blockMenuContainer>svg').css({ width: `${menuWidth + adjust - 2}px` });
+        $('.blockMenuContainer>div').css({ width: `${menuWidth + adjust - 2}px` });
         blockMenu.setWidth();
         $('.entryWorkspaceBoard').css({ left: `${menuWidth - 4}px` });
         Entry.playground.resizeHandle_.style.left = `${menuWidth - 4}px`;

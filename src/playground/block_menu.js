@@ -133,6 +133,10 @@ class BlockMenu {
             parent,
         });
         Entry.Utils.disableContextmenu(this.blockMenuContainer);
+        this.blockMenuWrapper = Entry.Dom('div', {
+            class: 'blockMenuWrapper',
+            parent: this.blockMenuContainer,
+        });
 
         this.svgDom = Entry.Dom(
             $(
@@ -140,7 +144,7 @@ class BlockMenu {
                     this._svgId
                 }" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>`
             ),
-            { parent: this.blockMenuContainer }
+            { parent: this.blockMenuWrapper }
         );
 
         this.svgDom.mouseenter(function() {
@@ -161,9 +165,7 @@ class BlockMenu {
             const { menuWidth } = Entry.interfaceState;
             if (expandWidth > menuWidth) {
                 this.widthBackup = menuWidth - adjust - 2;
-                $(this)
-                    .stop()
-                    .animate({ width: expandWidth - adjust }, 200);
+                $(that.blockMenuWrapper).css('width', expandWidth - adjust);
             }
         });
 
@@ -179,9 +181,7 @@ class BlockMenu {
 
             const widthBackup = this.widthBackup;
             if (widthBackup) {
-                $(this)
-                    .stop()
-                    .animate({ width: widthBackup }, 200);
+                $(that.blockMenuWrapper).css('width', widthBackup);
             }
             delete this.widthBackup;
             delete playground.focusBlockMenu;
@@ -798,6 +798,10 @@ class BlockMenu {
             e.stopPropagation();
         }
 
+        if (Entry.isMobile()) {
+            this._scroller.setOpacity(0.8);
+        }
+
         const { pageY } = Entry.Utils.convertMouseEvent(e);
 
         const dragInstance = this.dragInstance;
@@ -806,6 +810,9 @@ class BlockMenu {
     };
 
     onMouseUp = () => {
+        if (Entry.isMobile()) {
+            this._scroller.setOpacity(0);
+        }
         $(document).unbind('.blockMenu');
         delete this.dragInstance;
     };
