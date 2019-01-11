@@ -14,24 +14,24 @@
 }
 
 .entryPlaygroundTextAlignLeft {
-    .backgroundImage("text_align_left_off.png");
+    .backgroundImage('text_align_left_off.png');
 }
 .entryPlaygroundTextAlignLeft.toggle {
-    .backgroundImage("text_align_left_on.png");
+    .backgroundImage('text_align_left_on.png');
 }
 
 .entryPlaygroundTextAlignCenter {
-    .backgroundImage("text_align_center_off.png");
+    .backgroundImage('text_align_center_off.png');
 }
 .entryPlaygroundTextAlignCenter.toggle {
-    .backgroundImage("text_align_center_on.png");
+    .backgroundImage('text_align_center_on.png');
 }
 
 .entryPlaygroundTextAlignRight {
-    .backgroundImage("text_align_right_off.png");
+    .backgroundImage('text_align_right_off.png');
 }
 .entryPlaygroundTextAlignRight.toggle {
-    .backgroundImage("text_align_right_on.png");
+    .backgroundImage('text_align_right_on.png');
 }
 
 .entryPlayground_fgColorDiv {
@@ -62,16 +62,16 @@
 }
 
 .entryPlaygroundFontSizeWrapper {
-    position:absolute;
-    padding-left:13px;
-    padding-top:10px;
-    display:inline-block;
+    position: absolute;
+    padding-left: 13px;
+    padding-top: 10px;
+    display: inline-block;
     width: 244px;
     height: 40px;
     border-radius: 4px;
     background-color: #ffffff;
-    right:0px;
-    top:0px;
+    right: 0px;
+    top: 0px;
 }
 
 .entryPlaygroundFontSizeLabel {
@@ -88,13 +88,11 @@
     color: #2c313d;
 }
 
-
 #entryTextColourTable {
     margin-top: 12px;
     cursor: pointer;
     border-collapse: collapse;
 }
-
 
 .entryTd {
     width: 22px;
@@ -105,7 +103,12 @@
     width: 20px;
     height: 20px;
     background-color: white;
-    background-image: -webkit-linear-gradient(135deg, transparent 11.5px, rgb(255,0,0) 13px, rgba(255,255,255,.5) 14.5px);
+    background-image: -webkit-linear-gradient(
+        135deg,
+        transparent 11.5px,
+        rgb(255, 0, 0) 13px,
+        rgba(255, 255, 255, 0.5) 14.5px
+    );
     border: 1px solid;
 }
 
@@ -117,7 +120,7 @@
 
 .entryPlaygroundDefaultWorkspace {
     height: 100%;
-    background-color: #363C46;
+    background-color: #363c46;
     color: white;
 }
 
@@ -131,7 +134,7 @@
 .entryPlaygroundPhone {
     width: 100%;
     height: 500px;
-    background-color: #F5F5F5;
+    background-color: #f5f5f5;
 }
 
 .entryPlaygroundResizeWorkspace {
@@ -144,7 +147,7 @@
     cursor: ew-resize;
     border-left: none;
     z-index: 250;
-    .backgroundImage("entry_scroll_02.png");
+    .backgroundImage('entry_scroll_02.png');
     background-size: 16px auto;
 }
 
@@ -174,7 +177,7 @@
     background-color: #fff;
 
     .entryPlaygroundCommentButtonWorkspace {
-        .backgroundImage("btn-toggle-comment-off.png");
+        .backgroundImage('btn-toggle-comment-off.png');
         background-repeat: no-repeat;
         background-size: 30px auto;
         cursor: pointer;
@@ -186,7 +189,7 @@
         border: 1px solid #e2e2e2;
 
         &.showComment {
-            .backgroundImage("btn-toggle-comment-select.png");
+            .backgroundImage('btn-toggle-comment-select.png');
             background-size: 32px auto;
             width: 32px;
             height: 32px;
@@ -242,7 +245,8 @@
 #entrySoundTab {
     .animation-delay(0.1s);
 }
-#entryPictureTab.hideTab, #entryTextTab.hideTab{
+#entryPictureTab.hideTab,
+#entryTextTab.hideTab {
     .animation-delay(0.2s);
 }
 #entrySoundTab.hideTab {
@@ -252,7 +256,6 @@
     .animation-delay(0.2s);
 }
 
-
 .hideTab {
     .animation-duration(0.7s);
     .animation-name(hideTab);
@@ -260,28 +263,48 @@
 }
 
 @keyframes hideTab {
-    from {}
-    to {margin-top: 44px;opacity:0}
+    from {
+    }
+    to {
+        margin-top: 44px;
+        opacity: 0;
+    }
 }
 
 @-o-keyframes hideTab {
-    from {}
-    to {margin-top: 44px;opacity:0}
+    from {
+    }
+    to {
+        margin-top: 44px;
+        opacity: 0;
+    }
 }
 
 @-ms-keyframes hideTab {
-    from {}
-    to {margin-top: 44px;opacity:0}
+    from {
+    }
+    to {
+        margin-top: 44px;
+        opacity: 0;
+    }
 }
 
 @-moz-keyframes hideTab {
-    from {}
-    to {margin-top: 44px;opacity:0}
+    from {
+    }
+    to {
+        margin-top: 44px;
+        opacity: 0;
+    }
 }
 
 @-webkit-keyframes hideTab {
-    from {}
-    to {margin-top: 44px;opacity:0}
+    from {
+    }
+    to {
+        margin-top: 44px;
+        opacity: 0;
+    }
 }
 
 .showTab {
@@ -292,28 +315,53 @@
 }
 
 @keyframes showTab {
-    from {margin-top: 44px;opacity:0}
-    to {opacity: 1}
+    from {
+        margin-top: 44px;
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 @-o-keyframes showTab {
-    from {margin-top: 44px;opacity:0}
-    to {opacity: 1}
+    from {
+        margin-top: 44px;
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 @-ms-keyframes showTab {
-    from {margin-top: 44px;opacity:0}
-    to {opacity: 1}
+    from {
+        margin-top: 44px;
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 @-moz-keyframes showTab {
-    from {margin-top: 44px;opacity:0}
-    to {opacity: 1}
+    from {
+        margin-top: 44px;
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 @-webkit-keyframes showTab {
-    from {margin-top: 44px;opacity:0}
-    to {opacity: 1}
+    from {
+        margin-top: 44px;
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .entryPlaygroundCurtainWorkspace {
@@ -334,7 +382,7 @@
 
 .entryPlaygroundCurtainPhone {
     position: absolute;
-    background-color: rgba(0,0,0,0.8);
+    background-color: rgba(0, 0, 0, 0.8);
     color: white;
     padding-top: 100px;
     text-align: center;
@@ -345,7 +393,6 @@
     z-index: 5000;
     cursor: pointer;
 }
-
 
 .entryPlaygroundCodeWorkspace {
     overflow: hidden;
@@ -366,7 +413,7 @@
 .entryPlaygroundCodePhone {
     position: relative;
     height: 100%;
-    background-color: #F5F5F5;
+    background-color: #f5f5f5;
 }
 
 .entryPlaygroundCodePhone.entryRemove {
@@ -381,21 +428,21 @@
 }
 
 .entryPlaygroundPictureWorkspace {
-   position: absolute;
-   left: 0;
-   right: 0;
-   bottom: 8px;
-   background-color: #f9f9f9;
-   top: 80px;
-   margin-left: 0;
-   border-radius: 0 0 0 6px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 8px;
+    background-color: #f9f9f9;
+    top: 80px;
+    margin-left: 0;
+    border-radius: 0 0 0 6px;
 }
 
 .entryPlaygroundAddPicture {
-    width:254px;
+    width: 254px;
     padding: 8px 0 7px;
     background-color: #ecf8ff;
-    border: 1px  solid #d6e9f4;
+    border: 1px solid #d6e9f4;
 }
 
 .entryPlaygroundAddPicturePhone {
@@ -421,13 +468,12 @@
     font-weight: 600;
     line-height: 38px;
     cursor: pointer;
-
 }
 
 .entryPlaygroundAddPictureInnerPhone {
     display: block;
     height: 50px;
-    background-color: #CDCFC9;
+    background-color: #cdcfc9;
     color: #656565;
     text-align: center;
     font-size: 10.5pt;
@@ -480,7 +526,6 @@
     background-color: #fff;
 }
 
-
 .entryPlaygroundPictureOrder,
 .entryPlaygroundSoundOrder {
     overflow: hidden;
@@ -494,7 +539,7 @@
     font-size: 10px;
     color: #fff;
     text-align: center;
-    line-height:16px;
+    line-height: 16px;
     z-index: 10;
 }
 
@@ -557,8 +602,7 @@
     background-size: 10px auto;
     background-position: 50% 50%;
     background-repeat: no-repeat;
-    .backgroundImage("layers_icon_close_nor_new.png");
-
+    .backgroundImage('layers_icon_close_nor_new.png');
 }
 
 .pop_selectbox {
@@ -576,7 +620,7 @@
         color: #555;
         letter-spacing: -0.3px;
         line-height: 40px;
-        cursor:pointer;
+        cursor: pointer;
     }
     .select_link:after {
         position: absolute;
@@ -664,13 +708,13 @@
     border: 1px solid #e2e2e2;
     background-color: #fff;
     border-radius: 4px;
-    cursor:pointer;
+    cursor: pointer;
 }
 .entryPlaygroundTextWorkspace .write_box .write_set .font_style_box .style_link.on {
     border: 1px solid #4f80ff;
 }
 .entryPlaygroundTextWorkspace .write_box .input_box .write_type_box {
-    display:inline-block;
+    display: inline-block;
     border-radius: 4px;
     width: 207px;
     height: 40px;
@@ -690,7 +734,7 @@
     text-align: center;
     letter-spacing: -0.3px;
     line-height: 36px;
-    cursor:pointer;
+    cursor: pointer;
 }
 .entryPlaygroundTextWorkspace .write_box .input_box .write_type_box a + a {
     margin-left: -1px;
@@ -703,8 +747,8 @@
 }
 .entryPlaygroundTextWorkspace .write_box .input_box {
     margin: 24px 38px 0;
-    max-width:654px;
-    position:relative;
+    max-width: 654px;
+    position: relative;
 }
 .entryPlaygroundTextWorkspace .write_box .input_box .list {
     padding: 4px 0px;
@@ -729,7 +773,7 @@
     position: relative;
     overflow: hidden;
     height: 40px;
-    max-width:654px;
+    max-width: 654px;
     background-color: #fff;
     border: 1px solid #e2e2e2;
     border-radius: 4px;
@@ -737,19 +781,19 @@
 }
 
 .entryPlaygroundTextWorkspace .write_box .input_inner .bold {
-    font-weight:bold;
+    font-weight: bold;
 }
 
 .entryPlaygroundTextWorkspace .write_box .input_inner .italic {
-    font-style:italic;
+    font-style: italic;
 }
 
 .entryPlaygroundTextWorkspace .write_box .input_inner input[type='text'] {
-    display:none;
+    display: none;
     width: 100%;
-    height:100%;
-    margin:0;
-    padding-left:15px;
+    height: 100%;
+    margin: 0;
+    padding-left: 15px;
     border: 0;
     line-height: 40px;
     outline: 0;
@@ -758,10 +802,10 @@
 }
 .entryPlaygroundTextWorkspace .write_box .input_inner textarea {
     width: 100%;
-    height:100%;
-    margin:0;
-    padding:12px;
-    font-size:14px;
+    height: 100%;
+    margin: 0;
+    padding: 12px;
+    font-size: 14px;
     border: 0;
     line-height: 18px;
     outline: 0;
@@ -777,96 +821,96 @@
 }
 
 .imbtn_pop_font_bold {
-    .backgroundImage("btn_pop_font_bold.png");
+    .backgroundImage('btn_pop_font_bold.png');
     background-size: 38px auto;
     &.on {
-        .backgroundImage("btn_pop_font_bold_on.png");
+        .backgroundImage('btn_pop_font_bold_on.png');
     }
 }
 .imbtn_pop_font_underline {
-    .backgroundImage("btn_pop_font_underline.png");
+    .backgroundImage('btn_pop_font_underline.png');
     background-size: 38px auto;
     &.on {
-        .backgroundImage("btn_pop_font_underline_on.png");
+        .backgroundImage('btn_pop_font_underline_on.png');
     }
 }
 .imbtn_pop_font_italic {
-    .backgroundImage("btn_pop_font_italic.png");
+    .backgroundImage('btn_pop_font_italic.png');
     background-size: 38px auto;
     &.on {
-        .backgroundImage("btn_pop_font_italic_on.png");
+        .backgroundImage('btn_pop_font_italic_on.png');
     }
 }
 .imbtn_pop_font_through {
-    .backgroundImage("btn_pop_font_through.png");
+    .backgroundImage('btn_pop_font_through.png');
     background-size: 38px auto;
     &.on {
-        .backgroundImage("btn_pop_font_through_on.png");
+        .backgroundImage('btn_pop_font_through_on.png');
     }
 }
 .imbtn_pop_font_color {
-    .backgroundImage("btn_pop_font_color.png");
+    .backgroundImage('btn_pop_font_color.png');
     background-size: 38px auto;
     &.on {
-        .backgroundImage("btn_pop_font_color_on.png");
+        .backgroundImage('btn_pop_font_color_on.png');
     }
 }
 .imbtn_pop_font_backgroundcolor {
-    .backgroundImage("btn_pop_font_paint.png");
+    .backgroundImage('btn_pop_font_paint.png');
     background-size: 38px auto;
     &.on {
-        .backgroundImage("btn_pop_font_paint_on.png");
+        .backgroundImage('btn_pop_font_paint_on.png');
     }
 }
 
 .imbtn_pop_font_align_left {
-    .backgroundImage("btn_pop_font_align_left.png");
+    .backgroundImage('btn_pop_font_align_left.png');
     background-size: 38px auto;
     &.on {
-        .backgroundImage("btn_pop_font_align_left_on.png");
+        .backgroundImage('btn_pop_font_align_left_on.png');
     }
 }
 
 .imbtn_pop_font_align_middle {
-    .backgroundImage("btn_pop_font_align_middle.png");
+    .backgroundImage('btn_pop_font_align_middle.png');
     background-size: 38px auto;
     &.on {
-        .backgroundImage("btn_pop_font_align_middle_on.png");
+        .backgroundImage('btn_pop_font_align_middle_on.png');
     }
 }
 
 .imbtn_pop_font_align_right {
-    .backgroundImage("btn_pop_font_align_right.png");
+    .backgroundImage('btn_pop_font_align_right.png');
     background-size: 38px auto;
     &.on {
-        .backgroundImage("btn_pop_font_align_right_on.png");
+        .backgroundImage('btn_pop_font_align_right_on.png');
     }
 }
 
 .imico_pop_select_arr_down:after {
-    .backgroundImage("ico_pop_select_arr_down.png");
+    .backgroundImage('ico_pop_select_arr_down.png');
     background-size: 8px auto;
 }
 .imico_pop_select_arr_up:after {
-    .backgroundImage("ico_pop_select_arr_up.png");
+    .backgroundImage('ico_pop_select_arr_up.png');
     background-size: 8px auto;
 }
 
 #entryFontColorToggle {
-    .backgroundImage("text_in_off.png");
+    .backgroundImage('text_in_off.png');
 }
 
 #entryFontColorToggle.selected {
-    .backgroundImage("text_in_on.png");
+    .backgroundImage('text_in_on.png');
 }
 
 #entryFontBGToggle {
     margin-left: 6px;
-    .backgroundImage("text_out_off.png");
+    .backgroundImage('text_out_off.png');
 }
 
 #entryFontBGToggle.selected {
-    .backgroundImage("text_out_on.png");
+    .backgroundImage('text_out_on.png');
 }
 
 .entryPlaygroundSoundWorkspace {
@@ -899,7 +943,7 @@
     }
 
     .entryPlaygroundSoundEditImage {
-        .backgroundImage('sound_edit.png');
+        .backgroundImage('sound_edit.gif');
         width: 160px;
         height: 160px;
         object-fit: contain;
@@ -954,7 +998,7 @@
 .entryPlaygroundAddSoundInnerPhone {
     display: block;
     height: 40px;
-    background-color: #CDCFC9;
+    background-color: #cdcfc9;
     color: #656565;
     text-align: center;
     font-size: 10.5pt;
@@ -1021,11 +1065,11 @@
     background-position: 50% 50%;
 
     &.entryPlaygroundSoundPlay {
-        .backgroundImage("workspace_sound_play.png");
+        .backgroundImage('workspace_sound_play.png');
     }
 
     &.entryPlaygroundSoundStop {
-        .backgroundImage("workspace_sound_stop.png");
+        .backgroundImage('workspace_sound_stop.png');
     }
 }
 
@@ -1066,24 +1110,24 @@
 }
 
 .entryPlaygroundTextAlignLeft {
-    .backgroundImage("text_align_left_off.png");
+    .backgroundImage('text_align_left_off.png');
 }
 .entryPlaygroundTextAlignLeft.toggle {
-    .backgroundImage("text_align_left_on.png");
+    .backgroundImage('text_align_left_on.png');
 }
 
 .entryPlaygroundTextAlignCenter {
-    .backgroundImage("text_align_center_off.png");
+    .backgroundImage('text_align_center_off.png');
 }
 .entryPlaygroundTextAlignCenter.toggle {
-    .backgroundImage("text_align_center_on.png");
+    .backgroundImage('text_align_center_on.png');
 }
 
 .entryPlaygroundTextAlignRight {
-    .backgroundImage("text_align_right_off.png");
+    .backgroundImage('text_align_right_off.png');
 }
 .entryPlaygroundTextAlignRight.toggle {
-    .backgroundImage("text_align_right_on.png");
+    .backgroundImage('text_align_right_on.png');
 }
 
 .entryPlayground_fgColorDiv {
@@ -1103,8 +1147,8 @@
 }
 
 .entryPlaygroundFontSizeSlider {
-    display:inline-block;
-    margin-left:12px;
+    display: inline-block;
+    margin-left: 12px;
     width: 136px;
     height: 8px;
     border-radius: 3px;
@@ -1126,33 +1170,32 @@
     position: relative;
     margin-top: -14px;
     margin-left: -7px;
-    .backgroundImage("text_size_knob.png");
+    .backgroundImage('text_size_knob.png');
     cursor: pointer;
 }
 
 .entryPlaygroundTextColoursWrapper {
-    width : 260px;
+    width: 260px;
     height: 226px;
     z-index: 10;
     cursor: pointer;
     padding: 20px 5px;
     position: absolute;
-    .backgroundImage("text_color_bg.png");
+    .backgroundImage('text_color_bg.png');
     background-repeat: no-repeat;
     background-size: 260px 226px;
 }
 .entryPlaygroundTextBackgroundsWrapper {
-    width : 260px;
+    width: 260px;
     height: 226px;
     z-index: 10;
     cursor: pointer;
     padding: 20px 5px;
     position: absolute;
-    .backgroundImage("text_color_bg_1.png");
+    .backgroundImage('text_color_bg_1.png');
     background-repeat: no-repeat;
     background-size: 260px 226px;
 }
-
 
 .entryPlaygroundLinebreakWrapper {
     position: fixed;
@@ -1161,7 +1204,7 @@
 
 .entryPlaygroundLinebreakButtons {
     display: inline;
-    font-size:0;
+    font-size: 0;
     img {
         cursor: pointer;
     }
@@ -1186,16 +1229,15 @@
     ul {
         padding-left: 20px;
         li {
-            color: #B4B4B5;
+            color: #b4b4b5;
             font-size: 11px;
         }
     }
 }
 
-
 .tablet {
     .entryPlaygroundResizeWorkspace {
-        .backgroundImage("entry_scroll_02_big_2.png");
+        .backgroundImage('entry_scroll_02_big_2.png');
         width: 15px;
         height: 42px;
         border-top: none;
