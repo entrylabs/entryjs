@@ -4,8 +4,8 @@ Entry.nemoino = {
     name: 'nemoino',
     imageName: 'nemoino.png',
     title: {
-        "ko": "네모이노",
-        "en": "NEMOino"
+        ko: '네모이노',
+        en: 'NEMOino',
     },
     setZero: function() {
         Entry.hw.sendQueue.readablePorts = [];
@@ -21,8 +21,8 @@ Entry.nemoino.getBlocks = function() {
     return {
         //region nemoino 네모이노
         nemoino_get_named_sensor_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -41,6 +41,8 @@ Entry.nemoino.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -54,14 +56,12 @@ Entry.nemoino.getBlocks = function() {
             class: 'nemoino',
             isNotFor: ['nemoino'],
             func: function(sprite, script) {
-                return Entry.hw.getAnalogPortValue(
-                    script.getField('PORT', script)
-                );
+                return Entry.hw.getAnalogPortValue(script.getField('PORT', script));
             },
         },
         nemoino_get_sound_status: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -72,6 +72,8 @@ Entry.nemoino.getBlocks = function() {
                     options: [['소리큼', 'GREAT'], ['소리작음', 'SMALL']],
                     value: 'GREAT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -87,14 +89,13 @@ Entry.nemoino.getBlocks = function() {
             func: function(sprite, script) {
                 var value1 = script.getField('STATUS', script);
                 var value2 = 0;
-                if (value1 == 'GREAT')
-                    return Entry.hw.getAnalogPortValue(value2) > 600 ? 1 : 0;
+                if (value1 == 'GREAT') return Entry.hw.getAnalogPortValue(value2) > 600 ? 1 : 0;
                 else return Entry.hw.getAnalogPortValue(value2) < 600 ? 1 : 0;
             },
         },
         nemoino_is_button_pressed: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -111,6 +112,8 @@ Entry.nemoino.getBlocks = function() {
                     ],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -132,8 +135,8 @@ Entry.nemoino.getBlocks = function() {
             },
         },
         nemoino_get_accelerometer_direction: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -150,6 +153,8 @@ Entry.nemoino.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -180,16 +185,14 @@ Entry.nemoino.getBlocks = function() {
                 result = Math.min(value7, result);
                 result = Math.max(value6, result);
                 result = Math.round(result);
-                if (value1 == 'LEFT' || value1 == 'REAR')
-                    return result < -30 ? 1 : 0;
-                else if (value1 == 'RIGHT' || value1 == 'FRONT')
-                    return result > 30 ? 1 : 0;
+                if (value1 == 'LEFT' || value1 == 'REAR') return result < -30 ? 1 : 0;
+                else if (value1 == 'RIGHT' || value1 == 'FRONT') return result > 30 ? 1 : 0;
                 else if (value1 == 'REVERSE') return result < -50 ? 1 : 0;
             },
         },
         nemoino_get_accelerometer_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -200,6 +203,8 @@ Entry.nemoino.getBlocks = function() {
                     options: [['X', '3'], ['Y', '4'], ['Z', '5']],
                     value: '3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -213,9 +218,7 @@ Entry.nemoino.getBlocks = function() {
             class: 'nemoino',
             isNotFor: ['nemoino'],
             func: function(sprite, script) {
-                var value1 = Entry.hw.getAnalogPortValue(
-                    script.getField('PORT', script)
-                );
+                var value1 = Entry.hw.getAnalogPortValue(script.getField('PORT', script));
                 var value2 = 265;
                 var value3 = 402;
                 var value4 = -90;

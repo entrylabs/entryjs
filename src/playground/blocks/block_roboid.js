@@ -648,8 +648,8 @@ Entry.Roboid.getBlocks = function() {
     return {
         //region roboid 로보이드
         roboid_hamster_hand_found: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -701,8 +701,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -747,6 +747,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'leftProximity',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -842,6 +844,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -913,6 +917,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -984,6 +990,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -1055,6 +1063,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -1126,6 +1136,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -1197,6 +1209,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -1268,6 +1282,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -1339,6 +1355,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -1410,6 +1428,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -1481,6 +1501,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -1552,6 +1574,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -1623,6 +1647,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -1633,8 +1659,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_move_forward_once: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1754,8 +1780,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_turn_once: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1771,6 +1797,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1952,6 +1980,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -1976,6 +2006,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -1986,8 +2018,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_move_forward_for_secs: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2077,8 +2109,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_move_backward_for_secs: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2168,8 +2200,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_turn_for_secs: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2185,6 +2217,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -2278,6 +2312,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2306,6 +2342,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2320,8 +2358,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_change_both_wheels_by: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2412,8 +2450,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_set_both_wheels_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2496,8 +2534,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_change_wheel_by: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2514,6 +2552,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -2598,6 +2638,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2624,6 +2666,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2650,6 +2694,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2664,8 +2710,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_set_wheel_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2682,6 +2728,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -2754,6 +2802,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2780,6 +2830,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2806,6 +2858,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2820,8 +2874,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_follow_line_using: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2837,6 +2891,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'BLACK',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -2847,6 +2903,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -2911,6 +2969,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'BLACK',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2932,6 +2992,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2941,8 +3003,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_follow_line_until: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2958,6 +3020,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'BLACK',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -2969,6 +3033,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -3053,6 +3119,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'BLACK',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3072,6 +3140,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3081,8 +3151,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_set_following_speed_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3104,6 +3174,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -3162,6 +3234,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '1',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -3172,8 +3246,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_stop: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3230,8 +3304,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_set_led_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3248,6 +3322,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -3262,6 +3338,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -3324,6 +3402,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3340,6 +3420,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -3364,6 +3446,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3380,6 +3464,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -3404,6 +3490,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3420,6 +3508,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -3432,8 +3522,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_clear_led: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3450,6 +3540,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -3509,6 +3601,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3531,6 +3625,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3553,6 +3649,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3563,8 +3661,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_beep: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3636,8 +3734,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_change_buzzer_by: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3706,8 +3804,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_set_buzzer_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3764,8 +3862,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_clear_buzzer: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3813,8 +3911,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_play_note_for: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3840,6 +3938,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -3854,6 +3954,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -3955,6 +4057,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -3974,6 +4078,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '1',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -3988,8 +4094,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_rest_for: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4074,8 +4180,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_change_tempo_by: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4142,8 +4248,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_set_tempo_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4210,8 +4316,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_set_port_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4228,6 +4334,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'A',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -4240,6 +4348,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -4308,6 +4418,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '1',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -4338,6 +4450,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '1',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -4368,6 +4482,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '1',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -4380,8 +4496,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_change_output_by: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4398,6 +4514,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'A',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -4479,6 +4597,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'A',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -4505,6 +4625,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'A',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -4531,6 +4653,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'A',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -4545,8 +4669,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_set_output_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4563,6 +4687,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'A',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -4632,6 +4758,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'A',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -4658,6 +4786,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'A',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -4684,6 +4814,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'A',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -4698,8 +4830,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_gripper: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4715,6 +4847,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'OPEN',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -4790,6 +4924,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'OPEN',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
                         params: [null, 'OPEN'],
@@ -4809,6 +4945,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'OPEN',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
                         params: [null, 'CLOSE'],
@@ -4817,8 +4955,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_release_gripper: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4875,8 +5013,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_touching_color: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -4900,6 +5038,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -4953,6 +5093,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '2',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -4964,8 +5106,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_is_color_pattern: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -4986,6 +5128,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -4999,6 +5143,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: '3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -5052,6 +5198,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '1',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -5069,6 +5217,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '3',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -5080,8 +5230,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_button_state: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -5099,6 +5249,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'clicked',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -5150,6 +5302,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'clicked',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -5179,6 +5333,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'clicked',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -5208,6 +5364,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'clicked',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -5218,8 +5376,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -5241,6 +5399,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'colorNumber',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -5308,6 +5468,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'colorNumber',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -5350,6 +5512,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'colorNumber',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -5392,6 +5556,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'colorNumber',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -5434,6 +5600,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'colorNumber',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -5476,6 +5644,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'colorNumber',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -5518,6 +5688,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'colorNumber',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -5560,6 +5732,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'colorNumber',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -5570,8 +5744,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_move_forward_unit: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -5592,6 +5766,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'CM',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -5679,6 +5855,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'CM',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -5690,8 +5868,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_move_backward_unit: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -5712,6 +5890,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'CM',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -5799,6 +5979,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'CM',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -5810,8 +5992,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_turn_unit_in_place: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -5827,6 +6009,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -5841,6 +6025,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'DEG',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -5928,6 +6114,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -5944,6 +6132,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'DEG',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -5967,6 +6157,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -5983,6 +6175,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'DEG',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -5995,8 +6189,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_turn_unit_with_radius_in_direction: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -6012,6 +6206,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -6026,6 +6222,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'DEG',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -6039,6 +6237,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'HEAD',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -6141,6 +6341,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -6157,6 +6359,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'DEG',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -6174,6 +6378,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'HEAD',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -6197,6 +6403,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -6213,6 +6421,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'DEG',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -6230,6 +6440,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'HEAD',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -6242,8 +6454,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_pivot_around_wheel_unit_in_direction: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -6259,6 +6471,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -6273,6 +6487,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'DEG',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -6282,6 +6498,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'HEAD',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -6378,6 +6596,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -6394,6 +6614,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'DEG',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -6407,6 +6629,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'HEAD',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -6430,6 +6654,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -6446,6 +6672,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'DEG',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -6459,6 +6687,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'HEAD',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -6471,8 +6701,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_change_wheels_by_left_right: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -6563,8 +6793,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_set_wheels_to_left_right: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -6647,8 +6877,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_change_wheel_by: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -6665,6 +6895,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -6749,6 +6981,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -6775,6 +7009,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -6801,6 +7037,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -6815,8 +7053,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_set_wheel_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -6833,6 +7071,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -6905,6 +7145,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -6931,6 +7173,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -6957,6 +7201,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -6971,8 +7217,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_follow_line: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -6991,6 +7237,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: '10',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -7049,6 +7297,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '10',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -7060,8 +7310,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_follow_line_until: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -7082,6 +7332,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: '61',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -7161,6 +7413,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '61',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -7172,8 +7426,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_follow_line_until_black: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -7191,6 +7445,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: '71',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -7267,6 +7523,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '71',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -7278,8 +7536,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_cross_intersection: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -7355,8 +7613,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_turn_at_intersection: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -7373,6 +7631,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: '20',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -7448,6 +7708,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '20',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -7470,6 +7732,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '20',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -7492,6 +7756,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '20',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -7502,8 +7768,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_set_following_speed_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -7525,6 +7791,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -7583,6 +7851,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '1',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -7593,8 +7863,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_stop: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -7651,8 +7921,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_set_head_led_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -7675,6 +7945,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: 'RED',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -7736,6 +8008,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: 'RED',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -7747,8 +8021,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_change_head_led_by_rgb: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -7850,8 +8124,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_set_head_led_to_rgb: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -7945,8 +8219,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_clear_head_led: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -8001,8 +8275,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_play_sound_times: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -8025,6 +8299,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -8095,6 +8371,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '1',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -8110,8 +8388,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_play_sound_times_until_done: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -8134,6 +8412,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -8228,6 +8508,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '1',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -8243,8 +8525,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_change_buzzer_by: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -8314,8 +8596,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_set_buzzer_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -8383,8 +8665,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_clear_sound: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -8440,8 +8722,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_play_note: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -8467,6 +8749,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -8481,6 +8765,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -8548,6 +8834,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -8566,6 +8854,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '1',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -8576,8 +8866,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_play_note_for_beats: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -8603,6 +8893,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -8617,6 +8909,8 @@ Entry.Roboid.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -8719,6 +9013,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase,
@@ -8737,6 +9033,8 @@ Entry.Roboid.getBlocks = function() {
                                 ],
                                 value: '1',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -8751,8 +9049,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_rest_for_beats: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -8838,8 +9136,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_change_tempo_by: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -8905,8 +9203,8 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_set_tempo_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [

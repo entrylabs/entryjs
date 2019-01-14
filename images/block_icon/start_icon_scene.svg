@@ -1,13 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
-    <g fill="none" fill-rule="nonzero">
-        <circle cx="15" cy="15" r="14.5" fill="#FFF" stroke="#F2F2F2"/>
-        <g transform="translate(7 6)">
-            <rect width="14" height="9" x="1" y="7" fill="#10D35E" rx="1"/>
-            <g transform="rotate(-15 15.692 1.202)">
-                <rect width="14" height="3" fill="#10D35E" rx=".5"/>
-                <path fill="#FFF" d="M2 0h2L2 3H0l2-3zm5 0h2L7 3H5l2-3zm5 0h2l-2 3h-2l2-3z"/>
+    <g fill="none" fill-rule="evenodd">
+        <g fill-rule="nonzero">
+            <circle cx="15" cy="15" r="14.5" fill="#FFF" stroke="#F2F2F2"/>
+            <g transform="translate(6.5 5)">
+                <rect width="14.933" height="9.6" x="1.067" y="7.467" fill="#00B400" rx="1"/>
+                <g transform="rotate(-15 16.738 1.282)">
+                    <rect width="14.933" height="3.2" fill="#00B400" rx=".5"/>
+                    <path fill="#FFF" d="M2.133 0h2.134L2.133 3.2H0L2.133 0zm5.334 0H9.6L7.467 3.2H5.333L7.467 0zM12.8 0h2.133L12.8 3.2h-2.133L12.8 0z"/>
+                </g>
+                <path fill="#FFF" d="M3.7 9.6h4.333a.5.5 0 0 1 .5.5v.067a.5.5 0 0 1-.5.5H3.7a.5.5 0 0 1-.5-.5V10.1a.5.5 0 0 1 .5-.5zm0 2.133h8.6a.5.5 0 0 1 .5.5v.067a.5.5 0 0 1-.5.5H3.7a.5.5 0 0 1-.5-.5v-.067a.5.5 0 0 1 .5-.5zm0 2.134h9.667a.5.5 0 0 1 .5.5v.066a.5.5 0 0 1-.5.5H3.7a.5.5 0 0 1-.5-.5v-.066a.5.5 0 0 1 .5-.5z"/>
             </g>
-            <path fill="#FFF" d="M3.5 9h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1 0-1zm0 2h8a.5.5 0 1 1 0 1h-8a.5.5 0 1 1 0-1zm0 2h9a.5.5 0 1 1 0 1h-9a.5.5 0 1 1 0-1z"/>
         </g>
     </g>
 </svg>

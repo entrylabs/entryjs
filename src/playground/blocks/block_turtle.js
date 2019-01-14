@@ -151,8 +151,8 @@ Entry.Turtle = {
     url: 'http://turtle.school',
     imageName: 'turtle.png',
     title: {
-        "en": "Turtle",
-        "ko": "거북이"
+        en: 'Turtle',
+        ko: '거북이',
     },
     monitorTemplate: {
         imgPath: 'hw/turtle.png',
@@ -231,13 +231,12 @@ Entry.Turtle = {
     },
 };
 
-
 Entry.Turtle.getBlocks = function() {
     return {
         //region turtle 터틀
         turtle_touching_color: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -257,6 +256,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -295,9 +296,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: '2',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnValuePartialUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnValuePartialUpperCase,
                                 codeMap: 'Entry.CodeMap.Turtle.touching_colors',
                             },
                         ],
@@ -306,8 +307,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_is_color_pattern: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -324,6 +325,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -337,6 +340,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: '3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -353,8 +358,7 @@ Entry.Turtle.getBlocks = function() {
             func: function(sprite, script) {
                 var pd = Entry.hw.portData;
                 return (
-                    Number(script.getField('COLOR1')) * 10 +
-                        Number(script.getField('COLOR2')) ==
+                    Number(script.getField('COLOR1')) * 10 + Number(script.getField('COLOR2')) ==
                     pd.colorPattern
                 );
             },
@@ -377,9 +381,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: '1',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnValuePartialUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnValuePartialUpperCase,
                                 codeMap: 'Entry.CodeMap.Turtle.pattern_colors',
                             },
                             {
@@ -394,9 +398,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: '3',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnValuePartialUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnValuePartialUpperCase,
                                 codeMap: 'Entry.CodeMap.Turtle.pattern_colors',
                             },
                         ],
@@ -405,8 +409,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_button_state: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -420,6 +424,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: 'clicked',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -448,19 +454,14 @@ Entry.Turtle.getBlocks = function() {
                                 type: 'Dropdown',
                                 options: [
                                     [Lang.Blocks.ROBOID_clicked, 'clicked'],
-                                    [
-                                        Lang.Blocks.ROBOID_double_clicked,
-                                        'doubleClicked',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_long_pressed,
-                                        'longPressed',
-                                    ],
+                                    [Lang.Blocks.ROBOID_double_clicked, 'doubleClicked'],
+                                    [Lang.Blocks.ROBOID_long_pressed, 'longPressed'],
                                 ],
                                 value: 'clicked',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
                         params: ['clicked'],
@@ -473,19 +474,14 @@ Entry.Turtle.getBlocks = function() {
                                 type: 'Dropdown',
                                 options: [
                                     [Lang.Blocks.ROBOID_clicked, 'clicked'],
-                                    [
-                                        Lang.Blocks.ROBOID_double_clicked,
-                                        'doubleClicked',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_long_pressed,
-                                        'longPressed',
-                                    ],
+                                    [Lang.Blocks.ROBOID_double_clicked, 'doubleClicked'],
+                                    [Lang.Blocks.ROBOID_long_pressed, 'longPressed'],
                                 ],
                                 value: 'clicked',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
                         params: ['doubleClicked'],
@@ -498,19 +494,14 @@ Entry.Turtle.getBlocks = function() {
                                 type: 'Dropdown',
                                 options: [
                                     [Lang.Blocks.ROBOID_clicked, 'clicked'],
-                                    [
-                                        Lang.Blocks.ROBOID_double_clicked,
-                                        'doubleClicked',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_long_pressed,
-                                        'longPressed',
-                                    ],
+                                    [Lang.Blocks.ROBOID_double_clicked, 'doubleClicked'],
+                                    [Lang.Blocks.ROBOID_long_pressed, 'longPressed'],
                                 ],
                                 value: 'clicked',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
                         params: ['longPressed'],
@@ -519,8 +510,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -538,6 +529,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: 'colorNumber',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -565,33 +558,19 @@ Entry.Turtle.getBlocks = function() {
                             {
                                 type: 'Dropdown',
                                 options: [
-                                    [
-                                        Lang.Blocks.ROBOID_color_number,
-                                        'colorNumber',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_color_pattern,
-                                        'colorPattern',
-                                    ],
+                                    [Lang.Blocks.ROBOID_color_number, 'colorNumber'],
+                                    [Lang.Blocks.ROBOID_color_pattern, 'colorPattern'],
                                     [Lang.Blocks.ROBOID_floor, 'floor'],
                                     [Lang.Blocks.ROBOID_button, 'button'],
-                                    [
-                                        Lang.Blocks.ROBOID_acceleration_x,
-                                        'accelerationX',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_acceleration_y,
-                                        'accelerationY',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_acceleration_z,
-                                        'accelerationZ',
-                                    ],
+                                    [Lang.Blocks.ROBOID_acceleration_x, 'accelerationX'],
+                                    [Lang.Blocks.ROBOID_acceleration_y, 'accelerationY'],
+                                    [Lang.Blocks.ROBOID_acceleration_z, 'accelerationZ'],
                                 ],
                                 value: 'colorNumber',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
                         params: ['colorNumber'],
@@ -603,33 +582,19 @@ Entry.Turtle.getBlocks = function() {
                             {
                                 type: 'Dropdown',
                                 options: [
-                                    [
-                                        Lang.Blocks.ROBOID_color_number,
-                                        'colorNumber',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_color_pattern,
-                                        'colorPattern',
-                                    ],
+                                    [Lang.Blocks.ROBOID_color_number, 'colorNumber'],
+                                    [Lang.Blocks.ROBOID_color_pattern, 'colorPattern'],
                                     [Lang.Blocks.ROBOID_floor, 'floor'],
                                     [Lang.Blocks.ROBOID_button, 'button'],
-                                    [
-                                        Lang.Blocks.ROBOID_acceleration_x,
-                                        'accelerationX',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_acceleration_y,
-                                        'accelerationY',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_acceleration_z,
-                                        'accelerationZ',
-                                    ],
+                                    [Lang.Blocks.ROBOID_acceleration_x, 'accelerationX'],
+                                    [Lang.Blocks.ROBOID_acceleration_y, 'accelerationY'],
+                                    [Lang.Blocks.ROBOID_acceleration_z, 'accelerationZ'],
                                 ],
                                 value: 'colorNumber',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
                         params: ['colorPattern'],
@@ -641,33 +606,19 @@ Entry.Turtle.getBlocks = function() {
                             {
                                 type: 'Dropdown',
                                 options: [
-                                    [
-                                        Lang.Blocks.ROBOID_color_number,
-                                        'colorNumber',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_color_pattern,
-                                        'colorPattern',
-                                    ],
+                                    [Lang.Blocks.ROBOID_color_number, 'colorNumber'],
+                                    [Lang.Blocks.ROBOID_color_pattern, 'colorPattern'],
                                     [Lang.Blocks.ROBOID_floor, 'floor'],
                                     [Lang.Blocks.ROBOID_button, 'button'],
-                                    [
-                                        Lang.Blocks.ROBOID_acceleration_x,
-                                        'accelerationX',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_acceleration_y,
-                                        'accelerationY',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_acceleration_z,
-                                        'accelerationZ',
-                                    ],
+                                    [Lang.Blocks.ROBOID_acceleration_x, 'accelerationX'],
+                                    [Lang.Blocks.ROBOID_acceleration_y, 'accelerationY'],
+                                    [Lang.Blocks.ROBOID_acceleration_z, 'accelerationZ'],
                                 ],
                                 value: 'colorNumber',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
                         params: ['floor'],
@@ -679,33 +630,19 @@ Entry.Turtle.getBlocks = function() {
                             {
                                 type: 'Dropdown',
                                 options: [
-                                    [
-                                        Lang.Blocks.ROBOID_color_number,
-                                        'colorNumber',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_color_pattern,
-                                        'colorPattern',
-                                    ],
+                                    [Lang.Blocks.ROBOID_color_number, 'colorNumber'],
+                                    [Lang.Blocks.ROBOID_color_pattern, 'colorPattern'],
                                     [Lang.Blocks.ROBOID_floor, 'floor'],
                                     [Lang.Blocks.ROBOID_button, 'button'],
-                                    [
-                                        Lang.Blocks.ROBOID_acceleration_x,
-                                        'accelerationX',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_acceleration_y,
-                                        'accelerationY',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_acceleration_z,
-                                        'accelerationZ',
-                                    ],
+                                    [Lang.Blocks.ROBOID_acceleration_x, 'accelerationX'],
+                                    [Lang.Blocks.ROBOID_acceleration_y, 'accelerationY'],
+                                    [Lang.Blocks.ROBOID_acceleration_z, 'accelerationZ'],
                                 ],
                                 value: 'colorNumber',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
                         params: ['button'],
@@ -717,33 +654,19 @@ Entry.Turtle.getBlocks = function() {
                             {
                                 type: 'Dropdown',
                                 options: [
-                                    [
-                                        Lang.Blocks.ROBOID_color_number,
-                                        'colorNumber',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_color_pattern,
-                                        'colorPattern',
-                                    ],
+                                    [Lang.Blocks.ROBOID_color_number, 'colorNumber'],
+                                    [Lang.Blocks.ROBOID_color_pattern, 'colorPattern'],
                                     [Lang.Blocks.ROBOID_floor, 'floor'],
                                     [Lang.Blocks.ROBOID_button, 'button'],
-                                    [
-                                        Lang.Blocks.ROBOID_acceleration_x,
-                                        'accelerationX',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_acceleration_y,
-                                        'accelerationY',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_acceleration_z,
-                                        'accelerationZ',
-                                    ],
+                                    [Lang.Blocks.ROBOID_acceleration_x, 'accelerationX'],
+                                    [Lang.Blocks.ROBOID_acceleration_y, 'accelerationY'],
+                                    [Lang.Blocks.ROBOID_acceleration_z, 'accelerationZ'],
                                 ],
                                 value: 'colorNumber',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
                         params: ['accelerationX'],
@@ -755,33 +678,19 @@ Entry.Turtle.getBlocks = function() {
                             {
                                 type: 'Dropdown',
                                 options: [
-                                    [
-                                        Lang.Blocks.ROBOID_color_number,
-                                        'colorNumber',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_color_pattern,
-                                        'colorPattern',
-                                    ],
+                                    [Lang.Blocks.ROBOID_color_number, 'colorNumber'],
+                                    [Lang.Blocks.ROBOID_color_pattern, 'colorPattern'],
                                     [Lang.Blocks.ROBOID_floor, 'floor'],
                                     [Lang.Blocks.ROBOID_button, 'button'],
-                                    [
-                                        Lang.Blocks.ROBOID_acceleration_x,
-                                        'accelerationX',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_acceleration_y,
-                                        'accelerationY',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_acceleration_z,
-                                        'accelerationZ',
-                                    ],
+                                    [Lang.Blocks.ROBOID_acceleration_x, 'accelerationX'],
+                                    [Lang.Blocks.ROBOID_acceleration_y, 'accelerationY'],
+                                    [Lang.Blocks.ROBOID_acceleration_z, 'accelerationZ'],
                                 ],
                                 value: 'colorNumber',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
                         params: ['accelerationY'],
@@ -793,33 +702,19 @@ Entry.Turtle.getBlocks = function() {
                             {
                                 type: 'Dropdown',
                                 options: [
-                                    [
-                                        Lang.Blocks.ROBOID_color_number,
-                                        'colorNumber',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_color_pattern,
-                                        'colorPattern',
-                                    ],
+                                    [Lang.Blocks.ROBOID_color_number, 'colorNumber'],
+                                    [Lang.Blocks.ROBOID_color_pattern, 'colorPattern'],
                                     [Lang.Blocks.ROBOID_floor, 'floor'],
                                     [Lang.Blocks.ROBOID_button, 'button'],
-                                    [
-                                        Lang.Blocks.ROBOID_acceleration_x,
-                                        'accelerationX',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_acceleration_y,
-                                        'accelerationY',
-                                    ],
-                                    [
-                                        Lang.Blocks.ROBOID_acceleration_z,
-                                        'accelerationZ',
-                                    ],
+                                    [Lang.Blocks.ROBOID_acceleration_x, 'accelerationX'],
+                                    [Lang.Blocks.ROBOID_acceleration_y, 'accelerationY'],
+                                    [Lang.Blocks.ROBOID_acceleration_z, 'accelerationZ'],
                                 ],
                                 value: 'colorNumber',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
                         params: ['accelerationZ'],
@@ -828,8 +723,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_move_forward_unit: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -846,6 +741,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: 'CM',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -922,9 +819,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'CM',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnValuePartialUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnValuePartialUpperCase,
                                 codeMap: 'Entry.CodeMap.Turtle.units',
                             },
                         ],
@@ -933,8 +830,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_move_backward_unit: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -951,6 +848,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: 'CM',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1027,9 +926,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'CM',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnValuePartialUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnValuePartialUpperCase,
                                 codeMap: 'Entry.CodeMap.Turtle.units',
                             },
                         ],
@@ -1038,8 +937,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_turn_unit_in_place: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1051,6 +950,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1065,6 +966,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: 'DEG',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1109,8 +1012,7 @@ Entry.Turtle.getBlocks = function() {
                     if (field == 'SEC') unit = 2;
                     else if (field == 'PULSE') unit = 3;
                     var value = script.getNumberValue('VALUE');
-                    if (direction == 'LEFT')
-                        turtle.setMotion(sq, 3, unit, 0, value, 0);
+                    if (direction == 'LEFT') turtle.setMotion(sq, 3, unit, 0, value, 0);
                     else turtle.setMotion(sq, 4, unit, 0, value, 0);
                     return script;
                 } else {
@@ -1141,8 +1043,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                             {
                                 type: 'Block',
@@ -1157,9 +1060,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'DEG',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnValuePartialUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnValuePartialUpperCase,
                                 codeMap: 'Entry.CodeMap.Turtle.units',
                             },
                         ],
@@ -1176,8 +1079,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                             {
                                 type: 'Block',
@@ -1192,9 +1096,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'DEG',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnValuePartialUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnValuePartialUpperCase,
                                 codeMap: 'Entry.CodeMap.Turtle.units',
                             },
                         ],
@@ -1204,8 +1108,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_turn_unit_with_radius_in_direction: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1217,6 +1121,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1231,6 +1137,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: 'DEG',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1238,12 +1146,11 @@ Entry.Turtle.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.ROBOID_head, 'HEAD'],
-                        [Lang.Blocks.ROBOID_tail, 'TAIL'],
-                    ],
+                    options: [[Lang.Blocks.ROBOID_head, 'HEAD'], [Lang.Blocks.ROBOID_tail, 'TAIL']],
                     value: 'HEAD',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1298,12 +1205,10 @@ Entry.Turtle.getBlocks = function() {
                     var head = script.getField('HEAD');
                     var radius = script.getNumberValue('RADIUS');
                     if (direction == 'LEFT') {
-                        if (head == 'HEAD')
-                            turtle.setMotion(sq, 9, unit, 0, value, radius);
+                        if (head == 'HEAD') turtle.setMotion(sq, 9, unit, 0, value, radius);
                         else turtle.setMotion(sq, 10, unit, 0, value, radius);
                     } else {
-                        if (head == 'HEAD')
-                            turtle.setMotion(sq, 11, unit, 0, value, radius);
+                        if (head == 'HEAD') turtle.setMotion(sq, 11, unit, 0, value, radius);
                         else turtle.setMotion(sq, 12, unit, 0, value, radius);
                     }
                     return script;
@@ -1335,8 +1240,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                             {
                                 type: 'Block',
@@ -1351,9 +1257,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'DEG',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnValuePartialUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnValuePartialUpperCase,
                                 codeMap: 'Entry.CodeMap.Turtle.units',
                             },
                             {
@@ -1368,9 +1274,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'HEAD',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnValuePartialUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnValuePartialUpperCase,
                                 codeMap: 'Entry.CodeMap.Turtle.head_tail',
                             },
                         ],
@@ -1387,8 +1293,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                             {
                                 type: 'Block',
@@ -1403,9 +1310,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'DEG',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnValuePartialUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnValuePartialUpperCase,
                                 codeMap: 'Entry.CodeMap.Turtle.units',
                             },
                             {
@@ -1420,9 +1327,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'HEAD',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnValuePartialUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnValuePartialUpperCase,
                                 codeMap: 'Entry.CodeMap.Turtle.head_tail',
                             },
                         ],
@@ -1432,8 +1339,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_pivot_around_wheel_unit_in_direction: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1445,6 +1352,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1459,15 +1368,16 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: 'DEG',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.ROBOID_head, 'HEAD'],
-                        [Lang.Blocks.ROBOID_tail, 'TAIL'],
-                    ],
+                    options: [[Lang.Blocks.ROBOID_head, 'HEAD'], [Lang.Blocks.ROBOID_tail, 'TAIL']],
                     value: 'HEAD',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1516,12 +1426,10 @@ Entry.Turtle.getBlocks = function() {
                     var value = script.getNumberValue('VALUE');
                     var head = script.getField('HEAD');
                     if (direction == 'LEFT') {
-                        if (head == 'HEAD')
-                            turtle.setMotion(sq, 5, unit, 0, value, 0);
+                        if (head == 'HEAD') turtle.setMotion(sq, 5, unit, 0, value, 0);
                         else turtle.setMotion(sq, 6, unit, 0, value, 0);
                     } else {
-                        if (head == 'HEAD')
-                            turtle.setMotion(sq, 7, unit, 0, value, 0);
+                        if (head == 'HEAD') turtle.setMotion(sq, 7, unit, 0, value, 0);
                         else turtle.setMotion(sq, 8, unit, 0, value, 0);
                     }
                     return script;
@@ -1553,8 +1461,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                             {
                                 type: 'Block',
@@ -1569,9 +1478,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'DEG',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnValuePartialUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnValuePartialUpperCase,
                                 codeMap: 'Entry.CodeMap.Turtle.units',
                             },
                             {
@@ -1582,9 +1491,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'HEAD',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnValuePartialUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnValuePartialUpperCase,
                                 codeMap: 'Entry.CodeMap.Turtle.head_tail',
                             },
                         ],
@@ -1601,8 +1510,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                             {
                                 type: 'Block',
@@ -1617,9 +1527,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'DEG',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnValuePartialUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnValuePartialUpperCase,
                                 codeMap: 'Entry.CodeMap.Turtle.units',
                             },
                             {
@@ -1630,9 +1540,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'HEAD',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnValuePartialUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnValuePartialUpperCase,
                                 codeMap: 'Entry.CodeMap.Turtle.head_tail',
                             },
                         ],
@@ -1642,8 +1552,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_change_wheels_by_left_right: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1691,10 +1601,8 @@ Entry.Turtle.getBlocks = function() {
                 turtle.setPulse(sq, 0);
                 turtle.setLineTracerMode(sq, 0);
                 turtle.setMotion(sq, 0, 0, 0, 0, 0);
-                sq.leftWheel =
-                    sq.leftWheel != undefined ? sq.leftWheel + left : left;
-                sq.rightWheel =
-                    sq.rightWheel != undefined ? sq.rightWheel + right : right;
+                sq.leftWheel = sq.leftWheel != undefined ? sq.leftWheel + left : left;
+                sq.rightWheel = sq.rightWheel != undefined ? sq.rightWheel + right : right;
                 return script.callReturn();
             },
             syntax: {
@@ -1717,8 +1625,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_set_wheels_to_left_right: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1788,8 +1696,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_change_wheel_by: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1802,6 +1710,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1841,24 +1751,12 @@ Entry.Turtle.getBlocks = function() {
                 turtle.setLineTracerMode(sq, 0);
                 turtle.setMotion(sq, 0, 0, 0, 0, 0);
                 if (direction == 'LEFT') {
-                    sq.leftWheel =
-                        sq.leftWheel != undefined
-                            ? sq.leftWheel + value
-                            : value;
+                    sq.leftWheel = sq.leftWheel != undefined ? sq.leftWheel + value : value;
                 } else if (direction == 'RIGHT') {
-                    sq.rightWheel =
-                        sq.rightWheel != undefined
-                            ? sq.rightWheel + value
-                            : value;
+                    sq.rightWheel = sq.rightWheel != undefined ? sq.rightWheel + value : value;
                 } else {
-                    sq.leftWheel =
-                        sq.leftWheel != undefined
-                            ? sq.leftWheel + value
-                            : value;
-                    sq.rightWheel =
-                        sq.rightWheel != undefined
-                            ? sq.rightWheel + value
-                            : value;
+                    sq.leftWheel = sq.leftWheel != undefined ? sq.leftWheel + value : value;
+                    sq.rightWheel = sq.rightWheel != undefined ? sq.rightWheel + value : value;
                 }
                 return script.callReturn();
             },
@@ -1877,8 +1775,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                             {
                                 type: 'Block',
@@ -1899,8 +1798,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                             {
                                 type: 'Block',
@@ -1921,8 +1821,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                             {
                                 type: 'Block',
@@ -1936,8 +1837,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_set_wheel_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1950,6 +1851,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -2013,8 +1916,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                             {
                                 type: 'Block',
@@ -2035,8 +1939,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                             {
                                 type: 'Block',
@@ -2057,8 +1962,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                             {
                                 type: 'Block',
@@ -2072,8 +1978,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_follow_line: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2088,6 +1994,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: '10',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -2134,9 +2042,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: '10',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnValuePartialUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnValuePartialUpperCase,
                                 codeMap: 'Entry.CodeMap.Turtle.line_colors',
                             },
                         ],
@@ -2145,8 +2053,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_follow_line_until: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2163,6 +2071,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: '61',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -2226,9 +2136,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: '61',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnValuePartialUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnValuePartialUpperCase,
                                 codeMap: 'Entry.CodeMap.Turtle.target_colors',
                             },
                         ],
@@ -2237,8 +2147,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_follow_line_until_black: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2252,6 +2162,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: '71',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -2312,9 +2224,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: '71',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnValuePartialUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnValuePartialUpperCase,
                                 codeMap: 'Entry.CodeMap.Turtle.color_lines',
                             },
                         ],
@@ -2323,8 +2235,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_cross_intersection: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2377,8 +2289,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_turn_at_intersection: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2391,6 +2303,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: '20',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -2450,8 +2364,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: '20',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
                         params: ['20'],
@@ -2468,8 +2383,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: '20',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
                         params: ['30'],
@@ -2486,8 +2402,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: '20',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
                         params: ['50'],
@@ -2496,8 +2413,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_set_following_speed_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2515,6 +2432,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -2560,9 +2479,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: '1',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnStringOrNumberByValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
                             },
                         ],
                     },
@@ -2570,8 +2489,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_stop: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2609,8 +2528,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_set_head_led_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2629,6 +2548,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: 'RED',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -2669,17 +2590,14 @@ Entry.Turtle.getBlocks = function() {
                                     [Lang.Blocks.ROBOID_color_sky_blue, 'CYAN'],
                                     [Lang.Blocks.ROBOID_color_blue, 'BLUE'],
                                     [Lang.Blocks.ROBOID_color_violet, 'VIOLET'],
-                                    [
-                                        Lang.Blocks.ROBOID_color_purple,
-                                        'MAGENTA',
-                                    ],
+                                    [Lang.Blocks.ROBOID_color_purple, 'MAGENTA'],
                                     [Lang.Blocks.ROBOID_color_white, 'WHITE'],
                                 ],
                                 value: 'RED',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnValuePartialUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnValuePartialUpperCase,
                                 codeMap: 'Entry.CodeMap.Turtle.led_colors',
                             },
                         ],
@@ -2688,8 +2606,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_change_head_led_by_rgb: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2744,8 +2662,7 @@ Entry.Turtle.getBlocks = function() {
                 var green = script.getNumberValue('GREEN');
                 var blue = script.getNumberValue('BLUE');
                 sq.ledRed = sq.ledRed != undefined ? sq.ledRed + red : red;
-                sq.ledGreen =
-                    sq.ledGreen != undefined ? sq.ledGreen + green : green;
+                sq.ledGreen = sq.ledGreen != undefined ? sq.ledGreen + green : green;
                 sq.ledBlue = sq.ledBlue != undefined ? sq.ledBlue + blue : blue;
                 return script.callReturn();
             },
@@ -2773,8 +2690,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_set_head_led_to_rgb: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2854,8 +2771,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_clear_head_led: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2890,8 +2807,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_play_sound_times: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2910,6 +2827,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -2970,9 +2889,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: '1',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnValuePartialUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnValuePartialUpperCase,
                                 codeMap: 'Entry.CodeMap.Turtle.sounds',
                             },
                             {
@@ -2985,8 +2904,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_play_sound_times_until_done: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3005,6 +2924,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -3088,9 +3009,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: '1',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnValuePartialUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnValuePartialUpperCase,
                                 codeMap: 'Entry.CodeMap.Turtle.sounds',
                             },
                             {
@@ -3103,8 +3024,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_change_buzzer_by: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3153,8 +3074,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_set_buzzer_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3202,8 +3123,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_clear_sound: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3247,8 +3168,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_play_note: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3270,6 +3191,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -3284,6 +3207,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -3337,9 +3262,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnValuePartialUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnValuePartialUpperCase,
                                 codeMap: 'Entry.CodeMap.Turtle.notes',
                             },
                             {
@@ -3355,9 +3280,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: '1',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnStringOrNumberByValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
                             },
                         ],
                     },
@@ -3365,8 +3290,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_play_note_for_beats: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3388,6 +3313,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -3402,6 +3329,8 @@ Entry.Turtle.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -3495,9 +3424,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnValuePartialUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnValuePartialUpperCase,
                                 codeMap: 'Entry.CodeMap.Turtle.notes',
                             },
                             {
@@ -3513,9 +3442,9 @@ Entry.Turtle.getBlocks = function() {
                                 ],
                                 value: '1',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnStringOrNumberByValue,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
                             },
                             {
                                 type: 'Block',
@@ -3527,8 +3456,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_rest_for_beats: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3612,8 +3541,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_change_tempo_by: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3666,8 +3595,8 @@ Entry.Turtle.getBlocks = function() {
             },
         },
         turtle_set_tempo_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [

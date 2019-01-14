@@ -5,8 +5,8 @@ Entry.mkboard = {
     url: 'http://www.jkelec.co.kr',
     imageName: 'mkboard.png',
     title: {
-        "en": "digital monkeyboard",
-        "ko": "디지털 몽키보드"
+        en: 'digital monkeyboard',
+        ko: '디지털 몽키보드',
     },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
@@ -369,8 +369,8 @@ Entry.mkboard.getBlocks = function() {
     return {
         //region mkboard 몽키보드
         mkboard_analog_list: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -389,6 +389,8 @@ Entry.mkboard.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -404,8 +406,8 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_get_analog_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -438,8 +440,8 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_get_analog_value_map: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -533,8 +535,8 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_get_ultrasonic_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -581,9 +583,7 @@ Entry.mkboard.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.mkboard.sensorTypes.ULTRASONIC
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.mkboard.sensorTypes.ULTRASONIC] = {
                     port: [port1, port2],
                     time: new Date().getTime(),
                 };
@@ -592,8 +592,8 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_get_digital: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             params: [
@@ -631,8 +631,8 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_toggle_led: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -697,8 +697,8 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_digital_pwm: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -755,8 +755,8 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_tone_list: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -780,6 +780,8 @@ Entry.mkboard.getBlocks = function() {
                     ],
                     value: 'C',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -795,8 +797,8 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_tone_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -824,8 +826,8 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_octave_list: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -842,6 +844,8 @@ Entry.mkboard.getBlocks = function() {
                     ],
                     value: '3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -857,8 +861,8 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_set_tone: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -920,8 +924,7 @@ Entry.mkboard.getBlocks = function() {
 
                 if (!script.isStart) {
                     var note = script.getValue('NOTE', script);
-                    if (!Entry.Utils.isNumber(note))
-                        note = Entry.mkboard.toneTable[note];
+                    if (!Entry.Utils.isNumber(note)) note = Entry.mkboard.toneTable[note];
 
                     if (note < 0) {
                         note = 0;
@@ -995,8 +998,8 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_set_servo: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1052,8 +1055,8 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_list_digital_lcd_line: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -1063,6 +1066,8 @@ Entry.mkboard.getBlocks = function() {
                     options: [['LINE1', '0'], ['LINE2', '1']],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1077,8 +1082,8 @@ Entry.mkboard.getBlocks = function() {
             },
         },
         mkboard_list_digital_lcd_column: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -1105,6 +1110,8 @@ Entry.mkboard.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1119,8 +1126,8 @@ Entry.mkboard.getBlocks = function() {
             },
         },
         mkboard_set_lcd: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             template: Lang.template.mkboard_set_lcd,
@@ -1246,8 +1253,8 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: ['mkboard.mkboard_set_lcd(%1, %2, %3)'] },
         },
         mkboard_list_lcd_command: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -1265,6 +1272,8 @@ Entry.mkboard.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1279,8 +1288,8 @@ Entry.mkboard.getBlocks = function() {
             },
         },
         mkboard_lcd_command: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             template: Lang.template.mkboard_lcd_command,
             //"template": "%1 %2",
