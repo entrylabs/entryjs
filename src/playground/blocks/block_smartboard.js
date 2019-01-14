@@ -5,8 +5,8 @@ Entry.SmartBoard = {
     url: 'http://www.sciencebox.co.kr',
     imageName: 'smartboard.png',
     title: {
-        "ko": "과학상자 코딩보드",
-        "en": "Sciencebox Codingboard"
+        ko: '과학상자 코딩보드',
+        en: 'Sciencebox Codingboard',
     },
     setZero: function() {
         for (var port = 2; port < 9; port++) {
@@ -115,22 +115,19 @@ Entry.SmartBoard.getBlocks = function() {
     return {
         //region smartBoard 스마트보드
         smartBoard_get_named_sensor_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['SEN1', '2'],
-                        ['SEN2', '3'],
-                        ['SEN3', '4'],
-                        ['SEN4', '5'],
-                    ],
+                    options: [['SEN1', '2'], ['SEN2', '3'], ['SEN3', '4'], ['SEN4', '5']],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -144,14 +141,12 @@ Entry.SmartBoard.getBlocks = function() {
             class: 'smartBoard_sensor',
             isNotFor: ['smartBoard'],
             func: function(sprite, script) {
-                return Entry.hw.getAnalogPortValue(
-                    script.getField('PORT', script)
-                );
+                return Entry.hw.getAnalogPortValue(script.getField('PORT', script));
             },
         },
         smartBoard_convert_scale: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -241,22 +236,19 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_is_button_pressed: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['빨간', '12'],
-                        ['노란', '13'],
-                        ['초록', '14'],
-                        ['파랑', '15'],
-                    ],
+                    options: [['빨간', '12'], ['노란', '13'], ['초록', '14'], ['파랑', '15']],
                     value: '12',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -270,14 +262,12 @@ Entry.SmartBoard.getBlocks = function() {
             class: 'smartBoard_button',
             isNotFor: ['smartBoard'],
             func: function(sprite, script) {
-                return Entry.hw.getDigitalPortValue(
-                    script.getNumberField('PORT', script)
-                );
+                return Entry.hw.getDigitalPortValue(script.getNumberField('PORT', script));
             },
         },
         smartBoard_set_dc_motor_direction: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -286,12 +276,16 @@ Entry.SmartBoard.getBlocks = function() {
                     options: [['MT1', '4'], ['MT2', '7']],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [['정', '0'], ['역', '255']],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -319,8 +313,8 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_set_dc_motor_speed: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -329,6 +323,8 @@ Entry.SmartBoard.getBlocks = function() {
                     options: [['MT1', '5'], ['MT2', '6']],
                     value: '5',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -342,6 +338,8 @@ Entry.SmartBoard.getBlocks = function() {
                     ],
                     value: '160',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -369,8 +367,8 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_set_dc_motor_pwm: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -379,6 +377,8 @@ Entry.SmartBoard.getBlocks = function() {
                     options: [['MT1', '5'], ['MT2', '6']],
                     value: '5',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -419,8 +419,8 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_set_servo_speed: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -429,6 +429,8 @@ Entry.SmartBoard.getBlocks = function() {
                     options: [['SM3', '9'], ['SM2', '10'], ['SM1', '11']],
                     value: '9',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -439,6 +441,8 @@ Entry.SmartBoard.getBlocks = function() {
                     ],
                     value: '193',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -479,8 +483,8 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_set_servo_angle: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -489,6 +493,8 @@ Entry.SmartBoard.getBlocks = function() {
                     options: [['SM3', '9'], ['SM2', '10'], ['SM1', '11']],
                     value: '9',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -529,8 +535,8 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_set_number_eight_pin: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -539,12 +545,16 @@ Entry.SmartBoard.getBlocks = function() {
                     options: [['GS1', '3'], ['GS2', '2'], ['RELAY', '8']],
                     value: '3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [['끄기', '0'], ['켜기', '255']],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -572,8 +582,8 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_set_gs1_pwm: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [

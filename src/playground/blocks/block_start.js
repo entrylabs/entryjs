@@ -424,8 +424,7 @@ module.exports = {
                                     menuName: 'messages',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.colorSet.arrow.default.START,
-                                    converter:
-                                        Entry.block.converters.returnStringKey,
+                                    converter: Entry.block.converters.returnStringKey,
                                 },
                             ],
                         },
@@ -449,7 +448,7 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start.svg',
+                        img: 'block_icon/start_icon.svg',
                         size: 11,
                     },
                 ],
@@ -510,8 +509,7 @@ module.exports = {
                                     menuName: 'messages',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.colorSet.arrow.default.START,
-                                    converter:
-                                        Entry.block.converters.returnStringKey,
+                                    converter: Entry.block.converters.returnStringKey,
                                     paramType: 'signal',
                                 },
                                 undefined,
@@ -537,7 +535,7 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start.svg',
+                        img: 'block_icon/start_icon.svg',
                         size: 11,
                     },
                 ],
@@ -592,9 +590,7 @@ module.exports = {
                         const arr = Entry.variableContainer.messages_;
                         const isExist = Entry.isExist(value, 'id', arr);
                         if (value == 'null' || !isExist) {
-                            throw new Error(
-                                'value can not be null or undefined'
-                            );
+                            throw new Error('value can not be null or undefined');
                         }
                         const data = Entry.engine.raiseMessage(value);
                         let runningScript = [];
@@ -621,8 +617,7 @@ module.exports = {
                                     menuName: 'messages',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.colorSet.arrow.default.START,
-                                    converter:
-                                        Entry.block.converters.returnStringKey,
+                                    converter: Entry.block.converters.returnStringKey,
                                 },
                             ],
                         },
@@ -683,7 +678,7 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start.svg',
+                        img: 'block_icon/start_icon.svg',
                         size: 11,
                     },
                 ],
@@ -723,8 +718,7 @@ module.exports = {
                                     menuName: 'scenes',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.colorSet.arrow.default.START,
-                                    converter:
-                                        Entry.block.converters.returnStringKey,
+                                    converter: Entry.block.converters.returnStringKey,
                                 },
                             ],
                         },
@@ -751,7 +745,7 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start.svg',
+                        img: 'block_icon/start_icon.svg',
                         size: 11,
                     },
                 ],
@@ -776,9 +770,7 @@ module.exports = {
                     const o = script.getField('OPERATOR', script);
                     if (o == 'next') {
                         if (index + 1 < scenes.length) {
-                            const nextScene = Entry.scene.getSceneById(
-                                scenes[index + 1].id
-                            );
+                            const nextScene = Entry.scene.getSceneById(scenes[index + 1].id);
                             if (nextScene) {
                                 Entry.scene.selectScene(nextScene);
                                 Entry.engine.fireEvent('when_scene_start');
@@ -786,9 +778,7 @@ module.exports = {
                         }
                     } else {
                         if (index > 0) {
-                            const nextScene = Entry.scene.getSceneById(
-                                scenes[index - 1].id
-                            );
+                            const nextScene = Entry.scene.getSceneById(scenes[index - 1].id);
                             if (nextScene) {
                                 Entry.scene.selectScene(nextScene);
                                 Entry.engine.fireEvent('when_scene_start');
@@ -807,23 +797,14 @@ module.exports = {
                                 {
                                     type: 'Dropdown',
                                     options: [
-                                        [
-                                            Lang.Blocks.SCENE_start_scene_next,
-                                            'next',
-                                        ],
-                                        [
-                                            Lang.Blocks.SCENE_start_scene_pre,
-                                            'prev',
-                                        ],
+                                        [Lang.Blocks.SCENE_start_scene_next, 'next'],
+                                        [Lang.Blocks.SCENE_start_scene_pre, 'prev'],
                                     ],
                                     value: 'next',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.colorSet.arrow.default.START,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnStringValue,
-                                    codeMap:
-                                        'Entry.CodeMap.Entry.start_neighbor_scene[0]',
+                                    converter: Entry.block.converters.returnStringValue,
+                                    codeMap: 'Entry.CodeMap.Entry.start_neighbor_scene[0]',
                                 },
                             ],
                         },
@@ -899,11 +880,8 @@ module.exports = {
                     const flow = this.block.params[1];
                     let propertyKey = this.block.params[2];
                     const rightValue = this.getParam(4);
-                    propertyKey =
-                        propertyKey[0].toUpperCase() + propertyKey.substr(1);
-                    const leftValue = obj.entity[`get${  propertyKey}`].call(
-                        obj.entity
-                    );
+                    propertyKey = propertyKey[0].toUpperCase() + propertyKey.substr(1);
+                    const leftValue = obj.entity[`get${propertyKey}`].call(obj.entity);
                     let returnVal;
 
                     switch (this.block.params[3]) {
@@ -955,8 +933,8 @@ module.exports = {
                         fontSize: 11,
                     },
                     {
-                        type: 'TextInput',
-                        value: 1,
+                        type: 'Block',
+                        accept: 'string',
                     },
                     {
                         type: 'Indicator',
@@ -966,7 +944,7 @@ module.exports = {
                 ],
                 events: {},
                 def: {
-                    params: [null, 0],
+                    params: [null, 0, '1'],
                     type: 'check_block_execution',
                 },
                 paramsKeyMap: {
@@ -987,47 +965,37 @@ module.exports = {
                             return Entry.STATIC.BREAK;
                         }
                     }
-                    const code = Entry.container.getObject(this.block.params[0])
-                        .script;
+                    const code = Entry.container.getObject(this.block.params[0]).script;
                     const accuracy = this.block.params[1];
                     const statements = this.block.statements[0].getBlocks();
                     let lastBlock = null;
                     this.remainCheck = Number(this.block.params[2]);
                     let index = 0;
-                    this.entity.listener[id] = code.watchEvent.attach(
-                        this,
-                        (blocks) => {
-                            //dangerous
-                            blocks = blocks.concat();
-                            let block;
-                            let isFirst = true;
-                            while (blocks.length && index < statements.length) {
-                                block = blocks.shift();
-                                if (isFirst && block === lastBlock) {
-                                    continue;
-                                }
-                                if (
-                                    accuracy === 0 &&
-                                    statements[index].type === block.type
-                                ) {
-                                    index++;
-                                } else if (
-                                    accuracy === 1 &&
-                                    statements[index].isSameParamWith(block)
-                                ) {
-                                    index++;
-                                } else {
-                                    index = 0;
-                                }
-                                isFirst = false;
+                    this.entity.listener[id] = code.watchEvent.attach(this, (blocks) => {
+                        //dangerous
+                        blocks = blocks.concat();
+                        let block;
+                        let isFirst = true;
+                        while (blocks.length && index < statements.length) {
+                            block = blocks.shift();
+                            if (isFirst && block === lastBlock) {
+                                continue;
                             }
-                            lastBlock = block;
-                            if (index === statements.length) {
-                                this.remainCheck = this.remainCheck - 1;
+                            if (accuracy === 0 && statements[index].type === block.type) {
+                                index++;
+                            } else if (accuracy === 1 && statements[index].isSameParamWith(block)) {
+                                index++;
+                            } else {
                                 index = 0;
                             }
+                            isFirst = false;
                         }
-                    );
+                        lastBlock = block;
+                        if (index === statements.length) {
+                            this.remainCheck = this.remainCheck - 1;
+                            index = 0;
+                        }
+                    });
                     return Entry.STATIC.BREAK;
                 },
             },
@@ -1109,8 +1077,8 @@ module.exports = {
                 statements: [],
                 params: [
                     {
-                        type: 'TextInput',
-                        value: 0,
+                        type: 'Block',
+                        accept: 'string',
                     },
                     {
                         type: 'Dropdown',
@@ -1137,7 +1105,7 @@ module.exports = {
                     ],
                 },
                 def: {
-                    params: [0, 1, 1],
+                    params: ['0', 1, 1],
                     type: 'check_lecture_goal',
                 },
                 paramsKeyMap: {
@@ -1148,7 +1116,7 @@ module.exports = {
                 func(sprite, script) {
                     Entry.targetChecker.achieveCheck(
                         this.block.params[1],
-                        `${this.block.params[0]  }`
+                        `${this.block.params[0]}`
                     );
                 },
             },
@@ -1159,7 +1127,8 @@ module.exports = {
                 statements: [],
                 params: [
                     {
-                        type: 'TextInput',
+                        type: 'Block',
+                        accept: 'string',
                         value: '?',
                     },
                 ],
@@ -1174,10 +1143,8 @@ module.exports = {
                 class: 'checker',
                 isNotFor: ['checker'],
                 func(sprite, script) {
-                    const variableName = `${this.block.params[0]  }`;
-                    const variable = Entry.variableContainer.getVariableByName(
-                        variableName
-                    );
+                    const variableName = `${this.block.params[0]}`;
+                    const variable = Entry.variableContainer.getVariableByName(variableName);
                     if (variable) {
                         return variable.getValue();
                     } else {
@@ -1192,7 +1159,8 @@ module.exports = {
                 statements: [],
                 params: [
                     {
-                        type: 'TextInput',
+                        type: 'Block',
+                        accept: 'string',
                         value: '',
                     },
                     {
@@ -1213,9 +1181,7 @@ module.exports = {
                 isNotFor: ['checker'],
                 func(sprite, script) {
                     if (Entry.targetChecker) {
-                        Entry.targetChecker.showStatusMessage(
-                            this.block.params[0]
-                        );
+                        Entry.targetChecker.showStatusMessage(this.block.params[0]);
                     }
                 },
             },
@@ -1226,7 +1192,8 @@ module.exports = {
                 statements: [],
                 params: [
                     {
-                        type: 'TextInput',
+                        type: 'Block',
+                        accept: 'string',
                         value: '',
                     },
                 ],
@@ -1241,7 +1208,7 @@ module.exports = {
                 class: 'checker',
                 isNotFor: ['checker'],
                 func(sprite, script) {
-                    const goalName = `${this.block.params[0]  }`;
+                    const goalName = `${this.block.params[0]}`;
                     return Entry.targetChecker.checkGoal(goalName);
                 },
             },
@@ -1330,11 +1297,13 @@ module.exports = {
                 statements: [],
                 params: [
                     {
-                        type: 'TextInput',
+                        type: 'Block',
+                        accept: 'string',
                         value: 'score',
                     },
                     {
-                        type: 'TextInput',
+                        type: 'Block',
+                        accept: 'string',
                         value: '1',
                     },
                     {

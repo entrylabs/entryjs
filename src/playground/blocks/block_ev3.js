@@ -34,16 +34,7 @@ Entry.EV3 = {
         WrongPort: 0x7f,
         Unknown: 0xff,
     },
-    colorSensorValue: [
-        '',
-        '000000',
-        '0000FF',
-        '00FF00',
-        'FFFF00',
-        'FF0000',
-        'FFFFFF',
-        'A52A2A',
-    ],
+    colorSensorValue: ['', '000000', '0000FF', '00FF00', 'FFFF00', 'FF0000', 'FFFFFF', 'A52A2A'],
     timeouts: [],
     removeTimeout: function(id) {
         clearTimeout(id);
@@ -80,8 +71,8 @@ Entry.EV3 = {
     url: 'http://www.lego.com/ko-kr/mindstorms/about-ev3',
     imageName: 'ev3.png',
     title: {
-        "ko": "EV3",
-        "en": "EV3"
+        ko: 'EV3',
+        en: 'EV3',
     },
 };
 
@@ -96,20 +87,20 @@ Entry.EV3.setLanguage = function() {
                 ev3_motor_power: '%1 의 값을 %2 으로 출력 %3',
                 ev3_motor_power_on_time: '%1 의 값을 %2 초 동안 %3 으로 출력 %4',
                 ev3_motor_degrees: '%1 의 값을 %2 으로  %3 도 만큼 회전 %4',
-                ev3_status_led: 'LED 색깔을 %1 (으)로 정하기 %2'
-            }
+                ev3_status_led: 'LED 색깔을 %1 (으)로 정하기 %2',
+            },
         },
         en: {
             template: {
-                ev3_get_sensor_value: '%1\'s value',
-                ev3_touch_sensor: '%1\'s touch sensor activated?',
-                ev3_button_pressed: '%1\'s button pressed?',
-                ev3_color_sensor: '%1\'s %2 value',
-                ev3_motor_power: '%1\'s value print as %2 %3',
-                ev3_motor_power_on_time: '%1\'s value for %2seconds %3 printed %4',
-                ev3_motor_degrees: '%1\'s value in %2 direction turn %3 degrees %4',
-                ev3_status_led: 'Set status light to %1 %2'
-            }
+                ev3_get_sensor_value: "%1's value",
+                ev3_touch_sensor: "%1's touch sensor activated?",
+                ev3_button_pressed: "%1's button pressed?",
+                ev3_color_sensor: "%1's %2 value",
+                ev3_motor_power: "%1's value print as %2 %3",
+                ev3_motor_power_on_time: "%1's value for %2seconds %3 printed %4",
+                ev3_motor_degrees: "%1's value in %2 direction turn %3 degrees %4",
+                ev3_status_led: 'Set status light to %1 %2',
+            },
         },
     };
 };
@@ -118,8 +109,8 @@ Entry.EV3.getBlocks = function() {
     return {
         //region ev3 이브이3
         ev3_color_sensor: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -129,17 +120,16 @@ Entry.EV3.getBlocks = function() {
                     options: [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4']],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['RGB', 'RGB'],
-                        ['R', 'R'],
-                        ['G', 'G'],
-                        ['B', 'B'],
-                    ],
+                    options: [['RGB', 'RGB'], ['R', 'R'], ['G', 'G'], ['B', 'B']],
                     value: 'RGB',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -156,9 +146,7 @@ Entry.EV3.getBlocks = function() {
             func: function(sprite, script) {
                 var port = script.getStringField('PORT', script);
                 var rgb = script.getStringField('RGB', script);
-                var portData = Entry.hw.getDigitalPortValue(
-                    script.getNumberField('PORT', script)
-                );
+                var portData = Entry.hw.getDigitalPortValue(script.getNumberField('PORT', script));
                 var result = '';
                 if (portData.type == Entry.EV3.deviceTypes.Color) {
                     if (portData.siValue == 0) {
@@ -166,25 +154,25 @@ Entry.EV3.getBlocks = function() {
                     } else {
                         switch (rgb) {
                             case 'RGB':
-                                result =
-                                    Entry.EV3.colorSensorValue[
-                                        portData.siValue
-                                    ];
+                                result = Entry.EV3.colorSensorValue[portData.siValue];
                                 break;
                             case 'R':
-                                result = Entry.EV3.colorSensorValue[
-                                    portData.siValue
-                                ].substring(0, 2);
+                                result = Entry.EV3.colorSensorValue[portData.siValue].substring(
+                                    0,
+                                    2
+                                );
                                 break;
                             case 'G':
-                                result = Entry.EV3.colorSensorValue[
-                                    portData.siValue
-                                ].substring(2, 4);
+                                result = Entry.EV3.colorSensorValue[portData.siValue].substring(
+                                    2,
+                                    4
+                                );
                                 break;
                             case 'B':
-                                result = Entry.EV3.colorSensorValue[
-                                    portData.siValue
-                                ].substring(4, 6);
+                                result = Entry.EV3.colorSensorValue[portData.siValue].substring(
+                                    4,
+                                    6
+                                );
                                 break;
                         }
                     }
@@ -195,8 +183,8 @@ Entry.EV3.getBlocks = function() {
             },
         },
         ev3_get_sensor_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -206,6 +194,8 @@ Entry.EV3.getBlocks = function() {
                     options: [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4']],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -220,9 +210,7 @@ Entry.EV3.getBlocks = function() {
             isNotFor: ['EV3'],
             func: function(sprite, script) {
                 var port = script.getStringField('PORT', script);
-                var portData = Entry.hw.getDigitalPortValue(
-                    script.getNumberField('PORT', script)
-                );
+                var portData = Entry.hw.getDigitalPortValue(script.getNumberField('PORT', script));
                 var result;
                 if ($.isPlainObject(portData)) {
                     result = portData.siValue || 0;
@@ -231,8 +219,8 @@ Entry.EV3.getBlocks = function() {
             },
         },
         ev3_motor_degrees: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -241,15 +229,16 @@ Entry.EV3.getBlocks = function() {
                     options: [['A', 'A'], ['B', 'B'], ['C', 'C'], ['D', 'D']],
                     value: 'A',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.ev3_cw, 'CW'],
-                        [Lang.Blocks.ev3_ccw, 'CCW'],
-                    ],
+                    options: [[Lang.Blocks.ev3_cw, 'CW'], [Lang.Blocks.ev3_ccw, 'CCW']],
                     value: 'CW',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -299,8 +288,8 @@ Entry.EV3.getBlocks = function() {
             },
         },
         ev3_motor_power: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -309,6 +298,8 @@ Entry.EV3.getBlocks = function() {
                     options: [['A', 'A'], ['B', 'B'], ['C', 'C'], ['D', 'D']],
                     value: 'A',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -350,8 +341,8 @@ Entry.EV3.getBlocks = function() {
             },
         },
         ev3_motor_power_on_time: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -360,6 +351,8 @@ Entry.EV3.getBlocks = function() {
                     options: [['A', 'A'], ['B', 'B'], ['C', 'C'], ['D', 'D']],
                     value: 'A',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -435,8 +428,8 @@ Entry.EV3.getBlocks = function() {
             },
         },
         ev3_touch_sensor: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -446,6 +439,8 @@ Entry.EV3.getBlocks = function() {
                     options: [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4']],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -460,9 +455,7 @@ Entry.EV3.getBlocks = function() {
             isNotFor: ['EV3'],
             func: function(sprite, script) {
                 var port = script.getStringField('PORT', script);
-                var portData = Entry.hw.getDigitalPortValue(
-                    script.getNumberField('PORT', script)
-                );
+                var portData = Entry.hw.getDigitalPortValue(script.getNumberField('PORT', script));
                 var result = false;
                 if (portData.type == Entry.EV3.deviceTypes.Touch) {
                     if (Number(portData.siValue) >= 1) {
@@ -474,17 +467,26 @@ Entry.EV3.getBlocks = function() {
             },
         },
         ev3_button_pressed: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['위', 'UP'], ['아래', 'DOWN'], ['왼쪽', 'LEFT'], ['오른쪽', 'RIGHT'], ['가운데', 'ENTER'], ['뒤로', 'BACK']],
+                    options: [
+                        ['위', 'UP'],
+                        ['아래', 'DOWN'],
+                        ['왼쪽', 'LEFT'],
+                        ['오른쪽', 'RIGHT'],
+                        ['가운데', 'ENTER'],
+                        ['뒤로', 'BACK'],
+                    ],
                     value: 'UP',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -509,8 +511,8 @@ Entry.EV3.getBlocks = function() {
             },
         },
         ev3_status_led: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
@@ -518,18 +520,27 @@ Entry.EV3.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['주황', 'ORANGE'],['끄기', 'OFF'], ['초록', 'GREEN'], ['빨강', 'RED'],
-                        ['초록 깜박임', 'GREEN_FLASH'], ['빨강 깜박임', 'RED_FLASH'], ['주황 깜박임', 'ORANGE_FLASH'],
-                        ['초록 진동', 'GREEN_PULSE'], ['빨강 진동', 'RED_PULSE'], ['주황 진동', 'ORANGE_PULSE']
+                        ['주황', 'ORANGE'],
+                        ['끄기', 'OFF'],
+                        ['초록', 'GREEN'],
+                        ['빨강', 'RED'],
+                        ['초록 깜박임', 'GREEN_FLASH'],
+                        ['빨강 깜박임', 'RED_FLASH'],
+                        ['주황 깜박임', 'ORANGE_FLASH'],
+                        ['초록 진동', 'GREEN_PULSE'],
+                        ['빨강 진동', 'RED_PULSE'],
+                        ['주황 진동', 'ORANGE_PULSE'],
                     ],
                     value: 'ORANGE',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
                     img: 'block_icon/hardware_icon.svg',
                     size: 12,
-                }
+                },
             ],
             events: {},
             def: {

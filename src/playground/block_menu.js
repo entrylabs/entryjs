@@ -366,7 +366,7 @@ class BlockMenu {
                 this._boardBlockView = newBlockView;
 
                 newBlockView.onMouseDown.call(newBlockView, e);
-                if(newBlockView.dragInstance) {
+                if (newBlockView.dragInstance) {
                     newBlockView.dragInstance.set({
                         isNew: true,
                     });
@@ -564,7 +564,7 @@ class BlockMenu {
     }
 
     selectMenu(selector, doNotFold, doNotAlign) {
-        if(Entry.disposeEvent) {
+        if (Entry.disposeEvent) {
             Entry.disposeEvent.notify();
         }
         if (!this._isOn() || !this._categoryData) {

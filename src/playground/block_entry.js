@@ -1321,7 +1321,7 @@ function getBlocks() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/function_icon.svg',
+                    img: 'block_icon/func_icon.svg',
                     size: 11,
                 },
             ],
@@ -1346,7 +1346,7 @@ function getBlocks() {
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/function_icon.svg',
+                    img: 'block_icon/func_icon.svg',
                     size: 11,
                 },
             ],

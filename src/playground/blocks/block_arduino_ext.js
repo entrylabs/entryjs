@@ -5,8 +5,8 @@ Entry.ArduinoExt = {
     url: 'http://www.arduino.cc/',
     imageName: 'arduinoExt.png',
     title: {
-        "ko": "아두이노 Uno 확장모드",
-        "en": "ArduinoExt Uno"
+        ko: '아두이노 Uno 확장모드',
+        en: 'ArduinoExt Uno',
     },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
@@ -73,33 +73,26 @@ Entry.ArduinoExt.setLanguage = function() {
         ko: {
             template: {
                 arduino_ext_get_analog_value: '아날로그 %1 번 센서값',
-                arduino_ext_get_analog_value_map:
-                    '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
-                arduino_ext_get_ultrasonic_value:
-                    '울트라소닉 Trig %1 Echo %2 센서값',
+                arduino_ext_get_analog_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
+                arduino_ext_get_ultrasonic_value: '울트라소닉 Trig %1 Echo %2 센서값',
                 arduino_ext_toggle_led: '디지털 %1 번 핀 %2 %3',
                 arduino_ext_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
-                arduino_ext_set_tone:
-                    '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
-                arduino_ext_set_servo:
-                    '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
+                arduino_ext_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
+                arduino_ext_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
                 arduino_ext_get_digital: '디지털 %1 번 센서값',
-            }
+            },
         },
         en: {
             template: {
                 arduino_ext_get_analog_value: 'Analog %1 Sensor value',
-                arduino_ext_get_analog_value_map:
-                    'Map Value %1 %2 ~ %3 to %4 ~ %5',
-                arduino_ext_get_ultrasonic_value:
-                    'Read ultrasonic sensor trig pin %1 echo pin %2',
+                arduino_ext_get_analog_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
+                arduino_ext_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
                 arduino_ext_toggle_led: 'Digital %1 Pin %2 %3',
                 arduino_ext_digital_pwm: 'Digital %1 Pin %2 %3',
-                arduino_ext_set_tone:
-                    'Play tone pin %1 on note %2 octave %3 beat %4 %5',
+                arduino_ext_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
                 arduino_ext_set_servo: 'Set servo pin %1 angle as %2 %3',
                 arduino_ext_get_digital: 'Digital %1 Sensor value',
-            }
+            },
         },
     };
 };
@@ -108,8 +101,8 @@ Entry.ArduinoExt.setLanguage = function() {
 Entry.ArduinoExt.getBlocks = function() {
     return {
         arduino_ext_analog_list: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -126,6 +119,8 @@ Entry.ArduinoExt.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -157,10 +152,10 @@ Entry.ArduinoExt.getBlocks = function() {
                                 ],
                                 value: '0',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringKey,
-                                codeMap:
-                                    'Entry.CodeMap.Arduino.arduino_ext_analog_list[0]',
+                                converter: Entry.block.converters.returnStringKey,
+                                codeMap: 'Entry.CodeMap.Arduino.arduino_ext_analog_list[0]',
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
                         keyOption: 'arduino_ext_analog_list',
@@ -169,8 +164,8 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_get_analog_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -218,8 +213,8 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_get_analog_value_map: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -301,10 +296,8 @@ Entry.ArduinoExt.getBlocks = function() {
                 var isFloat = false;
 
                 if (
-                    (Entry.Utils.isNumber(stringValue4) &&
-                        stringValue4.indexOf('.') > -1) ||
-                    (Entry.Utils.isNumber(stringValue5) &&
-                        stringValue5.indexOf('.') > -1)
+                    (Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) ||
+                    (Entry.Utils.isNumber(stringValue5) && stringValue5.indexOf('.') > -1)
                 ) {
                     isFloat = true;
                 }
@@ -366,8 +359,8 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_get_ultrasonic_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -416,9 +409,7 @@ Entry.ArduinoExt.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.ArduinoExt.sensorTypes.ULTRASONIC
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.ArduinoExt.sensorTypes.ULTRASONIC] = {
                     port: [port1, port2],
                     time: new Date().getTime(),
                 };
@@ -445,8 +436,8 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_get_digital: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             params: [
@@ -474,15 +465,13 @@ Entry.ArduinoExt.getBlocks = function() {
             func: function(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
-                if(name === 'ArduinoExt') {
+                if (name === 'ArduinoExt') {
                     var port = script.getNumberValue('PORT', script);
                     var DIGITAL = Entry.hw.portData.DIGITAL;
                     if (!Entry.hw.sendQueue['GET']) {
                         Entry.hw.sendQueue['GET'] = {};
                     }
-                    Entry.hw.sendQueue['GET'][
-                        Entry.ArduinoExt.sensorTypes.DIGITAL
-                    ] = {
+                    Entry.hw.sendQueue['GET'][Entry.ArduinoExt.sensorTypes.DIGITAL] = {
                         port: port,
                         time: new Date().getTime(),
                     };
@@ -508,19 +497,17 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_get_digital_toggle: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.ARDUINO_on, 'on'],
-                        [Lang.Blocks.ARDUINO_off, 'off'],
-                    ],
+                    options: [[Lang.Blocks.ARDUINO_on, 'on'], [Lang.Blocks.ARDUINO_off, 'off']],
                     value: 'on',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
@@ -549,11 +536,10 @@ Entry.ArduinoExt.getBlocks = function() {
                                 value: 'on',
                                 fontSize: 11,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter:
-                                    Entry.block.converters
-                                        .returnStringValueUpperCase,
-                                codeMap:
-                                    'Entry.CodeMap.Arduino.arduino_get_digital_toggle[0]',
+                                converter: Entry.block.converters.returnStringValueUpperCase,
+                                codeMap: 'Entry.CodeMap.Arduino.arduino_get_digital_toggle[0]',
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
                         keyOption: 'arduino_get_digital_toggle',
@@ -562,8 +548,8 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_toggle_led: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -647,8 +633,8 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_digital_pwm: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -724,8 +710,8 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_tone_list: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -749,6 +735,8 @@ Entry.ArduinoExt.getBlocks = function() {
                     ],
                     value: 'C',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -786,9 +774,9 @@ Entry.ArduinoExt.getBlocks = function() {
                                 ],
                                 value: 'C',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnStringValueUpperCase,
+                                converter: Entry.block.converters.returnStringValueUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
                         keyOption: 'arduino_ext_tone_list',
@@ -797,8 +785,8 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_tone_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -834,8 +822,8 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_octave_list: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -852,6 +840,8 @@ Entry.ArduinoExt.getBlocks = function() {
                     ],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -875,8 +865,8 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_set_tone: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -940,8 +930,7 @@ Entry.ArduinoExt.getBlocks = function() {
 
                 if (!script.isStart) {
                     var note = script.getValue('NOTE', script);
-                    if (!Entry.Utils.isNumber(note))
-                        note = Entry.ArduinoExt.toneTable[note];
+                    if (!Entry.Utils.isNumber(note)) note = Entry.ArduinoExt.toneTable[note];
 
                     if (note < 0) {
                         note = 0;
@@ -1040,8 +1029,8 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_set_servo: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
