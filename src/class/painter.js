@@ -95,6 +95,10 @@ Entry.Painter = function(view) {
 
     p.changePicture = function(picture) {
         if (this.file && this.file.id === picture.id) {
+            if (!this.file.isUpdate) {
+                Entry.stage.updateObject();
+                this.file.isUpdate = true;
+            }
             return;
         } else if (!this.file.modified) {
             this.afterModified(picture);
@@ -126,6 +130,8 @@ Entry.Painter = function(view) {
                 }.bind(this)
             );
         }
+        Entry.stage.updateObject();
+        this.file.isUpdate = true;
     };
 
     p.afterModified = function(picture) {
@@ -224,6 +230,7 @@ Entry.Painter = function(view) {
             task: taskParam,
         });
 
+        this.file.isUpdate = false;
         this.file.modified = false;
     };
 
@@ -286,23 +293,23 @@ Entry.Painter = function(view) {
         painterTop.addClass('entryPainterTop');
 
         var painterTopFullscreenButton = ce('div', 'entryPainterTopFullscreenButton');
-        painterTopFullscreenButton.setAttribute("title", Lang.Painter.fullscreen);
-        painterTopFullscreenButton.setAttribute("alt", Lang.Painter.fullscreen);
+        painterTopFullscreenButton.setAttribute('title', Lang.Painter.fullscreen);
+        painterTopFullscreenButton.setAttribute('alt', Lang.Painter.fullscreen);
         painterTopFullscreenButton.addClass('entryPlaygroundPainterFullscreenButton');
         painterTopFullscreenButton.bindOnClick(function() {
             const { painter = {}, pictureView_ } = Entry.playground;
             const { view = {} } = painter;
             const $view = $(view);
-            if($view.hasClass('fullscreen')) {
+            if ($view.hasClass('fullscreen')) {
                 pictureView_.appendChild(view);
                 $(view).removeClass('fullscreen');
-                painterTopFullscreenButton.setAttribute("title", Lang.Painter.fullscreen);
-                painterTopFullscreenButton.setAttribute("alt", Lang.Painter.fullscreen);
+                painterTopFullscreenButton.setAttribute('title', Lang.Painter.fullscreen);
+                painterTopFullscreenButton.setAttribute('alt', Lang.Painter.fullscreen);
             } else {
                 document.body.appendChild(view);
                 $(view).addClass('fullscreen');
-                painterTopFullscreenButton.setAttribute("title", Lang.Painter.exit_fullscreen);
-                painterTopFullscreenButton.setAttribute("alt", Lang.Painter.exit_fullscreen);
+                painterTopFullscreenButton.setAttribute('title', Lang.Painter.exit_fullscreen);
+                painterTopFullscreenButton.setAttribute('alt', Lang.Painter.exit_fullscreen);
             }
             $(view)
                 .find('.lc-drawing.with-gui')
@@ -416,7 +423,7 @@ Entry.Painter = function(view) {
         function menuClickEvent(e) {
             $(painterTopMenuFile).removeClass('active');
             $(painterTopMenuEdit).removeClass('active');
-            if(e.target === this) {
+            if (e.target === this) {
                 e.stopImmediatePropagation();
                 $(this).addClass('active');
             }
