@@ -1186,7 +1186,7 @@ Entry.CODEino.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/brush_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],

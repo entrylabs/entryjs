@@ -125,8 +125,7 @@ Entry.Arduino.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: 'TextInput',
                 },
             ],
             events: {},
@@ -146,8 +145,7 @@ Entry.Arduino.getBlocks = function() {
                         syntax: '%1',
                         textParams: [
                             {
-                                type: 'Block',
-                                accept: 'string',
+                                type: 'TextInput',
                                 value: 10,
                                 converter: Entry.block.converters.returnStringOrNumberByValue,
                             },
