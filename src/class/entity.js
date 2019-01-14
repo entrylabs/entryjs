@@ -974,7 +974,7 @@ Entry.EntityObject = class EntityObject {
                 ];
 
                 const degrees = e.hsv * 3.6;
-                const r = degrees * 3 * Math.PI / 180;
+                const r = (degrees * 3 * Math.PI) / 180;
                 const cosVal = Math.cos(r);
                 const sinVal = Math.sin(r);
 
@@ -1205,18 +1205,18 @@ Entry.EntityObject = class EntityObject {
     }
 
     /*
-    * Return initial effect value
-    * @return {effect}
-    */
+     * Return initial effect value
+     * @return {effect}
+     */
     setInitialEffectValue() {
         this.effect = this.getInitialEffectValue();
         Entry.requestUpdate = true;
     }
 
     /*
-    * Return initial effect value
-    * @return {effect}
-    */
+     * Return initial effect value
+     * @return {effect}
+     */
     getInitialEffectValue() {
         return {
             blur: 0,
@@ -1230,16 +1230,16 @@ Entry.EntityObject = class EntityObject {
     }
 
     /*
-    * remove brush
-    */
+     * remove brush
+     */
     removeBrush() {
         this._removeShapes();
         this.brush = null;
     }
 
     /*
-    * erase brush
-    */
+     * erase brush
+     */
     eraseBrush() {
         this._removeShapes();
         Entry.requestUpdate = true;

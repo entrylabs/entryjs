@@ -18,16 +18,16 @@ Entry.Func = function(func) {
     this.content = content
         ? new Entry.Code(content)
         : new Entry.Code([
-            [
-                {
-                    type: 'function_create',
-                    copyable: false,
-                    deletable: false,
-                    x: 40,
-                    y: 40,
-                },
-            ],
-        ]);
+              [
+                  {
+                      type: 'function_create',
+                      copyable: false,
+                      deletable: false,
+                      x: 40,
+                      y: 40,
+                  },
+              ],
+          ]);
     this.block = null;
     this.blockMenuBlock = null;
     this._backupContent = null;

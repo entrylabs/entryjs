@@ -220,7 +220,7 @@ Entry.skeleton.basic_double_loop = {
         z`;
     },
     magnets(blockView) {
-        const contentHeight1 = Math.max(blockView.contentHeight % 1000000 + 2, 30);
+        const contentHeight1 = Math.max((blockView.contentHeight % 1000000) + 2, 30);
         const contentHeight2 = Math.max(Math.floor(blockView.contentHeight / 1000000) + 2, 30);
         let statementHeight1 = blockView._statements[0] ? blockView._statements[0].height : 20;
         let statementHeight2 = blockView._statements[1] ? blockView._statements[1].height : 20;
@@ -243,7 +243,7 @@ Entry.skeleton.basic_double_loop = {
     box(blockView) {
         const contentWidth = blockView.contentWidth;
         const contentHeight1 = Math.max(Math.floor(blockView.contentHeight / 1000000) + 2, 30);
-        const contentHeight2 = Math.max(blockView.contentHeight % 1000000 + 2, 30);
+        const contentHeight2 = Math.max((blockView.contentHeight % 1000000) + 2, 30);
         let statementHeight1 = blockView._statements[0]
             ? blockView._statements[0].height % 1000000
             : 20;
@@ -263,7 +263,7 @@ Entry.skeleton.basic_double_loop = {
         const statementHeight1 = blockView._statements[0]
             ? blockView._statements[0].height % 1000000
             : 20;
-        const height1 = Math.max(30, blockView.contentHeight % 1000000 + 2) + 1;
+        const height1 = Math.max(30, (blockView.contentHeight % 1000000) + 2) + 1;
         const height2 =
             height1 +
             Math.max(statementHeight1, 20) +

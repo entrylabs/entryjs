@@ -20,7 +20,7 @@ Entry.VirtualScroll = class VirtualScroll {
             return this._groupSize;
         }
         if (this._itemHeight) {
-            this._groupSize = parseInt(this.height / this._itemHeight * 1.5, 10);
+            this._groupSize = parseInt((this.height / this._itemHeight) * 1.5, 10);
             return this._groupSize;
         }
         const itemMinHeight = 15;

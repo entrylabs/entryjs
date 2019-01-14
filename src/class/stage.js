@@ -142,7 +142,7 @@ Entry.Stage.prototype.render = function stageRender() {
     var time = _.now();
     Entry.stage.update();
     time = _.now() - time;
-    Entry.stage.timer = setTimeout(stageRender, 16 - time % 16 + 16 * Math.floor(time / 16));
+    Entry.stage.timer = setTimeout(stageRender, 16 - (time % 16) + 16 * Math.floor(time / 16));
 };
 
 /**
@@ -256,7 +256,9 @@ Entry.Stage.prototype.sortZorder = function() {
         index = 0;
 
     for (var i = length - 1; i >= 0; i--) {
-        var { entity: { object } } = objects[i];
+        var {
+            entity: { object },
+        } = objects[i];
         container.setChildIndex(object, index++);
     }
 
@@ -373,13 +375,13 @@ Entry.Stage.prototype.updateObject = function() {
                 regY = -entity.regY * entity.scaleY;
                 switch (fontAlign) {
                     case Entry.TEXT_ALIGN_LEFT:
-                        regX = -entity.getWidth() / 2 * entity.scaleX;
+                        regX = (-entity.getWidth() / 2) * entity.scaleX;
                         break;
                     case Entry.TEXT_ALIGN_CENTER:
                         regX = entity.regX * entity.scaleX;
                         break;
                     case Entry.TEXT_ALIGN_RIGHT:
-                        regX = entity.getWidth() / 2 * entity.scaleX;
+                        regX = (entity.getWidth() / 2) * entity.scaleX;
                         break;
                 }
             }
@@ -388,7 +390,7 @@ Entry.Stage.prototype.updateObject = function() {
             regY = (entity.height / 2 - entity.regY) * entity.scaleY;
         }
 
-        var rotation = entity.getRotation() / 180 * Math.PI;
+        var rotation = (entity.getRotation() / 180) * Math.PI;
 
         this.handle.setX(entity.getX() - regX * Math.cos(rotation) - regY * Math.sin(rotation));
         this.handle.setY(-entity.getY() - regX * Math.sin(rotation) + regY * Math.cos(rotation));
@@ -426,7 +428,7 @@ Entry.Stage.prototype.updateHandle = function() {
 
         if (entity.height !== 0) entity.setScaleY(handle.height / entity.height);
     }
-    var direction = handle.rotation / 180 * Math.PI;
+    var direction = (handle.rotation / 180) * Math.PI;
     if (entity.type == 'textBox') {
         entity.syncFont();
         var newRegX = handle.regX / entity.scaleX;
@@ -438,16 +440,16 @@ Entry.Stage.prototype.updateHandle = function() {
         } else {
             switch (entity.getTextAlign()) {
                 case Entry.TEXT_ALIGN_LEFT:
-                    entity.setX(handle.x - handle.width / 2 * Math.cos(direction));
-                    entity.setY(-handle.y + handle.width / 2 * Math.sin(direction));
+                    entity.setX(handle.x - (handle.width / 2) * Math.cos(direction));
+                    entity.setY(-handle.y + (handle.width / 2) * Math.sin(direction));
                     break;
                 case Entry.TEXT_ALIGN_CENTER:
                     entity.setX(handle.x);
                     entity.setY(-handle.y);
                     break;
                 case Entry.TEXT_ALIGN_RIGHT:
-                    entity.setX(handle.x + handle.width / 2 * Math.cos(direction));
-                    entity.setY(-handle.y - handle.width / 2 * Math.sin(direction));
+                    entity.setX(handle.x + (handle.width / 2) * Math.cos(direction));
+                    entity.setY(-handle.y - (handle.width / 2) * Math.sin(direction));
                     break;
             }
         }

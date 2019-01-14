@@ -1112,21 +1112,27 @@ Entry.BlockView = class BlockView {
         this.movable =
             this.block.isMovable() !== null
                 ? this.block.isMovable()
-                : this._skeleton.movable !== undefined ? this._skeleton.movable : true;
+                : this._skeleton.movable !== undefined
+                ? this._skeleton.movable
+                : true;
     }
 
     _setReadOnly() {
         this.readOnly =
             this.block.isReadOnly() !== null
                 ? this.block.isReadOnly()
-                : this._skeleton.readOnly !== undefined ? this._skeleton.readOnly : false;
+                : this._skeleton.readOnly !== undefined
+                ? this._skeleton.readOnly
+                : false;
     }
 
     _setCopyable() {
         this.copyable =
             this.block.isCopyable() !== null
                 ? this.block.isCopyable()
-                : this._skeleton.copyable !== undefined ? this._skeleton.copyable : true;
+                : this._skeleton.copyable !== undefined
+                ? this._skeleton.copyable
+                : true;
     }
 
     bumpAway(distance = 15, delay) {

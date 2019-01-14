@@ -124,11 +124,24 @@
     color: white;
 }
 
+@introHeight: 52px;
+.entryPlaygroundIntro.active {
+    position: relative;
+    overflow: hidden;
+    height: @introHeight;
+    top: 54px;
+    z-index:1;
+}
+
 .entryPlaygroundWorkspace {
     position: relative;
     overflow: hidden;
     height: 100%;
     background-color: #fff;
+}
+
+.entryPlaygroundIntro.active + .entryPlaygroundWorkspace {
+    height: calc(100% - @introHeight);
 }
 
 .entryPlaygroundPhone {

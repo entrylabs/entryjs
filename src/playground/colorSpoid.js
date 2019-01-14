@@ -126,8 +126,8 @@ class ColorSpoid extends EventEmitter {
         ) {
             const innerX = mouseEvent.clientX - left;
             const innerY = mouseEvent.clientY - top;
-            const x = Math.floor(innerX * 640 / width); // + 29;
-            const y = Math.floor((innerY - this.CLIENT_OFFSET_Y) * 360 / height); // + 28;
+            const x = Math.floor((innerX * 640) / width); // + 29;
+            const y = Math.floor(((innerY - this.CLIENT_OFFSET_Y) * 360) / height); // + 28;
             this.updateMagnifier({
                 event: mouseEvent,
                 isShow: true,
