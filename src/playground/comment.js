@@ -76,10 +76,10 @@ Entry.Comment = class Comment {
     }
 
     get code() {
-        if (this.board) {
+        if (this.board && this.board.getCode) {
             return this.board.getCode();
         }
-        if (this.thread) {
+        if (this.thread && this.thread.getCode) {
             return this.thread.getCode();
         }
     }
@@ -111,13 +111,16 @@ Entry.Comment = class Comment {
         }
         const { view } = this.block || {};
         this._blockView = view;
-        const { svgGroup, pathGroup } = this.blockView || {};
+        const { svgGroup, pathGroup, svgCommentGroup } = this.blockView || {};
         this.pathGroup = pathGroup;
         this.parentGroup = svgGroup;
-        if (this.block) {
-            this.svgGroup = this.blockView.svgCommentGroup.prepend('g');
-        } else {
+
+        if (this.block && svgCommentGroup) {
+            this.svgGroup = svgCommentGroup.prepend('g');
+        } else if (this.board.svgCommentGroup) {
             this.svgGroup = this.board.svgCommentGroup.elem('g');
+        } else {
+            return;
         }
         this.mouseDown = this.mouseDown.bind(this);
         this.mouseMove = this.mouseMove.bind(this);
@@ -136,7 +139,7 @@ Entry.Comment = class Comment {
         this.setFrame();
         this.addControl();
         this.setPosition();
-        this.code.registerBlock(this);
+        this.code && this.code.registerBlock(this);
         this.setObservers();
     }
 
