@@ -18,6 +18,7 @@ require('./class/function');
 require('./class/helper');
 require('./class/hw');
 require('./class/hw_monitor');
+require('./class/intro');
 require('./class/object');
 require('./class/painter');
 require('./class/pdf');
