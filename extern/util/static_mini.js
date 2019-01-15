@@ -314,12 +314,15 @@ EntryStatic.getAllBlocks = function() {
                 'robotis_detectingsound_value',
                 'robotis_detectedsound_value_boolean',
                 'robotis_detectingsound_value_boolean',
+                'robotis_detectedsound_value_init',
                 'robotis_color_value',
                 'robotis_color_value_boolean',
                 'robotis_humidity_value',
                 'robotis_humidity_value_boolean',
                 'robotis_temperature_value',
                 'robotis_temperature_value_boolean',
+                'robotis_userbutton_value',
+                'robotis_userbutton_value_boolean',                
             ],
         },
         {
@@ -631,6 +634,7 @@ EntryStatic.hwMiniSupportList = [
     'neobot',
     'roborobo_schoolkit',
     'robotis_openCM70',
+    'robotis_openCM70EDU',
 ];
 
 EntryStatic.COMMAND_TYPES = {
