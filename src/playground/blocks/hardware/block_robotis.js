@@ -324,7 +324,7 @@ Entry.Robotis_openCM70EDU = {
     },
     id: '7.3',
     name: 'robotis_openCM70EDU',
-    url: 'www.robotis.com',
+    url: 'www.robotis.com/',
     imageName: 'robotis_openCM70EDU.png',
     title: {
         "ko": "로보티즈 실과형",
