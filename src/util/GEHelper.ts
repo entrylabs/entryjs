@@ -1,6 +1,8 @@
 import PIXIHelper from '../class/pixi/helper/PIXIHelper';
 
 
+declare let createjs:any;
+
 class _GEHelper {
 
     private _isWebGL:boolean = false;
@@ -51,6 +53,14 @@ class _GEHelper {
             return sprite.getBounds(false);
         } else {
             return sprite.getTransformedBounds();
+        }
+    }
+    
+    newContainer(debugName?:string):PIXI.Container|any {
+        if(this._isWebGL) {
+            return PIXIHelper.container(debugName);
+        } else {
+            return new createjs.Container();
         }
     }
 

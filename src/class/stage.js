@@ -3,9 +3,11 @@
  * @fileoverview This manage canvas
  *
  */
+
 'use strict';
 
 import ColorSpoid from '../playground/colorSpoid';
+import { GEHelper } from '../util/GEHelper';
 
 /**
  * class for a canvas
@@ -38,8 +40,8 @@ Entry.Stage.prototype.initStage = function(canvas) {
 
     this.background = new createjs.Shape();
     this.background.graphics.beginFill('#ffffff').drawRect(-480, -240, 960, 480);
-    this.variableContainer = new createjs.Container();
-    this.dialogContainer = new createjs.Container();
+    this.variableContainer = GEHelper.newContainer("variableContainer");
+    this.dialogContainer = GEHelper.newContainer("dialogContainer");
 
     this.canvas.addChild(this.background);
     this.canvas.addChild(this.variableContainer);
