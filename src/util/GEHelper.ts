@@ -32,7 +32,31 @@ class _GEHelper {
             return object;
         }
     }
+
+    hitTestMouse(object:any):boolean {
+        if(this._isWebGL) {
+            let pixiApp:PIXI.Application;
+            let im = pixiApp.renderer.plugins.interaction;
+            let hitObject = im.hitTest(im.mouse.global, object);
+            return !!hitObject;
+        } else {
+            const stage = Entry.stage.canvas;
+            const pt = object.globalToLocal(stage.mouseX, stage.mouseY);
+            return object.hitTest(pt.x, pt.y);
+        }
+    }
+
+    getTransformedBounds(sprite:PIXI.Sprite|any):PIXI.Rectangle|any {
+        if(this._isWebGL) {
+            return sprite.getBounds(false);
+        } else {
+            return sprite.getTransformedBounds();
+        }
+    }
+
+
 }
 
 export const GEHelper:_GEHelper = new _GEHelper();
+
 
