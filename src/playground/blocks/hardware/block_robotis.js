@@ -19,7 +19,7 @@ Entry.Robotis_carCont = {
         CM_CALIBRATION_LEFT: [95, 2],
         CM_CALIBRATION_RIGHT: [97, 2],
 
-        AUX_MOTOR_SPEED_LEFT: [152, 2], // car_cont
+        AUX_MOTOR_SPEED_LEFT: [152, 2], // car_cont!
         AUX_MOTOR_SPEED_RIGHT: [154, 2],
     },
     setZero: function() {
@@ -333,6 +333,7 @@ Entry.Robotis_openCM70EDU = {
     delay: 15,
 };
 //실과형 추가 종료 
+//2019-01-05 by kjs
 Entry.Robotis_carCont.getBlocks = function() {
     return {
         //region robotis 로보티즈 carCont
