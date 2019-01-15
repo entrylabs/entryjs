@@ -122,24 +122,20 @@ Entry.VariableContainer = class VariableContainer {
 
     generateAddButtons() {
         const createElement = Entry.createElement;
-        const variableAddButton = createElement('a').addClass('entryVariableAddWorkspace');
+        const variableAddButton = createElement('button').addClass('entryVariableAddWorkspace');
         variableAddButton.innerHTML = Lang.Workspace.variable_add;
-        variableAddButton.href = '#';
         this.variableAddButton_ = variableAddButton;
 
-        const messageAddButton = createElement('a').addClass('entryVariableAddWorkspace');
+        const messageAddButton = createElement('button').addClass('entryVariableAddWorkspace');
         messageAddButton.innerHTML = Lang.Workspace.message_create;
-        messageAddButton.href = '#';
         this.messageAddButton_ = messageAddButton;
 
-        const listAddButton = createElement('a').addClass('entryVariableAddWorkspace');
+        const listAddButton = createElement('button').addClass('entryVariableAddWorkspace');
         listAddButton.innerHTML = Lang.Workspace.list_create;
-        listAddButton.href = '#';
         this.listAddButton_ = listAddButton;
 
-        const functionAddButton = createElement('a').addClass('entryVariableAddWorkspace');
+        const functionAddButton = createElement('button').addClass('entryVariableAddWorkspace');
         functionAddButton.innerHTML = Lang.Workspace.function_add;
-        functionAddButton.href = '#';
         this.functionAddButton_ = functionAddButton;
     }
 
@@ -184,10 +180,7 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     updateVariableAddView(type = 'variable') {
-        const {
-            info: { isCloud, object },
-            view,
-        } = this._getAddPanel(type);
+        const { info: { isCloud, object }, view } = this._getAddPanel(type);
         const { cloudCheck, globalCheck, localCheck, cloudWrapper } = view;
 
         if (isCloud) {
@@ -367,7 +360,8 @@ Entry.VariableContainer = class VariableContainer {
         } else {
             Entry.createElement('li')
                 .addClass('text red')
-                .appendTo(listView).innerHTML = Lang.Workspace.no_use;
+                .appendTo(listView).innerHTML =
+                Lang.Workspace.no_use;
         }
 
         this.variableSettingView && this.variableSettingView.appendChild(usedWrapper);
@@ -1490,9 +1484,7 @@ Entry.VariableContainer = class VariableContainer {
         const messages = this.messages_;
         const exist = Entry.isExist(name, 'name', messages);
 
-        const {
-            listElement: { nameField },
-        } = message;
+        const { listElement: { nameField } } = message;
         const { playground, toast } = Entry;
 
         if (exist) {
@@ -1830,7 +1822,8 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('Workspace_text')
-            .appendTo(addSpaceGlobalWrapper).innerHTML = Lang.Workspace.use_all_objects;
+            .appendTo(addSpaceGlobalWrapper).innerHTML =
+            Lang.Workspace.use_all_objects;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -1855,7 +1848,8 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('entryVariableAddSpaceCloudSpanWorkspace')
-            .appendTo(addSpaceCloudWrapper).innerHTML = Lang.Workspace.Variable_create_cloud;
+            .appendTo(addSpaceCloudWrapper).innerHTML =
+            Lang.Workspace.Variable_create_cloud;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -1875,7 +1869,8 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('Workspace_text')
-            .appendTo(addSpaceLocalWrapper).innerHTML = Lang.Workspace.Variable_use_this_object;
+            .appendTo(addSpaceLocalWrapper).innerHTML =
+            Lang.Workspace.Variable_use_this_object;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -2014,7 +2009,8 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('Workspace_text')
-            .appendTo(addSpaceGlobalWrapper).innerHTML = Lang.Workspace.use_all_objects;
+            .appendTo(addSpaceGlobalWrapper).innerHTML =
+            Lang.Workspace.use_all_objects;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -2039,7 +2035,8 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('entryVariableAddSpaceCloudSpanWorkspace')
-            .appendTo(addSpaceCloudWrapper).innerHTML = Lang.Workspace.List_create_cloud;
+            .appendTo(addSpaceCloudWrapper).innerHTML =
+            Lang.Workspace.List_create_cloud;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -2059,7 +2056,8 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('Workspace_text')
-            .appendTo(addSpaceLocalWrapper).innerHTML = Lang.Workspace.Variable_use_this_object;
+            .appendTo(addSpaceLocalWrapper).innerHTML =
+            Lang.Workspace.Variable_use_this_object;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -2373,7 +2371,8 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('dash')
-            .appendTo(slideCountBox).innerHTML = '~';
+            .appendTo(slideCountBox).innerHTML =
+            '~';
 
         const maxValueInput = createElement('input').appendTo(slideCountBox);
         maxValueInput.innerHTML = Lang.Workspace.max_value;
@@ -2514,9 +2513,7 @@ Entry.VariableContainer = class VariableContainer {
         const buttonMinus = createElement('a')
             .addClass('btn_cnt')
             .bindOnClick(() => {
-                const {
-                    selected: { id_ },
-                } = that;
+                const { selected: { id_ } } = that;
                 Entry.do('listChangeLength', id_, 'minus');
             })
             .appendTo(countInputBox);
@@ -2527,9 +2524,7 @@ Entry.VariableContainer = class VariableContainer {
         const buttonPlus = createElement('a')
             .addClass('btn_cnt')
             .bindOnClick(() => {
-                const {
-                    selected: { id_ },
-                } = that;
+                const { selected: { id_ } } = that;
                 Entry.do('listChangeLength', id_, 'plus');
             })
             .appendTo(countInputBox);
@@ -2598,7 +2593,8 @@ Entry.VariableContainer = class VariableContainer {
             const fragment = document.createDocumentFragment();
             Entry.createElement('p')
                 .addClass('caution_dsc')
-                .appendTo(fragment).innerHTML = Lang.Workspace.empty_of_list;
+                .appendTo(fragment).innerHTML =
+                Lang.Workspace.empty_of_list;
             listValues.appendChild(fragment);
         } else {
             const data = arr.map(({ data: value }, i) => {
@@ -3062,10 +3058,7 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     _makeVariableData(type = 'variable') {
-        const {
-            view,
-            info: { isCloud, object },
-        } = this._getAddPanel(type);
+        const { view, info: { isCloud, object } } = this._getAddPanel(type);
 
         let name = view.name.value.trim();
         if (_.isEmpty(name)) {
