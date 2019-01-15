@@ -244,6 +244,7 @@ Entry.Robotis_openCM70EDU = {
         CM_USER_BUTTON: [26, 1],
         CM_MOTION: [66, 1],
 
+
         AUX_SERVO_POSITION: [152, 2],
         AUX_IR: [168, 2],
         AUX_TOUCH: [202, 1],
@@ -334,6 +335,8 @@ Entry.Robotis_openCM70EDU = {
 };
 //실과형 추가 종료 
 //2019-01-05 by kjs
+
+
 Entry.Robotis_carCont.blockMenuBlocks = [
     'robotis_carCont_sensor_value',
     'robotis_carCont_cm_led',
@@ -342,7 +345,10 @@ Entry.Robotis_carCont.blockMenuBlocks = [
     'robotis_carCont_aux_motor_speed2',
     'robotis_carCont_cm_calibration',
 ];
+
+
 Entry.Robotis_carCont.getBlocks = function () {
+
     return {
         //region robotis 로보티즈 carCont
         robotis_carCont_sensor_value: {
