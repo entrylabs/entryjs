@@ -22,7 +22,7 @@ Entry.Robotis_carCont = {
         AUX_MOTOR_SPEED_LEFT: [152, 2], // car_cont!
         AUX_MOTOR_SPEED_RIGHT: [154, 2],
     },
-    setZero: function() {
+    setZero: function () {
         // instruction / address / length / value / default length
         Entry.hw.sendQueue['setZero'] = [1];
         this.update();
@@ -45,7 +45,7 @@ Entry.Robotis_carCont = {
         "en": "Robotis Robot car"
     },
     delay: 40,
-    postCallReturn: function(script, data, ms) {
+    postCallReturn: function (script, data, ms) {
         if (ms <= 0) {
             this.setRobotisData(data);
             this.update();
@@ -60,7 +60,7 @@ Entry.Robotis_carCont = {
             this.update();
 
             //delay xx ms
-            setTimeout(function() {
+            setTimeout(function () {
                 script.timeFlag = 0;
             }, ms);
 
@@ -77,7 +77,7 @@ Entry.Robotis_carCont = {
             return script.callReturn();
         }
     },
-    wait: function(sq, ms) {
+    wait: function (sq, ms) {
         Entry.hw.socket.send(JSON.stringify(sq));
 
         var start = new Date().getTime();
@@ -87,27 +87,27 @@ Entry.Robotis_carCont = {
             end = new Date().getTime();
         }
     },
-    update: function() {
+    update: function () {
         Entry.hw.update();
         var ROBOTIS_DATA = Entry.hw.sendQueue['ROBOTIS_DATA'];
         if (ROBOTIS_DATA) {
-            ROBOTIS_DATA.forEach(function(data) {
+            ROBOTIS_DATA.forEach(function (data) {
                 data['send'] = true;
             });
         }
         this.setRobotisData(null);
     },
-    filterSendData: function() {
+    filterSendData: function () {
         var ROBOTIS_DATA = Entry.hw.sendQueue['ROBOTIS_DATA'];
         if (ROBOTIS_DATA) {
-            return ROBOTIS_DATA.filter(function(data) {
+            return ROBOTIS_DATA.filter(function (data) {
                 return data.send !== true;
             });
         } else {
             return null;
         }
     },
-    setRobotisData: function(data) {
+    setRobotisData: function (data) {
         var filterData = this.filterSendData();
         if (data == null) {
             Entry.hw.sendQueue['ROBOTIS_DATA'] = filterData;
@@ -167,7 +167,7 @@ Entry.Robotis_openCM70 = {
         PORT5: false,
         PORT6: false,
     },
-    setZero: function() {
+    setZero: function () {
         // instruction / address / length / value / default length
         Entry.hw.sendQueue['setZero'] = [1];
         Entry.Robotis_carCont.update();
@@ -334,7 +334,15 @@ Entry.Robotis_openCM70EDU = {
 };
 //실과형 추가 종료 
 //2019-01-05 by kjs
-Entry.Robotis_carCont.getBlocks = function() {
+Entry.Robotis_carCont.blockMenuBlocks = [
+    'robotis_carCont_sensor_value',
+    'robotis_carCont_cm_led',
+    'robotis_carCont_cm_sound_detected_clear',
+    'robotis_carCont_aux_motor_speed',
+    'robotis_carCont_aux_motor_speed2',
+    'robotis_carCont_cm_calibration',
+];
+Entry.Robotis_carCont.getBlocks = function () {
     return {
         //region robotis 로보티즈 carCont
         robotis_carCont_sensor_value: {
@@ -385,7 +393,7 @@ Entry.Robotis_carCont.getBlocks = function() {
             },
             class: 'robotis_carCont_cm',
             isNotFor: ['robotis_carCont'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var data_instruction = Entry.Robotis_carCont.INSTRUCTION.READ;
                 var data_address = 0;
@@ -585,7 +593,7 @@ Entry.Robotis_carCont.getBlocks = function() {
             },
             class: 'robotis_carCont_cm',
             isNotFor: ['robotis_carCont'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var value_left = script.getField('VALUE_LEFT', script);
                 var value_right = script.getField('VALUE_RIGHT', script);
@@ -636,7 +644,7 @@ Entry.Robotis_carCont.getBlocks = function() {
             },
             class: 'robotis_carCont_cm',
             isNotFor: ['robotis_carCont'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 // instruction / address / length / value / default length
 
                 var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE;
@@ -714,7 +722,7 @@ Entry.Robotis_carCont.getBlocks = function() {
             },
             class: 'robotis_carCont_cm',
             isNotFor: ['robotis_carCont'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var direction = script.getField('DIRECTION', script);
                 var directionAngle = script.getField('DIRECTION_ANGLE', script);
@@ -832,7 +840,7 @@ Entry.Robotis_carCont.getBlocks = function() {
             },
             class: 'robotis_carCont_cm',
             isNotFor: ['robotis_carCont'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE,
                     address =
                         Entry.Robotis_carCont.CONTROL_TABLE
@@ -906,7 +914,7 @@ Entry.Robotis_carCont.getBlocks = function() {
             },
             class: 'robotis_carCont_cm',
             isNotFor: ['robotis_carCont'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var direction = script.getField('DIRECTION', script);
                 var value = script.getNumberValue('VALUE');
@@ -953,7 +961,7 @@ Entry.Robotis_carCont.getBlocks = function() {
     };
 };
 
-Entry.Robotis_openCM70.getBlocks = function() {
+Entry.Robotis_openCM70.getBlocks = function () {
     return {
         //region robotis 로보티즈 openCM70
         robotis_openCM70_cm_custom_value: {
@@ -994,7 +1002,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             class: 'robotis_openCM70_custom',
             isNotFor: ['robotis_openCM70'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var scope = script.executor.scope;
 
                 // instruction / address / length / value / default length
@@ -1091,7 +1099,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var scope = script.executor.scope;
 
                 scope.isStart = true;
@@ -1245,7 +1253,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var scope = script.executor.scope;
 
                 // instruction / address / length / value / default length
@@ -1533,7 +1541,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var cmBuzzerIndex = script.getField('CM_BUZZER_INDEX', script);
                 var cmBuzzerTime = script.getNumberValue(
@@ -1645,7 +1653,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var cmBuzzerMelody = script.getField(
                     'CM_BUZZER_MELODY',
@@ -1713,7 +1721,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 // instruction / address / length / value / default length
 
                 var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
@@ -1779,7 +1787,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var cmLed = script.getField('CM_LED', script);
                 var value = script.getField('VALUE', script);
@@ -1850,7 +1858,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
                 var data_address = 0;
@@ -1926,7 +1934,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var port = script.getField('PORT', script);
                 var directionAngle = script.getField('DIRECTION_ANGLE', script);
@@ -2013,7 +2021,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var port = script.getField('PORT', script);
                 var mode = script.getField('MODE', script);
@@ -2097,7 +2105,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var port = script.getField('PORT', script);
                 var directionAngle = script.getField('DIRECTION_ANGLE', script);
@@ -2186,7 +2194,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var port = script.getField('PORT', script);
                 var value = script.getNumberValue('VALUE');
@@ -2285,7 +2293,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var port = script.getField('PORT', script);
                 var ledModule = script.getField('LED_MODULE', script);
@@ -2358,7 +2366,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var port = script.getField('PORT', script);
                 var value = script.getNumberValue('VALUE');
@@ -2427,7 +2435,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             class: 'robotis_openCM70_custom',
             isNotFor: ['robotis_openCM70'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
                 var data_address = 0;
