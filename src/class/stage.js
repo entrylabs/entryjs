@@ -14,12 +14,9 @@ import ColorSpoid from '../playground/colorSpoid';
 Entry.Stage = function() {
     /** @type {Dictionary} */
     this.variables = {};
-    this.background = new createjs.Shape();
-    this.background.graphics.beginFill('#ffffff').drawRect(-480, -240, 960, 480);
     this.objectContainers = [];
     this.selectedObjectContainer = null;
-    this.variableContainer = new createjs.Container();
-    this.dialogContainer = new createjs.Container();
+
     /** @type {null|Entry.EntryObject} */
     this.selectedObject = null;
     this.isObjectClick = false;
@@ -38,6 +35,12 @@ Entry.Stage.prototype.initStage = function(canvas) {
     createjs.Touch.enable(this.canvas);
     this.canvas.enableMouseOver(10);
     this.canvas.mouseMoveOutside = true;
+
+    this.background = new createjs.Shape();
+    this.background.graphics.beginFill('#ffffff').drawRect(-480, -240, 960, 480);
+    this.variableContainer = new createjs.Container();
+    this.dialogContainer = new createjs.Container();
+
     this.canvas.addChild(this.background);
     this.canvas.addChild(this.variableContainer);
     this.canvas.addChild(this.dialogContainer);
