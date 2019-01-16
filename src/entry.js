@@ -24,7 +24,6 @@ require('./class/pdf');
 require('./class/playground');
 require('./class/popup');
 require('./class/popup_helper');
-require('./class/popup_list');
 require('./class/project');
 require('./class/property_panel');
 require('./class/reporter');
