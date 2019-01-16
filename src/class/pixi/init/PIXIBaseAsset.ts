@@ -8,7 +8,8 @@ class PIXIBaseAssetSprite extends PIXI.Sprite {
     }
 }
 
-var atlasJson = require("./../../../entry_texture/base_asset.json");
+// var atlasJson = require("./../../../entry_texture/base_asset.json");
+var atlasJson:any;
 
 export class PIXIBaseAsset {
 

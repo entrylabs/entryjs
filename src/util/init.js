@@ -1,9 +1,11 @@
 /**
  * @fileoverview Initialize code fore Entry
  */
+
 'use strict';
 
 import { Destroyer } from './destroyer/Destroyer';
+import { GEHelper } from './GEHelper';
 require('./utils');
 
 /**
@@ -236,6 +238,9 @@ Entry.initialize_ = function() {
     } else if (this.type === 'workspace' || this.type === 'phone') {
         this.reporter = new Entry.Reporter(true);
     }
+
+    GEHelper.INIT(this.options.useWebGL);
+
 };
 
 Entry.disposeContainer = function() {

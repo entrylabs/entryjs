@@ -30,13 +30,10 @@ Entry.Stage = function() {
  * @param {!Element} canvas for stage
  */
 Entry.Stage.prototype.initStage = function(canvas) {
-    this.canvas = new createjs.Stage(canvas.id);
+    this.canvas = GEHelper.newStage(canvas);
     this.canvas.x = 960 / 1.5 / 2;
     this.canvas.y = 540 / 1.5 / 2;
     this.canvas.scaleX = this.canvas.scaleY = 2 / 1.5;
-    createjs.Touch.enable(this.canvas);
-    this.canvas.enableMouseOver(10);
-    this.canvas.mouseMoveOutside = true;
 
     this.background = new createjs.Shape();
     this.background.graphics.beginFill('#ffffff').drawRect(-480, -240, 960, 480);

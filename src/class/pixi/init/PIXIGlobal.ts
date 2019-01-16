@@ -20,6 +20,8 @@ class _PIXIGlobal {
     /** @readonly */
     baseAsset:PIXIBaseAsset;
 
+    private _currentApp:PIXI.Application;
+
     initOnce() {
         if(this._init) return;
         entryIsWebGLSupported();
@@ -35,8 +37,10 @@ class _PIXIGlobal {
         PIXITextMetricsPlugIn();
     }
 
+    getCurrentApp():PIXI.Application { return this._currentApp; }
+
     getNewApp(canvas:HTMLCanvasElement):PIXI.Application {
-        return new PIXI.Application({
+        this._currentApp = new PIXI.Application({
             view: canvas,
             width: canvas.width,
             height: canvas.height,
@@ -45,6 +49,7 @@ class _PIXIGlobal {
             antialias:true,
             transparent: true
         });
+        return this._currentApp;
     }
 }
 

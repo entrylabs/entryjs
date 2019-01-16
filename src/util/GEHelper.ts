@@ -1,12 +1,32 @@
 import PIXIHelper from '../class/pixi/helper/PIXIHelper';
 import Texture = PIXI.Texture;
+import { PIXIGlobal } from '../class/pixi/init/PIXIGlobal';
 
 
 declare let createjs:any;
 
 class _GEHelper {
 
-    private _isWebGL:boolean = false;
+    INIT(isWebGL:boolean) {
+        this._isWebGL = isWebGL;
+    }
+
+    private _isWebGL:boolean = true;
+
+    newStage(canvas:HTMLCanvasElement) {
+        let stage:any;
+        if(this._isWebGL) {
+            let pixiApp = PIXIGlobal.getNewApp(canvas);
+            stage = pixiApp.stage;
+        } else {
+            stage = new createjs.Stage(canvas.id);
+            createjs.Touch.enable(stage);
+            stage.enableMouseOver(10);
+            stage.mouseMoveOutside = true;
+        }
+        return stage;
+    }
+
 
     cloneStamp(entity:any):any {
         if(this._isWebGL) {
