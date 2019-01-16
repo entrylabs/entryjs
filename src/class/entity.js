@@ -54,7 +54,7 @@ Entry.EntityObject = class EntityObject {
             Entry.dispatchEvent('entityClick', this.entity);
             Entry.stage.isObjectClick = true;
 
-            if (Entry.type != 'minimize' && Entry.stage.isEntitySelectable()) {
+            if (Entry.type !== 'minimize' && Entry.stage.isEntitySelectable()) {
                 this.offset = {
                     x: -this.parent.x + this.entity.getX() - (stageX * 0.75 - 240),
                     y: -this.parent.y - this.entity.getY() - (stageY * 0.75 - 135),
@@ -974,7 +974,7 @@ Entry.EntityObject = class EntityObject {
                 ];
 
                 const degrees = e.hsv * 3.6;
-                const r = (degrees * 3 * Math.PI) / 180;
+                const r = degrees * 3 * Math.PI / 180;
                 const cosVal = Math.cos(r);
                 const sinVal = Math.sin(r);
 
