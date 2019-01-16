@@ -9,6 +9,7 @@ import { PIXIPixelPerfectInteractionPlugIn } from '../plugins/PIXIPixelPerfectIn
 import { PIXITempStore } from '../etc/PIXITempStore';
 import { PIXITextMetricsPlugIn } from '../plugins/PIXITextMetricsPlugIn';
 import { PIXIDebug } from '../debugs/Debugs';
+import { PIXIShortPropPlugin } from '../plugins/PIXIShortPropPlugin';
 
 
 declare let ndgmr:any;
@@ -28,6 +29,7 @@ class _PIXIGlobal {
         ndgmr.initTempObject();
         PIXITempStore.init();
         PIXIAtlasManager.INIT();
+        PIXIShortPropPlugin();
         new PIXIZeroAlphaNoneInteractionPlugins();
         new PIXIPixelPerfectInteractionPlugIn();
         PIXITextMetricsPlugIn();
