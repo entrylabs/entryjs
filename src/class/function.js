@@ -8,46 +8,70 @@
  * @param {variable model} variable
  * @constructor
  */
-Entry.Func = function(func) {
-    this.id = func && func.id ? func.id : Entry.generateHash();
-    let content;
-    //inspect empty content
-    if (func && func.content && func.content.length > 4) {
-        content = func.content;
-    }
-    this.content = content
-        ? new Entry.Code(content)
-        : new Entry.Code([
-              [
-                  {
-                      type: 'function_create',
-                      copyable: false,
-                      deletable: false,
-                      x: 40,
-                      y: 40,
-                  },
-              ],
-          ]);
-    this.block = null;
-    this.blockMenuBlock = null;
-    this._backupContent = null;
-    this.hashMap = {};
-
-    this.paramMap = {};
-
-    Entry.generateFunctionSchema(this.id);
-
-    if (func && func.content) {
-        const blockMap = this.content._blockMap;
-        for (const key in blockMap) {
-            Entry.Func.registerParamBlock(blockMap[key].type);
+Entry.Func = class Func {
+    constructor(func) {
+        this.id = func && func.id ? func.id : Entry.generateHash();
+        let content;
+        //inspect empty content
+        if (func && func.content && func.content.length > 4) {
+            content = func.content;
         }
-        Entry.Func.generateWsBlock(this);
+        this.content = content
+            ? new Entry.Code(content)
+            : new Entry.Code([
+                  [
+                      {
+                          type: 'function_create',
+                          copyable: false,
+                          deletable: false,
+                          x: 40,
+                          y: 40,
+                      },
+                  ],
+              ]);
+        this.block = null;
+        this.blockMenuBlock = null;
+        this._backupContent = null;
+        this.hashMap = {};
+
+        this.paramMap = {};
+
+        Entry.generateFunctionSchema(this.id);
+
+        if (func && func.content) {
+            const blockMap = this.content._blockMap;
+            for (const key in blockMap) {
+                Entry.Func.registerParamBlock(blockMap[key].type);
+            }
+            Entry.Func.generateWsBlock(this);
+        }
+
+        Entry.Func.registerFunction(this);
+
+        Entry.Func.updateMenu();
     }
 
-    Entry.Func.registerFunction(this);
+    destroy() {
+        this.blockMenuBlock && this.blockMenuBlock.destroy();
+    }
 
-    Entry.Func.updateMenu();
+    generateBlock() {
+        const generatedInfo = Entry.Func.generateBlock(this);
+        this.block = generatedInfo.block;
+        this.description = generatedInfo.description;
+    }
+
+    edit() {
+        if (Entry.Func.isEdit) {
+            return;
+        }
+        Entry.Func.isEdit = true;
+        if (!Entry.Func.svg) {
+            Entry.Func.initEditView();
+        } else {
+            this.parentView.appendChild(this.svg);
+        }
+    }
 };
 
 Entry.Func.threads = {};
@@ -87,10 +111,6 @@ Entry.Func.executeFunction = function(threadHash) {
 
 Entry.Func.clearThreads = function() {
     this.threads = {};
-};
-
-Entry.Func.prototype.destroy = function() {
-    this.blockMenuBlock && this.blockMenuBlock.destroy();
 };
 
 Entry.Func.edit = function(func) {
@@ -321,15 +341,15 @@ Entry.Func.createParamBlock = function(type, blockPrototype, originalType) {
     originalType = /string/gi.test(originalType)
         ? 'function_param_string'
         : 'function_param_boolean';
-    let blockSchema = function() {};
-    blockSchema.prototype = blockPrototype;
-    blockSchema = new blockSchema();
-    blockSchema.changeEvent = new Entry.Event();
-    blockSchema.template = Lang.template[originalType];
-    blockSchema.fontColor = blockPrototype.fontColor || '#FFF';
+    let BlockSchema = function() {};
+    BlockSchema.prototype = blockPrototype;
+    BlockSchema = new BlockSchema();
+    BlockSchema.changeEvent = new Entry.Event();
+    BlockSchema.template = Lang.template[originalType];
+    BlockSchema.fontColor = blockPrototype.fontColor || '#FFF';
 
-    Entry.block[type] = blockSchema;
-    return blockSchema;
+    Entry.block[type] = BlockSchema;
+    return BlockSchema;
 };
 
 Entry.Func.updateMenu = function() {
@@ -347,18 +367,6 @@ Entry.Func.updateMenu = function() {
         blockMenu.banClass('functionEdit', true);
     }
     blockMenu.lastSelector === 'func' && blockMenu.align();
-};
-
-Entry.Func.prototype.edit = function() {
-    if (Entry.Func.isEdit) {
-        return;
-    }
-    Entry.Func.isEdit = true;
-    if (!Entry.Func.svg) {
-        Entry.Func.initEditView();
-    } else {
-        this.parentView.appendChild(this.svg);
-    }
 };
 
 Entry.Func.generateBlock = function(func) {
@@ -394,12 +402,6 @@ Entry.Func.generateBlock = function(func) {
     }
 
     return { block, description };
-};
-
-Entry.Func.prototype.generateBlock = function(toSave) {
-    const generatedInfo = Entry.Func.generateBlock(this);
-    this.block = generatedInfo.block;
-    this.description = generatedInfo.description;
 };
 
 Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
