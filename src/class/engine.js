@@ -965,4 +965,8 @@ Entry.Engine = function() {
             this.addButton.addClass('entryRemove');
         }
     };
+
+    p.destroy = function() {
+        // 우선 interface 만 정의함.
+    };
 })(Entry.Engine.prototype);

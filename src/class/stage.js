@@ -694,3 +694,7 @@ Entry.Stage.prototype.setEntitySelectable = function(value) {
 Entry.Stage.prototype.isEntitySelectable = function() {
     return Entry.engine.isState('stop') && this._entitySelectable && !this.colorSpoid.isRunning;
 };
+
+Entry.Stage.prototype.destroy = function() {
+    // 우선 interface 만 정의함.
+};

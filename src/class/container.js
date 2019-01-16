@@ -1216,4 +1216,8 @@ Entry.Container = class Container {
         view_ && view_.scrollIntoView();
         document.body.scrollIntoView();
     }
+
+    destroy() {
+        // 우선 interface 만 정의함.
+    }
 };
