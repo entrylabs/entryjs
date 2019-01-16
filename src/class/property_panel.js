@@ -3,16 +3,16 @@
  */
 'use strict';
 
-Entry.PropertyPanel = function() {
-    this.modes = {};
-    this.selected = null;
-};
+Entry.PropertyPanel = class PropertyPanel {
+    constructor() {
+        this.modes = {};
+        this.selected = null;
+    }
 
-(function(p) {
     /**
      * Generate View
      */
-    p.generateView = function(parentDom, option) {
+    generateView = function(parentDom) {
         const container = $(parentDom);
         this._view = Entry.Dom('div', {
             class: 'propertyPanel',
@@ -34,37 +34,41 @@ Entry.PropertyPanel = function() {
             parent: this._view,
         });
 
-        var splitter = Entry.Dom('div', {
+        const splitter = Entry.Dom('div', {
             class: 'entryObjectSelectedImgWorkspace',
             parent: container,
         });
         this.initializeSplitter(splitter);
     };
 
-    p.addMode = function(mode, contentObj) {
-        if (this.modes[mode]) this.removeMode(mode);
+    addMode = function(mode, contentObj) {
+        if (this.modes[mode]) {
+            this.removeMode(mode);
+        }
 
-        var contentDom = contentObj.getView();
+        let contentDom = contentObj.getView();
         // will be removed after apply new Dom class
         contentDom = Entry.Dom(contentDom, {
             parent: this._contentView,
         });
 
-        var tabDom = Entry.Dom('<div>' + Lang.Menus[mode] + '</div>', {
-            classes: ['propertyTabElement', 'propertyTab' + mode],
+        const tabDom = Entry.Dom(`<div>${Lang.Menus[mode]}</div>`, {
+            classes: ['propertyTabElement', `propertyTab${mode}`],
             parent: this._tabView,
         });
-        var that = this;
+        const that = this;
         tabDom.bind('click', function() {
             that.select(mode);
         });
 
-        if (mode == 'console') contentObj.codeMirror.refresh();
+        if (mode === 'console') {
+            contentObj.codeMirror.refresh();
+        }
 
         if (this.modes[mode]) {
             this.modes[mode].tabDom.remove();
             this.modes[mode].contentDom.remove();
-            if (mode == 'hw') {
+            if (mode === 'hw') {
                 $(this.modes).removeClass('.propertyTabhw');
                 $('.propertyTabhw').unbind('dblclick');
             }
@@ -72,78 +76,88 @@ Entry.PropertyPanel = function() {
 
         this.modes[mode] = {
             obj: contentObj,
-            tabDom: tabDom,
-            contentDom: contentDom,
+            tabDom,
+            contentDom,
         };
 
-        if (mode == 'hw') {
+        if (mode === 'hw') {
             $('.propertyTabhw').bind('dblclick', function() {
                 Entry.dispatchEvent('hwModeChange');
             });
         }
     };
 
-    p.removeMode = function(mode) {
+    removeMode = function(mode) {
         if (this.modes[mode]) {
             this.modes[mode].tabDom.remove();
             this.modes[mode].contentDom.remove();
-            if (mode == 'hw') {
+            if (mode === 'hw') {
                 $(this.modes).removeClass('.propertyTabhw');
                 $('.propertyTabhw').unbind('dblclick');
             }
         }
 
-        var keys = Object.keys(this.modes);
+        const keys = Object.keys(this.modes);
         if (keys && keys.length > 0) {
             this.select(keys[0]);
         }
     };
 
-    p.resize = function(canvasSize) {
-        var selected = this.selected;
-        if (!selected) return;
-        var canvasHeight = canvasSize * 9 / 16;
+    resize = function(canvasSize) {
+        const selected = this.selected;
+        if (!selected) {
+            return;
+        }
+        const canvasHeight = canvasSize * 9 / 16;
         this._view.css({
-            width: canvasSize + 'px',
-            top: canvasHeight + 35 + 40 + 48 - 22 + 'px',
+            width: `${canvasSize}px`,
+            top: `${canvasHeight + 35 + 40 + 48 - 22}px`,
         });
-        if (canvasSize >= 430) this._view.removeClass('collapsed');
-        else this._view.addClass('collapsed');
+        if (canvasSize >= 430) {
+            this._view.removeClass('collapsed');
+        } else {
+            this._view.addClass('collapsed');
+        }
 
         Entry.dispatchEvent('windowResized');
 
-        var obj = this.modes[selected].obj;
-        if (selected == 'hw') {
-            if (this.modes.hw.obj.listPorts) obj.resizeList();
-            else obj.resize && obj.resize();
+        const obj = this.modes[selected].obj;
+        if (selected === 'hw') {
+            if (this.modes.hw.obj.listPorts) {
+                obj.resizeList();
+            } else {
+                obj.resize && obj.resize();
+            }
         } else {
             obj.resize && obj.resize();
         }
     };
 
-    p.select = function(modeName) {
-        for (var key in this.modes) {
-            var mode = this.modes[key];
+    select = function(modeName) {
+        for (const key in this.modes) {
+            const mode = this.modes[key];
             mode.tabDom.removeClass('selected');
             mode.contentDom.addClass('entryRemove');
             $(mode.contentDom).detach();
             mode.obj.visible = false;
         }
 
-        var selected = this.modes[modeName];
+        const selected = this.modes[modeName];
         $(this._contentView).append(selected.contentDom);
         selected.tabDom.addClass('selected');
         selected.contentDom.removeClass('entryRemove');
-        if (selected.obj.resize) selected.obj.resize();
+        if (selected.obj.resize) {
+            selected.obj.resize();
+        }
         selected.obj.visible = true;
         this.selected = modeName;
     };
 
-    p.initializeSplitter = function(splitter) {
-        var that = this;
+    initializeSplitter = function(splitter) {
+        const that = this;
         splitter.bind('mousedown touchstart', function(e) {
             e.preventDefault();
-            var container = Entry.container;
+            const container = Entry.container;
             that._cover.removeClass('entryRemove');
             that._cover._isVisible = true;
             container.splitterEnable = true;
@@ -156,22 +170,20 @@ Entry.PropertyPanel = function() {
                     }
                 });
             }
-            $(document).bind('mouseup.container:splitter touchend.container:splitter', func);
+            $(document).bind('mouseup.container:splitter touchend.container:splitter', () => {
+                const container = Entry.container;
+                const listener = container.resizeEvent;
+                if (listener) {
+                    container.splitterEnable = false;
+                    listener.destroy();
+                    delete container.resizeEvent;
+                }
+                if (that._cover._isVisible) {
+                    that._cover._isVisible = false;
+                    that._cover.addClass('entryRemove');
+                }
+                $(document).unbind('.container:splitter');
+            });
         });
-
-        var func = function(e) {
-            var container = Entry.container;
-            var listener = container.resizeEvent;
-            if (listener) {
-                container.splitterEnable = false;
-                listener.destroy();
-                delete container.resizeEvent;
-            }
-            if (that._cover._isVisible) {
-                that._cover._isVisible = false;
-                that._cover.addClass('entryRemove');
-            }
-            $(document).unbind('.container:splitter');
-        };
     };
-})(Entry.PropertyPanel.prototype);
+};
