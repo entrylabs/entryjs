@@ -175,31 +175,36 @@ Entry.EntryObject = class {
      * @return {entity model}
      */
     initEntity(model) {
-        const json = {};
-        json.rotation = json.x = json.y = 0;
+        const json = {
+            x: 0,
+            y: 0,
+        };
+        json.rotation = 0;
         json.direction = 90;
 
-        if (this.objectType == 'sprite') {
+        if (this.objectType === 'sprite') {
             const dimension = model.sprite.pictures[0].dimension;
             json.regX = dimension.width / 2;
             json.regY = dimension.height / 2;
             let scale;
             const mainCategory = model.sprite.category.main;
-            if (mainCategory == 'background' || mainCategory == 'new') {
+            if (mainCategory === 'background' || mainCategory === 'new') {
                 scale = Math.max(270 / dimension.height, 480 / dimension.width);
-            } else if (mainCategory == 'new') {
+            } else if (mainCategory === 'new') {
                 scale = 1;
             } else {
                 scale = 200 / (dimension.width + dimension.height);
             }
 
-            json.scaleX = json.scaleY = scale;
+            json.scaleX = scale;
+            json.scaleY = scale;
             json.width = dimension.width;
             json.height = dimension.height;
-        } else if (this.objectType == 'textBox') {
+        } else if (this.objectType === 'textBox') {
             json.regX = 25;
             json.regY = 12;
-            json.scaleX = json.scaleY = 1.5;
+            json.scaleX = 1.5;
+            json.scaleY = 1.5;
             json.width = 50;
             json.height = 24;
             json.text = model.text;
@@ -233,7 +238,8 @@ Entry.EntryObject = class {
                 json.bgColor = options.bgColor || options.background;
                 json.lineBreak = options.lineBreak;
                 json.textAlign = textAlign;
-                json.scaleX = json.scaleY = scaleX;
+                json.scaleX = scaleX;
+                json.scaleY = scaleX;
                 if (options.lineBreak) {
                     json.width = width || 256;
                     json.height = height || json.width * 0.5625;
@@ -478,7 +484,9 @@ Entry.EntryObject = class {
      * @param {string} soundId
      */
     removeSound(soundId) {
-        const index = this.sounds.findIndex((sound) => sound.id === soundId);
+        const index = this.sounds.findIndex((sound) => {
+            return sound.id === soundId;
+        });
         this.sounds.splice(index, 1);
         Entry.playground.reloadPlayground();
         Entry.playground.injectSound();
@@ -557,7 +565,7 @@ Entry.EntryObject = class {
      * @param {?Entry.EntityObject} entity
      * @param {?xml block} script
      */
-    addCloneEntity(object, entity, script) {
+    addCloneEntity(object, entity) {
         if (this.clonedEntities.length > Entry.maxCloneLimit) {
             return;
         }
@@ -1187,7 +1195,7 @@ Entry.EntryObject = class {
     createThumbnailView(objectId) {
         const thumbnail = Entry.createElement('div').addClass('entryObjectThumbnailWorkspace');
 
-        DomUtils.addEventListenerMultiple(thumbnail, 'mousedown touchstart', (e) => {
+        DomUtils.addEventListenerMultiple(thumbnail, 'mousedown touchstart', () => {
             Entry.do('containerSelectObject', objectId);
         });
 
@@ -1268,7 +1276,6 @@ Entry.EntryObject = class {
             ) {
                 Entry.do('containerSelectObject', objectId);
             }
-
         });
 
         objectView.addEventListener('mousedown', (e) => {
@@ -1299,7 +1306,7 @@ Entry.EntryObject = class {
 
                 const diff = Math.sqrt(
                     Math.pow(touchEvent.pageX - mouseDownCoordinate.x, 2) +
-                    Math.pow(touchEvent.pageY - mouseDownCoordinate.y, 2)
+                        Math.pow(touchEvent.pageY - mouseDownCoordinate.y, 2)
                 );
 
                 if (diff > 5 && longPressTimer) {

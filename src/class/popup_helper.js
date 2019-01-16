@@ -161,7 +161,7 @@ Entry.PopupHelper = class {
      * Resize this view size when window size modified
      * @param {event} e
      */
-    resize(e) {}
+    resize() {}
 
     show(key, isNext) {
         const that = this;
