@@ -14,7 +14,7 @@ const Entry = require('../entry');
  * This manage all view related with block.
  * @constructor
  */
-Entry.Playground = class {
+Entry.Playground = class Playground {
     constructor() {
         this.isTextBGMode_ = false;
         this.enableArduino = false;
@@ -699,7 +699,7 @@ Entry.Playground = class {
      * @param soundView
      */
     generateSoundView(soundView) {
-        if (Entry.type == 'workspace') {
+        if (Entry.type === 'workspace') {
             const soundAdd = Entry.createElement('div', 'entryAddSound');
             soundAdd.addClass('entryPlaygroundAddSound');
             const innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner').addClass(
@@ -1724,8 +1724,8 @@ Entry.Playground = class {
             data: {
                 color,
                 positionDom: target,
-                canTransparent: canTransparent,
-                onOutsideClick: (color) => {
+                canTransparent,
+                onOutsideClick: () => {
                     if (colorPicker) {
                         colorPicker.hide();
                     }
