@@ -5,7 +5,7 @@ Entry.getStartProject = function(mediaFilePath) {
         category: Lang.Menus.other,
         scenes: [
             {
-                name: Lang.Blocks.SCENE + ' 1',
+                name: `${Lang.Blocks.SCENE} 1`,
                 id: '7dwq',
             },
         ],
@@ -66,7 +66,7 @@ Entry.getStartProject = function(mediaFilePath) {
                             duration: 1.3,
                             ext: '.mp3',
                             id: '8el5',
-                            fileurl: mediaFilePath + 'media/bark.mp3',
+                            fileurl: `${mediaFilePath}media/bark.mp3`,
                             name: Lang.Blocks.doggi_bark,
                             label: {
                                 ko: '강아지 짖는소리',
@@ -77,8 +77,8 @@ Entry.getStartProject = function(mediaFilePath) {
                     pictures: [
                         {
                             id: 'vx80',
-                            fileurl: mediaFilePath + 'media/entrybot1.png',
-                            name: Lang.Blocks.walking_entryBot + '1',
+                            fileurl: `${mediaFilePath}media/entrybot1.png`,
+                            name: `${Lang.Blocks.walking_entryBot}1`,
                             scale: 100,
                             dimension: {
                                 width: 284,
@@ -87,8 +87,8 @@ Entry.getStartProject = function(mediaFilePath) {
                         },
                         {
                             id: '4t48',
-                            fileurl: mediaFilePath + 'media/entrybot2.png',
-                            name: Lang.Blocks.walking_entryBot + '2',
+                            fileurl: `${mediaFilePath}media/entrybot2.png`,
+                            name: `${Lang.Blocks.walking_entryBot}2`,
                             scale: 100,
                             dimension: {
                                 width: 284,
