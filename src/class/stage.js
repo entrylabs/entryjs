@@ -480,41 +480,27 @@ Entry.Stage.prototype.endEdit = function() {
 };
 
 Entry.Stage.prototype.initWall = function() {
-    var wall = new createjs.Container();
+    let wall = GEHelper.newContainer("wall");
     wall.mouseEnabled = false;
-    var bound = new Image();
-    bound.src = Entry.mediaFilePath + 'media/bound.png';
+    let tex = GEHelper.newTexture(Entry.mediaFilePath + 'media/bound.png');
+    const newSide = (x, y, sx, sy) => {
+        let sp = GEHelper.newSpriteWithTex(tex);
+        sp.x = x;
+        sp.y = y;
+        sx ?  sp.scaleX = sx : 0;
+        sy ?  sp.scaleY = sy : 0;
+        wall.addChild(sp);
+        return sp;
+    };
 
-    wall.up = new createjs.Bitmap();
-    wall.up.scaleX = 480 / 30;
-    wall.up.y = -135 - 30;
-    wall.up.x = -240;
-    wall.up.image = bound;
-    wall.addChild(wall.up);
-
-    wall.down = new createjs.Bitmap();
-    wall.down.scaleX = 480 / 30;
-    wall.down.y = 135;
-    wall.down.x = -240;
-    wall.down.image = bound;
-    wall.addChild(wall.down);
-
-    wall.right = new createjs.Bitmap();
-    wall.right.scaleY = 270 / 30;
-    wall.right.y = -135;
-    wall.right.x = 240;
-    wall.right.image = bound;
-    wall.addChild(wall.right);
-
-    wall.left = new createjs.Bitmap();
-    wall.left.scaleY = 270 / 30;
-    wall.left.y = -135;
-    wall.left.x = -240 - 30;
-    wall.left.image = bound;
-    wall.addChild(wall.left);
+    wall.up = newSide( -240, -135 - 30, 480 / 30, 0);
+    wall.down = newSide( -240, 135, 480 / 30, 0);
+    wall.right = newSide( 240, -135, 0, 270 / 30);
+    wall.left = newSide( -240 - 30, -135, 0, 270 / 30);
 
     this.canvas.addChild(wall);
     this.wall = wall;
+
 };
 
 /**

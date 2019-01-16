@@ -1,4 +1,5 @@
 import PIXIHelper from '../class/pixi/helper/PIXIHelper';
+import Texture = PIXI.Texture;
 
 
 declare let createjs:any;
@@ -61,6 +62,23 @@ class _GEHelper {
             return PIXIHelper.container(debugName);
         } else {
             return new createjs.Container();
+        }
+    }
+
+    newTexture(path:string) {
+        if(this._isWebGL) {
+            return Texture.fromImage(path);
+        } else {
+            let img = new Image();
+            return img.src = path;
+        }
+    }
+
+    newSpriteWithTex(tex?:any) {
+        if(this._isWebGL) {
+            return new PIXI.Sprite(tex);
+        } else {
+            return new createjs.Bitmap(tex);
         }
     }
 
