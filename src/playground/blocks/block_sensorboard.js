@@ -5,8 +5,8 @@ Entry.SensorBoard = {
     url: 'http://www.neweducation.co.kr/',
     imageName: 'entrybt.png',
     title: {
-        "ko": "E-센서보드",
-        "en": "E-Sensorboard"
+        ko: 'E-센서보드',
+        en: 'E-Sensorboard',
     },
     setZero: function() {
         Entry.hw.sendQueue.readablePorts = [];
@@ -22,22 +22,19 @@ Entry.SensorBoard.getBlocks = function() {
     return {
         //region sensorBoard e센서보드
         sensorBoard_get_named_sensor_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['소리', '0'],
-                        ['빛 감지', '1'],
-                        ['슬라이더', '2'],
-                        ['온도', '3'],
-                    ],
+                    options: [['소리', '0'], ['빛 감지', '1'], ['슬라이더', '2'], ['온도', '3']],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -51,29 +48,24 @@ Entry.SensorBoard.getBlocks = function() {
             class: 'sensorBoard',
             isNotFor: ['sensorBoard'],
             func: function(sprite, script) {
-                return Entry.hw.getAnalogPortValue(
-                    script.getField('PORT', script)
-                );
+                return Entry.hw.getAnalogPortValue(script.getField('PORT', script));
             },
             syntax: { js: [], py: ['Sensorboard.sensor_value(%1)'] },
         },
         sensorBoard_is_button_pressed: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['빨간', '8'],
-                        ['파란', '9'],
-                        ['노랑', '10'],
-                        ['초록', '11'],
-                    ],
+                    options: [['빨간', '8'], ['파란', '9'], ['노랑', '10'], ['초록', '11']],
                     value: '8',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -87,34 +79,31 @@ Entry.SensorBoard.getBlocks = function() {
             class: 'sensorBoard',
             isNotFor: ['sensorBoard'],
             func: function(sprite, script) {
-                return Entry.hw.getDigitalPortValue(
-                    script.getNumberField('PORT', script)
-                );
+                return Entry.hw.getDigitalPortValue(script.getNumberField('PORT', script));
             },
             syntax: { js: [], py: ['Sensorboard.is_button_pressed(%1)'] },
         },
         sensorBoard_led: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['빨간', '2'],
-                        ['초록', '3'],
-                        ['파란', '4'],
-                        ['노랑', '5'],
-                    ],
+                    options: [['빨간', '2'], ['초록', '3'], ['파란', '4'], ['노랑', '5']],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [['켜기', '255'], ['끄기', '0']],
                     value: '255',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',

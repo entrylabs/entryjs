@@ -5,8 +5,8 @@ Entry.Codestar = {
     url: 'http://codestar.co.kr',
     imageName: 'codestar.png',
     title: {
-        "ko": "코드스타",
-        "en": "Codestar"
+        ko: '코드스타',
+        en: 'Codestar',
     },
     setZero: function() {
         Entry.hw.sendQueue.readablePorts = [];
@@ -79,8 +79,8 @@ Entry.Codestar.getBlocks = function() {
     return {
         //region codestar 코드스타
         codestar_color_single: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: '%1 LED %2 %3',
@@ -88,13 +88,16 @@ Entry.Codestar.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [['빨간색', 7], ['파란색', 8]],
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.ARDUINO_on, 'on'],
-                        [Lang.Blocks.ARDUINO_off, 'off'],
-                    ],
+                    options: [[Lang.Blocks.ARDUINO_on, 'on'], [Lang.Blocks.ARDUINO_off, 'off']],
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -122,8 +125,8 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_3color: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: '3색 LED %1 밝기 %2 %3',
@@ -131,6 +134,9 @@ Entry.Codestar.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [['빨간색', 9], ['초록색', 10], ['파란색', 11]],
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -164,18 +170,18 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_vibration: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: '진동모터 %1 %2',
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.ARDUINO_on, 'on'],
-                        [Lang.Blocks.ARDUINO_off, 'off'],
-                    ],
+                    options: [[Lang.Blocks.ARDUINO_on, 'on'], [Lang.Blocks.ARDUINO_off, 'off']],
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -202,8 +208,8 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_buzzer: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: '부저 톤%1 %2',
@@ -226,6 +232,9 @@ Entry.Codestar.getBlocks = function() {
                         ['E5', 13],
                         ['F5', 14],
                     ],
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -250,8 +259,8 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_buzzer_stop: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: '부저 중지 %1',
@@ -276,8 +285,8 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_servo: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: '서보모터 %1 모터값 %2 %3',
@@ -292,6 +301,9 @@ Entry.Codestar.getBlocks = function() {
                         ['D10', 'D10'],
                         ['D11', 'D11'],
                     ],
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -329,20 +341,18 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_drive: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: '방향 %1 속도 %2 %3',
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['앞으로', '0'],
-                        ['뒤로', '1'],
-                        ['왼쪽', '2'],
-                        ['오른쪽', '3'],
-                    ],
+                    options: [['앞으로', '0'], ['뒤로', '1'], ['왼쪽', '2'], ['오른쪽', '3']],
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -382,8 +392,8 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_wheel: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: '방향 %1 바퀴속도 %2 %3',
@@ -391,6 +401,9 @@ Entry.Codestar.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [['왼쪽', '0'], ['오른쪽', '1']],
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -433,8 +446,8 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_light: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -453,8 +466,8 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_button: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -473,8 +486,8 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_ir: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -482,12 +495,10 @@ Entry.Codestar.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['A0', '0'],
-                        ['A4', '4'],
-                        ['A5', '5'],
-                        ['A7', '7'],
-                    ],
+                    options: [['A0', '0'], ['A4', '4'], ['A5', '5'], ['A7', '7']],
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -506,8 +517,8 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_sonar: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -526,8 +537,8 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_variable_R: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -535,12 +546,10 @@ Entry.Codestar.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['A0', '0'],
-                        ['A1', '1'],
-                        ['A4', '4'],
-                        ['A5', '5'],
-                    ],
+                    options: [['A0', '0'], ['A1', '1'], ['A4', '4'], ['A5', '5']],
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -559,8 +568,8 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_mic: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -579,8 +588,8 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_temperature: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -599,8 +608,8 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_gyroscope: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -609,6 +618,9 @@ Entry.Codestar.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [['x', 'x'], ['y', 'y'], ['z', 'z']],
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -631,8 +643,8 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_geomagnetic: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -641,6 +653,9 @@ Entry.Codestar.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [['x', 'x'], ['y', 'y'], ['z', 'z']],
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -663,8 +678,8 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_irR: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -683,8 +698,8 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_tilt: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],

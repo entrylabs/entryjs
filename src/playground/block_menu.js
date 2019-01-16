@@ -596,9 +596,11 @@ class BlockMenu {
         const board = this.workspace.board;
         const boardView = board.view;
         const className = 'entrySelectedCategory';
+        const className2 = 'entryUnSelectedCategory';
 
         if (oldView) {
             oldView.removeClass(className);
+            oldView.addClass(className2);
         }
 
         doNotFold = doNotFold || !this.hasCategory();
@@ -606,7 +608,10 @@ class BlockMenu {
         if (elem == oldView && !doNotFold) {
             boardView.addClass('folding');
             this._selectedCategoryView = null;
-            elem && elem.removeClass(className);
+            if (elem) {
+                elem.removeClass(className);
+                elem.addClass(className2);
+            }
             Entry.playground.hideTabs();
             animate = true;
             this.visible = false;
@@ -634,7 +639,10 @@ class BlockMenu {
 
         if (this.visible) {
             this._selectedCategoryView = elem;
-            elem && elem.addClass(className);
+            if (elem) {
+                elem.removeClass(className2);
+                elem.addClass(className);
+            }
         }
 
         doNotAlign !== true && this._dAlign();

@@ -224,8 +224,8 @@ Entry.Robotis_carCont.getBlocks = function() {
     return {
         //region robotis 로보티즈 carCont
         robotis_carCont_sensor_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -260,6 +260,8 @@ Entry.Robotis_carCont.getBlocks = function() {
                     ],
                     value: 'CM_SPRING_LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -433,8 +435,8 @@ Entry.Robotis_carCont.getBlocks = function() {
             syntax: { js: [], py: ['Robotis.carcont_sensor_value(%1)'] },
         },
         robotis_carCont_cm_led: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -446,6 +448,8 @@ Entry.Robotis_carCont.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -455,6 +459,8 @@ Entry.Robotis_carCont.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -507,8 +513,8 @@ Entry.Robotis_carCont.getBlocks = function() {
             syntax: { js: [], py: ['Robotis.carcont_cm_led(%1, %2)'] },
         },
         robotis_carCont_cm_sound_detected_clear: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -551,8 +557,8 @@ Entry.Robotis_carCont.getBlocks = function() {
             syntax: { js: [], py: ['Robotis.carcont_cm_sound_clear()'] },
         },
         robotis_carCont_aux_motor_speed: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -564,6 +570,8 @@ Entry.Robotis_carCont.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -573,6 +581,8 @@ Entry.Robotis_carCont.getBlocks = function() {
                     ],
                     value: 'CW',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -659,8 +669,8 @@ Entry.Robotis_carCont.getBlocks = function() {
             },
         },
         robotis_carCont_aux_motor_speed2: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template:
@@ -674,6 +684,8 @@ Entry.Robotis_carCont.getBlocks = function() {
                     ],
                     value: 'CW',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -687,6 +699,8 @@ Entry.Robotis_carCont.getBlocks = function() {
                     ],
                     value: 'CW',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -756,8 +770,8 @@ Entry.Robotis_carCont.getBlocks = function() {
             },
         },
         robotis_carCont_cm_calibration: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -769,6 +783,8 @@ Entry.Robotis_carCont.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -849,8 +865,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
     return {
         //region robotis 로보티즈 openCM70
         robotis_openCM70_cm_custom_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -868,6 +884,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     ],
                     value: 'BYTE',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -952,8 +970,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
         },
         robotis_openCM70_sensor_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -973,6 +991,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     ],
                     value: 'CM_SOUND_DETECTED',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1077,8 +1097,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
             syntax: { js: [], py: ['Robotis.opencm70_sensor_value(%1)'] },
         },
         robotis_openCM70_aux_sensor_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1093,6 +1113,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     ],
                     value: 'PORT_3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -1127,6 +1149,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     ],
                     value: 'AUX_SERVO_POSITION',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1337,8 +1361,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
         },
         robotis_openCM70_cm_buzzer_index: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1400,6 +1424,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1489,8 +1515,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
         },
         robotis_openCM70_cm_buzzer_melody: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1525,6 +1551,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1593,8 +1621,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
             syntax: { js: [], py: ['Robotis.opencm70_cm_buzzer_melody(%1)'] },
         },
         robotis_openCM70_cm_sound_detected_clear: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1637,8 +1665,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
             syntax: { js: [], py: ['Robotis.opencm70_cm_sound_clear()'] },
         },
         robotis_openCM70_cm_led: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1651,6 +1679,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     ],
                     value: 'CM_LED_R',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -1660,6 +1690,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1719,8 +1751,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
             syntax: { js: [], py: ['Robotis.opencm70_cm_led(%1, %2)'] },
         },
         robotis_openCM70_cm_motion: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1774,8 +1806,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
             syntax: { js: [], py: ['Robotis.opencm70_cm_motion(%1)'] },
         },
         robotis_openCM70_aux_motor_speed: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1787,6 +1819,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -1796,6 +1830,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     ],
                     value: 'CW',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1873,8 +1909,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
         },
         robotis_openCM70_aux_servo_mode: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1888,6 +1924,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     ],
                     value: '3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -1897,6 +1935,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1945,8 +1985,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
             syntax: { js: [], py: ['Robotis.opencm70_aux_servo_mode(%1, %2)'] },
         },
         robotis_openCM70_aux_servo_speed: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1960,6 +2000,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     ],
                     value: '3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -1969,6 +2011,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     ],
                     value: 'CW',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -2046,8 +2090,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
         },
         robotis_openCM70_aux_servo_position: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2061,6 +2105,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     ],
                     value: '3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -2130,8 +2176,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
         },
         robotis_openCM70_aux_led_module: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2145,6 +2191,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     ],
                     value: '3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -2172,6 +2220,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -2220,8 +2270,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
             syntax: { js: [], py: ['Robotis.opencm70_aux_led_module(%1, %2)'] },
         },
         robotis_openCM70_aux_custom: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2235,6 +2285,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     ],
                     value: '3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -2294,8 +2346,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
             syntax: { js: [], py: ['Robotis.opencm70_aux_custom(%1, %2)'] },
         },
         robotis_openCM70_cm_custom: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [

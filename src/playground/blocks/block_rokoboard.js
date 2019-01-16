@@ -5,8 +5,8 @@ Entry.rokoboard = {
     url: 'http://www.r-steam.com/',
     imageName: 'rokoboard.png',
     title: {
-        "ko": "로코보드",
-        "en": "rokoboard"
+        ko: '로코보드',
+        en: 'rokoboard',
     },
     setZero: function() {
         Entry.hw.sendQueue.readablePorts = [];
@@ -121,8 +121,8 @@ Entry.rokoboard.getBlocks = function() {
         //region rokoboard 로코보드
         // rokoboard Implementation
         rokoboard_get_sensor_value_by_name: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -140,6 +140,8 @@ Entry.rokoboard.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -159,8 +161,8 @@ Entry.rokoboard.getBlocks = function() {
             },
         },
         rokoboard_is_button_pressed: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
