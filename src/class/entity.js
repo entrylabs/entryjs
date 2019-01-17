@@ -782,7 +782,7 @@ Entry.EntityObject = class EntityObject {
             this.setWidth(this.getWidth() * this.getScaleX());
             this.setScaleX(1);
             this.setScaleY(1);
-            this.textObject.lineWidth = this.getWidth();
+            this.textObject.lineWidth = Math.ceil(this.getWidth());
             this.alignTextBox();
             if (this.fontType === 'Nanum Gothic Coding') {
                 const textObjectHeight = this.textObject.getMeasuredLineHeight();
