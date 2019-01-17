@@ -1,42 +1,39 @@
 'use strict';
 
-Entry.TvCast = function(tvCast) {
-    this.generateView(tvCast);
-};
+Entry.TvCast = class TvCast {
+    constructor(tvCast) {
+        this.generateView(tvCast);
+    }
 
-var p = Entry.TvCast.prototype;
+    init(tvCastHash) {
+        this.tvCastHash = tvCastHash;
+    }
 
-p.init = function(tvCastHash) {
-    this.tvCastHash = tvCastHash;
-};
+    generateView(tvCastHash) {
+        const movieContainer = Entry.createElement('div');
+        movieContainer.addClass('entryContainerMovieWorkspace');
+        movieContainer.addClass('entryRemove');
 
-p.generateView = function(tvCastHash) {
-    var movieContainer = Entry.createElement('div');
-    movieContainer.addClass('entryContainerMovieWorkspace');
-    movieContainer.addClass('entryRemove');
+        this.movieContainer = movieContainer;
 
-    this.movieContainer = movieContainer;
-    var view = this.movieContainer;
+        const iframe = Entry.createElement('iframe');
+        iframe.setAttribute('id', 'tvCastIframe');
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.setAttribute('frameborder', 0);
+        iframe.setAttribute('src', tvCastHash);
+        this.movieFrame = iframe;
 
-    var movieContainer = this.movieContainer;
-    var iframe = Entry.createElement('iframe');
-    iframe.setAttribute('id', 'tvCastIframe');
-    iframe.setAttribute('allowfullscreen', '');
-    iframe.setAttribute('frameborder', 0);
-    iframe.setAttribute('src', tvCastHash);
-    this.movieFrame = iframe;
+        this.movieContainer.appendChild(this.movieFrame);
+    }
 
-    this.movieContainer.appendChild(this.movieFrame);
-};
+    getView() {
+        return this.movieContainer;
+    }
 
-p.getView = function() {
-    return this.movieContainer;
-};
-
-p.resize = function() {
-    var container = document.getElementById('entryContainerWorkspaceId');
-    var iframe = document.getElementById('tvCastIframe');
-    var w = this.movieContainer.offsetWidth;
-    iframe.width = w + 'px';
-    iframe.height = w * 9 / 16 + 'px';
+    resize() {
+        const iframe = document.getElementById('tvCastIframe');
+        const w = this.movieContainer.offsetWidth;
+        iframe.width = `${w}px`;
+        iframe.height = `${w * 9 / 16}px`;
+    }
 };
