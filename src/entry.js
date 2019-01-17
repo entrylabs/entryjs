@@ -36,7 +36,6 @@ require('./class/variable_container');
 require('./command/command');
 require('./command/commander');
 require('./core/collection');
-require('./core/db');
 require('./core/dom');
 require('./core/event');
 require('./core/model');
