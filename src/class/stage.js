@@ -41,7 +41,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
     this.canvas.y = 540 / 1.5 / 2;
     this.canvas.scaleX = this.canvas.scaleY = 2 / 1.5;
 
-    this.background = new createjs.Shape();
+    this.background = GEHelper.newGraphic();
     this.background.graphics.beginFill('#ffffff').drawRect(-480, -240, 960, 480);
     this.variableContainer = GEHelper.newContainer("variableContainer");
     this.dialogContainer = GEHelper.newContainer("dialogContainer");
@@ -284,7 +284,9 @@ Entry.Stage.prototype.sortZorderRun = function() {
  * Initialize coordinate on canvas. It is toggle by Engine.
  */
 Entry.Stage.prototype.initCoordinator = function() {
-    this.coordinator = Object.assign(new createjs.Bitmap(Entry.mediaFilePath + 'workspace_coordinate.png'), {
+    let tex = GEHelper.newSpriteWithURL(Entry.mediaFilePath + 'workspace_coordinate.png');
+    //todo [박봉배] tickEnabled 어떻게 할지 고민하기.
+    this.coordinator = Object.assign(tex, {
         scaleX: 0.5,
         scaleY: 0.5,
         x: -240,

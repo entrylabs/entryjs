@@ -28,7 +28,7 @@ class _PIXIGlobal {
         entryIsWebGLSupported();
         this._init = true;
         PIXIDebug.internal_init();
-        this.baseAsset = new PIXIBaseAsset();
+        //this.baseAsset = new PIXIBaseAsset();
         ndgmr.initTempObject();
         PIXITempStore.init();
         PIXIAtlasManager.INIT();

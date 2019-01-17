@@ -37,6 +37,9 @@ class _GEHelper {
 
     INIT(isWebGL:boolean) {
         this._isWebGL = isWebGL;
+        if(this._isWebGL) {
+            PIXIGlobal.initOnce();
+        }
     }
 
     private _isWebGL:boolean = true;
@@ -126,6 +129,22 @@ class _GEHelper {
             return new PIXI.Sprite(tex);
         } else {
             return new createjs.Bitmap(tex);
+        }
+    }
+
+    newSpriteWithURL(url:string) {
+        if(this._isWebGL) {
+            return PIXI.Sprite.from(url);
+        } else {
+            return new createjs.Bitmap(url);
+        }
+    }
+
+    newGraphic() {
+        if(this._isWebGL) {
+            return new PIXI.Graphics();
+        } else {
+            return new createjs.Shape();
         }
     }
 
