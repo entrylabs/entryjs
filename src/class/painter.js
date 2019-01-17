@@ -95,6 +95,10 @@ Entry.Painter = function(view) {
 
     p.changePicture = function(picture) {
         if (this.file && this.file.id === picture.id) {
+            if (!this.file.isUpdate) {
+                Entry.stage.updateObject();
+                this.file.isUpdate = true;
+            }
             return;
         } else if (!this.file.modified) {
             this.afterModified(picture);
@@ -126,6 +130,8 @@ Entry.Painter = function(view) {
                 }.bind(this)
             );
         }
+        Entry.stage.updateObject();
+        this.file.isUpdate = true;
     };
 
     p.afterModified = function(picture) {
@@ -224,6 +230,7 @@ Entry.Painter = function(view) {
             task: taskParam,
         });
 
+        this.file.isUpdate = false;
         this.file.modified = false;
     };
 
