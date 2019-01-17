@@ -10,6 +10,7 @@ import { PIXITempStore } from '../etc/PIXITempStore';
 import { PIXITextMetricsPlugIn } from '../plugins/PIXITextMetricsPlugIn';
 import { PIXIDebug } from '../debugs/Debugs';
 import { PIXIShortPropPlugin } from '../plugins/PIXIShortPropPlugin';
+import { PIXIGraphicOverride } from '../plugins/PIXIGraphicOverride';
 
 
 declare let ndgmr:any;
@@ -35,6 +36,7 @@ class _PIXIGlobal {
         new PIXIZeroAlphaNoneInteractionPlugins();
         new PIXIPixelPerfectInteractionPlugIn();
         PIXITextMetricsPlugIn();
+        PIXIGraphicOverride();
     }
 
     getCurrentApp():PIXI.Application { return this._currentApp; }
