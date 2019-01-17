@@ -1,12 +1,7 @@
-/*
- */
 'use strict';
 
 import EntryTool from 'entry-tool';
 
-/*
- *
- */
 Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
     constructor(content, blockView, index, renderMode, i, isDynamic) {
         super();
@@ -23,8 +18,9 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
         this._contents = content;
         this._noArrow = content.noArrow;
 
-        let { bgColor, textColor, arrowColor } = content;
-        var { deletable, emphasized } = this._block;
+        const { bgColor, textColor } = content;
+        let { arrowColor } = content;
+        const { deletable, emphasized } = this._block;
 
         if (deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || emphasized) {
             arrowColor = blockView._fillColor;
@@ -46,12 +42,12 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
     }
 
     renderStart() {
-        var blockView = this._blockView;
-        var X_PADDING = 20;
-        var X_PADDING_SUBT = 10;
-        var that = this;
-        var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
-        var arrowInfo = this.getArrow();
+        const blockView = this._blockView;
+        const X_PADDING = 20;
+        const X_PADDING_SUBT = 10;
+        const that = this;
+        const CONTENT_HEIGHT = this._CONTENT_HEIGHT;
+        const arrowInfo = this.getArrow();
 
         if (!this.svgGroup) {
             this.svgGroup = blockView.contentSvgGroup.elem('g', {
@@ -66,8 +62,6 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
                 rx: that._ROUND,
                 ry: that._ROUND,
             };
-
-            // width="48" height="20" fill="#13BF68" fill-rule="nonzero" rx="2"
 
             if (this._bgColor) {
                 rectInfo.fill = this._bgColor;
@@ -84,7 +78,7 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
                 x: 5,
                 style: 'white-space: pre;',
                 fill: this._textColor,
-                'font-size': +that._font_size + 'px',
+                'font-size': `${+that._font_size}px`,
                 'font-weight': 'bold',
                 'font-family': 'NanumGothic',
             });
@@ -112,26 +106,23 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
 
         this._setTextValue();
 
-        var bBox = this.getTextBBox();
+        const bBox = this.getTextBBox();
 
         this.textElement.attr({
             y: bBox.height * 0.27,
         });
 
-        var width = bBox.width + X_PADDING;
+        let width = bBox.width + X_PADDING;
 
-        if (this._noArrow) width -= X_PADDING_SUBT;
+        if (this._noArrow) {
+            width -= X_PADDING_SUBT;
+        }
 
-        this._header.attr({ width: width });
+        this._header.attr({ width });
 
         if (!this._noArrow) {
             this._arrow.attr({
-                transform:
-                    'translate(' +
-                    (width - arrowInfo.width - 5) +
-                    ',' +
-                    -arrowInfo.height / 2 +
-                    ')',
+                transform: `translate(${width - arrowInfo.width - 5},${-arrowInfo.height / 2})`,
             });
         }
 
@@ -140,34 +131,31 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
         this.box.set({
             x: 0,
             y: 0,
-            width: width,
+            width,
             height: CONTENT_HEIGHT,
         });
     }
 
     resize() {
-        var X_PADDING = 20;
-        var X_PADDING_SUBT = 10;
+        const X_PADDING = 20;
+        const X_PADDING_SUBT = 10;
         const board = this._blockView.getBoard() || {};
         const { scale = 1 } = board || {};
-        var width = this.textElement.getBoundingClientRect().width / scale + X_PADDING;
+        let width = this.textElement.getBoundingClientRect().width / scale + X_PADDING;
         if (!this._noArrow) {
-            var arrowInfo = this.getArrow();
+            const arrowInfo = this.getArrow();
             this._arrow.attr({
-                transform:
-                    'translate(' +
-                    (width - arrowInfo.width - 5) +
-                    ',' +
-                    -arrowInfo.height / 2 +
-                    ')',
+                transform: `translate(${width - arrowInfo.width - 5},${-arrowInfo.height / 2})`,
             });
-        } else width -= X_PADDING_SUBT;
+        } else {
+            width -= X_PADDING_SUBT;
+        }
 
         this._header.attr({
-            width: width,
+            width,
         });
 
-        this.box.set({ width: width });
+        this.box.set({ width });
         this._block.view.dAlignContent();
     }
 
@@ -208,25 +196,30 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
             $(this._blockView.contentSvgGroup).trigger('optionChanged', {
                 block: this._block,
                 value: this.getValue(),
-                index: this._index,
             });
         });
         this.optionDomCreated();
     }
 
     applyValue(value) {
-        if (this.value != value) this.setValue(value);
+        if (this.value != value) {
+            this.setValue(value);
+        }
         this._setTextValue();
         this.resize();
     }
 
     getTextByValue(value) {
-        var reg = /&value/gm;
-        if (reg.test(value)) return value.replace(reg, '');
+        const reg = /&value/gm;
+        if (reg.test(value)) {
+            return value.replace(reg, '');
+        }
 
-        if ((!value && typeof value !== 'number') || value === 'null') return Lang.Blocks.no_target;
+        if ((!value && typeof value !== 'number') || value === 'null') {
+            return Lang.Blocks.no_target;
+        }
 
-        var matched = _.find(this._contents.options, ([, cValue]) => {
+        const matched = _.find(this._contents.options, ([, cValue]) => {
             return cValue == value;
         });
 
@@ -236,13 +229,14 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
 
         //no match found
         //check should return value as it is
-        if (this._shouldReturnValue(value)) return value;
+        if (this._shouldReturnValue(value)) {
+            return value;
+        }
         return Lang.Blocks.no_target;
     }
 
     getContentHeight(height) {
-        height = height || this._blockView.getSkeleton().dropdownHeight || 20;
-        return height;
+        return height || this._blockView.getSkeleton().dropdownHeight || 20;
     }
 
     getArrow() {
@@ -255,9 +249,11 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
     }
 
     _setTextValue() {
-        var textValue = this.getTextByValue(this.getValue());
-        var newValue = this._convert(textValue, this.getValue());
-        if (this.getTextValue() !== newValue) this.textElement.textContent = newValue;
+        const textValue = this.getTextByValue(this.getValue());
+        const newValue = this._convert(textValue, this.getValue());
+        if (this.getTextValue() !== newValue) {
+            this.textElement.textContent = newValue;
+        }
     }
 
     getTextValue() {
