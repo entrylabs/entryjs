@@ -5,8 +5,8 @@ Entry.ArduinoNano = {
     url: 'http://www.arduino.cc/',
     imageName: 'arduinoNano.png',
     title: {
-        "ko": "아두이노 Nano",
-        "en": "Arduino Nano"
+        ko: '아두이노 Nano',
+        en: 'Arduino Nano',
     },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
@@ -73,31 +73,23 @@ Entry.ArduinoNano.setLanguage = function() {
         ko: {
             template: {
                 arduino_nano_get_analog_value: '아날로그 %1 번 센서값',
-                arduino_nano_get_analog_value_map:
-                    '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
-                arduino_nano_get_ultrasonic_value:
-                    '울트라소닉 Trig %1 Echo %2 센서값',
+                arduino_nano_get_analog_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
+                arduino_nano_get_ultrasonic_value: '울트라소닉 Trig %1 Echo %2 센서값',
                 arduino_nano_toggle_led: '디지털 %1 번 핀 %2 %3',
-                arduino_nano_digital_pwm:
-                    '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
-                arduino_nano_set_tone:
-                    '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
-                arduino_nano_set_servo:
-                    '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
+                arduino_nano_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                arduino_nano_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
+                arduino_nano_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
                 arduino_nano_get_digital: '디지털 %1 번 센서값',
             },
         },
         en: {
             template: {
                 arduino_nano_get_analog_value: 'Analog %1 Sensor value',
-                arduino_nano_get_analog_value_map:
-                    'Map Value %1 %2 ~ %3 to %4 ~ %5',
-                arduino_nano_get_ultrasonic_value:
-                    'Read ultrasonic sensor trig pin %1 echo pin %2',
+                arduino_nano_get_analog_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
+                arduino_nano_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
                 arduino_nano_toggle_led: 'Digital %1 Pin %2 %3',
                 arduino_nano_digital_pwm: 'Digital %1 Pin %2 %3',
-                arduino_nano_set_tone:
-                    'Play tone pin %1 on note %2 octave %3 beat %4 %5',
+                arduino_nano_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
                 arduino_nano_set_servo: 'Set servo pin %1 angle as %2 %3',
                 arduino_nano_get_digital: 'Digital %1 Sensor value',
             },
@@ -125,6 +117,8 @@ Entry.ArduinoNano.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             syntax: undefined,

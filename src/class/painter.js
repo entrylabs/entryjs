@@ -99,6 +99,10 @@ Entry.Painter = class Painter {
 
     changePicture(picture) {
         if (this.file && this.file.id === picture.id) {
+            if (!this.file.isUpdate) {
+                Entry.stage.updateObject();
+                this.file.isUpdate = true;
+            }
             return;
         } else if (!this.file.modified) {
             this.afterModified(picture);
@@ -130,6 +134,8 @@ Entry.Painter = class Painter {
                 }.bind(this)
             );
         }
+        Entry.stage.updateObject();
+        this.file.isUpdate = true;
     }
 
     afterModified(picture) {
@@ -224,6 +230,7 @@ Entry.Painter = class Painter {
             task: taskParam,
         });
 
+        this.file.isUpdate = false;
         this.file.modified = false;
     }
 

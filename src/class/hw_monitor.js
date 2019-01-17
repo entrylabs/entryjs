@@ -53,7 +53,9 @@ Entry.HWMonitor = class HWMonitor {
         const monitorTemplate = this._hwModule.monitorTemplate;
 
         const imgObj = {
-            href: Entry.mediaFilePath + monitorTemplate.imgPath,
+            href: monitorTemplate.imgPath
+                ? Entry.mediaFilePath + monitorTemplate.imgPath
+                : undefined,
             x: -monitorTemplate.width / 2,
             y: -monitorTemplate.height / 2,
 
@@ -62,8 +64,10 @@ Entry.HWMonitor = class HWMonitor {
         };
 
         this._portViews = {};
-        this.hwView = this._svgGroup.elem('image');
-        this.hwView = this.hwView.attr(imgObj);
+        if (imgObj.href) {
+            this.hwView = this._svgGroup.elem('image');
+            this.hwView = this.hwView.attr(imgObj);
+        }
         this._template = monitorTemplate;
         const ports = monitorTemplate.ports;
         this.pathGroup = null;
@@ -350,12 +354,6 @@ Entry.HWMonitor = class HWMonitor {
     }
 
     resize() {
-        if (this.hwView) {
-            this.hwView.attr({
-                transform: `scale(${this.scale})`,
-            });
-        }
-
         let bRect = {};
         if (this.svgDom) {
             bRect = this.svgDom.get(0).getBoundingClientRect();
@@ -372,6 +370,13 @@ Entry.HWMonitor = class HWMonitor {
         }
 
         this.scale = this._template.height * (bRect.height / this._template.height) / 1000;
+
+        if (this.hwView && this.scale) {
+            this.hwView.attr({
+                transform: `scale(${this.scale})`,
+            });
+        }
+
         this.align();
     }
 

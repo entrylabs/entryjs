@@ -122,24 +122,20 @@ Entry.VariableContainer = class VariableContainer {
 
     generateAddButtons() {
         const createElement = Entry.createElement;
-        const variableAddButton = createElement('a').addClass('entryVariableAddWorkspace');
+        const variableAddButton = createElement('button').addClass('entryVariableAddWorkspace');
         variableAddButton.innerHTML = Lang.Workspace.variable_add;
-        variableAddButton.href = '#';
         this.variableAddButton_ = variableAddButton;
 
-        const messageAddButton = createElement('a').addClass('entryVariableAddWorkspace');
+        const messageAddButton = createElement('button').addClass('entryVariableAddWorkspace');
         messageAddButton.innerHTML = Lang.Workspace.message_create;
-        messageAddButton.href = '#';
         this.messageAddButton_ = messageAddButton;
 
-        const listAddButton = createElement('a').addClass('entryVariableAddWorkspace');
+        const listAddButton = createElement('button').addClass('entryVariableAddWorkspace');
         listAddButton.innerHTML = Lang.Workspace.list_create;
-        listAddButton.href = '#';
         this.listAddButton_ = listAddButton;
 
-        const functionAddButton = createElement('a').addClass('entryVariableAddWorkspace');
+        const functionAddButton = createElement('button').addClass('entryVariableAddWorkspace');
         functionAddButton.innerHTML = Lang.Workspace.function_add;
-        functionAddButton.href = '#';
         this.functionAddButton_ = functionAddButton;
     }
 
