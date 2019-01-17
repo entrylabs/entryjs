@@ -14,12 +14,12 @@ Entry.Observer = class Observer {
         parent.push(this);
     }
 
-    destroy = function() {
+    destroy() {
         const parent = this.parent;
         const index = parent.indexOf(this);
         if (index > -1) {
             parent.splice(index, 1);
         }
         return this;
-    };
+    }
 };
