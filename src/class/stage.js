@@ -612,7 +612,7 @@ Entry.Stage.prototype.selectObjectContainer = function(scene) {
     if (_.isEmpty(canvas) || _.isEmpty(containers)) {
         return;
     }
-
+    GEHelper.activateScene(scene && scene.id);
     var newContainer = this.getObjectContainerByScene(scene);
 
     containers.forEach(canvas.removeChild.bind(canvas));
@@ -625,7 +625,7 @@ Entry.Stage.prototype.selectObjectContainer = function(scene) {
  * init object containers
  */
 Entry.Stage.prototype.createObjectContainer = function(scene) {
-    return Object.assign(new createjs.Container(), { scene });
+    return Object.assign(GEHelper.newContainer("[Stage] SceneContainer"), { scene });
 };
 
 /**
@@ -639,6 +639,7 @@ Entry.Stage.prototype.removeObjectContainer = function(scene) {
     if (canvas) {
         canvas.removeChild(objContainer);
     }
+    GEHelper.removeScene(scene.id);
     containers.splice(containers.indexOf(objContainer), 1);
 };
 
@@ -704,7 +705,7 @@ Entry.Stage.prototype.destroy = function() {
         destroyOption = {children: true, texture: false, baseTexture: false};
         this.objectContainers.forEach( c => c.destroy(destroyOption) );
         //this.handle.destroy(); // 추상화 아직 안됨.
-        //PIXIAtlasManager.clearProject();
+        PIXIAtlasManager.clearProject();
     } else {
         //do nothing
     }

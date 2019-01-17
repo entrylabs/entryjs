@@ -1,6 +1,8 @@
 import PIXIHelper from '../class/pixi/helper/PIXIHelper';
 import Texture = PIXI.Texture;
 import { PIXIGlobal } from '../class/pixi/init/PIXIGlobal';
+import { PIXIAtlasHelper } from '../class/pixi/atlas/PIXIAtlasHelper';
+import { PIXIAtlasManager } from '../class/pixi/atlas/PIXIAtlasManager';
 
 
 declare let createjs:any;
@@ -124,6 +126,19 @@ class _GEHelper {
             return new PIXI.Sprite(tex);
         } else {
             return new createjs.Bitmap(tex);
+        }
+    }
+
+
+    removeScene(sceneID:string):void {
+        if(this._isWebGL) {
+            PIXIAtlasManager.removeScene(sceneID);
+        }
+    }
+
+    activateScene(sceneID:string):void {
+        if(this._isWebGL) {
+            PIXIAtlasManager.activateScene(sceneID);
         }
     }
 
