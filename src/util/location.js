@@ -1,12 +1,12 @@
 'use strict';
 
 function getInitialData() {
-    let locationObj = {};
+    const locationObj = {};
     locationObj.initialData = [Lang.Blocks.location_entire, 'all'];
     locationObj.ko = {
-        'Seoul': {
-            'lang': Lang.Blocks.location_seoul,
-            'sub': [
+        Seoul: {
+            lang: Lang.Blocks.location_seoul,
+            sub: [
                 [Lang.Blocks.location_seoul_jongno_gu, 'jongno_gu'],
                 [Lang.Blocks.location_seoul_jung_gu, 'jung_gu'],
                 [Lang.Blocks.location_seoul_yongsan_gu, 'yongsan_gu'],
@@ -34,9 +34,9 @@ function getInitialData() {
                 [Lang.Blocks.location_seoul_gangdong_gu, 'gangdong_gu'],
             ],
         },
-        'Gangwon': {
-            'lang': Lang.Blocks.location_gangwon,
-            'sub': [
+        Gangwon: {
+            lang: Lang.Blocks.location_gangwon,
+            sub: [
                 [Lang.Blocks.location_gangwon_chuncheon, 'chuncheon'],
                 [Lang.Blocks.location_gangwon_wonju, 'wonju'],
                 [Lang.Blocks.location_gangwon_gangneung_si, 'gangneung_si'],
@@ -58,8 +58,8 @@ function getInitialData() {
             ],
         },
         'Gyeonggi-do': {
-            'lang': Lang.Blocks.location_gyeonggi,
-            'sub': [
+            lang: Lang.Blocks.location_gyeonggi,
+            sub: [
                 [Lang.Blocks.location_gyeonggi_suwon_si, 'suwon_si'],
                 [Lang.Blocks.location_gyeonggi_seongnam, 'seongnam'],
                 [Lang.Blocks.location_gyeonggi_uijeongbu, 'uijeongbu'],
@@ -94,8 +94,8 @@ function getInitialData() {
             ],
         },
         'Gyeongsangnam-do': {
-            'lang': Lang.Blocks.location_gyeongsangnam,
-            'sub': [
+            lang: Lang.Blocks.location_gyeongsangnam,
+            sub: [
                 [Lang.Blocks.location_gyeongsangnam_changwon_si, 'changwon_si'],
                 [Lang.Blocks.location_gyeongsangnam_jinju, 'jinju'],
                 [Lang.Blocks.location_gyeongsangnam_tongyeong_si, 'tongyeong_si'],
@@ -117,8 +117,8 @@ function getInitialData() {
             ],
         },
         'Gyeongsangbuk-do': {
-            'lang': Lang.Blocks.location_gyeongsangbuk,
-            'sub': [
+            lang: Lang.Blocks.location_gyeongsangbuk,
+            sub: [
                 [Lang.Blocks.location_gyeongsangbuk_pohang_si, 'pohang_si'],
                 [Lang.Blocks.location_gyeongsangbuk_gyeongju_si, 'gyeongju_si'],
                 [Lang.Blocks.location_gyeongsangbuk_gimcheon_si, 'gimcheon_si'],
@@ -144,9 +144,9 @@ function getInitialData() {
                 [Lang.Blocks.location_gyeongsangbuk_ulleung, 'ulleung'],
             ],
         },
-        'Gwangju': {
-            'lang': Lang.Blocks.location_gwangju,
-            'sub': [
+        Gwangju: {
+            lang: Lang.Blocks.location_gwangju,
+            sub: [
                 [Lang.Blocks.location_gwangju_dong_gu, 'dong_gu'],
                 [Lang.Blocks.location_gwangju_seo_gu, 'seo_gu'],
                 [Lang.Blocks.location_gwangju_nam_gu, 'nam_gu'],
@@ -154,9 +154,9 @@ function getInitialData() {
                 [Lang.Blocks.location_gwangju_gwangsan_gu, 'gwangsan_gu'],
             ],
         },
-        'Daegu': {
-            'lang': Lang.Blocks.location_daegu,
-            'sub': [
+        Daegu: {
+            lang: Lang.Blocks.location_daegu,
+            sub: [
                 [Lang.Blocks.location_daegu_jung_gu, 'jung_gu'],
                 [Lang.Blocks.location_daegu_dong_gu, 'dong_gu'],
                 [Lang.Blocks.location_daegu_seo_gu, 'seo_gu'],
@@ -167,9 +167,9 @@ function getInitialData() {
                 [Lang.Blocks.location_daegu_dalseong, 'dalseong'],
             ],
         },
-        'Daejeon': {
-            'lang': Lang.Blocks.location_daejeon,
-            'sub': [
+        Daejeon: {
+            lang: Lang.Blocks.location_daejeon,
+            sub: [
                 [Lang.Blocks.location_daejeon_dong_gu, 'dong_gu'],
                 [Lang.Blocks.location_daejeon_jung_gu, 'jung_gu'],
                 [Lang.Blocks.location_daejeon_seo_gu, 'seo_gu'],
@@ -177,9 +177,9 @@ function getInitialData() {
                 [Lang.Blocks.location_daejeon_daedeok_gu, 'daedeok_gu'],
             ],
         },
-        'Busan': {
-            'lang': Lang.Blocks.location_busan,
-            'sub': [
+        Busan: {
+            lang: Lang.Blocks.location_busan,
+            sub: [
                 [Lang.Blocks.location_busan_jung_gu, 'jung_gu'],
                 [Lang.Blocks.location_busan_seo_gu, 'seo_gu'],
                 [Lang.Blocks.location_busan_dong_gu, 'dong_gu'],
@@ -198,13 +198,13 @@ function getInitialData() {
                 [Lang.Blocks.location_busan_gijang, 'gijang'],
             ],
         },
-        'Sejong': {
-            'lang': Lang.Blocks.location_sejong,
-            'sub': [],
+        Sejong: {
+            lang: Lang.Blocks.location_sejong,
+            sub: [],
         },
-        'Ulsan': {
-            'lang': Lang.Blocks.location_ulsan,
-            'sub': [
+        Ulsan: {
+            lang: Lang.Blocks.location_ulsan,
+            sub: [
                 [Lang.Blocks.location_ulsan_jung_gu, 'jung_gu'],
                 [Lang.Blocks.location_ulsan_nam_gu, 'nam_gu'],
                 [Lang.Blocks.location_ulsan_dong_gu, 'dong_gu'],
@@ -212,9 +212,9 @@ function getInitialData() {
                 [Lang.Blocks.location_ulsan_ulju, 'ulju'],
             ],
         },
-        'Incheon': {
-            'lang': Lang.Blocks.location_incheon,
-            'sub': [
+        Incheon: {
+            lang: Lang.Blocks.location_incheon,
+            sub: [
                 [Lang.Blocks.location_incheon_jung_gu, 'jung_gu'],
                 [Lang.Blocks.location_incheon_dong_gu, 'dong_gu'],
                 [Lang.Blocks.location_incheon_nam_gu, 'nam_gu'],
@@ -228,8 +228,8 @@ function getInitialData() {
             ],
         },
         'Jeollanam-do': {
-            'lang': Lang.Blocks.location_jeollanam,
-            'sub': [
+            lang: Lang.Blocks.location_jeollanam,
+            sub: [
                 [Lang.Blocks.location_jeollanam_mokpo, 'mokpo'],
                 [Lang.Blocks.location_jeollanam_yosu, 'yosu'],
                 [Lang.Blocks.location_jeollanam_suncheon_si, 'suncheon_si'],
@@ -252,12 +252,11 @@ function getInitialData() {
                 [Lang.Blocks.location_jeollanam_jangseong, 'jangseong'],
                 [Lang.Blocks.location_jeollanam_wando, 'wando'],
                 [Lang.Blocks.location_jeollanam_sinan, 'sinan'],
-
             ],
         },
         'Jeollabuk-do': {
-            'lang': Lang.Blocks.location_jeollabuk,
-            'sub': [
+            lang: Lang.Blocks.location_jeollabuk,
+            sub: [
                 [Lang.Blocks.location_jeollabuk_jeonju, 'jeonju'],
                 [Lang.Blocks.location_jeollabuk_gunsan_si, 'gunsan_si'],
                 [Lang.Blocks.location_jeollabuk_iksan, 'iksan'],
@@ -274,16 +273,16 @@ function getInitialData() {
                 [Lang.Blocks.location_jeollabuk_buan, 'buan'],
             ],
         },
-        'Jeju': {
-            'lang': Lang.Blocks.location_jeju,
-            'sub': [
+        Jeju: {
+            lang: Lang.Blocks.location_jeju,
+            sub: [
                 [Lang.Blocks.location_jeju_jeju_si, 'jeju_si'],
                 [Lang.Blocks.location_jeju_seogwipo, 'seogwipo'],
             ],
         },
         'Chungcheongnam-do': {
-            'lang': Lang.Blocks.location_chungcheongnam,
-            'sub': [
+            lang: Lang.Blocks.location_chungcheongnam,
+            sub: [
                 [Lang.Blocks.location_chungcheongnam_cheonan, 'cheonan'],
                 [Lang.Blocks.location_chungcheongnam_gongju, 'gongju'],
                 [Lang.Blocks.location_chungcheongnam_boryeong, 'boryeong'],
@@ -302,8 +301,8 @@ function getInitialData() {
             ],
         },
         'Chungcheongbuk-do': {
-            'lang': Lang.Blocks.location_chungcheongbuk,
-            'sub': [
+            lang: Lang.Blocks.location_chungcheongbuk,
+            sub: [
                 [Lang.Blocks.location_chungcheongbuk_cheongju, 'cheongju'],
                 [Lang.Blocks.location_chungcheongbuk_chungju, 'chungju'],
                 [Lang.Blocks.location_chungcheongbuk_jecheon, 'jecheon'],
@@ -325,7 +324,9 @@ exports.locationData = getInitialData();
 //도 및 광역시
 exports.getStateOptions = function() {
     const locationObj = getInitialData();
-    return Object.keys(locationObj.ko).map((k) => [locationObj.ko[k].lang, k]);
+    return Object.keys(locationObj.ko).map((k) => {
+        return [locationObj.ko[k].lang, k];
+    });
 };
 
 //시군구
@@ -333,7 +334,6 @@ exports.getCityOptions = function(state) {
     const locationObj = getInitialData();
     const init = [locationObj.initialData];
     if (locationObj.ko[state]) {
-
         return [...init, ...locationObj.ko[state].sub];
     }
     return [...init, ...locationObj.ko.Seoul.sub];

@@ -12,9 +12,13 @@ export default class {
         }
 
         if (typeof eventTypes === 'string') {
-            eventTypes.split(' ').forEach((eventType) => target.addEventListener(eventType, eventHandler, option));
+            eventTypes.split(' ').forEach((eventType) => {
+                return target.addEventListener(eventType, eventHandler, option);
+            });
         } else if (eventTypes instanceof Array) {
-            eventTypes.forEach((eventType) => target.addEventListener(eventType, eventHandler, option));
+            eventTypes.forEach((eventType) => {
+                return target.addEventListener(eventType, eventHandler, option);
+            });
         }
     }
 }

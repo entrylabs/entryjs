@@ -9,7 +9,7 @@
  */
 
 (function(u) {
-    var fuzzy = {};
+    const fuzzy = {};
 
     u.fuzzy = fuzzy;
 
@@ -30,7 +30,7 @@
     // in `opts.pre` and `opts.post`. If no match, return null
     fuzzy.match = function(pattern, string, opts) {
         opts = opts || {};
-        var patternIdx = 0,
+        let patternIdx = 0,
             result = [],
             len = string.length,
             totalScore = 0,
@@ -41,8 +41,7 @@
             post = opts.post || '',
             // String to compare against. This might be a lowercase version of the
             // raw string
-            compareString =
-                (opts.caseSensitive && string) || string.toLowerCase(),
+            compareString = (opts.caseSensitive && string) || string.toLowerCase(),
             ch,
             compareChar;
 
@@ -50,7 +49,7 @@
 
         // For each character in the string, either add it to the result
         // or wrap in template if it's the next string in the pattern
-        for (var idx = 0; idx < len; idx++) {
+        for (let idx = 0; idx < len; idx++) {
             ch = string[idx];
             if (compareString[idx] === opts.escapeLetter) {
                 break;
@@ -105,11 +104,11 @@
         return (
             arr
                 .reduce(function(prev, element, idx, arr) {
-                    var str = element;
+                    let str = element;
                     if (opts.extract) {
                         str = opts.extract(element);
                     }
-                    var rendered = fuzzy.match(pattern, str, opts);
+                    const rendered = fuzzy.match(pattern, str, opts);
                     if (rendered != null) {
                         prev[prev.length] = {
                             string: rendered.rendered,
@@ -125,8 +124,10 @@
                 // sorting, so force stable by using the index in the case of tie.
                 // See http://ofb.net/~sethml/is-sort-stable.html
                 .sort(function(a, b) {
-                    var compare = b.score - a.score;
-                    if (compare) return compare;
+                    const compare = b.score - a.score;
+                    if (compare) {
+                        return compare;
+                    }
                     return a.index - b.index;
                 })
         );

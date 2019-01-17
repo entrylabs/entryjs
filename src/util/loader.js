@@ -7,7 +7,9 @@ Entry.Loader = {
 };
 
 Entry.Loader.addQueue = function(type) {
-    if (!this.queueCount) Entry.dispatchEvent('loadStart');
+    if (!this.queueCount) {
+        Entry.dispatchEvent('loadStart');
+    }
     this.queueCount++;
     this.totalCount++;
 };
@@ -21,8 +23,11 @@ Entry.Loader.removeQueue = function(type) {
 };
 
 Entry.Loader.getLoadedPercent = function() {
-    if (this.totalCount === 0) return 1;
-    else return this.queueCount / this.totalCount;
+    if (this.totalCount === 0) {
+        return 1;
+    } else {
+        return this.queueCount / this.totalCount;
+    }
 };
 
 Entry.Loader.isLoaded = function() {
@@ -30,7 +35,9 @@ Entry.Loader.isLoaded = function() {
 };
 
 Entry.Loader.handleLoad = function() {
-    if (this.loaded) return;
+    if (this.loaded) {
+        return;
+    }
     this.loaded = true;
     Entry.dispatchEvent('loadComplete');
 };
