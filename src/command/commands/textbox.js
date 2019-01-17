@@ -4,18 +4,18 @@
 'use strict';
 
 (function(c) {
-    var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
+    const COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
 
     c[COMMAND_TYPES.editText] = {
-        do: function(text, prevText) {
+        do(text) {
             Entry.playground.object.setText(text);
             Entry.playground.object.entity.setText(text);
             Entry.dispatchEvent('textEdited');
         },
-        state: function(text, prevText) {
+        state(text, prevText) {
             return [prevText, text];
         },
-        log: function() {
+        log() {
             return [];
         },
         validate: false,

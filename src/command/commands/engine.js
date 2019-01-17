@@ -4,23 +4,24 @@
 'use strict';
 
 (function(c) {
-    var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
+    const COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
 
     c[COMMAND_TYPES.toggleRun] = {
-        do: function(callerName) {
+        do() {
             Entry.engine.toggleRun();
         },
-        state: function() {
+        state() {
             return [];
         },
-        log: function(callerName) {
+        log(callerName) {
             return [['callerName', callerName]];
         },
-        restrict: function(data, domQuery, callback, restrictor) {
-            var engine = Entry.engine;
-            if (!engine.isState('stop')) engine.toggleStop();
+        restrict(data, domQuery) {
+            const engine = Entry.engine;
+            if (!engine.isState('stop')) {
+                engine.toggleStop();
+            }
 
-            var isDone = false;
             return new Entry.Tooltip(
                 [
                     {
@@ -32,7 +33,7 @@
                 {
                     dimmed: true,
                     restrict: true,
-                    callBack: function(isFromInit) {},
+                    callBack() {},
                 }
             );
         },
@@ -43,19 +44,23 @@
     };
 
     c[COMMAND_TYPES.toggleStop] = {
-        do: function(callerName) {
+        do() {
             Entry.engine.toggleStop();
         },
-        state: function() {
+        state() {
             return [];
         },
-        log: function(callerName) {
+        log(callerName) {
             return [['callerName', callerName]];
         },
-        restrict: function(data, domQuery, callback, restrictor) {
-            var engine = Entry.engine;
-            if (Entry.engine.popup) Entry.engine.closeFullScreen();
-            if (!engine.isState('run')) engine.toggleRun(false);
+        restrict(data, domQuery, callback) {
+            const engine = Entry.engine;
+            if (Entry.engine.popup) {
+                Entry.engine.closeFullScreen();
+            }
+            if (!engine.isState('run')) {
+                engine.toggleRun(false);
+            }
 
             return new Entry.Tooltip(
                 [
@@ -68,7 +73,7 @@
                 {
                     dimmed: true,
                     restrict: true,
-                    callBack: function(isFromInit) {
+                    callBack() {
                         callback();
                     },
                 }

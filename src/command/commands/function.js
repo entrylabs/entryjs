@@ -29,9 +29,7 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
             Entry.playground.changeViewMode('variable');
             Entry.variableContainer.selectFilter('func');
 
-            const {
-                tooltip: { title, content },
-            } = data;
+            const { tooltip: { title, content } } = data;
             return createTooltip(title, content, domQuery, callback);
         },
         validate: false,
