@@ -6,8 +6,8 @@ Entry.elio = {
     url: 'https://mobilian.biz/#/app/product/elio', // 생략 가능합니다. 엔트리 사이트에서 홍보시 사용됩니다.
     imageName: 'elio.png', // images/hardware 폴더 내에 존재하는 이미지입니다. 엔트리 사이트에서 홍보시 사용됩니다.
     title: {
-        'ko': '하드웨어명',
-        'en': 'HardwareName'
+        'ko': 'elio',
+        'en': 'elio'
     },
     setZero: function () {
         var sq = Entry.hw.sendQueue;
