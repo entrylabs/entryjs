@@ -3,8 +3,6 @@
  */
 'use strict';
 
-
-
 /**
  * Construct stamp entity class
  * @param {!Entry.EntryObject} object
@@ -19,7 +17,7 @@ Entry.StampEntity = function(object, entity) {
     this.isStamp = true;
     this.width = entity.getWidth();
     this.height = entity.getHeight();
-    if (this.type == 'sprite') {
+    if (this.type === 'sprite') {
         this.object = entity.object.clone();
         this.object.mouseEnabled = false;
         this.object.tickEnabled = false;
@@ -28,20 +26,16 @@ Entry.StampEntity = function(object, entity) {
             this.effect = _.clone(entity.effect);
             this.applyFilter();
         }
-    } else if (this.type == 'textBox') {}
+    } else if (this.type === 'textBox') {
+    }
 
     this.object.entity = entity;
 };
 
-
 (function(p, origin) {
-    [
-        'applyFilter',
-        'getWidth',
-        'getHeight',
-        'getInitialEffectValue',
-        'destroy',
-        'cache'
-    ].forEach(function(key) { p[key] = origin[key]; });
+    ['applyFilter', 'getWidth', 'getHeight', 'getInitialEffectValue', 'destroy', 'cache'].forEach(
+        function(key) {
+            p[key] = origin[key];
+        }
+    );
 })(Entry.StampEntity.prototype, Entry.EntityObject.prototype);
-
