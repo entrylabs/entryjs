@@ -4,10 +4,12 @@
  *
  */
 
+
 'use strict';
 
 import ColorSpoid from '../playground/colorSpoid';
 import { GEHelper } from '../util/GEHelper';
+import { PIXIGlobal } from './pixi/init/PIXIGlobal';
 
 /**
  * class for a canvas
@@ -694,4 +696,15 @@ Entry.Stage.prototype.isEntitySelectable = function() {
 
 Entry.Stage.prototype.destroy = function() {
     // 우선 interface 만 정의함.
+    if(GEHelper.isWebGL) {
+        let op = {children: true, texture: false, baseTexture: false};
+        this.objectContainers.forEach( c => c.destroy(op) );
+        PIXIGlobal.destroyCurrentApp(op);
+        //this.handle.destroy(); // 추상화 아직 안됨.
+        //PIXIAtlasManager.clearProject();
+    } else {
+
+    }
+    this.handle = null;
+    this.objectContainers = null;
 };

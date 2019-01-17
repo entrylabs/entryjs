@@ -13,6 +13,8 @@ class _GEHelper {
 
     private _isWebGL:boolean = true;
 
+    get isWebGL():boolean { return this._isWebGL; }
+
     newStage(canvas:HTMLCanvasElement) {
         let stage:any;
         if(this._isWebGL) {
