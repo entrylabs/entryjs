@@ -5,34 +5,34 @@
 
 const UTIL = require('./command_util');
 
-Entry.Commander = function(injectType) {
-    if (injectType == 'workspace' || injectType == 'phone') {
-        /**
-         * Initialize stateManager for redo and undo.
-         * @type {!Entry.StateManager}
-         * @type {!object}
-         */
-        Entry.stateManager = new Entry.StateManager();
+Entry.Commander = class Commander {
+    constructor(injectType) {
+        if (injectType === 'workspace' || injectType === 'phone') {
+            /**
+             * Initialize stateManager for redo and undo.
+             * @type {!Entry.StateManager}
+             * @type {!object}
+             */
+            Entry.stateManager = new Entry.StateManager();
+        }
+        Entry.do = this.do.bind(this);
+
+        Entry.undo = this.undo.bind(this);
+
+        this.editor = {};
+
+        this.reporters = [];
+
+        Entry.Command.editor = this.editor;
+
+        this.doEvent = new Entry.Event(this);
+        this.logEvent = new Entry.Event(this);
+
+        this.doCommandAll = Entry.doCommandAll;
+        this._storage = null;
     }
-    Entry.do = this.do.bind(this);
 
-    Entry.undo = this.undo.bind(this);
-
-    this.editor = {};
-
-    this.reporters = [];
-
-    Entry.Command.editor = this.editor;
-
-    this.doEvent = new Entry.Event(this);
-    this.logEvent = new Entry.Event(this);
-
-    this.doCommandAll = Entry.doCommandAll;
-    this._storage = null;
-};
-
-(function(p) {
-    p.do = function(commandType, ...args) {
+    do(commandType, ...args) {
         const {
             stateManager,
             Command: EntryCommand,
@@ -70,9 +70,9 @@ Entry.Commander = function(injectType) {
                 this.isPassById(id, isPass, skipCount);
             }.bind(this),
         };
-    };
+    }
 
-    p.undo = function(commandType, ...args) {
+    undo(commandType, ...args) {
         this.report(Entry.STATIC.COMMAND_TYPES.undo);
 
         const command = Entry.Command[commandType];
@@ -90,9 +90,9 @@ Entry.Commander = function(injectType) {
                 this.isPassById(state.id, isPass);
             }.bind(this),
         };
-    };
+    }
 
-    p.redo = function(commandType, ...args) {
+    redo(commandType, ...args) {
         this.report(Entry.STATIC.COMMAND_TYPES.redo);
 
         const command = Entry.Command[commandType];
@@ -104,13 +104,13 @@ Entry.Commander = function(injectType) {
             );
         }
         command.undo.apply(this, args);
-    };
+    }
 
-    p.setCurrentEditor = function(key, object) {
+    setCurrentEditor(key, object) {
         this.editor[key] = object;
-    };
+    }
 
-    p.isPass = function(isPass = true) {
+    isPass(isPass = true) {
         if (!Entry.stateManager) {
             return;
         }
@@ -119,9 +119,9 @@ Entry.Commander = function(injectType) {
         if (lastCommand) {
             lastCommand.isPass = isPass;
         }
-    };
+    }
 
-    p.isPassById = function(id, isPass = true, skipCount = 0) {
+    isPassById(id, isPass = true, skipCount = 0) {
         if (!id || !Entry.stateManager) {
             return;
         }
@@ -133,20 +133,20 @@ Entry.Commander = function(injectType) {
                 lastCommand.skipCount = !!skipCount;
             }
         }
-    };
+    }
 
-    p.addReporter = function(reporter) {
+    addReporter(reporter) {
         reporter.logEventListener = this.logEvent.attach(reporter, reporter.add);
-    };
+    }
 
-    p.removeReporter = function(reporter) {
+    removeReporter(reporter) {
         if (reporter.logEventListener) {
             this.logEvent.detatch(reporter.logEventListener);
         }
         delete reporter.logEventListener;
-    };
+    }
 
-    p.report = function(commandType, argumentsArray) {
+    report(commandType, argumentsArray) {
         let data;
 
         if (commandType && Entry.Command[commandType] && Entry.Command[commandType].log) {
@@ -156,9 +156,9 @@ Entry.Commander = function(injectType) {
         }
         data.unshift(commandType);
         this.logEvent.notify(data);
-    };
+    }
 
-    p.applyOption = function() {
+    applyOption() {
         this.doCommandAll = Entry.doCommandAll;
-    };
-})(Entry.Commander.prototype);
+    }
+};
