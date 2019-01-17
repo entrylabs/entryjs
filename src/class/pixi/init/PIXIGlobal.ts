@@ -53,12 +53,6 @@ class _PIXIGlobal {
         });
         return this._currentApp;
     }
-
-    destroyCurrentApp(destroyOption:any):void {
-        if(!this._currentApp) return;
-        this._currentApp.destroy(destroyOption);
-        this._currentApp = null;
-    }
 }
 
 export let PIXIGlobal:_PIXIGlobal = new _PIXIGlobal();

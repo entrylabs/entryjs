@@ -25,6 +25,9 @@ Entry.Stage = function() {
     this.selectedObject = null;
     this.isObjectClick = false;
     this._entitySelectable = true;
+
+    /** @type {PIXI.Application | CreateJsApplication} */
+    this._app = null;
 };
 
 /**
@@ -32,7 +35,8 @@ Entry.Stage = function() {
  * @param {!Element} canvas for stage
  */
 Entry.Stage.prototype.initStage = function(canvas) {
-    this.canvas = GEHelper.newStage(canvas);
+    this._app = GEHelper.newApp(canvas);
+    this.canvas = this._app.stage;
     this.canvas.x = 960 / 1.5 / 2;
     this.canvas.y = 540 / 1.5 / 2;
     this.canvas.scaleX = this.canvas.scaleY = 2 / 1.5;
@@ -159,7 +163,7 @@ Entry.Stage.prototype.update = function() {
         Entry.requestUpdate = false;
         return;
     }
-    this.canvas.update();
+    this._app.render();
 
     if (Entry.engine.isState('stop') && this.objectUpdated) {
         this.objectUpdated = false;
@@ -695,16 +699,17 @@ Entry.Stage.prototype.isEntitySelectable = function() {
 };
 
 Entry.Stage.prototype.destroy = function() {
-    // 우선 interface 만 정의함.
+    let destroyOption;
     if(GEHelper.isWebGL) {
-        let op = {children: true, texture: false, baseTexture: false};
-        this.objectContainers.forEach( c => c.destroy(op) );
-        PIXIGlobal.destroyCurrentApp(op);
+        destroyOption = {children: true, texture: false, baseTexture: false};
+        this.objectContainers.forEach( c => c.destroy(destroyOption) );
         //this.handle.destroy(); // 추상화 아직 안됨.
         //PIXIAtlasManager.clearProject();
     } else {
-
+        //do nothing
     }
+    this._app.destroy(destroyOption);
+    this._app = null;
     this.handle = null;
     this.objectContainers = null;
 };

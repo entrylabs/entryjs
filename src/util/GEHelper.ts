@@ -5,6 +5,32 @@ import { PIXIGlobal } from '../class/pixi/init/PIXIGlobal';
 
 declare let createjs:any;
 
+interface IGraphicsEngineApplication {
+    render():void;
+    stage:PIXI.Container|any;
+    destroy(destroyOption:any):void;
+}
+
+class CreateJsApplication implements IGraphicsEngineApplication {
+
+    stage:any;
+
+    constructor(canvas:HTMLCanvasElement) {
+        let stage = new createjs.Stage(canvas.id);
+        createjs.Touch.enable(stage);
+        stage.enableMouseOver(10);
+        stage.mouseMoveOutside = true;
+        this.stage = stage;
+    }
+    render():void {
+        this.stage.update();
+    }
+    destroy(destroyOption:any) {
+        this.stage = null;
+    }
+}
+
+
 class _GEHelper {
 
     INIT(isWebGL:boolean) {
@@ -15,18 +41,15 @@ class _GEHelper {
 
     get isWebGL():boolean { return this._isWebGL; }
 
-    newStage(canvas:HTMLCanvasElement) {
-        let stage:any;
+
+    newApp(canvas:HTMLCanvasElement):IGraphicsEngineApplication {
+        let app:IGraphicsEngineApplication;
         if(this._isWebGL) {
-            let pixiApp = PIXIGlobal.getNewApp(canvas);
-            stage = pixiApp.stage;
+            app = PIXIGlobal.getNewApp(canvas);
         } else {
-            stage = new createjs.Stage(canvas.id);
-            createjs.Touch.enable(stage);
-            stage.enableMouseOver(10);
-            stage.mouseMoveOutside = true;
+            app = new CreateJsApplication(canvas);
         }
-        return stage;
+        return app;
     }
 
 
