@@ -224,11 +224,11 @@ Entry.VariableContainer = class VariableContainer {
         this.selected.listElement.addClass('unfold');
         if (object instanceof Entry.Variable) {
             if (object.type === 'variable') {
-                this.generateVariableSettingView();
-                this.renderVariableReference(object);
+                this.generateVariableSettingView(object);
+                this.updateVariableSettingView(object);
             } else if (object.type === 'list') {
-                this.generateListSettingView();
-                this.renderVariableReference(object);
+                this.generateListSettingView(object);
+                this.updateListSettingView(object);
             }
             if (object.object_) {
                 Entry.container.selectObject(object.object_, true);
@@ -452,6 +452,7 @@ Entry.VariableContainer = class VariableContainer {
                 this.updateFuncTab();
                 break;
         }
+        this.updateSelected();
     }
 
     makeChildVariableViews(arr, viewFunc, parent = this.listView_) {
@@ -471,9 +472,6 @@ Entry.VariableContainer = class VariableContainer {
                     });
             }
             parent.appendChild(data.listElement);
-            if (data.callerListElement) {
-                parent.appendChild(data.callerListElement);
-            }
         });
     }
 
@@ -2269,7 +2267,7 @@ Entry.VariableContainer = class VariableContainer {
         Entry.container.inputValue.setName(Lang.Blocks.VARIABLE_get_canvas_input_value);
     }
 
-    generateVariableSettingView() {
+    generateVariableSettingView(variable) {
         const that = this;
         const createElement = Entry.createElement;
         const _setFocused = Entry.Utils.setFocused;
@@ -2393,6 +2391,7 @@ Entry.VariableContainer = class VariableContainer {
             Entry.do('variableSetMaxValue', v.id_, value);
         });
         element.maxValueInput = maxValueInput;
+        this.renderVariableReference(variable);
     }
 
     /**
@@ -2429,7 +2428,7 @@ Entry.VariableContainer = class VariableContainer {
     /**
      * 속성 > 리스트 편집창 표기
      */
-    generateListSettingView() {
+    generateListSettingView(list) {
         const createElement = Entry.createElement;
 
         // 리스트 속성 설정
@@ -2458,6 +2457,7 @@ Entry.VariableContainer = class VariableContainer {
         this.generateListImportExportView(listAttr);
         this.generateListCountView(listAttr);
         this.generateListValuesView(listAttr);
+        this.renderVariableReference(list);
     }
 
     generateListImportExportView(element) {
@@ -2666,8 +2666,7 @@ Entry.VariableContainer = class VariableContainer {
             this.selected.listElement.removeClass('fold');
             this.selected.listElement.addClass('unfold');
             if (!this.variableSettingView) {
-                this.generateVariableSettingView();
-                this.renderVariableReference(object);
+                this.generateVariableSettingView(object);
             }
             this.updateVariableSettingView(object);
         } else if (objectType === 'list') {
@@ -2675,8 +2674,7 @@ Entry.VariableContainer = class VariableContainer {
             this.selected.listElement.removeClass('fold');
             this.selected.listElement.addClass('unfold');
             if (!this.listSettingView) {
-                this.generateListSettingView();
-                this.renderVariableReference(object);
+                this.generateListSettingView(object);
             }
             this.updateListSettingView(object);
         }
@@ -2782,8 +2780,64 @@ Entry.VariableContainer = class VariableContainer {
                 });
             });
         }
+        this.updateList();
 
         return datum;
+    }
+
+    removeRef(type, block) {
+        if (!Entry.playground.mainWorkspace) {
+            return;
+        }
+        const wsMode = Entry.getMainWS().getMode();
+        if (wsMode !== Entry.Workspace.MODE_BOARD) {
+            return;
+        }
+
+        const arr = this[type];
+
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i].block == block) {
+                arr.splice(i, 1);
+                break;
+            }
+        }
+
+        if (type === '_functionRefs') {
+            const id = block.type.substr(5);
+            const func = Entry.variableContainer.functions_[id];
+            if (!func || func.isRemoved) {
+                return;
+            }
+            func.isRemoved = true;
+            if (func) {
+                func.content.getBlockList().forEach((block) => {
+                    if (block.type.indexOf('func_') > -1) {
+                        if (block.type.substr(5) == id) {
+                            return;
+                        }
+                    }
+
+                    [
+                        ...(_.result(block.events, 'viewDestroy') || []),
+                        ...(_.result(block.events, 'dataDestroy') || []),
+                    ].forEach((fn) => {
+                        if (fn) {
+                            fn(block);
+                        }
+                    });
+                });
+            }
+        }
+        this.updateList();
+    }
+
+    updateSelected() {
+        if (this.selected) {
+            const selected = this.selected;
+            this.selected = null;
+            this.select(selected);
+        }
     }
 
     getObjectVariables(blockList, keys) {
@@ -2865,52 +2919,6 @@ Entry.VariableContainer = class VariableContainer {
             variables,
             messages,
         };
-    }
-
-    removeRef(type, block) {
-        if (!Entry.playground.mainWorkspace) {
-            return;
-        }
-        const wsMode = Entry.getMainWS().getMode();
-        if (wsMode !== Entry.Workspace.MODE_BOARD) {
-            return;
-        }
-
-        const arr = this[type];
-
-        for (let i = 0; i < arr.length; i++) {
-            if (arr[i].block == block) {
-                arr.splice(i, 1);
-                break;
-            }
-        }
-
-        if (type === '_functionRefs') {
-            const id = block.type.substr(5);
-            const func = Entry.variableContainer.functions_[id];
-            if (!func || func.isRemoved) {
-                return;
-            }
-            func.isRemoved = true;
-            if (func) {
-                func.content.getBlockList().forEach((block) => {
-                    if (block.type.indexOf('func_') > -1) {
-                        if (block.type.substr(5) == id) {
-                            return;
-                        }
-                    }
-
-                    [
-                        ...(_.result(block.events, 'viewDestroy') || []),
-                        ...(_.result(block.events, 'dataDestroy') || []),
-                    ].forEach((fn) => {
-                        if (fn) {
-                            fn(block);
-                        }
-                    });
-                });
-            }
-        }
     }
 
     _getBlockMenu() {
