@@ -6,8 +6,8 @@ Entry.elio = {
     url: 'https://mobilian.biz/#/app/product/elio', // 생략 가능합니다. 엔트리 사이트에서 홍보시 사용됩니다.
     imageName: 'elio.png', // images/hardware 폴더 내에 존재하는 이미지입니다. 엔트리 사이트에서 홍보시 사용됩니다.
     title: {
-        'ko': 'elio',
-        'en': 'elio'
+        'ko': '엘리오',
+        'en': 'ELIO'
     },
     setZero: function () {
         var sq = Entry.hw.sendQueue;
@@ -159,7 +159,7 @@ Entry.elio.blockMenuBlocks = [
 Entry.elio.getBlocks = function () {
     return {
 
-		   elio_config_block: {
+		elio_config_block: {
 				color: '#00CFCA',
 				outerLine: '#04B5B0',
 				skeleton: 'basic',
@@ -412,7 +412,7 @@ Entry.elio.getBlocks = function () {
 				],
 				
 				def: {
-					params: ["0", "0", "1", "10", "2", "20", "3", "30" , "4", "40", "5", "50", "6", "60"	],
+					params: ["0", "100", "1", "100", "2", "100", "3", "100" , "4", "100", "5", "100", "6", "100"	],
 					type: 'elio_io_all_block'
 				},
 				
@@ -499,7 +499,7 @@ Entry.elio.getBlocks = function () {
 				],
 				
 				def: {
-					params: ["0", 30	],
+					params: ["0", 50	],
 					type: 'elio_dc_block'
 				},
 				paramsKeyMap: {
@@ -563,7 +563,7 @@ Entry.elio.getBlocks = function () {
 				],
 				
 				def: {
-					params: ["0", "10", "1", "20"	],
+					params: ["0", "30", "1", "30"	],
 					type: 'elio_dc_all_block'
 				},
 				paramsKeyMap: {
@@ -685,7 +685,7 @@ Entry.elio.getBlocks = function () {
 				],
 				
 				def: {
-					params: ["0", "10", "1", "20"	],
+					params: ["0", "10", "1", "10"	],
 					type: 'elio_servo_all_block'
 				},
 				paramsKeyMap: {
@@ -901,17 +901,17 @@ Entry.elio.getBlocks = function () {
 				],
 				
 				def: {
-					params: ["0", "10", 
-							 "1", "20", 
+					params: ["0", "30", 
+							 "1", "30", 
 							
 							 "0", "30", 
-							 "1", "40", 
+							 "1", "30", 
 							
-							"0", "50", 
-							"1", "60", 
-							"2", "70", 
-							"3", "80", 
-							"4", "90",
+							"0", "100", 
+							"1", "100", 
+							"2", "100", 
+							"3", "100", 
+							"4", "100",
 							"5", "100",
 							],
 					type: 'elio_all_block'
@@ -1084,7 +1084,7 @@ Entry.elio.getBlocks = function () {
 				class: 'elio',
 				isNotFor: ['elio'],
 				func: function (sprite, script) {
-					var port = Entry.elio.getDC(script.getStringField('VALUE', script));
+					var port = Entry.elio.getSV(script.getStringField('VALUE', script));
 					var pd = Entry.hw.portData;
 					return pd[port];
 				}
@@ -1100,10 +1100,12 @@ Entry.elio.getBlocks = function () {
 						type: "Dropdown",
 						
 						options: [
-							[ "IO1", "0" ],
-							[ "IO2", "1" ],
-							[ "IO3", "2" ],
-							[ "IO4", "3" ],
+							[ "3V", "0" ],
+							[ "5V", "1" ],
+							[ "IO1", "2" ],
+							[ "IO2", "3" ],
+							[ "IO3", "4" ],
+							[ "IO4", "5" ],
 				
 						],
 						fontSize: 15
@@ -1131,7 +1133,7 @@ Entry.elio.getBlocks = function () {
 				class: 'elio',
 				isNotFor: ['elio'],
 				func: function (sprite, script) {
-					var port = Entry.elio.getDC(script.getStringField('VALUE', script));
+					var port = Entry.elio.getIO(script.getStringField('VALUE', script));
 					var pd = Entry.hw.portData;
 					return pd[port];
 				}
