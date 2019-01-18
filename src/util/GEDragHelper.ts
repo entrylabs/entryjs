@@ -16,9 +16,9 @@ function getPIXIEvent():IEventType {
 
 function getCreatejsEvent():IEventType  {
     return {
-        UP: PIXIDragHelper.UP,
-        DOWN: PIXIDragHelper.DOWN,
-        MOVE: PIXIDragHelper.MOVE,
+        UP: 'pressup',
+        DOWN: 'mousedown',
+        MOVE: 'pressmove',
     };
 }
 
@@ -42,3 +42,5 @@ class _GEDragHelper {
 }
 
 export let GEDragHelper = new _GEDragHelper();
+let w:any = window;
+w.GEDragHelper = GEDragHelper;

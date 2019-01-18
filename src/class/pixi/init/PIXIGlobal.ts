@@ -51,6 +51,7 @@ class _PIXIGlobal {
             antialias:true,
             transparent: true
         });
+        (this._currentApp.stage as any).canvas = canvas;
         return this._currentApp;
     }
 }

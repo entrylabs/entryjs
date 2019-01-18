@@ -3,6 +3,7 @@ import Texture = PIXI.Texture;
 import { PIXIGlobal } from '../class/pixi/init/PIXIGlobal';
 import { PIXIAtlasHelper } from '../class/pixi/atlas/PIXIAtlasHelper';
 import { PIXIAtlasManager } from '../class/pixi/atlas/PIXIAtlasManager';
+import { GEDragHelper } from './GEDragHelper';
 
 
 declare let createjs:any;
@@ -37,12 +38,24 @@ class _GEHelper {
 
     INIT(isWebGL:boolean) {
         this._isWebGL = isWebGL;
+        GEDragHelper.INIT(isWebGL);
         if(this._isWebGL) {
             PIXIGlobal.initOnce();
+            this.rotateRead = 180 / Math.PI;
+            this.rotateWrite = Math.PI / 180;
+        } else {
+
         }
     }
 
     private _isWebGL:boolean = true;
+
+    /**  pixi 객체로부터 rotate를 읽을 때 사용할 값 */
+    public rotateRead:number = 1;
+
+    /**  pixi 객체에 rotate를 할당 할 때 사용할 값 */
+    public rotateWrite:number = 1;
+
 
     get isWebGL():boolean { return this._isWebGL; }
 
@@ -165,5 +178,6 @@ class _GEHelper {
 }
 
 export const GEHelper:_GEHelper = new _GEHelper();
-
+let w:any = window;
+(w.GEHelper) = GEHelper;
 

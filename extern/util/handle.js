@@ -3,6 +3,11 @@
  */
 'use strict';
 
+//TODO [박봉배] handle.js 를 번들링 할 것인가 말것인가.
+
+// import { GEHelper } from '../../src/util/GEHelper';
+// import { GEDragHelper } from '../../src/util/GEDragHelper';
+
 var EaselHandle = function(canvas) {
     if (typeof createjs != 'object') {
         throw 'createjs is not founded';
@@ -146,24 +151,26 @@ var EaselHandle = function(canvas) {
 
     p.createHandle = function() {
         var handle = this;
-        var container = new createjs.Container();
+        var container = GEHelper.newContainer();
 
         //border
-        var border = new createjs.Shape();
+        var border = GEHelper.newGraphic();
         container.addChild(border);
         this.border = border;
 
         //edge
-        var edge = new createjs.Shape();
+        var edge = GEHelper.newGraphic();
         edge.cursor = 'move';
-        edge.on('mousedown', function(e) {
+
+        edge.on(GEDragHelper.types.DOWN, function(e) {
+            GEDragHelper.handleDrag(edge);
             var offset = handle.getEventCoordinate(e);
             offset.x -= handle.x;
             offset.y -= handle.y;
             this.offset = offset;
             handle.dispatchEditStartEvent();
         });
-        edge.on('pressmove', function(e) {
+        edge.on(GEDragHelper.types.MOVE, function(e) {
             if (handle.getDraggable()) {
                 var pos = handle.getEventCoordinate(e);
                 pos.x -= this.offset.x;
@@ -173,19 +180,20 @@ var EaselHandle = function(canvas) {
                 handle.dispatchOnChangeEvent();
             }
         });
-        edge.on('pressup', function(e) {
+        edge.on(GEDragHelper.types.UP, function(e) {
             handle.dispatchEditEndEvent();
         });
         container.addChild(edge);
         this.edge = edge;
 
         //rotate knob
-        var rotateKnob = new createjs.Shape();
+        var rotateKnob = GEHelper.newGraphic();
         rotateKnob.cursor = 'crosshair';
-        rotateKnob.on('mousedown', function(e) {
+        rotateKnob.on(GEDragHelper.types.DOWN, function(e) {
+            GEDragHelper.handleDrag(rotateKnob);
             handle.dispatchEditStartEvent();
         });
-        rotateKnob.on('pressmove', function(e) {
+        rotateKnob.on(GEDragHelper.types.MOVE, function(e) {
             var pos = handle.getEventCoordinate(e);
             pos.x -= handle.x;
             pos.y -= handle.y;
@@ -193,14 +201,14 @@ var EaselHandle = function(canvas) {
             handle.setRotation(rotation);
             handle.dispatchOnChangeEvent();
         });
-        rotateKnob.on('pressup', function(e) {
+        rotateKnob.on(GEDragHelper.types.UP, function(e) {
             handle.dispatchEditEndEvent();
         });
         container.addChild(rotateKnob);
         container.setChildIndex(rotateKnob, 1);
         this.rotateKnob = rotateKnob;
 
-        var directionArrow = new createjs.Shape();
+        var directionArrow = GEHelper.newGraphic();
 
         directionArrow.graphics
             .ss(4, 1, 1)
@@ -213,16 +221,17 @@ var EaselHandle = function(canvas) {
             .lt(-7, -32)
             .lt(0, -40)
             .es();
-        directionArrow.on('mousedown', function(e) {
+        directionArrow.on(GEDragHelper.types.DOWN, function(e) {
+            GEDragHelper.handleDrag(directionArrow);
             handle.dispatchEditStartEvent();
         });
-        directionArrow.on('pressmove', function(e) {
+        directionArrow.on(GEDragHelper.types.MOVE, function(e) {
             var pos = handle.getLocalCoordinate(handle.getEventCoordinate(e));
             var rotation = -Math.atan2(pos.x, pos.y) / Math.PI * 180 - 180;
             handle.setDirection(rotation);
             handle.dispatchOnChangeEvent();
         });
-        directionArrow.on('pressup', function(e) {
+        directionArrow.on(GEDragHelper.types.UP, function(e) {
             handle.dispatchEditEndEvent();
         });
         container.addChild(directionArrow);
@@ -230,23 +239,24 @@ var EaselHandle = function(canvas) {
         this.directionArrow = directionArrow;
 
         // center
-        var centerPoint = new createjs.Shape();
+        var centerPoint = GEHelper.newGraphic();
         centerPoint.graphics
             .beginFill(this.centerColor)
             .ss(1, 2, 0)
             .s(this.centerColor)
             .dc(0, 0, 5, 5);
-        centerPoint.on('mousedown', function(e) {
+        centerPoint.on(GEDragHelper.types.DOWN, function(e) {
+            GEDragHelper.handleDrag(centerPoint);
             handle.dispatchEditStartEvent();
         });
-        centerPoint.on('pressmove', function(e) {
+        centerPoint.on(GEDragHelper.types.MOVE, function(e) {
             var pos = handle.getEventCoordinate(e);
             pos = handle.getLocalCoordinate(pos);
             handle.setRegX(pos.x);
             handle.setRegY(pos.y);
             handle.dispatchOnChangeEvent();
         });
-        centerPoint.on('pressup', function(e) {
+        centerPoint.on(GEDragHelper.types.UP, function(e) {
             handle.dispatchEditEndEvent();
         });
         container.addChild(centerPoint);
@@ -255,7 +265,7 @@ var EaselHandle = function(canvas) {
         //resize knobs
         this.knobs = [];
         for (var i = 0; i < 8; i++) {
-            var knob = new createjs.Shape();
+            var knob = GEHelper.newGraphic();
             knob.graphics
                 .beginFill(this.color)
                 .ss(1, 2, 0)
@@ -263,7 +273,9 @@ var EaselHandle = function(canvas) {
                 .dr(-3, -3, 6, 6);
             knob.knobIndex = i;
             //knob.cursor = "move";
-            knob.on('mousedown', function(e) {
+            knob.on(GEDragHelper.types.DOWN, function(e) {
+                var targetKnob = e.currentTarget;
+                GEDragHelper.handleDrag(targetKnob);
                 var otherKnobIndex =
                     this.knobIndex + 4 > 7
                         ? this.knobIndex + 4 - 8
@@ -273,7 +285,7 @@ var EaselHandle = function(canvas) {
                 this.otherKnobPos = otherKnobPos;
                 handle.dispatchEditStartEvent();
             });
-            knob.on('pressmove', function(e) {
+            knob.on(GEDragHelper.types.MOVE, function(e) {
                 var pos = handle.getEventCoordinate(e);
                 if (handle.checkCenterPointState(handle.regX, handle.regY)) {
                     handle.setRegX(0);
@@ -282,27 +294,28 @@ var EaselHandle = function(canvas) {
                 }
                 handle.adjust(this.knobIndex, this.otherKnobPos, pos);
             });
-            knob.on('pressup', function(e) {
+            knob.on(GEDragHelper.types.UP, function(e) {
                 handle.dispatchEditEndEvent();
             });
             container.addChild(knob);
             this.knobs.push(knob);
         }
 
-        var background = new createjs.Shape();
+        var background = GEHelper.newGraphic();
         background.graphics
             .ss(1, 2, 0)
             .s('rgba(254,254,254,0.01)')
             .beginFill('rgba(254,254,254,1)')
             .dr(-50, -50, 100, 100);
-        background.on('mousedown', function(e) {
+        background.on(GEDragHelper.types.DOWN, function(e) {
+            GEDragHelper.handleDrag(background);
             var offset = handle.getEventCoordinate(e);
             offset.x -= handle.x;
             offset.y -= handle.y;
             this.offset = offset;
             handle.dispatchEditStartEvent();
         });
-        background.on('pressmove', function(e) {
+        background.on(GEDragHelper.types.MOVE, function(e) {
             if (handle.getDraggable()) {
                 var pos = handle.getEventCoordinate(e);
                 pos.x -= this.offset.x;
@@ -312,7 +325,7 @@ var EaselHandle = function(canvas) {
                 handle.dispatchOnChangeEvent();
             }
         });
-        background.on('pressup', function(e) {
+        background.on(GEDragHelper.types.UP, function(e) {
             handle.dispatchEditEndEvent();
         });
         this.canvas.addChildAt(background, 0);
@@ -349,7 +362,7 @@ var EaselHandle = function(canvas) {
             .clear()
             .ss(10, 2, 0)
             .s('rgba(254,254,254,0.01)')
-            .lt(-width / 2, -height / 2)
+            .mt(-width / 2, -height / 2)
             .lt(0, -height / 2)
             .lt(0, -height / 2)
             .lt(+width / 2, -height / 2)
@@ -380,7 +393,7 @@ var EaselHandle = function(canvas) {
             .clear()
             .ss(1, 2, 0)
             .s(this.color)
-            .lt(-width / 2, -height / 2)
+            .mt(-width / 2, -height / 2)
             .lt(0, -height / 2)
             .lt(0, -height / 2)
             .lt(+width / 2, -height / 2)
