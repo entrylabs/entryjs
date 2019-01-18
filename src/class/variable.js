@@ -1,7 +1,10 @@
 /**
  * @fileoverview Variable object for entry variable block.
  */
+
 'use strict';
+
+import { GEHelper } from '../util/GEHelper';
 
 /**
  * Block variable constructor
@@ -70,11 +73,11 @@ Entry.Variable = class Variable {
     generateView(variableIndex) {
         const type = this.type;
         if (type === 'variable' || type === 'timer' || type === 'answer') {
-            this.view_ = new createjs.Container();
-            this.rect_ = new createjs.Shape();
+            this.view_ = GEHelper.newContainer();
+            this.rect_ = GEHelper.newGraphic();
             this.view_.addChild(this.rect_);
             this.view_.variable = this;
-            this.wrapper_ = new createjs.Shape();
+            this.wrapper_ = GEHelper.newGraphic();
             this.view_.addChild(this.wrapper_);
             this.textView_ = new createjs.Text('asdf', this.FONT, '#000000');
             this.textView_.textBaseline = 'alphabetic';
@@ -116,11 +119,11 @@ Entry.Variable = class Variable {
             });
         } else if (type === 'slide') {
             const slide = this;
-            this.view_ = new createjs.Container();
-            this.rect_ = new createjs.Shape();
+            this.view_ = GEHelper.newContainer();
+            this.rect_ = GEHelper.newGraphic();
             this.view_.addChild(this.rect_);
             this.view_.variable = this;
-            this.wrapper_ = new createjs.Shape();
+            this.wrapper_ = GEHelper.newGraphic();
             this.view_.addChild(this.wrapper_);
             this.textView_ = new createjs.Text('name', this.FONT, '#000000');
             this.textView_.textBaseline = 'alphabetic';
@@ -154,7 +157,7 @@ Entry.Variable = class Variable {
             width = Math.max(width, 90);
             this.maxWidth = width - 20;
 
-            this.slideBar_ = new createjs.Shape();
+            this.slideBar_ = GEHelper.newGraphic();
             this.slideBar_.graphics
                 .beginFill('#A0A1A1')
                 .s('#A0A1A1')
@@ -163,7 +166,7 @@ Entry.Variable = class Variable {
             this.view_.addChild(this.slideBar_);
 
             const position = this.getSlidePosition(this.maxWidth);
-            this.valueSetter_ = new createjs.Shape();
+            this.valueSetter_ = GEHelper.newGraphic();
             this.valueSetter_.graphics
                 .beginFill('#1bafea')
                 .s('#A0A1A1')
@@ -213,8 +216,8 @@ Entry.Variable = class Variable {
                 this.setY(variableIndex * 24 + 20 - 135 - Math.floor(variableLength / 11) * 264);
             }
         } else {
-            this.view_ = new createjs.Container();
-            this.rect_ = new createjs.Shape();
+            this.view_ = GEHelper.newContainer();
+            this.rect_ = GEHelper.newGraphic();
             this.view_.addChild(this.rect_);
             this.view_.variable = this;
             this.titleView_ = new createjs.Text('asdf', this.FONT, '#000');
@@ -225,7 +228,7 @@ Entry.Variable = class Variable {
             this.titleView_.x = this.width_ / 2;
             this.view_.addChild(this.titleView_);
 
-            this.resizeHandle_ = new createjs.Shape();
+            this.resizeHandle_ = GEHelper.newGraphic();
             this.resizeHandle_.graphics
                 .f('#1bafea')
                 .ss(1, 0, 0)
@@ -286,13 +289,13 @@ Entry.Variable = class Variable {
                 this.variable.updateView();
             });
 
-            this.elementView = new createjs.Container();
+            this.elementView = GEHelper.newContainer();
             const indexView = new createjs.Text('asdf', this.FONT, '#000');
             indexView.textBaseline = 'middle';
             indexView.y = 5;
             this.elementView.addChild(indexView);
             this.elementView.indexView = indexView;
-            const valueWrapper = new createjs.Shape();
+            const valueWrapper = GEHelper.newGraphic();
             this.elementView.addChild(valueWrapper);
             this.elementView.valueWrapper = valueWrapper;
             const valueView = new createjs.Text('fdsa', this.FONT, '#eee');
@@ -303,7 +306,7 @@ Entry.Variable = class Variable {
             this.elementView.valueView = valueView;
             this.elementView.x = this.BORDER;
 
-            this.scrollButton_ = new createjs.Shape();
+            this.scrollButton_ = GEHelper.newGraphic();
             this.scrollButton_.graphics.f('#aaa').rr(0, 0, 7, 30, 3.5);
             this.view_.addChild(this.scrollButton_);
             this.scrollButton_.y = 23;
@@ -413,13 +416,13 @@ Entry.Variable = class Variable {
                     .f('#ffffff')
                     .ss(1, 2, 0)
                     .s('#A0A1A1')
-                    .rc(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4, 4, 4, 4);
+                    .rr(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4);
                 this.wrapper_.graphics
                     .clear()
                     .f('#1bafea')
                     .ss(1, 2, 0)
                     .s('#1bafea')
-                    .rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7);
+                    .rr(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7);
             } else if (this.type === 'slide') {
                 this.view_.x = this.getX();
                 this.view_.y = this.getY();
@@ -474,13 +477,13 @@ Entry.Variable = class Variable {
                     .f('#ffffff')
                     .ss(1, 2, 0)
                     .s('#A0A1A1')
-                    .rc(0, -14, width, 33, 4, 4, 4, 4);
+                    .rr(0, -14, width, 33, 4);
                 this.wrapper_.graphics
                     .clear()
                     .f('#1bafea')
                     .ss(1, 2, 0)
                     .s('#1bafea')
-                    .rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7);
+                    .rr(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7);
 
                 width = this._nameWidth + this._valueWidth + 26;
                 width = Math.max(width, 90);
@@ -654,13 +657,13 @@ Entry.Variable = class Variable {
                     .f('#ffffff')
                     .ss(1, 2, 0)
                     .s('#A0A1A1')
-                    .rc(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4, 4, 4, 4);
+                    .rr(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4);
                 this.wrapper_.graphics
                     .clear()
                     .f('#F57DF1')
                     .ss(1, 2, 0)
                     .s('#F57DF1')
-                    .rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7);
+                    .rr(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7);
             } else {
                 this.view_.x = this.getX();
                 this.view_.y = this.getY();
@@ -689,13 +692,13 @@ Entry.Variable = class Variable {
                     .f('#ffffff')
                     .ss(1, 2, 0)
                     .s('#A0A1A1')
-                    .rc(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4, 4, 4, 4);
+                    .rr(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4);
                 this.wrapper_.graphics
                     .clear()
                     .f('#ffbb14')
                     .ss(1, 2, 0)
                     .s('orange')
-                    .rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7);
+                    .rr(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7);
             }
         }
         Entry.requestUpdate = true;
