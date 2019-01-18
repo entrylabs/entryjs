@@ -1106,7 +1106,7 @@ Entry.Container = class Container {
             x: touchEvent.clientX,
             y: touchEvent.clientY,
         });
-    }
+    };
 
     removeFuncBlocks(functionType) {
         this.objects_.forEach(({ script }) => {
@@ -1122,7 +1122,7 @@ Entry.Container = class Container {
         // INFO : clear 시도할때 _extensionObjects 초기화
         this._extensionObjects = [];
         // TODO: clear 때 this._extensionListView 도 비워 줘야 하는지 확인 필요.
-        Entry.playground.flushPlayground();
+        Entry.playground.clear();
     }
 
     selectNeighborObject(option) {

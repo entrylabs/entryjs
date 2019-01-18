@@ -1374,6 +1374,11 @@ Entry.Playground = class {
         }
     }
 
+    clear() {
+        this.flushPlayground();
+        this.painter.clear();
+    }
+
     generatePictureElement(picture) {
         const element = Entry.createElement('li', picture.id)
             .addClass('entryPlaygroundPictureElement')
