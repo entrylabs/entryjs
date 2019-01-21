@@ -260,7 +260,7 @@ class GlobalSvg {
         const blockMenu = board.workspace.blockMenu;
         const bLeft = blockMenu.offset().left;
         const bTop = blockMenu.offset().top;
-        const bWidth = blockMenu.visible ? blockMenu.svgDom.width() : 0;
+        const bWidth = blockMenu.visible ? blockMenu.blockMenuWrapper.width() : 0;
         if (mousePos.y > board.offset().top - 20 && mousePos.x > bLeft + bWidth) {
             return this.DONE;
         } else if (mousePos.y > bTop && mousePos.x > bLeft && blockMenu.visible) {

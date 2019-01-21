@@ -122,6 +122,10 @@ class BlockMenuScroller {
         });
     }
 
+    getOpacity() {
+        return this._opacity;
+    }
+
     setOpacity(value) {
         if (this._opacity == value) return;
         this.vScrollbar.attr({
@@ -170,8 +174,6 @@ class BlockMenuScroller {
             var doc = $(document);
             doc.bind('mousemove.scroll', onMouseMove);
             doc.bind('mouseup.scroll', onMouseUp);
-            doc.bind('touchmove.scroll', onMouseMove);
-            doc.bind('touchend.scroll', onMouseUp);
             that.dragInstance = new Entry.DragInstance({
                 startY: mouseEvent.pageY,
                 offsetY: mouseEvent.pageY,
@@ -204,7 +206,7 @@ class BlockMenuScroller {
 
     _addControl() {
         var that = this;
-        $(this.vScrollbar).bind('mousedown touchstart', that.mouseHandler);
+        $(this.vScrollbar).bind('mousedown', that.mouseHandler);
     }
 }
 Entry.BlockMenuScroller = BlockMenuScroller;

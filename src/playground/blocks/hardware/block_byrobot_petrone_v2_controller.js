@@ -19,8 +19,8 @@ Entry.byrobot_petrone_v2_controller = {
     url: 'http://www.byrobot.co.kr/',
     imageName: 'byrobot_petrone_v2_controller.png',
     title: {
-        "en": "BYROBOT Petrone V2 controller",
-        "ko": "바이로봇 페트론V2 조종기"
+        en: 'BYROBOT Petrone V2 controller',
+        ko: '바이로봇 페트론V2 조종기',
     },
 
     // 초기화
@@ -59,42 +59,32 @@ Entry.byrobot_petrone_v2_controller = {
                 pos: { x: 0, y: 0 },
             },
             joystick_left_direction: {
-                name:
-                    Lang.Blocks
-                        .byrobot_petrone_v2_controller_joystick_left_direction,
+                name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_direction,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_left_event: {
-                name:
-                    Lang.Blocks
-                        .byrobot_petrone_v2_controller_joystick_left_event,
+                name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_event,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_right_x: {
-                name:
-                    Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_x,
+                name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_x,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_right_y: {
-                name:
-                    Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_y,
+                name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_y,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_right_direction: {
-                name:
-                    Lang.Blocks
-                        .byrobot_petrone_v2_controller_joystick_right_direction,
+                name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_direction,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_right_event: {
-                name:
-                    Lang.Blocks
-                        .byrobot_petrone_v2_controller_joystick_right_event,
+                name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_event,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
@@ -109,9 +99,7 @@ Entry.byrobot_petrone_v2_controller = {
                 pos: { x: 0, y: 0 },
             },
             entryhw_countTransferReserved: {
-                name:
-                    Lang.Blocks
-                        .byrobot_petrone_v2_entryhw_count_transfer_reserved,
+                name: Lang.Blocks.byrobot_petrone_v2_entryhw_count_transfer_reserved,
                 type: 'output',
                 pos: { x: 0, y: 0 },
             },
@@ -200,15 +188,7 @@ Entry.byrobot_petrone_v2_controller = {
         delete Entry.hw.sendQueue['light_color_b'];
     },
 
-    transferDisplayClear: function(
-        target,
-        pixel,
-        clearAll,
-        x,
-        y,
-        width,
-        height
-    ) {
+    transferDisplayClear: function(target, pixel, clearAll, x, y, width, height) {
         if (clearAll) {
             // 전송
             Entry.hw.setDigitalPortValue('target', target);
@@ -327,16 +307,7 @@ Entry.byrobot_petrone_v2_controller = {
         delete Entry.hw.sendQueue['display_draw_line_line'];
     },
 
-    transferDisplayDrawRect: function(
-        target,
-        x,
-        y,
-        width,
-        height,
-        pixel,
-        flagFill,
-        line
-    ) {
+    transferDisplayDrawRect: function(target, x, y, width, height, pixel, flagFill, line) {
         // 범위 조정
         x = Math.max(x, 0);
         x = Math.min(x, 128);
@@ -421,16 +392,7 @@ Entry.byrobot_petrone_v2_controller = {
         delete Entry.hw.sendQueue['display_draw_string_string'];
     },
 
-    transferDisplayDrawStringAlign: function(
-        target,
-        xStart,
-        xEnd,
-        y,
-        align,
-        font,
-        pixel,
-        string
-    ) {
+    transferDisplayDrawStringAlign: function(target, xStart, xEnd, y, align, font, pixel, string) {
         // 범위 조정
         xStart = Math.max(xStart, 0);
         xStart = Math.min(xStart, 124);
@@ -441,19 +403,13 @@ Entry.byrobot_petrone_v2_controller = {
 
         // 전송
         Entry.hw.setDigitalPortValue('target', target);
-        Entry.hw.setDigitalPortValue(
-            'display_draw_string_align_x_start',
-            xStart
-        );
+        Entry.hw.setDigitalPortValue('display_draw_string_align_x_start', xStart);
         Entry.hw.setDigitalPortValue('display_draw_string_align_x_end', xEnd);
         Entry.hw.setDigitalPortValue('display_draw_string_align_y', y);
         Entry.hw.setDigitalPortValue('display_draw_string_align_align', align);
         Entry.hw.setDigitalPortValue('display_draw_string_align_font', font);
         Entry.hw.setDigitalPortValue('display_draw_string_align_pixel', pixel);
-        Entry.hw.setDigitalPortValue(
-            'display_draw_string_align_string',
-            string
-        );
+        Entry.hw.setDigitalPortValue('display_draw_string_align_string', string);
 
         Entry.hw.update();
 
@@ -566,28 +522,11 @@ Entry.byrobot_petrone_v2_controller = {
     },
 
     // OLED - 화면 전체 지우기, 선택 영역 지우기
-    setDisplayClear: function(
-        script,
-        target,
-        pixel,
-        clearAll,
-        x,
-        y,
-        width,
-        height
-    ) {
+    setDisplayClear: function(script, target, pixel, clearAll, x, y, width, height) {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
-                    this.transferDisplayClear(
-                        target,
-                        pixel,
-                        clearAll,
-                        x,
-                        y,
-                        width,
-                        height
-                    );
+                    this.transferDisplayClear(target, pixel, clearAll, x, y, width, height);
                 }
                 return script;
 
@@ -647,15 +586,7 @@ Entry.byrobot_petrone_v2_controller = {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
-                    this.transferDisplayDrawLine(
-                        target,
-                        x1,
-                        y1,
-                        x2,
-                        y2,
-                        pixel,
-                        line
-                    );
+                    this.transferDisplayDrawLine(target, x1, y1, x2, y2, pixel, line);
                 }
                 return script;
 
@@ -671,17 +602,7 @@ Entry.byrobot_petrone_v2_controller = {
     },
 
     // OLED - 화면에 사각형 그리기
-    setDisplayDrawRect: function(
-        script,
-        target,
-        x,
-        y,
-        width,
-        height,
-        pixel,
-        flagFill,
-        line
-    ) {
+    setDisplayDrawRect: function(script, target, x, y, width, height, pixel, flagFill, line) {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
@@ -710,26 +631,11 @@ Entry.byrobot_petrone_v2_controller = {
     },
 
     // OLED - 화면에 원 그리기
-    setDisplayDrawCircle: function(
-        script,
-        target,
-        x,
-        y,
-        radius,
-        pixel,
-        flagFill
-    ) {
+    setDisplayDrawCircle: function(script, target, x, y, radius, pixel, flagFill) {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
-                    this.transferDisplayDrawCircle(
-                        target,
-                        x,
-                        y,
-                        radius,
-                        pixel,
-                        flagFill
-                    );
+                    this.transferDisplayDrawCircle(target, x, y, radius, pixel, flagFill);
                 }
                 return script;
 
@@ -749,14 +655,7 @@ Entry.byrobot_petrone_v2_controller = {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
-                    this.transferDisplayDrawString(
-                        target,
-                        x,
-                        y,
-                        font,
-                        pixel,
-                        string
-                    );
+                    this.transferDisplayDrawString(target, x, y, font, pixel, string);
                 }
                 return script;
 
@@ -870,14 +769,7 @@ Entry.byrobot_petrone_v2_controller = {
         }
     },
 
-    setBuzzerScale: function(
-        script,
-        octave,
-        scale,
-        time,
-        flagDelay,
-        flagInstantly
-    ) {
+    setBuzzerScale: function(script, octave, scale, time, flagDelay, flagInstantly) {
         time = Math.max(time, 0);
         time = Math.min(time, 60000);
 
@@ -964,14 +856,7 @@ Entry.byrobot_petrone_v2_controller = {
         }
     },
 
-    setVibrator: function(
-        script,
-        timeOn,
-        timeOff,
-        timeRun,
-        flagDelay,
-        flagInstantly
-    ) {
+    setVibrator: function(script, timeOn, timeOff, timeRun, flagDelay, flagInstantly) {
         timeRun = Math.max(timeRun, 0);
         timeRun = Math.min(timeRun, 60000);
 
@@ -1055,27 +940,21 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
         //region byrobot 바이로봇
         /* BYROBOT PetroneV2 Controller Start */
         byrobot_petrone_v2_controller_controller_value_button: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_button,
-                            'button_button',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_event,
-                            'button_event',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_button, 'button_button'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_event, 'button_event'],
                     ],
                     value: 'button_button', // 초기 선택항목 지정
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1095,8 +974,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_value_joystick: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -1104,48 +983,42 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_left_x,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_x,
                             'joystick_left_x',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_left_y,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_y,
                             'joystick_left_y',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_left_direction,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_direction,
                             'joystick_left_direction',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_left_event,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_event,
                             'joystick_left_event',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_right_x,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_x,
                             'joystick_right_x',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_right_y,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_y,
                             'joystick_right_y',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_right_direction,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_direction,
                             'joystick_right_direction',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_right_event,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_event,
                             'joystick_right_event',
                         ],
                     ],
                     value: 'joystick_left_x', // 초기 선택항목 지정
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1165,8 +1038,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_if_button_press: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -1174,76 +1047,29 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_front_left,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_front_right,
-                            '2',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_front_left_right,
-                            '3',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_center_up_left,
-                            '4',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_center_up_right,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_center_up,
-                            '16',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_center_left,
-                            '32',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_center_right,
-                            '64',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_center_down,
-                            '128',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_bottom_left,
-                            '256',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_bottom_right,
-                            '512',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_bottom_left_right,
-                            '768',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_front_left, '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_front_right, '2'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_front_left_right, '3'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_center_up_left, '4'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_center_up_right, '8'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_center_up, '16'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_center_left, '32'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_center_right, '64'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_center_down, '128'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_bottom_left, '256'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_bottom_right, '512'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_bottom_left_right, '768'],
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
             def: {
                 params: [null],
-                type:
-                    'byrobot_petrone_v2_controller_controller_if_button_press',
+                type: 'byrobot_petrone_v2_controller_controller_if_button_press',
             },
             paramsKeyMap: {
                 BUTTON: 0,
@@ -1255,17 +1081,14 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                 var button = 'button_button'; // paramsKeyMap에 정의된 이름 사용
                 var buttonevent = 'button_event'; // paramsKeyMap에 정의된 이름 사용
 
-                if (
-                    read[button] == script.getField('BUTTON') &&
-                    read[buttonevent] == 2
-                )
+                if (read[button] == script.getField('BUTTON') && read[buttonevent] == 2)
                     return true;
                 else return false;
             },
         },
         byrobot_petrone_v2_controller_controller_if_joystick_direction: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -1273,76 +1096,49 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_common_left,
-                            'joystick_left_direction',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_common_right,
-                            'joystick_right_direction',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_common_left, 'joystick_left_direction'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_right, 'joystick_right_direction'],
                     ],
                     value: 'joystick_left_direction',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_left_up,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_left_up,
                             '17',
                         ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_up, '18'],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_up,
-                            '18',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_right_up,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_right_up,
                             '20',
                         ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_left, '33'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_center, '34'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_right, '36'],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_left,
-                            '33',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_center,
-                            '34',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_right,
-                            '36',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_left_down,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_left_down,
                             '65',
                         ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_down, '66'],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_down,
-                            '66',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_right_down,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_right_down,
                             '68',
                         ],
                     ],
                     value: '34',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
             def: {
                 params: [null, null],
-                type:
-                    'byrobot_petrone_v2_controller_controller_if_joystick_direction',
+                type: 'byrobot_petrone_v2_controller_controller_if_joystick_direction',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -1360,8 +1156,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_light_manual_single_off: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1374,105 +1170,51 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             events: {},
             def: {
                 params: [null],
-                type:
-                    'byrobot_petrone_v2_controller_controller_light_manual_single_off',
+                type: 'byrobot_petrone_v2_controller_controller_light_manual_single_off',
             },
             paramsKeyMap: {},
             class: 'byrobot_petrone_v2_controller_controller_light',
             isNotFor: ['byrobot_petrone_v2_controller'],
             func: function(sprite, script) {
-                return Entry.byrobot_petrone_v2_controller.setLightManual(
-                    script,
-                    0x31,
-                    0xff,
-                    0
-                );
+                return Entry.byrobot_petrone_v2_controller.setLightManual(script, 0x31, 0xff, 0);
             },
         },
         byrobot_petrone_v2_controller_controller_light_manual_single: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_red,
-                            '128',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_green,
-                            '64',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_blue,
-                            '32',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_yellow,
-                            '192',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_magenta,
-                            '160',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_cyan,
-                            '96',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_white,
-                            '255',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_red, '128'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_green, '64'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_blue, '32'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_yellow, '192'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_magenta, '160'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_cyan, '96'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_white, '255'],
                     ],
                     value: '128',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_on,
-                            '220',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_off,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_b25,
-                            '75',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_b50,
-                            '125',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_b75,
-                            '200',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_b100,
-                            '255',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_on, '220'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_off, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b25, '75'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b50, '125'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b75, '200'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b100, '255'],
                     ],
                     value: '220',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1483,8 +1225,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             events: {},
             def: {
                 params: [null, null, null],
-                type:
-                    'byrobot_petrone_v2_controller_controller_light_manual_single',
+                type: 'byrobot_petrone_v2_controller_controller_light_manual_single',
             },
             paramsKeyMap: {
                 FLAGS: 0,
@@ -1504,8 +1245,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_light_manual_single_input: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1536,8 +1277,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_controller_controller_light_manual_single_input',
+                type: 'byrobot_petrone_v2_controller_controller_light_manual_single_input',
             },
             paramsKeyMap: {
                 FLAGS: 0,
@@ -1557,8 +1297,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_light_color_rgb_input: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1577,29 +1317,15 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_hold,
-                            '0',
-                        ], // TeamHold = 0x12
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_flicker,
-                            '1',
-                        ], // TeamFlicker = 0x13
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_flicker_double,
-                            '2',
-                        ], // TeamFlickerDouble = 0x14
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_dimming,
-                            '3',
-                        ], // TeamDimming = 0x15
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, '0'], // TeamHold = 0x12
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, '1'], // TeamFlicker = 0x13
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, '2'], // TeamFlickerDouble = 0x14
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, '3'], // TeamDimming = 0x15
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1625,8 +1351,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                     null,
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_controller_controller_light_color_rgb_input',
+                type: 'byrobot_petrone_v2_controller_controller_light_color_rgb_input',
             },
             paramsKeyMap: {
                 RED: 0,
@@ -1652,74 +1377,44 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_light_color_rgb_select: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_sunset, 'sunset'],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_sunset,
-                            'sunset',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_cottoncandy,
+                            Lang.Blocks.byrobot_petrone_v2_common_light_color_cottoncandy,
                             'cottonCandy',
                         ],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_muscat, 'muscat'],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_muscat,
-                            'muscat',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_strawberrymilk,
+                            Lang.Blocks.byrobot_petrone_v2_common_light_color_strawberrymilk,
                             'strawberryMilk',
                         ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_emerald,
-                            'emerald',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_lavender,
-                            'lavender',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_emerald, 'emerald'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_lavender, 'lavender'],
                     ],
                     value: 'sunset',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_hold,
-                            '0',
-                        ], // TeamHold = 0x12
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_flicker,
-                            '1',
-                        ], // TeamFlicker = 0x13
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_flicker_double,
-                            '2',
-                        ], // TeamFlickerDouble = 0x14
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_dimming,
-                            '3',
-                        ], // TeamDimming = 0x15
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, '0'], // TeamHold = 0x12
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, '1'], // TeamFlicker = 0x13
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, '2'], // TeamFlickerDouble = 0x14
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, '3'], // TeamDimming = 0x15
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1730,8 +1425,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             events: {},
             def: {
                 params: [null, null, null],
-                type:
-                    'byrobot_petrone_v2_controller_controller_light_color_rgb_select',
+                type: 'byrobot_petrone_v2_controller_controller_light_color_rgb_select',
             },
             paramsKeyMap: {
                 SELECT: 0,
@@ -1790,27 +1484,21 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_display_clear_all: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1821,8 +1509,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             events: {},
             def: {
                 params: [null, null],
-                type:
-                    'byrobot_petrone_v2_controller_controller_display_clear_all',
+                type: 'byrobot_petrone_v2_controller_controller_display_clear_all',
             },
             paramsKeyMap: {
                 PIXEL: 0,
@@ -1844,8 +1531,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_display_clear: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1868,19 +1555,13 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1940,8 +1621,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_display_invert: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2015,8 +1696,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_display_draw_point: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2031,19 +1712,13 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -2065,8 +1740,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                     null,
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_controller_controller_display_draw_point',
+                type: 'byrobot_petrone_v2_controller_controller_display_draw_point',
             },
             paramsKeyMap: {
                 X: 0,
@@ -2089,8 +1763,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_display_draw_line: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2113,41 +1787,25 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_line_solid,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_line_dotted,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_line_dashed,
-                            '2',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_line_solid, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dotted, '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dashed, '2'],
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -2178,8 +1836,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                     null,
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_controller_controller_display_draw_line',
+                type: 'byrobot_petrone_v2_controller_controller_display_draw_line',
             },
             paramsKeyMap: {
                 X1: 0,
@@ -2211,8 +1868,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_display_draw_rect: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2235,58 +1892,36 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_flagfill_off,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_flagfill_on,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_off, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_on, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_line_solid,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_line_dotted,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_line_dashed,
-                            '2',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_line_solid, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dotted, '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dashed, '2'],
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -2318,8 +1953,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                     null,
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_controller_controller_display_draw_rect',
+                type: 'byrobot_petrone_v2_controller_controller_display_draw_rect',
             },
             paramsKeyMap: {
                 X: 0,
@@ -2354,8 +1988,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_display_draw_circle: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2374,36 +2008,24 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_flagfill_off,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_flagfill_on,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_off, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_on, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -2430,8 +2052,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                     null,
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_controller_controller_display_draw_circle',
+                type: 'byrobot_petrone_v2_controller_controller_display_draw_circle',
             },
             paramsKeyMap: {
                 X: 0,
@@ -2460,8 +2081,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_display_draw_string: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2476,36 +2097,24 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_font_5x8,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_font_10x16,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_font_5x8, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_font_10x16, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -2536,8 +2145,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_controller_controller_display_draw_string',
+                type: 'byrobot_petrone_v2_controller_controller_display_draw_string',
             },
             paramsKeyMap: {
                 X: 0,
@@ -2566,8 +2174,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_display_draw_string_align: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2586,58 +2194,36 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_align_left,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_align_center,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_align_right,
-                            '2',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_align_left, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_align_center, '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_align_right, '2'],
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_font_5x8,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_font_10x16,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_font_5x8, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_font_10x16, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -2673,8 +2259,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_controller_controller_display_draw_string_align',
+                type: 'byrobot_petrone_v2_controller_controller_display_draw_string_align',
             },
             paramsKeyMap: {
                 XSTART: 0,
@@ -2709,8 +2294,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_buzzer_off: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2729,88 +2314,44 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             class: 'byrobot_petrone_v2_controller_buzzer',
             isNotFor: ['byrobot_petrone_v2_controller'],
             func: function(sprite, script) {
-                return Entry.byrobot_petrone_v2_controller.setBuzzerStop(
-                    script
-                );
+                return Entry.byrobot_petrone_v2_controller.setBuzzerStop(script);
             },
         },
         byrobot_petrone_v2_controller_controller_buzzer_scale: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['4', '3'],
-                        ['5', '4'],
-                        ['6', '5'],
-                        ['7', '6'],
-                        ['8', '7'],
-                    ],
+                    options: [['4', '3'], ['5', '4'], ['6', '5'], ['7', '6'], ['8', '7']],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_buzzer_mute,
-                            '-1',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d,
-                            '2',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds,
-                            '3',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e,
-                            '4',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f,
-                            '5',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs,
-                            '6',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g,
-                            '7',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a,
-                            '9',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as,
-                            '10',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b,
-                            '11',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_mute, '-1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs, '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d, '2'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds, '3'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e, '4'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f, '5'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs, '6'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g, '7'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs, '8'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a, '9'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as, '10'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b, '11'],
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -2852,82 +2393,40 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_buzzer_scale_delay: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['4', '3'],
-                        ['5', '4'],
-                        ['6', '5'],
-                        ['7', '6'],
-                        ['8', '7'],
-                    ],
+                    options: [['4', '3'], ['5', '4'], ['6', '5'], ['7', '6'], ['8', '7']],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_buzzer_mute,
-                            '-1',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d,
-                            '2',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds,
-                            '3',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e,
-                            '4',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f,
-                            '5',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs,
-                            '6',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g,
-                            '7',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a,
-                            '9',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as,
-                            '10',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b,
-                            '11',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_mute, '-1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs, '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d, '2'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds, '3'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e, '4'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f, '5'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs, '6'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g, '7'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs, '8'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a, '9'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as, '10'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b, '11'],
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -2950,8 +2449,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_controller_controller_buzzer_scale_delay',
+                type: 'byrobot_petrone_v2_controller_controller_buzzer_scale_delay',
             },
             paramsKeyMap: {
                 OCTAVE: 0,
@@ -2984,82 +2482,40 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_buzzer_scale_reserve: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['4', '3'],
-                        ['5', '4'],
-                        ['6', '5'],
-                        ['7', '6'],
-                        ['8', '7'],
-                    ],
+                    options: [['4', '3'], ['5', '4'], ['6', '5'], ['7', '6'], ['8', '7']],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_buzzer_mute,
-                            '-1',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d,
-                            '2',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds,
-                            '3',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e,
-                            '4',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f,
-                            '5',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs,
-                            '6',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g,
-                            '7',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a,
-                            '9',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as,
-                            '10',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b,
-                            '11',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_mute, '-1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs, '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d, '2'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds, '3'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e, '4'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f, '5'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs, '6'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g, '7'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs, '8'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a, '9'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as, '10'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b, '11'],
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -3082,8 +2538,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_controller_controller_buzzer_scale_reserve',
+                type: 'byrobot_petrone_v2_controller_controller_buzzer_scale_reserve',
             },
             paramsKeyMap: {
                 OCTAVE: 0,
@@ -3116,8 +2571,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_buzzer_hz: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3159,8 +2614,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_buzzer_hz_delay: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3191,8 +2646,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_controller_controller_buzzer_hz_delay',
+                type: 'byrobot_petrone_v2_controller_controller_buzzer_hz_delay',
             },
             paramsKeyMap: {
                 HZ: 0,
@@ -3213,8 +2667,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_buzzer_hz_reserve: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3245,8 +2699,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_controller_controller_buzzer_hz_reserve',
+                type: 'byrobot_petrone_v2_controller_controller_buzzer_hz_reserve',
             },
             paramsKeyMap: {
                 HZ: 0,
@@ -3267,8 +2720,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_vibrator_off: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3287,14 +2740,12 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             class: 'byrobot_petrone_v2_controller_vibrator',
             isNotFor: ['byrobot_petrone_v2_controller'],
             func: function(sprite, script) {
-                return Entry.byrobot_petrone_v2_controller.setVibratorStop(
-                    script
-                );
+                return Entry.byrobot_petrone_v2_controller.setVibratorStop(script);
             },
         },
         byrobot_petrone_v2_controller_controller_vibrator_on_delay: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3317,8 +2768,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_controller_controller_vibrator_on_delay',
+                type: 'byrobot_petrone_v2_controller_controller_vibrator_on_delay',
             },
             paramsKeyMap: {
                 TIMEON: 0,
@@ -3338,8 +2788,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_vibrator_on_reserve: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3362,8 +2812,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_controller_controller_vibrator_on_reserve',
+                type: 'byrobot_petrone_v2_controller_controller_vibrator_on_reserve',
             },
             paramsKeyMap: {
                 TIMEON: 0,
@@ -3383,8 +2832,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_vibrator_delay: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3447,8 +2896,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_vibrator_reserve: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3487,8 +2936,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_controller_controller_vibrator_reserve',
+                type: 'byrobot_petrone_v2_controller_controller_vibrator_reserve',
             },
             paramsKeyMap: {
                 TIMEON: 0,

@@ -6,8 +6,8 @@ Entry.ardublock = {
     url: 'http://www.jkelec.co.kr/',
     imageName: 'ardublock.png',
     title: {
-        "ko": "아두블럭",
-        "en": "ardublock"
+        ko: '아두블럭',
+        en: 'ardublock',
     },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
@@ -97,8 +97,8 @@ Entry.ardublock.getBlocks = function() {
     return {
         //region ardublock 아두블록
         ardublock_analog_list: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -115,6 +115,8 @@ Entry.ardublock.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -130,8 +132,8 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_get_analog_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -164,8 +166,8 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_get_analog_value_map: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -259,8 +261,8 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_get_ultrasonic_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -307,9 +309,7 @@ Entry.ardublock.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.ardublock.sensorTypes.ULTRASONIC
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.ardublock.sensorTypes.ULTRASONIC] = {
                     port: [port1, port2],
                     time: new Date().getTime(),
                 };
@@ -318,8 +318,8 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_get_digital: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             params: [
@@ -348,9 +348,7 @@ Entry.ardublock.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.ardublock.sensorTypes.DIGITAL
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.ardublock.sensorTypes.DIGITAL] = {
                     port: port,
                     time: new Date().getTime(),
                 };
@@ -359,8 +357,8 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_toggle_led: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -425,8 +423,8 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_digital_pwm: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -483,8 +481,8 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_tone_list: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -508,6 +506,8 @@ Entry.ardublock.getBlocks = function() {
                     ],
                     value: 'C',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -523,8 +523,8 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_tone_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -552,8 +552,8 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_octave_list: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -570,6 +570,8 @@ Entry.ardublock.getBlocks = function() {
                     ],
                     value: '3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -585,8 +587,8 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_set_tone: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -648,8 +650,7 @@ Entry.ardublock.getBlocks = function() {
 
                 if (!script.isStart) {
                     var note = script.getValue('NOTE', script);
-                    if (!Entry.Utils.isNumber(note))
-                        note = Entry.ardublock.toneTable[note];
+                    if (!Entry.Utils.isNumber(note)) note = Entry.ardublock.toneTable[note];
 
                     if (note < 0) {
                         note = 0;
@@ -723,8 +724,8 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_set_servo: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -780,8 +781,8 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_motor_direction_list: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -794,6 +795,8 @@ Entry.ardublock.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -809,8 +812,8 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_set_left_motor: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -888,8 +891,8 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_set_right_motor: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -968,8 +971,8 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_get_left_cds_analog_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1003,8 +1006,8 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_get_right_cds_analog_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1038,8 +1041,8 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_toggle_left_led: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1105,8 +1108,8 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_toggle_right_led: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1172,8 +1175,8 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_get_sound_analog_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],

@@ -197,12 +197,10 @@ Entry.Albert = {
             var value = 0;
             if (diff > 0) {
                 value = Math.log(1 + mag) * this.GAIN_ANGLE_FINE;
-                if (value < this.MINIMUM_WHEEL_SPEED)
-                    value = this.MINIMUM_WHEEL_SPEED;
+                if (value < this.MINIMUM_WHEEL_SPEED) value = this.MINIMUM_WHEEL_SPEED;
             } else {
                 value = -Math.log(1 + mag) * this.GAIN_ANGLE_FINE;
-                if (value > -this.MINIMUM_WHEEL_SPEED)
-                    value = -this.MINIMUM_WHEEL_SPEED;
+                if (value > -this.MINIMUM_WHEEL_SPEED) value = -this.MINIMUM_WHEEL_SPEED;
             }
             value = parseInt(value);
             sq.leftWheel = -value;
@@ -216,40 +214,26 @@ Entry.Albert = {
             if (mag < this.ORIENTATION_TOLERANCE_ROUGH) return false;
 
             var direction = diff > 0 ? 1 : -1;
-            if (
-                mag < this.ORIENTATION_TOLERANCE_ROUGH_LARGE &&
-                direction * this.prevDirection < 0
-            )
+            if (mag < this.ORIENTATION_TOLERANCE_ROUGH_LARGE && direction * this.prevDirection < 0)
                 return false;
             this.prevDirection = direction;
 
             var value = 0;
             if (diff > 0) {
                 value = Math.log(1 + mag) * this.GAIN_ANGLE;
-                if (value < this.MINIMUM_WHEEL_SPEED)
-                    value = this.MINIMUM_WHEEL_SPEED;
+                if (value < this.MINIMUM_WHEEL_SPEED) value = this.MINIMUM_WHEEL_SPEED;
             } else {
                 value = -Math.log(1 + mag) * this.GAIN_ANGLE;
-                if (value > -this.MINIMUM_WHEEL_SPEED)
-                    value = -this.MINIMUM_WHEEL_SPEED;
+                if (value > -this.MINIMUM_WHEEL_SPEED) value = -this.MINIMUM_WHEEL_SPEED;
             }
             value = parseInt(value);
             sq.leftWheel = -value;
             sq.rightWheel = value;
             return true;
         },
-        controlPositionFine: function(
-            currentX,
-            currentY,
-            currentRadian,
-            targetX,
-            targetY
-        ) {
+        controlPositionFine: function(currentX, currentY, currentRadian, targetX, targetY) {
             var sq = Entry.hw.sendQueue;
-            var targetRadian = Math.atan2(
-                targetY - currentY,
-                targetX - currentX
-            );
+            var targetRadian = Math.atan2(targetY - currentY, targetX - currentX);
             var diff = this.validateRadian(targetRadian - currentRadian);
             var mag = Math.abs(diff);
             var ex = targetX - currentX;
@@ -270,18 +254,9 @@ Entry.Albert = {
             sq.rightWheel = this.MINIMUM_WHEEL_SPEED_FINE + value;
             return true;
         },
-        controlPosition: function(
-            currentX,
-            currentY,
-            currentRadian,
-            targetX,
-            targetY
-        ) {
+        controlPosition: function(currentX, currentY, currentRadian, targetX, targetY) {
             var sq = Entry.hw.sendQueue;
-            var targetRadian = Math.atan2(
-                targetY - currentY,
-                targetX - currentX
-            );
+            var targetRadian = Math.atan2(targetY - currentY, targetX - currentX);
             var diff = this.validateRadian(targetRadian - currentRadian);
             var mag = Math.abs(diff);
             var ex = targetX - currentX;
@@ -300,9 +275,7 @@ Entry.Albert = {
                 sq.leftWheel = this.STRAIGHT_SPEED;
                 sq.rightWheel = this.STRAIGHT_SPEED;
             } else {
-                var base =
-                    (this.MINIMUM_WHEEL_SPEED + 0.5 / mag) *
-                    this.GAIN_BASE_SPEED;
+                var base = (this.MINIMUM_WHEEL_SPEED + 0.5 / mag) * this.GAIN_BASE_SPEED;
                 if (base > this.MAX_BASE_SPEED) base = this.MAX_BASE_SPEED;
 
                 var value = 0;
@@ -367,8 +340,8 @@ Entry.Albert.getBlocks = function() {
     return {
         //region albert 알버트
         albert_hand_found: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -387,8 +360,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.hand_found()'] },
         },
         albert_is_oid_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -401,6 +374,8 @@ Entry.Albert.getBlocks = function() {
                     ],
                     value: 'FRONT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -436,34 +411,19 @@ Entry.Albert.getBlocks = function() {
             },
         },
         albert_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks.ALBERT_sensor_left_proximity,
-                            'leftProximity',
-                        ],
-                        [
-                            Lang.Blocks.ALBERT_sensor_right_proximity,
-                            'rightProximity',
-                        ],
-                        [
-                            Lang.Blocks.ALBERT_sensor_acceleration_x,
-                            'accelerationX',
-                        ],
-                        [
-                            Lang.Blocks.ALBERT_sensor_acceleration_y,
-                            'accelerationY',
-                        ],
-                        [
-                            Lang.Blocks.ALBERT_sensor_acceleration_z,
-                            'accelerationZ',
-                        ],
+                        [Lang.Blocks.ALBERT_sensor_left_proximity, 'leftProximity'],
+                        [Lang.Blocks.ALBERT_sensor_right_proximity, 'rightProximity'],
+                        [Lang.Blocks.ALBERT_sensor_acceleration_x, 'accelerationX'],
+                        [Lang.Blocks.ALBERT_sensor_acceleration_y, 'accelerationY'],
+                        [Lang.Blocks.ALBERT_sensor_acceleration_z, 'accelerationZ'],
                         [Lang.Blocks.ALBERT_sensor_front_oid, 'frontOid'],
                         [Lang.Blocks.ALBERT_sensor_back_oid, 'backOid'],
                         [Lang.Blocks.ALBERT_sensor_position_x, 'positionX'],
@@ -472,13 +432,12 @@ Entry.Albert.getBlocks = function() {
                         [Lang.Blocks.ALBERT_sensor_light, 'light'],
                         [Lang.Blocks.ALBERT_sensor_temperature, 'temperature'],
                         [Lang.Blocks.ALBERT_sensor_battery, 'battery'],
-                        [
-                            Lang.Blocks.ALBERT_sensor_signal_strength,
-                            'signalStrength',
-                        ],
+                        [Lang.Blocks.ALBERT_sensor_signal_strength, 'signalStrength'],
                     ],
                     value: 'leftProximity',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -499,8 +458,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.value(%1)'] },
         },
         albert_move_forward_for_secs: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -558,8 +517,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.move_forward_for_secs(%1)'] },
         },
         albert_move_backward_for_secs: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -617,8 +576,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.move_backward_for_secs(%1)'] },
         },
         albert_turn_for_secs: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -630,6 +589,8 @@ Entry.Albert.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -694,8 +655,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.turn_for_secs(%1, %2)'] },
         },
         albert_change_both_wheels_by: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -738,17 +699,15 @@ Entry.Albert.getBlocks = function() {
                 var sq = Entry.hw.sendQueue;
                 var left = script.getNumberValue('LEFT');
                 var right = script.getNumberValue('RIGHT');
-                sq.leftWheel =
-                    sq.leftWheel != undefined ? sq.leftWheel + left : left;
-                sq.rightWheel =
-                    sq.rightWheel != undefined ? sq.rightWheel + right : right;
+                sq.leftWheel = sq.leftWheel != undefined ? sq.leftWheel + left : left;
+                sq.rightWheel = sq.rightWheel != undefined ? sq.rightWheel + right : right;
                 return script.callReturn();
             },
             syntax: { js: [], py: ['Albert.change_both_wheels(%1, %2)'] },
         },
         albert_set_both_wheels_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -796,8 +755,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.set_both_wheels(%1, %2)'] },
         },
         albert_change_wheel_by: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -810,6 +769,8 @@ Entry.Albert.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -844,32 +805,20 @@ Entry.Albert.getBlocks = function() {
                 var direction = script.getField('DIRECTION');
                 var value = script.getNumberValue('VALUE');
                 if (direction == 'LEFT') {
-                    sq.leftWheel =
-                        sq.leftWheel != undefined
-                            ? sq.leftWheel + value
-                            : value;
+                    sq.leftWheel = sq.leftWheel != undefined ? sq.leftWheel + value : value;
                 } else if (direction == 'RIGHT') {
-                    sq.rightWheel =
-                        sq.rightWheel != undefined
-                            ? sq.rightWheel + value
-                            : value;
+                    sq.rightWheel = sq.rightWheel != undefined ? sq.rightWheel + value : value;
                 } else {
-                    sq.leftWheel =
-                        sq.leftWheel != undefined
-                            ? sq.leftWheel + value
-                            : value;
-                    sq.rightWheel =
-                        sq.rightWheel != undefined
-                            ? sq.rightWheel + value
-                            : value;
+                    sq.leftWheel = sq.leftWheel != undefined ? sq.leftWheel + value : value;
+                    sq.rightWheel = sq.rightWheel != undefined ? sq.rightWheel + value : value;
                 }
                 return script.callReturn();
             },
             syntax: { js: [], py: ['Albert.change_wheel(%1, %2)'] },
         },
         albert_set_wheel_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -882,6 +831,8 @@ Entry.Albert.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -928,8 +879,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.set_wheel(%1, %2)'] },
         },
         albert_stop: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -956,8 +907,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.stop()'] },
         },
         albert_set_pad_size_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1006,8 +957,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.set_pad_size(%1, %2)'] },
         },
         albert_move_to_x_y_on_board: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1082,10 +1033,7 @@ Entry.Albert.getBlocks = function() {
                             var dx = script.targetX - script.x;
                             var dy = script.targetY - script.y;
                             var target = Math.atan2(dy, dx);
-                            if (
-                                controller.controlAngle(current, target) ==
-                                false
-                            )
+                            if (controller.controlAngle(current, target) == false)
                                 script.boardState = 2;
                             break;
                         }
@@ -1138,8 +1086,8 @@ Entry.Albert.getBlocks = function() {
             },
         },
         albert_set_orientation_on_board: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1188,25 +1136,15 @@ Entry.Albert.getBlocks = function() {
                     switch (script.boardState) {
                         case 1: {
                             var current = controller.toRadian(script.theta);
-                            var target = controller.toRadian(
-                                script.targetTheta
-                            );
-                            if (
-                                controller.controlAngle(current, target) ==
-                                false
-                            )
+                            var target = controller.toRadian(script.targetTheta);
+                            if (controller.controlAngle(current, target) == false)
                                 script.boardState = 2;
                             break;
                         }
                         case 2: {
                             var current = controller.toRadian(script.theta);
-                            var target = controller.toRadian(
-                                script.targetTheta
-                            );
-                            if (
-                                controller.controlAngleFine(current, target) ==
-                                false
-                            ) {
+                            var target = controller.toRadian(script.targetTheta);
+                            if (controller.controlAngleFine(current, target) == false) {
                                 sq.leftWheel = 0;
                                 sq.rightWheel = 0;
                                 script.isMoving = false;
@@ -1229,8 +1167,8 @@ Entry.Albert.getBlocks = function() {
             },
         },
         albert_set_eye_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1243,6 +1181,8 @@ Entry.Albert.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -1257,6 +1197,8 @@ Entry.Albert.getBlocks = function() {
                     ],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1292,8 +1234,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.set_eye(%1, %2)'] },
         },
         albert_clear_eye: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1306,6 +1248,8 @@ Entry.Albert.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1339,8 +1283,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.clear_eye(%1)'] },
         },
         albert_body_led: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1352,6 +1296,8 @@ Entry.Albert.getBlocks = function() {
                     ],
                     value: 'ON',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1379,8 +1325,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.body_led(%1)'] },
         },
         albert_front_led: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1392,6 +1338,8 @@ Entry.Albert.getBlocks = function() {
                     ],
                     value: 'ON',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1419,8 +1367,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.front_led(%1)'] },
         },
         albert_beep: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1464,8 +1412,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.beep()'] },
         },
         albert_change_buzzer_by: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1505,8 +1453,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.change_buzzer(%1)'] },
         },
         albert_set_buzzer_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1545,8 +1493,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.set_buzzer(%1)'] },
         },
         albert_clear_buzzer: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1572,8 +1520,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.clear_buzzer()'] },
         },
         albert_play_note_for: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1595,6 +1543,8 @@ Entry.Albert.getBlocks = function() {
                     ],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -1609,6 +1559,8 @@ Entry.Albert.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1679,8 +1631,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.play_note(%1, %2, %3)'] },
         },
         albert_rest_for: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1737,8 +1689,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.rest(%1)'] },
         },
         albert_change_tempo_by: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1776,8 +1728,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.change_tempo(%1)'] },
         },
         albert_set_tempo_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1815,8 +1767,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.set_tempo(%1)'] },
         },
         albert_move_forward: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1856,8 +1808,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.move_forward()'] },
         },
         albert_move_backward: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1897,8 +1849,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.move_backward()'] },
         },
         albert_turn_around: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1910,6 +1862,8 @@ Entry.Albert.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1956,8 +1910,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.turn_around()'] },
         },
         albert_set_led_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1970,6 +1924,8 @@ Entry.Albert.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -1984,6 +1940,8 @@ Entry.Albert.getBlocks = function() {
                     ],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -2014,8 +1972,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.set_led(%1, %2)'] },
         },
         albert_clear_led: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2028,6 +1986,8 @@ Entry.Albert.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -2056,8 +2016,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.clear_led(%1)'] },
         },
         albert_change_wheels_by: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2070,6 +2030,8 @@ Entry.Albert.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -2097,23 +2059,15 @@ Entry.Albert.getBlocks = function() {
 
                 if (direction == 'LEFT') {
                     sq.leftWheel =
-                        sq.leftWheel != undefined
-                            ? sq.leftWheel + value
-                            : pd.leftWheel + value;
+                        sq.leftWheel != undefined ? sq.leftWheel + value : pd.leftWheel + value;
                 } else if (direction == 'RIGHT')
                     sq.rightWheel =
-                        sq.rightWheel != undefined
-                            ? sq.rightWheel + value
-                            : pd.rightWheel + value;
+                        sq.rightWheel != undefined ? sq.rightWheel + value : pd.rightWheel + value;
                 else {
                     sq.leftWheel =
-                        sq.leftWheel != undefined
-                            ? sq.leftWheel + value
-                            : pd.leftWheel + value;
+                        sq.leftWheel != undefined ? sq.leftWheel + value : pd.leftWheel + value;
                     sq.rightWheel =
-                        sq.rightWheel != undefined
-                            ? sq.rightWheel + value
-                            : pd.rightWheel + value;
+                        sq.rightWheel != undefined ? sq.rightWheel + value : pd.rightWheel + value;
                 }
 
                 return script.callReturn();
@@ -2121,8 +2075,8 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.change_wheels(%1, %2)'] },
         },
         albert_set_wheels_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2135,6 +2089,8 @@ Entry.Albert.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',

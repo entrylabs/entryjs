@@ -48,6 +48,9 @@ Entry.RenderView = class RenderView {
 
             this.svgBlockGroup = this.svgGroup.elem('g');
             this.svgBlockGroup.board = this;
+
+            this.svgCommentGroup = this.svgGroup.elem('g');
+            this.svgCommentGroup.board = this;
         }
     }
 
@@ -84,6 +87,9 @@ Entry.RenderView = class RenderView {
 
             this.svgBlockGroup = this.svgGroup.elem('g');
             this.svgBlockGroup.board = this;
+
+            this.svgCommentGroup = this.svgGroup.elem('g');
+            this.svgCommentGroup.board = this;
         }
 
         code.createView(this);
@@ -149,8 +155,10 @@ Entry.RenderView = class RenderView {
         this.svgThreadGroup.remove();
         this.svgBlockGroup = codeView.svgBlockGroup;
         this.svgThreadGroup = codeView.svgThreadGroup;
+        this.svgCommentGroup = codeView.svgCommentGroup;
         this.svgGroup.appendChild(this.svgThreadGroup);
         this.svgGroup.appendChild(this.svgBlockGroup);
+        this.svgGroup.appendChild(this.svgCommentGroup);
     }
 
     resize(isImmediate) {

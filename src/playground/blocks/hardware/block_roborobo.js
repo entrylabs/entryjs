@@ -6,8 +6,8 @@ Entry.Roborobo_Roduino = {
     url: 'http://www.roborobo.co.kr',
     imageName: 'roborobo_roduino.png',
     title: {
-        "ko": "로두이노",
-        "en": "Roduino"
+        ko: '로두이노',
+        en: 'Roduino',
     },
     INSTRUCTION: {
         INPUT: 0,
@@ -44,120 +44,120 @@ Entry.Roborobo_Roduino = {
                 type: 'input',
                 pos: {
                     x: 0,
-                    y: 0
-                }
+                    y: 0,
+                },
             },
             a1: {
                 name: 'A1',
                 type: 'input',
                 pos: {
                     x: 0,
-                    y: 0
-                }
+                    y: 0,
+                },
             },
             a2: {
                 name: 'A2',
                 type: 'input',
                 pos: {
                     x: 0,
-                    y: 0
-                }
+                    y: 0,
+                },
             },
             a3: {
                 name: 'A3',
                 type: 'input',
                 pos: {
                     x: 0,
-                    y: 0
-                }
+                    y: 0,
+                },
             },
             a4: {
                 name: 'A4',
                 type: 'input',
                 pos: {
                     x: 0,
-                    y: 0
-                }
+                    y: 0,
+                },
             },
             a5: {
                 name: 'A5',
                 type: 'input',
                 pos: {
                     x: 0,
-                    y: 0
-                }
+                    y: 0,
+                },
             },
             2: {
                 name: 'D2',
                 type: 'input',
                 pos: {
                     x: 0,
-                    y: 0
-                }
+                    y: 0,
+                },
             },
             3: {
                 name: 'D3',
                 type: 'input',
                 pos: {
                     x: 0,
-                    y: 0
-                }
+                    y: 0,
+                },
             },
             4: {
                 name: 'D4',
                 type: 'input',
                 pos: {
                     x: 0,
-                    y: 0
-                }
+                    y: 0,
+                },
             },
             5: {
                 name: 'D5',
                 type: 'input',
                 pos: {
                     x: 0,
-                    y: 0
-                }
+                    y: 0,
+                },
             },
             6: {
                 name: 'D6',
                 type: 'input',
                 pos: {
                     x: 0,
-                    y: 0
-                }
+                    y: 0,
+                },
             },
             7: {
                 name: 'D7',
                 type: 'input',
                 pos: {
                     x: 0,
-                    y: 0
-                }
+                    y: 0,
+                },
             },
             8: {
                 name: 'D8',
                 type: 'input',
                 pos: {
                     x: 0,
-                    y: 0
-                }
+                    y: 0,
+                },
             },
             9: {
                 name: 'D9',
                 type: 'input',
                 pos: {
                     x: 0,
-                    y: 0
-                }
+                    y: 0,
+                },
             },
             10: {
                 name: 'D10',
                 type: 'input',
                 pos: {
                     x: 0,
-                    y: 0
-                }
+                    y: 0,
+                },
             },
         },
         mode: 'both',
@@ -209,8 +209,8 @@ Entry.Roborobo_SchoolKit = {
     url: 'http://www.roborobo.co.kr',
     imageName: 'roborobo_schoolkit.png',
     title: {
-        "ko": "스쿨키트",
-        "en": "School Kit"
+        ko: '스쿨키트',
+        en: 'School Kit',
     },
     pinMode: {
         INPUT: 0,
@@ -247,56 +247,56 @@ Entry.Roborobo_SchoolKit = {
                 type: 'input',
                 pos: {
                     x: 0,
-                    y: 0
-                }
+                    y: 0,
+                },
             },
             '1': {
                 name: 'D2',
                 type: 'input',
                 pos: {
                     x: 0,
-                    y: 0
-                }
+                    y: 0,
+                },
             },
             '2': {
                 name: 'D3',
                 type: 'input',
                 pos: {
                     x: 0,
-                    y: 0
-                }
+                    y: 0,
+                },
             },
             '3': {
                 name: 'D4',
                 type: 'input',
                 pos: {
                     x: 0,
-                    y: 0
-                }
+                    y: 0,
+                },
             },
             '4': {
                 name: 'D5',
                 type: 'input',
                 pos: {
                     x: 0,
-                    y: 0
-                }
+                    y: 0,
+                },
             },
             '5': {
                 name: 'D6',
                 type: 'input',
                 pos: {
                     x: 0,
-                    y: 0
-                }
+                    y: 0,
+                },
             },
             '6': {
                 name: 'D7',
                 type: 'input',
                 pos: {
                     x: 0,
-                    y: 0
-                }
+                    y: 0,
+                },
             },
         },
         mode: 'both',
@@ -322,15 +322,17 @@ Entry.Roborobo_Roduino.getBlocks = function() {
     return {
         //region roduino 로두이노
         roduino_on_block: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [{
-                type: 'Block',
-                accept: 'string',
-            }, ],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
             events: {},
             def: {
                 params: [null],
@@ -344,19 +346,21 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: ['Roborobo_roduino.roduino_on_block()']
+                py: ['Roborobo_roduino.roduino_on_block()'],
             },
         },
         roduino_off_block: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [{
-                type: 'Block',
-                accept: 'string',
-            }, ],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
             events: {},
             def: {
                 params: [null],
@@ -370,12 +374,12 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: ['Roborobo_roduino.roduino_off_block()']
+                py: ['Roborobo_roduino.roduino_off_block()'],
             },
         },
         roduino_get_analog_number: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -391,6 +395,7 @@ Entry.Roborobo_Roduino.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
@@ -406,29 +411,34 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [{
-                    syntax: '%1',
-                    textParams: [{
-                        type: 'Dropdown',
-                        options: [
-                            ['0', '0'],
-                            ['1', '1'],
-                            ['2', '2'],
-                            ['3', '3'],
-                            ['4', '4'],
-                            ['5', '5'],
+                py: [
+                    {
+                        syntax: '%1',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['0', '0'],
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                ],
+                                value: '0',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                            },
                         ],
-                        value: '0',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_HW,
-                    }, ],
-                    keyOption: 'roduino_get_analog_number',
-                }, ],
+                        keyOption: 'roduino_get_analog_number',
+                    },
+                ],
             },
         },
         roduino_get_port_number: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -445,6 +455,7 @@ Entry.Roborobo_Roduino.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
@@ -460,42 +471,51 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [{
-                    syntax: '%1',
-                    textParams: [{
-                        type: 'Dropdown',
-                        options: [
-                            ['2', '2'],
-                            ['3', '3'],
-                            ['4', '4'],
-                            ['5', '5'],
-                            ['6', '6'],
-                            ['7', '7'],
-                            ['8', '8'],
+                py: [
+                    {
+                        syntax: '%1',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                    ['8', '8'],
+                                ],
+                                value: '2',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                            },
                         ],
-                        value: '2',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_HW,
-                    }, ],
-                    keyOption: 'roduino_get_port_number',
-                }, ],
+                        keyOption: 'roduino_get_port_number',
+                    },
+                ],
             },
         },
         roduino_get_analog_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [{
-                type: 'Block',
-                accept: 'string',
-            }, ],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
             events: {},
             def: {
-                params: [{
-                    type: 'roduino_get_analog_number',
-                }, ],
+                params: [
+                    {
+                        type: 'roduino_get_analog_number',
+                    },
+                ],
                 type: 'roduino_get_analog_value',
             },
             paramsKeyMap: {
@@ -509,31 +529,39 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [{
-                    syntax: 'Roborobo_roduino.read_analog(%1)',
-                    blockType: 'param',
-                    textParams: [{
-                        type: 'Block',
-                        accept: 'string',
-                    }, ],
-                }, ],
+                py: [
+                    {
+                        syntax: 'Roborobo_roduino.read_analog(%1)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
             },
         },
         roduino_get_digital_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [{
-                type: 'Block',
-                accept: 'string',
-            }, ],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
             events: {},
             def: {
-                params: [{
-                    type: 'roduino_get_port_number',
-                }, ],
+                params: [
+                    {
+                        type: 'roduino_get_port_number',
+                    },
+                ],
                 type: 'roduino_get_digital_value',
             },
             paramsKeyMap: {
@@ -544,7 +572,22 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             func: function(sprite, script) {
                 var signal = script.getNumberValue('VALUE', script);
                 if (!Entry.hw.sendQueue.digitalPinMode) {
-                    Entry.hw.sendQueue.digitalPinMode = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
+                    Entry.hw.sendQueue.digitalPinMode = [
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                    ];
                 }
                 Entry.hw.sendQueue.digitalPinMode[signal] =
                     Entry.Roborobo_Roduino.INSTRUCTION.INPUT;
@@ -553,19 +596,23 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [{
-                    syntax: 'Roborobo_roduino.read_digital(%1)',
-                    blockType: 'param',
-                    textParams: [{
-                        type: 'Block',
-                        accept: 'string',
-                    }, ],
-                }, ],
+                py: [
+                    {
+                        syntax: 'Roborobo_roduino.read_digital(%1)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
             },
         },
         roduino_get_color: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -580,6 +627,7 @@ Entry.Roborobo_Roduino.getBlocks = function() {
                     ],
                     value: 'red',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
@@ -628,34 +676,37 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [{
-                    syntax: 'Roborobo_roduino.read_color(%1)',
-                    textParams: [{
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.roborobo_color_red, 'red'],
-                            [Lang.Blocks.roborobo_color_green, 'green'],
-                            [Lang.Blocks.roborobo_color_blue, 'blue'],
-                            [
-                                Lang.Blocks.roborobo_color_yellow,
-                                'yellow',
-                            ],
+                py: [
+                    {
+                        syntax: 'Roborobo_roduino.read_color(%1)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.roborobo_color_red, 'red'],
+                                    [Lang.Blocks.roborobo_color_green, 'green'],
+                                    [Lang.Blocks.roborobo_color_blue, 'blue'],
+                                    [Lang.Blocks.roborobo_color_yellow, 'yellow'],
+                                ],
+                                value: 'red',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
                         ],
-                        value: 'red',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_HW,
-                        converter: Entry.block.converters.returnStringValue,
-                    }, ],
-                }, ],
+                    },
+                ],
             },
         },
         roduino_get_sensor_analog_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [{
+            params: [
+                {
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.roborobo_get_temperutre, 'temperature'],
@@ -667,7 +718,8 @@ Entry.Roborobo_Roduino.getBlocks = function() {
                     ],
                     value: 'temperature',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -735,57 +787,49 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [{
-                    syntax: 'Roborobo_roduino.read_analog_sensor(%1, %2)',
-                    textParams: [{
-                            type: 'Dropdown',
-                            options: [
-                                [
-                                    Lang.Blocks.roborobo_get_temperutre,
-                                    'temperature',
+                py: [
+                    {
+                        syntax: 'Roborobo_roduino.read_analog_sensor(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.roborobo_get_temperutre, 'temperature'],
+                                    [Lang.Blocks.roborobo_get_joystick_x, 'joystickX'],
+                                    [Lang.Blocks.roborobo_get_joystick_y, 'joystickY'],
+                                    [Lang.Blocks.roborobo_get_light, 'light'],
+                                    [Lang.Blocks.roborobo_get_dial, 'dial'],
+                                    [Lang.Blocks.roborobo_get_keypad_a, 'keypad'],
                                 ],
-                                [
-                                    Lang.Blocks.roborobo_get_joystick_x,
-                                    'joystickX',
-                                ],
-                                [
-                                    Lang.Blocks.roborobo_get_joystick_y,
-                                    'joystickY',
-                                ],
-                                [Lang.Blocks.roborobo_get_light, 'light'],
-                                [Lang.Blocks.roborobo_get_dial, 'dial'],
-                                [
-                                    Lang.Blocks.roborobo_get_keypad_a,
-                                    'keypad',
-                                ],
-                            ],
-                            value: 'temperature',
-                            fontSize: 11,
-                            arrowColor: EntryStatic.ARROW_COLOR_HW,
-                            converter: Entry.block.converters.returnStringValue,
-                        },
-                        {
-                            type: 'Block',
-                            accept: 'string',
-                        },
-                    ],
-                }, ],
+                                value: 'temperature',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
             },
         },
         roduino_get_sensor_digital_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [{
+            params: [
+                {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.roborobo_get_ultrasonic, 'ultrasonic'],
-                    ],
+                    options: [[Lang.Blocks.roborobo_get_ultrasonic, 'ultrasonic']],
                     value: 'ultrasonic',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -814,7 +858,22 @@ Entry.Roborobo_Roduino.getBlocks = function() {
                 switch (sensor) {
                     case 'ultrasonic':
                         if (!Entry.hw.sendQueue.digitalPinMode) {
-                            Entry.hw.sendQueue.digitalPinMode = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
+                            Entry.hw.sendQueue.digitalPinMode = [
+                                -1,
+                                -1,
+                                -1,
+                                -1,
+                                -1,
+                                -1,
+                                -1,
+                                -1,
+                                -1,
+                                -1,
+                                -1,
+                                -1,
+                                -1,
+                                -1,
+                            ];
                         }
                         Entry.hw.sendQueue.digitalPinMode[signal] =
                             Entry.Roborobo_Roduino.INSTRUCTION.SONAR;
@@ -825,46 +884,44 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [{
-                    syntax: 'Roborobo_roduino.read_digital_sensor(%1, %2)',
-                    textParams: [{
-                            type: 'Dropdown',
-                            options: [
-                                [
-                                    Lang.Blocks.roborobo_get_ultrasonic,
-                                    'ultrasonic',
-                                ],
-                            ],
-                            value: 'ultrasonic',
-                            fontSize: 11,
-                            arrowColor: EntryStatic.ARROW_COLOR_HW,
-                            converter: Entry.block.converters.returnStringValue,
-                        },
-                        {
-                            type: 'Block',
-                            accept: 'string',
-                        },
-                    ],
-                }, ],
+                py: [
+                    {
+                        syntax: 'Roborobo_roduino.read_digital_sensor(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [[Lang.Blocks.roborobo_get_ultrasonic, 'ultrasonic']],
+                                value: 'ultrasonic',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
             },
         },
         roduino_set_digital: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [{
+            params: [
+                {
                     type: 'Block',
                     accept: 'string',
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.roborobo_on, 'on'],
-                        [Lang.Blocks.roborobo_off, 'off'],
-                    ],
+                    options: [[Lang.Blocks.roborobo_on, 'on'], [Lang.Blocks.roborobo_off, 'off']],
                     value: 'on',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
@@ -875,7 +932,8 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [{
+                params: [
+                    {
                         type: 'roduino_get_port_number',
                     },
                     null,
@@ -894,54 +952,71 @@ Entry.Roborobo_Roduino.getBlocks = function() {
                 var operator = script.getField('OPERATOR');
                 var value = operator == 'on' ? 1 : 0;
                 if (!Entry.hw.sendQueue.digitalPinMode) {
-                    Entry.hw.sendQueue.digitalPinMode = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
+                    Entry.hw.sendQueue.digitalPinMode = [
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                    ];
                 }
-                Entry.hw.sendQueue.digitalPinMode[pin] =
-                    Entry.Roborobo_Roduino.INSTRUCTION.OUTPUT;
+                Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_Roduino.INSTRUCTION.OUTPUT;
 
                 Entry.hw.setDigitalPortValue(pin, value);
                 return script.callReturn();
             },
             syntax: {
                 js: [],
-                py: [{
-                    syntax: 'Roborobo_roduino.wirte_digital(%1, %2)',
-                    textParams: [{
-                            type: 'Block',
-                            accept: 'string',
-                        },
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                [Lang.Blocks.roborobo_on, 'on'],
-                                [Lang.Blocks.roborobo_off, 'off'],
-                            ],
-                            value: 'on',
-                            fontSize: 11,
-                            arrowColor: EntryStatic.ARROW_COLOR_HW,
-                            converter: Entry.block.converters.returnStringValue,
-                        },
-                    ],
-                }, ],
+                py: [
+                    {
+                        syntax: 'Roborobo_roduino.wirte_digital(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.roborobo_on, 'on'],
+                                    [Lang.Blocks.roborobo_off, 'off'],
+                                ],
+                                value: 'on',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
             },
         },
         roduino_get_pwm_port_number: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
-            params: [{
-                type: 'Dropdown',
-                options: [
-                    ['3', 3],
-                    ['5', 5],
-                    ['6', 6]
-                ],
-                value: 3,
-                fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_HW,
-            }, ],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [['3', 3], ['5', 5], ['6', 6]],
+                    value: 3,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
             events: {},
             def: {
                 params: [null],
@@ -954,53 +1029,57 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [{
-                    syntax: '%1',
-                    textParams: [{
-                        type: 'Dropdown',
-                        options: [
-                            ['3', 3],
-                            ['5', 5],
-                            ['6', 6]
+                py: [
+                    {
+                        syntax: '%1',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [['3', 3], ['5', 5], ['6', 6]],
+                                value: 3,
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                            },
                         ],
-                        value: 3,
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_HW,
-                    }, ],
-                    keyOption: 'roduino_get_pwm_port_number',
-                }, ],
+                        keyOption: 'roduino_get_pwm_port_number',
+                    },
+                ],
             },
         },
         roduino_get_pwm_output_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
-            params: [{
-                type: 'Dropdown',
-                options: [
-                    ['0', '0'],
-                    ['1', '1'],
-                    ['2', '2'],
-                    ['3', '3'],
-                    ['4', '4'],
-                    ['5', '5'],
-                    ['6', '6'],
-                    ['7', '7'],
-                    ['8', '8'],
-                    ['9', '9'],
-                    ['10', '10'],
-                    ['11', '11'],
-                    ['12', '12'],
-                    ['13', '13'],
-                    ['14', '14'],
-                    ['15', '15'],
-                ],
-                value: '0',
-                fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_HW,
-            }, ],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['0', '0'],
+                        ['1', '1'],
+                        ['2', '2'],
+                        ['3', '3'],
+                        ['4', '4'],
+                        ['5', '5'],
+                        ['6', '6'],
+                        ['7', '7'],
+                        ['8', '8'],
+                        ['9', '9'],
+                        ['10', '10'],
+                        ['11', '11'],
+                        ['12', '12'],
+                        ['13', '13'],
+                        ['14', '14'],
+                        ['15', '15'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
             events: {},
             def: {
                 params: [null],
@@ -1013,42 +1092,48 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [{
-                    syntax: '%1',
-                    textParams: [{
-                        type: 'Dropdown',
-                        options: [
-                            ['0', '0'],
-                            ['1', '1'],
-                            ['2', '2'],
-                            ['3', '3'],
-                            ['4', '4'],
-                            ['5', '5'],
-                            ['6', '6'],
-                            ['7', '7'],
-                            ['8', '8'],
-                            ['9', '9'],
-                            ['10', '10'],
-                            ['11', '11'],
-                            ['12', '12'],
-                            ['13', '13'],
-                            ['14', '14'],
-                            ['15', '15'],
+                py: [
+                    {
+                        syntax: '%1',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['0', '0'],
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                    ['8', '8'],
+                                    ['9', '9'],
+                                    ['10', '10'],
+                                    ['11', '11'],
+                                    ['12', '12'],
+                                    ['13', '13'],
+                                    ['14', '14'],
+                                    ['15', '15'],
+                                ],
+                                value: '0',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                            },
                         ],
-                        value: '0',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_HW,
-                    }, ],
-                    keyOption: 'roduino_get_pwm_output_value',
-                }, ],
+                        keyOption: 'roduino_get_pwm_output_value',
+                    },
+                ],
             },
         },
         roduino_set_pwm_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [{
+            params: [
+                {
                     type: 'Block',
                     accept: 'string',
                 },
@@ -1058,13 +1143,14 @@ Entry.Roborobo_Roduino.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
             events: {},
             def: {
-                params: [{
+                params: [
+                    {
                         type: 'roduino_get_pwm_port_number',
                     },
                     {
@@ -1085,48 +1171,64 @@ Entry.Roborobo_Roduino.getBlocks = function() {
                 var value = script.getNumberValue('VALUE');
 
                 if (!Entry.hw.sendQueue.digitalPinMode) {
-                    Entry.hw.sendQueue.digitalPinMode = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
+                    Entry.hw.sendQueue.digitalPinMode = [
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                    ];
                 }
 
-                Entry.hw.sendQueue.digitalPinMode[pin] =
-                    Entry.Roborobo_Roduino.INSTRUCTION.PWM;
+                Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_Roduino.INSTRUCTION.PWM;
 
                 Entry.hw.setDigitalPortValue(pin, value);
                 return script.callReturn();
             },
             syntax: {
                 js: [],
-                py: [{
-                    syntax: 'Roborobo_roduino.write_analog(%1, %2)',
-                    textParams: [{
-                            type: 'Block',
-                            accept: 'string',
-                        },
-                        {
-                            type: 'Block',
-                            accept: 'string',
-                        },
-                    ],
-                }, ],
+                py: [
+                    {
+                        syntax: 'Roborobo_roduino.write_analog(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
             },
         },
         roduino_get_servo_port_number: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
-            params: [{
-                type: 'Dropdown',
-                options: [
-                    ['3', 3],
-                    ['5', 5],
-                    ['6', 6]
-                ],
-                value: 3,
-                fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_HW,
-            }, ],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [['3', 3], ['5', 5], ['6', 6]],
+                    value: 3,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
             events: {},
             def: {
                 params: [null],
@@ -1140,29 +1242,31 @@ Entry.Roborobo_Roduino.getBlocks = function() {
 
             syntax: {
                 js: [],
-                py: [{
-                    syntax: '%1',
-                    textParams: [{
-                        type: 'Dropdown',
-                        options: [
-                            ['3', 3],
-                            ['5', 5],
-                            ['6', 6]
+                py: [
+                    {
+                        syntax: '%1',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [['3', 3], ['5', 5], ['6', 6]],
+                                value: 3,
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                            },
                         ],
-                        value: 3,
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_HW,
-                    }, ],
-                    keyOption: 'roduino_get_servo_port_number',
-                }, ],
+                        keyOption: 'roduino_get_servo_port_number',
+                    },
+                ],
             },
         },
         roduino_set_servo_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [{
+            params: [
+                {
                     type: 'Block',
                     accept: 'string',
                 },
@@ -1172,13 +1276,14 @@ Entry.Roborobo_Roduino.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
             events: {},
             def: {
-                params: [{
+                params: [
+                    {
                         type: 'roduino_get_servo_port_number',
                     },
                     {
@@ -1200,11 +1305,25 @@ Entry.Roborobo_Roduino.getBlocks = function() {
                 var value = script.getNumberValue('VALUE');
 
                 if (!Entry.hw.sendQueue.digitalPinMode) {
-                    Entry.hw.sendQueue.digitalPinMode = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
+                    Entry.hw.sendQueue.digitalPinMode = [
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                    ];
                 }
 
-                Entry.hw.sendQueue.digitalPinMode[pin] =
-                    Entry.Roborobo_Roduino.INSTRUCTION.SERVO;
+                Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_Roduino.INSTRUCTION.SERVO;
 
                 if (value < 0) {
                     value = 0;
@@ -1217,26 +1336,30 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [{
-                    syntax: 'Roborobo_roduino.move_servo(%1, %2)',
-                    textParams: [{
-                            type: 'Block',
-                            accept: 'string',
-                        },
-                        {
-                            type: 'Block',
-                            accept: 'string',
-                        },
-                    ],
-                }, ],
+                py: [
+                    {
+                        syntax: 'Roborobo_roduino.move_servo(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
             },
         },
         roduino_motor: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [{
+            params: [
+                {
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.roborobo_motor1, 'motor1'],
@@ -1244,6 +1367,7 @@ Entry.Roborobo_Roduino.getBlocks = function() {
                     ],
                     value: 'motor1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
@@ -1255,6 +1379,7 @@ Entry.Roborobo_Roduino.getBlocks = function() {
                     ],
                     value: 'cw',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
@@ -1302,12 +1427,25 @@ Entry.Roborobo_Roduino.getBlocks = function() {
                 }
 
                 if (!Entry.hw.sendQueue.digitalPinMode) {
-                    Entry.hw.sendQueue.digitalPinMode = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
+                    Entry.hw.sendQueue.digitalPinMode = [
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                    ];
                 }
-                Entry.hw.sendQueue.digitalPinMode[pin1] =
-                    Entry.Roborobo_Roduino.INSTRUCTION.OUTPUT;
-                Entry.hw.sendQueue.digitalPinMode[pin2] =
-                    Entry.Roborobo_Roduino.INSTRUCTION.OUTPUT;
+                Entry.hw.sendQueue.digitalPinMode[pin1] = Entry.Roborobo_Roduino.INSTRUCTION.OUTPUT;
+                Entry.hw.sendQueue.digitalPinMode[pin2] = Entry.Roborobo_Roduino.INSTRUCTION.OUTPUT;
 
                 Entry.hw.setDigitalPortValue(pin1, value1);
                 Entry.hw.setDigitalPortValue(pin2, value2);
@@ -1316,41 +1454,47 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [{
-                    syntax: 'Roborobo_roduino.move_motor(%1, %2)',
-                    textParams: [{
-                            type: 'Dropdown',
-                            options: [
-                                [Lang.Blocks.roborobo_motor1, 'motor1'],
-                                [Lang.Blocks.roborobo_motor2, 'motor2'],
-                            ],
-                            value: 'motor1',
-                            fontSize: 11,
-                            arrowColor: EntryStatic.ARROW_COLOR_HW,
-                            converter: Entry.block.converters.returnStringValue,
-                        },
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                [Lang.Blocks.roborobo_motor_CW, 'cw'],
-                                [Lang.Blocks.roborobo_motor_CCW, 'ccw'],
-                                [Lang.Blocks.roborobo_motor_stop, 'stop'],
-                            ],
-                            value: 'cw',
-                            fontSize: 11,
-                            arrowColor: EntryStatic.ARROW_COLOR_HW,
-                            converter: Entry.block.converters.returnStringValue,
-                        },
-                    ],
-                }, ],
+                py: [
+                    {
+                        syntax: 'Roborobo_roduino.move_motor(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.roborobo_motor1, 'motor1'],
+                                    [Lang.Blocks.roborobo_motor2, 'motor2'],
+                                ],
+                                value: 'motor1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.roborobo_motor_CW, 'cw'],
+                                    [Lang.Blocks.roborobo_motor_CCW, 'ccw'],
+                                    [Lang.Blocks.roborobo_motor_stop, 'stop'],
+                                ],
+                                value: 'cw',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
             },
         },
         roduino_set_color_pin: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [{
+            params: [
+                {
                     type: 'Block',
                     accept: 'string',
                 },
@@ -1370,7 +1514,8 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [{
+                params: [
+                    {
                         type: 'number',
                         params: ['2'],
                     },
@@ -1400,7 +1545,22 @@ Entry.Roborobo_Roduino.getBlocks = function() {
 
                 Entry.Roborobo_Roduino.ColorPin = [redPin, greenPin, bluePin];
                 if (!Entry.hw.sendQueue.digitalPinMode) {
-                    Entry.hw.sendQueue.digitalPinMode = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
+                    Entry.hw.sendQueue.digitalPinMode = [
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                    ];
                 }
                 Entry.hw.sendQueue.digitalPinMode[redPin] =
                     Entry.Roborobo_Roduino.INSTRUCTION.INPUT;
@@ -1433,15 +1593,17 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
     return {
         //region schoolkit 스쿨키트
         schoolkit_on_block: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [{
-                type: 'Block',
-                accept: 'string',
-            }, ],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
             events: {},
             def: {
                 params: [null],
@@ -1455,19 +1617,21 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: ['Roborobo_SchoolKit.schoolkit_on_block()']
+                py: ['Roborobo_SchoolKit.schoolkit_on_block()'],
             },
         },
         schoolkit_off_block: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [{
-                type: 'Block',
-                accept: 'string',
-            }, ],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
             events: {},
             def: {
                 params: [null],
@@ -1485,22 +1649,17 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             },
         },
         schoolkit_get_out_port_number: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['OUT1', 2],
-                        ['OUT2', 3],
-                        ['OUT3', 4],
-                        ['OUT4', 5],
-                        ['OUT5', 6],
-                    ],
+                    options: [['OUT1', 2], ['OUT2', 3], ['OUT3', 4], ['OUT4', 5], ['OUT5', 6]],
                     value: 2,
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
@@ -1516,29 +1675,34 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [{
-                    syntax: '%1',
-                    textParams: [{
-                        type: 'Dropdown',
-                        options: [
-                            ['OUT1', 2],
-                            ['OUT2', 3],
-                            ['OUT3', 4],
-                            ['OUT4', 5],
-                            ['OUT5', 6],
+                py: [
+                    {
+                        syntax: '%1',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['OUT1', 2],
+                                    ['OUT2', 3],
+                                    ['OUT3', 4],
+                                    ['OUT4', 5],
+                                    ['OUT5', 6],
+                                ],
+                                value: 2,
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
                         ],
-                        value: 2,
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_HW,
-                        converter: Entry.block.converters.returnStringValue,
-                    }, ],
-                    keyOption: 'schoolkit_get_out_port_number',
-                }, ],
+                        keyOption: 'schoolkit_get_out_port_number',
+                    },
+                ],
             },
         },
         schoolkit_get_servo_port_number: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -1547,6 +1711,7 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
                     options: [['OUT1', 2], ['OUT2', 3], ['OUT3', 4]],
                     value: 2,
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
@@ -1562,27 +1727,28 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [{
-                    syntax: '%1',
-                    textParams: [{
-                        type: 'Dropdown',
-                        options: [
-                            ['OUT1', 2],
-                            ['OUT2', 3],
-                            ['OUT3', 4],
+                py: [
+                    {
+                        syntax: '%1',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [['OUT1', 2], ['OUT2', 3], ['OUT3', 4]],
+                                value: 2,
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
                         ],
-                        value: 2,
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_HW,
-                        converter: Entry.block.converters.returnStringValue,
-                    }, ],
-                    keyOption: 'schoolkit_get_servo_port_number',
-                }, ],
+                        keyOption: 'schoolkit_get_servo_port_number',
+                    },
+                ],
             },
         },
         schoolkit_get_in_port_number: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -1599,6 +1765,7 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
                     ],
                     value: 7,
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
@@ -1614,45 +1781,49 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [{
-                    syntax: '%1',
-                    textParams: [{
-                        type: 'Dropdown',
-                        options: [
-                            ['IN1', 7],
-                            ['IN2', 8],
-                            ['IN3', 9],
-                            ['IN4', 10],
-                            ['IN5', 11],
-                            ['IN6', 12],
-                            ['IN7', 13],
+                py: [
+                    {
+                        syntax: '%1',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['IN1', 7],
+                                    ['IN2', 8],
+                                    ['IN3', 9],
+                                    ['IN4', 10],
+                                    ['IN5', 11],
+                                    ['IN6', 12],
+                                    ['IN7', 13],
+                                ],
+                                value: 7,
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
                         ],
-                        value: 7,
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_HW,
-                        converter: Entry.block.converters.returnStringValue,
-                    }, ],
-                    keyOption: 'schoolkit_get_in_port_number',
-                }, ],
+                        keyOption: 'schoolkit_get_in_port_number',
+                    },
+                ],
             },
         },
         schoolkit_set_output: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [{
+            params: [
+                {
                     type: 'Block',
                     accept: 'string',
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.roborobo_on, 'on'],
-                        [Lang.Blocks.roborobo_off, 'off'],
-                    ],
+                    options: [[Lang.Blocks.roborobo_on, 'on'], [Lang.Blocks.roborobo_off, 'off']],
                     value: 'on',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
@@ -1663,7 +1834,8 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [{
+                params: [
+                    {
                         type: 'schoolkit_get_out_port_number',
                     },
                     null,
@@ -1686,49 +1858,56 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
                     Entry.hw.sendQueue.digitalPinMode = {};
                 }
 
-                Entry.hw.sendQueue.digitalPinMode[pin] =
-                    Entry.Roborobo_SchoolKit.pinMode.OUTPUT;
+                Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.OUTPUT;
                 Entry.hw.sendQueue[pin] = value;
                 return script.callReturn();
             },
             syntax: {
                 js: [],
-                py: [{
-                    syntax: 'Roborobo_schoolkit.wirte_digital(%1, %2)',
-                    textParams: [{
-                            type: 'Block',
-                            accept: 'string',
-                        },
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                [Lang.Blocks.roborobo_on, 'on'],
-                                [Lang.Blocks.roborobo_off, 'off'],
-                            ],
-                            value: 'on',
-                            fontSize: 11,
-                            arrowColor: EntryStatic.ARROW_COLOR_HW,
-                            converter: Entry.block.converters.returnStringValue,
-                        },
-                    ],
-                }, ],
+                py: [
+                    {
+                        syntax: 'Roborobo_schoolkit.wirte_digital(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.roborobo_on, 'on'],
+                                    [Lang.Blocks.roborobo_off, 'off'],
+                                ],
+                                value: 'on',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
             },
         },
         schoolkit_get_input_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [{
-                type: 'Block',
-                accept: 'string',
-            }, ],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
             events: {},
             def: {
-                params: [{
-                    type: 'schoolkit_get_in_port_number',
-                }, ],
+                params: [
+                    {
+                        type: 'schoolkit_get_in_port_number',
+                    },
+                ],
                 type: 'schoolkit_get_input_value',
             },
             paramsKeyMap: {
@@ -1742,21 +1921,26 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [{
-                    syntax: 'Roborobo_schoolkit.read_digital(%1)',
-                    textParams: [{
-                        type: 'Block',
-                        accept: 'string',
-                    }, ],
-                }, ],
+                py: [
+                    {
+                        syntax: 'Roborobo_schoolkit.read_digital(%1)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
             },
         },
         schoolkit_motor: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [{
+            params: [
+                {
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.roborobo_motor1, 'motor1'],
@@ -1764,6 +1948,7 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
                     ],
                     value: 'motor1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
@@ -1788,7 +1973,8 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
                     ],
                     value: '45',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -1799,6 +1985,7 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
                     ],
                     value: 'cw',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
@@ -1841,10 +2028,8 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
                     Entry.hw.sendQueue.digitalPinMode = {};
                 }
 
-                Entry.hw.sendQueue.digitalPinMode[pin] =
-                    Entry.Roborobo_SchoolKit.pinMode.PWM;
-                Entry.hw.sendQueue.digitalPinMode[pin + 7] =
-                    Entry.Roborobo_SchoolKit.pinMode.PWM;
+                Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+                Entry.hw.sendQueue.digitalPinMode[pin + 7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                 if (operator == 'cw') {
                     Entry.hw.sendQueue[pin] = value;
                 } else if (operator == 'ccw') {
@@ -1856,65 +2041,72 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [{
-                    syntax: 'Roborobo_schoolkit.move_motor_speed(%1, %2, %3)',
-                    textParams: [{
-                            type: 'Dropdown',
-                            options: [
-                                [Lang.Blocks.roborobo_motor1, 'motor1'],
-                                [Lang.Blocks.roborobo_motor2, 'motor2'],
-                            ],
-                            value: 'motor1',
-                            fontSize: 11,
-                            arrowColor: EntryStatic.ARROW_COLOR_HW,
-                            converter: Entry.block.converters.returnStringValue,
-                        },
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                ['0', '45'],
-                                ['1', '59'],
-                                ['2', '73'],
-                                ['3', '87'],
-                                ['4', '101'],
-                                ['5', '115'],
-                                ['6', '129'],
-                                ['7', '143'],
-                                ['8', '157'],
-                                ['9', '171'],
-                                ['10', '185'],
-                                ['11', '199'],
-                                ['12', '213'],
-                                ['13', '227'],
-                                ['14', '241'],
-                                ['15', '255'],
-                            ],
-                            value: '45',
-                            fontSize: 11,
-                            arrowColor: EntryStatic.ARROW_COLOR_HW,
-                        },
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                [Lang.Blocks.roborobo_motor_CW, 'cw'],
-                                [Lang.Blocks.roborobo_motor_CCW, 'ccw'],
-                                [Lang.Blocks.roborobo_motor_stop, 'stop'],
-                            ],
-                            value: 'cw',
-                            fontSize: 11,
-                            arrowColor: EntryStatic.ARROW_COLOR_HW,
-                            converter: Entry.block.converters.returnStringValue,
-                        },
-                    ],
-                }, ],
+                py: [
+                    {
+                        syntax: 'Roborobo_schoolkit.move_motor_speed(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.roborobo_motor1, 'motor1'],
+                                    [Lang.Blocks.roborobo_motor2, 'motor2'],
+                                ],
+                                value: 'motor1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['0', '45'],
+                                    ['1', '59'],
+                                    ['2', '73'],
+                                    ['3', '87'],
+                                    ['4', '101'],
+                                    ['5', '115'],
+                                    ['6', '129'],
+                                    ['7', '143'],
+                                    ['8', '157'],
+                                    ['9', '171'],
+                                    ['10', '185'],
+                                    ['11', '199'],
+                                    ['12', '213'],
+                                    ['13', '227'],
+                                    ['14', '241'],
+                                    ['15', '255'],
+                                ],
+                                value: '45',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.roborobo_motor_CW, 'cw'],
+                                    [Lang.Blocks.roborobo_motor_CCW, 'ccw'],
+                                    [Lang.Blocks.roborobo_motor_stop, 'stop'],
+                                ],
+                                value: 'cw',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
             },
         },
         schoolkit_set_servo_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [{
+            params: [
+                {
                     type: 'Block',
                     accept: 'string',
                 },
@@ -1930,7 +2122,8 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [{
+                params: [
+                    {
                         type: 'schoolkit_get_servo_port_number',
                     },
                     {
@@ -1954,8 +2147,7 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
                 if (!Entry.hw.sendQueue.digitalPinMode) {
                     Entry.hw.sendQueue.digitalPinMode = {};
                 }
-                Entry.hw.sendQueue.digitalPinMode[pin] =
-                    Entry.Roborobo_SchoolKit.pinMode.SERVO;
+                Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.SERVO;
 
                 if (value < 0) {
                     value = 0;
@@ -1967,18 +2159,21 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [{
-                    syntax: 'Roborobo_schoolkit.move_servo(%1, %2)',
-                    textParams: [{
-                            type: 'Block',
-                            accept: 'string',
-                        },
-                        {
-                            type: 'Block',
-                            accept: 'string',
-                        },
-                    ],
-                }, ],
+                py: [
+                    {
+                        syntax: 'Roborobo_schoolkit.move_servo(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
             },
         },
         //endregion schoolkit 스쿨키트

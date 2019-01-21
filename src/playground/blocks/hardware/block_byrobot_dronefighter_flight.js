@@ -19,8 +19,8 @@ Entry.byrobot_dronefighter_flight = {
     url: 'http://www.byrobot.co.kr/',
     imageName: 'byrobot_dronefighter_flight.png',
     title: {
-        "ko": "바이로봇 드론파이터 드론",
-        "en": "BYROBOT Drone Fighter flight"
+        ko: '바이로봇 드론파이터 드론',
+        en: 'BYROBOT Drone Fighter flight',
     },
 
     // 초기화
@@ -58,9 +58,7 @@ Entry.byrobot_dronefighter_flight = {
                 pos: { x: 0, y: 0 },
             },
             state_coordinate: {
-                name:
-                    Lang.Blocks
-                        .byrobot_dronefighter_drone_state_mode_coordinate,
+                name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_coordinate,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
@@ -90,70 +88,52 @@ Entry.byrobot_dronefighter_flight = {
                 pos: { x: 0, y: 0 },
             },
             joystick_left_x: {
-                name:
-                    Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x,
+                name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_left_y: {
-                name:
-                    Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y,
+                name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_left_direction: {
-                name:
-                    Lang.Blocks
-                        .byrobot_dronefighter_controller_joystick_left_direction,
+                name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_direction,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_left_event: {
-                name:
-                    Lang.Blocks
-                        .byrobot_dronefighter_controller_joystick_left_event,
+                name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_event,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_left_command: {
-                name:
-                    Lang.Blocks
-                        .byrobot_dronefighter_controller_joystick_left_command,
+                name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_command,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_right_x: {
-                name:
-                    Lang.Blocks
-                        .byrobot_dronefighter_controller_joystick_right_x,
+                name: Lang.Blocks.byrobot_dronefighter_controller_joystick_right_x,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_right_y: {
-                name:
-                    Lang.Blocks
-                        .byrobot_dronefighter_controller_joystick_right_y,
+                name: Lang.Blocks.byrobot_dronefighter_controller_joystick_right_y,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_right_direction: {
-                name:
-                    Lang.Blocks
-                        .byrobot_dronefighter_controller_joystick_right_direction,
+                name: Lang.Blocks.byrobot_dronefighter_controller_joystick_right_direction,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_right_event: {
-                name:
-                    Lang.Blocks
-                        .byrobot_dronefighter_controller_joystick_right_event,
+                name: Lang.Blocks.byrobot_dronefighter_controller_joystick_right_event,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_right_command: {
-                name:
-                    Lang.Blocks
-                        .byrobot_dronefighter_controller_joystick_right_command,
+                name: Lang.Blocks.byrobot_dronefighter_controller_joystick_right_command,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
@@ -168,9 +148,7 @@ Entry.byrobot_dronefighter_flight = {
                 pos: { x: 0, y: 0 },
             },
             entryhw_countTransferReserved: {
-                name:
-                    Lang.Blocks
-                        .byrobot_dronefighter_entryhw_count_transfer_reserved,
+                name: Lang.Blocks.byrobot_dronefighter_entryhw_count_transfer_reserved,
                 type: 'output',
                 pos: { x: 0, y: 0 },
             },
@@ -448,14 +426,7 @@ Entry.byrobot_dronefighter_flight = {
         }
     },
 
-    setBuzzerScale: function(
-        script,
-        octave,
-        scale,
-        time,
-        flagDelay,
-        flagInstantly
-    ) {
+    setBuzzerScale: function(script, octave, scale, time, flagDelay, flagInstantly) {
         time = Math.max(time, 0);
         time = Math.min(time, 60000);
 
@@ -542,14 +513,7 @@ Entry.byrobot_dronefighter_flight = {
         }
     },
 
-    setVibrator: function(
-        script,
-        timeOn,
-        timeOff,
-        timeRun,
-        flagDelay,
-        flagInstantly
-    ) {
+    setVibrator: function(script, timeOn, timeOff, timeRun, flagDelay, flagInstantly) {
         timeRun = Math.max(timeRun, 0);
         timeRun = Math.min(timeRun, 60000);
 
@@ -623,11 +587,7 @@ Entry.byrobot_dronefighter_flight = {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
-                    this.transferMotorSingle(
-                        motorIndex,
-                        motorDirection,
-                        motorSpeed
-                    );
+                    this.transferMotorSingle(motorIndex, motorDirection, motorSpeed);
                 }
                 return script;
 
@@ -695,13 +655,7 @@ Entry.byrobot_dronefighter_flight = {
         }
     },
 
-    sendControlQuadSingle: function(
-        script,
-        controlTarget,
-        value,
-        time,
-        flagDelay
-    ) {
+    sendControlQuadSingle: function(script, controlTarget, value, time, flagDelay) {
         var timeDelay = 40;
         if (flagDelay) timeDelay = time;
 
@@ -744,15 +698,7 @@ Entry.byrobot_dronefighter_flight = {
         }
     },
 
-    sendControlQuad: function(
-        script,
-        roll,
-        pitch,
-        yaw,
-        throttle,
-        time,
-        flagDelay
-    ) {
+    sendControlQuad: function(script, roll, pitch, yaw, throttle, time, flagDelay) {
         var timeDelay = 40;
         if (flagDelay) timeDelay = time;
 
@@ -818,31 +764,22 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
         //region byrobot 바이로봇
         /* BYROBOT DroneFighter Flight Start */
         byrobot_dronefighter_flight_drone_value_attitude: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_attitude_roll,
-                            'attitude_roll',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_attitude_pitch,
-                            'attitude_pitch',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_dronefighter_drone_attitude_yaw,
-                            'attitude_yaw',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_drone_attitude_roll, 'attitude_roll'],
+                        [Lang.Blocks.byrobot_dronefighter_drone_attitude_pitch, 'attitude_pitch'],
+                        [Lang.Blocks.byrobot_dronefighter_drone_attitude_yaw, 'attitude_yaw'],
                     ],
                     value: 'attitude_roll', // 초기 선택항목 지정
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -860,8 +797,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_value_etc: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -869,32 +806,24 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_state_mode_vehicle,
+                            Lang.Blocks.byrobot_dronefighter_drone_state_mode_vehicle,
                             'state_modeVehicle',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_state_mode_flight,
+                            Lang.Blocks.byrobot_dronefighter_drone_state_mode_flight,
                             'state_modeFlight',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_state_mode_coordinate,
+                            Lang.Blocks.byrobot_dronefighter_drone_state_mode_coordinate,
                             'state_coordinate',
                         ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_state_battery,
-                            'state_battery',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_dronefighter_drone_irmessage,
-                            'irmessage_irdata',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_drone_state_battery, 'state_battery'],
+                        [Lang.Blocks.byrobot_dronefighter_drone_irmessage, 'irmessage_irdata'],
                     ],
                     value: 'irmessage_irdata', // 초기 선택항목 지정
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -912,8 +841,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_value_button: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -921,18 +850,15 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_button,
+                            Lang.Blocks.byrobot_dronefighter_controller_button_button,
                             'button_button',
                         ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_event,
-                            'button_event',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_event, 'button_event'],
                     ],
                     value: 'button_button', // 초기 선택항목 지정
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -950,8 +876,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_value_joystick: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -959,58 +885,50 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_left_x,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x,
                             'joystick_left_x',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_left_y,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y,
                             'joystick_left_y',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_left_direction,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_left_direction,
                             'joystick_left_direction',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_left_event,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_left_event,
                             'joystick_left_event',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_left_command,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_left_command,
                             'joystick_left_command',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_right_x,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_right_x,
                             'joystick_right_x',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_right_y,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_right_y,
                             'joystick_right_y',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_right_direction,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_right_direction,
                             'joystick_right_direction',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_right_event,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_right_event,
                             'joystick_right_event',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_right_command,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_right_command,
                             'joystick_right_command',
                         ],
                     ],
                     value: 'joystick_left_x', // 초기 선택항목 지정
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1028,8 +946,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_if_button_press: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -1037,69 +955,26 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_front_left, '1'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_front_right, '2'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_front_left_right, '3'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_center_up_left, '4'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_center_up_right, '8'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_center_up, '16'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_center_left, '32'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_center_right, '64'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_center_down, '128'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_bottom_left, '256'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_bottom_right, '512'],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_front_left,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_front_right,
-                            '2',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_front_left_right,
-                            '3',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_center_up_left,
-                            '4',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_center_up_right,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_center_up,
-                            '16',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_center_left,
-                            '32',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_center_right,
-                            '64',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_center_down,
-                            '128',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_bottom_left,
-                            '256',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_bottom_right,
-                            '512',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_bottom_left_right,
+                            Lang.Blocks.byrobot_dronefighter_controller_button_bottom_left_right,
                             '768',
                         ],
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1117,18 +992,15 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 var button = 'button_button'; // paramsKeyMap에 정의된 이름 사용
                 var buttonevent = 'button_event'; // paramsKeyMap에 정의된 이름 사용
 
-                if (
-                    read[button] == script.getField('BUTTON') &&
-                    read[buttonevent] == 2
-                )
+                if (read[button] == script.getField('BUTTON') && read[buttonevent] == 2)
                     return true;
                 else return false;
             },
             syntax: { js: [], py: [] },
         },
         byrobot_dronefighter_flight_controller_if_joystick_direction: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -1136,49 +1008,33 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks.byrobot_dronefighter_common_left,
-                            'joystick_left_direction',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_dronefighter_common_right,
-                            'joystick_right_direction',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_common_left, 'joystick_left_direction'],
+                        [Lang.Blocks.byrobot_dronefighter_common_right, 'joystick_right_direction'],
                     ],
                     value: 'joystick_left_direction',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_direction_left_up,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left_up,
                             '17',
                         ],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_up, '18'],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_direction_up,
-                            '18',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_direction_right_up,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right_up,
                             '20',
                         ],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left, '33'],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_direction_left,
-                            '33',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_direction_center,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_center,
                             '34',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_direction_right,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right,
                             '36',
                         ],
                         [
@@ -1186,11 +1042,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                                 .byrobot_dronefighter_controller_joystick_direction_left_down,
                             '65',
                         ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_direction_down,
-                            '66',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_down, '66'],
                         [
                             Lang.Blocks
                                 .byrobot_dronefighter_controller_joystick_direction_right_down,
@@ -1199,13 +1051,14 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                     ],
                     value: '34',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
             def: {
                 params: [null, null],
-                type:
-                    'byrobot_dronefighter_flight_controller_if_joystick_direction',
+                type: 'byrobot_dronefighter_flight_controller_if_joystick_direction',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -1223,8 +1076,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_light_manual_single_off: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1237,115 +1090,53 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             events: {},
             def: {
                 params: [null],
-                type:
-                    'byrobot_dronefighter_flight_controller_light_manual_single_off',
+                type: 'byrobot_dronefighter_flight_controller_light_manual_single_off',
             },
             paramsKeyMap: {},
             class: 'byrobot_dronefighter_flight_controller_light',
             isNotFor: ['byrobot_dronefighter_flight'],
             func: function(sprite, script) {
-                return Entry.byrobot_dronefighter_flight.setLightManual(
-                    script,
-                    0x11,
-                    0xff,
-                    0
-                );
+                return Entry.byrobot_dronefighter_flight.setLightManual(script, 0x11, 0xff, 0);
             },
         },
         byrobot_dronefighter_flight_controller_light_manual_single: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_all,
-                            '255',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_1,
-                            '128',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_2,
-                            '64',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_3,
-                            '32',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_4,
-                            '16',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_5,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_6,
-                            '4',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_blue,
-                            '2',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_red,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_all, '255'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_1, '128'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_2, '64'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_3, '32'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_4, '16'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_5, '8'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_6, '4'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_blue, '2'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_red, '1'],
                     ],
                     value: '128',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_on,
-                            '220',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_off,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_b25,
-                            '75',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_b50,
-                            '125',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_b75,
-                            '200',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_b100,
-                            '255',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_on, '220'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_off, '0'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_b25, '75'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_b50, '125'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_b75, '200'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_b100, '255'],
                     ],
                     value: '220',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1356,8 +1147,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             events: {},
             def: {
                 params: [null, null, null],
-                type:
-                    'byrobot_dronefighter_flight_controller_light_manual_single',
+                type: 'byrobot_dronefighter_flight_controller_light_manual_single',
             },
             paramsKeyMap: {
                 FLAGS: 0,
@@ -1377,8 +1167,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_light_manual_single_input: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1409,8 +1199,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_dronefighter_flight_controller_light_manual_single_input',
+                type: 'byrobot_dronefighter_flight_controller_light_manual_single_input',
             },
             paramsKeyMap: {
                 FLAGS: 0,
@@ -1430,8 +1219,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_light_manual_single_off: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1444,105 +1233,51 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             events: {},
             def: {
                 params: [null],
-                type:
-                    'byrobot_dronefighter_flight_drone_light_manual_single_off',
+                type: 'byrobot_dronefighter_flight_drone_light_manual_single_off',
             },
             paramsKeyMap: {},
             class: 'byrobot_dronefighter_flight_drone_light',
             isNotFor: ['byrobot_dronefighter_flight'],
             func: function(sprite, script) {
-                return Entry.byrobot_dronefighter_flight.setLightManual(
-                    script,
-                    0x10,
-                    0xff,
-                    0
-                );
+                return Entry.byrobot_dronefighter_flight.setLightManual(script, 0x10, 0xff, 0);
             },
         },
         byrobot_dronefighter_flight_drone_light_manual_single: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_all,
-                            '255',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_1,
-                            '128',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_2,
-                            '64',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_3,
-                            '32',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_4,
-                            '16',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_blue,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_red,
-                            '4',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_all, '255'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_1, '128'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_2, '64'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_3, '32'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_4, '16'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_blue, '8'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_red, '4'],
                     ],
                     value: '128',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_on,
-                            '220',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_off,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_b25,
-                            '75',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_b50,
-                            '125',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_b75,
-                            '200',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_b100,
-                            '255',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_on, '220'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_off, '0'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_b25, '75'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_b50, '125'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_b75, '200'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_b100, '255'],
                     ],
                     value: '220',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1573,8 +1308,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_light_manual_single_input: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1605,8 +1340,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_dronefighter_flight_drone_light_manual_single_input',
+                type: 'byrobot_dronefighter_flight_drone_light_manual_single_input',
             },
             paramsKeyMap: {
                 FLAGS: 0,
@@ -1626,8 +1360,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_buzzer_off: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1650,94 +1384,40 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_buzzer_scale: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['4', '3'],
-                        ['5', '4'],
-                        ['6', '5'],
-                        ['7', '6'],
-                        ['8', '7'],
-                    ],
+                    options: [['4', '3'], ['5', '4'], ['6', '5'], ['7', '6'], ['8', '7']],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_mute,
-                            '-1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_c,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_cs,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_d,
-                            '2',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_ds,
-                            '3',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_e,
-                            '4',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_f,
-                            '5',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_fs,
-                            '6',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_g,
-                            '7',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_gs,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_a,
-                            '9',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_as,
-                            '10',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_b,
-                            '11',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_mute, '-1'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_c, '0'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_cs, '1'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_d, '2'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_ds, '3'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_e, '4'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_f, '5'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_fs, '6'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_g, '7'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_gs, '8'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_a, '9'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_as, '10'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_b, '11'],
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1779,94 +1459,40 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_buzzer_scale_delay: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['4', '3'],
-                        ['5', '4'],
-                        ['6', '5'],
-                        ['7', '6'],
-                        ['8', '7'],
-                    ],
+                    options: [['4', '3'], ['5', '4'], ['6', '5'], ['7', '6'], ['8', '7']],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_mute,
-                            '-1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_c,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_cs,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_d,
-                            '2',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_ds,
-                            '3',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_e,
-                            '4',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_f,
-                            '5',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_fs,
-                            '6',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_g,
-                            '7',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_gs,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_a,
-                            '9',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_as,
-                            '10',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_b,
-                            '11',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_mute, '-1'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_c, '0'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_cs, '1'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_d, '2'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_ds, '3'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_e, '4'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_f, '5'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_fs, '6'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_g, '7'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_gs, '8'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_a, '9'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_as, '10'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_b, '11'],
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1889,8 +1515,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_dronefighter_flight_controller_buzzer_scale_delay',
+                type: 'byrobot_dronefighter_flight_controller_buzzer_scale_delay',
             },
             paramsKeyMap: {
                 OCTAVE: 0,
@@ -1923,94 +1548,40 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_buzzer_scale_reserve: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['4', '3'],
-                        ['5', '4'],
-                        ['6', '5'],
-                        ['7', '6'],
-                        ['8', '7'],
-                    ],
+                    options: [['4', '3'], ['5', '4'], ['6', '5'], ['7', '6'], ['8', '7']],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_mute,
-                            '-1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_c,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_cs,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_d,
-                            '2',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_ds,
-                            '3',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_e,
-                            '4',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_f,
-                            '5',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_fs,
-                            '6',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_g,
-                            '7',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_gs,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_a,
-                            '9',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_as,
-                            '10',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_b,
-                            '11',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_mute, '-1'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_c, '0'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_cs, '1'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_d, '2'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_ds, '3'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_e, '4'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_f, '5'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_fs, '6'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_g, '7'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_gs, '8'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_a, '9'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_as, '10'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_b, '11'],
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -2033,8 +1604,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_dronefighter_flight_controller_buzzer_scale_reserve',
+                type: 'byrobot_dronefighter_flight_controller_buzzer_scale_reserve',
             },
             paramsKeyMap: {
                 OCTAVE: 0,
@@ -2067,8 +1637,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_buzzer_hz: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2110,8 +1680,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_buzzer_hz_delay: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2153,18 +1723,12 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             func: function(sprite, script) {
                 var hz = parseInt(script.getNumberValue('HZ', script));
                 var time = parseInt(script.getNumberValue('TIME') * 1000);
-                return Entry.byrobot_dronefighter_flight.setBuzzerHz(
-                    script,
-                    hz,
-                    time,
-                    true,
-                    true
-                );
+                return Entry.byrobot_dronefighter_flight.setBuzzerHz(script, hz, time, true, true);
             },
         },
         byrobot_dronefighter_flight_controller_buzzer_hz_reserve: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2195,8 +1759,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_dronefighter_flight_controller_buzzer_hz_reserve',
+                type: 'byrobot_dronefighter_flight_controller_buzzer_hz_reserve',
             },
             paramsKeyMap: {
                 HZ: 0,
@@ -2217,8 +1780,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_vibrator_off: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2237,14 +1800,12 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             class: 'byrobot_dronefighter_flight_vibrator',
             isNotFor: ['byrobot_dronefighter_flight'],
             func: function(sprite, script) {
-                return Entry.byrobot_dronefighter_flight.setVibratorStop(
-                    script
-                );
+                return Entry.byrobot_dronefighter_flight.setVibratorStop(script);
             },
         },
         byrobot_dronefighter_flight_controller_vibrator_on_delay: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2267,8 +1828,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_dronefighter_flight_controller_vibrator_on_delay',
+                type: 'byrobot_dronefighter_flight_controller_vibrator_on_delay',
             },
             paramsKeyMap: {
                 TIMEON: 0,
@@ -2288,8 +1848,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_vibrator_on_reserve: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2312,8 +1872,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_dronefighter_flight_controller_vibrator_on_reserve',
+                type: 'byrobot_dronefighter_flight_controller_vibrator_on_reserve',
             },
             paramsKeyMap: {
                 TIMEON: 0,
@@ -2333,8 +1892,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_vibrator_delay: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2397,8 +1956,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_controller_vibrator_reserve: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2461,8 +2020,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_irmessage: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2494,15 +2053,12 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             isNotFor: ['byrobot_dronefighter_flight'],
             func: function(sprite, script) {
                 var irmessage = script.getNumberValue('IRMESSAGE', script);
-                return Entry.byrobot_dronefighter_flight.sendIrMessage(
-                    script,
-                    irmessage
-                );
+                return Entry.byrobot_dronefighter_flight.sendIrMessage(script, irmessage);
             },
         },
         byrobot_dronefighter_flight_drone_motor_stop: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2525,8 +2081,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_motorsingle: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2535,6 +2091,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                     options: [['1', '0'], ['2', '1'], ['3', '2'], ['4', '3']],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -2567,9 +2125,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             func: function(sprite, script) {
                 var motorIndex = parseInt(script.getField('MOTORINDEX'));
                 var motorDirection = 1;
-                var motorSpeed = parseInt(
-                    script.getNumberValue('MOTORSPEED', script)
-                );
+                var motorSpeed = parseInt(script.getNumberValue('MOTORSPEED', script));
 
                 return Entry.byrobot_dronefighter_flight.setMotorSingle(
                     script,
@@ -2580,8 +2136,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_motorsingle_input: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2621,12 +2177,9 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             class: 'byrobot_dronefighter_flight_motor',
             isNotFor: ['byrobot_dronefighter_flight'],
             func: function(sprite, script) {
-                var motorIndex =
-                    parseInt(script.getNumberValue('MOTORINDEX', script)) - 1;
+                var motorIndex = parseInt(script.getNumberValue('MOTORINDEX', script)) - 1;
                 var motorDirection = 1;
-                var motorSpeed = parseInt(
-                    script.getNumberValue('MOTORSPEED', script)
-                );
+                var motorSpeed = parseInt(script.getNumberValue('MOTORSPEED', script));
 
                 return Entry.byrobot_dronefighter_flight.setMotorSingle(
                     script,
@@ -2637,8 +2190,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_command_mode_vehicle_drone: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2651,22 +2204,18 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             events: {},
             def: {
                 params: [null],
-                type:
-                    'byrobot_dronefighter_flight_drone_command_mode_vehicle_drone',
+                type: 'byrobot_dronefighter_flight_drone_command_mode_vehicle_drone',
             },
             paramsKeyMap: {},
             class: 'byrobot_dronefighter_flight_control_flight',
             isNotFor: ['byrobot_dronefighter_flight'],
             func: function(sprite, script) {
-                return Entry.byrobot_dronefighter_flight.setModeVehicle(
-                    script,
-                    0x10
-                ); // 0x10 : Mode::Vehicle::Flight
+                return Entry.byrobot_dronefighter_flight.setModeVehicle(script, 0x10); // 0x10 : Mode::Vehicle::Flight
             },
         },
         byrobot_dronefighter_flight_drone_control_drone_takeoff: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2685,16 +2234,12 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             class: 'byrobot_dronefighter_flight_control_flight',
             isNotFor: ['byrobot_dronefighter_flight'],
             func: function(sprite, script) {
-                return Entry.byrobot_dronefighter_flight.setEventFlight(
-                    script,
-                    0x11,
-                    200
-                ); // 0x11 : FlightEvent::TakeOff
+                return Entry.byrobot_dronefighter_flight.setEventFlight(script, 0x11, 200); // 0x11 : FlightEvent::TakeOff
             },
         },
         byrobot_dronefighter_flight_drone_control_drone_landing: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2713,16 +2258,12 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             class: 'byrobot_dronefighter_flight_control_flight',
             isNotFor: ['byrobot_dronefighter_flight'],
             func: function(sprite, script) {
-                return Entry.byrobot_dronefighter_flight.setEventFlight(
-                    script,
-                    0x12,
-                    200
-                ); // 0x12 : FlightEvent::Landing
+                return Entry.byrobot_dronefighter_flight.setEventFlight(script, 0x12, 200); // 0x12 : FlightEvent::Landing
             },
         },
         byrobot_dronefighter_flight_drone_control_drone_stop: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2745,27 +2286,21 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_control_coordinate: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_coordinate_world,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_coordinate_local,
-                            '2',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_drone_coordinate_world, '1'],
+                        [Lang.Blocks.byrobot_dronefighter_drone_coordinate_local, '2'],
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -2794,8 +2329,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_control_drone_reset_heading: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2808,53 +2343,39 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             events: {},
             def: {
                 params: [null],
-                type:
-                    'byrobot_dronefighter_flight_drone_control_drone_reset_heading',
+                type: 'byrobot_dronefighter_flight_drone_control_drone_reset_heading',
             },
             paramsKeyMap: {},
             class: 'byrobot_dronefighter_flight_control_flight',
             isNotFor: ['byrobot_dronefighter_flight'],
             func: function(sprite, script) {
-                return Entry.byrobot_dronefighter_flight.sendCommand(
-                    script,
-                    0x10,
-                    0x22,
-                    0xa0
-                ); // 0x22 : CommandType::FlightEvent  // 0xA0 : FlightEvent::ResetHeading
+                return Entry.byrobot_dronefighter_flight.sendCommand(script, 0x10, 0x22, 0xa0); // 0x22 : CommandType::FlightEvent  // 0xA0 : FlightEvent::ResetHeading
             },
         },
         byrobot_dronefighter_flight_drone_control_quad_one: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
+                        [Lang.Blocks.byrobot_dronefighter_drone_control_quad_roll, 'control_roll'],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_control_quad_roll,
-                            'control_roll',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_control_quad_pitch,
+                            Lang.Blocks.byrobot_dronefighter_drone_control_quad_pitch,
                             'control_pitch',
                         ],
+                        [Lang.Blocks.byrobot_dronefighter_drone_control_quad_yaw, 'control_yaw'],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_control_quad_yaw,
-                            'control_yaw',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_control_quad_throttle,
+                            Lang.Blocks.byrobot_dronefighter_drone_control_quad_throttle,
                             'control_throttle',
                         ],
                     ],
                     value: 'control_throttle',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -2898,37 +2419,29 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_control_quad_one_delay: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
+                        [Lang.Blocks.byrobot_dronefighter_drone_control_quad_roll, 'control_roll'],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_control_quad_roll,
-                            'control_roll',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_control_quad_pitch,
+                            Lang.Blocks.byrobot_dronefighter_drone_control_quad_pitch,
                             'control_pitch',
                         ],
+                        [Lang.Blocks.byrobot_dronefighter_drone_control_quad_yaw, 'control_yaw'],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_control_quad_yaw,
-                            'control_yaw',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_control_quad_throttle,
+                            Lang.Blocks.byrobot_dronefighter_drone_control_quad_throttle,
                             'control_throttle',
                         ],
                     ],
                     value: 'control_throttle',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -2958,8 +2471,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_dronefighter_flight_drone_control_quad_one_delay',
+                type: 'byrobot_dronefighter_flight_drone_control_quad_one_delay',
             },
             paramsKeyMap: {
                 CONTROLTARGET: 0,
@@ -2971,9 +2483,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             func: function(sprite, script) {
                 var controlTarget = script.getField('CONTROLTARGET');
                 var value = parseInt(script.getNumberValue('VALUE', script));
-                var time = parseInt(
-                    script.getNumberValue('TIME', script) * 1000
-                );
+                var time = parseInt(script.getNumberValue('TIME', script) * 1000);
 
                 return Entry.byrobot_dronefighter_flight.sendControlQuadSingle(
                     script,
@@ -2985,8 +2495,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_control_quad: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3047,9 +2557,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
                 var roll = parseInt(script.getNumberValue('ROLL', script));
                 var pitch = parseInt(script.getNumberValue('PITCH', script));
                 var yaw = parseInt(script.getNumberValue('YAW', script));
-                var throttle = parseInt(
-                    script.getNumberValue('THROTTLE', script)
-                );
+                var throttle = parseInt(script.getNumberValue('THROTTLE', script));
 
                 return Entry.byrobot_dronefighter_flight.sendControlQuad(
                     script,

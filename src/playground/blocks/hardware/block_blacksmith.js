@@ -6,8 +6,8 @@ Entry.Blacksmith = {
     url: 'http://www.hanibot.com',
     imageName: 'blacksmith.png',
     title: {
-        "ko": "대장장이 보드",
-        "en": "Blacksmith Board"
+        ko: '대장장이 보드',
+        en: 'Blacksmith Board',
     },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
@@ -78,57 +78,62 @@ Entry.Blacksmith.setLanguage = function() {
     return {
         ko: {
             template: {
-                "blacksmith_toggle_on": "켜기",
-                "blacksmith_toggle_off": "끄기",
-                "blacksmith_lcd_first_line": "첫 번째",
-                "blacksmith_lcd_seconds_line": "두 번째",
-                "blacksmith_dcmotor_direction_forward": "정방향",
-                "blacksmith_dcmotor_direction_reverse": "역방향",
-                "blacksmith_btData_select_number": "숫자",
-                "blacksmith_btData_select_character": "문자",
-                "blacksmith_get_analog_value": "아날로그 %1 번 핀 센서 값",
-                "blacksmith_get_analog_mapping": "아날로그 %1 번 핀 센서 값의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼 값",
-                "blacksmith_get_digital_bluetooth": "블루투스 RX 2 핀 %1 데이터 값",
-                "blacksmith_get_digital_ultrasonic": "초음파 Trig %1 핀 Echo %2 핀 센서 값",
-                "blacksmith_get_digital_toggle": "디지털 %1 번 핀 센서 값",
-                "blacksmith_set_digital_toggle": "디지털 %1 번 핀 %2 %3",
-                "blacksmith_set_digital_pwm": "디지털 %1 번 핀을 %2 (으)로 정하기 %3",
-                "blacksmith_set_digital_rgbled": "디지털 %1 번 핀의 RGB LED를 빨강 %2 초록 %3 파랑 %4 로 정하기 %5",
-                "blacksmith_set_digital_servo": "디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3",
-                "blacksmith_set_digital_buzzer": "디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5",
-                "blacksmith_set_digital_dcmotor": "DC모터 %1 번 핀을 %2 %3 번 핀의 속도를 %4 로 정하기 %5",
-                "blacksmith_module_digital_lcd": "LCD화면 %1 줄에 %2 나타내기 %3",
-                "blacksmith_module_digital_bluetooth": "블루투스 TX 3 핀에 %1 데이터 보내기 %2",
-                "blacksmith_module_digital_oled" : "OLED화면 X 좌표 %1  Y 좌표 %2 에 %3 나타내기 %4",
-            }
+                blacksmith_toggle_on: '켜기',
+                blacksmith_toggle_off: '끄기',
+                blacksmith_lcd_first_line: '첫 번째',
+                blacksmith_lcd_seconds_line: '두 번째',
+                blacksmith_dcmotor_direction_forward: '정방향',
+                blacksmith_dcmotor_direction_reverse: '역방향',
+                blacksmith_btData_select_number: '숫자',
+                blacksmith_btData_select_character: '문자',
+                blacksmith_get_analog_value: '아날로그 %1 번 핀 센서 값',
+                blacksmith_get_analog_mapping:
+                    '아날로그 %1 번 핀 센서 값의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼 값',
+                blacksmith_get_digital_bluetooth: '블루투스 RX 2 핀 %1 데이터 값',
+                blacksmith_get_digital_ultrasonic: '초음파 Trig %1 핀 Echo %2 핀 센서 값',
+                blacksmith_get_digital_toggle: '디지털 %1 번 핀 센서 값',
+                blacksmith_set_digital_toggle: '디지털 %1 번 핀 %2 %3',
+                blacksmith_set_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                blacksmith_set_digital_rgbled:
+                    '디지털 %1 번 핀의 RGB LED를 빨강 %2 초록 %3 파랑 %4 로 정하기 %5',
+                blacksmith_set_digital_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
+                blacksmith_set_digital_buzzer:
+                    '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
+                blacksmith_set_digital_dcmotor:
+                    'DC모터 %1 번 핀을 %2 %3 번 핀의 속도를 %4 로 정하기 %5',
+                blacksmith_module_digital_lcd: 'LCD화면 %1 줄에 %2 나타내기 %3',
+                blacksmith_module_digital_bluetooth: '블루투스 TX 3 핀에 %1 데이터 보내기 %2',
+                blacksmith_module_digital_oled: 'OLED화면 X 좌표 %1  Y 좌표 %2 에 %3 나타내기 %4',
+            },
         },
         en: {
             template: {
-                "blacksmith_toggle_on": "on",
-                "blacksmith_toggle_off": "off",
-                "blacksmith_lcd_first_line": "first",
-                "blacksmith_lcd_seconds_line": "seconds",
-                "blacksmith_dcmotor_direction_forward": "forward",
-                "blacksmith_dcmotor_direction_reverse": "reverse",
-                "blacksmith_btData_select_number": "number",
-                "blacksmith_btData_select_character": "character",
-                "blacksmith_get_analog_value": "Read analog %1 pin sensor value",
-                "blacksmith_get_analog_mapping": "Map analog %1 pin sensor value from %2 ~ %3 to %4 ~ %5",
-                "blacksmith_get_digital_bluetooth": "Bluetooth RX 2 %1 value",
-                "blacksmith_get_digital_ultrasonic": "Read ultrasonic Trig %1 Echo %2 sensor value",
-                "blacksmith_get_digital_toggle": "Digital %1 pin sensor value",
-                "blacksmith_set_digital_toggle": "Digital %1 pin %2 %3",
-                "blacksmith_set_digital_pwm": "Digital pwm %1 Pin %2 %3",
-                "blacksmith_set_digital_rgbled": "Digital %1 pin RGB LED Red %2 Green %3 Blue %4 %5",
-                "blacksmith_set_digital_servo": "Set servo pin %1 angle as %2 %3",
-                "blacksmith_set_digital_buzzer": "Play tone pin %1 on note %2 octave %3 beat %4 %5",
-                "blacksmith_set_digital_dcmotor": "DC Motor %1 pin direction %2 %3 pin speed %4 %5",
-                "blacksmith_module_digital_lcd": "LCD %1 line %2 appear %3",
-                "blacksmith_module_digital_bluetooth": "Bluetooth TX 3 Pin %1 data send %2",
-                "blacksmith_module_digital_oled" : "OLED X codinate %1 Y coodinate %2 appear %3 %4",
-            }
-        }
-    }
+                blacksmith_toggle_on: 'on',
+                blacksmith_toggle_off: 'off',
+                blacksmith_lcd_first_line: 'first',
+                blacksmith_lcd_seconds_line: 'seconds',
+                blacksmith_dcmotor_direction_forward: 'forward',
+                blacksmith_dcmotor_direction_reverse: 'reverse',
+                blacksmith_btData_select_number: 'number',
+                blacksmith_btData_select_character: 'character',
+                blacksmith_get_analog_value: 'Read analog %1 pin sensor value',
+                blacksmith_get_analog_mapping:
+                    'Map analog %1 pin sensor value from %2 ~ %3 to %4 ~ %5',
+                blacksmith_get_digital_bluetooth: 'Bluetooth RX 2 %1 value',
+                blacksmith_get_digital_ultrasonic: 'Read ultrasonic Trig %1 Echo %2 sensor value',
+                blacksmith_get_digital_toggle: 'Digital %1 pin sensor value',
+                blacksmith_set_digital_toggle: 'Digital %1 pin %2 %3',
+                blacksmith_set_digital_pwm: 'Digital pwm %1 Pin %2 %3',
+                blacksmith_set_digital_rgbled: 'Digital %1 pin RGB LED Red %2 Green %3 Blue %4 %5',
+                blacksmith_set_digital_servo: 'Set servo pin %1 angle as %2 %3',
+                blacksmith_set_digital_buzzer: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
+                blacksmith_set_digital_dcmotor: 'DC Motor %1 pin direction %2 %3 pin speed %4 %5',
+                blacksmith_module_digital_lcd: 'LCD %1 line %2 appear %3',
+                blacksmith_module_digital_bluetooth: 'Bluetooth TX 3 Pin %1 data send %2',
+                blacksmith_module_digital_oled: 'OLED X codinate %1 Y coodinate %2 appear %3 %4',
+            },
+        },
+    };
 };
 Entry.Blacksmith.blockMenuBlocks = [
     'blacksmith_get_analog_value',
@@ -150,8 +155,8 @@ Entry.Blacksmith.getBlocks = function() {
     return {
         //region blacksmith 대장장이보드
         blacksmith_list_analog_basic: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -168,6 +173,8 @@ Entry.Blacksmith.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -182,8 +189,8 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_basic: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -208,6 +215,7 @@ Entry.Blacksmith.getBlocks = function() {
                     ],
                     value: '10',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
@@ -223,8 +231,8 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_octave: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -243,6 +251,8 @@ Entry.Blacksmith.getBlocks = function() {
                     ],
                     value: '3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -257,8 +267,8 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_pwm: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -266,8 +276,8 @@ Entry.Blacksmith.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                    	['~3', '3'],
-                    	['~5', '5'],
+                        ['~3', '3'],
+                        ['~5', '5'],
                         ['~6', '6'],
                         ['~9', '9'],
                         ['~10', '10'],
@@ -275,6 +285,7 @@ Entry.Blacksmith.getBlocks = function() {
                     ],
                     value: '11',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
@@ -290,8 +301,8 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_toggle: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -304,6 +315,7 @@ Entry.Blacksmith.getBlocks = function() {
                     ],
                     value: 'on',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
@@ -319,8 +331,8 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_tone: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -344,6 +356,8 @@ Entry.Blacksmith.getBlocks = function() {
                     ],
                     value: 'C',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -358,8 +372,8 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_lcd: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -372,6 +386,8 @@ Entry.Blacksmith.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -386,7 +402,8 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_dcmotor_direction: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -399,6 +416,8 @@ Entry.Blacksmith.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -413,7 +432,8 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_btData_select: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -426,6 +446,8 @@ Entry.Blacksmith.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -440,8 +462,8 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_get_analog_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: Lang.template.blacksmith_get_analog_value,
@@ -477,8 +499,8 @@ Entry.Blacksmith.getBlocks = function() {
             syntax: { js: [], py: ['blacksmith.get_analog_value(%1)'] },
         },
         blacksmith_get_analog_mapping: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: Lang.template.blacksmith_get_analog_mapping,
@@ -576,8 +598,8 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_get_digital_bluetooth: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: Lang.template.blacksmith_get_digital_bluetooth,
@@ -617,45 +639,40 @@ Entry.Blacksmith.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.Blacksmith.sensorTypes.READ_BLUETOOTH
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.Blacksmith.sensorTypes.READ_BLUETOOTH] = {
                     port: port,
                     time: new Date().getTime(),
                 };
 
-                for(var i = 0; i < getString.length; i++) {
-                    if(i == getString.length - 1) {
-                        if(lengthCount == 2) {
-                            makeString = getString[i-1] + makeString[i];
-                        }
-                        else if (lengthCount == 3) {
-                            makeString = getString[i-2] + getString[i-1] + getString[i];
+                for (var i = 0; i < getString.length; i++) {
+                    if (i == getString.length - 1) {
+                        if (lengthCount == 2) {
+                            makeString = getString[i - 1] + makeString[i];
+                        } else if (lengthCount == 3) {
+                            makeString = getString[i - 2] + getString[i - 1] + getString[i];
                         }
                         makeString = Number(makeString);
-                        if(returnType == 1) {
+                        if (returnType == 1) {
                             makeString = String.fromCharCode(makeString);
                         }
                         result = result + makeString;
                         lengthCount = 0;
                         makeString = '';
                     }
-                    if(getString[i] == ',') {
-                        if(lengthCount == 2) {
-                            makeString = getString[i-2] + getString[i-1];
-                        }
-                        else if(lengthCount == 3) {
-                            makeString = getString[i-3] + getString[i-2] + getString[i-1];
+                    if (getString[i] == ',') {
+                        if (lengthCount == 2) {
+                            makeString = getString[i - 2] + getString[i - 1];
+                        } else if (lengthCount == 3) {
+                            makeString = getString[i - 3] + getString[i - 2] + getString[i - 1];
                         }
                         makeString = Number(makeString);
-                        if(returnType == 1) {
+                        if (returnType == 1) {
                             makeString = String.fromCharCode(makeString);
                         }
                         result = result + makeString;
                         lengthCount = 0;
                         makeString = '';
-                    }
-                    else {
+                    } else {
                         lengthCount += 1;
                     }
                 }
@@ -665,8 +682,8 @@ Entry.Blacksmith.getBlocks = function() {
             syntax: { js: [], py: ['blacksmith.get_digital_bluetooth()'] },
         },
         blacksmith_get_digital_ultrasonic: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: Lang.template.blacksmith_get_digital_ultrasonic,
@@ -713,9 +730,7 @@ Entry.Blacksmith.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.Blacksmith.sensorTypes.ULTRASONIC
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.Blacksmith.sensorTypes.ULTRASONIC] = {
                     port: [port1, port2],
                     time: new Date().getTime(),
                 };
@@ -728,8 +743,8 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_get_digital_toggle: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -761,9 +776,7 @@ Entry.Blacksmith.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.Blacksmith.sensorTypes.DIGITAL
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.Blacksmith.sensorTypes.DIGITAL] = {
                     port: port,
                     time: new Date().getTime(),
                 };
@@ -773,8 +786,8 @@ Entry.Blacksmith.getBlocks = function() {
             syntax: { js: [], py: ['blacksmith.get_digital_toggle(%1)'] },
         },
         blacksmith_set_digital_toggle: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
@@ -841,8 +854,8 @@ Entry.Blacksmith.getBlocks = function() {
             syntax: { js: [], py: ['blacksmith.set_digital_toggle(%1, %2)'] },
         },
         blacksmith_set_digital_pwm: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
@@ -903,7 +916,8 @@ Entry.Blacksmith.getBlocks = function() {
             syntax: { js: [], py: ['blacksmith.set_digital_pwm(%1, %2)'] },
         },
         blacksmith_set_digital_rgbled: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
@@ -927,7 +941,7 @@ Entry.Blacksmith.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -968,7 +982,7 @@ Entry.Blacksmith.getBlocks = function() {
                 value[1] = script.getNumberValue('VALUE1');
                 value[2] = script.getNumberValue('VALUE2');
 
-                for(var i = 0; i < 3; i++) {
+                for (var i = 0; i < 3; i++) {
                     value[i] = Math.round(value[i]);
                     value[i] = Math.min(value[i], 200);
                     value[i] = Math.max(value[i], 0);
@@ -991,8 +1005,8 @@ Entry.Blacksmith.getBlocks = function() {
             syntax: { js: [], py: ['blacksmith.set_digital_pwm(%1, %2)'] },
         },
         blacksmith_set_digital_servo: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
@@ -1052,8 +1066,8 @@ Entry.Blacksmith.getBlocks = function() {
             syntax: { js: [], py: ['blacksmith.set_digital_servo(%1, %2)'] },
         },
         blacksmith_set_digital_buzzer: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
@@ -1185,8 +1199,8 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_set_digital_lcd: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
@@ -1210,7 +1224,7 @@ Entry.Blacksmith.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1271,7 +1285,8 @@ Entry.Blacksmith.getBlocks = function() {
             syntax: { js: [], py: ['blacksmith.set_digital_dcmotor(%1, %2, %3, %4)'] },
         },
         blacksmith_module_digital_lcd: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             template: Lang.template.blacksmith_module_digital_lcd,
@@ -1376,7 +1391,8 @@ Entry.Blacksmith.getBlocks = function() {
             syntax: { js: [], py: ['blacksmith.module_digital_lcd(%1, %2)'] },
         },
         blacksmith_module_digital_oled: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
@@ -1396,7 +1412,7 @@ Entry.Blacksmith.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1417,7 +1433,7 @@ Entry.Blacksmith.getBlocks = function() {
                     },
                     null,
                 ],
-                type: "blacksmith_module_digital_oled",
+                type: 'blacksmith_module_digital_oled',
             },
             paramsKeyMap: {
                 VALUE0: 0,
@@ -1499,8 +1515,8 @@ Entry.Blacksmith.getBlocks = function() {
             syntax: { js: [], py: ['blacksmith.Module_digital_oled(%1, %2, %3)'] },
         },
         blacksmith_set_digital_bluetooth: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             template: Lang.template.blacksmith_module_digital_bluetooth,

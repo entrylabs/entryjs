@@ -49,8 +49,8 @@ Entry.Altino = {
     url: 'http://saeon.co.kr/',
     imageName: 'altino.png',
     title: {
-        "en": "Altino",
-        "ko": "알티노",
+        en: 'Altino',
+        ko: '알티노',
     },
 };
 
@@ -68,8 +68,8 @@ Entry.Altino.getBlocks = function() {
     return {
         //region Altino 알티노
         altino_analogValue: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -103,6 +103,8 @@ Entry.Altino.getBlocks = function() {
                     ],
                     value: 'cds',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -123,8 +125,8 @@ Entry.Altino.getBlocks = function() {
             syntax: { js: [], py: ['Altino.analog_value(%1)'] },
         },
         altino_steering: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -143,6 +145,8 @@ Entry.Altino.getBlocks = function() {
                     ],
                     value: 'Center',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -188,8 +192,8 @@ Entry.Altino.getBlocks = function() {
             syntax: { js: [], py: ['Altino.steering(%1,%2)'] },
         },
         altino_rear_wheel: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -239,8 +243,8 @@ Entry.Altino.getBlocks = function() {
             syntax: { js: [], py: ['Altino.rear_wheel(%1, %2)'] },
         },
         altino_sound: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -256,6 +260,8 @@ Entry.Altino.getBlocks = function() {
                     ],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -276,6 +282,8 @@ Entry.Altino.getBlocks = function() {
                     ],
                     value: 'NOT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -378,8 +386,8 @@ Entry.Altino.getBlocks = function() {
             syntax: { js: [], py: ['Altino.sound(%1, %2)'] },
         },
         altino_light: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -394,15 +402,16 @@ Entry.Altino.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.ALTINO_h2, '255'],
-                        [Lang.Blocks.ALTINO_h, '0'],
-                    ],
+                    options: [[Lang.Blocks.ALTINO_h2, '255'], [Lang.Blocks.ALTINO_h, '0']],
                     value: '255',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -462,8 +471,8 @@ Entry.Altino.getBlocks = function() {
             syntax: { js: [], py: ['Altino.light(%1, %2)'] },
         },
         altino_dot_display: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -516,8 +525,8 @@ Entry.Altino.getBlocks = function() {
             },
         },
         altino_dot_display_line: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [

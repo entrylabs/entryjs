@@ -40,8 +40,8 @@ Entry.robotori = {
     url: 'http://www.robotori.com/',
     imageName: 'robotori.png',
     title: {
-        "ko": "로보토리",
-        "en": "robotori"
+        ko: '로보토리',
+        en: 'robotori',
     },
     monitorTemplate: {
         imgPath: 'hw/robotori.png',
@@ -76,8 +76,8 @@ Entry.robotori.getBlocks = function() {
     return {
         //region robotori 로보토리
         robotori_digitalInput: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_boolean_field',
             statements: [],
             params: [
@@ -89,6 +89,7 @@ Entry.robotori.getBlocks = function() {
                     ],
                     value: 'D2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
@@ -109,8 +110,8 @@ Entry.robotori.getBlocks = function() {
             },
         },
         robotori_analogInput: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -126,6 +127,8 @@ Entry.robotori.getBlocks = function() {
                     ],
                     value: 'A0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -145,8 +148,8 @@ Entry.robotori.getBlocks = function() {
             },
         },
         robotori_digitalOutput: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -160,15 +163,16 @@ Entry.robotori.getBlocks = function() {
                     ],
                     value: 'D10',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.robotori_On, 'ON'],
-                        [Lang.Blocks.robotori_Off, 'OFF'],
-                    ],
+                    options: [[Lang.Blocks.robotori_On, 'ON'], [Lang.Blocks.robotori_Off, 'OFF']],
                     value: 'ON',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -220,8 +224,8 @@ Entry.robotori.getBlocks = function() {
             },
         },
         robotori_analogOutput: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -234,6 +238,8 @@ Entry.robotori.getBlocks = function() {
                     ],
                     value: 'AOUT5',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -280,8 +286,8 @@ Entry.robotori.getBlocks = function() {
             },
         },
         robotori_servo: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -319,8 +325,8 @@ Entry.robotori.getBlocks = function() {
             },
         },
         robotori_dc_direction: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -332,6 +338,8 @@ Entry.robotori.getBlocks = function() {
                     ],
                     value: 'RIGHT_MOTOR',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -342,6 +350,8 @@ Entry.robotori.getBlocks = function() {
                     ],
                     value: 'STOP',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',

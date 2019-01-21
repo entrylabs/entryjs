@@ -352,7 +352,7 @@ Entry.resizeElement = function(interfaceModel) {
         const adjust = blockMenu.hasCategory() ? -64 : 0;
 
         $('.blockMenuContainer').css({ width: `${menuWidth + adjust}px` });
-        $('.blockMenuContainer>svg').css({ width: `${menuWidth + adjust - 2}px` });
+        $('.blockMenuContainer>div').css({ width: `${menuWidth + adjust - 2}px` });
         blockMenu.setWidth();
         $('.entryWorkspaceBoard').css({ left: `${menuWidth - 4}px` });
         Entry.playground.resizeHandle_.style.left = `${menuWidth - 4}px`;
@@ -370,7 +370,7 @@ Entry.resizeElement = function(interfaceModel) {
 Entry.overridePrototype = function() {
     /** modulo include negative number */
     Number.prototype.mod = function(n) {
-        return (this % n + n) % n;
+        return ((this % n) + n) % n;
     };
 
     //polyfill
@@ -956,10 +956,10 @@ Entry.hex2rgb = function(hex) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
         ? {
-            r: parseInt(result[1], 16),
-            g: parseInt(result[2], 16),
-            b: parseInt(result[3], 16),
-        }
+              r: parseInt(result[1], 16),
+              g: parseInt(result[2], 16),
+              b: parseInt(result[3], 16),
+          }
         : null;
 };
 
@@ -1369,11 +1369,11 @@ Entry.getListRealIndex = function(index, list) {
 };
 
 Entry.toRadian = function(angle) {
-    return angle * Math.PI / 180;
+    return (angle * Math.PI) / 180;
 };
 
 Entry.toDegrees = function(radians) {
-    return radians * 180 / Math.PI;
+    return (radians * 180) / Math.PI;
 };
 
 Entry.getPicturesJSON = function(pictures = [], isClone) {
@@ -1745,14 +1745,12 @@ Entry.Utils.addFilters = function(boardSvgDom, suffix, isOnlyBlock) {
         values: '1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0',
     });
 
-    defs
-        .elem('filter', {
-            id: `entryBlockDarkenFilter_${suffix}`,
-        })
-        .elem('feColorMatrix', {
-            type: 'matrix',
-            values: '.45 0 0 0 0 0 .45 0 0 0 0 0 .45 0 0 0 0 0 1 0',
-        });
+    defs.elem('filter', {
+        id: `entryBlockDarkenFilter_${suffix}`,
+    }).elem('feColorMatrix', {
+        type: 'matrix',
+        values: '.45 0 0 0 0 0 .45 0 0 0 0 0 .45 0 0 0 0 0 1 0',
+    });
 
     if (!isOnlyBlock) {
         const buttonShadow = defs.elem('filter', {
@@ -2624,4 +2622,17 @@ Entry.Utils.focusIfNotActive = function(dom) {
     if (!Entry.Utils.isDomActive(dom)) {
         dom.focus && dom.focus();
     }
+};
+
+// 터치와 마우스의 이벤트를 맞춰주는 함수
+Entry.Utils.getMouseEvent = function(event) {
+    let mouseEvent;
+    if (event.originalEvent && event.originalEvent.touches) {
+        mouseEvent = event.originalEvent.touches[0];
+    } else if (event.touches) {
+        mouseEvent = event.touches[0];
+    } else {
+        mouseEvent = event;
+    }
+    return mouseEvent;
 };

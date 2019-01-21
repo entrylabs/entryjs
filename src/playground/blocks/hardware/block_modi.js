@@ -5,8 +5,8 @@ Entry.MODI = {
     url: 'http://www.luxrobo.com/',
     imageName: 'modi.png',
     title: {
-        "ko": "모디",
-        "en": "MODI"
+        ko: '모디',
+        en: 'MODI',
     },
     setZero: function() {
         Entry.hw.sendQueue.moduleValue = {
@@ -64,8 +64,7 @@ Entry.MODI = {
 
         list = [];
         for (var i = 0; i < moduleData['environment'].length; i++) {
-            if (moduleData['environment'][i])
-                list.push([i.toString(), i.toString()]);
+            if (moduleData['environment'][i]) list.push([i.toString(), i.toString()]);
         }
         return list;
     },
@@ -107,8 +106,7 @@ Entry.MODI = {
 
         list = [];
         for (var i = 0; i < moduleData['button'].length; i++) {
-            if (moduleData['button'][i])
-                list.push([i.toString(), i.toString()]);
+            if (moduleData['button'][i]) list.push([i.toString(), i.toString()]);
         }
         return list;
     },
@@ -136,8 +134,7 @@ Entry.MODI = {
 
         list = [];
         for (var i = 0; i < moduleData['ultrasonic'].length; i++) {
-            if (moduleData['ultrasonic'][i])
-                list.push([i.toString(), i.toString()]);
+            if (moduleData['ultrasonic'][i]) list.push([i.toString(), i.toString()]);
         }
         return list;
     },
@@ -178,8 +175,7 @@ Entry.MODI = {
 
         list = [];
         for (var i = 0; i < moduleData['speaker'].length; i++) {
-            if (moduleData['speaker'][i])
-                list.push([i.toString(), i.toString()]);
+            if (moduleData['speaker'][i]) list.push([i.toString(), i.toString()]);
         }
         return list;
     },
@@ -193,8 +189,7 @@ Entry.MODI = {
 
         list = [];
         for (var i = 0; i < moduleData['display'].length; i++) {
-            if (moduleData['display'][i])
-                list.push([i.toString(), i.toString()]);
+            if (moduleData['display'][i]) list.push([i.toString(), i.toString()]);
         }
         return list;
     },
@@ -224,8 +219,8 @@ Entry.MODI.blockMenuBlocks = [
 Entry.MODI.getBlocks = function() {
     return {
         modi_microphone_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '마이크 %1번의 볼륨',
@@ -235,6 +230,8 @@ Entry.MODI.getBlocks = function() {
                     value: null,
                     fontSize: 11,
                     menuName: Entry.MODI.microphoneList,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             def: {
@@ -270,8 +267,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_environment_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '환경센서 %1번의 %2',
@@ -281,6 +278,8 @@ Entry.MODI.getBlocks = function() {
                     value: null,
                     fontSize: 11,
                     menuName: Entry.MODI.environmentList,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -293,6 +292,8 @@ Entry.MODI.getBlocks = function() {
                         [Lang.Blocks.modi_enviroment_green, 4],
                     ],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             def: {
@@ -309,9 +310,7 @@ Entry.MODI.getBlocks = function() {
                 var key = script.getStringField('name');
                 var property = script.getNumberField('property');
 
-                var pd = JSON.parse(
-                    Entry.hw.portData.module['environment'][key]
-                );
+                var pd = JSON.parse(Entry.hw.portData.module['environment'][key]);
                 var moduleID = pd.id;
 
                 if (!Entry.hw.sendQueue['getProperty']) {
@@ -333,8 +332,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_dial_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '다이얼 %1번의 각도',
@@ -344,6 +343,8 @@ Entry.MODI.getBlocks = function() {
                     value: null,
                     fontSize: 11,
                     menuName: Entry.MODI.dialList,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             def: {
@@ -375,15 +376,14 @@ Entry.MODI.getBlocks = function() {
             }*/
                 }
 
-                var moduleID = JSON.parse(Entry.hw.portData.module['dial'][key])
-                    .id;
+                var moduleID = JSON.parse(Entry.hw.portData.module['dial'][key]).id;
 
                 return pd.value[2];
             },
         },
         modi_gyroscope_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '자이로센서 %1번의 %2',
@@ -393,6 +393,8 @@ Entry.MODI.getBlocks = function() {
                     value: null,
                     fontSize: 11,
                     menuName: Entry.MODI.gyroscopeList,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -405,6 +407,8 @@ Entry.MODI.getBlocks = function() {
                         [Lang.Blocks.modi_gyroscope_zAcceleratior, 10],
                     ],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             def: {
@@ -442,8 +446,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_button_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '버튼 %1번의 %2',
@@ -453,16 +457,15 @@ Entry.MODI.getBlocks = function() {
                     value: null,
                     fontSize: 11,
                     menuName: Entry.MODI.buttonList,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['Click', 2],
-                        ['Double Click', 3],
-                        ['Toggle', 5],
-                        ['Press', 4],
-                    ],
+                    options: [['Click', 2], ['Double Click', 3], ['Toggle', 5], ['Press', 4]],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             def: {
@@ -476,18 +479,13 @@ Entry.MODI.getBlocks = function() {
             class: 'button',
             isNotFor: ['modi'],
             func: function(sprite, script) {
-                if (
-                    !Entry.hw.sendQueue.moduleValue ||
-                    !Entry.hw.sendQueue['getProperty']
-                ) {
+                if (!Entry.hw.sendQueue.moduleValue || !Entry.hw.sendQueue['getProperty']) {
                     Entry.MODI.initSend();
                 }
 
                 var key = script.getStringField('name');
                 var property = script.getNumberField('property');
-                var moduleID = JSON.parse(
-                    Entry.hw.portData.module['button'][key]
-                ).id;
+                var moduleID = JSON.parse(Entry.hw.portData.module['button'][key]).id;
                 var pd = JSON.parse(Entry.hw.portData.module['button'][key]);
 
                 if (!Entry.hw.sendQueue['getProperty']) {
@@ -510,8 +508,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_button_true: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '눌림',
@@ -526,8 +524,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_button_false: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '안눌림',
@@ -542,8 +540,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_infrared_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '적외선 %1번 센서의 거리(%)',
@@ -553,6 +551,8 @@ Entry.MODI.getBlocks = function() {
                     value: null,
                     fontSize: 11,
                     menuName: Entry.MODI.infraredList,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             def: {
@@ -588,8 +588,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_ultrasonic_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '초음파 %1번 센서의 거리(%)',
@@ -599,6 +599,8 @@ Entry.MODI.getBlocks = function() {
                     value: null,
                     fontSize: 11,
                     menuName: Entry.MODI.ultrasonicList,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             def: {
@@ -613,9 +615,7 @@ Entry.MODI.getBlocks = function() {
             func: function(sprite, script) {
                 var key = script.getStringField('name');
 
-                var pd = JSON.parse(
-                    Entry.hw.portData.module['ultrasonic'][key]
-                );
+                var pd = JSON.parse(Entry.hw.portData.module['ultrasonic'][key]);
                 var moduleID = pd.id;
 
                 if (!Entry.hw.sendQueue['getProperty']) {
@@ -636,8 +636,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_set_motor_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             template: '모터 %1번 %2의 상단값은 %3 하단값은 %4 (으)로 정하기 %5',
@@ -647,6 +647,8 @@ Entry.MODI.getBlocks = function() {
                     value: null,
                     fontSize: 11,
                     menuName: Entry.MODI.motorList,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -656,6 +658,8 @@ Entry.MODI.getBlocks = function() {
                         [Lang.Blocks.modi_motor_torque, 'MOTOR_TORQUE'],
                     ],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -702,9 +706,7 @@ Entry.MODI.getBlocks = function() {
                     property = script.getStringField('property'),
                     upper = script.getNumberValue('upper'),
                     bottom = script.getNumberValue('bottom');
-                var moduleID = JSON.parse(
-                    Entry.hw.portData.module['motor'][key]
-                ).id;
+                var moduleID = JSON.parse(Entry.hw.portData.module['motor'][key]).id;
 
                 var sq = Entry.hw.sendQueue.moduleValue;
                 sq['motor'][key] = JSON.stringify({
@@ -718,8 +720,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_change_motor_upper_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             template: '모터 %1번 %2의 상단값을 %3만큼 바꾸기 %4',
             params: [
@@ -728,6 +730,8 @@ Entry.MODI.getBlocks = function() {
                     value: null,
                     fontSize: 11,
                     menuName: Entry.MODI.motorList,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -737,6 +741,8 @@ Entry.MODI.getBlocks = function() {
                         [Lang.Blocks.modi_motor_torque, 'MOTOR_TORQUE'],
                     ],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -782,12 +788,9 @@ Entry.MODI.getBlocks = function() {
                 var upper = value,
                     bottom = 0;
 
-                if (upper > 100)
-                    upper = 100;
-                else if (upper < 0 && property == 'MOTOR_ANGLE')
-                    upper = 0;
-                else if (upper < -100 && property != 'MOTOR_ANGLE')
-                    upper = -100;
+                if (upper > 100) upper = 100;
+                else if (upper < 0 && property == 'MOTOR_ANGLE') upper = 0;
+                else if (upper < -100 && property != 'MOTOR_ANGLE') upper = -100;
 
                 sq['motor'][key] = JSON.stringify({
                     module: property,
@@ -800,8 +803,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_change_motor_bottom_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             template: '모터 %1번 %2의 하단값을 %3만큼 바꾸기 %4',
             params: [
@@ -810,6 +813,8 @@ Entry.MODI.getBlocks = function() {
                     value: null,
                     fontSize: 11,
                     menuName: Entry.MODI.motorList,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -819,6 +824,8 @@ Entry.MODI.getBlocks = function() {
                         [Lang.Blocks.modi_motor_torque, 'MOTOR_TORQUE'],
                     ],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -865,12 +872,9 @@ Entry.MODI.getBlocks = function() {
                 var upper = 0,
                     bottom = value;
 
-                if (bottom > 100)
-                    bottom = 100;
-                else if (bottom < 0 && property == 'MOTOR_ANGLE')
-                    bottom = 0;
-                else if (bottom < -100 && property != 'MOTOR_ANGLE')
-                    bottom = -100;
+                if (bottom > 100) bottom = 100;
+                else if (bottom < 0 && property == 'MOTOR_ANGLE') bottom = 0;
+                else if (bottom < -100 && property != 'MOTOR_ANGLE') bottom = -100;
 
                 sq['motor'][key] = JSON.stringify({
                     module: property,
@@ -883,8 +887,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_clear_led: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             template: 'LED %1번의 색 끄기 %2',
             params: [
@@ -893,6 +897,8 @@ Entry.MODI.getBlocks = function() {
                     value: null,
                     fontSize: 11,
                     menuName: Entry.MODI.ledList,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -915,8 +921,7 @@ Entry.MODI.getBlocks = function() {
                 }
 
                 var key = script.getStringField('name');
-                var moduleID = JSON.parse(Entry.hw.portData.module['led'][key])
-                    .id;
+                var moduleID = JSON.parse(Entry.hw.portData.module['led'][key]).id;
 
                 var sq = Entry.hw.sendQueue.moduleValue;
                 sq['led'][key] = JSON.stringify({
@@ -931,8 +936,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_set_led_rgb: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             template: 'LED %1번 R %2 G %3 B %4  %5',
             params: [
@@ -941,6 +946,8 @@ Entry.MODI.getBlocks = function() {
                     value: null,
                     fontSize: 11,
                     menuName: Entry.MODI.ledList,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1010,8 +1017,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_set_led_color: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             template: 'LED %1번 색 %2로 정하기 %3',
             params: [
@@ -1020,6 +1027,8 @@ Entry.MODI.getBlocks = function() {
                     value: null,
                     fontSize: 11,
                     menuName: Entry.MODI.ledList,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Color',
@@ -1067,8 +1076,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_set_basic_speaker: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             template: '스피커 %1번을 %2음으로 크기는 %3(으)로 정하기 %4',
             params: [
@@ -1077,6 +1086,8 @@ Entry.MODI.getBlocks = function() {
                     value: null,
                     fontSize: 11,
                     menuName: Entry.MODI.speakerList,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -1104,9 +1115,11 @@ Entry.MODI.getBlocks = function() {
                         [Lang.Blocks.modi_speaker_F_RE_7, 'F_RE_7'],
                         [Lang.Blocks.modi_speaker_F_MI_7, 'F_MI_7'],
                         [Lang.Blocks.modi_speaker_F_DO_S_7, 'F_DO_S_7'],
-                        [Lang.Blocks.modi_speaker_F_RE_S_7, 'F_RE_S_7']
+                        [Lang.Blocks.modi_speaker_F_RE_S_7, 'F_RE_S_7'],
                     ],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1144,9 +1157,7 @@ Entry.MODI.getBlocks = function() {
                 var key = script.getStringField('name'),
                     frequence = script.getStringField('frequence'),
                     volume = script.getNumberValue('volume', script);
-                var moduleID = JSON.parse(
-                    Entry.hw.portData.module['speaker'][key]
-                ).id;
+                var moduleID = JSON.parse(Entry.hw.portData.module['speaker'][key]).id;
 
                 var sq = Entry.hw.sendQueue.moduleValue;
                 sq['speaker'][key] = JSON.stringify({
@@ -1160,8 +1171,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_set_custom_speaker: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             template: '스피커 %1번의 진동수는 %2 크기는 %3(으)로 정하기 %4',
             params: [
@@ -1170,6 +1181,8 @@ Entry.MODI.getBlocks = function() {
                     value: null,
                     fontSize: 11,
                     menuName: Entry.MODI.speakerList,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1213,9 +1226,7 @@ Entry.MODI.getBlocks = function() {
                 var key = script.getStringField('name'),
                     frequence = script.getNumberValue('frequence'),
                     volume = script.getNumberValue('volume', script);
-                var moduleID = JSON.parse(
-                    Entry.hw.portData.module['speaker'][key]
-                ).id;
+                var moduleID = JSON.parse(Entry.hw.portData.module['speaker'][key]).id;
 
                 var sq = Entry.hw.sendQueue.moduleValue;
                 sq['speaker'][key] = JSON.stringify({
@@ -1229,8 +1240,8 @@ Entry.MODI.getBlocks = function() {
             },
         },
         modi_print_display_by_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             template: '디스플레이 %1번의 화면에 %2 보이기 %3',
             params: [
@@ -1239,6 +1250,8 @@ Entry.MODI.getBlocks = function() {
                     value: null,
                     fontSize: 11,
                     menuName: Entry.MODI.displayList,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1279,9 +1292,7 @@ Entry.MODI.getBlocks = function() {
                     return script.callReturn();
                 }
 
-                var moduleID = JSON.parse(
-                    Entry.hw.portData.module['display'][key]
-                ).id;
+                var moduleID = JSON.parse(Entry.hw.portData.module['display'][key]).id;
 
                 var sq = Entry.hw.sendQueue.moduleValue;
                 sq['display'][key] = JSON.stringify({

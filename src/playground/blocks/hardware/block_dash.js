@@ -74,8 +74,8 @@ Entry.Dash.getBlocks = function() {
     return {
         // 소리
         dash_sound_say: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -95,6 +95,8 @@ Entry.Dash.getBlocks = function() {
                         ['무작위', 0x1e],
                     ],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -157,8 +159,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_sound_animal: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -178,6 +180,8 @@ Entry.Dash.getBlocks = function() {
                         ['무작위', 0x1e],
                     ],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -242,8 +246,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_sound_move: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -263,6 +267,8 @@ Entry.Dash.getBlocks = function() {
                         ['무작위', 0x1e],
                     ],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -327,8 +333,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_sound_strange: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -346,6 +352,8 @@ Entry.Dash.getBlocks = function() {
                         ['무작위', 0x1e],
                     ],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -410,8 +418,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_my_sound: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -432,6 +440,8 @@ Entry.Dash.getBlocks = function() {
                         ['#10', 0x09],
                     ],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -492,8 +502,8 @@ Entry.Dash.getBlocks = function() {
         },
         // LED
         dash_light_color: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -508,6 +518,8 @@ Entry.Dash.getBlocks = function() {
                         ['전면', 0x04],
                     ],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Color',
@@ -568,8 +580,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_tail_light_color: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -579,6 +591,8 @@ Entry.Dash.getBlocks = function() {
                     type: 'Dropdown',
                     options: [['켜기', 0x01], ['끄기', 0x00]],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Color',
@@ -635,8 +649,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_eye: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -653,6 +667,8 @@ Entry.Dash.getBlocks = function() {
                         ['모두 켜기', 0x05],
                     ],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -707,8 +723,8 @@ Entry.Dash.getBlocks = function() {
         },
         // 머리
         dash_v_head: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -716,12 +732,10 @@ Entry.Dash.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['위쪽', 0x04],
-                        ['가운데', 0x05],
-                        ['아래쪽', 0x06],
-                    ],
+                    options: [['위쪽', 0x04], ['가운데', 0x05], ['아래쪽', 0x06]],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -774,8 +788,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_h_head: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -789,6 +803,8 @@ Entry.Dash.getBlocks = function() {
                         ['오른쪽', 0x03],
                     ],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 // {	// 드롭다운으로 변경
                 // 	"type": "Angle",
@@ -807,6 +823,8 @@ Entry.Dash.getBlocks = function() {
                         ['120˚', 120],
                     ],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -865,8 +883,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_forward_head: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -922,8 +940,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_voice_head: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -982,8 +1000,8 @@ Entry.Dash.getBlocks = function() {
         },
         // 움직임
         dash_turn_drive: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -993,10 +1011,13 @@ Entry.Dash.getBlocks = function() {
                     type: 'Dropdown',
                     options: [['시계 방향', 0x03], ['반 시계 방향', 0x04]],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
-                    type: 'Angle',
+                    type: 'Block',
                     accept: 'string',
+                    defaultType: 'angle',
                 },
                 {
                     type: 'Indicator',
@@ -1054,8 +1075,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_turn_drive_360: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -1065,6 +1086,8 @@ Entry.Dash.getBlocks = function() {
                     type: 'Dropdown',
                     options: [['시계 방향', 0x03], ['반 시계 방향', 0x04]],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1120,8 +1143,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_drive: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -1131,6 +1154,8 @@ Entry.Dash.getBlocks = function() {
                     type: 'Dropdown',
                     options: [['앞', 0x01], ['뒤', 0x02]],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1146,6 +1171,8 @@ Entry.Dash.getBlocks = function() {
                         ['매우 빠르게', 0x05],
                     ],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1209,18 +1236,19 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_wheel_speed: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            template:
-                '왼쪽 바퀴 %1 (으)로 %2, 오른쪽 바퀴 %3 (으)로 %4 움직이기 %5',
+            template: '왼쪽 바퀴 %1 (으)로 %2, 오른쪽 바퀴 %3 (으)로 %4 움직이기 %5',
             params: [
                 {
                     type: 'Dropdown',
                     options: [['앞', 0x01], ['뒤', 0x02]],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -1232,11 +1260,15 @@ Entry.Dash.getBlocks = function() {
                         ['매우 빠르게', 0x05],
                     ],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [['앞', 0x01], ['뒤', 0x02]],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -1248,6 +1280,8 @@ Entry.Dash.getBlocks = function() {
                         ['매우 빠르게', 0x05],
                     ],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1310,8 +1344,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_drive_stop: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -1367,8 +1401,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_sensor1: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_boolean_field',
             template: '%1',
             params: [
@@ -1380,9 +1414,11 @@ Entry.Dash.getBlocks = function() {
                         ['2번 버튼', 0x07],
                         ['3번 버튼', 0x08],
                         ['박수 소리', 0x09],
-                        ['소리', 0x0A],
+                        ['소리', 0x0a],
                     ],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             def: {
@@ -1413,7 +1449,7 @@ Entry.Dash.getBlocks = function() {
                     case 0x09:
                         return pd.clap ? true : false;
                         break;
-                    case 0x0A:
+                    case 0x0a:
                         return pd.sound ? true : false;
                         break;
                     default:
@@ -1423,8 +1459,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_sensor2: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_boolean_field',
             template: '%1',
             params: [
@@ -1439,6 +1475,8 @@ Entry.Dash.getBlocks = function() {
                         ['들림', 0x0a],
                     ],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             def: {
@@ -1479,8 +1517,8 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_animation: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -1506,6 +1544,8 @@ Entry.Dash.getBlocks = function() {
                         ['출발', 0x0e],
                     ],
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',

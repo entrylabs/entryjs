@@ -52,8 +52,8 @@ Entry.Xbot = {
     url: 'http://xbot.co.kr/',
     imageName: 'xbot.png',
     title: {
-        "ko": "엑스봇(원터치 동글/USB)",
-        "en": "XBOT(OneTouch Dongle/USB)"
+        ko: '엑스봇(원터치 동글/USB)',
+        en: 'XBOT(OneTouch Dongle/USB)',
     },
 };
 Entry.Xbot.blockMenuBlocks = [
@@ -75,8 +75,8 @@ Entry.Xbot.getBlocks = function() {
     return {
         //region xbot 엑스봇
         xbot_digitalInput: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_boolean_field',
             statements: [],
             params: [
@@ -89,6 +89,7 @@ Entry.Xbot.getBlocks = function() {
                     ],
                     value: 'D2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
@@ -110,8 +111,8 @@ Entry.Xbot.getBlocks = function() {
             syntax: { js: [], py: ['Xbot.digital_input(%1)'] },
         },
         xbot_analogValue: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -127,6 +128,8 @@ Entry.Xbot.getBlocks = function() {
                     ],
                     value: 'light',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -147,30 +150,26 @@ Entry.Xbot.getBlocks = function() {
             syntax: { js: [], py: ['Xbot.analog_value(%1)'] },
         },
         xbot_digitalOutput: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['LED', 'D13'],
-                        ['D4', 'D4'],
-                        ['D7', 'D7'],
-                        ['D12 ', 'D12'],
-                    ],
+                    options: [['LED', 'D13'], ['D4', 'D4'], ['D7', 'D7'], ['D12 ', 'D12']],
                     value: 'D13',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.XBOT_High, 'HIGH'],
-                        [Lang.Blocks.XBOT_Low, 'LOW'],
-                    ],
+                    options: [[Lang.Blocks.XBOT_High, 'HIGH'], [Lang.Blocks.XBOT_Low, 'LOW']],
                     value: 'HIGH',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -223,8 +222,8 @@ Entry.Xbot.getBlocks = function() {
             syntax: { js: [], py: ['Xbot.digital_output(%1, %2)'] },
         },
         xbot_analogOutput: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -233,6 +232,8 @@ Entry.Xbot.getBlocks = function() {
                     options: [['D5', 'analogD5'], ['D6', 'analogD6']],
                     value: 'analogD5',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -277,8 +278,8 @@ Entry.Xbot.getBlocks = function() {
             syntax: { js: [], py: ['Xbot.analog_output(%1, %2)'] },
         },
         xbot_servo: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -291,6 +292,8 @@ Entry.Xbot.getBlocks = function() {
                     ],
                     value: 'head',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -338,8 +341,8 @@ Entry.Xbot.getBlocks = function() {
             syntax: { js: [], py: ['Xbot.servo(%1, %2)'] },
         },
         xbot_oneWheel: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -352,6 +355,7 @@ Entry.Xbot.getBlocks = function() {
                     ],
                     value: 'rightWheel',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
@@ -397,8 +401,8 @@ Entry.Xbot.getBlocks = function() {
             syntax: { js: [], py: ['Xbot.one_wheel(%1, %2)'] },
         },
         xbot_twoWheel: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -449,8 +453,8 @@ Entry.Xbot.getBlocks = function() {
             syntax: { js: [], py: ['Xbot.two_wheel(%1, %2)'] },
         },
         xbot_rgb: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -511,8 +515,8 @@ Entry.Xbot.getBlocks = function() {
             syntax: { js: [], py: ['Xbot.rgb(%1, %2, %3)'] },
         },
         xbot_rgb_picker: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -548,8 +552,8 @@ Entry.Xbot.getBlocks = function() {
             syntax: { js: [], py: ['Xbot.rgb_picker(%1)'] },
         },
         xbot_buzzer: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -566,6 +570,8 @@ Entry.Xbot.getBlocks = function() {
                     ],
                     value: 'C',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -579,6 +585,8 @@ Entry.Xbot.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -691,8 +699,8 @@ Entry.Xbot.getBlocks = function() {
             syntax: { js: [], py: ['Xbot.buzzer(%1, %2, %3)'] },
         },
         xbot_lcd: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -701,6 +709,7 @@ Entry.Xbot.getBlocks = function() {
                     options: [['0', '0'], ['1', '1']],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {

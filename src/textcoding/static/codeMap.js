@@ -1,6 +1,3 @@
-/*
- *
- */
 'use strict';
 
 Entry.CodeMap = {};
@@ -10,7 +7,7 @@ Entry.CodeMap = {};
         start_neighbor_scene: [
             {
                 다음: 'next',
-                이전: 'pre',
+                이전: 'prev',
             },
         ],
         stop_object: [
@@ -29,7 +26,7 @@ Entry.CodeMap = {};
         ],
         change_to_next_shape: [
             {
-                prev: 'pre',
+                prev: 'prev',
                 pre: 'prev',
                 다음: 'next',
                 이전: 'prev',
@@ -194,7 +191,7 @@ Entry.CodeMap = {};
                 show: 'SHOW',
                 hide: 'HIDE',
             },
-        ]
+        ],
     };
 
     cc.Arduino = {

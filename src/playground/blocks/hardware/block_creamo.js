@@ -1,4 +1,4 @@
-'use static';
+'use strict';
 
 Entry.Creamo = {
     id: '20.1',
@@ -6,8 +6,8 @@ Entry.Creamo = {
     url: 'http://www.creamo.co.kr',
     imageName: 'creamo.png',
     title: {
-        'en': 'creamo',
-        'ko': '크리모',
+        en: 'creamo',
+        ko: '크리모',
     },
     setZero: function() {
         Entry.hw.sendQueue.readablePorts = [];
@@ -155,8 +155,8 @@ Entry.Creamo.getBlocks = function() {
             syntax: { js: [], py: ['creamo.get_number_sensor_value(%1)'] },
         },
         creamo_get_port_number: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -165,6 +165,7 @@ Entry.Creamo.getBlocks = function() {
                     options: [['7', '7'], ['8', '8'], ['12', '12']],
                     value: '7',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
@@ -189,6 +190,7 @@ Entry.Creamo.getBlocks = function() {
                                 options: [['7', '7'], ['8', '8'], ['12', '12']],
                                 value: '7',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
@@ -232,8 +234,8 @@ Entry.Creamo.getBlocks = function() {
             syntax: { js: [], py: ['creamo.toggle_led(%1)'] },
         },
         creamo_motor_port_number: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -242,6 +244,7 @@ Entry.Creamo.getBlocks = function() {
                     options: [['6', '6'], ['9', '9']],
                     value: '6',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
@@ -275,8 +278,8 @@ Entry.Creamo.getBlocks = function() {
             },
         },
         creamo_toggle_pwm: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -300,10 +303,7 @@ Entry.Creamo.getBlocks = function() {
                     {
                         type: 'creamo_get_pwm_port_number',
                     },
-                    {
-                        type: 'arduino_text',
-                        params: ['255'],
-                    },
+                    '255',
                     null,
                 ],
                 type: 'creamo_toggle_pwm',
@@ -343,8 +343,8 @@ Entry.Creamo.getBlocks = function() {
             },
         },
         creamo_get_pwm_port_number: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -353,6 +353,7 @@ Entry.Creamo.getBlocks = function() {
                     options: [['5', '5'], ['6', '6'], ['9', '9']],
                     value: '5',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
@@ -377,10 +378,9 @@ Entry.Creamo.getBlocks = function() {
                                 options: [['5', '5'], ['6', '6'], ['9', '9']],
                                 value: '3',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter:
-                                Entry.block.converters
-                                    .returnStringOrNumberByValue,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
                             },
                         ],
                         keyOption: 'arduino_get_pwm_port_number',

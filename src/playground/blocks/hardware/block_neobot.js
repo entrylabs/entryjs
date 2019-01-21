@@ -6,8 +6,8 @@ Entry.Neobot = {
     url: 'http://www.neobot.co.kr',
     imageName: 'neobot.png',
     title: {
-        "ko": "네오봇",
-        "en": "Neo Bot"
+        ko: '네오봇',
+        en: 'Neo Bot',
     },
     LOCAL_MAP: ['IN1', 'IN2', 'IN3', 'IR', 'BAT'],
     REMOTE_MAP: ['OUT1', 'OUT2', 'OUT3', 'DCR', 'DCL', 'SND', 'FND', 'OPT'],
@@ -41,32 +41,33 @@ Entry.Neobot = {
     },
 };
 
-Entry.Neobot.setLanguage = function () {
+Entry.Neobot.setLanguage = function() {
     return {
         ko: {
             // ko.js에 작성하던 내용
             template: {
-                neobot_sensor_value: "%1",
-                neobot_sensor_convert_scale : "%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 변환",
-                neobot_sensor_color : "%1",
-                neobot_equal_with_sensor : "%1 의 센서값이 %2",
-                get_motor_speed : "%1",
-                neobot_left_motor : "왼쪽 모터를 %1 %2 의 속도로 회전 %3",
-                neobot_stop_left_motor : "왼쪽 모터를 정지 %1",
-                neobot_right_motor : "오른쪽 모터를 %1 %2 의 속도로 회전 %3",
-                neobot_stop_right_motor : "오른쪽 모터를 정지 %1",
-                neobot_all_motor : "양쪽 모터를 %1 %2의 속도로 %3초 동안 회전 %4",
-                neobot_stop_all_motor : "양쪽 모터를 정지 %1",
-                neobot_set_servo : "%1 포트의 서보모터를 %2 도 이동 %3",
-                neobot_set_output : "%1 번 포트의 값을 %2 만큼 출력 %3",
-                neobot_set_fnd : "FND에 %1 출력 %2",
-                neobot_set_fnd_off : "FND 출력 끄기 %1",
-                neobot_play_note_for : "멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4",
-                neobot_play_note_with_sensor : "컨트롤러에서 %1 센서의 %2 ~ %3 값으로 멜로디 연주하기 %4",
-                neobot_change_color_with_color_picker : "%1 LED의 색깔을 %2(으)로 정하기 %3",
-                neobot_change_color_with_sensor_value : "%1 LED의 색깔을 %2 센서 값으로 바꾸기 %3",
+                neobot_sensor_value: '%1',
+                neobot_sensor_convert_scale: '%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 변환',
+                neobot_sensor_color: '%1',
+                neobot_equal_with_sensor: '%1 의 센서값이 %2',
+                get_motor_speed: '%1',
+                neobot_left_motor: '왼쪽 모터를 %1 %2 의 속도로 회전 %3',
+                neobot_stop_left_motor: '왼쪽 모터를 정지 %1',
+                neobot_right_motor: '오른쪽 모터를 %1 %2 의 속도로 회전 %3',
+                neobot_stop_right_motor: '오른쪽 모터를 정지 %1',
+                neobot_all_motor: '양쪽 모터를 %1 %2의 속도로 %3초 동안 회전 %4',
+                neobot_stop_all_motor: '양쪽 모터를 정지 %1',
+                neobot_set_servo: '%1 포트의 서보모터를 %2 도 이동 %3',
+                neobot_set_output: '%1 번 포트의 값을 %2 만큼 출력 %3',
+                neobot_set_fnd: 'FND에 %1 출력 %2',
+                neobot_set_fnd_off: 'FND 출력 끄기 %1',
+                neobot_play_note_for: '멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4',
+                neobot_play_note_with_sensor:
+                    '컨트롤러에서 %1 센서의 %2 ~ %3 값으로 멜로디 연주하기 %4',
+                neobot_change_color_with_color_picker: '%1 LED의 색깔을 %2(으)로 정하기 %3',
+                neobot_change_color_with_sensor_value: '%1 LED의 색깔을 %2 센서 값으로 바꾸기 %3',
             },
-            Blocks : {
+            Blocks: {
                  //for dropdown
                 neobot_port_1 : "1번 포트",
                 neobot_port_2 : "2번 포트",
@@ -108,66 +109,68 @@ Entry.Neobot.setLanguage = function () {
         en: {
             // en.js에 작성하던 내용
             template: {
-                neobot_sensor_value : "%1 value",
-                neobot_sensor_convert_scale : "Change %1's area from %2 ~ %3 to %4 ~ %5",
-                neobot_sensor_color : "%1",
-                neobot_equal_with_sensor : "%1's sensor value is %2",
-                get_motor_speed : "%1",
-                neobot_left_motor : "Move left motor %1 for speed %2 %3",
-                neobot_stop_left_motor : "Stop left motor",
-                neobot_right_motor : "Move right motor %1 for speed %2 %3",
-                neobot_stop_right_motor : "Stop right motor %1",
-                neobot_all_motor : "Move both motors %2 speeds at %1 for %3 seconds %4",
-                neobot_stop_all_motor : "Stop both motors",
-                neobot_set_servo : "%1 port servo motor moves to %2 degrees %3",
-                neobot_set_output : "Output the value of the %1 port by %2 %3",
-                neobot_set_fnd : "Display %1 to FND %2",
-                neobot_set_fnd_off : "Turn off the FND %1",
-                neobot_play_note_for : "Sound melody %1 at %2 octave for %3 %4",
-                neobot_play_note_with_sensor : "Sound melody for value %2 ~ %3 on the controller's %1 %4",
-                neobot_change_color_with_color_picker : "Select %2 for %1 LED %3",
-                neobot_change_color_with_sensor_value : "Change %1 LED's color according to %2 sensor's value %3",
+                neobot_sensor_value: '%1 value',
+                neobot_sensor_convert_scale: "Change %1's area from %2 ~ %3 to %4 ~ %5",
+                neobot_sensor_color: '%1',
+                neobot_equal_with_sensor: "%1's sensor value is %2",
+                get_motor_speed: '%1',
+                neobot_left_motor: 'Move left motor %1 for speed %2 %3',
+                neobot_stop_left_motor: 'Stop left motor',
+                neobot_right_motor: 'Move right motor %1 for speed %2 %3',
+                neobot_stop_right_motor: 'Stop right motor %1',
+                neobot_all_motor: 'Move both motors %2 speeds at %1 for %3 seconds %4',
+                neobot_stop_all_motor: 'Stop both motors',
+                neobot_set_servo: '%1 port servo motor moves to %2 degrees %3',
+                neobot_set_output: 'Output the value of the %1 port by %2 %3',
+                neobot_set_fnd: 'Display %1 to FND %2',
+                neobot_set_fnd_off: 'Turn off the FND %1',
+                neobot_play_note_for: 'Sound melody %1 at %2 octave for %3 %4',
+                neobot_play_note_with_sensor:
+                    "Sound melody for value %2 ~ %3 on the controller's %1 %4",
+                neobot_change_color_with_color_picker: 'Select %2 for %1 LED %3',
+                neobot_change_color_with_sensor_value:
+                    "Change %1 LED's color according to %2 sensor's value %3",
             },
-            Blocks : {
+            Blocks: {
                 //for dropdown
-                neobot_port_1 : "Port 1",
-                neobot_port_2 : "Port 2",
-                neobot_port_3 : "Port 3",
-                neobot_port_4 : "Port 4",
-                neobot_port_bat : "Battery",
-                neobot_port_remot : "Remote",
-                neobot_color_white : "White",
-                neobot_color_red : "Red",
-                neobot_color_yellow : "Yellow",
-                neobot_color_green : "Green",
-                neobot_color_blue : "Blue",
-                neobot_direction_forward : "Forward",
-                neobot_direction_backward : "Backward",
-                neobot_direction_stop : "Stop",
-                neobot_direction_turn_left_p : "Left in place",
-                neobot_direction_turn_right_p : "Right in place",
-                neobot_direction_turn_left : "Left",
-                neobot_direction_turn_right : "Right",
-                neobot_sound_silent : "Silent",
-                neobot_sound_do : "Do",
-                neobot_sound_do_shop : "Do#",
-                neobot_sound_re : "Re",
-                neobot_sound_re_shop : "Re#",
-                neobot_sound_mi : "Mi",
-                neobot_sound_fa : "Fa",
-                neobot_sound_fa_shop : "Fa#",
-                neobot_sound_so : "So",
-                neobot_sound_so_shop : "So#",
-                neobot_sound_la : "La",
-                neobot_sound_la_shop:"La#",
-                neobot_sound_ti : "Ti",
-                neobot_sound_half_note : "Half note",
-                neobot_sound_quarter_note : "Quarter note",
-                neobot_sound_eighth_note : "Eighth note",
-                neobot_sound_sixteenth_note : "Sixteenth note"
-            }
-        }   //
-    }
+                neobot_port_1: 'Port 1',
+                neobot_port_2: 'Port 2',
+                neobot_port_3: 'Port 3',
+                neobot_port_4: 'Port 4',
+                neobot_port_bat: 'Battery',
+                neobot_port_remot: 'Remote',
+                neobot_color_white: 'White',
+                neobot_color_red: 'Red',
+                neobot_color_yellow: 'Yellow',
+                neobot_color_green: 'Green',
+                neobot_color_blue: 'Blue',
+                neobot_direction_forward: 'Forward',
+                neobot_direction_backward: 'Backward',
+                neobot_direction_stop: 'Stop',
+                neobot_direction_turn_left_p: 'Left in place',
+                neobot_direction_turn_right_p: 'Right in place',
+                neobot_direction_turn_left: 'Left',
+                neobot_direction_turn_right: 'Right',
+                neobot_sound_silent: 'Silent',
+                neobot_sound_do: 'Do',
+                neobot_sound_do_shop: 'Do#',
+                neobot_sound_re: 'Re',
+                neobot_sound_re_shop: 'Re#',
+                neobot_sound_mi: 'Mi',
+                neobot_sound_fa: 'Fa',
+                neobot_sound_fa_shop: 'Fa#',
+                neobot_sound_so: 'So',
+                neobot_sound_so_shop: 'So#',
+                neobot_sound_la: 'La',
+                neobot_sound_la_shop: 'La#',
+                neobot_sound_ti: 'Ti',
+                neobot_sound_half_note: 'Half note',
+                neobot_sound_quarter_note: 'Quarter note',
+                neobot_sound_eighth_note: 'Eighth note',
+                neobot_sound_sixteenth_note: 'Sixteenth note',
+            },
+        }, //
+    };
 };
 
 Entry.Neobot.blockMenuBlocks = [
@@ -196,8 +199,8 @@ Entry.Neobot.getBlocks = function() {
     return {
         //region neobot 네오봇
         neobot_sensor_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -214,6 +217,8 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: 'IN1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -233,8 +238,8 @@ Entry.Neobot.getBlocks = function() {
             syntax: { js: [], py: ['Neobot.sensor_value(%1)'] },
         },
         neobot_sensor_convert_scale: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -251,6 +256,8 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: 'IN1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -331,8 +338,8 @@ Entry.Neobot.getBlocks = function() {
             },
         },
         neobot_sensor_color: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -348,6 +355,8 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: 'WHITE',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -368,8 +377,8 @@ Entry.Neobot.getBlocks = function() {
         },
         neobot_equal_with_sensor: {
             //MinjuneL
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -386,6 +395,8 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: 'IN1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -398,6 +409,8 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -437,8 +450,8 @@ Entry.Neobot.getBlocks = function() {
             syntax: { js: [], py: ['Entry.neobot_equal_check()'] },
         },
         get_motor_speed: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -464,6 +477,7 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: '15',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
@@ -480,16 +494,20 @@ Entry.Neobot.getBlocks = function() {
             syntax: { js: [], py: ['%1get_motor_speed#'] },
         },
         neobot_left_motor: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [[Lang.Blocks.neobot_direction_forward, '16'], [Lang.Blocks.neobot_direction_backward, '32']],
+                    options: [
+                        [Lang.Blocks.neobot_direction_forward, '16'],
+                        [Lang.Blocks.neobot_direction_backward, '32'],
+                    ],
                     value: '16',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
@@ -529,8 +547,8 @@ Entry.Neobot.getBlocks = function() {
             syntax: { js: [], py: ['Neobot.turn_left(%1, %2)'] },
         },
         neobot_stop_left_motor: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -554,16 +572,20 @@ Entry.Neobot.getBlocks = function() {
             syntax: { js: [], py: ['Neobot.stop_left()'] },
         },
         neobot_right_motor: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [[Lang.Blocks.neobot_direction_forward, '16'], [Lang.Blocks.neobot_direction_backward, '32']],
+                    options: [
+                        [Lang.Blocks.neobot_direction_forward, '16'],
+                        [Lang.Blocks.neobot_direction_backward, '32'],
+                    ],
                     value: '16',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
@@ -603,8 +625,8 @@ Entry.Neobot.getBlocks = function() {
             syntax: { js: [], py: ['Neobot.turn_right(%1, %2)'] },
         },
         neobot_stop_right_motor: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -628,8 +650,8 @@ Entry.Neobot.getBlocks = function() {
             syntax: { js: [], py: ['Neobot.stop_right()'] },
         },
         neobot_all_motor: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -645,6 +667,7 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
@@ -687,9 +710,7 @@ Entry.Neobot.getBlocks = function() {
                 var sq = Entry.hw.sendQueue;
 
                 if (!script.isStart) {
-                    var speed = Entry.parseNumber(
-                        script.getStringValue('SPEED')
-                    );
+                    var speed = Entry.parseNumber(script.getStringValue('SPEED'));
                     var direction = script.getNumberField('DIRECTION');
                     var duration = script.getNumberValue('DURATION');
 
@@ -747,8 +768,8 @@ Entry.Neobot.getBlocks = function() {
             },
         },
         neobot_stop_all_motor: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -773,20 +794,17 @@ Entry.Neobot.getBlocks = function() {
             syntax: { js: [], py: ['Neobot.run_motor(%1, %2, %3, %4)'] },
         },
         neobot_set_servo: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['OUT1', 'OUT1'],
-                        ['OUT2', 'OUT2'],
-                        ['OUT3', 'OUT3'],
-                    ],
+                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT3', 'OUT3']],
                     value: 'OUT1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
@@ -829,8 +847,8 @@ Entry.Neobot.getBlocks = function() {
             syntax: { js: [], py: ['Neobot.servo_1(%1, %2)'] },
         },
         neobot_set_output: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -844,6 +862,7 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: 'OUT1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
@@ -893,8 +912,8 @@ Entry.Neobot.getBlocks = function() {
             syntax: { js: [], py: ['Neobot.servo_2(%1, %2)'] },
         },
         neobot_set_fnd: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -935,8 +954,8 @@ Entry.Neobot.getBlocks = function() {
             },
         },
         neobot_set_fnd_off: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -963,8 +982,8 @@ Entry.Neobot.getBlocks = function() {
             },
         },
         neobot_play_note_for: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -987,6 +1006,8 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -1000,6 +1021,8 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -1011,6 +1034,8 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1063,8 +1088,8 @@ Entry.Neobot.getBlocks = function() {
         },
         neobot_play_note_with_sensor: {
             //MinjuneL
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1079,6 +1104,8 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: 'IN1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1177,8 +1204,8 @@ Entry.Neobot.getBlocks = function() {
         },
         neobot_change_color_with_color_picker: {
             //MinjuneL
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1192,6 +1219,7 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: 'OUT1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
@@ -1224,8 +1252,8 @@ Entry.Neobot.getBlocks = function() {
             },
         },
         neobot_change_color_with_sensor_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1239,6 +1267,7 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: 'OUT1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
@@ -1253,6 +1282,8 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: 'IN1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',

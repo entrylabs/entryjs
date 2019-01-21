@@ -232,8 +232,8 @@ Entry.Hamster.getBlocks = function() {
     return {
         //region hamster 햄스터
         hamster_hand_found: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -260,8 +260,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -302,6 +302,8 @@ Entry.Hamster.getBlocks = function() {
                     ],
                     value: 'leftProximity',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -383,6 +385,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -450,6 +454,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -517,6 +523,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -584,6 +592,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -651,6 +661,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -718,6 +730,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -785,6 +799,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -852,6 +868,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -919,6 +937,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -986,6 +1006,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -1053,6 +1075,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -1120,6 +1144,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'leftProximity',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -1130,8 +1156,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_move_forward_once: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1229,8 +1255,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_turn_once: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1242,6 +1268,8 @@ Entry.Hamster.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1408,6 +1436,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -1428,6 +1458,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -1438,8 +1470,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_move_forward_for_secs: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1515,8 +1547,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_move_backward_for_secs: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1592,8 +1624,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_turn_for_secs: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1605,6 +1637,8 @@ Entry.Hamster.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1688,6 +1722,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -1712,6 +1748,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -1726,8 +1764,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_change_both_wheels_by: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1800,8 +1838,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_set_both_wheels_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1870,8 +1908,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_change_wheel_by: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1884,6 +1922,8 @@ Entry.Hamster.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1958,6 +1998,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -1980,6 +2022,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2002,6 +2046,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2017,8 +2063,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_set_wheel_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2031,6 +2077,8 @@ Entry.Hamster.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -2093,6 +2141,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2115,6 +2165,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2137,6 +2189,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2152,8 +2206,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_follow_line_using: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2165,6 +2219,8 @@ Entry.Hamster.getBlocks = function() {
                     ],
                     value: 'BLACK',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -2175,6 +2231,8 @@ Entry.Hamster.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -2226,6 +2284,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'BLACK',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2247,6 +2307,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2265,6 +2327,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'BLACK',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2286,6 +2350,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2304,6 +2370,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'BLACK',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2325,6 +2393,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2343,6 +2413,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'BLACK',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2364,6 +2436,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2382,6 +2456,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'BLACK',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2403,6 +2479,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2421,6 +2499,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'BLACK',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2442,6 +2522,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2452,8 +2534,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_follow_line_until: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2465,6 +2547,8 @@ Entry.Hamster.getBlocks = function() {
                     ],
                     value: 'BLACK',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -2476,6 +2560,8 @@ Entry.Hamster.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -2544,6 +2630,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'BLACK',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2563,6 +2651,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2581,6 +2671,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'BLACK',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2600,6 +2692,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2618,6 +2712,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'BLACK',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2637,6 +2733,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2655,6 +2753,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'BLACK',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2674,6 +2774,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2692,6 +2794,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'BLACK',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2711,6 +2815,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2729,6 +2835,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'BLACK',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2748,6 +2856,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2766,6 +2876,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'BLACK',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2785,6 +2897,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2803,6 +2917,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'BLACK',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2822,6 +2938,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -2832,8 +2950,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_set_following_speed_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2851,6 +2969,8 @@ Entry.Hamster.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -2894,6 +3014,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '1',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -2904,8 +3026,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_stop: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2942,8 +3064,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_set_led_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2956,6 +3078,8 @@ Entry.Hamster.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -2970,6 +3094,8 @@ Entry.Hamster.getBlocks = function() {
                     ],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -3018,6 +3144,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3034,6 +3162,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3053,6 +3183,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3069,6 +3201,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3087,6 +3221,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3103,6 +3239,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3121,6 +3259,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3137,6 +3277,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3155,6 +3297,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3171,6 +3315,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3189,6 +3335,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3205,6 +3353,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3223,6 +3373,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3239,6 +3391,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3257,6 +3411,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3273,6 +3429,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3291,6 +3449,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3307,6 +3467,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3325,6 +3487,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3341,6 +3505,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3359,6 +3525,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3375,6 +3543,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3393,6 +3563,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3409,6 +3581,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3427,6 +3601,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3443,6 +3619,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3461,6 +3639,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3477,6 +3657,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3495,6 +3677,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3511,6 +3695,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3529,6 +3715,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3545,6 +3733,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3563,6 +3753,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3579,6 +3771,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3597,6 +3791,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3613,6 +3809,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3631,6 +3829,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3647,6 +3847,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3665,6 +3867,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3681,6 +3885,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3699,6 +3905,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3715,6 +3923,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3725,8 +3935,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_clear_led: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3739,6 +3949,8 @@ Entry.Hamster.getBlocks = function() {
                     ],
                     value: 'LEFT',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -3785,6 +3997,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3803,6 +4017,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3822,6 +4038,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3840,6 +4058,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3858,6 +4078,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3877,6 +4099,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3895,6 +4119,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3913,6 +4139,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3932,6 +4160,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'LEFT',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -3942,8 +4172,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_beep: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3995,8 +4225,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_change_buzzer_by: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4044,8 +4274,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_set_buzzer_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4092,8 +4322,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_clear_buzzer: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4128,8 +4358,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_play_note_for: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4151,6 +4381,8 @@ Entry.Hamster.getBlocks = function() {
                     ],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -4165,6 +4397,8 @@ Entry.Hamster.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -4257,6 +4491,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '4',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnValuePartialUpperCase, // akaii: modify
@@ -4276,6 +4512,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: '1',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -4290,8 +4528,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_rest_for: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4373,8 +4611,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_change_tempo_by: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4426,8 +4664,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_set_tempo_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4479,8 +4717,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_set_port_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4493,6 +4731,8 @@ Entry.Hamster.getBlocks = function() {
                     ],
                     value: 'A',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -4505,6 +4745,8 @@ Entry.Hamster.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -4707,8 +4949,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_change_output_by: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4721,6 +4963,8 @@ Entry.Hamster.getBlocks = function() {
                     ],
                     value: 'A',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -4806,6 +5050,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'A',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -4828,6 +5074,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'A',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -4842,8 +5090,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_set_output_to: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4856,6 +5104,8 @@ Entry.Hamster.getBlocks = function() {
                     ],
                     value: 'A',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -4915,6 +5165,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'A',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -4937,6 +5189,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'A',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -4959,6 +5213,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'A',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -4973,8 +5229,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_gripper: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4986,6 +5242,8 @@ Entry.Hamster.getBlocks = function() {
                     ],
                     value: 'OPEN',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -5048,6 +5306,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'OPEN',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
                         params: ['OPEN'],
@@ -5063,6 +5323,8 @@ Entry.Hamster.getBlocks = function() {
                                 ],
                                 value: 'OPEN',
                                 fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
                         params: ['CLOSE'],
@@ -5071,8 +5333,8 @@ Entry.Hamster.getBlocks = function() {
             },
         },
         hamster_release_gripper: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [

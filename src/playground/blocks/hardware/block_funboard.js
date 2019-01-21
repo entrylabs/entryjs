@@ -7,12 +7,12 @@ Entry.FunBoard = {
     url: 'http://www.thinkfunedu.com',
     imageName: 'funboard.png',
     title: {
-        'en': 'funboard',
-        'ko': '펀보드',
+        en: 'funboard',
+        ko: '펀보드',
     },
     Static: {
-        FUNBOARD_BLOCK_COLOR: '#00CFCA', // gray(#848484)
-        FUNBOARD_ARROW_COLOR_HW: '#00CFCA',
+        FUNBOARD_BLOCK_color: EntryStatic.colorSet.block.default.HARDWARE, // gray(#848484)
+        FUNBOARD_ARROW_COLOR_HW: EntryStatic.colorSet.block.default.HARDWARE,
         FUNBOARD_FONT_COLOR: '#000f0f', // cyan(#000f0f), lightgray(#000113), reddish-brown(#982600)
         FUNBOARD_LED_ON: 255,
         BUTTON_PRESS_VALUE: 0, // 버튼 눌림 값
@@ -36,12 +36,10 @@ Entry.FunBoard = {
                 data: Entry.FunBoard.EventTypes.RESET,
                 time: new Date().getTime(),
             };
-            for (var i = 0; i < 50000; i++) {
-            }
+            for (var i = 0; i < 50000; i++) {}
             Entry.hw.update();
             delete Entry.hw.sendQueue[port];
-            for (var i = 0; i < 500000; i++) {
-            }
+            for (var i = 0; i < 500000; i++) {}
         }
         //-------------------------------------------------
         if (!Entry.hw.sendQueue.SET) {
@@ -52,8 +50,7 @@ Entry.FunBoard = {
         } else {
             var keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach(function(key) {
-                Entry.hw.sendQueue.SET[key].type =
-                    Entry.FunBoard.sensorTypes.ETC;
+                Entry.hw.sendQueue.SET[key].type = Entry.FunBoard.sensorTypes.ETC;
                 Entry.hw.sendQueue.SET[key].data = 0;
                 Entry.hw.sendQueue.SET[key].time = new Date().getTime();
             });
@@ -174,10 +171,8 @@ Entry.FunBoard = {
         var isFloat = false;
 
         if (
-            (Entry.Utils.isNumber(stringValue4) &&
-                stringValue4.indexOf('.') > -1) ||
-            (Entry.Utils.isNumber(stringValue5) &&
-                stringValue5.indexOf('.') > -1)
+            (Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) ||
+            (Entry.Utils.isNumber(stringValue5) && stringValue5.indexOf('.') > -1)
         ) {
             isFloat = true;
         }
@@ -239,7 +234,7 @@ Entry.FunBoard = {
         //즉, 비교할 수 있는 문자들만(기호는 문자비교를 할 수 없으니...)...
         // \ 는 앞에 \ 를 붙인다.
         var displayCharSet =
-            '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz !?#$%&*+-/~^_@<>=()[]{},.:;\'`\\|';
+            "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz !?#$%&*+-/~^_@<>=()[]{},.:;'`\\|";
         var not_found = 62; //62 == space 문자 위치
         if (k < 0 || k >= str.length) return not_found;
         var pos = displayCharSet.indexOf(str[k]);
@@ -310,8 +305,8 @@ Entry.FunBoard.getBlocks = function() {
     return {
         //region FunBoard
         funboard_list_pushbutton_basic: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -326,6 +321,8 @@ Entry.FunBoard.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -340,8 +337,8 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_touchbutton_basic: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -359,6 +356,8 @@ Entry.FunBoard.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -373,8 +372,8 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_analogsensor_basic: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -388,6 +387,8 @@ Entry.FunBoard.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -402,8 +403,8 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_2_state_basic: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -416,6 +417,8 @@ Entry.FunBoard.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -430,8 +433,8 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_ledcolor_basic: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -447,6 +450,8 @@ Entry.FunBoard.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -461,8 +466,8 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_ledcolor_pwm_basic: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -475,6 +480,8 @@ Entry.FunBoard.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -489,8 +496,8 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_onoff_basic: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -503,6 +510,8 @@ Entry.FunBoard.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -517,8 +526,8 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_digital_octave: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -537,6 +546,8 @@ Entry.FunBoard.getBlocks = function() {
                     ],
                     value: '3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -551,8 +562,8 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_digital_tone: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -576,6 +587,8 @@ Entry.FunBoard.getBlocks = function() {
                     ],
                     value: 'C',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -590,8 +603,8 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_matrix_rows: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -610,6 +623,8 @@ Entry.FunBoard.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -624,8 +639,8 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_matrix_row_or_column: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -638,6 +653,8 @@ Entry.FunBoard.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -652,8 +669,8 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_matrix_scroll_option: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -669,6 +686,8 @@ Entry.FunBoard.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -683,8 +702,8 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_matrix_char: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -782,13 +801,15 @@ Entry.FunBoard.getBlocks = function() {
                         ['.', '.'],
                         [':', ':'],
                         [';', ';'],
-                        ['\'', '\''],
+                        ["'", "'"],
                         ['`', '`'],
                         ['\\', '\\'],
                         ['|', '|'],
                     ],
                     value: 'A',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -803,8 +824,8 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_what_button_pressed: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -832,12 +853,9 @@ Entry.FunBoard.getBlocks = function() {
                 var port = 0;
                 var bt_index = script.getNumberValue('PORT');
                 if (bt_index == 1) port = Entry.FunBoard.PORT_MAP['up_bt'];
-                else if (bt_index == 2)
-                    port = Entry.FunBoard.PORT_MAP['down_bt'];
-                else if (bt_index == 3)
-                    port = Entry.FunBoard.PORT_MAP['left_bt'];
-                else if (bt_index == 4)
-                    port = Entry.FunBoard.PORT_MAP['right_bt'];
+                else if (bt_index == 2) port = Entry.FunBoard.PORT_MAP['down_bt'];
+                else if (bt_index == 3) port = Entry.FunBoard.PORT_MAP['left_bt'];
+                else if (bt_index == 4) port = Entry.FunBoard.PORT_MAP['right_bt'];
 
                 var DIGITAL = Entry.hw.portData.DIGITAL;
                 var value = 0;
@@ -864,8 +882,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_what_touch_button_pressed: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -893,18 +911,12 @@ Entry.FunBoard.getBlocks = function() {
                 var port = 0;
                 var bt_index = script.getNumberValue('PORT');
                 if (bt_index == 1) port = Entry.FunBoard.PORT_MAP['up_bt'];
-                else if (bt_index == 2)
-                    port = Entry.FunBoard.PORT_MAP['down_bt'];
-                else if (bt_index == 3)
-                    port = Entry.FunBoard.PORT_MAP['left_bt'];
-                else if (bt_index == 4)
-                    port = Entry.FunBoard.PORT_MAP['right_bt'];
-                else if (bt_index == 5)
-                    port = Entry.FunBoard.PORT_MAP['space_touchbt'];
-                else if (bt_index == 6)
-                    port = Entry.FunBoard.PORT_MAP['enter_touchbt'];
-                else if (bt_index == 7)
-                    port = Entry.FunBoard.PORT_MAP['escape_touchbt'];
+                else if (bt_index == 2) port = Entry.FunBoard.PORT_MAP['down_bt'];
+                else if (bt_index == 3) port = Entry.FunBoard.PORT_MAP['left_bt'];
+                else if (bt_index == 4) port = Entry.FunBoard.PORT_MAP['right_bt'];
+                else if (bt_index == 5) port = Entry.FunBoard.PORT_MAP['space_touchbt'];
+                else if (bt_index == 6) port = Entry.FunBoard.PORT_MAP['enter_touchbt'];
+                else if (bt_index == 7) port = Entry.FunBoard.PORT_MAP['escape_touchbt'];
 
                 var value = 0;
                 var bt_pressed = 0;
@@ -935,8 +947,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_get_digital_button_value: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -964,12 +976,9 @@ Entry.FunBoard.getBlocks = function() {
                 var port = 0;
                 var bt_index = script.getNumberValue('PORT');
                 if (bt_index == 1) port = Entry.FunBoard.PORT_MAP['up_bt'];
-                else if (bt_index == 2)
-                    port = Entry.FunBoard.PORT_MAP['down_bt'];
-                else if (bt_index == 3)
-                    port = Entry.FunBoard.PORT_MAP['left_bt'];
-                else if (bt_index == 4)
-                    port = Entry.FunBoard.PORT_MAP['right_bt'];
+                else if (bt_index == 2) port = Entry.FunBoard.PORT_MAP['down_bt'];
+                else if (bt_index == 3) port = Entry.FunBoard.PORT_MAP['left_bt'];
+                else if (bt_index == 4) port = Entry.FunBoard.PORT_MAP['right_bt'];
 
                 var DIGITAL = Entry.hw.portData.DIGITAL;
                 var value = 0;
@@ -994,8 +1003,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_get_touch_button_value: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1023,18 +1032,12 @@ Entry.FunBoard.getBlocks = function() {
                 var port = 0;
                 var bt_index = script.getNumberValue('PORT');
                 if (bt_index == 1) port = Entry.FunBoard.PORT_MAP['up_bt'];
-                else if (bt_index == 2)
-                    port = Entry.FunBoard.PORT_MAP['down_bt'];
-                else if (bt_index == 3)
-                    port = Entry.FunBoard.PORT_MAP['left_bt'];
-                else if (bt_index == 4)
-                    port = Entry.FunBoard.PORT_MAP['right_bt'];
-                else if (bt_index == 5)
-                    port = Entry.FunBoard.PORT_MAP['space_touchbt'];
-                else if (bt_index == 6)
-                    port = Entry.FunBoard.PORT_MAP['enter_touchbt'];
-                else if (bt_index == 7)
-                    port = Entry.FunBoard.PORT_MAP['escape_touchbt'];
+                else if (bt_index == 2) port = Entry.FunBoard.PORT_MAP['down_bt'];
+                else if (bt_index == 3) port = Entry.FunBoard.PORT_MAP['left_bt'];
+                else if (bt_index == 4) port = Entry.FunBoard.PORT_MAP['right_bt'];
+                else if (bt_index == 5) port = Entry.FunBoard.PORT_MAP['space_touchbt'];
+                else if (bt_index == 6) port = Entry.FunBoard.PORT_MAP['enter_touchbt'];
+                else if (bt_index == 7) port = Entry.FunBoard.PORT_MAP['escape_touchbt'];
 
                 var value = 0;
                 if (bt_index >= 5) {
@@ -1071,8 +1074,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_get_number_sensor_value: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1110,8 +1113,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_get_analog_sensor_2state: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -1160,11 +1163,7 @@ Entry.FunBoard.getBlocks = function() {
 
                 vlimit =
                     vmin +
-                    Math.max(
-                        0,
-                        Math.abs(vmax - vmin) *
-                        Entry.FunBoard.Static.ANALOG_STATE_PERCENT,
-                    );
+                    Math.max(0, Math.abs(vmax - vmin) * Entry.FunBoard.Static.ANALOG_STATE_PERCENT);
 
                 var ret = 0;
                 //작다
@@ -1180,8 +1179,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_convert_scale: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1257,10 +1256,8 @@ Entry.FunBoard.getBlocks = function() {
                 var stringValue5 = script.getValue('VALUE5', script);
                 var isFloat = false;
                 if (
-                    (Entry.Utils.isNumber(stringValue4) &&
-                        stringValue4.indexOf('.') > -1) ||
-                    (Entry.Utils.isNumber(stringValue5) &&
-                        stringValue5.indexOf('.') > -1)
+                    (Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) ||
+                    (Entry.Utils.isNumber(stringValue5) && stringValue5.indexOf('.') > -1)
                 ) {
                     isFloat = true;
                 }
@@ -1297,8 +1294,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_set_digital_buzzer: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
@@ -1419,8 +1416,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_buzzer_second: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1467,8 +1464,7 @@ Entry.FunBoard.getBlocks = function() {
                 if (!script.isStart) {
                     {
                         var port = 0;
-                        if (onoff == '1')
-                            port = Entry.FunBoard.EventTypes.BUZZER_ON;
+                        if (onoff == '1') port = Entry.FunBoard.EventTypes.BUZZER_ON;
                         else port = Entry.FunBoard.EventTypes.BUZZER_OFF;
 
                         if (!Entry.hw.sendQueue['SET']) {
@@ -1502,8 +1498,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_buzzer_tone_simple: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1520,6 +1516,8 @@ Entry.FunBoard.getBlocks = function() {
                     ],
                     value: 'C',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -1533,6 +1531,8 @@ Entry.FunBoard.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1586,8 +1586,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_buzzer_onoff: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1622,12 +1622,10 @@ Entry.FunBoard.getBlocks = function() {
                 if (!script.isStart) {
                     {
                         //1 based value
-                        var eff_value =
-                            Math.floor(Math.random() * (123 - 1)) + 1;
+                        var eff_value = Math.floor(Math.random() * (123 - 1)) + 1;
 
                         var port = 0;
-                        if (onoff == '1')
-                            port = Entry.FunBoard.EventTypes.BUZZER_ON;
+                        if (onoff == '1') port = Entry.FunBoard.EventTypes.BUZZER_ON;
                         else port = Entry.FunBoard.EventTypes.BUZZER_OFF;
 
                         if (!Entry.hw.sendQueue['SET']) {
@@ -1643,10 +1641,7 @@ Entry.FunBoard.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue = Math.max(
-                        1,
-                        3 * Entry.FunBoard.Static.DELAY_SECOND,
-                    );
+                    var timeValue = Math.max(1, 3 * Entry.FunBoard.Static.DELAY_SECOND);
                     timeValue = Entry.FunBoard.Static.DELAY_SECOND;
                     timeValue = 60 / fps * timeValue * 1000;
                     setTimeout(function() {
@@ -1665,8 +1660,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_color_led_onoff: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1735,9 +1730,7 @@ Entry.FunBoard.getBlocks = function() {
                                 if (!Entry.hw.sendQueue['SET']) {
                                     Entry.hw.sendQueue['SET'] = {};
                                 }
-                                Entry.hw.sendQueue['SET'][
-                                    Entry.FunBoard.PORT_MAP['led_red']
-                                    ] = {
+                                Entry.hw.sendQueue['SET'][Entry.FunBoard.PORT_MAP['led_red']] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portR,
                                     time: new Date().getTime(),
@@ -1747,9 +1740,7 @@ Entry.FunBoard.getBlocks = function() {
                                 if (!Entry.hw.sendQueue['SET']) {
                                     Entry.hw.sendQueue['SET'] = {};
                                 }
-                                Entry.hw.sendQueue['SET'][
-                                    Entry.FunBoard.PORT_MAP['led_yellow']
-                                    ] = {
+                                Entry.hw.sendQueue['SET'][Entry.FunBoard.PORT_MAP['led_yellow']] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portY,
                                     time: new Date().getTime(),
@@ -1759,9 +1750,7 @@ Entry.FunBoard.getBlocks = function() {
                                 if (!Entry.hw.sendQueue['SET']) {
                                     Entry.hw.sendQueue['SET'] = {};
                                 }
-                                Entry.hw.sendQueue['SET'][
-                                    Entry.FunBoard.PORT_MAP['led_green']
-                                    ] = {
+                                Entry.hw.sendQueue['SET'][Entry.FunBoard.PORT_MAP['led_green']] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portG,
                                     time: new Date().getTime(),
@@ -1771,9 +1760,7 @@ Entry.FunBoard.getBlocks = function() {
                                 if (!Entry.hw.sendQueue['SET']) {
                                     Entry.hw.sendQueue['SET'] = {};
                                 }
-                                Entry.hw.sendQueue['SET'][
-                                    Entry.FunBoard.PORT_MAP['led_blue']
-                                    ] = {
+                                Entry.hw.sendQueue['SET'][Entry.FunBoard.PORT_MAP['led_blue']] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portB,
                                     time: new Date().getTime(),
@@ -1801,9 +1788,7 @@ Entry.FunBoard.getBlocks = function() {
                                 if (!Entry.hw.sendQueue['SET']) {
                                     Entry.hw.sendQueue['SET'] = {};
                                 }
-                                Entry.hw.sendQueue['SET'][
-                                    Entry.FunBoard.PORT_MAP['led_red']
-                                    ] = {
+                                Entry.hw.sendQueue['SET'][Entry.FunBoard.PORT_MAP['led_red']] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portR,
                                     time: new Date().getTime(),
@@ -1813,9 +1798,7 @@ Entry.FunBoard.getBlocks = function() {
                                 if (!Entry.hw.sendQueue['SET']) {
                                     Entry.hw.sendQueue['SET'] = {};
                                 }
-                                Entry.hw.sendQueue['SET'][
-                                    Entry.FunBoard.PORT_MAP['led_yellow']
-                                    ] = {
+                                Entry.hw.sendQueue['SET'][Entry.FunBoard.PORT_MAP['led_yellow']] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portY,
                                     time: new Date().getTime(),
@@ -1825,9 +1808,7 @@ Entry.FunBoard.getBlocks = function() {
                                 if (!Entry.hw.sendQueue['SET']) {
                                     Entry.hw.sendQueue['SET'] = {};
                                 }
-                                Entry.hw.sendQueue['SET'][
-                                    Entry.FunBoard.PORT_MAP['led_green']
-                                    ] = {
+                                Entry.hw.sendQueue['SET'][Entry.FunBoard.PORT_MAP['led_green']] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portG,
                                     time: new Date().getTime(),
@@ -1837,9 +1818,7 @@ Entry.FunBoard.getBlocks = function() {
                                 if (!Entry.hw.sendQueue['SET']) {
                                     Entry.hw.sendQueue['SET'] = {};
                                 }
-                                Entry.hw.sendQueue['SET'][
-                                    Entry.FunBoard.PORT_MAP['led_blue']
-                                    ] = {
+                                Entry.hw.sendQueue['SET'][Entry.FunBoard.PORT_MAP['led_blue']] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portB,
                                     time: new Date().getTime(),
@@ -1869,8 +1848,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_color_led_on_pwm: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1938,9 +1917,7 @@ Entry.FunBoard.getBlocks = function() {
                             if (!Entry.hw.sendQueue['SET']) {
                                 Entry.hw.sendQueue['SET'] = {};
                             }
-                            Entry.hw.sendQueue['SET'][
-                                Entry.FunBoard.PORT_MAP['led_red']
-                                ] = {
+                            Entry.hw.sendQueue['SET'][Entry.FunBoard.PORT_MAP['led_red']] = {
                                 type: Entry.FunBoard.sensorTypes.PWM,
                                 data: portR,
                                 time: new Date().getTime(),
@@ -1950,9 +1927,7 @@ Entry.FunBoard.getBlocks = function() {
                             if (!Entry.hw.sendQueue['SET']) {
                                 Entry.hw.sendQueue['SET'] = {};
                             }
-                            Entry.hw.sendQueue['SET'][
-                                Entry.FunBoard.PORT_MAP['led_yellow']
-                                ] = {
+                            Entry.hw.sendQueue['SET'][Entry.FunBoard.PORT_MAP['led_yellow']] = {
                                 type: Entry.FunBoard.sensorTypes.PWM,
                                 data: portY,
                                 time: new Date().getTime(),
@@ -1981,8 +1956,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_intensity: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2063,8 +2038,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_scroll_option: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2129,8 +2104,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_scroll_rapid: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2178,8 +2153,7 @@ Entry.FunBoard.getBlocks = function() {
 
                 if (!script.isStart) {
                     {
-                        var port =
-                            Entry.FunBoard.EventTypes.MATRIX_SCROLL_RAPID;
+                        var port = Entry.FunBoard.EventTypes.MATRIX_SCROLL_RAPID;
                         if (!Entry.hw.sendQueue['SET']) {
                             Entry.hw.sendQueue['SET'] = {};
                         }
@@ -2211,8 +2185,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_onoff: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2247,8 +2221,7 @@ Entry.FunBoard.getBlocks = function() {
 
                 if (!script.isStart) {
                     var port = Entry.FunBoard.EventTypes.MATRIX_OFF_ALL;
-                    if (onoff == '1')
-                        port = Entry.FunBoard.EventTypes.MATRIX_ON_ALL;
+                    if (onoff == '1') port = Entry.FunBoard.EventTypes.MATRIX_ON_ALL;
 
                     if (!Entry.hw.sendQueue['SET']) {
                         Entry.hw.sendQueue['SET'] = {};
@@ -2281,8 +2254,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_char_display: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2339,8 +2312,7 @@ Entry.FunBoard.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue =
-                        (char_tot + 0.5) * Entry.FunBoard.Static.DELAY_SECOND;
+                    var timeValue = (char_tot + 0.5) * Entry.FunBoard.Static.DELAY_SECOND;
                     timeValue = 60 / fps * timeValue * 1000;
 
                     Entry.hw.sendQueue['SET'][port] = {
@@ -2382,8 +2354,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_string_display: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2452,8 +2424,7 @@ Entry.FunBoard.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue =
-                        char_tot * Entry.FunBoard.Static.DELAY_SECOND;
+                    var timeValue = char_tot * Entry.FunBoard.Static.DELAY_SECOND;
                     //scroll//var timeValue = (char_tot*3)*Entry.FunBoard.Static.DELAY_SECOND;
                     timeValue = 60 / fps * timeValue * 1000;
 
@@ -2496,8 +2467,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_string_display_scroll: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2561,16 +2532,11 @@ Entry.FunBoard.getBlocks = function() {
 
                 if (!script.isStart) {
                     var port = Entry.FunBoard.EventTypes.STR_OUT_NO_SCROLL;
-                    if (scroll_opt == '1')
-                        port = Entry.FunBoard.EventTypes.STR_OUT_NO_SCROLL;
-                    else if (scroll_opt == '2')
-                        port = Entry.FunBoard.EventTypes.STR_OUT_LEFT;
-                    else if (scroll_opt == '3')
-                        port = Entry.FunBoard.EventTypes.STR_OUT_UP;
-                    else if (scroll_opt == '4')
-                        port = Entry.FunBoard.EventTypes.STR_OUT_RIGHT;
-                    else if (scroll_opt == '5')
-                        port = Entry.FunBoard.EventTypes.STR_OUT_DOWN;
+                    if (scroll_opt == '1') port = Entry.FunBoard.EventTypes.STR_OUT_NO_SCROLL;
+                    else if (scroll_opt == '2') port = Entry.FunBoard.EventTypes.STR_OUT_LEFT;
+                    else if (scroll_opt == '3') port = Entry.FunBoard.EventTypes.STR_OUT_UP;
+                    else if (scroll_opt == '4') port = Entry.FunBoard.EventTypes.STR_OUT_RIGHT;
+                    else if (scroll_opt == '5') port = Entry.FunBoard.EventTypes.STR_OUT_DOWN;
 
                     var text = [];
                     if (typeof string === 'string') {
@@ -2635,8 +2601,8 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_dotmatrix_symbol: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2656,6 +2622,8 @@ Entry.FunBoard.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -2677,10 +2645,7 @@ Entry.FunBoard.getBlocks = function() {
                 var string = script.getField('VALUE');
                 //1 based value (setZero 구별)
                 var value = parseInt(string);
-                if (
-                    value < 1 ||
-                    value > Entry.FunBoard.Static.MATRIX_REGISTED_SYMBOL_TOTAL
-                ) {
+                if (value < 1 || value > Entry.FunBoard.Static.MATRIX_REGISTED_SYMBOL_TOTAL) {
                     return script.callReturn();
                 }
 
@@ -2717,8 +2682,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_num: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2738,6 +2703,8 @@ Entry.FunBoard.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -2785,8 +2752,7 @@ Entry.FunBoard.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue =
-                        char_tot * Entry.FunBoard.Static.DELAY_SECOND;
+                    var timeValue = char_tot * Entry.FunBoard.Static.DELAY_SECOND;
                     timeValue = 60 / fps * timeValue * 1000;
 
                     Entry.hw.sendQueue['SET'][port] = {
@@ -2828,8 +2794,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_big_eng: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2865,6 +2831,8 @@ Entry.FunBoard.getBlocks = function() {
                     ],
                     value: 'A',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -2911,8 +2879,7 @@ Entry.FunBoard.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue =
-                        char_tot * Entry.FunBoard.Static.DELAY_SECOND;
+                    var timeValue = char_tot * Entry.FunBoard.Static.DELAY_SECOND;
                     timeValue = 60 / fps * timeValue * 1000;
 
                     Entry.hw.sendQueue['SET'][port] = {
@@ -2954,8 +2921,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_small_eng: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2991,6 +2958,8 @@ Entry.FunBoard.getBlocks = function() {
                     ],
                     value: 'a',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -3037,8 +3006,7 @@ Entry.FunBoard.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue =
-                        char_tot * Entry.FunBoard.Static.DELAY_SECOND;
+                    var timeValue = char_tot * Entry.FunBoard.Static.DELAY_SECOND;
                     timeValue = 60 / fps * timeValue * 1000;
 
                     Entry.hw.sendQueue['SET'][port] = {
@@ -3080,8 +3048,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_extra_char: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3126,6 +3094,8 @@ Entry.FunBoard.getBlocks = function() {
                     ],
                     value: '!',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -3171,8 +3141,7 @@ Entry.FunBoard.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue =
-                        char_tot * Entry.FunBoard.Static.DELAY_SECOND;
+                    var timeValue = char_tot * Entry.FunBoard.Static.DELAY_SECOND;
                     timeValue = 60 / fps * timeValue * 1000;
 
                     Entry.hw.sendQueue['SET'][port] = {
@@ -3214,8 +3183,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_1row: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3332,8 +3301,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_1column: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3451,8 +3420,8 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_1row_1column: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3583,8 +3552,8 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_dotmatrix_set: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [

@@ -54,8 +54,8 @@ Entry.hummingbird = {
     url: 'http://www.creartbot.com/hummingbird',
     imageName: 'hummingbirdduo.png',
     title: {
-        "en": "Hummingbird Duo",
-        "ko": "허밍버드 듀오"
+        en: 'Hummingbird Duo',
+        ko: '허밍버드 듀오',
     },
 };
 Entry.hummingbird.blockMenuBlocks = [
@@ -78,8 +78,8 @@ Entry.hummingbird.getBlocks = function() {
         //Hummingbird parts
         //범용 센서
         hummingbird_sensorValue: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -87,14 +87,11 @@ Entry.hummingbird.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['1', 'adc1'],
-                        ['2', 'adc2'],
-                        ['3', 'adc3'],
-                        ['4', 'adc4'],
-                    ],
+                    options: [['1', 'adc1'], ['2', 'adc2'], ['3', 'adc3'], ['4', 'adc4']],
                     value: 'adc1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -117,8 +114,8 @@ Entry.hummingbird.getBlocks = function() {
 
         //온도센서
         hummingbird_temperatureValue: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -126,14 +123,11 @@ Entry.hummingbird.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['1', 'adc1'],
-                        ['2', 'adc2'],
-                        ['3', 'adc3'],
-                        ['4', 'adc4'],
-                    ],
+                    options: [['1', 'adc1'], ['2', 'adc2'], ['3', 'adc3'], ['4', 'adc4']],
                     value: 'adc1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -157,8 +151,8 @@ Entry.hummingbird.getBlocks = function() {
         },
         // 빛 블럭
         hummingbird_lightValue: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -166,14 +160,11 @@ Entry.hummingbird.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['1', 'adc1'],
-                        ['2', 'adc2'],
-                        ['3', 'adc3'],
-                        ['4', 'adc4'],
-                    ],
+                    options: [['1', 'adc1'], ['2', 'adc2'], ['3', 'adc3'], ['4', 'adc4']],
                     value: 'adc1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -197,8 +188,8 @@ Entry.hummingbird.getBlocks = function() {
 
         // 거리센서 블럭
         hummingbird_distanceValue: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -206,14 +197,11 @@ Entry.hummingbird.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['1', 'adc1'],
-                        ['2', 'adc2'],
-                        ['3', 'adc3'],
-                        ['4', 'adc4'],
-                    ],
+                    options: [['1', 'adc1'], ['2', 'adc2'], ['3', 'adc3'], ['4', 'adc4']],
                     value: 'adc1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -234,20 +222,19 @@ Entry.hummingbird.getBlocks = function() {
                 var reading = ((pd[dev] >> 2) & 0xff) * 4;
                 if (reading < 130) {
                     distance = 100.0;
-                }
-                else {
+                } else {
                     reading = reading - 120;
                     if (reading > 680) {
                         distance = 5.0;
-                    }
-                    else {
+                    } else {
                         var sensor_val_square = reading * reading;
-                        distance = sensor_val_square*sensor_val_square*reading*-0.000000000004789
-				               + sensor_val_square*sensor_val_square*0.000000010057143
-				               - sensor_val_square*reading*0.000008279033021
-				               + sensor_val_square*0.003416264518201
-				               - reading*0.756893112198934
-				               + 90.707167605683000;
+                        distance =
+                            sensor_val_square * sensor_val_square * reading * -0.000000000004789 +
+                            sensor_val_square * sensor_val_square * 0.000000010057143 -
+                            sensor_val_square * reading * 0.000008279033021 +
+                            sensor_val_square * 0.003416264518201 -
+                            reading * 0.756893112198934 +
+                            90.707167605683;
                     }
                 }
                 return Math.floor(distance);
@@ -257,8 +244,8 @@ Entry.hummingbird.getBlocks = function() {
 
         // 소음 센서 블럭
         hummingbird_soundValue: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -266,14 +253,11 @@ Entry.hummingbird.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['1', 'adc1'],
-                        ['2', 'adc2'],
-                        ['3', 'adc3'],
-                        ['4', 'adc4'],
-                    ],
+                    options: [['1', 'adc1'], ['2', 'adc2'], ['3', 'adc3'], ['4', 'adc4']],
                     value: 'adc1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -293,8 +277,7 @@ Entry.hummingbird.getBlocks = function() {
 
                 if (sound_value > 14) {
                     return Math.round((sound_value - 15) * 3 / 2);
-                }
-                else {
+                } else {
                     return 0;
                 }
             },
@@ -303,8 +286,8 @@ Entry.hummingbird.getBlocks = function() {
 
         // 회전센서
         hummingbird_rotaryValue: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -312,14 +295,11 @@ Entry.hummingbird.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['1', 'adc1'],
-                        ['2', 'adc2'],
-                        ['3', 'adc3'],
-                        ['4', 'adc4'],
-                    ],
+                    options: [['1', 'adc1'], ['2', 'adc2'], ['3', 'adc3'], ['4', 'adc4']],
                     value: 'adc1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -344,8 +324,8 @@ Entry.hummingbird.getBlocks = function() {
 
         //진동모터
         hummingbird_vibeMotor: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: 'HB 진동모터 %1번 세기: %2 %3',
@@ -355,6 +335,8 @@ Entry.hummingbird.getBlocks = function() {
                     options: [['1', 'vibeMotor1'], ['2', 'vibeMotor2']],
                     value: 'vibeMotor1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -402,22 +384,19 @@ Entry.hummingbird.getBlocks = function() {
 
         //서보모터
         hummingbird_servo: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: 'HB 서보모터 %1번 각도: %2 %3',
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['1', 'servo1'],
-                        ['2', 'servo2'],
-                        ['3', 'servo3'],
-                        ['4', 'servo4'],
-                    ],
+                    options: [['1', 'servo1'], ['2', 'servo2'], ['3', 'servo3'], ['4', 'servo4']],
                     value: 'servo1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -466,8 +445,8 @@ Entry.hummingbird.getBlocks = function() {
 
         //기어모터
         hummingbird_dcMotor: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: 'HB 기어모터 %1번 속도: %2 %3',
@@ -477,6 +456,8 @@ Entry.hummingbird.getBlocks = function() {
                     options: [['1', 'dcMotor1'], ['2', 'dcMotor2']],
                     value: 'dcMotor1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -525,22 +506,19 @@ Entry.hummingbird.getBlocks = function() {
 
         // 단색LED
         hummingbird_led: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: 'HB 단색LED %1번 밝기: %2 %3',
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['1', 'led1'],
-                        ['2', 'led2'],
-                        ['3', 'led3'],
-                        ['4', 'led4'],
-                    ],
+                    options: [['1', 'led1'], ['2', 'led2'], ['3', 'led3'], ['4', 'led4']],
                     value: 'led1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -589,8 +567,8 @@ Entry.hummingbird.getBlocks = function() {
 
         // 삼색LED
         hummingbird_triLED: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: 'HB 삼색LED %1번 빨강%2 초록%3 파랑%4 %5',
@@ -600,6 +578,8 @@ Entry.hummingbird.getBlocks = function() {
                     options: [['1', 'triLED1'], ['2', 'triLED2']],
                     value: 'triLED1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',

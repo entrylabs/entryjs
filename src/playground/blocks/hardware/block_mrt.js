@@ -6,8 +6,8 @@ Entry.MRT = {
     url: 'http://www.myrobottime.com/',
     imageName: 'mrt.png',
     title: {
-        "ko": "MRT-X",
-        "en": "MRT-X"
+        ko: 'MRT-X',
+        en: 'MRT-X',
     },
     PORT_MAP: {
         RIGHT_WHEEL1: 0,
@@ -54,45 +54,44 @@ Entry.MRT = {
         }
         this.timeouts = [];
     },
-
 };
 
 Entry.MRT.setLanguage = function() {
     return {
         ko: {
-            template:{
-                    mrt_digitalInput: '%1',
-                    mrt_analogValue: '%1',
-                    mrt_digitalOutput: '디지털 %1 핀, 출력 값 %2 %3',
-                    mrt_servo: '서보 모터 %1 , 각도 %2 %3',
-                    mrt_oneWheel: '바퀴(DC) 모터 %1 , 속도 %2 %3',
-                    mrt_buzzer: '%1   %2 음을 %3 초 연주하기 %4',
-                    mrt_lcd: 'LCD %1 번째 줄 ,  출력 값 %2 %3',
-                    mrt_ultra: '초음파 센서',
-                    mrt_gyro : '자이로 센서 %1',
-                    mrt_color : '컬러 센서',
-                    mrt_remotecontrol : '리모콘',
-                    mrt_keyvalue : '키 값',
-                }
+            template: {
+                mrt_digitalInput: '%1',
+                mrt_analogValue: '%1',
+                mrt_digitalOutput: '디지털 %1 핀, 출력 값 %2 %3',
+                mrt_servo: '서보 모터 %1 , 각도 %2 %3',
+                mrt_oneWheel: '바퀴(DC) 모터 %1 , 속도 %2 %3',
+                mrt_buzzer: '%1   %2 음을 %3 초 연주하기 %4',
+                mrt_lcd: 'LCD %1 번째 줄 ,  출력 값 %2 %3',
+                mrt_ultra: '초음파 센서',
+                mrt_gyro: '자이로 센서 %1',
+                mrt_color: '컬러 센서',
+                mrt_remotecontrol: '리모콘',
+                mrt_keyvalue: '키 값',
             },
+        },
         en: {
-            template:{
-                    mrt_digitalInput: '%1',
-                    mrt_analogValue: '%1',
-                    mrt_digitalOutput: 'digital write pin %1 , value %2 %3',
-                    mrt_servo: 'servo write pin %1 , degrees %2 %3',
-                    mrt_oneWheel: 'set DC-motor %1 , speed %2 %3',
-                    mrt_buzzer: 'play Tone on note %1   %2  %3 duration %4',
-                    mrt_lcd: 'LCD %1 번째 줄 ,  출력 값 %2 %3',
-                    mrt_ultra: 'ultrasonic sensor',
-                    mrt_gyro : 'gyro sensor %1',
-                    mrt_color : 'color sensor',
-                    mrt_remotecontrol : 'remocon',
-                    mrt_keyvalue : 'key value',
-                }
+            template: {
+                mrt_digitalInput: '%1',
+                mrt_analogValue: '%1',
+                mrt_digitalOutput: 'digital write pin %1 , value %2 %3',
+                mrt_servo: 'servo write pin %1 , degrees %2 %3',
+                mrt_oneWheel: 'set DC-motor %1 , speed %2 %3',
+                mrt_buzzer: 'play Tone on note %1   %2  %3 duration %4',
+                mrt_lcd: 'LCD %1 번째 줄 ,  출력 값 %2 %3',
+                mrt_ultra: 'ultrasonic sensor',
+                mrt_gyro: 'gyro sensor %1',
+                mrt_color: 'color sensor',
+                mrt_remotecontrol: 'remocon',
+                mrt_keyvalue: 'key value',
             },
-        };
+        },
     };
+};
 
 Entry.MRT.blockMenuBlocks = [
     //region MRT-X Blocks added
@@ -115,8 +114,8 @@ Entry.MRT.getBlocks = function() {
     return {
         //region xbot 엑스봇
         mrt_analogValue: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -131,6 +130,8 @@ Entry.MRT.getBlocks = function() {
                     ],
                     value: 'adc0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -151,17 +152,15 @@ Entry.MRT.getBlocks = function() {
             syntax: { js: [], py: ['MRT.analog_value(%1)'] },
         },
         mrt_ultra: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             fontColor: '#ffffff',
             params: [
                 {
                     type: 'default_value',
-                    options: [
-                        ['ultra', 'ultra'],
-                    ],
+                    options: [['ultra', 'ultra']],
                     value: 'ultra',
                     fontSize: 11,
                 },
@@ -185,17 +184,15 @@ Entry.MRT.getBlocks = function() {
         },
 
         mrt_color: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             fontColor: '#ffffff',
             params: [
                 {
                     type: 'default_value',
-                    options: [
-                        ['color', 'color'],
-                    ],
+                    options: [['color', 'color']],
                     value: 'color',
                     fontSize: 11,
                 },
@@ -218,19 +215,16 @@ Entry.MRT.getBlocks = function() {
             syntax: { js: [], py: ['MRT.analog_value(%1)'] },
         },
 
-
         mrt_remotecontrol: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             fontColor: '#ffffff',
             params: [
                 {
                     type: 'default_value',
-                    options: [
-                        ['remocon', 'remocon'],
-                    ],
+                    options: [['remocon', 'remocon']],
                     value: 'remocon',
                     fontSize: 11,
                 },
@@ -253,19 +247,16 @@ Entry.MRT.getBlocks = function() {
             syntax: { js: [], py: ['MRT.analog_value(%1)'] },
         },
 
-
         mrt_keyvalue: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             fontColor: '#ffffff',
             params: [
                 {
                     type: 'default_value',
-                    options: [
-                        ['key', 'key'],
-                    ],
+                    options: [['key', 'key']],
                     value: 'key',
                     fontSize: 11,
                 },
@@ -289,21 +280,19 @@ Entry.MRT.getBlocks = function() {
         },
 
         mrt_gyro: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             fontColor: '#ffffff',
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['X', 'gyroX'],
-                        ['Y', 'gyroY'],
-                        ['Z', 'gyroZ'],
-                    ],
+                    options: [['X', 'gyroX'], ['Y', 'gyroY'], ['Z', 'gyroZ']],
                     value: 'gyroX',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -325,8 +314,8 @@ Entry.MRT.getBlocks = function() {
         },
 
         mrt_digitalOutput: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -340,15 +329,16 @@ Entry.MRT.getBlocks = function() {
                     ],
                     value: 'LED',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.XBOT_High, 'HIGH'],
-                        [Lang.Blocks.XBOT_Low, 'LOW'],
-                    ],
+                    options: [[Lang.Blocks.XBOT_High, 'HIGH'], [Lang.Blocks.XBOT_Low, 'LOW']],
                     value: 'HIGH',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -402,20 +392,18 @@ Entry.MRT.getBlocks = function() {
         },
 
         mrt_servo: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['OUT1', 'OUT1'],
-                        ['OUT2', 'OUT2'],
-                        ['OUT3', 'OUT3'],
-                    ],
+                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT3', 'OUT3']],
                     value: 'OUT1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -463,8 +451,8 @@ Entry.MRT.getBlocks = function() {
             syntax: { js: [], py: ['MRT.servo(%1, %2)'] },
         },
         mrt_oneWheel: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -478,6 +466,7 @@ Entry.MRT.getBlocks = function() {
                     ],
                     value: 'RIGHT_WHEEL1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
@@ -519,15 +508,14 @@ Entry.MRT.getBlocks = function() {
                 if (dir == 'RIGHT_WHEEL2') sq.RIGHT_WHEEL2 = speed;
                 if (dir == 'LEFT_WHEEL2') sq.LEFT_WHEEL2 = speed;
 
-
                 return script.callReturn();
             },
             syntax: { js: [], py: ['MRT.one_wheel(%1, %2)'] },
         },
 
         mrt_lcd: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -536,6 +524,7 @@ Entry.MRT.getBlocks = function() {
                     options: [['0', '0'], ['1', '1']],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {

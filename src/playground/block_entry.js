@@ -366,14 +366,15 @@ function getBlocks() {
             events: {},
         },
         arduino_connect: {
-            skeleton: 'basic_button',
-            color: '#eee',
+            skeleton: 'basic_text',
+            color: '#ecf8ff',
+            template: '%1',
             isNotFor: ['arduinoConnect'],
             params: [
                 {
                     type: 'Text',
                     text: Lang.Blocks.ARDUINO_connect,
-                    color: '#4f80ff',
+                    color: '#333',
                     align: 'center',
                 },
             ],
@@ -1321,7 +1322,7 @@ function getBlocks() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/function_icon.svg',
+                    img: 'block_icon/func_icon.svg',
                     size: 11,
                 },
             ],
@@ -1346,7 +1347,7 @@ function getBlocks() {
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/function_icon.svg',
+                    img: 'block_icon/func_icon.svg',
                     size: 11,
                 },
             ],

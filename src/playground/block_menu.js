@@ -97,9 +97,6 @@ class BlockMenu {
             this._addControl($dom.find('.blockMenuContainer'));
         }
 
-        // if (Entry.documentMousedown) {
-        //     Entry.documentMousedown.attach(this, this.setSelectedBlock);
-        // }
         if (this.code && Entry.keyPressed) {
             Entry.keyPressed.attach(this, this._captureKeyEvent);
         }
@@ -136,6 +133,10 @@ class BlockMenu {
             parent,
         });
         Entry.Utils.disableContextmenu(this.blockMenuContainer);
+        this.blockMenuWrapper = Entry.Dom('div', {
+            class: 'blockMenuWrapper',
+            parent: this.blockMenuContainer,
+        });
 
         this.svgDom = Entry.Dom(
             $(
@@ -143,10 +144,10 @@ class BlockMenu {
                     this._svgId
                 }" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>`
             ),
-            { parent: this.blockMenuContainer }
+            { parent: this.blockMenuWrapper }
         );
 
-        this.svgDom.mouseenter(function(e) {
+        this.svgDom.mouseenter(function() {
             that._scroller && that._scroller.setOpacity(0.8);
 
             const selectedBlockView = that.workspace.selectedBlockView;
@@ -164,13 +165,11 @@ class BlockMenu {
             const { menuWidth } = Entry.interfaceState;
             if (expandWidth > menuWidth) {
                 this.widthBackup = menuWidth - adjust - 2;
-                $(this)
-                    .stop()
-                    .animate({ width: expandWidth - adjust }, 200);
+                $(that.blockMenuWrapper).css('width', expandWidth - adjust);
             }
         });
 
-        this.svgDom.mouseleave(function(e) {
+        this.svgDom.mouseleave(function() {
             const playground = Entry.playground;
             if (!playground || playground.resizing) {
                 return;
@@ -182,9 +181,7 @@ class BlockMenu {
 
             const widthBackup = this.widthBackup;
             if (widthBackup) {
-                $(this)
-                    .stop()
-                    .animate({ width: widthBackup }, 200);
+                $(that.blockMenuWrapper).css('width', widthBackup);
             }
             delete this.widthBackup;
             delete playground.focusBlockMenu;
@@ -240,7 +237,7 @@ class BlockMenu {
 
         const vPadding = 15;
         let marginFromTop = 10;
-        const hPadding = this._align == 'LEFT' ? 10 : this.svgDom.width() / 2;
+        const hPadding = this._align === 'LEFT' ? 10 : this.svgDom.width() / 2;
 
         let pastClass;
         const blocks = this._getSortedBlocks();
@@ -272,7 +269,7 @@ class BlockMenu {
             pastClass = className;
 
             let left = hPadding - blockView.offsetX;
-            if (this._align == 'CENTER') {
+            if (this._align === 'CENTER') {
                 left -= blockView.width / 2;
             }
 
@@ -366,7 +363,7 @@ class BlockMenu {
                 this._boardBlockView = newBlockView;
 
                 newBlockView.onMouseDown.call(newBlockView, e);
-                if(newBlockView.dragInstance) {
+                if (newBlockView.dragInstance) {
                     newBlockView.dragInstance.set({
                         isNew: true,
                     });
@@ -396,7 +393,7 @@ class BlockMenu {
         return left < boardBlockView.getBoard().offset().left - width / 2;
     }
 
-    getCode(thread) {
+    getCode() {
         return this.code;
     }
 
@@ -425,7 +422,7 @@ class BlockMenu {
             return;
         }
 
-        var blocks = blocks || this._getSortedBlocks();
+        blocks = blocks || this._getSortedBlocks();
         const targetMode = Entry.BlockView.RENDER_MODE_TEXT;
 
         blocks[0].forEach((block) => {
@@ -473,7 +470,7 @@ class BlockMenu {
                 y1: topPos,
                 x2: this._svgWidth - splitterHPadding,
                 y2: topPos,
-                stroke: '#b5b5b5',
+                stroke: '#AAC5D5',
             })
         );
     }
@@ -564,7 +561,7 @@ class BlockMenu {
     }
 
     selectMenu(selector, doNotFold, doNotAlign) {
-        if(Entry.disposeEvent) {
+        if (Entry.disposeEvent) {
             Entry.disposeEvent.notify();
         }
         if (!this._isOn() || !this._categoryData) {
@@ -599,9 +596,11 @@ class BlockMenu {
         const board = this.workspace.board;
         const boardView = board.view;
         const className = 'entrySelectedCategory';
+        const className2 = 'entryUnSelectedCategory';
 
         if (oldView) {
             oldView.removeClass(className);
+            oldView.addClass(className2);
         }
 
         doNotFold = doNotFold || !this.hasCategory();
@@ -609,7 +608,10 @@ class BlockMenu {
         if (elem == oldView && !doNotFold) {
             boardView.addClass('folding');
             this._selectedCategoryView = null;
-            elem && elem.removeClass(className);
+            if (elem) {
+                elem.removeClass(className);
+                elem.addClass(className2);
+            }
             Entry.playground.hideTabs();
             animate = true;
             this.visible = false;
@@ -637,7 +639,10 @@ class BlockMenu {
 
         if (this.visible) {
             this._selectedCategoryView = elem;
-            elem && elem.addClass(className);
+            if (elem) {
+                elem.removeClass(className2);
+                elem.addClass(className);
+            }
         }
 
         doNotAlign !== true && this._dAlign();
@@ -686,7 +691,7 @@ class BlockMenu {
         this._categories.push(category);
 
         let index;
-        if (category == 'func') {
+        if (category === 'func') {
             const threads = this.code.getThreadsByCategory('func');
             if (threads.length) {
                 index = this.code.getThreadIndex(threads[0]);
@@ -698,7 +703,7 @@ class BlockMenu {
                 return;
             }
             t[0].x = -99999;
-            const thread = this._createThread(t, index);
+            this._createThread(t, index);
             if (index !== undefined) {
                 index++;
             }
@@ -801,6 +806,10 @@ class BlockMenu {
             e.stopPropagation();
         }
 
+        if (Entry.isMobile()) {
+            this._scroller.setOpacity(0.8);
+        }
+
         const { pageY } = Entry.Utils.convertMouseEvent(e);
 
         const dragInstance = this.dragInstance;
@@ -808,16 +817,15 @@ class BlockMenu {
         dragInstance.set({ offsetY: pageY });
     };
 
-    onMouseUp = (e) => {
+    onMouseUp = () => {
+        if (Entry.isMobile()) {
+            this._scroller.setOpacity(0);
+        }
         $(document).unbind('.blockMenu');
         delete this.dragInstance;
     };
 
     onMouseDown(e) {
-        // ISSUE:: 마우스이벤트1
-        // if (e.stopPropagation) {
-        //     e.stopPropagation();
-        // }
         if (e.preventDefault) {
             e.preventDefault();
         }
@@ -881,7 +889,7 @@ class BlockMenu {
     _captureKeyEvent(e) {
         const keyCode = e.keyCode;
 
-        if (e.ctrlKey && Entry.type == 'workspace' && keyCode > 48 && keyCode < 58) {
+        if (e.ctrlKey && Entry.type === 'workspace' && keyCode > 48 && keyCode < 58) {
             e.preventDefault();
             setTimeout(() => {
                 this._cancelDynamic(true);
@@ -970,7 +978,7 @@ class BlockMenu {
                 visible === false ? 'entryRemoveCategory' : '',
             ],
         })
-            .bindOnClick((e) => {
+            .bindOnClick(() => {
                 this._cancelDynamic(true, () => {
                     this.selectMenu(name, undefined, true);
                     this.align();

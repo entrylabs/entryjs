@@ -6,26 +6,26 @@ Entry.BINGLES = {
     url: 'http://www.xbot.co.kr/',
     imageName: 'bingles.png',
     title: {
-        "ko": "빙글S",
-        "en": "BINGLES"
+        ko: '빙글S',
+        en: 'BINGLES',
     },
     PORT_MAP: {
-    RIGHT_WHEEL: 0,
-    LEFT_WHEEL: 0,
-    HEAD: 90,
-    ARMR: 90,
-    ARML: 90,
-    HEAD_LED: 0,
-    ledR: 0,
-    ledG: 0,
-    ledB: 0,
-    lcdNum: 0,
-    lcdTxt: ' ',
-    note: 'C4',
-    duration: 0,
-    motor_direction: 'Forward',
-    motor_duration: 0,
-    OLEDImage: 0,
+        RIGHT_WHEEL: 0,
+        LEFT_WHEEL: 0,
+        HEAD: 90,
+        ARMR: 90,
+        ARML: 90,
+        HEAD_LED: 0,
+        ledR: 0,
+        ledG: 0,
+        ledB: 0,
+        lcdNum: 0,
+        lcdTxt: ' ',
+        note: 'C4',
+        duration: 0,
+        motor_direction: 'Forward',
+        motor_duration: 0,
+        OLEDImage: 0,
     },
     setZero: function() {
         var portMap = Entry.BINGLES.PORT_MAP;
@@ -53,7 +53,6 @@ Entry.BINGLES = {
         }
         this.timeouts = [];
     },
-
 };
 
 Entry.BINGLES.setLanguage = function() {
@@ -75,21 +74,20 @@ Entry.BINGLES.setLanguage = function() {
                 LeftArm: '왼 팔',
                 RightArm: '오른 팔',
             },
-            template:{
-                    bingles_analogValue: '%1',
-                    bingles_digitalOutput: '디지털 %1 핀, 출력 값 %2 %3',
-                    bingles_servo: '서보 모터 %1 , 각도 %2 %3',
-                    bingles_twoWheel: '바퀴(DC) 모터 오른쪽(2) 속도: %1 왼쪽(1) 속도: %2',
-                    bingles_lcd: 'LCD %1 번째 줄 ,  출력 값 %2 %3',
-                    bingles_remotecontrol : '리모콘',
-                    bingles_rgb:'RGB LED 켜기 R 값 %1 G 값 %2 B 값 %3',
-                    bingles_rgb_picker: 'RGB LED색 %1로 정하기',
-                    bingles_buzzer: '%1 %2 음을 %3초 연주하기',
-                    bingles_oled: '얼굴 %1 번 표현 나타내기',
-                    bingles_motorgo: '방향 %1 %2 초 움직이기',
-
-                }
+            template: {
+                bingles_analogValue: '%1',
+                bingles_digitalOutput: '디지털 %1 핀, 출력 값 %2 %3',
+                bingles_servo: '서보 모터 %1 , 각도 %2 %3',
+                bingles_twoWheel: '바퀴(DC) 모터 오른쪽(2) 속도: %1 왼쪽(1) 속도: %2',
+                bingles_lcd: 'LCD %1 번째 줄 ,  출력 값 %2 %3',
+                bingles_remotecontrol: '리모콘',
+                bingles_rgb: 'RGB LED 켜기 R 값 %1 G 값 %2 B 값 %3',
+                bingles_rgb_picker: 'RGB LED색 %1로 정하기',
+                bingles_buzzer: '%1 %2 음을 %3초 연주하기',
+                bingles_oled: '얼굴 %1 번 표현 나타내기',
+                bingles_motorgo: '방향 %1 %2 초 움직이기',
             },
+        },
         en: {
             Blocks: {
                 Forward: 'Forward',
@@ -102,47 +100,33 @@ Entry.BINGLES.setLanguage = function() {
                 IR1Value: 'IR 1 Value',
                 IR2Value: 'IR 2 Value',
                 IR3Value: 'IR 3 Value',
-                Remocon : 'Remote control',
+                Remocon: 'Remote control',
                 Head: 'Head',
                 LeftArm: 'Left',
                 RightArm: 'Right',
             },
-            template:{
-                    bingles_analogValue: '%1',
-                    bingles_digitalOutput: 'Digital %1 PIN, Output Value %2 %3',
-                    bingles_servo: 'Servo Motor %1 , Angle %2 %3',
-                    bingles_twoWheel: 'Wheel(DC) Motor %1 , Speed %2 %3',
-                    bingles_lcd: 'LCD Line %1 , Text %2 %3',
-                    bingles_remotecontrol : 'Remote control',
-                    bingles_rgb:'RGB LED Color from Red %1 Green %2 Blue %3',
-                    bingles_rgb_picker: 'RGB LED Color from %1',
-                    bingles_buzzer: 'Play Tone %1 %2 for %3sec of Melody Playing',
-                    bingles_oled: 'Set Facial Icon %1',
-                    bingles_motorgo: 'Move Robot %1 %2 sec',
-                }
+            template: {
+                bingles_analogValue: '%1',
+                bingles_digitalOutput: 'Digital %1 PIN, Output Value %2 %3',
+                bingles_servo: 'Servo Motor %1 , Angle %2 %3',
+                bingles_twoWheel: 'Wheel(DC) Motor %1 , Speed %2 %3',
+                bingles_lcd: 'LCD Line %1 , Text %2 %3',
+                bingles_remotecontrol: 'Remote control',
+                bingles_rgb: 'RGB LED Color from Red %1 Green %2 Blue %3',
+                bingles_rgb_picker: 'RGB LED Color from %1',
+                bingles_buzzer: 'Play Tone %1 %2 for %3sec of Melody Playing',
+                bingles_oled: 'Set Facial Icon %1',
+                bingles_motorgo: 'Move Robot %1 %2 sec',
             },
-        };
+        },
     };
-
-Entry.BINGLES.blockMenuBlocks = [
-    'bingles_analogValue',
-    'bingles_digitalOutput',
-    'bingles_rgb',
-    'bingles_rgb_picker',
-    'bingles_buzzer',
-    'bingles_servo',
-    'bingles_twoWheel',
-    'bingles_lcd',
-    'bingles_remotecontrol',
-    'bingles_oled',
-    'bingles_motorgo',
-];
-
+};
 Entry.BINGLES.getBlocks = function() {
     return {
         //region xbot 엑스봇
         bingles_analogValue: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -158,6 +142,8 @@ Entry.BINGLES.getBlocks = function() {
                     ],
                     value: 'light',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -179,16 +165,15 @@ Entry.BINGLES.getBlocks = function() {
         },
 
         bingles_remotecontrol: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             fontColor: '#ffffff',
             params: [
                 {
                     type: 'default_value',
-                    options: [
-                        [Lang.Blocks.Remocon, 'remocon'],
-                    ],
+                    options: [[Lang.Blocks.Remocon, 'remocon']],
                     value: 'remocon',
                     fontSize: 11,
                 },
@@ -212,30 +197,30 @@ Entry.BINGLES.getBlocks = function() {
         },
 
         bingles_digitalOutput: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['LED', 'HEAD_LED'],
-                    ],
+                    options: [['LED', 'HEAD_LED']],
                     value: 'HEAD_LED',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.XBOT_High, 'HIGH'],
-                        [Lang.Blocks.XBOT_Low, 'LOW'],
-                    ],
+                    options: [[Lang.Blocks.XBOT_High, 'HIGH'], [Lang.Blocks.XBOT_Low, 'LOW']],
                     value: 'HIGH',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -267,7 +252,8 @@ Entry.BINGLES.getBlocks = function() {
         },
 
         bingles_servo: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -280,6 +266,8 @@ Entry.BINGLES.getBlocks = function() {
                     ],
                     value: 'head',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -287,7 +275,7 @@ Entry.BINGLES.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -327,7 +315,8 @@ Entry.BINGLES.getBlocks = function() {
         },
 
         bingles_lcd: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -336,7 +325,8 @@ Entry.BINGLES.getBlocks = function() {
                     options: [['0', '0'], ['1', '1']],
                     value: '0',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -344,7 +334,7 @@ Entry.BINGLES.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -379,7 +369,8 @@ Entry.BINGLES.getBlocks = function() {
         },
 
         bingles_buzzer: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -396,6 +387,8 @@ Entry.BINGLES.getBlocks = function() {
                     ],
                     value: 'C',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -409,6 +402,8 @@ Entry.BINGLES.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -416,7 +411,7 @@ Entry.BINGLES.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -452,7 +447,7 @@ Entry.BINGLES.getBlocks = function() {
 
                     sq.note = noteOctave;
 
-                    sq.duration = duration * 10;//  convert to 100mSec
+                    sq.duration = duration * 10; //  convert to 100mSec
 
                     script.isStart = true;
                     script.timeFlag = 1;
@@ -480,7 +475,8 @@ Entry.BINGLES.getBlocks = function() {
         },
 
         bingles_rgb: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -498,7 +494,7 @@ Entry.BINGLES.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -542,7 +538,8 @@ Entry.BINGLES.getBlocks = function() {
         },
 
         bingles_rgb_picker: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -551,7 +548,7 @@ Entry.BINGLES.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -579,7 +576,8 @@ Entry.BINGLES.getBlocks = function() {
         },
 
         bingles_twoWheel: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -593,7 +591,7 @@ Entry.BINGLES.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -630,8 +628,9 @@ Entry.BINGLES.getBlocks = function() {
             syntax: { js: [], py: ['bingles.two_wheel(%1, %2)'] },
         },
 
-       bingles_motorgo: {
-            color: '#00979D',
+        bingles_motorgo: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -645,6 +644,8 @@ Entry.BINGLES.getBlocks = function() {
                     ],
                     value: 'Forward',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -652,7 +653,7 @@ Entry.BINGLES.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -681,18 +682,19 @@ Entry.BINGLES.getBlocks = function() {
                 //console.log('xbot_direction ' + motorDir + ' ' + motorDur);
 
                 sq.motor_direction = motorDir;
-                sq.motor_duration = motorDur * 10;//  convert to 100mSec*/
+                sq.motor_duration = motorDur * 10; //  convert to 100mSec*/
                 return script.callReturn();
             },
             syntax: { js: [], py: ['bingles.motorgo(%1, %2, %3)'] },
         },
 
         bingles_oled: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-            {
+                {
                     type: 'Dropdown',
                     options: [
                         ['0', '0'],
@@ -728,10 +730,12 @@ Entry.BINGLES.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -758,8 +762,6 @@ Entry.BINGLES.getBlocks = function() {
 
                 sq.OLEDImage = OLEDImage;
                 return script.callReturn();
-
-
             },
             syntax: { js: [], py: ['bingles.lcd(%1, %2)'] },
         },

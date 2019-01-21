@@ -6,8 +6,8 @@ Entry.memaker = {
     url: 'http://www.jkelec.co.kr/',
     imageName: 'memaker.png',
     title: {
-        "ko": "미메이커",
-        "en": "memaker"
+        ko: '미메이커',
+        en: 'memaker',
     },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
@@ -382,8 +382,8 @@ Entry.memaker.getBlocks = function() {
     return {
         //region memaker 미메이커
         memaker_analog_list: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -402,6 +402,8 @@ Entry.memaker.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -417,8 +419,8 @@ Entry.memaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         memaker_get_analog_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -451,8 +453,8 @@ Entry.memaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         memaker_get_analog_value_map: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -546,8 +548,8 @@ Entry.memaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         memaker_get_ultrasonic_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -594,9 +596,7 @@ Entry.memaker.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.memaker.sensorTypes.ULTRASONIC
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.memaker.sensorTypes.ULTRASONIC] = {
                     port: [port1, port2],
                     time: new Date().getTime(),
                 };
@@ -605,8 +605,8 @@ Entry.memaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         memaker_get_digital: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             params: [
@@ -644,8 +644,8 @@ Entry.memaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         memaker_toggle_led: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -710,8 +710,8 @@ Entry.memaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         memaker_digital_pwm: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -768,8 +768,8 @@ Entry.memaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         memaker_set_servo: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -825,8 +825,8 @@ Entry.memaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         memaker_list_digital_lcd_line: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -836,6 +836,8 @@ Entry.memaker.getBlocks = function() {
                     options: [['LINE1', '0'], ['LINE2', '1']],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -850,8 +852,8 @@ Entry.memaker.getBlocks = function() {
             },
         },
         memaker_list_digital_lcd_column: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -878,6 +880,8 @@ Entry.memaker.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -892,8 +896,8 @@ Entry.memaker.getBlocks = function() {
             },
         },
         memaker_set_lcd: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             template: Lang.template.memaker_set_lcd,
@@ -1012,21 +1016,19 @@ Entry.memaker.getBlocks = function() {
             syntax: { js: [], py: ['memaker.memaker_set_lcd(%1, %2, %3)'] },
         },
         memaker_list_lcd_command: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['LCD_BLUE', '0'],
-                        ['LCD_GREEN', '1'],
-                        ['LCD_CLEAR', '2'],
-                    ],
+                    options: [['LCD_BLUE', '0'], ['LCD_GREEN', '1'], ['LCD_CLEAR', '2']],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1042,8 +1044,8 @@ Entry.memaker.getBlocks = function() {
         },
 
         memaker_lcd_command: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             template: Lang.template.memaker_lcd_command,
             statements: [],

@@ -6,8 +6,8 @@ Entry.playcode = {
     url: 'http://www.playcode.kr/product',
     imageName: 'playcode.png',
     title: {
-        "en": "playcode",
-        "ko": "플레이코드"
+        en: 'playcode',
+        ko: '플레이코드',
     },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
@@ -380,8 +380,8 @@ Entry.playcode.getBlocks = function() {
     return {
         //region playcode
         playcode_port_list: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -400,6 +400,8 @@ Entry.playcode.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -414,8 +416,8 @@ Entry.playcode.getBlocks = function() {
             },
         },
         playcode_first_port_list: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -425,6 +427,8 @@ Entry.playcode.getBlocks = function() {
                     options: [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4']],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -439,8 +443,8 @@ Entry.playcode.getBlocks = function() {
             },
         },
         playcode_get_light_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '빛센서 : %1 포트 값',
@@ -486,8 +490,8 @@ Entry.playcode.getBlocks = function() {
             syntax: { js: [], py: ['playcode.get_analog_value(%1)'] },
         },
         playcode_get_mic_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '마이크센서 : %1 포트 값',
@@ -522,9 +526,7 @@ Entry.playcode.getBlocks = function() {
                     Entry.hw.sendQueue['GET'] = {};
                 }
 
-                Entry.hw.sendQueue['GET'][
-                    Entry.playcode.sensorTypes.MICROPHONE
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.playcode.sensorTypes.MICROPHONE] = {
                     port: [port],
                     data: 1,
                     time: new Date().getTime(),
@@ -535,8 +537,8 @@ Entry.playcode.getBlocks = function() {
             syntax: { js: [], py: ['playcode.get_analog_value(%1)'] },
         },
         playcode_gpio: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             template: 'GPIO : %1포트에 %2 보내기 %3',
@@ -548,12 +550,10 @@ Entry.playcode.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.ARDUINO_on, 'on'],
-                        [Lang.Blocks.ARDUINO_off, 'off'],
-                    ],
+                    options: [[Lang.Blocks.ARDUINO_on, 'on'], [Lang.Blocks.ARDUINO_off, 'off']],
                     value: 'on',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
@@ -601,8 +601,8 @@ Entry.playcode.getBlocks = function() {
             syntax: { js: [], py: ['playcode.playcode_gpio(%1)'] },
         },
         playcode_servo: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             template: 'Servo : %1포트에 %2 보내기 %3',
             params: [
@@ -664,8 +664,8 @@ Entry.playcode.getBlocks = function() {
             },
         },
         playcode_speed: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             template: 'Speed : %1포트에 %2 보내기 %3',
             params: [

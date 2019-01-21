@@ -10,8 +10,8 @@ Entry.Microbit = new class Microbit {
         this.url = 'http://microbit.org/ko/';
         this.imageName = 'microbit.png';
         this.title = {
-            "en": "Microbit",
-            "ko": "마이크로빗"
+            en: 'Microbit',
+            ko: '마이크로빗',
         };
         this.name = 'microbit';
         this.blockIds = {};
@@ -81,7 +81,7 @@ Entry.Microbit = new class Microbit {
                 scope.timeFlag = 0;
             });
             return false;
-        }else if (this.blockIds[this.nowBlockId] && scope.timeFlag === 0) {
+        } else if (this.blockIds[this.nowBlockId] && scope.timeFlag === 0) {
             delete this.blockIds[this.nowBlockId];
             delete scope.isStart;
             this.execTimeFlag = 0;
@@ -122,11 +122,7 @@ Entry.Microbit = new class Microbit {
     afterReceive({ blockId = '', RADIO }) {
         if (blockId in this.blockIds) {
             this.blockIds[blockId] = true;
-        } else if (
-            RADIO &&
-            Entry.engine.isState('run') &&
-            RADIO.time > this.radioTime
-        ) {
+        } else if (RADIO && Entry.engine.isState('run') && RADIO.time > this.radioTime) {
             this.radioTime = RADIO.time;
             Entry.engine.fireEvent('MicrobitRadioReceive');
         }
@@ -153,8 +149,8 @@ Entry.Microbit.blockMenuBlocks = [
 Entry.Microbit.getBlocks = function() {
     return {
         microbit_led_toggle: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: 'LED의 X:%1 Y:%2 %3 %4',
@@ -171,13 +167,11 @@ Entry.Microbit.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['켜기', 'on'],
-                        ['끄기', 'off'],
-                        ['반전', 'toggle'],
-                    ],
+                    options: [['켜기', 'on'], ['끄기', 'off'], ['반전', 'toggle']],
                     value: 'on',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -229,8 +223,8 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_get_led: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -299,8 +293,8 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_show_string: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: '%1 출력하기 %2',
@@ -349,8 +343,8 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_show_image: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: '%1 아이콘 출력하기 %2',
@@ -366,6 +360,8 @@ Entry.Microbit.getBlocks = function() {
                     ],
                     value: 0,
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -397,8 +393,8 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_get_analog: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -409,6 +405,8 @@ Entry.Microbit.getBlocks = function() {
                     options: [['P0', 7], ['P1', 8], ['P2', 9]],
                     value: 7,
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -446,19 +444,20 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_get_analog_map: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic_string_field',
             statements: [],
-            template:
-                '아날로그 핀 %1번 센서값의 범위를 %2~%3 에서 %4~%5 (으)로 바꾼값',
+            template: '아날로그 핀 %1번 센서값의 범위를 %2~%3 에서 %4~%5 (으)로 바꾼값',
             params: [
                 {
                     type: 'Dropdown',
                     options: [['P0', 7], ['P1', 8], ['P2', 9]],
                     value: 7,
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -545,10 +544,8 @@ Entry.Microbit.getBlocks = function() {
                 var isFloat = false;
 
                 if (
-                    (Entry.Utils.isNumber(stringValue4) &&
-                        stringValue4.indexOf('.') > -1) ||
-                    (Entry.Utils.isNumber(stringValue5) &&
-                        stringValue5.indexOf('.') > -1)
+                    (Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) ||
+                    (Entry.Utils.isNumber(stringValue5) && stringValue5.indexOf('.') > -1)
                 ) {
                     isFloat = true;
                 }
@@ -564,8 +561,7 @@ Entry.Microbit.getBlocks = function() {
                     value5 = swap;
                 }
                 returnData -= value2;
-                returnData =
-                    returnData * ((value5 - value4) / (value3 - value2));
+                returnData = returnData * ((value5 - value4) / (value3 - value2));
                 returnData += value4;
                 returnData = Math.min(value5, returnData);
                 returnData = Math.max(value4, returnData);
@@ -579,8 +575,8 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_get_digital: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -591,6 +587,8 @@ Entry.Microbit.getBlocks = function() {
                     options: [['P0', 7], ['P1', 8], ['P2', 9]],
                     value: 7,
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -628,8 +626,8 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_get_button: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -640,6 +638,8 @@ Entry.Microbit.getBlocks = function() {
                     options: [['A', 1], ['B', 2]],
                     value: 1,
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -677,8 +677,8 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_get_sensor: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -693,6 +693,8 @@ Entry.Microbit.getBlocks = function() {
                     ],
                     value: 'temperature',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -730,8 +732,8 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_get_accelerometer: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -739,14 +741,11 @@ Entry.Microbit.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['x축', 0],
-                        ['y축', 1],
-                        ['z축', 2],
-                        ['크기', 3],
-                    ],
+                    options: [['x축', 0], ['y축', 1], ['z축', 2], ['크기', 3]],
                     value: 'x',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -778,18 +777,14 @@ Entry.Microbit.getBlocks = function() {
                     if (!scope.cacheValue) {
                         scope.cacheValue = {};
                     }
-                    _set(
-                        scope.cacheValue,
-                        `GET_ACCELEROMETER.${value}`,
-                        returnData
-                    );
+                    _set(scope.cacheValue, `GET_ACCELEROMETER.${value}`, returnData);
                 }
                 return returnData;
             },
         },
         microbit_play_note: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic',
             statements: [],
@@ -837,6 +832,8 @@ Entry.Microbit.getBlocks = function() {
                     ],
                     value: 262,
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -851,6 +848,8 @@ Entry.Microbit.getBlocks = function() {
                     ],
                     value: 1,
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -885,8 +884,8 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_change_bpm: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic',
             statements: [],
@@ -933,8 +932,8 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_set_bpm: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic',
             statements: [],
@@ -981,8 +980,8 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_radio_receive_event: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_event',
             statements: [],
@@ -990,13 +989,13 @@ Entry.Microbit.getBlocks = function() {
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/start_icon_hardware.png',
-                    size: 17,
+                    img: 'block_icon/start_icon_hardware.svg',
+                    size: 14,
                     position: { x: 0, y: -2 },
                 },
             ],
             def: { params: [], type: 'microbit_radio_receive_event' },
-            paramsKeyMap: { },
+            paramsKeyMap: {},
             class: 'MicrobitRadio',
             isNotFor: ['microbit'],
             event: 'MicrobitRadioReceive',

@@ -18,16 +18,16 @@ Entry.Func = function(func) {
     this.content = content
         ? new Entry.Code(content)
         : new Entry.Code([
-            [
-                {
-                    type: 'function_create',
-                    copyable: false,
-                    deletable: false,
-                    x: 40,
-                    y: 40,
-                },
-            ],
-        ]);
+              [
+                  {
+                      type: 'function_create',
+                      copyable: false,
+                      deletable: false,
+                      x: 40,
+                      y: 40,
+                  },
+              ],
+          ]);
     this.block = null;
     this.blockMenuBlock = null;
     this._backupContent = null;
@@ -462,7 +462,7 @@ Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
     schemaTemplate += ` %${booleanIndex + stringIndex + 1}`;
     schemaParams.push({
         type: 'Indicator',
-        img: 'block_icon/function_03.png',
+        img: 'block_icon/func_icon.svg',
         size: 12,
     });
 

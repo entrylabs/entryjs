@@ -6,8 +6,8 @@ Entry.DaduBlock = {
     url: 'http://www.dadublock.com/',
     imageName: 'dadublock.png',
     title: {
-        "ko": "다두블럭",
-        "en": "DaduBlock"
+        ko: '다두블럭',
+        en: 'DaduBlock',
     },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
@@ -58,8 +58,8 @@ Entry.DaduBlock_Car = {
     url: 'http://www.dadublock.com/',
     imageName: 'dadublock_car.png',
     title: {
-        "ko": "다두블럭 자동차",
-        "en": "DaduBlock Car"
+        ko: '다두블럭 자동차',
+        en: 'DaduBlock Car',
     },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
@@ -132,22 +132,19 @@ Entry.DaduBlock.getBlocks = function() {
     return {
         //region dadublock 다두블록
         dadublock_get_analog_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['A0', '0'],
-                        ['A1', '1'],
-                        ['A2', '2'],
-                        ['A3', '3'],
-                    ],
+                    options: [['A0', '0'], ['A1', '1'], ['A2', '2'], ['A3', '3']],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -167,22 +164,19 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_get_analog_value_map: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['A0', '0'],
-                        ['A1', '1'],
-                        ['A2', '2'],
-                        ['A3', '3'],
-                    ],
+                    options: [['A0', '0'], ['A1', '1'], ['A2', '2'], ['A3', '3']],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -262,8 +256,8 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_get_ultrasonic_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -286,6 +280,8 @@ Entry.DaduBlock.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -305,6 +301,8 @@ Entry.DaduBlock.getBlocks = function() {
                     ],
                     value: '3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -330,9 +328,7 @@ Entry.DaduBlock.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.DaduBlock.sensorTypes.ULTRASONIC
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.DaduBlock.sensorTypes.ULTRASONIC] = {
                     port: [port1, port2],
                     time: new Date().getTime(),
                 };
@@ -340,8 +336,8 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_get_digital: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             params: [
@@ -363,6 +359,8 @@ Entry.DaduBlock.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -382,9 +380,7 @@ Entry.DaduBlock.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.DaduBlock.sensorTypes.DIGITAL
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.DaduBlock.sensorTypes.DIGITAL] = {
                     port: port,
                     time: new Date().getTime(),
                 };
@@ -392,8 +388,8 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_toggle_led: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -415,12 +411,16 @@ Entry.DaduBlock.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [['켜기', 'on'], ['끄기', 'off']],
                     value: 'on',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -460,21 +460,18 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_digital_pwm: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['~5', '5'],
-                        ['~6', '6'],
-                        ['~9', '9'],
-                        ['~10', '10'],
-                    ],
+                    options: [['~5', '5'], ['~6', '6'], ['~9', '9'], ['~10', '10']],
                     value: '5',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -524,8 +521,8 @@ Entry.DaduBlock.getBlocks = function() {
             syntax: { js: [], py: ['Arduino.analogWrite(%1, %2)'] },
         },
         dadublock_set_servo: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -547,6 +544,8 @@ Entry.DaduBlock.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -591,8 +590,8 @@ Entry.DaduBlock.getBlocks = function() {
             syntax: { js: [], py: ['Arduino.servomotorWrite(%1, %2)'] },
         },
         dadublock_set_tone: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -614,6 +613,8 @@ Entry.DaduBlock.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -634,6 +635,8 @@ Entry.DaduBlock.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -647,6 +650,8 @@ Entry.DaduBlock.getBlocks = function() {
                     ],
                     value: '3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -742,22 +747,19 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_car_get_analog_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['A0', '0'],
-                        ['A1', '1'],
-                        ['A2', '2'],
-                        ['A3', '3'],
-                    ],
+                    options: [['A0', '0'], ['A1', '1'], ['A2', '2'], ['A3', '3']],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -777,22 +779,19 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_car_get_analog_value_map: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['A0', '0'],
-                        ['A1', '1'],
-                        ['A2', '2'],
-                        ['A3', '3'],
-                    ],
+                    options: [['A0', '0'], ['A1', '1'], ['A2', '2'], ['A3', '3']],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -872,8 +871,8 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_car_get_ultrasonic_value: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -896,6 +895,8 @@ Entry.DaduBlock.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -915,6 +916,8 @@ Entry.DaduBlock.getBlocks = function() {
                     ],
                     value: '3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -940,9 +943,7 @@ Entry.DaduBlock.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.DaduBlock.sensorTypes.ULTRASONIC
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.DaduBlock.sensorTypes.ULTRASONIC] = {
                     port: [port1, port2],
                     time: new Date().getTime(),
                 };
@@ -950,8 +951,8 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_car_get_digital: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             params: [
@@ -973,6 +974,8 @@ Entry.DaduBlock.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -992,9 +995,7 @@ Entry.DaduBlock.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.DaduBlock.sensorTypes.DIGITAL
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.DaduBlock.sensorTypes.DIGITAL] = {
                     port: port,
                     time: new Date().getTime(),
                 };
@@ -1002,8 +1003,8 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_car_toggle_led: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1025,12 +1026,16 @@ Entry.DaduBlock.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [['켜기', 'on'], ['끄기', 'off']],
                     value: 'on',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1070,21 +1075,18 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_car_digital_pwm: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['~5', '5'],
-                        ['~6', '6'],
-                        ['~9', '9'],
-                        ['~10', '10'],
-                    ],
+                    options: [['~5', '5'], ['~6', '6'], ['~9', '9'], ['~10', '10']],
                     value: '5',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1134,8 +1136,8 @@ Entry.DaduBlock.getBlocks = function() {
             syntax: { js: [], py: ['Arduino.analogWrite(%1, %2)'] },
         },
         dadublock_car_set_servo: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1157,6 +1159,8 @@ Entry.DaduBlock.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1201,8 +1205,8 @@ Entry.DaduBlock.getBlocks = function() {
             syntax: { js: [], py: ['Arduino.servomotorWrite(%1, %2)'] },
         },
         dadublock_car_set_tone: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1224,6 +1228,8 @@ Entry.DaduBlock.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -1244,6 +1250,8 @@ Entry.DaduBlock.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -1257,6 +1265,8 @@ Entry.DaduBlock.getBlocks = function() {
                     ],
                     value: '3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1352,8 +1362,8 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_car_motor_stop: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1362,6 +1372,8 @@ Entry.DaduBlock.getBlocks = function() {
                     options: [['~5,~6', '1'], ['~9,~10', '2']],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1425,8 +1437,8 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_car_motor: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1435,12 +1447,16 @@ Entry.DaduBlock.getBlocks = function() {
                     options: [['~5,~6', '1'], ['~9,~10', '2']],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [['정방향', '1'], ['역방향', '2']],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1566,8 +1582,8 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_car_get_irsensor: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             params: [
@@ -1589,6 +1605,8 @@ Entry.DaduBlock.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1608,9 +1626,7 @@ Entry.DaduBlock.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.DaduBlock.sensorTypes.DIGITAL
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.DaduBlock.sensorTypes.DIGITAL] = {
                     port: port,
                     time: new Date().getTime(),
                 };
