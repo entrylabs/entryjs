@@ -66,6 +66,25 @@ Entry.Variable = class Variable {
         Entry.addEventListener('workspaceChangeMode', this.updateView.bind(this));
     }
 
+    _createListElementView() {
+        let elementView = GEHelper.newContainer();
+        const indexView = GEHelper.newText('asdf', this.FONT, '#000000', 'middle');
+        indexView.y = 5;
+        elementView.addChild(indexView);
+        elementView.indexView = indexView;
+        const valueWrapper = GEHelper.newGraphic();
+        elementView.addChild(valueWrapper);
+        elementView.valueWrapper = valueWrapper;
+        const valueView = GEHelper.newText('fdsa', this.FONT, '#eeeeee', 'middle');
+        valueView.x = 24;
+        valueView.y = 6;
+        elementView.addChild(valueView);
+        elementView.valueView = valueView;
+        elementView.x = this.BORDER;
+
+        return elementView;
+    }
+
     /**
      * Generate variable view on canvas
      * @param {number} variableIndex index of this variable for render position
@@ -227,7 +246,8 @@ Entry.Variable = class Variable {
                 .f('#1bafea')
                 .ss(1, 0, 0)
                 .s('#1bafea')
-                .lt(0, -9)
+                //todo 박준배. 원래 lt 였으나, mt로 변경. mt가 맞는지 확인 하기.
+                .mt(0, -9)
                 .lt(-9, 0)
                 .lt(0, 0);
             this.view_.addChild(this.resizeHandle_);
@@ -283,21 +303,7 @@ Entry.Variable = class Variable {
                 this.variable.updateView();
             });
 
-            this.elementView = GEHelper.newContainer();
-            const indexView = GEHelper.newText('asdf', this.FONT, '#000000', 'middle');
-            indexView.y = 5;
-            this.elementView.addChild(indexView);
-            this.elementView.indexView = indexView;
-            const valueWrapper = GEHelper.newGraphic();
-            this.elementView.addChild(valueWrapper);
-            this.elementView.valueWrapper = valueWrapper;
-            const valueView = GEHelper.newText('fdsa', this.FONT, '#eeeeee', 'middle');
-            valueView.x = 24;
-            valueView.y = 6;
-            this.elementView.addChild(valueView);
-            this.elementView.valueView = valueView;
-            this.elementView.x = this.BORDER;
-
+            this.elementView = this._createListElementView();
             this.scrollButton_ = GEHelper.newGraphic();
             this.scrollButton_.graphics.f('#aaaaaa').rr(0, 0, 7, 30, 3.5);
             this.view_.addChild(this.scrollButton_);
@@ -569,6 +575,7 @@ Entry.Variable = class Variable {
                     i < this.scrollPosition + maxView && i < arr.length;
                     i++
                 ) {
+                    this.elementView = this._createListElementView();
                     if (
                         Entry.getMainWS() &&
                         Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD
@@ -615,9 +622,8 @@ Entry.Variable = class Variable {
                         maxLen = Math.max(execText.length, maxLen);
                     }
 
-                    const view = this.elementView.clone(true);
-                    view.y = (i - this.scrollPosition) * 20 + 23;
-                    this.view_.addChild(view);
+                    this.elementView.y = (i - this.scrollPosition) * 20 + 23;
+                    this.view_.addChild(this.elementView);
                 }
             } else if (this.type === 'answer') {
                 this.view_.x = this.getX();
