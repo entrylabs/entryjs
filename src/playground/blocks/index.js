@@ -58,6 +58,7 @@ require('./block_bingles');
 require('./block_proboconnect');
 require('./block_sciencecube');
 require('./block_codingmachine');
+require('./block_thinkboard');
 
 Entry.HARDWARE_LIST = {
     '1.1': Entry.Arduino,
@@ -116,13 +117,14 @@ Entry.HARDWARE_LIST = {
     '1F.1': Entry.mechatro,
     '20.1': Entry.Creamo,
     '21.1': Entry.FunBoard,
+    '21.2': Entry.ThinkBoard,	
     '22.1': Entry.Microbit,
     '23.1': Entry.MRT,
     '24.1': Entry.Dash,
     '1.D': Entry.BINGLES,
     '25.1': Entry.sciencecube,
     '26.1': Entry.Codingmachine,
-    '27.1': Entry.ProboConnect,
+    '27.1': Entry.ProboConnect
 };
 
 const startBlock = require('./block_start');
