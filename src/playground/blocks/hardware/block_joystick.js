@@ -78,12 +78,12 @@ Entry.joystick.setLanguage = function() {
                 joystick_set_servo:
                     '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
                 joystick_get_digital: '디지털 %1 번 센서값',
-				joystick_is_button_pressed: '%1 버튼이 눌렸는가?',
-				joystick_get_joystick_value: '조이스틱을 %1 으로 움직였는가?',
-				joystick_get_sensor_value: '%1 의 측정값',
-				joystick_toggle_motor: '진동모터 %1',
-				joystick_toggle_shield_led: '%1 번 째 LED를 %2 %3',
-				arduino_get_led_toggle: '%1',
+		joystick_is_button_pressed: '%1 버튼이 눌렸는가?',
+		joystick_get_joystick_value: '조이스틱을 %1 으로 움직였는가?',
+		joystick_get_sensor_value: '%1 의 측정값',
+		joystick_toggle_motor: '진동모터 %1',
+		joystick_toggle_shield_led: '%1 번 째 LED를 %2 %3',
+		joystick_get_led_number: '%1',
             }
         },
         en: {
@@ -99,11 +99,12 @@ Entry.joystick.setLanguage = function() {
                     'Play tone on note %1 octave %2 beat %3 %4',
                 joystick_set_servo: 'Set servo pin %1 angle as %2 %3',
                 joystick_get_digital: 'Digital %1 Sensor value',
-				joystick_is_button_pressed: 'button pressed %1',
-				joystick_get_joystick_value: 'when the joystick move to %1',
-				joystick_get_sensor_value: '%1 value',
-				joystick_toggle_motor: 'vibrator motor %1',
-				joystick_toggle_shield_led: '%2 the sensorshield %1 LED %3',
+		joystick_is_button_pressed: 'button pressed %1',
+		joystick_get_joystick_value: 'when the joystick move to %1',
+		joystick_get_sensor_value: '%1 value',
+		joystick_toggle_motor: 'vibrator motor %1',
+		joystick_toggle_shield_led: '%2 the sensorshield %1 LED %3',
+		joystick_get_led_number: '%1',
             }
         },
     };
@@ -1392,7 +1393,7 @@ Entry.joystick.getBlocks = function() {
                 ],
             },
         },
-		arduino_get_led_toggle: {
+		joystick_get_led_number: {
             color: '#00CFCA',
 			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
@@ -1453,7 +1454,7 @@ Entry.joystick.getBlocks = function() {
             def: {
                 params: [
 					{
-                        type: 'arduino_get_led_toggle',
+                        type: 'joystick_get_led_number',
 						params: [null],
                     },
                     {
