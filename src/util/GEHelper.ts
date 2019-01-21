@@ -174,6 +174,25 @@ class _GEHelper {
         }
     }
 
+    /**
+     * @param str
+     * @param font size & fontface - 10pt NanumGothic
+     * @param color css style color - #ffffff
+     * @param textBaseline
+     * @param textAlign
+     * @
+     */
+    newText(str:string, font:string, color:string, textBaseline?:string, textAlign?:string):PIXI.Text|any {
+        if(this._isWebGL) {
+            return PIXIHelper.text(str, font, color, textBaseline, textAlign);
+        } else {
+            let t = new createjs.Text(font, font, color);
+            textBaseline ? t.textBaseline = textBaseline : 0;
+            textAlign ? t.textAlign = textAlign : 0;
+            return t;
+        }
+    }
+
 
 }
 

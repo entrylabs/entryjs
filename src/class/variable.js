@@ -79,13 +79,11 @@ Entry.Variable = class Variable {
             this.view_.variable = this;
             this.wrapper_ = GEHelper.newGraphic();
             this.view_.addChild(this.wrapper_);
-            this.textView_ = new createjs.Text('asdf', this.FONT, '#000000');
-            this.textView_.textBaseline = 'alphabetic';
+            this.textView_ = GEHelper.newText('asdf', this.FONT, '#000000', 'alphabetic');
             this.textView_.x = 4;
             this.textView_.y = 1;
             this.view_.addChild(this.textView_);
-            this.valueView_ = new createjs.Text('asdf', '10pt NanumGothic', '#ffffff');
-            this.valueView_.textBaseline = 'alphabetic';
+            this.valueView_ = GEHelper.newText('asdf', '10pt NanumGothic', '#ffffff', 'alphabetic');
             const variableLength = Entry.variableContainer.variables_.length;
             if (this.getX() && this.getY()) {
                 this.setX(this.getX());
@@ -125,13 +123,11 @@ Entry.Variable = class Variable {
             this.view_.variable = this;
             this.wrapper_ = GEHelper.newGraphic();
             this.view_.addChild(this.wrapper_);
-            this.textView_ = new createjs.Text('name', this.FONT, '#000000');
-            this.textView_.textBaseline = 'alphabetic';
+            this.textView_ = GEHelper.newText('name', this.FONT, '#000000', 'alphabetic');
             this.textView_.x = 4;
             this.textView_.y = 1;
             this.view_.addChild(this.textView_);
-            this.valueView_ = new createjs.Text('value', '10pt NanumGothic', '#ffffff');
-            this.valueView_.textBaseline = 'alphabetic';
+            this.valueView_ = GEHelper.newText('value', '10pt NanumGothic', '#ffffff', 'alphabetic');
             this.view_.on('mousedown', function(evt) {
                 if (Entry.type !== 'workspace') {
                     return;
@@ -220,9 +216,7 @@ Entry.Variable = class Variable {
             this.rect_ = GEHelper.newGraphic();
             this.view_.addChild(this.rect_);
             this.view_.variable = this;
-            this.titleView_ = new createjs.Text('asdf', this.FONT, '#000');
-            this.titleView_.textBaseline = 'alphabetic';
-            this.titleView_.textAlign = 'center';
+            this.titleView_ = GEHelper.newText('asdf', this.FONT, '#000', 'alphabetic', 'center');
             this.titleView_.width = this.width_ - 2 * this.BORDER;
             this.titleView_.y = this.BORDER + 10;
             this.titleView_.x = this.width_ / 2;
@@ -290,24 +284,22 @@ Entry.Variable = class Variable {
             });
 
             this.elementView = GEHelper.newContainer();
-            const indexView = new createjs.Text('asdf', this.FONT, '#000');
-            indexView.textBaseline = 'middle';
+            const indexView = GEHelper.newText('asdf', this.FONT, '#000000', 'middle');
             indexView.y = 5;
             this.elementView.addChild(indexView);
             this.elementView.indexView = indexView;
             const valueWrapper = GEHelper.newGraphic();
             this.elementView.addChild(valueWrapper);
             this.elementView.valueWrapper = valueWrapper;
-            const valueView = new createjs.Text('fdsa', this.FONT, '#eee');
+            const valueView = GEHelper.newText('fdsa', this.FONT, '#eeeeee', 'middle');
             valueView.x = 24;
             valueView.y = 6;
-            valueView.textBaseline = 'middle';
             this.elementView.addChild(valueView);
             this.elementView.valueView = valueView;
             this.elementView.x = this.BORDER;
 
             this.scrollButton_ = GEHelper.newGraphic();
-            this.scrollButton_.graphics.f('#aaa').rr(0, 0, 7, 30, 3.5);
+            this.scrollButton_.graphics.f('#aaaaaa').rr(0, 0, 7, 30, 3.5);
             this.view_.addChild(this.scrollButton_);
             this.scrollButton_.y = 23;
 

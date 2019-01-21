@@ -49,6 +49,10 @@ export class PIXIText extends PIXI.Text {
         this.dirty = true;
     }
 
+    getMeasuredWidth() {
+        this.updateText(true);
+        return this._measuredWidth;
+    }
 
     get measuredWidth() {
         this.updateText(true);
