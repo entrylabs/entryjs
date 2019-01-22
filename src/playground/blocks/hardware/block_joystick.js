@@ -81,7 +81,7 @@ Entry.joystick.setLanguage = function() {
 		joystick_is_button_pressed: '%1 버튼이 눌렸는가?',
 		joystick_get_joystick_value: '조이스틱을 %1 으로 움직였는가?',
 		joystick_get_sensor_value: '%1 의 측정값',
-		joystick_toggle_motor: '진동모터 %1',
+		joystick_toggle_motor: '진동모터 %1 %2',
 		joystick_toggle_shield_led: '%1 번째 LED를 %2 %3',
 		joystick_get_led_number: '%1',
             }
@@ -102,7 +102,7 @@ Entry.joystick.setLanguage = function() {
 		joystick_is_button_pressed: 'button pressed %1',
 		joystick_get_joystick_value: 'when the joystick move to %1',
 		joystick_get_sensor_value: '%1 value',
-		joystick_toggle_motor: 'vibrator motor %1',
+		joystick_toggle_motor: 'vibrator motor %1 %2',
 		joystick_toggle_shield_led: '%2 the sensorshield %1 LED %3',
 		joystick_get_led_number: '%1',
             }
