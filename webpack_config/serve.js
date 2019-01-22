@@ -59,13 +59,13 @@ module.exports = merge(common, {
             index: '/example/example.html',
             rewrites: [
                 { from: /^\/$/, to: '/example/example.html' },
-                { from: /^\/lib\/entryjs/, to: '/' },
+                { from: /^\/lib\/entry-js/, to: '/' },
             ],
         },
         proxy: {
-            '/lib/entryjs': {
+            '/lib/entry-js': {
                 target: 'http://localhost:8080',
-                pathRewrite: { '^/lib/entryjs': '' },
+                pathRewrite: { '^/lib/entry-js': '' },
             },
         },
     },
