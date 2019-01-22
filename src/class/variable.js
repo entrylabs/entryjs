@@ -66,7 +66,7 @@ Entry.Variable = class Variable {
         Entry.addEventListener('workspaceChangeMode', this.updateView.bind(this));
     }
 
-    _createListElementView() {
+    _createListElementView(wrapperWidth) {
         let elementView = GEHelper.newContainer();
         const indexView = GEHelper.newText('asdf', this.FONT, '#000000', 'middle');
         indexView.y = 5;
@@ -75,6 +75,11 @@ Entry.Variable = class Variable {
         const valueWrapper = GEHelper.newGraphic();
         elementView.addChild(valueWrapper);
         elementView.valueWrapper = valueWrapper;
+        elementView.valueWrapper.graphics
+            .clear()
+            .f('#1bafea')
+            .rr(20, -2, wrapperWidth, 17, 2);
+
         const valueView = GEHelper.newText('fdsa', this.FONT, '#eeeeee', 'middle');
         valueView.x = 24;
         valueView.y = 6;
@@ -246,7 +251,6 @@ Entry.Variable = class Variable {
                 .f('#1bafea')
                 .ss(1, 0, 0)
                 .s('#1bafea')
-                //todo 박준배. 원래 lt 였으나, mt로 변경. mt가 맞는지 확인 하기.
                 .mt(0, -9)
                 .lt(-9, 0)
                 .lt(0, 0);
@@ -303,7 +307,8 @@ Entry.Variable = class Variable {
                 this.variable.updateView();
             });
 
-            this.elementView = this._createListElementView();
+            //todo [박봉배] 아래줄 삭제 하는게 맞겠죠?
+            //this.elementView = this._createListElementView();
             this.scrollButton_ = GEHelper.newGraphic();
             this.scrollButton_.graphics.f('#aaaaaa').rr(0, 0, 7, 30, 3.5);
             this.view_.addChild(this.scrollButton_);
@@ -544,10 +549,11 @@ Entry.Variable = class Variable {
                     if (this.scrollButton_.y > this.getHeight() - 40) {
                         this.scrollButton_.y = this.getHeight() - 40;
                     }
-                    this.elementView.valueWrapper.graphics
-                        .clear()
-                        .f('#1bafea')
-                        .rr(20, -2, wrapperWidth, 17, 2);
+                    //todo [박봉배] _createListElementView 로 코드 이동
+                    // this.elementView.valueWrapper.graphics
+                    //     .clear()
+                    //     .f('#1bafea')
+                    //     .rr(20, -2, wrapperWidth, 17, 2);
                     this.scrollButton_.x = totalWidth - 12;
                     this.scrollPosition = Math.floor(
                         (this.scrollButton_.y - 23) /
@@ -555,10 +561,11 @@ Entry.Variable = class Variable {
                             (arr.length - maxView)
                     );
                 } else {
-                    this.elementView.valueWrapper.graphics
-                        .clear()
-                        .f('#1bafea')
-                        .rr(20, -2, wrapperWidth, 17, 2);
+                    //todo [박봉배] _createListElementView 로 코드 이동
+                    // this.elementView.valueWrapper.graphics
+                    //     .clear()
+                    //     .f('#1bafea')
+                    //     .rr(20, -2, wrapperWidth, 17, 2);
                     this.scrollPosition = 0;
                 }
                 this.scrollButton_.visible = isOverFlow;
@@ -575,7 +582,7 @@ Entry.Variable = class Variable {
                     i < this.scrollPosition + maxView && i < arr.length;
                     i++
                 ) {
-                    this.elementView = this._createListElementView();
+                    this.elementView = this._createListElementView(wrapperWidth + 6);
                     if (
                         Entry.getMainWS() &&
                         Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD
