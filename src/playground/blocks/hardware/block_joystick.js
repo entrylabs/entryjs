@@ -82,7 +82,7 @@ Entry.joystick.setLanguage = function() {
 		joystick_get_joystick_value: '조이스틱을 %1 으로 움직였는가?',
 		joystick_get_sensor_value: '%1 의 측정값',
 		joystick_toggle_motor: '진동모터 %1',
-		joystick_toggle_shield_led: '%1 번 째 LED를 %2 %3',
+		joystick_toggle_shield_led: '%1 번째 LED를 %2 %3',
 		joystick_get_led_number: '%1',
             }
         },
@@ -527,60 +527,6 @@ Entry.joystick.getBlocks = function() {
                                 accept: 'string',
                             },
                         ],
-                    },
-                ],
-            },
-        },
-        arduino_get_digital_toggle: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
-            skeleton: 'basic_string_field',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.ARDUINO_on, 'on'],
-                        [Lang.Blocks.ARDUINO_off, 'off'],
-                    ],
-                    value: 'on',
-                    fontSize: 11,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-            },
-            paramsKeyMap: {
-                OPERATOR: 0,
-            },
-            func: function(sprite, script) {
-                return script.getStringField('OPERATOR');
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: '%1',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.ARDUINO_on, 'on'],
-                                    [Lang.Blocks.ARDUINO_off, 'off'],
-                                ],
-                                value: 'on',
-                                fontSize: 11,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter:
-                                    Entry.block.converters
-                                        .returnStringValueUpperCase,
-                                codeMap:
-                                    'Entry.CodeMap.Arduino.arduino_get_digital_toggle[0]',
-                            },
-                        ],
-                        keyOption: 'arduino_get_digital_toggle',
                     },
                 ],
             },
@@ -1144,10 +1090,10 @@ Entry.joystick.getBlocks = function() {
                         ['노랑', '9'],
                         ['빨강', '8'],
                         ['파랑', '17'],
-						['왼쪽 위', '4'],
-						['오른쪽 위', '5'],
+			['왼쪽 위', '4'],
+			['오른쪽 위', '5'],
                     ],
-                    value: '8',
+                    value: '16',
                     fontSize: 11,
                 },
             ],
@@ -1403,10 +1349,10 @@ Entry.joystick.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         ['1', '1'],
-						['2', '2'],
-						['3', '3'],
-						['4', '4'],
-						['5', '5'],
+			['2', '2'],
+			['3', '3'],
+			['4', '4'],
+			['5', '5'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1453,15 +1399,15 @@ Entry.joystick.getBlocks = function() {
             events: {},
             def: {
                 params: [
-					{
-                        type: 'joystick_get_led_number',
-						params: [null],
-                    },
-                    {
-                        type: 'arduino_get_digital_toggle',
-                        params: ['on'],
-                    },
-                    null,
+			{
+                        	type: 'joystick_get_led_number',
+				params: [null],
+                    	},
+                    	{
+                      	  	type: 'arduino_get_digital_toggle',
+                     	   	params: ['on'],
+                  	},
+                 	   	null,
                 ],
                 type: 'joystick_toggle_shield_led',
             },
@@ -1473,19 +1419,19 @@ Entry.joystick.getBlocks = function() {
             isNotFor: ['joystick'],
             func: function(sprite, script) {
                 var port = script.getValue('PORT');
-				if(port === '1') {
-					port = 2;
-				} else if (port === '2') {
-					port = 3;
-				} else if (port === '3') {
-					port = 11;
-				} else if (port === '4') {
-					port = 12;
-				} else if (port === '5') {
-					port = 13;
-				} else {
-					port = null;
-				}
+		if(port === '1') {
+			port = 2;
+		} else if (port === '2') {
+			port = 3;
+		} else if (port === '3') {
+			port = 11;
+		} else if (port === '4') {
+			port = 12;
+		} else if (port === '5') {
+			port = 13;
+		} else {
+			port = null;
+		}
                 var value = script.getValue('VALUE');
 
                 if (typeof value === 'string') {
