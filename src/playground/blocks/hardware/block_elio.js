@@ -1,7 +1,7 @@
 'use strict';
 
 Entry.elio = {
-    id: '28.01', // 엔트리에서 발급받은 하드웨어 번호를 기술합니다.
+    id: '28.1', // 엔트리에서 발급받은 하드웨어 번호를 기술합니다.
     name: 'elio', // isNotFor 속성과 대소문자까지 정확하게 매치되어야 합니다.
     url: 'https://mobilian.biz/#/app/product/elio', // 생략 가능합니다. 엔트리 사이트에서 홍보시 사용됩니다.
     imageName: 'elio.png', // images/hardware 폴더 내에 존재하는 이미지입니다. 엔트리 사이트에서 홍보시 사용됩니다.
