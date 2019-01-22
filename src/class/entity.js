@@ -1,9 +1,11 @@
 /**
  * @fileoverview entity object is class for entry object canvas view.
  */
+
 'use strict';
 
 import { GEHelper } from '../util/GEHelper';
+import { GEDragHelper } from '../util/GEDragHelper';
 
 /**
  * Construct entity class
@@ -24,18 +26,15 @@ Entry.EntityObject = class EntityObject {
         this.shapes = [];
 
         if (this.type === 'sprite') {
-            this.object = new createjs.Bitmap();
+            this.object = GEHelper.newSpriteWithURL();
             this.setInitialEffectValue();
         } else if (this.type === 'textBox') {
-            this.object = new createjs.Container();
-            this.textObject = new createjs.Text();
-            this.textObject.font = '20px Nanum Gothic';
-            this.textObject.textBaseline = 'middle';
-            this.textObject.textAlign = 'center';
-            this.bgObject = new createjs.Shape();
+            this.object = GEHelper.newContainer();
+            this.textObject = GEHelper.textHelper.newText("", '20px Nanum Gothic', "", 'middle', 'center');
+            this.bgObject = GEHelper.newGraphic();
             this.bgObject.graphics
                 .setStrokeStyle(1)
-                .beginStroke('#f00')
+                .beginStroke('#ff0000')
                 .drawRect(0, 0, 100, 100);
             this.object.addChild(this.bgObject);
             this.object.addChild(this.textObject);
@@ -51,12 +50,14 @@ Entry.EntityObject = class EntityObject {
         this.object.entity = this;
         this.object.cursor = 'pointer';
 
-        this.object.on('mousedown', function({ stageX, stageY }) {
+        this.object.on(GEDragHelper.types.DOWN, function({ stageX, stageY }) {
+        // this.object.on('mousedown', function({ stageX, stageY }) {
             const id = this.entity.parent.id;
             Entry.dispatchEvent('entityClick', this.entity);
             Entry.stage.isObjectClick = true;
 
             if (Entry.type != 'minimize' && Entry.stage.isEntitySelectable()) {
+                GEDragHelper.handleDrag(this);
                 this.offset = {
                     x: -this.parent.x + this.entity.getX() - (stageX * 0.75 - 240),
                     y: -this.parent.y - this.entity.getY() - (stageY * 0.75 - 135),
@@ -67,14 +68,16 @@ Entry.EntityObject = class EntityObject {
             }
         });
 
-        this.object.on('pressup', function() {
+        // this.object.on('pressup', function() {
+        this.object.on(GEDragHelper.types.UP, function() {
             Entry.dispatchEvent('entityClickCanceled', this.entity);
             this.cursor = 'pointer';
             this.entity.checkCommand();
         });
 
         if (Entry.type !== 'minimize') {
-            this.object.on('pressmove', function({ stageX, stageY }) {
+            this.object.on(GEDragHelper.types.MOVE, function({ stageX, stageY }) {
+            // this.object.on('pressmove', function({ stageX, stageY }) {
                 if (Entry.stage.isEntitySelectable()) {
                     const entity = this.entity;
                     if (entity.parent.getLock()) {
@@ -484,7 +487,7 @@ Entry.EntityObject = class EntityObject {
         /** @type {string} */
         this.colour = colour;
         if (this.textObject) {
-            this.textObject.color = this.colour;
+            GEHelper.textHelper.setColor(this.textObject, this.colour);
         }
         Entry.requestUpdate = true;
     }
@@ -519,7 +522,7 @@ Entry.EntityObject = class EntityObject {
 
     setUnderLine(underLine = false) {
         this.underLine = underLine;
-        this.textObject.underLine = underLine;
+        GEHelper.textHelper.setUnderLine(this.textObject, underLine);
         Entry.requestUpdate = true;
     }
 
@@ -529,7 +532,7 @@ Entry.EntityObject = class EntityObject {
 
     setStrike(strike = false) {
         this.strike = strike;
-        this.textObject.strike = strike;
+        GEHelper.textHelper.setStrike(this.textObject, strike);
         Entry.requestUpdate = true;
     }
 
@@ -578,7 +581,7 @@ Entry.EntityObject = class EntityObject {
         this.setFontSize(parseInt(fontArray.shift()));
         this.setFontType(fontArray.join(' '));
 
-        this.textObject.font = this.getFont();
+        GEHelper.textHelper.setFontFace(this.textObject, this.getFont());
         Entry.stage.update();
         this.setWidth(this.textObject.getMeasuredWidth());
         this.updateBG();
@@ -586,21 +589,23 @@ Entry.EntityObject = class EntityObject {
     }
 
     setLineHeight() {
+        let size;
         switch (this.getFontType()) {
             case 'Nanum Gothic Coding': {
-                this.textObject.lineHeight = this.fontSize;
+                size = this.fontSize;
                 break;
             }
             default: {
-                this.textObject.lineHeight = 0;
+                size = 0;
                 break;
             }
         }
+        GEHelper.textHelper.setLineHeight(this.textObject, size);
     }
 
     syncFont() {
         const textObject = this.textObject;
-        textObject.font = this.getFont();
+        GEHelper.textHelper.setFontFace(textObject, this.getFont());
         this.setLineHeight();
         Entry.stage.update();
         if (this.getLineBreak()) {
@@ -744,7 +749,8 @@ Entry.EntityObject = class EntityObject {
         }
         this.textAlign = textAlign;
 
-        this.textObject.textAlign = Entry.TEXT_ALIGNS[this.textAlign];
+        GEHelper.textHelper.setTextAlign(this.textObject, Entry.TEXT_ALIGNS[this.textAlign]);
+
         this.alignTextBox();
         this.updateBG();
         Entry.stage.updateObject();
@@ -775,7 +781,7 @@ Entry.EntityObject = class EntityObject {
         this.lineBreak = lineBreak;
 
         if (previousState && !this.lineBreak) {
-            this.textObject.lineWidth = null;
+            GEHelper.textHelper.setLineWith(this.textObject, null);
             this.setHeight(this.textObject.getMeasuredLineHeight());
             this.setText(this.getText().replace(/\n/g, ''));
         } else if (!previousState && this.lineBreak) {
@@ -784,7 +790,7 @@ Entry.EntityObject = class EntityObject {
             this.setWidth(this.getWidth() * this.getScaleX());
             this.setScaleX(1);
             this.setScaleY(1);
-            this.textObject.lineWidth = Math.ceil(this.getWidth());
+            GEHelper.textHelper.setLineWith(this.textObject, Math.ceil(this.getWidth()));
             this.alignTextBox();
             if (this.fontType === 'Nanum Gothic Coding') {
                 const textObjectHeight = this.textObject.getMeasuredLineHeight();
@@ -873,7 +879,7 @@ Entry.EntityObject = class EntityObject {
                 }
 
                 this.onload = null;
-                setImage(this);
+                setImage(this, true);
             };
 
             const fileUrl = pictureModel.fileurl;
@@ -886,25 +892,18 @@ Entry.EntityObject = class EntityObject {
                     2
                 )}/${fileName.substring(2, 4)}/image/${fileName}.png`;
             }
-
-            that.object.image = image;
-            if (!_.isEmpty(that.object.filters)) {
-                that.cache();
-            } else {
-                that.object.uncache();
-            }
+            setImage(image, false);
         } else {
-            setImage(image);
+            setImage(image, true);
         }
 
-        function setImage(datum) {
+        function setImage(datum, reqUpdate) {
             that.object.image = datum;
-            if (!_.isEmpty(that.object.filters)) {
-                that.cache();
-            } else {
-                that.object.uncache();
+            let hasFilter = !_.isEmpty(that.object.filters);
+            GEHelper.colorFilter.setCache(that.object, hasFilter);
+            if(reqUpdate) {
+                Entry.requestUpdate = true;
             }
-            Entry.requestUpdate = true;
         }
 
         Entry.dispatchEvent('updateObject');
@@ -1219,7 +1218,7 @@ Entry.EntityObject = class EntityObject {
                     textObject.x = this.getWidth() / 2;
                     break;
             }
-            textObject.maxHeight = this.getHeight();
+            GEHelper.textHelper.setMaxHeight(textObject, this.getHeight());
         } else {
             textObject.x = 0;
             textObject.y = 0;

@@ -4,6 +4,7 @@ import { PIXIGlobal } from '../class/pixi/init/PIXIGlobal';
 import { PIXIAtlasHelper } from '../class/pixi/atlas/PIXIAtlasHelper';
 import { PIXIAtlasManager } from '../class/pixi/atlas/PIXIAtlasManager';
 import { GEDragHelper } from './GEDragHelper';
+import { PIXIText } from '../class/pixi/text/PIXIText';
 
 
 declare let createjs:any;
@@ -40,6 +41,7 @@ class _GEHelper {
         this._isWebGL = isWebGL;
         GEDragHelper.INIT(isWebGL);
         this.colorFilter = new _ColorFilterHelper().INIT(isWebGL);
+        this.textHelper = new _TextHelper().INIT(isWebGL);
         if(this._isWebGL) {
             PIXIGlobal.initOnce();
             this.rotateRead = 180 / Math.PI;
@@ -49,6 +51,7 @@ class _GEHelper {
         }
     }
 
+    public textHelper:_TextHelper;
     public colorFilter:_ColorFilterHelper;
 
     private _isWebGL:boolean = true;
@@ -77,7 +80,7 @@ class _GEHelper {
     cloneStamp(entity:any):any {
         if(this._isWebGL) {
             let orgObj = entity.object;
-            let object = PIXIHelper.sprite("StampEntity", orgObj.texture);
+            let object = PIXIHelper.sprite('StampEntity', orgObj.texture);
             object.visible = orgObj.visible;
             object.interactive = false;
             object.interactiveChildren = false;
@@ -131,12 +134,13 @@ class _GEHelper {
         }
     }
 
-    newTexture(path:string) {
+    newTexture(path:string):Texture|HTMLImageElement {
         if(this._isWebGL) {
             return Texture.fromImage(path);
         } else {
-            let img = new Image();
-            return img.src = path;
+            let img:HTMLImageElement = new Image();
+            img.src = path;
+            return img;
         }
     }
 
@@ -150,6 +154,7 @@ class _GEHelper {
 
     newSpriteWithURL(url:string) {
         if(this._isWebGL) {
+            //todo [박봉배] PIXISprite로 변경
             return PIXI.Sprite.from(url);
         } else {
             return new createjs.Bitmap(url);
@@ -183,7 +188,7 @@ class _GEHelper {
      * @param color css style color - #ffffff
      * @param textBaseline
      * @param textAlign
-     * @
+     * @deprecated
      */
     newText(str:string, font:string, color:string, textBaseline?:string, textAlign?:string):PIXI.Text|any {
         if(this._isWebGL) {
@@ -210,7 +215,7 @@ class _ColorFilterHelper {
 
     private _isWebGL:boolean;
 
-    INIT(isWebGL:boolean) {
+    INIT(isWebGL:boolean):this {
         this._isWebGL = isWebGL;
         return this;
     }
@@ -238,7 +243,7 @@ class _ColorFilterHelper {
             0, 1, 0, 0, value,
             0, 0, 1, 0, value,
             0, 0, 0, 1, 0,
-            0, 0, 0, 0, 1
+            0, 0, 0, 0, 1,
         ];
         return this.newColorMatrixFilter(matrix);
     }
@@ -257,6 +262,108 @@ class _ColorFilterHelper {
             let cm = new createjs.ColorMatrix();
             cm.copy(matrixValue);
             return new createjs.ColorMatrixFilter(cm);
+        }
+    }
+
+    setCache(target:PIXI.Sprite|any, cache:boolean) {
+        if(this._isWebGL) {
+
+        } else {
+            cache ? target.cache() : target.uncache();
+        }
+    }
+
+}
+
+class _TextHelper {
+
+    private _isWebGL:boolean;
+
+    INIT(isWebGL:boolean):this {
+        this._isWebGL = isWebGL;
+        return this;
+    }
+
+    setColor(target:PIXI.Text|any, color:string) {
+        if(this._isWebGL) {
+            target.style.fill = color;
+        } else {
+            target.color = color;
+        }
+    }
+
+    /**
+     * @param str
+     * @param font size & fontface - 10pt NanumGothic
+     * @param color css style color - #ffffff
+     * @param textBaseline
+     * @param textAlign
+     * @
+     */
+    newText(str:string, font:string, color:string, textBaseline?:string, textAlign?:string):PIXI.Text|any {
+        if(this._isWebGL) {
+            return PIXIHelper.text(str, font, color, textBaseline, textAlign);
+        } else {
+            let t = new createjs.Text(font, font, color);
+            textBaseline ? t.textBaseline = textBaseline : 0;
+            textAlign ? t.textAlign = textAlign : 0;
+            return t;
+        }
+    }
+
+    setUnderLine(target:PIXIText|any, value:boolean) {
+        if(this._isWebGL) {
+
+        } else {
+            target.underLine = value;
+        }
+    }
+
+    setStrike(target:PIXIText|any, value:boolean) {
+        if(this._isWebGL) {
+
+        } else {
+            target.strike = value;
+        }
+    }
+
+    setFontFace(target:PIXIText|any, value:string) {
+        if(this._isWebGL) {
+
+        } else {
+            target.font = value;
+        }
+    }
+
+    setLineHeight(target:PIXIText|any, value:number) {
+        if(this._isWebGL) {
+
+        } else {
+            target.lineHeight = value;
+        }
+    }
+
+    setTextAlign(target:PIXIText|any, value:string) {
+        if(this._isWebGL) {
+
+        } else {
+            target.textAlign = value;
+        }
+    }
+
+    setLineWith(target:PIXIText|any, value:number|null) {
+        if(this._isWebGL) {
+
+        } else {
+            target.lineWidth = value;
+        }
+    }
+
+    setMaxHeight(target:PIXIText|any, value:number) {
+        if(this._isWebGL) {
+
+        } else {
+            target.maxHeight = value;
         }
     }
 }
