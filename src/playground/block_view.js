@@ -1112,27 +1112,21 @@ Entry.BlockView = class BlockView {
         this.movable =
             this.block.isMovable() !== null
                 ? this.block.isMovable()
-                : this._skeleton.movable !== undefined
-                ? this._skeleton.movable
-                : true;
+                : this._skeleton.movable !== undefined ? this._skeleton.movable : true;
     }
 
     _setReadOnly() {
         this.readOnly =
             this.block.isReadOnly() !== null
                 ? this.block.isReadOnly()
-                : this._skeleton.readOnly !== undefined
-                ? this._skeleton.readOnly
-                : false;
+                : this._skeleton.readOnly !== undefined ? this._skeleton.readOnly : false;
     }
 
     _setCopyable() {
         this.copyable =
             this.block.isCopyable() !== null
                 ? this.block.isCopyable()
-                : this._skeleton.copyable !== undefined
-                ? this._skeleton.copyable
-                : true;
+                : this._skeleton.copyable !== undefined ? this._skeleton.copyable : true;
     }
 
     bumpAway(distance = 15, delay) {
@@ -1292,168 +1286,95 @@ Entry.BlockView = class BlockView {
     }
 
     getDataUrl(notClone, notPng) {
-        const $deferred = $.Deferred();
-        let svgData =
-            '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %W %H">(svgGroup)(defs)</svg>';
-        const bBox = this.svgGroup.getBoundingClientRect();
-        let svgGroup = notClone ? this.svgGroup : this.svgGroup.cloneNode(true);
-        const svgCommentGroup = notClone
-            ? this.svgCommentGroup
-            : this.svgCommentGroup && this.svgCommentGroup.cloneNode(true);
-        const box = this._skeleton.box(this);
-        const scale = notPng ? 1 : 1.5;
-        let fontWeight = isWindow7() ? 0.9 : 0.95;
-        if (this.type.indexOf('func_') > -1) {
-            fontWeight *= 0.99;
-        }
-        svgGroup.setAttribute(
-            'transform',
-            'scale(%SCALE) translate(%X,%Y)'
-                .replace('%X', -box.offsetX)
-                .replace('%Y', -box.offsetY)
-                .replace('%SCALE', scale)
-        );
-        this.svgCommentGroup &&
-            svgCommentGroup.setAttribute(
+        return new Promise((resolve, reject) => {
+            let svgGroup = notClone ? this.svgGroup : this.svgGroup.cloneNode(true);
+            const svgCommentGroup = notClone
+                ? this.svgCommentGroup
+                : this.svgCommentGroup && this.svgCommentGroup.cloneNode(true);
+            const box = this._skeleton.box(this);
+            const scale = notPng ? 1 : 1.5;
+            let fontWeight = this.isWindow7() ? 0.9 : 0.95;
+            if (this.type.indexOf('func_') > -1) {
+                fontWeight *= 0.99;
+            }
+            svgGroup.setAttribute(
                 'transform',
                 'scale(%SCALE) translate(%X,%Y)'
                     .replace('%X', -box.offsetX)
                     .replace('%Y', -box.offsetY)
                     .replace('%SCALE', scale)
             );
-
-        const defs = this.getBoard().svgDom.find('defs');
-
-        const images = svgGroup.getElementsByTagName('image');
-        const texts = svgGroup.getElementsByTagName('text');
-
-        const fontFamily =
-            "'NanumGothic', 'NanumGothic', '나눔고딕','NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum";
-        const boldTypes = ['≥', '≤'];
-        const notResizeTypes = ['≥', '≤', '-', '>', '<', '=', '+', '-', 'x', '/'];
-
-        _.toArray(texts).forEach((text) => {
-            text.setAttribute('font-family', fontFamily);
-            const size = parseInt(text.getAttribute('font-size'));
-            const content = $(text).text();
-            if (_.includes(boldTypes, content)) {
-                text.setAttribute('font-weight', '500');
-            }
-
-            if (content == 'q') {
-                const y = parseInt(text.getAttribute('y'));
-                text.setAttribute('y', y - 1);
-            }
-
-            if (_.includes(notResizeTypes, content)) {
-                text.setAttribute('font-size', `${size}px`);
-            } else {
-                text.setAttribute('font-size', `${size * fontWeight}px`);
-            }
-            text.setAttribute('alignment-baseline', 'baseline');
-        });
-
-        let counts = 0;
-        if (!images.length) {
-            processSvg();
-        } else {
-            _.toArray(images).forEach((img) => {
-                const href = img.getAttribute('href');
-                loadImage(href, img.getAttribute('width'), img.getAttribute('height')).then(
-                    function(src) {
-                        img.setAttribute('href', src);
-                        if (++counts == images.length) {
-                            return processSvg();
-                        }
-                    }
+            this.svgCommentGroup &&
+                svgCommentGroup.setAttribute(
+                    'transform',
+                    'scale(%SCALE) translate(%X,%Y)'
+                        .replace('%X', -box.offsetX)
+                        .replace('%Y', -box.offsetY)
+                        .replace('%SCALE', scale)
                 );
-            });
-        }
 
-        return $deferred.promise();
+            const defs = this.getBoard().svgDom.find('defs');
 
-        function processSvg() {
-            svgData = svgData
-                .replace('(svgGroup)', new XMLSerializer().serializeToString(svgGroup))
-                .replace('%W', bBox.width * scale + 20)
-                .replace('%H', bBox.height * scale + 5)
-                .replace('(defs)', new XMLSerializer().serializeToString(defs[0]))
-                .replace(/>\s+/g, '>')
-                .replace(/\s+</g, '<');
-            let src = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgData)))}`;
-            svgData = null;
-            if (notPng) {
-                $deferred.resolve({
-                    src,
-                    width: bBox.width,
-                    height: bBox.height,
-                });
-                svgGroup = null;
-            } else {
-                loadImage(src, bBox.width, bBox.height, 1.5).then(
-                    function(src) {
-                        svgGroup = null;
-                        $deferred.resolve({
-                            src,
-                            width: bBox.width,
-                            height: bBox.height,
-                        });
-                    },
-                    function(err) {
-                        $deferred.reject('error occured');
-                    }
-                );
-            }
-            src = null;
-        }
+            const images = svgGroup.getElementsByTagName('image');
+            const texts = svgGroup.getElementsByTagName('text');
 
-        function loadImage(src, width, height, multiplier = 1) {
-            return new Promise((resolve, reject) => {
-                if (Entry.BlockView.pngMap[src] !== undefined) {
-                    return resolve(Entry.BlockView.pngMap[src]);
+            const fontFamily =
+                "'NanumGothic', 'NanumGothic', '나눔고딕','NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum";
+            const boldTypes = ['≥', '≤'];
+            const notResizeTypes = ['≥', '≤', '-', '>', '<', '=', '+', '-', 'x', '/'];
+
+            _.toArray(texts).forEach((text) => {
+                text.setAttribute('font-family', fontFamily);
+                const size = parseInt(text.getAttribute('font-size'));
+                const content = $(text).text();
+                if (_.includes(boldTypes, content)) {
+                    text.setAttribute('font-weight', '500');
                 }
 
-                width *= multiplier;
-                height *= multiplier;
-                //float point cropped
-                width = Math.ceil(width);
-                height = Math.ceil(height);
+                if (content == 'q') {
+                    const y = parseInt(text.getAttribute('y'));
+                    text.setAttribute('y', y - 1);
+                }
 
-                const img = document.createElement('img');
-                img.crossOrigin = 'Anonymous';
-                const canvas = document.createElement('canvas');
-
-                canvas.width = width;
-                canvas.height = height;
-                const ctx = canvas.getContext('2d');
-
-                img.onload = function() {
-                    ctx.drawImage(img, 0, 0, width, height);
-                    const data = canvas.toDataURL('image/png');
-                    if (/\.png$/.test(src)) {
-                        Entry.BlockView.pngMap[src] = data;
-                    }
-                    return resolve(data);
-                };
-
-                img.onerror = function() {
-                    return reject('error occured');
-                };
-                img.src = src;
+                if (_.includes(notResizeTypes, content)) {
+                    text.setAttribute('font-size', `${size}px`);
+                } else {
+                    text.setAttribute('font-size', `${size * fontWeight}px`);
+                }
+                text.setAttribute('alignment-baseline', 'baseline');
             });
-        }
 
-        function isWindow7() {
-            const platform = window.platform;
-            if (
-                platform &&
-                platform.name.toLowerCase() === 'windows' &&
-                platform.version[0] === '7'
-            ) {
-                return true;
+            let counts = 0;
+            if (!images.length) {
+                this.processSvg(svgGroup, scale, defs, notPng)
+                    .then((data) => {
+                        resolve(data);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            } else {
+                _.toArray(images).forEach((img) => {
+                    const href = img.getAttribute('href');
+                    this.loadImage(
+                        href,
+                        img.getAttribute('width'),
+                        img.getAttribute('height')
+                    ).then((src) => {
+                        img.setAttribute('href', src);
+                        if (++counts == images.length) {
+                            this.processSvg(svgGroup, scale, defs, notPng)
+                                .then((data) => {
+                                    resolve(data);
+                                })
+                                .catch((err) => {
+                                    reject(err);
+                                });
+                        }
+                    });
+                });
             }
-            return false;
-        }
+        });
     }
 
     downloadAsImage(i) {
@@ -1521,6 +1442,16 @@ Entry.BlockView = class BlockView {
                 },
             };
 
+            const addBackpack = {
+                text: Lang.Blocks.add_my_storage,
+                callback() {
+                    Entry.dispatchEvent('addStorage', {
+                        type: 'block',
+                        data: block,
+                    });
+                },
+            };
+
             const download = {
                 text: save_as_image,
                 callback() {
@@ -1545,7 +1476,7 @@ Entry.BlockView = class BlockView {
             }
 
             if (!isInBlockMenu) {
-                options = [copyAndPaste, copy, remove, ...options, comment];
+                options = [copyAndPaste, copy, remove, addBackpack, ...options, comment];
             }
 
             return options;
@@ -1723,6 +1654,90 @@ Entry.BlockView = class BlockView {
                 return fields;
             }, [])
         );
+    }
+
+    processSvg(svgGroup, scale, defs, notPng) {
+        return new Promise((resolve, reject) => {
+            let svgData =
+                '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %W %H">(svgGroup)(defs)</svg>';
+            const bBox = this.svgGroup.getBoundingClientRect();
+            svgData = svgData
+                .replace('(svgGroup)', new XMLSerializer().serializeToString(svgGroup))
+                .replace('%W', bBox.width * scale + 20)
+                .replace('%H', bBox.height * scale + 5)
+                .replace('(defs)', new XMLSerializer().serializeToString(defs[0]))
+                .replace(/>\s+/g, '>')
+                .replace(/\s+</g, '<');
+            let src = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgData)))}`;
+            svgData = null;
+            if (notPng) {
+                resolve({
+                    src,
+                    width: bBox.width,
+                    height: bBox.height,
+                });
+                svgGroup = null;
+            } else {
+                this.loadImage(src, bBox.width, bBox.height, 1.5).then(
+                    function(src) {
+                        svgGroup = null;
+                        resolve({
+                            src,
+                            width: bBox.width,
+                            height: bBox.height,
+                        });
+                    },
+                    function(err) {
+                        reject('error occured');
+                    }
+                );
+            }
+            src = null;
+        });
+    }
+
+    loadImage(src, width, height, multiplier = 1) {
+        return new Promise((resolve, reject) => {
+            if (Entry.BlockView.pngMap[src] !== undefined) {
+                return resolve(Entry.BlockView.pngMap[src]);
+            }
+
+            width *= multiplier;
+            height *= multiplier;
+            //float point cropped
+            width = Math.ceil(width);
+            height = Math.ceil(height);
+
+            const img = document.createElement('img');
+            img.crossOrigin = 'Anonymous';
+            const canvas = document.createElement('canvas');
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0, width, height);
+                const data = canvas.toDataURL('image/png');
+                if (/\.png$/.test(src)) {
+                    Entry.BlockView.pngMap[src] = data;
+                }
+                return resolve(data);
+            };
+
+            img.onerror = function() {
+                return reject('error occured');
+            };
+            img.src = src;
+        });
+    }
+
+    isWindow7() {
+        const platform = window.platform;
+        if (platform && platform.name.toLowerCase() === 'windows' && platform.version[0] === '7') {
+            return true;
+        }
+        return false;
     }
 };
 

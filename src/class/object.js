@@ -802,6 +802,15 @@ Entry.EntryObject = class {
                 },
             },
             {
+                text: Lang.Blocks.add_my_storage,
+                callback() {
+                    Entry.dispatchEvent('addStorage', {
+                        type: 'object',
+                        data: object,
+                    });
+                },
+            },
+            {
                 text: Lang.Blocks.export_object,
                 callback() {
                     Entry.dispatchEvent('exportObject', object);
@@ -1268,7 +1277,6 @@ Entry.EntryObject = class {
             ) {
                 Entry.do('containerSelectObject', objectId);
             }
-
         });
 
         objectView.addEventListener('mousedown', (e) => {
@@ -1299,7 +1307,7 @@ Entry.EntryObject = class {
 
                 const diff = Math.sqrt(
                     Math.pow(touchEvent.pageX - mouseDownCoordinate.x, 2) +
-                    Math.pow(touchEvent.pageY - mouseDownCoordinate.y, 2)
+                        Math.pow(touchEvent.pageY - mouseDownCoordinate.y, 2)
                 );
 
                 if (diff > 5 && longPressTimer) {
