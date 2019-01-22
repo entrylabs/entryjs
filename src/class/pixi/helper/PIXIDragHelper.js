@@ -8,6 +8,7 @@ export class PIXIDragHelper {
      */
     static handleDrag(target) {
         const C = PIXIDragHelper;
+        const CE = this._convertEvent;
         if(C._TARGET) {
             console.log(`%coh my godness. drag target already exist.`, 'background: #00fffff; color: #ff0000');
             C._unhandleDrag(C._TARGET);
@@ -16,10 +17,10 @@ export class PIXIDragHelper {
         C._TARGET = target;
         console.log(`%chandleDrag(${C.__CNT})`, 'background: #222; color: #bada55');
         C._onMove = function(e){
-            target.emit(C.MOVE, e);
+            target.emit(C.MOVE, CE(e));
         };
         C._onUp = function(e){
-            target.emit(C.UP, e);
+            target.emit(C.UP, CE(e));
             C._TARGET = null;
             C._unhandleDrag(target);
         };
@@ -28,6 +29,13 @@ export class PIXIDragHelper {
         target.on("pointerup", this._onUp);
         target.on("pointerupoutside", this._onUp);
         target.on("pointercancel", this._onUp);
+    }
+
+    static _convertEvent(e) {
+        return {
+            stageX: e.data.global.x,
+            stageY: e.data.global.y,
+        };
     }
 
     /**
