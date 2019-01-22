@@ -169,8 +169,8 @@ Entry.elio.getBlocks = function () {
 						type: "Dropdown",
 						
 						options: [
-							[ "ON", "0" ],
-							[ "OFF", "1" ],
+							[ "OFF", "0" ],
+							[ "ON", "1" ],
 						],
 						fontSize: 15
 					}, 
@@ -179,8 +179,8 @@ Entry.elio.getBlocks = function () {
 						type: "Dropdown",
 						
 						options: [
-							[ "ON", "0" ],
-							[ "OFF", "1" ],
+							[ "OFF", "0" ],
+							[ "ON", "1" ],
 						],
 						fontSize: 15
 					}, 
@@ -190,8 +190,8 @@ Entry.elio.getBlocks = function () {
 						type: "Dropdown",
 						
 						options: [
-							[ "ON", "0" ],
-							[ "OFF", "1" ],
+							[ "OFF", "0" ],
+							[ "ON", "1" ],
 						],
 						fontSize: 15
 					}, 
