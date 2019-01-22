@@ -39,6 +39,7 @@ class _GEHelper {
     INIT(isWebGL:boolean) {
         this._isWebGL = isWebGL;
         GEDragHelper.INIT(isWebGL);
+        this.colorFilter = new _ColorFilterHelper().INIT(isWebGL);
         if(this._isWebGL) {
             PIXIGlobal.initOnce();
             this.rotateRead = 180 / Math.PI;
@@ -47,6 +48,8 @@ class _GEHelper {
 
         }
     }
+
+    public colorFilter:_ColorFilterHelper;
 
     private _isWebGL:boolean = true;
 
@@ -194,9 +197,66 @@ class _GEHelper {
     }
 
 
+
+
 }
 
 export const GEHelper:_GEHelper = new _GEHelper();
 let w:any = window;
 (w.GEHelper) = GEHelper;
 
+
+class _ColorFilterHelper {
+
+    private _isWebGL:boolean;
+
+    INIT(isWebGL:boolean) {
+        this._isWebGL = isWebGL;
+        return this;
+    }
+
+    hue(value:number) {
+        if(this._isWebGL) {
+            const cmHue = new PIXI.filters.ColorMatrixFilter();
+            return cmHue.hue(value);
+        } else {
+            const cmHue = new createjs.ColorMatrix();
+            cmHue.adjustColor(0, 0, 0, value);
+            const hueFilter = new createjs.ColorMatrixFilter(cmHue);
+            return hueFilter;
+        }
+    }
+
+    brightness(value:number) {
+        if(this._isWebGL) {
+            // todo [박봉배] 여기 /255 가 필요한가
+            value /= 255;
+        }
+        // pixi 필터에 brightness 가 있지만, createjs 와 matrix 값이 달라 결과가 다르게 보임. 그래서 동일하게 구현함.
+        const matrix = [
+            1, 0, 0, 0, value,
+            0, 1, 0, 0, value,
+            0, 0, 1, 0, value,
+            0, 0, 0, 1, 0,
+            0, 0, 0, 0, 1
+        ];
+        return this.newColorMatrixFilter(matrix);
+    }
+
+    /**
+     * @param matrixValue
+     */
+    newColorMatrixFilter(matrixValue:number[]) {
+        if(this._isWebGL) {
+            matrixValue.length = 20; // pixi matrix 는 5 * 4
+            let m = new PIXI.filters.ColorMatrixFilter();
+            m.matrix = matrixValue;
+            return m;
+        } else {
+            //createjs matrix 는 5*5
+            let cm = new createjs.ColorMatrix();
+            cm.copy(matrixValue);
+            return new createjs.ColorMatrixFilter(cm);
+        }
+    }
+}

@@ -3,6 +3,8 @@
  */
 'use strict';
 
+import { GEHelper } from '../util/GEHelper';
+
 /**
  * Construct entity class
  * @param {!Entry.EntryObject} object
@@ -929,19 +931,12 @@ Entry.EntityObject = class EntityObject {
             const adjust = Entry.adjustValueWithMaxMin;
 
             if (~diffEffects.indexOf('brightness')) {
-                e.brightness = e.brightness;
-                const cmBrightness = new createjs.ColorMatrix();
-                cmBrightness.adjustColor(adjust(e.brightness, -100, 100), 0, 0, 0);
-                const brightnessFilter = new createjs.ColorMatrixFilter(cmBrightness);
-                f.push(brightnessFilter);
+                let brightness = adjust(e.brightness, -100, 100);
+                f.push(GEHelper.colorFilter.brightness(brightness));
             }
 
             if (~diffEffects.indexOf('hue')) {
-                e.hue = e.hue.mod(360);
-                const cmHue = new createjs.ColorMatrix();
-                cmHue.adjustColor(0, 0, 0, e.hue);
-                const hueFilter = new createjs.ColorMatrixFilter(cmHue);
-                f.push(hueFilter);
+                f.push(GEHelper.colorFilter.hue(e.hue.mod(360)));
             }
 
             if (~diffEffects.indexOf('hsv')) {
@@ -989,8 +984,7 @@ Entry.EntityObject = class EntityObject {
                     ];
                 }
 
-                const calcMatrix = new createjs.ColorMatrix().concat(matrixValue);
-                const colorFilter = new createjs.ColorMatrixFilter(calcMatrix);
+                const colorFilter = GEHelper.colorFilter.newColorMatrixFilter(matrixValue);
                 f.push(colorFilter);
             }
 
