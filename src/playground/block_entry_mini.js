@@ -2965,6 +2965,7 @@
         },
         robotis_userbutton_value: {
             color: '#2AB4D3',
+            outerLine: '#0e93b1',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -3108,6 +3109,7 @@
         },
         robotis_detectedsound_value_init: {
             color: '#00D67F',
+            outerLine: '#00b36a',
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
@@ -3116,7 +3118,7 @@
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/sound.png',
+                    img: 'block_icon/practical_course/sound.png',
                     size: 12
                 }],
             def: {
