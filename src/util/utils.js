@@ -370,7 +370,7 @@ Entry.resizeElement = function(interfaceModel) {
 Entry.overridePrototype = function() {
     /** modulo include negative number */
     Number.prototype.mod = function(n) {
-        return ((this % n) + n) % n;
+        return (this % n + n) % n;
     };
 
     //polyfill
@@ -1369,11 +1369,11 @@ Entry.getListRealIndex = function(index, list) {
 };
 
 Entry.toRadian = function(angle) {
-    return (angle * Math.PI) / 180;
+    return angle * Math.PI / 180;
 };
 
 Entry.toDegrees = function(radians) {
-    return (radians * 180) / Math.PI;
+    return radians * 180 / Math.PI;
 };
 
 Entry.getPicturesJSON = function(pictures = [], isClone) {
@@ -1745,12 +1745,14 @@ Entry.Utils.addFilters = function(boardSvgDom, suffix, isOnlyBlock) {
         values: '1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0',
     });
 
-    defs.elem('filter', {
-        id: `entryBlockDarkenFilter_${suffix}`,
-    }).elem('feColorMatrix', {
-        type: 'matrix',
-        values: '.45 0 0 0 0 0 .45 0 0 0 0 0 .45 0 0 0 0 0 1 0',
-    });
+    defs
+        .elem('filter', {
+            id: `entryBlockDarkenFilter_${suffix}`,
+        })
+        .elem('feColorMatrix', {
+            type: 'matrix',
+            values: '.45 0 0 0 0 0 .45 0 0 0 0 0 .45 0 0 0 0 0 1 0',
+        });
 
     if (!isOnlyBlock) {
         const buttonShadow = defs.elem('filter', {

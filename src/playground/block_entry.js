@@ -18,165 +18,146 @@ if (!Entry.block) {
     Entry.block = {};
 }
 
-if (!Entry.block.converters) {
-    Entry.block.converters = {};
-}
 
-if (Entry && Entry.block) {
-    (function(c) {
-        c.keyboardCode = function(key, value) {
-            let code;
+function getConverters() {
+    const c ={};
+    c.keyboardCode = function(key, value) {
+        let code;
 
-            if (key) {
-                code = key.toUpperCase();
-            }
+        if (key) {
+            code = key.toUpperCase();
+        }
 
-            const map = {
-                32: 'space',
-                13: 'enter',
-                38: 'up',
-                37: 'left',
-                39: 'right',
-                40: 'down',
-            };
-
-            code = map[value] || code || value;
-            if (!Entry.Utils.isNumber(code)) {
-                return code;
-            } else {
-                return '"()"'.replace('"()"', code);
-            }
+        const map = {
+            32: 'space',
+            13: 'enter',
+            38: 'up',
+            37: 'left',
+            39: 'right',
+            40: 'down',
         };
 
-        c.returnStringKey = function(key, value) {
-            if ((!value && typeof value !== 'number') || value === 'null') {
-                return 'None';
-            }
-            key = String(key);
-            if (value === 'mouse') {
-                key = 'mouse';
-            }
+        code = map[value] || code || value;
+        if (!Entry.Utils.isNumber(code)) {
+            return code;
+        } else {
+            return '"()"'.replace('"()"', code);
+        }
+    };
 
-            const name = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(
-                value,
-                this.menuName
-            );
-            if (name) {
-                key = name;
-            }
-            if (this.codeMap) {
-                var codeMap = eval(this.codeMap);
-            }
-            const codeMapKey = value;
-            if (codeMap) {
-                const codeMapValue = codeMap[codeMapKey];
-                if (codeMapValue) {
-                    key = codeMapValue;
-                }
-            }
+    c.returnStringKey = function(key, value) {
+        if ((!value && typeof value !== 'number') || value === 'null') {
+            return 'None';
+        }
+        key = String(key);
+        if (value === 'mouse') {
+            key = 'mouse';
+        }
 
-            key = key.replace(/\"/gi, '');
-            return '"()"'.replace('()', key);
+        const name = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(
+            value,
+            this.menuName
+        );
+        if (name) {
+            key = name;
+        }
+        if (this.codeMap) {
+            var codeMap = eval(this.codeMap);
+        }
+        const codeMapKey = value;
+        if (codeMap) {
+            const codeMapValue = codeMap[codeMapKey];
+            if (codeMapValue) {
+                key = codeMapValue;
+            }
+        }
+
+        key = key.replace(/\"/gi, '');
+        return '"()"'.replace('()', key);
+    };
+
+    c.returnRawStringKey = function(key, value) {
+        if ((!value && typeof value !== 'number') || value === 'null') {
+            return 'None';
+        }
+        key = String(key);
+        if (value === 'mouse') {
+            key = value;
+        }
+        const name = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(
+            value,
+            this.menuName
+        );
+        if (name) {
+            key = name;
+        }
+        key = key.replace(/\"/gi, '');
+        return '"()"'.replace('"()"', key);
+    };
+
+    c.returnStringValue = function(key, value) {
+        if ((!value && typeof value !== 'number') || value === 'null') {
+            return 'None';
+        }
+
+        if (this.codeMap) {
+            var codeMap = eval(this.codeMap);
+        }
+        const codeMapKey = value;
+        if (codeMap) {
+            const codeMapValue = codeMap[codeMapKey];
+            if (codeMapValue) {
+                value = codeMapValue;
+            }
+        }
+        return '"()"'.replace('()', value);
+    };
+
+    c.returnOperator = function(key, value) {
+        const map = {
+            EQUAL: '==',
+            GREATER: '>',
+            LESS: '<',
+            GREATER_OR_EQUAL: '>=',
+            LESS_OR_EQUAL: '<=',
+            PLUS: '+',
+            MINUS: '-',
+            MULTI: '*',
+            DIVIDE: '/',
+            '==': 'EQUAL',
+            '>': 'GREATER',
+            '<': 'LESS',
+            '>=': 'GREATER_OR_EQUAL',
+            '<=': 'LESS_OR_EQUAL',
+            '+': 'PLUS',
+            '-': 'MINUS',
+            '*': 'MULTI',
+            '/': 'DIVIDE',
+            AND: 'and',
+            OR: 'or',
         };
+        return map[value];
+    };
 
-        c.returnRawStringKey = function(key, value) {
-            if ((!value && typeof value !== 'number') || value === 'null') {
-                return 'None';
-            }
-            key = String(key);
-            if (value === 'mouse') {
-                key = value;
-            }
-            const name = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(
-                value,
-                this.menuName
-            );
-            if (name) {
-                key = name;
-            }
-            key = key.replace(/\"/gi, '');
-            return '"()"'.replace('"()"', key);
-        };
+    c.returnRawNumberValueByKey = function(key, value) {
+        //return String(key).replace(/\D/, '');
+        return key;
+    };
 
-        c.returnStringValue = function(key, value) {
-            if ((!value && typeof value !== 'number') || value === 'null') {
-                return 'None';
-            }
-
-            if (this.codeMap) {
-                var codeMap = eval(this.codeMap);
-            }
-            const codeMapKey = value;
-            if (codeMap) {
-                const codeMapValue = codeMap[codeMapKey];
-                if (codeMapValue) {
-                    value = codeMapValue;
-                }
-            }
+    c.returnStringOrNumberByValue = function(key, value) {
+        if (!Entry.Utils.isNumber(value)) {
+            value = value.replace(/\"/gi, '');
             return '"()"'.replace('()', value);
-        };
+        } else {
+            return value;
+        }
+    };
 
-        c.returnOperator = function(key, value) {
-            const map = {
-                EQUAL: '==',
-                GREATER: '>',
-                LESS: '<',
-                GREATER_OR_EQUAL: '>=',
-                LESS_OR_EQUAL: '<=',
-                PLUS: '+',
-                MINUS: '-',
-                MULTI: '*',
-                DIVIDE: '/',
-                '==': 'EQUAL',
-                '>': 'GREATER',
-                '<': 'LESS',
-                '>=': 'GREATER_OR_EQUAL',
-                '<=': 'LESS_OR_EQUAL',
-                '+': 'PLUS',
-                '-': 'MINUS',
-                '*': 'MULTI',
-                '/': 'DIVIDE',
-                AND: 'and',
-                OR: 'or',
-            };
-            return map[value];
-        };
-
-        c.returnRawNumberValueByKey = function(key, value) {
-            //return String(key).replace(/\D/, '');
-            return key;
-        };
-
-        c.returnStringOrNumberByValue = function(key, value) {
-            if (!Entry.Utils.isNumber(value)) {
-                value = value.replace(/\"/gi, '');
-                return '"()"'.replace('()', value);
-            } else {
-                return value;
-            }
-        };
-
-        c.returnObjectOrStringValue = function(key, value) {
-            if (Entry.container && Entry.container.getObject(value)) {
-                const objectName = Entry.container.getObject(value).name;
-                return '"()"'.replace('()', objectName);
-            } else {
-                if (this.codeMap) {
-                    var codeMap = eval(this.codeMap);
-                }
-                const codeMapKey = value;
-                if (codeMap) {
-                    const codeMapValue = codeMap[codeMapKey];
-                    if (codeMapValue) {
-                        value = codeMapValue;
-                    }
-                }
-                value = value.replace(/\"/gi, '');
-                return '"()"'.replace('()', value);
-            }
-        };
-
-        c.returnStringValueUpperCase = function(key, value) {
+    c.returnObjectOrStringValue = function(key, value) {
+        if (Entry.container && Entry.container.getObject(value)) {
+            const objectName = Entry.container.getObject(value).name;
+            return '"()"'.replace('()', objectName);
+        } else {
             if (this.codeMap) {
                 var codeMap = eval(this.codeMap);
             }
@@ -187,60 +168,76 @@ if (Entry && Entry.block) {
                     value = codeMapValue;
                 }
             }
-            return '"()"'.replace('()', value).toUpperCase();
-        };
+            value = value.replace(/\"/gi, '');
+            return '"()"'.replace('()', value);
+        }
+    };
 
-        c.returnValueUpperCase = function(key, value) {
-            if (this.codeMap) {
-                var codeMap = eval(this.codeMap);
+    c.returnStringValueUpperCase = function(key, value) {
+        if (this.codeMap) {
+            var codeMap = eval(this.codeMap);
+        }
+        const codeMapKey = value;
+        if (codeMap) {
+            const codeMapValue = codeMap[codeMapKey];
+            if (codeMapValue) {
+                value = codeMapValue;
             }
-            const codeMapKey = value;
-            if (codeMap) {
-                const codeMapValue = codeMap[codeMapKey];
-                if (codeMapValue) {
-                    value = codeMapValue;
-                }
+        }
+        return '"()"'.replace('()', value).toUpperCase();
+    };
+
+    c.returnValueUpperCase = function(key, value) {
+        if (this.codeMap) {
+            var codeMap = eval(this.codeMap);
+        }
+        const codeMapKey = value;
+        if (codeMap) {
+            const codeMapValue = codeMap[codeMapKey];
+            if (codeMapValue) {
+                value = codeMapValue;
             }
+        }
+        return value.toUpperCase();
+    };
+
+    c.returnStringValueLowerCase = function(key, value) {
+        if (this.codeMap) {
+            var codeMap = eval(this.codeMap);
+        }
+        const codeMapKey = value;
+        if (codeMap) {
+            const codeMapValue = codeMap[codeMapKey];
+            if (codeMapValue) {
+                value = codeMapValue;
+            }
+        }
+        return '"()"'.replace('()', value).toLowerCase();
+    };
+
+    c.returnValuePartialUpperCase = function(key, value) {
+        if (this.codeMap) {
+            var codeMap = eval(this.codeMap);
+        }
+        const codeMapKey = value;
+        if (codeMap) {
+            const codeMapValue = codeMap[codeMapKey];
+            if (codeMapValue) {
+                value = codeMapValue;
+            }
+        }
+        const dot = value.indexOf('.') + 1;
+        if (dot > 1) {
+            return (
+                value.charAt(0).toUpperCase() +
+                value.substring(1, dot) +
+                value.substring(dot).toUpperCase()
+            );
+        } else {
             return value.toUpperCase();
-        };
-
-        c.returnStringValueLowerCase = function(key, value) {
-            if (this.codeMap) {
-                var codeMap = eval(this.codeMap);
-            }
-            const codeMapKey = value;
-            if (codeMap) {
-                const codeMapValue = codeMap[codeMapKey];
-                if (codeMapValue) {
-                    value = codeMapValue;
-                }
-            }
-            return '"()"'.replace('()', value).toLowerCase();
-        };
-
-        c.returnValuePartialUpperCase = function(key, value) {
-            if (this.codeMap) {
-                var codeMap = eval(this.codeMap);
-            }
-            const codeMapKey = value;
-            if (codeMap) {
-                const codeMapValue = codeMap[codeMapKey];
-                if (codeMapValue) {
-                    value = codeMapValue;
-                }
-            }
-            const dot = value.indexOf('.') + 1;
-            if (dot > 1) {
-                return (
-                    value.charAt(0).toUpperCase() +
-                    value.substring(1, dot) +
-                    value.substring(dot).toUpperCase()
-                );
-            } else {
-                return value.toUpperCase();
-            }
-        };
-    })(Entry.block.converters);
+        }
+    };
+    return c
 }
 
 const blocks = require('./blocks');
@@ -7687,7 +7684,8 @@ assignBlocks();
 })();
 
 function assignBlocks() {
-    Object.assign(Entry.block, getBlocks(), blocks.getBlocks());
+    Entry.block.converters = getConverters();
+    Entry.block = Object.assign({}, getBlocks(), blocks.getBlocks());
 }
 
 function setHardwareLanguage() {
