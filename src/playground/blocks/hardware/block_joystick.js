@@ -74,10 +74,16 @@ Entry.joystick.setLanguage = function() {
                 joystick_toggle_led: '디지털 %1 번 핀 %2 %3',
                 joystick_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
                 joystick_set_tone:
-                    '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
+                    '피에조부저를 %1 %2 음으로 %3 초 연주하기 %4',
                 joystick_set_servo:
                     '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
                 joystick_get_digital: '디지털 %1 번 센서값',
+		joystick_is_button_pressed: '%1 버튼이 눌렸는가?',
+		joystick_get_joystick_value: '조이스틱을 %1 으로 움직였는가?',
+		joystick_get_sensor_value: '%1 의 측정값',
+		joystick_toggle_motor: '진동모터 %1 %2',
+		joystick_toggle_shield_led: '%1 번째 LED를 %2 %3',
+		joystick_get_led_number: '%1',
             }
         },
         en: {
@@ -90,9 +96,15 @@ Entry.joystick.setLanguage = function() {
                 joystick_toggle_led: 'Digital %1 Pin %2 %3',
                 joystick_digital_pwm: 'Digital %1 Pin %2 %3',
                 joystick_set_tone:
-                    'Play tone pin %1 on note %2 octave %3 beat %4 %5',
+                    'Play tone on note %1 octave %2 beat %3 %4',
                 joystick_set_servo: 'Set servo pin %1 angle as %2 %3',
                 joystick_get_digital: 'Digital %1 Sensor value',
+		joystick_is_button_pressed: 'button pressed %1',
+		joystick_get_joystick_value: 'when the joystick move to %1',
+		joystick_get_sensor_value: '%1 value',
+		joystick_toggle_motor: 'vibrator motor %1 %2',
+		joystick_toggle_shield_led: '%2 the sensorshield %1 LED %3',
+		joystick_get_led_number: '%1',
             }
         },
     };
@@ -106,7 +118,15 @@ Entry.joystick.blockMenuBlocks = [
 	'joystick_toggle_led',
 	'joystick_digital_pwm',
 	'joystick_set_servo',
+	'joystick_toggle_shield_led',
 	'joystick_set_tone',
+	'joystick_toggle_motor',
+	'joystick_is_button_pressed',
+	'joystick_get_joystick_value',
+	'joystick_get_sensor_value',
+
+
+	
 ];
 
 Entry.joystick.getBlocks = function() {
@@ -511,60 +531,6 @@ Entry.joystick.getBlocks = function() {
                 ],
             },
         },
-        arduino_get_digital_toggle: {
-            color: '#00CFCA',
-			outerLine: '#04B5B0',
-            skeleton: 'basic_string_field',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.ARDUINO_on, 'on'],
-                        [Lang.Blocks.ARDUINO_off, 'off'],
-                    ],
-                    value: 'on',
-                    fontSize: 11,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-            },
-            paramsKeyMap: {
-                OPERATOR: 0,
-            },
-            func: function(sprite, script) {
-                return script.getStringField('OPERATOR');
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: '%1',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.ARDUINO_on, 'on'],
-                                    [Lang.Blocks.ARDUINO_off, 'off'],
-                                ],
-                                value: 'on',
-                                fontSize: 11,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter:
-                                    Entry.block.converters
-                                        .returnStringValueUpperCase,
-                                codeMap:
-                                    'Entry.CodeMap.Arduino.arduino_get_digital_toggle[0]',
-                            },
-                        ],
-                        keyOption: 'arduino_get_digital_toggle',
-                    },
-                ],
-            },
-        },
         joystick_toggle_led: {
             color: '#00CFCA',
 			outerLine: '#04B5B0',
@@ -887,11 +853,6 @@ Entry.joystick.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
                 },
                 {
                     type: 'Block',
@@ -913,10 +874,6 @@ Entry.joystick.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'arduino_get_port_number',
-                        params: [3],
-                    },
-                    {
                         type: 'joystick_tone_list',
                     },
                     {
@@ -931,20 +888,20 @@ Entry.joystick.getBlocks = function() {
                 type: 'joystick_set_tone',
             },
             paramsKeyMap: {
-                PORT: 0,
-                NOTE: 1,
-                OCTAVE: 2,
-                DURATION: 3,
+                NOTE: 0,
+                OCTAVE: 1,
+                DURATION: 2,
             },
-            class: 'joystick',
+            class: 'joysticksensor',
             isNotFor: ['joystick'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
-                var port = script.getNumberValue('PORT', script);
+                var port = 6;
 
                 if (!script.isStart) {
                     var note = script.getValue('NOTE', script);
                     if (!Entry.Utils.isNumber(note))
+						
                         note = Entry.joystick.toneTable[note];
 
                     if (note < 0) {
@@ -1105,6 +1062,403 @@ Entry.joystick.getBlocks = function() {
                 py: [
                     {
                         syntax: 'Arduino.servomotorWrite(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+		joystick_is_button_pressed: {
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['흰색', '16'],
+                        ['노랑', '9'],
+                        ['빨강', '8'],
+                        ['파랑', '17'],
+			['왼쪽 위', '4'],
+			['오른쪽 위', '5'],
+                    ],
+                    value: '16',
+                    fontSize: 11,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'joystick_is_button_pressed',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'joysticksensor',
+            isNotFor: ['joystick'],
+            func: function(sprite, script) {
+                const { hwModule = {} } = Entry.hw;
+                const { name } = hwModule;
+                if(name === 'joystick') {
+                    var port = script.getNumberField('PORT', script)
+                    var DIGITAL = Entry.hw.portData.DIGITAL;
+                    if (!Entry.hw.sendQueue['GET']) {
+                        Entry.hw.sendQueue['GET'] = {};
+                    }
+                    Entry.hw.sendQueue['GET'][
+                        Entry.joystick.sensorTypes.DIGITAL
+                    ] = {
+                        port: port,
+                        time: new Date().getTime(),
+                    };
+                    return DIGITAL ? !DIGITAL[port] || 0 : 0;
+                } else {
+                    return Entry.block.arduino_get_digital_value.func(sprite, script);
+                }
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.digitalRead(%1)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+		joystick_get_joystick_value: {
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+             params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['오른쪽', '1'],
+                        ['왼쪽', '2'],
+                        ['위', '3'],
+                        ['아래', '4'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'joystick_get_joystick_value',
+            },
+            paramsKeyMap: {
+                STICK: 0,
+            },
+            class: 'joysticksensor',
+            isNotFor: ['joystick'],
+            func: function(sprite, script) {
+				var stick = script.getNumberField('STICK', script)
+				var port = 0;
+				if(stick === 1 || stick === 2) {
+					port = 'A0';
+				}
+				else { 
+					port = 'A1';
+				}
+				
+                var ANALOG = Entry.hw.portData.ANALOG;
+                if (port[0] === 'A') port = port.substring(1);
+				if(stick === 1 && ANALOG[port] > 800) {
+					return 1;
+				} else if(stick === 2 && ANALOG[port] < 100) {
+					return 1;
+				} else if(stick === 3 && ANALOG[port] > 800) {
+					return 1;
+				} else if(stick === 4 && ANALOG[port] < 100) {
+					return 1;
+				} else {
+					return 0;
+				}
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.analogRead(%1)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+		joystick_get_sensor_value: {
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+				{
+					type: 'Dropdown',
+                    options: [
+                        ['가변저항', '1'],
+                        ['빛감지센서', '2'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+				}
+            ],
+            events: {},
+            def: {
+				params: [null],
+                type: 'joystick_get_sensor_value',
+            },
+            paramsKeyMap: {
+				PORT: 0,
+            },
+            class: 'joysticksensor',
+            isNotFor: ['joystick'],
+            func: function(sprite, script) {
+                var port = script.getNumberField('PORT', script)
+				if(port === 1) {
+					port = 'A4';
+				} else if(port === 2) {
+					port = 'A5';
+				} else {
+					port = '0';
+				}
+                var ANALOG = Entry.hw.portData.ANALOG;
+                if (port[0] === 'A') port = port.substring(1);
+                return ANALOG ? ANALOG[port] || 0 : 0;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.analogRead(%1)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+		joystick_toggle_motor: {
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_digital_toggle',
+                        params: ['on'],
+                    },
+                    null,
+                ],
+                type: 'joystick_toggle_motor',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'joysticksensor',
+            isNotFor: ['joystick'],
+            func: function(sprite, script) {
+                var port = 7;
+                var value = script.getValue('VALUE');
+
+                if (typeof value === 'string') {
+                    value = value.toLowerCase();
+                }
+                if (Entry.joystick.highList.indexOf(value) > -1) {
+                    value = 255;
+                } else if (Entry.joystick.lowList.indexOf(value) > -1) {
+                    value = 0;
+                } else {
+                    throw new Error();
+                }
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.joystick.sensorTypes.DIGITAL,
+                    data: value,
+                    time: new Date().getTime(),
+                };
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.digitalWrite(7, %1)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+		joystick_get_led_number: {
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', '1'],
+			['2', '2'],
+			['3', '3'],
+			['4', '4'],
+			['5', '5'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                OPERATOR: 0,
+            },
+            isNotFor: ['joystick'],
+            func: function(sprite, script) {
+                return script.getStringField('OPERATOR');
+            },
+            syntax: {
+                js: [],
+                py: [],
+            },
+        },
+		joystick_toggle_shield_led: {
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+					defaultType: 'number'
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+			{
+                        	type: 'joystick_get_led_number',
+				params: [null],
+                    	},
+                    	{
+                      	  	type: 'arduino_get_digital_toggle',
+                     	   	params: ['on'],
+                  	},
+                 	   	null,
+                ],
+                type: 'joystick_toggle_shield_led',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                VALUE: 1,
+            },
+            class: 'joysticksensor',
+            isNotFor: ['joystick'],
+            func: function(sprite, script) {
+                var port = script.getValue('PORT');
+		if(port === '1') {
+			port = 2;
+		} else if (port === '2') {
+			port = 3;
+		} else if (port === '3') {
+			port = 11;
+		} else if (port === '4') {
+			port = 12;
+		} else if (port === '5') {
+			port = 13;
+		} else {
+			port = null;
+		}
+                var value = script.getValue('VALUE');
+
+                if (typeof value === 'string') {
+                    value = value.toLowerCase();
+                }
+                if (Entry.joystick.highList.indexOf(value) > -1) {
+                    value = 255;
+                } else if (Entry.joystick.lowList.indexOf(value) > -1) {
+                    value = 0;
+                } else {
+                    throw new Error();
+                }
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.joystick.sensorTypes.DIGITAL,
+                    data: value,
+                    time: new Date().getTime(),
+                };
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.digitalWrite(%1, %2)',
                         textParams: [
                             {
                                 type: 'Block',
