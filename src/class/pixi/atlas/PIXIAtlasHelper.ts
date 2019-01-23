@@ -2,8 +2,10 @@ import { IRawPicture } from './model/IRawPicture';
 import { PrimitiveSet } from './structure/PrimitiveSet';
 import { ImageRect } from '../../maxrect-packer/geom/ImageRect';
 import { autoFit } from '../utils/AutoFit';
-import Rectangle = PIXI.Rectangle;
 
+interface ISimpleRect {
+    x:number; y:number; width:number, height:number;
+}
 
 declare let _:any;
 
@@ -40,7 +42,7 @@ class _PIXIAtlasHelper {
         return pathSet;
     }
 
-    getNewImageRect(pic:IRawPicture, texMaxRect:Rectangle):ImageRect {
+    getNewImageRect(pic:IRawPicture, texMaxRect:ISimpleRect):ImageRect {
         let w = pic.dimension.width,
             h = pic.dimension.height;
         let r = new ImageRect(0,0, w, h);

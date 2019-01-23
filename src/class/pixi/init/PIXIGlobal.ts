@@ -20,7 +20,7 @@ class _PIXIGlobal {
     private _init:boolean;
     /** @readonly */
     baseAsset:PIXIBaseAsset;
-
+    atlasManager:PIXIAtlasManager;
     private _currentApp:PIXI.Application;
 
     initOnce() {
@@ -31,7 +31,7 @@ class _PIXIGlobal {
         //this.baseAsset = new PIXIBaseAsset();
         ndgmr.initTempObject();
         PIXITempStore.init();
-        PIXIAtlasManager.INIT();
+        this.atlasManager = new PIXIAtlasManager();
         PIXIShortPropPlugin();
         new PIXIZeroAlphaNoneInteractionPlugins();
         new PIXIPixelPerfectInteractionPlugIn();

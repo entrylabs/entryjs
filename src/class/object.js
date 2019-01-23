@@ -4,6 +4,7 @@
 'use strict';
 
 import DomUtils from '../../src/util/domUtils';
+import { GEHelper } from '../graphicEngine/GEHelper';
 
 /**
  * Class for entry object.
@@ -58,64 +59,18 @@ Entry.EntryObject = class {
 
             Entry.stage.loadObject(this);
 
-            const entityId = this.entity.id;
-            const cachePicture = Entry.container.cachePicture.bind(Entry.container);
             const pictures = this.pictures;
 
             for (const i in pictures) {
-                ((picture) => {
-                    picture.objectId = this.id;
-                    if (!picture.id) {
-                        picture.id = Entry.generateHash();
-                    }
-
-                    const image = new Image();
-                    Entry.Loader.addQueue();
-
-                    image.onload = function() {
-                        delete this.triedCnt;
-                        cachePicture(picture.id + entityId, this);
-                        Entry.Loader.removeQueue();
-                        this.onload = null;
-                    };
-
-                    image.onerror = function() {
-                        if (!this.triedCnt) {
-                            if (Entry.type !== 'invisible') {
-                                console.log('err=', picture.name, 'load failed');
-                            }
-                            this.triedCnt = 1;
-                            this.src = getImageSrc(picture);
-                        } else if (this.triedCnt < 3) {
-                            this.triedCnt++;
-                            this.src = `${Entry.mediaFilePath}_1x1.png`;
-                        } else {
-                            //prevent infinite call
-                            delete this.triedCnt;
-                            Entry.Loader.removeQueue();
-                            this.onerror = null;
-                        }
-                    };
-
-                    image.src = getImageSrc(picture);
-                })(this.pictures[i]);
+                var picture = pictures[i];
+                picture.objectId = this.id;
+                if (!picture.id) picture.id = Entry.generateHash();
+                GEHelper.resManager.reqResource(null, this.scene.id, picture);
             }
             Entry.requestUpdate = true;
         }
 
         this._isContextMenuEnabled = true;
-
-        function getImageSrc(picture) {
-            if (picture.fileurl) {
-                return picture.fileurl;
-            }
-
-            const fileName = picture.filename;
-            return `${Entry.defaultPath}/uploads/${fileName.substring(0, 2)}/${fileName.substring(
-                2,
-                4
-            )}/image/${fileName}.png`;
-        }
     }
 
     /**
@@ -366,8 +321,6 @@ Entry.EntryObject = class {
         if (picture === this.selectedPicture) {
             playground.selectPicture(pictures[0]);
         }
-
-        Entry.container.unCachePictures(this.entity, picture);
 
         playground.injectPicture(this);
         playground.reloadPlayground();

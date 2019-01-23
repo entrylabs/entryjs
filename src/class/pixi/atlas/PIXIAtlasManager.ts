@@ -17,7 +17,7 @@ declare let _:any;
 
 type SceneBinsMap = {[key:string]: ISceneTextures};
 
-class _PIXIAtlasManager implements IGEResManager {
+export class PIXIAtlasManager implements IGEResManager {
 
     private _sceneID_sceneBin_map:SceneBinsMap = {};
     private _activatedScene:ISceneTextures;
@@ -113,11 +113,11 @@ class _PIXIAtlasManager implements IGEResManager {
     }
 }
 
-export let PIXIAtlasManager:_PIXIAtlasManager = new _PIXIAtlasManager();
-
-
-var w:any = window;
-w.PIXIAtlasManager = PIXIAtlasManager;
-w.PIXIDebugHelper = PIXIDebugHelper;
+// export let PIXIAtlasManager:_PIXIAtlasManager = new _PIXIAtlasManager();
+//
+//
+// var w:any = window;
+// w.PIXIAtlasManager = PIXIAtlasManager;
+// w.PIXIDebugHelper = PIXIDebugHelper;
 
 

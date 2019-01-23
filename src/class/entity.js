@@ -867,54 +867,26 @@ Entry.EntityObject = class EntityObject {
         this.setRegX(this.width / 2 + absoluteRegX);
         this.setRegY(this.height / 2 + absoluteRegY);
 
-        //pictureId can be duplicated by copy/paste
-        //add entityId in order to differentiate copied pictures
-        const cacheId = !this.isClone ? pictureModel.id + this.id : pictureModel.id;
 
-        let image = Entry.container.getCachedPicture(cacheId);
-
-        if (!image) {
-            image = new Image();
-
-            image.onload = function() {
-                if (!that.removed) {
-                    Entry.container.cachePicture(cacheId, this);
-                }
-
-                this.onload = null;
-                setImage(this, true);
-            };
-
-            const fileUrl = pictureModel.fileurl;
-            if (fileUrl) {
-                image.src = fileUrl;
-            } else {
-                const fileName = pictureModel.filename;
-                image.src = `${Entry.defaultPath}/uploads/${fileName.substring(
-                    0,
-                    2
-                )}/${fileName.substring(2, 4)}/image/${fileName}.png`;
-            }
-            setImage(image, false);
-        } else {
-            setImage(image, true);
-        }
-
-        function setImage(datum, reqUpdate) {
-            if(GEHelper.isWebGL) {
-                that.object.texture = PIXI.Texture.from(datum);
-            } else {
-                that.object.image = datum;
-            }
-
-            let hasFilter = !_.isEmpty(that.object.filters);
-            GEHelper.colorFilter.setCache(that.object, hasFilter);
-            if(reqUpdate) {
-                Entry.requestUpdate = true;
-            }
-        }
+        //TODO [박봉배] 이미지 로드 후 cache / uncache 하기.
+        GEHelper.resManager.reqResource(this.object, this.parent.scene.id, pictureModel);
 
         Entry.dispatchEvent('updateObject');
+
+        // function setImage(datum, reqUpdate) {
+        //     if(GEHelper.isWebGL) {
+        //         that.object.texture = PIXI.Texture.from(datum);
+        //     } else {
+        //         that.object.image = datum;
+        //     }
+        //
+        //     let hasFilter = !_.isEmpty(that.object.filters);
+        //     GEHelper.colorFilter.setCache(that.object, hasFilter);
+        //     if(reqUpdate) {
+        //         Entry.requestUpdate = true;
+        //     }
+        // }
+
     }
 
     /**
@@ -1264,6 +1236,7 @@ Entry.EntityObject = class EntityObject {
         this.removed = true;
 
         const object = this.object;
+        //TODO [박봉배] object destroy 구현
         if (object) {
             object.uncache();
             object.removeAllEventListeners();
@@ -1278,11 +1251,6 @@ Entry.EntityObject = class EntityObject {
         _.result(this.dialog, 'remove');
         this.brush && this.removeBrush();
         Entry.stage.unloadEntity(this);
-
-        const container = Entry.container;
-        if (container) {
-            container.unCachePictures(this, this.parent.pictures, isClone);
-        }
     }
 
     cache() {

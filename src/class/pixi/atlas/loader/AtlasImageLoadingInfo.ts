@@ -109,19 +109,12 @@ export class AtlasImageLoadingInfo {
     get path():string { return this._rawPath; }
 
     private _getImageSrc(picture:IRawPicture) {
-        if (picture.fileurl) return picture.fileurl;
+        if (picture.fileurl) {
+            return picture.fileurl;
+        }
 
-        let fileName = picture.filename;
-        return (
-            Entry.defaultPath +
-            '/uploads/' +
-            fileName.substring(0, 2) +
-            '/' +
-            fileName.substring(2, 4) +
-            '/image/' +
-            fileName +
-            '.png'
-        );
+        const name = picture.filename;
+        return `${Entry.defaultPath}/uploads/${name.substring(0, 2)}/${name.substring(2, 4)}/image/${name}.png`;
     }
 
     destroy() {

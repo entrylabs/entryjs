@@ -613,7 +613,7 @@ Entry.Stage.prototype.selectObjectContainer = function(scene) {
     if (_.isEmpty(canvas) || _.isEmpty(containers)) {
         return;
     }
-    GEHelper.activateScene(scene && scene.id);
+    GEHelper.resManager.activateScene(scene && scene.id);
     var newContainer = this.getObjectContainerByScene(scene);
 
     containers.forEach(canvas.removeChild.bind(canvas));
@@ -640,7 +640,7 @@ Entry.Stage.prototype.removeObjectContainer = function(scene) {
     if (canvas) {
         canvas.removeChild(objContainer);
     }
-    GEHelper.removeScene(scene.id);
+    GEHelper.resManager.removeScene(scene.id);
     containers.splice(containers.indexOf(objContainer), 1);
 };
 

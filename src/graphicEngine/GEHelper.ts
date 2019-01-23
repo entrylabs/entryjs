@@ -5,6 +5,8 @@ import { PIXIAtlasHelper } from '../class/pixi/atlas/PIXIAtlasHelper';
 import { PIXIAtlasManager } from '../class/pixi/atlas/PIXIAtlasManager';
 import { GEDragHelper } from './GEDragHelper';
 import { PIXIText } from '../class/pixi/text/PIXIText';
+import { IGEResManager } from './IGEResManager';
+import { EaselResManager } from './EaselResManager';
 
 
 
@@ -60,12 +62,15 @@ class _GEHelper extends GEHelperBase {
             PIXIGlobal.initOnce();
             this.rotateRead = 180 / Math.PI;
             this.rotateWrite = Math.PI / 180;
+            this.resManager = PIXIGlobal.atlasManager;
         } else {
-
+            this.resManager = new EaselResManager();
         }
+        this.resManager.INIT();
         return this;
     }
 
+    public resManager:IGEResManager;
     public textHelper:_TextHelper;
     public colorFilter:_ColorFilterHelper;
 
@@ -181,18 +186,6 @@ class _GEHelper extends GEHelperBase {
         }
     }
 
-
-    removeScene(sceneID:string):void {
-        if(this._isWebGL) {
-            PIXIAtlasManager.removeScene(sceneID);
-        }
-    }
-
-    activateScene(sceneID:string):void {
-        if(this._isWebGL) {
-            PIXIAtlasManager.activateScene(sceneID);
-        }
-    }
 
     /**
      * @param str
