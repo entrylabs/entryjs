@@ -7,12 +7,16 @@ import { GEDragHelper } from './GEDragHelper';
 import { PIXIText } from '../class/pixi/text/PIXIText';
 
 
+
+
 declare let createjs:any;
 
 interface IGraphicsEngineApplication {
     render():void;
     stage:PIXI.Container|any;
     destroy(destroyOption:any):void;
+
+
 }
 
 class CreateJsApplication implements IGraphicsEngineApplication {
@@ -34,11 +38,21 @@ class CreateJsApplication implements IGraphicsEngineApplication {
     }
 }
 
+export class GEHelperBase {
 
-class _GEHelper {
+    protected _isWebGL:boolean = false;
 
-    INIT(isWebGL:boolean) {
+    get isWebGL():boolean { return this._isWebGL; }
+
+    INIT(isWebGL:boolean):this {
         this._isWebGL = isWebGL;
+        return this;
+    }
+}
+class _GEHelper extends GEHelperBase {
+
+    INIT(isWebGL:boolean):this {
+        super.INIT(isWebGL);
         GEDragHelper.INIT(isWebGL);
         this.colorFilter = new _ColorFilterHelper().INIT(isWebGL);
         this.textHelper = new _TextHelper().INIT(isWebGL);
@@ -49,12 +63,11 @@ class _GEHelper {
         } else {
 
         }
+        return this;
     }
 
     public textHelper:_TextHelper;
     public colorFilter:_ColorFilterHelper;
-
-    private _isWebGL:boolean = true;
 
     /**  pixi 객체로부터 rotate를 읽을 때 사용할 값 */
     public rotateRead:number = 1;
@@ -63,7 +76,6 @@ class _GEHelper {
     public rotateWrite:number = 1;
 
 
-    get isWebGL():boolean { return this._isWebGL; }
 
 
     newApp(canvas:HTMLCanvasElement):IGraphicsEngineApplication {
@@ -211,14 +223,8 @@ let w:any = window;
 (w.GEHelper) = GEHelper;
 
 
-class _ColorFilterHelper {
+class _ColorFilterHelper extends GEHelperBase {
 
-    private _isWebGL:boolean;
-
-    INIT(isWebGL:boolean):this {
-        this._isWebGL = isWebGL;
-        return this;
-    }
 
     hue(value:number) {
         if(this._isWebGL) {
@@ -275,14 +281,7 @@ class _ColorFilterHelper {
 
 }
 
-class _TextHelper {
-
-    private _isWebGL:boolean;
-
-    INIT(isWebGL:boolean):this {
-        this._isWebGL = isWebGL;
-        return this;
-    }
+class _TextHelper extends GEHelperBase {
 
     setColor(target:PIXI.Text|any, color:string) {
         if(this._isWebGL) {

@@ -10,13 +10,14 @@ import { EntryTextureOption } from './EntryTextureOption';
 import { ISceneTextures } from './ISceneTextures';
 import { SceneTextures } from './SceneTextures';
 import { clog } from '../utils/logs';
+import { IGEResManager } from '../../../graphicEngine/IGEResManager';
 
 declare let _:any;
 
 
 type SceneBinsMap = {[key:string]: ISceneTextures};
 
-class _PIXIAtlasManager {
+class _PIXIAtlasManager implements IGEResManager {
 
     private _sceneID_sceneBin_map:SceneBinsMap = {};
     private _activatedScene:ISceneTextures;
@@ -59,6 +60,15 @@ class _PIXIAtlasManager {
         var bin:ISceneTextures = this._getSceneBin(sceneID);
         bin.addPicInfo(pic);
         return bin.getTexture(PIXIAtlasHelper.getRawPath(pic));
+    }
+
+    reqResource(spriteNullable:PIXI.Sprite, sceneID:string, pic:IRawPicture):void {
+        var bin:ISceneTextures = this._getSceneBin(sceneID);
+        bin.addPicInfo(pic);
+        let tex = bin.getTexture(PIXIAtlasHelper.getRawPath(pic));
+        if(spriteNullable) {
+            spriteNullable.texture = tex;
+        }
     }
 
     private _getSceneBin(sceneID:string, createIfNotExist:boolean = true):ISceneTextures {

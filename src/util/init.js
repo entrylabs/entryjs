@@ -2,10 +2,11 @@
  * @fileoverview Initialize code fore Entry
  */
 
+
 'use strict';
 
 import { Destroyer } from './destroyer/Destroyer';
-import { GEHelper } from './GEHelper';
+import { GEHelper } from '../graphicEngine/GEHelper';
 require('./utils');
 
 /**
@@ -239,7 +240,8 @@ Entry.initialize_ = function() {
         this.reporter = new Entry.Reporter(true);
     }
 
-    GEHelper.INIT(this.options.useWebGL);
+    // GEHelper.INIT(this.options.useWebGL);
+    GEHelper.INIT(0);
 
 };
 

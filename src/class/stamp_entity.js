@@ -2,11 +2,11 @@
  * @fileoverview stamp entity object is class for entry stamp entity canvas view.
  */
 
+
 'use strict';
 
 
-
-import { GEHelper } from '../util/GEHelper';
+import {GEHelper} from '../graphicEngine/GEHelper';
 
 /**
  * Construct stamp entity class

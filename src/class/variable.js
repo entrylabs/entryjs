@@ -2,9 +2,10 @@
  * @fileoverview Variable object for entry variable block.
  */
 
+
 'use strict';
 
-import { GEHelper } from '../util/GEHelper';
+import {GEHelper} from '../graphicEngine/GEHelper';
 
 /**
  * Block variable constructor

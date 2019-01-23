@@ -1,4 +1,4 @@
-import { GEHelper } from '../../util/GEHelper';
+import {GEHelper} from '../../graphicEngine/GEHelper';
 
 module.exports = {
     getBlocks() {

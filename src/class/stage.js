@@ -8,8 +8,7 @@
 'use strict';
 
 import ColorSpoid from '../playground/colorSpoid';
-import { GEHelper } from '../util/GEHelper';
-import { PIXIGlobal } from './pixi/init/PIXIGlobal';
+import { GEHelper } from '../graphicEngine/GEHelper';
 
 /**
  * class for a canvas

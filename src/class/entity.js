@@ -2,10 +2,11 @@
  * @fileoverview entity object is class for entry object canvas view.
  */
 
+
 'use strict';
 
-import { GEHelper } from '../util/GEHelper';
-import { GEDragHelper } from '../util/GEDragHelper';
+import {GEHelper} from '../graphicEngine/GEHelper';
+import {GEDragHelper} from '../graphicEngine/GEDragHelper';
 
 /**
  * Construct entity class
@@ -438,7 +439,8 @@ Entry.EntityObject = class EntityObject {
     setWidth(width) {
         /** @type {number} */
         this.width = width;
-        this.object.width = this.width;
+        //todo [박봉배] object.width -> object.$width 로 변경
+        this.object.$width = this.width;
         if (this.textObject && this.getLineBreak()) {
             this.textObject.lineWidth = this.width;
         }
@@ -461,9 +463,10 @@ Entry.EntityObject = class EntityObject {
      */
     setHeight(height) {
         /** @type {number} */
+        //todo [박봉배] object.height -> object.$height 로 변경
         this.height = height;
         if (this.textObject) {
-            this.object.height = this.height;
+            this.object.$height = this.height;
             this.alignTextBox();
         }
         this.updateDialog();
@@ -898,7 +901,12 @@ Entry.EntityObject = class EntityObject {
         }
 
         function setImage(datum, reqUpdate) {
-            that.object.image = datum;
+            if(GEHelper.isWebGL) {
+                that.object.texture = PIXI.Texture.from(datum);
+            } else {
+                that.object.image = datum;
+            }
+
             let hasFilter = !_.isEmpty(that.object.filters);
             GEHelper.colorFilter.setCache(that.object, hasFilter);
             if(reqUpdate) {
