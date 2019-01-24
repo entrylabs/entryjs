@@ -69,7 +69,7 @@ Entry.Variable = class Variable {
 
     _createListElementView(wrapperWidth) {
         let elementView = GEHelper.newContainer();
-        const indexView = GEHelper.newText('asdf', this.FONT, '#000000', 'middle');
+        const indexView = GEHelper.textHelper.newText('asdf', this.FONT, '#000000', 'middle');
         indexView.y = 5;
         elementView.addChild(indexView);
         elementView.indexView = indexView;
@@ -81,7 +81,7 @@ Entry.Variable = class Variable {
             .f('#1bafea')
             .rr(20, -2, wrapperWidth, 17, 2);
 
-        const valueView = GEHelper.newText('fdsa', this.FONT, '#eeeeee', 'middle');
+        const valueView = GEHelper.textHelper.newText('fdsa', this.FONT, '#eeeeee', 'middle');
         valueView.x = 24;
         valueView.y = 6;
         elementView.addChild(valueView);
@@ -104,11 +104,11 @@ Entry.Variable = class Variable {
             this.view_.variable = this;
             this.wrapper_ = GEHelper.newGraphic();
             this.view_.addChild(this.wrapper_);
-            this.textView_ = GEHelper.newText('asdf', this.FONT, '#000000', 'alphabetic');
+            this.textView_ = GEHelper.textHelper.newText('asdf', this.FONT, '#000000', 'alphabetic');
             this.textView_.x = 4;
             this.textView_.y = 1;
             this.view_.addChild(this.textView_);
-            this.valueView_ = GEHelper.newText('asdf', '10pt NanumGothic', '#ffffff', 'alphabetic');
+            this.valueView_ = GEHelper.textHelper.newText('asdf', '10pt NanumGothic', '#ffffff', 'alphabetic');
             const variableLength = Entry.variableContainer.variables_.length;
             if (this.getX() && this.getY()) {
                 this.setX(this.getX());
@@ -148,11 +148,11 @@ Entry.Variable = class Variable {
             this.view_.variable = this;
             this.wrapper_ = GEHelper.newGraphic();
             this.view_.addChild(this.wrapper_);
-            this.textView_ = GEHelper.newText('name', this.FONT, '#000000', 'alphabetic');
+            this.textView_ = GEHelper.textHelper.newText('name', this.FONT, '#000000', 'alphabetic');
             this.textView_.x = 4;
             this.textView_.y = 1;
             this.view_.addChild(this.textView_);
-            this.valueView_ = GEHelper.newText('value', '10pt NanumGothic', '#ffffff', 'alphabetic');
+            this.valueView_ = GEHelper.textHelper.newText('value', '10pt NanumGothic', '#ffffff', 'alphabetic');
             this.view_.on('mousedown', function(evt) {
                 if (Entry.type !== 'workspace') {
                     return;
@@ -241,7 +241,7 @@ Entry.Variable = class Variable {
             this.rect_ = GEHelper.newGraphic();
             this.view_.addChild(this.rect_);
             this.view_.variable = this;
-            this.titleView_ = GEHelper.newText('asdf', this.FONT, '#000', 'alphabetic', 'center');
+            this.titleView_ = GEHelper.textHelper.newText('asdf', this.FONT, '#000', 'alphabetic', 'center');
             this.titleView_.width = this.width_ - 2 * this.BORDER;
             this.titleView_.y = this.BORDER + 10;
             this.titleView_.x = this.width_ / 2;
