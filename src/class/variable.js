@@ -6,6 +6,7 @@
 'use strict';
 
 import {GEHelper} from '../graphicEngine/GEHelper';
+import { GEDragHelper } from '../graphicEngine/GEDragHelper';
 
 /**
  * Block variable constructor
@@ -121,10 +122,11 @@ Entry.Variable = class Variable {
             this.view_.visible = this.visible_;
             this.view_.addChild(this.valueView_);
 
-            this.view_.on('mousedown', function(evt) {
+            this.view_.on(GEDragHelper.types.DOWN, function(evt) {
                 if (Entry.type !== 'workspace') {
                     return;
                 }
+                GEDragHelper.handleDrag(this);
                 this.offset = {
                     x: this.x - (evt.stageX * 0.75 - 240),
                     y: this.y - (evt.stageY * 0.75 - 135),
@@ -132,7 +134,7 @@ Entry.Variable = class Variable {
                 this.cursor = 'move';
             });
 
-            this.view_.on('pressmove', function(evt) {
+            this.view_.on(GEDragHelper.types.MOVE, function(evt) {
                 if (Entry.type !== 'workspace') {
                     return;
                 }
@@ -153,7 +155,7 @@ Entry.Variable = class Variable {
             this.textView_.y = 1;
             this.view_.addChild(this.textView_);
             this.valueView_ = GEHelper.textHelper.newText('value', '10pt NanumGothic', '#ffffff', 'alphabetic');
-            this.view_.on('mousedown', function(evt) {
+            this.view_.on(GEDragHelper.types.DOWN, function(evt) {
                 if (Entry.type !== 'workspace') {
                     return;
                 }
@@ -163,7 +165,7 @@ Entry.Variable = class Variable {
                 };
             });
 
-            this.view_.on('pressmove', function(evt) {
+            this.view_.on(GEDragHelper.types.MOVE, function(evt) {
                 if (Entry.type !== 'workspace' || slide.isAdjusting) {
                     return;
                 }
@@ -194,7 +196,7 @@ Entry.Variable = class Variable {
                 .ss(1)
                 .dc(position, 10 + 0.5, 3);
             this.valueSetter_.cursor = 'pointer';
-            this.valueSetter_.on('mousedown', function(evt) {
+            this.valueSetter_.on(GEDragHelper.types.DOWN, function(evt) {
                 if (!Entry.engine.isState('run')) {
                     return;
                 }
@@ -203,7 +205,7 @@ Entry.Variable = class Variable {
                 this.offsetX = -(this.x - evt.stageX * 0.75 + 240);
             });
 
-            this.valueSetter_.on('pressmove', function(evt) {
+            this.valueSetter_.on(GEDragHelper.types.MOVE, function(evt) {
                 if (!Entry.engine.isState('run')) {
                     return;
                 }
@@ -224,7 +226,7 @@ Entry.Variable = class Variable {
                 }
                 slide.setSlideCommandX(value);
             });
-            this.valueSetter_.on('pressup', function() {
+            this.valueSetter_.on(GEDragHelper.types.UP, function() {
                 slide.isAdjusting = false;
             });
             this.view_.addChild(this.valueSetter_);
@@ -248,6 +250,7 @@ Entry.Variable = class Variable {
             this.view_.addChild(this.titleView_);
 
             this.resizeHandle_ = GEHelper.newGraphic();
+            this.resizeHandle_.mouseEnabled = true;
             this.resizeHandle_.graphics
                 .f('#1bafea')
                 .ss(1, 0, 0)
@@ -259,11 +262,11 @@ Entry.Variable = class Variable {
 
             this.resizeHandle_.list = this;
 
-            this.resizeHandle_.on('mouseover', function() {
+            this.resizeHandle_.on(GEDragHelper.types.OVER, function() {
                 this.cursor = 'nwse-resize';
             });
 
-            this.resizeHandle_.on('mousedown', function(evt) {
+            this.resizeHandle_.on(GEDragHelper.types.DOWN, function(evt) {
                 // if(Entry.type != 'workspace') return;
                 this.list.isResizing = true;
                 this.offset = {
@@ -272,7 +275,7 @@ Entry.Variable = class Variable {
                 };
                 this.parent.cursor = 'nwse-resize';
             });
-            this.resizeHandle_.on('pressmove', function(evt) {
+            this.resizeHandle_.on(GEDragHelper.types.MOVE, function(evt) {
                 // if(Entry.type != 'workspace') return;
                 this.list.setWidth(evt.stageX * 0.75 - this.offset.x);
                 this.list.setHeight(evt.stageY * 0.75 - this.offset.y);
@@ -283,7 +286,7 @@ Entry.Variable = class Variable {
                 this.cursor = 'move';
             });
 
-            this.view_.on('mousedown', function(evt) {
+            this.view_.on(GEDragHelper.types.DOWN, function(evt) {
                 if (Entry.type !== 'workspace' || this.variable.isResizing) {
                     return;
                 }
@@ -294,12 +297,12 @@ Entry.Variable = class Variable {
                 this.cursor = 'move';
             });
 
-            this.view_.on('pressup', function() {
+            this.view_.on(GEDragHelper.types.UP, function() {
                 this.cursor = 'initial';
                 this.variable.isResizing = false;
             });
 
-            this.view_.on('pressmove', function(evt) {
+            this.view_.on(GEDragHelper.types.MOVE, function(evt) {
                 if (Entry.type !== 'workspace' || this.variable.isResizing) {
                     return;
                 }
@@ -316,7 +319,7 @@ Entry.Variable = class Variable {
             this.scrollButton_.y = 23;
 
             this.scrollButton_.list = this;
-            this.scrollButton_.on('mousedown', function(evt) {
+            this.scrollButton_.on(GEDragHelper.types.DOWN, function(evt) {
                 // if(Entry.type != 'workspace') return;
                 this.list.isResizing = true;
                 this.cursor = 'pointer';
@@ -325,7 +328,7 @@ Entry.Variable = class Variable {
                         ? evt.rawY / 2
                         : this.offsetY;
             });
-            this.scrollButton_.on('pressmove', function(evt) {
+            this.scrollButton_.on(GEDragHelper.types.MOVE, function(evt) {
                 // if(Entry.type != 'workspace') return;
                 if (this.moveAmount === undefined) {
                     this.y = evt.target.y;
@@ -343,7 +346,7 @@ Entry.Variable = class Variable {
                 this.list.updateView();
             });
 
-            this.scrollButton_.on('pressup', function() {
+            this.scrollButton_.on(GEDragHelper.types.UP, function() {
                 this.moveAmount = undefined;
             });
             if (this.getX() && this.getY()) {
