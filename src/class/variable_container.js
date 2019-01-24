@@ -2780,7 +2780,7 @@ Entry.VariableContainer = class VariableContainer {
                 });
             });
         }
-        this.updateList();
+        Entry.playground.viewMode_ !== 'default' && this.updateList();
 
         return datum;
     }
@@ -2829,7 +2829,7 @@ Entry.VariableContainer = class VariableContainer {
                 });
             }
         }
-        this.updateList();
+        Entry.playground.viewMode_ !== 'default' && this.updateList();
     }
 
     updateSelected() {

@@ -290,13 +290,17 @@ Entry.Painter = function(view) {
         if ((isFullscreen !== true && $view.hasClass('fullscreen')) || isFullscreen === false) {
             pictureView_.appendChild(view);
             $(view).removeClass('fullscreen');
-            this.fullscreenButton.setAttribute('title', Lang.Painter.fullscreen);
-            this.fullscreenButton.setAttribute('alt', Lang.Painter.fullscreen);
+            if (this.fullscreenButton) {
+                this.fullscreenButton.setAttribute('title', Lang.Painter.fullscreen);
+                this.fullscreenButton.setAttribute('alt', Lang.Painter.fullscreen);
+            }
         } else {
             document.body.appendChild(view);
             $(view).addClass('fullscreen');
-            this.fullscreenButton.setAttribute('title', Lang.Painter.exit_fullscreen);
-            this.fullscreenButton.setAttribute('alt', Lang.Painter.exit_fullscreen);
+            if (this.fullscreenButton) {
+                this.fullscreenButton.setAttribute('title', Lang.Painter.exit_fullscreen);
+                this.fullscreenButton.setAttribute('alt', Lang.Painter.exit_fullscreen);
+            }
         }
         $(view)
             .find('.lc-drawing.with-gui')
