@@ -1,9 +1,11 @@
 import { PIXIDragHelper } from '../class/pixi/helper/PIXIDragHelper';
+import { clog } from '../class/pixi/utils/logs';
 
 interface IEventType {
     UP:string;
     MOVE:string;
     DOWN:string;
+    OVER:string;
 }
 
 function getPIXIEvent():IEventType {
@@ -11,6 +13,7 @@ function getPIXIEvent():IEventType {
         UP: PIXIDragHelper.UP,
         DOWN: PIXIDragHelper.DOWN,
         MOVE: PIXIDragHelper.MOVE,
+        OVER: PIXIDragHelper.OVER
     };
 }
 
@@ -19,6 +22,7 @@ function getCreatejsEvent():IEventType  {
         UP: 'pressup',
         DOWN: 'mousedown',
         MOVE: 'pressmove',
+        OVER: 'mouseover'
     };
 }
 
@@ -29,6 +33,7 @@ class _GEDragHelper {
     private _isWebGL:boolean;
 
     INIT(isWebGL:boolean) {
+        this._isWebGL = isWebGL;
         this.types = isWebGL ? getPIXIEvent() : getCreatejsEvent();
     }
 

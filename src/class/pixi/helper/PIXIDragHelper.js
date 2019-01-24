@@ -56,4 +56,5 @@ PIXIDragHelper.__CNT = 0;
 PIXIDragHelper.DOWN = "pointerdown";
 PIXIDragHelper.MOVE = "__pointermove";
 PIXIDragHelper.UP = "__pointerup";
+PIXIDragHelper.OVER = "pointerover";
 
