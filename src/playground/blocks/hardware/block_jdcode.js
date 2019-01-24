@@ -290,13 +290,14 @@ Entry.JDCode.getBlocks = function() {
     return {
         //region JDCode
         jdcode_takeoff: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -332,13 +333,14 @@ Entry.JDCode.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdcode_landing: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -370,7 +372,8 @@ Entry.JDCode.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdcode_altitude: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -382,7 +385,7 @@ Entry.JDCode.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -414,7 +417,8 @@ Entry.JDCode.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdcode_throttle: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -426,7 +430,7 @@ Entry.JDCode.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -460,7 +464,8 @@ Entry.JDCode.getBlocks = function() {
         },
 
         jdcode_velocity: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -474,6 +479,8 @@ Entry.JDCode.getBlocks = function() {
                     ],
                     value: 0,
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -483,7 +490,7 @@ Entry.JDCode.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -524,7 +531,8 @@ Entry.JDCode.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdcode_distance: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -538,6 +546,8 @@ Entry.JDCode.getBlocks = function() {
                     ],
                     value: 0,
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -553,7 +563,7 @@ Entry.JDCode.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -603,7 +613,8 @@ Entry.JDCode.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdcode_degree: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -615,6 +626,8 @@ Entry.JDCode.getBlocks = function() {
                     ],
                     value: 0,
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -630,7 +643,7 @@ Entry.JDCode.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -672,13 +685,14 @@ Entry.JDCode.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdcode_emergency: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -708,7 +722,8 @@ Entry.JDCode.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdcode_connect: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -737,7 +752,8 @@ Entry.JDCode.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdcode_battery: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -756,7 +772,8 @@ Entry.JDCode.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdcode_dronealt: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -775,7 +792,8 @@ Entry.JDCode.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdcode_gyrox: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -797,7 +815,8 @@ Entry.JDCode.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdcode_gyroy: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -819,7 +838,8 @@ Entry.JDCode.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdcode_posx: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -841,7 +861,8 @@ Entry.JDCode.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdcode_posy: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -885,7 +906,8 @@ Entry.JDCode.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdcode_motor: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -899,6 +921,8 @@ Entry.JDCode.getBlocks = function() {
                     ],
                     value: 1,
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -908,7 +932,7 @@ Entry.JDCode.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
