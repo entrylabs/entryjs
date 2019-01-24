@@ -1231,12 +1231,16 @@ Entry.EntityObject = class EntityObject {
         this.removed = true;
 
         const object = this.object;
-        //TODO [박봉배] object destroy 구현
         if (object) {
             GEHelper.colorFilter.setCache(this, false);
             object.removeAllEventListeners();
             delete object.image;
             delete object.entity;
+        }
+
+        if(this._scaleAdaptor) {
+            this._scaleAdaptor.destroy();
+            this._scaleAdaptor = null;
         }
 
         if (this.stamps) {
@@ -1246,6 +1250,9 @@ Entry.EntityObject = class EntityObject {
         _.result(this.dialog, 'remove');
         this.brush && this.removeBrush();
         Entry.stage.unloadEntity(this);
+
+        //pixi 전용 코드
+        object.destroy && object.destroy({children: true});
     }
 
     cache() {
