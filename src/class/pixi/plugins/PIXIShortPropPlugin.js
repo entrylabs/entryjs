@@ -1,8 +1,6 @@
 export function PIXIShortPropPlugin() {
 
-    var p = PIXI.DisplayObject.prototype;
-
-    Object.defineProperties(p, {
+    Object.defineProperties(PIXI.DisplayObject.prototype, {
         scaleX: {
             get: function(){ return this.scale.x; },
             set: function(v){ this.scale.x = v; },
@@ -21,7 +19,14 @@ export function PIXIShortPropPlugin() {
         },
         mouseEnabled: {
             get: function() { return this.interactive; },
-            set: function(v) { return this.interactive = v; }
+            set: function(v) { this.interactive = v; }
         },
+    });
+
+    Object.defineProperties(PIXI.Container.prototype, {
+        mouseChildren: {
+            get: function() { return this.interactiveChildren; },
+            set: function(v) { this.interactiveChildren = v; }
+        }
     });
 }
