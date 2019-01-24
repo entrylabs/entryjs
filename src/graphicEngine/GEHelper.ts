@@ -264,11 +264,16 @@ class _ColorFilterHelper extends GEHelperBase {
         }
     }
 
-    setCache(target:PIXI.Sprite|any, cache:boolean) {
+    /**
+     *
+     * @param target - EntityObject
+     * @param cache
+     */
+    setCache(entiy:any, cache:boolean) {
         if(this._isWebGL) {
 
         } else {
-            cache ? target.cache() : target.uncache();
+            cache ? entiy.cache() : entiy.object.uncache();
         }
     }
 

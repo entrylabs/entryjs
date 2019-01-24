@@ -877,7 +877,7 @@ Entry.EntityObject = class EntityObject {
             if (this.removed) return;
             if (info.source() !== this.object.image) return;
             let hasFilter = !_.isEmpty(that.object.filters);
-            GEHelper.colorFilter.setCache(this.object, hasFilter);
+            GEHelper.colorFilter.setCache(this, hasFilter);
             Entry.requestUpdate = true;
         };
         GEHelper.resManager.reqResource(this.object, this.parent.scene.id, pictureModel, onImageLoad);
@@ -996,8 +996,7 @@ Entry.EntityObject = class EntityObject {
         object.filters = [];
         this.setInitialEffectValue();
         object.alpha = this.effect.alpha;
-
-        object.uncache();
+        GEHelper.colorFilter.setCache(this, false);
     }
 
     /**
@@ -1234,7 +1233,7 @@ Entry.EntityObject = class EntityObject {
         const object = this.object;
         //TODO [박봉배] object destroy 구현
         if (object) {
-            object.uncache();
+            GEHelper.colorFilter.setCache(this, false);
             object.removeAllEventListeners();
             delete object.image;
             delete object.entity;
