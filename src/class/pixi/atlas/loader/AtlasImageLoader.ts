@@ -10,6 +10,7 @@ var TIME_OUT_DELAY:number = 1000;
 
 type LoadingInfoMap = {[key:string]:AtlasImageLoadingInfo};
 
+export type ImageLoaderHandler = (info:AtlasImageLoadingInfo)=>void;
 
 declare let _:any;
 declare let Entry:any;
@@ -20,13 +21,14 @@ export class AtlasImageLoader {
     private _timer:TimeoutTimer = new TimeoutTimer();
     private _syncRequested:boolean;
 
-    constructor(private _onLoadCallback:(info:AtlasImageLoadingInfo) => void) {
+    constructor(private _onLoadCallback:ImageLoaderHandler) {
     }
 
     /**
      * model 의 이미지를 로드 후, rect.scaleFactor가 1이 아닐경우 rect 만큼 리사이즈한 canvas 를 소스로 설정하긔
      * @param model
      * @param imgRect
+     * @param subCallback
      */
     load(model:IRawPicture, imgRect:ImageRect) {
         var path = PIXIAtlasHelper.getRawPath(model);

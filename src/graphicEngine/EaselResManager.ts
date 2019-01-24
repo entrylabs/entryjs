@@ -1,6 +1,6 @@
 import { IGEResManager } from './IGEResManager';
 import { IRawPicture } from '../class/pixi/atlas/model/IRawPicture';
-import { AtlasImageLoader } from '../class/pixi/atlas/loader/AtlasImageLoader';
+import { AtlasImageLoader, ImageLoaderHandler } from '../class/pixi/atlas/loader/AtlasImageLoader';
 import { AtlasImageLoadingInfo } from '../class/pixi/atlas/loader/AtlasImageLoadingInfo';
 import { PIXIAtlasHelper } from '../class/pixi/atlas/PIXIAtlasHelper';
 
@@ -25,17 +25,24 @@ export class EaselResManager implements IGEResManager {
         //do nothing
     }
 
-    reqResource(spriteNullable:PIXI.Sprite | any, sceneID:string, pic:IRawPicture):void {
+    reqResource(spriteNullable:PIXI.Sprite | any, sceneID:string, pic:IRawPicture, callback:ImageLoaderHandler):void {
         const loader = this._imgLoader;
         let path = PIXIAtlasHelper.getRawPath(pic);
         let info = loader.getImageInfo(path);
         if(!info) {
-            loader.load(pic,  PIXIAtlasHelper.getNewImageRect(pic, this._MAX_TEX_RECT));
+            let rect = PIXIAtlasHelper.getNewImageRect(pic, this._MAX_TEX_RECT);
+            loader.load(pic,  rect);
             info = loader.getImageInfo(path);
         }
         if(spriteNullable) {
             spriteNullable.image = info.source();
         }
+        if(!info.isReady) {
+            info.addCallback(callback);
+        } else {
+            callback(info);
+        }
+
     }
 
     clearProject():void {

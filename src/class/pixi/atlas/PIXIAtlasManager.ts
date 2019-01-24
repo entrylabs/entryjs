@@ -1,6 +1,6 @@
 import { SceneBins } from './SceneBins';
 import { AtlasCanvasViewer } from './AtlasCanvasViewer';
-import { AtlasImageLoader } from './loader/AtlasImageLoader';
+import { AtlasImageLoader, ImageLoaderHandler } from './loader/AtlasImageLoader';
 import { AtlasImageLoadingInfo } from './loader/AtlasImageLoadingInfo';
 import { IRawPicture } from './model/IRawPicture';
 import Texture = PIXI.Texture;
@@ -62,7 +62,7 @@ export class PIXIAtlasManager implements IGEResManager {
         return bin.getTexture(PIXIAtlasHelper.getRawPath(pic));
     }
 
-    reqResource(spriteNullable:PIXI.Sprite, sceneID:string, pic:IRawPicture):void {
+    reqResource(spriteNullable:PIXI.Sprite, sceneID:string, pic:IRawPicture, callback:ImageLoaderHandler):void {
         var bin:ISceneTextures = this._getSceneBin(sceneID);
         bin.addPicInfo(pic);
         let tex = bin.getTexture(PIXIAtlasHelper.getRawPath(pic));

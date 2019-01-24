@@ -3,6 +3,7 @@ import { PIXIAtlasHelper } from '../PIXIAtlasHelper';
 import { ImageRect } from '../../../maxrect-packer/geom/ImageRect';
 import PIXIHelper from '../../helper/PIXIHelper';
 import { clog, cwarn } from '../../utils/logs';
+import { ImageLoaderHandler } from './AtlasImageLoader';
 
 declare let Entry:any;
 declare let _:any;
@@ -37,14 +38,14 @@ export class AtlasImageLoadingInfo {
     // 로드된 이미지 혹은 resize된 이미지의 사이즈. dimension 의 값과 다른 경우가 있어서 추가함.
     public srcWidth:number;
     public srcHeight:number;
-
+    private _subCallback:ImageLoaderHandler[] = [];
     /**
      * model 의 이미지를 로드 후, imgRect.scaleFactor가 1이 아닐경우 imgRect 만큼 리사이즈한 canvas 를 소스로 설정하긔
      * @param model
      * @param _imgRect
      * @param _onLoadCallback
      */
-    constructor(model:IRawPicture, private _imgRect:ImageRect, private _onLoadCallback:(info:AtlasImageLoadingInfo) => void) {
+    constructor(model:IRawPicture, private _imgRect:ImageRect, private _onLoadCallback:ImageLoaderHandler) {
         this._realPath = this._getImageSrc(model);
         this._rawPath = PIXIAtlasHelper.getRawPath(model);
         this._picName = model.name;
@@ -52,6 +53,16 @@ export class AtlasImageLoadingInfo {
 
     source():HTMLImageElement|HTMLCanvasElement {
         return this._img || this._canvas;
+    }
+
+    /**
+     * 이미지가 로드 되면 호출 할 콜백들. 이미지가 로드 된 후 add된 값들은 무시 됨.
+     * @param fn
+     */
+    addCallback(fn:ImageLoaderHandler):void {
+        if(!fn) return;
+        if(this.isReady) return;
+        this._subCallback.push(fn);
     }
 
     load() {
@@ -72,7 +83,10 @@ export class AtlasImageLoadingInfo {
 
             this._onLoadCallback(this);
             this._onLoadCallback = null;
-            // this._realPath = null;
+            this._subCallback.forEach((fn)=>{
+                fn(this);
+            });
+            this._subCallback = null;
         };
 
         img.onerror = (err) => {
@@ -123,7 +137,7 @@ export class AtlasImageLoadingInfo {
         if(this._canvas) {
             this._canvas = null;
         }
-
+        this._subCallback = null;
         this._rawPath = this._realPath = null;
     }
 

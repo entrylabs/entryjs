@@ -7,6 +7,7 @@
 
 import {GEHelper} from '../graphicEngine/GEHelper';
 import {GEDragHelper} from '../graphicEngine/GEDragHelper';
+import { clog } from './pixi/utils/logs';
 
 /**
  * Construct entity class
@@ -868,25 +869,20 @@ Entry.EntityObject = class EntityObject {
         this.setRegY(this.height / 2 + absoluteRegY);
 
 
-        //TODO [박봉배] 이미지 로드 후 cache / uncache 하기.
-        GEHelper.resManager.reqResource(this.object, this.parent.scene.id, pictureModel);
+        /**
+         * //이 코드는 createjs 일때만 호출 됨.
+         * @param {AtlasImageLoadingInfo} info
+         */
+        const onImageLoad = (info)=> {
+            if (this.removed) return;
+            if (info.source() !== this.object.image) return;
+            let hasFilter = !_.isEmpty(that.object.filters);
+            GEHelper.colorFilter.setCache(this.object, hasFilter);
+            Entry.requestUpdate = true;
+        };
+        GEHelper.resManager.reqResource(this.object, this.parent.scene.id, pictureModel, onImageLoad);
 
         Entry.dispatchEvent('updateObject');
-
-        // function setImage(datum, reqUpdate) {
-        //     if(GEHelper.isWebGL) {
-        //         that.object.texture = PIXI.Texture.from(datum);
-        //     } else {
-        //         that.object.image = datum;
-        //     }
-        //
-        //     let hasFilter = !_.isEmpty(that.object.filters);
-        //     GEHelper.colorFilter.setCache(that.object, hasFilter);
-        //     if(reqUpdate) {
-        //         Entry.requestUpdate = true;
-        //     }
-        // }
-
     }
 
     /**

@@ -1,4 +1,5 @@
 import { IRawPicture } from '../class/pixi/atlas/model/IRawPicture';
+import { ImageLoaderHandler } from '../class/pixi/atlas/loader/AtlasImageLoader';
 
 export interface IGEResManager {
     INIT():void;
@@ -12,6 +13,7 @@ export interface IGEResManager {
      * @param spriteNullable
      * @param sceneID
      * @param pic
+     * @param callback
      */
-    reqResource(spriteNullable:PIXI.Sprite|any, sceneID:string, pic:IRawPicture):void;
+    reqResource(spriteNullable:PIXI.Sprite|any, sceneID:string, pic:IRawPicture, callback:ImageLoaderHandler):void;
 }
