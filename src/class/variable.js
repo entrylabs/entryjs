@@ -241,7 +241,7 @@ Entry.Variable = class Variable {
             this.rect_ = GEHelper.newGraphic();
             this.view_.addChild(this.rect_);
             this.view_.variable = this;
-            this.titleView_ = GEHelper.textHelper.newText('asdf', this.FONT, '#000', 'alphabetic', 'center');
+            this.titleView_ = GEHelper.textHelper.newText('asdf', this.FONT, '#000000', 'alphabetic', 'center');
             this.titleView_.width = this.width_ - 2 * this.BORDER;
             this.titleView_.y = this.BORDER + 10;
             this.titleView_.x = this.width_ / 2;
@@ -703,7 +703,7 @@ Entry.Variable = class Variable {
                     .clear()
                     .f('#ffbb14')
                     .ss(1, 2, 0)
-                    .s('orange')
+                    .s('#ffa500')
                     .rr(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7);
             }
         }
