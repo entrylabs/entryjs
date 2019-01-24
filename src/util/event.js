@@ -10,7 +10,10 @@ class Event {
         }
     }
 
-    on(dom = document, type, callback, option = false) {
+    on(dom, type, callback, option = false) {
+        if (!dom) {
+            throw new Error('dom is undefined');
+        }
         const eventMap = Event.elementMap.get(dom) || {};
         if (eventMap[type]) {
             eventMap[type].push(callback);
@@ -21,7 +24,10 @@ class Event {
         this.addEvent(dom, type, callback, option);
     }
 
-    off(dom = document, type, callback, option = false) {
+    off(dom, type, callback, option = false) {
+        if (!dom) {
+            throw new Error('dom is undefined');
+        }
         const eventMap = Event.elementMap.get(dom) || {};
         _toPairs(eventMap).forEach(([key, value = []]) => {
             const filtered = value.filter((func) => {
