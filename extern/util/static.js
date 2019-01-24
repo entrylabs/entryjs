@@ -405,8 +405,7 @@ EntryStatic.getAllBlocks = function() {
                 'arduino_open',
                 'arduino_cloud_pc_open',
                 'arduino_noti',
-                ...EntryStatic.DynamicHardwareBlocks,
-            ],
+            ].concat(EntryStatic.DynamicHardwareBlocks),
         },
     ];
 };
