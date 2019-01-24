@@ -1135,7 +1135,14 @@ Entry.EntityObject = class EntityObject {
 
     _removeShapes() {
         const container = Entry.stage.selectedObjectContainer;
-        this.shapes.map(container.removeChild, container);
+        const shapes = this.shapes;
+        const LEN = shapes.length;
+        let s;
+        for(let i = 0 ; i < LEN ; i++ ) {
+            s = shapes[i];
+            container.removeChild(s);
+            s.destroy && s.destroy(true); //pixi 일때만 호출
+        }
         this.shapes = [];
     }
 
