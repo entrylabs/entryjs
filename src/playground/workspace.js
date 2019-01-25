@@ -561,10 +561,6 @@ Entry.Workspace = class Workspace {
                         blockView.block.isDeletable() &&
                         !blockView.isFieldEditing()
                     ) {
-                        console.log("Entry.engine.isState()= " + Entry.engine.isState('stop'));
-                        console.log("Entry.engine.isState()= " + Entry.engine.isState('start'));
-                        console.log("Entry.engine.isState()= " + Entry.engine.isState);
-
                         if(Entry.engine.isState('stop')){
                             Entry.do('destroyBlock', blockView.block);
                             this.board.set({ selectedBlockView: null });
