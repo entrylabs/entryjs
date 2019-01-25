@@ -120,18 +120,20 @@ Entry.Variable = class Variable {
                 this.setY(variableIndex * 24 + 20 - 135 - Math.floor(variableLength / 11) * 264);
             }
             this.view_.visible = this.visible_;
+            this.view_.mouseEnabled = true;
             this.view_.addChild(this.valueView_);
-
+            if (Entry.type === 'workspace') {
+                this.view_.cursor = 'move';
+            }
+            GEDragHelper.handleDrag(this.view_);
             this.view_.on(GEDragHelper.types.DOWN, function(evt) {
                 if (Entry.type !== 'workspace') {
                     return;
                 }
-                GEDragHelper.handleDrag(this);
                 this.offset = {
                     x: this.x - (evt.stageX * 0.75 - 240),
                     y: this.y - (evt.stageY * 0.75 - 135),
                 };
-                this.cursor = 'move';
             });
 
             this.view_.on(GEDragHelper.types.MOVE, function(evt) {
@@ -155,6 +157,11 @@ Entry.Variable = class Variable {
             this.textView_.y = 1;
             this.view_.addChild(this.textView_);
             this.valueView_ = GEHelper.textHelper.newText('value', '10pt NanumGothic', '#ffffff', 'alphabetic');
+
+
+            GEDragHelper.handleDrag(this.view_);
+            this.view_.mouseEnabled = true;
+            this.view_.mouseChildren = true;
             this.view_.on(GEDragHelper.types.DOWN, function(evt) {
                 if (Entry.type !== 'workspace') {
                     return;
@@ -196,11 +203,12 @@ Entry.Variable = class Variable {
                 .ss(1)
                 .dc(position, 10 + 0.5, 3);
             this.valueSetter_.cursor = 'pointer';
+            this.valueSetter_.mouseEnabled = true;
+            GEDragHelper.handleDrag(this.valueSetter_);
             this.valueSetter_.on(GEDragHelper.types.DOWN, function(evt) {
                 if (!Entry.engine.isState('run')) {
                     return;
                 }
-
                 slide.isAdjusting = true;
                 this.offsetX = -(this.x - evt.stageX * 0.75 + 240);
             });
@@ -242,9 +250,13 @@ Entry.Variable = class Variable {
             this.view_ = GEHelper.newContainer();
             this.rect_ = GEHelper.newGraphic();
             this.view_.addChild(this.rect_);
+            this.view_.mouseEnabled = true;
+            this.view_.mouseChildren = true;
             this.view_.variable = this;
             this.titleView_ = GEHelper.textHelper.newText('asdf', this.FONT, '#000000', 'alphabetic', 'center');
-            this.titleView_.width = this.width_ - 2 * this.BORDER;
+
+            //todo [박봉배] textview_.width 를 $width 로 변경.
+            this.titleView_.$width = this.width_ - 2 * this.BORDER;
             this.titleView_.y = this.BORDER + 10;
             this.titleView_.x = this.width_ / 2;
             this.view_.addChild(this.titleView_);
@@ -262,6 +274,7 @@ Entry.Variable = class Variable {
 
             this.resizeHandle_.list = this;
 
+            GEDragHelper.handleDrag(this.resizeHandle_);
             this.resizeHandle_.on(GEDragHelper.types.OVER, function() {
                 this.cursor = 'nwse-resize';
             });
@@ -282,7 +295,8 @@ Entry.Variable = class Variable {
                 this.list.updateView();
             });
 
-            this.view_.on('mouseover', function() {
+            GEDragHelper.handleDrag(this.view_);
+            this.view_.on(GEDragHelper.types.OVER, function() {
                 this.cursor = 'move';
             });
 
@@ -311,9 +325,12 @@ Entry.Variable = class Variable {
                 this.variable.updateView();
             });
 
-            //todo [박봉배] 아래줄 삭제 하는게 맞겠죠?
+            //todo [박봉배] 아래줄 삭제 하는게 맞겠죠? 리스트 아이템인데, 생성을 아래쪽에서 함.
             //this.elementView = this._createListElementView();
             this.scrollButton_ = GEHelper.newGraphic();
+            this.scrollButton_.mouseEnabled = true;
+            this.scrollButton_.cursor = 'pointer';
+            GEDragHelper.handleDrag(this.scrollButton_);
             this.scrollButton_.graphics.f('#aaaaaa').rr(0, 0, 7, 30, 3.5);
             this.view_.addChild(this.scrollButton_);
             this.scrollButton_.y = 23;
@@ -322,33 +339,21 @@ Entry.Variable = class Variable {
             this.scrollButton_.on(GEDragHelper.types.DOWN, function(evt) {
                 // if(Entry.type != 'workspace') return;
                 this.list.isResizing = true;
-                this.cursor = 'pointer';
-                this.offsetY =
-                    !Entry.Utils.isNumber(this.offsetY) || this.offsetY < 0
-                        ? evt.rawY / 2
-                        : this.offsetY;
+                this.offsetY = evt.stageY - this.y / 0.75;
             });
             this.scrollButton_.on(GEDragHelper.types.MOVE, function(evt) {
                 // if(Entry.type != 'workspace') return;
-                if (this.moveAmount === undefined) {
-                    this.y = evt.target.y;
-                    this.moveAmount = true;
-                } else {
-                    this.y = evt.rawY / 2 - this.offsetY + 23 * (this.list.height_ / 100);
-                }
 
-                if (this.y < 23) {
-                    this.y = 23;
-                }
-                if (this.y > this.list.getHeight() - 40) {
-                    this.y = this.list.getHeight() - 40;
-                }
+                let stageY = evt.stageY;
+                var yPos = (stageY - this.offsetY) * 0.75;
+                var min = 23;
+                var max = this.list.getHeight() - 40;
+                if(yPos < min) yPos = min;
+                if(yPos > max) yPos = max;
+                this.y = yPos;
                 this.list.updateView();
             });
 
-            this.scrollButton_.on(GEDragHelper.types.UP, function() {
-                this.moveAmount = undefined;
-            });
             if (this.getX() && this.getY()) {
                 this.setX(this.getX());
                 this.setY(this.getY());
@@ -983,7 +988,10 @@ Entry.Variable = class Variable {
     }
 
     setSlideCommandX(value) {
-        const command = this.valueSetter_.graphics.command;
+        if(!this.valueSetter_.command) {
+            this.valueSetter_.command = {};
+        }
+        const command = this.valueSetter_.command;
         let commandX = typeof value === 'undefined' ? 10 : value;
         commandX = Math.max(value, 10);
         commandX = Math.min(this.maxWidth + 10, value);
@@ -993,7 +1001,7 @@ Entry.Variable = class Variable {
 
     updateSlideValueByView() {
         const maxWidth = this.maxWidth;
-        const position = Math.max(this.valueSetter_.graphics.command.x - 10, 0);
+        const position = Math.max(this.valueSetter_.command.x - 10, 0);
         let ratio = position / maxWidth;
         if (ratio < 0) {
             ratio = 0;
