@@ -152,6 +152,8 @@ var EaselHandle = function(canvas) {
     p.createHandle = function() {
         var handle = this;
         var container = GEHelper.newContainer();
+        container.mouseEnabled = true;
+        container.mouseChildren = true;
 
         //border
         var border = GEHelper.newGraphic();
@@ -161,9 +163,10 @@ var EaselHandle = function(canvas) {
         //edge
         var edge = GEHelper.newGraphic();
         edge.cursor = 'move';
+        edge.mouseEnabled = true;
+        GEDragHelper.handleDrag(edge);
 
         edge.on(GEDragHelper.types.DOWN, function(e) {
-            GEDragHelper.handleDrag(edge);
             var offset = handle.getEventCoordinate(e);
             offset.x -= handle.x;
             offset.y -= handle.y;
@@ -188,9 +191,10 @@ var EaselHandle = function(canvas) {
 
         //rotate knob
         var rotateKnob = GEHelper.newGraphic();
+        rotateKnob.mouseEnabled = true;
+        GEDragHelper.handleDrag(rotateKnob);
         rotateKnob.cursor = 'crosshair';
         rotateKnob.on(GEDragHelper.types.DOWN, function(e) {
-            GEDragHelper.handleDrag(rotateKnob);
             handle.dispatchEditStartEvent();
         });
         rotateKnob.on(GEDragHelper.types.MOVE, function(e) {
@@ -209,6 +213,8 @@ var EaselHandle = function(canvas) {
         this.rotateKnob = rotateKnob;
 
         var directionArrow = GEHelper.newGraphic();
+        directionArrow.mouseEnabled = true;
+        GEDragHelper.handleDrag(directionArrow);
 
         directionArrow.graphics
             .ss(4, 1, 1)
@@ -222,7 +228,6 @@ var EaselHandle = function(canvas) {
             .lt(0, -40)
             .es();
         directionArrow.on(GEDragHelper.types.DOWN, function(e) {
-            GEDragHelper.handleDrag(directionArrow);
             handle.dispatchEditStartEvent();
         });
         directionArrow.on(GEDragHelper.types.MOVE, function(e) {
@@ -240,13 +245,15 @@ var EaselHandle = function(canvas) {
 
         // center
         var centerPoint = GEHelper.newGraphic();
+        centerPoint.mouseEnabled = true;
+        GEDragHelper.handleDrag(centerPoint);
+
         centerPoint.graphics
             .beginFill(this.centerColor)
             .ss(1, 2, 0)
             .s(this.centerColor)
             .dc(0, 0, 5, 5);
         centerPoint.on(GEDragHelper.types.DOWN, function(e) {
-            GEDragHelper.handleDrag(centerPoint);
             handle.dispatchEditStartEvent();
         });
         centerPoint.on(GEDragHelper.types.MOVE, function(e) {
@@ -266,6 +273,8 @@ var EaselHandle = function(canvas) {
         this.knobs = [];
         for (var i = 0; i < 8; i++) {
             var knob = GEHelper.newGraphic();
+            knob.mouseEnabled = true;
+            GEDragHelper.handleDrag(knob);
             knob.graphics
                 .beginFill(this.color)
                 .ss(1, 2, 0)
@@ -273,9 +282,8 @@ var EaselHandle = function(canvas) {
                 .dr(-3, -3, 6, 6);
             knob.knobIndex = i;
             //knob.cursor = "move";
+
             knob.on(GEDragHelper.types.DOWN, function(e) {
-                var targetKnob = e.currentTarget;
-                GEDragHelper.handleDrag(targetKnob);
                 var otherKnobIndex =
                     this.knobIndex + 4 > 7
                         ? this.knobIndex + 4 - 8
@@ -302,13 +310,14 @@ var EaselHandle = function(canvas) {
         }
 
         var background = GEHelper.newGraphic();
+        background.mouseEnabled = true;
+        GEDragHelper.handleDrag(background);
         background.graphics
             .ss(1, 2, 0)
             .s('rgba(254,254,254,0.01)')
             .beginFill('rgba(254,254,254,1)')
             .dr(-50, -50, 100, 100);
         background.on(GEDragHelper.types.DOWN, function(e) {
-            GEDragHelper.handleDrag(background);
             var offset = handle.getEventCoordinate(e);
             offset.x -= handle.x;
             offset.y -= handle.y;
@@ -358,17 +367,18 @@ var EaselHandle = function(canvas) {
     p.renderEdge = function() {
         var width = this.width;
         var height = this.height;
+        var t = 10; //thickness
+        var sx = -(width + t)/2; //startX
+        var sy = -(height + t)/2; //startY
+
+        //[박봉배] pixi 에서 lineTo는 히트테스트 안되서 drawRect로 변경.
         this.edge.graphics
             .clear()
-            .ss(10, 2, 0)
-            .s('rgba(254,254,254,0.01)')
-            .mt(-width / 2, -height / 2)
-            .lt(0, -height / 2)
-            .lt(0, -height / 2)
-            .lt(+width / 2, -height / 2)
-            .lt(+width / 2, +height / 2)
-            .lt(-width / 2, +height / 2)
-            .cp();
+            .f('rgba(254,254,254,0.01)')
+            .dr(sx, sy, width + t, t)
+            .dr(sx, sy + height, width + t, t)
+            .dr(sx, sy + t, t, height-t)
+            .dr(sx+width, sy+ t, t, height-t);
     };
 
     p.renderRotateKnob = function() {
