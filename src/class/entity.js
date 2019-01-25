@@ -29,6 +29,7 @@ Entry.EntityObject = class EntityObject {
 
         if (this.type === 'sprite') {
             this.object = GEHelper.newSpriteWithURL();
+            this.object.pixelPerfect = true;
             this.setInitialEffectValue();
         } else if (this.type === 'textBox') {
             this.object = GEHelper.newContainer();
@@ -51,15 +52,16 @@ Entry.EntityObject = class EntityObject {
 
         this.object.entity = this;
         this.object.cursor = 'pointer';
+        this.object.mouseEnabled = true;
+        GEDragHelper.handleDrag(this.object);
 
         this.object.on(GEDragHelper.types.DOWN, function({ stageX, stageY }) {
-        // this.object.on('mousedown', function({ stageX, stageY }) {
             const id = this.entity.parent.id;
             Entry.dispatchEvent('entityClick', this.entity);
             Entry.stage.isObjectClick = true;
 
             if (Entry.type != 'minimize' && Entry.stage.isEntitySelectable()) {
-                GEDragHelper.handleDrag(this);
+
                 this.offset = {
                     x: -this.parent.x + this.entity.getX() - (stageX * 0.75 - 240),
                     y: -this.parent.y - this.entity.getY() - (stageY * 0.75 - 135),
@@ -70,7 +72,6 @@ Entry.EntityObject = class EntityObject {
             }
         });
 
-        // this.object.on('pressup', function() {
         this.object.on(GEDragHelper.types.UP, function() {
             Entry.dispatchEvent('entityClickCanceled', this.entity);
             this.cursor = 'pointer';
@@ -79,7 +80,6 @@ Entry.EntityObject = class EntityObject {
 
         if (Entry.type !== 'minimize') {
             this.object.on(GEDragHelper.types.MOVE, function({ stageX, stageY }) {
-            // this.object.on('pressmove', function({ stageX, stageY }) {
                 if (Entry.stage.isEntitySelectable()) {
                     const entity = this.entity;
                     if (entity.parent.getLock()) {
