@@ -565,8 +565,6 @@ Entry.Workspace = class Workspace {
                             Entry.do('destroyBlock', blockView.block);
                             this.board.set({ selectedBlockView: null });
                             e.preventDefault();
-                        }else{
-                            e.preventDefault();
                         }
                     }
                     break;
