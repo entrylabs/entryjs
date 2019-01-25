@@ -1100,6 +1100,7 @@ Entry.joystick.getBlocks = function() {
                         ['파랑', '17'],
                         ['왼쪽 위', '4'],
                         ['오른쪽 위', '5'],
+			['조이스틱', '10'],
                     ],
                     value: '16',
                     fontSize: 11,
