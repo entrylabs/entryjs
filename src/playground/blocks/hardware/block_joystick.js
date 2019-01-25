@@ -1167,6 +1167,10 @@ Entry.joystick.getBlocks = function() {
                         ['왼쪽', '2'],
                         ['위', '3'],
                         ['아래', '4'],
+			['오른쪽 위', '5'],
+                        ['오른쪽 아래', '6'],
+                        ['왼쪽 위', '7'],
+                        ['왼쪽 아래', '8'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1185,28 +1189,27 @@ Entry.joystick.getBlocks = function() {
             class: 'joysticksensor',
             isNotFor: ['joystick'],
             func: function(sprite, script) {
-				var stick = script.getNumberField('STICK', script)
-				var port = 0;
-				if(stick === 1 || stick === 2) {
-					port = 'A0';
-				}
-				else { 
-					port = 'A1';
-				}
-				
+		var stick = script.getNumberField('STICK', script)
                 var ANALOG = Entry.hw.portData.ANALOG;
-                if (port[0] === 'A') port = port.substring(1);
-				if(stick === 1 && ANALOG[port] > 800) {
-					return 1;
-				} else if(stick === 2 && ANALOG[port] < 100) {
-					return 1;
-				} else if(stick === 3 && ANALOG[port] > 800) {
-					return 1;
-				} else if(stick === 4 && ANALOG[port] < 100) {
-					return 1;
-				} else {
-					return 0;
-				}
+		if(stick === 1 && ANALOG[0] > 800) {
+			return 1;
+		} else if(stick === 2 && ANALOG[0] < 100) {
+			return 1;
+		} else if(stick === 3 && ANALOG[1] > 800) {
+			return 1;
+		} else if(stick === 4 && ANALOG[1] < 100) {
+			return 1;
+		} else if(stick === 5 && ANALOG[0] > 700 && ANALOG[1] > 700) {
+			return 1;
+		} else if(stick === 6 && ANALOG[0] > 700 && ANALOG[1] < 300) {
+			return 1;
+		} else if(stick === 7 && ANALOG[0] < 300 && ANALOG[1] > 700) {
+			return 1;
+		} else if(stick === 8 && ANALOG[0] < 300 && ANALOG[1] < 300) {
+			return 1;
+		} else { 
+			return 0;
+		}
             },
             syntax: {
                 js: [],
