@@ -284,7 +284,7 @@ Entry.EntityObject = class EntityObject {
         }
         /** @type {number} */
         this.direction = direction.mod(360);
-        this.object.direction = this.direction;
+        this.object.direction = this.direction * GEHelper.rotateWrite;
         !this.isClone && parent.updateRotationView();
         Entry.dispatchEvent('updateObject');
         Entry.requestUpdate = true;
@@ -301,7 +301,7 @@ Entry.EntityObject = class EntityObject {
         }
 
         this.rotation = rotation.mod(360);
-        this.object.rotation = this.rotation;
+        this.object.rotation = this.rotation * GEHelper.rotateWrite;
         this.updateDialog();
         !this.isClone && this.parent.updateRotationView();
         Entry.dispatchEvent('updateObject');

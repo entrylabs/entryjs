@@ -1,6 +1,7 @@
 /**
  * Resize handle on Easel.js
  */
+
 'use strict';
 
 //TODO [박봉배] handle.js 를 번들링 할 것인가 말것인가.
@@ -127,6 +128,7 @@ var EaselHandle = function(canvas) {
     p.setRotation = function(rotation) {
         rotation = (rotation + 360) % 360;
         this.rotation = rotation;
+        rotation *= GEHelper.rotateWrite;
         this.container.rotation = rotation;
         this.background.rotation = rotation;
         this.updateKnobCursor();
@@ -135,7 +137,7 @@ var EaselHandle = function(canvas) {
     p.setDirection = function(direction) {
         direction = (direction + 360) % 360;
         this.direction = direction;
-        this.directionArrow.rotation = direction;
+        this.directionArrow.rotation = direction * GEHelper.rotateWrite;
     };
 
     p.setVisible = function(visible) {
@@ -430,7 +432,7 @@ var EaselHandle = function(canvas) {
 
     p.getGlobalCoordinate = function(childObject) {
         var container = this.container;
-        var rotation = -(this.container.rotation * Math.PI / 180);
+        var rotation = -(this.container.rotation * Math.PI / 180 * GEHelper.rotateRead);
         return {
             x:
                 this.x +
@@ -445,7 +447,7 @@ var EaselHandle = function(canvas) {
 
     p.getLocalCoordinate = function(pos) {
         var container = this.container;
-        var rotation = this.container.rotation * Math.PI / 180;
+        var rotation = this.container.rotation * Math.PI / 180 * GEHelper.rotateRead;
         pos.x -= this.x;
         pos.y -= this.y;
         return {
@@ -500,7 +502,7 @@ var EaselHandle = function(canvas) {
     };
 
     p.updateKnobCursor = function() {
-        var rotation = this.rotation;
+        var rotation = this.rotation * GEHelper.rotateRead;
         var cursorList = [
             'ns-resize',
             'nwse-resize',
