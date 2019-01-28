@@ -218,17 +218,28 @@ var EaselHandle = function(canvas) {
         directionArrow.mouseEnabled = true;
         GEDragHelper.handleDrag(directionArrow);
 
-        directionArrow.graphics
-            .ss(4, 1, 1)
-            .s(this.arrowColor)
-            .f(this.arrowColor)
-            .dc(0, 0, this.DHANDLE_RADIUS)
-            .mt(0, 0)
-            .lt(0, -40)
-            .lt(7, -32)
-            .lt(-7, -32)
-            .lt(0, -40)
-            .es();
+        if(GEHelper.isWebGL) {
+            directionArrow.graphics
+                .f(this.arrowColor)
+                .mt(0, -42)
+                .lt(9, -30)
+                .lt(-9, -30)
+                .closePath()
+                .dr(-2, -32, 4, 32);
+        } else {
+            directionArrow.graphics
+                .ss(4, 1, 1)
+                .s(this.arrowColor)
+                .f(this.arrowColor)
+                .dc(0, 0, this.DHANDLE_RADIUS)
+                .mt(0, 0)
+                .lt(0, -40)
+                .lt(7, -32)
+                .lt(-7, -32)
+                .lt(0, -40)
+                .es();
+        }
+
         directionArrow.on(GEDragHelper.types.DOWN, function(e) {
             handle.dispatchEditStartEvent();
         });
