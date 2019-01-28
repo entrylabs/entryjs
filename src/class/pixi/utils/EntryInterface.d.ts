@@ -12,4 +12,9 @@ declare class Entry {
     static addEventListener(type:string, handle:()=>void):void;
     static container:EntryContainer;
     static stage:EntryStage;
+
+    static TEXT_ALIGNS:string[];
+    static TEXT_ALIGN_LEFT:number;
+    static TEXT_ALIGN_CENTER:number;
+    static TEXT_ALIGN_RIGHT:number;
 }

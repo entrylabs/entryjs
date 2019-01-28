@@ -99,6 +99,9 @@ class GraphicsAdaptor {
      * @private
      */
     _parseRGBCssStyleColor(color, result) {
+        if(!color) {
+            return;
+        }
         color  = color.replace("/\s/", "");
         if(color[0] === "#") {
             result.color = parseInt(color.substr(1), 16);

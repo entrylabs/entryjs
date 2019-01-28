@@ -34,6 +34,9 @@ Entry.EntityObject = class EntityObject {
         } else if (this.type === 'textBox') {
             this.object = GEHelper.newContainer();
             this.textObject = GEHelper.textHelper.newText("", '20px Nanum Gothic', "", 'middle', 'center');
+            if(GEHelper.isWebGL) {
+                this.textObject.anchor.set(0.5, 0.5);
+            }
             this.bgObject = GEHelper.newGraphic();
             this.bgObject.graphics
                 .setStrokeStyle(1)
@@ -526,7 +529,11 @@ Entry.EntityObject = class EntityObject {
 
     setUnderLine(underLine = false) {
         this.underLine = underLine;
-        GEHelper.textHelper.setUnderLine(this.textObject, underLine);
+        if(GEHelper.isWebGL) {
+            this.textObject.style.underLine = underLine;
+        } else {
+            this.textObject.underLine = underLine;
+        }
         Entry.requestUpdate = true;
     }
 
@@ -536,7 +543,11 @@ Entry.EntityObject = class EntityObject {
 
     setStrike(strike = false) {
         this.strike = strike;
-        GEHelper.textHelper.setStrike(this.textObject, strike);
+        if(GEHelper.isWebGL) {
+            this.textObject.style.cancelLine = strike;
+        } else {
+            this.textObject.strike = strike;
+        }
         Entry.requestUpdate = true;
     }
 
@@ -585,7 +596,7 @@ Entry.EntityObject = class EntityObject {
         this.setFontSize(parseInt(fontArray.shift()));
         this.setFontType(fontArray.join(' '));
 
-        GEHelper.textHelper.setFontFace(this.textObject, this.getFont());
+        this._syncFontStyle();
         Entry.stage.update();
         this.setWidth(this.textObject.getMeasuredWidth());
         this.updateBG();
@@ -593,23 +604,27 @@ Entry.EntityObject = class EntityObject {
     }
 
     setLineHeight() {
-        let size;
+        let lineHeight;
         switch (this.getFontType()) {
             case 'Nanum Gothic Coding': {
-                size = this.fontSize;
+                lineHeight = this.fontSize;
                 break;
             }
             default: {
-                size = 0;
+                lineHeight = 0;
                 break;
             }
         }
-        GEHelper.textHelper.setLineHeight(this.textObject, size);
+        if(GEHelper.isWebGL) {
+            this.textObject.style.lineHeight = lineHeight;
+        } else {
+            this.textObject.lineHeight = lineHeight;
+        }
     }
 
     syncFont() {
         const textObject = this.textObject;
-        GEHelper.textHelper.setFontFace(textObject, this.getFont());
+        this._syncFontStyle();
         this.setLineHeight();
         Entry.stage.update();
         if (this.getLineBreak()) {
@@ -753,7 +768,15 @@ Entry.EntityObject = class EntityObject {
         }
         this.textAlign = textAlign;
 
-        GEHelper.textHelper.setTextAlign(this.textObject, Entry.TEXT_ALIGNS[this.textAlign]);
+        const textObj = this.textObject;
+        const alignValue = Entry.TEXT_ALIGNS[textAlign];
+        if(GEHelper.isWebGL) {
+            let anchorX = [0.5, 0, 1];
+            textObj.anchor.x = anchorX[textAlign];
+            textObj.style.align = alignValue;
+        } else {
+            textObj.textAlign = alignValue;
+        }
 
         this.alignTextBox();
         this.updateBG();
@@ -780,21 +803,35 @@ Entry.EntityObject = class EntityObject {
         if (this.parent.objectType !== 'textBox') {
             return;
         }
-
+        const isWebGL = GEHelper.isWebGL;
         const previousState = this.lineBreak;
         this.lineBreak = lineBreak;
 
         if (previousState && !this.lineBreak) {
-            GEHelper.textHelper.setLineWith(this.textObject, null);
+            if(isWebGL) {
+                this.textObject.style.wordWrap = false;
+            } else {
+                this.textObject.lineWidth = null;
+            }
             this.setHeight(this.textObject.getMeasuredLineHeight());
             this.setText(this.getText().replace(/\n/g, ''));
+            if(isWebGL) {
+                this.textObject.anchor.y = 0.5;
+            }
         } else if (!previousState && this.lineBreak) {
             this.setFontSize(this.getFontSize() * this.getScaleX());
             this.setHeight(this.textObject.getMeasuredLineHeight() * 3);
             this.setWidth(this.getWidth() * this.getScaleX());
             this.setScaleX(1);
             this.setScaleY(1);
-            GEHelper.textHelper.setLineWith(this.textObject, Math.ceil(this.getWidth()));
+            if(isWebGL) {
+                this.textObject.anchor.y = 0;
+                this.textObject.style.wordWrap = true;
+                this.textObject.style.breakWords = true;
+                this.textObject.style.wordWrapWidth = Math.ceil(this.getWidth());
+            } else {
+                this.textObject.lineWidth = Math.ceil(this.getWidth());
+            }
             this.alignTextBox();
             if (this.fontType === 'Nanum Gothic Coding') {
                 const textObjectHeight = this.textObject.getMeasuredLineHeight();
@@ -1181,9 +1218,13 @@ Entry.EntityObject = class EntityObject {
             return;
         }
         const textObject = this.textObject;
-
+        const isWebGL = GEHelper.isWebGL;
         if (this.lineBreak) {
-            textObject.y = textObject.getMeasuredLineHeight() / 2 - this.getHeight() / 2;
+            if(isWebGL) {
+                textObject.y = -this.getHeight() / 2;
+            } else {
+                textObject.y = textObject.getMeasuredLineHeight() / 2 - this.getHeight() / 2;
+            }
 
             if (this.fontType === 'Nanum Gothic Coding') {
                 textObject.y += 10;
@@ -1200,7 +1241,11 @@ Entry.EntityObject = class EntityObject {
                     textObject.x = this.getWidth() / 2;
                     break;
             }
-            GEHelper.textHelper.setMaxHeight(textObject, this.getHeight());
+            if(isWebGL) {
+                textObject.style.maxHeight = this.getHeight();
+            } else {
+                textObject.maxHeight = this.getHeight();
+            }
         } else {
             textObject.x = 0;
             textObject.y = 0;
@@ -1240,7 +1285,7 @@ Entry.EntityObject = class EntityObject {
         const object = this.object;
         if (object) {
             GEHelper.colorFilter.setCache(this, false);
-            object.removeAllEventListeners();
+            object.removeAllEventListeners && object.removeAllEventListeners();
             delete object.image;
             delete object.entity;
         }
@@ -1259,7 +1304,7 @@ Entry.EntityObject = class EntityObject {
         Entry.stage.unloadEntity(this);
 
         //pixi 전용 코드
-        object.destroy && object.destroy({children: true});
+        object && object.destroy && object.destroy({children: true});
     }
 
     cache() {
@@ -1275,5 +1320,17 @@ Entry.EntityObject = class EntityObject {
         this.resetFilter();
         _.result(this.dialog, 'remove');
         this.shapes.length && this.removeBrush();
+    }
+
+    _syncFontStyle() {
+        this.textObject.font = this.getFont();
+        if(!GEHelper.isWebGL) {
+            return;
+        }
+        let style = this.textObject.style;
+        style.fontSize = this.getFontSize() + 'px';
+        style.fontStyle = this.fontItalic ? 'italic' : 'normal';
+        style.fontWeight = this.fontBold ? 'bold' : 'normal';
+        style.fontFamily = this.fontType;
     }
 };

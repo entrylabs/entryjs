@@ -54,6 +54,13 @@ export class PIXIText extends PIXI.Text {
         return this._measuredWidth;
     }
 
+    getMeasuredHeight() {
+        return this._measuredHeight;
+    }
+    getMeasuredLineHeight() {
+        return this._measuredLineHeight;
+    }
+
     get measuredWidth() {
         this.updateText(true);
         // console.log(`measuredWidth(${this._measuredWidth})`);
