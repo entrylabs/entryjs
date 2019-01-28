@@ -8,6 +8,7 @@
 import {GEHelper} from '../graphicEngine/GEHelper';
 import { GEDragHelper } from '../graphicEngine/GEDragHelper';
 
+const RECT_RADIUS = 6; // round rect radius
 /**
  * Block variable constructor
  * @param {variable model} variable
@@ -71,7 +72,11 @@ Entry.Variable = class Variable {
     _createListElementView(wrapperWidth) {
         let elementView = GEHelper.newContainer();
         const indexView = GEHelper.textHelper.newText('asdf', this.FONT, '#000000', 'middle');
-        indexView.y = 5;
+        if(GEHelper.isWebGL) {
+            indexView.y = 0;
+        } else {
+            indexView.y = 5;
+        }
         elementView.addChild(indexView);
         elementView.indexView = indexView;
         const valueWrapper = GEHelper.newGraphic();
@@ -84,7 +89,11 @@ Entry.Variable = class Variable {
 
         const valueView = GEHelper.textHelper.newText('fdsa', this.FONT, '#eeeeee', 'middle');
         valueView.x = 24;
-        valueView.y = 6;
+        if(GEHelper.isWebGL) {
+            valueView.y = -1;
+        } else {
+            valueView.y = 6;
+        }
         elementView.addChild(valueView);
         elementView.valueView = valueView;
         elementView.x = this.BORDER;
@@ -107,7 +116,11 @@ Entry.Variable = class Variable {
             this.view_.addChild(this.wrapper_);
             this.textView_ = GEHelper.textHelper.newText('asdf', this.FONT, '#000000', 'alphabetic');
             this.textView_.x = 4;
-            this.textView_.y = 1;
+            if(GEHelper.isWebGL) {
+                this.textView_.y = -11;
+            } else {
+                this.textView_.y = 1;
+            }
             this.view_.addChild(this.textView_);
             this.valueView_ = GEHelper.textHelper.newText('asdf', '10pt NanumGothic', '#ffffff', 'alphabetic');
             const variableLength = Entry.variableContainer.variables_.length;
@@ -154,7 +167,11 @@ Entry.Variable = class Variable {
             this.view_.addChild(this.wrapper_);
             this.textView_ = GEHelper.textHelper.newText('name', this.FONT, '#000000', 'alphabetic');
             this.textView_.x = 4;
-            this.textView_.y = 1;
+            if(GEHelper.isWebGL) {
+                this.textView_.y = -11;
+            } else {
+                this.textView_.y = 1;
+            }
             this.view_.addChild(this.textView_);
             this.valueView_ = GEHelper.textHelper.newText('value', '10pt NanumGothic', '#ffffff', 'alphabetic');
 
@@ -257,8 +274,13 @@ Entry.Variable = class Variable {
 
             //todo [박봉배] textview_.width 를 $width 로 변경.
             this.titleView_.$width = this.width_ - 2 * this.BORDER;
-            this.titleView_.y = this.BORDER + 10;
-            this.titleView_.x = this.width_ / 2;
+            if(GEHelper.isWebGL) {
+                this.titleView_.x = (this.width_ - this.titleView_.width) / 2;
+                this.titleView_.y = this.BORDER -1;
+            } else {
+                this.titleView_.x = this.width_ / 2;
+                this.titleView_.y = this.BORDER + 10;
+            }
             this.view_.addChild(this.titleView_);
 
             this.resizeHandle_ = GEHelper.newGraphic();
@@ -417,7 +439,12 @@ Entry.Variable = class Variable {
                     this._nameWidth = this.textView_.getMeasuredWidth();
                 }
                 this.valueView_.x = this._nameWidth + 14;
-                this.valueView_.y = 1;
+                if(GEHelper.isWebGL) {
+                    this.valueView_.y = -11;
+                } else {
+                    this.valueView_.y = 1;
+                }
+
                 // INFO: Number체크는 slide 일때만 하도록 처리 기본 문자로 처리함(#4876)
 
                 if (this._valueWidth === null) {
@@ -434,7 +461,7 @@ Entry.Variable = class Variable {
                     .f('#1bafea')
                     .ss(1, 2, 0)
                     .s('#1bafea')
-                    .rr(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7);
+                    .rr(this._nameWidth + 7, -11, this._valueWidth + 15, 14, RECT_RADIUS);
             } else if (this.type === 'slide') {
                 this.view_.x = this.getX();
                 this.view_.y = this.getY();
@@ -460,7 +487,11 @@ Entry.Variable = class Variable {
                     this._nameWidth = this.textView_.getMeasuredWidth();
                 }
                 this.valueView_.x = this._nameWidth + 14;
-                this.valueView_.y = 1;
+                if(GEHelper.isWebGL) {
+                    this.valueView_.y = -11;
+                } else {
+                    this.valueView_.y = 1;
+                }
                 let value = String(this.getValue());
 
                 if (this.isFloatPoint()) {
@@ -495,7 +526,7 @@ Entry.Variable = class Variable {
                     .f('#1bafea')
                     .ss(1, 2, 0)
                     .s('#1bafea')
-                    .rr(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7);
+                    .rr(this._nameWidth + 7, -11, this._valueWidth + 15, 14, RECT_RADIUS);
 
                 width = this._nameWidth + this._valueWidth + 26;
                 width = Math.max(width, 90);
@@ -537,7 +568,11 @@ Entry.Variable = class Variable {
                         this.titleView_.text = name;
                     }
                 }
-                this.titleView_.x = this.width_ / 2;
+                if(GEHelper.isWebGL) {
+                    this.titleView_.x = (this.width_ - this.titleView_.width)/ 2;
+                } else {
+                    this.titleView_.x = this.width_ / 2;
+                }
                 this.rect_.graphics
                     .clear()
                     .f('#ffffff')
@@ -645,7 +680,11 @@ Entry.Variable = class Variable {
                 this.view_.x = this.getX();
                 this.view_.y = this.getY();
                 this.textView_.text = this.getName();
-                this.valueView_.y = 1;
+                if(GEHelper.isWebGL) {
+                    this.valueView_.y = -11;
+                } else {
+                    this.valueView_.y = 1;
+                }
                 if (this.isNumber()) {
                     const v = Number(this.getValue());
                     if (parseInt(this.getValue(), 10) == this.getValue()) {
@@ -677,7 +716,7 @@ Entry.Variable = class Variable {
                     .f('#F57DF1')
                     .ss(1, 2, 0)
                     .s('#F57DF1')
-                    .rr(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7);
+                    .rr(this._nameWidth + 7, -11, this._valueWidth + 15, 14, RECT_RADIUS);
             } else {
                 this.view_.x = this.getX();
                 this.view_.y = this.getY();
@@ -688,7 +727,11 @@ Entry.Variable = class Variable {
                 }
 
                 this.valueView_.x = this._nameWidth + 14;
-                this.valueView_.y = 1;
+                if(GEHelper.isWebGL) {
+                    this.valueView_.y = -11;
+                } else {
+                    this.valueView_.y = 1;
+                }
                 if (this.isNumber()) {
                     this.valueView_.text = Number(this.getValue())
                         .toFixed(1)
@@ -712,7 +755,7 @@ Entry.Variable = class Variable {
                     .f('#ffbb14')
                     .ss(1, 2, 0)
                     .s('#ffa500')
-                    .rr(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7);
+                    .rr(this._nameWidth + 7, -11, this._valueWidth + 15, 14, RECT_RADIUS);
             }
         }
         Entry.requestUpdate = true;
