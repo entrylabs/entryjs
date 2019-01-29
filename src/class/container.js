@@ -1,9 +1,11 @@
 /**
  * @fileoverview Container handle all object in entry.
  */
+
 'use strict';
 
 import EntryTool from 'entry-tool';
+import { GEHelper } from '../graphicEngine/GEHelper';
 
 /**
  * Class for a container.
@@ -446,6 +448,7 @@ Entry.Container = class Container {
         }
 
         Entry.playground.reloadPlayground();
+        GEHelper.resManager.imageRemoved("container::removeObject");
     }
 
     /**
