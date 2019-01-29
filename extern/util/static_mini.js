@@ -362,9 +362,7 @@ EntryStatic.getAllBlocks = function() {
         {
             category: 'arduino',
             visible: false,
-            blocks: [
-                ...EntryStatic.DynamicHardwareBlocks
-            ],
+            blocks: EntryStatic.DynamicHardwareBlocks,
         },
     ];
 };
