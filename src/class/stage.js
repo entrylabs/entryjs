@@ -511,9 +511,30 @@ Entry.Stage.prototype.initWall = function() {
  * show inputfield from the canvas
  */
 Entry.Stage.prototype.showInputField = function() {
-    if (!this.inputField) {
-        var scale = 1 / 1.5;
-        this.inputField = new CanvasInput({
+    const THIS = this;
+    const isWebGL = GEHelper.isWebGL;
+
+    if(!this.inputField) {
+        this.inputField = _createInputField();
+        this.inputSubmitButton = _createSubmitButton();
+    }
+
+    this.inputField.value('');
+    if(isWebGL) {
+        this.canvas.addChild(this.inputField.getPixiView());
+    }
+    this.inputField.show();
+    this.canvas.addChild(this.inputSubmitButton);
+
+    Entry.requestUpdateTwice = true;
+
+    function _createInputField() {
+        let scale = 1 / 1.5;
+        let posX = 202 * scale;
+        let posY = 450 * scale;
+        const isWebGL = GEHelper.isWebGL;
+        const classRef = isWebGL ? window.PIXICanvasInput : CanvasInput;
+        let inputField = new classRef({
             canvas: document.getElementById('entryCanvas'),
             fontSize: 30 * scale,
             fontFamily: 'NanumGothic',
@@ -526,60 +547,65 @@ Entry.Stage.prototype.showInputField = function() {
             borderRadius: 3,
             boxShadow: 'none',
             innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
-            x: 202 * scale,
-            y: 450 * scale,
+            x: posX,
+            y: posY,
             readonly: false,
             topPosition: true,
             onsubmit: function() {
                 Entry.dispatchEvent('canvasInputComplete');
             },
         });
-    }
 
-    var inputSubmitButton = new createjs.Container();
-    var buttonImg = new Image();
-    var button = new createjs.Bitmap();
-    buttonImg.onload = function() {
-        button.image = this;
-        Entry.requestUpdate = true;
-    };
-    buttonImg.src = Entry.mediaFilePath + 'confirm_button.png';
-    button.scaleX = 0.23;
-    button.scaleY = 0.23;
-    button.x = 160;
-    button.y = 89;
-    button.cursor = 'pointer';
-    button.image = buttonImg;
-    inputSubmitButton.addChild(button);
-
-    inputSubmitButton.on('mousedown', () => {
-        if (this.inputField._readonly == false) {
-            Entry.dispatchEvent('canvasInputComplete');
+        if(isWebGL) {
+            const canvas = THIS.canvas;
+            const globalScale = canvas.scale.x;
+            const textView = inputField.getPixiView();
+            textView.scale.set(1/globalScale);
+            textView.position.set(
+                (posX / globalScale - canvas.x / globalScale),
+                (posY / globalScale - canvas.y / globalScale),
+            );
         }
-    });
+        return inputField;
+    }//_createInputField
 
-    if (!this.inputSubmitButton) {
-        this.inputField.value('');
-        this.canvas.addChild(inputSubmitButton);
-        this.inputSubmitButton = inputSubmitButton;
-    }
 
-    this.inputField.show();
-    Entry.requestUpdateTwice = true;
+    function _createSubmitButton() {
+        const path = Entry.mediaFilePath + 'confirm_button.png';
+        let inputSubmitButton = GEHelper.newSpriteWithCallback(path, ()=>{
+            Entry.requestUpdate = true;
+        });
+        inputSubmitButton.mouseEnabled = true;
+        inputSubmitButton.scaleX = 0.23;
+        inputSubmitButton.scaleY = 0.23;
+        inputSubmitButton.x = 160;
+        inputSubmitButton.y = 89;
+        inputSubmitButton.cursor = 'pointer';
+
+        let eventType = isWebGL ? 'pointerdown' : 'mousedown';
+        inputSubmitButton.on(eventType, () => {
+            if (!THIS.inputField._readonly) {
+                Entry.dispatchEvent('canvasInputComplete');
+            }
+        });
+        return inputSubmitButton;
+    }//_createSubmitButton
 };
 
 /**
  * remove inputfield from the canvas
  */
 Entry.Stage.prototype.hideInputField = function() {
-    if (this.inputField && this.inputField.value()) this.inputField.value('');
+    if(!this.inputField) return;
 
-    if (this.inputSubmitButton) {
-        this.canvas.removeChild(this.inputSubmitButton);
-        this.inputSubmitButton = null;
+    if(GEHelper.isWebGL) {
+        this.canvas.removeChild(this.inputField.getPixiView());
     }
+    this.inputField.value('');
+    this.inputField.hide();
 
-    if (this.inputField) this.inputField.hide();
+    this.canvas.removeChild(this.inputSubmitButton);
+
     Entry.requestUpdate = true;
 };
 

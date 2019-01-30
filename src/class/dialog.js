@@ -4,6 +4,9 @@
  * @fileoverview Show dialog on canvas
  */
  
+import { GEHelper } from '../graphicEngine/GEHelper';
+import PIXIHelper from './pixi/helper/PIXIHelper';
+
 /**
  * Construct dialog
  * @param {!Entry.EntityObject} entity parent entity
@@ -36,17 +39,21 @@ Entry.Dialog = function(entity, message, mode, isStamp) {
  * Generate speak dialog box
  */
 Entry.Dialog.prototype.generateSpeak = function() {
-    /** @type {createjs.Container} Easel object */
-    this.object = new createjs.Container();
-    var text = new createjs.Text();
-    text.font = "15px NanumGothic";
-    text.textBaseline = "top";
-    text.textAlign = "left";
-    text.text = this.message_;
-    var bound = text.getTransformedBounds();
+    this.object = GEHelper.newContainer("[dialog] container");
+    var text = GEHelper.textHelper.newText(
+        this.message_, "15px NanumGothic", "#000000", "top", "left"
+    );
+
+    let bound;
+    if(GEHelper.isWebGL) {
+        bound = text;
+    } else {
+        bound = text.getTransformedBounds();
+    }
+
     var height = bound.height;
     var width = bound.width >= 10 ? bound.width : 17;
-    var rect = new createjs.Shape();
+    var rect = GEHelper.newGraphic();
     rect.graphics.f("#f5f5f5").ss(2,'round').s("#6FC0DD").rr(
         -this.padding, -this.padding,
         width + 2*this.padding, height + 2*this.padding, this.padding);
@@ -66,11 +73,19 @@ Entry.Dialog.prototype.generateSpeak = function() {
  * Set position
  */
 Entry.Dialog.prototype.update = function() {
-    var bound = this.parent.object.getTransformedBounds();
+    const parentObj = this.parent.object;
+    const calcParentBound = function() {
+        if(GEHelper.isWebGL) {
+            return PIXIHelper.getTransformBound(parentObj);
+        } else {
+            return parentObj.getTransformedBounds();
+        }
+    };
+    var bound = calcParentBound();
     if (!bound && this.parent.type === 'textBox') {
         if (!this._isNoContentTried) {
             this.parent.setText(' ');
-            bound = this.parent.object.getTransformedBounds();
+            bound = calcParentBound();
             this._isNoContentTried = true;
         } else {
             delete this._isNoContentTried;
@@ -121,7 +136,7 @@ Entry.Dialog.prototype.update = function() {
  * @return {createjs.Shape}
  */
 Entry.Dialog.prototype.createSpeakNotch = function(type) {
-    var notch = new createjs.Shape();
+    var notch = GEHelper.newGraphic();
     notch.type = type;
     if (type == 'ne')
         notch.graphics.f("#f5f5f5").ss(2,'round').s("#6FC0DD")

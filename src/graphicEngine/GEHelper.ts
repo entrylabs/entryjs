@@ -178,6 +178,19 @@ class _GEHelper extends GEHelperBase {
         }
     }
 
+    newSpriteWithCallback(url:string, callback:()=>void) {
+        let img = new Image();
+        img.onload = ()=>{
+            callback && callback();
+        };
+        img.src = url;
+        if(this._isWebGL) {
+            return PIXI.Sprite.from(img);
+        } else {
+            return new createjs.Bitmap(img);
+        }
+    }
+
     newGraphic() {
         if(this._isWebGL) {
             return new PIXI.Graphics();
@@ -282,7 +295,7 @@ class _TextHelper extends GEHelperBase {
         if(this._isWebGL) {
             return PIXIHelper.text(str, font, color, textBaseline, textAlign);
         } else {
-            let t = new createjs.Text(font, font, color);
+            let t = new createjs.Text(str, font, color);
             textBaseline ? t.textBaseline = textBaseline : 0;
             textAlign ? t.textAlign = textAlign : 0;
             return t;

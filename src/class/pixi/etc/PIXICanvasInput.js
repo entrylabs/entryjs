@@ -14,7 +14,7 @@
     var inputs = [];
 
     // initialize the Canvas Input
-    var CanvasInput = window.CanvasInput = function(o) {
+    var CanvasInput = window.PIXICanvasInput = function(o) {
         var self = this;
 
         o = o ? o : {};
