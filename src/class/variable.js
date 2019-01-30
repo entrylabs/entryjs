@@ -580,8 +580,10 @@ Entry.Variable = class Variable {
                     .s('#A0A1A1')
                     .rect(0, 0, this.width_, this.height_);
 
-                while (this.view_.children[4]) {
-                    this.view_.removeChild(this.view_.children[4]);
+                let listChild;
+                while (listChild = this.view_.children[4]) {
+                    this.view_.removeChild(listChild);
+                    listChild.destroy && listChild.destroy();
                 }
                 const maxView = Math.floor((this.getHeight() - 20) / 20);
 
