@@ -283,16 +283,17 @@ Entry.Stage.prototype.sortZorderRun = function() {
  * Initialize coordinate on canvas. It is toggle by Engine.
  */
 Entry.Stage.prototype.initCoordinator = function() {
-    let tex = GEHelper.newSpriteWithURL(Entry.mediaFilePath + 'workspace_coordinate.png');
-    //todo [박봉배] tickEnabled 어떻게 할지 고민하기.
+    let tex = GEHelper.newSpriteWithCallback(Entry.mediaFilePath + 'workspace_coordinate.png');
     this.coordinator = Object.assign(tex, {
         scaleX: 0.5,
         scaleY: 0.5,
         x: -240,
         y: -135,
         visible: false,
-        tickEnabled: false
     });
+    if(!GEHelper.isWebGL) {
+        this.coordinator.tickEnabled = false;
+    }
     this.canvas.addChild(this.coordinator);
 };
 
@@ -486,9 +487,9 @@ Entry.Stage.prototype.endEdit = function() {
 Entry.Stage.prototype.initWall = function() {
     let wall = GEHelper.newContainer("wall");
     wall.mouseEnabled = false;
-    let tex = GEHelper.newTexture(Entry.mediaFilePath + 'media/bound.png');
+    let tex = GEHelper.newWallTexture(Entry.mediaFilePath + 'media/bound.png');
     const newSide = (x, y, sx, sy) => {
-        let sp = GEHelper.newSpriteWithTex(tex);
+        let sp = GEHelper.newWallSprite(tex);
         sp.x = x;
         sp.y = y;
         sx ?  sp.scaleX = sx : 0;

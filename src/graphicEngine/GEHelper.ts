@@ -7,6 +7,7 @@ import { GEDragHelper } from './GEDragHelper';
 import { PIXIText } from '../class/pixi/text/PIXIText';
 import { IGEResManager } from './IGEResManager';
 import { EaselResManager } from './EaselResManager';
+import { PIXISprite } from '../class/pixi/plugins/PIXISprite';
 
 
 
@@ -151,7 +152,11 @@ class _GEHelper extends GEHelperBase {
         }
     }
 
-    newTexture(path:string):Texture|HTMLImageElement {
+    /**
+     * stage wall 생성만을 위한 함수
+     * @param path
+     */
+    newWallTexture(path:string):Texture|HTMLImageElement {
         if(this._isWebGL) {
             return Texture.fromImage(path);
         } else {
@@ -161,7 +166,11 @@ class _GEHelper extends GEHelperBase {
         }
     }
 
-    newSpriteWithTex(tex?:any) {
+    /**
+     * stage wall 생성만을 위한 함수
+     * @param path
+     */
+    newWallSprite(tex:any) {
         if(this._isWebGL) {
             return new PIXI.Sprite(tex);
         } else {
@@ -169,16 +178,15 @@ class _GEHelper extends GEHelperBase {
         }
     }
 
-    newSpriteWithURL(url:string) {
+    newEmptySprite() {
         if(this._isWebGL) {
-            //todo [박봉배] PIXISprite로 변경
-            return PIXI.Sprite.from(url);
+            return new PIXISprite();
         } else {
-            return new createjs.Bitmap(url);
+            return new createjs.Bitmap();
         }
     }
 
-    newSpriteWithCallback(url:string, callback:()=>void) {
+    newSpriteWithCallback(url:string, callback?:()=>void) {
         let img = new Image();
         img.onload = ()=>{
             callback && callback();
@@ -264,7 +272,7 @@ class _ColorFilterHelper extends GEHelperBase {
      */
     setCache(entiy:any, cache:boolean) {
         if(this._isWebGL) {
-
+            //do nothing
         } else {
             cache ? entiy.cache() : entiy.object.uncache();
         }

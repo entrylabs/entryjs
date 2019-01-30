@@ -384,7 +384,6 @@ var EaselHandle = function(canvas) {
         var sx = -(width + t)/2; //startX
         var sy = -(height + t)/2; //startY
 
-        //[박봉배] pixi 에서 lineTo는 히트테스트 안되서 drawRect로 변경.
         this.edge.graphics
             .clear()
             .f('rgba(254,254,254,0.01)')

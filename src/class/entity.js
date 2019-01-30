@@ -28,7 +28,7 @@ Entry.EntityObject = class EntityObject {
         this.shapes = [];
 
         if (this.type === 'sprite') {
-            this.object = GEHelper.newSpriteWithURL();
+            this.object = GEHelper.newEmptySprite();
             this.object.pixelPerfect = true;
             this.setInitialEffectValue();
         } else if (this.type === 'textBox') {
