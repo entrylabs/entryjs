@@ -8,6 +8,7 @@ import { PIXIText } from '../class/pixi/text/PIXIText';
 import { IGEResManager } from './IGEResManager';
 import { EaselResManager } from './EaselResManager';
 import { PIXISprite } from '../class/pixi/plugins/PIXISprite';
+import { PIXIBrushAdaptor } from '../class/pixi/etc/PIXIBrushAdaptor';
 
 
 
@@ -45,7 +46,7 @@ export class GEHelperBase {
 
     protected _isWebGL:boolean = false;
 
-    get isWebGL():boolean { return this._isWebGL; }
+
 
     INIT(isWebGL:boolean):this {
         this._isWebGL = isWebGL;
@@ -59,10 +60,11 @@ class _GEHelper extends GEHelperBase {
         GEDragHelper.INIT(isWebGL);
         this.colorFilter = new _ColorFilterHelper().INIT(isWebGL);
         this.textHelper = new _TextHelper().INIT(isWebGL);
+        this.brushHelper = new _BrushHelper().INIT(isWebGL);
         if(this._isWebGL) {
-            PIXIGlobal.initOnce();
             this.rotateRead = 180 / Math.PI;
             this.rotateWrite = Math.PI / 180;
+            PIXIGlobal.initOnce();
             this.resManager = PIXIGlobal.atlasManager;
         } else {
             this.resManager = new EaselResManager();
@@ -70,10 +72,11 @@ class _GEHelper extends GEHelperBase {
         this.resManager.INIT();
         return this;
     }
-
+    get isWebGL():boolean { return this._isWebGL; }
     public resManager:IGEResManager;
     public textHelper:_TextHelper;
     public colorFilter:_ColorFilterHelper;
+    public brushHelper:_BrushHelper;
 
     /**  pixi 객체로부터 rotate를 읽을 때 사용할 값 */
     public rotateRead:number = 1;
@@ -309,4 +312,25 @@ class _TextHelper extends GEHelperBase {
         }
     }
 
+}
+
+class _BrushHelper extends GEHelperBase {
+
+    newBrush() {
+        if(this._isWebGL) {
+            return new PIXIBrushAdaptor();
+        } else {
+            return new createjs.Graphics();
+        }
+    }
+
+    newShape(brush:PIXIBrushAdaptor|any) {
+        if(this._isWebGL) {
+            let shape = PIXIHelper.newPIXIGraphics();
+            brush.internal_setShape(shape);
+            return shape;
+        } else {
+            return new createjs.Shape(brush);
+        }
+    }
 }

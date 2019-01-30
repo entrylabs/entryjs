@@ -35,7 +35,7 @@ import PIXIHelper from '../helper/PIXIHelper';
  *
  **/
 
-window.ndgmr = window.ndgmr || {};
+export let PIXICollision = {};
 (function(ndgmr) {
 
     //--------- Class CollisionCanvas -------
@@ -308,4 +308,4 @@ window.ndgmr = window.ndgmr || {};
 
 
 
-})(window.ndgmr);
+})(PIXICollision);

@@ -1,5 +1,6 @@
 'use strict';
 
+import { GEHelper } from '../graphicEngine/GEHelper';
 Entry.Utils = {};
 
 Entry.TEXT_ALIGN_CENTER = 0;
@@ -970,6 +971,17 @@ Entry.rgb2hex = function(r, g, b) {
     return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
 };
 
+/**
+ *
+ * @param {number} r - 0~255 integer
+ * @param {number} g - 0~255 integer
+ * @param {number} b - 0~255 integer
+ * @return {number} 0~0xffffff integer
+ */
+Entry.rgb2Number = function(r, g, b) {
+    return (r << 16) + (g << 8) + Number(b);
+};
+
 /*
  * Generate random rgb color object
  */
@@ -1440,28 +1452,38 @@ Entry.getBrowserType = function() {
 };
 
 Entry.setBasicBrush = function(sprite) {
-    const brush = new createjs.Graphics();
+    const isWebGL = GEHelper.isWebGL;
+    const brush = GEHelper.brushHelper.newBrush();
     if (sprite.brush) {
         const parentBrush = sprite.brush;
         brush.thickness = parentBrush.thickness;
         brush.rgb = parentBrush.rgb;
-
         brush.opacity = parentBrush.opacity;
         brush.setStrokeStyle(brush.thickness);
-        brush.beginStroke(
-            `rgba(${brush.rgb.r},${brush.rgb.g},${brush.rgb.b},${1 - brush.opacity / 100})`
-        );
+
+        let rgb = brush.rgb;
+        let opacity = 1 - brush.opacity / 100;
+
+        if(isWebGL) {
+            brush.beginStrokeFast(Entry.rgb2Number(rgb.r, rgb.g, rgb.b), opacity);
+        } else {
+            brush.beginStroke(`rgba(${rgb.r},${rgb.g},${rgb.b},${opacity})`);
+        }
     } else {
         brush.thickness = 1;
         brush.rgb = Entry.hex2rgb('#ff0000');
         brush.opacity = 0;
         brush.setStrokeStyle(1);
-        brush.beginStroke('rgba(255,0,0,1)');
+        if(isWebGL) {
+            brush.beginStrokeFast(0xff0000, 1);
+        } else {
+            brush.beginStroke('rgba(255,0,0,1)');
+        }
     }
 
     brush.entity = sprite;
+    const shape = GEHelper.brushHelper.newShape(brush);
 
-    const shape = new createjs.Shape(brush);
     shape.entity = sprite;
     const selectedObjectContainer = Entry.stage.selectedObjectContainer;
     selectedObjectContainer.addChildAt(shape, selectedObjectContainer.getChildIndex(sprite.object));
@@ -1472,17 +1494,22 @@ Entry.setBasicBrush = function(sprite) {
 };
 
 Entry.setCloneBrush = function(sprite, parentBrush) {
-    const brush = new createjs.Graphics();
+    const isWebGL = GEHelper.isWebGL;
+    const brush =  GEHelper.brushHelper.newBrush();
     brush.thickness = parentBrush.thickness;
     brush.rgb = parentBrush.rgb;
-
     brush.opacity = parentBrush.opacity;
     brush.setStrokeStyle(brush.thickness);
-    brush.beginStroke(
-        `rgba(${brush.rgb.r},${brush.rgb.g},${brush.rgb.b},${1 - brush.opacity / 100})`
-    );
 
-    const shape = new createjs.Shape(brush);
+    let rgb = brush.rgb;
+    let opacity = 1 - brush.opacity / 100;
+    if(isWebGL) {
+        brush.beginStrokeFast(Entry.rgb2Number(rgb.r, rgb.g, rgb.b), opacity);
+    } else {
+        brush.beginStroke(`rgba(${rgb.r},${rgb.g},${rgb.b},${opacity})`);
+    }
+
+    const shape = GEHelper.brushHelper.newShape(brush);
     shape.entity = sprite;
     const selectedObjectContainer = Entry.stage.selectedObjectContainer;
     selectedObjectContainer.addChildAt(shape, selectedObjectContainer.getChildIndex(sprite.object));

@@ -1,5 +1,5 @@
 import { PIXIBaseAsset } from './PIXIBaseAsset';
-require("./../etc/PIXI-ndgmr.Collision");
+let PIXICollision = require("./../etc/PIXI-ndgmr.Collision").PIXICollision;
 require("./../etc/PIXICanvasInput");
 let entryIsWebGLSupported = require("./entryIsWebGLSupported").entryIsWebGLSupported;
 
@@ -28,6 +28,7 @@ class _PIXIGlobal {
         this._init = true;
         PIXIDebug.internal_init();
         //this.baseAsset = new PIXIBaseAsset();
+        ndgmr = PIXICollision;
         ndgmr.initTempObject();
         PIXITempStore.init();
         this.atlasManager = new PIXIAtlasManager();
