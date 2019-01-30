@@ -227,7 +227,6 @@ class _ColorFilterHelper extends GEHelperBase {
 
     brightness(value:number) {
         if(this._isWebGL) {
-            // todo [박봉배] 여기 /255 가 필요한가
             value /= 255;
         }
         // pixi 필터에 brightness 가 있지만, createjs 와 matrix 값이 달라 결과가 다르게 보임. 그래서 동일하게 구현함.
