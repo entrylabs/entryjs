@@ -1466,9 +1466,6 @@ Entry.setBasicBrush = function(sprite) {
     const selectedObjectContainer = Entry.stage.selectedObjectContainer;
     selectedObjectContainer.addChildAt(shape, selectedObjectContainer.getChildIndex(sprite.object));
 
-    if (sprite.brush) {
-        sprite.brush = null;
-    }
     sprite.brush = brush;
 
     sprite.shapes.push(shape);
@@ -1492,9 +1489,6 @@ Entry.setCloneBrush = function(sprite, parentBrush) {
 
     brush.stop = parentBrush.stop;
 
-    if (sprite.brush) {
-        sprite.brush = null;
-    }
     sprite.brush = brush;
 
     sprite.shapes.push(shape);
