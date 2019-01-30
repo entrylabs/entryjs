@@ -21,7 +21,6 @@ class _PIXIGlobal {
     /** @readonly */
     baseAsset:PIXIBaseAsset;
     atlasManager:PIXIAtlasManager;
-    private _currentApp:PIXI.Application;
 
     initOnce() {
         if(this._init) return;
@@ -39,10 +38,8 @@ class _PIXIGlobal {
         PIXIGraphicOverride();
     }
 
-    getCurrentApp():PIXI.Application { return this._currentApp; }
-
     getNewApp(canvas:HTMLCanvasElement):PIXI.Application {
-        this._currentApp = new PIXI.Application({
+        let app = new PIXI.Application({
             view: canvas,
             width: canvas.width,
             height: canvas.height,
@@ -51,8 +48,8 @@ class _PIXIGlobal {
             antialias:true,
             transparent: true
         });
-        (this._currentApp.stage as any).canvas = canvas;
-        return this._currentApp;
+        (app.stage as any).canvas = canvas;
+        return app;
     }
 }
 
