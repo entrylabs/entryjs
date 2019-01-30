@@ -778,8 +778,8 @@ Entry.Playground = class {
     injectObject(object) {
         /** @type {Entry.Entryobject} */
         if (!object) {
+            this.object = null; //[박봉배-2018.11.12] - 아래 위치에 있으면 죽은 object의 메서드를 호출함. 그래서 위로 올림.
             this.changeViewMode('code');
-            this.object = null;
             return;
         }
         if (object === this.object) {
