@@ -1359,7 +1359,8 @@ Entry.BlockView = class BlockView {
                     this.loadImage(
                         href,
                         img.getAttribute('width'),
-                        img.getAttribute('height')
+                        img.getAttribute('height'),
+                        notPng
                     ).then((src) => {
                         img.setAttribute('href', src);
                         if (++counts == images.length) {
@@ -1659,7 +1660,7 @@ Entry.BlockView = class BlockView {
     processSvg(svgGroup, scale, defs, notPng) {
         return new Promise((resolve, reject) => {
             let svgData =
-                '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %W %H">(svgGroup)(defs)</svg>';
+                '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %W %H">(svgGroup)(defs)</svg>';
             const bBox = this.svgGroup.getBoundingClientRect();
             svgData = svgData
                 .replace('(svgGroup)', new XMLSerializer().serializeToString(svgGroup))
@@ -1678,7 +1679,7 @@ Entry.BlockView = class BlockView {
                 });
                 svgGroup = null;
             } else {
-                this.loadImage(src, bBox.width, bBox.height, 1.5).then(
+                this.loadImage(src, bBox.width, bBox.height, notPng, 1.5).then(
                     function(src) {
                         svgGroup = null;
                         resolve({
@@ -1696,7 +1697,7 @@ Entry.BlockView = class BlockView {
         });
     }
 
-    loadImage(src, width, height, multiplier = 1) {
+    loadImage(src, width, height, notPng, multiplier = 1) {
         return new Promise((resolve, reject) => {
             if (Entry.BlockView.pngMap[src] !== undefined) {
                 return resolve(Entry.BlockView.pngMap[src]);
@@ -1717,6 +1718,9 @@ Entry.BlockView = class BlockView {
             const ctx = canvas.getContext('2d');
 
             img.onload = function() {
+                if (notPng) {
+                    return resolve(img.src);
+                }
                 ctx.drawImage(img, 0, 0, width, height);
                 const data = canvas.toDataURL('image/png');
                 if (/\.png$/.test(src)) {
