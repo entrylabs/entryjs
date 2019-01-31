@@ -10,10 +10,11 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
 
     c[COMMAND_TYPES.funcCreateStart] = {
         do(funcId) {
+            Entry.getMainWS().setMode(Entry.Workspace.MODE_BOARD, 'cancelEdit');
             funcId = getExpectedData('funcId') || funcId;
             Entry.playground.changeViewMode('code');
             const blockMenu = Entry.variableContainer._getBlockMenu();
-            if (blockMenu.lastSelector != 'func') {
+            if (blockMenu.lastSelector !== 'func') {
                 blockMenu.selectMenu('func');
             }
             Entry.variableContainer.createFunction({ id: funcId });
@@ -28,7 +29,9 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
             Entry.playground.changeViewMode('variable');
             Entry.variableContainer.selectFilter('func');
 
-            const { content: contentData, tooltip: { title, content } } = data;
+            const {
+                tooltip: { title, content },
+            } = data;
             return createTooltip(title, content, domQuery, callback);
         },
         validate: false,

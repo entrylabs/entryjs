@@ -76,10 +76,10 @@ Entry.Comment = class Comment {
     }
 
     get code() {
-        if (this.board) {
+        if (this.board && this.board.getCode) {
             return this.board.getCode();
         }
-        if (this.thread) {
+        if (this.thread && this.thread.getCode) {
             return this.thread.getCode();
         }
     }
@@ -111,13 +111,16 @@ Entry.Comment = class Comment {
         }
         const { view } = this.block || {};
         this._blockView = view;
-        const { svgGroup, pathGroup } = this.blockView || {};
+        const { svgGroup, pathGroup, svgCommentGroup } = this.blockView || {};
         this.pathGroup = pathGroup;
         this.parentGroup = svgGroup;
-        if (this.block) {
-            this.svgGroup = this.blockView.svgCommentGroup.prepend('g');
-        } else {
+
+        if (this.block && svgCommentGroup) {
+            this.svgGroup = svgCommentGroup.prepend('g');
+        } else if (this.board.svgCommentGroup) {
             this.svgGroup = this.board.svgCommentGroup.elem('g');
+        } else {
+            return;
         }
         this.mouseDown = this.mouseDown.bind(this);
         this.mouseMove = this.mouseMove.bind(this);
@@ -136,7 +139,7 @@ Entry.Comment = class Comment {
         this.setFrame();
         this.addControl();
         this.setPosition();
-        this.code.registerBlock(this);
+        this.code && this.code.registerBlock(this);
         this.setObservers();
     }
 
@@ -463,9 +466,10 @@ Entry.Comment = class Comment {
         e.stopPropagation();
         e.preventDefault();
         this.longPressTimer = null;
-        if (Entry.documentMousedown) {
-            Entry.documentMousedown.notify(e);
+        if (this.board.workingEvent) {
+            return;
         }
+        this.board.workingEvent = true;
 
         if ((e.button === 0 || e.type === 'touchstart') && !this.board.readOnly) {
             this.setDragInstance(e);
@@ -493,6 +497,7 @@ Entry.Comment = class Comment {
         if (disposeEvent) {
             disposeEvent.notify(e);
         }
+        delete this.board.workingEvent;
         this.dragMode = Entry.DRAG_MODE_NONE;
 
         const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
@@ -611,6 +616,7 @@ Entry.Comment = class Comment {
         }
         if (this.board) {
             this.board.set({ dragBlock: null });
+            delete this.board.workingEvent;
         }
 
         this.removeMoveSetting(this.mouseMove, this.mouseUp);

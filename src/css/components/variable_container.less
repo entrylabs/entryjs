@@ -196,8 +196,8 @@
     color: #4f80ff;
     text-align: center;
     text-decoration: none;
-    line-height: 38px;
-    cursor: pointer;
+    line-height: 42px;
+    box-sizing: border-box;
 }
 .entryVariableAdd_box .entryVariableAddWorkspace.disabled {
     border: 1px solid #e2e2e2;
@@ -810,6 +810,9 @@
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .scroll_box.on {
     padding-right: 20px;
+}
+.scroll_box:not(.on) .simplebar-vertical {
+    display: none;
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .scroll_box .simplebar-scrollbar {
     opacity: 0.8;

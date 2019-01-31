@@ -95,6 +95,10 @@ Entry.Painter = function(view) {
 
     p.changePicture = function(picture) {
         if (this.file && this.file.id === picture.id) {
+            if (!this.file.isUpdate) {
+                Entry.stage.updateObject();
+                this.file.isUpdate = true;
+            }
             return;
         } else if (!this.file.modified) {
             this.afterModified(picture);
@@ -126,6 +130,8 @@ Entry.Painter = function(view) {
                 }.bind(this)
             );
         }
+        Entry.stage.updateObject();
+        this.file.isUpdate = true;
     };
 
     p.afterModified = function(picture) {
@@ -224,6 +230,7 @@ Entry.Painter = function(view) {
             task: taskParam,
         });
 
+        this.file.isUpdate = false;
         this.file.modified = false;
     };
 
@@ -276,6 +283,30 @@ Entry.Painter = function(view) {
         this.lc.trigger('keyUp', e);
     };
 
+    p.toggleFullscreen = function(isFullscreen) {
+        const { painter = {}, pictureView_ } = Entry.playground;
+        const { view = {} } = painter;
+        const $view = $(view);
+        if ((isFullscreen !== true && $view.hasClass('fullscreen')) || isFullscreen === false) {
+            pictureView_.appendChild(view);
+            $(view).removeClass('fullscreen');
+            if (this.fullscreenButton) {
+                this.fullscreenButton.setAttribute('title', Lang.Painter.fullscreen);
+                this.fullscreenButton.setAttribute('alt', Lang.Painter.fullscreen);
+            }
+        } else {
+            document.body.appendChild(view);
+            $(view).addClass('fullscreen');
+            if (this.fullscreenButton) {
+                this.fullscreenButton.setAttribute('title', Lang.Painter.exit_fullscreen);
+                this.fullscreenButton.setAttribute('alt', Lang.Painter.exit_fullscreen);
+            }
+        }
+        $(view)
+            .find('.lc-drawing.with-gui')
+            .trigger('resize');
+    };
+
     p.initTopBar = function() {
         var painter = this;
 
@@ -286,28 +317,13 @@ Entry.Painter = function(view) {
         painterTop.addClass('entryPainterTop');
 
         var painterTopFullscreenButton = ce('div', 'entryPainterTopFullscreenButton');
-        painterTopFullscreenButton.setAttribute("title", Lang.Painter.fullscreen);
-        painterTopFullscreenButton.setAttribute("alt", Lang.Painter.fullscreen);
+        painterTopFullscreenButton.setAttribute('title', Lang.Painter.fullscreen);
+        painterTopFullscreenButton.setAttribute('alt', Lang.Painter.fullscreen);
         painterTopFullscreenButton.addClass('entryPlaygroundPainterFullscreenButton');
-        painterTopFullscreenButton.bindOnClick(function() {
-            const { painter = {}, pictureView_ } = Entry.playground;
-            const { view = {} } = painter;
-            const $view = $(view);
-            if($view.hasClass('fullscreen')) {
-                pictureView_.appendChild(view);
-                $(view).removeClass('fullscreen');
-                painterTopFullscreenButton.setAttribute("title", Lang.Painter.fullscreen);
-                painterTopFullscreenButton.setAttribute("alt", Lang.Painter.fullscreen);
-            } else {
-                document.body.appendChild(view);
-                $(view).addClass('fullscreen');
-                painterTopFullscreenButton.setAttribute("title", Lang.Painter.exit_fullscreen);
-                painterTopFullscreenButton.setAttribute("alt", Lang.Painter.exit_fullscreen);
-            }
-            $(view)
-                .find('.lc-drawing.with-gui')
-                .trigger('resize');
+        painterTopFullscreenButton.bindOnClick(() => {
+            this.toggleFullscreen();
         });
+        this.fullscreenButton = painterTopFullscreenButton;
         painterTop.appendChild(painterTopFullscreenButton);
 
         var painterTopMenu = ce('nav', 'entryPainterTopMenu');
@@ -416,7 +432,7 @@ Entry.Painter = function(view) {
         function menuClickEvent(e) {
             $(painterTopMenuFile).removeClass('active');
             $(painterTopMenuEdit).removeClass('active');
-            if(e.target === this) {
+            if (e.target === this) {
                 e.stopImmediatePropagation();
                 $(this).addClass('active');
             }
@@ -448,5 +464,9 @@ Entry.Painter = function(view) {
             var evt = events.pop();
             evt.destroy && evt.destroy();
         }
+    };
+
+    p.clear = function() {
+        this.toggleFullscreen(false);
     };
 })(Entry.Painter.prototype);

@@ -122,24 +122,20 @@ Entry.VariableContainer = class VariableContainer {
 
     generateAddButtons() {
         const createElement = Entry.createElement;
-        const variableAddButton = createElement('a').addClass('entryVariableAddWorkspace');
+        const variableAddButton = createElement('button').addClass('entryVariableAddWorkspace');
         variableAddButton.innerHTML = Lang.Workspace.variable_add;
-        variableAddButton.href = '#';
         this.variableAddButton_ = variableAddButton;
 
-        const messageAddButton = createElement('a').addClass('entryVariableAddWorkspace');
+        const messageAddButton = createElement('button').addClass('entryVariableAddWorkspace');
         messageAddButton.innerHTML = Lang.Workspace.message_create;
-        messageAddButton.href = '#';
         this.messageAddButton_ = messageAddButton;
 
-        const listAddButton = createElement('a').addClass('entryVariableAddWorkspace');
+        const listAddButton = createElement('button').addClass('entryVariableAddWorkspace');
         listAddButton.innerHTML = Lang.Workspace.list_create;
-        listAddButton.href = '#';
         this.listAddButton_ = listAddButton;
 
-        const functionAddButton = createElement('a').addClass('entryVariableAddWorkspace');
+        const functionAddButton = createElement('button').addClass('entryVariableAddWorkspace');
         functionAddButton.innerHTML = Lang.Workspace.function_add;
-        functionAddButton.href = '#';
         this.functionAddButton_ = functionAddButton;
     }
 
@@ -228,11 +224,11 @@ Entry.VariableContainer = class VariableContainer {
         this.selected.listElement.addClass('unfold');
         if (object instanceof Entry.Variable) {
             if (object.type === 'variable') {
-                this.generateVariableSettingView();
-                this.renderVariableReference(object);
+                this.generateVariableSettingView(object);
+                this.updateVariableSettingView(object);
             } else if (object.type === 'list') {
-                this.generateListSettingView();
-                this.renderVariableReference(object);
+                this.generateListSettingView(object);
+                this.updateListSettingView(object);
             }
             if (object.object_) {
                 Entry.container.selectObject(object.object_, true);
@@ -376,9 +372,9 @@ Entry.VariableContainer = class VariableContainer {
      * @param {object} variable
      */
     renderFunctionReference(func) {
-        const callers = [...this._functionRefs].filter(
-            (item) => item.block.data.type === 'func_' + func.id
-        );
+        const callers = [...this._functionRefs].filter((item) => {
+            return item.block.data.type === `func_${func.id}`;
+        });
 
         func.usedView && $(func.usedView).remove();
         let usedWrapper;
@@ -456,6 +452,7 @@ Entry.VariableContainer = class VariableContainer {
                 this.updateFuncTab();
                 break;
         }
+        this.updateSelected();
     }
 
     makeChildVariableViews(arr, viewFunc, parent = this.listView_) {
@@ -475,9 +472,6 @@ Entry.VariableContainer = class VariableContainer {
                     });
             }
             parent.appendChild(data.listElement);
-            if (data.callerListElement) {
-                parent.appendChild(data.callerListElement);
-            }
         });
     }
 
@@ -2273,7 +2267,7 @@ Entry.VariableContainer = class VariableContainer {
         Entry.container.inputValue.setName(Lang.Blocks.VARIABLE_get_canvas_input_value);
     }
 
-    generateVariableSettingView() {
+    generateVariableSettingView(variable) {
         const that = this;
         const createElement = Entry.createElement;
         const _setFocused = Entry.Utils.setFocused;
@@ -2397,6 +2391,7 @@ Entry.VariableContainer = class VariableContainer {
             Entry.do('variableSetMaxValue', v.id_, value);
         });
         element.maxValueInput = maxValueInput;
+        this.renderVariableReference(variable);
     }
 
     /**
@@ -2433,7 +2428,7 @@ Entry.VariableContainer = class VariableContainer {
     /**
      * 속성 > 리스트 편집창 표기
      */
-    generateListSettingView() {
+    generateListSettingView(list) {
         const createElement = Entry.createElement;
 
         // 리스트 속성 설정
@@ -2462,6 +2457,7 @@ Entry.VariableContainer = class VariableContainer {
         this.generateListImportExportView(listAttr);
         this.generateListCountView(listAttr);
         this.generateListValuesView(listAttr);
+        this.renderVariableReference(list);
     }
 
     generateListImportExportView(element) {
@@ -2558,65 +2554,75 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('scroll_box')
             .appendTo(countGroup);
         const el = new SimpleBar(scrollBox, { autoHide: false });
+        const parent = /* html */ `<ol class='cnt_list'>{1}</ol>`;
         this.listSettingView.scrollBox = scrollBox;
         this.listSettingView.simpleBar = el;
         this.listSettingView.listValues = el.getContentElement();
+        this.listSettingView.infinityScroll = new Entry.VirtualScroll(
+            this.listSettingView.listValues,
+            {
+                dataWrapper: parent,
+                itemHeight: 35,
+                groupSize: 10,
+            }
+        );
     }
 
     updateListSettingView(list) {
         const view = this.listSettingView;
+        const that = this;
         if (!view) {
             return;
         }
-        const createElement = Entry.createElement;
         list = list || this.selected;
-        const { listValues, lengthInput, simpleBar, scrollBox } = view;
+        const { infinityScroll, listValues, lengthInput, simpleBar, scrollBox } = view;
         const arr = list.array_ || [];
         lengthInput.value = arr.length;
+        if (arr.length > 4) {
+            scrollBox.addClass('on');
+        } else {
+            scrollBox.removeClass('on');
+        }
         list.listElement.appendChild(view);
         //remove element and event bindings
-        $(listValues).empty();
+        const $listValues = $(listValues);
+        $listValues.empty();
+        $listValues.off();
         const startIndex = Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD ? 0 : 1;
-        let fragment;
         if (arr.length === 0) {
-            fragment = document.createDocumentFragment();
+            const fragment = document.createDocumentFragment();
             Entry.createElement('p')
                 .addClass('caution_dsc')
                 .appendTo(fragment).innerHTML =
                 Lang.Workspace.empty_of_list;
+            listValues.appendChild(fragment);
         } else {
-            fragment = createElement('ol')
-                .addClass('cnt_list')
-                .appendTo(listValues);
-            if (arr.length > 5) {
-                scrollBox.addClass('on');
-            } else {
-                scrollBox.removeClass('on');
-            }
-            arr.forEach(({ data }, i) => {
-                const wrapper = Entry.createElement('li').appendTo(fragment);
-                Entry.createElement('span')
-                    .addClass('cnt')
-                    .appendTo(wrapper).innerHTML =
-                    i + startIndex;
-                const input = Entry.createElement('input').appendTo(wrapper);
-                input.value = data;
-                input.setAttribute('type', 'text');
-                input.onfocus = Entry.Utils.setFocused;
-                input.onblur = Entry.Utils.setBlurredTimer(function() {
-                    Entry.do('listSetDefaultValue', list.id_, i, this.value);
-                });
-                input.onkeypress = Entry.Utils.blurWhenEnter;
-                Entry.createElement('a')
-                    .addClass('del')
-                    .bindOnClick(() => {
-                        arr.splice(i, 1);
-                        this.updateListSettingView();
-                    })
-                    .appendTo(wrapper);
+            const data = arr.map(({ data: value }, i) => {
+                return /* html */ `
+                    <li>
+                        <span class='cnt'>${i + startIndex}</span>
+                        <input value='${value}' type='text' data-index='${i}'/>
+                        <a class='del' data-index='${i}'></a>
+                    </li>`.trim();
+            });
+            infinityScroll.assignData(data);
+            infinityScroll.show();
+            $listValues.on(
+                'blur',
+                'input',
+                Entry.Utils.setBlurredTimer(function() {
+                    const index = this.getAttribute('data-index');
+                    Entry.do('listSetDefaultValue', list.id_, index, this.value);
+                })
+            );
+            $listValues.on('focus', 'input', Entry.Utils.setFocused);
+            $listValues.on('keypress', 'input', Entry.Utils.blurWhenEnter);
+            $listValues.on('click', 'a', function() {
+                const index = this.getAttribute('data-index');
+                arr.splice(index, 1);
+                that.updateListSettingView();
             });
         }
-        listValues.appendChild(fragment);
         simpleBar.recalculate();
         list.updateView();
     }
@@ -2660,8 +2666,7 @@ Entry.VariableContainer = class VariableContainer {
             this.selected.listElement.removeClass('fold');
             this.selected.listElement.addClass('unfold');
             if (!this.variableSettingView) {
-                this.generateVariableSettingView();
-                this.renderVariableReference(object);
+                this.generateVariableSettingView(object);
             }
             this.updateVariableSettingView(object);
         } else if (objectType === 'list') {
@@ -2669,8 +2674,7 @@ Entry.VariableContainer = class VariableContainer {
             this.selected.listElement.removeClass('fold');
             this.selected.listElement.addClass('unfold');
             if (!this.listSettingView) {
-                this.generateListSettingView();
-                this.renderVariableReference(object);
+                this.generateListSettingView(object);
             }
             this.updateListSettingView(object);
         }
@@ -2776,8 +2780,64 @@ Entry.VariableContainer = class VariableContainer {
                 });
             });
         }
+        Entry.playground.viewMode_ !== 'default' && this.updateList();
 
         return datum;
+    }
+
+    removeRef(type, block) {
+        if (!Entry.playground.mainWorkspace) {
+            return;
+        }
+        const wsMode = Entry.getMainWS().getMode();
+        if (wsMode !== Entry.Workspace.MODE_BOARD) {
+            return;
+        }
+
+        const arr = this[type];
+
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i].block == block) {
+                arr.splice(i, 1);
+                break;
+            }
+        }
+
+        if (type === '_functionRefs') {
+            const id = block.type.substr(5);
+            const func = Entry.variableContainer.functions_[id];
+            if (!func || func.isRemoved) {
+                return;
+            }
+            func.isRemoved = true;
+            if (func) {
+                func.content.getBlockList().forEach((block) => {
+                    if (block.type.indexOf('func_') > -1) {
+                        if (block.type.substr(5) == id) {
+                            return;
+                        }
+                    }
+
+                    [
+                        ...(_.result(block.events, 'viewDestroy') || []),
+                        ...(_.result(block.events, 'dataDestroy') || []),
+                    ].forEach((fn) => {
+                        if (fn) {
+                            fn(block);
+                        }
+                    });
+                });
+            }
+        }
+        Entry.playground.viewMode_ !== 'default' && this.updateList();
+    }
+
+    updateSelected() {
+        if (this.selected) {
+            const selected = this.selected;
+            this.selected = null;
+            this.select(selected);
+        }
     }
 
     getObjectVariables(blockList, keys) {
@@ -2859,52 +2919,6 @@ Entry.VariableContainer = class VariableContainer {
             variables,
             messages,
         };
-    }
-
-    removeRef(type, block) {
-        if (!Entry.playground.mainWorkspace) {
-            return;
-        }
-        const wsMode = Entry.getMainWS().getMode();
-        if (wsMode !== Entry.Workspace.MODE_BOARD) {
-            return;
-        }
-
-        const arr = this[type];
-
-        for (let i = 0; i < arr.length; i++) {
-            if (arr[i].block == block) {
-                arr.splice(i, 1);
-                break;
-            }
-        }
-
-        if (type === '_functionRefs') {
-            const id = block.type.substr(5);
-            const func = Entry.variableContainer.functions_[id];
-            if (!func || func.isRemoved) {
-                return;
-            }
-            func.isRemoved = true;
-            if (func) {
-                func.content.getBlockList().forEach((block) => {
-                    if (block.type.indexOf('func_') > -1) {
-                        if (block.type.substr(5) == id) {
-                            return;
-                        }
-                    }
-
-                    [
-                        ...(_.result(block.events, 'viewDestroy') || []),
-                        ...(_.result(block.events, 'dataDestroy') || []),
-                    ].forEach((fn) => {
-                        if (fn) {
-                            fn(block);
-                        }
-                    });
-                });
-            }
-        }
     }
 
     _getBlockMenu() {
