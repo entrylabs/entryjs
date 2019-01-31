@@ -1,10 +1,6 @@
 import PIXIHelper from '../class/pixi/helper/PIXIHelper';
-import Texture = PIXI.Texture;
 import { PIXIGlobal } from '../class/pixi/init/PIXIGlobal';
-import { PIXIAtlasHelper } from '../class/pixi/atlas/PIXIAtlasHelper';
-import { PIXIAtlasManager } from '../class/pixi/atlas/PIXIAtlasManager';
 import { GEDragHelper } from './GEDragHelper';
-import { PIXIText } from '../class/pixi/text/PIXIText';
 import { IGEResManager } from './IGEResManager';
 import { EaselResManager } from './EaselResManager';
 import { PIXISprite } from '../class/pixi/plugins/PIXISprite';
@@ -159,9 +155,9 @@ class _GEHelper extends GEHelperBase {
      * stage wall 생성만을 위한 함수
      * @param path
      */
-    newWallTexture(path:string):Texture|HTMLImageElement {
+    newWallTexture(path:string):PIXI.Texture|HTMLImageElement {
         if(this._isWebGL) {
-            return Texture.fromImage(path);
+            return PIXI.Texture.fromImage(path);
         } else {
             let img:HTMLImageElement = new Image();
             img.src = path;

@@ -1,5 +1,4 @@
 import { PIXIDragHelper } from '../class/pixi/helper/PIXIDragHelper';
-import { clog } from '../class/pixi/utils/logs';
 
 interface IEventType {
     UP:string;
