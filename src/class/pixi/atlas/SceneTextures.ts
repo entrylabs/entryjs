@@ -61,11 +61,16 @@ export class SceneTextures implements ISceneTextures {
         let map = this._path_tex_map;
         if(map.hasValue(path)) return;
 
+        let info = this._loader.getImageInfo(path);
         let rect:ImageRect = PIXIAtlasHelper.getNewImageRect(pic, this._option.texMaxRect);
-        this._loader.load(pic, rect);
+        if(!info) {
+            this._loader.load(pic, rect);
+        }
         let tex = this._newTexture(path, rect);
-
         map.add(path, tex);
+        if(info&&info.isReady) {
+            this.putImage(info, false);
+        }
     }
 
 

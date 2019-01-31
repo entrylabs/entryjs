@@ -56,12 +56,6 @@ export class PIXIAtlasManager implements IGEResManager {
         this._activatedScene.activate();
     }
 
-    getTextureWithModel(sceneID:string, pic:IRawPicture):Texture {
-        var bin:ISceneTextures = this._getSceneBin(sceneID);
-        bin.addPicInfo(pic);
-        return bin.getTexture(PIXIAtlasHelper.getRawPath(pic));
-    }
-
     reqResource(spriteNullable:PIXI.Sprite, sceneID:string, pic:IRawPicture, callback:ImageLoaderHandler):void {
         var bin:ISceneTextures = this._getSceneBin(sceneID);
         bin.addPicInfo(pic);
