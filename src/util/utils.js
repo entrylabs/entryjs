@@ -103,6 +103,7 @@ Entry.clearProject = function() {
     Entry.variableContainer.clear();
     Entry.container.clear();
     Entry.scene.clear();
+    GEHelper.resManager.clearProject();
     if (Entry.Loader) {
         Entry.Loader.loaded = false;
     }
