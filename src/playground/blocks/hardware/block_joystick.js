@@ -10,10 +10,17 @@ Entry.joystick = {
         "en": "Joystick Sensor Shield"
     },
     setZero: function() {
-        Entry.hw.sendQueue.readablePorts = [];
-        for (var port = 0; port < 20; port++) {
-            Entry.hw.sendQueue[port] = 0;
-            Entry.hw.sendQueue.readablePorts.push(port);
+        if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue = {
+                GET: {},
+                SET: {},
+            };
+        } else {
+            var keySet = Object.keys(Entry.hw.sendQueue.SET);
+            keySet.forEach(function(key) {
+                Entry.hw.sendQueue.SET[key].data = 0;
+                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+            });
         }
         Entry.hw.update();
     },
