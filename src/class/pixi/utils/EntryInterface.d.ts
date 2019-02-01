@@ -3,7 +3,8 @@ declare class EntryContainer {
 }
 
 declare class EntryStage {
-    canvas:PIXI.Application|any;
+    canvas:PIXI.Container|any;
+    _app:PIXI.Application|any;
 }
 
 declare class Entry {

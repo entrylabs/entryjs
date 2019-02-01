@@ -124,7 +124,7 @@ class _GEHelper extends GEHelperBase {
 
     hitTestMouse(object:any):boolean {
         if(this._isWebGL) {
-            let pixiApp:PIXI.Application;
+            let pixiApp:PIXI.Application = Entry.stage._app;
             let im = pixiApp.renderer.plugins.interaction;
             let hitObject = im.hitTest(im.mouse.global, object);
             return !!hitObject;
