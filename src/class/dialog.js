@@ -5,7 +5,6 @@
  */
  
 import { GEHelper } from '../graphicEngine/GEHelper';
-import PIXIHelper from './pixi/helper/PIXIHelper';
 
 /**
  * Construct dialog
@@ -74,18 +73,11 @@ Entry.Dialog.prototype.generateSpeak = function() {
  */
 Entry.Dialog.prototype.update = function() {
     const parentObj = this.parent.object;
-    const calcParentBound = function() {
-        if(GEHelper.isWebGL) {
-            return PIXIHelper.getTransformBound(parentObj);
-        } else {
-            return parentObj.getTransformedBounds();
-        }
-    };
-    var bound = calcParentBound();
+    var bound = GEHelper.calcParentBound(parentObj);
     if (!bound && this.parent.type === 'textBox') {
         if (!this._isNoContentTried) {
             this.parent.setText(' ');
-            bound = calcParentBound();
+            bound = GEHelper.calcParentBound(parentObj);
             this._isNoContentTried = true;
         } else {
             delete this._isNoContentTried;

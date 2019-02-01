@@ -142,6 +142,14 @@ class _GEHelper extends GEHelperBase {
             return sprite.getTransformedBounds();
         }
     }
+
+    calcParentBound(obj:any):any {
+        if(this._isWebGL) {
+            return PIXIHelper.getTransformBound(obj);
+        } else {
+            return obj.getTransformedBounds();
+        }
+    }
     
     newContainer(debugName?:string):PIXI.Container|any {
         if(this._isWebGL) {
