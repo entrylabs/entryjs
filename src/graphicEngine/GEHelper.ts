@@ -224,13 +224,6 @@ class _GEHelper extends GEHelperBase {
 }
 
 
-
-
-export const GEHelper:_GEHelper = new _GEHelper();
-let w:any = window;
-(w.GEHelper) = GEHelper;
-
-
 class _ColorFilterHelper extends GEHelperBase {
 
 

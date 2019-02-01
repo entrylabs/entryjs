@@ -9,6 +9,7 @@
 
 import ColorSpoid from '../playground/colorSpoid';
 import { GEHelper } from '../graphicEngine/GEHelper';
+import { GEHandle } from '../graphicEngine/GEHandle';
 
 /**
  * class for a canvas
@@ -320,7 +321,7 @@ Entry.Stage.prototype.selectObject = function(object) {
  * Initialize handle. Handle is use for transform object on canvas.
  */
 Entry.Stage.prototype.initHandle = function() {
-    this.handle = new EaselHandle(this.canvas)
+    this.handle = new GEHandle(this.canvas)
         .setChangeListener(this, this.updateHandle)
         .setEditStartListener(this, this.startEdit)
         .setEditEndListener(this, this.endEdit);
