@@ -55,9 +55,11 @@ export class PIXIText extends PIXI.Text {
     }
 
     getMeasuredHeight() {
+        this.updateText(true);
         return this._measuredHeight;
     }
     getMeasuredLineHeight() {
+        this.updateText(true);
         return this._measuredLineHeight;
     }
 
