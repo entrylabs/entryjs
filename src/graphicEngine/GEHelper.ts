@@ -223,6 +223,8 @@ class _GEHelper extends GEHelperBase {
     }
 }
 
+export const GEHelper = new _GEHelper();
+
 
 class _ColorFilterHelper extends GEHelperBase {
 
