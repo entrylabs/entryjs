@@ -30,9 +30,11 @@ Entry.EntityObject = class EntityObject {
         if (this.type === 'sprite') {
             this.object = GEHelper.newEmptySprite();
             this.object.pixelPerfect = true;
+            this._scaleAdaptor = GEHelper.newAScaleAdaptor(this.object);
             this.setInitialEffectValue();
         } else if (this.type === 'textBox') {
             this.object = GEHelper.newContainer();
+            this._scaleAdaptor = GEHelper.newAScaleAdaptor(this.object);
             this.textObject = GEHelper.textHelper.newText("", '20px Nanum Gothic', "", 'middle', 'center');
             if(GEHelper.isWebGL) {
                 this.textObject.anchor.set(0.5, 0.5);
@@ -333,7 +335,11 @@ Entry.EntityObject = class EntityObject {
         }
         /** @type {number} */
         this.regX = regX;
-        this.object.regX = this.regX;
+        if(GEHelper.isWebGL) {
+            this._scaleAdaptor.pivot.setX(regX);
+        } else {
+            this.object.regX = this.regX;
+        }
         Entry.requestUpdate = true;
     }
 
@@ -355,7 +361,11 @@ Entry.EntityObject = class EntityObject {
         }
         /** @type {number} */
         this.regY = regY;
-        this.object.regY = this.regY;
+        if(GEHelper.isWebGL) {
+            this._scaleAdaptor.pivot.setY(regY);
+        } else {
+            this.object.regY = this.regY;
+        }
         Entry.requestUpdate = true;
     }
 
@@ -374,7 +384,14 @@ Entry.EntityObject = class EntityObject {
     setScaleX(scaleX) {
         /** @type {number} */
         this.scaleX = scaleX;
-        this.object.scaleX = this.scaleX;
+        if(GEHelper.isWebGL) {
+            this._scaleAdaptor.scale.setX(scaleX);
+            if(this.textObject) {
+                this.textObject.setFontScaleX(scaleX);
+            }
+        } else {
+            this.object.scaleX = this.scaleX;
+        }
         this.parent.updateCoordinateView();
         this.updateDialog();
         Entry.requestUpdate = true;
@@ -395,7 +412,14 @@ Entry.EntityObject = class EntityObject {
     setScaleY(scaleY) {
         /** @type {number} */
         this.scaleY = scaleY;
-        this.object.scaleY = this.scaleY;
+        if(GEHelper.isWebGL) {
+            this._scaleAdaptor.scale.setY(scaleY);
+            if(this.textObject) {
+                this.textObject.setFontScaleY(scaleY);
+            }
+        } else {
+            this.object.scaleY = this.scaleY;
+        }
         this.parent.updateCoordinateView();
         this.updateDialog();
         Entry.requestUpdate = true;
@@ -918,6 +942,9 @@ Entry.EntityObject = class EntityObject {
             Entry.requestUpdate = true;
         };
         GEHelper.resManager.reqResource(this.object, this.parent.scene.id, pictureModel, onImageLoad);
+        if(GEHelper.isWebGL) {
+            this._scaleAdaptor.updateScaleFactor();
+        }
 
         Entry.dispatchEvent('updateObject');
     }

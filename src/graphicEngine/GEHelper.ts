@@ -5,6 +5,7 @@ import { IGEResManager } from './IGEResManager';
 import { EaselResManager } from './EaselResManager';
 import { PIXISprite } from '../class/pixi/plugins/PIXISprite';
 import { PIXIBrushAdaptor } from '../class/pixi/etc/PIXIBrushAdaptor';
+import { PIXIScaleAdaptor } from '../class/pixi/atlas/PIXIScaleAdaptor';
 
 
 
@@ -15,9 +16,9 @@ interface IGraphicsEngineApplication {
     render():void;
     stage:PIXI.Container|any;
     destroy(destroyOption:any):void;
-
-
 }
+
+
 
 class CreateJsApplication implements IGraphicsEngineApplication {
 
@@ -38,36 +39,19 @@ class CreateJsApplication implements IGraphicsEngineApplication {
     }
 }
 
+
 export class GEHelperBase {
 
     protected _isWebGL:boolean = false;
-
-
-
-    INIT(isWebGL:boolean):this {
+    INIT(isWebGL:boolean) {
         this._isWebGL = isWebGL;
-        return this;
     }
 }
+
+
 class _GEHelper extends GEHelperBase {
 
-    INIT(isWebGL:boolean):this {
-        super.INIT(isWebGL);
-        GEDragHelper.INIT(isWebGL);
-        this.colorFilter = new _ColorFilterHelper().INIT(isWebGL);
-        this.textHelper = new _TextHelper().INIT(isWebGL);
-        this.brushHelper = new _BrushHelper().INIT(isWebGL);
-        if(this._isWebGL) {
-            this.rotateRead = 180 / Math.PI;
-            this.rotateWrite = Math.PI / 180;
-            PIXIGlobal.initOnce();
-            this.resManager = PIXIGlobal.atlasManager;
-        } else {
-            this.resManager = new EaselResManager();
-        }
-        this.resManager.INIT();
-        return this;
-    }
+
     get isWebGL():boolean { return this._isWebGL; }
     public resManager:IGEResManager;
     public textHelper:_TextHelper;
@@ -81,6 +65,22 @@ class _GEHelper extends GEHelperBase {
     public rotateWrite:number = 1;
 
 
+    INIT(isWebGL:boolean) {
+        super.INIT(isWebGL);
+        GEDragHelper.INIT(isWebGL);
+        (this.colorFilter = new _ColorFilterHelper()).INIT(isWebGL);
+        (this.textHelper = new _TextHelper()).INIT(isWebGL);
+        (this.brushHelper = new _BrushHelper()).INIT(isWebGL);
+        if(this._isWebGL) {
+            this.rotateRead = 180 / Math.PI;
+            this.rotateWrite = Math.PI / 180;
+            PIXIGlobal.initOnce();
+            this.resManager = PIXIGlobal.atlasManager;
+        } else {
+            this.resManager = new EaselResManager();
+        }
+        this.resManager.INIT();
+    }
 
 
     newApp(canvas:HTMLCanvasElement):IGraphicsEngineApplication {
@@ -167,7 +167,7 @@ class _GEHelper extends GEHelperBase {
 
     /**
      * stage wall 생성만을 위한 함수
-     * @param path
+     * @param tex
      */
     newWallSprite(tex:any) {
         if(this._isWebGL) {
@@ -206,11 +206,17 @@ class _GEHelper extends GEHelperBase {
         }
     }
 
-
-
-
-
+    newAScaleAdaptor(target:any):any {
+        if(this._isWebGL) {
+            return PIXIScaleAdaptor.factory(target);
+        }
+        //createjs 는 사용하는 코드측에서 분기 처리.
+        return null;
+    }
 }
+
+
+
 
 export const GEHelper:_GEHelper = new _GEHelper();
 let w:any = window;
@@ -266,14 +272,14 @@ class _ColorFilterHelper extends GEHelperBase {
 
     /**
      *
-     * @param target - EntityObject
+     * @param entity - EntityObject
      * @param cache
      */
-    setCache(entiy:any, cache:boolean) {
+    setCache(entity:any, cache:boolean) {
         if(this._isWebGL) {
             //do nothing
         } else {
-            cache ? entiy.cache() : entiy.object.uncache();
+            cache ? entity.cache() : entity.object.uncache();
         }
     }
 
