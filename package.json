@@ -41,7 +41,8 @@
         "postcss-flexbugs-fixes": "^4.1.0",
         "simplebar": "^3.1.1",
         "uglifyjs-webpack-plugin": "^1.2.2",
-        "webpack": "^4.28.3"
+        "webpack": "^4.20.2",
+        "webpack-cli": "^3.1.1"
     },
     "devDependencies": {
         "@babel/core": "7.0.0",
