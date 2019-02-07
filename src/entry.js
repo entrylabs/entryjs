@@ -6,7 +6,7 @@ module.exports = Entry;
 global.Entry = Entry;
 
 require('core-js/fn/object/values');
-
+require('./graphicEngine/FakePIXI');
 require('./css/entry.less');
 require('./class/time_wait');
 require('./class/container');
