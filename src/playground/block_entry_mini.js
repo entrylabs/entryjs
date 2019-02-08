@@ -2463,7 +2463,7 @@
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            isNotFor: ['robotis_openCM70'],
+            isNotFor: ['robotis_openCM70','robotis_openCM70EDU'],
             template: '%1번 포트 LED를 %2 %3',
             params: [{
                 type: 'Dropdown',
@@ -2537,7 +2537,7 @@
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            isNotFor: ['robotis_openCM70'],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             template: '%1번 포트 접촉 센서 값',
             params: [{
                 type: 'Dropdown',
@@ -2588,7 +2588,7 @@
             outerLine: '#0e93b1',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
-            isNotFor: ['robotis_openCM70'],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             template: '%1번 포트 접촉 센서가 %2',
             params: [{
                 type: 'Dropdown',
@@ -2651,7 +2651,7 @@
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            isNotFor: ['robotis_openCM70'],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             template: '%1번 포트 적외선 센서 값',
             params: [{
                 type: 'Dropdown',
@@ -2731,7 +2731,7 @@
             outerLine: '#9a0045',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
-            isNotFor: ['robotis_openCM70'],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             template: '%1번 포트 적외선 센서 값 %2 %3',
             params: [{
                 type: 'Dropdown',
@@ -2855,7 +2855,7 @@
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            isNotFor: ['robotis_openCM70'],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             template: '%1번 포트 빛 감지 센서 값',
             params: [{
                 type: 'Dropdown',
@@ -2890,7 +2890,7 @@
             outerLine: '#e37100',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
-            isNotFor: ['robotis_openCM70'],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             template: '%1번 포트 빛 감지 센서 값 %2 %3',
             params: [{
                 type: 'Dropdown',
@@ -2963,13 +2963,69 @@
                 return isCheck;
             }
         },
+        robotis_userbutton_value: {
+            color: '#2AB4D3',
+            outerLine: '#0e93b1',
+            skeleton: 'basic_string_field',
+            fontColor: '#fff',
+            statements: [],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
+            template: '사용자 버튼',
+            events: {},
+            params: [{
+                type: 'Block',
+                accept: 'string'
+            }],
+            def: {
+                params: [null],
+                type: 'robotis_userbutton_value'
+            },
+            paramsKeyMap: {
+            },
+            class: 'robotis_userbutton',
+            func: function (sprite, script) {
+                return Entry.hw.portData['USERBUTTONSTATE'];
+            }
+        }, robotis_userbutton_value_boolean: {
+            color: '#2AB4D3',
+            skeleton: 'basic_boolean_field',
+            fontColor: '#fff',
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
+            template: '사용자 버튼이 %1',
+            params: [{
+                type: 'Dropdown',
+                options: [
+                    ['접촉 되면', '1'],
+                    ['접촉 안되면', '0']
+                ],
+                value: '1',
+                fontsIze: 11
+            }],
+            def: {
+                params: [null],
+                type: 'robotis_userbutton_value_boolean'
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'robotis_userbutton',
+            func: function (sprite, script) {
+                var port = script.getStringField('PORT');
+                var value = Entry.hw.portData['USERBUTTONSTATE'];
+                var isTouch = false;
+
+                var isTouch = (port == value)
+
+                return isTouch;
+            }
+        },
         robotis_detectedsound_value: {
             color: '#01d67f',
             outerLine: '#00b36a',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            isNotFor: ['robotis_openCM70'],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             template: '소리 센서 최종 소리 횟수',
             events: {},
             params: [{
@@ -2992,7 +3048,7 @@
             outerLine: '#00b36a',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
-            isNotFor: ['robotis_openCM70'],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             template: '소리 센서 최종 소리 횟수 %1 %2',
             params: [{
                 type: 'Dropdown',
@@ -3051,13 +3107,47 @@
                 return isCheck;
             }
         },
+        robotis_detectedsound_value_init: {
+            color: '#00D67F',
+            outerLine: '#00b36a',
+            skeleton: 'basic',
+            fontColor: '#fff',
+            statements: [],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
+            template: '소리 센서 최종 소리 횟수 초기화 %1',
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/practical_course/sound.png',
+                    size: 12
+                }],
+            def: {
+                params: [null],
+                type: 'robotis_detectedsound_value_init'
+            },
+            paramsKeyMap: {
+            },
+            class: 'robotis_sound',
+            func: function (sprite, script) {
+
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                var data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+                var data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+                var data_value = 0;
+
+                var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+                //Entry.Robotis_carCont.setRobotisData(data_sendqueue);
+                //Entry.Robotis_carCont.update();
+                return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
+            }
+        },
         robotis_detectingsound_value: {
             color: '#01d67f',
             outerLine: '#00b36a',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            isNotFor: ['robotis_openCM70'],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             template: '소리 센서 실시간 소리 횟수',
             events: {},
             params: [{
@@ -3080,7 +3170,7 @@
             outerLine: '#00b36a',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
-            isNotFor: ['robotis_openCM70'],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             template: '소리 센서 실시간 소리 횟수 %1 %2',
             params: [{
                 type: 'Dropdown',
@@ -3145,7 +3235,7 @@
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            isNotFor: ['robotis_openCM70'],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             template: '%1번 포트 칼라 센서 값',
             params: [{
                 type: 'Dropdown',
@@ -3231,7 +3321,7 @@
             outerLine: '#9a0045',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
-            isNotFor: ['robotis_openCM70'],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             template: '%1번 포트 칼라 센서 값 %2 %3',
             params: [{
                 type: 'Dropdown',
@@ -3347,7 +3437,7 @@
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            isNotFor: ['robotis_openCM70'],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             template: '%1번 포트 습도 센서 값',
             params: [{
                 type: 'Dropdown',
@@ -3409,7 +3499,7 @@
             outerLine: '#9a0045',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
-            isNotFor: ['robotis_openCM70'],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             template: '%1번 포트 습도 센서 값 %2 %3',
             params: [{
                 type: 'Dropdown',
@@ -3515,7 +3605,7 @@
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            isNotFor: ['robotis_openCM70'],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             template: '%1번 포트 온도 센서 값',
             params: [{
                 type: 'Dropdown',
@@ -3577,7 +3667,7 @@
             outerLine: '#9a0045',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
-            isNotFor: ['robotis_openCM70'],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             template: '%1번 포트 온도 센서 값 %2 %3',
             params: [{
                 type: 'Dropdown',
@@ -3683,7 +3773,7 @@
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            isNotFor: ['robotis_openCM70'],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             template: '%1모터를 %2 %3의 속도로 %4초 동안 회전 %5',
             params: [{
                 type: 'Dropdown',
@@ -3826,7 +3916,7 @@
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            isNotFor: ['robotis_openCM70'],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             template: '%1모터를 %2 %3의 속도로 계속 회전 %4',
             params: [{
                 type: 'Dropdown',
@@ -3927,7 +4017,7 @@
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            isNotFor: ['robotis_openCM70'],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             template: '%1모터를 정지 %2',
             params: [{
                 type: 'Dropdown',
@@ -3983,7 +4073,7 @@
             outerLine: '#a2049e',
             skeleton: 'basic',
             statements: [],
-            isNotFor: ['robotis_openCM70'],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             template: '%1 포트의 서보모터를 %2 %3속도로 회전 %4',
             params: [{
                 type: 'Dropdown',
@@ -4183,7 +4273,7 @@
             outerLine: '#a2049e',
             skeleton: 'basic',
             statements: [],
-            isNotFor: ['robotis_openCM70'],
+            isNotFor: ['robotis_openCM70','robotis_openCM70EDU'],
             template: '%1 포트의 서보모터를 %2 도 %3속도로 이동 %4',
             params: [{
                 type: 'Dropdown',
@@ -4356,7 +4446,7 @@
             color: '#FC327F',
             skeleton: 'basic',
             statements: [],
-            isNotFor: ['robotis_openCM70'],
+            isNotFor: ['robotis_openCM70', , 'robotis_openCM70EDU'],
             template: '멜로디 %1 을(를) %2 옥타브로 %3 만큼 소리내기 %4',
             params: [{
                 type: 'Dropdown',
