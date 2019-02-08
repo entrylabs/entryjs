@@ -69,10 +69,13 @@ class _GEHelper extends GEHelperBase {
     public rotateWrite:number = 1;
 
     public Ticker:ITicker;
+    private _isInitialized:boolean;
 
 
     INIT(isWebGL:boolean) {
         super.INIT(isWebGL);
+        if(this._isInitialized) return;
+        this._isInitialized = true;
         GEDragHelper.INIT(isWebGL);
         (this.colorFilter = new _ColorFilterHelper()).INIT(isWebGL);
         (this.textHelper = new _TextHelper()).INIT(isWebGL);
