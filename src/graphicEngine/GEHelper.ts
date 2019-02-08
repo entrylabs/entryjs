@@ -72,6 +72,12 @@ class _GEHelper extends GEHelperBase {
     private _isInitialized:boolean;
 
 
+    /**
+     * issues/9422#issuecomment-2678582
+     * 최종 좌표 결정 단계에서 약간의 오차를 주어 이 현상을 막음.
+     */
+    public rndPosition:()=>number;
+
     INIT(isWebGL:boolean) {
         super.INIT(isWebGL);
         if(this._isInitialized) return;
@@ -81,6 +87,7 @@ class _GEHelper extends GEHelperBase {
         (this.textHelper = new _TextHelper()).INIT(isWebGL);
         (this.brushHelper = new _BrushHelper()).INIT(isWebGL);
         if(this._isWebGL) {
+            this.rndPosition = ()=>{ return Math.random() * 0.04 - 0.02;};
             this.rotateRead = 180 / Math.PI;
             this.rotateWrite = Math.PI / 180;
             PIXIGlobal.initOnce();
@@ -90,6 +97,7 @@ class _GEHelper extends GEHelperBase {
                 setFPS:emptyFn
             };
         } else {
+            this.rndPosition = ()=>{return 0;};
             this.resManager = new EaselResManager();
             this.Ticker = {
                 reset: createjs.Ticker.reset,

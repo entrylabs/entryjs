@@ -26,8 +26,11 @@ Entry.EntityObject = class EntityObject {
         this.removed = false;
         this.stamps = [];
         this.shapes = [];
-
+        this._rndPosX = 0;
+        this._rndPosY = 0;
         if (this.type === 'sprite') {
+            this._rndPosX = GEHelper.rndPosition();
+            this._rndPosY = GEHelper.rndPosition();
             this.object = GEHelper.newEmptySprite();
             this.object.pixelPerfect = true;
             this._scaleAdaptor = GEHelper.newAScaleAdaptor(this.object);
@@ -210,7 +213,7 @@ Entry.EntityObject = class EntityObject {
 
         /** @type {number} */
         this.x = x;
-        this.object.x = this.x;
+        this.object.x = this.x + this._rndPosX;
         !this.isClone && this.parent.updateCoordinateView();
         this.updateDialog();
         Entry.requestUpdate = true;
@@ -239,7 +242,7 @@ Entry.EntityObject = class EntityObject {
 
         /** @type {number} */
         this.y = y;
-        this.object.y = -this.y;
+        this.object.y = -this.y + this._rndPosY;
         !this.isClone && this.parent.updateCoordinateView();
         this.updateDialog();
         Entry.requestUpdate = true;
