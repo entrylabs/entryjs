@@ -33,7 +33,7 @@ Entry.loadProject = function(project) {
     Entry.variableContainer.setFunctions(project.functions);
     Entry.container.setObjects(project.objects);
     Entry.FPS = project.speed ? project.speed : 60;
-    createjs.Ticker.setFPS(Entry.FPS);
+    GEHelper.Ticker.setFPS(Entry.FPS);
 
     Entry.expansionBlocks = project.expansionBlocks || [];
     if (Entry.expansionBlocks.length > 0) {

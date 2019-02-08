@@ -18,7 +18,10 @@ interface IGraphicsEngineApplication {
     destroy(destroyOption:any):void;
 }
 
-
+interface ITicker {
+    reset():void;
+    setFPS(n:number):void;
+}
 
 class CreateJsApplication implements IGraphicsEngineApplication {
 
@@ -48,6 +51,7 @@ export class GEHelperBase {
     }
 }
 
+const emptyFn = (...arg:any[])=>{};
 
 class _GEHelper extends GEHelperBase {
 
@@ -64,6 +68,8 @@ class _GEHelper extends GEHelperBase {
     /**  pixi 객체에 rotate를 할당 할 때 사용할 값 */
     public rotateWrite:number = 1;
 
+    public Ticker:ITicker;
+
 
     INIT(isWebGL:boolean) {
         super.INIT(isWebGL);
@@ -76,8 +82,16 @@ class _GEHelper extends GEHelperBase {
             this.rotateWrite = Math.PI / 180;
             PIXIGlobal.initOnce();
             this.resManager = PIXIGlobal.atlasManager;
+            this.Ticker = {
+                reset: emptyFn,
+                setFPS:emptyFn
+            };
         } else {
             this.resManager = new EaselResManager();
+            this.Ticker = {
+                reset: createjs.Ticker.reset,
+                setFPS: createjs.Ticker.setFPS
+            }
         }
         this.resManager.INIT();
     }
@@ -339,3 +353,4 @@ class _BrushHelper extends GEHelperBase {
         }
     }
 }
+
