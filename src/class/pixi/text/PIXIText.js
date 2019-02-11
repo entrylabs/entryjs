@@ -326,4 +326,4 @@ export class PIXIText extends PIXI.Text {
 // PIXIText.STAGE_SCALE = 1.51;
 PIXIText.STAGE_SCALE = 1.53;
 // PIXIText.STAGE_SCALE = 1.41;
-console.log(`PIXIText.STAGE_SCALE1(${PIXIText.STAGE_SCALE})`);
+// console.log(`PIXIText.STAGE_SCALE1(${PIXIText.STAGE_SCALE})`);
