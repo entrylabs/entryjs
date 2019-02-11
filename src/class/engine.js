@@ -147,25 +147,6 @@ Entry.Engine = function() {
                 .appendTo(this.buttonWrapper)
                 .bindOnClick(() => Entry.engine.toggleRun());
 
-            this.stopButton = Entry.createElement('button')
-                .addClass('entryEngineButtonWorkspace_w')
-                .addClass('entryStopButtonWorkspace_w')
-                .addClass('entryRemove')
-                .bindOnClick(() => Entry.do('toggleStop', 'stopButton'))
-                .appendTo(this.buttonWrapper);
-            this.stopButton.innerHTML = Lang.Workspace.stop;
-
-            this.stopButton2 = Entry.createElement('button')
-                .addClass('entryEngineButtonWorkspace_w')
-                .addClass('entryStopButtonWorkspace_w2')
-                .addClass('entryRemove')
-                .bindOnClick(function() {
-                    this.blur();
-                    Entry.engine.toggleStop();
-                })
-                .appendTo(this.buttonWrapper);
-            this.stopButton2.innerHTML = Lang.Workspace.stop;
-
             this.pauseButton = Entry.createElement('button')
                 .addClass('entryEngineButtonWorkspace_w')
                 .addClass('entryPauseButtonWorkspace_w')
@@ -185,6 +166,25 @@ Entry.Engine = function() {
                     this.blur();
                     Entry.engine.togglePause();
                 });
+
+            this.stopButton = Entry.createElement('button')
+                .addClass('entryEngineButtonWorkspace_w')
+                .addClass('entryStopButtonWorkspace_w')
+                .addClass('entryRemove')
+                .bindOnClick(() => Entry.do('toggleStop', 'stopButton'))
+                .appendTo(this.buttonWrapper);
+            this.stopButton.innerHTML = Lang.Workspace.stop;
+
+            this.stopButton2 = Entry.createElement('button')
+                .addClass('entryEngineButtonWorkspace_w')
+                .addClass('entryStopButtonWorkspace_w2')
+                .addClass('entryRemove')
+                .bindOnClick(function() {
+                    this.blur();
+                    Entry.engine.toggleStop();
+                })
+                .appendTo(this.buttonWrapper);
+            this.stopButton2.innerHTML = Lang.Workspace.stop;
         } else if (option == 'minimize') {
             /** @type {!Element} */
             this.view_ = controlView;

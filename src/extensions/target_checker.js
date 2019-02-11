@@ -193,7 +193,10 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
             this.unachievedGoals.indexOf(goalName) < 0;
     };
 
-    p.registerAchievement = function(block) {
+    p.registerAchievement = function(originBlock) {
+        const block = $.extend(true, {}, originBlock);
+        block.params = originBlock.params.map(p => p instanceof Entry.Block ? p.data.params[0] : p);
+
         if (this.isForEdit)
             this.watchingBlocks.push(block);
         if (block.params[1] && this.goals.indexOf(block.params[0] + "") < 0) {
@@ -206,7 +209,12 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     };
 
     p.reRegisterAll = function() {
-        var blocks = this.script.getBlockList(false, "check_lecture_goal");
+        const blocks = this.script.getBlockList(false, 'check_lecture_goal').map(originBlock => {
+            const block = $.extend(true, {}, originBlock);
+            block.params = originBlock.params.map(p => p instanceof Entry.Block ? p.data.params[0] : p);
+            return block;
+        });
+
         this.watchingBlocks = blocks;
         this.goals = _.uniq(
             blocks.filter(function(b) {return b.params[1] === 1})

@@ -872,6 +872,7 @@ module.exports = {
                 },
                 paramsKeyMap: {
                     VALUE: 0,
+                    RIGHTVALUE: 4,
                 },
                 class: 'checker',
                 isNotFor: ['checker'],
@@ -879,7 +880,7 @@ module.exports = {
                     const obj = Entry.container.getObject(this.block.params[0]);
                     const flow = this.block.params[1];
                     let propertyKey = this.block.params[2];
-                    const rightValue = this.getParam(4);
+                    const rightValue = script.getStringValue('RIGHTVALUE', script);
                     propertyKey = propertyKey[0].toUpperCase() + propertyKey.substr(1);
                     const leftValue = obj.entity[`get${propertyKey}`].call(obj.entity);
                     let returnVal;
@@ -949,10 +950,12 @@ module.exports = {
                 },
                 paramsKeyMap: {
                     VALUE: 0,
+                    COUNT: 2,
                 },
                 class: 'checker',
                 isNotFor: ['checker'],
                 func(sprite, script) {
+                    const count = script.getNumberValue('COUNT', script);
                     const { block = {} } = this;
                     const { data = {} } = block;
                     const { id = '' } = data;
@@ -969,7 +972,7 @@ module.exports = {
                     const accuracy = this.block.params[1];
                     const statements = this.block.statements[0].getBlocks();
                     let lastBlock = null;
-                    this.remainCheck = Number(this.block.params[2]);
+                    this.remainCheck = Number(count);
                     let index = 0;
                     this.entity.listener[id] = code.watchEvent.attach(this, (blocks) => {
                         //dangerous
@@ -1114,10 +1117,8 @@ module.exports = {
                 class: 'checker',
                 isNotFor: ['checker'],
                 func(sprite, script) {
-                    Entry.targetChecker.achieveCheck(
-                        this.block.params[1],
-                        `${this.block.params[0]}`
-                    );
+                    const variableName = script.getStringValue('VALUE', script);
+                    Entry.targetChecker.achieveCheck(this.block.params[1], variableName);
                 },
             },
             check_variable_by_name: {
@@ -1143,7 +1144,7 @@ module.exports = {
                 class: 'checker',
                 isNotFor: ['checker'],
                 func(sprite, script) {
-                    const variableName = `${this.block.params[0]}`;
+                    const variableName = script.getStringValue('VALUE', script);
                     const variable = Entry.variableContainer.getVariableByName(variableName);
                     if (variable) {
                         return variable.getValue();
@@ -1180,8 +1181,9 @@ module.exports = {
                 class: 'checker',
                 isNotFor: ['checker'],
                 func(sprite, script) {
+                    const message = script.getStringValue('VALUE', script);
                     if (Entry.targetChecker) {
-                        Entry.targetChecker.showStatusMessage(this.block.params[0]);
+                        Entry.targetChecker.showStatusMessage(message);
                     }
                 },
             },
@@ -1208,7 +1210,7 @@ module.exports = {
                 class: 'checker',
                 isNotFor: ['checker'],
                 func(sprite, script) {
-                    const goalName = `${this.block.params[0]}`;
+                    const goalName = script.getStringValue('VALUE', script);
                     return Entry.targetChecker.checkGoal(goalName);
                 },
             },
@@ -1319,9 +1321,15 @@ module.exports = {
                 },
                 class: 'checker',
                 isNotFor: ['checker'],
+                paramsKeyMap: {
+                    BEFORE: 0,
+                    AFTER: 0,
+                },
                 func(sprite, script) {
+                    const before = script.getStringValue('BEFORE', script);
+                    const after = script.getStringValue('AFTER', script);
                     const obj = {};
-                    obj[this.block.params[0]] = this.block.params[1];
+                    obj[before] = after;
                     if (typeof entrylms !== 'undefined') {
                         entrylms.emit('registerScore', obj);
                     }
