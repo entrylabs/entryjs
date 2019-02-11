@@ -1,7 +1,7 @@
 'use strict';
 
 Entry.Minicell = {
-    id: 'FF.FF',
+    id: 'E.1',
     name: 'minicell',
     url: 'http://http://www.needsrobot.com/',
     title: {
@@ -119,8 +119,8 @@ Entry.Minicell.blockMenuBlocks = [
 Entry.Minicell.getBlocks = function() {
     return {
         minicell_inputsensor: { 
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -134,6 +134,8 @@ Entry.Minicell.getBlocks = function() {
                     ],
                     value: 'IR',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -144,6 +146,9 @@ Entry.Minicell.getBlocks = function() {
                         [Lang.Blocks.MINICELL_idx3, '4'],
                     ],
                     value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -164,8 +169,8 @@ Entry.Minicell.getBlocks = function() {
             syntax: { js: [], py: ['Minicell.inputsensor(%1, %2)']},
         },
         minicell_ispressed: { 
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_boolean_field',
             statements: [],
             params: [
@@ -178,6 +183,9 @@ Entry.Minicell.getBlocks = function() {
                         [Lang.Blocks.MINICELL_idx3, '4'],
                     ],
                     value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -198,8 +206,8 @@ Entry.Minicell.getBlocks = function() {
             syntax: { js: [], py: ['Minicell.ispressed(%1)']},
         },
         minicell_buzzer_off: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -211,7 +219,10 @@ Entry.Minicell.getBlocks = function() {
                         [Lang.Blocks.MINICELL_idx2, '3'],
                         [Lang.Blocks.MINICELL_idx3, '4'],
                     ],
-                    value:'1'
+                    value:'1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -245,8 +256,8 @@ Entry.Minicell.getBlocks = function() {
             syntax: { js: [], py: ['Minicell.buzzer_off(%1, %2)']}
         },
         minicell_buzzer_note: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -258,7 +269,10 @@ Entry.Minicell.getBlocks = function() {
                         [Lang.Blocks.MINICELL_idx2, '3'],
                         [Lang.Blocks.MINICELL_idx3, '4'],
                     ],
-                    value:'1'
+                    value:'1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -276,7 +290,10 @@ Entry.Minicell.getBlocks = function() {
                         [Lang.Blocks.MINICELL_buzzer_note_as, '58'],
                         [Lang.Blocks.MINICELL_buzzer_note_b, '59'],
                     ],
-                    value:'48'
+                    value:'48',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -312,8 +329,8 @@ Entry.Minicell.getBlocks = function() {
             syntax: { js: [], py: ['Minicell.buzzer_note(%1, %2, %3)']}
         },
         minicell_buzzer_note_delay: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -325,7 +342,10 @@ Entry.Minicell.getBlocks = function() {
                         [Lang.Blocks.MINICELL_idx2, '3'],
                         [Lang.Blocks.MINICELL_idx3, '4'],
                     ],
-                    value:'1'
+                    value:'1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -343,7 +363,10 @@ Entry.Minicell.getBlocks = function() {
                         [Lang.Blocks.MINICELL_buzzer_note_as, '58'],
                         [Lang.Blocks.MINICELL_buzzer_note_b, '59'],
                     ],
-                    value:'48'
+                    value:'48',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     "type": "Block",
@@ -414,8 +437,8 @@ Entry.Minicell.getBlocks = function() {
             syntax: { js: [], py: ['Minicell.buzzer_note_delay(%1, %2, %3, %4)']}
         },
         minicell_led_toggle: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -427,7 +450,10 @@ Entry.Minicell.getBlocks = function() {
                         [Lang.Blocks.MINICELL_idx2, '3'],
                         [Lang.Blocks.MINICELL_idx3, '4'],
                     ],
-                    value:'1'
+                    value:'1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -435,7 +461,10 @@ Entry.Minicell.getBlocks = function() {
                         [Lang.Blocks.MINICELL_led_on, '255'],
                         [Lang.Blocks.MINICELL_led_off, '0'],
                     ],
-                    value:'255'
+                    value:'255',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -475,8 +504,8 @@ Entry.Minicell.getBlocks = function() {
             syntax: { js: [], py: ['Minicell.led_toggle(%1, %2, %3)']}
         },
         minicell_led_color: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -488,7 +517,10 @@ Entry.Minicell.getBlocks = function() {
                         [Lang.Blocks.MINICELL_idx2, '3'],
                         [Lang.Blocks.MINICELL_idx3, '4'],
                     ],
-                    value:'1'
+                    value:'1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Color',
@@ -532,8 +564,8 @@ Entry.Minicell.getBlocks = function() {
             syntax: { js: [], py: ['Minicell.led_color(%1, %2, %3)']}
         },
         minicell_led_color_number: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -545,7 +577,10 @@ Entry.Minicell.getBlocks = function() {
                         [Lang.Blocks.MINICELL_idx2, '3'],
                         [Lang.Blocks.MINICELL_idx3, '4'],
                     ],
-                    value:'1'
+                    value:'1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     'type': 'Block',
@@ -598,8 +633,8 @@ Entry.Minicell.getBlocks = function() {
             syntax: { js: [], py: ['Minicell.led_color_number(%1, %2, %3)']}
         },
         minicell_led: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -611,7 +646,10 @@ Entry.Minicell.getBlocks = function() {
                         [Lang.Blocks.MINICELL_idx2, '3'],
                         [Lang.Blocks.MINICELL_idx3, '4'],
                     ],
-                    value:'1'
+                    value:'1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -619,7 +657,10 @@ Entry.Minicell.getBlocks = function() {
                         [Lang.Blocks.MINICELL_led_on, '255'],
                         [Lang.Blocks.MINICELL_led_off, '0'],
                     ],
-                    value:'255'
+                    value:'255',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -627,7 +668,10 @@ Entry.Minicell.getBlocks = function() {
                         [Lang.Blocks.MINICELL_led_on, '255'],
                         [Lang.Blocks.MINICELL_led_off, '0'],
                     ],
-                    value:'255'
+                    value:'255',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -635,7 +679,10 @@ Entry.Minicell.getBlocks = function() {
                         [Lang.Blocks.MINICELL_led_on, '255'],
                         [Lang.Blocks.MINICELL_led_off, '0'],
                     ],
-                    value:'255'
+                    value:'255',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -679,8 +726,8 @@ Entry.Minicell.getBlocks = function() {
             syntax: { js: [], py: ['Minicell.led(%1, %2, %3, %4, %5)']}
         },
         minicell_led_pwm: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -692,7 +739,10 @@ Entry.Minicell.getBlocks = function() {
                         [Lang.Blocks.MINICELL_idx2, '3'],
                         [Lang.Blocks.MINICELL_idx3, '4'],
                     ],
-                    value:'1'
+                    value:'1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     'type': 'Block',
@@ -764,8 +814,8 @@ Entry.Minicell.getBlocks = function() {
             syntax: { js: [], py: ['Minicell.led_pwm(%1, %2, %3, %4, %5)']}
         },
         minicell_motor_stop: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -797,8 +847,8 @@ Entry.Minicell.getBlocks = function() {
             syntax: { js: [], py: ['Minicell.motor_stop(%1)']}
         },
         minicell_rc_motor: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -810,7 +860,10 @@ Entry.Minicell.getBlocks = function() {
                         [Lang.Blocks.MINICELL_idx2, '3'],
                         [Lang.Blocks.MINICELL_idx3, '4'],
                     ],
-                    value:'1'
+                    value:'1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     'type': 'Block',
@@ -873,8 +926,8 @@ Entry.Minicell.getBlocks = function() {
             syntax: { js: [], py: ['Minicell.rc_motor(%1, %2, %3, %4)']}
         },
         minicell_dc_motor: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -886,7 +939,10 @@ Entry.Minicell.getBlocks = function() {
                         [Lang.Blocks.MINICELL_idx2, '3'],
                         [Lang.Blocks.MINICELL_idx3, '4'],
                     ],
-                    value:'1'
+                    value:'1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -894,7 +950,10 @@ Entry.Minicell.getBlocks = function() {
                         [Lang.Blocks.MINICELL_motor_cw, '0'],
                         [Lang.Blocks.MINICELL_motor_ccw, '1'],
                     ],
-                    value:'0'
+                    value:'0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     'type': 'Block',
@@ -947,8 +1006,8 @@ Entry.Minicell.getBlocks = function() {
             syntax: { js: [], py: ['Minicell.dc_motor(%1, %2, %3, %4)']}
         },
         minicell_dc_motor_for_secs: {
-            color: '#00CFCA',
-            outerLine: '#04B5B0',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -960,7 +1019,10 @@ Entry.Minicell.getBlocks = function() {
                         [Lang.Blocks.MINICELL_idx2, '3'],
                         [Lang.Blocks.MINICELL_idx3, '4'],
                     ],
-                    value:'1'
+                    value:'1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -968,7 +1030,10 @@ Entry.Minicell.getBlocks = function() {
                         [Lang.Blocks.MINICELL_motor_cw, '0'],
                         [Lang.Blocks.MINICELL_motor_ccw, '1'],
                     ],
-                    value:'0'
+                    value:'0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     'type': 'Block',
