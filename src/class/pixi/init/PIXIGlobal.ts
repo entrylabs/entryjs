@@ -1,5 +1,5 @@
 import { PIXIBaseAsset } from './PIXIBaseAsset';
-let PIXICollision = require("./../etc/PIXI-ndgmr.Collision").PIXICollision;
+let ndgmr = require("./../etc/PIXI-ndgmr.Collision").PIXICollision;
 require("./../etc/PIXICanvasInput");
 let entryIsWebGLSupported = require("./entryIsWebGLSupported").entryIsWebGLSupported;
 
@@ -13,7 +13,7 @@ import { PIXIShortPropPlugin } from '../plugins/PIXIShortPropPlugin';
 import { PIXIGraphicOverride } from '../plugins/PIXIGraphicOverride';
 
 
-declare let ndgmr:any;
+
 
 class _PIXIGlobal {
     
@@ -28,8 +28,8 @@ class _PIXIGlobal {
         this._init = true;
         PIXIDebug.internal_init();
         //this.baseAsset = new PIXIBaseAsset();
-        ndgmr = PIXICollision;
         ndgmr.initTempObject();
+        (window as any).ndgmr = ndgmr;
         PIXITempStore.init();
         this.atlasManager = new PIXIAtlasManager();
         PIXIShortPropPlugin();
