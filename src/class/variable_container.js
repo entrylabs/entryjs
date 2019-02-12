@@ -250,9 +250,7 @@ Entry.VariableContainer = class VariableContainer {
     renderMessageReference(message) {
         const messageId = message.id;
 
-        const callers = this._messageRefs.filter(({ block: { params } }) => {
-            return _.includes(params, messageId);
-        });
+        const callers = this._messageRefs.filter(({ block: { params } }) => _.includes(params, messageId));
 
         message.usedView && $(message.usedView).remove();
         let usedWrapper;
@@ -272,8 +270,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('span')
                     .addClass('text')
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
-                    Lang.Blocks[`START_${caller.block.type}`]
-                }`;
+                        Lang.Blocks[`START_${caller.block.type}`]
+                    }`;
                 element.bindOnClick((e) => {
                     e.stopPropagation();
                     if (Entry.playground.object !== caller.object) {
@@ -305,9 +303,7 @@ Entry.VariableContainer = class VariableContainer {
     renderVariableReference(variable) {
         const variableId = variable.id_;
 
-        const callers = this._variableRefs.filter(({ block: { params } }) => {
-            return _.includes(params, variableId);
-        });
+        const callers = this._variableRefs.filter(({ block: { params } }) => _.includes(params, variableId));
 
         const usedWrapper = Entry.createElement('div').addClass('use_obj');
         const usedSubject = Entry.createElement('span')
@@ -337,8 +333,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('span')
                     .addClass('text')
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
-                    Lang.Blocks[`VARIABLE_${caller.block.type}`]
-                }`;
+                        Lang.Blocks[`VARIABLE_${caller.block.type}`]
+                    }`;
                 element.variable = variable;
                 element.bindOnClick((e) => {
                     e.stopPropagation();
@@ -372,9 +368,7 @@ Entry.VariableContainer = class VariableContainer {
      * @param {object} variable
      */
     renderFunctionReference(func) {
-        const callers = [...this._functionRefs].filter((item) => {
-            return item.block.data.type === `func_${func.id}`;
-        });
+        const callers = [...this._functionRefs].filter((item) => item.block.data.type === `func_${func.id}`);
 
         func.usedView && $(func.usedView).remove();
         let usedWrapper;
@@ -523,9 +517,7 @@ Entry.VariableContainer = class VariableContainer {
         } else {
             this.messageAddButton_
                 .unBindOnClick()
-                .bindOnClick(() => {
-                    return Entry.do('variableContainerClickMessageAddButton');
-                })
+                .bindOnClick(() => Entry.do('variableContainerClickMessageAddButton'))
                 .removeClass('disabled');
         }
         listView.appendChild(this.messageAddButton_);
@@ -558,9 +550,7 @@ Entry.VariableContainer = class VariableContainer {
         } else {
             this.variableAddButton_
                 .unBindOnClick()
-                .bindOnClick(() => {
-                    return Entry.do('variableContainerClickVariableAddButton');
-                })
+                .bindOnClick(() => Entry.do('variableContainerClickVariableAddButton'))
                 .removeClass('disabled');
         }
 
@@ -599,9 +589,7 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('attr_box')
             .appendTo(localList);
 
-        const { globalV, localV } = _.groupBy(this.variables_, ({ object_ }) => {
-            return object_ ? 'localV' : 'globalV';
-        });
+        const { globalV, localV } = _.groupBy(this.variables_, ({ object_ }) => object_ ? 'localV' : 'globalV');
 
         const gLength = (globalV || []).length;
         const lLength = (localV || []).length;
@@ -643,9 +631,7 @@ Entry.VariableContainer = class VariableContainer {
         } else {
             this.listAddButton_
                 .unBindOnClick()
-                .bindOnClick(() => {
-                    return Entry.do('variableContainerClickListAddButton');
-                })
+                .bindOnClick(() => Entry.do('variableContainerClickListAddButton'))
                 .removeClass('disabled');
         }
         listView.appendChild(this.listAddButton_);
@@ -683,9 +669,7 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('attr_box')
             .appendTo(localList);
 
-        const { localV, globalV } = _.groupBy(this.lists_, ({ object_ }) => {
-            return object_ ? 'localV' : 'globalV';
-        });
+        const { localV, globalV } = _.groupBy(this.lists_, ({ object_ }) => object_ ? 'localV' : 'globalV');
 
         const gLength = (globalV || []).length;
         const lLength = (localV || []).length;
@@ -710,9 +694,7 @@ Entry.VariableContainer = class VariableContainer {
         } else {
             this.functionAddButton_
                 .unBindOnClick()
-                .bindOnClick(() => {
-                    return Entry.do('funcCreateStart', Entry.generateHash());
-                })
+                .bindOnClick(() => Entry.do('funcCreateStart', Entry.generateHash()))
                 .removeClass('disabled');
         }
         listView.appendChild(this.functionAddButton_);
@@ -753,9 +735,7 @@ Entry.VariableContainer = class VariableContainer {
             if (!message.id) {
                 message.id = Entry.generateHash();
             } else if (
-                this.messages_.some((item) => {
-                    return item.id === message.id;
-                })
+                this.messages_.some((item) => item.id === message.id)
             ) {
                 continue;
             }
@@ -824,9 +804,7 @@ Entry.VariableContainer = class VariableContainer {
             const type = variable.getType();
             if (type === 'variable' || type === 'slide') {
                 if (
-                    this.variables_.some((item) => {
-                        return item.id_ === variable.id_;
-                    })
+                    this.variables_.some((item) => item.id_ === variable.id_)
                 ) {
                     continue;
                 }
@@ -834,9 +812,7 @@ Entry.VariableContainer = class VariableContainer {
                 this.variables_.push(variable);
             } else if (type === 'list') {
                 if (
-                    this.lists_.some((item) => {
-                        return item.id_ === variable.id_;
-                    })
+                    this.lists_.some((item) => item.id_ === variable.id_)
                 ) {
                     continue;
                 }
@@ -896,9 +872,7 @@ Entry.VariableContainer = class VariableContainer {
             };
         });
 
-        const isDuplecate = funcsParamNames.some(({ name }) => {
-            return funcParamName === name;
-        });
+        const isDuplecate = funcsParamNames.some(({ name }) => funcParamName === name);
 
         if (isDuplecate) {
             const orderedNumber = Entry.getOrderedNameNumber(
@@ -919,9 +893,7 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     getFunctionParamName(info) {
-        return info.reduce((acc, { name }) => {
-            return (acc += name);
-        }, '');
+        return info.reduce((acc, { name }) => (acc += name), '');
     }
 
     getFunctionParamInfo(parentParams) {
@@ -1160,9 +1132,7 @@ Entry.VariableContainer = class VariableContainer {
      * @return {boolean} return true when success
      */
     checkAllVariableName(name, variable) {
-        return this[variable].some(({ name_ }) => {
-            return name_ === name;
-        });
+        return this[variable].some(({ name_ }) => name_ === name);
     }
 
     _addVariableOrList(type, data) {
@@ -1709,9 +1679,7 @@ Entry.VariableContainer = class VariableContainer {
             _.result(Entry.container, 'inputValue'),
         ]
             .filter(_.identity)
-            .map((v) => {
-                return v.toJSON ? v.toJSON() : v;
-            });
+            .map((v) => v.toJSON ? v.toJSON() : v);
     }
 
     /**
@@ -1729,15 +1697,13 @@ Entry.VariableContainer = class VariableContainer {
     getFunctionJSON() {
         return _.reduce(
             this.functions_,
-            (acc, { id, content }) => {
-                return [
+            (acc, { id, content }) => [
                     ...acc,
                     {
                         id,
                         content: content.stringify(),
                     },
-                ];
-            },
+                ],
             []
         );
     }
@@ -2276,9 +2242,7 @@ Entry.VariableContainer = class VariableContainer {
         // 변수 속성 설정
         const element = createElement('div')
             .addClass('attr_inner_box')
-            .bindOnClick((e) => {
-                return e.stopPropagation();
-            });
+            .bindOnClick((e) => e.stopPropagation());
         if (this.variableSettingView) {
             $(this.variableSettingView).remove();
             delete this.variableSettingView;
@@ -2305,7 +2269,8 @@ Entry.VariableContainer = class VariableContainer {
         attrInputLabel.setAttribute('for', 'attr_cnt');
         attrInputLabel.innerHTML = Lang.Workspace.default_value;
 
-        const attrInput = createElement('input').appendTo(attrInputBox);
+        const attrInputWrapper = createElement('span').appendTo(attrInputBox);
+        const attrInput = createElement('input').appendTo(attrInputWrapper);
         attrInput.setAttribute('type', 'text');
         attrInput.value = 0;
         attrInput.onkeypress = Entry.Utils.blurWhenEnter;
@@ -2434,9 +2399,7 @@ Entry.VariableContainer = class VariableContainer {
         // 리스트 속성 설정
         const element = createElement('div')
             .addClass('attr_inner_box')
-            .bindOnClick((e) => {
-                return e.stopPropagation();
-            });
+            .bindOnClick((e) => e.stopPropagation());
         if (this.listSettingView) {
             $(this.listSettingView).remove();
             delete this.listSettingView;
@@ -2597,14 +2560,14 @@ Entry.VariableContainer = class VariableContainer {
                 Lang.Workspace.empty_of_list;
             listValues.appendChild(fragment);
         } else {
-            const data = arr.map(({ data: value }, i) => {
-                return /* html */ `
+            const data = arr.map(({ data: value }, i) => 
+                 /* html */ `
                     <li>
                         <span class='cnt'>${i + startIndex}</span>
                         <input value='${value}' type='text' data-index='${i}'/>
                         <a class='del' data-index='${i}'></a>
-                    </li>`.trim();
-            });
+                    </li>`.trim()
+            );
             infinityScroll.assignData(data);
             infinityScroll.show();
             $listValues.on(
@@ -2633,9 +2596,7 @@ Entry.VariableContainer = class VariableContainer {
         const times = value - arr.length;
         if (times && Entry.Utils.isNumber(value)) {
             if (times > 0) {
-                _.times(times, () => {
-                    return arr.push({ data: 0 });
-                });
+                _.times(times, () => arr.push({ data: 0 }));
             } else {
                 arr.length = value;
             }
@@ -2644,9 +2605,7 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     updateViews() {
-        [...this.variables_, ...this.lists_].forEach((v) => {
-            return v.updateView();
-        });
+        [...this.variables_, ...this.lists_].forEach((v) => v.updateView());
     }
 
     updateSelectedVariable(object, type = 'variable') {
