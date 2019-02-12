@@ -756,11 +756,13 @@ Entry.Engine = function() {
     };
 
     /**
-     * Update mouse coordinate
+     * Update mouse coordinate (used ws > stage)
      */
     p.updateMouseView = function() {
         var { x, y } = Entry.stage.mouseCoordinate;
-        this.mouseViewInput.value = 'X : ' + x + ', Y : ' + y;
+        if(this.mouseViewInput){
+            this.mouseViewInput.value = 'X : ' + x + ', Y : ' + y;
+        }
         this.mouseView.removeClass('entryHide');
     };
 

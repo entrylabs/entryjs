@@ -1651,7 +1651,8 @@ module.exports = {
                 class: 'calc_user',
                 isNotFor: [],
                 func() {
-                    return window.user ? window.user.username : ' ';
+                    const username = window.user ? window.user.username : ' ';
+                    return Entry.WS_GET_USER_NAME ? Entry.WS_GET_USER_NAME : username;
                 },
                 syntax: {
                     js: [],
