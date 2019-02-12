@@ -238,6 +238,9 @@ Entry.Engine = function() {
             this.mouseView.addClass('entryHide');
             this.view_.appendChild(this.mouseView);
 
+            this.mouseViewInput = Entry.createElement('input').appendTo(this.mouseView);
+            $(this.mouseViewInput).attr('readonly', 'readonly');
+
             Entry.addEventListener('loadComplete', () => {
                 this.runButton = Entry.Dom('div', {
                     class: 'entryRunButtonBigMinimize',
