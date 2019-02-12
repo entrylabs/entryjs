@@ -56,18 +56,27 @@ function registerHardwareBlockToStatic(hardwareModules) {
     hardwareModules.forEach((hardware) => {
         if (hardware.blockMenuBlocks) {
             EntryStatic.DynamicHardwareBlocks.push.apply(
-                EntryStatic.DynamicHardwareBlocks, hardware.blockMenuBlocks);
+                EntryStatic.DynamicHardwareBlocks,
+                hardware.blockMenuBlocks
+            );
         }
     });
 }
 
 module.exports = {
     getBlocks() {
-        const hardwareModules = hardware.getHardwareModuleList();
-        registerHardwareBlockToStatic(hardwareModules);
+        // const hardwareModules = hardware.getHardwareModuleList();
+        // registerHardwareBlockToStatic(hardwareModules);
+        setTimeout(() => {
+            hardware.getHardwareModule('block_arduino').then((o) => {
+                console.log(o);
+            });
+        }, 4000);
 
-        const basicAndExpansionBlockObjectList = getBlockObject(basicBlockList.concat(Object.values(Entry.EXPANSION_BLOCK_LIST)));
-        const hardwareBlockObjectList = getBlockObject(hardwareModules);
+        const basicAndExpansionBlockObjectList = getBlockObject(
+            basicBlockList.concat(Object.values(Entry.EXPANSION_BLOCK_LIST))
+        );
+        const hardwareBlockObjectList = []; // getBlockObject(hardwareModules);
         return Object.assign({}, basicAndExpansionBlockObjectList, hardwareBlockObjectList);
     },
 };

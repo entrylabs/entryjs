@@ -1,6 +1,6 @@
 'use strict';
 
-import EntryTool from 'entry-tool';
+import { Number, Angle } from '@entrylabs/tool';
 
 Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
     constructor(content, blockView, index) {
@@ -145,7 +145,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
     }
 
     _getNumberOptionWidget() {
-        return new EntryTool({
+        return new Number({
             type: 'numberWidget',
             data: {
                 eventTypes: ['mousedown', 'touchstart', 'wheel'],
@@ -179,7 +179,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
      * @private
      */
     _getAngleOptionWidget(...excludeDom) {
-        return new EntryTool({
+        return new Angle({
             type: 'angleWidget',
             data: {
                 eventTypes: ['mousedown', 'touchstart', 'wheel'],

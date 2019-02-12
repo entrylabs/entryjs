@@ -4,7 +4,7 @@
  */
 'use strict';
 
-import EntryTool from 'entry-tool';
+import { Sortable, ColorPicker, Dropdown } from '@entrylabs/tool';
 import Toast from '../playground/toast';
 
 const Entry = require('../entry');
@@ -329,8 +329,7 @@ Entry.Playground = class {
             return;
         }
 
-        this.pictureSortableListWidget = new EntryTool({
-            type: 'sortableWidget',
+        this.pictureSortableListWidget = new Sortable({
             data: {
                 height: '100%',
                 sortableTarget: ['entryPlaygroundPictureThumbnail'],
@@ -736,8 +735,7 @@ Entry.Playground = class {
             return;
         }
 
-        this.soundSortableListWidget = new EntryTool({
-            type: 'sortableWidget',
+        this.soundSortableListWidget = new Sortable({
             data: {
                 height: '100%',
                 sortableTarget: ['entryPlaygroundSoundThumbnail'],
@@ -1699,8 +1697,7 @@ Entry.Playground = class {
     }
 
     openDropDown = (options, target, callback, closeCallback) => {
-        const dropdownWidget = new EntryTool({
-            type: 'dropdownWidget',
+        const dropdownWidget = new Dropdown({
             data: {
                 items: options,
                 positionDom: target,
@@ -1724,8 +1721,7 @@ Entry.Playground = class {
     };
 
     openColourPicker = (target, color, canTransparent, callback) => {
-        const colorPicker = new EntryTool({
-            type: 'colorPicker',
+        const colorPicker = new ColorPicker({
             data: {
                 color,
                 positionDom: target,

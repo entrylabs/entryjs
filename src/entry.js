@@ -1,3 +1,4 @@
+__webpack_public_path__ = global.PUBLIC_PATH_FOR_ENTRYJS || 'dist/';
 import 'simplebar/dist/simplebar.css';
 
 const Entry = {};
