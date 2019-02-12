@@ -2269,7 +2269,7 @@ Entry.VariableContainer = class VariableContainer {
         attrInputLabel.setAttribute('for', 'attr_cnt');
         attrInputLabel.innerHTML = Lang.Workspace.default_value;
 
-        const attrInputWrapper = createElement('span').appendTo(attrInputBox);
+        const attrInputWrapper = createElement('span').appendTo(attrInputBox).addClass('val_inptbox');
         const attrInput = createElement('input').appendTo(attrInputWrapper);
         attrInput.setAttribute('type', 'text');
         attrInput.value = 0;
