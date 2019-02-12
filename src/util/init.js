@@ -206,6 +206,7 @@ Entry.initialize_ = function() {
      */
     this.playground = new Entry.Playground();
 
+    this.intro = new Entry.Intro();
     /**
      * Initialize toast. Toast don't need generate view.
      * @type {!Entry.Toast}
@@ -308,6 +309,11 @@ Entry.createDom = function(container, option) {
 
         this.helper.generateView(this.containerView, option);
         this.propertyPanel.addMode('helper', this.helper);
+
+        const introView = Entry.createElement('div');
+        container.appendChild(introView);
+        this.introView = introView;
+        this.intro.generateView(this.introView, option);
 
         const playgroundView = Entry.createElement('div');
         container.appendChild(playgroundView);
