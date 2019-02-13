@@ -105,7 +105,7 @@ Entry.Scene = class {
     updateSceneView() {
         const items = this._getSortableSceneList();
         if (this.sceneSortableListWidget) {
-            setTimeout(() => this.sceneSortableListWidget.setData({ items }), 300);
+            setTimeout(() => this.sceneSortableListWidget.setData({ items }), 0);
         }
     }
 
