@@ -1376,7 +1376,9 @@ Entry.Playground = class {
 
     clear() {
         this.flushPlayground();
-        this.painter.clear();
+        if(this.painter) {
+            this.painter.clear();
+        }
     }
 
     generatePictureElement(picture) {
