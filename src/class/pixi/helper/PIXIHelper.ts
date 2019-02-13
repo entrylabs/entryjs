@@ -76,12 +76,12 @@ export default class PIXIHelper {
         //     fontName: fontName,
         //     size: size
         // });
-
+        const nColor = parseInt(color.replace("#", "0x")) || 0;
         // var t = new PIXI.Text(str, {
         var t = new PIXIText(str, {
             fontFamily: fontName,
             fontSize: size,
-            fill: color,
+            fill: nColor,
             // textBaseline: textBaseline || 'alphabetic',
             textBaseline: "middle",
             align: textAlign || "left",
