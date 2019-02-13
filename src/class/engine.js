@@ -765,9 +765,7 @@ Entry.Engine = function() {
      */
     p.updateMouseView = function() {
         var { x, y } = Entry.stage.mouseCoordinate;
-        if(this.mouseViewInput){
-            this.mouseViewInput.value = 'X : ' + x + ', Y : ' + y;
-        }
+        this.mouseViewInput.value = 'X : ' + x + ', Y : ' + y;
         this.mouseView.removeClass('entryHide');
     };
 
