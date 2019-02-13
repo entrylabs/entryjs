@@ -240,8 +240,8 @@ Entry.initialize_ = function() {
         this.reporter = new Entry.Reporter(true);
     }
 
-    // GEHelper.INIT(this.options.useWebGL);
-    GEHelper.INIT(0);
+    GEHelper.INIT(this.options.useWebGL);
+    // GEHelper.INIT(0);
 
 };
 
