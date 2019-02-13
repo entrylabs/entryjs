@@ -1,9 +1,11 @@
 /**
  * @fileoverview Container handle all object in entry.
  */
+
 'use strict';
 
 import EntryTool from 'entry-tool';
+import { GEHelper } from '../graphicEngine/GEHelper';
 
 /**
  * Class for a container.
@@ -446,6 +448,7 @@ Entry.Container = class Container {
         }
 
         Entry.playground.reloadPlayground();
+        GEHelper.resManager.imageRemoved("container::removeObject");
     }
 
     /**
@@ -851,6 +854,7 @@ Entry.Container = class Container {
     }
 
     /**
+     * @deprecated 새로운 리소스 관리자 생겨서 이제 사용안함
      * Get cached picture
      * @param {!string} pictureId
      * @return {?createjs.Image}
@@ -861,6 +865,7 @@ Entry.Container = class Container {
     }
 
     /**
+     * @deprecated 새로운 리소스 관리자 생겨서 이제 사용안함
      * cache picture
      * @param {!picture object} pictureModel
      */
@@ -868,6 +873,12 @@ Entry.Container = class Container {
         this.cachedPicture[pictureId] = image;
     }
 
+    /**
+     * @deprecated 새로운 리소스 관리자 생겨서 이제 사용안함
+     * @param entity
+     * @param pictures
+     * @param isClone
+     */
     unCachePictures(entity, pictures, isClone) {
         if (!entity || !pictures) {
             return;
@@ -1215,5 +1226,9 @@ Entry.Container = class Container {
 
         view_ && view_.scrollIntoView();
         document.body.scrollIntoView();
+    }
+
+    destroy() {
+        // 우선 interface 만 정의함.
     }
 };

@@ -1,8 +1,14 @@
 /**
  * @fileoverview Variable object for entry variable block.
  */
+
+
 'use strict';
 
+import {GEHelper} from '../graphicEngine/GEHelper';
+import { GEDragHelper } from '../graphicEngine/GEDragHelper';
+
+const RECT_RADIUS = 6; // round rect radius
 /**
  * Block variable constructor
  * @param {variable model} variable
@@ -63,6 +69,38 @@ Entry.Variable = class Variable {
         Entry.addEventListener('workspaceChangeMode', this.updateView.bind(this));
     }
 
+    _createListElementView(wrapperWidth) {
+        let elementView = GEHelper.newContainer();
+        const indexView = GEHelper.textHelper.newText('asdf', this.FONT, '#000000', 'middle');
+        if(GEHelper.isWebGL) {
+            indexView.y = 0;
+        } else {
+            indexView.y = 5;
+        }
+        elementView.addChild(indexView);
+        elementView.indexView = indexView;
+        const valueWrapper = GEHelper.newGraphic();
+        elementView.addChild(valueWrapper);
+        elementView.valueWrapper = valueWrapper;
+        elementView.valueWrapper.graphics
+            .clear()
+            .f('#1bafea')
+            .rr(20, -2, wrapperWidth, 17, 2);
+
+        const valueView = GEHelper.textHelper.newText('fdsa', this.FONT, '#eeeeee', 'middle');
+        valueView.x = 24;
+        if(GEHelper.isWebGL) {
+            valueView.y = -1;
+        } else {
+            valueView.y = 6;
+        }
+        elementView.addChild(valueView);
+        elementView.valueView = valueView;
+        elementView.x = this.BORDER;
+
+        return elementView;
+    }
+
     /**
      * Generate variable view on canvas
      * @param {number} variableIndex index of this variable for render position
@@ -70,19 +108,21 @@ Entry.Variable = class Variable {
     generateView(variableIndex) {
         const type = this.type;
         if (type === 'variable' || type === 'timer' || type === 'answer') {
-            this.view_ = new createjs.Container();
-            this.rect_ = new createjs.Shape();
+            this.view_ = GEHelper.newContainer();
+            this.rect_ = GEHelper.newGraphic();
             this.view_.addChild(this.rect_);
             this.view_.variable = this;
-            this.wrapper_ = new createjs.Shape();
+            this.wrapper_ = GEHelper.newGraphic();
             this.view_.addChild(this.wrapper_);
-            this.textView_ = new createjs.Text('asdf', this.FONT, '#000000');
-            this.textView_.textBaseline = 'alphabetic';
+            this.textView_ = GEHelper.textHelper.newText('asdf', this.FONT, '#000000', 'alphabetic');
             this.textView_.x = 4;
-            this.textView_.y = 1;
+            if(GEHelper.isWebGL) {
+                this.textView_.y = -11;
+            } else {
+                this.textView_.y = 1;
+            }
             this.view_.addChild(this.textView_);
-            this.valueView_ = new createjs.Text('asdf', '10pt NanumGothic', '#ffffff');
-            this.valueView_.textBaseline = 'alphabetic';
+            this.valueView_ = GEHelper.textHelper.newText('asdf', '10pt NanumGothic', '#ffffff', 'alphabetic');
             const variableLength = Entry.variableContainer.variables_.length;
             if (this.getX() && this.getY()) {
                 this.setX(this.getX());
@@ -93,9 +133,13 @@ Entry.Variable = class Variable {
                 this.setY(variableIndex * 24 + 20 - 135 - Math.floor(variableLength / 11) * 264);
             }
             this.view_.visible = this.visible_;
+            this.view_.mouseEnabled = true;
             this.view_.addChild(this.valueView_);
-
-            this.view_.on('mousedown', function(evt) {
+            if (Entry.type === 'workspace') {
+                this.view_.cursor = 'move';
+            }
+            GEDragHelper.handleDrag(this.view_);
+            this.view_.on(GEDragHelper.types.DOWN, function(evt) {
                 if (Entry.type !== 'workspace') {
                     return;
                 }
@@ -103,10 +147,9 @@ Entry.Variable = class Variable {
                     x: this.x - (evt.stageX * 0.75 - 240),
                     y: this.y - (evt.stageY * 0.75 - 135),
                 };
-                this.cursor = 'move';
             });
 
-            this.view_.on('pressmove', function(evt) {
+            this.view_.on(GEDragHelper.types.MOVE, function(evt) {
                 if (Entry.type !== 'workspace') {
                     return;
                 }
@@ -116,20 +159,27 @@ Entry.Variable = class Variable {
             });
         } else if (type === 'slide') {
             const slide = this;
-            this.view_ = new createjs.Container();
-            this.rect_ = new createjs.Shape();
+            this.view_ = GEHelper.newContainer();
+            this.rect_ = GEHelper.newGraphic();
             this.view_.addChild(this.rect_);
             this.view_.variable = this;
-            this.wrapper_ = new createjs.Shape();
+            this.wrapper_ = GEHelper.newGraphic();
             this.view_.addChild(this.wrapper_);
-            this.textView_ = new createjs.Text('name', this.FONT, '#000000');
-            this.textView_.textBaseline = 'alphabetic';
+            this.textView_ = GEHelper.textHelper.newText('name', this.FONT, '#000000', 'alphabetic');
             this.textView_.x = 4;
-            this.textView_.y = 1;
+            if(GEHelper.isWebGL) {
+                this.textView_.y = -11;
+            } else {
+                this.textView_.y = 1;
+            }
             this.view_.addChild(this.textView_);
-            this.valueView_ = new createjs.Text('value', '10pt NanumGothic', '#ffffff');
-            this.valueView_.textBaseline = 'alphabetic';
-            this.view_.on('mousedown', function(evt) {
+            this.valueView_ = GEHelper.textHelper.newText('value', '10pt NanumGothic', '#ffffff', 'alphabetic');
+
+
+            GEDragHelper.handleDrag(this.view_);
+            this.view_.mouseEnabled = true;
+            this.view_.mouseChildren = true;
+            this.view_.on(GEDragHelper.types.DOWN, function(evt) {
                 if (Entry.type !== 'workspace') {
                     return;
                 }
@@ -139,7 +189,7 @@ Entry.Variable = class Variable {
                 };
             });
 
-            this.view_.on('pressmove', function(evt) {
+            this.view_.on(GEDragHelper.types.MOVE, function(evt) {
                 if (Entry.type !== 'workspace' || slide.isAdjusting) {
                     return;
                 }
@@ -154,7 +204,7 @@ Entry.Variable = class Variable {
             width = Math.max(width, 90);
             this.maxWidth = width - 20;
 
-            this.slideBar_ = new createjs.Shape();
+            this.slideBar_ = GEHelper.newGraphic();
             this.slideBar_.graphics
                 .beginFill('#A0A1A1')
                 .s('#A0A1A1')
@@ -163,23 +213,24 @@ Entry.Variable = class Variable {
             this.view_.addChild(this.slideBar_);
 
             const position = this.getSlidePosition(this.maxWidth);
-            this.valueSetter_ = new createjs.Shape();
+            this.valueSetter_ = GEHelper.newGraphic();
             this.valueSetter_.graphics
                 .beginFill('#1bafea')
                 .s('#A0A1A1')
                 .ss(1)
                 .dc(position, 10 + 0.5, 3);
             this.valueSetter_.cursor = 'pointer';
-            this.valueSetter_.on('mousedown', function(evt) {
+            this.valueSetter_.mouseEnabled = true;
+            GEDragHelper.handleDrag(this.valueSetter_);
+            this.valueSetter_.on(GEDragHelper.types.DOWN, function(evt) {
                 if (!Entry.engine.isState('run')) {
                     return;
                 }
-
                 slide.isAdjusting = true;
                 this.offsetX = -(this.x - evt.stageX * 0.75 + 240);
             });
 
-            this.valueSetter_.on('pressmove', function(evt) {
+            this.valueSetter_.on(GEDragHelper.types.MOVE, function(evt) {
                 if (!Entry.engine.isState('run')) {
                     return;
                 }
@@ -200,7 +251,7 @@ Entry.Variable = class Variable {
                 }
                 slide.setSlideCommandX(value);
             });
-            this.valueSetter_.on('pressup', function() {
+            this.valueSetter_.on(GEDragHelper.types.UP, function() {
                 slide.isAdjusting = false;
             });
             this.view_.addChild(this.valueSetter_);
@@ -213,35 +264,44 @@ Entry.Variable = class Variable {
                 this.setY(variableIndex * 24 + 20 - 135 - Math.floor(variableLength / 11) * 264);
             }
         } else {
-            this.view_ = new createjs.Container();
-            this.rect_ = new createjs.Shape();
+            this.view_ = GEHelper.newContainer();
+            this.rect_ = GEHelper.newGraphic();
             this.view_.addChild(this.rect_);
+            this.view_.mouseEnabled = true;
+            this.view_.mouseChildren = true;
             this.view_.variable = this;
-            this.titleView_ = new createjs.Text('asdf', this.FONT, '#000');
-            this.titleView_.textBaseline = 'alphabetic';
-            this.titleView_.textAlign = 'center';
-            this.titleView_.width = this.width_ - 2 * this.BORDER;
-            this.titleView_.y = this.BORDER + 10;
-            this.titleView_.x = this.width_ / 2;
+            this.titleView_ = GEHelper.textHelper.newText('asdf', this.FONT, '#000000', 'alphabetic', 'center');
+
+            //todo [박봉배] textview_.width 를 $width 로 변경.
+            this.titleView_.$width = this.width_ - 2 * this.BORDER;
+            if(GEHelper.isWebGL) {
+                this.titleView_.x = (this.width_ - this.titleView_.width) / 2;
+                this.titleView_.y = this.BORDER -1;
+            } else {
+                this.titleView_.x = this.width_ / 2;
+                this.titleView_.y = this.BORDER + 10;
+            }
             this.view_.addChild(this.titleView_);
 
-            this.resizeHandle_ = new createjs.Shape();
+            this.resizeHandle_ = GEHelper.newGraphic();
+            this.resizeHandle_.mouseEnabled = true;
             this.resizeHandle_.graphics
                 .f('#1bafea')
                 .ss(1, 0, 0)
                 .s('#1bafea')
-                .lt(0, -9)
+                .mt(0, -9)
                 .lt(-9, 0)
                 .lt(0, 0);
             this.view_.addChild(this.resizeHandle_);
 
             this.resizeHandle_.list = this;
 
-            this.resizeHandle_.on('mouseover', function() {
+            GEDragHelper.handleDrag(this.resizeHandle_);
+            this.resizeHandle_.on(GEDragHelper.types.OVER, function() {
                 this.cursor = 'nwse-resize';
             });
 
-            this.resizeHandle_.on('mousedown', function(evt) {
+            this.resizeHandle_.on(GEDragHelper.types.DOWN, function(evt) {
                 // if(Entry.type != 'workspace') return;
                 this.list.isResizing = true;
                 this.offset = {
@@ -250,18 +310,19 @@ Entry.Variable = class Variable {
                 };
                 this.parent.cursor = 'nwse-resize';
             });
-            this.resizeHandle_.on('pressmove', function(evt) {
+            this.resizeHandle_.on(GEDragHelper.types.MOVE, function(evt) {
                 // if(Entry.type != 'workspace') return;
                 this.list.setWidth(evt.stageX * 0.75 - this.offset.x);
                 this.list.setHeight(evt.stageY * 0.75 - this.offset.y);
                 this.list.updateView();
             });
 
-            this.view_.on('mouseover', function() {
+            GEDragHelper.handleDrag(this.view_);
+            this.view_.on(GEDragHelper.types.OVER, function() {
                 this.cursor = 'move';
             });
 
-            this.view_.on('mousedown', function(evt) {
+            this.view_.on(GEDragHelper.types.DOWN, function(evt) {
                 if (Entry.type !== 'workspace' || this.variable.isResizing) {
                     return;
                 }
@@ -272,12 +333,12 @@ Entry.Variable = class Variable {
                 this.cursor = 'move';
             });
 
-            this.view_.on('pressup', function() {
+            this.view_.on(GEDragHelper.types.UP, function() {
                 this.cursor = 'initial';
                 this.variable.isResizing = false;
             });
 
-            this.view_.on('pressmove', function(evt) {
+            this.view_.on(GEDragHelper.types.MOVE, function(evt) {
                 if (Entry.type !== 'workspace' || this.variable.isResizing) {
                     return;
                 }
@@ -286,59 +347,35 @@ Entry.Variable = class Variable {
                 this.variable.updateView();
             });
 
-            this.elementView = new createjs.Container();
-            const indexView = new createjs.Text('asdf', this.FONT, '#000');
-            indexView.textBaseline = 'middle';
-            indexView.y = 5;
-            this.elementView.addChild(indexView);
-            this.elementView.indexView = indexView;
-            const valueWrapper = new createjs.Shape();
-            this.elementView.addChild(valueWrapper);
-            this.elementView.valueWrapper = valueWrapper;
-            const valueView = new createjs.Text('fdsa', this.FONT, '#eee');
-            valueView.x = 24;
-            valueView.y = 6;
-            valueView.textBaseline = 'middle';
-            this.elementView.addChild(valueView);
-            this.elementView.valueView = valueView;
-            this.elementView.x = this.BORDER;
-
-            this.scrollButton_ = new createjs.Shape();
-            this.scrollButton_.graphics.f('#aaa').rr(0, 0, 7, 30, 3.5);
+            //todo [박봉배] 아래줄 삭제 하는게 맞겠죠? 리스트 아이템인데, 생성을 아래쪽에서 함.
+            //this.elementView = this._createListElementView();
+            this.scrollButton_ = GEHelper.newGraphic();
+            this.scrollButton_.mouseEnabled = true;
+            this.scrollButton_.cursor = 'pointer';
+            GEDragHelper.handleDrag(this.scrollButton_);
+            this.scrollButton_.graphics.f('#aaaaaa').rr(0, 0, 7, 30, 3.5);
             this.view_.addChild(this.scrollButton_);
             this.scrollButton_.y = 23;
 
             this.scrollButton_.list = this;
-            this.scrollButton_.on('mousedown', function(evt) {
+            this.scrollButton_.on(GEDragHelper.types.DOWN, function(evt) {
                 // if(Entry.type != 'workspace') return;
                 this.list.isResizing = true;
-                this.cursor = 'pointer';
-                this.offsetY =
-                    !Entry.Utils.isNumber(this.offsetY) || this.offsetY < 0
-                        ? evt.rawY / 2
-                        : this.offsetY;
+                this.offsetY = evt.stageY - this.y / 0.75;
             });
-            this.scrollButton_.on('pressmove', function(evt) {
+            this.scrollButton_.on(GEDragHelper.types.MOVE, function(evt) {
                 // if(Entry.type != 'workspace') return;
-                if (this.moveAmount === undefined) {
-                    this.y = evt.target.y;
-                    this.moveAmount = true;
-                } else {
-                    this.y = evt.rawY / 2 - this.offsetY + 23 * (this.list.height_ / 100);
-                }
 
-                if (this.y < 23) {
-                    this.y = 23;
-                }
-                if (this.y > this.list.getHeight() - 40) {
-                    this.y = this.list.getHeight() - 40;
-                }
+                let stageY = evt.stageY;
+                var yPos = (stageY - this.offsetY) * 0.75;
+                var min = 23;
+                var max = this.list.getHeight() - 40;
+                if(yPos < min) yPos = min;
+                if(yPos > max) yPos = max;
+                this.y = yPos;
                 this.list.updateView();
             });
 
-            this.scrollButton_.on('pressup', function() {
-                this.moveAmount = undefined;
-            });
             if (this.getX() && this.getY()) {
                 this.setX(this.getX());
                 this.setY(this.getY());
@@ -402,7 +439,12 @@ Entry.Variable = class Variable {
                     this._nameWidth = this.textView_.getMeasuredWidth();
                 }
                 this.valueView_.x = this._nameWidth + 14;
-                this.valueView_.y = 1;
+                if(GEHelper.isWebGL) {
+                    this.valueView_.y = -11;
+                } else {
+                    this.valueView_.y = 1;
+                }
+
                 // INFO: Number체크는 slide 일때만 하도록 처리 기본 문자로 처리함(#4876)
 
                 if (this._valueWidth === null) {
@@ -413,13 +455,13 @@ Entry.Variable = class Variable {
                     .f('#ffffff')
                     .ss(1, 2, 0)
                     .s('#A0A1A1')
-                    .rc(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4, 4, 4, 4);
+                    .rr(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4);
                 this.wrapper_.graphics
                     .clear()
                     .f('#1bafea')
                     .ss(1, 2, 0)
                     .s('#1bafea')
-                    .rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7);
+                    .rr(this._nameWidth + 7, -11, this._valueWidth + 15, 14, RECT_RADIUS);
             } else if (this.type === 'slide') {
                 this.view_.x = this.getX();
                 this.view_.y = this.getY();
@@ -445,7 +487,11 @@ Entry.Variable = class Variable {
                     this._nameWidth = this.textView_.getMeasuredWidth();
                 }
                 this.valueView_.x = this._nameWidth + 14;
-                this.valueView_.y = 1;
+                if(GEHelper.isWebGL) {
+                    this.valueView_.y = -11;
+                } else {
+                    this.valueView_.y = 1;
+                }
                 let value = String(this.getValue());
 
                 if (this.isFloatPoint()) {
@@ -474,13 +520,13 @@ Entry.Variable = class Variable {
                     .f('#ffffff')
                     .ss(1, 2, 0)
                     .s('#A0A1A1')
-                    .rc(0, -14, width, 33, 4, 4, 4, 4);
+                    .rr(0, -14, width, 33, 4);
                 this.wrapper_.graphics
                     .clear()
                     .f('#1bafea')
                     .ss(1, 2, 0)
                     .s('#1bafea')
-                    .rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7);
+                    .rr(this._nameWidth + 7, -11, this._valueWidth + 15, 14, RECT_RADIUS);
 
                 width = this._nameWidth + this._valueWidth + 26;
                 width = Math.max(width, 90);
@@ -522,7 +568,11 @@ Entry.Variable = class Variable {
                         this.titleView_.text = name;
                     }
                 }
-                this.titleView_.x = this.width_ / 2;
+                if(GEHelper.isWebGL) {
+                    this.titleView_.x = (this.width_ - this.titleView_.width)/ 2;
+                } else {
+                    this.titleView_.x = this.width_ / 2;
+                }
                 this.rect_.graphics
                     .clear()
                     .f('#ffffff')
@@ -530,8 +580,10 @@ Entry.Variable = class Variable {
                     .s('#A0A1A1')
                     .rect(0, 0, this.width_, this.height_);
 
-                while (this.view_.children[4]) {
-                    this.view_.removeChild(this.view_.children[4]);
+                let listChild;
+                while (listChild = this.view_.children[4]) {
+                    this.view_.removeChild(listChild);
+                    listChild.destroy && listChild.destroy();
                 }
                 const maxView = Math.floor((this.getHeight() - 20) / 20);
 
@@ -543,10 +595,11 @@ Entry.Variable = class Variable {
                     if (this.scrollButton_.y > this.getHeight() - 40) {
                         this.scrollButton_.y = this.getHeight() - 40;
                     }
-                    this.elementView.valueWrapper.graphics
-                        .clear()
-                        .f('#1bafea')
-                        .rr(20, -2, wrapperWidth, 17, 2);
+                    //todo [박봉배] _createListElementView 로 코드 이동
+                    // this.elementView.valueWrapper.graphics
+                    //     .clear()
+                    //     .f('#1bafea')
+                    //     .rr(20, -2, wrapperWidth, 17, 2);
                     this.scrollButton_.x = totalWidth - 12;
                     this.scrollPosition = Math.floor(
                         (this.scrollButton_.y - 23) /
@@ -554,10 +607,11 @@ Entry.Variable = class Variable {
                             (arr.length - maxView)
                     );
                 } else {
-                    this.elementView.valueWrapper.graphics
-                        .clear()
-                        .f('#1bafea')
-                        .rr(20, -2, wrapperWidth, 17, 2);
+                    //todo [박봉배] _createListElementView 로 코드 이동
+                    // this.elementView.valueWrapper.graphics
+                    //     .clear()
+                    //     .f('#1bafea')
+                    //     .rr(20, -2, wrapperWidth, 17, 2);
                     this.scrollPosition = 0;
                 }
                 this.scrollButton_.visible = isOverFlow;
@@ -574,6 +628,7 @@ Entry.Variable = class Variable {
                     i < this.scrollPosition + maxView && i < arr.length;
                     i++
                 ) {
+                    this.elementView = this._createListElementView(wrapperWidth + 6);
                     if (
                         Entry.getMainWS() &&
                         Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD
@@ -620,15 +675,18 @@ Entry.Variable = class Variable {
                         maxLen = Math.max(execText.length, maxLen);
                     }
 
-                    const view = this.elementView.clone(true);
-                    view.y = (i - this.scrollPosition) * 20 + 23;
-                    this.view_.addChild(view);
+                    this.elementView.y = (i - this.scrollPosition) * 20 + 23;
+                    this.view_.addChild(this.elementView);
                 }
             } else if (this.type === 'answer') {
                 this.view_.x = this.getX();
                 this.view_.y = this.getY();
                 this.textView_.text = this.getName();
-                this.valueView_.y = 1;
+                if(GEHelper.isWebGL) {
+                    this.valueView_.y = -11;
+                } else {
+                    this.valueView_.y = 1;
+                }
                 if (this.isNumber()) {
                     const v = Number(this.getValue());
                     if (parseInt(this.getValue(), 10) == this.getValue()) {
@@ -654,13 +712,13 @@ Entry.Variable = class Variable {
                     .f('#ffffff')
                     .ss(1, 2, 0)
                     .s('#A0A1A1')
-                    .rc(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4, 4, 4, 4);
+                    .rr(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4);
                 this.wrapper_.graphics
                     .clear()
                     .f('#F57DF1')
                     .ss(1, 2, 0)
                     .s('#F57DF1')
-                    .rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7);
+                    .rr(this._nameWidth + 7, -11, this._valueWidth + 15, 14, RECT_RADIUS);
             } else {
                 this.view_.x = this.getX();
                 this.view_.y = this.getY();
@@ -671,7 +729,11 @@ Entry.Variable = class Variable {
                 }
 
                 this.valueView_.x = this._nameWidth + 14;
-                this.valueView_.y = 1;
+                if(GEHelper.isWebGL) {
+                    this.valueView_.y = -11;
+                } else {
+                    this.valueView_.y = 1;
+                }
                 if (this.isNumber()) {
                     this.valueView_.text = Number(this.getValue())
                         .toFixed(1)
@@ -689,13 +751,13 @@ Entry.Variable = class Variable {
                     .f('#ffffff')
                     .ss(1, 2, 0)
                     .s('#A0A1A1')
-                    .rc(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4, 4, 4, 4);
+                    .rr(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4);
                 this.wrapper_.graphics
                     .clear()
                     .f('#ffbb14')
                     .ss(1, 2, 0)
-                    .s('orange')
-                    .rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7);
+                    .s('#ffa500')
+                    .rr(this._nameWidth + 7, -11, this._valueWidth + 15, 14, RECT_RADIUS);
             }
         }
         Entry.requestUpdate = true;
@@ -971,7 +1033,10 @@ Entry.Variable = class Variable {
     }
 
     setSlideCommandX(value) {
-        const command = this.valueSetter_.graphics.command;
+        if(!this.valueSetter_.command) {
+            this.valueSetter_.command = {};
+        }
+        const command = this.valueSetter_.command;
         let commandX = typeof value === 'undefined' ? 10 : value;
         commandX = Math.max(value, 10);
         commandX = Math.min(this.maxWidth + 10, value);
@@ -981,7 +1046,7 @@ Entry.Variable = class Variable {
 
     updateSlideValueByView() {
         const maxWidth = this.maxWidth;
-        const position = Math.max(this.valueSetter_.graphics.command.x - 10, 0);
+        const position = Math.max(this.valueSetter_.command.x - 10, 0);
         let ratio = position / maxWidth;
         if (ratio < 0) {
             ratio = 0;

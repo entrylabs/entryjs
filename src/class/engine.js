@@ -3,6 +3,8 @@
  */
 'use strict';
 
+import { GEHelper } from '../graphicEngine/GEHelper';
+
 /**
  * Class for a engine.
  * This have view for control running state.
@@ -236,6 +238,9 @@ Entry.Engine = function() {
             this.mouseView.addClass('entryHide');
             this.view_.appendChild(this.mouseView);
 
+            this.mouseViewInput = Entry.createElement('input').appendTo(this.mouseView);
+            $(this.mouseViewInput).attr('readonly', 'readonly');
+
             Entry.addEventListener('loadComplete', () => {
                 this.runButton = Entry.Dom('div', {
                     class: 'entryRunButtonBigMinimize',
@@ -370,7 +375,7 @@ Entry.Engine = function() {
      */
     p.start = function(FPS) {
         /** @type {!number} */
-        createjs.Ticker.setFPS(Entry.FPS);
+        GEHelper.Ticker.setFPS(Entry.FPS);
 
         if (!this.ticker) this.ticker = setInterval(this.update, Math.floor(1000 / Entry.FPS));
     };
@@ -379,7 +384,7 @@ Entry.Engine = function() {
      * Stop engine
      */
     p.stop = function() {
-        createjs.Ticker.reset();
+        GEHelper.Ticker.reset();
         clearInterval(this.ticker);
         this.ticker = null;
     };
@@ -964,5 +969,9 @@ Entry.Engine = function() {
             this.stopButton.removeClass(SMALL);
             this.addButton.addClass('entryRemove');
         }
+    };
+
+    p.destroy = function() {
+        // 우선 interface 만 정의함.
     };
 })(Entry.Engine.prototype);

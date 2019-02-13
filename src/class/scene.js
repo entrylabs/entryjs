@@ -600,4 +600,8 @@ Entry.Scene = class {
                 return;
         }
     }
+
+    destroy() {
+        // 우선 interface 만 정의함.
+    }
 };
