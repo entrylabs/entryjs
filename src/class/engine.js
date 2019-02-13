@@ -234,6 +234,11 @@ Entry.Engine = function() {
             this.mouseView = Entry.createElement('div');
             this.mouseView.addClass('entryMouseViewMinimize');
             this.mouseView.addClass('entryHide');
+
+            this.mouseViewInput = Entry.createElement('input').appendTo(this.mouseView);
+            $(this.mouseViewInput).attr('readonly', 'readonly');
+            $(this.mouseViewInput).attr('style','border: none;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;line-height: normal');
+
             this.view_.appendChild(this.mouseView);
 
             Entry.addEventListener('loadComplete', () => {
@@ -756,7 +761,7 @@ Entry.Engine = function() {
     };
 
     /**
-     * Update mouse coordinate (used ws > stage)
+     * Update mouse coordinate
      */
     p.updateMouseView = function() {
         var { x, y } = Entry.stage.mouseCoordinate;
