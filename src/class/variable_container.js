@@ -250,7 +250,9 @@ Entry.VariableContainer = class VariableContainer {
     renderMessageReference(message) {
         const messageId = message.id;
 
-        const callers = this._messageRefs.filter(({ block: { params } }) => _.includes(params, messageId));
+        const callers = this._messageRefs.filter(({ block: { params } }) =>
+            _.includes(params, messageId)
+        );
 
         message.usedView && $(message.usedView).remove();
         let usedWrapper;
@@ -303,7 +305,9 @@ Entry.VariableContainer = class VariableContainer {
     renderVariableReference(variable) {
         const variableId = variable.id_;
 
-        const callers = this._variableRefs.filter(({ block: { params } }) => _.includes(params, variableId));
+        const callers = this._variableRefs.filter(({ block: { params } }) =>
+            _.includes(params, variableId)
+        );
 
         const usedWrapper = Entry.createElement('div').addClass('use_obj');
         const usedSubject = Entry.createElement('span')
@@ -368,7 +372,9 @@ Entry.VariableContainer = class VariableContainer {
      * @param {object} variable
      */
     renderFunctionReference(func) {
-        const callers = [...this._functionRefs].filter((item) => item.block.data.type === `func_${func.id}`);
+        const callers = [...this._functionRefs].filter(
+            (item) => item.block.data.type === `func_${func.id}`
+        );
 
         func.usedView && $(func.usedView).remove();
         let usedWrapper;
@@ -589,7 +595,10 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('attr_box')
             .appendTo(localList);
 
-        const { globalV, localV } = _.groupBy(this.variables_, ({ object_ }) => object_ ? 'localV' : 'globalV');
+        const { globalV, localV } = _.groupBy(
+            this.variables_,
+            ({ object_ }) => (object_ ? 'localV' : 'globalV')
+        );
 
         const gLength = (globalV || []).length;
         const lLength = (localV || []).length;
@@ -669,7 +678,10 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('attr_box')
             .appendTo(localList);
 
-        const { localV, globalV } = _.groupBy(this.lists_, ({ object_ }) => object_ ? 'localV' : 'globalV');
+        const { localV, globalV } = _.groupBy(
+            this.lists_,
+            ({ object_ }) => (object_ ? 'localV' : 'globalV')
+        );
 
         const gLength = (globalV || []).length;
         const lLength = (localV || []).length;
@@ -734,9 +746,7 @@ Entry.VariableContainer = class VariableContainer {
             const message = messages[i];
             if (!message.id) {
                 message.id = Entry.generateHash();
-            } else if (
-                this.messages_.some((item) => item.id === message.id)
-            ) {
+            } else if (this.messages_.some((item) => item.id === message.id)) {
                 continue;
             }
             let name = message.name;
@@ -803,17 +813,13 @@ Entry.VariableContainer = class VariableContainer {
             }
             const type = variable.getType();
             if (type === 'variable' || type === 'slide') {
-                if (
-                    this.variables_.some((item) => item.id_ === variable.id_)
-                ) {
+                if (this.variables_.some((item) => item.id_ === variable.id_)) {
                     continue;
                 }
                 this.generateVariable(variable, this.variables_, 'variables_');
                 this.variables_.push(variable);
             } else if (type === 'list') {
-                if (
-                    this.lists_.some((item) => item.id_ === variable.id_)
-                ) {
+                if (this.lists_.some((item) => item.id_ === variable.id_)) {
                     continue;
                 }
                 this.generateVariable(variable, this.lists_, 'lists_');
@@ -1679,7 +1685,7 @@ Entry.VariableContainer = class VariableContainer {
             _.result(Entry.container, 'inputValue'),
         ]
             .filter(_.identity)
-            .map((v) => v.toJSON ? v.toJSON() : v);
+            .map((v) => (v.toJSON ? v.toJSON() : v));
     }
 
     /**
@@ -1698,12 +1704,12 @@ Entry.VariableContainer = class VariableContainer {
         return _.reduce(
             this.functions_,
             (acc, { id, content }) => [
-                    ...acc,
-                    {
-                        id,
-                        content: content.stringify(),
-                    },
-                ],
+                ...acc,
+                {
+                    id,
+                    content: content.stringify(),
+                },
+            ],
             []
         );
     }
@@ -2269,7 +2275,9 @@ Entry.VariableContainer = class VariableContainer {
         attrInputLabel.setAttribute('for', 'attr_cnt');
         attrInputLabel.innerHTML = Lang.Workspace.default_value;
 
-        const attrInputWrapper = createElement('span').appendTo(attrInputBox).addClass('val_inptbox');
+        const attrInputWrapper = createElement('span')
+            .appendTo(attrInputBox)
+            .addClass('val_inptbox');
         const attrInput = createElement('input').appendTo(attrInputWrapper);
         attrInput.setAttribute('type', 'text');
         attrInput.value = 0;
@@ -2560,8 +2568,8 @@ Entry.VariableContainer = class VariableContainer {
                 Lang.Workspace.empty_of_list;
             listValues.appendChild(fragment);
         } else {
-            const data = arr.map(({ data: value }, i) => 
-                 /* html */ `
+            const data = arr.map(({ data: value }, i) =>
+                /* html */ `
                     <li>
                         <span class='cnt'>${i + startIndex}</span>
                         <input value='${value}' type='text' data-index='${i}'/>
