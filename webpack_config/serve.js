@@ -7,6 +7,9 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const autoprefixer = require('autoprefixer');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const templateName = process.env.NODE_ENV === 'serve' ? 'example.ejs' : 'example_mini.ejs';
+const template = path.resolve('example', templateName);
+
 module.exports = merge(common, {
     mode: 'development',
     module: {
@@ -17,7 +20,7 @@ module.exports = merge(common, {
                     {
                         loader: MiniCssExtractPlugin.loader,
                         options: {
-                            // you can specify a publicPath here
+                            // you can specify a publ icPath here
                             // by default it use publicPath in webpackOptions.output
                             publicPath: '../',
                         },
@@ -61,9 +64,9 @@ module.exports = merge(common, {
     },
     plugins: [
         new HtmlWebpackPlugin({
+            template,
             title: 'Entry Example',
             filename: path.resolve('dist', 'index.html'),
-            template: path.resolve('example', 'example.ejs'),
             // template: path.resolve('./example/example.html'),
             inject: false,
             hash: true,
@@ -73,8 +76,8 @@ module.exports = merge(common, {
         contentBase: './',
         port: 8080,
         historyApiFallback: true,
-        hot: true,
-        inline: true,
+        // hot: true,
+        // inline: true,
         publicPath: '/',
         // historyApiFallback: {
         //     index: '/example/example.html',

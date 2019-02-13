@@ -65,13 +65,8 @@ function registerHardwareBlockToStatic(hardwareModules) {
 
 module.exports = {
     getBlocks() {
-        // const hardwareModules = hardware.getHardwareModuleList();
-        // registerHardwareBlockToStatic(hardwareModules);
-        setTimeout(() => {
-            hardware.getHardwareModule('block_arduino').then((o) => {
-                console.log(o);
-            });
-        }, 4000);
+        const hardwareModules = hardware.getHardwareModuleList();
+        registerHardwareBlockToStatic(hardwareModules);
 
         const basicAndExpansionBlockObjectList = getBlockObject(
             basicBlockList.concat(Object.values(Entry.EXPANSION_BLOCK_LIST))

@@ -12,17 +12,15 @@
         "type": "git",
         "url": "https://github.com/boolgom/entryjs.git"
     },
-    "keywords": [
-        "entry",
-        "entryjs",
-        "javascript"
-    ],
+    "keywords": ["entry", "entryjs", "javascript"],
     "bugs": {
         "url": "https://github.com/boolgom/entryjs/issues"
     },
     "scripts": {
         "lint": "cross-env NODE_ENV=lint webpack -w",
-        "serve": "cross-env NODE_ENV=serve webpack-dev-server --open",
+        "serve": "cross-env NODE_ENV=serve webpack-dev-server --open --hot --inline --host 0.0.0.0",
+        "serve:mini":
+            "cross-env NODE_ENV=serve-mini webpack-dev-server --open --hot --inline --host 0.0.0.0",
         "prod": "cross-env NODE_ENV=production webpack",
         "dev": "webpack -w",
         "test": "jest --colors",

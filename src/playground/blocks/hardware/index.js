@@ -16,55 +16,26 @@ Entry.HARDWARE_LIST = {};
  * 모듈은 id 가 있어야 등록된다.
  * 등록된 모듈은 Entry.HARDWARE_LIST 에 포함된다.
  */
-// const moduleListReq = require.context('.', false, /^(?!.*index.js)((.*\.(js\.*))[^.]*$)/im);
-// moduleListReq.keys().forEach((fileName) => {
-//     const module = moduleListReq(fileName);
-//     const addHardwareList = (module) => {
-//         if (typeof module.id === 'string') {
-//             Entry.HARDWARE_LIST[module.id] = module;
-//         } else if (module.id instanceof Array) {
-//             module.id.forEach((id) => {
-//                 Entry.HARDWARE_LIST[id] = module;
-//             });
-//         }
-//     };
+const moduleListReq = require.context('.', false, /^(?!.*index.js)((.*\.(js\.*))[^.]*$)/im);
+moduleListReq.keys().forEach((fileName) => {
+    const module = moduleListReq(fileName);
+    const addHardwareList = (module) => {
+        if (typeof module.id === 'string') {
+            Entry.HARDWARE_LIST[module.id] = module;
+        } else if (module.id instanceof Array) {
+            module.id.forEach((id) => {
+                Entry.HARDWARE_LIST[id] = module;
+            });
+        }
+    };
 
-//     if (module instanceof Array) {
-//         module.forEach(addHardwareList);
-//     } else {
-//         addHardwareList(module);
-//     }
-// });
+    if (module instanceof Array) {
+        module.forEach(addHardwareList);
+    } else {
+        addHardwareList(module);
+    }
+});
 
-// function getHardwareModule2(hardware, callback) {
-//     return new Promise((resolve) => {
-//         require.ensure([], function(require) {
-//             const moduleListReq = require.context(
-//                 '.',
-//                 false,
-//                 /^(?!.*index.js)((.*\.(js\.*))[^.]*$)/im
-//             );
-//             moduleListReq.keys().forEach((fileName) => {
-//                 const module = moduleListReq(fileName);
-//                 const addHardwareList = (module) => {
-//                     if (typeof module.id === 'string') {
-//                         Entry.HARDWARE_LIST[module.id] = module;
-//                     } else if (module.id instanceof Array) {
-//                         module.id.forEach((id) => {
-//                             Entry.HARDWARE_LIST[id] = module;
-//                         });
-//                     }
-//                 };
-
-//                 if (module instanceof Array) {
-//                     module.forEach(addHardwareList);
-//                 } else {
-//                     addHardwareList(module);
-//                 }
-//             });
-//         });
-//     });
-// }
 function getHardwareModule(hardware, callback) {
     return new Promise((resolve) => {
         require.ensure([], function(require) {
@@ -76,14 +47,5 @@ function getHardwareModule(hardware, callback) {
 module.exports = {
     getHardwareModuleList() {
         return Object.values(Entry.HARDWARE_LIST);
-    },
-    getAllHardwareModule() {
-        return Object.values(Entry.HARDWARE_LIST);
-    },
-    getHardwareModule(hardware) {
-        return getHardwareModule(hardware);
-    },
-    getHardwareModule2(hardware) {
-        return getHardwareModule2(hardware);
     },
 };

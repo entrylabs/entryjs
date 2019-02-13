@@ -58,16 +58,16 @@ module.exports = {
             chunkFilename: '[id].css',
         }),
     ],
-    optimization: {
-        runtimeChunk: 'single',
-        // splitChunks: {
-        //     chunks: 'all',
-        //     // cacheGroups: {
-        //     //     vendor: {
-        //     //         name: 'vendors',
-        //     //         chunks: 'all',
-        //     //     },
-        //     // },
-        // },
-    },
+    // optimization: {
+    //     runtimeChunk: 'single',
+    //     // splitChunks: {
+    //     //     chunks: 'all',
+    //     //     // cacheGroups: {
+    //     //     //     vendor: {
+    //     //     //         name: 'vendors',
+    //     //     //         chunks: 'all',
+    //     //     //     },
+    //     //     // },
+    //     // },
+    // },
 };
