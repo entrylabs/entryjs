@@ -424,7 +424,8 @@ Entry.Workspace = class Workspace {
                         !isBoardReadOnly &&
                         board &&
                         board instanceof Entry.Board &&
-                        Entry.clipboard
+                        Entry.clipboard &&
+                        Entry.playground.getViewMode() === 'code'
                     ) {
                         Entry.do('addThread', Entry.clipboard)
                             .value.getFirstBlock()
