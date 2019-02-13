@@ -11,13 +11,13 @@ Entry.Mindpiggy = {
         photointerrupt:0,
         speaker:[0,0],
     },
-    // id: 'F.F',
-    name: 'Mindpiggy',
+    id: 'FF.FF',
+    name: 'mindpiggy',
     url: 'http://inuscoop.com',
     imageName: 'mindpiggy.png',
     title: {
-        "ko": '마인드피기',
-        "en": 'mindpiggy'
+        "en": 'mindpiggy',
+        "ko": '마인드피기'
     },
     setZero: function() {
         // 엔트리 작품이 정지되었을때
@@ -111,6 +111,7 @@ Entry.Mindpiggy.getBlocks = () => {
     return {
         mindpiggy_on_digital_value: { // 블록 이름
             color: EntryStatic.colorSet.block.default.HARDWARE, // 블록색상
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic', // 블록 모양 템플릿. 자세한 목록은 docs 를 참고해주세요
             statements: [],
             params: [ //입력될 파라미터들의 속성을 정의
@@ -158,6 +159,7 @@ Entry.Mindpiggy.getBlocks = () => {
         },
         mindpiggy_off_digital_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -203,6 +205,7 @@ Entry.Mindpiggy.getBlocks = () => {
         },
         mindpiggy_neopixel_mood_on_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -256,6 +259,7 @@ Entry.Mindpiggy.getBlocks = () => {
         },
         mindpiggy_neopixel_mood_pixel_on_value :{
             color : EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton : 'basic',
             statements : [],
             params : [
@@ -319,6 +323,7 @@ Entry.Mindpiggy.getBlocks = () => {
         },
         mindpiggy_neopixel_mood_off_value : {
             color : EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton : 'basic',
             statements : [],
             params : [],
@@ -339,6 +344,7 @@ Entry.Mindpiggy.getBlocks = () => {
         },
         mindpiggy_neopixel_chip_on_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -392,6 +398,7 @@ Entry.Mindpiggy.getBlocks = () => {
         },
         mindpiggy_neopixel_chip_off_value : {
             color : EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton : 'basic',
             statements : [],
             params : [],
@@ -412,6 +419,7 @@ Entry.Mindpiggy.getBlocks = () => {
         },
         mindpiggy_get_vibration: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_boolean_field',
             params: [],
             events: {},
@@ -434,6 +442,7 @@ Entry.Mindpiggy.getBlocks = () => {
 
         mindpiggy_get_soundsensor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             params: [],
             events: {},
@@ -453,6 +462,7 @@ Entry.Mindpiggy.getBlocks = () => {
         },
         mindpiggy_get_photo: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_boolean_field',
             params: [
                 {
@@ -463,6 +473,8 @@ Entry.Mindpiggy.getBlocks = () => {
                     ],
                     value : '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -492,6 +504,7 @@ Entry.Mindpiggy.getBlocks = () => {
         },
         mindpiggy_octave_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -508,6 +521,8 @@ Entry.Mindpiggy.getBlocks = () => {
                     ],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -526,6 +541,7 @@ Entry.Mindpiggy.getBlocks = () => {
         },
         mindpiggy_tone_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -549,6 +565,8 @@ Entry.Mindpiggy.getBlocks = () => {
                     ],
                     value: 'C',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -567,6 +585,7 @@ Entry.Mindpiggy.getBlocks = () => {
         },
         mindpiggy_set_tone: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
