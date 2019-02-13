@@ -418,6 +418,7 @@ Entry.Workspace = class Workspace {
                 }
             }
 
+            const isBlockCodeView = Entry.playground.getViewMode() === 'code' || Entry.playground.getViewMode() === 'variable';
             switch (keyCode) {
                 case 86: //paste
                     if (
@@ -425,7 +426,7 @@ Entry.Workspace = class Workspace {
                         board &&
                         board instanceof Entry.Board &&
                         Entry.clipboard &&
-                        Entry.playground.getViewMode() === 'code'
+                        isBlockCodeView
                     ) {
                         Entry.do('addThread', Entry.clipboard)
                             .value.getFirstBlock()
