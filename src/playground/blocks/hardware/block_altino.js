@@ -56,12 +56,19 @@ Entry.Altino = {
 
 Entry.Altino.blockMenuBlocks = [
     'altino_analogValue',
+    'altino_stopAll',
     'altino_rear_wheel',
     'altino_steering',
     'altino_sound',
     'altino_light',
     'altino_dot_display',
     'altino_dot_display_line',
+    'altino_steering_hex',
+    'altino_light_hex',    
+    'altino_sound_hex',              
+    'altino_dot_display_hex',
+    'altino_dot_display_matrix_on',
+    'altino_dot_display_matrix_off',
 ];
 
 Entry.Altino.getBlocks = function() {
@@ -78,15 +85,6 @@ Entry.Altino.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.ALTINO_CDS, 'cds'],
-                        [Lang.Blocks.ALTINO_IR1, 'ir1'],
-                        [Lang.Blocks.ALTINO_IR2, 'ir2'],
-                        [Lang.Blocks.ALTINO_IR3, 'ir3'],
-                        [Lang.Blocks.ALTINO_IR4, 'ir4'],
-                        [Lang.Blocks.ALTINO_IR5, 'ir5'],
-                        [Lang.Blocks.ALTINO_IR6, 'ir6'],
-                        [Lang.Blocks.ALTINO_TOR1, 'tor1'],
-                        [Lang.Blocks.ALTINO_TOR2, 'tor2'],
-                        [Lang.Blocks.ALTINO_TEM, 'tem'],
                         [Lang.Blocks.ALTINO_ACCX, 'accx'],
                         [Lang.Blocks.ALTINO_ACCY, 'accy'],
                         [Lang.Blocks.ALTINO_ACCZ, 'accz'],
@@ -96,10 +94,19 @@ Entry.Altino.getBlocks = function() {
                         [Lang.Blocks.ALTINO_GYROX, 'gyrox'],
                         [Lang.Blocks.ALTINO_GYROY, 'gyroy'],
                         [Lang.Blocks.ALTINO_GYROZ, 'gyroz'],
-                        [Lang.Blocks.ALTINO_STVAR, 'stvar'],
+                        [Lang.Blocks.ALTINO_IR1, 'ir1'],
+                        [Lang.Blocks.ALTINO_IR2, 'ir2'],
+                        [Lang.Blocks.ALTINO_IR3, 'ir3'],
+                        [Lang.Blocks.ALTINO_IR4, 'ir4'],
+                        [Lang.Blocks.ALTINO_IR5, 'ir5'],
+                        [Lang.Blocks.ALTINO_IR6, 'ir6'],
+                        [Lang.Blocks.ALTINO_TEM, 'tem'],                        
+                        [Lang.Blocks.ALTINO_TOR2, 'tor2'],
+                        [Lang.Blocks.ALTINO_TOR1, 'tor1'],
+                        //[Lang.Blocks.ALTINO_STVAR, 'stvar'],
                         [Lang.Blocks.ALTINO_STTOR, 'sttor'],
                         [Lang.Blocks.ALTINO_BAT, 'bat'],
-                        [Lang.Blocks.ALTINO_REMOTE, 'remote'],
+                        //[Lang.Blocks.ALTINO_REMOTE, 'remote'],
                     ],
                     value: 'cds',
                     fontSize: 11,
@@ -123,6 +130,96 @@ Entry.Altino.getBlocks = function() {
                 return pd[dev];
             },
             syntax: { js: [], py: ['Altino.analog_value(%1)'] },
+        },
+        altino_stopAll: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ALTINO_stopAll, 'All'],
+                        [Lang.Blocks.ALTINO_stopDrive, 'Drive'],
+                        [Lang.Blocks.ALTINO_stopSteering, 'Steering'],
+                        [Lang.Blocks.ALTINO_stopSound, 'Sound'],
+                        [Lang.Blocks.ALTINO_stopLight, 'Light'],
+                        [Lang.Blocks.ALTINO_stopDisplay, 'Display'],
+                    ],
+                    value: 'All',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'altino_stopAll',
+            },
+            paramsKeyMap: {
+                DIRECTION: 0,
+            },
+            class: 'altino_output',
+            isNotFor: ['altino'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var direction = script.getField('DIRECTION', script);
+
+                if (direction == 'All') {
+                    sq.steering = 0;
+                    sq.rightWheel = 0;
+                    sq.leftWheel = 0;
+                    sq.note = 0;
+                    sq.led = 0;
+                    sq.led2 = sq.led2 & 0x3f;
+                    sq.ascii = 0;
+                    sq.dot1 = 0;
+                    sq.dot2 = 0;
+                    sq.dot3 = 0;
+                    sq.dot4 = 0;
+                    sq.dot5 = 0;
+                    sq.dot6 = 0;
+                    sq.dot7 = 0;
+                    sq.dot8 = 0;
+                } else if (direction == 'Drive') {
+                    sq.rightWheel = 0;
+                    sq.leftWheel = 0;
+                } else if (direction == 'Steering') {
+                    sq.steering = 0;
+                } else if (direction == 'Sound') {
+                    sq.note = 0;
+                } else if (direction == 'Light') {
+                    sq.led = 0;
+                    sq.led2 = sq.led2 & 0x3f;
+                    /*
+                    sq.led = sq.led & 0xfc;
+                    sq.led = sq.led & 0xf3;
+                    sq.led2 = sq.led2 & 0x3f;
+                    sq.led = sq.led & 0x5f;
+                    sq.led = sq.led & 0xaf;
+                    */
+                } else if (direction == 'Display') {
+                    sq.ascii = 0;
+                    sq.dot1 = 0;
+                    sq.dot2 = 0;
+                    sq.dot3 = 0;
+                    sq.dot4 = 0;
+                    sq.dot5 = 0;
+                    sq.dot6 = 0;
+                    sq.dot7 = 0;
+                    sq.dot8 = 0;
+                } 
+                
+                return script.callReturn();
+            },
+            syntax: { js: [], py: ['Altino.stop(%1)'] },
         },
         altino_steering: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -162,7 +259,7 @@ Entry.Altino.getBlocks = function() {
             paramsKeyMap: {
                 DIRECTION: 0,
             },
-            class: 'altino_motor',
+            class: 'altino_output',
             isNotFor: ['altino'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
@@ -189,8 +286,86 @@ Entry.Altino.getBlocks = function() {
                 }
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Altino.steering(%1,%2)'] },
+            syntax: { js: [], py: ['Altino.steering(%1)'] },
         },
+        altino_steering_hex: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'altino_steering_hex',
+            },
+            paramsKeyMap: {
+                steerVal: 0,
+            },
+            class: 'altino_expert',
+            isNotFor: ['altino'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                sq.steering = script.getNumberValue('steerVal');
+                return script.callReturn();
+            },
+            syntax: { js: [], py: ['Altino.steering_hex(%1)'] },
+        },  
+        altino_sound_hex: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'altino_sound_hex',
+            },
+            paramsKeyMap: {
+                soundVal: 0,
+            },
+            class: 'altino_expert',
+            isNotFor: ['altino'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                sq.note = script.getNumberValue('soundVal');
+                return script.callReturn();
+            },
+            syntax: { js: [], py: ['Altino.sound_hex(%1)'] },
+        },      
         altino_rear_wheel: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -216,32 +391,31 @@ Entry.Altino.getBlocks = function() {
                 params: [
                     {
                         type: 'text',
-                        params: ['300'],
+                        params: ['400'],
                     },
                     {
                         type: 'text',
-                        params: ['300'],
+                        params: ['400'],
                     },
                     null,
                 ],
                 type: 'altino_rear_wheel',
             },
             paramsKeyMap: {
-                rightWheel: 0,
-                leftWheel: 1,
+                leftWheel: 0,
+                rightWheel: 1,
             },
-            class: 'altino_motor',
+            class: 'altino_output',
             isNotFor: ['altino'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
 
                 sq.rightWheel = script.getNumberValue('rightWheel');
                 sq.leftWheel = script.getNumberValue('leftWheel');
-
                 return script.callReturn();
             },
             syntax: { js: [], py: ['Altino.rear_wheel(%1, %2)'] },
-        },
+        },       
         altino_sound: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -251,12 +425,14 @@ Entry.Altino.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['2', '2'],
-                        ['3', '3'],
-                        ['4', '4'],
-                        ['5', '5'],
-                        ['6', '6'],
-                        ['7', '7'],
+                        ['1-' + Lang.Blocks.ALTINO_sound_oct, '1'],
+                        ['2-' + Lang.Blocks.ALTINO_sound_oct, '2'],
+                        ['3-' + Lang.Blocks.ALTINO_sound_oct, '3'],
+                        ['4-' + Lang.Blocks.ALTINO_sound_oct, '4'],
+                        ['5-' + Lang.Blocks.ALTINO_sound_oct, '5'],
+                        ['6-' + Lang.Blocks.ALTINO_sound_oct, '6'],
+                        ['7-' + Lang.Blocks.ALTINO_sound_oct, '7'],
+                        ['8-' + Lang.Blocks.ALTINO_sound_oct, '8'],
                     ],
                     value: '4',
                     fontSize: 11,
@@ -300,7 +476,7 @@ Entry.Altino.getBlocks = function() {
                 OCTAVE: 0,
                 NOTE: 1,
             },
-            class: 'altino_display',
+            class: 'altino_output',
             isNotFor: ['altino'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
@@ -309,6 +485,18 @@ Entry.Altino.getBlocks = function() {
                 var octave_int = octave + note;
 
                 if (note == 'NOT') sq.note = 0;
+                else if (octave_int == '1C') sq.note = 1;
+                else if (octave_int == '1C#') sq.note = 2;
+                else if (octave_int == '1D') sq.note = 3;
+                else if (octave_int == '1D#') sq.note = 4;
+                else if (octave_int == '1E') sq.note = 5;
+                else if (octave_int == '1F') sq.note = 6;
+                else if (octave_int == '1F#') sq.note = 7;
+                else if (octave_int == '1G') sq.note = 8;
+                else if (octave_int == '1G#') sq.note = 9;
+                else if (octave_int == '1A') sq.note = 10;
+                else if (octave_int == '1A#') sq.note = 11;
+                else if (octave_int == '1B') sq.note = 12;
                 else if (octave_int == '2C') sq.note = 13;
                 else if (octave_int == '2C#') sq.note = 14;
                 else if (octave_int == '2D') sq.note = 15;
@@ -381,6 +569,18 @@ Entry.Altino.getBlocks = function() {
                 else if (octave_int == '7A') sq.note = 82;
                 else if (octave_int == '7A#') sq.note = 83;
                 else if (octave_int == '7B') sq.note = 84;
+                else if (octave_int == '8C') sq.note = 85;
+                else if (octave_int == '8C#') sq.note = 86;
+                else if (octave_int == '8D') sq.note = 87;
+                else if (octave_int == '8D#') sq.note = 88;
+                else if (octave_int == '8E') sq.note = 89;
+                else if (octave_int == '8F') sq.note = 90;
+                else if (octave_int == '8F#') sq.note = 91;
+                else if (octave_int == '8G') sq.note = 92;
+                else if (octave_int == '8G#') sq.note = 93;
+                else if (octave_int == '8A') sq.note = 94;
+                else if (octave_int == '8A#') sq.note = 95;
+                else if (octave_int == '8B') sq.note = 96;
                 return script.callReturn();
             },
             syntax: { js: [], py: ['Altino.sound(%1, %2)'] },
@@ -395,10 +595,10 @@ Entry.Altino.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.ALTINO_Led_Forward_Light, '2'],
-                        [Lang.Blocks.ALTINO_Led_Reverse_Light, '3'],
-                        [Lang.Blocks.ALTINO_Led_Brake_Light, '4'],
                         [Lang.Blocks.ALTINO_Led_Turn_Left_Light, '5'],
                         [Lang.Blocks.ALTINO_Led_Turn_Right_Light, '6'],
+                        [Lang.Blocks.ALTINO_Led_Brake_Light, '4'],
+                        [Lang.Blocks.ALTINO_Led_Reverse_Light, '3'],
                     ],
                     value: '2',
                     fontSize: 11,
@@ -428,7 +628,7 @@ Entry.Altino.getBlocks = function() {
                 SELECT: 0,
                 ONOFF: 1,
             },
-            class: 'altino_display',
+            class: 'altino_output',
             isNotFor: ['altino'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
@@ -448,7 +648,7 @@ Entry.Altino.getBlocks = function() {
                 }
 
                 if (select == '4' && onoff == '255') {
-                    sq.led2 = sq.led2 | 0xc1;
+                    sq.led2 = sq.led2 | 0xc0;
                 } else if (select == '4' && onoff == '0') {
                     sq.led2 = sq.led2 & 0x3f;
                 }
@@ -470,6 +670,206 @@ Entry.Altino.getBlocks = function() {
             },
             syntax: { js: [], py: ['Altino.light(%1, %2)'] },
         },
+        altino_dot_display_matrix_on: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'altino_dot_display_matrix_on',
+            },
+            paramsKeyMap: {
+                VALUE1: 0,
+                VALUE2: 1,
+            },
+            class: 'altino_expert',
+            isNotFor: ['altino'],
+            func: function(sprite, script) {
+                
+                var sq = Entry.hw.sendQueue;
+                var nx = script.getNumberValue('VALUE1');
+                var ny = script.getNumberValue('VALUE2');
+                var mask = 1;
+                
+                if((ny >= 1) && (ny <= 8)){
+                    ny = ny - 1;
+                    mask = mask << ny;
+                    if(nx == 1){
+                        sq.dot8 |= mask;
+                    }else if(nx == 2){
+                        sq.dot7 |= mask;
+                    }else if(nx == 3){
+                        sq.dot6 |= mask;
+                    }else if(nx == 4){
+                        sq.dot5 |= mask;
+                    }else if(nx == 5){
+                        sq.dot4 |= mask;
+                    }else if(nx == 6){
+                        sq.dot3 |= mask;
+                    }else if(nx == 7){
+                        sq.dot2 |= mask;
+                    }else if(nx == 8){
+                        sq.dot1 |= mask;
+                    }
+                }
+                
+                return script.callReturn();
+            },
+            syntax: { js: [], py: ['Altino.dot_display_matrix_on(%1, %2)'] },
+        },
+        altino_dot_display_matrix_off: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'altino_dot_display_matrix_off',
+            },
+            paramsKeyMap: {
+                VALUE1: 0,
+                VALUE2: 1,
+            },
+            class: 'altino_expert',
+            isNotFor: ['altino'],
+            func: function(sprite, script) {
+                
+                var sq = Entry.hw.sendQueue;
+                var nx = script.getNumberValue('VALUE1');
+                var ny = script.getNumberValue('VALUE2');
+                var mask = 1;
+
+                if((ny >= 1) && (ny <= 8)){
+                    ny = ny - 1;
+                    mask = mask << ny;
+                    if(nx == 1){
+                        sq.dot8 &= ~mask;
+                    }else if(nx == 2){
+                        sq.dot7 &= ~mask;
+                    }else if(nx == 3){
+                        sq.dot6 &= ~mask;
+                    }else if(nx == 4){
+                        sq.dot5 &= ~mask;
+                    }else if(nx == 5){
+                        sq.dot4 &= ~mask;
+                    }else if(nx == 6){
+                        sq.dot3 &= ~mask;
+                    }else if(nx == 7){
+                        sq.dot2 &= ~mask;
+                    }else if(nx == 8){
+                        sq.dot1 &= ~mask;
+                    }
+                }
+                return script.callReturn();
+            },
+            syntax: { js: [], py: ['Altino.dot_display_matrix_off(%1, %2)'] },
+        },
+        altino_light_hex: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0x00'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0x00'],
+                    },
+                    null,
+                ],
+                type: 'altino_light_hex',
+            },
+            paramsKeyMap: {
+                MSB: 0,
+                LSB: 1,
+            },
+            class: 'altino_expert',
+            isNotFor: ['altino'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var msb = script.getNumberValue('MSB');
+                var lsb = script.getNumberValue('LSB');
+
+                sq.led2 = (msb & 0xC0) | (sq.led2 & 0x3F); 
+                sq.led = lsb;
+
+                return script.callReturn();
+            },
+            syntax: { js: [], py: ['Altino.light_hex(%1, %2)'] },
+        },    
         altino_dot_display: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -500,7 +900,7 @@ Entry.Altino.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
-            class: 'altino_display',
+            class: 'altino_output',
             isNotFor: ['altino'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
@@ -525,6 +925,204 @@ Entry.Altino.getBlocks = function() {
             },
         },
         altino_dot_display_line: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ALTINO_dot_line_1, '1'],
+                        [Lang.Blocks.ALTINO_dot_line_2, '2'],
+                        [Lang.Blocks.ALTINO_dot_line_3, '3'],
+                        [Lang.Blocks.ALTINO_dot_line_4, '4'],
+                        [Lang.Blocks.ALTINO_dot_line_5, '5'],
+                        [Lang.Blocks.ALTINO_dot_line_6, '6'],
+                        [Lang.Blocks.ALTINO_dot_line_7, '7'],
+                        [Lang.Blocks.ALTINO_dot_line_8, '8'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [[Lang.Blocks.ALTINO_h2, '1'], [Lang.Blocks.ALTINO_h, '0']],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [[Lang.Blocks.ALTINO_h2, '1'], [Lang.Blocks.ALTINO_h, '0']],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [[Lang.Blocks.ALTINO_h2, '1'], [Lang.Blocks.ALTINO_h, '0']],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [[Lang.Blocks.ALTINO_h2, '1'], [Lang.Blocks.ALTINO_h, '0']],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [[Lang.Blocks.ALTINO_h2, '1'], [Lang.Blocks.ALTINO_h, '0']],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [[Lang.Blocks.ALTINO_h2, '1'], [Lang.Blocks.ALTINO_h, '0']],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [[Lang.Blocks.ALTINO_h2, '1'], [Lang.Blocks.ALTINO_h, '0']],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [[Lang.Blocks.ALTINO_h2, '1'], [Lang.Blocks.ALTINO_h, '0']],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null, null, null, null, null, null, null, null, null, null],
+                type: 'altino_dot_display_line',
+            },
+            paramsKeyMap: {
+                LINE: 0,
+                SW1: 1,
+                SW2: 2,
+                SW3: 3,
+                SW4: 4,
+                SW5: 5,
+                SW6: 6,
+                SW7: 7,
+                SW8: 8,
+            },
+            class: 'altino_output',
+            isNotFor: ['altino'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var line = script.getStringField('LINE', script);
+                var dots = [
+                    script.getStringField('SW1', script),
+                    script.getStringField('SW2', script),
+                    script.getStringField('SW3', script),
+                    script.getStringField('SW4', script),
+                    script.getStringField('SW5', script),
+                    script.getStringField('SW6', script),
+                    script.getStringField('SW7', script),
+                    script.getStringField('SW8', script)
+            ];
+
+                var mask = 0;
+
+                if(line == '1'){
+                    mask = 0x01;
+                }else if(line == '2'){
+                    mask = 0x02;
+                }else if(line == '3'){
+                    mask = 0x04;
+                }else if(line == '4'){
+                    mask = 0x08;
+                }else if(line == '5'){
+                    mask = 0x10;
+                }else if(line == '6'){
+                    mask = 0x20;
+                }else if(line == '7'){
+                    mask = 0x40;
+                }else if(line == '8'){
+                    mask = 0x80;
+                }
+                
+                if(dots[7] == "1"){
+                    sq.dot1 |= mask;
+                }else{
+                    sq.dot1 &= ~mask;
+                }
+
+                if(dots[6] == "1"){
+                    sq.dot2 |= mask;
+                }else{
+                    sq.dot2 &= ~mask;
+                }
+
+                if(dots[5] == "1"){
+                    sq.dot3 |= mask;
+                }else{
+                    sq.dot3 &= ~mask;
+                }
+
+                if(dots[4] == "1"){
+                    sq.dot4 |= mask;
+                }else{
+                    sq.dot4 &= ~mask;
+                }
+
+                if(dots[3] == "1"){
+                    sq.dot5 |= mask;
+                }else{
+                    sq.dot5 &= ~mask;
+                }
+
+                if(dots[2] == "1"){
+                    sq.dot6 |= mask;
+                }else{
+                    sq.dot6 &= ~mask;
+                }
+
+                if(dots[1] == "1"){
+                    sq.dot7 |= mask;
+                }else{
+                    sq.dot7 &= ~mask;
+                }
+
+                if(dots[0] == "1"){
+                    sq.dot8 |= mask;
+                }else{
+                    sq.dot8 &= ~mask;
+                }
+
+                //sq.led = 0xff;
+                return script.callReturn();
+            },
+            syntax: { js: [], py: ['Altino.dot_display_line(%1, %2, %3, %4, %5, %6, %7, %8)'] },
+        },
+        altino_dot_display_hex: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -573,39 +1171,39 @@ Entry.Altino.getBlocks = function() {
                 params: [
                     {
                         type: 'text',
-                        params: ['0xff'],
+                        params: ['0x00'],
                     },
                     {
                         type: 'text',
-                        params: ['0xff'],
+                        params: ['0x00'],
                     },
                     {
                         type: 'text',
-                        params: ['0xff'],
+                        params: ['0x00'],
                     },
                     {
                         type: 'text',
-                        params: ['0xff'],
+                        params: ['0x00'],
                     },
                     {
                         type: 'text',
-                        params: ['0xff'],
+                        params: ['0x00'],
                     },
                     {
                         type: 'text',
-                        params: ['0xff'],
+                        params: ['0x00'],
                     },
                     {
                         type: 'text',
-                        params: ['0xff'],
+                        params: ['0x00'],
                     },
                     {
                         type: 'text',
-                        params: ['0xff'],
+                        params: ['0x00'],
                     },
                     null,
                 ],
-                type: 'altino_dot_display_line',
+                type: 'altino_dot_display_hex',
             },
             paramsKeyMap: {
                 VALUE1: 0,
@@ -617,22 +1215,23 @@ Entry.Altino.getBlocks = function() {
                 VALUE7: 6,
                 VALUE8: 7,
             },
-            class: 'altino_display',
+            class: 'altino_expert',
             isNotFor: ['altino'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 sq.ascii = 0;
-                sq.dot1 = script.getNumberValue('VALUE1');
-                sq.dot2 = script.getNumberValue('VALUE2');
-                sq.dot3 = script.getNumberValue('VALUE3');
-                sq.dot4 = script.getNumberValue('VALUE4');
-                sq.dot5 = script.getNumberValue('VALUE5');
-                sq.dot6 = script.getNumberValue('VALUE6');
-                sq.dot7 = script.getNumberValue('VALUE7');
-                sq.dot8 = script.getNumberValue('VALUE8');
+                sq.dot1 = script.getNumberValue('VALUE8');
+                sq.dot2 = script.getNumberValue('VALUE7');
+                sq.dot3 = script.getNumberValue('VALUE6');
+                sq.dot4 = script.getNumberValue('VALUE5');
+                sq.dot5 = script.getNumberValue('VALUE4');
+                sq.dot6 = script.getNumberValue('VALUE3');
+                sq.dot7 = script.getNumberValue('VALUE2');
+                sq.dot8 = script.getNumberValue('VALUE1');
 
                 return script.callReturn();
             },
+            syntax: { js: [], py: ['Altino.dot_display_hex(%1, %2, %3, %4, %5, %6, %7, %8)'] },
         },
         //endregion Altino 알티노
     };
