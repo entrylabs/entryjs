@@ -1,18 +1,18 @@
 'use strict';
 
-Entry.Minicell = {
+Entry.PalmKit = {
     id: 'E.1',
-    name: 'minicell',
+    name: 'palmkit',
     url: 'http://http://www.needsrobot.com/',
     title: {
         'ko': '팜킷',
         'en': 'PALM KIT',
     },
     setZero: function() {
-        var mcell = Entry.Minicell.KEY;
+        var mcell = Entry.PalmKit.KEY;
         var sq = Entry.hw.sendQueue;
         for(var key in mcell)
-            delete sq[Entry.Minicell.KEY[key]];
+            delete sq[Entry.PalmKit.KEY[key]];
         sq.set_zero = {};
         Entry.hw.update();
         delete sq.set_zero;
@@ -26,7 +26,7 @@ Entry.Minicell = {
         LED_B: 'led_b',
     },
     monitorTemplate:{
-        imgPath: 'hw/minicell.png',
+        imgPath: 'hw/palmkit.png',
         width: 700,
         height: 524,
         listPorts:{
@@ -82,9 +82,9 @@ Entry.Minicell = {
 
         var p = 2*l - q;
 
-        var r = Math.max(0, Entry.Minicell.hueToRGB(p, q, h + (1/3)));
-        var g = Math.max(0, Entry.Minicell.hueToRGB(p, q, h));
-        var b = Math.max(0, Entry.Minicell.hueToRGB(p, q, h - (1/3)));
+        var r = Math.max(0, Entry.PalmKit.hueToRGB(p, q, h + (1/3)));
+        var g = Math.max(0, Entry.PalmKit.hueToRGB(p, q, h));
+        var b = Math.max(0, Entry.PalmKit.hueToRGB(p, q, h - (1/3)));
 
         
         rgb.r = Math.round(Math.min(r, 1) * 255);
@@ -108,30 +108,30 @@ Entry.Minicell = {
 
 };
 
-Entry.Minicell.blockMenuBlocks = [
-    'minicell_inputsensor',
-    'minicell_ispressed',
+Entry.PalmKit.blockMenuBlocks = [
+    'palmkit_inputsensor',
+    'palmkit_ispressed',
 
-    'minicell_buzzer_off',
-    'minicell_buzzer_note',
-    'minicell_buzzer_note_delay',
+    'palmkit_buzzer_off',
+    'palmkit_buzzer_note',
+    'palmkit_buzzer_note_delay',
 
-    'minicell_led_toggle',
-    'minicell_led_color',
-    'minicell_led_color_number',
-    'minicell_led',
-    'minicell_led_pwm',
+    'palmkit_led_toggle',
+    'palmkit_led_color',
+    'palmkit_led_color_number',
+    'palmkit_led',
+    'palmkit_led_pwm',
 
-    'minicell_motor_stop',
-    'minicell_dc_motor',
-    'minicell_dc_motor_for_secs',
-    'minicell_rc_motor',
-//    'minicell_rc_motor_for_secs',
+    'palmkit_motor_stop',
+    'palmkit_dc_motor',
+    'palmkit_dc_motor_for_secs',
+    'palmkit_rc_motor',
+//    'palmkit_rc_motor_for_secs',
 ];
 
-Entry.Minicell.getBlocks = function() {
+Entry.PalmKit.getBlocks = function() {
     return {
-        minicell_inputsensor: { 
+        palmkit_inputsensor: { 
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -140,9 +140,9 @@ Entry.Minicell.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.MINICELL_pot, 'POT'],
-                        [Lang.Blocks.MINICELL_button, 'TACT_SWITCH'],
-                        [Lang.Blocks.MINICELL_cds, 'CDS'],
+                        [Lang.Blocks.PALMKIT_pot, 'POT'],
+                        [Lang.Blocks.PALMKIT_button, 'TACT_SWITCH'],
+                        [Lang.Blocks.PALMKIT_cds, 'CDS'],
                     ],
                     value: 'CDS',
                     fontSize: 11,
@@ -152,10 +152,10 @@ Entry.Minicell.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.MINICELL_idx0, '0'],
-                        [Lang.Blocks.MINICELL_idx1, '1'],
-                        [Lang.Blocks.MINICELL_idx2, '2'],
-                        [Lang.Blocks.MINICELL_idx3, '3'],
+                        [Lang.Blocks.PALMKIT_idx0, '0'],
+                        [Lang.Blocks.PALMKIT_idx1, '1'],
+                        [Lang.Blocks.PALMKIT_idx2, '2'],
+                        [Lang.Blocks.PALMKIT_idx3, '3'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -166,21 +166,21 @@ Entry.Minicell.getBlocks = function() {
             events: {},
             def: {
                 params: [null],
-                type: 'minicell_inputsensor'
+                type: 'palmkit_inputsensor'
             },
             paramsKeyMap: {
                 'TYPE': 0,
                 'INDEX': 1
             },
-            class: 'minicell_input',
-            isNotFor: ['minicell'],
+            class: 'palmkit_input',
+            isNotFor: ['palmkit'],
             func: function (sprite, script) {
                 var pd = Entry.hw.portData[script.getField('TYPE', script)+script.getField('INDEX', script)];
                 return pd;
             },
-            syntax: { js: [], py: ['Minicell.inputsensor(%1, %2)']},
+            syntax: { js: [], py: ['PalmKit.inputsensor(%1, %2)']},
         },
-        minicell_ispressed: { 
+        palmkit_ispressed: { 
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_boolean_field',
@@ -189,10 +189,10 @@ Entry.Minicell.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.MINICELL_idx0, '0'],
-                        [Lang.Blocks.MINICELL_idx1, '1'],
-                        [Lang.Blocks.MINICELL_idx2, '2'],
-                        [Lang.Blocks.MINICELL_idx3, '3'],
+                        [Lang.Blocks.PALMKIT_idx0, '0'],
+                        [Lang.Blocks.PALMKIT_idx1, '1'],
+                        [Lang.Blocks.PALMKIT_idx2, '2'],
+                        [Lang.Blocks.PALMKIT_idx3, '3'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -203,21 +203,21 @@ Entry.Minicell.getBlocks = function() {
             events: {},
             def: {
                 params: [null],
-                type: 'minicell_ispressed'
+                type: 'palmkit_ispressed'
             },
             paramsKeyMap: {
                 'INDEX': 0
             },
-            class: 'minicell_input',
-            isNotFor: ['minicell'],
+            class: 'palmkit_input',
+            isNotFor: ['palmkit'],
             func: function (sprite, script) {
                 var pd = Entry.hw.portData['TACT_SWITCH' + script.getField('INDEX', script)];
                 if(pd == 1) return true;
                 else return false;
             },
-            syntax: { js: [], py: ['Minicell.ispressed(%1)']},
+            syntax: { js: [], py: ['PalmKit.ispressed(%1)']},
         },
-        minicell_buzzer_off: {
+        palmkit_buzzer_off: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -226,10 +226,10 @@ Entry.Minicell.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.MINICELL_idx0, '1'],
-                        [Lang.Blocks.MINICELL_idx1, '2'],
-                        [Lang.Blocks.MINICELL_idx2, '3'],
-                        [Lang.Blocks.MINICELL_idx3, '4'],
+                        [Lang.Blocks.PALMKIT_idx0, '1'],
+                        [Lang.Blocks.PALMKIT_idx1, '2'],
+                        [Lang.Blocks.PALMKIT_idx2, '3'],
+                        [Lang.Blocks.PALMKIT_idx3, '4'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -245,13 +245,13 @@ Entry.Minicell.getBlocks = function() {
             events: {},
             def: {
                 params: [null],
-                type: 'minicell_buzzer_off'
+                type: 'palmkit_buzzer_off'
             },
             paramsKeyMap: {
                 'INDEX': 0,
             },
-            class: 'minicell_buzzer',
-            isNotFor: ['minicell'],
+            class: 'palmkit_buzzer',
+            isNotFor: ['palmkit'],
             func: function (sprite, script) {
                 var buf = {};
                 var sq = Entry.hw.sendQueue;
@@ -265,9 +265,9 @@ Entry.Minicell.getBlocks = function() {
                 Entry.hw.update();
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Minicell.buzzer_off(%1, %2)']}
+            syntax: { js: [], py: ['PalmKit.buzzer_off(%1, %2)']}
         },
-        minicell_buzzer_note: {
+        palmkit_buzzer_note: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -276,10 +276,10 @@ Entry.Minicell.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.MINICELL_idx0, '1'],
-                        [Lang.Blocks.MINICELL_idx1, '2'],
-                        [Lang.Blocks.MINICELL_idx2, '3'],
-                        [Lang.Blocks.MINICELL_idx3, '4'],
+                        [Lang.Blocks.PALMKIT_idx0, '1'],
+                        [Lang.Blocks.PALMKIT_idx1, '2'],
+                        [Lang.Blocks.PALMKIT_idx2, '3'],
+                        [Lang.Blocks.PALMKIT_idx3, '4'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -289,18 +289,18 @@ Entry.Minicell.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.MINICELL_buzzer_note_c, '48'],
-                        [Lang.Blocks.MINICELL_buzzer_note_cs, '49'],
-                        [Lang.Blocks.MINICELL_buzzer_note_d, '50'],
-                        [Lang.Blocks.MINICELL_buzzer_note_ds, '51'],
-                        [Lang.Blocks.MINICELL_buzzer_note_e, '52'],
-                        [Lang.Blocks.MINICELL_buzzer_note_f, '53'],
-                        [Lang.Blocks.MINICELL_buzzer_note_fs, '54'],
-                        [Lang.Blocks.MINICELL_buzzer_note_g, '55'],
-                        [Lang.Blocks.MINICELL_buzzer_note_gs, '56'],
-                        [Lang.Blocks.MINICELL_buzzer_note_a, '57'],
-                        [Lang.Blocks.MINICELL_buzzer_note_as, '58'],
-                        [Lang.Blocks.MINICELL_buzzer_note_b, '59'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_c, '48'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_cs, '49'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_d, '50'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_ds, '51'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_e, '52'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_f, '53'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_fs, '54'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_g, '55'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_gs, '56'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_a, '57'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_as, '58'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_b, '59'],
                     ],
                     value:'48',
                     fontSize: 11,
@@ -316,14 +316,14 @@ Entry.Minicell.getBlocks = function() {
             events: {},
             def: {
                 params: [null],
-                type: 'minicell_buzzer_note'
+                type: 'palmkit_buzzer_note'
             },
             paramsKeyMap: {
                 'INDEX': 0,
                 'NOTE': 1,
             },
-            class: 'minicell_buzzer',
-            isNotFor: ['minicell'],
+            class: 'palmkit_buzzer',
+            isNotFor: ['palmkit'],
             func: function (sprite, script) {
                 var buf = {};
                 var sq = Entry.hw.sendQueue;
@@ -338,9 +338,9 @@ Entry.Minicell.getBlocks = function() {
                 Entry.hw.update();
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Minicell.buzzer_note(%1, %2, %3)']}
+            syntax: { js: [], py: ['PalmKit.buzzer_note(%1, %2, %3)']}
         },
-        minicell_buzzer_note_delay: {
+        palmkit_buzzer_note_delay: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -349,10 +349,10 @@ Entry.Minicell.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.MINICELL_idx0, '1'],
-                        [Lang.Blocks.MINICELL_idx1, '2'],
-                        [Lang.Blocks.MINICELL_idx2, '3'],
-                        [Lang.Blocks.MINICELL_idx3, '4'],
+                        [Lang.Blocks.PALMKIT_idx0, '1'],
+                        [Lang.Blocks.PALMKIT_idx1, '2'],
+                        [Lang.Blocks.PALMKIT_idx2, '3'],
+                        [Lang.Blocks.PALMKIT_idx3, '4'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -362,18 +362,18 @@ Entry.Minicell.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.MINICELL_buzzer_note_c, '48'],
-                        [Lang.Blocks.MINICELL_buzzer_note_cs, '49'],
-                        [Lang.Blocks.MINICELL_buzzer_note_d, '50'],
-                        [Lang.Blocks.MINICELL_buzzer_note_ds, '51'],
-                        [Lang.Blocks.MINICELL_buzzer_note_e, '52'],
-                        [Lang.Blocks.MINICELL_buzzer_note_f, '53'],
-                        [Lang.Blocks.MINICELL_buzzer_note_fs, '54'],
-                        [Lang.Blocks.MINICELL_buzzer_note_g, '55'],
-                        [Lang.Blocks.MINICELL_buzzer_note_gs, '56'],
-                        [Lang.Blocks.MINICELL_buzzer_note_a, '57'],
-                        [Lang.Blocks.MINICELL_buzzer_note_as, '58'],
-                        [Lang.Blocks.MINICELL_buzzer_note_b, '59'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_c, '48'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_cs, '49'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_d, '50'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_ds, '51'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_e, '52'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_f, '53'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_fs, '54'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_g, '55'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_gs, '56'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_a, '57'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_as, '58'],
+                        [Lang.Blocks.PALMKIT_buzzer_note_b, '59'],
                     ],
                     value:'48',
                     fontSize: 11,
@@ -402,15 +402,15 @@ Entry.Minicell.getBlocks = function() {
                         },
                         null
                     ],
-                type: 'minicell_buzzer_note_delay'
+                type: 'palmkit_buzzer_note_delay'
             },
             paramsKeyMap: {
                 'INDEX': 0,
                 'NOTE': 1,
                 'SEC': 2,
             },
-            class: 'minicell_buzzer',
-            isNotFor: ['minicell'],
+            class: 'palmkit_buzzer',
+            isNotFor: ['palmkit'],
             func: function (sprite, script) {
                 var buf = {};
                 var sq = Entry.hw.sendQueue;
@@ -446,9 +446,9 @@ Entry.Minicell.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: ['Minicell.buzzer_note_delay(%1, %2, %3, %4)']}
+            syntax: { js: [], py: ['PalmKit.buzzer_note_delay(%1, %2, %3, %4)']}
         },
-        minicell_led_toggle: {
+        palmkit_led_toggle: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -457,10 +457,10 @@ Entry.Minicell.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.MINICELL_idx0, '1'],
-                        [Lang.Blocks.MINICELL_idx1, '2'],
-                        [Lang.Blocks.MINICELL_idx2, '3'],
-                        [Lang.Blocks.MINICELL_idx3, '4'],
+                        [Lang.Blocks.PALMKIT_idx0, '1'],
+                        [Lang.Blocks.PALMKIT_idx1, '2'],
+                        [Lang.Blocks.PALMKIT_idx2, '3'],
+                        [Lang.Blocks.PALMKIT_idx3, '4'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -470,8 +470,8 @@ Entry.Minicell.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.MINICELL_led_on, '255'],
-                        [Lang.Blocks.MINICELL_led_off, '0'],
+                        [Lang.Blocks.PALMKIT_led_on, '255'],
+                        [Lang.Blocks.PALMKIT_led_off, '0'],
                     ],
                     value:'255',
                     fontSize: 11,
@@ -487,14 +487,14 @@ Entry.Minicell.getBlocks = function() {
             events: {},
             def: {
                 params: [null],
-                type: 'minicell_led_toggle'
+                type: 'palmkit_led_toggle'
             },
             paramsKeyMap: {
                 'INDEX': 0,
                 'VALUE': 1,
             },
-            class: 'minicell_led',
-            isNotFor: ['minicell'],
+            class: 'palmkit_led',
+            isNotFor: ['palmkit'],
             func: function (sprite, script) {
                 var buf = {};
                 var sq = Entry.hw.sendQueue;
@@ -513,9 +513,9 @@ Entry.Minicell.getBlocks = function() {
                 Entry.hw.update();
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Minicell.led_toggle(%1, %2, %3)']}
+            syntax: { js: [], py: ['PalmKit.led_toggle(%1, %2, %3)']}
         },
-        minicell_led_color: {
+        palmkit_led_color: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -524,10 +524,10 @@ Entry.Minicell.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.MINICELL_idx0, '1'],
-                        [Lang.Blocks.MINICELL_idx1, '2'],
-                        [Lang.Blocks.MINICELL_idx2, '3'],
-                        [Lang.Blocks.MINICELL_idx3, '4'],
+                        [Lang.Blocks.PALMKIT_idx0, '1'],
+                        [Lang.Blocks.PALMKIT_idx1, '2'],
+                        [Lang.Blocks.PALMKIT_idx2, '3'],
+                        [Lang.Blocks.PALMKIT_idx3, '4'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -546,14 +546,14 @@ Entry.Minicell.getBlocks = function() {
             events: {},
             def: {
                 params: [null],
-                type: 'minicell_led_color'
+                type: 'palmkit_led_color'
             },
             paramsKeyMap: {
                 'INDEX': 0,
                 'VALUE': 1
             },
-            class: 'minicell_led',
-            isNotFor: ['minicell'],
+            class: 'palmkit_led',
+            isNotFor: ['palmkit'],
             func: function (sprite, script) {
                 var buf = {};
                 var sq = Entry.hw.sendQueue;
@@ -573,9 +573,9 @@ Entry.Minicell.getBlocks = function() {
                 Entry.hw.update();
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Minicell.led_color(%1, %2, %3)']}
+            syntax: { js: [], py: ['PalmKit.led_color(%1, %2, %3)']}
         },
-        minicell_led_color_number: {
+        palmkit_led_color_number: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -584,10 +584,10 @@ Entry.Minicell.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.MINICELL_idx0, '1'],
-                        [Lang.Blocks.MINICELL_idx1, '2'],
-                        [Lang.Blocks.MINICELL_idx2, '3'],
-                        [Lang.Blocks.MINICELL_idx3, '4'],
+                        [Lang.Blocks.PALMKIT_idx0, '1'],
+                        [Lang.Blocks.PALMKIT_idx1, '2'],
+                        [Lang.Blocks.PALMKIT_idx2, '3'],
+                        [Lang.Blocks.PALMKIT_idx3, '4'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -615,21 +615,21 @@ Entry.Minicell.getBlocks = function() {
                         },
                         null
                     ],
-                type: 'minicell_led_color_number'
+                type: 'palmkit_led_color_number'
             },
             paramsKeyMap: {
                 'INDEX': 0,
                 'VALUE': 1
             },
-            class: 'minicell_led',
-            isNotFor: ['minicell'],
+            class: 'palmkit_led',
+            isNotFor: ['palmkit'],
             func: function (sprite, script) {
                 var buf = {};
                 var sq = Entry.hw.sendQueue;
                 
                 var idx = script.getField('INDEX', script);
                 var value = script.getNumberValue('VALUE', script);
-                var rgb = Entry.Minicell.toRGB(value);
+                var rgb = Entry.PalmKit.toRGB(value);
 
                 buf.idx = idx;
                 buf.value_r = rgb.r;
@@ -642,9 +642,9 @@ Entry.Minicell.getBlocks = function() {
                 Entry.hw.update();
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Minicell.led_color_number(%1, %2, %3)']}
+            syntax: { js: [], py: ['PalmKit.led_color_number(%1, %2, %3)']}
         },
-        minicell_led: {
+        palmkit_led: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -653,10 +653,10 @@ Entry.Minicell.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.MINICELL_idx0, '1'],
-                        [Lang.Blocks.MINICELL_idx1, '2'],
-                        [Lang.Blocks.MINICELL_idx2, '3'],
-                        [Lang.Blocks.MINICELL_idx3, '4'],
+                        [Lang.Blocks.PALMKIT_idx0, '1'],
+                        [Lang.Blocks.PALMKIT_idx1, '2'],
+                        [Lang.Blocks.PALMKIT_idx2, '3'],
+                        [Lang.Blocks.PALMKIT_idx3, '4'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -666,8 +666,8 @@ Entry.Minicell.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.MINICELL_led_on, '255'],
-                        [Lang.Blocks.MINICELL_led_off, '0'],
+                        [Lang.Blocks.PALMKIT_led_on, '255'],
+                        [Lang.Blocks.PALMKIT_led_off, '0'],
                     ],
                     value:'255',
                     fontSize: 11,
@@ -677,8 +677,8 @@ Entry.Minicell.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.MINICELL_led_on, '255'],
-                        [Lang.Blocks.MINICELL_led_off, '0'],
+                        [Lang.Blocks.PALMKIT_led_on, '255'],
+                        [Lang.Blocks.PALMKIT_led_off, '0'],
                     ],
                     value:'255',
                     fontSize: 11,
@@ -688,8 +688,8 @@ Entry.Minicell.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.MINICELL_led_on, '255'],
-                        [Lang.Blocks.MINICELL_led_off, '0'],
+                        [Lang.Blocks.PALMKIT_led_on, '255'],
+                        [Lang.Blocks.PALMKIT_led_off, '0'],
                     ],
                     value:'255',
                     fontSize: 11,
@@ -705,7 +705,7 @@ Entry.Minicell.getBlocks = function() {
             events: {},
             def: {
                 params: [null],
-                type: 'minicell_led'
+                type: 'palmkit_led'
             },
             paramsKeyMap: {
                 'INDEX': 0,
@@ -713,8 +713,8 @@ Entry.Minicell.getBlocks = function() {
                 'G': 2,
                 'B': 3,
             },
-            class: 'minicell_led',
-            isNotFor: ['minicell'],
+            class: 'palmkit_led',
+            isNotFor: ['palmkit'],
             func: function (sprite, script) {
                 var buf = {};
                 var sq = Entry.hw.sendQueue;
@@ -735,9 +735,9 @@ Entry.Minicell.getBlocks = function() {
                 Entry.hw.update();
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Minicell.led(%1, %2, %3, %4, %5)']}
+            syntax: { js: [], py: ['PalmKit.led(%1, %2, %3, %4, %5)']}
         },
-        minicell_led_pwm: {
+        palmkit_led_pwm: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -746,10 +746,10 @@ Entry.Minicell.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.MINICELL_idx0, '1'],
-                        [Lang.Blocks.MINICELL_idx1, '2'],
-                        [Lang.Blocks.MINICELL_idx2, '3'],
-                        [Lang.Blocks.MINICELL_idx3, '4'],
+                        [Lang.Blocks.PALMKIT_idx0, '1'],
+                        [Lang.Blocks.PALMKIT_idx1, '2'],
+                        [Lang.Blocks.PALMKIT_idx2, '3'],
+                        [Lang.Blocks.PALMKIT_idx3, '4'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -793,7 +793,7 @@ Entry.Minicell.getBlocks = function() {
                         },
                         null,
                     ],
-                type: 'minicell_led_pwm'
+                type: 'palmkit_led_pwm'
             },
             paramsKeyMap: {
                 'INDEX': 0,
@@ -801,8 +801,8 @@ Entry.Minicell.getBlocks = function() {
                 'G': 2,
                 'B': 3,
             },
-            class: 'minicell_led',
-            isNotFor: ['minicell'],
+            class: 'palmkit_led',
+            isNotFor: ['palmkit'],
             func: function (sprite, script) {
                 var buf = {};
                 var sq = Entry.hw.sendQueue;
@@ -823,9 +823,9 @@ Entry.Minicell.getBlocks = function() {
                 Entry.hw.update();
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Minicell.led_pwm(%1, %2, %3, %4, %5)']}
+            syntax: { js: [], py: ['PalmKit.led_pwm(%1, %2, %3, %4, %5)']}
         },
-        minicell_motor_stop: {
+        palmkit_motor_stop: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -840,11 +840,11 @@ Entry.Minicell.getBlocks = function() {
             events: {},
             def: {
                 params: [null],
-                type: 'minicell_motor_stop'
+                type: 'palmkit_motor_stop'
             },
             paramsKeyMap: {},
-            class: 'minicell_motor',
-            isNotFor: ['minicell'],
+            class: 'palmkit_motor',
+            isNotFor: ['palmkit'],
             func: function (sprite, script) {
                 var buf = {};
                 var sq = Entry.hw.sendQueue;
@@ -856,9 +856,9 @@ Entry.Minicell.getBlocks = function() {
                 Entry.hw.update();
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Minicell.motor_stop(%1)']}
+            syntax: { js: [], py: ['PalmKit.motor_stop(%1)']}
         },
-        minicell_rc_motor: {
+        palmkit_rc_motor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -867,10 +867,10 @@ Entry.Minicell.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.MINICELL_idx0, '1'],
-                        [Lang.Blocks.MINICELL_idx1, '2'],
-                        [Lang.Blocks.MINICELL_idx2, '3'],
-                        [Lang.Blocks.MINICELL_idx3, '4'],
+                        [Lang.Blocks.PALMKIT_idx0, '1'],
+                        [Lang.Blocks.PALMKIT_idx1, '2'],
+                        [Lang.Blocks.PALMKIT_idx2, '3'],
+                        [Lang.Blocks.PALMKIT_idx3, '4'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -906,15 +906,15 @@ Entry.Minicell.getBlocks = function() {
                         },
                         null,
                     ],
-                type: 'minicell_rc_motor'
+                type: 'palmkit_rc_motor'
             },
             paramsKeyMap: {
                  'INDEX': 0,
                  'ANGLE': 1,
                  'SPEED': 2,
             },
-            class: 'minicell_motor',
-            isNotFor: ['minicell'],
+            class: 'palmkit_motor',
+            isNotFor: ['palmkit'],
             func: function (sprite, script) {
                 var buf = {};
                 var sq = Entry.hw.sendQueue;
@@ -935,9 +935,9 @@ Entry.Minicell.getBlocks = function() {
                 Entry.hw.update();
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Minicell.rc_motor(%1, %2, %3, %4)']}
+            syntax: { js: [], py: ['PalmKit.rc_motor(%1, %2, %3, %4)']}
         },
-        minicell_dc_motor: {
+        palmkit_dc_motor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -946,10 +946,10 @@ Entry.Minicell.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.MINICELL_idx0, '1'],
-                        [Lang.Blocks.MINICELL_idx1, '2'],
-                        [Lang.Blocks.MINICELL_idx2, '3'],
-                        [Lang.Blocks.MINICELL_idx3, '4'],
+                        [Lang.Blocks.PALMKIT_idx0, '1'],
+                        [Lang.Blocks.PALMKIT_idx1, '2'],
+                        [Lang.Blocks.PALMKIT_idx2, '3'],
+                        [Lang.Blocks.PALMKIT_idx3, '4'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -959,8 +959,8 @@ Entry.Minicell.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.MINICELL_motor_cw, '0'],
-                        [Lang.Blocks.MINICELL_motor_ccw, '1'],
+                        [Lang.Blocks.PALMKIT_motor_cw, '0'],
+                        [Lang.Blocks.PALMKIT_motor_ccw, '1'],
                     ],
                     value:'0',
                     fontSize: 11,
@@ -989,15 +989,15 @@ Entry.Minicell.getBlocks = function() {
                         },
                         null,
                     ],
-                type: 'minicell_dc_motor'
+                type: 'palmkit_dc_motor'
             },
             paramsKeyMap: {
                  'INDEX': 0,
                  'DIR': 1,
                  'SPEED': 2,
             },
-            class: 'minicell_motor',
-            isNotFor: ['minicell'],
+            class: 'palmkit_motor',
+            isNotFor: ['palmkit'],
             func: function (sprite, script) {
                 var buf = {};
                 var sq = Entry.hw.sendQueue;
@@ -1015,9 +1015,9 @@ Entry.Minicell.getBlocks = function() {
                 Entry.hw.update();
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Minicell.dc_motor(%1, %2, %3, %4)']}
+            syntax: { js: [], py: ['PalmKit.dc_motor(%1, %2, %3, %4)']}
         },
-        minicell_dc_motor_for_secs: {
+        palmkit_dc_motor_for_secs: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1026,10 +1026,10 @@ Entry.Minicell.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.MINICELL_idx0, '1'],
-                        [Lang.Blocks.MINICELL_idx1, '2'],
-                        [Lang.Blocks.MINICELL_idx2, '3'],
-                        [Lang.Blocks.MINICELL_idx3, '4'],
+                        [Lang.Blocks.PALMKIT_idx0, '1'],
+                        [Lang.Blocks.PALMKIT_idx1, '2'],
+                        [Lang.Blocks.PALMKIT_idx2, '3'],
+                        [Lang.Blocks.PALMKIT_idx3, '4'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1039,8 +1039,8 @@ Entry.Minicell.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.MINICELL_motor_cw, '0'],
-                        [Lang.Blocks.MINICELL_motor_ccw, '1'],
+                        [Lang.Blocks.PALMKIT_motor_cw, '0'],
+                        [Lang.Blocks.PALMKIT_motor_ccw, '1'],
                     ],
                     value:'0',
                     fontSize: 11,
@@ -1077,7 +1077,7 @@ Entry.Minicell.getBlocks = function() {
                         },
                         null,
                     ],
-                type: 'minicell_dc_motor_for_secs'
+                type: 'palmkit_dc_motor_for_secs'
             },
             paramsKeyMap: {
                  'INDEX': 0,
@@ -1085,8 +1085,8 @@ Entry.Minicell.getBlocks = function() {
                  'SPEED': 2,
                  'SECS' : 3,
             },
-            class: 'minicell_motor',
-            isNotFor: ['minicell'],
+            class: 'palmkit_motor',
+            isNotFor: ['palmkit'],
             func: function (sprite, script) {
                 var buf = {};
                 var sq = Entry.hw.sendQueue;
@@ -1127,103 +1127,103 @@ Entry.Minicell.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: ['Minicell.dc_motor_for_secs(%1, %2, %3, %4, %5)']}
+            syntax: { js: [], py: ['PalmKit.dc_motor_for_secs(%1, %2, %3, %4, %5)']}
         },
     };
 };
 
-Entry.Minicell.setLanguage = function() {
+Entry.PalmKit.setLanguage = function() {
     return {
         ko: {
             template: {
-                minicell_inputsensor: '%1 %2 번',
-                minicell_ispressed: '%1 번 버튼 누르기?',
-                minicell_buzzer_off: '%1 번 부저 끄기 %2',
-                minicell_buzzer_note: '%1 번 부저 %2 음 내기 %3',
-                minicell_buzzer_note_delay: '%1 번 부저 %2 음 %3 박자로 연주하기 %4',
-                minicell_led_toggle: '%1 번 LED %2 %3',
-                minicell_led_color: '%1 번 LED 색 %2 으로 정하기 %3',
-                minicell_led_color_number: '%1 번 LED 색 %2 으로 정하기 %3',
-                minicell_led: '%1 번 LED R %2 G %3 B %4 %5',
-                minicell_led_pwm: '%1 번 LED R %2 G %3 B %4 %5',
-                minicell_motor_stop: '모터 정지하기 %1',
-                minicell_dc_motor: '%1 번 DC모터 %2 속력 %3 으로 움직이기 %4',
-                minicell_dc_motor_for_secs: '%1 번 DC모터 %2 속력 %3 으로 %4 초간 움직이기 %5',
-                minicell_rc_motor: '%1 번 RC모터 각도 %2 속력 %3 으로 움직이기 %4',
+                palmkit_inputsensor: '%1 %2 번',
+                palmkit_ispressed: '%1 번 버튼 누르기?',
+                palmkit_buzzer_off: '%1 번 부저 끄기 %2',
+                palmkit_buzzer_note: '%1 번 부저 %2 음 내기 %3',
+                palmkit_buzzer_note_delay: '%1 번 부저 %2 음 %3 박자로 연주하기 %4',
+                palmkit_led_toggle: '%1 번 LED %2 %3',
+                palmkit_led_color: '%1 번 LED 색 %2 으로 정하기 %3',
+                palmkit_led_color_number: '%1 번 LED 색 %2 으로 정하기 %3',
+                palmkit_led: '%1 번 LED R %2 G %3 B %4 %5',
+                palmkit_led_pwm: '%1 번 LED R %2 G %3 B %4 %5',
+                palmkit_motor_stop: '모터 정지하기 %1',
+                palmkit_dc_motor: '%1 번 DC모터 %2 속력 %3 으로 움직이기 %4',
+                palmkit_dc_motor_for_secs: '%1 번 DC모터 %2 속력 %3 으로 %4 초간 움직이기 %5',
+                palmkit_rc_motor: '%1 번 RC모터 각도 %2 속력 %3 으로 움직이기 %4',
             },
             Blocks: {
-                MINICELL_idx0: '1',
-                MINICELL_idx1: '2',
-                MINICELL_idx2: '3',
-                MINICELL_idx3: '4',
-                MINICELL_ir: '바닥센서',
-                MINICELL_pot: '가변저항',
-                MINICELL_button: '버튼',
-                MINICELL_cds: '조도센서',
-                MINICELL_led_on: '켜기',
-                MINICELL_led_off: '끄기',
-                MINICELL_buzzer_note_c: '도',
-                MINICELL_buzzer_note_cs: '도#',
-                MINICELL_buzzer_note_d: '레',
-                MINICELL_buzzer_note_ds: '레#',
-                MINICELL_buzzer_note_e: '미',
-                MINICELL_buzzer_note_f: '파',
-                MINICELL_buzzer_note_fs: '파#',
-                MINICELL_buzzer_note_g: '솔',
-                MINICELL_buzzer_note_gs: '솔#',
-                MINICELL_buzzer_note_a: '라',
-                MINICELL_buzzer_note_as: '라#',
-                MINICELL_buzzer_note_b: '시',
-                MINICELL_motor_cw: '시계방향',
-                MINICELL_motor_ccw: '반시계방향',
+                PALMKIT_idx0: '1',
+                PALMKIT_idx1: '2',
+                PALMKIT_idx2: '3',
+                PALMKIT_idx3: '4',
+                PALMKIT_ir: '바닥센서',
+                PALMKIT_pot: '가변저항',
+                PALMKIT_button: '버튼',
+                PALMKIT_cds: '조도센서',
+                PALMKIT_led_on: '켜기',
+                PALMKIT_led_off: '끄기',
+                PALMKIT_buzzer_note_c: '도',
+                PALMKIT_buzzer_note_cs: '도#',
+                PALMKIT_buzzer_note_d: '레',
+                PALMKIT_buzzer_note_ds: '레#',
+                PALMKIT_buzzer_note_e: '미',
+                PALMKIT_buzzer_note_f: '파',
+                PALMKIT_buzzer_note_fs: '파#',
+                PALMKIT_buzzer_note_g: '솔',
+                PALMKIT_buzzer_note_gs: '솔#',
+                PALMKIT_buzzer_note_a: '라',
+                PALMKIT_buzzer_note_as: '라#',
+                PALMKIT_buzzer_note_b: '시',
+                PALMKIT_motor_cw: '시계방향',
+                PALMKIT_motor_ccw: '반시계방향',
             }
 
         },
         en: {
             template: {
-                minicell_inputsensor: '%1 No. %2',
-                minicell_ispressed: 'No. %1 Button is pressed?',
-                minicell_buzzer_off: 'No. %1 Buzzer off %2',
-                minicell_buzzer_note: 'No. %1 Buzzer play note %2 %3',
-                minicell_buzzer_note_delay: 'No. %1 Buzzer play note %2 for %3 beats %4',
-                minicell_led_toggle: 'No. %1 LED %2 %3',
-                minicell_led_color: 'No. %1 LED set color to %2 %3',
-                minicell_led_color_number: 'No. %1 LED set color to %2 %3',
-                minicell_led: 'No. %1 LED R %2 G %3 B %4 %5',
-                minicell_led: 'No. %1 LED R %2 G %3 B %4 %5',
-                minicell_motor_stop: 'Motor stop %1',
-                minicell_dc_motor: 'No. %1 DC motor move to direction %2 at speed %3 %4',
-                minicell_dc_motor: 'No. %1 DC motor move to direction %2 at speed %3 for %4 secs %5',
-                minicell_rc_motor: 'No. %1 RC motor move to angle %2 at speed %3 %4',
+                palmkit_inputsensor: '%1 No. %2',
+                palmkit_ispressed: 'No. %1 Button is pressed?',
+                palmkit_buzzer_off: 'No. %1 Buzzer off %2',
+                palmkit_buzzer_note: 'No. %1 Buzzer play note %2 %3',
+                palmkit_buzzer_note_delay: 'No. %1 Buzzer play note %2 for %3 beats %4',
+                palmkit_led_toggle: 'No. %1 LED %2 %3',
+                palmkit_led_color: 'No. %1 LED set color to %2 %3',
+                palmkit_led_color_number: 'No. %1 LED set color to %2 %3',
+                palmkit_led: 'No. %1 LED R %2 G %3 B %4 %5',
+                palmkit_led: 'No. %1 LED R %2 G %3 B %4 %5',
+                palmkit_motor_stop: 'Motor stop %1',
+                palmkit_dc_motor: 'No. %1 DC motor move to direction %2 at speed %3 %4',
+                palmkit_dc_motor: 'No. %1 DC motor move to direction %2 at speed %3 for %4 secs %5',
+                palmkit_rc_motor: 'No. %1 RC motor move to angle %2 at speed %3 %4',
             },
             Blocks: {
-                MINICELL_idx0: '1',
-                MINICELL_idx1: '2',
-                MINICELL_idx2: '3',
-                MINICELL_idx3: '4',
-                MINICELL_ir: 'IR',
-                MINICELL_pot: 'Potentiometer',
-                MINICELL_button: 'Button',
-                MINICELL_cds: 'CDS',
-                MINICELL_led_on: 'On',
-                MINICELL_led_off: 'Off',
-                MINICELL_buzzer_note_c: 'C',
-                MINICELL_buzzer_note_cs: 'C#',
-                MINICELL_buzzer_note_d: 'D',
-                MINICELL_buzzer_note_ds: 'D#',
-                MINICELL_buzzer_note_e: 'E',
-                MINICELL_buzzer_note_f: 'F',
-                MINICELL_buzzer_note_fs: 'F#',
-                MINICELL_buzzer_note_g: 'G',
-                MINICELL_buzzer_note_gs: 'G#',
-                MINICELL_buzzer_note_a: 'A',
-                MINICELL_buzzer_note_as: 'A#',
-                MINICELL_buzzer_note_b: 'B',
-                MINICELL_motor_cw: 'Clockwise',
-                MINICELL_motor_ccw: 'Counter clockwise',
+                PALMKIT_idx0: '1',
+                PALMKIT_idx1: '2',
+                PALMKIT_idx2: '3',
+                PALMKIT_idx3: '4',
+                PALMKIT_ir: 'IR',
+                PALMKIT_pot: 'Potentiometer',
+                PALMKIT_button: 'Button',
+                PALMKIT_cds: 'CDS',
+                PALMKIT_led_on: 'On',
+                PALMKIT_led_off: 'Off',
+                PALMKIT_buzzer_note_c: 'C',
+                PALMKIT_buzzer_note_cs: 'C#',
+                PALMKIT_buzzer_note_d: 'D',
+                PALMKIT_buzzer_note_ds: 'D#',
+                PALMKIT_buzzer_note_e: 'E',
+                PALMKIT_buzzer_note_f: 'F',
+                PALMKIT_buzzer_note_fs: 'F#',
+                PALMKIT_buzzer_note_g: 'G',
+                PALMKIT_buzzer_note_gs: 'G#',
+                PALMKIT_buzzer_note_a: 'A',
+                PALMKIT_buzzer_note_as: 'A#',
+                PALMKIT_buzzer_note_b: 'B',
+                PALMKIT_motor_cw: 'Clockwise',
+                PALMKIT_motor_ccw: 'Counter clockwise',
             }
         }
     }
 };
 
-module.exports = Entry.Minicell;
+module.exports = Entry.PalmKit;
