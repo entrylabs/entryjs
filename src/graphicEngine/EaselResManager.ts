@@ -25,7 +25,7 @@ export class EaselResManager implements IGEResManager {
         //do nothing
     }
 
-    reqResource(spriteNullable:PIXI.Sprite | any, sceneID:string, pic:IRawPicture, callback:ImageLoaderHandler):void {
+    reqResource(spriteNullable:PIXI.Sprite | any, sceneID:string, pic:IRawPicture, callback:ImageLoaderHandler|null):void {
         const loader = this._imgLoader;
         let path = PIXIAtlasHelper.getRawPath(pic);
         let info = loader.getImageInfo(path);
@@ -40,7 +40,7 @@ export class EaselResManager implements IGEResManager {
         if(!info.isReady) {
             info.addCallback(callback);
         } else {
-            callback(info);
+            callback && callback(info);
         }
 
     }
