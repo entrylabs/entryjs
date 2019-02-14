@@ -2638,3 +2638,9 @@ Entry.Utils.getMouseEvent = function(event) {
     }
     return mouseEvent;
 };
+
+// window.user의 정보를 리턴.
+const WS_GET_USER_NAME = window.user ? window.user.username : ' ';
+Entry.Utils.getWindowUsername = function() {
+    return WS_GET_USER_NAME;
+};

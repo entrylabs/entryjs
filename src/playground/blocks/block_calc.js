@@ -1651,8 +1651,13 @@ module.exports = {
                 class: 'calc_user',
                 isNotFor: [],
                 func() {
-                    const username = window.user ? window.user.username : ' ';
-                    return Entry.WS_GET_USER_NAME ? Entry.WS_GET_USER_NAME : username;
+                    let username;
+                    if (Entry.type === "minimize") {
+                        username = Entry.Utils.getWindowUsername();
+                    } else {
+                        username = window.user ? window.user.username : ' ';
+                    }
+                    return username;
                 },
                 syntax: {
                     js: [],
