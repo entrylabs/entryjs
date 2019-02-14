@@ -1220,10 +1220,14 @@ Entry.EntityObject = class EntityObject {
         this.bgObject.graphics.clear();
         const width = this.getWidth();
         const height = this.getHeight();
+        const bgColor = this.getBGColour();
+        const hasColor = (bgColor || "").indexOf("#") === 0;
+        this.bgObject.alpha = hasColor ? 1 : 0;
+
         this.bgObject.graphics
             .setStrokeStyle(1)
             .beginStroke()
-            .beginFill(this.getBGColour())
+            .beginFill(bgColor)
             .drawRect(-width / 2, -height / 2, width, height);
         if (this.getLineBreak()) {
             this.bgObject.x = 0;
