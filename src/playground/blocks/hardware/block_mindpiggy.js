@@ -12,15 +12,15 @@ Entry.Mindpiggy = {
         speaker:[0,0],
     },
     id: '29.1',
-    name: 'mindpiggy',
+    name: 'Mindpiggy',
     url: 'http://inuscoop.com',
     imageName: 'mindpiggy.png',
     title: {
         "en": 'mindpiggy',
         "ko": '마인드피기'
     },
-    setZero: function() {
-        // 엔트리 작품이 정지되었을때
+    setZero: function () {
+        // 엔트리 정지시 하드웨어 초기화 로직
         var portmap = Entry.Mindpiggy.PORT_MAP;
         var sq = Entry.hw.sendQueue;
         for(var port in portmap){
@@ -59,10 +59,13 @@ Entry.Mindpiggy = {
     },
 };
 
-Entry.Mindpiggy.setLanguage = () => {
+// 언어 적용
+Entry.Mindpiggy.setLanguage = function () {
     return {
         ko: {
+            // ko.js에 작성하던 내용
             template: {
+                sample_block: '하나하면 %1',
                 mindpiggy_on_digital_value: '디지털 핀 %1 번을 켜기',
                 mindpiggy_off_digital_value: '디지털 핀 %1 번을 끄기',
                 mindpiggy_neopixel_mood_on_value: '무드등(D7) R %1 G %2 B %3 로 설정하기',
@@ -77,7 +80,9 @@ Entry.Mindpiggy.setLanguage = () => {
             }
         },
         en: {
+            // en.js에 작성하던 내용
             template: {
+                sample_block: 'one and one %1',
                 mindpiggy_on_digital_value: 'turn on digital pin %1',
                 mindpiggy_off_digital_value: 'turn off digital pin %1',
                 mindpiggy_neopixel_mood_on_value: 'mood(D7) on R %2 G %3 B %4',
@@ -92,10 +97,11 @@ Entry.Mindpiggy.setLanguage = () => {
             }
         }
     }
-}
+};
+
+// 엔트리에 등록할 블록들의 블록명 작성
 Entry.Mindpiggy.blockMenuBlocks = [
-    // "mindpiggy_on_digital_value",
-    // "mindpiggy_off_digital_value",
+    'sample_block',
     "mindpiggy_neopixel_mood_on_value",
     "mindpiggy_neopixel_mood_pixel_on_value",
     "mindpiggy_neopixel_mood_off_value",
@@ -107,102 +113,9 @@ Entry.Mindpiggy.blockMenuBlocks = [
     "mindpiggy_set_tone",
 ];
 
-Entry.Mindpiggy.getBlocks = () => {
+// 블록 생성
+Entry.Mindpiggy.getBlocks = function () {
     return {
-        mindpiggy_on_digital_value: { // 블록 이름
-            color: EntryStatic.colorSet.block.default.HARDWARE, // 블록색상
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic', // 블록 모양 템플릿. 자세한 목록은 docs 를 참고해주세요
-            statements: [],
-            params: [ //입력될 파라미터들의 속성을 정의
-                {
-                    type: 'Block',
-                    accept: 'string', //숫자만 들어가도 string 입니다. 엔트리엔 이를 구분하지 않습니다.
-                },
-            ],
-            def: {
-                params: [ //파라미터에 들어갈 기본 값.
-                    {
-                        type: 'number',
-                        params: [2],
-                    },
-                ],
-                type: 'mindpiggy_on_digital_value', // 블록 상속과 관련된 값입니다. 블록명과 동일하게 해주면 됩니다.
-            },
-            paramsKeyMap: { // 실제 블록의 로직인 func 에서 해당 인덱스의 파라미터를 가져올때 쓸 key 값
-                PORT: 0,
-            },
-            events: {},
-            class: 'MindpiggyBlock', // 블록을 묶어서 보여줄 단위값. 이 값이 바뀌면 사이에 가로줄이 생깁니다.
-            isNotFor: ['Mindpiggy'], // 하드웨어가 연결되었을 경우만 블록을 보여주겠다는 판단값입니다.
-            func: (sprite, script) => {
-                // paramsKeyMap 에서 PORT 는 파라미터의 0번 인덱스 값이었습니다.
-                const portNumber = script.getNumberValue('PORT');
-                Entry.hw.sendQueue.digitalpin=1;
-                // 값을 반환해야하는 경우는 return 할 수 있습니다.
-            },
-            syntax: { // 파이썬 문법 변환에 사용되고 있습니다.
-                js: [],
-                py: [
-                    {
-                        syntax: 'Mindpiggy.turnOnDigitalPort(%1)',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
-        },
-        mindpiggy_off_digital_value: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-            ],
-            def: {
-                params: [
-                    {
-                        type: 'number',
-                        params: [2],
-                    },
-                ],
-                type: 'mindpiggy_off_digital_value',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            events: {},
-            class: 'MindpiggyBlock',
-            isNotFor: ['Mindpiggy'],
-            func: (sprite, script) => {
-                const portNumber = script.getNumberValue('PORT');
-                Entry.hw.sendQueue.digitalpin=0;
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Mindpiggy.turnOffDigitalPort(%1)',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
-        },
         mindpiggy_neopixel_mood_on_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -247,7 +160,7 @@ Entry.Mindpiggy.getBlocks = () => {
             events:{},
             class:'MindpiggyBlock',
             isNotFor:['Mindpiggy'],
-            func:(sprite,script)=>{
+            func:function(sprite,script){
                 var RedValue = script.getNumberValue('RED');
                 var GreenValue = script.getNumberValue('GREEN');
                 var BlueValue = script.getNumberValue('BLUE');
@@ -308,7 +221,7 @@ Entry.Mindpiggy.getBlocks = () => {
             events : {},
             class : 'MindpiggyBlock',
             isNotFor : ['Mindpiggy'],
-            func : (sprite,script)=>{
+            func:function(sprite,script){
                 var Pixel = script.getNumberValue('PIXEL');
                 var RedValue = script.getNumberValue('RED');
                 var GreenValue = script.getNumberValue('GREEN');
@@ -331,7 +244,7 @@ Entry.Mindpiggy.getBlocks = () => {
             events : {},
             class : 'MindpiggyBlock',
             isNotFor : ['Mindpiggy'],
-            func : (sprite, script)=>{
+            func:function(sprite,script){
                 Entry.hw.sendQueue.moodneopixel=[12,0,0,0];
             },
             syntax: { js: [], py: ['mindpiggy.neopixel_mood_off_value()'] },
@@ -363,7 +276,7 @@ Entry.Mindpiggy.getBlocks = () => {
                     },
                     {
                         type:'number',
-                        params:['110']
+                        params:['0']
                     },
                     {
                         type:'number',
@@ -380,7 +293,7 @@ Entry.Mindpiggy.getBlocks = () => {
             events:{},
             class:'MindpiggyBlock',
             isNotFor:['Mindpiggy'],
-            func:(sprite,script)=>{
+            func:function(sprite,script){
                 var RedValue = script.getNumberValue('RED');
                 var GreenValue = script.getNumberValue('GREAN');
                 var BlueValue = script.getNumberValue('BLUE');
@@ -402,7 +315,7 @@ Entry.Mindpiggy.getBlocks = () => {
             events : {},
             class : 'MindpiggyBlock',
             isNotFor : ['Mindpiggy'],
-            func : (script, sprite)=>{
+            func:function(sprite,script){
                 Entry.hw.sendQueue.chipneopixel=[0,0,0];
             },
             syntax: { js: [], py: ['mindpiggy.neopixel_chip_off_value()'] },
@@ -422,7 +335,7 @@ Entry.Mindpiggy.getBlocks = () => {
             },
             class: 'MindpiggyBlock',
             isNotFor: ['Mindpiggy'],
-            func: (sprite, script) => {
+            func:function(sprite,script){
                 return Entry.hw.portData.isVibration;
             },
             syntax: { js: [], py: ['mindpiggy.get_vibration(1%)'] },
@@ -441,7 +354,7 @@ Entry.Mindpiggy.getBlocks = () => {
             paramsKeyMap: {},
             class: 'MindpiggyBlock',
             isNotFor: ['Mindpiggy'],
-            func: (sprite, script) => {
+            func:function(sprite,script){
                 return Entry.hw.portData.SoundsensorValue;
             },
             syntax: { js: [], py: ['mindpiggy.get_soundsensor()'] },
@@ -473,7 +386,7 @@ Entry.Mindpiggy.getBlocks = () => {
             },
             class: 'MindpiggyBlock',
             isNotFor: ['Mindpiggy'],
-            func: (sprite, script) => {
+            func:function(sprite,script){
                 var pinNum = script.getField('PINNUM');
                 var isSense;
                 if(pinNum == '0'){
@@ -669,6 +582,8 @@ Entry.Mindpiggy.getBlocks = () => {
             },
             syntax: { js: [], py: ['mindpiggy.set_tone(%1, %2, %3)'] },
         },
-
     }
-}
+};
+
+// 엔트리에서 하드웨어 블록 클래스를 인식할 수 있도록 내보내기
+module.exports = Entry.Mindpiggy;
