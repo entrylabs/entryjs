@@ -1651,7 +1651,7 @@ module.exports = {
                 class: 'calc_user',
                 isNotFor: [],
                 func() {
-                    return Entry.Utils.getWindowUsername();
+                    return window.user ? window.user.username : ' ';
                 },
                 syntax: {
                     js: [],
