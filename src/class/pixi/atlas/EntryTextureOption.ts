@@ -36,16 +36,6 @@ export class EntryTextureOption {
 
         this._USE_ATLAS = this._isSpriteSheetEnabled();
 
-
-        //for debug
-        setTimeout(()=>{
-            if(this.USE_ATLAS) {
-                $(".workspace_name_wrapper>input").css("color","yellow")
-            }
-            clog(`%c  USE_ATLAS = ${this.USE_ATLAS}  `, 'background: #222; color: #bada55');
-        }, 2000);
-
-
         this.GPU_TEX_MAX_SIZE = this.computeMaxTextureSize(4096);
 
         this._texStageRatio = 1;
