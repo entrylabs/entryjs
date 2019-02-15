@@ -40,6 +40,7 @@ class _PIXIGlobal {
     }
 
     getNewApp(canvas:HTMLCanvasElement):PIXI.Application {
+        PIXI.utils.skipHello();
         let app = new PIXI.Application({
             view: canvas,
             width: canvas.width,
