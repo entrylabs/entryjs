@@ -11,7 +11,7 @@ Entry.Mindpiggy = {
         photointerrupt:0,
         speaker:[0,0],
     },
-    id: '29.01',
+    id: '29.1',
     name: 'mindpiggy',
     url: 'http://inuscoop.com',
     imageName: 'mindpiggy.png',
@@ -253,9 +253,7 @@ Entry.Mindpiggy.getBlocks = () => {
                 var BlueValue = script.getNumberValue('BLUE');
                 Entry.hw.sendQueue.moodneopixel=[12,RedValue,GreenValue,BlueValue];
             },
-            syntax:{
-
-            },
+            syntax: { js: [], py: ['mindpiggy.neopixel_mood_on_value(%1, %2, %3)'] },
         },
         mindpiggy_neopixel_mood_pixel_on_value :{
             color : EntryStatic.colorSet.block.default.HARDWARE,
@@ -317,9 +315,7 @@ Entry.Mindpiggy.getBlocks = () => {
                 var BlueValue = script.getNumberValue('BLUE');
                 Entry.hw.sendQueue.moodneopixel=[Pixel,RedValue,GreenValue,BlueValue];
             },
-            syntax:{
-
-            },
+            syntax: { js: [], py: ['mindpiggy.neopixel_mood_pixel_on_value(1%, 2%, 3%, 4%)'] },
         },
         mindpiggy_neopixel_mood_off_value : {
             color : EntryStatic.colorSet.block.default.HARDWARE,
@@ -338,9 +334,7 @@ Entry.Mindpiggy.getBlocks = () => {
             func : (sprite, script)=>{
                 Entry.hw.sendQueue.moodneopixel=[12,0,0,0];
             },
-            syntax:{
-
-            },
+            syntax: { js: [], py: ['mindpiggy.neopixel_mood_off_value()'] },
         },
         mindpiggy_neopixel_chip_on_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -392,9 +386,7 @@ Entry.Mindpiggy.getBlocks = () => {
                 var BlueValue = script.getNumberValue('BLUE');
                 Entry.hw.sendQueue.chipneopixel=[RedValue,GreenValue,BlueValue];
             },
-            syntax:{
-
-            },
+            syntax: { js: [], py: ['mindpiggy.neopixel_chip_on_value(1%, 2%, 3%)'] },
         },
         mindpiggy_neopixel_chip_off_value : {
             color : EntryStatic.colorSet.block.default.HARDWARE,
@@ -413,9 +405,7 @@ Entry.Mindpiggy.getBlocks = () => {
             func : (script, sprite)=>{
                 Entry.hw.sendQueue.chipneopixel=[0,0,0];
             },
-            syntax:{
-
-            },
+            syntax: { js: [], py: ['mindpiggy.neopixel_chip_off_value()'] },
         },
         mindpiggy_get_vibration: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -435,9 +425,7 @@ Entry.Mindpiggy.getBlocks = () => {
             func: (sprite, script) => {
                 return Entry.hw.portData.isVibration;
             },
-            syntax: {
-
-            },
+            syntax: { js: [], py: ['mindpiggy.get_vibration(1%)'] },
         },
 
         mindpiggy_get_soundsensor: {
@@ -456,9 +444,7 @@ Entry.Mindpiggy.getBlocks = () => {
             func: (sprite, script) => {
                 return Entry.hw.portData.SoundsensorValue;
             },
-            syntax: {
-
-            },
+            syntax: { js: [], py: ['mindpiggy.get_soundsensor()'] },
         },
         mindpiggy_get_photo: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -498,9 +484,7 @@ Entry.Mindpiggy.getBlocks = () => {
                 if(isSense == 0)return false;
                 else return true;
             },
-            syntax: {
-
-            },
+            syntax: { js: [], py: ['mindpiggy.get_photo(%1)'] },
         },
         mindpiggy_octave_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -535,9 +519,7 @@ Entry.Mindpiggy.getBlocks = () => {
             func: function(sprite, script) {
                 return script.getField('OCTAVE');
             },
-            syntax: {
-
-            },
+            syntax: { js: [], py: [] },
         },
         mindpiggy_tone_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -579,9 +561,7 @@ Entry.Mindpiggy.getBlocks = () => {
             func: function(sprite, script) {
                 return script.getField('NOTE');
             },
-            syntax: {
-
-            },
+            syntax: { js: [], py: [] },
         },
         mindpiggy_set_tone: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -687,9 +667,7 @@ Entry.Mindpiggy.getBlocks = () => {
                     return script.callReturn();
                 }
             },
-            syntax: {
-
-            },
+            syntax: { js: [], py: ['mindpiggy.set_tone(%1, %2, %3)'] },
         },
 
     }
