@@ -2642,5 +2642,13 @@ Entry.Utils.getMouseEvent = function(event) {
 // window.user의 정보를 리턴.
 const WS_GET_USER_NAME = window.user ? window.user.username : ' ';
 Entry.Utils.getWindowUsername = function() {
-    return WS_GET_USER_NAME;
+    //workspace username Block..
+    if (WS_GET_USER_NAME === ' ' && Entry.type === "workspace") {
+        const username = window.user ? window.user.username : ' ';
+
+        return username;
+
+    } else {
+        return WS_GET_USER_NAME;
+    }
 };
