@@ -44,8 +44,7 @@ Entry.EntityObject = class EntityObject {
             }
             this.bgObject = GEHelper.newGraphic();
             this.bgObject.graphics
-                .setStrokeStyle(1)
-                .beginStroke('#ff0000')
+                .beginFill("#ffffff")
                 .drawRect(0, 0, 100, 100);
             this.object.addChild(this.bgObject);
             this.object.addChild(this.textObject);
@@ -1225,8 +1224,6 @@ Entry.EntityObject = class EntityObject {
         this.bgObject.alpha = hasColor ? 1 : 0;
 
         this.bgObject.graphics
-            .setStrokeStyle(1)
-            .beginStroke()
             .beginFill(bgColor)
             .drawRect(-width / 2, -height / 2, width, height);
         if (this.getLineBreak()) {
