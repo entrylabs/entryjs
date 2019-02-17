@@ -65,7 +65,6 @@ Entry.Mindpiggy.setLanguage = function () {
         ko: {
             // ko.js에 작성하던 내용
             template: {
-                sample_block: '하나하면 %1',
                 mindpiggy_on_digital_value: '디지털 핀 %1 번을 켜기',
                 mindpiggy_off_digital_value: '디지털 핀 %1 번을 끄기',
                 mindpiggy_neopixel_mood_on_value: '무드등(D7) R %1 G %2 B %3 로 설정하기',
@@ -82,7 +81,6 @@ Entry.Mindpiggy.setLanguage = function () {
         en: {
             // en.js에 작성하던 내용
             template: {
-                sample_block: 'one and one %1',
                 mindpiggy_on_digital_value: 'turn on digital pin %1',
                 mindpiggy_off_digital_value: 'turn off digital pin %1',
                 mindpiggy_neopixel_mood_on_value: 'mood(D7) on R %2 G %3 B %4',
@@ -101,7 +99,6 @@ Entry.Mindpiggy.setLanguage = function () {
 
 // 엔트리에 등록할 블록들의 블록명 작성
 Entry.Mindpiggy.blockMenuBlocks = [
-    'sample_block',
     "mindpiggy_neopixel_mood_on_value",
     "mindpiggy_neopixel_mood_pixel_on_value",
     "mindpiggy_neopixel_mood_off_value",
@@ -389,9 +386,9 @@ Entry.Mindpiggy.getBlocks = function () {
             func:function(sprite,script){
                 var pinNum = script.getField('PINNUM');
                 var isSense;
-                if(pinNum == '0'){
+                if(pinNum === '0'){
                     isSense = Entry.hw.portData.isPhotoInterrupt&2;
-                }else if(pinNum == '1'){
+                }else if(pinNum === '1'){
                     isSense = Entry.hw.portData.isPhotoInterrupt&1;
                 }
                 if(isSense == 0)return false;
