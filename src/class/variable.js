@@ -9,6 +9,16 @@ import {GEHelper} from '../graphicEngine/GEHelper';
 import { GEDragHelper } from '../graphicEngine/GEDragHelper';
 
 const RECT_RADIUS = 6; // round rect radius
+
+const GL_VAR_POS = {
+    VALUE_Y: -9,
+    LABEL_Y: -9
+}
+const GL_LIST_POS = {
+    INDEX_Y: 1,
+    VALUE_Y: 1
+}
+
 /**
  * Block variable constructor
  * @param {variable model} variable
@@ -73,7 +83,7 @@ Entry.Variable = class Variable {
         let elementView = GEHelper.newContainer();
         const indexView = GEHelper.textHelper.newText('asdf', this.FONT, '#000000', 'middle');
         if(GEHelper.isWebGL) {
-            indexView.y = 0;
+            indexView.y = GL_LIST_POS.INDEX_Y;
         } else {
             indexView.y = 5;
         }
@@ -90,7 +100,7 @@ Entry.Variable = class Variable {
         const valueView = GEHelper.textHelper.newText('fdsa', this.FONT, '#eeeeee', 'middle');
         valueView.x = 24;
         if(GEHelper.isWebGL) {
-            valueView.y = -1;
+            valueView.y = GL_LIST_POS.VALUE_Y;
         } else {
             valueView.y = 6;
         }
@@ -117,7 +127,7 @@ Entry.Variable = class Variable {
             this.textView_ = GEHelper.textHelper.newText('asdf', this.FONT, '#000000', 'alphabetic');
             this.textView_.x = 4;
             if(GEHelper.isWebGL) {
-                this.textView_.y = -11;
+                this.textView_.y = GL_VAR_POS.LABEL_Y;
             } else {
                 this.textView_.y = 1;
             }
@@ -168,7 +178,7 @@ Entry.Variable = class Variable {
             this.textView_ = GEHelper.textHelper.newText('name', this.FONT, '#000000', 'alphabetic');
             this.textView_.x = 4;
             if(GEHelper.isWebGL) {
-                this.textView_.y = -11;
+                this.textView_.y = GL_VAR_POS.LABEL_Y;
             } else {
                 this.textView_.y = 1;
             }
@@ -440,7 +450,7 @@ Entry.Variable = class Variable {
                 }
                 this.valueView_.x = this._nameWidth + 14;
                 if(GEHelper.isWebGL) {
-                    this.valueView_.y = -11;
+                    this.valueView_.y = GL_VAR_POS.VALUE_Y;
                 } else {
                     this.valueView_.y = 1;
                 }
@@ -488,7 +498,7 @@ Entry.Variable = class Variable {
                 }
                 this.valueView_.x = this._nameWidth + 14;
                 if(GEHelper.isWebGL) {
-                    this.valueView_.y = -11;
+                    this.valueView_.y = GL_VAR_POS.VALUE_Y;
                 } else {
                     this.valueView_.y = 1;
                 }
@@ -683,7 +693,7 @@ Entry.Variable = class Variable {
                 this.view_.y = this.getY();
                 this.textView_.text = this.getName();
                 if(GEHelper.isWebGL) {
-                    this.valueView_.y = -11;
+                    this.valueView_.y = GL_VAR_POS.VALUE_Y;
                 } else {
                     this.valueView_.y = 1;
                 }
@@ -730,7 +740,7 @@ Entry.Variable = class Variable {
 
                 this.valueView_.x = this._nameWidth + 14;
                 if(GEHelper.isWebGL) {
-                    this.valueView_.y = -11;
+                    this.valueView_.y = GL_VAR_POS.VALUE_Y;
                 } else {
                     this.valueView_.y = 1;
                 }
