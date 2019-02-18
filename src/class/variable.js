@@ -132,7 +132,7 @@ Entry.Variable = class Variable {
                 this.textView_.y = 1;
             }
             this.view_.addChild(this.textView_);
-            this.valueView_ = GEHelper.textHelper.newText('asdf', '10pt NanumGothic', '#ffffff', 'alphabetic');
+            this.valueView_ = GEHelper.textHelper.newText('asdf', this.FONT, '#ffffff', 'alphabetic');
             const variableLength = Entry.variableContainer.variables_.length;
             if (this.getX() && this.getY()) {
                 this.setX(this.getX());
@@ -183,7 +183,7 @@ Entry.Variable = class Variable {
                 this.textView_.y = 1;
             }
             this.view_.addChild(this.textView_);
-            this.valueView_ = GEHelper.textHelper.newText('value', '10pt NanumGothic', '#ffffff', 'alphabetic');
+            this.valueView_ = GEHelper.textHelper.newText('value', this.FONT, '#ffffff', 'alphabetic');
 
 
             GEDragHelper.handleDrag(this.view_);
