@@ -4,7 +4,7 @@ Entry.Mindpiggy = {
     PORT_MAP: {
         //코드 내 전역변수
         digitalpin:0,
-        moodneopixel:[0,0,0,0],
+        moodneopixel:[12,0,0,0],
         chipneopixel:[0,0,0],
         vibration:0,
         soundsensor:0,
@@ -21,11 +21,15 @@ Entry.Mindpiggy = {
     },
     setZero: function () {
         // 엔트리 정지시 하드웨어 초기화 로직
-        var portmap = Entry.Mindpiggy.PORT_MAP;
-        var sq = Entry.hw.sendQueue;
-        for(var port in portmap){
-            sq[port] = portmap[port];
-        }
+        Entry.hw.sendQueue = {
+            digitalpin:0,
+            moodneopixel:[12,0,0,0],
+            chipneopixel:[0,0,0],
+            vibration:0,
+            soundsensor:0,
+            photointerrupt:0,
+            speaker:[0,0],
+        };
         Entry.hw.update();
     },
     toneTable: {
