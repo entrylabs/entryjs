@@ -4,6 +4,7 @@
  */
 
 import PIXITextStyle from './PIXITextStyle';
+import { PIXIGlobal } from '../init/PIXIGlobal';
 
 var TextMetrics = PIXI.TextMetrics;
 
@@ -13,6 +14,7 @@ export class PIXIText extends PIXI.Text {
         super(text, style, canvas);
         this.setFontScaleX(1);
         this.setFontScaleY(1);
+        PIXIGlobal.fontLoadChecker.manage(this);
     }
     
     set style(style) // eslint-disable-line require-jsdoc
@@ -319,6 +321,7 @@ export class PIXIText extends PIXI.Text {
     }
 
     destroy() {
+        PIXIGlobal.fontLoadChecker.unmanage(this);
         super.destroy({children:false, baseTexture:true, texture: true});
     }
 }

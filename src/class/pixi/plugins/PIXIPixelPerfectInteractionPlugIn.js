@@ -1,11 +1,10 @@
 /**
  * PIXI-js v4.xx pixel perfect interaction plugin
  */
-import PIXIHelper from '../helper/PIXIHelper';
 
 
 const tempPoint = new PIXI.Point();
-const hitTestCanvas = PIXIHelper.getOffScreenCanvas();
+const hitTestCanvas = document.createElement("canvas");
 hitTestCanvas.width = 1;
 hitTestCanvas.height = 1;
 const hitTestConText = hitTestCanvas.getContext("2d");

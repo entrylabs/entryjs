@@ -11,6 +11,7 @@ import { PIXITextMetricsPlugIn } from '../plugins/PIXITextMetricsPlugIn';
 import { PIXIDebug } from '../debugs/Debugs';
 import { PIXIShortPropPlugin } from '../plugins/PIXIShortPropPlugin';
 import { PIXIGraphicOverride } from '../plugins/PIXIGraphicOverride';
+import { PIXIFontLoadHandler } from './PIXIFontLoadHandler';
 
 
 
@@ -21,11 +22,13 @@ class _PIXIGlobal {
     /** @readonly */
     baseAsset:PIXIBaseAsset;
     atlasManager:PIXIAtlasManager;
+    fontLoadChecker:PIXIFontLoadHandler;
 
     initOnce() {
         if(this._init) return;
         entryIsWebGLSupported();
         this._init = true;
+        this.fontLoadChecker = new PIXIFontLoadHandler();
         PIXIDebug.internal_init();
         //this.baseAsset = new PIXIBaseAsset();
         ndgmr.initTempObject();
@@ -40,6 +43,7 @@ class _PIXIGlobal {
     }
 
     getNewApp(canvas:HTMLCanvasElement):PIXI.Application {
+        PIXI.utils.skipHello();
         let app = new PIXI.Application({
             view: canvas,
             width: canvas.width,
