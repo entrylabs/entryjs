@@ -417,8 +417,8 @@ Entry.Workspace = class Workspace {
                     return;
                 }
             }
-
-            const isBlockCodeView = Entry.playground.mainWorkspace.getMode() === 0 && (Entry.playground.getViewMode() === 'code' || Entry.playground.getViewMode() === 'variable');
+            
+            const isBlockCodeView = Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD && (Entry.playground.getViewMode() === 'code' || Entry.playground.getViewMode() === 'variable');
             switch (keyCode) {
                 case 86: //paste
                     if (
