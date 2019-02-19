@@ -3,7 +3,7 @@
  */
 'use strict';
 
-import EntryTool from 'entry-tool';
+import { Sortable } from '@entrylabs/tool';
 
 /**
  * Class for a container.
@@ -166,7 +166,7 @@ Entry.Container = class Container {
                 disabled: false,
             });
         } else {
-            this.sortableListViewWidget = new EntryTool({
+            this.sortableListViewWidget = new Sortable({
                 type: 'sortableWidget',
                 data: {
                     height: '100%',

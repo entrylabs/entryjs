@@ -3,7 +3,7 @@
  */
 'use strict';
 
-import EntryTool from 'entry-tool';
+import { Sortable } from '@entrylabs/tool';
 
 /**
  * Class for a scene controller.
@@ -83,8 +83,7 @@ Entry.Scene = class {
         const listView = Entry.createElement('div');
         listView.addClass('entrySceneListWorkspace');
 
-        this.sceneSortableListWidget = new EntryTool({
-            type: 'sortableWidget',
+        this.sceneSortableListWidget = new Sortable({
             data: {
                 height: '100%',
                 sortableTarget: ['entrySceneRemoveButtonWorkspace', 'entrySceneInputCover'],
@@ -537,7 +536,7 @@ Entry.Scene = class {
             view = $(view);
 
             var width = parseFloat(Entry.computeInputWidth(scene.name));
-            var adjusted = (width * 10) / 9;
+            var adjusted = width * 10 / 9;
             if (scene === this.selectedScene) diff = adjusted - width;
             // $(scene.inputWrapper).width(adjusted + 'px');
             var viewWidth = view.width();
