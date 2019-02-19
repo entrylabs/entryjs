@@ -145,9 +145,7 @@ Entry.BlockView = class BlockView {
 
         svgGroup.attr(attr);
 
-        (skeleton.classes || []).forEach((c) => {
-            return svgGroup.addClass(c);
-        });
+        (skeleton.classes || []).forEach((c) => svgGroup.addClass(c));
 
         const path = skeleton.path(this);
 
@@ -557,7 +555,7 @@ Entry.BlockView = class BlockView {
             this.addDragging();
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
 
-            if (eventType === 'touchstart') {
+            if (eventType === 'touchstart' || Entry.isMobile()) {
                 this.longPressTimer = setTimeout(() => {
                     if (this.longPressTimer) {
                         this.longPressTimer = null;
@@ -901,9 +899,7 @@ Entry.BlockView = class BlockView {
         const _destroyFunc = _.partial(_.result, _, 'destroy');
 
         if (animate) {
-            $(svgGroup).fadeOut(100, () => {
-                return svgGroup.remove();
-            });
+            $(svgGroup).fadeOut(100, () => svgGroup.remove());
         } else {
             svgGroup.remove();
         }
@@ -1112,27 +1108,21 @@ Entry.BlockView = class BlockView {
         this.movable =
             this.block.isMovable() !== null
                 ? this.block.isMovable()
-                : this._skeleton.movable !== undefined
-                ? this._skeleton.movable
-                : true;
+                : this._skeleton.movable !== undefined ? this._skeleton.movable : true;
     }
 
     _setReadOnly() {
         this.readOnly =
             this.block.isReadOnly() !== null
                 ? this.block.isReadOnly()
-                : this._skeleton.readOnly !== undefined
-                ? this._skeleton.readOnly
-                : false;
+                : this._skeleton.readOnly !== undefined ? this._skeleton.readOnly : false;
     }
 
     _setCopyable() {
         this.copyable =
             this.block.isCopyable() !== null
                 ? this.block.isCopyable()
-                : this._skeleton.copyable !== undefined
-                ? this._skeleton.copyable
-                : true;
+                : this._skeleton.copyable !== undefined ? this._skeleton.copyable : true;
     }
 
     bumpAway(distance = 15, delay) {
@@ -1253,9 +1243,7 @@ Entry.BlockView = class BlockView {
 
     _updateContents(isReDraw) {
         const params = [undefined, undefined, this.renderMode, isReDraw];
-        this._contents.forEach((c) => {
-            return c.renderStart(...params);
-        });
+        this._contents.forEach((c) => c.renderStart(...params));
         this.alignContent(false);
     }
 
@@ -1279,12 +1267,8 @@ Entry.BlockView = class BlockView {
                 param.data.view.reDraw();
             }
         });
-        (this.block.statements || []).forEach(({ view }) => {
-            return view.reDraw();
-        });
-        (this._extensions || []).forEach((ext) => {
-            return _.result(ext, 'updatePos');
-        });
+        (this.block.statements || []).forEach(({ view }) => view.reDraw());
+        (this._extensions || []).forEach((ext) => _.result(ext, 'updatePos'));
     }
 
     getParam(index) {
