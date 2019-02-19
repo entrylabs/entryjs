@@ -1339,10 +1339,11 @@ Entry.EntityObject = class EntityObject {
     }
 
     cache() {
-        if(GEHelper.isWebGL) return;
         const { object } = this;
         if (object) {
-            object.cache(0, 0, this.getWidth(), this.getHeight());
+            if(!GEHelper.isWebGL) {
+                object.cache(0, 0, this.getWidth(), this.getHeight());
+            }
             Entry.requestUpdate = true;
         }
     }
