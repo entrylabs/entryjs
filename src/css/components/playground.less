@@ -130,7 +130,7 @@
     overflow: hidden;
     height: @introHeight;
     top: 54px;
-    z-index:1;
+    z-index: 1;
 }
 
 .entryPlaygroundWorkspace {
@@ -182,6 +182,37 @@
     background-color: #f1f1f1;
 }
 
+.entryPlaygroundBackPackView {
+    height: 100%;
+    display: block;
+    right: 0;
+    top: 38px;
+    position: absolute;
+    z-index: 1;
+}
+.entryPlaygroundBackPackView {
+    height: 100%;
+    display: block;
+    right: 0;
+    top: 38px;
+    position: absolute;
+    z-index: 1;
+
+    .widget {
+        height: 100%;
+    }
+
+    .blockBackPackDrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 400;
+        background-color: rgba(248, 241, 204, 0.9);
+        border: 2px dashed #ffc800;
+        pointer-events: none;
+    }
+}
+
 .entryPlaygroundButtonTabWorkspace {
     position: absolute;
     right: 0;
@@ -190,6 +221,7 @@
     background-color: #fff;
 
     .entryPlaygroundCommentButtonWorkspace {
+        float: left;
         .backgroundImage('btn-toggle-comment-off.png');
         background-repeat: no-repeat;
         background-size: 32px auto;
@@ -206,6 +238,26 @@
             border: 0;
             background-color: inherit;
         }
+    }
+
+    .entryPlaygroundBackPackButtonWorkspace {
+        &::before {
+            content: '';
+            display: inline-block;
+            width: 1px;
+            height: 16px;
+            background: #bfd8e6;
+            margin: 8px 0 0 -9px;
+        }
+        float: left;
+        .backgroundImage('back_pack_button.svg');
+        background-repeat: no-repeat;
+        background-size: 32px auto;
+        background-position: 50% 50%;
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        margin: 0 9px;
     }
 
     &.entryRemove.entryCode {

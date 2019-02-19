@@ -6,6 +6,8 @@
 
 import { Sortable, ColorPicker, Dropdown } from '@entrylabs/tool';
 import Toast from '../playground/toast';
+import { BackPack } from '@entrylabs/tool';
+import EntryEvent from '@entrylabs/event';
 
 const Entry = require('../entry');
 
@@ -59,8 +61,8 @@ Entry.Playground = class {
             const tabButtonView = Entry.createElement('div', 'entryButtonTab')
                 .addClass('entryPlaygroundButtonTabWorkspace')
                 .appendTo(this.view_);
-            this.createButtonTabView(tabButtonView);
             this.tabButtonView_ = tabButtonView;
+            this.createButtonTabView(tabButtonView);
 
             const curtainView = Entry.createElement('div', 'entryCurtain')
                 .addClass('entryPlaygroundCurtainWorkspace entryRemove')
@@ -102,6 +104,12 @@ Entry.Playground = class {
                 .appendTo(this.view_);
             this.generateCodeView(codeView);
             this.codeView_ = codeView;
+
+            const backPackView = Entry.createElement('div', 'entryBackPackView')
+                .addClass('entryPlaygroundBackPackView')
+                .appendTo(this.view_);
+            this.backPackView = backPackView;
+            this.createPackPackView(backPackView);
 
             const resizeHandle = Entry.createElement('div')
                 .addClass('entryPlaygroundResizeWorkspace', 'entryRemove')
@@ -206,6 +214,98 @@ Entry.Playground = class {
         commentToggleButton.bindOnClick(() => {
             this.toggleCommentButton();
         });
+
+        const backPackButton = Entry.createElement('div')
+            .addClass('entryPlaygroundBackPackButtonWorkspace')
+            .appendTo(tabButtonView);
+        backPackButton.setAttribute('alt', Lang.Blocks.show_all_comment);
+        backPackButton.setAttribute('title', Lang.Blocks.show_all_comment);
+
+        this.backPackButton_ = backPackButton;
+        backPackButton.bindOnClick(() => {
+            // console.log('BackPack');
+            // this.backPackView.removeClass('entryRemove');
+            Entry.dispatchEvent('openBackPack');
+            // this.toggleCommentButton();
+        });
+    }
+
+    createPackPackView(backPackView) {
+        this.backPack = new BackPack({
+            data: {
+                items: [],
+                onClose: () => {
+                    console.log('click');
+                    Entry.dispatchEvent('closeBackPack');
+                },
+                onRemoveItem: (id) => {
+                    Entry.dispatchEvent('removeBackPackItem', id);
+                },
+                onChangeTitle: (id, title) => {
+                    Entry.dispatchEvent('changeBackPackTitle', id, title);
+                },
+            },
+            container: this.backPackView,
+        });
+
+        console.log(this.board, this.mainWorkspace);
+        const { view } = this.board || {};
+        if (view) {
+            const dom = view[0];
+            const eventDom = new EntryEvent(dom);
+            eventDom.on(
+                'drop',
+                (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('drop', e.dataTransfer.getData('type'));
+                    $(this.blockBackPackArea).css({
+                        display: 'none',
+                    });
+                },
+                false
+            );
+            // $(view).on('drop');
+            eventDom.on('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            });
+            eventDom.on('dragenter', (e) => {
+                const { width, height, top, left } = view[0].getBoundingClientRect();
+                $(this.blockBackPackArea).css({
+                    width: width - 134,
+                    height,
+                    top,
+                    left,
+                    display: 'block',
+                });
+                console.log('enter');
+            });
+            eventDom.on('dragleave', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('dragleave');
+                $(this.blockBackPackArea).css({
+                    display: 'none',
+                });
+            });
+        }
+        this.blockBackPackArea = Entry.createElement('div')
+            .addClass('blockBackPackDrop')
+            .appendTo(backPackView);
+        this.objectBackPackArea = Entry.createElement('div')
+            .addClass('objectBackPackDrop')
+            .appendTo(backPackView);
+    }
+
+    showBackPack(args) {
+        // th;
+        this.backPack.setData({ ...args });
+        this.backPackView.removeClass('entryRemove');
+    }
+
+    hideBackPack() {
+        this.backPackView.addClass('entryRemove');
     }
 
     toggleCommentButton() {
@@ -1931,5 +2031,10 @@ Entry.Playground = class {
         if (Entry.hasVariableManager) {
             this.variableTab.removeClass('entryRemove');
         }
+    }
+
+    destroy() {
+        this.commentToggleButton_.unBindOnClick();
+        this.backPackButton_.unBindOnClick();
     }
 };
