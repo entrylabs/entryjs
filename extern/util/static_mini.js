@@ -595,23 +595,6 @@ EntryStatic.fonts = [
     },
 ];
 
-EntryStatic.getName = function(str, type) {
-    var dict = SpriteNames;
-    if (type == 'picture') dict = PictureNames;
-    else if (type == 'sound') dict = SoundNames;
-
-    var lang = navigator.language ? navigator.language : 'ko';
-    if (window.lang) lang = window.lang;
-
-    if (window.user && window.user.language) lang = window.user.language;
-
-    if (!dict || lang == 'ko' || lang == 'code') {
-        return str;
-    } else {
-        return dict[str] ? dict[str] : str;
-    }
-};
-
 EntryStatic.colorSet = {
     arrow: {
         default: {
@@ -625,74 +608,76 @@ EntryStatic.colorSet = {
             JUDGE: '#89A1F7',
             CALC: '#E8B349',
             VARIABLE: '#CE38CE',
-            HARDWARE: '#097E84',
+            HARDWARE: '#FFFFFF',
             EXPANSION: '#FF8888',
         },
     },
     block: {
         default: {
-            START: '#10D35E',
-            FLOW: '#31C1EC',
-            MOVING: '#BF63FF',
-            LOOKS: '#FF5174',
-            BRUSH: '#FC7E01',
-            SOUND: '#82D214',
-            HARDWARE: '#00CFCA',
-            CALC: '#FEB71A',
-            VARIABLE: '#F57DF1',
-            FUNC: '#DE6E22',
-            JUDGE: '#7E8EFE',
-            TEXT: '#FC5D01',
-            EXPANSION: '#FF8888',
+            START: '#00b400',
+            FLOW: '#17a6d1',
+            MOVING: '#ad3efb',
+            LOOKS: '#ff3a61',
+            BRUSH: '#fc7e01',
+            TEXT: '#e43500',
+            SOUND: '#67b100',
+            JUDGE: '#4562f5',
+            CALC: '#f4af18',
+            VARIABLE: '#dd47d8',
+            FUNC: '#de5c04',
+            HARDWARE: '#00b6b1',
+            EXPANSION: '#ef6d6d',
         },
         lighten: {
-            //NOTE not have boolean, extension block color
-            START: '#53E68E',
-            FLOW: '#4ADAFB',
-            MOVING: '#CA7DFF',
-            LOOKS: '#FF7792',
-            BRUSH: '#FF9831',
-            SOUND: '#9FEC35',
-            HARDWARE: '#65E3E0',
-            CALC: '#FFDE82',
-            VARIABLE: '#FAA0F7',
-            FUNC: '#F3853B',
-            TEXT: '#FF9354',
+            START: '#3bce3b',
+            FLOW: '#3bce3b',
+            MOVING: '#bd65fb',
+            LOOKS: '#ff5577',
+            BRUSH: '#ff9831',
+            TEXT: '#ff6739',
+            SOUND: '#7ecc12',
+            JUDGE: '#99adff',
+            CALC: '#ffde82',
+            VARIABLE: '#f778f3',
+            FUNC: '#ff7b22',
+            HARDWARE: '#78d5d3',
+            EXPANSION: '#ffaeae',
         },
         darken: {
-            START: '#13BF68',
-            FLOW: '#08ACDD',
-            MOVING: '#B13EFE',
-            LOOKS: '#EE3157',
-            BRUSH: '#FC5E01',
-            SOUND: '#6EBC02',
-            HARDWARE: '#04B5B0',
-            CALC: '#FF9C00',
-            VARIABLE: '#EC52E7',
-            FUNC: '#C85404',
-            JUDGE: '#6173F5',
-            TEXT: '#E43500',
-            EXPANSION: '#EF6D6D',
+            START: '#009400',
+            FLOW: '#007ca2',
+            MOVING: '#8b19db',
+            LOOKS: '#c72042',
+            BRUSH: '#c72042',
+            TEXT: '#ad2800',
+            SOUND: '#508a00',
+            JUDGE: '#1b3ad8',
+            CALC: '#ff7f00',
+            VARIABLE: '#b819b3',
+            FUNC: '#a14100',
+            HARDWARE: '#008380',
+            EXPANSION: '#c63f3f',
         },
         emphasize: {
-            '#10D35E': '#5BC982',
-            '#31C1EC': '#62A5F4',
-            '#BF63FF': '#C08FF7',
-            '#FF5174': '#F46487',
-            '#FC7E01': '#FFB05A',
-            '#82D214': '#C4DD31',
-            '#00CFCA': '#09BAB5',
-            '#FEB71A': '#FCDA90',
-            '#F57DF1': '#F279F2',
-            '#DE6E22': '#DD884E',
-            '#7E8EFE': '#C0CBFF',
-            '#FC5D01': '#F2C670',
+            '#00b400': '#5BC982', //START
+            '#17a6d1': '#62A5F4', //FLOW
+            '#ad3efb': '#C08FF7', //MOVING
+            '#ff3a61': '#F46487', //LOOKS
+            '#fc7e01': '#FFB05A', //BRUSH
+            '#e43500': '#F2C670', //TEXT
+            '#67b100': '#C4DD31', //SOUND
+            '#4562f5': '#C0CBFF', //JUDGE
+            '#f4af18': '#FCDA90', //CALC
+            '#dd47d8': '#F279F2', //VARIABLE
+            '#de5c04': '#DD884E', //FUNC
+            '#00b6b1': '#09BAB5', //HARDWARE
+            //Not guided emphasize color for EXPANSION
         },
     },
     common: {
         WHITE: '#FFFFFF',
-        DARK: '#000000'
-    }
+        DARK: '#000000',
+    },
 };
 
 EntryStatic.initOptions = {

@@ -3,6 +3,8 @@
  */
 'use strict';
 
+import { GEHelper } from '../graphicEngine/GEHelper';
+
 /**
  * Class for a engine.
  * This have view for control running state.
@@ -147,25 +149,6 @@ Entry.Engine = function() {
                 .appendTo(this.buttonWrapper)
                 .bindOnClick(() => Entry.engine.toggleRun());
 
-            this.stopButton = Entry.createElement('button')
-                .addClass('entryEngineButtonWorkspace_w')
-                .addClass('entryStopButtonWorkspace_w')
-                .addClass('entryRemove')
-                .bindOnClick(() => Entry.do('toggleStop', 'stopButton'))
-                .appendTo(this.buttonWrapper);
-            this.stopButton.innerHTML = Lang.Workspace.stop;
-
-            this.stopButton2 = Entry.createElement('button')
-                .addClass('entryEngineButtonWorkspace_w')
-                .addClass('entryStopButtonWorkspace_w2')
-                .addClass('entryRemove')
-                .bindOnClick(function() {
-                    this.blur();
-                    Entry.engine.toggleStop();
-                })
-                .appendTo(this.buttonWrapper);
-            this.stopButton2.innerHTML = Lang.Workspace.stop;
-
             this.pauseButton = Entry.createElement('button')
                 .addClass('entryEngineButtonWorkspace_w')
                 .addClass('entryPauseButtonWorkspace_w')
@@ -185,6 +168,25 @@ Entry.Engine = function() {
                     this.blur();
                     Entry.engine.togglePause();
                 });
+
+            this.stopButton = Entry.createElement('button')
+                .addClass('entryEngineButtonWorkspace_w')
+                .addClass('entryStopButtonWorkspace_w')
+                .addClass('entryRemove')
+                .bindOnClick(() => Entry.do('toggleStop', 'stopButton'))
+                .appendTo(this.buttonWrapper);
+            this.stopButton.innerHTML = Lang.Workspace.stop;
+
+            this.stopButton2 = Entry.createElement('button')
+                .addClass('entryEngineButtonWorkspace_w')
+                .addClass('entryStopButtonWorkspace_w2')
+                .addClass('entryRemove')
+                .bindOnClick(function() {
+                    this.blur();
+                    Entry.engine.toggleStop();
+                })
+                .appendTo(this.buttonWrapper);
+            this.stopButton2.innerHTML = Lang.Workspace.stop;
         } else if (option == 'minimize') {
             /** @type {!Element} */
             this.view_ = controlView;
@@ -234,7 +236,15 @@ Entry.Engine = function() {
             this.mouseView = Entry.createElement('div');
             this.mouseView.addClass('entryMouseViewMinimize');
             this.mouseView.addClass('entryHide');
+
+            this.mouseViewInput = Entry.createElement('input').appendTo(this.mouseView);
+            $(this.mouseViewInput).attr('readonly', 'readonly');
+            $(this.mouseViewInput).attr('style','border: none;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;line-height: normal');
+
             this.view_.appendChild(this.mouseView);
+
+            this.mouseViewInput = Entry.createElement('input').appendTo(this.mouseView);
+            $(this.mouseViewInput).attr('readonly', 'readonly');
 
             Entry.addEventListener('loadComplete', () => {
                 this.runButton = Entry.Dom('div', {
@@ -370,7 +380,7 @@ Entry.Engine = function() {
      */
     p.start = function(FPS) {
         /** @type {!number} */
-        createjs.Ticker.setFPS(Entry.FPS);
+        GEHelper.Ticker.setFPS(Entry.FPS);
 
         if (!this.ticker) this.ticker = setInterval(this.update, Math.floor(1000 / Entry.FPS));
     };
@@ -379,7 +389,7 @@ Entry.Engine = function() {
      * Stop engine
      */
     p.stop = function() {
-        createjs.Ticker.reset();
+        GEHelper.Ticker.reset();
         clearInterval(this.ticker);
         this.ticker = null;
     };
@@ -964,5 +974,9 @@ Entry.Engine = function() {
             this.stopButton.removeClass(SMALL);
             this.addButton.addClass('entryRemove');
         }
+    };
+
+    p.destroy = function() {
+        // 우선 interface 만 정의함.
     };
 })(Entry.Engine.prototype);

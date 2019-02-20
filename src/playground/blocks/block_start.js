@@ -880,8 +880,11 @@ module.exports = {
                     const flow = this.block.params[1];
                     let propertyKey = this.block.params[2];
                     const rightValue = this.getParam(4);
-                    propertyKey = propertyKey[0].toUpperCase() + propertyKey.substr(1);
-                    const leftValue = obj.entity[`get${propertyKey}`].call(obj.entity);
+                    propertyKey =
+                        propertyKey[0].toUpperCase() + propertyKey.substr(1);
+                    const leftValue = obj.entity[`get${  propertyKey}`].call(
+                        obj.entity
+                    );
                     let returnVal;
 
                     switch (this.block.params[3]) {
@@ -933,8 +936,8 @@ module.exports = {
                         fontSize: 11,
                     },
                     {
-                        type: 'Block',
-                        accept: 'string',
+                        type: 'TextInput',
+                        value: 1,
                     },
                     {
                         type: 'Indicator',
@@ -1077,8 +1080,8 @@ module.exports = {
                 statements: [],
                 params: [
                     {
-                        type: 'Block',
-                        accept: 'string',
+                        type: 'TextInput',
+                        value: 0,
                     },
                     {
                         type: 'Dropdown',
@@ -1105,7 +1108,7 @@ module.exports = {
                     ],
                 },
                 def: {
-                    params: ['0', 1, 1],
+                    params: [0, 1, 1],
                     type: 'check_lecture_goal',
                 },
                 paramsKeyMap: {
@@ -1116,7 +1119,7 @@ module.exports = {
                 func(sprite, script) {
                     Entry.targetChecker.achieveCheck(
                         this.block.params[1],
-                        `${this.block.params[0]}`
+                        `${this.block.params[0]  }`
                     );
                 },
             },
@@ -1127,8 +1130,7 @@ module.exports = {
                 statements: [],
                 params: [
                     {
-                        type: 'Block',
-                        accept: 'string',
+                        type: 'TextInput',
                         value: '?',
                     },
                 ],
@@ -1143,8 +1145,10 @@ module.exports = {
                 class: 'checker',
                 isNotFor: ['checker'],
                 func(sprite, script) {
-                    const variableName = `${this.block.params[0]}`;
-                    const variable = Entry.variableContainer.getVariableByName(variableName);
+                    const variableName = `${this.block.params[0]  }`;
+                    const variable = Entry.variableContainer.getVariableByName(
+                        variableName
+                    );
                     if (variable) {
                         return variable.getValue();
                     } else {
@@ -1159,8 +1163,7 @@ module.exports = {
                 statements: [],
                 params: [
                     {
-                        type: 'Block',
-                        accept: 'string',
+                        type: 'TextInput',
                         value: '',
                     },
                     {
@@ -1181,7 +1184,9 @@ module.exports = {
                 isNotFor: ['checker'],
                 func(sprite, script) {
                     if (Entry.targetChecker) {
-                        Entry.targetChecker.showStatusMessage(this.block.params[0]);
+                        Entry.targetChecker.showStatusMessage(
+                            this.block.params[0]
+                        );
                     }
                 },
             },
@@ -1192,8 +1197,7 @@ module.exports = {
                 statements: [],
                 params: [
                     {
-                        type: 'Block',
-                        accept: 'string',
+                        type: 'TextInput',
                         value: '',
                     },
                 ],
@@ -1208,7 +1212,7 @@ module.exports = {
                 class: 'checker',
                 isNotFor: ['checker'],
                 func(sprite, script) {
-                    const goalName = `${this.block.params[0]}`;
+                    const goalName = `${this.block.params[0]  }`;
                     return Entry.targetChecker.checkGoal(goalName);
                 },
             },
@@ -1297,13 +1301,11 @@ module.exports = {
                 statements: [],
                 params: [
                     {
-                        type: 'Block',
-                        accept: 'string',
+                        type: 'TextInput',
                         value: 'score',
                     },
                     {
-                        type: 'Block',
-                        accept: 'string',
+                        type: 'TextInput',
                         value: '1',
                     },
                     {
