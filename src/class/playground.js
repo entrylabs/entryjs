@@ -248,44 +248,92 @@ Entry.Playground = class {
             container: this.backPackView,
         });
 
-        console.log(this.board, this.mainWorkspace);
-        const { view } = this.board || {};
-        if (view) {
-            const dom = view[0];
+        console.log(this.backPack, this.backPack.getData('dragType'));
+        const { view: blockView } = this.board || {};
+        if (blockView) {
+            const dom = blockView[0];
             const eventDom = new EntryEvent(dom);
+            this.blockBackPackEvent = eventDom;
             eventDom.on(
                 'drop',
                 (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('drop', e.dataTransfer.getData('type'));
+                    const id = e.dataTransfer.getData('text');
+                    Entry.dispatchEvent('addBackPackToEntry', 'block', id);
                     $(this.blockBackPackArea).css({
                         display: 'none',
                     });
                 },
                 false
             );
-            // $(view).on('drop');
             eventDom.on('dragover', (e) => {
                 e.preventDefault();
-                e.dataTransfer.dropEffect = 'move';
             });
             eventDom.on('dragenter', (e) => {
-                const { width, height, top, left } = view[0].getBoundingClientRect();
-                $(this.blockBackPackArea).css({
-                    width: width - 134,
-                    height,
-                    top,
-                    left,
-                    display: 'block',
-                });
-                console.log('enter');
+                const type = this.backPack.getData('dragType');
+                if (type === 'block') {
+                    const { width, height, top, left } = blockView[0].getBoundingClientRect();
+                    $(this.blockBackPackArea).css({
+                        width: width - 134,
+                        height,
+                        top,
+                        left,
+                        display: 'block',
+                    });
+                    console.log('enter');
+                }
             });
             eventDom.on('dragleave', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('dragleave');
                 $(this.blockBackPackArea).css({
+                    display: 'none',
+                });
+            });
+        }
+
+        const { modes = {} } = Entry.propertyPanel || {};
+        const { object = {} } = modes;
+        const { contentDom: objectView } = object;
+        if (objectView) {
+            const dom = objectView[0];
+            const eventDom = new EntryEvent(dom);
+            this.blockBackPackEvent = eventDom;
+            eventDom.on(
+                'drop',
+                (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const id = e.dataTransfer.getData('text');
+                    Entry.dispatchEvent('addBackPackToEntry', 'object', id);
+                    $(this.objectBackPackArea).css({
+                        display: 'none',
+                    });
+                },
+                false
+            );
+            eventDom.on('dragover', (e) => {
+                e.preventDefault();
+            });
+            eventDom.on('dragenter', (e) => {
+                const type = this.backPack.getData('dragType');
+                if (type === 'object') {
+                    const { width, height, top, left } = objectView[0].getBoundingClientRect();
+                    $(this.objectBackPackArea).css({
+                        width: width,
+                        height,
+                        top,
+                        left,
+                        display: 'block',
+                    });
+                    console.log('enter');
+                }
+            });
+            eventDom.on('dragleave', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this.objectBackPackArea).css({
                     display: 'none',
                 });
             });
@@ -2036,5 +2084,6 @@ Entry.Playground = class {
     destroy() {
         this.commentToggleButton_.unBindOnClick();
         this.backPackButton_.unBindOnClick();
+        this.blockBackPackEvent.off();
     }
 };
