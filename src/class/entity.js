@@ -472,7 +472,11 @@ Entry.EntityObject = class EntityObject {
         //todo [박봉배] object.width -> object.$width 로 변경
         this.object.$width = this.width;
         if (this.textObject && this.getLineBreak()) {
-            this.textObject.lineWidth = this.width;
+            if(GEHelper.isWebGL) {
+                this.textObject.style.wordWrapWidth = this.width;
+            }else{
+                this.textObject.lineWidth = this.width;
+            }
         }
         this.updateDialog();
         this.updateBG();
@@ -1339,10 +1343,11 @@ Entry.EntityObject = class EntityObject {
     }
 
     cache() {
-        if(GEHelper.isWebGL) return;
         const { object } = this;
         if (object) {
-            object.cache(0, 0, this.getWidth(), this.getHeight());
+            if(!GEHelper.isWebGL) {
+                object.cache(0, 0, this.getWidth(), this.getHeight());
+            }
             Entry.requestUpdate = true;
         }
     }
