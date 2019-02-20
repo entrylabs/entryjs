@@ -1,7 +1,6 @@
 import { PIXIBaseAsset } from './PIXIBaseAsset';
 let ndgmr = require("./../etc/PIXI-ndgmr.Collision").PIXICollision;
 require("./../etc/PIXICanvasInput");
-let entryIsWebGLSupported = require("./entryIsWebGLSupported").entryIsWebGLSupported;
 
 import { PIXIAtlasManager } from '../atlas/PIXIAtlasManager';
 import { PIXIZeroAlphaNoneInteractionPlugins } from '../plugins/PIXIZeroAlphaNoneInteractionPlugins';
@@ -26,8 +25,8 @@ class _PIXIGlobal {
 
     initOnce() {
         if(this._init) return;
-        entryIsWebGLSupported();
         this._init = true;
+        this._isWebGLSupported();
         this.fontLoadChecker = new PIXIFontLoadHandler();
         PIXIDebug.internal_init();
         //this.baseAsset = new PIXIBaseAsset();
@@ -56,6 +55,13 @@ class _PIXIGlobal {
         (app.stage as any).canvas = canvas;
         return app;
     }
+
+    private _isWebGLSupported() {
+        if (PIXI.utils.isWebGLSupported()) return;
+        Entry.dispatchEvent("webglNotSupport");
+    }
+
+
 }
 
 export let PIXIGlobal:_PIXIGlobal = new _PIXIGlobal();
