@@ -478,7 +478,7 @@ Entry.Comment = class Comment {
             const eventType = e.type;
             this.board.set({ dragBlock: this });
 
-            if (eventType === 'touchstart') {
+            if (eventType === 'touchstart' || Entry.isMobile()) {
                 this.longPressTimer = setTimeout(() => {
                     if (this.longPressTimer) {
                         this.longPressTimer = null;

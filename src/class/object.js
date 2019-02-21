@@ -62,9 +62,11 @@ Entry.EntryObject = class {
             const pictures = this.pictures;
 
             for (const i in pictures) {
-                var picture = pictures[i];
+                const picture = pictures[i];
                 picture.objectId = this.id;
-                if (!picture.id) picture.id = Entry.generateHash();
+                if (!picture.id) {
+                    picture.id = Entry.generateHash();
+                }
                 GEHelper.resManager.reqResource(null, this.scene.id, picture);
             }
             Entry.requestUpdate = true;
@@ -321,7 +323,7 @@ Entry.EntryObject = class {
         if (picture === this.selectedPicture) {
             playground.selectPicture(pictures[0]);
         }
-        GEHelper.resManager.imageRemoved("EntityObject::removePicture");
+        GEHelper.resManager.imageRemoved('EntityObject::removePicture');
         playground.injectPicture(this);
         playground.reloadPlayground();
         return true;
@@ -627,9 +629,7 @@ Entry.EntryObject = class {
 
     addCloneVariables({ id }, entity, variables, lists) {
         const _whereFunc = _.partial(_.filter, _, { object_: id });
-        const _cloneFunc = (v) => {
-            return v.clone();
-        };
+        const _cloneFunc = (v) => v.clone();
         const { variables_, lists_ } = Entry.variableContainer;
 
         entity.variables = (variables || _whereFunc(variables_)).map(_cloneFunc);
@@ -1221,20 +1221,9 @@ Entry.EntryObject = class {
             ) {
                 Entry.do('containerSelectObject', objectId);
             }
-
         });
 
-        objectView.addEventListener('mousedown', (e) => {
-            if (Entry.Utils.isRightButton(e)) {
-                e.stopPropagation();
-                this._rightClick(e);
-            }
-        });
-
-        objectView.addEventListener('touchstart', (e) => {
-            e.eventFromEntryObject = true;
-            Entry.documentMousedown.notify(e);
-
+        const longPressEvent = (e) => {
             const doc = $(document);
             const touchEvent = Entry.Utils.convertMouseEvent(e);
             const mouseDownCoordinate = { x: touchEvent.clientX, y: touchEvent.clientY };
@@ -1252,7 +1241,7 @@ Entry.EntryObject = class {
 
                 const diff = Math.sqrt(
                     Math.pow(touchEvent.pageX - mouseDownCoordinate.x, 2) +
-                    Math.pow(touchEvent.pageY - mouseDownCoordinate.y, 2)
+                        Math.pow(touchEvent.pageY - mouseDownCoordinate.y, 2)
                 );
 
                 if (diff > 5 && longPressTimer) {
@@ -1268,6 +1257,24 @@ Entry.EntryObject = class {
                     longPressTimer = null;
                 }
             });
+        };
+
+        objectView.addEventListener('mousedown', (e) => {
+            if (Entry.Utils.isRightButton(e)) {
+                e.stopPropagation();
+                this._rightClick(e);
+            }
+
+            if (Entry.isMobile()) {
+                e.stopPropagation();
+                longPressEvent(e);
+            }
+        });
+
+        objectView.addEventListener('touchstart', (e) => {
+            e.eventFromEntryObject = true;
+            Entry.documentMousedown.notify(e);
+            longPressEvent(e);
         });
 
         return objectView;

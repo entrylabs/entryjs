@@ -90,24 +90,7 @@ Entry.Container = class Container {
         scrollWrapper.addClass(baseClass);
         Entry.Utils.disableContextmenu(scrollWrapper);
 
-        /*
-         * 오른쪽 버튼 클릭 시 컨텍스트메뉴 발생
-         */
-        scrollWrapper.addEventListener('mousedown', e => {
-            if (Entry.Utils.isRightButton(e)) {
-                e.stopPropagation();
-                this._rightClick(e);
-            }
-        });
-
-        /*
-         * 터치 디바이스의 롱클릭 대응. touch 1초간 유지시 컨텍스트메뉴 발생.
-         * 현재위치에서 일정 범위 이상 벗어난 경우취소
-         */
-        scrollWrapper.addEventListener('touchstart', e => {
-            if (e.eventFromEntryObject) {
-                return;
-            }
+        const longPressEvent = (e) => {
             let longPressTimer = null;
             const doc = $(document);
 
@@ -147,6 +130,32 @@ Entry.Container = class Container {
                     longPressTimer = null;
                 }
             });
+        };
+        /*
+         * 오른쪽 버튼 클릭 시 컨텍스트메뉴 발생
+         */
+        scrollWrapper.addEventListener('mousedown', (e) => {
+            if (Entry.Utils.isRightButton(e)) {
+                e.stopPropagation();
+                this._rightClick(e);
+            }
+
+            if (Entry.isMobile()) {
+                e.stopPropagation();
+                longPressEvent(e);
+            }
+        });
+
+        /*
+         * 터치 디바이스의 롱클릭 대응. touch 1초간 유지시 컨텍스트메뉴 발생.
+         * 현재위치에서 일정 범위 이상 벗어난 경우취소
+         */
+        scrollWrapper.addEventListener('touchstart', (e) => {
+            if (e.eventFromEntryObject) {
+                return;
+            }
+
+            longPressEvent(e);
         });
 
         const extensionListView = Entry.createElement('ul');
@@ -192,7 +201,7 @@ Entry.Container = class Container {
     _getSortableObjectList(objects) {
         const targetObjects = objects || this.currentObjects_ || [];
 
-        return targetObjects.map(value => ({
+        return targetObjects.map((value) => ({
             key: value.id,
             item: value.view_,
         }));
@@ -441,7 +450,7 @@ Entry.Container = class Container {
         }
 
         Entry.playground.reloadPlayground();
-        GEHelper.resManager.imageRemoved("container::removeObject");
+        GEHelper.resManager.imageRemoved('container::removeObject');
     }
 
     /**
@@ -753,13 +762,13 @@ Entry.Container = class Container {
      * @param {} param
      */
     mapObject(mapFunction, param) {
-        return [...this._extensionObjects, ...this.objects_].map(object =>
+        return [...this._extensionObjects, ...this.objects_].map((object) =>
             mapFunction(object, param)
         );
     }
 
     mapObjectOnScene(mapFunction, param) {
-        return [...this._extensionObjects, ...this.getCurrentObjects()].map(object =>
+        return [...this._extensionObjects, ...this.getCurrentObjects()].map((object) =>
             mapFunction(object, param)
         );
     }
@@ -876,7 +885,7 @@ Entry.Container = class Container {
      * @return {JSON}
      */
     toJSON() {
-        return this.objects_.map(object => object.toJSON());
+        return this.objects_.map((object) => object.toJSON())
     }
 
     /**
@@ -1093,7 +1102,7 @@ Entry.Container = class Container {
     }
 
     clear() {
-        [...this.objects_, ...this._extensionObjects].forEach(o => o.destroy());
+        [...this.objects_, ...this._extensionObjects].forEach((o) => o.destroy());
         this.objects_ = [];
         // INFO : clear 시도할때 _extensionObjects 초기화
         this._extensionObjects = [];
