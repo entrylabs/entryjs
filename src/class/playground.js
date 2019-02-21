@@ -1316,6 +1316,8 @@ Entry.Playground = class {
         const that = this;
         $(handle).bind('mousedown touchstart', function(e) {
             e.preventDefault();
+            if (Entry.disposeEvent)
+                Entry.disposeEvent.notify();
             that.resizing = true;
             if (Entry.documentMousemove) {
                 listener = Entry.documentMousemove.attach(this, function({ clientX }) {

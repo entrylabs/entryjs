@@ -230,7 +230,7 @@ Entry.EntryObject = class {
                 )}/thumb/${fileName}.png")`;
             }
         } else if (objectType === 'textBox') {
-            const textIconPath = `${Entry.mediaFilePath}/text_icon.png`;
+            const textIconPath = `${Entry.mediaFilePath}text_icon.png`;
             thumb.style.backgroundImage = `url(${textIconPath})`;
         }
     }

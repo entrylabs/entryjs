@@ -87,7 +87,8 @@ class _GEHelper extends GEHelperBase {
         (this.textHelper = new _TextHelper()).INIT(isWebGL);
         (this.brushHelper = new _BrushHelper()).INIT(isWebGL);
         if(this._isWebGL) {
-            this.rndPosition = ()=>{ return Math.random() * 0.04 - 0.02;};
+            // this.rndPosition = ()=>{ return Math.random() * 0.8 - 0.4; };
+            this.rndPosition = ()=>{ return 0; };
             this.rotateRead = 180 / Math.PI;
             this.rotateWrite = Math.PI / 180;
             PIXIGlobal.initOnce();

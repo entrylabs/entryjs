@@ -27,8 +27,8 @@ Entry.FieldKeyboard = function(content, blockView, index) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 
 (function(p) {
-    var X_PADDING = 10,
-        TEXT_Y_PADDING = 4;
+    const X_PADDING = 10;
+    const TEXT_Y_PADDING = 4;
 
     p.renderStart = function() {
         if (this.svgGroup) {
@@ -48,13 +48,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 
         this._setTextValue();
 
-        var width = this.getTextWidth() + 1;
+        const width = this.getTextWidth() + 1;
 
-        var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
+        const CONTENT_HEIGHT = this._CONTENT_HEIGHT;
         this._header = this.svgGroup.elem('rect', {
             x: 0,
             y: (_.result(this.position, 'y') || 0) - CONTENT_HEIGHT / 2,
-            width: width,
+            width,
             height: CONTENT_HEIGHT,
             rx: 3,
             ry: 3,
@@ -69,24 +69,22 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         this.box.set({
             x: 0,
             y: 0,
-            width: width,
+            width,
             height: CONTENT_HEIGHT,
         });
     };
 
     p.renderOptions = function() {
-        if (Entry.keyPressed)
-            this.keyPressed = Entry.keyPressed.attach(
-                this,
-                this._keyboardControl
-            );
+        if (Entry.keyPressed) {
+            this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl);
+        }
         this._optionVisible = true;
 
         this._attachDisposeEvent((skipCommand, forceCommand) => {
             this.destroyOption(skipCommand, forceCommand === true);
         });
 
-        var { x, y } = this.getAbsolutePosFromDocument();
+        let { x, y } = this.getAbsolutePosFromDocument();
 
         x -= 12 + X_PADDING / 2;
         x += this.box.width / 2;
@@ -100,17 +98,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 
         this.optionGroup.on('load', this.optionDomCreated.bind(this));
 
-        this.optionGroup[0].src = `${
-            Entry.mediaFilePath
-        }/media/keyboard_workspace_widget.png`;
+        this.optionGroup[0].src = `${Entry.mediaFilePath}media/keyboard_workspace_widget.png`;
 
         this.optionGroup.on('mousedown', (e) => e.stopPropagation());
         this.optionGroup.css({ left: x, top: y });
     };
 
     p.destroyOption = function(skipCommand, forceCommand) {
-        var _destroyFunc = _.partial(_.result, _, 'destroy');
-        var _removeFunc = _.partial(_.result, _, 'remove');
+        const _destroyFunc = _.partial(_.result, _, 'destroy');
+        const _removeFunc = _.partial(_.result, _, 'remove');
 
         _destroyFunc(this.disposeEvent);
         delete this.disposeEvent;
@@ -129,10 +125,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     p._keyboardControl = function(event) {
         event.stopPropagation && event.stopPropagation();
         event.preventDefault && event.preventDefault();
-        if (!this._optionVisible) return;
+        if (!this._optionVisible) {
+            return;
+        }
 
-        var value = event.keyCode;
-        var text = Entry.getKeyCodeMap()[value];
+        const value = event.keyCode;
+        const text = Entry.getKeyCodeMap()[value];
         if (text !== undefined) {
             this.applyValue(text, value, false, true);
         }
@@ -146,7 +144,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     };
 
     p.resize = function() {
-        var width = this.getTextWidth() + 1;
+        const width = this.getTextWidth() + 1;
         this._header.attr({ width });
         this.box.set({ width });
         this._blockView.dAlignContent();
@@ -162,10 +160,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     };
 
     p._setTextValue = function() {
-        var value = this.getValue();
+        let value = this.getValue();
         value = this._convert(Entry.getKeyCodeMap()[value], value);
-        this.textElement.textContent = _.isUndefined(value)
-            ? Lang.Blocks.no_target
-            : value;
+        this.textElement.textContent = _.isUndefined(value) ? Lang.Blocks.no_target : value;
     };
 })(Entry.FieldKeyboard.prototype);
