@@ -247,6 +247,12 @@ Entry.Playground = class {
             },
             container: this.backPackView,
         });
+        this.blockBackPackArea = Entry.createElement('div')
+            .addClass('blockBackPackDrop')
+            .appendTo(backPackView);
+        this.objectBackPackArea = Entry.createElement('div')
+            .addClass('objectBackPackDrop')
+            .appendTo(backPackView);
 
         console.log(this.backPack, this.backPack.getData('dragType'));
         const { view: blockView } = this.board || {};
@@ -254,7 +260,9 @@ Entry.Playground = class {
             const dom = blockView[0];
             const eventDom = new EntryEvent(dom);
             this.blockBackPackEvent = eventDom;
-            eventDom.on(
+            const areaDom = new EntryEvent(this.blockBackPackArea);
+            this.blockBackPackAreaEvent = areaDom;
+            areaDom.on(
                 'drop',
                 (e) => {
                     e.preventDefault();
@@ -267,9 +275,6 @@ Entry.Playground = class {
                 },
                 false
             );
-            eventDom.on('dragover', (e) => {
-                e.preventDefault();
-            });
             eventDom.on('dragenter', (e) => {
                 const type = this.backPack.getData('dragType');
                 if (type === 'block') {
@@ -284,7 +289,10 @@ Entry.Playground = class {
                     console.log('enter');
                 }
             });
-            eventDom.on('dragleave', (e) => {
+            areaDom.on('dragover', (e) => {
+                e.preventDefault();
+            });
+            areaDom.on('dragleave', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 $(this.blockBackPackArea).css({
@@ -299,8 +307,10 @@ Entry.Playground = class {
         if (objectView) {
             const dom = objectView[0];
             const eventDom = new EntryEvent(dom);
-            this.blockBackPackEvent = eventDom;
-            eventDom.on(
+            this.objectBackPackEvent = eventDom;
+            const areaDom = new EntryEvent(this.objectBackPackArea);
+            this.objectBackPackAreaEvent = areaDom;
+            areaDom.on(
                 'drop',
                 (e) => {
                     e.preventDefault();
@@ -313,9 +323,6 @@ Entry.Playground = class {
                 },
                 false
             );
-            eventDom.on('dragover', (e) => {
-                e.preventDefault();
-            });
             eventDom.on('dragenter', (e) => {
                 const type = this.backPack.getData('dragType');
                 if (type === 'object') {
@@ -330,7 +337,12 @@ Entry.Playground = class {
                     console.log('enter');
                 }
             });
-            eventDom.on('dragleave', (e) => {
+            areaDom.on('dragover', (e) => {
+                console.log('over');
+                e.preventDefault();
+            });
+            areaDom.on('dragleave', (e) => {
+                console.log();
                 e.preventDefault();
                 e.stopPropagation();
                 $(this.objectBackPackArea).css({
@@ -338,12 +350,6 @@ Entry.Playground = class {
                 });
             });
         }
-        this.blockBackPackArea = Entry.createElement('div')
-            .addClass('blockBackPackDrop')
-            .appendTo(backPackView);
-        this.objectBackPackArea = Entry.createElement('div')
-            .addClass('objectBackPackDrop')
-            .appendTo(backPackView);
     }
 
     showBackPack(args) {
@@ -2085,5 +2091,8 @@ Entry.Playground = class {
         this.commentToggleButton_.unBindOnClick();
         this.backPackButton_.unBindOnClick();
         this.blockBackPackEvent.off();
+        this.blockBackPackAreaEvent.off();
+        this.objectBackPackEvent.off();
+        this.objectBackPackAreaEvent.off();
     }
 };

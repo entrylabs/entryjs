@@ -1703,6 +1703,10 @@ Entry.BlockView = class BlockView {
                 return resolve(Entry.BlockView.pngMap[src]);
             }
 
+            if (notPng) {
+                return resolve(src);
+            }
+
             width *= multiplier;
             height *= multiplier;
             //float point cropped
@@ -1718,9 +1722,6 @@ Entry.BlockView = class BlockView {
             const ctx = canvas.getContext('2d');
 
             img.onload = function() {
-                if (notPng) {
-                    return resolve(img.src);
-                }
                 ctx.drawImage(img, 0, 0, width, height);
                 const data = canvas.toDataURL('image/png');
                 if (/\.png$/.test(src)) {

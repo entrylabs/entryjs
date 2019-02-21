@@ -1259,6 +1259,7 @@ Entry.EntryObject = class {
         const objectView = Entry.createElement('li', objectId).addClass(
             'entryContainerListElementWorkspace'
         );
+        $(objectView).attr('draggable', true);
         const fragment = document.createDocumentFragment();
         fragment.appendChild(objectView);
         // generate context menu
