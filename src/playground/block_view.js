@@ -1334,7 +1334,7 @@ Entry.BlockView = class BlockView {
             } else {
                 text.setAttribute('font-size', `${size * fontWeight}px`);
             }
-            text.setAttribute('alignment-baseline', 'baseline');
+            text.setAttribute('alignment-baseline', 'middle');
         });
 
         let counts = 0;
