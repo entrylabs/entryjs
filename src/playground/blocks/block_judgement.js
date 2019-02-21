@@ -1,4 +1,4 @@
-import {GEHelper} from '../../graphicEngine/GEHelper';
+import { GEHelper } from '../../graphicEngine/GEHelper';
 
 module.exports = {
     getBlocks() {
@@ -42,7 +42,7 @@ module.exports = {
                 statements: [],
                 params: [
                     {
-                        type: 'Dropdown',
+                        type: 'Keyboard',
                         options: [
                             [Lang.Blocks.START_press_some_key_up, '38'],
                             [Lang.Blocks.START_press_some_key_down, '40'],
