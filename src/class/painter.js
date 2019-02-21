@@ -2,7 +2,7 @@
 
 Entry.Painter = function(view) {
     this.view = view;
-    this.baseUrl = Entry.painterBaseUrl || '/lib/literallycanvas-mobile/lib/img';
+    this.baseUrl = Entry.painterBaseUrl;
 
     this.file = {
         id: Entry.generateHash(),

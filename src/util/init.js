@@ -34,6 +34,7 @@ Entry.init = function(container, options) {
     this.options = options;
     this.parseOptions(options);
     this.mediaFilePath = `${options.libDir ? options.libDir : '/lib'}/entry-js/images/`;
+    this.painterBaseUrl = `${options.libDir ? options.libDir : '/lib'}/literallycanvas-mobile/lib/img`;
     this.defaultPath = options.defaultDir || '';
     this.blockInjectPath = options.blockInjectDir || '';
 
