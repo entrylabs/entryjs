@@ -90,24 +90,7 @@ Entry.Container = class Container {
         scrollWrapper.addClass(baseClass);
         Entry.Utils.disableContextmenu(scrollWrapper);
 
-        /*
-         * 오른쪽 버튼 클릭 시 컨텍스트메뉴 발생
-         */
-        scrollWrapper.addEventListener('mousedown', (e) => {
-            if (Entry.Utils.isRightButton(e)) {
-                e.stopPropagation();
-                this._rightClick(e);
-            }
-        });
-
-        /*
-         * 터치 디바이스의 롱클릭 대응. touch 1초간 유지시 컨텍스트메뉴 발생.
-         * 현재위치에서 일정 범위 이상 벗어난 경우취소
-         */
-        scrollWrapper.addEventListener('touchstart', (e) => {
-            if (e.eventFromEntryObject) {
-                return;
-            }
+        const longPressEvent = (e) => {
             let longPressTimer = null;
             const doc = $(document);
 
@@ -122,7 +105,7 @@ Entry.Container = class Container {
             const mouseDownCoordinate = { x: event.clientX, y: event.clientY };
 
             // 움직임 포착된 경우 타이머 종료
-            doc.bind('mousemove.container touchmove.container', (e) => {
+            doc.bind('mousemove.container touchmove.container', e => {
                 const event = Entry.Utils.convertMouseEvent(e);
                 const moveThreshold = 5;
                 if (!mouseDownCoordinate) {
@@ -147,6 +130,32 @@ Entry.Container = class Container {
                     longPressTimer = null;
                 }
             });
+        };
+        /*
+         * 오른쪽 버튼 클릭 시 컨텍스트메뉴 발생
+         */
+        scrollWrapper.addEventListener('mousedown', (e) => {
+            if (Entry.Utils.isRightButton(e)) {
+                e.stopPropagation();
+                this._rightClick(e);
+            }
+
+            if (Entry.isMobile()) {
+                e.stopPropagation();
+                longPressEvent(e);
+            }
+        });
+
+        /*
+         * 터치 디바이스의 롱클릭 대응. touch 1초간 유지시 컨텍스트메뉴 발생.
+         * 현재위치에서 일정 범위 이상 벗어난 경우취소
+         */
+        scrollWrapper.addEventListener('touchstart', (e) => {
+            if (e.eventFromEntryObject) {
+                return;
+            }
+
+            longPressEvent(e);
         });
 
         const extensionListView = Entry.createElement('ul');
@@ -192,12 +201,10 @@ Entry.Container = class Container {
     _getSortableObjectList(objects) {
         const targetObjects = objects || this.currentObjects_ || [];
 
-        return targetObjects.map((value) => {
-            return {
-                key: value.id,
-                item: value.view_,
-            };
-        });
+        return targetObjects.map((value) => ({
+            key: value.id,
+            item: value.view_,
+        }));
     }
 
     /**
@@ -225,14 +232,10 @@ Entry.Container = class Container {
 
         let objs = this.getCurrentObjects().slice();
 
-        const ret = objs.filter(({ index }) => {
-            return index !== undefined;
-        });
+        const ret = objs.filter(({ index }) => index !== undefined);
 
         if (ret.length === objs.length) {
-            objs = objs.sort((a, b) => {
-                return a.index - b.index;
-            });
+            objs = objs.sort((a, b) => a.index - b.index);
         }
 
         objs.forEach(function(obj) {
@@ -282,9 +285,7 @@ Entry.Container = class Container {
      */
     setPicture(picture) {
         const pictures = this.getObject(picture.objectId).pictures;
-        const index = _.findIndex(pictures, ({ id }) => {
-            return id === picture.id;
-        });
+        const index = _.findIndex(pictures, ({ id }) => id === picture.id);
         if (!~index) {
             throw new Error('No picture found');
         }
@@ -329,9 +330,10 @@ Entry.Container = class Container {
     }
 
     addObjectFunc(objectModel, index, isNotRender) {
+        delete objectModel.scene;
         const object = new Entry.EntryObject(objectModel);
 
-        object.scene = object.scene || Entry.scene.selectedScene;
+        object.scene = Entry.scene.selectedScene;
 
         let isBackground = objectModel.sprite.category || {};
         isBackground = isBackground.main === 'background';
@@ -448,7 +450,7 @@ Entry.Container = class Container {
         }
 
         Entry.playground.reloadPlayground();
-        GEHelper.resManager.imageRemoved("container::removeObject");
+        GEHelper.resManager.imageRemoved('container::removeObject');
     }
 
     /**
@@ -464,7 +466,7 @@ Entry.Container = class Container {
         }
 
         const className = 'selectedObject';
-        this.mapObjectOnScene((o) => {
+        this.mapObjectOnScene(o => {
             !o.view_ && _.result(o, 'generateView');
             const selected = o === object;
             const view = o.view_;
@@ -626,9 +628,7 @@ Entry.Container = class Container {
         let result = [];
         switch (menuName) {
             case 'sprites':
-                result = this.getCurrentObjects().map(({ name, id }) => {
-                    return [name, id];
-                });
+                result = this.getCurrentObjects().map(({ name, id }) => [name, id]);
                 break;
             case 'allSprites':
                 result = this.getAllObjects().map(({ name, id, scene = {} }) => {
@@ -637,15 +637,11 @@ Entry.Container = class Container {
                 });
                 break;
             case 'spritesWithMouse':
-                result = this.getCurrentObjects().map(({ name, id }) => {
-                    return [name, id];
-                });
+                result = this.getCurrentObjects().map(({ name, id }) => [name, id]);
                 result.push([Lang.Blocks.mouse_pointer, 'mouse']);
                 break;
             case 'spritesWithSelf':
-                result = this.getCurrentObjects().map(({ name, id }) => {
-                    return [name, id];
-                });
+                result = this.getCurrentObjects().map(({ name, id }) => [name, id]);
                 result.push([Lang.Blocks.self, 'self']);
                 break;
             case 'textBoxWithSelf': {
@@ -663,9 +659,7 @@ Entry.Container = class Container {
             case 'collision':
                 result = [
                     [Lang.Blocks.mouse_pointer, 'mouse'],
-                    ...this.getCurrentObjects().map(({ name, id }) => {
-                        return [name, id];
-                    }),
+                    ...this.getCurrentObjects().map(({ name, id }) => [name, id]),
                     [Lang.Blocks.wall, 'wall'],
                     [Lang.Blocks.wall_up, 'wall_up'],
                     [Lang.Blocks.wall_down, 'wall_down'],
@@ -678,18 +672,14 @@ Entry.Container = class Container {
                 if (!object) {
                     break;
                 }
-                result = (object.pictures || []).map(({ name, id }) => {
-                    return [name, id];
-                });
+                result = (object.pictures || []).map(({ name, id }) => [name, id]);
                 break;
             }
             case 'messages':
-                result = Entry.variableContainer.messages_.map(({ name, id }) => {
-                    return [name, id];
-                });
+                result = Entry.variableContainer.messages_.map(({ name, id }) => [name, id]);
                 break;
             case 'variables':
-                Entry.variableContainer.variables_.forEach((variable) => {
+                Entry.variableContainer.variables_.forEach(variable => {
                     if (
                         variable.object_ &&
                         Entry.playground.object &&
@@ -705,7 +695,7 @@ Entry.Container = class Container {
                 break;
             case 'lists': {
                 const object = Entry.playground.object || object;
-                Entry.variableContainer.lists_.forEach((list) => {
+                Entry.variableContainer.lists_.forEach(list => {
                     if (list.object_ && object && list.object_ != object.id) {
                         return;
                     }
@@ -718,26 +708,20 @@ Entry.Container = class Container {
                 break;
             }
             case 'scenes':
-                result = Entry.scene.getScenes().map(({ name, id }) => {
-                    return [name, id];
-                });
+                result = Entry.scene.getScenes().map(({ name, id }) => [name, id]);
                 break;
             case 'sounds': {
                 const object = Entry.playground.object || object;
                 if (!object) {
                     break;
                 }
-                result = (object.sounds || []).map(({ name, id }) => {
-                    return [name, id];
-                });
+                result = (object.sounds || []).map(({ name, id }) => [name, id]);
                 break;
             }
             case 'clone':
                 result = [
                     [Lang.Blocks.oneself, 'self'],
-                    ...this.getCurrentObjects().map(({ name, id }) => {
-                        return [name, id];
-                    }),
+                    ...this.getCurrentObjects().map(({ name, id }) => [name, id]),
                 ];
                 break;
             case 'objectSequence':
@@ -756,13 +740,13 @@ Entry.Container = class Container {
      * Initialize entities to state before run
      */
     clearRunningState() {
-        this.mapObject((object) => {
+        this.mapObject(object => {
             object.clearExecutor();
         });
     }
 
     clearRunningStateOnScene() {
-        this.mapObjectOnScene((object) => {
+        this.mapObjectOnScene(object => {
             if (object instanceof Entry.TargetChecker) {
                 return;
             }
@@ -778,15 +762,15 @@ Entry.Container = class Container {
      * @param {} param
      */
     mapObject(mapFunction, param) {
-        return [...this._extensionObjects, ...this.objects_].map((object) => {
-            return mapFunction(object, param);
-        });
+        return [...this._extensionObjects, ...this.objects_].map((object) =>
+            mapFunction(object, param)
+        );
     }
 
     mapObjectOnScene(mapFunction, param) {
-        return [...this._extensionObjects, ...this.getCurrentObjects()].map((object) => {
-            return mapFunction(object, param);
-        });
+        return [...this._extensionObjects, ...this.getCurrentObjects()].map((object) =>
+            mapFunction(object, param)
+        );
     }
 
     /**
@@ -797,15 +781,11 @@ Entry.Container = class Container {
      * @param {} param
      */
     mapEntity(mapFunction, param) {
-        return this.objects_.map(({ entity }) => {
-            return mapFunction(entity, param);
-        });
+        return this.objects_.map(({ entity }) => mapFunction(entity, param));
     }
 
     mapEntityOnScene(mapFunction, param) {
-        return this.getCurrentObjects().map(({ entity }) => {
-            return mapFunction(entity, param);
-        });
+        return this.getCurrentObjects().map(({ entity }) => mapFunction(entity, param));
     }
 
     /**
@@ -905,9 +885,7 @@ Entry.Container = class Container {
      * @return {JSON}
      */
     toJSON() {
-        return this.objects_.map((object) => {
-            return object.toJSON();
-        });
+        return this.objects_.map((object) => object.toJSON())
     }
 
     /**
@@ -973,7 +951,7 @@ Entry.Container = class Container {
             return;
         }
 
-        this.mapEntityOnScene((entity) => {
+        this.mapEntityOnScene(entity => {
             entity.reset();
         });
         this.clearRunningStateOnScene();
@@ -985,9 +963,9 @@ Entry.Container = class Container {
     }
 
     updateObjectsOrder() {
-        this.objects_ = Entry.scene.getScenes().reduce((objs, scene) => {
-            return [...objs, ...this.getSceneObjects(scene)];
-        }, []);
+        this.objects_ = Entry.scene
+            .getScenes()
+            .reduce((objs, scene) => [...objs, ...this.getSceneObjects(scene)], []);
     }
 
     /**
@@ -1002,9 +980,7 @@ Entry.Container = class Container {
         }
 
         const sceneId = scene.id;
-        return this.getAllObjects().filter(({ scene: { id } }) => {
-            return id === sceneId;
-        });
+        return this.getAllObjects().filter(({ scene: { id } }) => id === sceneId);
     }
 
     /**
@@ -1092,7 +1068,7 @@ Entry.Container = class Container {
         return;
     }
 
-    _rightClick = (e) => {
+    _rightClick = e => {
         e.stopPropagation();
         const touchEvent = Entry.Utils.convertMouseEvent(e);
 
@@ -1126,9 +1102,7 @@ Entry.Container = class Container {
     }
 
     clear() {
-        [...this.objects_, ...this._extensionObjects].forEach((o) => {
-            return o.destroy();
-        });
+        [...this.objects_, ...this._extensionObjects].forEach((o) => o.destroy());
         this.objects_ = [];
         // INFO : clear 시도할때 _extensionObjects 초기화
         this._extensionObjects = [];
@@ -1214,11 +1188,7 @@ Entry.Container = class Container {
     }
 
     getBlockList() {
-        return _.flatten(
-            this.objects_.map(({ script }) => {
-                return script.getBlockList();
-            })
-        );
+        return _.flatten(this.objects_.map(({ script }) => script.getBlockList()));
     }
 
     scrollToObject(ObjectId) {

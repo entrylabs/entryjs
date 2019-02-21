@@ -562,9 +562,11 @@ Entry.Workspace = class Workspace {
                         blockView.block.isDeletable() &&
                         !blockView.isFieldEditing()
                     ) {
-                        Entry.do('destroyBlock', blockView.block);
-                        this.board.set({ selectedBlockView: null });
-                        e.preventDefault();
+                        if(Entry.engine.isState('stop')){
+                            Entry.do('destroyBlock', blockView.block);
+                            this.board.set({ selectedBlockView: null });
+                            e.preventDefault();
+                        }
                     }
                     break;
             }

@@ -848,12 +848,14 @@ Entry.EntityObject = class EntityObject {
             if(isWebGL) {
                 this.textObject.anchor.y = 0.5;
             }
-        } else if (!previousState && this.lineBreak) {
-            this.setFontSize(this.getFontSize() * this.getScaleX());
-            this.setHeight(this.textObject.getMeasuredLineHeight() * 3);
-            this.setWidth(this.getWidth() * this.getScaleX());
-            this.setScaleX(1);
-            this.setScaleY(1);
+        } else if (this.lineBreak) {
+            if(previousState === false) {
+                this.setFontSize(this.getFontSize() * this.getScaleX());
+                this.setHeight(this.textObject.getMeasuredLineHeight() * 3);
+                this.setWidth(this.getWidth() * this.getScaleX());
+                this.setScaleX(1);
+                this.setScaleY(1);
+            }
             if(isWebGL) {
                 this.textObject.anchor.y = 0;
                 this.textObject.style.wordWrap = true;

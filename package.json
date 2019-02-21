@@ -53,6 +53,7 @@
         "@babel/plugin-transform-runtime": "7.0.0",
         "@babel/preset-env": "7.0.0",
         "@babel/runtime": "^7.0.0",
+        "@entrylabs/event": "^1.0.1",
         "@types/pixi.js": "^4.8.6",
         "awesome-typescript-loader": "^5.2.1",
         "babel-eslint": "^8.2.2",
