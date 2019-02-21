@@ -54,7 +54,7 @@ module.exports = {
                         },
                     },
                     {
-                        type: 'Dropdown',
+                        type: 'Keyboard',
                         options: [
                             [Lang.Blocks.START_press_some_key_up, '38'],
                             [Lang.Blocks.START_press_some_key_down, '40'],
@@ -880,11 +880,8 @@ module.exports = {
                     const flow = this.block.params[1];
                     let propertyKey = this.block.params[2];
                     const rightValue = this.getParam(4);
-                    propertyKey =
-                        propertyKey[0].toUpperCase() + propertyKey.substr(1);
-                    const leftValue = obj.entity[`get${  propertyKey}`].call(
-                        obj.entity
-                    );
+                    propertyKey = propertyKey[0].toUpperCase() + propertyKey.substr(1);
+                    const leftValue = obj.entity[`get${propertyKey}`].call(obj.entity);
                     let returnVal;
 
                     switch (this.block.params[3]) {
@@ -1119,7 +1116,7 @@ module.exports = {
                 func(sprite, script) {
                     Entry.targetChecker.achieveCheck(
                         this.block.params[1],
-                        `${this.block.params[0]  }`
+                        `${this.block.params[0]}`
                     );
                 },
             },
@@ -1145,10 +1142,8 @@ module.exports = {
                 class: 'checker',
                 isNotFor: ['checker'],
                 func(sprite, script) {
-                    const variableName = `${this.block.params[0]  }`;
-                    const variable = Entry.variableContainer.getVariableByName(
-                        variableName
-                    );
+                    const variableName = `${this.block.params[0]}`;
+                    const variable = Entry.variableContainer.getVariableByName(variableName);
                     if (variable) {
                         return variable.getValue();
                     } else {
@@ -1184,9 +1179,7 @@ module.exports = {
                 isNotFor: ['checker'],
                 func(sprite, script) {
                     if (Entry.targetChecker) {
-                        Entry.targetChecker.showStatusMessage(
-                            this.block.params[0]
-                        );
+                        Entry.targetChecker.showStatusMessage(this.block.params[0]);
                     }
                 },
             },
@@ -1212,7 +1205,7 @@ module.exports = {
                 class: 'checker',
                 isNotFor: ['checker'],
                 func(sprite, script) {
-                    const goalName = `${this.block.params[0]  }`;
+                    const goalName = `${this.block.params[0]}`;
                     return Entry.targetChecker.checkGoal(goalName);
                 },
             },
