@@ -356,12 +356,10 @@ Entry.Playground = class {
             return [];
         }
 
-        return this.object.pictures.map((value) => {
-            return {
-                key: value.id,
-                item: value.view,
-            };
-        });
+        return this.object.pictures.map((value) => ({
+            key: value.id,
+            item: value.view,
+        }));
     }
 
     /**
@@ -385,9 +383,7 @@ Entry.Playground = class {
             'select_link imico_pop_select_arr_down'
         );
         fontLink.bindOnClick(() => {
-            const options = EntryStatic.fonts.map((font) => {
-                return [font.name, font];
-            });
+            const options = EntryStatic.fonts.map((font) => [font.name, font]);
             fontLink.addClass('imico_pop_select_arr_up');
             fontLink.removeClass('imico_pop_select_arr_down');
             this.openDropDown(
@@ -504,14 +500,14 @@ Entry.Playground = class {
         styleBox.appendChild(through);
 
         const color = Entry.createElement('a').addClass('style_link imbtn_pop_font_color');
-        color.bindOnClick(() => {
-            return this.openColourPicker(
+        color.bindOnClick(() =>
+            this.openColourPicker(
                 color,
                 this.object.entity.getColour(),
                 false,
                 this.setTextColour.bind(this)
-            );
-        });
+            )
+        );
         color.setAttribute('title', Lang.Workspace.font_color);
         styleBox.appendChild(color);
 
@@ -519,27 +515,23 @@ Entry.Playground = class {
             'style_link imbtn_pop_font_backgroundcolor'
         );
         backgroundColor.setAttribute('title', Lang.Workspace.font_fill);
-        backgroundColor.bindOnClick(() => {
-            return this.openColourPicker(
+        backgroundColor.bindOnClick(() =>
+            this.openColourPicker(
                 backgroundColor,
                 this.object.entity.getBGColour(),
                 true,
                 this.setBackgroundColour.bind(this)
-            );
-        });
+            )
+        );
         styleBox.appendChild(backgroundColor);
 
         const writeTypeBox = Entry.createElement('div').addClass('write_type_box');
         const singleLine = Entry.createElement('a');
         singleLine.innerText = Lang.Buttons.single_line;
-        singleLine.bindOnClick(() => {
-            return Entry.playground.toggleLineBreak(false);
-        });
+        singleLine.bindOnClick(() => Entry.playground.toggleLineBreak(false));
         const multiLine = Entry.createElement('a');
         multiLine.innerText = Lang.Buttons.multi_line;
-        multiLine.bindOnClick(() => {
-            return Entry.playground.toggleLineBreak(true);
-        });
+        multiLine.bindOnClick(() => Entry.playground.toggleLineBreak(true));
         writeTypeBox.appendChild(singleLine);
         writeTypeBox.appendChild(multiLine);
         inputArea.appendChild(writeTypeBox);
@@ -763,12 +755,10 @@ Entry.Playground = class {
             return [];
         }
 
-        return this.object.sounds.map((value) => {
-            return {
-                key: value.id,
-                item: value.view,
-            };
-        });
+        return this.object.sounds.map((value) => ({
+            key: value.id,
+            item: value.view,
+        }));
     }
 
     /**
@@ -862,6 +852,7 @@ Entry.Playground = class {
         }
 
         if (!this.object) {
+            this.updatePictureView();
             return Entry.dispatchEvent('pictureClear');
         }
 
@@ -1019,9 +1010,7 @@ Entry.Playground = class {
         this.textEditInput.value = text;
         this.textEditArea.value = text;
 
-        const font = EntryStatic.fonts.find((font) => {
-            return font.family === entity.getFontName();
-        });
+        const font = EntryStatic.fonts.find((font) => font.family === entity.getFontName());
         if (font) {
             $('#entryText #entryTextBoxAttrFontName').text(font.name);
             $('#entryText #entryTextBoxAttrFontName').data('font', font);
@@ -1316,8 +1305,9 @@ Entry.Playground = class {
         const that = this;
         $(handle).bind('mousedown touchstart', function(e) {
             e.preventDefault();
-            if (Entry.disposeEvent)
+            if (Entry.disposeEvent) {
                 Entry.disposeEvent.notify();
+            }
             that.resizing = true;
             if (Entry.documentMousemove) {
                 listener = Entry.documentMousemove.attach(this, function({ clientX }) {
@@ -1378,7 +1368,7 @@ Entry.Playground = class {
 
     clear() {
         this.flushPlayground();
-        if(this.painter) {
+        if (this.painter) {
             this.painter.clear();
         }
     }
@@ -1733,7 +1723,7 @@ Entry.Playground = class {
             data: {
                 color,
                 positionDom: target,
-                canTransparent: canTransparent,
+                canTransparent,
                 onOutsideClick: (color) => {
                     if (colorPicker) {
                         colorPicker.hide();
