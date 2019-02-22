@@ -947,6 +947,9 @@ Entry.EntityObject = class EntityObject {
             if (info.source() !== this.object.image) return;
             let hasFilter = !_.isEmpty(that.object.filters);
             GEHelper.colorFilter.setCache(this, hasFilter);
+            if(GEHelper.isWebGL) {
+                this.object.refreshFilter();
+            }
             Entry.requestUpdate = true;
         };
         GEHelper.resManager.reqResource(this.object, this.parent.scene.id, pictureModel, onImageLoad);
@@ -1039,8 +1042,11 @@ Entry.EntityObject = class EntityObject {
                 e.alpha = adjust(e.alpha, 0, 1);
                 obj.alpha = e.alpha;
             }
-
-            obj.filters = f;
+            if(GEHelper.isWebGL) {
+                obj.setFilterAndCache(f);
+            } else {
+                obj.filters = f;
+            }
         })(effects, object);
 
         this.cache();
@@ -1065,7 +1071,11 @@ Entry.EntityObject = class EntityObject {
         }
 
         const object = this.object;
-        object.filters = [];
+        if(GEHelper.isWebGL) {
+            object.setFilterAndCache(null);
+        } else {
+            object.filters = [];
+        }
         this.setInitialEffectValue();
         object.alpha = this.effect.alpha;
         GEHelper.colorFilter.setCache(this, false);
