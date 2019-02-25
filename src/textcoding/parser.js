@@ -239,7 +239,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             error.type = "converting";
                         }
 
-                        // 라인을 표기할 수 있으면 표기한다. py to block converting 중에는 표기할 수 없다.
                         if (annotation) {
                             const option = {
                                 className: 'CodeMirror-lint-mark-error',
