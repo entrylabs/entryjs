@@ -236,19 +236,18 @@ Entry.Workspace = class Workspace {
                         this.board.hide();
                     }
                     this.set({ selectedBoard: this.vimBoard });
-                    blockMenu.banClass('functionInit');
+                    // blockMenu.banClass('functionInit');
+
                     this.mode = WORKSPACE.MODE_VIMBOARD;
 
                     if (this.oldTextType === VIM.TEXT_TYPE_JS) {
-                        mode.boardType = WORKSPACE.MODE_VIMBOARD;
-                        mode.textType = VIM.TEXT_TYPE_JS;
-                        mode.runType = VIM.MAZE_MODE;
-                        this.oldTextType = VIM.TEXT_TYPE_JS;
+                        this.boardType = WORKSPACE.MODE_VIMBOARD;
+                        this.textType = VIM.TEXT_TYPE_JS;
+                        this.runType = VIM.MAZE_MODE;
                     } else if (this.oldTextType === VIM.TEXT_TYPE_PY) {
-                        mode.boardType = WORKSPACE.MODE_VIMBOARD;
-                        mode.textType = VIM.TEXT_TYPE_PY;
-                        mode.runType = VIM.WORKSPACE_MODE;
-                        this.oldTextType = VIM.TEXT_TYPE_PY;
+                        this.boardType = WORKSPACE.MODE_VIMBOARD;
+                        this.textType = VIM.TEXT_TYPE_PY;
+                        this.runType = VIM.WORKSPACE_MODE;
                     }
                 }
                 Entry.commander.setCurrentEditor('board', this.board);
