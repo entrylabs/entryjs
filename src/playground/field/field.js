@@ -403,7 +403,7 @@ Entry.Field = class Field {
     }
 
     getTextBBox() {
-        if (window.fontLoaded && !invisibleContext) {
+        if (!invisibleContext) {
             invisibleCanvas = Entry.Dom($('<canvas id="invisibleCanvas"></canvas>'))[0];
             invisibleContext = invisibleCanvas.getContext('2d');
         }
