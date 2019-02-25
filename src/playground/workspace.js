@@ -236,7 +236,7 @@ Entry.Workspace = class Workspace {
                         this.board.hide();
                     }
                     this.set({ selectedBoard: this.vimBoard });
-                    // blockMenu.banClass('functionInit');
+                    blockMenu.banClass('functionInit');
 
                     this.mode = WORKSPACE.MODE_VIMBOARD;
 
