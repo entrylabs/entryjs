@@ -214,16 +214,15 @@ Entry.FieldKeyboard = class FieldDropdown extends Entry.Field {
         const text = Entry.getKeyCodeMap()[value];
         if (text !== undefined) {
             this.destroyOption();
-            this.applyValue(text, value, false, true);
+            this.applyValue(value, false, true);
         }
     };
 
-    applyValue(value) {
-        if (this.value != value) {
-            this.setValue(value);
-        }
+    applyValue(value, skipCommand, forceCommand) {
+        this.setValue(String(value));
         this._setTextValue();
         this.resize();
+        this.destroyOption(skipCommand, forceCommand);
     }
 
     getTextByValue(value) {
