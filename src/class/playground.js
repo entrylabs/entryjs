@@ -859,7 +859,7 @@ Entry.Playground = class {
         }
 
         if (!this.object) {
-            Entry.playground.painter.lc && Entry.playground.painter.lc.pointerDown();
+            this.painter.lc && this.painter.lc.pointerDown();
             delete Entry.stage.selectedObject;
             Entry.dispatchEvent('pictureSelected');
         }
