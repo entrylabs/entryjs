@@ -644,10 +644,10 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@entrylabs/event@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@entrylabs/event/-/event-1.0.1.tgz#f33a58d5f4ae7ffb5fef1ce28575abdaf6b1806e"
-  integrity sha512-XxRvDcB92AZiOhEoy5Z9LIgiip4iMxSWeEnJP1zXvBMJRFRSlgR+UdGH28aFQa22jqxzwzXxAZK27ZZ0ioIgQQ==
+"@entrylabs/event@latest":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@entrylabs/event/-/event-1.0.2.tgz#96dc0d0eb759cd627668889928c2768497126f78"
+  integrity sha512-2GSF+9eJCIc/+9EqcZRq7vhmOnwJQeB6LYQIBiM7vv43qCu2odqkekE6VMC6ToMLQwZWBRbn8Qq0dR5hEFRwEg==
 
 "@types/pixi.js@^4.8.6":
   version "4.8.6"
