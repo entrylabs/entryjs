@@ -32,7 +32,7 @@
         "autoprefixer": "^9.4.3",
         "axios": "^0.18.0",
         "babel-core": "^7.0.0-bridge.0",
-        "entry-tool": "^1.0.9",
+        "entry-tool": "latest",
         "events": "^3.0.0",
         "hammerjs": "^2.0.8",
         "hyperid": "^1.4.1",
