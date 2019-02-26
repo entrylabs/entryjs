@@ -105,7 +105,7 @@ Entry.Container = class Container {
             const mouseDownCoordinate = { x: event.clientX, y: event.clientY };
 
             // 움직임 포착된 경우 타이머 종료
-            doc.bind('mousemove.container touchmove.container', e => {
+            doc.bind('mousemove.container touchmove.container', (e) => {
                 const event = Entry.Utils.convertMouseEvent(e);
                 const moveThreshold = 5;
                 if (!mouseDownCoordinate) {
@@ -466,7 +466,7 @@ Entry.Container = class Container {
         }
 
         const className = 'selectedObject';
-        this.mapObjectOnScene(o => {
+        this.mapObjectOnScene((o) => {
             !o.view_ && _.result(o, 'generateView');
             const selected = o === object;
             const view = o.view_;
@@ -526,9 +526,9 @@ Entry.Container = class Container {
         }
 
         if (Entry.playground) {
-            Entry.playground.injectObject(object);
+            object ? Entry.playground.injectObject(object) : Entry.playground.injectEmptyObject();
         }
-        if (Entry.type != 'minimize' && Entry.engine.isState('stop')) {
+        if (Entry.type !== 'minimize' && Entry.engine.isState('stop')) {
             Entry.stage.selectObject(object);
         }
     }
@@ -679,7 +679,7 @@ Entry.Container = class Container {
                 result = Entry.variableContainer.messages_.map(({ name, id }) => [name, id]);
                 break;
             case 'variables':
-                Entry.variableContainer.variables_.forEach(variable => {
+                Entry.variableContainer.variables_.forEach((variable) => {
                     if (
                         variable.object_ &&
                         Entry.playground.object &&
@@ -695,7 +695,7 @@ Entry.Container = class Container {
                 break;
             case 'lists': {
                 const object = Entry.playground.object || object;
-                Entry.variableContainer.lists_.forEach(list => {
+                Entry.variableContainer.lists_.forEach((list) => {
                     if (list.object_ && object && list.object_ != object.id) {
                         return;
                     }
@@ -740,13 +740,13 @@ Entry.Container = class Container {
      * Initialize entities to state before run
      */
     clearRunningState() {
-        this.mapObject(object => {
+        this.mapObject((object) => {
             object.clearExecutor();
         });
     }
 
     clearRunningStateOnScene() {
-        this.mapObjectOnScene(object => {
+        this.mapObjectOnScene((object) => {
             if (object instanceof Entry.TargetChecker) {
                 return;
             }
@@ -885,7 +885,7 @@ Entry.Container = class Container {
      * @return {JSON}
      */
     toJSON() {
-        return this.objects_.map((object) => object.toJSON())
+        return this.objects_.map((object) => object.toJSON());
     }
 
     /**
@@ -951,7 +951,7 @@ Entry.Container = class Container {
             return;
         }
 
-        this.mapEntityOnScene(entity => {
+        this.mapEntityOnScene((entity) => {
             entity.reset();
         });
         this.clearRunningStateOnScene();
@@ -1068,7 +1068,7 @@ Entry.Container = class Container {
         return;
     }
 
-    _rightClick = e => {
+    _rightClick = (e) => {
         e.stopPropagation();
         const touchEvent = Entry.Utils.convertMouseEvent(e);
 
