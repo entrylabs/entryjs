@@ -862,15 +862,16 @@ Entry.Playground = class {
             this.painter.lc && this.painter.lc.pointerDown();
             delete Entry.stage.selectedObject;
             Entry.dispatchEvent('pictureSelected');
+        } else {
+            (this.object.pictures || []).forEach((picture, i) => {
+                !picture.view && Entry.playground.generatePictureElement(picture);
+                const element = picture.view;
+                element.orderHolder.innerHTML = i + 1;
+            });
+
+            this.selectPicture(this.object.selectedPicture);
         }
 
-        ((this.object && this.object.pictures) || []).forEach((picture, i) => {
-            !picture.view && Entry.playground.generatePictureElement(picture);
-            const element = picture.view;
-            element.orderHolder.innerHTML = i + 1;
-        });
-
-        this.object && this.selectPicture(this.object.selectedPicture);
         this.updatePictureView();
     }
 
@@ -1067,13 +1068,13 @@ Entry.Playground = class {
 
         if (!this.object) {
             delete Entry.stage.selectedObject;
+        } else {
+            (this.object.sounds || []).forEach((sound, i) => {
+                !sound.view && Entry.playground.generateSoundElement(sound);
+                const element = sound.view;
+                element.orderHolder.innerHTML = i + 1;
+            });
         }
-
-        ((this.object && this.object.sounds) || []).forEach((sound, i) => {
-            !sound.view && Entry.playground.generateSoundElement(sound);
-            const element = sound.view;
-            element.orderHolder.innerHTML = i + 1;
-        });
 
         this.updateSoundsView();
     }
