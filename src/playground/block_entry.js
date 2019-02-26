@@ -7696,7 +7696,7 @@ function setHardwareLanguage() {
         }
         if ('setLanguage' in hw) {
             const hwLang = hw.setLanguage();
-            const data = hwLang[global.Lang.type];
+            const data = hwLang[Lang.type || Lang.fallbackType];
             for (const key in data) {
                 Object.assign(Lang[key], data[key]);
             }
@@ -7704,7 +7704,10 @@ function setHardwareLanguage() {
     }
 }
 
-Entry.reloadBlock = assignBlocks;
+Entry.reloadBlock = function() {
+    setHardwareLanguage();
+    assignBlocks();
+}
 
 if (typeof exports === 'object') {
     exports.block = Entry.block;
