@@ -356,12 +356,10 @@ Entry.Playground = class {
             return [];
         }
 
-        return this.object.pictures.map((value) => {
-            return {
-                key: value.id,
-                item: value.view,
-            };
-        });
+        return this.object.pictures.map((value) => ({
+            key: value.id,
+            item: value.view,
+        }));
     }
 
     /**
@@ -385,9 +383,7 @@ Entry.Playground = class {
             'select_link imico_pop_select_arr_down'
         );
         fontLink.bindOnClick(() => {
-            const options = EntryStatic.fonts.map((font) => {
-                return [font.name, font];
-            });
+            const options = EntryStatic.fonts.map((font) => [font.name, font]);
             fontLink.addClass('imico_pop_select_arr_up');
             fontLink.removeClass('imico_pop_select_arr_down');
             this.openDropDown(
@@ -504,14 +500,14 @@ Entry.Playground = class {
         styleBox.appendChild(through);
 
         const color = Entry.createElement('a').addClass('style_link imbtn_pop_font_color');
-        color.bindOnClick(() => {
-            return this.openColourPicker(
+        color.bindOnClick(() =>
+            this.openColourPicker(
                 color,
                 this.object.entity.getColour(),
                 false,
                 this.setTextColour.bind(this)
-            );
-        });
+            )
+        );
         color.setAttribute('title', Lang.Workspace.font_color);
         styleBox.appendChild(color);
 
@@ -519,27 +515,23 @@ Entry.Playground = class {
             'style_link imbtn_pop_font_backgroundcolor'
         );
         backgroundColor.setAttribute('title', Lang.Workspace.font_fill);
-        backgroundColor.bindOnClick(() => {
-            return this.openColourPicker(
+        backgroundColor.bindOnClick(() =>
+            this.openColourPicker(
                 backgroundColor,
                 this.object.entity.getBGColour(),
                 true,
                 this.setBackgroundColour.bind(this)
-            );
-        });
+            )
+        );
         styleBox.appendChild(backgroundColor);
 
         const writeTypeBox = Entry.createElement('div').addClass('write_type_box');
         const singleLine = Entry.createElement('a');
         singleLine.innerText = Lang.Buttons.single_line;
-        singleLine.bindOnClick(() => {
-            return Entry.playground.toggleLineBreak(false);
-        });
+        singleLine.bindOnClick(() => Entry.playground.toggleLineBreak(false));
         const multiLine = Entry.createElement('a');
         multiLine.innerText = Lang.Buttons.multi_line;
-        multiLine.bindOnClick(() => {
-            return Entry.playground.toggleLineBreak(true);
-        });
+        multiLine.bindOnClick(() => Entry.playground.toggleLineBreak(true));
         writeTypeBox.appendChild(singleLine);
         writeTypeBox.appendChild(multiLine);
         inputArea.appendChild(writeTypeBox);
@@ -763,12 +755,10 @@ Entry.Playground = class {
             return [];
         }
 
-        return this.object.sounds.map((value) => {
-            return {
-                key: value.id,
-                item: value.view,
-            };
-        });
+        return this.object.sounds.map((value) => ({
+            key: value.id,
+            item: value.view,
+        }));
     }
 
     /**
@@ -778,8 +768,8 @@ Entry.Playground = class {
     injectObject(object) {
         /** @type {Entry.Entryobject} */
         if (!object) {
+            this.object = null; //[박봉배-2018.11.12] - 아래 위치에 있으면 죽은 object의 메서드를 호출함. 그래서 위로 올림.
             this.changeViewMode('code');
-            this.object = null;
             return;
         }
         if (object === this.object) {
@@ -826,6 +816,13 @@ Entry.Playground = class {
         _.result(this.blockMenu, 'clearRendered');
         this.reloadPlayground();
     }
+    /**
+     * Inject object
+     * @param {?Entry.EntryObject} object
+     */
+    injectEmptyObject() {
+        this.object = null;
+    }
 
     /**
      * Inject code
@@ -862,16 +859,19 @@ Entry.Playground = class {
         }
 
         if (!this.object) {
-            return Entry.dispatchEvent('pictureClear');
+            this.painter.lc && this.painter.lc.pointerDown();
+            delete Entry.stage.selectedObject;
+            Entry.dispatchEvent('pictureSelected');
+        } else {
+            (this.object.pictures || []).forEach((picture, i) => {
+                !picture.view && Entry.playground.generatePictureElement(picture);
+                const element = picture.view;
+                element.orderHolder.innerHTML = i + 1;
+            });
+
+            this.selectPicture(this.object.selectedPicture);
         }
 
-        (this.object.pictures || []).forEach((picture, i) => {
-            !picture.view && Entry.playground.generatePictureElement(picture);
-            const element = picture.view;
-            element.orderHolder.innerHTML = i + 1;
-        });
-
-        this.selectPicture(this.object.selectedPicture);
         this.updatePictureView();
     }
 
@@ -1019,9 +1019,7 @@ Entry.Playground = class {
         this.textEditInput.value = text;
         this.textEditArea.value = text;
 
-        const font = EntryStatic.fonts.find((font) => {
-            return font.family === entity.getFontName();
-        });
+        const font = EntryStatic.fonts.find((font) => font.family === entity.getFontName());
         if (font) {
             $('#entryText #entryTextBoxAttrFontName').text(font.name);
             $('#entryText #entryTextBoxAttrFontName').data('font', font);
@@ -1064,15 +1062,19 @@ Entry.Playground = class {
      */
     injectSound() {
         const view = this.soundListView_;
-        if (!view || !this.object) {
+        if (!view) {
             return;
         }
 
-        (this.object.sounds || []).forEach((sound, i) => {
-            !sound.view && Entry.playground.generateSoundElement(sound);
-            const element = sound.view;
-            element.orderHolder.innerHTML = i + 1;
-        });
+        if (!this.object) {
+            delete Entry.stage.selectedObject;
+        } else {
+            (this.object.sounds || []).forEach((sound, i) => {
+                !sound.view && Entry.playground.generateSoundElement(sound);
+                const element = sound.view;
+                element.orderHolder.innerHTML = i + 1;
+            });
+        }
 
         this.updateSoundsView();
     }
@@ -1316,6 +1318,9 @@ Entry.Playground = class {
         const that = this;
         $(handle).bind('mousedown touchstart', function(e) {
             e.preventDefault();
+            if (Entry.disposeEvent) {
+                Entry.disposeEvent.notify();
+            }
             that.resizing = true;
             if (Entry.documentMousemove) {
                 listener = Entry.documentMousemove.attach(this, function({ clientX }) {
@@ -1376,7 +1381,9 @@ Entry.Playground = class {
 
     clear() {
         this.flushPlayground();
-        this.painter.clear();
+        if (this.painter) {
+            this.painter.clear();
+        }
     }
 
     generatePictureElement(picture) {
@@ -1729,7 +1736,7 @@ Entry.Playground = class {
             data: {
                 color,
                 positionDom: target,
-                canTransparent: canTransparent,
+                canTransparent,
                 onOutsideClick: (color) => {
                     if (colorPicker) {
                         colorPicker.hide();

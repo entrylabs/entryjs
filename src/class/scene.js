@@ -105,7 +105,7 @@ Entry.Scene = class {
     updateSceneView() {
         const items = this._getSortableSceneList();
         if (this.sceneSortableListWidget) {
-            setTimeout(() => this.sceneSortableListWidget.setData({ items }), 300);
+            setTimeout(() => this.sceneSortableListWidget.setData({ items }), 0);
         }
     }
 
@@ -599,5 +599,9 @@ Entry.Scene = class {
             default:
                 return;
         }
+    }
+
+    destroy() {
+        // 우선 interface 만 정의함.
     }
 };
