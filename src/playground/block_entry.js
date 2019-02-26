@@ -7696,7 +7696,7 @@ function setHardwareLanguage() {
         }
         if ('setLanguage' in hw) {
             const hwLang = hw.setLanguage();
-            const data = hwLang[Lang.type || Lang.fallbackType];
+            const data = hwLang[Lang.type] || hwLang[Lang.fallbackType];
             for (const key in data) {
                 Object.assign(Lang[key], data[key]);
             }
