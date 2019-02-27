@@ -32,7 +32,7 @@ class _PIXIGlobal {
         this.atlasManager = new PIXIAtlasManager();
         PIXIShortPropPlugin();
         PIXIZeroAlphaNoneInteractionPlugins();
-        new PIXIPixelPerfectInteractionPlugIn();
+        PIXIPixelPerfectInteractionPlugIn();
         PIXITextMetricsPlugIn();
         PIXIGraphicOverride();
     }
