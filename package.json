@@ -12,7 +12,11 @@
         "type": "git",
         "url": "https://github.com/boolgom/entryjs.git"
     },
-    "keywords": ["entry", "entryjs", "javascript"],
+    "keywords": [
+        "entry",
+        "entryjs",
+        "javascript"
+    ],
     "bugs": {
         "url": "https://github.com/boolgom/entryjs/issues"
     },
@@ -32,7 +36,7 @@
         "events": "^3.0.0",
         "hammerjs": "^2.0.8",
         "hyperid": "^1.4.1",
-        "jest": "^23.3.0",
+        "jest": "^24.1.0",
         "lodash": "^4.17.11",
         "postcss-flexbugs-fixes": "^4.1.0",
         "simplebar": "^3.1.1",
@@ -66,13 +70,13 @@
         "extract-text-webpack-plugin": "^4.0.0-beta.0",
         "file-loader": "^1.1.11",
         "jest-jenkins-reporter": "^1.0.2",
-        "karma": "^0.13.0",
+        "karma": "^4.0.0",
         "karma-chai": "^0.1.0",
         "karma-chrome-launcher": "^0.2.0",
         "karma-mocha": "^0.2.0",
-        "less": "^3.0.1",
+        "less": "^3.9.0",
         "less-loader": "^4.0.6",
-        "mocha": "^2.5.3",
+        "mocha": "^6.0.2",
         "postcss-cssnext": "^3.1.0",
         "postcss-import": "^12.0.1",
         "postcss-loader": "^3.0.0",
@@ -82,7 +86,7 @@
         "typescript": "^3.2.2",
         "url-loader": "^1.0.1",
         "webpack-cli": "^3.2.1",
-        "webpack-dev-server": "^3.1.1",
+        "webpack-dev-server": "^3.2.1",
         "webpack-merge": "^4.1.2",
         "webpack-strip-block": "^0.2.0"
     },
