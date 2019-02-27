@@ -23,12 +23,13 @@ jobs:
           script: yarn test
         - stage: deploy
           before_script:
-              - export NODE_OPTIONS=--max-old-space-size=4096
               - chmod +x ./scripts/build.sh
               - chmod +x ./scripts/deploy.sh
           install:
               - yarn --ignore-engines
           script:
+              - export NODE_OPTIONS="--max-old-space-size=4096"
+              - export TOOL_NODE_FLAGS="--max-old-space-size=4096"
               - ./scripts/build.sh
               - ./scripts/deploy.sh
           notifications:
