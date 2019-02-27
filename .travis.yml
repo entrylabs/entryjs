@@ -23,6 +23,7 @@ jobs:
           script: yarn test
         - stage: deploy
           before_script:
+              - export NODE_OPTIONS=--max-old-space-size=4096
               - chmod +x ./scripts/build.sh
               - chmod +x ./scripts/deploy.sh
           install:
