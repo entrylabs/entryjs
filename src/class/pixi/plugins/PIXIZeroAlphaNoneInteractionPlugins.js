@@ -8,7 +8,7 @@ export class PIXIZeroAlphaNoneInteractionPlugins {
         (function(p) {
             p._processInteractive = p.processInteractive;
             p.processInteractive = function(interactionEvent, displayObject, func, hitTest, interactive) {
-                if(!displayObject || displayObject.alpha <= 0) {
+                if(!displayObject || displayObject.alpha < 0.001) {
                     return false;
                 }
                 return this._processInteractive(interactionEvent, displayObject, func, hitTest, interactive);
