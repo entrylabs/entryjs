@@ -11,6 +11,7 @@ import { PIXIDebug } from '../debugs/Debugs';
 import { PIXIShortPropPlugin } from '../plugins/PIXIShortPropPlugin';
 import { PIXIGraphicOverride } from '../plugins/PIXIGraphicOverride';
 import { PIXIFontLoadHandler } from './PIXIFontLoadHandler';
+import { pixiGetChildAt } from '../plugins/pixiGetChildAt';
 
 class _PIXIGlobal {
     private _init: boolean;
@@ -31,6 +32,7 @@ class _PIXIGlobal {
         PIXITempStore.init();
         this.atlasManager = new PIXIAtlasManager();
         PIXIShortPropPlugin();
+        pixiGetChildAt();
         PIXIZeroAlphaNoneInteractionPlugins();
         PIXIPixelPerfectInteractionPlugIn();
         PIXITextMetricsPlugIn();
