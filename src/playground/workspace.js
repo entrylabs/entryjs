@@ -237,18 +237,17 @@ Entry.Workspace = class Workspace {
                     }
                     this.set({ selectedBoard: this.vimBoard });
                     blockMenu.banClass('functionInit');
+
                     this.mode = WORKSPACE.MODE_VIMBOARD;
 
                     if (this.oldTextType === VIM.TEXT_TYPE_JS) {
-                        mode.boardType = WORKSPACE.MODE_VIMBOARD;
-                        mode.textType = VIM.TEXT_TYPE_JS;
-                        mode.runType = VIM.MAZE_MODE;
-                        this.oldTextType = VIM.TEXT_TYPE_JS;
+                        this.boardType = WORKSPACE.MODE_VIMBOARD;
+                        this.textType = VIM.TEXT_TYPE_JS;
+                        this.runType = VIM.MAZE_MODE;
                     } else if (this.oldTextType === VIM.TEXT_TYPE_PY) {
-                        mode.boardType = WORKSPACE.MODE_VIMBOARD;
-                        mode.textType = VIM.TEXT_TYPE_PY;
-                        mode.runType = VIM.WORKSPACE_MODE;
-                        this.oldTextType = VIM.TEXT_TYPE_PY;
+                        this.boardType = WORKSPACE.MODE_VIMBOARD;
+                        this.textType = VIM.TEXT_TYPE_PY;
+                        this.runType = VIM.WORKSPACE_MODE;
                     }
                 }
                 Entry.commander.setCurrentEditor('board', this.board);
@@ -417,14 +416,16 @@ Entry.Workspace = class Workspace {
                     return;
                 }
             }
-
+            
+            const isBlockCodeView = Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD && (Entry.playground.getViewMode() === 'code' || Entry.playground.getViewMode() === 'variable');
             switch (keyCode) {
                 case 86: //paste
                     if (
                         !isBoardReadOnly &&
                         board &&
                         board instanceof Entry.Board &&
-                        Entry.clipboard
+                        Entry.clipboard &&
+                        isBlockCodeView
                     ) {
                         Entry.do('addThread', Entry.clipboard)
                             .value.getFirstBlock()
@@ -561,9 +562,11 @@ Entry.Workspace = class Workspace {
                         blockView.block.isDeletable() &&
                         !blockView.isFieldEditing()
                     ) {
-                        Entry.do('destroyBlock', blockView.block);
-                        this.board.set({ selectedBlockView: null });
-                        e.preventDefault();
+                        if(Entry.engine.isState('stop')){
+                            Entry.do('destroyBlock', blockView.block);
+                            this.board.set({ selectedBlockView: null });
+                            e.preventDefault();
+                        }
                     }
                     break;
             }

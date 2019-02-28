@@ -1,3 +1,5 @@
+import { GEHelper } from '../../graphicEngine/GEHelper';
+
 module.exports = {
     getBlocks() {
         return {
@@ -40,7 +42,7 @@ module.exports = {
                 statements: [],
                 params: [
                     {
-                        type: 'Dropdown',
+                        type: 'Keyboard',
                         options: [
                             [Lang.Blocks.START_press_some_key_up, '38'],
                             [Lang.Blocks.START_press_some_key_down, '40'],
@@ -257,14 +259,12 @@ module.exports = {
                                 return !!collision(object, wall.left, ath, false);
                         }
                     } else if (targetSpriteId === 'mouse') {
-                        const stage = Entry.stage.canvas;
-                        const pt = object.globalToLocal(stage.mouseX, stage.mouseY);
-                        return object.hitTest(pt.x, pt.y);
+                        return GEHelper.hitTestMouse(object);
                     } else {
                         const targetSprite = Entry.container.getEntity(targetSpriteId);
                         if (targetSprite.type === 'textBox' || sprite.type === 'textBox') {
-                            const targetBound = targetSprite.object.getTransformedBounds();
-                            const bound = object.getTransformedBounds();
+                            const targetBound = GEHelper.getTransformedBounds(targetSprite.object);
+                            const bound = GEHelper.getTransformedBounds(object);
                             if (Entry.checkCollisionRect(bound, targetBound)) {
                                 return true;
                             }
@@ -277,7 +277,7 @@ module.exports = {
                                 if (
                                     Entry.checkCollisionRect(
                                         bound,
-                                        entity.object.getTransformedBounds()
+                                        GEHelper.getTransformedBounds(entity.object)
                                     )
                                 ) {
                                     return true;

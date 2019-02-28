@@ -54,7 +54,7 @@ module.exports = {
                         },
                     },
                     {
-                        type: 'Dropdown',
+                        type: 'Keyboard',
                         options: [
                             [Lang.Blocks.START_press_some_key_up, '38'],
                             [Lang.Blocks.START_press_some_key_down, '40'],
@@ -933,8 +933,8 @@ module.exports = {
                         fontSize: 11,
                     },
                     {
-                        type: 'Block',
-                        accept: 'string',
+                        type: 'TextInput',
+                        value: 1,
                     },
                     {
                         type: 'Indicator',
@@ -1077,8 +1077,8 @@ module.exports = {
                 statements: [],
                 params: [
                     {
-                        type: 'Block',
-                        accept: 'string',
+                        type: 'TextInput',
+                        value: 0,
                     },
                     {
                         type: 'Dropdown',
@@ -1105,7 +1105,7 @@ module.exports = {
                     ],
                 },
                 def: {
-                    params: ['0', 1, 1],
+                    params: [0, 1, 1],
                     type: 'check_lecture_goal',
                 },
                 paramsKeyMap: {
@@ -1127,8 +1127,7 @@ module.exports = {
                 statements: [],
                 params: [
                     {
-                        type: 'Block',
-                        accept: 'string',
+                        type: 'TextInput',
                         value: '?',
                     },
                 ],
@@ -1159,8 +1158,7 @@ module.exports = {
                 statements: [],
                 params: [
                     {
-                        type: 'Block',
-                        accept: 'string',
+                        type: 'TextInput',
                         value: '',
                     },
                     {
@@ -1192,8 +1190,7 @@ module.exports = {
                 statements: [],
                 params: [
                     {
-                        type: 'Block',
-                        accept: 'string',
+                        type: 'TextInput',
                         value: '',
                     },
                 ],
@@ -1297,13 +1294,11 @@ module.exports = {
                 statements: [],
                 params: [
                     {
-                        type: 'Block',
-                        accept: 'string',
+                        type: 'TextInput',
                         value: 'score',
                     },
                     {
-                        type: 'Block',
-                        accept: 'string',
+                        type: 'TextInput',
                         value: '1',
                     },
                     {
