@@ -241,16 +241,16 @@ Entry.Stage.prototype.unloadDialog = function({ object }) {
 };
 
 Entry.Stage.prototype.setEntityIndex = function({ object }, index) {
+    if (index === -1) {
+        return;
+    }
     var selectedObjectContainer = Entry.stage.selectedObjectContainer;
     var currentIndex = selectedObjectContainer.getChildIndex(object);
 
-    if (currentIndex === index) {
+    if (currentIndex === -1 ||  currentIndex === index) {
         return;
-    } else if (currentIndex > index) {
-        selectedObjectContainer.setChildIndex(object, index);
-    } else {
-        selectedObjectContainer.setChildIndex(object, index);
     }
+    selectedObjectContainer.setChildIndex(object, index);
     Entry.requestUpdate = true;
 };
 
