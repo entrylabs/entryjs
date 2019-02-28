@@ -31,8 +31,8 @@ class _PIXIGlobal {
         PIXITempStore.init();
         this.atlasManager = new PIXIAtlasManager();
         PIXIShortPropPlugin();
-        new PIXIZeroAlphaNoneInteractionPlugins();
-        new PIXIPixelPerfectInteractionPlugIn();
+        PIXIZeroAlphaNoneInteractionPlugins();
+        PIXIPixelPerfectInteractionPlugIn();
         PIXITextMetricsPlugIn();
         PIXIGraphicOverride();
     }

@@ -9,15 +9,9 @@ hitTestCanvas.width = 1;
 hitTestCanvas.height = 1;
 const hitTestConText = hitTestCanvas.getContext("2d");
 
-export class PIXIPixelPerfectInteractionPlugIn {
-    constructor() {
-        this._overwriteHitTestMethod(PIXI.Sprite.prototype);
-    }
+export function PIXIPixelPerfectInteractionPlugIn() {
+    const p = PIXI.Sprite.prototype;
 
-    /**
-     * @private
-     */
-    _overwriteHitTestMethod(p) {
         /**
          * if true use pixel-perfect hit test
          * @type {boolean}
@@ -93,5 +87,5 @@ export class PIXIPixelPerfectInteractionPlugIn {
         }; //end p._checkPixel
 
 
-    }
+
 }
