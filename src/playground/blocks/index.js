@@ -1,5 +1,6 @@
 'use strict';
 
+const _includes = require('lodash/includes');
 const hardware = require('./hardware/index');
 
 const basicBlockList = [
@@ -57,7 +58,7 @@ function registerHardwareBlockToStatic(hardwareModules) {
     hardwareModules.forEach((hardware) => {
         if (hardware.blockMenuBlocks) {
             allBlockMenuBlocks.push.apply(allBlockMenuBlocks,
-                hardware.blockMenuBlocks.filter((block) => !allBlockMenuBlocks.includes(block))
+                hardware.blockMenuBlocks.filter((block) => !_includes(allBlockMenuBlocks, block))
             );
         }
     });
