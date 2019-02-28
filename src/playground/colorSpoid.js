@@ -141,6 +141,7 @@ class ColorSpoid extends EventEmitter {
                 },
             });
         } else {
+            this.color = '';
             this.updateMagnifier({
                 event: mouseEvent,
                 isShow: false,
