@@ -426,8 +426,8 @@ Entry.Field = class Field {
         const { scale = 1 } = board;
         invisibleContext.font = `${fontSize}px ${this.getFontFamily()}`;
         bBox = {
-            width: Math.round(invisibleContext.measureText(value).width * 100) / 100 / scale,
-            height: Math.round(invisibleContext.measureText('M').width * 100) / 100 / scale,
+            width: Math.round(invisibleContext.measureText(value).width * 100) / 100,
+            height: Math.round(invisibleContext.measureText('M').width * 100) / 100,
         };
 
         if (fontSize && window.fontLoaded && bBox.width && bBox.height) {
