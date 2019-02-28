@@ -1,8 +1,12 @@
 /**
  * @fileoverview Initialize code fore Entry
  */
+
+
 'use strict';
 
+import { Destroyer } from './destroyer/Destroyer';
+import { GEHelper } from '../graphicEngine/GEHelper';
 require('./utils');
 
 /**
@@ -30,6 +34,7 @@ Entry.init = function(container, options) {
     this.options = options;
     this.parseOptions(options);
     this.mediaFilePath = `${options.libDir ? options.libDir : '/lib'}/entry-js/images/`;
+    this.painterBaseUrl = `${options.libDir ? options.libDir : '/lib'}/literallycanvas-mobile/lib/img`;
     this.defaultPath = options.defaultDir || '';
     this.blockInjectPath = options.blockInjectDir || '';
 
@@ -142,12 +147,18 @@ Entry.loadAudio_ = function(filenames, name) {
  * @private
  */
 Entry.initialize_ = function() {
+
+    /** @type {Destroyer} */
+    this._destroyer = this._destroyer || new Destroyer();
+    this._destroyer.destroy();
+
     /**
      * Initialize stage
      * @type {!Entry.Stage}
      * @type {!object}
      */
     this.stage = new Entry.Stage();
+    this._destroyer.add(this.stage);
 
     if (Entry.engine && Entry.engine.projectTimer) {
         Entry.engine.clearTimer();
@@ -158,6 +169,7 @@ Entry.initialize_ = function() {
      * @type {!object}
      */
     this.engine = new Entry.Engine();
+    this._destroyer.add(this.engine);
 
     /**
      * Initialize PropertyPanel.
@@ -174,6 +186,7 @@ Entry.initialize_ = function() {
      * @type {!object}
      */
     this.container = new Entry.Container();
+    this._destroyer.add(this.container);
 
     /**
      * Initialize helper.
@@ -199,6 +212,7 @@ Entry.initialize_ = function() {
      * @type {!object}
      */
     this.scene = new Entry.Scene();
+    this._destroyer.add(this.scene);
 
     /**
      * Initialize playground.
@@ -206,6 +220,7 @@ Entry.initialize_ = function() {
      */
     this.playground = new Entry.Playground();
 
+    this.intro = new Entry.Intro();
     /**
      * Initialize toast. Toast don't need generate view.
      * @type {!Entry.Toast}
@@ -226,6 +241,10 @@ Entry.initialize_ = function() {
     } else if (this.type === 'workspace' || this.type === 'phone') {
         this.reporter = new Entry.Reporter(true);
     }
+
+    GEHelper.INIT(this.options.useWebGL);
+    // GEHelper.INIT(0);
+
 };
 
 Entry.disposeContainer = function() {
@@ -308,6 +327,11 @@ Entry.createDom = function(container, option) {
 
         this.helper.generateView(this.containerView, option);
         this.propertyPanel.addMode('helper', this.helper);
+
+        const introView = Entry.createElement('div');
+        container.appendChild(introView);
+        this.introView = introView;
+        this.intro.generateView(this.introView, option);
 
         const playgroundView = Entry.createElement('div');
         container.appendChild(playgroundView);

@@ -3,6 +3,9 @@
  */
 'use strict';
 
+const _cache = new Map();
+let invisibleCanvas = undefined;
+let invisibleContext = undefined;
 /*
  *
  */
@@ -57,6 +60,10 @@ Entry.Field = class Field {
         delete this.optionGroup;
 
         delete this._neighborFields;
+
+        _cache.clear();
+        invisibleCanvas = undefined;
+        invisibleContext = undefined;
 
         this.isEditing() && Entry.Utils.blur();
         this._isEditing = false;
@@ -208,7 +215,7 @@ Entry.Field = class Field {
             return false;
         }
         const dragMode = this._block.view.dragMode;
-        if (dragMode == Entry.DRAG_MODE_DRAG) {  
+        if (dragMode == Entry.DRAG_MODE_DRAG) {
             return false;
         }
         const blockView = this._block.view;
@@ -243,15 +250,17 @@ Entry.Field = class Field {
         }
 
         this.svgGroup._isBinded = true;
-        $(this.svgGroup).off('mouseup.fieldBindEvent touchend.fieldBindEvent').on('mouseup.fieldBindEvent touchend.fieldBindEvent', (e) => {
-            if (this._isEditable()) {
-                this._code = this.getCode();
-                this.destroyOption();
-                this._startValue = this.getValue();
-                this.renderOptions();
-                this._isEditing = true;
-            }
-        });
+        $(this.svgGroup)
+            .off('mouseup.fieldBindEvent touchend.fieldBindEvent')
+            .on('mouseup.fieldBindEvent touchend.fieldBindEvent', (e) => {
+                if (this._isEditable()) {
+                    this._code = this.getCode();
+                    this.destroyOption();
+                    this._startValue = this.getValue();
+                    this.renderOptions();
+                    this._isEditing = true;
+                }
+            });
     }
 
     pointer(pointer = []) {
@@ -385,64 +394,44 @@ Entry.Field = class Field {
         return this.getValue();
     }
 
+    getFontFamily() {
+        return window.loadFontFamily || 'NanumGothic';
+    }
+
     getIndex() {
         return this._index;
     }
 
     getTextBBox() {
-        const _cache = {};
-        let svg;
-
-        if (window.fontLoaded && !svg) {
-            //make invisible svg dom to body
-            //in order to calculate text width
-            svg = Entry.Dom(
-                $(
-                    '<svg id="invisibleBoard" class="entryBoard" width="1px" height="1px"' +
-                        'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'
-                ),
-                { parent: $('body') }
-            );
+        if (!invisibleContext) {
+            invisibleCanvas = Entry.Dom($('<canvas id="invisibleCanvas"></canvas>'))[0];
+            invisibleContext = invisibleCanvas.getContext('2d');
         }
 
         const value = this.getTextValue();
 
-        //empty string check
         if (!value) {
             return { width: 0, height: 0 };
         }
 
         const fontSize = this._font_size || '';
-
         const key = `${value}&&${fontSize}`;
-        let bBox = _cache[key];
+        let bBox = _cache.get(key);
 
         if (bBox) {
             return bBox;
         }
 
-        let textElement = this.textElement;
-        if (svg) {
-            textElement = textElement.cloneNode(true);
-            svg.append(textElement);
-        }
-
-        bBox = textElement.getBoundingClientRect();
-        Entry.Utils.debounce(function() {
-            if (!svg) {
-                return;
-            }
-            $(svg).empty();
-        }, 500)();
         const board = this._blockView.getBoard();
         const { scale = 1 } = board;
+        invisibleContext.font = `${fontSize}px ${this.getFontFamily()}`;
         bBox = {
-            width: Math.round(bBox.width * 100) / 100 / scale,
-            height: Math.round(bBox.height * 100) / 100 / scale,
+            width: Math.round(invisibleContext.measureText(value).width * 100) / 100,
+            height: Math.round(invisibleContext.measureText('M').width * 100) / 100,
         };
 
         if (fontSize && window.fontLoaded && bBox.width && bBox.height) {
-            _cache[key] = bBox;
+            _cache.set(key, bBox);
         }
         return bBox;
     }

@@ -523,29 +523,32 @@
     content: '';
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .attr_inpt {
+    display: flex;
     position: relative;
-    padding: 0 35px 0 46px;
+    padding: 0 34px 10px 0;
     margin-bottom: 10px;
-    padding-bottom: 10px;
     border-bottom: 1px solid #ecf8ff;
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .attr_inpt.hidden {
     display: none;
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .attr_inpt label {
-    position: absolute;
-    left: 13px;
-    top: 5px;
+    flex: 0 1 auto;
     font-size: 12px;
     font-weight: 600;
     color: #2c313d;
     letter-spacing: -0.4px;
     vertical-align: top;
-    line-height: 12px;
+    line-height: 27px;
+    white-space: nowrap;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .attr_inpt .val_inptbox {
+    display: block;
+    flex: 1 1 auto;
+    margin-left: 8px;
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .attr_inpt input[type='text'] {
     width: 100%;
-    margin-left: 4px;
     padding: 6px 8px 5px;
     border: 1px solid #e2e2e2;
     border-radius: 4px;
@@ -556,6 +559,7 @@
     color: #2c313d;
     letter-spacing: -0.2px;
     line-height: 11px;
+    box-sizing: border-box;
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .slide_inpt {
     margin-bottom: 10px;

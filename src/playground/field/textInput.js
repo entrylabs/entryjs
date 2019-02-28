@@ -231,6 +231,10 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
             }
         });
 
+        inputField.on('blur', () => {
+            this.destroyOption(undefined, true);
+        });
+
         inputField.on('keydown', (e) => {
             const keyCode = e.keyCode || e.which;
 
@@ -286,8 +290,8 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
 
     resize() {
         const { scale = 1 } = this.board;
-        const size = { width: this.getTextWidth() * scale };
-        const scaleSize = { width: this.getTextWidth() };
+        const size = { width: this.getTextWidth() };
+        const scaleSize = { width: this.getTextWidth() / scale };
         this._header.attr(scaleSize);
         this.box.set(scaleSize);
         this.optionInput && this.optionInput.css(size);
