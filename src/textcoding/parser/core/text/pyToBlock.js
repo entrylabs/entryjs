@@ -150,8 +150,9 @@ Entry.PyToBlockParser = class {
         }
 
         if (obj.type === 'is_press_some_key') {
+            const value = component.arguments[0].value;
             obj.params = [
-                Entry.KeyboardCode.map[component.arguments[0].value] + '',
+                Entry.KeyboardCode.map[typeof value === 'string' ? value.toLowerCase() : value] + '',
             ];
         }
 
