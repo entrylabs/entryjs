@@ -1,5 +1,6 @@
 'use strict';
 
+const _includes = require('lodash/includes');
 const hardware = require('./hardware/index');
 
 const basicBlockList = [
@@ -53,10 +54,12 @@ function getBlockObject(items) {
  * @return {void}
  */
 function registerHardwareBlockToStatic(hardwareModules) {
+    const allBlockMenuBlocks = EntryStatic.DynamicHardwareBlocks;
     hardwareModules.forEach((hardware) => {
         if (hardware.blockMenuBlocks) {
-            EntryStatic.DynamicHardwareBlocks.push.apply(
-                EntryStatic.DynamicHardwareBlocks, hardware.blockMenuBlocks);
+            allBlockMenuBlocks.push.apply(allBlockMenuBlocks,
+                hardware.blockMenuBlocks.filter((block) => !_includes(allBlockMenuBlocks, block))
+            );
         }
     });
 }
