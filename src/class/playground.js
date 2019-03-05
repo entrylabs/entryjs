@@ -1019,10 +1019,13 @@ Entry.Playground = class {
         this.textEditInput.value = text;
         this.textEditArea.value = text;
 
-        const font = EntryStatic.fonts.find((font) => font.family === entity.getFontName());
+        const font = EntryStatic.fonts.filter(font => font.visible).find((font) => font.family === entity.getFontName());
         if (font) {
             $('#entryText #entryTextBoxAttrFontName').text(font.name);
             $('#entryText #entryTextBoxAttrFontName').data('font', font);
+        } else {
+            $('#entryText #entryTextBoxAttrFontName').text("");
+            $('#entryText #entryTextBoxAttrFontName').data('font', EntryStatic.fonts[0]);
         }
 
         $('.style_link.imbtn_pop_font_bold').toggleClass('on', entity.fontBold);
