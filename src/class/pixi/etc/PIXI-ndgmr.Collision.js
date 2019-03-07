@@ -34,18 +34,31 @@
  **/
 
 export let PIXICollision = {};
-(function(ndgmr) {
+const ndgmr = PIXICollision;
+
 
     //--------- Class CollisionCanvas -------
-    function CollisionCanvas () {
-        /** @readonly **/
-        this._canvas = document.createElement("canvas");
-        this._ctx = this._canvas.getContext('2d');
-        this._ctx.save();
-    }
-    (function(p){
+    class CollisionCanvas {
+        constructor() {
+            /** @readonly **/
+            this._canvas = document.createElement("canvas");
+            this._ctx = this._canvas.getContext('2d');
+            this._ctx.save();
+            this._prepended = false;
+        }
 
-        p.render = function(obj, intersectRect) {
+        /**
+         * for debug
+         * @param color css style color
+         */
+        __prepend(color) {
+            if(this._prepended) return;
+            this._prepended = true;
+            $("body").prepend(this._canvas);
+            $(this._canvas).css("border", `1px solid ${color}`);
+        }
+
+        render(obj, intersectRect) {
             var tex = obj.internal_getOriginalTex();
             if(!tex) return;
             var fr = tex.frame;
@@ -76,9 +89,9 @@ export let PIXICollision = {};
 
             ctx.drawImage(source, fr.x, fr.y, fr.width, fr.height, 0, 0, fr.width, fr.height);
             return ctx.getImageData(0, 0, IR.width, IR.height).data;
-        };
+        }
+    }
 
-    })(CollisionCanvas.prototype);
     //--------- end of Class CollisionCanvas -------
 
 
@@ -117,8 +130,8 @@ export let PIXICollision = {};
 
     ndgmr.checkPixelCollision = function(bitmap1, bitmap2, alphaThreshold, getRect) {
         if (ndgmr.DEBUG || ndgmr.DEBUG_COLLISION) {
-            document.body.appendChild(canvas1._canvas);
-            document.body.appendChild(canvas2._canvas);
+            canvas2.__prepend("blue");
+            canvas1.__prepend("red");
         }
 
         bitmap1.getBounds(false, _RECT1);
@@ -308,4 +321,3 @@ export let PIXICollision = {};
 
 
 
-})(PIXICollision);
