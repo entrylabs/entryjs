@@ -383,7 +383,7 @@ Entry.Playground = class {
             'select_link imico_pop_select_arr_down'
         );
         fontLink.bindOnClick(() => {
-            const options = EntryStatic.fonts.map((font) => [font.name, font]);
+            const options = EntryStatic.fonts.filter(font => font.visible).map((font) => [font.name, font]);
             fontLink.addClass('imico_pop_select_arr_up');
             fontLink.removeClass('imico_pop_select_arr_down');
             this.openDropDown(
@@ -1019,10 +1019,13 @@ Entry.Playground = class {
         this.textEditInput.value = text;
         this.textEditArea.value = text;
 
-        const font = EntryStatic.fonts.find((font) => font.family === entity.getFontName());
+        const font = EntryStatic.fonts.filter(font => font.visible).find((font) => font.family === entity.getFontName());
         if (font) {
             $('#entryText #entryTextBoxAttrFontName').text(font.name);
             $('#entryText #entryTextBoxAttrFontName').data('font', font);
+        } else {
+            $('#entryText #entryTextBoxAttrFontName').text("");
+            $('#entryText #entryTextBoxAttrFontName').data('font', EntryStatic.fonts[0]);
         }
 
         $('.style_link.imbtn_pop_font_bold').toggleClass('on', entity.fontBold);
