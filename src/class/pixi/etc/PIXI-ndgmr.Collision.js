@@ -23,8 +23,6 @@
 */
 
 
-import PIXIHelper from '../helper/PIXIHelper';
-
 /**
  * [original]
  * A Pixel Perfect Collision Detection for EaselJS Bitmap-Objects
@@ -41,9 +39,7 @@ export let PIXICollision = {};
     //--------- Class CollisionCanvas -------
     function CollisionCanvas () {
         /** @readonly **/
-        this.isOffscreenCanvas = false;
-        this._canvas = PIXIHelper.getOffScreenCanvas();
-        this.isOffscreenCanvas = !(this._canvas instanceof HTMLCanvasElement);
+        this._canvas = document.createElement("canvas");
         this._ctx = this._canvas.getContext('2d');
         this._ctx.save();
     }
@@ -80,7 +76,7 @@ export let PIXICollision = {};
 
             ctx.drawImage(source, fr.x, fr.y, fr.width, fr.height, 0, 0, fr.width, fr.height);
             return ctx.getImageData(0, 0, IR.width, IR.height).data;
-        }
+        };
 
     })(CollisionCanvas.prototype);
     //--------- end of Class CollisionCanvas -------
@@ -115,10 +111,8 @@ export let PIXICollision = {};
 
     ndgmr.checkPixelCollision = function(bitmap1, bitmap2, alphaThreshold, getRect) {
         if (ndgmr.DEBUG || ndgmr.DEBUG_COLLISION) {
-            if(!canvas1.isOffscreenCanvas) {
-                document.body.appendChild(canvas1._canvas);
-                document.body.appendChild(canvas2._canvas);
-            }
+            document.body.appendChild(canvas1._canvas);
+            document.body.appendChild(canvas2._canvas);
         }
 
         bitmap1.getBounds(false, _RECT1);
@@ -194,8 +188,8 @@ export let PIXICollision = {};
      * @private
      */
     function _collisionDistancePrecheck(ir1, ir2) {
-        return (Math.abs(ir2.x - ir1.x) < (ir1.x < ir2.x ? ir1.width : ir2.width)
-            && Math.abs(ir2.y - ir1.y) < (ir1.y < ir2.y ? ir1.height : ir2.height));
+        return (Math.abs(ir2.x - ir1.x) < (ir1.x < ir2.x ? ir1.width : ir2.width) &&
+            Math.abs(ir2.y - ir1.y) < (ir1.y < ir2.y ? ir1.height : ir2.height));
     }
 
 
@@ -302,7 +296,7 @@ export let PIXICollision = {};
         }
 
         return null;
-    }
+    };
 
 
 
