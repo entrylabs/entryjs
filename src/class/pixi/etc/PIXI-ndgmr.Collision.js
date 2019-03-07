@@ -74,18 +74,11 @@ class CollisionCanvas {
         canvas.width = IR.width;
         canvas.height = IR.height;
 
-        _IP.set(IR.x, IR.y);
-        obj.toLocal(_IP, null, _LP);
+        obj.toLocal(IR, null, _LP);
 
-        obj.worldTransform.decompose(_TRANSFORM);
-
-        ctx.restore();
-        ctx.save();
-        ctx.rotate(_TRANSFORM.rotation);
-        ctx.scale(_TRANSFORM.scale.x, _TRANSFORM.scale.y);
-        var tx = -_LP.x - _TRANSFORM.pivot.x - fr.width * obj.anchor.x;
-        var ty = -_LP.y - _TRANSFORM.pivot.y - fr.height * obj.anchor.y;
-        ctx.translate(tx, ty);
+        const {a, b, c, d} = obj.worldTransform;
+        ctx.setTransform(a, b, c, d, 0 ,0);
+        ctx.translate(-_LP.x, -_LP.y);
 
         ctx.drawImage(source, fr.x, fr.y, fr.width, fr.height, 0, 0, fr.width, fr.height);
         return ctx.getImageData(0, 0, IR.width, IR.height).data;
@@ -101,10 +94,7 @@ var threshold = 1;
 var _RECT1, _RECT2;
 
 /** @type PIXI.Point. for global to local point **/
-var _LP, _IP; //localPoint, intersect point
-
-/** @type PIXI.Transform **/
-var _TRANSFORM;
+var _LP; //localPoint
 
 /** @type CollisionCanvas **/
 var canvas1, canvas2;
@@ -116,8 +106,6 @@ ndgmr.initTempObject = function() {
     _RECT1 = new PIXI.Rectangle();
     _RECT2 = new PIXI.Rectangle();
     _LP = new PIXI.Point();
-    _IP = new PIXI.Point();
-    _TRANSFORM = new PIXI.Transform();
     canvas1 = new CollisionCanvas();
     canvas2 = new CollisionCanvas();
 };
@@ -183,7 +171,7 @@ ndgmr.checkPixelCollision = function(bitmap1, bitmap2, alphaThreshold, getRect) 
         iw / threshold,
         ih / threshold,
         alphaThreshold,
-        getRect,
+        getRect
     );
 
     if (!pixelIntersection) {
