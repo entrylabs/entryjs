@@ -32,8 +32,9 @@ export class PIXIBrushAdaptor {
     }
 
     endStroke() {
-        if(!this._shape || this._shape.destroyied) return;
-        this._shape.closePath();
+        //#10141 때문에 closePath 사용안함.
+        // if(!this._shape || this._shape.destroyied) return;
+        // this._shape.closePath();
     }
 
     /**

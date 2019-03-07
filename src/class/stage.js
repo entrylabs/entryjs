@@ -175,6 +175,10 @@ Entry.Stage.prototype.update = function() {
     else Entry.requestUpdate = false;
 };
 
+Entry.Stage.prototype.updateForce = function() {
+    this._app && this._app.render();
+};
+
 /**
  * add object entity on canvas
  * @param {Entry.EntryObject} object
