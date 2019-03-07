@@ -3,6 +3,8 @@
  *
  * @param {object} dom which to inject playground
  */
+import Visible from '@egjs/visible';
+import debounce from 'lodash/debounce';
 
 const VARIABLE = 'variable';
 const HW = 'arduino';
@@ -798,9 +800,16 @@ class BlockMenu {
         }
     }
 
+    destroy() {
+        this.categoryIndicatorVisible.off();
+        this._categoryCol.off();
+        $(document).off('.blockMenuScroll');
+    }
+
     removeControl(eventType) {
         this.svgDom.off(eventType);
     }
+
     onMouseMove = (e) => {
         if (e.stopPropagation) {
             e.stopPropagation();
@@ -956,10 +965,14 @@ class BlockMenu {
 
         _.result(this._categoryCol, 'remove');
 
-        this._categoryCol = Entry.Dom('ul', {
+        this.categoryWrapper = Entry.Dom('div', {
             class: 'entryCategoryListWorkspace',
         });
-        this.view.prepend(this._categoryCol);
+        this._categoryCol = Entry.Dom('ul', {
+            class: 'entryCategoryList',
+            parent: this.categoryWrapper,
+        });
+        this.view.prepend(this.categoryWrapper);
 
         const fragment = document.createDocumentFragment();
         data.forEach(({ category, visible }) => {
@@ -967,6 +980,65 @@ class BlockMenu {
         });
         this.firstSelector = _.head(data).category;
         this._categoryCol[0].appendChild(fragment);
+        this.makeScrollIndicator();
+    }
+
+    makeScrollIndicator() {
+        ['append', 'prepend'].forEach((action) => {
+            const point = Entry.Dom('li', {
+                class: `visiblePoint ${action}`,
+            });
+            const indicator = Entry.Dom('a', {
+                class: `scrollIndicator ${action}`,
+            });
+            indicator.bindOnClick(() => {
+                point[0].scrollIntoView({
+                    behavior: 'smooth',
+                });
+            });
+            point.attr('data-action', action);
+            indicator.attr('data-action', action);
+            this._categoryCol[action](point);
+            this._categoryCol[action](indicator);
+        });
+
+        this.categoryIndicatorVisible = new Visible('.entryCategoryListWorkspace', {
+            targetClass: 'visiblePoint',
+            expandSize: 0,
+        });
+        this.categoryIndicatorVisible.on('change', (e) => {
+            e.visible.forEach((dom) => {
+                const { dataset } = dom;
+                const { action } = dataset;
+                $(`.scrollIndicator.${action}`).css('display', 'none');
+            });
+            e.invisible.forEach((dom) => {
+                const { dataset } = dom;
+                const { action } = dataset;
+                $(`.scrollIndicator.${action}`).css('display', 'block');
+            });
+        });
+        this._categoryCol.on(
+            'scroll',
+            debounce(() => {
+                this.categoryIndicatorVisible.check();
+            }, 100)
+        );
+        setTimeout(() => {
+            this.categoryIndicatorVisible.check();
+        }, 0);
+        if (Entry.windowResized) {
+            Entry.windowResized.attach(this, () => {
+                this.categoryIndicatorVisible.check();
+            });
+        }
+        $(document).on('visibilitychange.blockMenuScroll', (e) => {
+            if (document.visibilityState === 'visible') {
+                requestAnimationFrame(() => {
+                    this.categoryIndicatorVisible.check();
+                });
+            }
+        });
     }
 
     _generateCategoryElement(name, visible) {

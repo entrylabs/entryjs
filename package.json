@@ -49,6 +49,7 @@
         "@babel/plugin-transform-runtime": "7.0.0",
         "@babel/preset-env": "7.0.0",
         "@babel/runtime": "^7.0.0",
+        "@egjs/visible": "^2.1.0",
         "@entrylabs/event": "latest",
         "@types/pixi.js": "^4.8.6",
         "awesome-typescript-loader": "^5.2.1",
