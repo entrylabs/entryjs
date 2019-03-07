@@ -109,6 +109,12 @@ export let PIXICollision = {};
         canvas2 = new CollisionCanvas();
     };
 
+    function isContainer(obj) {
+        var isSprite = obj instanceof PIXI.Sprite;
+        if(isSprite) return false;
+        return obj instanceof PIXI.Container;
+    }
+
     ndgmr.checkPixelCollision = function(bitmap1, bitmap2, alphaThreshold, getRect) {
         if (ndgmr.DEBUG || ndgmr.DEBUG_COLLISION) {
             document.body.appendChild(canvas1._canvas);
@@ -130,10 +136,10 @@ export let PIXICollision = {};
             return false;
         }
 
-        // if (bitmap1 instanceof createjs.Container ||
-        //     bitmap2 instanceof createjs.Container) {
-        //     return intersection;
-        // }
+        //글상자와 벽 충돌 체크
+        if(isContainer(bitmap1) || isContainer(bitmap2)) {
+            return intersection;
+        }
 
         var iw = intersection.width;
         var ih = intersection.height;
