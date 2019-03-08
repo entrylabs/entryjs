@@ -145,9 +145,7 @@ Entry.BlockView = class BlockView {
 
         svgGroup.attr(attr);
 
-        (skeleton.classes || []).forEach((c) => {
-            return svgGroup.addClass(c);
-        });
+        (skeleton.classes || []).forEach((c) => svgGroup.addClass(c));
 
         const path = skeleton.path(this);
 
@@ -276,9 +274,7 @@ Entry.BlockView = class BlockView {
 
     _startExtension(mode) {
         this._extensions = this.block.extensions.map(
-            function(e) {
-                return new Entry[`Ext${e.type}`](e, this, mode);
-            }.bind(this)
+            (e) => new Entry[`Ext${e.type}`](e, this, mode)
         );
     }
 
@@ -290,6 +286,7 @@ Entry.BlockView = class BlockView {
     }
 
     alignContent(animate) {
+        this.resetBackgroundPath();
         if (animate !== true) {
             animate = false;
         }
@@ -398,7 +395,7 @@ Entry.BlockView = class BlockView {
 
         if (false && Entry.ANIMATION_DURATION !== 0) {
             const that = this;
-            setTimeout(function() {
+            setTimeout(() => {
                 that._path.animate({ d: newPath }, Entry.ANIMATION_DURATION, mina.easeinout);
             }, 0);
         } else {
@@ -557,7 +554,7 @@ Entry.BlockView = class BlockView {
             this.addDragging();
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
 
-            if (eventType === 'touchstart') {
+            if (eventType === 'touchstart' || Entry.isMobile()) {
                 this.longPressTimer = setTimeout(() => {
                     if (this.longPressTimer) {
                         this.longPressTimer = null;
@@ -901,9 +898,7 @@ Entry.BlockView = class BlockView {
         const _destroyFunc = _.partial(_.result, _, 'destroy');
 
         if (animate) {
-            $(svgGroup).fadeOut(100, () => {
-                return svgGroup.remove();
-            });
+            $(svgGroup).fadeOut(100, () => svgGroup.remove());
         } else {
             svgGroup.remove();
         }
@@ -1112,21 +1107,27 @@ Entry.BlockView = class BlockView {
         this.movable =
             this.block.isMovable() !== null
                 ? this.block.isMovable()
-                : this._skeleton.movable !== undefined ? this._skeleton.movable : true;
+                : this._skeleton.movable !== undefined
+                ? this._skeleton.movable
+                : true;
     }
 
     _setReadOnly() {
         this.readOnly =
             this.block.isReadOnly() !== null
                 ? this.block.isReadOnly()
-                : this._skeleton.readOnly !== undefined ? this._skeleton.readOnly : false;
+                : this._skeleton.readOnly !== undefined
+                ? this._skeleton.readOnly
+                : false;
     }
 
     _setCopyable() {
         this.copyable =
             this.block.isCopyable() !== null
                 ? this.block.isCopyable()
-                : this._skeleton.copyable !== undefined ? this._skeleton.copyable : true;
+                : this._skeleton.copyable !== undefined
+                ? this._skeleton.copyable
+                : true;
     }
 
     bumpAway(distance = 15, delay) {
@@ -1134,7 +1135,7 @@ Entry.BlockView = class BlockView {
         if (delay) {
             const oldX = this.x;
             const oldY = this.y;
-            window.setTimeout(function() {
+            window.setTimeout(() => {
                 //only when position not changed
                 if (oldX === that.x && oldY === that.y) {
                     that.moveBy(distance, distance, false);
@@ -1247,9 +1248,7 @@ Entry.BlockView = class BlockView {
 
     _updateContents(isReDraw) {
         const params = [undefined, undefined, this.renderMode, isReDraw];
-        this._contents.forEach((c) => {
-            return c.renderStart(...params);
-        });
+        this._contents.forEach((c) => c.renderStart(...params));
         this.alignContent(false);
     }
 
@@ -1273,12 +1272,8 @@ Entry.BlockView = class BlockView {
                 param.data.view.reDraw();
             }
         });
-        (this.block.statements || []).forEach(({ view }) => {
-            return view.reDraw();
-        });
-        (this._extensions || []).forEach((ext) => {
-            return _.result(ext, 'updatePos');
-        });
+        (this.block.statements || []).forEach(({ view }) => view.reDraw());
+        (this._extensions || []).forEach((ext) => _.result(ext, 'updatePos'));
     }
 
     getParam(index) {
@@ -1287,7 +1282,7 @@ Entry.BlockView = class BlockView {
 
     getDataUrl(notClone, notPng) {
         return new Promise((resolve, reject) => {
-            let svgGroup = notClone ? this.svgGroup : this.svgGroup.cloneNode(true);
+            const svgGroup = notClone ? this.svgGroup : this.svgGroup.cloneNode(true);
             const svgCommentGroup = notClone
                 ? this.svgCommentGroup
                 : this.svgCommentGroup && this.svgCommentGroup.cloneNode(true);
@@ -1325,14 +1320,14 @@ Entry.BlockView = class BlockView {
 
             _.toArray(texts).forEach((text) => {
                 text.setAttribute('font-family', fontFamily);
-                const size = parseInt(text.getAttribute('font-size'));
+                const size = parseInt(text.getAttribute('font-size'), 10);
                 const content = $(text).text();
                 if (_.includes(boldTypes, content)) {
                     text.setAttribute('font-weight', '500');
                 }
 
                 if (content == 'q') {
-                    const y = parseInt(text.getAttribute('y'));
+                    const y = parseInt(text.getAttribute('y'), 10);
                     text.setAttribute('y', y - 1);
                 }
 
@@ -1341,7 +1336,7 @@ Entry.BlockView = class BlockView {
                 } else {
                     text.setAttribute('font-size', `${size * fontWeight}px`);
                 }
-                text.setAttribute('alignment-baseline', 'baseline');
+                text.setAttribute('alignment-baseline', 'middle');
             });
 
             let counts = 0;
@@ -1628,7 +1623,7 @@ Entry.BlockView = class BlockView {
         const FIELD_OUTPUT = Entry.FieldOutput;
 
         return (this._statements || []).reduce(
-            function(fields, statement) {
+            (fields, statement) => {
                 statement = statement && statement._thread;
                 if (!(statement instanceof THREAD)) {
                     return fields;
@@ -1636,7 +1631,7 @@ Entry.BlockView = class BlockView {
 
                 return fields.concat(statement.view.getFields());
             },
-            (this._contents || []).reduce(function(fields, c) {
+            (this._contents || []).reduce((fields, c) => {
                 if (!c) {
                     return fields;
                 }
@@ -1680,7 +1675,7 @@ Entry.BlockView = class BlockView {
                 svgGroup = null;
             } else {
                 this.loadImage(src, bBox.width, bBox.height, notPng, 1.5).then(
-                    function(src) {
+                    (src) => {
                         svgGroup = null;
                         resolve({
                             src,
@@ -1688,7 +1683,7 @@ Entry.BlockView = class BlockView {
                             height: bBox.height,
                         });
                     },
-                    function(err) {
+                    (err) => {
                         reject('error occured');
                     }
                 );

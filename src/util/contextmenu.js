@@ -102,32 +102,34 @@ Entry.ContextMenu = {};
     };
 
     ctx.onContextmenu = function(target, callback) {
+        const longPressEvent = (e) => {
+            const startEvent = Entry.Utils.convertMouseEvent(e);
+            this.coordi = {
+                x: startEvent.clientX,
+                y: startEvent.clientY,
+            };
+
+            if (this.longTouchEvent) {
+                clearTimeout(this.longTouchEvent);
+                this.longTouchEvent = null;
+            }
+
+            this.longTouchEvent = setTimeout(() => {
+                callback(this.coordi);
+                this.longTouchEvent = undefined;
+            }, 900);
+        };
+
         DomUtils.addEventListenerMultiple(
             target,
-            'touchstart touchmove touchend mousedown',
+            'touchstart touchmove touchend mousemove mouseup mousedown',
             (e) => {
                 switch (e.type) {
                     case 'touchstart': {
-                        const startEvent = Entry.Utils.convertMouseEvent(e);
-                        this.coordi = {
-                            x: startEvent.clientX,
-                            y: startEvent.clientY,
-                        };
-
-                        if (this.longTouchEvent) {
-                            clearTimeout(this.longTouchEvent);
-                            this.longTouchEvent = null;
-                        }
-
-                        this.longTouchEvent = setTimeout(
-                            function() {
-                                callback(this.coordi);
-                                this.longTouchEvent = undefined;
-                            }.bind(this),
-                            900
-                        );
+                        longPressEvent(e);
                         break;
                     }
+                    case 'mousemove':
                     case 'touchmove': {
                         const startEvent = Entry.Utils.convertMouseEvent(e);
                         if (!this.coordi) {
@@ -144,6 +146,7 @@ Entry.ContextMenu = {};
                         }
                         break;
                     }
+                    case 'mouseup':
                     case 'touchend':
                         // e.stopPropagation();
                         if (this.longTouchEvent) {
@@ -163,6 +166,10 @@ Entry.ContextMenu = {};
                             clearTimeout(this.longTouchEvent);
                             this.longTouchEvent = undefined;
                             callback(this.coordi);
+                        }
+
+                        if (Entry.isMobile()) {
+                            longPressEvent(e);
                         }
                         break;
                 }

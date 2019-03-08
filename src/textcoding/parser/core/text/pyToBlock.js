@@ -46,12 +46,12 @@ Entry.PyToBlockParser = class {
         try {
             return this.processPrograms(astArr);
         } catch (error) {
-            var err = {};
-            err.title = error.title;
-            err.message = error.message;
-            err.line = error.line;
-            throw err;
+            throw error;
         }
+    }
+
+    raiseError({title = '', message = '', line}) {
+        throw { title, message, line };
     }
 
     processPrograms(astArr) {
@@ -114,8 +114,15 @@ Entry.PyToBlockParser = class {
         // Duplicate name with variable
             obj = callee.name;
 
-        if (typeof obj === 'string' && callee.type === 'MemberExpression' && this[obj]) {
-            return this[obj](component);
+        if (typeof obj === 'string' && callee.type === 'MemberExpression') {
+            if (this[obj]) {
+                return this[obj](component);
+            } else {
+                this.raiseError({
+                    message: Lang.TextCoding.message_conv_undefined_function,
+                    line: callee.loc,
+                });
+            }
         }
 
         if (callee.type === 'Identifier') {
@@ -143,8 +150,9 @@ Entry.PyToBlockParser = class {
         }
 
         if (obj.type === 'is_press_some_key') {
+            const value = component.arguments[0].value;
             obj.params = [
-                Entry.KeyboardCode.map[component.arguments[0].value] + '',
+                Entry.KeyboardCode.map[typeof value === 'string' ? value.toLowerCase() : value] + '',
             ];
         }
 

@@ -290,7 +290,9 @@ Entry.BlockToPyParser = class {
                     }
 
                     // 필드 블록이 아닌 블록에 내재된 파라미터 처리
-                    if (!Entry.Utils.isNumber(param) && block.type === 'when_some_key_pressed') {
+                    if (!Entry.Utils.isNumber(param) &&
+                        (block.type === 'when_some_key_pressed' || block.type === 'is_press_some_key')
+                    ) {
                         result += `"${param}"`;
                     } else {
                         result += param;

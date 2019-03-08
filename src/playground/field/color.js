@@ -139,7 +139,7 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
                     }
                     if (this.colorPicker) {
                         this.colorPicker.hide();
-                        this.applyValue(color);
+                        color && this.applyValue(color);
                     }
                     this._attachDisposeEvent();
                 },
@@ -149,11 +149,12 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
                         activeSpoid: true,
                     };
                     Entry.stage.colorSpoid.run().once('selectColor', (color) => {
-                        this.applyValue(color);
-                        this.colorPicker.setData({
-                            color,
-                            activeSpoid: false,
-                        });
+                        const data = { activeSpoid: false };
+                        if (color) {
+                            this.applyValue(color);
+                            data.color = color;
+                        }
+                        this.colorPicker.setData(data);
                         delete this.isRunSpoid;
                     });
                 },
@@ -161,6 +162,7 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
             container: this.optionGroup[0],
         }).on('change', (color) => {
             if (color) {
+                this.colorPicker.setData({ color });
                 this.applyValue(color);
             }
         });

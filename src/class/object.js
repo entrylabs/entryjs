@@ -4,6 +4,7 @@
 'use strict';
 
 import DomUtils from '../../src/util/domUtils';
+import { GEHelper } from '../graphicEngine/GEHelper';
 
 /**
  * Class for entry object.
@@ -27,7 +28,7 @@ Entry.EntryObject = class {
                 this.editObjectValues(false);
             });
 
-            this.sounds.forEach(function(s) {
+            this.sounds.forEach((s) => {
                 if (!s.id) {
                     s.id = Entry.generateHash();
                 }
@@ -58,64 +59,20 @@ Entry.EntryObject = class {
 
             Entry.stage.loadObject(this);
 
-            const entityId = this.entity.id;
-            const cachePicture = Entry.container.cachePicture.bind(Entry.container);
             const pictures = this.pictures;
 
             for (const i in pictures) {
-                ((picture) => {
-                    picture.objectId = this.id;
-                    if (!picture.id) {
-                        picture.id = Entry.generateHash();
-                    }
-
-                    const image = new Image();
-                    Entry.Loader.addQueue();
-
-                    image.onload = function() {
-                        delete this.triedCnt;
-                        cachePicture(picture.id + entityId, this);
-                        Entry.Loader.removeQueue();
-                        this.onload = null;
-                    };
-
-                    image.onerror = function() {
-                        if (!this.triedCnt) {
-                            if (Entry.type !== 'invisible') {
-                                console.log('err=', picture.name, 'load failed');
-                            }
-                            this.triedCnt = 1;
-                            this.src = getImageSrc(picture);
-                        } else if (this.triedCnt < 3) {
-                            this.triedCnt++;
-                            this.src = `${Entry.mediaFilePath}_1x1.png`;
-                        } else {
-                            //prevent infinite call
-                            delete this.triedCnt;
-                            Entry.Loader.removeQueue();
-                            this.onerror = null;
-                        }
-                    };
-
-                    image.src = getImageSrc(picture);
-                })(this.pictures[i]);
+                const picture = pictures[i];
+                picture.objectId = this.id;
+                if (!picture.id) {
+                    picture.id = Entry.generateHash();
+                }
+                GEHelper.resManager.reqResource(null, this.scene.id, picture);
             }
             Entry.requestUpdate = true;
         }
 
         this._isContextMenuEnabled = true;
-
-        function getImageSrc(picture) {
-            if (picture.fileurl) {
-                return picture.fileurl;
-            }
-
-            const fileName = picture.filename;
-            return `${Entry.defaultPath}/uploads/${fileName.substring(0, 2)}/${fileName.substring(
-                2,
-                4
-            )}/image/${fileName}.png`;
-        }
     }
 
     /**
@@ -273,7 +230,7 @@ Entry.EntryObject = class {
                 )}/thumb/${fileName}.png")`;
             }
         } else if (objectType === 'textBox') {
-            const textIconPath = `${Entry.mediaFilePath}/text_icon.png`;
+            const textIconPath = `${Entry.mediaFilePath}text_icon.png`;
             thumb.style.backgroundImage = `url(${textIconPath})`;
         }
     }
@@ -366,9 +323,7 @@ Entry.EntryObject = class {
         if (picture === this.selectedPicture) {
             playground.selectPicture(pictures[0]);
         }
-
-        Entry.container.unCachePictures(this.entity, picture);
-
+        GEHelper.resManager.imageRemoved('EntityObject::removePicture');
         playground.injectPicture(this);
         playground.reloadPlayground();
         return true;
@@ -674,9 +629,7 @@ Entry.EntryObject = class {
 
     addCloneVariables({ id }, entity, variables, lists) {
         const _whereFunc = _.partial(_.filter, _, { object_: id });
-        const _cloneFunc = (v) => {
-            return v.clone();
-        };
+        const _cloneFunc = (v) => v.clone();
         const { variables_, lists_ } = Entry.variableContainer;
 
         entity.variables = (variables || _whereFunc(variables_)).map(_cloneFunc);
@@ -705,11 +658,11 @@ Entry.EntryObject = class {
         ];
 
         if (isLocked) {
-            inputs.forEach(function(input) {
+            inputs.forEach((input) => {
                 input.setAttribute('disabled', 'disabled');
             });
         } else {
-            inputs.forEach(function(input) {
+            inputs.forEach((input) => {
                 input.removeAttribute('disabled');
             });
         }
@@ -730,7 +683,7 @@ Entry.EntryObject = class {
         if (activate && !this.isEditing) {
             this.isEditing = true;
         } else {
-            inputs.forEach(function(input) {
+            inputs.forEach((input) => {
                 input.blur(true);
             });
 
@@ -1287,10 +1240,7 @@ Entry.EntryObject = class {
             }
         });
 
-        objectView.addEventListener('touchstart', (e) => {
-            e.eventFromEntryObject = true;
-            Entry.documentMousedown.notify(e);
-
+        const longPressEvent = (e) => {
             const doc = $(document);
             const touchEvent = Entry.Utils.convertMouseEvent(e);
             const mouseDownCoordinate = { x: touchEvent.clientX, y: touchEvent.clientY };
@@ -1324,6 +1274,24 @@ Entry.EntryObject = class {
                     longPressTimer = null;
                 }
             });
+        };
+
+        objectView.addEventListener('mousedown', (e) => {
+            if (Entry.Utils.isRightButton(e)) {
+                e.stopPropagation();
+                this._rightClick(e);
+            }
+
+            if (Entry.isMobile()) {
+                e.stopPropagation();
+                longPressEvent(e);
+            }
+        });
+
+        objectView.addEventListener('touchstart', (e) => {
+            e.eventFromEntryObject = true;
+            Entry.documentMousedown.notify(e);
+            longPressEvent(e);
         });
 
         return objectView;
@@ -1344,8 +1312,6 @@ Entry.EntryObject = class {
     }
 
     _whenRotateEditable(func, obj) {
-        return Entry.Utils.when(function() {
-            return !(Entry.engine.isState('run') || obj.getLock());
-        }, func);
+        return Entry.Utils.when(() => !(Entry.engine.isState('run') || obj.getLock()), func);
     }
 };

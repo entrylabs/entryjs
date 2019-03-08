@@ -3,9 +3,13 @@
  * @fileoverview This manage canvas
  *
  */
+
+
 'use strict';
 
 import ColorSpoid from '../playground/colorSpoid';
+import { GEHelper } from '../graphicEngine/GEHelper';
+import { GEHandle } from '../graphicEngine/GEHandle';
 
 /**
  * class for a canvas
@@ -14,16 +18,16 @@ import ColorSpoid from '../playground/colorSpoid';
 Entry.Stage = function() {
     /** @type {Dictionary} */
     this.variables = {};
-    this.background = new createjs.Shape();
-    this.background.graphics.beginFill('#ffffff').drawRect(-480, -240, 960, 480);
     this.objectContainers = [];
     this.selectedObjectContainer = null;
-    this.variableContainer = new createjs.Container();
-    this.dialogContainer = new createjs.Container();
+
     /** @type {null|Entry.EntryObject} */
     this.selectedObject = null;
     this.isObjectClick = false;
     this._entitySelectable = true;
+
+    /** @type {PIXI.Application | CreateJsApplication} */
+    this._app = null;
 };
 
 /**
@@ -31,13 +35,17 @@ Entry.Stage = function() {
  * @param {!Element} canvas for stage
  */
 Entry.Stage.prototype.initStage = function(canvas) {
-    this.canvas = new createjs.Stage(canvas.id);
+    this._app = GEHelper.newApp(canvas);
+    this.canvas = this._app.stage;
     this.canvas.x = 960 / 1.5 / 2;
     this.canvas.y = 540 / 1.5 / 2;
     this.canvas.scaleX = this.canvas.scaleY = 2 / 1.5;
-    createjs.Touch.enable(this.canvas);
-    this.canvas.enableMouseOver(10);
-    this.canvas.mouseMoveOutside = true;
+
+    this.background = GEHelper.newGraphic();
+    this.background.graphics.beginFill('#ffffff').drawRect(-480, -240, 960, 480);
+    this.variableContainer = GEHelper.newContainer("variableContainer");
+    this.dialogContainer = GEHelper.newContainer("dialogContainer");
+
     this.canvas.addChild(this.background);
     this.canvas.addChild(this.variableContainer);
     this.canvas.addChild(this.dialogContainer);
@@ -155,7 +163,7 @@ Entry.Stage.prototype.update = function() {
         Entry.requestUpdate = false;
         return;
     }
-    this.canvas.update();
+    this._app.render();
 
     if (Entry.engine.isState('stop') && this.objectUpdated) {
         this.objectUpdated = false;
@@ -165,6 +173,10 @@ Entry.Stage.prototype.update = function() {
     if (inputField && !inputField._isHidden) inputField.render();
     if (Entry.requestUpdateTwice) Entry.requestUpdateTwice = false;
     else Entry.requestUpdate = false;
+};
+
+Entry.Stage.prototype.updateForce = function() {
+    this._app && this._app.render();
 };
 
 /**
@@ -233,16 +245,16 @@ Entry.Stage.prototype.unloadDialog = function({ object }) {
 };
 
 Entry.Stage.prototype.setEntityIndex = function({ object }, index) {
+    if (index === -1) {
+        return;
+    }
     var selectedObjectContainer = Entry.stage.selectedObjectContainer;
     var currentIndex = selectedObjectContainer.getChildIndex(object);
 
-    if (currentIndex === index) {
+    if (currentIndex === -1 ||  currentIndex === index) {
         return;
-    } else if (currentIndex > index) {
-        selectedObjectContainer.setChildIndex(object, index);
-    } else {
-        selectedObjectContainer.setChildIndex(object, index);
     }
+    selectedObjectContainer.setChildIndex(object, index);
     Entry.requestUpdate = true;
 };
 
@@ -276,21 +288,18 @@ Entry.Stage.prototype.sortZorderRun = function() {
  * Initialize coordinate on canvas. It is toggle by Engine.
  */
 Entry.Stage.prototype.initCoordinator = function() {
-    var coordinator = (this.coordinator = Object.assign(new createjs.Container(), {
-        mouseEnabled: false,
-        tickEnabled: false,
-        tickChildren: false,
+    let tex = GEHelper.newSpriteWithCallback(Entry.mediaFilePath + 'workspace_coordinate.png');
+    this.coordinator = Object.assign(tex, {
+        scaleX: 0.5,
+        scaleY: 0.5,
+        x: -240,
+        y: -135,
         visible: false,
-    }));
-    coordinator.addChild(
-        Object.assign(new createjs.Bitmap(Entry.mediaFilePath + 'workspace_coordinate.png'), {
-            scaleX: 0.5,
-            scaleY: 0.5,
-            x: -240,
-            y: -135,
-        })
-    );
-    this.canvas.addChild(coordinator);
+    });
+    if(!GEHelper.isWebGL) {
+        this.coordinator.tickEnabled = false;
+    }
+    this.canvas.addChild(this.coordinator);
 };
 
 /**
@@ -316,7 +325,7 @@ Entry.Stage.prototype.selectObject = function(object) {
  * Initialize handle. Handle is use for transform object on canvas.
  */
 Entry.Stage.prototype.initHandle = function() {
-    this.handle = new EaselHandle(this.canvas)
+    this.handle = new GEHandle(this.canvas)
         .setChangeListener(this, this.updateHandle)
         .setEditStartListener(this, this.startEdit)
         .setEditEndListener(this, this.endEdit);
@@ -481,50 +490,57 @@ Entry.Stage.prototype.endEdit = function() {
 };
 
 Entry.Stage.prototype.initWall = function() {
-    var wall = new createjs.Container();
+    let wall = GEHelper.newContainer("wall");
     wall.mouseEnabled = false;
-    var bound = new Image();
-    bound.src = Entry.mediaFilePath + 'media/bound.png';
+    let tex = GEHelper.newWallTexture(Entry.mediaFilePath + 'media/bound.png');
+    const newSide = (x, y, sx, sy) => {
+        let sp = GEHelper.newWallSprite(tex);
+        sp.x = x;
+        sp.y = y;
+        sx ?  sp.scaleX = sx : 0;
+        sy ?  sp.scaleY = sy : 0;
+        wall.addChild(sp);
+        return sp;
+    };
 
-    wall.up = new createjs.Bitmap();
-    wall.up.scaleX = 480 / 30;
-    wall.up.y = -135 - 30;
-    wall.up.x = -240;
-    wall.up.image = bound;
-    wall.addChild(wall.up);
-
-    wall.down = new createjs.Bitmap();
-    wall.down.scaleX = 480 / 30;
-    wall.down.y = 135;
-    wall.down.x = -240;
-    wall.down.image = bound;
-    wall.addChild(wall.down);
-
-    wall.right = new createjs.Bitmap();
-    wall.right.scaleY = 270 / 30;
-    wall.right.y = -135;
-    wall.right.x = 240;
-    wall.right.image = bound;
-    wall.addChild(wall.right);
-
-    wall.left = new createjs.Bitmap();
-    wall.left.scaleY = 270 / 30;
-    wall.left.y = -135;
-    wall.left.x = -240 - 30;
-    wall.left.image = bound;
-    wall.addChild(wall.left);
+    wall.up = newSide( -240, -135 - 30, 480 / 30, 0);
+    wall.down = newSide( -240, 135, 480 / 30, 0);
+    wall.right = newSide( 240, -135, 0, 270 / 30);
+    wall.left = newSide( -240 - 30, -135, 0, 270 / 30);
 
     this.canvas.addChild(wall);
     this.wall = wall;
+
 };
 
 /**
  * show inputfield from the canvas
  */
 Entry.Stage.prototype.showInputField = function() {
-    if (!this.inputField) {
-        var scale = 1 / 1.5;
-        this.inputField = new CanvasInput({
+    const THIS = this;
+    const isWebGL = GEHelper.isWebGL;
+
+    if(!this.inputField) {
+        this.inputField = _createInputField();
+        this.inputSubmitButton = _createSubmitButton();
+    }
+
+    this.inputField.value('');
+    if(isWebGL) {
+        this.canvas.addChild(this.inputField.getPixiView());
+    }
+    this.inputField.show();
+    this.canvas.addChild(this.inputSubmitButton);
+
+    Entry.requestUpdateTwice = true;
+
+    function _createInputField() {
+        let scale = 1 / 1.5;
+        let posX = 202 * scale;
+        let posY = 450 * scale;
+        const isWebGL = GEHelper.isWebGL;
+        const classRef = isWebGL ? window.PIXICanvasInput : CanvasInput;
+        let inputField = new classRef({
             canvas: document.getElementById('entryCanvas'),
             fontSize: 30 * scale,
             fontFamily: 'NanumGothic',
@@ -537,60 +553,65 @@ Entry.Stage.prototype.showInputField = function() {
             borderRadius: 3,
             boxShadow: 'none',
             innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
-            x: 202 * scale,
-            y: 450 * scale,
+            x: posX,
+            y: posY,
             readonly: false,
             topPosition: true,
             onsubmit: function() {
                 Entry.dispatchEvent('canvasInputComplete');
             },
         });
-    }
 
-    var inputSubmitButton = new createjs.Container();
-    var buttonImg = new Image();
-    var button = new createjs.Bitmap();
-    buttonImg.onload = function() {
-        button.image = this;
-        Entry.requestUpdate = true;
-    };
-    buttonImg.src = Entry.mediaFilePath + 'confirm_button.png';
-    button.scaleX = 0.23;
-    button.scaleY = 0.23;
-    button.x = 160;
-    button.y = 89;
-    button.cursor = 'pointer';
-    button.image = buttonImg;
-    inputSubmitButton.addChild(button);
-
-    inputSubmitButton.on('mousedown', () => {
-        if (this.inputField._readonly == false) {
-            Entry.dispatchEvent('canvasInputComplete');
+        if(isWebGL) {
+            const canvas = THIS.canvas;
+            const globalScale = canvas.scale.x;
+            const textView = inputField.getPixiView();
+            textView.scale.set(1/globalScale);
+            textView.position.set(
+                (posX / globalScale - canvas.x / globalScale),
+                (posY / globalScale - canvas.y / globalScale),
+            );
         }
-    });
+        return inputField;
+    }//_createInputField
 
-    if (!this.inputSubmitButton) {
-        this.inputField.value('');
-        this.canvas.addChild(inputSubmitButton);
-        this.inputSubmitButton = inputSubmitButton;
-    }
 
-    this.inputField.show();
-    Entry.requestUpdateTwice = true;
+    function _createSubmitButton() {
+        const path = Entry.mediaFilePath + 'confirm_button.png';
+        let inputSubmitButton = GEHelper.newSpriteWithCallback(path, ()=>{
+            Entry.requestUpdate = true;
+        });
+        inputSubmitButton.mouseEnabled = true;
+        inputSubmitButton.scaleX = 0.23;
+        inputSubmitButton.scaleY = 0.23;
+        inputSubmitButton.x = 160;
+        inputSubmitButton.y = 89;
+        inputSubmitButton.cursor = 'pointer';
+
+        let eventType = isWebGL ? 'pointerdown' : 'mousedown';
+        inputSubmitButton.on(eventType, () => {
+            if (!THIS.inputField._readonly) {
+                Entry.dispatchEvent('canvasInputComplete');
+            }
+        });
+        return inputSubmitButton;
+    }//_createSubmitButton
 };
 
 /**
  * remove inputfield from the canvas
  */
 Entry.Stage.prototype.hideInputField = function() {
-    if (this.inputField && this.inputField.value()) this.inputField.value('');
+    if(!this.inputField) return;
 
-    if (this.inputSubmitButton) {
-        this.canvas.removeChild(this.inputSubmitButton);
-        this.inputSubmitButton = null;
+    if(GEHelper.isWebGL) {
+        this.canvas.removeChild(this.inputField.getPixiView());
     }
+    this.inputField.value('');
+    this.inputField.hide();
 
-    if (this.inputField) this.inputField.hide();
+    this.canvas.removeChild(this.inputSubmitButton);
+
     Entry.requestUpdate = true;
 };
 
@@ -624,7 +645,7 @@ Entry.Stage.prototype.selectObjectContainer = function(scene) {
     if (_.isEmpty(canvas) || _.isEmpty(containers)) {
         return;
     }
-
+    GEHelper.resManager.activateScene(scene && scene.id);
     var newContainer = this.getObjectContainerByScene(scene);
 
     containers.forEach(canvas.removeChild.bind(canvas));
@@ -637,7 +658,7 @@ Entry.Stage.prototype.selectObjectContainer = function(scene) {
  * init object containers
  */
 Entry.Stage.prototype.createObjectContainer = function(scene) {
-    return Object.assign(new createjs.Container(), { scene });
+    return Object.assign(GEHelper.newContainer("[Stage] SceneContainer"), { scene });
 };
 
 /**
@@ -651,6 +672,7 @@ Entry.Stage.prototype.removeObjectContainer = function(scene) {
     if (canvas) {
         canvas.removeChild(objContainer);
     }
+    GEHelper.resManager.removeScene(scene.id);
     containers.splice(containers.indexOf(objContainer), 1);
 };
 
@@ -708,4 +730,20 @@ Entry.Stage.prototype.setEntitySelectable = function(value) {
 
 Entry.Stage.prototype.isEntitySelectable = function() {
     return Entry.engine.isState('stop') && this._entitySelectable && !this.colorSpoid.isRunning;
+};
+
+Entry.Stage.prototype.destroy = function() {
+    let destroyOption;
+    if(GEHelper.isWebGL) {
+        destroyOption = {children: true, texture: false, baseTexture: false};
+        this.objectContainers.forEach( c => c.destroy(destroyOption) );
+        //this.handle.destroy(); // 추상화 아직 안됨.
+        PIXIAtlasManager.clearProject();
+    } else {
+        //do nothing
+    }
+    this._app.destroy(destroyOption);
+    this._app = null;
+    this.handle = null;
+    this.objectContainers = null;
 };

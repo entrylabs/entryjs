@@ -14,6 +14,9 @@ module.exports = {
         publicPath: '/dist/',
         filename: '[name].js',
     },
+    resolve: {
+        extensions: [".ts", ".tsx", ".js", ".json"]
+    },
     module: {
         rules: [
             {
@@ -39,6 +42,10 @@ module.exports = {
                     name: '[hash].[ext]',
                     limit: 10000,
                 },
+            },
+            {
+                test: /\.tsx?$/,
+                loader: 'awesome-typescript-loader'
             },
         ],
     },

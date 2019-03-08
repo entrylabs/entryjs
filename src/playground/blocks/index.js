@@ -53,11 +53,11 @@ function getBlockObject(items) {
  * @return {void}
  */
 function registerHardwareBlockToStatic(hardwareModules) {
+    const hardwareBlocks = EntryStatic.DynamicHardwareBlocks;
     hardwareModules.forEach((hardware) => {
-        if (hardware.blockMenuBlocks) {
-            EntryStatic.DynamicHardwareBlocks.push.apply(
-                EntryStatic.DynamicHardwareBlocks,
-                hardware.blockMenuBlocks
+        if (hardware.blockMenuBlocks && !hardwareBlocks.includes(hardware.blockMenuBlocks)) {
+            hardwareBlocks.push(
+                ...hardware.blockMenuBlocks.filter((block) => !hardwareBlocks.includes(block))
             );
         }
     });

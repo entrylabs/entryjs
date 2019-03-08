@@ -188,14 +188,14 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     this._pyBlockCount = {};
                     this._pyThreadCount = 1;
 
-                    var pyAstGenerator = new Entry.PyAstGenerator();
-                    var threads = this.makeThreads(code);
+                    const pyAstGenerator = new Entry.PyAstGenerator();
+                    const threads = this.makeThreads(code);
 
-                    var astArray = [];
-                    var threadCount = 0;
-                    var ast;
-                    for(var index = 0; index < threads.length; index++) {
-                        var thread = threads[index];
+                    const astArray = [];
+                    let threadCount = 0;
+                    let ast;
+                    for(let index = 0; index < threads.length; index++) {
+                        let thread = threads[index];
                         if(thread.length === 0)
                             continue;
                         thread = thread.replace(/\t/gm, '    ');
@@ -214,44 +214,54 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     this._onError = true;
                     result = [];
 
+                    let annotation;
                     if (this.codeMirror) {
-                        var line;
                         if (error instanceof SyntaxError) {
-                            var err = this.findSyntaxError(error);
-                            var annotation = {
-                                from: {line: err.from.line-1, ch: err.from.ch},
-                                to: {line: err.to.line-1, ch: err.to.ch}
-                            };
+                            const err = this.findSyntaxError(error);
+                            if (err) {
+                                annotation = {
+                                    from: {line: err.from.line-1, ch: err.from.ch},
+                                    to: {line: err.to.line-1, ch: err.to.ch}
+                                };
+                            }
+
                             error.type = "syntax";
                         } else {
-                            var err = error.line;
-                            var annotation = {
-                                from: {line: err.start.line + 1, ch: err.start.column},
-                                to: {line: err.end.line + 1, ch: err.end.column}
-                            };
+                            const err = error.line;
+                            if (err) {
+                                // 3 == 최초주석 및 import 구문
+                                annotation = {
+                                    from: {line: err.start.line + 3, ch: err.start.column},
+                                    to: {line: err.end.line + 3, ch: err.end.column}
+                                };
+                            }
+
                             error.type = "converting";
                         }
 
-                        var option = {
-                            className: "CodeMirror-lint-mark-error",
-                            __annotation: annotation,
-                            clearOnEnter: true,
-                            inclusiveLeft: true,
-                            inclusiveRigth: true,
-                            clearWhenEmpty: false
-                        };
+                        if (annotation) {
+                            const option = {
+                                className: 'CodeMirror-lint-mark-error',
+                                __annotation: annotation,
+                                clearOnEnter: true,
+                                inclusiveLeft: true,
+                                inclusiveRight: true,
+                                clearWhenEmpty: false,
+                            };
 
-                        this._marker = this.codeMirror.markText(
-                            annotation.from, annotation.to, option);
-
-                        if(error.type == "syntax") {
-                            var title = error.title;
-                            var message = this.makeSyntaxErrorDisplay(error.subject, error.keyword, error.message, err.from.line);
+                            this._marker = this.codeMirror.markText(
+                                annotation.from, annotation.to, option);
                         }
-                        else if(error.type == "converting") {
-                            var title = error.title;
-                            var message = error.message;
 
+                        let title = '';
+                        let message = '';
+                        if(error.type === "syntax") {
+                            title = error.title;
+                            message = this.makeSyntaxErrorDisplay(error.subject, error.keyword, error.message, err.from.line);
+                        }
+                        else if(error.type === "converting") {
+                            title = error.title;
+                            message = error.message;
                         }
 
                         Entry.toast.alert(title, message);
