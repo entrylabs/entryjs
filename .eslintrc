@@ -4,6 +4,7 @@
     "rules": {
         "prefer-const": "warn",
         "no-var": "warn",
+        "eqeqeq": 0,
         "no-const-assign": "error",
         "no-new-object": "warn",
         "object-shorthand": "warn",

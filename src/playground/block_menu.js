@@ -14,9 +14,10 @@ function _buildCategoryCodes(blocks, category) {
         if (!block || !block.def) {
             return [...threads, [{ type, category }]];
         } else {
-            return (block.defs || [block.def]).reduce((threads, d) => {
-                return [...threads, [Object.assign(d, { category })]];
-            }, threads);
+            return (block.defs || [block.def]).reduce(
+                (threads, d) => [...threads, [Object.assign(d, { category })]],
+                threads
+            );
         }
     }, []);
 }
@@ -203,8 +204,9 @@ class BlockMenu {
         _.result(this.codeListener, 'destroy');
 
         const that = this;
+        const that = this;
         this.set({ code });
-        this.codeListener = this.code.changeEvent.attach(this, function() {
+        this.codeListener = this.code.changeEvent.attach(this, () => {
             that.changeEvent.notify();
         });
         code.createView(this);
@@ -509,16 +511,17 @@ class BlockMenu {
 
         this._categoryData.forEach(({ category, blocks: threads }) => {
             if (category === 'func') {
-                const funcThreads = this.code.getThreadsByCategory('func').map((t) => {
-                    return t.getFirstBlock().type;
-                });
+                const funcThreads = this.code
+                    .getThreadsByCategory('func')
+                    .map((t) => t.getFirstBlock().type);
                 threads = funcThreads.length ? funcThreads : threads;
             }
 
             const inVisible =
-                threads.reduce((count, type) => {
-                    return this.checkBanClass(Entry.block[type]) ? count - 1 : count;
-                }, threads.length) === 0;
+                threads.reduce(
+                    (count, type) => (this.checkBanClass(Entry.block[type]) ? count - 1 : count),
+                    threads.length
+                ) === 0;
             const elem = this._categoryElems[category];
 
             if (inVisible) {
@@ -530,13 +533,9 @@ class BlockMenu {
 
         requestAnimationFrame(() => {
             //visible
-            sorted[0].forEach((elem) => {
-                return elem.removeClass('entryRemove');
-            });
+            sorted[0].forEach((elem) => elem.removeClass('entryRemove'));
             //invisible
-            sorted[1].forEach((elem) => {
-                return elem.addClass('entryRemove');
-            });
+            sorted[1].forEach((elem) => elem.addClass('entryRemove'));
             this.selectMenu(0, true, doNotAlign);
         });
     }
@@ -665,9 +664,7 @@ class BlockMenu {
         }
 
         if (elems.length) {
-            this._generateCodesTimer = setTimeout(() => {
-                return this._generateCategoryCodes(elems);
-            }, 0);
+            this._generateCodesTimer = setTimeout(() => this._generateCategoryCodes(elems), 0);
         } else {
             this._generateCodesTimer = null;
             this.view.removeClass('init');
@@ -731,9 +728,10 @@ class BlockMenu {
             return;
         }
 
-        const count = threads.reduce((count, block) => {
-            return this.checkBanClass(Entry.block[block]) ? count - 1 : count;
-        }, threads.length);
+        const count = threads.reduce(
+            (count, block) => (this.checkBanClass(Entry.block[block]) ? count - 1 : count),
+            threads.length
+        );
 
         const categoryElem = this._categoryElems[category];
         if (categoryElem && count > 0) {
@@ -874,9 +872,7 @@ class BlockMenu {
         this.selectMenu(selector, true);
         this._getSortedBlocks()
             .shift()
-            .forEach(({ view }) => {
-                return view.reDraw();
-            });
+            .forEach(({ view }) => view.reDraw());
     }
 
     _handleDragBlock() {
@@ -962,9 +958,9 @@ class BlockMenu {
         this.view.prepend(this._categoryCol);
 
         const fragment = document.createDocumentFragment();
-        data.forEach(({ category, visible }) => {
-            return fragment.appendChild(this._generateCategoryElement(category, visible)[0]);
-        });
+        data.forEach(({ category, visible }) =>
+            fragment.appendChild(this._generateCategoryElement(category, visible)[0])
+        );
         this.firstSelector = _.head(data).category;
         this._categoryCol[0].appendChild(fragment);
     }
@@ -1017,18 +1013,15 @@ class BlockMenu {
             return;
         }
 
-        _buildCategoryCodes(
-            blocks.filter((b) => {
-                return !this.checkBanClass(Entry.block[b]);
-            }),
-            HW
-        ).forEach((t) => {
-            if (shouldHide) {
-                t[0].x = -99999;
+        _buildCategoryCodes(blocks.filter((b) => !this.checkBanClass(Entry.block[b])), HW).forEach(
+            (t) => {
+                if (shouldHide) {
+                    t[0].x = -99999;
+                }
+                this._createThread(t);
+                delete t[0].x;
             }
-            this._createThread(t);
-            delete t[0].x;
-        });
+        );
 
         this.hwCodeOutdated = false;
         Entry.dispatchEvent('hwCodeGenerated');
