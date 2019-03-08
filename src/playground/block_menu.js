@@ -204,7 +204,6 @@ class BlockMenu {
         _.result(this.codeListener, 'destroy');
 
         const that = this;
-        const that = this;
         this.set({ code });
         this.codeListener = this.code.changeEvent.attach(this, () => {
             that.changeEvent.notify();
