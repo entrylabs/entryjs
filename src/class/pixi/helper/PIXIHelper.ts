@@ -5,10 +5,10 @@ import Texture = PIXI.Texture;
 
 export class PIXIGraphics extends PIXI.Graphics {
     
-    destroyied:boolean = false;
+    destroyed:boolean = false;
     
     destroy(options?: DestroyOptions | boolean) {
-        this.destroyied = true;
+        this.destroyed = true;
         super.destroy(options);
     }
 }
