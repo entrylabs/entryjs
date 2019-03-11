@@ -5,32 +5,36 @@
 
 Entry.TextCodingUtil = {};
 
-(function(tu) {
-    /*tu.init = function() {
-        this._funcParams = [];
-    };*/
-
-    tu.canUsePythonVariables = function (variables) {
-        return variables.every((variable)=> {
+class TextCodingUtil {
+    // Entry 에서 사용 중
+    canUsePythonVariables(variables) {
+        return variables.every((variable) => {
             const target = variable.variableType === 'variable' ? 'v' : 'l';
             return !Entry.TextCodingUtil.checkName(variable.name, target);
         });
     }
 
-    tu.canUsePythonFunctions = function (functions) {
-        return functions.every(({content}) => {
-            var code = new Entry.Code(content);
-            var paramBlock = code.getEventMap('funcDef')[0];
+    // Entry 에서 사용 중
+    canUsePythonFunctions(functions) {
+        return functions.every(({ content }) => {
+            const code = new Entry.Code(content);
+            let paramBlock = code.getEventMap('funcDef')[0];
             paramBlock = paramBlock && paramBlock.params[0];
 
-            if (!paramBlock) return true;
+            if (!paramBlock) {
+                return true;
+            }
 
-            if (paramBlock.type !== 'function_field_label') return false;
+            if (paramBlock.type !== 'function_field_label') {
+                return false;
+            }
 
-            var params = paramBlock.params;
+            const params = paramBlock.params;
 
             if (!params[1]) {
-                if (test(params[0])) return false;
+                if (test(params[0])) {
+                    return false;
+                }
             } else if (this.hasFunctionFieldLabel(params[1])) {
                 return false;
             }
@@ -43,40 +47,40 @@ Entry.TextCodingUtil = {};
         }
     }
 
-    tu.initQueue = function() {
-        var queue = new Entry.Queue();
+    initQueue() {
+        const queue = new Entry.Queue();
         this._funcParamQ = queue;
 
-        var fNameQueue = new Entry.Queue();
+        const fNameQueue = new Entry.Queue();
         this._funcNameQ = fNameQueue;
-    };
+    }
 
-    tu.clearQueue = function() {
+    clearQueue() {
         this._funcParamQ.clear();
         this._funcNameQ.clear();
-    };
+    }
 
-    tu.indent = function(textCode) {
-        var result = '\t';
-        var indentedCodeArr = textCode.split('\n');
+    indent(textCode) {
+        let result = '\t';
+        const indentedCodeArr = textCode.split('\n');
         indentedCodeArr.pop();
         result += indentedCodeArr.join('\n\t');
-        result = '\t' + result.trim(); //.concat('\n');
+        result = `\t${result.trim()}`; //.concat('\n');
 
         return result;
-    };
+    }
 
-    tu.isNumeric = function(value) {
+    isNumeric(value) {
         value = String(Math.abs(value));
         if (value.match(/^-?\d+$|^-\d+$/) || value.match(/^-?\d+\.\d+$/)) {
             return true;
         }
 
         return false;
-    };
+    }
 
-    tu.isBinaryOperator = function(value) {
-        if (
+    isBinaryOperator(value) {
+        return (
             value == '==' ||
             value == '>' ||
             value == '<' ||
@@ -86,15 +90,11 @@ Entry.TextCodingUtil = {};
             value == '-' ||
             value == '*' ||
             value == '/'
-        ) {
-            return true;
-        }
+        );
+    }
 
-        return false;
-    };
-
-    tu.logicalExpressionConvert = function(operator) {
-        var result;
+    logicalExpressionConvert(operator) {
+        let result;
         switch (operator) {
             case '&&': {
                 result = null;
@@ -109,20 +109,16 @@ Entry.TextCodingUtil = {};
             }
         }
         return result;
-    };
+    }
 
-    tu.dropdownDynamicNameToIdConvertor = function(
-        name,
-        menuName,
-        currentObject
-    ) {
-        var result = name;
-        var currentScene = Entry.scene.selectedScene;
+    dropdownDynamicNameToIdConvertor(name, menuName, currentObject) {
+        const result = name;
+        const currentScene = Entry.scene.selectedScene;
 
         if (menuName == 'scenes') {
-            var scenes = Entry.scene.getScenes();
-            for (var s in scenes) {
-                var scene = scenes[s];
+            const scenes = Entry.scene.getScenes();
+            for (const s in scenes) {
+                const scene = scenes[s];
                 if (name == scene.name) {
                     return scene.id;
                 }
@@ -133,56 +129,65 @@ Entry.TextCodingUtil = {};
             menuName == 'collision' ||
             menuName == 'clone'
         ) {
-            var objects = Entry.container.getAllObjects();
-            for (var o in objects) {
-                var object = objects[o];
-                if (object.scene.id == currentScene.id)
-                    if (name == object.name) return object.id;
+            const objects = Entry.container.getAllObjects();
+            for (const o in objects) {
+                const object = objects[o];
+                if (object.scene.id == currentScene.id) {
+                    if (name == object.name) {
+                        return object.id;
+                    }
+                }
             }
         } else if (menuName == 'variables') {
-            var entryVariables = Entry.variableContainer.variables_;
+            const entryVariables = Entry.variableContainer.variables_;
             for (var e in entryVariables) {
-                var entryVariable = entryVariables[e];
+                const entryVariable = entryVariables[e];
                 if (entryVariable.name_ == name) {
                     if (currentObject) {
-                        if (currentObject.id == entryVariable.object_)
+                        if (currentObject.id == entryVariable.object_) {
                             return entryVariable.id_;
-                    } else return entryVariable.id_;
+                        }
+                    } else {
+                        return entryVariable.id_;
+                    }
                 }
             }
         } else if (menuName == 'lists') {
-            var entryLists = Entry.variableContainer.lists_;
+            const entryLists = Entry.variableContainer.lists_;
             for (var e in entryLists) {
-                var entryList = entryLists[e];
+                const entryList = entryLists[e];
                 if (entryList.name_ == name) {
                     if (currentObject) {
-                        if (currentObject.id == entryList.object_)
+                        if (currentObject.id == entryList.object_) {
                             return entryList.id_;
-                    } else return entryList.id_;
+                        }
+                    } else {
+                        return entryList.id_;
+                    }
                 }
             }
         } else if (menuName == 'messages') {
-            var entryMessages = Entry.variableContainer.messages_;
+            const entryMessages = Entry.variableContainer.messages_;
             for (var e in entryMessages) {
-                var entryMessage = entryMessages[e];
+                const entryMessage = entryMessages[e];
                 if (entryMessage.name == name) {
                     return entryMessage.id;
                 }
             }
         } else if (menuName == 'pictures') {
             currentObject = Entry.playground.object;
-            var pictures = currentObject.pictures;
+            const pictures = currentObject.pictures;
             for (var p in pictures) {
-                var picture = pictures[p];
+                const picture = pictures[p];
                 if (picture.name == name) {
                     return picture.id;
                 }
             }
         } else if (menuName == 'sounds') {
             currentObject = Entry.playground.object;
-            var sounds = currentObject.sounds;
+            const sounds = currentObject.sounds;
             for (var p in sounds) {
-                var sound = sounds[p];
+                const sound = sounds[p];
                 if (sound.name == name) {
                     return sound.id;
                 }
@@ -190,21 +195,23 @@ Entry.TextCodingUtil = {};
         }
 
         return result;
-    };
+    }
 
-    tu.dropdownDynamicIdToNameConvertor = function(id, menuName) {
+    dropdownDynamicIdToNameConvertor(id, menuName) {
         //var found = false;
-        var result;
+        let result;
 
         switch (menuName) {
             case 'variables':
                 var entryVariables = Entry.variableContainer.variables_;
                 for (var e in entryVariables) {
-                    var entryVariable = entryVariables[e];
+                    const entryVariable = entryVariables[e];
                     if (entryVariable.id_ == id) {
-                        if (entryVariable.object_)
-                            result = 'self.' + entryVariable.name_;
-                        else result = entryVariable.name_;
+                        if (entryVariable.object_) {
+                            result = `self.${entryVariable.name_}`;
+                        } else {
+                            result = entryVariable.name_;
+                        }
                         break;
                     }
                 }
@@ -214,9 +221,11 @@ Entry.TextCodingUtil = {};
                 for (var e in entryLists) {
                     var entryList = entryLists[e];
                     if (entryList.id_ == id) {
-                        if (entryList.object_)
-                            result = 'self.' + entryList.name_;
-                        else result = entryList.name_;
+                        if (entryList.object_) {
+                            result = `self.${entryList.name_}`;
+                        } else {
+                            result = entryList.name_;
+                        }
                         break;
                     }
                 }
@@ -235,9 +244,9 @@ Entry.TextCodingUtil = {};
                 var objects = Entry.container.getAllObjects();
                 for (var o in objects) {
                     var object = objects[o];
-                    var pictures = object.pictures;
+                    const pictures = object.pictures;
                     for (var p in pictures) {
-                        var picture = pictures[p];
+                        const picture = pictures[p];
                         if (picture.id == id) {
                             result = picture.name;
                             return result;
@@ -249,9 +258,9 @@ Entry.TextCodingUtil = {};
                 var objects = Entry.container.getAllObjects();
                 for (var o in objects) {
                     var object = objects[o];
-                    var sounds = object.sounds;
+                    const sounds = object.sounds;
                     for (var p in sounds) {
-                        var sound = sounds[p];
+                        const sound = sounds[p];
                         if (sound.id == id) {
                             result = sound.name;
                             return result;
@@ -261,8 +270,8 @@ Entry.TextCodingUtil = {};
                 break;
             case 'scenes':
                 var scenes = Entry.scene.getScenes();
-                for (var s in scenes) {
-                    var scene = scenes[s];
+                for (const s in scenes) {
+                    const scene = scenes[s];
                     if (scene.id == id) {
                         result = scene.name;
                         break;
@@ -274,11 +283,7 @@ Entry.TextCodingUtil = {};
                 if (id == 'self') {
                     result = id;
                 } else {
-                    var objects = Entry.container.objects_.filter(function(
-                        obj
-                    ) {
-                        return obj.id === id;
-                    });
+                    var objects = Entry.container.objects_.filter((obj) => obj.id === id);
 
                     result = objects[0] ? objects[0].name : null;
                 }
@@ -286,15 +291,17 @@ Entry.TextCodingUtil = {};
         }
 
         return result;
-    };
+    }
 
-    tu.getDynamicIdByNumber = function(value, textParam) {
-        var result = value;
-        if (Entry.getMainWS() && Entry.getMainWS().vimBoard)
+    getDynamicIdByNumber(value, textParam) {
+        let result = value;
+        if (Entry.getMainWS() && Entry.getMainWS().vimBoard) {
             var VIM = Entry.getMainWS().vimBoard;
-        else return result;
+        } else {
+            return result;
+        }
 
-        var currentObject = VIM._currentObject;
+        const currentObject = VIM._currentObject;
 
         if (typeof value == 'number') {
             result = 'None';
@@ -304,8 +311,8 @@ Entry.TextCodingUtil = {};
                     for (var o in objects) {
                         var object = objects[o];
                         if (object.id == currentObject.id) {
-                            var pictures = object.pictures;
-                            var picture = pictures[value - 1];
+                            const pictures = object.pictures;
+                            const picture = pictures[value - 1];
                             if (picture) {
                                 result = picture.name;
                                 break;
@@ -319,8 +326,8 @@ Entry.TextCodingUtil = {};
                     for (var o in objects) {
                         var object = objects[o];
                         if (object.id == currentObject.id) {
-                            var sounds = object.sounds;
-                            var sound = sounds[value - 1];
+                            const sounds = object.sounds;
+                            const sound = sounds[value - 1];
                             if (sound) {
                                 result = sound.name;
                                 break;
@@ -341,36 +348,42 @@ Entry.TextCodingUtil = {};
         function isNumeric(value) {
             return /^\d+$/.test(value);
         }
-    };
+    }
 
-    tu.isLocalType = function(id, menuName) {
-        var result = id;
+    isLocalType(id, menuName) {
+        const result = id;
 
         if (menuName == 'variables') {
-            var entryVariables = Entry.variableContainer.variables_;
+            const entryVariables = Entry.variableContainer.variables_;
             for (var e in entryVariables) {
-                var entryVariable = entryVariables[e];
+                const entryVariable = entryVariables[e];
                 if (entryVariable.id_ == id) {
-                    if (entryVariable.object_) return true;
-                    else return false;
+                    if (entryVariable.object_) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }
             }
         } else if (menuName == 'lists') {
-            var entryLists = Entry.variableContainer.lists_;
+            const entryLists = Entry.variableContainer.lists_;
             for (var e in entryLists) {
-                var entryList = entryLists[e];
+                const entryList = entryLists[e];
                 if (entryList.id_ == id) {
-                    if (entryList.object_) return true;
-                    else return false;
+                    if (entryList.object_) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }
             }
         }
 
         return false;
-    };
+    }
 
-    tu.binaryOperatorValueConvertor = function(operator) {
-        var result;
+    binaryOperatorValueConvertor(operator) {
+        let result;
         switch (operator) {
             case '"EQUAL"': {
                 result = '==';
@@ -422,18 +435,16 @@ Entry.TextCodingUtil = {};
         }
 
         return result;
-    };
+    }
 
-    tu.variableListFilter = function(block, index, param) {
-        if (param == 'None') return (result = param);
+    variableListFilter(block, index, param) {
+        if (param == 'None') {
+            return (result = param);
+        }
 
         var result = param;
-        var type = block.data.type;
-        if (
-            type == 'change_variable' ||
-            type == 'set_variable' ||
-            type == 'get_variable'
-        ) {
+        const type = block.data.type;
+        if (type == 'change_variable' || type == 'set_variable' || type == 'get_variable') {
             if (index == 1) {
                 result = eval(param);
             }
@@ -445,25 +456,33 @@ Entry.TextCodingUtil = {};
             if (index == 2) {
                 result = eval(param);
             } else if (index == 4) {
-                if (this.isNumeric(param)) result = param - 1;
+                if (this.isNumeric(param)) {
+                    result = param - 1;
+                }
             }
         } else if (type == 'remove_value_from_list') {
             if (index == 2) {
                 result = eval(param);
             } else if (index == 1) {
-                if (this.isNumeric(param)) result = param - 1;
+                if (this.isNumeric(param)) {
+                    result = param - 1;
+                }
             }
         } else if (type == 'insert_value_to_list') {
             if (index == 2) {
                 result = eval(param);
             } else if (index == 3) {
-                if (this.isNumeric(param)) result = param - 1;
+                if (this.isNumeric(param)) {
+                    result = param - 1;
+                }
             }
         } else if (type == 'change_value_list_index') {
             if (index == 1) {
                 result = eval(param);
             } else if (index == 2) {
-                if (this.isNumeric(param)) result = param - 1;
+                if (this.isNumeric(param)) {
+                    result = param - 1;
+                }
             }
         } else if (type == 'add_value_to_list') {
             if (index == 2) {
@@ -472,9 +491,9 @@ Entry.TextCodingUtil = {};
         }
 
         return result;
-    };
+    }
 
-    /*tu.variableListSpaceMessage = function() {
+    /*variableListSpaceMessage() {
         var error = {};
         error.title = "파이썬변환(Converting) 오류";
         error.message = "공백(띄어쓰기)이 포함된 변수 또는 리스트는 변환할 수 없습니다.";
@@ -482,24 +501,24 @@ Entry.TextCodingUtil = {};
         throw error;
     };*/
 
-    tu.isGlobalVariableExisted = function(name) {
-        var entryVariables = Entry.variableContainer.variables_;
-        for (var i in entryVariables) {
-            var entryVariable = entryVariables[i];
+    isGlobalVariableExisted(name) {
+        const entryVariables = Entry.variableContainer.variables_;
+        for (const i in entryVariables) {
+            const entryVariable = entryVariables[i];
             if (entryVariable.object_ === null && entryVariable.name_ == name) {
                 return true;
             }
         }
 
         return false;
-    };
+    }
 
-    tu.updateGlobalVariable = function(name, value) {
-        var variables = Entry.variableContainer.variables_;
-        for (var i in variables) {
-            var variable = variables[i];
+    updateGlobalVariable(name, value) {
+        const variables = Entry.variableContainer.variables_;
+        for (const i in variables) {
+            const variable = variables[i];
             if (variable.object_ === null && variable.name_ == name) {
-                var model = variable.toJSON();
+                const model = variable.toJSON();
                 model.name = name;
                 model.value = value;
                 variable.syncModel_(model);
@@ -508,45 +527,41 @@ Entry.TextCodingUtil = {};
                 break;
             }
         }
-    };
+    }
 
-    tu.createGlobalVariable = function(name, value) {
-        if (this.isGlobalVariableExisted(name)) return;
+    createGlobalVariable(name, value) {
+        if (this.isGlobalVariableExisted(name)) {
+            return;
+        }
 
-        var variable = {
-            name: name,
-            value: value,
+        const variable = {
+            name,
+            value,
             variableType: 'variable',
         };
 
         Entry.variableContainer.addVariable(variable);
         Entry.variableContainer.updateList();
-    };
+    }
 
-    tu.isLocalVariableExisted = function(name, object) {
-        var entryVariables = Entry.variableContainer.variables_;
-        for (var i in entryVariables) {
-            var entryVariable = entryVariables[i];
-            if (
-                entryVariable.object_ === object.id &&
-                entryVariable.name_ == name
-            ) {
+    isLocalVariableExisted(name, object) {
+        const entryVariables = Entry.variableContainer.variables_;
+        for (const i in entryVariables) {
+            const entryVariable = entryVariables[i];
+            if (entryVariable.object_ === object.id && entryVariable.name_ == name) {
                 return true;
             }
         }
 
         return false;
-    };
+    }
 
-    tu.updateLocalVariable = function(name, value, object) {
-        var entryVariables = Entry.variableContainer.variables_;
-        for (var i in entryVariables) {
-            var entryVariable = entryVariables[i];
-            if (
-                entryVariable.object_ === object.id &&
-                entryVariable.name_ == name
-            ) {
-                var model = entryVariable.toJSON();
+    updateLocalVariable(name, value, object) {
+        const entryVariables = Entry.variableContainer.variables_;
+        for (const i in entryVariables) {
+            const entryVariable = entryVariables[i];
+            if (entryVariable.object_ === object.id && entryVariable.name_ == name) {
+                const model = entryVariable.toJSON();
                 model.name = name;
                 model.value = value;
                 entryVariable.syncModel_(model);
@@ -555,65 +570,64 @@ Entry.TextCodingUtil = {};
                 break;
             }
         }
-    };
+    }
 
-    tu.createLocalVariable = function(name, value, object) {
-        if (this.isLocalVariableExisted(name, object)) return;
+    createLocalVariable(name, value, object) {
+        if (this.isLocalVariableExisted(name, object)) {
+            return;
+        }
 
-        var variable = {
-            name: name,
-            value: value,
+        const variable = {
+            name,
+            value,
             object: object.id,
             variableType: 'variable',
         };
 
         Entry.variableContainer.addVariable(variable);
         Entry.variableContainer.updateList();
-    };
+    }
 
-    tu.isLocalVariable = function(variableId) {
-        var object = Entry.playground.object;
-        var entryVariables = Entry.variableContainer.variables_;
-        for (var e in entryVariables) {
-            var entryVariable = entryVariables[e];
-            if (
-                entryVariable.object_ == object.id &&
-                entryVariable.id_ == variableId
-            ) {
+    isLocalVariable(variableId) {
+        const object = Entry.playground.object;
+        const entryVariables = Entry.variableContainer.variables_;
+        for (const e in entryVariables) {
+            const entryVariable = entryVariables[e];
+            if (entryVariable.object_ == object.id && entryVariable.id_ == variableId) {
                 return true;
             }
         }
 
         return false;
-    };
+    }
 
-    tu.isGlobalListExisted = function(name) {
-        var entryLists = Entry.variableContainer.lists_;
-        for (var i in entryLists) {
-            var entryList = entryLists[i];
+    isGlobalListExisted(name) {
+        const entryLists = Entry.variableContainer.lists_;
+        for (const i in entryLists) {
+            const entryList = entryLists[i];
             if (entryList.object_ === null && entryList.name_ == name) {
                 return true;
             }
         }
 
         return false;
-    };
+    }
 
-    tu.updateGlobalList = function(name, array) {
-        var entryLists = Entry.variableContainer.lists_;
-        for (var i in entryLists) {
-            var entryList = entryLists[i];
+    updateGlobalList(name, array) {
+        const entryLists = Entry.variableContainer.lists_;
+        for (const i in entryLists) {
+            const entryList = entryLists[i];
             if (entryList.object_ === null && entryList.name_ == name) {
-                var list = {
+                const list = {
                     x: entryList.x_,
                     y: entryList.y_,
                     id: entryList.id_,
                     visible: entryList.visible_,
-                    name: name,
+                    name,
                     isCloud: entryList.isCloud_,
                     width: entryList.width_,
                     height: entryList.height_,
-                    array: array,
+                    array,
                 };
 
                 entryList.syncModel_(list);
@@ -623,49 +637,53 @@ Entry.TextCodingUtil = {};
                 break;
             }
         }
-    };
+    }
 
-    tu.createGlobalList = function(name, array) {
-        if (this.isGlobalListExisted(name)) return;
+    createGlobalList(name, array) {
+        if (this.isGlobalListExisted(name)) {
+            return;
+        }
 
-        var list = {
-            name: name,
-            array: array,
+        const list = {
+            name,
+            array,
             variableType: 'list',
         };
 
         Entry.variableContainer.addList(list);
         Entry.variableContainer.updateList();
-    };
+    }
 
-    tu.isLocalListExisted = function(name, object) {
-        if (!object) return false;
-        var entryLists = Entry.variableContainer.lists_;
-        for (var i in entryLists) {
-            var entryList = entryLists[i];
+    isLocalListExisted(name, object) {
+        if (!object) {
+            return false;
+        }
+        const entryLists = Entry.variableContainer.lists_;
+        for (const i in entryLists) {
+            const entryList = entryLists[i];
             if (entryList.object_ === object.id && entryList.name_ == name) {
                 return true;
             }
         }
 
         return false;
-    };
+    }
 
-    tu.updateLocalList = function(name, array, object) {
-        var entryLists = Entry.variableContainer.lists_;
-        for (var i in entryLists) {
-            var entryList = entryLists[i];
+    updateLocalList(name, array, object) {
+        const entryLists = Entry.variableContainer.lists_;
+        for (const i in entryLists) {
+            const entryList = entryLists[i];
             if (entryList.object_ === object.id && entryList.name_ == name) {
-                var list = {
+                const list = {
                     x: entryList.x_,
                     y: entryList.y_,
                     id: entryList.id_,
                     visible: entryList.visible_,
-                    name: name,
+                    name,
                     isCloud: entryList.isCloud_,
                     width: entryList.width_,
                     height: entryList.height_,
-                    array: array,
+                    array,
                 };
 
                 entryList.syncModel_(list);
@@ -675,48 +693,52 @@ Entry.TextCodingUtil = {};
                 break;
             }
         }
-    };
+    }
 
-    tu.createLocalList = function(name, array, object) {
-        if (this.isLocalListExisted(name, object)) return;
+    createLocalList(name, array, object) {
+        if (this.isLocalListExisted(name, object)) {
+            return;
+        }
 
-        var list = {
-            name: name,
-            array: array,
+        const list = {
+            name,
+            array,
             object: object.id,
             variableType: 'list',
         };
 
         Entry.variableContainer.addList(list);
         Entry.variableContainer.updateList();
-    };
+    }
 
-    tu.isLocalList = function(listId) {
-        var object = Entry.playground.object;
-        var entryLists = Entry.variableContainer.lists_;
-        for (var e in entryLists) {
-            var entryList = entryLists[e];
+    isLocalList(listId) {
+        const object = Entry.playground.object;
+        const entryLists = Entry.variableContainer.lists_;
+        for (const e in entryLists) {
+            const entryList = entryLists[e];
             if (entryList.object_ == object.id && entryList.id_ == listId) {
                 return true;
             }
         }
 
         return false;
-    };
+    }
 
-    tu.createMessage = function(name) {
-        var messages = Entry.variableContainer.messages_;
-        var exist = Entry.isExist(name, 'name', messages);
-        if (exist) return;
-        var message = {
-            name: name,
+    createMessage(name) {
+        const messages = Entry.variableContainer.messages_;
+        const exist = Entry.isExist(name, 'name', messages);
+        if (exist) {
+            return;
+        }
+        const message = {
+            name,
         };
 
         Entry.variableContainer.addMessage(message);
         Entry.variableContainer.updateList();
-    };
+    }
 
-    /*tu.isLocalType = function(block, id) {
+    /*isLocalType(block, id) {
         if(block.data.type == "get_variable" ||
             block.data.type == "set_variable" ||
             block.data.type == "change_variable" ) {
@@ -737,9 +759,9 @@ Entry.TextCodingUtil = {};
         }
     };*/
 
-    tu.isEventBlock = function(block) {
-        var blockType = block.data.type;
-        if (
+    isEventBlock(block) {
+        const blockType = block.data.type;
+        return (
             blockType == 'when_run_button_click' ||
             blockType == 'when_some_key_pressed' ||
             blockType == 'mouse_clicked' ||
@@ -749,26 +771,16 @@ Entry.TextCodingUtil = {};
             blockType == 'when_message_cast' ||
             blockType == 'when_scene_start' ||
             blockType == 'when_clone_start'
-        ) {
-            return true;
-        }
+        );
+    }
 
-        return false;
-    };
+    isEntryEventBlockWithParam(block) {
+        const blockType = block.data.type;
+        return blockType == 'when_some_key_pressed' || blockType == 'when_message_cast';
+    }
 
-    tu.isEntryEventBlockWithParam = function(block) {
-        var blockType = block.data.type;
-        if (
-            blockType == 'when_some_key_pressed' ||
-            blockType == 'when_message_cast'
-        )
-            return true;
-
-        return false;
-    };
-
-    tu.isEventBlockByType = function(blockType) {
-        if (
+    isEventBlockByType(blockType) {
+        return (
             blockType == 'when_run_button_click' ||
             blockType == 'when_some_key_pressed' ||
             blockType == 'mouse_clicked' ||
@@ -778,23 +790,19 @@ Entry.TextCodingUtil = {};
             blockType == 'when_message_cast' ||
             blockType == 'when_scene_start' ||
             blockType == 'when_clone_start'
-        ) {
-            return true;
-        }
+        );
+    }
 
-        return false;
-    };
+    makeDefinition(block) {
+        const blockType = block.data.type;
+        const syntax = Entry.block[blockType].syntax.py[0];
 
-    tu.makeDefinition = function(block) {
-        var blockType = block.data.type;
-        var syntax = Entry.block[blockType].syntax.py[0];
+        const paramReg = /(%.)/im;
+        const tokens = syntax.split(paramReg);
 
-        var paramReg = /(%.)/im;
-        var tokens = syntax.split(paramReg);
-
-        var result = '';
-        for (var i = 0; i < tokens.length; i++) {
-            var token = tokens[i];
+        let result = '';
+        for (let i = 0; i < tokens.length; i++) {
+            const token = tokens[i];
             if (paramReg.test(token)) {
                 result += 'event';
             } else {
@@ -803,47 +811,43 @@ Entry.TextCodingUtil = {};
         }
 
         return result;
-    };
+    }
 
-    /*tu.isNoPrintBlock = function(block) {
-        var blockType = block.data.type;
+    entryEventFilter(text) {
+        const startIndex = text.indexOf('(');
+        const endIndex = text.indexOf(')');
 
-        return false;
-    };*/
-
-    tu.entryEventFilter = function(text) {
-        var startIndex = text.indexOf('(');
-        var endIndex = text.indexOf(')');
-
-        var stmt = text.substring(0, startIndex);
-        var param = text.substring(startIndex + 1, endIndex);
+        const stmt = text.substring(0, startIndex);
+        let param = text.substring(startIndex + 1, endIndex);
         param = param.replace(/\"/g, '');
 
         if (param) {
             if (isNaN(param)) {
                 param = param.replace(/ /g, '_space_');
             } else {
-                param = 'num' + param;
+                param = `num${param}`;
             }
 
-            if (param == 'None') param = 'none';
+            if (param == 'None') {
+                param = 'none';
+            }
         }
 
-        text = stmt + '(' + param + '):\n';
+        text = `${stmt}(${param}):\n`;
 
         return text;
-    };
+    }
 
-    tu.entryEventFuncFilter = function(threads) {
-        var result;
-        var eventFound = false;
-        var threadArr = threads.split('\n');
+    entryEventFuncFilter(threads) {
+        let result;
+        let eventFound = false;
+        const threadArr = threads.split('\n');
 
-        for (var i in threadArr) {
-            var thread = threadArr[i];
-            var trimedThread = threadArr[i].trim();
+        for (const i in threadArr) {
+            let thread = threadArr[i];
+            const trimedThread = threadArr[i].trim();
             var colonIndex = trimedThread.indexOf(':');
-            var preText = '';
+            let preText = '';
 
             if (colonIndex > 0) {
                 preText = trimedThread.substring(0, colonIndex + 1);
@@ -851,47 +855,11 @@ Entry.TextCodingUtil = {};
 
             preText = preText.split('(');
             preText = preText[0];
-
-            /*if( preText == "def entry_event_start():" ||
-                    preText == "def entry_event_mouse_down():" ||
-                    preText == "def entry_event_mouse_up():" ||
-                    preText == "def entry_event_object_down():" ||
-                    preText == "def entry_event_object_up():" ||
-                    preText == "def entry_event_scene_start():" ||
-                    preText == "def entry_event_clone_create():" ) {
-
-                    //var tokens = [];
-                    //tokens = funcPart.split("def");
-                    //funcPart = tokens[1].substring(0, tokens[1].length-1).trim();
-
-                    thread = thread.replace(/def /, "");
-                    var colonIndex = thread.indexOf(":");
-                    var funcPart = "";
-                    var restPart = "";
-
-                    if(colonIndex > 0) {
-                        funcPart = thread.substring(0, colonIndex+1);
-                        restPart = thread.substring(colonIndex+1, thread.length);
-                    }
-
-                    if(restPart) {
-                        var newThread = funcPart.concat("\n").concat(restPart.trim());
-                    }
-                    else {
-                        var newThread = funcPart;
-                    }
-
-                    threadArr[i] = newThread;
-                    eventFound = true;
-                }
-                else */ if (
-                preText == 'def when_press_key' ||
-                preText == 'def when_get_signal'
-            ) {
+            if (preText == 'def when_press_key' || preText == 'def when_get_signal') {
                 thread = thread.replace(/def /, '');
                 var colonIndex = thread.indexOf(':');
-                var funcPart = '';
-                var restPart = '';
+                let funcPart = '';
+                let restPart = '';
 
                 if (colonIndex > 0) {
                     funcPart = thread.substring(0, colonIndex);
@@ -899,9 +867,7 @@ Entry.TextCodingUtil = {};
                 }
 
                 if (restPart) {
-                    var newThread = funcPart
-                        .concat('\n')
-                        .concat(restPart.trim());
+                    var newThread = funcPart.concat('\n').concat(restPart.trim());
                 } else {
                     var newThread = funcPart;
                 }
@@ -920,31 +886,11 @@ Entry.TextCodingUtil = {};
 
         result = threadArr.join('\n');
         return result;
-    };
+    }
 
-    tu.eventBlockSyntaxFilter = function(name) {
-        var result;
-        if (
-            name == 'when_start' ||
-            name == 'when_press_key' ||
-            name == 'when_click_mouse_on' ||
-            name == 'when_click_mouse_off' ||
-            name == 'when_click_object_on' ||
-            name == 'when_click_object_off' ||
-            name == 'when_get_signal' ||
-            name == 'when_start_scene' ||
-            name == 'when_make_clone'
-        ) {
-            name = 'def ' + name;
-            result = name;
-            return name;
-        }
-
-        return result;
-    };
-
-    tu.isEntryEventFunc = function(name) {
-        return name === 'def when_start' ||
+    isEntryEventFunc(name) {
+        return (
+            name === 'def when_start' ||
             name === 'def when_press_key' ||
             name === 'def when_click_mouse_on' ||
             name === 'def when_click_mouse_off' ||
@@ -952,17 +898,15 @@ Entry.TextCodingUtil = {};
             name === 'def when_click_object_off' ||
             name === 'def when_get_signal' ||
             name === 'def when_start_scene' ||
-            name === 'def when_make_clone';
-    };
+            name === 'def when_make_clone'
+        );
+    }
 
-    /////////////////////////////////////////////////////
-    //Important
-    ////////////////////////////////////////////////////
-    tu.isEntryEventFuncByFullText = function(text) {
-        var index = text.indexOf('(');
-        var name = text.substring(0, index);
+    isEntryEventFuncByFullText(text) {
+        const index = text.indexOf('(');
+        const name = text.substring(0, index);
 
-        if (
+        return (
             name == 'def when_start' ||
             name == 'def when_press_key' ||
             name == 'def when_click_mouse_on' ||
@@ -971,10 +915,7 @@ Entry.TextCodingUtil = {};
             name == 'def when_click_object_off' ||
             name == 'def when_get_signal' ||
             name == 'def when_start_scene' ||
-            name == 'def when_make_clone'
-        ) {
-            return true;
-        } else if (
+            name == 'def when_make_clone' ||
             name == 'def entry_event_start' ||
             name == 'def entry_event_key' ||
             name == 'def entry_event_mouse_down' ||
@@ -984,15 +925,10 @@ Entry.TextCodingUtil = {};
             name == 'def entry_event_signal' ||
             name == 'def entry_event_scene_start' ||
             name == 'def entry_event_clone_create'
-        ) {
-            return true;
-        }
+        );
+    }
 
-        return false;
-    };
-
-    tu.eventBlockSyntaxFilter = function(name) {
-        var result;
+    eventBlockSyntaxFilter(name) {
         if (
             name == 'when_start' ||
             name == 'when_press_key' ||
@@ -1002,12 +938,7 @@ Entry.TextCodingUtil = {};
             name == 'when_click_object_off' ||
             name == 'when_get_signal' ||
             name == 'when_start_scene' ||
-            name == 'when_make_clone'
-        ) {
-            name = 'def ' + name;
-            result = name;
-            return name;
-        } else if (
+            name == 'when_make_clone' ||
             name == 'entry_event_start' ||
             name == 'entry_event_key' ||
             name == 'entry_event_mouse_down' ||
@@ -1018,16 +949,13 @@ Entry.TextCodingUtil = {};
             name == 'entry_event_scene_start' ||
             name == 'entry_event_clone_create'
         ) {
-            name = 'def ' + name;
-            result = name;
-            return name;
+            return `def ${name}`;
         }
+        return undefined;
+    }
 
-        return result;
-    };
-
-    tu.isEntryEventFuncName = function(name) {
-        if (
+    isEntryEventFuncName(name) {
+        return (
             name == 'when_start' ||
             name == 'when_press_key' ||
             name == 'when_click_mouse_on' ||
@@ -1036,10 +964,7 @@ Entry.TextCodingUtil = {};
             name == 'when_click_object_off' ||
             name == 'when_get_signal' ||
             name == 'when_start_scene' ||
-            name == 'when_make_clone'
-        ) {
-            return true;
-        } else if (
+            name == 'when_make_clone' ||
             name == 'entry_event_start' ||
             name == 'entry_event_key' ||
             name == 'entry_event_mouse_down' ||
@@ -1049,15 +974,11 @@ Entry.TextCodingUtil = {};
             name == 'entry_event_signal' ||
             name == 'entry_event_scene_start' ||
             name == 'entry_event_clone_create'
-        ) {
-            return true;
-        }
+        );
+    }
 
-        return false;
-    };
-
-    tu.isEntryEventFuncByType = function(type) {
-        if (
+    isEntryEventFuncByType(type) {
+        return (
             type == 'when_run_button_click' ||
             type == 'when_some_key_pressed' ||
             type == 'mouse_clicked' ||
@@ -1067,31 +988,25 @@ Entry.TextCodingUtil = {};
             type == 'when_message_cast' ||
             type == 'when_scene_start' ||
             type == 'when_clone_start'
-        ) {
-            return true;
-        }
-        return false;
-    };
-    /////////////////////////////////////////////////////
-    //Important
-    ////////////////////////////////////////////////////
+        );
+    }
 
-    tu.isEntryEventFuncNameWithParam = function(name) {
-        var lastIndex = name.lastIndexOf('_');
+    isEntryEventFuncNameWithParam(name) {
+        const lastIndex = name.lastIndexOf('_');
 
         if (lastIndex > 0) {
-            var preText = name.substring(0, lastIndex);
+            const preText = name.substring(0, lastIndex);
             if (preText == 'when_press_key' || preText == 'when_get_signal') {
                 return true;
             }
         }
 
         return false;
-    };
+    }
 
-    tu.searchFuncDefParam = function(block) {
+    searchFuncDefParam(block) {
         if (block.data.type == 'function_field_label') {
-            var name = block.data.params[0];
+            const name = block.data.params[0];
             this._funcNameQ.enqueue(name);
         }
 
@@ -1100,40 +1015,25 @@ Entry.TextCodingUtil = {};
                 block.data.type == 'function_field_string' ||
                 block.data.type == 'function_field_boolean'
             ) {
-                var param = block.data.params[0].data.type;
+                const param = block.data.params[0].data.type;
                 this._funcParamQ.enqueue(param);
             }
 
-            var result = this.searchFuncDefParam(block.data.params[1]);
-            return result;
+            return this.searchFuncDefParam(block.data.params[1]);
         } else {
             return block;
         }
-    };
+    }
 
-    tu.isEntryEventFuncTypeWithParam = function(block) {
-        if (
-            block.type == 'when_some_key_pressed' ||
-            block.type == 'when_message_cast'
-        )
-            return true;
+    isEntryEventFuncTypeWithParam(block) {
+        return block.type == 'when_some_key_pressed' || block.type == 'when_message_cast';
+    }
 
-        return false;
-    };
+    isEntryEventDesignatedParamName(paramName) {
+        return paramName == 'key' || paramName == 'signal';
+    }
 
-    tu.isEntryEventDesignatedParamName = function(paramName) {
-        var result = false;
-
-        if (paramName == 'key') {
-            result = true;
-        } else if (paramName == 'signal') {
-            result = true;
-        }
-
-        return result;
-    };
-
-    tu.gatherFuncDefParam = function(block) {
+    gatherFuncDefParam(block) {
         if (block && block.data) {
             if (block.data.params[0]) {
                 if (block.data.params[0].data) {
@@ -1145,7 +1045,7 @@ Entry.TextCodingUtil = {};
                         this._funcParamQ.enqueue(param);
                     }
                 } else if (block.data.type == 'function_field_label') {
-                    var name = block.data.params[0];
+                    const name = block.data.params[0];
                     this._funcNameQ.enqueue(name);
                 }
             }
@@ -1165,14 +1065,11 @@ Entry.TextCodingUtil = {};
 
                 if (result.data.params[1]) {
                     if (result.data.params[1].data.params[0].data) {
-                        var param =
-                            result.data.params[1].data.params[0].data.type;
+                        var param = result.data.params[1].data.params[0].data.type;
 
                         if (
-                            result.data.params[1].data.type ==
-                                'function_field_string' ||
-                            result.data.params[1].data.type ==
-                                'function_field_boolean'
+                            result.data.params[1].data.type == 'function_field_string' ||
+                            result.data.params[1].data.type == 'function_field_boolean'
                         ) {
                             this._funcParamQ.enqueue(param);
                         }
@@ -1182,37 +1079,37 @@ Entry.TextCodingUtil = {};
         }
 
         return result;
-    };
+    }
 
-    tu.getLastParam = function(funcBlock) {
+    getLastParam(funcBlock) {
         if (funcBlock && funcBlock.data && funcBlock.data.params[1]) {
-            var result = this.getLastParam(funcBlock.data.params[1]);
+            return this.getLastParam(funcBlock.data.params[1]);
         } else {
             return funcBlock;
         }
+    }
 
-        return result;
-    };
-
-    tu.isFuncContentsMatch = function(
+    isFuncContentsMatch(
         blockFuncContents,
         textFuncStatements,
         paramMap,
         paramInfo,
         currentFuncKey
     ) {
-        var matchFlag = true;
+        let matchFlag = true;
 
         if (textFuncStatements.length != blockFuncContents.length) {
             matchFlag = false;
             return matchFlag;
         }
 
-        for (var i = 0; i < blockFuncContents.length; i++) {
-            if (!matchFlag) break;
+        for (let i = 0; i < blockFuncContents.length; i++) {
+            if (!matchFlag) {
+                break;
+            }
             matchFlag = false;
-            var blockFuncContent = blockFuncContents[i];
-            var textFuncStatement = textFuncStatements[i];
+            const blockFuncContent = blockFuncContents[i];
+            const textFuncStatement = textFuncStatements[i];
 
             if (blockFuncContent && !textFuncStatement) {
                 matchFlag = false;
@@ -1225,90 +1122,78 @@ Entry.TextCodingUtil = {};
             }
 
             if (blockFuncContent._schema && blockFuncContent._schema.template) {
-                var template = blockFuncContent._schema.template;
-                var blockFuncName = template.trim().split(' ')[0];
-                if (blockFuncName == textFuncStatement.funcName)
+                const template = blockFuncContent._schema.template;
+                const blockFuncName = template.trim().split(' ')[0];
+                if (blockFuncName == textFuncStatement.funcName) {
                     var reculsive = true;
-                else var reculsive = false;
+                } else {
+                    var reculsive = false;
+                }
             }
 
-            if (
-                textFuncStatement.type == blockFuncContent.data.type ||
-                reculsive
-            ) {
+            if (textFuncStatement.type == blockFuncContent.data.type || reculsive) {
                 matchFlag = true;
-                if (currentFuncKey != textFuncStatement.type) matchFlag = false;
+                if (currentFuncKey != textFuncStatement.type) {
+                    matchFlag = false;
+                }
 
-                var textFuncStatementParams = textFuncStatement.params;
-                var blockFuncContentParams = blockFuncContent.data.params;
+                let textFuncStatementParams = textFuncStatement.params;
+                let blockFuncContentParams = blockFuncContent.data.params;
                 var cleansingParams = [];
-                if (
-                    textFuncStatementParams == undefined ||
-                    textFuncStatementParams == null
-                )
+                if (textFuncStatementParams == undefined || textFuncStatementParams == null) {
                     textFuncStatementParams = [];
-                if (
-                    blockFuncContentParams == undefined ||
-                    blockFuncContentParams == null
-                )
+                }
+                if (blockFuncContentParams == undefined || blockFuncContentParams == null) {
                     blockFuncContentParams = [];
+                }
 
-                blockFuncContentParams.map(function(
-                    blockFuncContentParam,
-                    index
-                ) {
-                    if (blockFuncContentParam)
+                blockFuncContentParams.map((blockFuncContentParam, index) => {
+                    if (blockFuncContentParam) {
                         cleansingParams.push(blockFuncContentParam);
+                    }
                 });
                 blockFuncContentParams = cleansingParams;
 
                 cleansingParams = [];
-                textFuncStatementParams.map(function(
-                    textFuncStatementParam,
-                    index
-                ) {
-                    if (textFuncStatementParam)
+                textFuncStatementParams.map((textFuncStatementParam, index) => {
+                    if (textFuncStatementParam) {
                         cleansingParams.push(textFuncStatementParam);
+                    }
                 });
                 textFuncStatementParams = cleansingParams;
 
-                if (
-                    textFuncStatementParams.length ==
-                    blockFuncContentParams.length
-                ) {
+                if (textFuncStatementParams.length == blockFuncContentParams.length) {
                     //Statement Param Length Comparison
                     matchFlag = true;
-                    for (var j = 0; j < textFuncStatementParams.length; j++) {
-                        if (!matchFlag) break;
+                    for (let j = 0; j < textFuncStatementParams.length; j++) {
+                        if (!matchFlag) {
+                            break;
+                        }
                         matchFlag = false;
 
                         if (typeof textFuncStatementParams[j] !== 'object') {
-                            if (
-                                textFuncStatementParams[j] ==
-                                blockFuncContentParams[j]
-                            ) {
+                            if (textFuncStatementParams[j] == blockFuncContentParams[j]) {
                                 matchFlag = true;
                             } else {
                                 matchFlag = false;
                             }
                         } else if (textFuncStatementParams[j].name) {
-                            var paramKey = textFuncStatementParams[j].name;
-                            var paramBlockType = paramInfo[paramKey];
+                            const paramKey = textFuncStatementParams[j].name;
+                            const paramBlockType = paramInfo[paramKey];
 
                             if (paramBlockType) {
-                                if (
-                                    blockFuncContentParams[j].data.type ==
-                                    paramBlockType
-                                )
+                                if (blockFuncContentParams[j].data.type == paramBlockType) {
                                     matchFlag = true;
+                                }
                             } else {
                                 if (
                                     textFuncStatementParams[j].params &&
                                     blockFuncContentParams[j].data.params &&
                                     textFuncStatementParams[j].params[0] ==
                                         blockFuncContentParams[j].data.params[0]
-                                )
+                                ) {
                                     matchFlag = true;
+                                }
                             }
                         } else if (
                             textFuncStatementParams[j].type == 'True' ||
@@ -1322,8 +1207,7 @@ Entry.TextCodingUtil = {};
                                     matchFlag = true;
                                 }
                             } else if (
-                                textFuncStatementParams[j].type ==
-                                blockFuncContentParams[j].type
+                                textFuncStatementParams[j].type == blockFuncContentParams[j].type
                             ) {
                                 matchFlag = true;
                             }
@@ -1345,13 +1229,14 @@ Entry.TextCodingUtil = {};
                         textFuncStatement.statements &&
                         textFuncStatement.statements.length != 0
                     ) {
-                        for (var kkk in textFuncStatement.statements)
+                        for (const kkk in textFuncStatement.statements) {
                             matchFlag = this.isFuncContentsMatch(
                                 blockFuncContent.data.statements[kkk]._data,
                                 textFuncStatement.statements[kkk],
                                 paramMap,
                                 paramInfo
                             );
+                        }
                     }
                 } else {
                     matchFlag = false;
@@ -1364,26 +1249,22 @@ Entry.TextCodingUtil = {};
         }
 
         return matchFlag;
-    };
+    }
 
-    tu.isFuncContentsParamsMatch = function(
-        blockFuncContentParam,
-        textFuncStatementParam,
-        paramMap,
-        paramInfo
-    ) {
-        var matchFlag = false;
+    isFuncContentsParamsMatch(blockFuncContentParam, textFuncStatementParam, paramMap, paramInfo) {
+        let matchFlag = false;
 
-        var tfspType = textFuncStatementParam.type;
-        var bfcpType = blockFuncContentParam.data.type;
+        let tfspType = textFuncStatementParam.type;
+        let bfcpType = blockFuncContentParam.data.type;
 
         if (tfspType == 'text') {
             tfspType = 'literal';
         } else if (tfspType == 'number') {
             tfspType = 'literal';
         } else {
-            if (textFuncStatementParam.isParamFromFunc)
+            if (textFuncStatementParam.isParamFromFunc) {
                 tfspType = paramInfo[tfspType];
+            }
         }
 
         if (bfcpType == 'text') {
@@ -1393,25 +1274,20 @@ Entry.TextCodingUtil = {};
         }
 
         if (tfspType == bfcpType) {
-            var textSubParams = textFuncStatementParam.params;
-            //var blockSubParamsUncleansed = blockFuncContentParam.data.params;
-            var blockSubParams = blockFuncContentParam.data.params;
-
-            /*for(var b in blockSubParamsUncleansed) {
-                var blockSubParamUncleansed = blockSubParamsUncleansed[b];
-                if(blockSubParamUncleansed)
-                    blockSubParams.push(blockSubParamUncleansed);
-            }*/
+            const textSubParams = textFuncStatementParam.params;
+            const blockSubParams = blockFuncContentParam.data.params;
 
             if (!textSubParams && !blockSubParams) {
                 matchFlag = true;
             } else if (textSubParams.length == blockSubParams.length) {
                 matchFlag = true;
-                for (var t in textSubParams) {
-                    if (!matchFlag) break;
+                for (const t in textSubParams) {
+                    if (!matchFlag) {
+                        break;
+                    }
                     matchFlag = false;
-                    var textSubParam = textSubParams[t];
-                    var blockSubParam = blockSubParams[t];
+                    const textSubParam = textSubParams[t];
+                    const blockSubParam = blockSubParams[t];
                     if (!textSubParam && !blockSubParam) {
                         matchFlag = true;
                     } else if (typeof textSubParam !== 'object') {
@@ -1419,22 +1295,18 @@ Entry.TextCodingUtil = {};
                             matchFlag = true;
                         }
                     } else if (textSubParam.name) {
-                        var paramKey = textSubParam.name;
-                        var paramBlockType = paramInfo[paramKey];
+                        const paramKey = textSubParam.name;
+                        const paramBlockType = paramInfo[paramKey];
                         if (paramBlockType) {
-                            if (blockSubParam.data.type == paramBlockType)
+                            if (blockSubParam.data.type == paramBlockType) {
                                 matchFlag = true;
+                            }
                         } else {
-                            if (
-                                textSubParam.params[0] ==
-                                blockSubParam.data.params[0]
-                            )
+                            if (textSubParam.params[0] == blockSubParam.data.params[0]) {
                                 matchFlag = true;
+                            }
                         }
-                    } else if (
-                        textSubParam.type == 'True' ||
-                        textSubParam.type == 'False'
-                    ) {
+                    } else if (textSubParam.type == 'True' || textSubParam.type == 'False') {
                         if (blockSubParam.data) {
                             if (textSubParam.type == blockSubParam.data.type) {
                                 matchFlag = true;
@@ -1459,29 +1331,25 @@ Entry.TextCodingUtil = {};
         }
 
         return matchFlag;
-    };
+    }
 
-    tu.isParamBlock = function(block) {
-        var type = block.type;
-        if (
+    isParamBlock(block) {
+        const type = block.type;
+        return (
             type == 'ai_boolean_distance' ||
             type == 'ai_distance_value' ||
             type == 'ai_boolean_object' ||
             type == 'ai_boolean_and'
-        ) {
-            return true;
-        } else {
-            return false;
-        }
-    };
+        );
+    }
 
-    tu.hasBlockInfo = function(data, blockInfo) {
-        var result = false;
-        for (var key in blockInfo) {
-            var info = blockInfo[key];
+    hasBlockInfo(data, blockInfo) {
+        let result = false;
+        for (const key in blockInfo) {
+            const info = blockInfo[key];
             if (key == data.type) {
-                for (var j in info) {
-                    var loc = info[j];
+                for (const j in info) {
+                    const loc = info[j];
                     if (loc.start == data.start && loc.end == data.end) {
                         result = true;
                         break;
@@ -1491,16 +1359,20 @@ Entry.TextCodingUtil = {};
         }
 
         return result;
-    };
+    }
 
-    tu.makeFuncParamBlock = function(targetBlock, paramInfo, blockCount) {
-        var tParams = targetBlock.params;
+    makeFuncParamBlock(targetBlock, paramInfo, blockCount) {
+        const tParams = targetBlock.params;
 
-        for (var i in tParams) {
-            var param = tParams[i];
-            if (!param) continue;
+        for (const i in tParams) {
+            const param = tParams[i];
+            if (!param) {
+                continue;
+            }
 
-            if (typeof param != 'object') continue;
+            if (typeof param != 'object') {
+                continue;
+            }
 
             if (param.type && param.params && param.params.length != 0) {
                 this.makeFuncParamBlock(param, paramInfo, blockCount);
@@ -1533,7 +1405,7 @@ Entry.TextCodingUtil = {};
                 }
             } else if (param.object && param.property) {
                 //self.xx
-                var keyword = param.object.name + '.' + param.property.name;
+                var keyword = `${param.object.name}.${param.property.name}`;
                 Entry.TextCodingError.error(
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
@@ -1544,30 +1416,30 @@ Entry.TextCodingUtil = {};
             }
         }
 
-        var stmts = targetBlock.statements;
+        const stmts = targetBlock.statements;
 
         if (stmts && stmts[0] && stmts[0].length != 0) {
-            var statements0 = stmts[0];
-            for (var s0 in statements0) {
-                var statement0 = statements0[s0];
+            const statements0 = stmts[0];
+            for (const s0 in statements0) {
+                const statement0 = statements0[s0];
                 this.makeFuncParamBlock(statement0, paramInfo, blockCount);
             }
         }
 
         if (stmts && stmts[1] && stmts[1].length != 0) {
-            var statements1 = stmts[1];
-            for (var s1 in statements1) {
-                var statement1 = statements1[s1];
+            const statements1 = stmts[1];
+            for (const s1 in statements1) {
+                const statement1 = statements1[s1];
                 this.makeFuncParamBlock(statement1, paramInfo, blockCount);
             }
         }
-    };
+    }
 
-    tu.updateBlockInfo = function(data, blockInfo) {
-        var infoArr = blockInfo[data.type];
+    updateBlockInfo(data, blockInfo) {
+        const infoArr = blockInfo[data.type];
         if (infoArr && Array.isArray(infoArr) && infoArr.legnth != 0) {
-            for (var i in infoArr) {
-                var info = infoArr[i];
+            for (const i in infoArr) {
+                const info = infoArr[i];
                 if (info.start == data.start && info.end == data.end) {
                     break;
                 } else {
@@ -1587,17 +1459,17 @@ Entry.TextCodingUtil = {};
 
             blockInfo[data.type].push(loc);
         }
-    };
+    }
 
-    tu.assembleRepeatWhileTrueBlock = function(block, syntax) {
+    assembleRepeatWhileTrueBlock(block, syntax) {
         let result = '';
         if (block.data.type === 'repeat_while_true') {
             const blockToken = syntax.split(/(?=:)|[ ]/gi); // space 로 split 하되, : 도 자르지만 토큰에 포함
-            var lastIndex = blockToken.length - 2;
-            var option = blockToken[lastIndex];
+            let lastIndex = blockToken.length - 2;
+            const option = blockToken[lastIndex];
 
             if (option == 'until') {
-                var condition = 'not';
+                const condition = 'not';
                 blockToken.splice(1, 0, condition);
                 lastIndex += 1;
                 blockToken.splice(lastIndex, 1);
@@ -1613,10 +1485,10 @@ Entry.TextCodingUtil = {};
         }
 
         return result;
-    };
+    }
 
-    tu.isJudgementBlock = function(blockType) {
-        if (
+    isJudgementBlock(blockType) {
+        return (
             blockType == 'is_clicked' ||
             blockType == 'is_press_some_key' ||
             blockType == 'reach_something' ||
@@ -1624,15 +1496,11 @@ Entry.TextCodingUtil = {};
             blockType == 'boolean_and' ||
             blockType == 'boolean_or' ||
             blockType == 'boolean_not'
-        ) {
-            return true;
-        }
+        );
+    }
 
-        return false;
-    };
-
-    tu.isCalculationBlock = function(blockType) {
-        if (
+    isCalculationBlock(blockType) {
+        return (
             blockType == 'calc_basic' ||
             blockType == 'calc_rand' ||
             blockType == 'coordinate_mouse' ||
@@ -1651,21 +1519,15 @@ Entry.TextCodingUtil = {};
             blockType == 'index_of_string' ||
             blockType == 'replace_string' ||
             blockType == 'change_string_case'
-        ) {
-            return true;
-        }
+        );
+    }
 
-        return false;
-    };
+    isVariableDeclarationBlock(blockType) {
+        return blockType == 'set_variable';
+    }
 
-    tu.isVariableDeclarationBlock = function(blockType) {
-        if (blockType == 'set_variable') return true;
-
-        return false;
-    };
-
-    tu.isHWParamBlock = function(blockType) {
-        if (
+    isHWParamBlock(blockType) {
+        return (
             blockType == 'hamster_hand_found' ||
             blockType == 'hamster_value' ||
             blockType == 'arduino_get_port_number' ||
@@ -1678,66 +1540,49 @@ Entry.TextCodingUtil = {};
             blockType == 'arduino_ext_get_digital' ||
             blockType == 'arduino_ext_tone_list' ||
             blockType == 'arduino_ext_octave_list'
-        ) {
-            return true;
-        }
+        );
+    }
 
-        return false;
-    };
-
-    tu.isMaterialBlock = function(blockType) {
-        if (
+    isMaterialBlock(blockType) {
+        return (
             blockType == 'get_canvas_input_value' ||
             blockType == 'get_variable' ||
             blockType == 'value_of_index_from_list' ||
             blockType == 'length_of_list' ||
             blockType == 'is_included_in_list'
-        ) {
-            return true;
-        }
+        );
+    }
 
-        return false;
-    };
-
-    tu.jsAdjustSyntax = function(block, syntax) {
-        var result = '';
+    jsAdjustSyntax(block, syntax) {
+        let result = '';
         if (block.data.type == 'ai_boolean_distance') {
             var tokens = syntax.split(' ');
             var firstParam = tokens[0].split('_');
             var value = firstParam[1];
-            firstParam[1] = firstParam[1].substring(
-                1,
-                firstParam[1].length - 1
-            );
+            firstParam[1] = firstParam[1].substring(1, firstParam[1].length - 1);
             firstParam[1] = firstParam[1].toLowerCase();
             firstParam = firstParam.join('_');
             var secondParam = tokens[1];
             secondParam = this.bTojBinaryOperatorConvertor(secondParam);
             var thirdParam = tokens[2];
 
-            result = firstParam + ' ' + secondParam + ' ' + thirdParam;
+            result = `${firstParam} ${secondParam} ${thirdParam}`;
         } else if (block.data.type == 'ai_boolean_object') {
             var tokens = syntax.split(' ');
             var firstParam = tokens[0].split('_');
             var value = firstParam[1];
-            firstParam[1] = firstParam[1].substring(
-                1,
-                firstParam[1].length - 1
-            );
+            firstParam[1] = firstParam[1].substring(1, firstParam[1].length - 1);
             firstParam[1] = firstParam[1].toLowerCase();
             firstParam = firstParam.join('_');
             var secondParam = tokens[1];
             var thirdParam = tokens[2];
 
-            result = firstParam + ' ' + secondParam + ' ' + thirdParam;
+            result = `${firstParam} ${secondParam} ${thirdParam}`;
         } else if (block.data.type == 'ai_distance_value') {
             var tokens = syntax.split(' ');
             var firstParam = tokens[0].split('_');
             var value = firstParam[1];
-            firstParam[1] = firstParam[1].substring(
-                1,
-                firstParam[1].length - 1
-            );
+            firstParam[1] = firstParam[1].substring(1, firstParam[1].length - 1);
             firstParam[1] = firstParam[1].toLowerCase();
             firstParam = firstParam.join('_');
 
@@ -1747,10 +1592,10 @@ Entry.TextCodingUtil = {};
         }
 
         return result;
-    };
+    }
 
-    tu.bTojBinaryOperatorConvertor = function(operator) {
-        var result;
+    bTojBinaryOperatorConvertor(operator) {
+        let result;
         switch (operator) {
             case "'BIGGER'":
                 result = '>';
@@ -1770,10 +1615,10 @@ Entry.TextCodingUtil = {};
         }
 
         return result;
-    };
+    }
 
-    tu.jTobBinaryOperatorConvertor = function(operator) {
-        var result;
+    jTobBinaryOperatorConvertor(operator) {
+        let result;
         switch (operator) {
             case '>':
                 result = 'BIGGER';
@@ -1793,17 +1638,15 @@ Entry.TextCodingUtil = {};
         }
 
         return result;
-    };
+    }
 
-    tu.radarVariableConvertor = function(variable) {
-        var items = variable.split('_');
-        var result = items[1].toUpperCase();
+    radarVariableConvertor(variable) {
+        const items = variable.split('_');
+        return items[1].toUpperCase();
+    }
 
-        return result;
-    };
-
-    tu.tTobDropdownValueConvertor = function(value) {
-        var result;
+    tTobDropdownValueConvertor(value) {
+        let result;
         if (value == 'stone') {
             result = 'OBSTACLE';
         } else if (value == 'wall') {
@@ -1815,72 +1658,85 @@ Entry.TextCodingUtil = {};
         }
 
         return result;
-    };
+    }
 
-    tu.canConvertTextModeForOverlayMode = function(convertingMode) {
-        var message;
-        var oldMode = Entry.getMainWS().oldMode;
+    canConvertTextModeForOverlayMode(convertingMode) {
+        let message;
+        const oldMode = Entry.getMainWS().oldMode;
 
         if (
             oldMode == Entry.Workspace.MODE_OVERLAYBOARD &&
             convertingMode == Entry.Workspace.MODE_VIMBOARD
         ) {
-            message =
-                Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_EDITOR];
+            message = Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_EDITOR];
             return message;
         }
 
         return message;
-    };
+    }
 
-    tu.isNamesIncludeSpace = function() {
+    isNamesIncludeSpace() {
         const vc = Entry.variableContainer;
-        if (!vc) return;
+        if (!vc) {
+            return;
+        }
 
         const hasWhiteSpace = (targets, message) => {
             const result = {
-                message : undefined,
-                type : 'error'
+                message: undefined,
+                type: 'error',
             };
 
             for (let i = 0; i < targets.length; i++) {
-                if (/ /.test(targets[i].name_)){
+                if (/ /.test(targets[i].name_)) {
                     result.message = message;
                     return result;
                 }
             }
         };
 
-        return hasWhiteSpace(vc.lists_ || [] , Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT]) ||
-            hasWhiteSpace(vc.variables_ || [] , Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT]);
-    };
+        return (
+            hasWhiteSpace(
+                vc.lists_ || [],
+                Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT]
+            ) ||
+            hasWhiteSpace(
+                vc.variables_ || [],
+                Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT]
+            )
+        );
+    }
 
     /**
      * TODO 18년 9월자 배포(10/4) 일 임시 코드입니다. 차후 수정 필수입니다.
      * https://oss.navercorp.com/entry/Entry/issues/9155 링크 참조
      * @returns {{message: string, type: string} || undefined}
      */
-    tu.hasExpansionBlocks = function() {
+    hasExpansionBlocks() {
         const vc = Entry.variableContainer;
-        if (!vc) return;
+        if (!vc) {
+            return;
+        }
 
         const activatedExpansionBlocks = Entry.expansionBlocks;
 
         if (activatedExpansionBlocks.length > 0) {
             return {
-                message : Lang.TextCoding[Entry.TextCodingError.ALERT_API_NO_SUPPORT],
-                type : 'error'
+                message: Lang.TextCoding[Entry.TextCodingError.ALERT_API_NO_SUPPORT],
+                type: 'error',
             };
         }
-    };
+    }
 
-    tu.validateVariableToPython = function() {
+    validateVariableToPython() {
         return this.isNamesIncludeSpace() || this.isNameIncludeNotValidChar();
-    };
+    }
 
-    tu.validateFunctionToPython = function() {
+    validateFunctionToPython() {
         const vc = Entry.variableContainer;
-        if(!vc) return;
+        if (!vc) {
+            return;
+        }
 
         const ERROR_LANG = Lang.TextCoding;
         const ERROR = Entry.TextCodingError;
@@ -1888,24 +1744,26 @@ Entry.TextCodingUtil = {};
         const FIELD_MULTI = ERROR_LANG[ERROR.ALERT_FUNCTION_NAME_FIELD_MULTI];
         const HAS_BOOLEAN = ERROR_LANG[ERROR.ALERT_FUNCTION_HAS_BOOLEAN];
         const result = {
-            message : undefined,
-            type : 'error'
+            message: undefined,
+            type: 'error',
         };
 
         const targets = vc.functions_ || {};
 
-        for (let i in targets) {
+        for (const i in targets) {
             let paramBlock = targets[i].content.getEventMap('funcDef')[0];
             paramBlock = paramBlock && paramBlock.params[0];
-            if (!paramBlock) continue;
+            if (!paramBlock) {
+                continue;
+            }
 
             // 함수 파라미터의 첫 값이 이름이어야 한다.
-            if (paramBlock.type !== 'function_field_label'){
+            if (paramBlock.type !== 'function_field_label') {
                 result.message = DISORDER;
                 return result;
             }
 
-            const {params} = paramBlock;
+            const { params } = paramBlock;
 
             // 인자가 하나이상 존재하면 함수명에 공백이 허용되고, 함수명만 존재하면 공백을 허용하지 않는다.
             if (this.hasFunctionFieldLabel(params[1])) {
@@ -1918,36 +1776,34 @@ Entry.TextCodingUtil = {};
                 return result;
             }
         }
-    };
+    }
 
-    tu.isNameIncludeSpace = function(name, type) {
-        if (!/ /.test(name)) return false;
+    isNameIncludeSpace(name, type) {
+        if (!/ /.test(name)) {
+            return false;
+        }
 
         if (type == 'variable') {
-            return Lang.TextCoding[
-                Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT_ADD_CHANGE
-            ];
+            return Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT_ADD_CHANGE];
         } else if (type == 'list') {
-            return Lang.TextCoding[
-                Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT_ADD_CHANGE
-            ];
+            return Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT_ADD_CHANGE];
         } else if (type == 'function') {
-            return Lang.TextCoding[
-                Entry.TextCodingError.ALERT_FUNCTION_NAME_EMPTY_TEXT_ADD_CHANGE
-            ];
+            return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_EMPTY_TEXT_ADD_CHANGE];
         }
 
         return false;
-    };
+    }
 
-    tu.isNameIncludeNotValidChar = function() {
+    isNameIncludeNotValidChar() {
         const vc = Entry.variableContainer;
-        if (!vc) return;
+        if (!vc) {
+            return;
+        }
 
         const validateList = (targets, errorSuffix) => {
             const result = {
-                message : undefined,
-                type : 'error'
+                message: undefined,
+                type: 'error',
             };
 
             for (let i = 0; i < targets.length; i++) {
@@ -1959,31 +1815,44 @@ Entry.TextCodingUtil = {};
             }
         };
 
-        return validateList(vc.variables_ || [] , 'v') ||
-            validateList(vc.lists_ || [] , 'l');
-    };
+        return validateList(vc.variables_ || [], 'v') || validateList(vc.lists_ || [], 'l');
+    }
 
-    tu.hasFunctionFieldLabel = function(fBlock) {
-        if (!fBlock || !fBlock.data) return;
-        if (fBlock.data.type == 'function_field_label') return true;
+    hasFunctionFieldLabel(fBlock) {
+        if (!fBlock || !fBlock.data) {
+            return;
+        }
+        if (fBlock.data.type == 'function_field_label') {
+            return true;
+        }
 
-        var params = fBlock.data.params;
+        const params = fBlock.data.params;
         if (params[0]) {
             var type = params[0].data.type;
-            if (type == 'function_field_label') return true;
-            if (params[0].data.params)
-                if (this.hasFunctionFieldLabel(params[0])) return true;
+            if (type == 'function_field_label') {
+                return true;
+            }
+            if (params[0].data.params) {
+                if (this.hasFunctionFieldLabel(params[0])) {
+                    return true;
+                }
+            }
         }
 
         if (params[1]) {
             var type = params[1].data.type;
-            if (type == 'function_field_label') return true;
-            if (params[1].data.params)
-                if (this.hasFunctionFieldLabel(params[1])) return true;
+            if (type == 'function_field_label') {
+                return true;
+            }
+            if (params[1].data.params) {
+                if (this.hasFunctionFieldLabel(params[1])) {
+                    return true;
+                }
+            }
         }
 
         return false;
-    };
+    }
 
     /**
      * 함수 인자에 판단형 파라미터가 존재하는지 찾는다.
@@ -1991,27 +1860,31 @@ Entry.TextCodingUtil = {};
      * @param fBlock 함수명이 포함되지 않은 functionBlock 목록
      * @returns {Boolean} 판단형 파라미터가 존재하는 경우 true, 존재하지 않는 경우 false
      */
-    tu.hasFunctionBooleanField = function(fBlock) {
-        if (!fBlock || !fBlock.data) return false;
-        const {data} = fBlock;
-        return data.type === 'function_field_boolean' || this.hasFunctionBooleanField(data.params[1]);
-    };
+    hasFunctionBooleanField(fBlock) {
+        if (!fBlock || !fBlock.data) {
+            return false;
+        }
+        const { data } = fBlock;
+        return (
+            data.type === 'function_field_boolean' || this.hasFunctionBooleanField(data.params[1])
+        );
+    }
 
-    tu.makeExpressionStatementForEntryEvent = function(calleName, arg) {
-        var expressionStatement = {};
+    makeExpressionStatementForEntryEvent(calleeName, arg) {
+        const expressionStatement = {};
 
-        var type = 'ExpressionStatement';
-        var expression = {};
+        const type = 'ExpressionStatement';
+        const expression = {};
 
         expression.type = 'CallExpression';
 
-        var callee = {};
-        callee.name = calleName;
+        const callee = {};
+        callee.name = calleeName;
         callee.type = 'Identifier';
         expression.callee = callee;
 
-        var args = [];
-        var argument = {};
+        const args = [];
+        const argument = {};
         argument.type = 'Literal';
         argument.value = arg;
         args.push(argument);
@@ -2021,10 +1894,10 @@ Entry.TextCodingUtil = {};
         expressionStatement.type = type;
 
         return expressionStatement;
-    };
+    }
 
-    tu.setMathParams = function(propertyName, params) {
-        var optionParam;
+    setMathParams(propertyName, params) {
+        let optionParam;
 
         if (propertyName == 'pow') {
             optionParam = 'square';
@@ -2074,95 +1947,92 @@ Entry.TextCodingUtil = {};
         }
 
         return optionParam;
-    };
+    }
 
-    tu.isMathExpression = function(text) {
-        var textTokens = text.split('(');
-        var textName = textTokens[0];
+    isMathExpression(text) {
+        const textTokens = text.split('(');
+        const textName = textTokens[0];
+        return textName == 'Entry.math_operation';
+    }
 
-        if (textName == 'Entry.math_operation') return true;
-
-        return false;
-    };
-
-    tu.makeMathExpression = function(text) {
-        var result = text;
-        var textTokens = text.split('(');
-        var paramsParts = textTokens[1];
-        var paramsTokens = paramsParts.split(',');
-        var mathValue = paramsTokens[0];
-        var mathOption = paramsTokens[1];
-        var mathProperty;
+    makeMathExpression(text) {
+        let result = text;
+        const textTokens = text.split('(');
+        const paramsParts = textTokens[1];
+        const paramsTokens = paramsParts.split(',');
+        const mathValue = paramsTokens[0];
+        let mathOption = paramsTokens[1];
+        let mathProperty;
 
         mathOption = mathOption.substring(2, mathOption.length - 2).trim();
 
         if (mathOption == 'square') {
             mathProperty = 'pow';
-            var mathText = 'math' + '.' + mathProperty;
-            result = mathText + '(' + mathValue + ')';
+            var mathText = `${'math' + '.'}${mathProperty}`;
+            result = `${mathText}(${mathValue})`;
         } else if (mathOption == 'root') {
             mathProperty = 'sqrt';
-            var mathText = 'math' + '.' + mathProperty;
-            result = mathText + '(' + mathValue + ')';
+            var mathText = `${'math' + '.'}${mathProperty}`;
+            result = `${mathText}(${mathValue})`;
         } else if (mathOption == 'sin') {
             mathProperty = 'sin';
-            var mathText = 'math' + '.' + mathProperty;
-            result = mathText + '(' + mathValue + ')';
+            var mathText = `${'math' + '.'}${mathProperty}`;
+            result = `${mathText}(${mathValue})`;
         } else if (mathOption == 'cos') {
             mathProperty = 'cos';
-            var mathText = 'math' + '.' + mathProperty;
-            result = mathText + '(' + mathValue + ')';
+            var mathText = `${'math' + '.'}${mathProperty}`;
+            result = `${mathText}(${mathValue})`;
         } else if (mathOption == 'tan') {
             mathProperty = 'tan';
-            var mathText = 'math' + '.' + mathProperty;
-            result = mathText + '(' + mathValue + ')';
+            var mathText = `${'math' + '.'}${mathProperty}`;
+            result = `${mathText}(${mathValue})`;
         } else if (mathOption == 'asin_radian') {
             mathProperty = 'asin';
-            var mathText = 'math' + '.' + mathProperty;
-            result = mathText + '(' + mathValue + ')';
+            var mathText = `${'math' + '.'}${mathProperty}`;
+            result = `${mathText}(${mathValue})`;
         } else if (mathOption == 'acos_radian') {
             mathProperty = 'acos';
-            var mathText = 'math' + '.' + mathProperty;
-            result = mathText + '(' + mathValue + ')';
+            var mathText = `${'math' + '.'}${mathProperty}`;
+            result = `${mathText}(${mathValue})`;
         } else if (mathOption == 'atan_radian') {
             mathProperty = 'atan';
-            var mathText = 'math' + '.' + mathProperty;
-            result = mathText + '(' + mathValue + ')';
+            var mathText = `${'math' + '.'}${mathProperty}`;
+            result = `${mathText}(${mathValue})`;
         } else if (mathOption == 'ln') {
             mathProperty = 'log';
-            var mathText = 'math' + '.' + mathProperty;
-            result = mathText + '(' + mathValue + ')';
+            var mathText = `${'math' + '.'}${mathProperty}`;
+            result = `${mathText}(${mathValue})`;
         } else if (mathOption == 'log') {
             mathProperty = 'log10';
-            var mathText = 'math' + '.' + mathProperty;
-            result = mathText + '(' + mathValue + ')';
+            var mathText = `${'math' + '.'}${mathProperty}`;
+            result = `${mathText}(${mathValue})`;
         } else if (mathOption == 'floor') {
             mathProperty = 'floor';
-            var mathText = 'math' + '.' + mathProperty;
-            result = mathText + '(' + mathValue + ')';
+            var mathText = `${'math' + '.'}${mathProperty}`;
+            result = `${mathText}(${mathValue})`;
         } else if (mathOption == 'ceil') {
             mathProperty = 'ceil';
-            var mathText = 'math' + '.' + mathProperty;
-            result = mathText + '(' + mathValue + ')';
+            var mathText = `${'math' + '.'}${mathProperty}`;
+            result = `${mathText}(${mathValue})`;
         } else if (mathOption == 'round') {
             mathProperty = 'round';
-            var mathText = 'math' + '.' + mathProperty;
-            result = mathText + '(' + mathValue + ')';
+            var mathText = `${'math' + '.'}${mathProperty}`;
+            result = `${mathText}(${mathValue})`;
         } else if (mathOption == 'factorial') {
             mathProperty = 'factorial';
-            var mathText = 'math' + '.' + mathProperty;
-            result = mathText + '(' + mathValue + ')';
+            var mathText = `${'math' + '.'}${mathProperty}`;
+            result = `${mathText}(${mathValue})`;
         } else if (mathOption == 'abs') {
             mathProperty = 'fabs';
-            var mathText = 'math' + '.' + mathProperty;
-            result = mathText + '(' + mathValue + ')';
+            var mathText = `${'math' + '.'}${mathProperty}`;
+            result = `${mathText}(${mathValue})`;
         }
 
         return result;
-    };
+    }
 
-    tu.checkName = function(name, target) {
-        var keywords = [
+    checkName(name, target) {
+        const keywords = [
             'and',
             'assert',
             'break',
@@ -2195,151 +2065,157 @@ Entry.TextCodingUtil = {};
             'yield',
         ];
         //숫자 검사
-        var regExp = /^[0-9]$/g;
+        let regExp = /^[0-9]$/g;
 
         if (regExp.test(name[0])) {
-            return Lang.Menus['textcoding_numberError_' + target];
+            return Lang.Menus[`textcoding_numberError_${target}`];
         }
 
         //특수문자 검사
-        var regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-+<>@\#$%&\\\=\(\'\"]/gi;
+        regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-+<>@\#$%&\\\=\(\'\"]/gi;
         if (regExp.test(name)) {
-            return Lang.Menus['textcoding_specialCharError_' + target];
+            return Lang.Menus[`textcoding_specialCharError_${target}`];
         }
 
         //예약어 검사
         if (keywords.includes(name)) {
             return (
-                Lang.Menus['textcoding_bookedError_1' + target] +
+                Lang.Menus[`textcoding_bookedError_1${target}`] +
                 name +
-                Lang.Menus['textcoding_bookedError_2' + target]
+                Lang.Menus[`textcoding_bookedError_2${target}`]
             );
         }
 
         return false;
-    };
+    }
 
-    tu.generateVariablesDeclaration = function() {
-        var result = '';
-        var currentObject = Entry.playground.object;
-        var vc = Entry.variableContainer;
-        if (!vc) return;
+    generateVariablesDeclaration() {
+        let result = '';
+        const currentObject = Entry.playground.object;
+        const vc = Entry.variableContainer;
+        if (!vc) {
+            return;
+        }
         //inspect variables
-        var targets = vc.variables_ || [];
+        const targets = vc.variables_ || [];
 
-        for (var i = targets.length - 1; i >= 0; i--) {
-            var v = targets[i];
-            var name = v.name_;
-            var value = v.value_;
+        for (let i = targets.length - 1; i >= 0; i--) {
+            const v = targets[i];
+            let name = v.name_;
+            let value = v.value_;
 
             if (v.object_) {
                 if (v.object_ == currentObject.id) {
-                    name = 'self.' + name;
-                } else continue;
+                    name = `self.${name}`;
+                } else {
+                    continue;
+                }
             }
 
-            if (typeof value === 'string') value = '"()"'.replace('()', value);
+            if (typeof value === 'string') {
+                value = '"()"'.replace('()', value);
+            }
 
-            result += name + ' = ' + value + '\n';
+            result += `${name} = ${value}\n`;
         }
 
         return result;
-    };
+    }
 
-    tu.generateListsDeclaration = function() {
-        var result = '';
-        var currentObject = Entry.playground.object;
-        var vc = Entry.variableContainer;
-        if (!vc) return;
+    generateListsDeclaration() {
+        let result = '';
+        const currentObject = Entry.playground.object;
+        const vc = Entry.variableContainer;
+        if (!vc) {
+            return;
+        }
 
         //inspect lists
-        var targets = vc.lists_ || [];
+        const targets = vc.lists_ || [];
 
-        for (var i = targets.length - 1; i >= 0; i--) {
-            var l = targets[i];
-            var name = l.name_;
-            var value = '';
-            var lArray = l.array_;
+        for (let i = targets.length - 1; i >= 0; i--) {
+            const l = targets[i];
+            let name = l.name_;
+            let value = '';
+            const lArray = l.array_;
             if (l.object_) {
                 if (l.object_ == currentObject.id) {
-                    name = 'self.' + name;
-                } else continue;
+                    name = `self.${name}`;
+                } else {
+                    continue;
+                }
             }
 
-            for (var va in lArray) {
-                var vItem = lArray[va];
-                var data = vItem.data;
+            for (const va in lArray) {
+                const vItem = lArray[va];
+                let data = vItem.data;
 
-                /*if(Entry.Utils.isNumber(pData)) {
-                    data = pData;
-                    data = parseFloat(data);
-
-                }*/
-
-                if (
-                    isNaN(data) ||
-                    (data.length > 1 && String(data)[0] === '0')
-                ) {
-                    data = '"' + data.replace(/"/gi, '\\"') + '"';
+                if (isNaN(data) || (data.length > 1 && String(data)[0] === '0')) {
+                    data = `"${data.replace(/"/gi, '\\"')}"`;
                 }
 
-                if (typeof data === 'number' || data.trim().length > 0)
+                if (typeof data === 'number' || data.trim().length > 0) {
                     value += data;
+                }
 
-                if (va != lArray.length - 1) value += ', ';
+                if (va != lArray.length - 1) {
+                    value += ', ';
+                }
             }
 
-            result += name + ' = [' + value + ']' + '\n';
+            result += `${name} = [${value}]` + `\n`;
         }
 
         return result;
-    };
+    }
 
-    tu.isVariableNumber = function(id, type) {
-        var currentObject = Entry.playground.object;
-        var entryVariables = Entry.variableContainer.variables_;
-        for (var i in entryVariables) {
-            var entryVariable = entryVariables[i];
+    isVariableNumber(id, type) {
+        const currentObject = Entry.playground.object;
+        const entryVariables = Entry.variableContainer.variables_;
+        for (const i in entryVariables) {
+            const entryVariable = entryVariables[i];
             if (type == 'global') {
                 if (entryVariable.object_ === null && entryVariable.id_ == id) {
-                    if (Entry.Utils.isNumber(entryVariable.value_)) return true;
+                    if (Entry.Utils.isNumber(entryVariable.value_)) {
+                        return true;
+                    }
                 }
             } else if (type == 'local') {
-                if (
-                    entryVariable.object_ === currentObject.id &&
-                    entryVariable.id_ == id
-                ) {
-                    if (Entry.Utils.isNumber(entryVariable.value_)) return true;
+                if (entryVariable.object_ === currentObject.id && entryVariable.id_ == id) {
+                    if (Entry.Utils.isNumber(entryVariable.value_)) {
+                        return true;
+                    }
                 }
             }
         }
 
         return false;
-    };
+    }
 
-    tu.generateForStmtIndex = function(index, str) {
+    generateForStmtIndex(index, str) {
         str = str || '';
-        var ref = ['i', 'j', 'k'];
-        var quotient = Math.floor(index / 3);
-        var remainder = index % 3;
+        const ref = ['i', 'j', 'k'];
+        const quotient = Math.floor(index / 3);
+        const remainder = index % 3;
 
         str = ref[remainder] + str;
 
-        if (quotient) return this.generateForStmtIndex(quotient - 1, str);
-        else return str;
-    };
+        if (quotient) {
+            return this.generateForStmtIndex(quotient - 1, str);
+        } else {
+            return str;
+        }
+    }
 
-    tu.isExpressionLiteral = function(component, syntax) {
+    isExpressionLiteral(component, syntax) {
         switch (component.type) {
             case 'CallExpression':
                 if (component.callee.type === 'MemberExpression') {
-                    var calleeName = component.callee.property.name;
+                    let calleeName = component.callee.property.name;
                     calleeName = syntax['%2'][calleeName];
                     if (calleeName) {
-                        var key = calleeName.key;
-                        return (
-                            Entry.block[key].skeleton === 'basic_string_field'
-                        );
+                        const key = calleeName.key;
+                        return Entry.block[key].skeleton === 'basic_string_field';
                     }
                 }
                 break;
@@ -2347,14 +2223,16 @@ Entry.TextCodingUtil = {};
                 return true;
         }
         return false;
-    };
+    }
 
-    tu.isNameInEntryData = function(name, object) {
+    isNameInEntryData(name, object) {
         return (
             this.isGlobalVariableExisted(name) ||
             this.isLocalVariableExisted(name, object) ||
             this.isGlobalListExisted(name) ||
             this.isLocalListExisted(name)
         );
-    };
-})(Entry.TextCodingUtil);
+    }
+}
+
+Entry.TextCodingUtil = new TextCodingUtil();
