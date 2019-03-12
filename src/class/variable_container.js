@@ -1069,7 +1069,7 @@ Entry.VariableContainer = class VariableContainer {
         if (ws && ws.overlayModefrom == Entry.Workspace.MODE_VIMBOARD) {
             if (func && func.description) {
                 const funcName = func.description.substring(1, func.description.length - 1);
-                const alertMsg = Entry.TextCodingUtil.isNameIncludeSpace(funcName, 'function');
+                const alertMsg = Entry.TextCodingUtil.validateNameIncludeSpace(funcName, 'function');
                 if (alertMsg) {
                     entrylms.alert(alertMsg);
                     Entry.Func.cancelEdit();
@@ -1149,7 +1149,7 @@ Entry.VariableContainer = class VariableContainer {
         const name = panel.view.name.value.trim();
 
         if (Entry.isTextMode) {
-            const alertMsg = Entry.TextCodingUtil.isNameIncludeSpace(name, type);
+            const alertMsg = Entry.TextCodingUtil.validateNameIncludeSpace(name, type);
             if (alertMsg) {
                 entrylms.alert(alertMsg);
                 this.resetVariableAddPanel(type);
@@ -1224,7 +1224,7 @@ Entry.VariableContainer = class VariableContainer {
         }
 
         if (Entry.isTextMode) {
-            const alertMsg = Entry.TextCodingUtil.isNameIncludeSpace(name, 'variable');
+            const alertMsg = Entry.TextCodingUtil.validateNameIncludeSpace(name, 'variable');
             if (alertMsg) {
                 entrylms.alert(alertMsg);
                 variable.listElement.nameField.value = variable.name_;
@@ -1261,7 +1261,7 @@ Entry.VariableContainer = class VariableContainer {
         }
 
         if (Entry.isTextMode) {
-            const alertMsg = Entry.TextCodingUtil.isNameIncludeSpace(name, 'list');
+            const alertMsg = Entry.TextCodingUtil.validateNameIncludeSpace(name, 'list');
             if (alertMsg) {
                 entrylms.alert(alertMsg);
                 list.listElement.nameField.value = list.name_;

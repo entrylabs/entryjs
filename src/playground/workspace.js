@@ -175,7 +175,7 @@ Entry.Workspace = class Workspace {
         switch (this.mode) {
             case WORKSPACE.MODE_VIMBOARD: {
                 const alertMessage =
-                    Util.validateVariableToPython() ||
+                    Util.validateVariableAndListToPython() ||
                     Util.validateFunctionToPython() ||
                     Util.hasExpansionBlocks();
 
@@ -416,8 +416,11 @@ Entry.Workspace = class Workspace {
                     return;
                 }
             }
-            
-            const isBlockCodeView = Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD && (Entry.playground.getViewMode() === 'code' || Entry.playground.getViewMode() === 'variable');
+
+            const isBlockCodeView =
+                Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD &&
+                (Entry.playground.getViewMode() === 'code' ||
+                    Entry.playground.getViewMode() === 'variable');
             switch (keyCode) {
                 case 86: //paste
                     if (

@@ -5,7 +5,7 @@ class TextCodingUtil {
     canUsePythonVariables(variables) {
         return variables.every((variable) => {
             const target = variable.variableType === 'variable' ? 'v' : 'l';
-            return !Entry.TextCodingUtil.checkName(variable.name, target);
+            return !Entry.TextCodingUtil.validateName(variable.name, target);
         });
     }
 
@@ -502,38 +502,6 @@ class TextCodingUtil {
         return message;
     }
 
-    isNamesIncludeSpace() {
-        const vc = Entry.variableContainer;
-        if (!vc) {
-            return;
-        }
-
-        const hasWhiteSpace = (targets, message) => {
-            const result = {
-                message: undefined,
-                type: 'error',
-            };
-
-            for (let i = 0; i < targets.length; i++) {
-                if (/ /.test(targets[i].name_)) {
-                    result.message = message;
-                    return result;
-                }
-            }
-        };
-
-        return (
-            hasWhiteSpace(
-                vc.lists_ || [],
-                Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT]
-            ) ||
-            hasWhiteSpace(
-                vc.variables_ || [],
-                Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT]
-            )
-        );
-    }
-
     /**
      * TODO 18년 9월자 배포(10/4) 일 임시 코드입니다. 차후 수정 필수입니다.
      * https://oss.navercorp.com/entry/Entry/issues/9155 링크 참조
@@ -555,94 +523,91 @@ class TextCodingUtil {
         }
     }
 
-    validateVariableToPython() {
-        return this.isNamesIncludeSpace() || this.isNameIncludeNotValidChar();
+    /**
+     * 현재 코드 내 변수, 리스트에 대해 공백/특수문자/예약어/숫자시작 여부를 검사한다.
+     * @return {Object} 에러오브젝트
+     */
+    validateVariableAndListToPython() {
+        const vc = Entry.variableContainer;
+        if (!vc) {
+            return;
+        }
+        return (
+            this.validateNameList(vc.variables_ || [], 'v') ||
+            this.validateNameList(vc.lists_ || [], 'l')
+        );
     }
 
+    validateNameList(targets, errorSuffix) {
+        for (let i = 0; i < targets.length; i++) {
+            const errorMessage = this.validateName(targets[i].name_, errorSuffix);
+            if (errorMessage) {
+                return errorMessage;
+            }
+        }
+    }
+
+    /**
+     * 현재 코드 내 함수에 대해 공백/특수문자/예약어/숫자시작 여부 외에,
+     * 함수명 필드 시작여부 / 함수명 다중 사용여부 / boolean 타입 필드 사용여부를 검사한다.
+     * boolean 은 구조상 파이선으로 변환하면 일반필드가 되어버린다.
+     * @return {Object} 에러 / 경고 오브젝트
+     */
     validateFunctionToPython() {
+        const returnErrorResult = (errorMessage) =>
+            this._generateErrorObject(errorMessage, 'error');
         const vc = Entry.variableContainer;
         if (!vc) {
             return;
         }
 
-        const ERROR_LANG = Lang.TextCoding;
-        const ERROR = Entry.TextCodingError;
-        const DISORDER = ERROR_LANG[ERROR.ALERT_FUNCTION_NAME_DISORDER];
-        const FIELD_MULTI = ERROR_LANG[ERROR.ALERT_FUNCTION_NAME_FIELD_MULTI];
-        const HAS_BOOLEAN = ERROR_LANG[ERROR.ALERT_FUNCTION_HAS_BOOLEAN];
-        const result = {
-            message: undefined,
-            type: 'error',
-        };
+        const {
+            ALERT_FUNCTION_NAME_DISORDER,
+            ALERT_FUNCTION_NAME_FIELD_MULTI,
+            ALERT_FUNCTION_HAS_BOOLEAN,
+        } = Entry.TextCodingError;
+        const DISORDER = Lang.TextCoding[ALERT_FUNCTION_NAME_DISORDER];
+        const FIELD_MULTI = Lang.TextCoding[ALERT_FUNCTION_NAME_FIELD_MULTI];
+        const HAS_BOOLEAN = Lang.TextCoding[ALERT_FUNCTION_HAS_BOOLEAN];
 
         const targets = vc.functions_ || {};
 
-        for (const i in targets) {
-            let paramBlock = targets[i].content.getEventMap('funcDef')[0];
-            paramBlock = paramBlock && paramBlock.params[0];
-            if (!paramBlock) {
+        for (const targetKey in targets) {
+            const funcSchemaBlock = targets[targetKey].content.getEventMap('funcDef')[0];
+            const functionBlock = funcSchemaBlock && funcSchemaBlock.params[0];
+            const { params } = functionBlock;
+            const [functionName, parameterBlock] = params;
+
+            if (!functionBlock) {
                 continue;
             }
 
-            // 함수 파라미터의 첫 값이 이름이어야 한다.
-            if (paramBlock.type !== 'function_field_label') {
-                result.message = DISORDER;
-                return result;
+            // 함수의 첫 값이 함수명필드여야 한다.
+            if (functionBlock.type !== 'function_field_label') {
+                return returnErrorResult(DISORDER);
             }
 
-            const { params } = paramBlock;
+            // 함수명의 특수문자, 예약어, 숫자로 시작됨 여부 검사
+            // 공백검사는 하지 않는다. 공백은 __ 로 치환되기 때문이다.
+            const errorMessageObject =
+                this.validateNameNotStartWithNumber(functionName, 'f') ||
+                this.validateNameNotStartWithSpecials(functionName, 'f') ||
+                this.validateNameIsReservedKeyword(functionName, 'f');
 
-            // 인자가 하나이상 존재하면 함수명에 공백이 허용되고, 함수명만 존재하면 공백을 허용하지 않는다.
-            if (this.hasFunctionFieldLabel(params[1])) {
-                //이름은 처음에만 등장해야한다.
-                result.message = FIELD_MULTI;
-                return result;
-            } else if (this.hasFunctionBooleanField(params[1])) {
-                result.message = HAS_BOOLEAN;
-                result.type = 'warning';
-                return result;
+            if (errorMessageObject) {
+                return errorMessageObject;
+            }
+
+            // 함수명 필드는 여러개 등장할 수 없다.
+            if (this.hasFunctionFieldLabel(parameterBlock)) {
+                return returnErrorResult(FIELD_MULTI);
+            }
+
+            // 'warning' 함수인자에 boolean 타입이 있는 경우 변환시 일반 필드화가 된다.
+            if (this.hasFunctionBooleanField(parameterBlock)) {
+                return this._generateErrorObject(HAS_BOOLEAN, 'warning');
             }
         }
-    }
-
-    isNameIncludeSpace(name, type) {
-        if (!/ /.test(name)) {
-            return false;
-        }
-
-        if (type == 'variable') {
-            return Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT_ADD_CHANGE];
-        } else if (type == 'list') {
-            return Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT_ADD_CHANGE];
-        } else if (type == 'function') {
-            return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_EMPTY_TEXT_ADD_CHANGE];
-        }
-
-        return false;
-    }
-
-    isNameIncludeNotValidChar() {
-        const vc = Entry.variableContainer;
-        if (!vc) {
-            return;
-        }
-
-        const validateList = (targets, errorSuffix) => {
-            const result = {
-                message: undefined,
-                type: 'error',
-            };
-
-            for (let i = 0; i < targets.length; i++) {
-                const errorMessage = this.checkName(targets[i].name_, errorSuffix);
-                if (errorMessage) {
-                    result.message = errorMessage;
-                    return result;
-                }
-            }
-        };
-
-        return validateList(vc.variables_ || [], 'v') || validateList(vc.lists_ || [], 'l');
     }
 
     hasFunctionFieldLabel(fBlock) {
@@ -697,7 +662,88 @@ class TextCodingUtil {
         );
     }
 
-    checkName(name, target) {
+    /**
+     * 예약어 사용여부, 공백 사용여부, 숫자로 시작여부, 특수문자 사용 여부를 검사한다.
+     * @param target{string} 검사할 name
+     * @param errorSuffix{string} l = 리스트, v = 변수, f = 함수
+     * @return {Object || undefined} 에러메세지를 반환하거나 아무것도 반환하지 않는다
+     * @property message{string} 에러메세지
+     * @property type{string} 'error' 고정. 타입이 에러인 메세지 반환
+     */
+    validateName(target, errorSuffix) {
+        //이름엔 공백이 포함될 수 없다.
+        //이름 맨앞에 _ 를 제외한 특수문자가 올 수 없다.
+        //변수명은 예약어가 될 수 없다.
+        const errorMessage = this.validateNameIncludeSpace(target, errorSuffix);
+        if (errorMessage) {
+            return this._generateErrorObject(errorMessage, 'error');
+        }
+
+        //이름 맨앞에 숫자가 올 수 없다.
+        const errorObject =
+            this.validateNameNotStartWithNumber(target, errorSuffix) ||
+            this.validateNameNotStartWithSpecials(target, errorSuffix) ||
+            this.validateNameIsReservedKeyword(target, errorSuffix);
+
+        if (errorObject) {
+            return errorObject;
+        }
+    }
+
+    /**
+     * 공백이 들었는지 검사한다. 외부에서 사용하고 있어서 리턴타입을 변경하지 않았다.
+     * @param name 타겟
+     * @param type variable|v|list|l|function|f 이에 맞춰서 에러메세지가 변경된다.
+     * @return {string|undefined} 에러메세지
+     */
+    validateNameIncludeSpace(name, type) {
+        if (!/ /.test(name)) {
+            return;
+        }
+
+        if (type === 'variable' || type === 'v') {
+            return Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT_ADD_CHANGE];
+        } else if (type === 'list' || type === 'l') {
+            return Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT_ADD_CHANGE];
+        } else if (type === 'function' || type === 'f') {
+            return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_EMPTY_TEXT_ADD_CHANGE];
+        }
+    }
+
+    /**
+     * 이름이 숫자로 시작하는지 검사. 숫자로 시작하는 경우 에러 메세지를 반환한다.
+     * @param name 타겟
+     * @param errorSuffix v|l|f 이에 맞춰서 에러메세지가 변경된다.
+     * @return {{message: string, type: string} | undefined} 에러메세지
+     */
+    validateNameNotStartWithNumber(name, errorSuffix) {
+        //이름 맨앞에 숫자가 올 수 없다.
+        const regExp = /^[0-9]$/g;
+        if (regExp.test(name[0])) {
+            return this._generateErrorObject(
+                Lang.Menus[`textcoding_numberError_${errorSuffix}`],
+                'error'
+            );
+        }
+    }
+
+    /**
+     * 이름이 _ 를 제외한 특수문자로 시작하는지 검사. 해당하는 경우 에러 메세지를 반환한다.
+     * @param name 타겟
+     * @param errorSuffix v|l|f 이에 맞춰서 에러메세지가 변경된다.
+     * @return {{message: string, type: string} | undefined} 에러메세지
+     */
+    validateNameNotStartWithSpecials(name, errorSuffix) {
+        const regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-+<>@\#$%&\\\=\(\'\"]/gi;
+        if (regExp.test(name)) {
+            return this._generateErrorObject(
+                Lang.Menus[`textcoding_specialCharError_${errorSuffix}`],
+                'error'
+            );
+        }
+    }
+
+    validateNameIsReservedKeyword(name, errorSuffix) {
         const keywords = [
             'and',
             'assert',
@@ -729,30 +775,32 @@ class TextCodingUtil {
             'while',
             'with',
             'yield',
+            'None',
         ];
-        //숫자 검사
-        let regExp = /^[0-9]$/g;
 
-        if (regExp.test(name[0])) {
-            return Lang.Menus[`textcoding_numberError_${target}`];
-        }
-
-        //특수문자 검사
-        regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-+<>@\#$%&\\\=\(\'\"]/gi;
-        if (regExp.test(name)) {
-            return Lang.Menus[`textcoding_specialCharError_${target}`];
-        }
-
-        //예약어 검사
+        //변수명은 예약어가 될 수 없다.
         if (keywords.includes(name)) {
-            return (
-                Lang.Menus[`textcoding_bookedError_1${target}`] +
-                name +
-                Lang.Menus[`textcoding_bookedError_2${target}`]
+            return this._generateErrorObject(
+                Lang.Menus[`textcoding_bookedError_1${errorSuffix}`] +
+                    name +
+                    Lang.Menus[`textcoding_bookedError_2${errorSuffix}`],
+                'error'
             );
         }
+    }
 
-        return false;
+    /**
+     * 에러메세지를 만든다. 단순히 오브젝트를 지정하는 것 말고는 하지 않는다.
+     * @param message{string} 에러메세지
+     * @param type{string} error | warning warning 인 경우는 변환은 성공하나, 알림이 발생한다.
+     * @return {{message: string, type: string}}
+     * @private
+     */
+    _generateErrorObject(message, type) {
+        return {
+            message,
+            type,
+        };
     }
 
     generateVariablesDeclaration() {
@@ -847,6 +895,27 @@ class TextCodingUtil {
         } else {
             return str;
         }
+    }
+
+    /**
+     * 함수명 템플릿에서 함수명을 추출한다.
+     * 함수명은 아래의 규칙을 따른다.
+     * - 공백은 __로 치환된다.
+     * - 함수명이 '' 인 경우는 '함수' 로 대체된다.
+     * @param template{string} 함수명 템플릿
+     * @return {string} 치환된 함수
+     */
+    getFunctionNameFromTemplate(template) {
+        if (!template) {
+            return Lang.Workspace.func;
+        }
+
+        const trimmedFunctionName = template.split(/%\d/)[0].trim();
+        if (trimmedFunctionName === '') {
+            return Lang.Workspace.func;
+        }
+
+        return trimmedFunctionName.replace(/ /gi, '__');
     }
 }
 
