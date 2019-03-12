@@ -10,6 +10,7 @@
 import ColorSpoid from '../playground/colorSpoid';
 import { GEHelper } from '../graphicEngine/GEHelper';
 import { GEHandle } from '../graphicEngine/GEHandle';
+import { PIXIAtlasManager } from './pixi/atlas/PIXIAtlasManager';
 
 /**
  * class for a canvas
