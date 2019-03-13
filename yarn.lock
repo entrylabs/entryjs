@@ -744,6 +744,31 @@
   resolved "https://registry.yarnpkg.com/@entrylabs/event/-/event-1.0.1.tgz#f33a58d5f4ae7ffb5fef1ce28575abdaf6b1806e"
   integrity sha512-XxRvDcB92AZiOhEoy5Z9LIgiip4iMxSWeEnJP1zXvBMJRFRSlgR+UdGH28aFQa22jqxzwzXxAZK27ZZ0ioIgQQ==
 
+"@entrylabs/postcss-url@^8.0.1":
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/@entrylabs/postcss-url/-/postcss-url-8.0.1.tgz#81f682d2be52928060b4c545ad3e7ae8a9f17d64"
+  integrity sha512-hNf9s4t5dmexSY3ioMrVx929fQuH6zo8DD9+ALvY1EE04nRTniS48TaXvqS1k5O4fdssw4aksf8Jr4v9n0nxBg==
+  dependencies:
+    mime "^2.3.1"
+    minimatch "^3.0.4"
+    mkdirp "^0.5.0"
+    postcss "^7.0.2"
+    xxhashjs "^0.2.1"
+
+"@entrylabs/tool@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@entrylabs/tool/-/tool-1.1.0.tgz#1cf01fe694f7cb0669489cbb771f9d7b5aa782c1"
+  integrity sha512-iyvkybaSK6vmhGzR4VzdRlu3QmqYwqUbgjhijlgV2UPn5ydp7vy0uDNRP+Lm4Geq/7PpBIEy7GP2E6iVXMtKnQ==
+  dependencies:
+    "@entrylabs/postcss-url" "^8.0.1"
+    axios "^0.18.0"
+    chroma-js "^1.4.0"
+    react-cookies "^0.1.0"
+    react-outside-click-handler "^1.2.2"
+    react-slick "^0.23.2"
+    redux-form "^7.4.2"
+    reselect "^4.0.0"
+
 "@jest/console@^24.3.0":
   version "24.3.0"
   resolved "https://registry.yarnpkg.com/@jest/console/-/console-24.3.0.tgz#7bd920d250988ba0bf1352c4493a48e1cb97671e"
@@ -3007,6 +3032,11 @@ cssom@0.3.x, "cssom@>= 0.3.2 < 0.4.0":
   resolved "https://registry.yarnpkg.com/cssstyle/-/cssstyle-0.3.1.tgz#6da9b4cff1bc5d716e6e5fe8e04fcb1b50a49adf"
   dependencies:
     cssom "0.3.x"
+
+cuint@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/cuint/-/cuint-0.2.2.tgz#408086d409550c2631155619e9fa7bcadc3b991b"
+  integrity sha1-QICG1AlVDCYxFVYZ6fp7ytw7mRs=
 
 custom-event@~1.0.0:
   version "1.0.1"
@@ -10905,6 +10935,13 @@ xregexp@4.0.0:
 xtend@^4.0.0, xtend@~4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/xtend/-/xtend-4.0.1.tgz#a5c6d532be656e23db820efb943a1f04998d63af"
+
+xxhashjs@^0.2.1:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/xxhashjs/-/xxhashjs-0.2.2.tgz#8a6251567621a1c46a5ae204da0249c7f8caa9d8"
+  integrity sha512-AkTuIuVTET12tpsVIQo+ZU6f/qDmKuRUcjaqR+OIvm+aCBsZ95i7UVY5WJ9TMsSaZ0DA2WxoZ4acu0sPH+OKAw==
+  dependencies:
+    cuint "^0.2.2"
 
 y18n@^3.2.1:
   version "3.2.1"
