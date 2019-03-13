@@ -4,9 +4,8 @@
  */
 'use strict';
 
-import { Sortable, ColorPicker, Dropdown } from '@entrylabs/tool';
+import { Sortable, ColorPicker, Dropdown, BackPack } from '@entrylabs/tool';
 import Toast from '../playground/toast';
-import { BackPack } from '@entrylabs/tool';
 import EntryEvent from '@entrylabs/event';
 
 const Entry = require('../entry');
@@ -69,7 +68,7 @@ Entry.Playground = class {
                 .appendTo(this.view_);
             const [mentHead, mentTail = ''] = Lang.Workspace.cannot_edit_click_to_stop.split('.');
             curtainView.innerHTML = `${mentHead}.<br/>${mentTail}`;
-            curtainView.addEventListener('click', function() {
+            curtainView.addEventListener('click', () => {
                 Entry.engine.toggleStop();
             });
             this.curtainView_ = curtainView;
@@ -223,19 +222,16 @@ Entry.Playground = class {
 
         this.backPackButton_ = backPackButton;
         backPackButton.bindOnClick(() => {
-            // console.log('BackPack');
-            // this.backPackView.removeClass('entryRemove');
             Entry.dispatchEvent('openBackPack');
-            // this.toggleCommentButton();
         });
     }
 
     createPackPackView(backPackView) {
         this.backPack = new BackPack({
+            isShow: false,
             data: {
                 items: [],
                 onClose: () => {
-                    console.log('click');
                     Entry.dispatchEvent('closeBackPack');
                 },
                 onRemoveItem: (id) => {
@@ -244,23 +240,56 @@ Entry.Playground = class {
                 onChangeTitle: (id, title) => {
                     Entry.dispatchEvent('changeBackPackTitle', id, title);
                 },
+                onCustomDragEnter: ({ type, value, onDragEnter }) => {
+                    if (Entry.GlobalSvg.isShow) {
+                        const { _view = {} } = Entry.GlobalSvg;
+                        onDragEnter({
+                            type: 'block',
+                            value: _view,
+                        });
+                    }
+                },
+                onDropItem: ({ type, value }) => {
+                    if (type === 'object') {
+                        const object = Entry.container.getObject(value);
+                        object.addStorage();
+                    } else if (type === 'block') {
+                        if (value.addStorage) {
+                            value.addStorage();
+                        }
+                    }
+                },
             },
             container: this.backPackView,
         });
-        this.blockBackPackArea = Entry.createElement('div')
+        this.blockBackPackArea = Entry.Dom('div')
             .addClass('blockBackPackDrop')
             .appendTo(backPackView);
-        this.objectBackPackArea = Entry.createElement('div')
+        this.objectBackPackArea = Entry.Dom('div')
             .addClass('objectBackPackDrop')
             .appendTo(backPackView);
+        const icon = Entry.Dom('div', {
+            class: 'blockBackPackIcon',
+        });
+        const desc = Entry.Dom('div', {
+            class: 'blockBackPackDesc',
+            text: Lang.Workspace.my_storage_block_drop,
+        });
+        const desc2 = Entry.Dom('div', {
+            class: 'blockBackPackDesc',
+            text: Lang.Workspace.my_storage_object_drop,
+        });
+        this.blockBackPackArea.append(icon);
+        this.blockBackPackArea.append(desc);
+        this.objectBackPackArea.append(icon.clone());
+        this.objectBackPackArea.append(desc2);
 
-        console.log(this.backPack, this.backPack.getData('dragType'));
         const { view: blockView } = this.board || {};
         if (blockView) {
             const dom = blockView[0];
             const eventDom = new EntryEvent(dom);
             this.blockBackPackEvent = eventDom;
-            const areaDom = new EntryEvent(this.blockBackPackArea);
+            const areaDom = new EntryEvent(this.blockBackPackArea[0]);
             this.blockBackPackAreaEvent = areaDom;
             areaDom.on(
                 'drop',
@@ -269,7 +298,7 @@ Entry.Playground = class {
                     e.stopPropagation();
                     const id = e.dataTransfer.getData('text');
                     Entry.dispatchEvent('addBackPackToEntry', 'block', id);
-                    $(this.blockBackPackArea).css({
+                    this.blockBackPackArea.css({
                         display: 'none',
                     });
                 },
@@ -279,14 +308,13 @@ Entry.Playground = class {
                 const type = this.backPack.getData('dragType');
                 if (type === 'block') {
                     const { width, height, top, left } = blockView[0].getBoundingClientRect();
-                    $(this.blockBackPackArea).css({
+                    this.blockBackPackArea.css({
                         width: width - 134,
                         height,
                         top,
                         left,
-                        display: 'block',
+                        display: 'flex',
                     });
-                    console.log('enter');
                 }
             });
             areaDom.on('dragover', (e) => {
@@ -295,7 +323,7 @@ Entry.Playground = class {
             areaDom.on('dragleave', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                $(this.blockBackPackArea).css({
+                this.blockBackPackArea.css({
                     display: 'none',
                 });
             });
@@ -308,7 +336,7 @@ Entry.Playground = class {
             const dom = objectView[0];
             const eventDom = new EntryEvent(dom);
             this.objectBackPackEvent = eventDom;
-            const areaDom = new EntryEvent(this.objectBackPackArea);
+            const areaDom = new EntryEvent(this.objectBackPackArea[0]);
             this.objectBackPackAreaEvent = areaDom;
             areaDom.on(
                 'drop',
@@ -317,7 +345,7 @@ Entry.Playground = class {
                     e.stopPropagation();
                     const id = e.dataTransfer.getData('text');
                     Entry.dispatchEvent('addBackPackToEntry', 'object', id);
-                    $(this.objectBackPackArea).css({
+                    this.objectBackPackArea.css({
                         display: 'none',
                     });
                 },
@@ -327,25 +355,22 @@ Entry.Playground = class {
                 const type = this.backPack.getData('dragType');
                 if (type === 'object') {
                     const { width, height, top, left } = objectView[0].getBoundingClientRect();
-                    $(this.objectBackPackArea).css({
-                        width: width,
+                    this.objectBackPackArea.css({
+                        width,
                         height,
                         top,
                         left,
-                        display: 'block',
+                        display: 'flex',
                     });
-                    console.log('enter');
                 }
             });
             areaDom.on('dragover', (e) => {
-                console.log('over');
                 e.preventDefault();
             });
             areaDom.on('dragleave', (e) => {
-                console.log();
                 e.preventDefault();
                 e.stopPropagation();
-                $(this.objectBackPackArea).css({
+                this.objectBackPackArea.css({
                     display: 'none',
                 });
             });
@@ -353,12 +378,15 @@ Entry.Playground = class {
     }
 
     showBackPack(args) {
-        // th;
+        Entry.container.setDraggableObjects(true);
         this.backPack.setData({ ...args });
+        this.backPack.show();
         this.backPackView.removeClass('entryRemove');
     }
 
     hideBackPack() {
+        Entry.container.setDraggableObjects(false);
+        this.backPack.hide();
         this.backPackView.addClass('entryRemove');
     }
 
@@ -536,7 +564,9 @@ Entry.Playground = class {
             'select_link imico_pop_select_arr_down'
         );
         fontLink.bindOnClick(() => {
-            const options = EntryStatic.fonts.filter(font => font.visible).map((font) => [font.name, font]);
+            const options = EntryStatic.fonts
+                .filter((font) => font.visible)
+                .map((font) => [font.name, font]);
             fontLink.addClass('imico_pop_select_arr_up');
             fontLink.removeClass('imico_pop_select_arr_down');
             this.openDropDown(
@@ -713,7 +743,7 @@ Entry.Playground = class {
         fontSizeSlider.appendChild(fontSizeKnob);
         this.fontSizeKnob = fontSizeKnob;
 
-        $(fontSizeKnob).bind('mousedown.fontKnob touchstart.fontKnob', function() {
+        $(fontSizeKnob).bind('mousedown.fontKnob touchstart.fontKnob', () => {
             const resizeOffset = $(fontSizeSlider).offset().left;
 
             const doc = $(document);
@@ -765,7 +795,7 @@ Entry.Playground = class {
         textEditInput.onkeyup = textChangeApply;
         textEditInput.onchange = textChangeApply;
 
-        textEditInput.addEventListener('focusin', function() {
+        textEditInput.addEventListener('focusin', () => {
             textEditInput.prevText = textEditInput.value;
         });
         textEditInput.onblur = function() {
@@ -784,7 +814,7 @@ Entry.Playground = class {
         textEditArea.onkeyup = textChangeApply;
         textEditArea.onchange = textChangeApply;
 
-        textEditArea.addEventListener('focusin', function() {
+        textEditArea.addEventListener('focusin', () => {
             textEditArea.prevText = textEditArea.value;
         });
         textEditArea.onblur = function() {
@@ -850,7 +880,7 @@ Entry.Playground = class {
             const innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner').addClass(
                 'entryPlaygroundAddSoundInner'
             );
-            innerSoundAdd.bindOnClick(function() {
+            innerSoundAdd.bindOnClick(() => {
                 if (!Entry.container || Entry.container.isSceneObjectsExist()) {
                     Entry.do('playgroundClickAddSound');
                 } else {
@@ -1171,12 +1201,14 @@ Entry.Playground = class {
         this.textEditInput.value = text;
         this.textEditArea.value = text;
 
-        const font = EntryStatic.fonts.filter(font => font.visible).find((font) => font.family === entity.getFontName());
+        const font = EntryStatic.fonts
+            .filter((font) => font.visible)
+            .find((font) => font.family === entity.getFontName());
         if (font) {
             $('#entryText #entryTextBoxAttrFontName').text(font.name);
             $('#entryText #entryTextBoxAttrFontName').data('font', font);
         } else {
-            $('#entryText #entryTextBoxAttrFontName').text("");
+            $('#entryText #entryTextBoxAttrFontName').text('');
             $('#entryText #entryTextBoxAttrFontName').data('font', EntryStatic.fonts[0]);
         }
 
@@ -1478,7 +1510,7 @@ Entry.Playground = class {
             }
             that.resizing = true;
             if (Entry.documentMousemove) {
-                listener = Entry.documentMousemove.attach(this, function({ clientX }) {
+                listener = Entry.documentMousemove.attach(this, ({ clientX }) => {
                     if (that.resizing) {
                         Entry.resizeElement({
                             menuWidth: clientX - Entry.interfaceState.canvasWidth,
@@ -1486,7 +1518,7 @@ Entry.Playground = class {
                     }
                 });
             }
-            $(document).bind('mouseup.resizeHandle touchend.resizeHandle', function() {
+            $(document).bind('mouseup.resizeHandle touchend.resizeHandle', () => {
                 $(document).unbind('.resizeHandle');
                 if (listener) {
                     that.resizing = false;
@@ -1551,7 +1583,7 @@ Entry.Playground = class {
         element.picture = picture;
 
         Entry.Utils.disableContextmenu(picture.view);
-        Entry.ContextMenu.onContextmenu(picture.view, function(coordinate) {
+        Entry.ContextMenu.onContextmenu(picture.view, (coordinate) => {
             const options = [
                 {
                     text: Lang.Workspace.context_rename,
@@ -1712,7 +1744,7 @@ Entry.Playground = class {
         element.sound = sound;
 
         Entry.Utils.disableContextmenu(sound.view);
-        Entry.ContextMenu.onContextmenu(sound.view, function(coordinate) {
+        Entry.ContextMenu.onContextmenu(sound.view, (coordinate) => {
             const options = [
                 {
                     text: Lang.Workspace.context_rename,
@@ -1791,7 +1823,7 @@ Entry.Playground = class {
                 soundInstance = createjs.Sound.play(sound.id);
             }
 
-            soundInstance.addEventListener('complete', function() {
+            soundInstance.addEventListener('complete', () => {
                 thumbnailView.removeClass('entryPlaygroundSoundStop');
                 thumbnailView.addClass('entryPlaygroundSoundPlay');
                 isPlaying = false;

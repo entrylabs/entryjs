@@ -191,7 +191,7 @@
     z-index: 1;
 }
 .entryPlaygroundBackPackView {
-    height: 100%;
+    height: calc(100% - 47px);
     display: block;
     right: 0;
     top: 38px;
@@ -205,11 +205,31 @@
     .blockBackPackDrop,
     .objectBackPackDrop {
         position: fixed;
+        display: none;
         top: 0;
         left: 0;
         z-index: 400;
         background-color: rgba(248, 241, 204, 0.9);
         border: 2px dashed #ffc800;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+
+        .blockBackPackIcon {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 11px;
+            .backgroundImage('img_backpack_plus.svg');
+        }
+        .blockBackPackDesc {
+            font-family: NanumGothic;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: -0.1px;
+            white-space: pre;
+            text-align: center;
+            color: #2c313d;
+        }
     }
 }
 
@@ -1322,7 +1342,7 @@
     }
 }
 
-.sortableWidget {
+.sortable {
     height: 100%;
 
     .rcs-custom-scrollbar {

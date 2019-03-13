@@ -216,23 +216,21 @@ Entry.EntryObject = class {
         const thumb = this.thumbnailView_;
         const picture = this.entity.picture;
         const objectType = this.objectType;
-
+        this.thumbUrl = '';
         if (objectType === 'sprite') {
             if (picture.fileurl) {
-                thumb.style.backgroundImage = `url("${picture.fileurl}")`;
+                this.thumbUrl = picture.fileurl;
             } else {
                 const fileName = picture.filename;
-                thumb.style.backgroundImage = `url("${
-                    Entry.defaultPath
-                }/uploads/${fileName.substring(0, 2)}/${fileName.substring(
-                    2,
-                    4
-                )}/thumb/${fileName}.png")`;
+                this.thumbUrl = `${Entry.defaultPath}/uploads/${fileName.substring(
+                    0,
+                    2
+                )}/${fileName.substring(2, 4)}/thumb/${fileName}.png`;
             }
         } else if (objectType === 'textBox') {
-            const textIconPath = `${Entry.mediaFilePath}text_icon.png`;
-            thumb.style.backgroundImage = `url(${textIconPath})`;
+            this.thumbUrl = `${Entry.mediaFilePath}text_icon.png`;
         }
+        thumb.style.backgroundImage = `url(${this.thumbUrl})`;
     }
 
     /**
@@ -756,11 +754,8 @@ Entry.EntryObject = class {
             },
             {
                 text: Lang.Blocks.add_my_storage,
-                callback() {
-                    Entry.dispatchEvent('addStorage', {
-                        type: 'object',
-                        data: object,
-                    });
+                callback: () => {
+                    this.addStorage();
                 },
             },
             {
@@ -773,6 +768,13 @@ Entry.EntryObject = class {
 
         const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
         Entry.ContextMenu.show(options, 'workspace-contextmenu', { x, y });
+    }
+
+    addStorage() {
+        Entry.dispatchEvent('addStorage', {
+            type: 'object',
+            data: this,
+        });
     }
 
     enableContextMenu() {
@@ -1212,7 +1214,11 @@ Entry.EntryObject = class {
         const objectView = Entry.createElement('li', objectId).addClass(
             'entryContainerListElementWorkspace'
         );
-        $(objectView).attr('draggable', true);
+
+        $(objectView).on('dragstart', (e) => {
+            // e.originalEvent.dataTransfer.setDragImage(canvas, 25, 25);
+            e.originalEvent.dataTransfer.setData('text', objectId);
+        });
         const fragment = document.createDocumentFragment();
         fragment.appendChild(objectView);
         // generate context menu
@@ -1230,13 +1236,6 @@ Entry.EntryObject = class {
                 !_.includes(exceptionsForMouseDown, e.target)
             ) {
                 Entry.do('containerSelectObject', objectId);
-            }
-        });
-
-        objectView.addEventListener('mousedown', (e) => {
-            if (Entry.Utils.isRightButton(e)) {
-                e.stopPropagation();
-                this._rightClick(e);
             }
         });
 
@@ -1313,5 +1312,9 @@ Entry.EntryObject = class {
 
     _whenRotateEditable(func, obj) {
         return Entry.Utils.when(() => !(Entry.engine.isState('run') || obj.getLock()), func);
+    }
+
+    setDraggable(isDraggable) {
+        $(this.view_).attr('draggable', isDraggable);
     }
 };

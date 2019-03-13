@@ -35,9 +35,12 @@ Entry.Dom = function(tag, options) {
         dom.addClass(options.class);
     }
     if (options.classes) {
-        options.classes.map(function(className) {
+        options.classes.map((className) => {
             dom.addClass(className);
         });
+    }
+    if (options.text) {
+        dom.text(options.text);
     }
     if (options.src) {
         dom.attr('src', options.src);

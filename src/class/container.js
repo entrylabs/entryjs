@@ -175,7 +175,6 @@ Entry.Container = class Container {
             });
         } else {
             this.sortableListViewWidget = new Sortable({
-                type: 'sortableWidget',
                 data: {
                     height: '100%',
                     sortableTarget: ['entryObjectThumbnailWorkspace'],
@@ -263,6 +262,18 @@ Entry.Container = class Container {
         }
     }
 
+    setDraggableObject(object, isDraggable) {
+        this.isDraggable = isDraggable;
+        object.setDraggable(isDraggable);
+    }
+
+    setDraggableObjects(isDraggable) {
+        this.isDraggable = isDraggable;
+        this.objects_.forEach((object) => {
+            object.setDraggable(isDraggable);
+        });
+    }
+
     /**
      * get Pictures element
      * @param {!String} pictureId
@@ -329,7 +340,6 @@ Entry.Container = class Container {
     addObjectFunc(objectModel, index, isNotRender) {
         delete objectModel.scene;
         const object = new Entry.EntryObject(objectModel);
-
         object.scene = Entry.scene.selectedScene;
 
         let isBackground = objectModel.sprite.category || {};
@@ -355,6 +365,7 @@ Entry.Container = class Container {
             this.updateListView();
             Entry.variableContainer.updateViews();
             Entry.variableContainer.updateList();
+            this.setDraggableObject(object, this.isDraggable);
         }
     }
 

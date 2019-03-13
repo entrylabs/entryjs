@@ -164,10 +164,11 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
                     }
                     this.applyValue(prevValue + value);
                     break;
-                case 'backButtonPressed':
+                case 'backButtonPressed': {
                     const nextValue = prevValue.substring(0, prevValue.length - 1);
                     this.applyValue(_.isEmpty(nextValue) ? 0 : nextValue);
                     break;
+                }
             }
         });
     }
@@ -347,9 +348,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
                 .getRootBlock()
                 .getThread()
                 .view.getFields()
-                .filter((f) => {
-                    return f instanceof FIELD_TEXT_INPUT;
-                });
+                .filter((f) => f instanceof FIELD_TEXT_INPUT);
         }
 
         return this._neighborFields;

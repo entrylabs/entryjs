@@ -627,12 +627,14 @@ Entry.BlockView = class BlockView {
 
             if (!this.isInBlockMenu) {
                 let isFirst = false;
+
                 if (this.dragMode != Entry.DRAG_MODE_DRAG) {
                     this._toGlobalCoordinate(undefined, true);
                     this.dragMode = Entry.DRAG_MODE_DRAG;
                     this.block.getThread().changeEvent.notify();
                     Entry.GlobalSvg.setView(this, workspaceMode);
                     isFirst = true;
+                    this.fromBlockMenu = this.dragInstance && this.dragInstance.isNew;
                 }
 
                 if (this.animating) {
@@ -645,18 +647,27 @@ Entry.BlockView = class BlockView {
                 }
 
                 const dragInstance = this.dragInstance;
-                this.moveBy(
-                    mouseEvent.pageX - dragInstance.offsetX,
-                    mouseEvent.pageY - dragInstance.offsetY,
-                    false,
-                    true
-                );
+                const backPackMode = !this.fromBlockMenu && Entry.playground.backPack.isShow;
+                if (backPackMode) {
+                    Entry.GlobalSvg.position({
+                        left: mouseEvent.pageX - dragInstance.offsetX,
+                        top: mouseEvent.pageY - dragInstance.offsetY,
+                    });
+                } else {
+                    this.moveBy(
+                        mouseEvent.pageX - dragInstance.offsetX,
+                        mouseEvent.pageY - dragInstance.offsetY,
+                        false,
+                        true
+                    );
+                    Entry.GlobalSvg.position();
+                }
+
                 dragInstance.set({
                     offsetX: mouseEvent.pageX,
                     offsetY: mouseEvent.pageY,
                 });
 
-                Entry.GlobalSvg.position();
                 if (!this.originPos) {
                     this.originPos = {
                         x: this.x,
@@ -1104,30 +1115,15 @@ Entry.BlockView = class BlockView {
     }
 
     _setMovable() {
-        this.movable =
-            this.block.isMovable() !== null
-                ? this.block.isMovable()
-                : this._skeleton.movable !== undefined
-                ? this._skeleton.movable
-                : true;
+        this.movable = this.block.isMovable() || this._skeleton.movable || true;
     }
 
     _setReadOnly() {
-        this.readOnly =
-            this.block.isReadOnly() !== null
-                ? this.block.isReadOnly()
-                : this._skeleton.readOnly !== undefined
-                ? this._skeleton.readOnly
-                : false;
+        this.readOnly = this.block.isReadOnly() || this._skeleton.readOnly || false;
     }
 
     _setCopyable() {
-        this.copyable =
-            this.block.isCopyable() !== null
-                ? this.block.isCopyable()
-                : this._skeleton.copyable !== undefined
-                ? this._skeleton.copyable
-                : true;
+        this.copyable = this.block.isCopyable() || this._skeleton.copyable || true;
     }
 
     bumpAway(distance = 15, delay) {
@@ -1438,7 +1434,7 @@ Entry.BlockView = class BlockView {
                 },
             };
 
-            const addBackpack = {
+            const addStorage = {
                 text: Lang.Blocks.add_my_storage,
                 callback() {
                     Entry.dispatchEvent('addStorage', {
@@ -1472,7 +1468,7 @@ Entry.BlockView = class BlockView {
             }
 
             if (!isInBlockMenu) {
-                options = [copyAndPaste, copy, remove, addBackpack, ...options, comment];
+                options = [copyAndPaste, copy, remove, addStorage, ...options, comment];
             }
 
             return options;
@@ -1481,6 +1477,13 @@ Entry.BlockView = class BlockView {
                 return Entry.Utils.isChrome() && Entry.type === 'workspace' && !Entry.isMobile();
             }
         }
+    }
+
+    addStorage() {
+        Entry.dispatchEvent('addStorage', {
+            type: 'block',
+            data: this.block,
+        });
     }
 
     clone() {
