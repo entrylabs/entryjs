@@ -83,7 +83,8 @@ Entry.freearduino.setLanguage = function() {
 Entry.freearduino.getBlocks = function() {
     return {
         freearduino_get_analog_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -121,7 +122,8 @@ Entry.freearduino.getBlocks = function() {
         },
 
         freearduino_get_analog_value_pullup: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -159,7 +161,8 @@ Entry.freearduino.getBlocks = function() {
         },
 
         freearduino_get_analog_mapped_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -266,7 +269,8 @@ Entry.freearduino.getBlocks = function() {
         },
 
         freearduino_get_humidity_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -317,7 +321,8 @@ Entry.freearduino.getBlocks = function() {
         },
 
         freearduino_get_temperature_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -368,7 +373,8 @@ Entry.freearduino.getBlocks = function() {
         },
 
         freearduino_get_distance_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -447,7 +453,9 @@ Entry.freearduino.getBlocks = function() {
         },
 
         freearduino_set_digital_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
+            fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -509,7 +517,8 @@ Entry.freearduino.getBlocks = function() {
         },
 
         freearduino_get_digital_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -559,7 +568,8 @@ Entry.freearduino.getBlocks = function() {
         },
 
         freearduino_get_digital_value_pullup: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -609,7 +619,9 @@ Entry.freearduino.getBlocks = function() {
         },
 
         freearduino_set_pwm_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
+            fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -674,7 +686,9 @@ Entry.freearduino.getBlocks = function() {
 
 
         freearduino_set_servo_angle: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
+            fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -739,7 +753,9 @@ Entry.freearduino.getBlocks = function() {
         },
 
         freearduino_set_motor_run: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
+            fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -798,7 +814,9 @@ Entry.freearduino.getBlocks = function() {
         },
 
         freearduino_set_motor_speed: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
+            fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
             params: [
