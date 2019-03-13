@@ -106,6 +106,7 @@ Entry.freearduino.getBlocks = function() {
             ],
             def: {
                 params: [null],
+                type: 'freearduino_get_analog_value',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -144,6 +145,7 @@ Entry.freearduino.getBlocks = function() {
             ],
             def: {
                 params: [null],
+                type: 'freearduino_get_analog_value_pullup',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -202,6 +204,7 @@ Entry.freearduino.getBlocks = function() {
                         params: [ '0'],
                     }, 
                     null, null, null, null],
+                type: 'freearduino_get_analog_mapped_value',
             },
             paramsKeyMap: {
                 VALUE1: 0,
@@ -299,6 +302,7 @@ Entry.freearduino.getBlocks = function() {
             ],
             def: {
                 params: [null],
+                type: 'freearduino_get_humidity_value',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -350,6 +354,7 @@ Entry.freearduino.getBlocks = function() {
             ],
             def: {
                 params: [null],
+                type: 'freearduino_get_temperature_value',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -428,6 +433,7 @@ Entry.freearduino.getBlocks = function() {
             ],
             def: {
                 params: [null,null],
+                type: 'freearduino_get_distance_value',
             },
             paramsKeyMap: {
                 PORT1: 0,
@@ -495,6 +501,7 @@ Entry.freearduino.getBlocks = function() {
             ],
             def: {
                 params: [null, null, null],
+                type: 'freearduino_set_digital_value',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -547,6 +554,7 @@ Entry.freearduino.getBlocks = function() {
             ],
             def: {
                 params: [null],
+                type: 'freearduino_get_digital_value',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -597,6 +605,7 @@ Entry.freearduino.getBlocks = function() {
             ],
             def: {
                 params: [null],
+                type: 'freearduino_get_digital_value_pullup',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -646,6 +655,7 @@ Entry.freearduino.getBlocks = function() {
             ],
             def: {
                 params: [null, null, null],
+                type: 'freearduino_set_pwm_value',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -724,6 +734,7 @@ Entry.freearduino.getBlocks = function() {
             ],
             def: {
                 params: [null, null, null],
+                type: 'freearduino_set_servo_angle',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -782,6 +793,7 @@ Entry.freearduino.getBlocks = function() {
             ],
             def: {
                 params: [null, null, null],
+                type: 'freearduino_set_motor_run',
             },
             paramsKeyMap: {
                 VALUE1: 0,
@@ -838,6 +850,7 @@ Entry.freearduino.getBlocks = function() {
             ],
             def: {
                 params: [null, null, null],
+                type: 'freearduino_set_motor_speed',
             },
             paramsKeyMap: {
                 VALUE1: 0,
