@@ -710,7 +710,6 @@ Entry.Variable = class Variable {
             } else if (this.type === 'answer') {
                 this._adjustSingleViewPosition();
                 this.textView_.text = this.getName();
-                this._adjustSingleValueViewPosition();
                 if (this.isNumber()) {
                     const v = Number(this.getValue());
                     if (parseInt(this.getValue(), 10) == this.getValue()) {
@@ -726,6 +725,7 @@ Entry.Variable = class Variable {
                 if (this._nameWidth === null) {
                     this._nameWidth = this.textView_.getMeasuredWidth();
                 }
+                this._adjustSingleValueViewPosition();
                 if (this._valueWidth === null) {
                     this._valueWidth = this.valueView_.getMeasuredWidth();
                 }
