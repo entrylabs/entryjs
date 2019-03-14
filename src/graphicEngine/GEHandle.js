@@ -12,8 +12,8 @@ export var GEHandle = function(canvas) {
         throw 'createjs is not founded';
     }
     this.canvas = canvas;
-    this.color = '#e2e2e2';
-    //this.color = "#6BD5FF";
+    this.borderColor = '#e2e2e2';
+    this.knobColor = '#4f80ff';
     this.arrowColor = '#ffb500';
     this.centerColor = '#4f80ff';
     this.rotateKnobColor = '#ffb500';
@@ -81,7 +81,7 @@ export var GEHandle = function(canvas) {
 
     p.toggleResize = function(isEnable) {
         this.resizeEditable = isEnable;
-        for (var i = 0; i < 8; i++) {
+        for (let i = 0; i < 8; i++) {
             this.knobs[i].visible = isEnable;
         }
     };
@@ -150,24 +150,24 @@ export var GEHandle = function(canvas) {
     };
 
     p.createHandle = function() {
-        var handle = this;
-        var container = GEHelper.newContainer();
+        const handle = this;
+        const container = GEHelper.newContainer();
         container.mouseEnabled = true;
         container.mouseChildren = true;
 
         //border
-        var border = GEHelper.newGraphic();
+        const border = GEHelper.newGraphic();
         container.addChild(border);
         this.border = border;
 
         //edge
-        var edge = GEHelper.newGraphic();
+        const edge = GEHelper.newGraphic();
         edge.cursor = 'move';
         edge.mouseEnabled = true;
         GEDragHelper.handleDrag(edge);
 
         edge.on(GEDragHelper.types.DOWN, function(e) {
-            var offset = handle.getEventCoordinate(e);
+            const offset = handle.getEventCoordinate(e);
             offset.x -= handle.x;
             offset.y -= handle.y;
             this.offset = offset;
@@ -175,7 +175,7 @@ export var GEHandle = function(canvas) {
         });
         edge.on(GEDragHelper.types.MOVE, function(e) {
             if (handle.getDraggable()) {
-                var pos = handle.getEventCoordinate(e);
+                const pos = handle.getEventCoordinate(e);
                 pos.x -= this.offset.x;
                 pos.y -= this.offset.y;
                 handle.setX(pos.x);
@@ -183,40 +183,40 @@ export var GEHandle = function(canvas) {
                 handle.dispatchOnChangeEvent();
             }
         });
-        edge.on(GEDragHelper.types.UP, function(e) {
+        edge.on(GEDragHelper.types.UP, (e) => {
             handle.dispatchEditEndEvent();
         });
         container.addChild(edge);
         this.edge = edge;
 
         //rotate knob
-        var rotateKnob = GEHelper.newGraphic();
+        const rotateKnob = GEHelper.newGraphic();
         rotateKnob.mouseEnabled = true;
         GEDragHelper.handleDrag(rotateKnob);
         rotateKnob.cursor = 'crosshair';
-        rotateKnob.on(GEDragHelper.types.DOWN, function(e) {
+        rotateKnob.on(GEDragHelper.types.DOWN, (e) => {
             handle.dispatchEditStartEvent();
         });
-        rotateKnob.on(GEDragHelper.types.MOVE, function(e) {
-            var pos = handle.getEventCoordinate(e);
+        rotateKnob.on(GEDragHelper.types.MOVE, (e) => {
+            const pos = handle.getEventCoordinate(e);
             pos.x -= handle.x;
             pos.y -= handle.y;
-            var rotation = -Math.atan2(pos.x, pos.y) / Math.PI * 180 - 180;
+            const rotation = (-Math.atan2(pos.x, pos.y) / Math.PI) * 180 - 180;
             handle.setRotation(rotation);
             handle.dispatchOnChangeEvent();
         });
-        rotateKnob.on(GEDragHelper.types.UP, function(e) {
+        rotateKnob.on(GEDragHelper.types.UP, (e) => {
             handle.dispatchEditEndEvent();
         });
         container.addChild(rotateKnob);
         container.setChildIndex(rotateKnob, 1);
         this.rotateKnob = rotateKnob;
 
-        var directionArrow = GEHelper.newGraphic();
+        const directionArrow = GEHelper.newGraphic();
         directionArrow.mouseEnabled = true;
         GEDragHelper.handleDrag(directionArrow);
 
-        if(GEHelper.isWebGL) {
+        if (GEHelper.isWebGL) {
             directionArrow.graphics
                 .f(this.arrowColor)
                 .mt(0, -42)
@@ -238,16 +238,16 @@ export var GEHandle = function(canvas) {
                 .es();
         }
 
-        directionArrow.on(GEDragHelper.types.DOWN, function(e) {
+        directionArrow.on(GEDragHelper.types.DOWN, (e) => {
             handle.dispatchEditStartEvent();
         });
-        directionArrow.on(GEDragHelper.types.MOVE, function(e) {
-            var pos = handle.getLocalCoordinate(handle.getEventCoordinate(e));
-            var rotation = -Math.atan2(pos.x, pos.y) / Math.PI * 180 - 180;
+        directionArrow.on(GEDragHelper.types.MOVE, (e) => {
+            const pos = handle.getLocalCoordinate(handle.getEventCoordinate(e));
+            const rotation = (-Math.atan2(pos.x, pos.y) / Math.PI) * 180 - 180;
             handle.setDirection(rotation);
             handle.dispatchOnChangeEvent();
         });
-        directionArrow.on(GEDragHelper.types.UP, function(e) {
+        directionArrow.on(GEDragHelper.types.UP, (e) => {
             handle.dispatchEditEndEvent();
         });
         container.addChild(directionArrow);
@@ -255,26 +255,26 @@ export var GEHandle = function(canvas) {
         this.directionArrow = directionArrow;
 
         // center
-        var centerPoint = GEHelper.newGraphic();
+        const centerPoint = GEHelper.newGraphic();
         centerPoint.mouseEnabled = true;
         GEDragHelper.handleDrag(centerPoint);
 
         centerPoint.graphics
-            .beginFill(this.centerColor)
-            .ss(1, 2, 0)
+            .ss(1.6, 2, 0)
             .s('#FFFFFF')
-            .dc(0, 0, 5, 5);
-        centerPoint.on(GEDragHelper.types.DOWN, function(e) {
+            .beginFill(this.centerColor)
+            .dc(0, 0, 5, 4.4);
+        centerPoint.on(GEDragHelper.types.DOWN, (e) => {
             handle.dispatchEditStartEvent();
         });
-        centerPoint.on(GEDragHelper.types.MOVE, function(e) {
-            var pos = handle.getEventCoordinate(e);
+        centerPoint.on(GEDragHelper.types.MOVE, (e) => {
+            let pos = handle.getEventCoordinate(e);
             pos = handle.getLocalCoordinate(pos);
             handle.setRegX(pos.x);
             handle.setRegY(pos.y);
             handle.dispatchOnChangeEvent();
         });
-        centerPoint.on(GEDragHelper.types.UP, function(e) {
+        centerPoint.on(GEDragHelper.types.UP, (e) => {
             handle.dispatchEditEndEvent();
         });
         container.addChild(centerPoint);
@@ -282,30 +282,30 @@ export var GEHandle = function(canvas) {
 
         //resize knobs
         this.knobs = [];
-        for (var i = 0; i < 8; i++) {
-            var knob = GEHelper.newGraphic();
+        for (let i = 0; i < 8; i++) {
+            const knob = GEHelper.newGraphic();
             knob.mouseEnabled = true;
             GEDragHelper.handleDrag(knob);
             knob.graphics
-                .beginFill(this.color)
-                .ss(1, 2, 0)
-                .s(this.color)
-                .dr(-3, -3, 6, 6);
+                .ss(0.2, 0, 0)
+                .s('#d8d8d8')
+                .beginFill('#ffffff')
+                .dr(-3, -3, 6, 6)
+                .beginFill(this.knobColor)
+                .dr(-2.5, -2.5, 5, 5);
             knob.knobIndex = i;
             //knob.cursor = "move";
 
             knob.on(GEDragHelper.types.DOWN, function(e) {
-                var otherKnobIndex =
-                    this.knobIndex + 4 > 7
-                        ? this.knobIndex + 4 - 8
-                        : this.knobIndex + 4;
-                var otherKnob = handle.knobs[otherKnobIndex];
-                var otherKnobPos = handle.getGlobalCoordinate(otherKnob);
+                const otherKnobIndex =
+                    this.knobIndex + 4 > 7 ? this.knobIndex + 4 - 8 : this.knobIndex + 4;
+                const otherKnob = handle.knobs[otherKnobIndex];
+                const otherKnobPos = handle.getGlobalCoordinate(otherKnob);
                 this.otherKnobPos = otherKnobPos;
                 handle.dispatchEditStartEvent();
             });
             knob.on(GEDragHelper.types.MOVE, function(e) {
-                var pos = handle.getEventCoordinate(e);
+                const pos = handle.getEventCoordinate(e);
                 if (handle.checkCenterPointState(handle.regX, handle.regY)) {
                     handle.setRegX(0);
                     handle.setRegY(0);
@@ -313,14 +313,14 @@ export var GEHandle = function(canvas) {
                 }
                 handle.adjust(this.knobIndex, this.otherKnobPos, pos);
             });
-            knob.on(GEDragHelper.types.UP, function(e) {
+            knob.on(GEDragHelper.types.UP, (e) => {
                 handle.dispatchEditEndEvent();
             });
             container.addChild(knob);
             this.knobs.push(knob);
         }
 
-        var background = GEHelper.newGraphic();
+        const background = GEHelper.newGraphic();
         background.mouseEnabled = true;
         GEDragHelper.handleDrag(background);
         background.graphics
@@ -329,7 +329,7 @@ export var GEHandle = function(canvas) {
             .beginFill('rgba(254,254,254,1)')
             .dr(-50, -50, 100, 100);
         background.on(GEDragHelper.types.DOWN, function(e) {
-            var offset = handle.getEventCoordinate(e);
+            const offset = handle.getEventCoordinate(e);
             offset.x -= handle.x;
             offset.y -= handle.y;
             this.offset = offset;
@@ -337,7 +337,7 @@ export var GEHandle = function(canvas) {
         });
         background.on(GEDragHelper.types.MOVE, function(e) {
             if (handle.getDraggable()) {
-                var pos = handle.getEventCoordinate(e);
+                const pos = handle.getEventCoordinate(e);
                 pos.x -= this.offset.x;
                 pos.y -= this.offset.y;
                 handle.setX(pos.x);
@@ -345,7 +345,7 @@ export var GEHandle = function(canvas) {
                 handle.dispatchOnChangeEvent();
             }
         });
-        background.on(GEDragHelper.types.UP, function(e) {
+        background.on(GEDragHelper.types.UP, (e) => {
             handle.dispatchEditEndEvent();
         });
         this.canvas.addChildAt(background, 0);
@@ -356,8 +356,8 @@ export var GEHandle = function(canvas) {
     };
 
     p.checkCenterPointState = function(x, y) {
-        var standard = 718;
-        var res = Math.sqrt(x * x + y * y);
+        const standard = 718;
+        const res = Math.sqrt(x * x + y * y);
         if (res > standard && Entry.engine.isState('stop')) {
             Entry.toast.warning(
                 '이런! 조심하세요!',
@@ -376,43 +376,45 @@ export var GEHandle = function(canvas) {
     };
 
     p.renderEdge = function() {
-        var width = this.width;
-        var height = this.height;
-        var t = 10; //thickness
-        var sx = -(width + t)/2; //startX
-        var sy = -(height + t)/2; //startY
+        const width = this.width;
+        const height = this.height;
+        const t = 10; //thickness
+        const sx = -(width + t) / 2; //startX
+        const sy = -(height + t) / 2; //startY
 
         this.edge.graphics
             .clear()
             .f('rgba(254,254,254,0.01)')
             .dr(sx, sy, width + t, t)
             .dr(sx, sy + height, width + t, t)
-            .dr(sx, sy + t, t, height-t)
-            .dr(sx+width, sy+ t, t, height-t);
+            .dr(sx, sy + t, t, height - t)
+            .dr(sx + width, sy + t, t, height - t);
     };
 
     p.renderRotateKnob = function() {
-        var width = this.width;
-        var height = this.height;
+        const width = this.width;
+        const height = this.height;
         this.rotateKnob.graphics
             .clear()
-            .ss(1, 2, 0)
-            .s(this.rotateKnobColor)
+            .ss(0.5, 2, 0)
+            .s('#d8d8d8')
             .mt(0, -height / 2)
             .lt(0, -height / 2)
             .lt(0, -height / 2 - 20)
             .cp()
             .beginFill(this.rotateKnobColor)
-            .dc(0, -height / 2 - 20, 4);
+            .dc(0, -height / 2 - 20, 5)
+            .beginFill('#ffffff')
+            .dc(0, -height / 2 - 20, 2.5);
     };
 
     p.renderBorder = function() {
-        var width = this.width;
-        var height = this.height;
+        const width = this.width;
+        const height = this.height;
         this.border.graphics
             .clear()
-            .ss(1, 2, 0)
-            .s(this.color)
+            .ss(0.5, 2, 0)
+            .s(this.borderColor)
             .mt(-width / 2, -height / 2)
             .lt(0, -height / 2)
             .lt(0, -height / 2)
@@ -423,11 +425,11 @@ export var GEHandle = function(canvas) {
     };
 
     p.renderKnobs = function() {
-        var width = this.width/2;
-        var height = this.height/2;
-        this.knobs.forEach(function(knob, i) {
-            knob.x = Math.round(Math.sin(i / 4 * Math.PI)) * width;
-            knob.y = Math.round(Math.cos(i / 4 * Math.PI)) * height;
+        const width = this.width / 2;
+        const height = this.height / 2;
+        this.knobs.forEach((knob, i) => {
+            knob.x = Math.round(Math.sin((i / 4) * Math.PI)) * width;
+            knob.y = Math.round(Math.cos((i / 4) * Math.PI)) * height;
         });
     };
 
@@ -439,23 +441,17 @@ export var GEHandle = function(canvas) {
     };
 
     p.getGlobalCoordinate = function(childObject) {
-        var container = this.container;
-        var rotation = -(this.container.rotation * Math.PI / 180 * GEHelper.rotateRead);
+        const container = this.container;
+        const rotation = -(((this.container.rotation * Math.PI) / 180) * GEHelper.rotateRead);
         return {
-            x:
-                this.x +
-                childObject.x * Math.cos(rotation) +
-                childObject.y * Math.sin(rotation),
-            y:
-                this.y +
-                childObject.y * Math.cos(rotation) -
-                childObject.x * Math.sin(rotation),
+            x: this.x + childObject.x * Math.cos(rotation) + childObject.y * Math.sin(rotation),
+            y: this.y + childObject.y * Math.cos(rotation) - childObject.x * Math.sin(rotation),
         };
     };
 
     p.getLocalCoordinate = function(pos) {
-        var container = this.container;
-        var rotation = this.container.rotation * Math.PI / 180 * GEHelper.rotateRead;
+        const container = this.container;
+        const rotation = ((this.container.rotation * Math.PI) / 180) * GEHelper.rotateRead;
         pos.x -= this.x;
         pos.y -= this.y;
         return {
@@ -465,18 +461,13 @@ export var GEHandle = function(canvas) {
     };
 
     p.adjust = function(knobIndex, otherKnobPos, pos) {
-        var newPoint = this.calcPos(
-            { x: this.x, y: this.y },
-            otherKnobPos,
-            pos
-        );
-        var newCenter = {
+        const newPoint = this.calcPos({ x: this.x, y: this.y }, otherKnobPos, pos);
+        const newCenter = {
             x: (otherKnobPos.x + newPoint.x) / 2,
             y: (otherKnobPos.y + newPoint.y) / 2,
         };
-        var newLength = Math.sqrt(
-            Math.pow(newPoint.x - otherKnobPos.x, 2) +
-                Math.pow(newPoint.y - otherKnobPos.y, 2)
+        const newLength = Math.sqrt(
+            Math.pow(newPoint.x - otherKnobPos.x, 2) + Math.pow(newPoint.y - otherKnobPos.y, 2)
         );
         if (knobIndex % 4 == 0) {
             var ratio = newLength / this.height;
@@ -487,19 +478,18 @@ export var GEHandle = function(canvas) {
             this.width = newLength;
             this.setRegX(this.regX * ratio);
         } else {
-            var oldLength =
+            const oldLength =
                 2 *
                 Math.sqrt(
-                    Math.pow(this.x - otherKnobPos.x, 2) +
-                        Math.pow(this.y - otherKnobPos.y, 2)
+                    Math.pow(this.x - otherKnobPos.x, 2) + Math.pow(this.y - otherKnobPos.y, 2)
                 );
-            var newWidth = this.width * newLength / oldLength;
+            const newWidth = (this.width * newLength) / oldLength;
             var ratio = newWidth / this.width;
             this.setWidth(newWidth);
             this.setRegX(this.regX * ratio);
-            var newHeight = this.height * newLength / oldLength;
+            const newHeight = (this.height * newLength) / oldLength;
             ratio = newHeight / this.height;
-            this.setHeight(this.height * newLength / oldLength);
+            this.setHeight((this.height * newLength) / oldLength);
             this.setRegY(this.regY * ratio);
         }
         this.setX(newCenter.x);
@@ -510,14 +500,9 @@ export var GEHandle = function(canvas) {
     };
 
     p.updateKnobCursor = function() {
-        var rotation = this.rotation * GEHelper.rotateRead;
-        var cursorList = [
-            'ns-resize',
-            'nwse-resize',
-            'ew-resize',
-            'nesw-resize',
-        ];
-        var iter = Math.round(rotation / 45);
+        const rotation = this.rotation * GEHelper.rotateRead;
+        const cursorList = ['ns-resize', 'nwse-resize', 'ew-resize', 'nesw-resize'];
+        const iter = Math.round(rotation / 45);
         for (var i = 0; i < iter; i++) {
             cursorList.unshift(cursorList.pop());
         }
@@ -538,10 +523,10 @@ export var GEHandle = function(canvas) {
                 y: pos1.y,
             };
         } else {
-            var a = pos1.y - pos2.y;
-            var b = pos2.x - pos1.x;
-            var c = pos1.x * pos2.y - pos2.x * pos1.y;
-            var k = -(a * targetPos.x + b * targetPos.y + c) / (a * a + b * b);
+            const a = pos1.y - pos2.y;
+            const b = pos2.x - pos1.x;
+            const c = pos1.x * pos2.y - pos2.x * pos1.y;
+            const k = -(a * targetPos.x + b * targetPos.y + c) / (a * a + b * b);
             return {
                 x: targetPos.x + a * k,
                 y: targetPos.y + b * k,
@@ -550,18 +535,21 @@ export var GEHandle = function(canvas) {
     };
 
     p.dispatchOnChangeEvent = function() {
-        if (this.onChangeFunction)
+        if (this.onChangeFunction) {
             this.onChangeFunction.call(this.callerObject, this);
+        }
     };
 
     p.dispatchEditStartEvent = function() {
-        if (this.onEditStartFunction)
+        if (this.onEditStartFunction) {
             this.onEditStartFunction.call(this.editStartCallerObject, this);
+        }
     };
 
     p.dispatchEditEndEvent = function() {
-        if (this.onEditEndFunction)
+        if (this.onEditEndFunction) {
             this.onEditEndFunction.call(this.editEndCallerObject, this);
+        }
     };
 
     p.setDraggable = function(bool) {
