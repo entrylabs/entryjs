@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>entryjs example page</title>
+<meta charset="utf-8">
+<link rel='stylesheet' href='../dist/entry.css'>
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+</style>
+</head>
+<body>
+
+<section class="wrapper">
+    <div id="workspace">
+    </div>
+</section>
+
+
+<!--Jquery -->
+<script src="https://playentry.org/lib/jquery/jquery.min.js"></script>
+<script src="https://playentry.org/lib/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+
+<!--underscore -->
+<script src="https://playentry.org/lib/underscore/underscore.js"></script>
+
+<!--canvas input-->
+<script src="https://playentry.org/lib/entryjs/extern/util/CanvasInput.js"></script>
+
+<!--Blockly-->
+<script src="https://playentry.org/lib/entryjs/extern/blockly/blockly_compressed.js"></script>
+<script src="https://playentry.org/lib/entryjs/extern/blockly/msg/js/ko.js"></script>
+
+<!--createjs-->
+<script src="https://playentry.org/lib/PreloadJS/lib/preloadjs-0.6.0.min.js"></script>
+<script src="https://playentry.org/lib/EaselJS/lib/easeljs-0.8.0.min.js"></script>
+<script src="https://playentry.org/lib/SoundJS/lib/soundjs-0.6.0.min.js"></script>
+<script src="https://playentry.org/lib/SoundJS/lib/flashaudioplugin-0.6.0.min.js"></script>
+<script src="https://playentry.org/lib/entryjs/extern/util/ndgmr.Collision.js"></script>
+<script src="https://playentry.org/lib/entryjs/extern/util/handle.js"></script>
+
+<!--bignumber-->
+<script src="https://playentry.org/lib/entryjs/extern/util/bignumber.min.js"></script>
+
+<!--language-->
+<script src="../extern/lang/ko.js"></script>
+
+<!--socket.io-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.js"></script>
+
+<!--codemirror-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.23.0/codemirror.js"></script>
+
+<script src="https://pixijs.download/v4.8.5/pixi.min.js"/>
+
+<!--entryjs-->
+<script src="https://playentry.org/lib/components-webfontloader/webfont.js"></script>
+<script src="../extern/util/static.js"></script>
+<script src="../dist/entry.js"></script>
+
+<!--main script-->
+<script>
+    $(document).ready(function(){
+        var initOption = {
+            type: 'workspace',
+            useWebGL: '1',
+        };
+        Entry.init(
+            document.getElementById('workspace'),
+            initOption
+        );
+        Entry.enableArduino();
+        Entry.loadProject({
+            "objects": [
+                {
+                    "id": "7y0y",
+                    "name": "엔트리봇",
+                    "script": "[[{\"id\":\"qu38\",\"x\":-126,\"y\":30,\"type\":\"when_run_button_click\",\"params\":[null],\"statements\":[],\"movable\":null,\"deletable\":1,\"emphasized\":false,\"readOnly\":null,\"copyable\":true,\"extensions\":[]},{\"id\":\"2dd8\",\"x\":0,\"y\":0,\"type\":\"repeat_basic\",\"params\":[{\"id\":\"s22v\",\"x\":0,\"y\":0,\"type\":\"number\",\"params\":[10],\"statements\":[],\"movable\":null,\"deletable\":1,\"emphasized\":false,\"readOnly\":null,\"copyable\":true,\"extensions\":[]},null],\"statements\":[[{\"id\":\"iynw\",\"x\":0,\"y\":0,\"type\":\"move_direction\",\"params\":[{\"id\":\"jw1r\",\"x\":0,\"y\":0,\"type\":\"number\",\"params\":[10],\"statements\":[],\"movable\":null,\"deletable\":1,\"emphasized\":false,\"readOnly\":null,\"copyable\":true,\"extensions\":[]},null],\"statements\":[],\"movable\":null,\"deletable\":1,\"emphasized\":false,\"readOnly\":null,\"copyable\":true,\"extensions\":[]},{\"id\":\"yxgb\",\"x\":0,\"y\":0,\"type\":\"set_visible_answer\",\"params\":[\"HIDE\",null],\"statements\":[],\"movable\":null,\"deletable\":1,\"emphasized\":false,\"readOnly\":null,\"copyable\":true,\"extensions\":[]}]],\"movable\":null,\"deletable\":1,\"emphasized\":false,\"readOnly\":null,\"copyable\":true,\"extensions\":[]},{\"id\":\"6948\",\"x\":0,\"y\":0,\"type\":\"choose_project_timer_action\",\"params\":[null,\"START\",null,null],\"statements\":[],\"movable\":null,\"deletable\":1,\"emphasized\":false,\"readOnly\":null,\"copyable\":true,\"extensions\":[]}]]",
+                    "objectType": "sprite",
+                    "rotateMethod": "free",
+                    "scene": "7dwq",
+                    "sprite": {
+                        "pictures": [
+                            {
+                                "id": "vx80",
+                                "dimension": {
+                                    "width": 284,
+                                    "height": 350
+                                },
+                                "fileurl": "/lib/entry-js/images/media/entrybot1.png",
+                                "name": "엔트리봇_걷기1",
+                                "scale": 100
+                            },
+                            {
+                                "id": "4t48",
+                                "dimension": {
+                                    "width": 284,
+                                    "height": 350
+                                },
+                                "fileurl": "/lib/entry-js/images/media/entrybot2.png",
+                                "name": "엔트리봇_걷기2",
+                                "scale": 100
+                            }
+                        ],
+                        "sounds": [
+                            {
+                                "duration": 1.3,
+                                "ext": ".mp3",
+                                "id": "8el5",
+                                "fileurl": "/lib/entry-js/images/media/bark.mp3",
+                                "name": "강아지 짖는소리"
+                            }
+                        ]
+                    },
+                    "selectedPictureId": "vx80",
+                    "lock": false,
+                    "entity": {
+                        "x": 0,
+                        "y": 0,
+                        "regX": 142,
+                        "regY": 175,
+                        "scaleX": 0.3154574132492113,
+                        "scaleY": 0.3154574132492113,
+                        "rotation": 0,
+                        "direction": 90,
+                        "width": 284,
+                        "height": 350,
+                        "font": "undefinedpx ",
+                        "visible": true
+                    }
+                }
+            ],
+            "scenes": [
+                {
+                    "id": "7dwq",
+                    "name": "장면 1"
+                }
+            ],
+            "variables": [
+                {
+                    "name": "11",
+                    "id": "vpa7",
+                    "visible": true,
+                    "value": 0,
+                    "variableType": "slide",
+                    "minValue": 0,
+                    "maxValue": 100,
+                    "isCloud": false,
+                    "cloudDate": false,
+                    "object": null,
+                    "x": -230.04534635845707,
+                    "y": -67.60867354952326
+                },
+                {
+                    "name": "변수",
+                    "id": "9oyj",
+                    "visible": true,
+                    "value": 0,
+                    "variableType": "variable",
+                    "isCloud": false,
+                    "cloudDate": false,
+                    "object": null,
+                    "x": -230,
+                    "y": -109.23191000427533
+                },
+                {
+                    "name": "리스트 이름 10자",
+                    "id": "zu70",
+                    "visible": true,
+                    "value": 0,
+                    "variableType": "list",
+                    "width": 100,
+                    "height": 120.42205536554084,
+                    "array": [
+                        {
+                            "data": 0
+                        },
+                        {
+                            "data": 0
+                        },
+                        {
+                            "data": 0
+                        },
+                        {
+                            "data": 0
+                        },
+                        {
+                            "data": 0
+                        },
+                        {
+                            "data": 0
+                        },
+                        {
+                            "data": 0
+                        },
+                        {
+                            "data": 0
+                        },
+                        {
+                            "data": 0
+                        },
+                        {
+                            "data": 0
+                        }
+                    ],
+                    "isCloud": false,
+                    "cloudDate": false,
+                    "object": null,
+                    "x": 124.93790716612375,
+                    "y": -47.158967881631156
+                },
+                {
+                    "name": "초시계",
+                    "id": "brih",
+                    "visible": true,
+                    "value": "0",
+                    "variableType": "timer",
+                    "isCloud": false,
+                    "cloudDate": false,
+                    "object": null,
+                    "x": 133.6184334637103,
+                    "y": -67.55839733665836
+                },
+                {
+                    "name": " 대답 ",
+                    "id": "1vu8",
+                    "visible": true,
+                    "value": "0",
+                    "variableType": "answer",
+                    "isCloud": false,
+                    "cloudDate": false,
+                    "object": null,
+                    "x": 150,
+                    "y": -100
+                }
+            ],
+            "messages": [],
+            "functions": [],
+            "speed": 60,
+            "interface": {
+                "canvasWidth": 640,
+                "menuWidth": 283,
+                "object": "7y0y"
+            },
+            "expansionBlocks": []
+        });
+    });
+</script>
+
+</body>

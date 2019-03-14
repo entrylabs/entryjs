@@ -235,21 +235,25 @@ Entry.Variable = class Variable {
 
             this.slideBar_ = GEHelper.newGraphic();
             this.slideBar_.graphics
-                .beginFill('#A0A1A1')
-                .s('#A0A1A1')
+                .beginFill('#d8d8d8')
+                .s('#d8d8d8')
                 .ss(1)
-                .dr(10, 10, this.maxWidth, 1.5);
+                .rr(10, 10, this.maxWidth, 15, 4);
             this.view_.addChild(this.slideBar_);
 
             const position = this.getSlidePosition(this.maxWidth);
-            this.valueSetter_ = GEHelper.newGraphic();
-            this.valueSetter_.graphics
-                .beginFill('#1bafea')
-                .s('#A0A1A1')
-                .ss(1)
-                .dc(position, 10 + 0.5, 3);
+
+            this.valueSetter_ = GEHelper.newSpriteWithCallback(
+                `${Entry.mediaFilePath}stage_variable_slider.png`,
+                () => {
+                    Entry.requiresUpdate = true;
+                }
+            );
             this.valueSetter_.cursor = 'pointer';
+            this.valueSetter_.scaleX = 0.8;
+            this.valueSetter_.scaleY = 0.8;
             this.valueSetter_.mouseEnabled = true;
+
             GEDragHelper.handleDrag(this.valueSetter_);
             this.valueSetter_.on(GEDragHelper.types.DOWN, function(evt) {
                 if (!Entry.engine.isState('run')) {
@@ -318,15 +322,24 @@ Entry.Variable = class Variable {
             }
             this.view_.addChild(this.titleView_);
 
-            this.resizeHandle_ = GEHelper.newGraphic();
+            // this.resizeHandle_ = GEHelper.newGraphic();
+            // this.resizeHandle_.mouseEnabled = true;
+            // this.resizeHandle_.graphics
+            //     .f('#4f80ff')
+            //     .ss(1, 0, 0)
+            //     .s('#4f80ff')
+            //     .mt(0, -9)
+            //     .lt(-9, 0)
+            //     .lt(0, 0);
+            this.resizeHandle_ = GEHelper.newSpriteWithCallback(
+                `${Entry.mediaFilePath}stage_list_resize_handle.png`,
+                () => {
+                    Entry.requiresUpdate = true;
+                }
+            );
             this.resizeHandle_.mouseEnabled = true;
-            this.resizeHandle_.graphics
-                .f('#4f80ff')
-                .ss(1, 0, 0)
-                .s('#4f80ff')
-                .mt(0, -9)
-                .lt(-9, 0)
-                .lt(0, 0);
+            this.resizeHandle_.scaleX = 0.7;
+            this.resizeHandle_.scaleY = 0.7;
             this.view_.addChild(this.resizeHandle_);
 
             this.resizeHandle_.list = this;
@@ -551,21 +564,22 @@ Entry.Variable = class Variable {
 
                 this.slideBar_.graphics
                     .clear()
-                    .beginFill('#A0A1A1')
-                    .s('#A0A1A1')
+                    .beginFill('#d8d8d8')
+                    .s('#d8d8d8')
                     .ss(1)
-                    .dr(10, 10, this.maxWidth, 1.5);
+                    .rr(10, 10, this.maxWidth, 5, 2);
                 const position = this.getSlidePosition(this.maxWidth);
-                this.valueSetter_.graphics
-                    .clear()
-                    .beginFill('#1bafea')
-                    .s('#A0A1A1')
-                    .ss(1)
-                    .dc(position, 10 + 0.5, 3);
+                this.valueSetter_.x = position;
+                // this.valueSetter_.graphics
+                //     .clear()
+                //     .beginFill('#1bafea')
+                //     .s('#A0A1A1')
+                //     .ss(1)
+                //     .dc(position, 10 + 0.5, 3);
             } else if (this.type === 'list') {
                 this._adjustSingleViewPosition();
-                this.resizeHandle_.x = this.width_;
-                this.resizeHandle_.y = this.height_ + 16;
+                this.resizeHandle_.x = this.width_ - 10;
+                this.resizeHandle_.y = this.height_ + 16 - 10;
                 const arr = this.array_;
 
                 let name = this.getName();

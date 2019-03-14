@@ -4,7 +4,7 @@
 
 'use strict';
 
-import {GEDragHelper} from './GEDragHelper';
+import { GEDragHelper } from './GEDragHelper';
 import { GEHelper } from './GEHelper';
 
 export var GEHandle = function(canvas) {
@@ -12,11 +12,11 @@ export var GEHandle = function(canvas) {
         throw 'createjs is not founded';
     }
     this.canvas = canvas;
-    this.color = '#c1c7cd';
+    this.color = '#e2e2e2';
     //this.color = "#6BD5FF";
-    this.arrowColor = '#E79040';
-    this.centerColor = '#93440F';
-    this.rotateKnobColor = '#6B6B6B';
+    this.arrowColor = '#ffb500';
+    this.centerColor = '#4f80ff';
+    this.rotateKnobColor = '#ffb500';
 
     this.x = 0;
     this.y = 0;
@@ -262,7 +262,7 @@ export var GEHandle = function(canvas) {
         centerPoint.graphics
             .beginFill(this.centerColor)
             .ss(1, 2, 0)
-            .s(this.centerColor)
+            .s('#FFFFFF')
             .dc(0, 0, 5, 5);
         centerPoint.on(GEDragHelper.types.DOWN, function(e) {
             handle.dispatchEditStartEvent();
