@@ -12,7 +12,11 @@
         "type": "git",
         "url": "https://github.com/boolgom/entryjs.git"
     },
-    "keywords": ["entry", "entryjs", "javascript"],
+    "keywords": [
+        "entry",
+        "entryjs",
+        "javascript"
+    ],
     "bugs": {
         "url": "https://github.com/boolgom/entryjs/issues"
     },

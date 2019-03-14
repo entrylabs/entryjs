@@ -2,22 +2,21 @@
  * @fileoverview Variable object for entry variable block.
  */
 
-
 'use strict';
 
-import {GEHelper} from '../graphicEngine/GEHelper';
+import { GEHelper } from '../graphicEngine/GEHelper';
 import { GEDragHelper } from '../graphicEngine/GEDragHelper';
 
-const RECT_RADIUS = 6; // round rect radius
+const RECT_RADIUS = 7; // round rect radius
 
 const GL_VAR_POS = {
-    VALUE_Y: -9,
-    LABEL_Y: -9
-}
+    VALUE_Y: -8.5,
+    LABEL_Y: -9.5,
+};
 const GL_LIST_POS = {
-    INDEX_Y: 1,
-    VALUE_Y: 1
-}
+    INDEX_Y: 5,
+    VALUE_Y: 6.5,
+};
 
 /**
  * Block variable constructor
@@ -74,15 +73,16 @@ Entry.Variable = class Variable {
 
             this.BORDER = 6;
             this.FONT = '10pt NanumGothic';
+            this.VALUE_FONT = '9pt NanumGothic';
         }
 
         Entry.addEventListener('workspaceChangeMode', this.updateView.bind(this));
     }
 
     _createListElementView(wrapperWidth) {
-        let elementView = GEHelper.newContainer();
-        const indexView = GEHelper.textHelper.newText('asdf', this.FONT, '#000000', 'middle');
-        if(GEHelper.isWebGL) {
+        const elementView = GEHelper.newContainer();
+        const indexView = GEHelper.textHelper.newText('', this.FONT, '#000000', 'middle');
+        if (GEHelper.isWebGL) {
             indexView.y = GL_LIST_POS.INDEX_Y;
         } else {
             indexView.y = 5;
@@ -94,12 +94,12 @@ Entry.Variable = class Variable {
         elementView.valueWrapper = valueWrapper;
         elementView.valueWrapper.graphics
             .clear()
-            .f('#1bafea')
-            .rr(20, -2, wrapperWidth, 17, 2);
+            .f('#4f80ff')
+            .rr(18, 4, wrapperWidth, 17, 2);
 
-        const valueView = GEHelper.textHelper.newText('fdsa', this.FONT, '#eeeeee', 'middle');
+        const valueView = GEHelper.textHelper.newText('', this.VALUE_FONT, '#ffffff', 'middle');
         valueView.x = 24;
-        if(GEHelper.isWebGL) {
+        if (GEHelper.isWebGL) {
             valueView.y = GL_LIST_POS.VALUE_Y;
         } else {
             valueView.y = 6;
@@ -124,15 +124,25 @@ Entry.Variable = class Variable {
             this.view_.variable = this;
             this.wrapper_ = GEHelper.newGraphic();
             this.view_.addChild(this.wrapper_);
-            this.textView_ = GEHelper.textHelper.newText('asdf', this.FONT, '#000000', 'alphabetic');
-            this.textView_.x = 4;
-            if(GEHelper.isWebGL) {
+            this.textView_ = GEHelper.textHelper.newText(
+                'asdf',
+                this.FONT,
+                '#000000',
+                'alphabetic'
+            );
+            this.textView_.x = 4 + 2;
+            if (GEHelper.isWebGL) {
                 this.textView_.y = GL_VAR_POS.LABEL_Y;
             } else {
                 this.textView_.y = 1;
             }
             this.view_.addChild(this.textView_);
-            this.valueView_ = GEHelper.textHelper.newText('asdf', this.FONT, '#ffffff', 'alphabetic');
+            this.valueView_ = GEHelper.textHelper.newText(
+                'asdf',
+                this.VALUE_FONT,
+                '#ffffff',
+                'alphabetic'
+            );
             const variableLength = Entry.variableContainer.variables_.length;
             if (this.getX() && this.getY()) {
                 this.setX(this.getX());
@@ -175,16 +185,25 @@ Entry.Variable = class Variable {
             this.view_.variable = this;
             this.wrapper_ = GEHelper.newGraphic();
             this.view_.addChild(this.wrapper_);
-            this.textView_ = GEHelper.textHelper.newText('name', this.FONT, '#000000', 'alphabetic');
+            this.textView_ = GEHelper.textHelper.newText(
+                'name',
+                this.FONT,
+                '#000000',
+                'alphabetic'
+            );
             this.textView_.x = 4;
-            if(GEHelper.isWebGL) {
+            if (GEHelper.isWebGL) {
                 this.textView_.y = GL_VAR_POS.LABEL_Y;
             } else {
                 this.textView_.y = 1;
             }
             this.view_.addChild(this.textView_);
-            this.valueView_ = GEHelper.textHelper.newText('value', this.FONT, '#ffffff', 'alphabetic');
-
+            this.valueView_ = GEHelper.textHelper.newText(
+                'value',
+                this.VALUE_FONT,
+                '#ffffff',
+                'alphabetic'
+            );
 
             GEDragHelper.handleDrag(this.view_);
             this.view_.mouseEnabled = true;
@@ -261,7 +280,7 @@ Entry.Variable = class Variable {
                 }
                 slide.setSlideCommandX(value);
             });
-            this.valueSetter_.on(GEDragHelper.types.UP, function() {
+            this.valueSetter_.on(GEDragHelper.types.UP, () => {
                 slide.isAdjusting = false;
             });
             this.view_.addChild(this.valueSetter_);
@@ -280,13 +299,19 @@ Entry.Variable = class Variable {
             this.view_.mouseEnabled = true;
             this.view_.mouseChildren = true;
             this.view_.variable = this;
-            this.titleView_ = GEHelper.textHelper.newText('asdf', this.FONT, '#000000', 'alphabetic', 'center');
+            this.titleView_ = GEHelper.textHelper.newText(
+                'asdf',
+                this.FONT,
+                '#000000',
+                'alphabetic',
+                'center'
+            );
 
             //todo [박봉배] textview_.width 를 $width 로 변경.
             this.titleView_.$width = this.width_ - 2 * this.BORDER;
-            if(GEHelper.isWebGL) {
+            if (GEHelper.isWebGL) {
                 this.titleView_.x = (this.width_ - this.titleView_.width) / 2;
-                this.titleView_.y = this.BORDER -1;
+                this.titleView_.y = this.BORDER - 1;
             } else {
                 this.titleView_.x = this.width_ / 2;
                 this.titleView_.y = this.BORDER + 10;
@@ -296,9 +321,9 @@ Entry.Variable = class Variable {
             this.resizeHandle_ = GEHelper.newGraphic();
             this.resizeHandle_.mouseEnabled = true;
             this.resizeHandle_.graphics
-                .f('#1bafea')
+                .f('#4f80ff')
                 .ss(1, 0, 0)
-                .s('#1bafea')
+                .s('#4f80ff')
                 .mt(0, -9)
                 .lt(-9, 0)
                 .lt(0, 0);
@@ -376,12 +401,16 @@ Entry.Variable = class Variable {
             this.scrollButton_.on(GEDragHelper.types.MOVE, function(evt) {
                 // if(Entry.type != 'workspace') return;
 
-                let stageY = evt.stageY;
-                var yPos = (stageY - this.offsetY) * 0.75;
-                var min = 23;
-                var max = this.list.getHeight() - 40;
-                if(yPos < min) yPos = min;
-                if(yPos > max) yPos = max;
+                const stageY = evt.stageY;
+                let yPos = (stageY - this.offsetY) * 0.75;
+                const min = 23;
+                const max = this.list.getHeight() - 40;
+                if (yPos < min) {
+                    yPos = min;
+                }
+                if (yPos > max) {
+                    yPos = max;
+                }
                 this.y = yPos;
                 this.list.updateView();
             });
@@ -413,8 +442,7 @@ Entry.Variable = class Variable {
 
         if (this.isVisible()) {
             if (this.type === 'variable') {
-                this.view_.x = this.getX();
-                this.view_.y = this.getY();
+                this._adjustSingleViewPosition();
                 const oldContent = this.textView_.text;
                 let newContent;
                 if (this.object_) {
@@ -448,33 +476,17 @@ Entry.Variable = class Variable {
                 if (this._nameWidth === null) {
                     this._nameWidth = this.textView_.getMeasuredWidth();
                 }
-                this.valueView_.x = this._nameWidth + 14;
-                if(GEHelper.isWebGL) {
-                    this.valueView_.y = GL_VAR_POS.VALUE_Y;
-                } else {
-                    this.valueView_.y = 1;
-                }
+                this._adjustSingleValueViewPosition();
 
                 // INFO: Number체크는 slide 일때만 하도록 처리 기본 문자로 처리함(#4876)
 
                 if (this._valueWidth === null) {
                     this._valueWidth = this.valueView_.getMeasuredWidth();
                 }
-                this.rect_.graphics
-                    .clear()
-                    .f('#ffffff')
-                    .ss(1, 2, 0)
-                    .s('#A0A1A1')
-                    .rr(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4);
-                this.wrapper_.graphics
-                    .clear()
-                    .f('#1bafea')
-                    .ss(1, 2, 0)
-                    .s('#1bafea')
-                    .rr(this._nameWidth + 7, -11, this._valueWidth + 15, 14, RECT_RADIUS);
+
+                this._adjustSingleViewBox('#4f80ff');
             } else if (this.type === 'slide') {
-                this.view_.x = this.getX();
-                this.view_.y = this.getY();
+                this._adjustSingleViewPosition();
                 const oldContent = this.textView_.text;
                 let newContent;
                 if (this.object_) {
@@ -496,12 +508,7 @@ Entry.Variable = class Variable {
                 if (this._nameWidth === null) {
                     this._nameWidth = this.textView_.getMeasuredWidth();
                 }
-                this.valueView_.x = this._nameWidth + 14;
-                if(GEHelper.isWebGL) {
-                    this.valueView_.y = GL_VAR_POS.VALUE_Y;
-                } else {
-                    this.valueView_.y = 1;
-                }
+                this._adjustSingleValueViewPosition();
                 let value = String(this.getValue());
 
                 if (this.isFloatPoint()) {
@@ -523,20 +530,20 @@ Entry.Variable = class Variable {
                 if (this._valueWidth === null) {
                     this._valueWidth = this.valueView_.getMeasuredWidth();
                 }
-                let width = this._nameWidth + this._valueWidth + 26;
+                let width = this._nameWidth + this._valueWidth + 35;
                 width = Math.max(width, 90);
                 this.rect_.graphics
                     .clear()
                     .f('#ffffff')
                     .ss(1, 2, 0)
-                    .s('#A0A1A1')
+                    .s('#aac5d5')
                     .rr(0, -14, width, 33, 4);
                 this.wrapper_.graphics
                     .clear()
-                    .f('#1bafea')
+                    .f('#4f80ff')
                     .ss(1, 2, 0)
-                    .s('#1bafea')
-                    .rr(this._nameWidth + 7, -11, this._valueWidth + 15, 14, RECT_RADIUS);
+                    .s('#4f80ff')
+                    .rr(this._nameWidth + 14, -10, this._valueWidth + 15, 16, RECT_RADIUS);
 
                 width = this._nameWidth + this._valueWidth + 26;
                 width = Math.max(width, 90);
@@ -556,10 +563,9 @@ Entry.Variable = class Variable {
                     .ss(1)
                     .dc(position, 10 + 0.5, 3);
             } else if (this.type === 'list') {
-                this.view_.x = this.getX();
-                this.view_.y = this.getY();
-                this.resizeHandle_.x = this.width_ - 2;
-                this.resizeHandle_.y = this.height_ - 2;
+                this._adjustSingleViewPosition();
+                this.resizeHandle_.x = this.width_;
+                this.resizeHandle_.y = this.height_ + 16;
                 const arr = this.array_;
 
                 let name = this.getName();
@@ -578,8 +584,8 @@ Entry.Variable = class Variable {
                         this.titleView_.text = name;
                     }
                 }
-                if(GEHelper.isWebGL) {
-                    this.titleView_.x = (this.width_ - this.titleView_.width)/ 2;
+                if (GEHelper.isWebGL) {
+                    this.titleView_.x = (this.width_ - this.titleView_.width) / 2 + 3;
                 } else {
                     this.titleView_.x = this.width_ / 2;
                 }
@@ -587,33 +593,32 @@ Entry.Variable = class Variable {
                     .clear()
                     .f('#ffffff')
                     .ss(1, 2, 0)
-                    .s('#A0A1A1')
-                    .rect(0, 0, this.width_, this.height_);
+                    .s('#aac5d5')
+                    .rr(0, 0, this.width_ + 7, this.height_ + 22, RECT_RADIUS);
 
                 let listChild;
-                while (listChild = this.view_.children[4]) {
+                while ((listChild = this.view_.children[4])) {
                     this.view_.removeChild(listChild);
                     listChild.destroy && listChild.destroy();
                 }
-                const maxView = Math.floor((this.getHeight() - 20) / 20);
+                const maxView = Math.floor((this.getHeight() - 15) / 20);
 
                 const isOverFlow = maxView < arr.length;
                 const totalWidth = this.getWidth();
                 let wrapperWidth = totalWidth - 2 * this.BORDER - (isOverFlow ? 30 : 20);
 
                 if (isOverFlow) {
-                    if (this.scrollButton_.y > this.getHeight() - 40) {
-                        this.scrollButton_.y = this.getHeight() - 40;
+                    if (this.scrollButton_.y > this.getHeight() - 30) {
+                        this.scrollButton_.y = this.getHeight() - 30;
                     }
                     //todo [박봉배] _createListElementView 로 코드 이동
                     // this.elementView.valueWrapper.graphics
                     //     .clear()
                     //     .f('#1bafea')
                     //     .rr(20, -2, wrapperWidth, 17, 2);
-                    this.scrollButton_.x = totalWidth - 12;
+                    this.scrollButton_.x = totalWidth - 6;
                     this.scrollPosition = Math.floor(
-                        (this.scrollButton_.y - 23) /
-                            (this.getHeight() - 23 - 40) *
+                        ((this.scrollButton_.y - 23) / (this.getHeight() - 23 - 30)) *
                             (arr.length - maxView)
                     );
                 } else {
@@ -638,7 +643,7 @@ Entry.Variable = class Variable {
                     i < this.scrollPosition + maxView && i < arr.length;
                     i++
                 ) {
-                    this.elementView = this._createListElementView(wrapperWidth + 6);
+                    this.elementView = this._createListElementView(wrapperWidth + 14);
                     if (
                         Entry.getMainWS() &&
                         Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD
@@ -689,14 +694,9 @@ Entry.Variable = class Variable {
                     this.view_.addChild(this.elementView);
                 }
             } else if (this.type === 'answer') {
-                this.view_.x = this.getX();
-                this.view_.y = this.getY();
+                this._adjustSingleViewPosition();
                 this.textView_.text = this.getName();
-                if(GEHelper.isWebGL) {
-                    this.valueView_.y = GL_VAR_POS.VALUE_Y;
-                } else {
-                    this.valueView_.y = 1;
-                }
+                this._adjustSingleValueViewPosition();
                 if (this.isNumber()) {
                     const v = Number(this.getValue());
                     if (parseInt(this.getValue(), 10) == this.getValue()) {
@@ -716,34 +716,16 @@ Entry.Variable = class Variable {
                     this._valueWidth = this.valueView_.getMeasuredWidth();
                 }
 
-                this.valueView_.x = this._nameWidth + 14;
-                this.rect_.graphics
-                    .clear()
-                    .f('#ffffff')
-                    .ss(1, 2, 0)
-                    .s('#A0A1A1')
-                    .rr(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4);
-                this.wrapper_.graphics
-                    .clear()
-                    .f('#F57DF1')
-                    .ss(1, 2, 0)
-                    .s('#F57DF1')
-                    .rr(this._nameWidth + 7, -11, this._valueWidth + 15, 14, RECT_RADIUS);
+                this._adjustSingleViewBox('#F57DF1');
             } else {
-                this.view_.x = this.getX();
-                this.view_.y = this.getY();
+                this._adjustSingleViewPosition();
                 this.textView_.text = this.getName();
 
                 if (this._nameWidth === null) {
                     this._nameWidth = this.textView_.getMeasuredWidth();
                 }
 
-                this.valueView_.x = this._nameWidth + 14;
-                if(GEHelper.isWebGL) {
-                    this.valueView_.y = GL_VAR_POS.VALUE_Y;
-                } else {
-                    this.valueView_.y = 1;
-                }
+                this._adjustSingleValueViewPosition();
                 if (this.isNumber()) {
                     this.valueView_.text = Number(this.getValue())
                         .toFixed(1)
@@ -756,21 +738,47 @@ Entry.Variable = class Variable {
                     this._valueWidth = this.valueView_.getMeasuredWidth();
                 }
 
-                this.rect_.graphics
-                    .clear()
-                    .f('#ffffff')
-                    .ss(1, 2, 0)
-                    .s('#A0A1A1')
-                    .rr(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4);
-                this.wrapper_.graphics
-                    .clear()
-                    .f('#ffbb14')
-                    .ss(1, 2, 0)
-                    .s('#ffa500')
-                    .rr(this._nameWidth + 7, -11, this._valueWidth + 15, 14, RECT_RADIUS);
+                this._adjustSingleViewBox('#f4af18');
             }
         }
         Entry.requestUpdate = true;
+    }
+
+    /**
+     * stage 내 변수 / 타이머 / 대답 뷰의 크기와 위치를 조정한다.
+     * wrapper 의 이미지는 동일하다.
+     * rr(RectRadius) 의 인자는 각각 x, y, width, height, radius
+     * @param boxFillAndStrokeColor
+     * @private
+     */
+    _adjustSingleViewBox(boxFillAndStrokeColor) {
+        // TODO slider updateView 만 rect_.graphics 를 따로 씀. rr 인자 constants 로 묶을 것.
+        this.rect_.graphics
+            .clear()
+            .f('#ffffff')
+            .ss(1, 2, 0)
+            .s('#aac5d5')
+            .rr(0, -14, this._nameWidth + this._valueWidth + 35, 24, 4);
+        this.wrapper_.graphics
+            .clear()
+            .f(boxFillAndStrokeColor)
+            .ss(1, 2, 0)
+            .s(boxFillAndStrokeColor)
+            .rr(this._nameWidth + 14, -10, this._valueWidth + 15, 16, RECT_RADIUS);
+    }
+
+    _adjustSingleViewPosition() {
+        this.view_.x = this.getX();
+        this.view_.y = this.getY();
+    }
+
+    _adjustSingleValueViewPosition() {
+        this.valueView_.x = this._nameWidth + 21;
+        if (GEHelper.isWebGL) {
+            this.valueView_.y = GL_VAR_POS.VALUE_Y;
+        } else {
+            this.valueView_.y = 1;
+        }
     }
 
     /**
@@ -1043,7 +1051,7 @@ Entry.Variable = class Variable {
     }
 
     setSlideCommandX(value) {
-        if(!this.valueSetter_.command) {
+        if (!this.valueSetter_.command) {
             this.valueSetter_.command = {};
         }
         const command = this.valueSetter_.command;
