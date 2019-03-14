@@ -23,6 +23,7 @@
     "scripts": {
         "lint": "cross-env NODE_ENV=lint webpack -w",
         "serve": "cross-env NODE_ENV=serve webpack-dev-server --open",
+        "serve:webgl": "cross-env NODE_ENV=serve webpack-dev-server --open --webgl=true",
         "dev": "webpack -w",
         "test": "jest --colors",
         "dist": "webpack"

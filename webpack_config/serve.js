@@ -5,6 +5,13 @@ const common = require('./common.js');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 
+const isWebGLEnabled = process.argv.some(
+    (arg) => arg.startsWith('--webgl') && arg.split('=')[1] === 'true'
+);
+
+const targetExamplePage = isWebGLEnabled ? '/example/example_webgl.html' : '/example/example.html';
+const devServerPort = 8080;
+
 module.exports = merge(common, {
     mode: 'development',
     module: {
@@ -54,17 +61,17 @@ module.exports = merge(common, {
     },
     devServer: {
         contentBase: './',
-        port: 8080,
+        port: devServerPort,
         historyApiFallback: {
-            index: '/example/example.html',
+            index: targetExamplePage,
             rewrites: [
-                { from: /^\/$/, to: '/example/example.html' },
+                { from: /^\/$/, to: targetExamplePage },
                 { from: /^\/lib\/entry-js/, to: '/' },
             ],
         },
         proxy: {
             '/lib/entry-js': {
-                target: 'http://localhost:8080',
+                target: `http://localhost:${devServerPort}`,
                 pathRewrite: { '^/lib/entry-js': '' },
             },
         },
