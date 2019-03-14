@@ -550,7 +550,7 @@ Entry.Variable = class Variable {
                     .f('#ffffff')
                     .ss(1, 2, 0)
                     .s('#aac5d5')
-                    .rr(0, -14, width, 33, 4);
+                    .rr(0, -14, width, 42, 4);
                 this.wrapper_.graphics
                     .clear()
                     .f('#4f80ff')
@@ -560,16 +560,17 @@ Entry.Variable = class Variable {
 
                 width = this._nameWidth + this._valueWidth + 26;
                 width = Math.max(width, 90);
-                this.maxWidth = width - 20;
+                this.maxWidth = width - 16;
 
                 this.slideBar_.graphics
                     .clear()
                     .beginFill('#d8d8d8')
                     .s('#d8d8d8')
                     .ss(1)
-                    .rr(10, 10, this.maxWidth, 5, 2);
-                const position = this.getSlidePosition(this.maxWidth);
-                this.valueSetter_.x = position;
+                    .rr(6, 16, this.maxWidth + 4, 5, 2);
+                this.valueSetter_.x = this.getSlidePosition(this.maxWidth);
+                this.valueSetter_.y = 9;
+                console.log(this.valueSetter_.y);
                 // this.valueSetter_.graphics
                 //     .clear()
                 //     .beginFill('#1bafea')
@@ -1061,7 +1062,7 @@ Entry.Variable = class Variable {
         const maxValue = this.maxValue_;
         const value = this.value_;
         const ratio = Math.abs(value - minValue) / Math.abs(maxValue - minValue);
-        return width * ratio + 10;
+        return width * ratio + 6;
     }
 
     setSlideCommandX(value) {
