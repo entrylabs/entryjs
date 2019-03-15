@@ -1,6 +1,6 @@
 'use strict';
 
-import EntryTool from 'entry-tool';
+import { ContextMenu } from '@entrylabs/tool';
 import DomUtils from './domUtils';
 
 Entry.ContextMenu = {};
@@ -40,7 +40,7 @@ Entry.ContextMenu = {};
 
         this._hideEvent = Entry.documentMousedown.attach(this, this.hide);
         this.mouseCoordinate = coordinate || Entry.mouseCoordinate;
-        this.contextMenu = new EntryTool({
+        this.contextMenu = new ContextMenu({
             type: 'contextMenu',
             data: {
                 items: options,
@@ -114,13 +114,10 @@ Entry.ContextMenu = {};
                 this.longTouchEvent = null;
             }
 
-            this.longTouchEvent = setTimeout(
-                function() {
-                    callback(this.coordi);
-                    this.longTouchEvent = undefined;
-                }.bind(this),
-                900
-            );
+            this.longTouchEvent = setTimeout(() => {
+                callback(this.coordi);
+                this.longTouchEvent = undefined;
+            }, 900);
         };
 
         DomUtils.addEventListenerMultiple(

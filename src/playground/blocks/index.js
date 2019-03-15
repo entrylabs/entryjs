@@ -56,8 +56,8 @@ function registerHardwareBlockToStatic(hardwareModules) {
     const hardwareBlocks = EntryStatic.DynamicHardwareBlocks;
     hardwareModules.forEach((hardware) => {
         if (hardware.blockMenuBlocks && !hardwareBlocks.includes(hardware.blockMenuBlocks)) {
-            hardwareBlocks.push.apply(hardwareBlocks,
-                hardware.blockMenuBlocks.filter((block) => !hardwareBlocks.includes(block))
+            hardwareBlocks.push(
+                ...hardware.blockMenuBlocks.filter((block) => !hardwareBlocks.includes(block))
             );
         }
     });
@@ -68,8 +68,10 @@ module.exports = {
         const hardwareModules = hardware.getHardwareModuleList();
         registerHardwareBlockToStatic(hardwareModules);
 
-        const basicAndExpansionBlockObjectList = getBlockObject(basicBlockList.concat(Object.values(Entry.EXPANSION_BLOCK_LIST)));
-        const hardwareBlockObjectList = getBlockObject(hardwareModules);
+        const basicAndExpansionBlockObjectList = getBlockObject(
+            basicBlockList.concat(Object.values(Entry.EXPANSION_BLOCK_LIST))
+        );
+        const hardwareBlockObjectList = []; // getBlockObject(hardwareModules);
         return Object.assign({}, basicAndExpansionBlockObjectList, hardwareBlockObjectList);
     },
 };

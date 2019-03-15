@@ -2,7 +2,7 @@
  */
 'use strict';
 
-import EntryTool from 'entry-tool';
+import { ColorPicker } from '@entrylabs/tool';
 
 /*
  *
@@ -125,8 +125,7 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
             class: 'entry-color-picker',
             parent: $('body'),
         });
-        this.colorPicker = new EntryTool({
-            type: 'colorPicker',
+        this.colorPicker = new ColorPicker({
             data: {
                 eventTypes: ['mousedown', 'touchstart', 'wheel'],
                 color: this.getValue(),

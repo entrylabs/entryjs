@@ -4,7 +4,7 @@
 
 'use strict';
 
-import EntryTool from 'entry-tool';
+import { Sortable } from '@entrylabs/tool';
 import { GEHelper } from '../graphicEngine/GEHelper';
 
 /**
@@ -44,17 +44,14 @@ Entry.Container = class Container {
          */
         this.currentObjects_ = null;
         this._extensionObjects = [];
-        Entry.addEventListener(
-            'workspaceChangeMode',
-            function() {
-                const ws = Entry.getMainWS();
-                if (ws && ws.getMode() === Entry.Workspace.MODE_VIMBOARD) {
-                    this.objects_.forEach(function({ script }) {
-                        script && script.destroyView();
-                    });
-                }
-            }.bind(this)
-        );
+        Entry.addEventListener('workspaceChangeMode', () => {
+            const ws = Entry.getMainWS();
+            if (ws && ws.getMode() === Entry.Workspace.MODE_VIMBOARD) {
+                this.objects_.forEach(({ script }) => {
+                    script && script.destroyView();
+                });
+            }
+        });
 
         Entry.addEventListener('run', this.disableSort.bind(this));
         Entry.addEventListener('stop', this.enableSort.bind(this));
@@ -177,8 +174,7 @@ Entry.Container = class Container {
                 disabled: false,
             });
         } else {
-            this.sortableListViewWidget = new EntryTool({
-                type: 'sortableWidget',
+            this.sortableListViewWidget = new Sortable({
                 data: {
                     height: '100%',
                     sortableTarget: ['entryObjectThumbnailWorkspace'],
@@ -238,7 +234,7 @@ Entry.Container = class Container {
             objs = objs.sort((a, b) => a.index - b.index);
         }
 
-        objs.forEach(function(obj) {
+        objs.forEach((obj) => {
             !obj.view_ && obj.generateView();
         });
 
@@ -264,6 +260,18 @@ Entry.Container = class Container {
             const target = this.getCurrentObjects()[0];
             target && this.selectObject(target.id);
         }
+    }
+
+    setDraggableObject(object, isDraggable) {
+        this.isDraggable = isDraggable;
+        object.setDraggable(isDraggable);
+    }
+
+    setDraggableObjects(isDraggable) {
+        this.isDraggable = isDraggable;
+        this.objects_.forEach((object) => {
+            object.setDraggable(isDraggable);
+        });
     }
 
     /**
@@ -332,7 +340,6 @@ Entry.Container = class Container {
     addObjectFunc(objectModel, index, isNotRender) {
         delete objectModel.scene;
         const object = new Entry.EntryObject(objectModel);
-
         object.scene = Entry.scene.selectedScene;
 
         let isBackground = objectModel.sprite.category || {};
@@ -358,6 +365,7 @@ Entry.Container = class Container {
             this.updateListView();
             Entry.variableContainer.updateViews();
             Entry.variableContainer.updateList();
+            this.setDraggableObject(object, this.isDraggable);
         }
     }
 
@@ -826,7 +834,7 @@ Entry.Container = class Container {
             const object = objects[i];
             output.push(mapFunction(object.entity, param));
 
-            object.getClonedEntities().forEach(function(entity) {
+            object.getClonedEntities().forEach((entity) => {
                 output.push(mapFunction(entity, param));
             });
         }
@@ -1162,16 +1170,15 @@ Entry.Container = class Container {
             return;
         }
         const that = this;
-        newIds.forEach(function(newId) {
-            that
-                .getObject(newId)
+        newIds.forEach((newId) => {
+            that.getObject(newId)
                 .script.getBlockList()
-                .forEach(function(b) {
+                .forEach((b) => {
                     if (!b || !b.params) {
                         return;
                     }
                     let changed = false;
-                    const ret = b.params.map(function(p) {
+                    const ret = b.params.map((p) => {
                         if (typeof p !== 'string') {
                             return p;
                         }
