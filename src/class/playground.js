@@ -6,6 +6,7 @@
 
 import EntryTool from 'entry-tool';
 import Toast from '../playground/toast';
+import { Destroyer } from '../util/destroyer/Destroyer';
 
 const Entry = require('../entry');
 
@@ -16,6 +17,8 @@ const Entry = require('../entry');
  */
 Entry.Playground = class {
     constructor() {
+        this._destroyer = this._destroyer || new Destroyer();
+        this._destroyer.destroy();
         this.isTextBGMode_ = false;
         this.enableArduino = false;
 
@@ -273,6 +276,7 @@ Entry.Playground = class {
         }
 
         this.mainWorkspace = new Entry.Workspace(initOpts);
+        this._destroyer.add(this.mainWorkspace);
         this.blockMenu = this.mainWorkspace.blockMenu;
         this.board = this.mainWorkspace.board;
         this.toast = new Toast(this.board);
@@ -1945,5 +1949,9 @@ Entry.Playground = class {
         if (Entry.hasVariableManager) {
             this.variableTab.removeClass('entryRemove');
         }
+    }
+
+    destroy() {
+        this._destroyer.destroy();
     }
 };

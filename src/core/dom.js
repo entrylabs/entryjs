@@ -42,6 +42,9 @@ Entry.Dom = function(tag, options) {
     if (options.src) {
         dom.attr('src', options.src);
     }
+    if (options.href) {
+        dom.attr('href', options.href);
+    }
     if (options.parent) {
         options.parent.append(dom);
     }

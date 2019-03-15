@@ -739,6 +739,18 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@egjs/component@^2.1.0":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@egjs/component/-/component-2.1.2.tgz#c466a0a6fc6ba2d479814dcbe6ee4643c25a2e5b"
+  integrity sha512-7tnPiqxbSZ0porzlm0+/O3qZdanMj0zOq0sb17wQXuaRG49XKKKJaO+SacGnZDqf308N5hzJ0m9fZ4+j+VBvXA==
+
+"@egjs/visible@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@egjs/visible/-/visible-2.1.0.tgz#dcf8bf2db50fa6c54d127d1efe4d82e577b8d8ee"
+  integrity sha512-eRIiBvzxSaocA67vfAqekME+1YVV4yVurFKMwPJiqPcK7Ttob6TJ/WptMVFC4R6riP+u6KAWiA3QWzyhrU2zJg==
+  dependencies:
+    "@egjs/component" "^2.1.0"
+
 "@entrylabs/event@latest":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@entrylabs/event/-/event-1.0.2.tgz#96dc0d0eb759cd627668889928c2768497126f78"

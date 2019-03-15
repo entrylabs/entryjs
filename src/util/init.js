@@ -2,7 +2,6 @@
  * @fileoverview Initialize code fore Entry
  */
 
-
 'use strict';
 
 import { Destroyer } from './destroyer/Destroyer';
@@ -34,7 +33,9 @@ Entry.init = function(container, options) {
     this.options = options;
     this.parseOptions(options);
     this.mediaFilePath = `${options.libDir ? options.libDir : '/lib'}/entry-js/images/`;
-    this.painterBaseUrl = `${options.libDir ? options.libDir : '/lib'}/literallycanvas-mobile/lib/img`;
+    this.painterBaseUrl = `${
+        options.libDir ? options.libDir : '/lib'
+    }/literallycanvas-mobile/lib/img`;
     this.defaultPath = options.defaultDir || '';
     this.blockInjectPath = options.blockInjectDir || '';
 
@@ -147,7 +148,6 @@ Entry.loadAudio_ = function(filenames, name) {
  * @private
  */
 Entry.initialize_ = function() {
-
     /** @type {Destroyer} */
     this._destroyer = this._destroyer || new Destroyer();
     this._destroyer.destroy();
@@ -219,6 +219,7 @@ Entry.initialize_ = function() {
      * @type {!Entry.Playground}
      */
     this.playground = new Entry.Playground();
+    this._destroyer.add(this.playground);
 
     this.intro = new Entry.Intro();
     /**
@@ -244,7 +245,6 @@ Entry.initialize_ = function() {
 
     GEHelper.INIT(this.options.useWebGL);
     // GEHelper.INIT(0);
-
 };
 
 Entry.disposeContainer = function() {
