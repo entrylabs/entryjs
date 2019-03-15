@@ -4,6 +4,7 @@
 'use strict';
 
 import SimpleBar from 'simplebar';
+
 /**
  * Block variable constructor
  * @param {variable model} variable
@@ -180,7 +181,10 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     updateVariableAddView(type = 'variable') {
-        const { info: { isCloud, object }, view } = this._getAddPanel(type);
+        const {
+            info: { isCloud, object },
+            view,
+        } = this._getAddPanel(type);
         const { cloudCheck, globalCheck, localCheck, cloudWrapper } = view;
 
         if (isCloud) {
@@ -272,8 +276,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('span')
                     .addClass('text')
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
-                        Lang.Blocks[`START_${caller.block.type}`]
-                    }`;
+                    Lang.Blocks[`START_${caller.block.type}`]
+                }`;
                 element.bindOnClick((e) => {
                     e.stopPropagation();
                     if (Entry.playground.object !== caller.object) {
@@ -337,8 +341,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('span')
                     .addClass('text')
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
-                        Lang.Blocks[`VARIABLE_${caller.block.type}`]
-                    }`;
+                    Lang.Blocks[`VARIABLE_${caller.block.type}`]
+                }`;
                 element.variable = variable;
                 element.bindOnClick((e) => {
                     e.stopPropagation();
@@ -360,8 +364,7 @@ Entry.VariableContainer = class VariableContainer {
         } else {
             Entry.createElement('li')
                 .addClass('text red')
-                .appendTo(listView).innerHTML =
-                Lang.Workspace.no_use;
+                .appendTo(listView).innerHTML = Lang.Workspace.no_use;
         }
 
         this.variableSettingView && this.variableSettingView.appendChild(usedWrapper);
@@ -394,7 +397,7 @@ Entry.VariableContainer = class VariableContainer {
                 const nameElement = Entry.createElement('span').addClass('text');
                 nameElement.innerHTML = caller.object.name;
                 element.appendChild(nameElement);
-                element.bindOnClick(function() {
+                element.bindOnClick(() => {
                     if (Entry.playground.object != caller.object) {
                         Entry.container.selectObject();
                         Entry.container.selectObject(caller.object.id, true);
@@ -595,9 +598,8 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('attr_box')
             .appendTo(localList);
 
-        const { globalV, localV } = _.groupBy(
-            this.variables_,
-            ({ object_ }) => (object_ ? 'localV' : 'globalV')
+        const { globalV, localV } = _.groupBy(this.variables_, ({ object_ }) =>
+            (object_ ? 'localV' : 'globalV')
         );
 
         const gLength = (globalV || []).length;
@@ -678,9 +680,8 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('attr_box')
             .appendTo(localList);
 
-        const { localV, globalV } = _.groupBy(
-            this.lists_,
-            ({ object_ }) => (object_ ? 'localV' : 'globalV')
+        const { localV, globalV } = _.groupBy(this.lists_, ({ object_ }) =>
+            (object_ ? 'localV' : 'globalV')
         );
 
         const gLength = (globalV || []).length;
@@ -764,7 +765,7 @@ Entry.VariableContainer = class VariableContainer {
      */
     setVariables(variables = []) {
         variables.forEach((variable) => {
-            variable = new Entry.Variable(variable);
+            variable = Entry.Variable.create(variable);
             switch (variable.getType()) {
                 case 'variable':
                 case 'slide':
@@ -807,7 +808,7 @@ Entry.VariableContainer = class VariableContainer {
      */
     appendVariables(variables) {
         for (const i in variables) {
-            const variable = new Entry.Variable(variables[i]);
+            const variable = Entry.Variable.create(variables[i]);
             if (!variable.id_) {
                 variable.id_ = Entry.generateHash();
             }
@@ -1164,7 +1165,7 @@ Entry.VariableContainer = class VariableContainer {
         this.resetVariableAddPanel(type);
 
         if (!(data instanceof Entry.Variable)) {
-            data = new Entry.Variable(data);
+            data = Entry.Variable.create(data);
         }
 
         if (type === 'variable') {
@@ -1324,7 +1325,7 @@ Entry.VariableContainer = class VariableContainer {
 
         const editBoxWrapper = createElement('div')
             .addClass('inpt_box')
-            .bindOnClick(function(e) {
+            .bindOnClick((e) => {
                 e.stopPropagation();
 
                 if (that.variableSettingView) {
@@ -1458,7 +1459,9 @@ Entry.VariableContainer = class VariableContainer {
         const messages = this.messages_;
         const exist = Entry.isExist(name, 'name', messages);
 
-        const { listElement: { nameField } } = message;
+        const {
+            listElement: { nameField },
+        } = message;
         const { playground, toast } = Entry;
 
         if (exist) {
@@ -1584,7 +1587,7 @@ Entry.VariableContainer = class VariableContainer {
 
         const editBoxWrapper = createElement('div')
             .addClass('inpt_box')
-            .bindOnClick(function(e) {
+            .bindOnClick((e) => {
                 e.stopPropagation();
 
                 if (that.listSettingView) {
@@ -1792,8 +1795,7 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('Workspace_text')
-            .appendTo(addSpaceGlobalWrapper).innerHTML =
-            Lang.Workspace.use_all_objects;
+            .appendTo(addSpaceGlobalWrapper).innerHTML = Lang.Workspace.use_all_objects;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -1818,8 +1820,7 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('entryVariableAddSpaceCloudSpanWorkspace')
-            .appendTo(addSpaceCloudWrapper).innerHTML =
-            Lang.Workspace.Variable_create_cloud;
+            .appendTo(addSpaceCloudWrapper).innerHTML = Lang.Workspace.Variable_create_cloud;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -1839,8 +1840,7 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('Workspace_text')
-            .appendTo(addSpaceLocalWrapper).innerHTML =
-            Lang.Workspace.Variable_use_this_object;
+            .appendTo(addSpaceLocalWrapper).innerHTML = Lang.Workspace.Variable_use_this_object;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -1881,7 +1881,7 @@ Entry.VariableContainer = class VariableContainer {
             delete variableInput.blurCallback;
             Entry.do(
                 'variableContainerAddVariable',
-                new Entry.Variable(this._makeVariableData('variable'))
+                Entry.Variable.create(this._makeVariableData('variable'))
             );
             const [variable] = this.variables_;
             this.updateSelectedVariable(variable);
@@ -1902,7 +1902,7 @@ Entry.VariableContainer = class VariableContainer {
         const blurCallback = () => {
             Entry.do(
                 'variableContainerAddList',
-                new Entry.Variable(this._makeVariableData('list'))
+                Entry.Variable.create(this._makeVariableData('list'))
             );
             const [list] = this.lists_;
             this.updateSelectedVariable(list);
@@ -1979,8 +1979,7 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('Workspace_text')
-            .appendTo(addSpaceGlobalWrapper).innerHTML =
-            Lang.Workspace.use_all_objects;
+            .appendTo(addSpaceGlobalWrapper).innerHTML = Lang.Workspace.use_all_objects;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -2005,8 +2004,7 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('entryVariableAddSpaceCloudSpanWorkspace')
-            .appendTo(addSpaceCloudWrapper).innerHTML =
-            Lang.Workspace.List_create_cloud;
+            .appendTo(addSpaceCloudWrapper).innerHTML = Lang.Workspace.List_create_cloud;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -2026,8 +2024,7 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('Workspace_text')
-            .appendTo(addSpaceLocalWrapper).innerHTML =
-            Lang.Workspace.Variable_use_this_object;
+            .appendTo(addSpaceLocalWrapper).innerHTML = Lang.Workspace.Variable_use_this_object;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -2201,7 +2198,7 @@ Entry.VariableContainer = class VariableContainer {
     generateTimer(timer) {
         timer =
             timer ||
-            new Entry.Variable({
+            Entry.Variable.create({
                 id: Entry.generateHash(),
                 name: Lang.Workspace.Variable_Timer,
                 value: 0,
@@ -2224,7 +2221,7 @@ Entry.VariableContainer = class VariableContainer {
     generateAnswer(answer) {
         answer =
             answer ||
-            new Entry.Variable({
+            Entry.Variable.create({
                 id: Entry.generateHash(),
                 name: Lang.Blocks.VARIABLE_get_canvas_input_value,
                 value: 0,
@@ -2342,8 +2339,7 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('dash')
-            .appendTo(slideCountBox).innerHTML =
-            '~';
+            .appendTo(slideCountBox).innerHTML = '~';
 
         const maxValueInput = createElement('input').appendTo(slideCountBox);
         maxValueInput.innerHTML = Lang.Workspace.max_value;
@@ -2484,7 +2480,9 @@ Entry.VariableContainer = class VariableContainer {
         const buttonMinus = createElement('a')
             .addClass('btn_cnt')
             .bindOnClick(() => {
-                const { selected: { id_ } } = that;
+                const {
+                    selected: { id_ },
+                } = that;
                 Entry.do('listChangeLength', id_, 'minus');
             })
             .appendTo(countInputBox);
@@ -2495,7 +2493,9 @@ Entry.VariableContainer = class VariableContainer {
         const buttonPlus = createElement('a')
             .addClass('btn_cnt')
             .bindOnClick(() => {
-                const { selected: { id_ } } = that;
+                const {
+                    selected: { id_ },
+                } = that;
                 Entry.do('listChangeLength', id_, 'plus');
             })
             .appendTo(countInputBox);
@@ -2564,8 +2564,7 @@ Entry.VariableContainer = class VariableContainer {
             const fragment = document.createDocumentFragment();
             Entry.createElement('p')
                 .addClass('caution_dsc')
-                .appendTo(fragment).innerHTML =
-                Lang.Workspace.empty_of_list;
+                .appendTo(fragment).innerHTML = Lang.Workspace.empty_of_list;
             listValues.appendChild(fragment);
         } else {
             const data = arr.map(({ data: value }, i) =>
@@ -2814,28 +2813,26 @@ Entry.VariableContainer = class VariableContainer {
         let variables = jsonData.variables;
         let messages = jsonData.messages;
 
-        blockList.forEach(
-            function(block) {
-                const type = block.type;
-                if (type && type.indexOf('func_') === 0) {
-                    const id = type.substr(5);
-                    if (!findFuncKeys[id]) {
-                        const func = this.functions_[id];
-                        findFuncKeys[id] = true;
-                        functions.push({
-                            id,
-                            content: JSON.stringify(func.content.toJSON()),
-                        });
+        blockList.forEach((block) => {
+            const type = block.type;
+            if (type && type.indexOf('func_') === 0) {
+                const id = type.substr(5);
+                if (!findFuncKeys[id]) {
+                    const func = this.functions_[id];
+                    findFuncKeys[id] = true;
+                    functions.push({
+                        id,
+                        content: JSON.stringify(func.content.toJSON()),
+                    });
 
-                        blockList = func.content.getBlockList();
-                        const jsonData = this.getObjectVariables(blockList, findFuncKeys);
-                        functions = functions.concat(jsonData.functions);
-                        variables = variables.concat(jsonData.variables);
-                        messages = messages.concat(jsonData.messages);
-                    }
+                    blockList = func.content.getBlockList();
+                    const jsonData = this.getObjectVariables(blockList, findFuncKeys);
+                    functions = functions.concat(jsonData.functions);
+                    variables = variables.concat(jsonData.variables);
+                    messages = messages.concat(jsonData.messages);
                 }
-            }.bind(this)
-        );
+            }
+        });
 
         return {
             functions,
@@ -2855,7 +2852,7 @@ Entry.VariableContainer = class VariableContainer {
             {}
         );
 
-        blockList.forEach(function(block) {
+        blockList.forEach((block) => {
             const data = block.data || {};
             const type = data.type;
             if (!type) {
@@ -2865,7 +2862,7 @@ Entry.VariableContainer = class VariableContainer {
             const isVariable = _.includes(EntryStatic.variableBlockList, type);
 
             if (isMessage || isVariable) {
-                block.data.params.forEach(function(param) {
+                block.data.params.forEach((param) => {
                     if (typeof param === 'string' && !!variableSet[param]) {
                         const item = variableSet[param];
                         if (isVariable) {
@@ -3033,7 +3030,10 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     _makeVariableData(type = 'variable') {
-        const { view, info: { isCloud, object } } = this._getAddPanel(type);
+        const {
+            view,
+            info: { isCloud, object },
+        } = this._getAddPanel(type);
 
         let name = view.name.value.trim();
         if (_.isEmpty(name)) {
@@ -3087,7 +3087,7 @@ Entry.VariableContainer = class VariableContainer {
 
         if (type === 'slide') {
             variableJSON.variableType = type;
-            newVariable = new Entry.Variable(variableJSON);
+            newVariable = Entry.Variable.create(variableJSON);
             variables.splice(variables.indexOf(v), 0, newVariable);
 
             if (newVariable.getValue() < 0) {
@@ -3100,7 +3100,7 @@ Entry.VariableContainer = class VariableContainer {
             if (value !== undefined) {
                 variableJSON.value = value;
             }
-            newVariable = new Entry.Variable(variableJSON);
+            newVariable = Entry.Variable.create(variableJSON);
             variables.splice(variables.indexOf(v), 0, newVariable);
         }
         this.createVariableView(newVariable);
