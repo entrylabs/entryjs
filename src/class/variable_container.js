@@ -2204,7 +2204,7 @@ Entry.VariableContainer = class VariableContainer {
                 value: 0,
                 variableType: 'timer',
                 visible: false,
-                x: 150,
+                x: 134,
                 y: -70,
             });
 
