@@ -114,7 +114,7 @@ class ListVariable extends Variable {
         GEDragHelper.handleDrag(this.scrollButton_);
         this.scrollButton_.graphics.f('#aaaaaa').rr(0, 0, 7, 30, 3.5);
         this.view_.addChild(this.scrollButton_);
-        this.scrollButton_.y = 23;
+        this.scrollButton_.y = 25;
 
         this.scrollButton_.list = this;
         this.scrollButton_.on(GEDragHelper.types.DOWN, function(evt) {
@@ -127,8 +127,8 @@ class ListVariable extends Variable {
 
             const stageY = evt.stageY;
             let yPos = (stageY - this.offsetY) * 0.75;
-            const min = 23;
-            const max = this.list.getHeight() - 40;
+            const min = 25;
+            const max = this.list.getHeight() - 30;
             if (yPos < min) {
                 yPos = min;
             }
