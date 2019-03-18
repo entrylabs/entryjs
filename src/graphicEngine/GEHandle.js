@@ -292,7 +292,7 @@ export var GEHandle = function(canvas) {
                 .beginFill('#ffffff')
                 .rr(-6, -6, 12, 12, 1)
                 .beginFill(this.knobColor)
-                .rr(-3.2, -3.2, 7, 7, 1);
+                .rr(-3.4, -3.4, 7, 7, 1);
             knob.knobIndex = i;
             //knob.cursor = "move";
 
