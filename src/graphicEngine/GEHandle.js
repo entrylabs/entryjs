@@ -219,11 +219,11 @@ export var GEHandle = function(canvas) {
         if (GEHelper.isWebGL) {
             directionArrow.graphics
                 .f(this.arrowColor)
-                .mt(0, -42)
-                .lt(9, -30)
-                .lt(-9, -30)
+                .mt(0, -42 +10)
+                .lt(9, -30 +10)
+                .lt(-9, -30 +10)
                 .closePath()
-                .dr(-2, -32, 4, 32);
+                .dr(-2, -32 +10, 4, 25);
         } else {
             directionArrow.graphics
                 .ss(4, 1, 1)
@@ -260,10 +260,10 @@ export var GEHandle = function(canvas) {
         GEDragHelper.handleDrag(centerPoint);
 
         centerPoint.graphics
-            .ss(1.6, 2, 0)
+            .ss(3.5, 2, 0)
             .s('#FFFFFF')
             .beginFill(this.centerColor)
-            .dc(0, 0, 5, 4.4);
+            .dc(0, 0, 5.5);
         centerPoint.on(GEDragHelper.types.DOWN, (e) => {
             handle.dispatchEditStartEvent();
         });
@@ -290,9 +290,9 @@ export var GEHandle = function(canvas) {
                 .ss(0.2, 0, 0)
                 .s('#d8d8d8')
                 .beginFill('#ffffff')
-                .dr(-3, -3, 6, 6)
+                .rr(-6, -6, 12, 12, 1)
                 .beginFill(this.knobColor)
-                .dr(-2.5, -2.5, 5, 5);
+                .rr(-3.2, -3.2, 7, 7, 1);
             knob.knobIndex = i;
             //knob.cursor = "move";
 
@@ -403,9 +403,9 @@ export var GEHandle = function(canvas) {
             .lt(0, -height / 2 - 20)
             .cp()
             .beginFill(this.rotateKnobColor)
-            .dc(0, -height / 2 - 20, 5)
+            .dc(0, -height / 2 - 20, 8)
             .beginFill('#ffffff')
-            .dc(0, -height / 2 - 20, 2.5);
+            .dc(0, -height / 2 - 20, 4);
     };
 
     p.renderBorder = function() {
