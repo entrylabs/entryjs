@@ -112,7 +112,7 @@ class Variable {
             } else {
                 //TODO
                 this.setX(10 - 240 + Math.floor((variableLength % 66) / 11) * 80);
-                this.setY(variableIndex * 24 + 20 - 135 - Math.floor(variableLength / 11) * 264);
+                this.setY(variableIndex * 28 + 20 - 135 - Math.floor(variableLength / 11) * 264);
             }
             this.view_.visible = this.visible_;
             this.view_.addChild(this.valueView_);
