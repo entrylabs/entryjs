@@ -83,6 +83,8 @@ class SlideVariable extends Variable {
         this.valueSetter_.scaleX = 0.8;
         this.valueSetter_.scaleY = 0.8;
         this.valueSetter_.mouseEnabled = true;
+        this.valueSetter_.y = 9;
+        this.valueSetter_.regX = 0.5;
 
         GEDragHelper.handleDrag(this.valueSetter_);
         this.valueSetter_.on(GEDragHelper.types.DOWN, function(evt) {
@@ -90,28 +92,15 @@ class SlideVariable extends Variable {
                 return;
             }
             slide.isAdjusting = true;
-            this.offsetX = -(this.x - evt.stageX * 0.75 + 240);
+            this.offsetX = evt.stageX * 0.75 - this.x;
         });
 
         this.valueSetter_.on(GEDragHelper.types.MOVE, function(evt) {
             if (!Entry.engine.isState('run')) {
                 return;
             }
-
-            const oldOffsetX = this.offsetX;
-            this.offsetX = -(this.x - evt.stageX * 0.75 + 240);
-            if (oldOffsetX === this.offsetX) {
-                return;
-            }
-            const slideX = slide.getX();
-            let value;
-            if (slideX + 10 > this.offsetX) {
-                value = 0;
-            } else if (slideX + slide.maxWidth + 10 > this.offsetX) {
-                value = this.offsetX - slideX;
-            } else {
-                value = slide.maxWidth + 10;
-            }
+            const value = (evt.stageX * 0.75) - this.offsetX + 5;
+            //박봉배 - value 값의 min/max 는 다른곳에서 체크 하므로, 이곳에서는 로직 삭제 하겠음.
             slide.setSlideCommandX(value);
         });
         this.valueSetter_.on(GEDragHelper.types.UP, () => {
@@ -207,8 +196,8 @@ class SlideVariable extends Variable {
                 .ss(1)
                 .rr(6, 16, this.maxWidth + 4, 5, 2);
             this.valueSetter_.x = this.getSlidePosition(this.maxWidth);
-            this.valueSetter_.y = 9;
-            console.log(this.valueSetter_.y);
+
+
             // this.valueSetter_.graphics
             //     .clear()
             //     .beginFill('#1bafea')
@@ -246,11 +235,10 @@ class SlideVariable extends Variable {
         if (!this.valueSetter_.command) {
             this.valueSetter_.command = {};
         }
-        const command = this.valueSetter_.command;
         let commandX = typeof value === 'undefined' ? 10 : value;
-        commandX = Math.max(value, 10);
-        commandX = Math.min(this.maxWidth + 10, value);
-        command.x = commandX;
+        commandX = Math.max(commandX, 10);
+        commandX = Math.min(this.maxWidth + 10, commandX);
+        this.valueSetter_.command.x = commandX;
         this.updateSlideValueByView();
     }
 
