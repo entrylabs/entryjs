@@ -76,7 +76,7 @@ class SlideVariable extends Variable {
         this.valueSetter_ = GEHelper.newSpriteWithCallback(
             `${Entry.mediaFilePath}stage_variable_slider.png`,
             () => {
-                Entry.requiresUpdate = true;
+                Entry.requestUpdate = true;
             }
         );
         this.valueSetter_.cursor = 'pointer';

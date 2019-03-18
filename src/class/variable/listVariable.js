@@ -46,7 +46,7 @@ class ListVariable extends Variable {
         this.resizeHandle_ = GEHelper.newSpriteWithCallback(
             `${Entry.mediaFilePath}stage_list_resize_handle.png`,
             () => {
-                Entry.requiresUpdate = true;
+                Entry.requestUpdate = true;
             }
         );
         this.resizeHandle_.mouseEnabled = true;
