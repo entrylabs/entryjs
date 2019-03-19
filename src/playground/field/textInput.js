@@ -232,10 +232,6 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
             }
         });
 
-        inputField.on('blur', () => {
-            this.destroyOption(undefined, true);
-        });
-
         inputField.on('keydown', (e) => {
             const keyCode = e.keyCode || e.which;
 
