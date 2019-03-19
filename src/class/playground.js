@@ -206,27 +206,33 @@ Entry.Playground = class {
     }
 
     createButtonTabView(tabButtonView) {
-        const commentToggleButton = Entry.createElement('div')
-            .addClass('entryPlaygroundCommentButtonWorkspace showComment')
-            .appendTo(tabButtonView);
-        commentToggleButton.setAttribute('alt', Lang.Blocks.show_all_comment);
-        commentToggleButton.setAttribute('title', Lang.Blocks.show_all_comment);
+        const { commentDisable, backpackDisable } = Entry.options;
 
-        this.commentToggleButton_ = commentToggleButton;
-        commentToggleButton.bindOnClick(() => {
-            this.toggleCommentButton();
-        });
+        if (!commentDisable) {
+            const commentToggleButton = Entry.createElement('div')
+                .addClass('entryPlaygroundCommentButtonWorkspace showComment')
+                .appendTo(tabButtonView);
+            commentToggleButton.setAttribute('alt', Lang.Blocks.show_all_comment);
+            commentToggleButton.setAttribute('title', Lang.Blocks.show_all_comment);
 
-        const backPackButton = Entry.createElement('div')
-            .addClass('entryPlaygroundBackPackButtonWorkspace')
-            .appendTo(tabButtonView);
-        backPackButton.setAttribute('alt', Lang.Blocks.show_all_comment);
-        backPackButton.setAttribute('title', Lang.Blocks.show_all_comment);
+            this.commentToggleButton_ = commentToggleButton;
+            commentToggleButton.bindOnClick(() => {
+                this.toggleCommentButton();
+            });
+        }
 
-        this.backPackButton_ = backPackButton;
-        backPackButton.bindOnClick(() => {
-            Entry.dispatchEvent('openBackPack');
-        });
+        if (!backpackDisable) {
+            const backPackButton = Entry.createElement('div')
+                .addClass('entryPlaygroundBackPackButtonWorkspace')
+                .appendTo(tabButtonView);
+            backPackButton.setAttribute('alt', Lang.Blocks.show_all_comment);
+            backPackButton.setAttribute('title', Lang.Blocks.show_all_comment);
+
+            this.backPackButton_ = backPackButton;
+            backPackButton.bindOnClick(() => {
+                Entry.dispatchEvent('openBackPack');
+            });
+        }
     }
 
     createPackPackView(backPackView) {

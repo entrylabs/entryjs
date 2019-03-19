@@ -1434,7 +1434,7 @@ Entry.BlockView = class BlockView {
                 },
             };
 
-            const addStorage = {
+            const addStorage = !Entry.options.backpackDisable && {
                 text: Lang.Blocks.add_my_storage,
                 callback() {
                     Entry.dispatchEvent('addStorage', {
@@ -1452,7 +1452,7 @@ Entry.BlockView = class BlockView {
             };
 
             const hasComment = !!block._comment;
-            const comment = {
+            const comment = !Entry.options.commentDisable && {
                 text: hasComment ? Lang.Blocks.delete_comment : Lang.Blocks.add_comment,
                 enable: block.isCommentable(),
                 callback() {
@@ -1468,7 +1468,7 @@ Entry.BlockView = class BlockView {
             }
 
             if (!isInBlockMenu) {
-                options = [copyAndPaste, copy, remove, addStorage, ...options, comment];
+                options = [copyAndPaste, copy, remove, addStorage, ...options, comment].filter(x=>x);
             }
 
             return options;

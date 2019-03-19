@@ -1210,7 +1210,7 @@ Entry.Board = class Board {
                 },
             },
             {
-                activated: true,
+                activated: !Entry.options.commentDisable,
                 option: {
                     text: Lang.Blocks.add_comment,
                     enable: !this.readOnly,
@@ -1229,7 +1229,7 @@ Entry.Board = class Board {
                 },
             },
             {
-                activated: true,
+                activated: !Entry.options.commentDisable,
                 option: {
                     text: Lang.Blocks.hide_all_comment,
                     enable: !this.readOnly,
