@@ -71,7 +71,7 @@ module.exports = {
         const basicAndExpansionBlockObjectList = getBlockObject(
             basicBlockList.concat(Object.values(Entry.EXPANSION_BLOCK_LIST))
         );
-        const hardwareBlockObjectList = []; // getBlockObject(hardwareModules);
+        const hardwareBlockObjectList = getBlockObject(hardwareModules);
         return Object.assign({}, basicAndExpansionBlockObjectList, hardwareBlockObjectList);
     },
 };
