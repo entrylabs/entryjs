@@ -751,10 +751,10 @@
   dependencies:
     "@egjs/component" "^2.1.0"
 
-"@entrylabs/event@^1.0.0":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@entrylabs/event/-/event-1.0.1.tgz#f33a58d5f4ae7ffb5fef1ce28575abdaf6b1806e"
-  integrity sha512-XxRvDcB92AZiOhEoy5Z9LIgiip4iMxSWeEnJP1zXvBMJRFRSlgR+UdGH28aFQa22jqxzwzXxAZK27ZZ0ioIgQQ==
+"@entrylabs/event@latest":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@entrylabs/event/-/event-1.0.2.tgz#96dc0d0eb759cd627668889928c2768497126f78"
+  integrity sha512-2GSF+9eJCIc/+9EqcZRq7vhmOnwJQeB6LYQIBiM7vv43qCu2odqkekE6VMC6ToMLQwZWBRbn8Qq0dR5hEFRwEg==
 
 "@entrylabs/postcss-url@^8.0.1":
   version "8.0.1"
@@ -1573,11 +1573,6 @@ babel-core@^6.26.0:
     slash "^1.0.0"
     source-map "^0.5.6"
 
-babel-core@^7.0.0-bridge.0:
-  version "7.0.0-bridge.0"
-  resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-7.0.0-bridge.0.tgz#95a492ddd90f9b4e9a4a1da14eb335b87b634ece"
-  integrity sha512-poPX9mZH/5CSanm50Q+1toVci6pv5KSRv/5TWCwtzQS5XEwn40BcCrgIeMFWP9CKKIniKXNxoIOnOq4VVlGXhg==
-
 babel-eslint@^8.2.2:
   version "8.2.2"
   resolved "https://registry.yarnpkg.com/babel-eslint/-/babel-eslint-8.2.2.tgz#1102273354c6f0b29b4ea28a65f97d122296b68b"
@@ -1629,11 +1624,12 @@ babel-jest@^24.3.1:
     chalk "^2.4.2"
     slash "^2.0.0"
 
-babel-loader@^8.0.0-beta.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/babel-loader/-/babel-loader-8.0.0.tgz#c42f2bef268d0d8bb4ceec5d02b540a9055d58a0"
+babel-loader@^8.0.0-beta:
+  version "8.0.5"
+  resolved "https://registry.yarnpkg.com/babel-loader/-/babel-loader-8.0.5.tgz#225322d7509c2157655840bba52e46b6c2f2fe33"
+  integrity sha512-NTnHnVRd2JnRqPC0vW+iOQWU5pchDbYXsG2E6DMXEpMfUcQKclF9gmf3G3ZMhzG7IG9ji4coL0cm+FxeWxDpnw==
   dependencies:
-    find-cache-dir "^1.0.0"
+    find-cache-dir "^2.0.0"
     loader-utils "^1.0.2"
     mkdirp "^0.5.1"
     util.promisify "^1.0.0"
