@@ -1,6 +1,6 @@
 'use strict';
 
-var path = require('path');
+const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
@@ -15,7 +15,7 @@ module.exports = {
         filename: '[name].js',
     },
     resolve: {
-        extensions: [".ts", ".tsx", ".js", ".json"]
+        extensions: ['.ts', '.tsx', '.js', '.json'],
     },
     module: {
         rules: [
@@ -45,7 +45,7 @@ module.exports = {
             },
             {
                 test: /\.tsx?$/,
-                loader: 'awesome-typescript-loader'
+                loader: 'awesome-typescript-loader',
             },
         ],
     },
