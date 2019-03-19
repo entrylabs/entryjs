@@ -751,7 +751,7 @@
   dependencies:
     "@egjs/component" "^2.1.0"
 
-"@entrylabs/event@latest":
+"@entrylabs/event@^1.0.2", "@entrylabs/event@latest":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@entrylabs/event/-/event-1.0.2.tgz#96dc0d0eb759cd627668889928c2768497126f78"
   integrity sha512-2GSF+9eJCIc/+9EqcZRq7vhmOnwJQeB6LYQIBiM7vv43qCu2odqkekE6VMC6ToMLQwZWBRbn8Qq0dR5hEFRwEg==
@@ -767,11 +767,12 @@
     postcss "^7.0.2"
     xxhashjs "^0.2.1"
 
-"@entrylabs/tool@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@entrylabs/tool/-/tool-1.1.0.tgz#1cf01fe694f7cb0669489cbb771f9d7b5aa782c1"
-  integrity sha512-iyvkybaSK6vmhGzR4VzdRlu3QmqYwqUbgjhijlgV2UPn5ydp7vy0uDNRP+Lm4Geq/7PpBIEy7GP2E6iVXMtKnQ==
+"@entrylabs/tool@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@entrylabs/tool/-/tool-1.1.1.tgz#8f04ce214374d95c9fd212b3067bdc7ddcfb6cde"
+  integrity sha512-5vetkfCST+xhc9WIR5aB0GicUDEY4lIpnBPknkGY5OlGJp9e4E6JEPuNVDrXXr0iPo/AT7wIa2lqaruCGzCpfw==
   dependencies:
+    "@entrylabs/event" "^1.0.2"
     "@entrylabs/postcss-url" "^8.0.1"
     axios "^0.18.0"
     chroma-js "^1.4.0"
