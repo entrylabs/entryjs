@@ -167,7 +167,7 @@ Entry.Kingcoding.getBlocks = function() {
                     size: 12,
                 },
             ],
-            events: {},
+            events: {}, 
             def: { //파라미터에 들어갈 기본 값.
                 params: [null, null],
                 type: 'kingcoding_set_buzzer', //상속, 블록명과 동일
