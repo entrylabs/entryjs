@@ -10,7 +10,7 @@ const isWebGLEnabled = process.argv.some(
 );
 
 const targetExamplePage = isWebGLEnabled ? '/example/example_webgl.html' : '/example/example.html';
-const devServerPort = 8080;
+const devServerPort = 8081;
 
 module.exports = merge(common, {
     mode: 'development',

@@ -22,7 +22,7 @@ class Variable {
     get GL_LIST_POS() {
         return {
             INDEX_Y: 5,
-            VALUE_Y: 6.5,
+            VALUE_Y: 6,
         };
     }
 
@@ -96,7 +96,7 @@ class Variable {
             if (GEHelper.isWebGL) {
                 this.textView_.y = this.GL_VAR_POS.LABEL_Y;
             } else {
-                this.textView_.y = 1;
+                this.textView_.y = 2.5;
             }
             this.view_.addChild(this.textView_);
             this.valueView_ = GEHelper.textHelper.newText(
@@ -234,7 +234,7 @@ class Variable {
         if (GEHelper.isWebGL) {
             this.valueView_.y = this.GL_VAR_POS.VALUE_Y;
         } else {
-            this.valueView_.y = 1;
+            this.valueView_.y = 1.5;
         }
     }
 

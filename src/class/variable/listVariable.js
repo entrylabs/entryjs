@@ -25,7 +25,7 @@ class ListVariable extends Variable {
         GEDragHelper.handleDrag(this.view_);
 
         this.titleView_ = GEHelper.textHelper.newText(
-            'asdf',
+            '',
             this.FONT,
             '#000000',
             'alphabetic',
@@ -39,7 +39,7 @@ class ListVariable extends Variable {
             this.titleView_.y = this.BORDER - 1;
         } else {
             this.titleView_.x = this.width_ / 2;
-            this.titleView_.y = this.BORDER + 10;
+            this.titleView_.y = this.BORDER + 11;
         }
         this.view_.addChild(this.titleView_);
 
@@ -182,7 +182,7 @@ class ListVariable extends Variable {
             if (GEHelper.isWebGL) {
                 this.titleView_.x = (this.width_ - this.titleView_.width) / 2 + 3;
             } else {
-                this.titleView_.x = this.width_ / 2;
+                this.titleView_.x = this.width_ / 2 + 3;
             }
             this.rect_.graphics
                 .clear()
@@ -299,7 +299,7 @@ class ListVariable extends Variable {
         if (GEHelper.isWebGL) {
             indexView.y = this.GL_LIST_POS.INDEX_Y;
         } else {
-            indexView.y = 5;
+            indexView.y = 12;
         }
         elementView.addChild(indexView);
         elementView.indexView = indexView;
@@ -316,7 +316,7 @@ class ListVariable extends Variable {
         if (GEHelper.isWebGL) {
             valueView.y = this.GL_LIST_POS.VALUE_Y;
         } else {
-            valueView.y = 6;
+            valueView.y = 12;
         }
         elementView.addChild(valueView);
         elementView.valueView = valueView;
