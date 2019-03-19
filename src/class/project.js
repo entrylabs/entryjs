@@ -83,7 +83,7 @@ Entry.getStartProject = function(mediaFilePath) {
                 visible: false,
                 value: '0',
                 variableType: 'timer',
-                x: 150,
+                x: 134,
                 y: -70,
                 array: [],
                 object: null,

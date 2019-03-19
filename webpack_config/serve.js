@@ -7,8 +7,18 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const autoprefixer = require('autoprefixer');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const templateName = process.env.NODE_ENV === 'serve' ? 'example.ejs' : 'example_mini.ejs';
+const isWebGLEnabled = process.argv.some(
+    (arg) => arg.startsWith('--webgl') && arg.split('=')[1] === 'true'
+);
+const templateName = (() => {
+    if (process.env.NODE_ENV === 'serve') {
+        return isWebGLEnabled ? 'example_webgl.ejs' : 'example.ejs';
+    } else {
+        return 'example_mini.ejs';
+    }
+})();
 const template = path.resolve('example', templateName);
+const devServerPort = 8080;
 
 module.exports = merge(common, {
     mode: 'development',
@@ -74,7 +84,7 @@ module.exports = merge(common, {
     ],
     devServer: {
         contentBase: './',
-        port: 8080,
+        port: devServerPort,
         historyApiFallback: true,
         // hot: true,
         // inline: true,
@@ -88,11 +98,11 @@ module.exports = merge(common, {
         // },
         proxy: {
             '/lib/entry-js': {
-                target: 'http://localhost:8080',
+                target: `http://localhost:${devServerPort}`,
                 pathRewrite: { '^/lib/entry-js': '' },
             },
             '/dist': {
-                target: 'http://localhost:8080',
+                target: `http://localhost:${devServerPort}`,
                 pathRewrite: { '^/dist': '' },
             },
         },

@@ -15,12 +15,12 @@ class GraphicsAdaptor {
         this._lineStyle = {
             alpha: 1,
             color: 0,
-            thickness: 0
+            thickness: 0,
         };
 
         this._fillStyle = {
             alpha: 1,
-            color: 0
+            color: 0,
         };
     }
 
@@ -30,7 +30,7 @@ class GraphicsAdaptor {
     }
 
     beginFill(color) {
-        let style = this._fillStyle;
+        const style = this._fillStyle;
         this._parseRGBCssStyleColor(color, style);
         this._gra.beginFill(style.color, style.alpha);
         return this;
@@ -43,13 +43,13 @@ class GraphicsAdaptor {
         return this;
     }
 
-    drawRoundRect(x, y ,w , h, r) {
-        this._gra.drawRoundedRect(x, y ,w ,h ,r);
+    drawRoundRect(x, y, w, h, r) {
+        this._gra.drawRoundedRect(x, y, w, h, r);
         return this;
     }
 
     drawCircle(x, y, r) {
-        this._gra.drawCircle(x, y ,r);
+        this._gra.drawCircle(x, y, r);
         return this;
     }
 
@@ -63,14 +63,14 @@ class GraphicsAdaptor {
         return this;
     }
 
-    setStrokeStyle(thickness, caps=0, joints=0, miterLimit=10) {
+    setStrokeStyle(thickness, caps = 0, joints = 0, miterLimit = 10) {
         this._lineStyleChanged = true;
         this._lineStyle.thickness = thickness;
         this._setStrokeStyle();
         return this;
     }
 
-    drawRect(x, y ,w, h) {
+    drawRect(x, y, w, h) {
         this._gra.drawRect(x, y, w, h);
         return this;
     }
@@ -86,12 +86,13 @@ class GraphicsAdaptor {
     }
 
     _setStrokeStyle() {
-        if(!this._lineStyleChanged) return;
+        if (!this._lineStyleChanged) {
+            return;
+        }
         this._lineStyleChanged = false;
-        let s = this._lineStyle;
+        const s = this._lineStyle;
         this._gra.lineStyle(s.thickness, s.color, s.alpha);
     }
-
 
     /**
      * @param color {string}
@@ -99,38 +100,35 @@ class GraphicsAdaptor {
      * @private
      */
     _parseRGBCssStyleColor(color, result) {
-        if(!color) {
+        if (!color) {
             return;
         }
-        color  = color.replace("/\s/", "");
-        if(color[0] === "#") {
+        color = color.replace('/s/', '');
+        if (color[0] === '#') {
             result.color = parseInt(color.substr(1), 16);
             return;
         }
 
         let regexResult;
 
-        regexResult = (/^rgba\((\d+),(\d+),(\d+),(\d+(\.?\d*))\)$/i).exec(color);
-        if(regexResult) {
+        regexResult = /^rgba\((\d+),(\d+),(\d+),(\d+(\.?\d*))\)$/i.exec(color);
+        if (regexResult) {
             result.color = this._RGBToNumber(regexResult);
             result.alpha = Number(regexResult[4]);
             return;
         }
 
-        regexResult = (/^rgb\((\d+),(\d+),(\d+)\)$/i).exec(color);
-        if(regexResult) {
+        regexResult = /^rgb\((\d+),(\d+),(\d+)\)$/i.exec(color);
+        if (regexResult) {
             result.color = this._RGBToNumber(regexResult);
         }
     }
 
-
     _RGBToNumber(regexResult) {
-        let [x, r, g, b] = regexResult;
+        const [x, r, g, b] = regexResult;
         return (r << 16) + (g << 8) + Number(b);
     }
-
 }
-
 
 // createjs tiny api
 const GP = GraphicsAdaptor.prototype;
@@ -145,21 +143,17 @@ GP.rect = GP.r = GP.dr = GP.drawRect;
 GP.cp = GP.closePath;
 GP.es = GP.endStroke;
 
-
-
 export function PIXIGraphicOverride() {
-    let p = PIXI.Graphics.prototype;
+    const p = PIXI.Graphics.prototype;
 
-    Object.defineProperties(p,{
+    Object.defineProperties(p, {
         graphics: {
-            get: function() {
-                if(!this.___adaptor___) {
+            get() {
+                if (!this.___adaptor___) {
                     this.___adaptor___ = new GraphicsAdaptor(this);
                 }
                 return this.___adaptor___;
-            }
-        }
+            },
+        },
     });
-
-
 }
