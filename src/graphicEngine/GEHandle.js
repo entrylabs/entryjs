@@ -217,24 +217,26 @@ export var GEHandle = function(canvas) {
         GEDragHelper.handleDrag(directionArrow);
 
         if (GEHelper.isWebGL) {
+            const arrowLength = 7; // 이 값이 작아질수록 길어집니다
             directionArrow.graphics
                 .f(this.arrowColor)
-                .mt(0, -42 +10)
-                .lt(9, -30 +10)
-                .lt(-9, -30 +10)
+                .mt(0, -40 + arrowLength)
+                .lt(9, -30 + arrowLength)
+                .lt(-9, -30 + arrowLength)
                 .closePath()
-                .dr(-2, -32 +10, 4, 25);
+                .dr(-2, -32 + arrowLength, 4, 25);
         } else {
+            const arrowLength = 7;
             directionArrow.graphics
                 .ss(4, 1, 1)
                 .s(this.arrowColor)
                 .f(this.arrowColor)
                 .dc(0, 0, this.DHANDLE_RADIUS)
                 .mt(0, 0)
-                .lt(0, -40)
-                .lt(7, -32)
-                .lt(-7, -32)
-                .lt(0, -40)
+                .lt(0, -40 + arrowLength)
+                .lt(7, -32 + arrowLength)
+                .lt(-7, -32 + arrowLength)
+                .lt(0, -40 + arrowLength)
                 .es();
         }
 
