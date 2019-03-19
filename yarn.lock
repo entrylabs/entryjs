@@ -767,10 +767,10 @@
     postcss "^7.0.2"
     xxhashjs "^0.2.1"
 
-"@entrylabs/tool@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@entrylabs/tool/-/tool-1.1.1.tgz#8f04ce214374d95c9fd212b3067bdc7ddcfb6cde"
-  integrity sha512-5vetkfCST+xhc9WIR5aB0GicUDEY4lIpnBPknkGY5OlGJp9e4E6JEPuNVDrXXr0iPo/AT7wIa2lqaruCGzCpfw==
+"@entrylabs/tool@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@entrylabs/tool/-/tool-1.1.2.tgz#9ea19ac2daa7e693935110d5d3b87162b09dd019"
+  integrity sha512-EcKcOapc/1gyoQ+26Uozt/yZqmMEXDKxfwrrcRNMhT8vQmYWLLx9BEzxg8GuOxH9bgt1BzD/6QV6LNG5/RNdCw==
   dependencies:
     "@entrylabs/event" "^1.0.2"
     "@entrylabs/postcss-url" "^8.0.1"

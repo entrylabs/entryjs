@@ -67,9 +67,9 @@ module.exports = merge(common, {
     },
     plugins: [
         new UglifyJSPlugin({
-            uglifyOptions: {
-                keep_fnames: true,
-            },
+            // uglifyOptions: {
+            //     keep_fnames: true,
+            // },
             include: /\.min\.js$/,
         }),
         new MiniCssExtractPlugin({
