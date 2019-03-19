@@ -3519,19 +3519,6 @@ entities@~1.1.1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/entities/-/entities-1.1.2.tgz#bdfa735299664dfafd34529ed4f8522a275fea56"
 
-entry-tool@latest:
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/entry-tool/-/entry-tool-1.0.11.tgz#ba0ab36f5bd82676482c123e2fff6a41086663a9"
-  integrity sha512-HiPK4co+5OxP351FxxSFKJAKS4eQ8tE1XkGFU6dGxy9bwiVeQ6oDBDZtCBlsrD22JlYjN59Az0MW0j9mmUb+0A==
-  dependencies:
-    axios "^0.18.0"
-    chroma-js "^1.4.0"
-    react-cookies "^0.1.0"
-    react-outside-click-handler "^1.2.2"
-    react-slick "^0.23.2"
-    redux-form "^7.4.2"
-    reselect "^4.0.0"
-
 errno@^0.1.1, errno@^0.1.3, errno@~0.1.7:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/errno/-/errno-0.1.7.tgz#4684d71779ad39af177e3f007996f7c67c852618"
