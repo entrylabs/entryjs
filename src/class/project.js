@@ -9,7 +9,32 @@ Entry.getStartProject = function(mediaFilePath) {
                 id: '7dwq',
             },
         ],
-        variables: [],
+        variables: [
+            {
+                name: Lang.Workspace.Variable_Timer,
+                id: 'brih',
+                visible: false,
+                value: '0',
+                variableType: 'timer',
+                x: 134,
+                y: -70,
+                array: [],
+                object: null,
+                isCloud: false,
+            },
+            {
+                name: Lang.Blocks.VARIABLE_get_canvas_input_value,
+                id: '1vu8',
+                visible: false,
+                value: '0',
+                variableType: 'answer',
+                x: 150,
+                y: -100,
+                array: [],
+                object: null,
+                isCloud: false,
+            },
+        ],
         objects: [
             {
                 id: '7y0y',
