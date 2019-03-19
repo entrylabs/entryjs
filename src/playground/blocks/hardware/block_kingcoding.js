@@ -175,7 +175,7 @@ Entry.Kingcoding.getBlocks = function() {
             paramsKeyMap: { // 실제 블록의 로직인 func 에서 해당 인덱스의 파라미터를 가져올때 쓸 key 값
                 PORT: 0,
             },
-            class: 'Kingcoding',
+            class: 'Kingcoding', 
             //isNotFor: ['Kingcoding'],
             func: function(sprite, script) {
                 var value = script.getNumberField('PORT', script);
