@@ -80,6 +80,7 @@ class Variable {
             this.rect_ = GEHelper.newGraphic();
             this.view_.addChild(this.rect_);
             this.view_.variable = this;
+            this.view_.visible = this.visible_;
             this.view_.mouseEnabled = true;
             GEDragHelper.handleDrag(this.view_);
 
@@ -114,7 +115,7 @@ class Variable {
                 this.setX(10 - 240 + Math.floor((variableLength % 66) / 11) * 80);
                 this.setY(variableIndex * 28 + 20 - 135 - Math.floor(variableLength / 11) * 264);
             }
-            this.view_.visible = this.visible_;
+
             this.view_.addChild(this.valueView_);
             if (Entry.type === 'workspace') {
                 this.view_.cursor = 'move';

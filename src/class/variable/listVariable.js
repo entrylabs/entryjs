@@ -20,6 +20,7 @@ class ListVariable extends Variable {
         this.rect_ = GEHelper.newGraphic();
         this.view_.addChild(this.rect_);
         this.view_.variable = this;
+        this.view_.visible = this.visible_;
         this.view_.mouseEnabled = true;
         this.view_.mouseChildren = true;
         GEDragHelper.handleDrag(this.view_);
