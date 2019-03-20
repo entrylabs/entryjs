@@ -206,7 +206,8 @@ Entry.Playground = class {
     }
 
     createButtonTabView(tabButtonView) {
-        const { commentDisable, backpackDisable } = Entry.options;
+        const { options = {} } = Entry;
+        const { commentDisable, backpackDisable } = options;
 
         if (!commentDisable) {
             const commentToggleButton = Entry.createElement('div')
