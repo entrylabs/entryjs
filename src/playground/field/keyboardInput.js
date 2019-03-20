@@ -2,7 +2,7 @@
  */
 'use strict';
 
-import {  Dropdown  } from 'entry-tool';
+import { Dropdown } from '@entrylabs/tool';
 import EntryEvent from '@entrylabs/event';
 
 Entry.FieldKeyboard = class FieldDropdown extends Entry.Field {
