@@ -1405,7 +1405,7 @@ Entry.BlockView = class BlockView {
         function _getOptions(blockView) {
             const isBoardReadOnly = blockView._board.readOnly;
             const { block, isInBlockMenu, copyable } = blockView;
-            const { options = {} } = Entry;
+            const { options:EntryOptions = {} } = Entry;
             const {
                 Blocks: { Duplication_option, CONTEXT_COPY_option, Delete_Blocks },
                 Menus: { save_as_image },
@@ -1435,7 +1435,7 @@ Entry.BlockView = class BlockView {
                 },
             };
 
-            const addStorage = !options.backpackDisable && {
+            const addStorage = !EntryOptions.backpackDisable && {
                 text: Lang.Blocks.add_my_storage,
                 callback() {
                     Entry.dispatchEvent('addStorage', {
@@ -1453,7 +1453,7 @@ Entry.BlockView = class BlockView {
             };
 
             const hasComment = !!block._comment;
-            const comment = !options.commentDisable && {
+            const comment = !EntryOptions.commentDisable && {
                 text: hasComment ? Lang.Blocks.delete_comment : Lang.Blocks.add_comment,
                 enable: block.isCommentable(),
                 callback() {
