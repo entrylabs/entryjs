@@ -353,7 +353,6 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                 ],
                 events: {},
