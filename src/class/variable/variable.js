@@ -518,4 +518,5 @@ class Variable {
 }
 
 // Entry.Variable = Variable;
+// add export
 export default Variable;
