@@ -1,7 +1,7 @@
 /*
  */
 'use strict';
-import EntryTool from 'entry-tool';
+import { Dropdown } from '@entrylabs/tool';
 import _cloneDeep from 'lodash/cloneDeep';
 /*
  *
@@ -95,10 +95,9 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         });
         const { options = [] } = this._contents;
         const convertedOptions = options.map(([key, value]) => {
-           return [this._convert(key, value), value];
+            return [this._convert(key, value), value];
         });
-        this.dropdownWidget = new EntryTool({
-            type: 'dropdownWidget',
+        this.dropdownWidget = new Dropdown({
             data: {
                 eventTypes: ['mousedown', 'touchstart', 'wheel'],
                 items: convertedOptions,

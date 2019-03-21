@@ -4,8 +4,10 @@
  */
 'use strict';
 
-import EntryTool from 'entry-tool';
+import { Sortable, ColorPicker, Dropdown, BackPack } from '@entrylabs/tool';
 import Toast from '../playground/toast';
+import EntryEvent from '@entrylabs/event';
+import { Destroyer } from '../util/destroyer/Destroyer';
 
 const Entry = require('../entry');
 
@@ -16,6 +18,8 @@ const Entry = require('../entry');
  */
 Entry.Playground = class {
     constructor() {
+        this._destroyer = this._destroyer || new Destroyer();
+        this._destroyer.destroy();
         this.isTextBGMode_ = false;
         this.enableArduino = false;
 
@@ -59,15 +63,15 @@ Entry.Playground = class {
             const tabButtonView = Entry.createElement('div', 'entryButtonTab')
                 .addClass('entryPlaygroundButtonTabWorkspace')
                 .appendTo(this.view_);
-            this.createButtonTabView(tabButtonView);
             this.tabButtonView_ = tabButtonView;
+            this.createButtonTabView(tabButtonView);
 
             const curtainView = Entry.createElement('div', 'entryCurtain')
                 .addClass('entryPlaygroundCurtainWorkspace entryRemove')
                 .appendTo(this.view_);
             const [mentHead, mentTail = ''] = Lang.Workspace.cannot_edit_click_to_stop.split('.');
             curtainView.innerHTML = `${mentHead}.<br/>${mentTail}`;
-            curtainView.addEventListener('click', function() {
+            curtainView.addEventListener('click', () => {
                 Entry.engine.toggleStop();
             });
             this.curtainView_ = curtainView;
@@ -102,6 +106,12 @@ Entry.Playground = class {
                 .appendTo(this.view_);
             this.generateCodeView(codeView);
             this.codeView_ = codeView;
+
+            const backPackView = Entry.createElement('div', 'entryBackPackView')
+                .addClass('entryPlaygroundBackPackView')
+                .appendTo(this.view_);
+            this.backPackView = backPackView;
+            this.createPackPackView(backPackView);
 
             const resizeHandle = Entry.createElement('div')
                 .addClass('entryPlaygroundResizeWorkspace', 'entryRemove')
@@ -206,6 +216,181 @@ Entry.Playground = class {
         commentToggleButton.bindOnClick(() => {
             this.toggleCommentButton();
         });
+
+        const backPackButton = Entry.createElement('div')
+            .addClass('entryPlaygroundBackPackButtonWorkspace')
+            .appendTo(tabButtonView);
+        backPackButton.setAttribute('alt', Lang.Blocks.show_all_comment);
+        backPackButton.setAttribute('title', Lang.Blocks.show_all_comment);
+
+        this.backPackButton_ = backPackButton;
+        backPackButton.bindOnClick(() => {
+            Entry.dispatchEvent('openBackPack');
+        });
+    }
+
+    createPackPackView(backPackView) {
+        this.backPack = new BackPack({
+            isShow: false,
+            data: {
+                items: [],
+                onClose: () => {
+                    Entry.dispatchEvent('closeBackPack');
+                },
+                onRemoveItem: (id) => {
+                    Entry.dispatchEvent('removeBackPackItem', id);
+                },
+                onChangeTitle: (id, title) => {
+                    Entry.dispatchEvent('changeBackPackTitle', id, title);
+                },
+                onCustomDragEnter: ({ type, value, onDragEnter }) => {
+                    if (Entry.GlobalSvg.isShow) {
+                        const { _view = {} } = Entry.GlobalSvg;
+                        onDragEnter({
+                            type: 'block',
+                            value: _view,
+                        });
+                    }
+                },
+                onDropItem: ({ type, value }) => {
+                    if (type === 'object') {
+                        const object = Entry.container.getObject(value);
+                        object.addStorage();
+                    } else if (type === 'block') {
+                        if (value.addStorage) {
+                            value.addStorage();
+                        }
+                    }
+                },
+            },
+            container: this.backPackView,
+        });
+        this.blockBackPackArea = Entry.Dom('div')
+            .addClass('blockBackPackDrop')
+            .appendTo(backPackView);
+        this.objectBackPackArea = Entry.Dom('div')
+            .addClass('objectBackPackDrop')
+            .appendTo(backPackView);
+        const icon = Entry.Dom('div', {
+            class: 'blockBackPackIcon',
+        });
+        const desc = Entry.Dom('div', {
+            class: 'blockBackPackDesc',
+            text: Lang.Workspace.my_storage_block_drop,
+        });
+        const desc2 = Entry.Dom('div', {
+            class: 'blockBackPackDesc',
+            text: Lang.Workspace.my_storage_object_drop,
+        });
+        this.blockBackPackArea.append(icon);
+        this.blockBackPackArea.append(desc);
+        this.objectBackPackArea.append(icon.clone());
+        this.objectBackPackArea.append(desc2);
+
+        const { view: blockView } = this.board || {};
+        if (blockView) {
+            const dom = blockView[0];
+            const eventDom = new EntryEvent(dom);
+            this.blockBackPackEvent = eventDom;
+            const areaDom = new EntryEvent(this.blockBackPackArea[0]);
+            this.blockBackPackAreaEvent = areaDom;
+            areaDom.on(
+                'drop',
+                (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const id = e.dataTransfer.getData('text');
+                    Entry.dispatchEvent('addBackPackToEntry', 'block', id);
+                    this.blockBackPackArea.css({
+                        display: 'none',
+                    });
+                },
+                false
+            );
+            eventDom.on('dragenter', (e) => {
+                const type = this.backPack.getData('dragType');
+                if (type === 'block') {
+                    const { width, height, top, left } = blockView[0].getBoundingClientRect();
+                    this.blockBackPackArea.css({
+                        width: width - 134,
+                        height,
+                        top,
+                        left,
+                        display: 'flex',
+                    });
+                }
+            });
+            areaDom.on('dragover', (e) => {
+                e.preventDefault();
+            });
+            areaDom.on('dragleave', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.blockBackPackArea.css({
+                    display: 'none',
+                });
+            });
+        }
+
+        const { modes = {} } = Entry.propertyPanel || {};
+        const { object = {} } = modes;
+        const { contentDom: objectView } = object;
+        if (objectView) {
+            const dom = objectView[0];
+            const eventDom = new EntryEvent(dom);
+            this.objectBackPackEvent = eventDom;
+            const areaDom = new EntryEvent(this.objectBackPackArea[0]);
+            this.objectBackPackAreaEvent = areaDom;
+            areaDom.on(
+                'drop',
+                (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const id = e.dataTransfer.getData('text');
+                    Entry.dispatchEvent('addBackPackToEntry', 'object', id);
+                    this.objectBackPackArea.css({
+                        display: 'none',
+                    });
+                },
+                false
+            );
+            eventDom.on('dragenter', (e) => {
+                const type = this.backPack.getData('dragType');
+                if (type === 'object') {
+                    const { width, height, top, left } = objectView[0].getBoundingClientRect();
+                    this.objectBackPackArea.css({
+                        width,
+                        height,
+                        top,
+                        left,
+                        display: 'flex',
+                    });
+                }
+            });
+            areaDom.on('dragover', (e) => {
+                e.preventDefault();
+            });
+            areaDom.on('dragleave', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.objectBackPackArea.css({
+                    display: 'none',
+                });
+            });
+        }
+    }
+
+    showBackPack(args) {
+        Entry.container.setDraggableObjects(true);
+        this.backPack.setData({ ...args });
+        this.backPack.show();
+        this.backPackView.removeClass('entryRemove');
+    }
+
+    hideBackPack() {
+        Entry.container.setDraggableObjects(false);
+        this.backPack.hide();
+        this.backPackView.addClass('entryRemove');
     }
 
     toggleCommentButton() {
@@ -273,6 +458,7 @@ Entry.Playground = class {
         }
 
         this.mainWorkspace = new Entry.Workspace(initOpts);
+        this._destroyer.add(this.mainWorkspace);
         this.blockMenu = this.mainWorkspace.blockMenu;
         this.board = this.mainWorkspace.board;
         this.toast = new Toast(this.board);
@@ -329,8 +515,7 @@ Entry.Playground = class {
             return;
         }
 
-        this.pictureSortableListWidget = new EntryTool({
-            type: 'sortableWidget',
+        this.pictureSortableListWidget = new Sortable({
             data: {
                 height: '100%',
                 sortableTarget: ['entryPlaygroundPictureThumbnail'],
@@ -383,7 +568,9 @@ Entry.Playground = class {
             'select_link imico_pop_select_arr_down'
         );
         fontLink.bindOnClick(() => {
-            const options = EntryStatic.fonts.map((font) => [font.name, font]);
+            const options = EntryStatic.fonts
+                .filter((font) => font.visible)
+                .map((font) => [font.name, font]);
             fontLink.addClass('imico_pop_select_arr_up');
             fontLink.removeClass('imico_pop_select_arr_down');
             this.openDropDown(
@@ -560,7 +747,7 @@ Entry.Playground = class {
         fontSizeSlider.appendChild(fontSizeKnob);
         this.fontSizeKnob = fontSizeKnob;
 
-        $(fontSizeKnob).bind('mousedown.fontKnob touchstart.fontKnob', function() {
+        $(fontSizeKnob).bind('mousedown.fontKnob touchstart.fontKnob', () => {
             const resizeOffset = $(fontSizeSlider).offset().left;
 
             const doc = $(document);
@@ -612,7 +799,7 @@ Entry.Playground = class {
         textEditInput.onkeyup = textChangeApply;
         textEditInput.onchange = textChangeApply;
 
-        textEditInput.addEventListener('focusin', function() {
+        textEditInput.addEventListener('focusin', () => {
             textEditInput.prevText = textEditInput.value;
         });
         textEditInput.onblur = function() {
@@ -631,7 +818,7 @@ Entry.Playground = class {
         textEditArea.onkeyup = textChangeApply;
         textEditArea.onchange = textChangeApply;
 
-        textEditArea.addEventListener('focusin', function() {
+        textEditArea.addEventListener('focusin', () => {
             textEditArea.prevText = textEditArea.value;
         });
         textEditArea.onblur = function() {
@@ -697,7 +884,7 @@ Entry.Playground = class {
             const innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner').addClass(
                 'entryPlaygroundAddSoundInner'
             );
-            innerSoundAdd.bindOnClick(function() {
+            innerSoundAdd.bindOnClick(() => {
                 if (!Entry.container || Entry.container.isSceneObjectsExist()) {
                     Entry.do('playgroundClickAddSound');
                 } else {
@@ -728,8 +915,7 @@ Entry.Playground = class {
             return;
         }
 
-        this.soundSortableListWidget = new EntryTool({
-            type: 'sortableWidget',
+        this.soundSortableListWidget = new Sortable({
             data: {
                 height: '100%',
                 sortableTarget: ['entryPlaygroundSoundThumbnail'],
@@ -1019,10 +1205,15 @@ Entry.Playground = class {
         this.textEditInput.value = text;
         this.textEditArea.value = text;
 
-        const font = EntryStatic.fonts.find((font) => font.family === entity.getFontName());
+        const font = EntryStatic.fonts
+            .filter((font) => font.visible)
+            .find((font) => font.family === entity.getFontName());
         if (font) {
             $('#entryText #entryTextBoxAttrFontName').text(font.name);
             $('#entryText #entryTextBoxAttrFontName').data('font', font);
+        } else {
+            $('#entryText #entryTextBoxAttrFontName').text('');
+            $('#entryText #entryTextBoxAttrFontName').data('font', EntryStatic.fonts[0]);
         }
 
         $('.style_link.imbtn_pop_font_bold').toggleClass('on', entity.fontBold);
@@ -1323,7 +1514,7 @@ Entry.Playground = class {
             }
             that.resizing = true;
             if (Entry.documentMousemove) {
-                listener = Entry.documentMousemove.attach(this, function({ clientX }) {
+                listener = Entry.documentMousemove.attach(this, ({ clientX }) => {
                     if (that.resizing) {
                         Entry.resizeElement({
                             menuWidth: clientX - Entry.interfaceState.canvasWidth,
@@ -1331,7 +1522,7 @@ Entry.Playground = class {
                     }
                 });
             }
-            $(document).bind('mouseup.resizeHandle touchend.resizeHandle', function() {
+            $(document).bind('mouseup.resizeHandle touchend.resizeHandle', () => {
                 $(document).unbind('.resizeHandle');
                 if (listener) {
                     that.resizing = false;
@@ -1396,7 +1587,7 @@ Entry.Playground = class {
         element.picture = picture;
 
         Entry.Utils.disableContextmenu(picture.view);
-        Entry.ContextMenu.onContextmenu(picture.view, function(coordinate) {
+        Entry.ContextMenu.onContextmenu(picture.view, (coordinate) => {
             const options = [
                 {
                     text: Lang.Workspace.context_rename,
@@ -1557,7 +1748,7 @@ Entry.Playground = class {
         element.sound = sound;
 
         Entry.Utils.disableContextmenu(sound.view);
-        Entry.ContextMenu.onContextmenu(sound.view, function(coordinate) {
+        Entry.ContextMenu.onContextmenu(sound.view, (coordinate) => {
             const options = [
                 {
                     text: Lang.Workspace.context_rename,
@@ -1636,7 +1827,7 @@ Entry.Playground = class {
                 soundInstance = createjs.Sound.play(sound.id);
             }
 
-            soundInstance.addEventListener('complete', function() {
+            soundInstance.addEventListener('complete', () => {
                 thumbnailView.removeClass('entryPlaygroundSoundStop');
                 thumbnailView.addClass('entryPlaygroundSoundPlay');
                 isPlaying = false;
@@ -1706,8 +1897,7 @@ Entry.Playground = class {
     }
 
     openDropDown = (options, target, callback, closeCallback) => {
-        const dropdownWidget = new EntryTool({
-            type: 'dropdownWidget',
+        const dropdownWidget = new Dropdown({
             data: {
                 items: options,
                 positionDom: target,
@@ -1731,8 +1921,7 @@ Entry.Playground = class {
     };
 
     openColourPicker = (target, color, canTransparent, callback) => {
-        const colorPicker = new EntryTool({
-            type: 'colorPicker',
+        const colorPicker = new ColorPicker({
             data: {
                 color,
                 positionDom: target,
@@ -1942,5 +2131,15 @@ Entry.Playground = class {
         if (Entry.hasVariableManager) {
             this.variableTab.removeClass('entryRemove');
         }
+    }
+
+    destroy() {
+        this.commentToggleButton_.unBindOnClick();
+        this.backPackButton_.unBindOnClick();
+        this.blockBackPackEvent.off();
+        this.blockBackPackAreaEvent.off();
+        this.objectBackPackEvent.off();
+        this.objectBackPackAreaEvent.off();
+        this._destroyer.destroy();
     }
 };

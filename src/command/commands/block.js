@@ -48,7 +48,7 @@
         const targetDom = Entry.getDom(restrictor.processDomQuery(targetDomQuery, nextCmd));
         const { left, top } = targetDom.getBoundingClientRect();
 
-        Entry.Utils.glideBlock(svgGroup, left, top, function() {
+        Entry.Utils.glideBlock(svgGroup, left, top, () => {
             restrictor.fadeInTooltip();
         });
     };
@@ -299,7 +299,7 @@
             );
             const targetRect = targetDom.getBoundingClientRect();
 
-            Entry.Utils.glideBlock(svgGroup, targetRect.left, targetRect.top, function() {
+            Entry.Utils.glideBlock(svgGroup, targetRect.left, targetRect.top, () => {
                 restrictor.fadeInTooltip();
             });
         },
@@ -511,7 +511,7 @@
         const targetDom = Entry.getDom(['playground', 'board', 'trashcan']);
         const targetRect = targetDom.getBoundingClientRect();
 
-        Entry.Utils.glideBlock(svgGroup, targetRect.left, targetRect.top, function() {
+        Entry.Utils.glideBlock(svgGroup, targetRect.left, targetRect.top, () => {
             restrictor.fadeInTooltip();
         });
     };
@@ -841,22 +841,16 @@
         do() {
             const threads = this.editor.board.code
                 .getThreads()
-                .filter(function(t) {
-                    return t.getFirstBlock().isDeletable();
-                })
-                .forEach(function(t) {
+                .filter((t) => t.getFirstBlock().isDeletable())
+                .forEach((t) => {
                     t.destroy();
                 });
         },
         state() {
             const threads = this.editor.board.code
                 .getThreads()
-                .filter(function(t) {
-                    return t.getFirstBlock().isDeletable();
-                })
-                .map(function(t) {
-                    return t.toJSON();
-                });
+                .filter((t) => t.getFirstBlock().isDeletable())
+                .map((t) => t.toJSON());
 
             return [threads];
         },
@@ -869,7 +863,7 @@
     c[COMMAND_TYPES.addThreads] = {
         do(threads) {
             const code = this.editor.board.code;
-            threads.forEach(function(t) {
+            threads.forEach((t) => {
                 code.createThread(t);
             });
         },
@@ -926,7 +920,7 @@
     function cloneCommand(newType, oldType, props) {
         c[newType] = _.clone(c[oldType]);
         if (props && props instanceof Array) {
-            props.forEach(function(prop) {
+            props.forEach((prop) => {
                 c[newType][prop[0]] = prop[1];
             });
         }

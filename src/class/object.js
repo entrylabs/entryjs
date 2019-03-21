@@ -28,7 +28,7 @@ Entry.EntryObject = class {
                 this.editObjectValues(false);
             });
 
-            this.sounds.forEach(function(s) {
+            this.sounds.forEach((s) => {
                 if (!s.id) {
                     s.id = Entry.generateHash();
                 }
@@ -216,23 +216,21 @@ Entry.EntryObject = class {
         const thumb = this.thumbnailView_;
         const picture = this.entity.picture;
         const objectType = this.objectType;
-
+        this.thumbUrl = '';
         if (objectType === 'sprite') {
             if (picture.fileurl) {
-                thumb.style.backgroundImage = `url("${picture.fileurl}")`;
+                this.thumbUrl = picture.fileurl;
             } else {
                 const fileName = picture.filename;
-                thumb.style.backgroundImage = `url("${
-                    Entry.defaultPath
-                }/uploads/${fileName.substring(0, 2)}/${fileName.substring(
-                    2,
-                    4
-                )}/thumb/${fileName}.png")`;
+                this.thumbUrl = `${Entry.defaultPath}/uploads/${fileName.substring(
+                    0,
+                    2
+                )}/${fileName.substring(2, 4)}/thumb/${fileName}.png`;
             }
         } else if (objectType === 'textBox') {
-            const textIconPath = `${Entry.mediaFilePath}text_icon.png`;
-            thumb.style.backgroundImage = `url(${textIconPath})`;
+            this.thumbUrl = `${Entry.mediaFilePath}text_icon.png`;
         }
+        thumb.style.backgroundImage = `url(${this.thumbUrl})`;
     }
 
     /**
@@ -658,11 +656,11 @@ Entry.EntryObject = class {
         ];
 
         if (isLocked) {
-            inputs.forEach(function(input) {
+            inputs.forEach((input) => {
                 input.setAttribute('disabled', 'disabled');
             });
         } else {
-            inputs.forEach(function(input) {
+            inputs.forEach((input) => {
                 input.removeAttribute('disabled');
             });
         }
@@ -683,7 +681,7 @@ Entry.EntryObject = class {
         if (activate && !this.isEditing) {
             this.isEditing = true;
         } else {
-            inputs.forEach(function(input) {
+            inputs.forEach((input) => {
                 input.blur(true);
             });
 
@@ -755,6 +753,12 @@ Entry.EntryObject = class {
                 },
             },
             {
+                text: Lang.Blocks.add_my_storage,
+                callback: () => {
+                    this.addStorage();
+                },
+            },
+            {
                 text: Lang.Blocks.export_object,
                 callback() {
                     Entry.dispatchEvent('exportObject', object);
@@ -764,6 +768,13 @@ Entry.EntryObject = class {
 
         const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
         Entry.ContextMenu.show(options, 'workspace-contextmenu', { x, y });
+    }
+
+    addStorage() {
+        Entry.dispatchEvent('addStorage', {
+            type: 'object',
+            data: this,
+        });
     }
 
     enableContextMenu() {
@@ -1203,6 +1214,11 @@ Entry.EntryObject = class {
         const objectView = Entry.createElement('li', objectId).addClass(
             'entryContainerListElementWorkspace'
         );
+
+        $(objectView).on('dragstart', (e) => {
+            // e.originalEvent.dataTransfer.setDragImage(canvas, 25, 25);
+            e.originalEvent.dataTransfer.setData('text', objectId);
+        });
         const fragment = document.createDocumentFragment();
         fragment.appendChild(objectView);
         // generate context menu
@@ -1295,8 +1311,10 @@ Entry.EntryObject = class {
     }
 
     _whenRotateEditable(func, obj) {
-        return Entry.Utils.when(function() {
-            return !(Entry.engine.isState('run') || obj.getLock());
-        }, func);
+        return Entry.Utils.when(() => !(Entry.engine.isState('run') || obj.getLock()), func);
+    }
+
+    setDraggable(isDraggable) {
+        $(this.view_).attr('draggable', isDraggable);
     }
 };
