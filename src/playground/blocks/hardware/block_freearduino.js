@@ -85,9 +85,8 @@ Entry.freearduino.getBlocks = function() {
         freearduino_get_analog_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
-            fontColor: '#fff',
             skeleton: 'basic_string_field',
-            statements: [],
+            fontColor: '#fff',
             params: [
                 {
                     type: 'Dropdown',
@@ -101,12 +100,12 @@ Entry.freearduino.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
-            events: {},
             def: {
                 params: [null],
-                type: 'freearduino_get_analog_value',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -124,9 +123,8 @@ Entry.freearduino.getBlocks = function() {
         freearduino_get_analog_value_pullup: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
-            fontColor: '#fff',
             skeleton: 'basic_string_field',
-            statements: [],
+            fontColor: '#fff',
             params: [
                 {
                     type: 'Dropdown',
@@ -140,12 +138,12 @@ Entry.freearduino.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
-            events: {},
             def: {
                 params: [null],
-                type: 'freearduino_get_analog_value_pullup',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -163,9 +161,8 @@ Entry.freearduino.getBlocks = function() {
         freearduino_get_analog_mapped_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
-            fontColor: '#fff',
             skeleton: 'basic_string_field',
-            statements: [],
+            fontColor: '#fff',
             params: [
                 {
                     type: 'Block',
@@ -198,7 +195,6 @@ Entry.freearduino.getBlocks = function() {
                     fontSize: 11,
                 },
             ],
-            events: {},
             def: {
                 params: [
                     {
@@ -206,7 +202,6 @@ Entry.freearduino.getBlocks = function() {
                         params: [ '0'],
                     }, 
                     null, null, null, null],
-                type: 'freearduino_get_analog_mapped_value',
             },
             paramsKeyMap: {
                 VALUE1: 0,
@@ -271,9 +266,8 @@ Entry.freearduino.getBlocks = function() {
         freearduino_get_humidity_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
-            fontColor: '#fff',
             skeleton: 'basic_string_field',
-            statements: [],
+            fontColor: '#fff',
             params: [
                 {
                     type: 'Dropdown',
@@ -299,12 +293,12 @@ Entry.freearduino.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
-            events: {},
             def: {
                 params: [null],
-                type: 'freearduino_get_humidity_value',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -323,9 +317,8 @@ Entry.freearduino.getBlocks = function() {
         freearduino_get_temperature_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
-            fontColor: '#fff',
             skeleton: 'basic_string_field',
-            statements: [],
+            fontColor: '#fff',
             params: [
                 {
                     type: 'Dropdown',
@@ -351,12 +344,12 @@ Entry.freearduino.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
-            events: {},
             def: {
                 params: [null],
-                type: 'freearduino_get_temperature_value',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -375,9 +368,8 @@ Entry.freearduino.getBlocks = function() {
         freearduino_get_distance_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
-            fontColor: '#fff',
             skeleton: 'basic_string_field',
-            statements: [],
+            fontColor: '#fff',
             params: [
                 {
                     type: 'Dropdown',
@@ -403,6 +395,8 @@ Entry.freearduino.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -428,12 +422,12 @@ Entry.freearduino.getBlocks = function() {
                     ],
                     value: '3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
-            events: {},
             def: {
                 params: [null,null],
-                type: 'freearduino_get_distance_value',
             },
             paramsKeyMap: {
                 PORT1: 0,
@@ -455,9 +449,8 @@ Entry.freearduino.getBlocks = function() {
         freearduino_set_digital_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
-            fontColor: '#fff',
             skeleton: 'basic',
-            statements: [],
+            fontColor: '#fff',
             params: [
                 {
                     type: 'Dropdown',
@@ -483,12 +476,16 @@ Entry.freearduino.getBlocks = function() {
                     ],
                     value: '13',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [['HIGH', '255'], ['LOW', '0']],
                     value: '255',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -496,10 +493,8 @@ Entry.freearduino.getBlocks = function() {
                     size: 12,
                 },
             ],
-            events: {},
             def: {
                 params: [null, null, null],
-                type: 'freearduino_set_digital_value',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -519,9 +514,8 @@ Entry.freearduino.getBlocks = function() {
         freearduino_get_digital_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
-            fontColor: '#fff',
             skeleton: 'basic_string_field',
-            statements: [],
+            fontColor: '#fff',
             params: [
                 {
                     type: 'Dropdown',
@@ -547,12 +541,12 @@ Entry.freearduino.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
-            events: {},
             def: {
                 params: [null],
-                type: 'freearduino_get_digital_value',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -570,9 +564,8 @@ Entry.freearduino.getBlocks = function() {
         freearduino_get_digital_value_pullup: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
-            fontColor: '#fff',
             skeleton: 'basic_string_field',
-            statements: [],
+            fontColor: '#fff',
             params: [
                 {
                     type: 'Dropdown',
@@ -598,12 +591,12 @@ Entry.freearduino.getBlocks = function() {
                     ],
                     value: '2',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
-            events: {},
             def: {
                 params: [null],
-                type: 'freearduino_get_digital_value_pullup',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -621,9 +614,8 @@ Entry.freearduino.getBlocks = function() {
         freearduino_set_pwm_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
-            fontColor: '#fff',
             skeleton: 'basic',
-            statements: [],
+            fontColor: '#fff',
             params: [
                 {
                     type: 'Dropdown',
@@ -637,6 +629,8 @@ Entry.freearduino.getBlocks = function() {
                     ],
                     value: '3',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -650,10 +644,8 @@ Entry.freearduino.getBlocks = function() {
                     size: 12,
                 },
             ],
-            events: {},
             def: {
                 params: [null, null, null],
-                type: 'freearduino_set_pwm_value',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -688,9 +680,8 @@ Entry.freearduino.getBlocks = function() {
         freearduino_set_servo_angle: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
-            fontColor: '#fff',
             skeleton: 'basic',
-            statements: [],
+            fontColor: '#fff',
             params: [
                 {
                     type: 'Dropdown',
@@ -716,6 +707,8 @@ Entry.freearduino.getBlocks = function() {
                     ],
                     value: '9',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -729,10 +722,8 @@ Entry.freearduino.getBlocks = function() {
                     size: 12,
                 },
             ],
-            events: {},
             def: {
                 params: [null, null, null],
-                type: 'freearduino_set_servo_angle',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -755,9 +746,8 @@ Entry.freearduino.getBlocks = function() {
         freearduino_set_motor_run: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
-            fontColor: '#fff',
             skeleton: 'basic',
-            statements: [],
+            fontColor: '#fff',
             params: [
                 {
                     type: 'Dropdown',
@@ -769,6 +759,8 @@ Entry.freearduino.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -779,6 +771,8 @@ Entry.freearduino.getBlocks = function() {
                     ],
                     value: '4',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -786,10 +780,8 @@ Entry.freearduino.getBlocks = function() {
                     size: 12,
                 },
             ],
-            events: {},
             def: {
                 params: [null, null, null],
-                type: 'freearduino_set_motor_run',
             },
             paramsKeyMap: {
                 VALUE1: 0,
@@ -816,9 +808,8 @@ Entry.freearduino.getBlocks = function() {
         freearduino_set_motor_speed: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,  
-            fontColor: '#fff',
             skeleton: 'basic',
-            statements: [],
+            fontColor: '#fff',
             params: [
                 {
                     type: 'Dropdown',
@@ -830,6 +821,8 @@ Entry.freearduino.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -843,10 +836,8 @@ Entry.freearduino.getBlocks = function() {
                     size: 12,
                 },
             ],
-            events: {},
             def: {
                 params: [null, null, null],
-                type: 'freearduino_set_motor_speed',
             },
             paramsKeyMap: {
                 VALUE1: 0,
