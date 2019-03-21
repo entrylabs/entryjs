@@ -1,11 +1,13 @@
 export default class Toast {
     static instance;
     constructor(board) {
-        if (Toast.instance) {
+        const $boardView = $(board.view);
+
+        if (!$boardView.find('.entryMobileToast') && Toast.instance) {
             return Toast.instance;
         }
         this.board = board;
-        this.$boardView = $(board.view);
+        this.$boardView = $boardView;
         this.generateView();
         Toast.instance = this;
     }
