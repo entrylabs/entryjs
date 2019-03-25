@@ -7686,6 +7686,12 @@ assignBlocks();
 function assignBlocks() {
     Entry.block.converters = getConverters();
     Entry.block = Object.assign({}, getBlocks(), blocks.getBlocks());
+    if (EntryStatic.isPracticalCourse) {
+        Object.assign(
+            Entry.block,
+            require('../playground/block_entry_mini').practicalCourseBlock,
+        );
+    }
 }
 
 function setHardwareLanguage() {
@@ -7696,7 +7702,7 @@ function setHardwareLanguage() {
         }
         if ('setLanguage' in hw) {
             const hwLang = hw.setLanguage();
-            const data = hwLang[global.Lang.type];
+            const data = hwLang[Lang.type] || hwLang[Lang.fallbackType];
             for (const key in data) {
                 Object.assign(Lang[key], data[key]);
             }
@@ -7704,7 +7710,10 @@ function setHardwareLanguage() {
     }
 }
 
-Entry.reloadBlock = assignBlocks;
+Entry.reloadBlock = function() {
+    setHardwareLanguage();
+    assignBlocks();
+};
 
 if (typeof exports === 'object') {
     exports.block = Entry.block;

@@ -2,8 +2,12 @@ var Lang = {};
 Lang.category = {
     "name": "en"
 };
-Lang.type = "en";
+Lang.type = "vn";
+Lang.fallbackType = "en";
+Lang.ko = "한국어";
 Lang.en = "English";
+Lang.jp = "日本語";
+Lang.vn = "tiếng Việt";
 Lang.Command = {
     "1": "장면 추가하기",
     "2": "장면 삭제하기",
@@ -2170,9 +2174,6 @@ Lang.Buttons = {
     "single_line": "Single line",
     "multi_line": "Multiline"
 };
-Lang.ko = "한국어";
-Lang.vn = "tiếng Việt";
-Lang.jp = "日本語";
 Lang.Menus = {
     "nothing_to_import": "There is no content to upload.",
     "nothing_to_export": "There is no content to download.",
@@ -2250,9 +2251,10 @@ Lang.Menus = {
     "discuss_saved": "is saved",
     "discuss_no_write_permission": "Cannot be saved with the current login account.",
     "discuss_no_project_permission": "Cannot be saved with the current login account.",
-    "discuss_write_abuse_detected": "Several articles have been written within a \nshort period of time. \nPlease try again in 10 minutes.",
+    "discuss_write_abuse_detected": "Several articles have been written within a \nshort period of time. \nPlease try again in 1 minutes.",
     "contents_abuse_detected": "Please try again in 5 minutes.",
     "contents_abuse_detected_10": "Please try again in 10 minutes.",
+    "discuss_new_write_abuse_warn": "Posting multiple comments within a \nshort period of time may limit the post \nof comments.\nBe careful of your use.",
     "discuss_write_abuse_warn": "Posting multiple comments within a \nshort period of time may limit the post \nof comments.\nBe careful of your use.",
     "find_not_your_email": "Please enter a valid email.",
     "search_lang": "search",
@@ -3001,8 +3003,8 @@ Lang.Menus = {
     "sound_effect": "Sound",
     "others_instrument": "Others",
     "aboutEntryDesc_1": "Entry is an education platform created to help anyone learn to code.",
-    "aboutEntryDesc_2": "Students are able to learn to code while playing.",
-    "aboutEntryDesc_3": "Teachers are able to teach and manage students effectively",
+    "aboutEntryDesc_2": "Students are able to learn to code while playing,",
+    "aboutEntryDesc_3": "teachers are able to teach effectively.",
     "aboutEntryDesc_4": "Entry is a non-profit service.",
     "aboutEntryDesc_5": "",
     "viewProjectTerms": "See usage policy",
@@ -3142,6 +3144,7 @@ Lang.Menus = {
     "Explore": "Explore",
     "Load": "Load",
     "My_lesson": "Open Lessons",
+    "textbook_learning": "Learning Text book",
     "Resources": "Resources",
     "play_software": "EBS Let’s play, SW!",
     "problem_solve": "Entry Learn",
@@ -3355,7 +3358,10 @@ Lang.Menus = {
     "exhibit_project": "Exhibit Project",
     "art_list_shared": "Shared",
     "art_list_group_shared": "Group",
+    "gl_mode_boost": "Boost Mode",
+    "gl_not_supported": "Can not run in boost mode.\nClick OK to run in default mode.",
     "view_project": "View Project",
+    "code_view": "View Code",
     "noResult": "No results found",
     "comment_view": "Comment",
     "upload_project": "Upload",
@@ -4465,6 +4471,11 @@ Lang.Menus = {
     "group_add_course_3": "'Learn > Open Lessons > Courseware",
     "group_add_course_4": "Browse courseware",
     "hw_main_title": "Download Program",
+    "main_learn_1": "If you are new to Entry",
+    "main_learn_2": "Learn about Entry",
+    "main_learn_3": "Watch the video to learn about the various functions of Entry,",
+    "main_learn_4": "create and share your project!",
+    "main_learn_5": "Watch the video",
     "hw_desc_wrapper": "Install the Upgraded \nEntry Hardware Connection Program\nand Offline Editor",
     "hw_downolad_link": "Download Hardware Connection Program",
     "save_as_image_all": "Save code as image",
@@ -4542,6 +4553,7 @@ Lang.Menus = {
     "coconut": "coconut",
     "jdkit": "JDKit",
     "practical_course": "Textbook",
+    "entry_user_policy": "Entry usage policy",
     "entry_scholarship_title": "Entry scholarly data",
     "entry_scholarship_content": "Entry collaborates with researchers to strengthen learning effectiveness. Check out our data.",
     "entry_scholarship_content_sub": "*We provide data which is saved in the form of a sequence of processes by users participating in the Online coding party to assist in study and analysis.",
@@ -4610,6 +4622,13 @@ Lang.Menus = {
     "rangers_index_content": "LINE Rangers are combined to defeat the powerful villain Mephisto and save Sally.<br />Be the hero by avoiding obstacles and saving Sally through the principle of software.<br />You can learn about software passing through each steps and get the licence<br />after finishing the mission.",
     "rangers_replay_button": "Replay",
     "rangers_start_button": "Start",
+    "lms_curriculum_intro": "",
+    "lms_curriculum_goal": "",
+    "lms_curriculum_prepare": "",
+    "lms_curriculum_study": "",
+    "lms_curriculum_summary": "",
+    "lms_curriculum_quiz": "",
+    "lms_curriculum_now_stage": "",
     "bug_report_title": "Bug Report",
     "bug_report_content": "Please tell us about errors or good suggestions that you find when you use Entry.",
     "object_import_syntax_error": "Since the object has syntax error blocks, it cannot be loaded. Please convert into block mode to load the object.",
@@ -4652,7 +4671,7 @@ Lang.Msgs = {
     "to_be_continue": "Still not working",
     "warn": "cảnh báo",
     "error_occured": "Oops, something went wrong. Why don't you try again? If you see this more than once, please let us know by Proposal board!",
-    "error_forbidden": "You don't have permission to save this projet. If you see this more than once, please let us know by Proposal board!",
+    "error_forbidden": "Can not save because you are not signed in.\nPlease make sure if you haven’t signed out in another tab.\nIf you still can not save after sign in, please leave a message via ‘Suggestion’.",
     "list_can_not_space": "tên danh sách không thể để trống",
     "sign_can_not_space": "tên tín hiệu không thể để trống",
     "variable_can_not_space": "Variable's name can't be space",
@@ -4989,7 +5008,7 @@ Lang.Workspace = {
     "select_sound": "Select sound",
     "Size": "kích cỡ",
     "show_variable": "hiển thị các biến ",
-    "default_value": "Giá trị mặc định",
+    "default_value": "Mặc định",
     "slide": "slide",
     "min_value": "giá trị nhỏ nhất",
     "max_value": "giá trị lớn nhất",
@@ -7063,6 +7082,7 @@ Lang.TextCoding = {
     "message_conv_no_object": "Object can't convert",
     "message_conv_no_function": "Function can't convert",
     "message_conv_no_entry_event_function": "Entry Event Function can't exist within other functions.",
+    "message_conv_undefined_function": "Undefined instruction. Please make sure you instruction correctly.",
     "message_conv_is_expect1": "Syntax error. Please make sure you type ",
     "message_conv_is_expect2": " correctly.",
     "message_conv_instead": "Syntax error. It should be %2 instead of %1.",
@@ -7650,6 +7670,6 @@ Lang.Painter = {
     "exit_fullscreen": "Exit full screen"
 };
 
-Lang.Support = ["ko", "en", "ebs", "code", "vn", "jp"];
+Lang.Support = ["ko", "en", "vn", "jp"];
 if (typeof exports == "object")
     exports.Lang = Lang;
