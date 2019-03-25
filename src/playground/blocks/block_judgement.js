@@ -335,7 +335,6 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Dropdown',
@@ -354,7 +353,6 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                 ],
                 events: {},
@@ -476,13 +474,13 @@ module.exports = {
                         case 'EQUAL':
                             return leftValue == rightValue;
                         case 'GREATER':
-                            return Number(leftValue) > Number(rightValue);
+                            return leftValue > rightValue;
                         case 'LESS':
-                            return Number(leftValue) < Number(rightValue);
+                            return leftValue < rightValue;
                         case 'GREATER_OR_EQUAL':
-                            return Number(leftValue) >= Number(rightValue);
+                            return leftValue >= rightValue;
                         case 'LESS_OR_EQUAL':
-                            return Number(leftValue) <= Number(rightValue);
+                            return leftValue <= rightValue;
                     }
                 },
                 syntax: {

@@ -9,7 +9,7 @@ import { PIXIScaleAdaptor } from '../class/pixi/atlas/PIXIScaleAdaptor';
 
 
 
-
+declare let $:any;
 declare let createjs:any;
 
 interface IGraphicsEngineApplication {
@@ -221,9 +221,14 @@ class _GEHelper extends GEHelperBase {
 
     newSpriteWithCallback(url:string, callback?:()=>void) {
         let img = new Image();
-        img.onload = ()=>{
-            callback && callback();
-        };
+        if(callback) {
+            const $img = $(img);
+            const handle = ()=>{
+                $img.off('load', handle);
+                callback();
+            };
+            $img.on('load', handle);
+        }
         img.src = url;
         if(this._isWebGL) {
             return PIXI.Sprite.from(img);

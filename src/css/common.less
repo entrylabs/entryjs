@@ -2,6 +2,16 @@
 @image_url: '../../images/';
 @image_url2: '../images/';
 
+html {
+    overflow: hidden;
+}
+
+#__next {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
 html,
 body,
 .wrapper,
@@ -79,11 +89,11 @@ body,
     top: -9999px;
 }
 
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
     -webkit-appearance: none;
 }
 
-input[type=number] {
+input[type='number'] {
     -moz-appearance: textfield;
 }

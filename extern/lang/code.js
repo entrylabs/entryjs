@@ -3,7 +3,11 @@ Lang.category = {
     "name": "ko"
 };
 Lang.type = "ko";
+Lang.fallbackType = "ko";
+Lang.ko = "한국어";
 Lang.en = "English";
+Lang.jp = "日本語";
+Lang.vn = "tiếng Việt";
 Lang.Command = {
     "1": "장면 추가하기",
     "2": "장면 삭제하기",
@@ -2170,9 +2174,6 @@ Lang.Buttons = {
     "single_line": "한 줄 쓰기",
     "multi_line": "여러 줄 쓰기"
 };
-Lang.ko = "한국어";
-Lang.vn = "tiếng Việt";
-Lang.jp = "日本語";
 Lang.Menus = {
     "nothing_to_import": "불러오기 할 항목이 없습니다.",
     "nothing_to_export": "내려받기 할 항목이 없습니다.",
@@ -2250,9 +2251,10 @@ Lang.Menus = {
     "discuss_saved": "이 저장되었습니다.",
     "discuss_no_write_permission": "현재 로그인된 계정으로는 글을 작성하실 수 없습니다.",
     "discuss_no_project_permission": "현재 로그인된 계정으로는 작품을 게시하실 수 없습니다.",
-    "discuss_write_abuse_detected": "짧은 시간안에 여러 글이 작성되었습니다.\n10분 뒤에 다시 시도해주세요.",
+    "discuss_write_abuse_detected": "짧은 시간안에 여러 글이 작성되었습니다.\n1분 뒤에 다시 시도해주세요.",
     "contents_abuse_detected": "5분 뒤에 다시 시도해주세요.",
     "contents_abuse_detected_10": "10분 뒤에 다시 시도해주세요.",
+    "discuss_new_write_abuse_warn": "짧은 시간안에 새 글을 작성하는 경우 \n게시글 작성이 제한될 수 있습니다. \n이용에 주의하시길 바랍니다.",
     "discuss_write_abuse_warn": "짧은 시간안에 여러 댓글을 작성하는 경우 \n댓글 작성이 제한될 수 있습니다. \n이용에 주의하시길 바랍니다.",
     "find_not_your_email": "올바른 이메일을 입력해주세요.",
     "search_lang": "검색",
@@ -3000,9 +3002,9 @@ Lang.Menus = {
     "janggu": "장구",
     "sound_effect": "효과음",
     "others_instrument": "기타타악기",
-    "aboutEntryDesc_1": "엔트리는 누구나 무료로 소프트웨어 교육을 받을 수 있게 개발된 소프트웨어 교육 플랫폼입니다.",
-    "aboutEntryDesc_2": "학생들은 소프트웨어를 쉽고 재미있게 배울 수 있고,",
-    "aboutEntryDesc_3": "선생님은 효과적으로 학생들을 가르치고 관리할 수 있습니다.",
+    "aboutEntryDesc_1": "엔트리는 누구나 무료로 소프트웨어 교육을 받을 수 있는 플랫폼입니다.",
+    "aboutEntryDesc_2": "학생들이 소프트웨어를 쉽고 재미있게 학습하고,",
+    "aboutEntryDesc_3": "선생님들은 효과적으로 학생들을 가르칠 수 있습니다.",
     "aboutEntryDesc_4": "엔트리는 공공재와 같이",
     "aboutEntryDesc_5": "비영리로 운영됩니다.",
     "viewProjectTerms": "이용정책 보기",
@@ -3142,6 +3144,7 @@ Lang.Menus = {
     "Explore": "구경하기",
     "Load": "불러오기",
     "My_lesson": "오픈 강의",
+    "textbook_learning": "교과서 학습하기",
     "Resources": "교육 자료",
     "play_software": "소프트웨어야 놀자!",
     "problem_solve": "엔트리 학습하기",
@@ -3355,7 +3358,10 @@ Lang.Menus = {
     "exhibit_project": "작품 전시하기",
     "art_list_shared": "개인",
     "art_list_group_shared": "학급",
+    "gl_mode_boost": "부스트 모드",
+    "gl_not_supported": "부스트 모드로 실행할 수 없는 환경입니다.\n확인을 누르면 기본모드로 실행됩니다.",
     "view_project": "코드 보기",
+    "code_view": "코드보기",
     "noResult": "검색 결과가 없습니다.",
     "comment_view": "댓글",
     "upload_project": "올리기",
@@ -4465,6 +4471,11 @@ Lang.Menus = {
     "group_add_course_3": "추가하고 싶은 강의 모음을 관심 강의 모음으로 등록해 주세요.",
     "group_add_course_4": "강의 모음 보기",
     "hw_main_title": "프로그램 다운로드",
+    "main_learn_1": "엔트리에 처음 오셨다면",
+    "main_learn_2": "엔트리 알아보기",
+    "main_learn_3": "영상을 통헤 엔트리의 다양한 기능을 알아보고,",
+    "main_learn_4": "멋진 작품을 만들어 친구들과 공유해보세요!",
+    "main_learn_5": "영상보기",
     "hw_desc_wrapper": "엔트리 하드웨어 연결 프로그램과 오프라인 버전이 \n서비스를 한층 더 강화해 업그레이드 되었습니다.\n업데이트 된 프로그램을 설치해주세요!",
     "hw_downolad_link": "하드웨어 연결 \n프로그램 다운로드",
     "save_as_image_all": "모든 코드 이미지로 저장하기",
@@ -4542,6 +4553,7 @@ Lang.Menus = {
     "coconut": "코코넛",
     "jdkit": "제이디키트",
     "practical_course": "교과용 만들기",
+    "entry_user_policy": "엔트리 이용정책",
     "entry_scholarship_title": "엔트리 학술 자료",
     "entry_scholarship_content": "엔트리는 대학/학회 등과 함께 다양한 연구를 진행하여 전문성을 강화해나가고 있습니다. 엔트리에서 제공하는 연구용 자료를 확인해보세요",
     "entry_scholarship_content_sub": "*엔트리에서 제공하는 데이터는 연구 및 분석에 활용될 수 있도록 온라인코딩파티에 참여한 사용자들이 미션을 해결하는 일련의 과정을 로그 형태로 저장한 데이터 입니다.",
@@ -4610,6 +4622,13 @@ Lang.Menus = {
     "rangers_index_content": "악당 메피스토에게 납치된 샐리를 구하기 위해 라인 레인저스가 뭉쳤습니다.<br />소프트웨어의 원리를 통해 장애물을 극복하고, 샐리를 구출하는 영웅이 되어주세요.<br />각 단계를 통과하면서 자연스럽게 소프트웨어를 배워볼 수 있고, 미션을 마치면 인증서도<br />얻을 수 있습니다.",
     "rangers_replay_button": "영상 다시보기",
     "rangers_start_button": "미션 시작",
+    "lms_curriculum_intro": "학습시작",
+    "lms_curriculum_goal": "학습목표",
+    "lms_curriculum_prepare": "학습준비",
+    "lms_curriculum_study": "실습활동",
+    "lms_curriculum_summary": "학습정리",
+    "lms_curriculum_quiz": "학습문제",
+    "lms_curriculum_now_stage": "현재 단계",
     "bug_report_title": "버그 리포트",
     "bug_report_content": "이용 시 발생하는 오류나 버그 신고 및 엔트리를 위한 좋은 제안을 해주세요. 신고나 제안과 무관한 욕설 작성 시 이용이 정지될 수 있습니다.",
     "object_import_syntax_error": "불러오려는 오브젝트에 엔트리파이선 문법과 맞지 않는 블록이 포함되어 있습니다. 블록코딩으로 전환한 뒤 오브젝트를 불러와주세요.",
@@ -4652,7 +4671,7 @@ Lang.Msgs = {
     "to_be_continue": "준비 중입니다.",
     "warn": "경고",
     "error_occured": "다시 한번 시도해 주세요. 만약 같은 문제가 다시 발생 하면 '제안 및 건의' 게시판에 문의 바랍니다. ",
-    "error_forbidden": "저장할 수 있는 권한이 없습니다. 만약 같은 문제가 다시 발생 하면 '제안 및 건의' 게시판에 문의 바랍니다. ",
+    "error_forbidden": "로그아웃 상태라 저장을 할 수 없습니다.\n만약 로그인했다면 다른 창에서 로그아웃 했는지 확인해 주세요.\n로그인 확인 후 저장이 안 된다면 ‘제안 및 건의’ 게시판에 문의 하세요.",
     "list_can_not_space": "리스트의 이름은 빈 칸이 될 수 없습니다.",
     "sign_can_not_space": "신호의 이름은 빈 칸이 될 수 없습니다.",
     "variable_can_not_space": "변수의 이름은 빈 칸이 될 수 없습니다.",
@@ -4696,7 +4715,7 @@ Lang.Msgs = {
     "hw_connection_success_desc": "하드웨어 아이콘을 더블클릭하면, 센서값만 확인할 수 있습니다.",
     "hw_connection_success_desc2": "하드웨어와 정상적으로 연결되었습니다.",
     "ie_page_title": "이 브라우저는<br/>지원하지 않습니다.",
-    "ie_page_desc": "엔트리는 인터넷 익스플로어 11 버전 이상 또는 크롬 브라우저에서 이용하실 수 있습니다.<br/>윈도우 업데이트를 진행하시거나, 크롬 브라우저를 설치해주세요.<br/>엔트리 오프라인 버전은 인터넷이 연결되어 있지 않아도 사용할 수 있습니다. 지금 다운받아서 시작해보세요!",
+    "ie_page_desc": "엔트리는 인터넷 익스플로러 11 버전 이상 또는 크롬 브라우저에서 이용하실 수 있습니다.<br/>윈도우 업데이트를 진행하시거나, 크롬 브라우저를 설치해주세요.<br/>엔트리 오프라인 버전은 인터넷이 연결되어 있지 않아도 사용할 수 있습니다. 지금 다운받아서 시작해보세요!",
     "ie_page_chrome_download": "크롬 브라우저<br/>다운로드",
     "ie_page_windows_update": "윈도우 최신버전<br>업데이트",
     "ie_page_offline_32bit_download": "엔트리 오프라인 32bit<br>다운로드",
@@ -7063,6 +7082,7 @@ Lang.TextCoding = {
     "message_conv_no_object": "객체는 지원되지 않습니다",
     "message_conv_no_function": "함수가 변환될 수 없습니다",
     "message_conv_no_entry_event_function": "엔트리 이벤트 함수는 다른 함수 안에 존재할 수 없습니다.",
+    "message_conv_undefined_function": "정의되지 않은 명령어 입니다. 명령어가 올바르게 입력되었는지 확인해주세요.",
     "message_conv_is_expect1": "올바르지 않은 문법입니다. ",
     "message_conv_is_expect2": " 가 올바르게 입력되었는지 확인해주세요.",
     "message_conv_instead": "올바르지 않은 문법입니다. %1 대신 %2 가 필요합니다.",
@@ -7650,6 +7670,6 @@ Lang.Painter = {
     "exit_fullscreen": "전체화면 해제"
 };
 
-Lang.Support = ["ko", "en", "ebs", "code", "vn", "jp"];
+Lang.Support = ["ko", "en", "vn", "jp"];
 if (typeof exports == "object")
     exports.Lang = Lang;

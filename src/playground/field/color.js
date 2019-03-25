@@ -2,7 +2,7 @@
  */
 'use strict';
 
-import EntryTool from 'entry-tool';
+import { ColorPicker } from '@entrylabs/tool';
 
 /*
  *
@@ -125,8 +125,7 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
             class: 'entry-color-picker',
             parent: $('body'),
         });
-        this.colorPicker = new EntryTool({
-            type: 'colorPicker',
+        this.colorPicker = new ColorPicker({
             data: {
                 eventTypes: ['mousedown', 'touchstart', 'wheel'],
                 color: this.getValue(),
@@ -140,7 +139,7 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
                     }
                     if (this.colorPicker) {
                         this.colorPicker.hide();
-                        this.applyValue(color);
+                        color && this.applyValue(color);
                     }
                     this._attachDisposeEvent();
                 },
@@ -163,6 +162,7 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
             container: this.optionGroup[0],
         }).on('change', (color) => {
             if (color) {
+                this.colorPicker.setData({ color });
                 this.applyValue(color);
             }
         });

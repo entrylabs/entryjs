@@ -1,6 +1,6 @@
 'use strict';
 
-import EntryTool from 'entry-tool';
+import { Dropdown } from '@entrylabs/tool';
 
 Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
     constructor(content, blockView, index, renderMode, i, isDynamic) {
@@ -179,7 +179,7 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
         const convertedOptions = options.map(([key, value]) => {
             return [this._convert(key, value), value];
         });
-        this.dropdownWidget = new EntryTool({
+        this.dropdownWidget = new Dropdown({
             type: 'dropdownWidget',
             data: {
                 eventTypes: ['mousedown', 'touchstart', 'wheel'],

@@ -10,6 +10,7 @@
 import ColorSpoid from '../playground/colorSpoid';
 import { GEHelper } from '../graphicEngine/GEHelper';
 import { GEHandle } from '../graphicEngine/GEHandle';
+import { PIXIAtlasManager } from './pixi/atlas/PIXIAtlasManager';
 
 /**
  * class for a canvas
@@ -175,6 +176,10 @@ Entry.Stage.prototype.update = function() {
     else Entry.requestUpdate = false;
 };
 
+Entry.Stage.prototype.updateForce = function() {
+    this._app && this._app.render();
+};
+
 /**
  * add object entity on canvas
  * @param {Entry.EntryObject} object
@@ -241,16 +246,16 @@ Entry.Stage.prototype.unloadDialog = function({ object }) {
 };
 
 Entry.Stage.prototype.setEntityIndex = function({ object }, index) {
+    if (index === -1) {
+        return;
+    }
     var selectedObjectContainer = Entry.stage.selectedObjectContainer;
     var currentIndex = selectedObjectContainer.getChildIndex(object);
 
-    if (currentIndex === index) {
+    if (currentIndex === -1 ||  currentIndex === index) {
         return;
-    } else if (currentIndex > index) {
-        selectedObjectContainer.setChildIndex(object, index);
-    } else {
-        selectedObjectContainer.setChildIndex(object, index);
     }
+    selectedObjectContainer.setChildIndex(object, index);
     Entry.requestUpdate = true;
 };
 

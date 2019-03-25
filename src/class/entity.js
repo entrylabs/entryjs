@@ -942,19 +942,18 @@ Entry.EntityObject = class EntityObject {
          * //이 코드는 createjs 일때만 호출 됨.
          * @param {AtlasImageLoadingInfo} info
          */
-        const onImageLoad = (info)=> {
+        const onImageLoad = GEHelper.isWebGL ? null : ((info)=> {
             if (this.removed) return;
             if (info.source() !== this.object.image) return;
             let hasFilter = !_.isEmpty(that.object.filters);
             GEHelper.colorFilter.setCache(this, hasFilter);
-            if(GEHelper.isWebGL) {
-                this.object.refreshFilter();
-            }
             Entry.requestUpdate = true;
-        };
+        });
+
         GEHelper.resManager.reqResource(this.object, this.parent.scene.id, pictureModel, onImageLoad);
         if(GEHelper.isWebGL) {
             this._scaleAdaptor.updateScaleFactor();
+            this.object.refreshFilter();
         }
 
         Entry.dispatchEvent('updateObject');

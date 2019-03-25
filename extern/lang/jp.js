@@ -2,8 +2,12 @@ var Lang = {};
 Lang.category = {
     "name": "en"
 };
-Lang.type = "en";
+Lang.type = "jp";
+Lang.fallbackType = "en";
+Lang.ko = "한국어";
 Lang.en = "English";
+Lang.jp = "日本語";
+Lang.vn = "tiếng Việt";
 Lang.Command = {
     "1": "장면 추가하기",
     "2": "장면 삭제하기",
@@ -2170,9 +2174,6 @@ Lang.Buttons = {
     "single_line": "一行で書く",
     "multi_line": "改行して書く"
 };
-Lang.ko = "한국어";
-Lang.vn = "tiếng Việt";
-Lang.jp = "日本語";
 Lang.Menus = {
     "nothing_to_import": "読み込みできる項目がありません。",
     "nothing_to_export": "書き出しできる項目がありません。",
@@ -2250,9 +2251,10 @@ Lang.Menus = {
     "discuss_saved": "が保存されました。",
     "discuss_no_write_permission": "現在ログイン中のアカウントでは投稿を作成できません。",
     "discuss_no_project_permission": "現在ログイン中のアカウントでは作品を掲示できません。",
-    "discuss_write_abuse_detected": "短時間に複数の投稿が作成されました。\n10分後にやり直してください。",
+    "discuss_write_abuse_detected": "短時間に複数の投稿が作成されました。\n1分後にやり直してください。",
     "contents_abuse_detected": "5分後にやり直してください。",
     "contents_abuse_detected_10": "10分後にやり直してください。",
+    "discuss_new_write_abuse_warn": "短時間に複数のコメントを作成した場合、\nコメントの作成が制限されることがあります。\nあらかじめご注意ください。",
     "discuss_write_abuse_warn": "短時間に複数のコメントを作成した場合、\nコメントの作成が制限されることがあります。\nあらかじめご注意ください。",
     "find_not_your_email": "メールアドレスが正しくありません",
     "search_lang": "検索",
@@ -3000,9 +3002,9 @@ Lang.Menus = {
     "janggu": "太鼓",
     "sound_effect": "効果音",
     "others_instrument": "その他の打楽器",
-    "aboutEntryDesc_1": "エントリーは誰でも無料でソフトウェア教育を受けられるように開発されたソフトウェア教育プラットフォームです。",
-    "aboutEntryDesc_2": "学生たちはソフトウェアを簡単かつ楽しく学ぶことができ、",
-    "aboutEntryDesc_3": "先生は効果的に学生たちを教えたり管理することができます。",
+    "aboutEntryDesc_1": "エントリーは、誰でも無料で使えるプログラミング教育プラットフォームです。",
+    "aboutEntryDesc_2": "生徒はプログラミングを簡単に楽しく学習し、",
+    "aboutEntryDesc_3": "先生は効果的に生徒を教えることができます。",
     "aboutEntryDesc_4": "エントリーは公共財のように",
     "aboutEntryDesc_5": "非営利で運営されています。",
     "viewProjectTerms": "利用ポリシーを見る",
@@ -3142,6 +3144,7 @@ Lang.Menus = {
     "Explore": "観覧する",
     "Load": "読み込む",
     "My_lesson": "オープン講義",
+    "textbook_learning": "教科書で学習する",
     "Resources": "教育資料",
     "play_software": "ソフトウェア、遊ぼう!",
     "problem_solve": "エントリー学習",
@@ -3355,7 +3358,10 @@ Lang.Menus = {
     "exhibit_project": "作品を展示する",
     "art_list_shared": "個人",
     "art_list_group_shared": "クラス",
+    "gl_mode_boost": "ブーストモード",
+    "gl_not_supported": "ブーストモードで実行できない環境です。\n確認をクリックすると基本モードで実行されます。",
     "view_project": "コードを見る",
+    "code_view": "コード詳細",
     "noResult": "検索結果がありません。",
     "comment_view": "コメント",
     "upload_project": "コメントする",
@@ -4465,6 +4471,11 @@ Lang.Menus = {
     "group_add_course_3": "追加したい講義集を関心講義集に登録してください。",
     "group_add_course_4": "講義集を見る",
     "hw_main_title": "プログラムダウンロード",
+    "main_learn_1": "エントリーが初めてなら",
+    "main_learn_2": "エントリーについて知ろう",
+    "main_learn_3": "動画でエントリーのさまざまな機能を学び,",
+    "main_learn_4": "ステキな作品を作って友だちと共有してみましょう！",
+    "main_learn_5": "動画を見る",
     "hw_desc_wrapper": "ハードウェア結合プログラムとオフ\nラインバージョンが\より一層レベルアップしてアップグ\nレードされました。",
     "hw_downolad_link": "ハードウェア結合\nプログラムダウンロード",
     "save_as_image_all": "すべてのコードを画像で保存する",
@@ -4542,6 +4553,7 @@ Lang.Menus = {
     "coconut": "coconut",
     "jdkit": "JDKit",
     "practical_course": "教科用を作成する",
+    "entry_user_policy": "エントリー利用ポリシー",
     "entry_scholarship_title": "エントリー学術資料",
     "entry_scholarship_content": "エントリーは大学/学会などと共に多様な研究を行い、専門性を強化し続けています。エントリーで提供している研究用資料を確認してみてください。",
     "entry_scholarship_content_sub": "*エントリーで提供するデータは、研究及び分析に活用されるようオンラインコーディングパーティーに参加したユーザーたちがミッションを解決する一連の過程をログ形式で保存したデータです。",
@@ -4610,6 +4622,13 @@ Lang.Menus = {
     "rangers_index_content": "最強ボス・メフィストに連れ去られたサリーを救うため、LINEレンジャーが一つになりました。<br/>プログラミングの原理で障害物を克服し、サリーを救うヒーローになってください。各ステップを<br/>進むと自然にプログラミングを学ぶことができ、ミッションを終えたら証明書ももらえます。",
     "rangers_replay_button": "動画を見る",
     "rangers_start_button": "スタート",
+    "lms_curriculum_intro": "",
+    "lms_curriculum_goal": "",
+    "lms_curriculum_prepare": "",
+    "lms_curriculum_study": "",
+    "lms_curriculum_summary": "",
+    "lms_curriculum_quiz": "",
+    "lms_curriculum_now_stage": "",
     "bug_report_title": "バグ報告",
     "bug_report_content": "利用中に発生するエラーやバグの報告のほか、エントリーのためにすばらしい意見をお寄せ下さい。",
     "object_import_syntax_error": "Since the object has syntax error blocks, it cannot be loaded. Please convert into block mode to load the object.",
@@ -4652,7 +4671,7 @@ Lang.Msgs = {
     "to_be_continue": "準備中です。",
     "warn": "警告",
     "error_occured": "もう一度やり直してください。同じ問題が再度発生する時は、「提案と意見」掲示板にお問い合わせください。",
-    "error_forbidden": "保存できる権限がありません。同じ問題が再度発生する時は、「提案と意見」掲示板にお問い合わせください。",
+    "error_forbidden": "ログアウト状態であるため、作品を保存することができません。\n他のタブでログアウントされているか確認してください。\nログインの確認ができても、保存ができなければ”提案と意見”にてお問い合わせください。",
     "list_can_not_space": "リスト名のセルを空白にすることはできません。",
     "sign_can_not_space": "信号の名前のセルを空白にすることはできません。",
     "variable_can_not_space": "変数の名前のセルを空白にすることはできません。",
@@ -7063,6 +7082,7 @@ Lang.TextCoding = {
     "message_conv_no_object": "オブジェクトには対応していません",
     "message_conv_no_function": "関数は変換できません。",
     "message_conv_no_entry_event_function": "エントリーイベント関数は他の関数の中に存在できません。",
+    "message_conv_undefined_function": "定義されていない命令です。命令が正しく入力されているか確認してください。",
     "message_conv_is_expect1": "正しくない文法です。",
     "message_conv_is_expect2": " が正しく入力されているか確認してください。",
     "message_conv_instead": "正しくない文法です。%1の代わりに%2が必要です。",
@@ -7650,6 +7670,6 @@ Lang.Painter = {
     "exit_fullscreen": "全画面を終了"
 };
 
-Lang.Support = ["ko", "en", "ebs", "code", "vn", "jp"];
+Lang.Support = ["ko", "en", "vn", "jp"];
 if (typeof exports == "object")
     exports.Lang = Lang;

@@ -103,6 +103,7 @@ Entry.clearProject = function() {
     Entry.variableContainer.clear();
     Entry.container.clear();
     Entry.scene.clear();
+    Entry.stateManager.clear();
     GEHelper.resManager.clearProject();
     if (Entry.Loader) {
         Entry.Loader.loaded = false;
@@ -372,7 +373,7 @@ Entry.resizeElement = function(interfaceModel) {
 Entry.overridePrototype = function() {
     /** modulo include negative number */
     Number.prototype.mod = function(n) {
-        return (this % n + n) % n;
+        return ((this % n) + n) % n;
     };
 
     //polyfill
@@ -651,7 +652,7 @@ Entry.Utils.bindIOSDeviceWatch = function() {
             lastSVGDomHeight = Entry.Utils.SVGDom.height();
         }
 
-        setInterval(function() {
+        setInterval(() => {
             const nowHeight = window.innerHeight || document.documentElement.clientHeight;
             let SVGDomCheck = false;
             if (Entry.Utils.SVGDom) {
@@ -665,7 +666,7 @@ Entry.Utils.bindIOSDeviceWatch = function() {
             lastHeight = nowHeight;
         }, 1000);
 
-        $(window).on('orientationchange', function() {
+        $(window).on('orientationchange', () => {
             Entry.windowResized.notify();
         });
     }
@@ -683,7 +684,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
             Entry.windowReszied.clear();
         }
         Entry.windowResized = new Entry.Event(window);
-        $(window).on('resize', function(e) {
+        $(window).on('resize', (e) => {
             Entry.windowResized.notify(e);
         });
         Entry.Utils.bindIOSDeviceWatch();
@@ -708,7 +709,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
 
         Entry.mouseCoordinate = {};
         Entry.documentMousemove = new Entry.Event(window);
-        doc.on('touchmove mousemove', function(e) {
+        doc.on('touchmove mousemove', (e) => {
             if (e.originalEvent && e.originalEvent.touches) {
                 e = e.originalEvent.touches[0];
             }
@@ -725,7 +726,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
-        doc.on('keydown', function(e) {
+        doc.on('keydown', (e) => {
             const keyCode = e.keyCode;
 
             if (Entry.pressedKeys.indexOf(keyCode) < 0) {
@@ -741,7 +742,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
             Entry.keyUpped.clear();
         }
         Entry.keyUpped = new Entry.Event(window);
-        doc.on('keyup', function(e) {
+        doc.on('keyup', (e) => {
             const keyCode = e.keyCode;
             const index = Entry.pressedKeys.indexOf(keyCode);
             if (index > -1) {
@@ -757,7 +758,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }
         Entry.disposeEvent = new Entry.Event(window);
         if (Entry.documentMousedown) {
-            Entry.documentMousedown.attach(this, function(e) {
+            Entry.documentMousedown.attach(this, (e) => {
                 Entry.disposeEvent.notify(e);
             });
         }
@@ -883,9 +884,7 @@ Entry.dispatchEvent = function(eventName, ...args) {
         return;
     }
 
-    events.forEach((func) => {
-        return func.apply(window, args);
-    });
+    events.forEach((func) => func.apply(window, args));
 };
 
 /**
@@ -897,9 +896,7 @@ Entry.removeEventListener = function(eventName, fn) {
     if (_.isEmpty(events)) {
         return;
     }
-    this.events_[eventName] = events.filter((a) => {
-        return fn !== a;
-    });
+    this.events_[eventName] = events.filter((a) => fn !== a);
 };
 
 /**
@@ -1357,7 +1354,7 @@ Entry.findObjsByKey = function(arr, keyName, key) {
     return result;
 };
 
-Entry.factorial = _.memoize(function(n) {
+Entry.factorial = _.memoize((n) => {
     if (n === 0 || n == 1) {
         return 1;
     }
@@ -1382,11 +1379,11 @@ Entry.getListRealIndex = function(index, list) {
 };
 
 Entry.toRadian = function(angle) {
-    return angle * Math.PI / 180;
+    return (angle * Math.PI) / 180;
 };
 
 Entry.toDegrees = function(radians) {
-    return radians * 180 / Math.PI;
+    return (radians * 180) / Math.PI;
 };
 
 Entry.getPicturesJSON = function(pictures = [], isClone) {
@@ -1462,10 +1459,10 @@ Entry.setBasicBrush = function(sprite) {
         brush.opacity = parentBrush.opacity;
         brush.setStrokeStyle(brush.thickness);
 
-        let rgb = brush.rgb;
-        let opacity = 1 - brush.opacity / 100;
+        const rgb = brush.rgb;
+        const opacity = 1 - brush.opacity / 100;
 
-        if(isWebGL) {
+        if  (isWebGL) {
             brush.beginStrokeFast(Entry.rgb2Number(rgb.r, rgb.g, rgb.b), opacity);
         } else {
             brush.beginStroke(`rgba(${rgb.r},${rgb.g},${rgb.b},${opacity})`);
@@ -1475,7 +1472,7 @@ Entry.setBasicBrush = function(sprite) {
         brush.rgb = Entry.hex2rgb('#ff0000');
         brush.opacity = 0;
         brush.setStrokeStyle(1);
-        if(isWebGL) {
+        if  (isWebGL) {
             brush.beginStrokeFast(0xff0000, 1);
         } else {
             brush.beginStroke('rgba(255,0,0,1)');
@@ -1496,15 +1493,15 @@ Entry.setBasicBrush = function(sprite) {
 
 Entry.setCloneBrush = function(sprite, parentBrush) {
     const isWebGL = GEHelper.isWebGL;
-    const brush =  GEHelper.brushHelper.newBrush();
+    const brush = GEHelper.brushHelper.newBrush();
     brush.thickness = parentBrush.thickness;
     brush.rgb = parentBrush.rgb;
     brush.opacity = parentBrush.opacity;
     brush.setStrokeStyle(brush.thickness);
 
-    let rgb = brush.rgb;
-    let opacity = 1 - brush.opacity / 100;
-    if(isWebGL) {
+    const rgb = brush.rgb;
+    const opacity = 1 - brush.opacity / 100;
+    if  (isWebGL) {
         brush.beginStrokeFast(Entry.rgb2Number(rgb.r, rgb.g, rgb.b), opacity);
     } else {
         brush.beginStroke(`rgba(${rgb.r},${rgb.g},${rgb.b},${opacity})`);
@@ -1625,7 +1622,7 @@ Entry.convertToRoundedDecimals = function(value, decimals) {
 };
 
 Entry.attachEventListener = function(elem, eventType, func) {
-    setTimeout(function() {
+    setTimeout(() => {
         elem.addEventListener(eventType, func);
     }, 0);
 };
@@ -1767,14 +1764,12 @@ Entry.Utils.addFilters = function(boardSvgDom, suffix, isOnlyBlock) {
         values: '1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0',
     });
 
-    defs
-        .elem('filter', {
-            id: `entryBlockDarkenFilter_${suffix}`,
-        })
-        .elem('feColorMatrix', {
-            type: 'matrix',
-            values: '.45 0 0 0 0 0 .45 0 0 0 0 0 .45 0 0 0 0 0 1 0',
-        });
+    defs.elem('filter', {
+        id: `entryBlockDarkenFilter_${suffix}`,
+    }).elem('feColorMatrix', {
+        type: 'matrix',
+        values: '.45 0 0 0 0 0 .45 0 0 0 0 0 .45 0 0 0 0 0 1 0',
+    });
 
     if (!isOnlyBlock) {
         const buttonShadow = defs.elem('filter', {
@@ -1832,6 +1827,76 @@ Entry.Utils.addBlockPattern = function(boardSvgDom, suffix) {
     }
 
     return { pattern };
+};
+
+Entry.Utils.addNewBlock = function(script) {
+    Entry.do(
+        'addThread',
+        script.map((block) => {
+            block.id = Entry.generateHash();
+            return block;
+        })
+    );
+};
+
+Entry.Utils.addNewObject = function(sprite) {
+    if (sprite) {
+        const objects = sprite.objects;
+        const functions = sprite.functions;
+        const messages = sprite.messages;
+        const variables = sprite.variables;
+
+        if (
+            Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD &&
+            (!Entry.TextCodingUtil.canUsePythonVariables(variables) ||
+                !Entry.TextCodingUtil.canUsePythonFunctions(functions))
+        ) {
+            return entrylms.alert(Lang.Menus.object_import_syntax_error);
+        }
+        const objectIdMap = {};
+        variables.forEach((variable) => {
+            const { object } = variable;
+            if (object) {
+                const id = variable.id;
+                const idMap = objectIdMap[object];
+                variable.id = Entry.generateHash();
+                if (!idMap) {
+                    variable.object = Entry.generateHash();
+                    objectIdMap[object] = {
+                        objectId: variable.object,
+                        variableOriginId: [id],
+                        variableId: [variable.id],
+                    };
+                } else {
+                    variable.object = idMap.objectId;
+                    idMap.variableOriginId.push(id);
+                    idMap.variableId.push(variable.id);
+                }
+            }
+        });
+        Entry.variableContainer.appendMessages(messages);
+        Entry.variableContainer.appendVariables(variables);
+        Entry.variableContainer.appendFunctions(functions);
+
+        objects.forEach((object) => {
+            const idMap = objectIdMap[object.id];
+            if (idMap) {
+                let script = object.script;
+                idMap.variableOriginId.forEach((id, idx) => {
+                    const regex = new RegExp(id, 'gi');
+                    script = script.replace(regex, idMap.variableId[idx]);
+                });
+                object.script = script;
+                object.id = idMap.objectId;
+            } else if (Entry.container.getObject(object.id)) {
+                object.id = Entry.generateHash();
+            }
+            if (!object.objectType) {
+                object.objectType = 'sprite';
+            }
+            Entry.container.addObject(object, 0);
+        });
+    }
 };
 
 Entry.Utils.COLLISION = {
@@ -2232,7 +2297,7 @@ Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
         categoryIndexMap[datum.category] = i;
     }
 
-    blockArr.forEach(function(b) {
+    blockArr.forEach((b) => {
         const category = that.getBlockCategory(b);
         const index = categoryIndexMap[category];
         if (index === undefined) {
@@ -2253,7 +2318,7 @@ Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
         const selectedBlocks = data[i].blocks;
         const sorted = [];
 
-        blocks.forEach(function(b) {
+        blocks.forEach((b) => {
             if (selectedBlocks.indexOf(b) > -1) {
                 sorted.push(b);
             }
@@ -2372,7 +2437,7 @@ Entry.Utils.glideBlock = function(svgGroup, x, y, callback) {
         {
             duration: 1200,
             complete() {
-                setTimeout(function() {
+                setTimeout(() => {
                     svgDom.remove();
                     callback();
                 }, 500);
@@ -2395,7 +2460,7 @@ Entry.Utils.copy = function(target) {
 
 //helper function for development and debug
 Entry.Utils.getAllObjectsBlockList = function() {
-    return Entry.container.objects_.reduce(function(prev, { script }) {
+    return Entry.container.objects_.reduce((prev, { script }) => {
         return prev.concat(script.getBlockList());
     }, []);
 };
@@ -2419,7 +2484,7 @@ Entry.Utils.toFixed = function(value, len) {
 
 Entry.Utils.addSoundInstances = function(instance) {
     Entry.soundInstances.push(instance);
-    instance.on('complete', function() {
+    instance.on('complete', () => {
         const index = Entry.soundInstances.indexOf(instance);
         if (index > -1) {
             Entry.soundInstances.splice(index, 1);
@@ -2428,13 +2493,13 @@ Entry.Utils.addSoundInstances = function(instance) {
 };
 
 Entry.Utils.pauseSoundInstances = function() {
-    Entry.soundInstances.map(function(instance) {
+    Entry.soundInstances.map((instance) => {
         instance.paused = true;
     });
 };
 
 Entry.Utils.recoverSoundInstances = function() {
-    Entry.soundInstances.map(function(instance) {
+    Entry.soundInstances.map((instance) => {
         instance.paused = false;
     });
 };
@@ -2483,9 +2548,7 @@ Entry.Utils.recoverSoundInstances = function() {
     };
 })(HTMLElement.prototype);
 
-Entry.Utils.hasClass = (elem, name) => {
-    return ` ${elem.getAttribute('class')} `.indexOf(` ${name} `) >= 0;
-};
+Entry.Utils.hasClass = (elem, name) => ` ${elem.getAttribute('class')} `.indexOf(` ${name} `) >= 0;
 
 Entry.Utils.addClass = (elem, name) => {
     if (!Entry.Utils.hasClass(elem, name)) {
@@ -2595,9 +2658,7 @@ Entry.Utils.when = function(predicate, fn) {
 };
 
 Entry.Utils.whenEnter = function(fn) {
-    return Entry.Utils.when(({ keyCode } = {}) => {
-        return keyCode === 13;
-    }, fn);
+    return Entry.Utils.when(({ keyCode } = {}) => keyCode === 13, fn);
 };
 
 Entry.Utils.blurWhenEnter = Entry.Utils.whenEnter(function() {
@@ -2660,3 +2721,4 @@ Entry.Utils.getMouseEvent = function(event) {
     }
     return mouseEvent;
 };
+

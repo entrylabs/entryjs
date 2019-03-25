@@ -1,6 +1,6 @@
 'use strict';
 
-import EntryTool from 'entry-tool';
+import { Number, Angle } from '@entrylabs/tool';
 
 Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
     constructor(content, blockView, index) {
@@ -145,7 +145,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
     }
 
     _getNumberOptionWidget() {
-        return new EntryTool({
+        return new Number({
             type: 'numberWidget',
             data: {
                 eventTypes: ['mousedown', 'touchstart', 'wheel'],
@@ -164,10 +164,11 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
                     }
                     this.applyValue(prevValue + value);
                     break;
-                case 'backButtonPressed':
+                case 'backButtonPressed': {
                     const nextValue = prevValue.substring(0, prevValue.length - 1);
                     this.applyValue(_.isEmpty(nextValue) ? 0 : nextValue);
                     break;
+                }
             }
         });
     }
@@ -179,7 +180,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
      * @private
      */
     _getAngleOptionWidget(...excludeDom) {
-        return new EntryTool({
+        return new Angle({
             type: 'angleWidget',
             data: {
                 eventTypes: ['mousedown', 'touchstart', 'wheel'],
@@ -229,10 +230,6 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
             if (_.includes([13, 27], e.keyCode || e.which)) {
                 this.destroyOption(undefined, true);
             }
-        });
-
-        inputField.on('blur', () => {
-            this.destroyOption(undefined, true);
         });
 
         inputField.on('keydown', (e) => {
@@ -347,9 +344,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
                 .getRootBlock()
                 .getThread()
                 .view.getFields()
-                .filter((f) => {
-                    return f instanceof FIELD_TEXT_INPUT;
-                });
+                .filter((f) => f instanceof FIELD_TEXT_INPUT);
         }
 
         return this._neighborFields;
