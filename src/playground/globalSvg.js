@@ -223,8 +223,8 @@ class GlobalSvg {
         const pos = blockView.getAbsoluteCoordinate();
         const offset = blockView.getBoard().offset();
         if (value) {
-            this.left += value.left;
-            this.top += value.top;
+            this.left += value.left / this.scale;
+            this.top += value.top / this.scale;
         } else {
             this.left = pos.scaleX + (offset.left / this.scale - this._offsetX);
             this.top = pos.scaleY + (offset.top / this.scale - this._offsetY);
