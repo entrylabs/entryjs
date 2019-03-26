@@ -162,6 +162,11 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
                     type: 'Block',
                     accept: 'string',
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/sound_icon.svg',
+                    size: 11,
+                },
             ],
             events: {},
             def: {
@@ -170,6 +175,7 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
                         type: 'text',
                         params: [Lang.Blocks.entry],
                     },
+                    null
                 ],
                 type: 'read_text',
             },
@@ -225,6 +231,11 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
                 params.getSpeaker(),
                 params.getSpeed(),
                 params.getPitch(),
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/sound_icon.svg',
+                    size: 11,
+                },
             ],
             events: {},
             def: {
@@ -232,6 +243,7 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
                     params.getSpeaker().value,
                     params.getSpeed().value,
                     params.getPitch().value,
+                    null
                 ],
                 type: 'set_tts_property',
             },
