@@ -29,7 +29,7 @@ Entry.EXPANSION_BLOCK.tts = {
                     createjs.Sound.play(id);
                     return false;
                 }
-                setTimeout(() => createjs.Sound.play(id), 1000);
+                setTimeout(() => Entry.Utils.addSoundInstances(createjs.Sound.play(id)), 1000);
                 return false;
             });
         });
@@ -190,7 +190,7 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
                     const id = `tts-${textObj.code}-${JSON.stringify(prop)}`;
                     const sound = tts.soundQueue.getItem(id);
                     if (sound) {
-                        createjs.Sound.play(id);
+                        Entry.Utils.addSoundInstances(createjs.Sound.play(id));
                     } else {
                         const src = `${Entry.EXPANSION_BLOCK.tts.api}.mp3?${toQueryString({ text: encodeURI(textObj.message), ...prop })}`;
                         const type = createjs.LoadQueue.SOUND;
