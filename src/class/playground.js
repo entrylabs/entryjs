@@ -222,7 +222,7 @@ Entry.Playground = class {
             });
         }
 
-        if (!backpackDisable) {
+        if (!backpackDisable && false) {
             const backPackButton = Entry.createElement('div')
                 .addClass('entryPlaygroundBackPackButtonWorkspace')
                 .appendTo(tabButtonView);
