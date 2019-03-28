@@ -36,15 +36,15 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
         if (this.svgGroup) {
             $(this.svgGroup).remove();
         }
-        var { contentSvgGroup, renderMode } = this._blockView;
+        const { contentSvgGroup, renderMode } = this._blockView;
         this.svgGroup = contentSvgGroup.elem('g', {
             class: 'entry-field-color',
         });
 
-        var x, y, WIDTH, HEIGHT;
+        let x, y, WIDTH, HEIGHT;
 
         if (renderMode === Entry.BlockView.RENDER_MODE_TEXT) {
-            var rect = this.svgGroup.elem('rect', {
+            const rect = this.svgGroup.elem('rect', {
                 x: 0,
                 rx: 3,
                 ry: 3,
@@ -54,14 +54,14 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
 
             this.textElement = this.svgGroup.elem('text').attr({
                 style: 'white-space: pre;',
-                'font-size': this._fontSize + 'px',
+                'font-size': `${this._fontSize}px`,
                 'font-family': 'NanumGothic',
                 class: 'dragNone',
                 fill: this._color,
             });
 
             this.textElement.textContent = this._convert(this.getValue(), this.getValue());
-            var bBox = this.textElement.getBoundingClientRect();
+            const bBox = this.textElement.getBoundingClientRect();
             WIDTH = bBox.width + 12;
             HEIGHT = bBox.height;
             rect.attr({
@@ -76,7 +76,7 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
         } else {
             HEIGHT = this._CONTENT_HEIGHT;
             WIDTH = this._CONTENT_WIDTH;
-            var position = this._position;
+            const position = this._position;
             if (position) {
                 x = position.x || 0;
                 y = position.y || 0;
@@ -86,8 +86,8 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
             }
 
             this._header = this.svgGroup.elem('rect', {
-                x: x,
-                y: y,
+                x,
+                y,
                 rx: 2,
                 ry: 2,
                 width: 20, //WIDTH,
@@ -120,6 +120,22 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
         this.disposeEvent = Entry.disposeEvent.attach(this, action);
     }
 
+    spoidClick = _.debounce(() => {
+        this.isRunSpoid = true;
+        this.colorPicker.data = {
+            activeSpoid: true,
+        };
+        Entry.stage.colorSpoid.run().once('selectColor', (color) => {
+            const data = { activeSpoid: false };
+            if (color) {
+                this.applyValue(color);
+                data.color = color;
+            }
+            this.colorPicker.setData(data);
+            delete this.isRunSpoid;
+        });
+    }, 1);
+
     renderOptions() {
         this.optionGroup = Entry.Dom('div', {
             class: 'entry-color-picker',
@@ -143,21 +159,7 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
                     }
                     this._attachDisposeEvent();
                 },
-                onSpoidClick: () => {
-                    this.isRunSpoid = true;
-                    this.colorPicker.data = {
-                        activeSpoid: true,
-                    };
-                    Entry.stage.colorSpoid.run().once('selectColor', (color) => {
-                        const data = { activeSpoid: false };
-                        if (color) {
-                            this.applyValue(color);
-                            data.color = color;
-                        }
-                        this.colorPicker.setData(data);
-                        delete this.isRunSpoid;
-                    });
-                },
+                onSpoidClick: this.spoidClick,
             },
             container: this.optionGroup[0],
         }).on('change', (color) => {
