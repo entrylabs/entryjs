@@ -58,6 +58,9 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     };
 
     p.generateStatusView = function(isForIframe) {
+        if(this.statusViewDisabled) {
+            return ;
+        }
         this._statusView = Entry.Dom('div', {
             class: "entryTargetStatus"
         });

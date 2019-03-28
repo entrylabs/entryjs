@@ -1142,6 +1142,7 @@ Entry.Board = class Board {
 
     _initContextOptions() {
         const that = this;
+        const { options = {} } = Entry;
         this._contextOptions = [
             {
                 activated: true,
@@ -1210,7 +1211,7 @@ Entry.Board = class Board {
                 },
             },
             {
-                activated: true,
+                activated: !options.commentDisable,
                 option: {
                     text: Lang.Blocks.add_comment,
                     enable: !this.readOnly,
@@ -1229,7 +1230,7 @@ Entry.Board = class Board {
                 },
             },
             {
-                activated: true,
+                activated: !options.commentDisable,
                 option: {
                     text: Lang.Blocks.hide_all_comment,
                     enable: !this.readOnly,

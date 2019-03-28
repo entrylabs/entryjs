@@ -1,5 +1,6 @@
 'use strict';
 
+const _includes = require('lodash/includes');
 const hardware = require('./hardware/index');
 const _union = require('lodash/union');
 const _flatten = require('lodash/flatten');
