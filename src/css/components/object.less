@@ -42,6 +42,30 @@
     .backgroundImage('layers_icon_lock.png');
 }
 
+.entryDisabled {
+    .objectInfo_visible {
+        .backgroundImage('layers_icon_visible_disabled.png');
+        cursor: default;
+    }
+    .objectInfo_unlock {
+        .backgroundImage('layers_icon_lock_disabled.png');
+        cursor: default;
+    }
+    .entryObjectDeleteWorkspace {
+        .backgroundImage('layers_icon_close_nor_new_disabled.png');
+        background-size: 26px auto;
+        cursor: default;
+    }
+    input {
+        color: #cbcbcb;
+    }
+    &.selectedObject {
+        .entryObjectWrapperWorkspace .entryObjectNameWorkspace {
+            color: #cbcbcb;
+        }
+    }
+}
+
 .entryObjectThumbnailWorkspace {
     overflow: hidden;
     cursor: move;
