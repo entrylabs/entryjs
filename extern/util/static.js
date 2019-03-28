@@ -614,12 +614,6 @@ Object.defineProperty(EntryStatic, 'fonts', {
                 visible: false,
             },
             {
-                name: Lang.Fonts.gothic_coding,
-                family: 'Nanum Gothic Coding',
-                url: '/css/nanumgothiccoding.css',
-                visible: false,
-            },
-            {
                 name: Lang.Fonts.gothic,
                 family: 'Nanum Gothic',
                 url: '/css/nanumgothic.css',
@@ -644,6 +638,12 @@ Object.defineProperty(EntryStatic, 'fonts', {
                 visible: true,
             },
             {
+                name: Lang.Fonts.gothic_coding,
+                family: 'Nanum Gothic Coding',
+                url: '/css/nanumgothiccoding.css',
+                visible: true,
+            },
+            {
                 name: Lang.Fonts.jalnan,
                 family: 'yg-jalnan',
                 url: '/css/jalnan.css',
@@ -656,39 +656,9 @@ Object.defineProperty(EntryStatic, 'fonts', {
                 visible: true,
             },
             {
-                name: Lang.Fonts.malssami815,
-                family: 'Malssami815',
-                url: '/css/malssami815.css',
-                visible: true,
-            },
-            {
                 name: Lang.Fonts.dunggeunmo,
                 family: 'DungGeunMo',
                 url: '/css/dunggeunmo.css',
-                visible: true,
-            },
-            {
-                name: Lang.Fonts.hs_bombaram,
-                family: 'HSBombaram',
-                url: '/css/hs_bombaram.css',
-                visible: true,
-            },
-            {
-                name: Lang.Fonts.yisunshin,
-                family: 'YiSunShinRegular',
-                url: '/css/yisunshin.css',
-                visible: true,
-            },
-            {
-                name: Lang.Fonts.goyang,
-                family: 'Goyang',
-                url: '/css/goyang.css',
-                visible: true,
-            },
-            {
-                name: Lang.Fonts.flower_road,
-                family: 'SangSangFlowerRoad',
-                url: '/css/flower_road.css',
                 visible: true,
             },
             {

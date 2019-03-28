@@ -842,6 +842,9 @@ Entry.EntryObject = class {
         const objectId = this.id;
 
         this.view_ = this.createObjectView(objectId, exceptionsForMouseDown); // container
+        if (!Entry.objectEditable) {
+            this.view_.addClass('entryDisabled');
+        }
         this.view_.appendChild(this.createObjectInfoView()); // visible, lock
 
         const thumbnailView = this.createThumbnailView(objectId); // thumbnail
@@ -850,11 +853,9 @@ Entry.EntryObject = class {
 
         this.view_.appendChild(this.createWrapperView()); // name space
 
-        if (Entry.objectEditable && Entry.objectDeletable) {
-            const deleteView = this.createDeleteView(exceptionsForMouseDown, that); // delete
-            this.deleteView_ = deleteView;
-            this.view_.appendChild(deleteView);
-        }
+        const deleteView = this.createDeleteView(exceptionsForMouseDown, that); // delete
+        this.deleteView_ = deleteView;
+        this.view_.appendChild(deleteView);
 
         const rotationWrapperView = this.createRotationWrapperView();
         this.view_.appendChild(rotationWrapperView);
@@ -1098,13 +1099,15 @@ Entry.EntryObject = class {
     createDeleteView(exceptionsForMouseDown) {
         const deleteView = Entry.createElement('div').addClass('entryObjectDeleteWorkspace');
         exceptionsForMouseDown.push(deleteView);
-        deleteView.bindOnClick((e) => {
-            e.stopPropagation();
-            if (Entry.engine.isState('run')) {
-                return;
-            }
-            Entry.do('removeObject', this.id);
-        });
+        if (Entry.objectEditable && Entry.objectDeletable) {
+            deleteView.bindOnClick((e) => {
+                e.stopPropagation();
+                if (Entry.engine.isState('run')) {
+                    return;
+                }
+                Entry.do('removeObject', this.id);
+            });
+        }
         return deleteView;
     }
 
@@ -1164,47 +1167,49 @@ Entry.EntryObject = class {
 
     createObjectInfoView() {
         const objectInfoView = Entry.createElement('ul').addClass('objectInfoView');
-        if (!Entry.objectEditable) {
-            objectInfoView.addClass('entryHide');
-        }
-
         const objectInfoVisible = Entry.createElement('li').addClass('objectInfo_visible');
         if (!this.entity.getVisible()) {
             objectInfoVisible.addClass('objectInfo_unvisible');
         }
-
-        objectInfoVisible.bindOnClick(() => {
-            if (Entry.engine.isState('run')) {
-                return;
-            }
-
-            const entity = this.entity;
-            const visible = entity.setVisible(!entity.getVisible());
-            if (visible) {
-                objectInfoVisible.removeClass('objectInfo_unvisible');
-            } else {
-                objectInfoVisible.addClass('objectInfo_unvisible');
-            }
-        });
 
         const objectInfoLock = Entry.createElement('li').addClass('objectInfo_unlock');
         if (this.getLock()) {
             objectInfoLock.addClass('objectInfo_lock');
         }
 
-        objectInfoLock.bindOnClick(() => {
-            if (Entry.engine.isState('run')) {
-                return;
-            }
+        if (Entry.objectEditable) {
+            objectInfoVisible.bindOnClick(() => {
+                if (Entry.engine.isState('run')) {
+                    return;
+                }
 
-            if (this.setLock(!this.getLock())) {
-                objectInfoLock.addClass('objectInfo_lock');
-            } else {
-                objectInfoLock.removeClass('objectInfo_lock');
-            }
+                const entity = this.entity;
+                const visible = entity.setVisible(!entity.getVisible());
+                if (visible) {
+                    objectInfoVisible.removeClass('objectInfo_unvisible');
+                } else {
+                    objectInfoVisible.addClass('objectInfo_unvisible');
+                }
+            });
 
-            this.updateInputViews(this.getLock());
-        });
+            objectInfoLock.bindOnClick(() => {
+                if (Entry.engine.isState('run')) {
+                    return;
+                }
+
+                if (this.setLock(!this.getLock())) {
+                    objectInfoLock.addClass('objectInfo_lock');
+                } else {
+                    objectInfoLock.removeClass('objectInfo_lock');
+                }
+
+                this.updateInputViews(this.getLock());
+            });
+        }
+
+
+
+
         objectInfoView.appendChild(objectInfoVisible);
         objectInfoView.appendChild(objectInfoLock);
         return objectInfoView;

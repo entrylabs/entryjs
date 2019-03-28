@@ -22,7 +22,7 @@ Entry.Popup = function(className) {
     document.body.appendChild(this.body_);
     this.window_ = Entry.createElement('div');
     this.window_.addClass('entryPopupWindow');
-    if (Entry.targetChecker) this.window_.addClass('targetCheckerPopup');
+    if (Entry.targetChecker && !Entry.targetChecker.statusViewDisabled) this.window_.addClass('targetCheckerPopup');
     // if (Entry.device === 'tablet') this.window_.addClass('tablet');
     this.window_.bindOnClick(function() {});
     Entry.addEventListener('windowResized', this.resize);
@@ -57,7 +57,7 @@ Entry.Popup.prototype.remove = function() {
     Entry.removeEventListener('windowResized', this.resize);
     Entry.engine.popup = null;
     Entry.windowResized.notify();
-    if (Entry.type === 'workspace' && Entry.targetChecker)
+    if (Entry.type === 'workspace' && Entry.targetChecker && !Entry.targetChecker.statusViewDisabled)
         Entry.targetChecker.getStatusView().remove();
 };
 
@@ -68,7 +68,7 @@ Entry.Popup.prototype.remove = function() {
 Entry.Popup.prototype.resize = function(e) {
     var popup = window.popup;
     var popupWindow = popup.window_;
-    var bottomOffset = Entry.targetChecker ? 91 + 48 : 48;
+    var bottomOffset = Entry.targetChecker && !Entry.targetChecker.statusViewDisabled ? 91 + 48 : 48;
     var maxWidth = window.innerWidth * 0.9;
     var maxHeight = window.innerHeight * 0.9 - bottomOffset;
     if (maxWidth * 9 <= maxHeight * 16) {
