@@ -39,7 +39,7 @@ Entry.Chocopi = {
         ['BLE8', 15],
     ],
     dataHandler: function(data) {
-        if (!this.connected) {
+        if (!Entry.hw.sendQueue.data) {
             this.connected = true;
             Entry.hw.sendQueue.init = true;
             Entry.hw.update();
@@ -911,7 +911,6 @@ Entry.Chocopi.getBlocks = function () {
                 var r = script.getNumberValue('r');
                 var g = script.getNumberValue('g');
                 var b = script.getNumberValue('b');
-                console.log([l, r, g, b]);
                 Entry.hw.sendQueue.data[port] = [l, r, g, b];
                 Entry.hw.update();
                 delete Entry.hw.sendQueue.data[port];
