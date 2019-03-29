@@ -752,12 +752,12 @@ Entry.EntryObject = class {
                     }
                 },
             },
-            {
-                text: Lang.Blocks.add_my_storage,
-                callback: () => {
-                    this.addStorage();
-                },
-            },
+            // {
+            //     text: Lang.Blocks.add_my_storage,
+            //     callback: () => {
+            //         this.addStorage();
+            //     },
+            // },
             {
                 text: Lang.Blocks.export_object,
                 callback() {
@@ -1206,9 +1206,6 @@ Entry.EntryObject = class {
                 this.updateInputViews(this.getLock());
             });
         }
-
-
-
 
         objectInfoView.appendChild(objectInfoVisible);
         objectInfoView.appendChild(objectInfoLock);

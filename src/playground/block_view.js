@@ -1405,7 +1405,7 @@ Entry.BlockView = class BlockView {
         function _getOptions(blockView) {
             const isBoardReadOnly = blockView._board.readOnly;
             const { block, isInBlockMenu, copyable } = blockView;
-            const { options:EntryOptions = {} } = Entry;
+            const { options: EntryOptions = {} } = Entry;
             const {
                 Blocks: { Duplication_option, CONTEXT_COPY_option, Delete_Blocks },
                 Menus: { save_as_image },
@@ -1435,15 +1435,15 @@ Entry.BlockView = class BlockView {
                 },
             };
 
-            const addStorage = !EntryOptions.backpackDisable && {
-                text: Lang.Blocks.add_my_storage,
-                callback() {
-                    Entry.dispatchEvent('addStorage', {
-                        type: 'block',
-                        data: block,
-                    });
-                },
-            };
+            // const addStorage = !EntryOptions.backpackDisable && {
+            //     text: Lang.Blocks.add_my_storage,
+            //     callback() {
+            //         Entry.dispatchEvent('addStorage', {
+            //             type: 'block',
+            //             data: block,
+            //         });
+            //     },
+            // };
 
             const download = {
                 text: save_as_image,
@@ -1469,7 +1469,8 @@ Entry.BlockView = class BlockView {
             }
 
             if (!isInBlockMenu) {
-                options = [copyAndPaste, copy, remove, addStorage, ...options, comment].filter(x=>x);
+                // options = [copyAndPaste, copy, remove, addStorage, ...options, comment].filter(x=>x);
+                options = [copyAndPaste, copy, remove, ...options, comment].filter((x) => x);
             }
 
             return options;
