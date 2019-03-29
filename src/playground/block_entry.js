@@ -7661,10 +7661,7 @@ function getBlocks() {
     };
 }
 
-setHardwareLanguage();
-assignBlocks();
-
-(function() {
+function inheritBlockSchema() {
     for (const type in Entry.block) {
         const block = Entry.block[type];
         if (!block.isNotFor) {
@@ -7681,7 +7678,7 @@ assignBlocks();
             Entry.block[type] = schema;
         }
     }
-})();
+}
 
 function assignBlocks() {
     Entry.block.converters = getConverters();
@@ -7713,7 +7710,9 @@ function setHardwareLanguage() {
 Entry.reloadBlock = function() {
     setHardwareLanguage();
     assignBlocks();
+    inheritBlockSchema();
 };
+Entry.reloadBlock();
 
 if (typeof exports === 'object') {
     exports.block = Entry.block;
