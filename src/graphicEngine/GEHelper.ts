@@ -213,7 +213,7 @@ class _GEHelper extends GEHelperBase {
 
     newEmptySprite() {
         if(this._isWebGL) {
-            return new PIXISprite();
+            return PIXIHelper.sprite();
         } else {
             return new createjs.Bitmap();
         }
