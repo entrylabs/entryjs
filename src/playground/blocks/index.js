@@ -1,9 +1,6 @@
 'use strict';
 
-const _includes = require('lodash/includes');
 const hardware = require('./hardware/index');
-const _union = require('lodash/union');
-const _flatten = require('lodash/flatten');
 
 const basicBlockList = [
     require('./block_start'),
@@ -50,14 +47,20 @@ function getBlockObject(items) {
  * 기존 블록은 legacy 블록이 존재하기 때문에 전부 등록하면 안되기 때문이다.
  * 또한 값블록으로서만 사용하는 블록이 블록메뉴에 따로 나타나게 될 수 있다.
  *
+ * block 자체에 ignore: true 프로퍼티가 존재하는 경우 스킵한다.
+ *
  * @param {Object} hardwareModules
  * @return {void}
  */
 function registerHardwareBlockToStatic(hardwareModules) {
-    EntryStatic.DynamicHardwareBlocks = _union(
-        _flatten(hardwareModules.map((hardware) => hardware.blockMenuBlocks || [])),
-        EntryStatic.DynamicHardwareBlocks,
-    );
+    const hardwareBlocks = EntryStatic.DynamicHardwareBlocks;
+    hardwareModules.forEach((hardware) => {
+        if (hardware.blockMenuBlocks && !hardwareBlocks.includes(hardware.blockMenuBlocks)) {
+            hardwareBlocks.push.apply(hardwareBlocks,
+                hardware.blockMenuBlocks.filter((block) => !hardwareBlocks.includes(block))
+            );
+        }
+    });
 }
 
 module.exports = {
@@ -65,9 +68,7 @@ module.exports = {
         const hardwareModules = hardware.getHardwareModuleList();
         registerHardwareBlockToStatic(hardwareModules);
 
-        const basicAndExpansionBlockObjectList = getBlockObject(
-            basicBlockList.concat(Object.values(Entry.EXPANSION_BLOCK_LIST))
-        );
+        const basicAndExpansionBlockObjectList = getBlockObject(basicBlockList.concat(Object.values(Entry.EXPANSION_BLOCK_LIST)));
         const hardwareBlockObjectList = getBlockObject(hardwareModules);
         return Object.assign({}, basicAndExpansionBlockObjectList, hardwareBlockObjectList);
     },

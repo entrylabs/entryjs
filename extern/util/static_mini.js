@@ -569,6 +569,21 @@ EntryStatic.fonts = [
         url: '/css/kopubbatang.css',
     },
     {
+        name: Lang.Fonts.myeongjo,
+        family: 'Nanum Myeongjo',
+        url: '/css/nanummyeongjo.css',
+    },
+    {
+        name: Lang.Fonts.gothic,
+        family: 'Nanum Gothic',
+        url: '/css/nanumgothic.css',
+    },
+    {
+        name: Lang.Fonts.pen_script,
+        family: 'Nanum Pen Script',
+        url: '/css/nanumpenscript.css',
+    },
+    {
         name: Lang.Fonts.jeju_hallasan,
         family: 'Jeju Hallasan',
         url: '/css/jejuhallasan.css',
@@ -578,72 +593,6 @@ EntryStatic.fonts = [
         family: 'Nanum Gothic Coding',
         url: '/css/nanumgothiccoding.css',
     },
-
-    {
-        name: Lang.Fonts.gothic,
-        family: 'Nanum Gothic',
-        url: '/css/nanumgothic.css',
-    },
-    {
-        name: Lang.Fonts.myeongjo,
-        family: 'Nanum Myeongjo',
-        url: '/css/nanummyeongjo.css',
-    },
-    {
-        name: Lang.Fonts.pen_script,
-        family: 'Nanum Pen Script',
-        url: '/css/nanumpenscript.css',
-    },
-    {
-        name: Lang.Fonts.square_round,
-        family: 'Nanum Pen Script',
-        url: '/css/square_round.css',
-    },
-    {
-        name: Lang.Fonts.jalnan,
-        family: 'yg-jalnan',
-        url: '/css/jalnan.css',
-    },
-    {
-        name: Lang.Fonts.designhouse,
-        family: 'designhouseOTFLight00',
-        url: '/css/designhouse.css',
-    },
-    {
-        name: Lang.Fonts.malssami815,
-        family: 'Malssami815',
-        url: '/css/malssami815.css',
-    },
-    {
-        name: Lang.Fonts.dunggeunmo,
-        family: 'DungGeunMo',
-        url: '/css/dunggeunmo.css',
-    },
-    {
-        name: Lang.Fonts.hs_bombaram,
-        family: 'HSBombaram',
-        url: '/css/hs_bombaram.css',
-    },
-    {
-        name: Lang.Fonts.yisunshin,
-        family: 'YiSunShinRegular',
-        url: '/css/yisunshin.css',
-    },
-    {
-        name: Lang.Fonts.goyang,
-        family: 'Goyang',
-        url: '/css/goyang.css',
-    },
-    {
-        name: Lang.Fonts.flower_road,
-        family: 'SangSangFlowerRoad',
-        url: '/css/flower_road.css',
-    },
-    {
-        name: Lang.Fonts.uhbeemysen,
-        family: 'UhBeemysen',
-        url: '/css/uhbeemysen.css',
-    }
 ];
 
 EntryStatic.colorSet = {

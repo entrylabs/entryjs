@@ -4,7 +4,6 @@ Entry.PalmKit = {
     id: 'E.1',
     name: 'palmkit',
     url: 'http://http://www.needsrobot.com/',
-    imageName: 'palmkit.png',
     title: {
         'ko': '팜킷',
         'en': 'PALM KIT',
@@ -22,8 +21,8 @@ Entry.PalmKit = {
         DC_MOTOR: 'dc_motor',
         RC_MOTOR: 'rc_motor',
         BUZZER: 'buzzer',
-        LED_R: 'led_r',
-        LED_G: 'led_g',
+        LED_R: 'led_r',  
+        LED_G: 'led_g',  
         LED_B: 'led_b',
     },
     monitorTemplate:{
@@ -34,18 +33,18 @@ Entry.PalmKit = {
         },
         ports:{
             CDS0: {
-                name: '조도센서',
-                type: 'input',
+                name: '조도센서', 
+                type: 'input', 
                 pos: {x: 200, y: 290},
             },
             POT0: {
-                name: '가변저항',
-                type: 'input',
+                name: '가변저항', 
+                type: 'input', 
                 pos: {x: 500, y: 350},
             },
             TACT_SWITCH0: {
-                name: '버튼',
-                type: 'input',
+                name: '버튼', 
+                type: 'input', 
                 pos: {x: 300, y: 260},
             },
         },
@@ -65,7 +64,7 @@ Entry.PalmKit = {
             return rgb;
         }
 
-        var _h = parseInt(h / 100);
+        var _h = parseInt(h / 100); 
         var s = 100;
         var l = 50 + 5*_h;
         h = parseFloat(h) % 100;
@@ -74,7 +73,7 @@ Entry.PalmKit = {
         s = parseFloat(s) / 100;
         l = parseFloat(l) / 100;
 
-
+        
 
         var q = 0;
 
@@ -87,7 +86,7 @@ Entry.PalmKit = {
         var g = Math.max(0, Entry.PalmKit.hueToRGB(p, q, h));
         var b = Math.max(0, Entry.PalmKit.hueToRGB(p, q, h - (1/3)));
 
-
+        
         rgb.r = Math.round(Math.min(r, 1) * 255);
         rgb.g = Math.round(Math.min(g, 1) * 255);
         rgb.b = Math.round(Math.min(b, 1) * 255);
@@ -105,7 +104,7 @@ Entry.PalmKit = {
         if (3*h < 2) return p + ((q-p) * 6 * ((2/3)-h));
 
         return p;
-    },
+    },        
 
 };
 
@@ -132,7 +131,7 @@ Entry.PalmKit.blockMenuBlocks = [
 
 Entry.PalmKit.getBlocks = function() {
     return {
-        palmkit_inputsensor: {
+        palmkit_inputsensor: { 
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -181,7 +180,7 @@ Entry.PalmKit.getBlocks = function() {
             },
             syntax: { js: [], py: ['PalmKit.inputsensor(%1, %2)']},
         },
-        palmkit_ispressed: {
+        palmkit_ispressed: { 
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_boolean_field',
@@ -256,7 +255,7 @@ Entry.PalmKit.getBlocks = function() {
             func: function (sprite, script) {
                 var buf = {};
                 var sq = Entry.hw.sendQueue;
-
+                
                 var idx = script.getField('INDEX', script);
 
                 buf.idx = idx;
@@ -328,7 +327,7 @@ Entry.PalmKit.getBlocks = function() {
             func: function (sprite, script) {
                 var buf = {};
                 var sq = Entry.hw.sendQueue;
-
+                
                 var idx = script.getField('INDEX', script);
                 var value = script.getNumberField('NOTE', script);
 
@@ -393,7 +392,7 @@ Entry.PalmKit.getBlocks = function() {
             ],
             events: {},
             def: {
-                params:
+                params: 
                     [
                         null,
                         null,
@@ -419,7 +418,7 @@ Entry.PalmKit.getBlocks = function() {
                 var idx = script.getField('INDEX', script);
                 var value = script.getNumberField('NOTE', script);
                 var sec = script.getNumberValue('SEC', script);
-
+                
                 if(!script.isStart) {
                     script.isStart = true;
                     script.timeFlag = 1;
@@ -499,7 +498,7 @@ Entry.PalmKit.getBlocks = function() {
             func: function (sprite, script) {
                 var buf = {};
                 var sq = Entry.hw.sendQueue;
-
+                
                 var idx = script.getField('INDEX', script);
                 var value = script.getNumberField('VALUE', script);
 
@@ -558,7 +557,7 @@ Entry.PalmKit.getBlocks = function() {
             func: function (sprite, script) {
                 var buf = {};
                 var sq = Entry.hw.sendQueue;
-
+                
                 var idx = script.getField('INDEX', script);
                 var value = script.getField('VALUE', script);
                 var rgb = Entry.hex2rgb(value);
@@ -607,7 +606,7 @@ Entry.PalmKit.getBlocks = function() {
             ],
             events: {},
             def: {
-                params:
+                params: 
                     [
                         null,
                         {
@@ -627,7 +626,7 @@ Entry.PalmKit.getBlocks = function() {
             func: function (sprite, script) {
                 var buf = {};
                 var sq = Entry.hw.sendQueue;
-
+                
                 var idx = script.getField('INDEX', script);
                 var value = script.getNumberValue('VALUE', script);
                 var rgb = Entry.PalmKit.toRGB(value);
@@ -719,7 +718,7 @@ Entry.PalmKit.getBlocks = function() {
             func: function (sprite, script) {
                 var buf = {};
                 var sq = Entry.hw.sendQueue;
-
+                
                 var idx = script.getField('INDEX', script);
                 var r = script.getNumberField('R', script);
                 var g = script.getNumberField('G', script);
@@ -777,7 +776,7 @@ Entry.PalmKit.getBlocks = function() {
             ],
             events: {},
             def: {
-                params:
+                params: 
                     [
                         null,
                         {
@@ -807,7 +806,7 @@ Entry.PalmKit.getBlocks = function() {
             func: function (sprite, script) {
                 var buf = {};
                 var sq = Entry.hw.sendQueue;
-
+                
                 var idx = script.getField('INDEX', script);
                 var r = script.getNumberValue('R', script);
                 var g = script.getNumberValue('G', script);
@@ -894,7 +893,7 @@ Entry.PalmKit.getBlocks = function() {
             ],
             events: {},
             def: {
-                params:
+                params: 
                     [
                         null,
                         {
@@ -980,7 +979,7 @@ Entry.PalmKit.getBlocks = function() {
             ],
             events: {},
             def: {
-                params:
+                params: 
                     [
                         null,
                         null,
@@ -1064,7 +1063,7 @@ Entry.PalmKit.getBlocks = function() {
             ],
             events: {},
             def: {
-                params:
+                params: 
                     [
                         null,
                         null,

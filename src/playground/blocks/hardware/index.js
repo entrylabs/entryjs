@@ -36,14 +36,6 @@ moduleListReq.keys().forEach((fileName) => {
     }
 });
 
-function getHardwareModule(hardware, callback) {
-    return new Promise((resolve) => {
-        require.ensure([], function(require) {
-            resolve(require('./' + hardware));
-        });
-    });
-}
-
 module.exports = {
     getHardwareModuleList() {
         return Object.values(Entry.HARDWARE_LIST);

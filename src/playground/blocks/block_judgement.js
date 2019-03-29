@@ -335,6 +335,7 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Dropdown',
@@ -353,6 +354,7 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                 ],
                 events: {},
@@ -465,31 +467,22 @@ module.exports = {
                 isNotFor: [],
                 func(sprite, script) {
                     const operator = script.getField('OPERATOR', script);
-                    let [leftValue, rightValue] = script.getValues(
+                    const [leftValue, rightValue] = script.getValues(
                         ['LEFTHAND', 'RIGHTHAND'],
                         script
                     );
-
-                    const leftNumber = Number(leftValue);
-                    const rightNumber = Number(rightValue);
-                    if (!isNaN(leftNumber)) {
-                        leftValue = leftNumber;
-                    }
-                    if (!isNaN(rightNumber)) {
-                        rightValue = rightNumber;
-                    }
 
                     switch (operator) {
                         case 'EQUAL':
                             return leftValue == rightValue;
                         case 'GREATER':
-                            return leftValue > rightValue;
+                            return Number(leftValue) > Number(rightValue);
                         case 'LESS':
-                            return leftValue < rightValue;
+                            return Number(leftValue) < Number(rightValue);
                         case 'GREATER_OR_EQUAL':
-                            return leftValue >= rightValue;
+                            return Number(leftValue) >= Number(rightValue);
                         case 'LESS_OR_EQUAL':
-                            return leftValue <= rightValue;
+                            return Number(leftValue) <= Number(rightValue);
                     }
                 },
                 syntax: {
