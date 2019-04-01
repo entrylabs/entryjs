@@ -196,6 +196,7 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
             $(this._blockView.contentSvgGroup).trigger('optionChanged', {
                 block: this._block,
                 value: this.getValue(),
+                index: this._index,
             });
         });
         this.optionDomCreated();
