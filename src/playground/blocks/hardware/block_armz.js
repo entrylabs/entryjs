@@ -7,7 +7,7 @@ const _merge = require('lodash/merge');
 Entry.Armz = new class Armz {
     constructor() {
 //        this.id = 'FF.FF'; 
-        this.id = '2C.01';        
+        this.id = '2C.1';       
         this.url = 'http://www.myarmz.com';
         this.imageName = 'armz.png';
 		    this.title = {
@@ -561,7 +561,7 @@ Entry.Armz.getBlocks = function() {
                         value,
                     },
                 };
-								return Entry.Armz.postCallReturnDelay({script, data}, 5); 
+								return Entry.Armz.postCallReturnDelay({script, data}, 3);
             },
         },          
     };
