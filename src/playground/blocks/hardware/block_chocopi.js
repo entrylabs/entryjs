@@ -39,7 +39,7 @@ Entry.Chocopi = {
         ['BLE8', 15],
     ],
     dataHandler: function(data) {
-        if (!this.connected) {
+        if (!Entry.hw.sendQueue.data) {
             this.connected = true;
             Entry.hw.sendQueue.init = true;
             Entry.hw.update();
