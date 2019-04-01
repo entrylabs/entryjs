@@ -57,7 +57,7 @@ Entry.trueRobot = {
 
 		Entry.hw.sendQueue['SET'] = {};
 
-		var settimer = 300
+		var settimer = 100
 			for( var port in  portArray ){
 				var tempport = 0;
 			
@@ -68,14 +68,26 @@ Entry.trueRobot = {
                         dataB: 0x07,
                         dataC: 0x07,
                     };
-					//console.log( portArray[tempport] + "!! port settine end" );
-				
+					
 						Entry.hw.update();
 						tempport++;	
 						settimer = settimer + 30;
 						}, settimer);
 		
 			}
+
+		setTimeout(function() {
+				Entry.hw.sendQueue['SET'][Entry.trueRobot.PORT_MAP.colorled] = {
+					port: Entry.trueRobot.PORT_MAP.colorled,
+					dataA: 0,
+					dataB: 0,
+					dataC: 255,
+				};
+					Entry.hw.update();
+					tempport++;	
+					settimer = settimer + 30;
+					}, settimer);
+			
     },
 	monitorTemplate: {
 		imgPath: 'hw/truebot.png',
@@ -514,7 +526,7 @@ Entry.trueRobot.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: ['0', '0', '0', null],
+                params: ['0', '0', '1', null],
                 type: 'truetrue_set_dualmotor',
             },
             paramsKeyMap: {
