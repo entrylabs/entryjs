@@ -179,7 +179,7 @@ Entry.Workspace = class Workspace {
         switch (this.mode) {
             case WORKSPACE.MODE_VIMBOARD: {
                 const alertMessage =
-                    Util.validateVariableToPython() ||
+                    Util.validateVariableAndListToPython() ||
                     Util.validateFunctionToPython() ||
                     Util.hasExpansionBlocks();
 
