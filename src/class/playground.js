@@ -575,6 +575,7 @@ Entry.Playground = class {
         const fontLink = Entry.createElement('a', 'entryTextBoxAttrFontName').addClass(
             'select_link imico_pop_select_arr_down'
         );
+
         fontLink.bindOnClick(() => {
             const options = EntryStatic.fonts
                 .filter((font) => font.visible)
@@ -694,7 +695,8 @@ Entry.Playground = class {
         through.setAttribute('title', Lang.Workspace.font_cancel);
         styleBox.appendChild(through);
 
-        const color = Entry.createElement('a').addClass('style_link imbtn_pop_font_color');
+        const color = Entry.createElement('a').addClass('imbtn_pop_font_color');
+        color.appendChild(Entry.createElement('em'));
         color.bindOnClick(() =>
             this.openColourPicker(
                 color,
@@ -706,10 +708,9 @@ Entry.Playground = class {
         color.setAttribute('title', Lang.Workspace.font_color);
         styleBox.appendChild(color);
 
-        const backgroundColor = Entry.createElement('a').addClass(
-            'style_link imbtn_pop_font_backgroundcolor'
-        );
+        const backgroundColor = Entry.createElement('a').addClass('imbtn_pop_font_backgroundcolor');
         backgroundColor.setAttribute('title', Lang.Workspace.font_fill);
+        backgroundColor.appendChild(Entry.createElement('em'));
         backgroundColor.bindOnClick(() =>
             this.openColourPicker(
                 backgroundColor,
@@ -1905,6 +1906,10 @@ Entry.Playground = class {
     }
 
     openDropDown = (options, target, callback, closeCallback) => {
+        const container = Entry.Dom('div', {
+            class: 'entry-widget-dropdown',
+            parent: $('body'),
+        })[0];
         const dropdownWidget = new Dropdown({
             data: {
                 items: options,
@@ -1913,13 +1918,14 @@ Entry.Playground = class {
                     if (dropdownWidget) {
                         closeCallback();
                         dropdownWidget.hide();
+                        dropdownWidget.remove();
+                    }
+                    if (container) {
+                        container.remove();
                     }
                 },
             },
-            container: Entry.Dom('div', {
-                class: 'entry-widget-dropdown',
-                parent: $('body'),
-            })[0],
+            container,
         }).on('select', (item) => {
             callback(item);
             closeCallback();
@@ -1929,6 +1935,12 @@ Entry.Playground = class {
     };
 
     openColourPicker = (target, color, canTransparent, callback) => {
+        const container = Entry.Dom('div', {
+            class: 'entry-color-picker',
+            parent: $('body'),
+        })[0];
+
+        $(target).addClass("on");
         const colorPicker = new ColorPicker({
             data: {
                 color,
@@ -1936,14 +1948,17 @@ Entry.Playground = class {
                 canTransparent,
                 onOutsideClick: (color) => {
                     if (colorPicker) {
+                        $(target).removeClass("on");
                         colorPicker.hide();
+                        colorPicker.remove();
+                    }
+
+                    if (container) {
+                        container.remove();
                     }
                 },
             },
-            container: Entry.Dom('div', {
-                class: 'entry-color-picker',
-                parent: $('body'),
-            })[0],
+            container,
         }).on('change', (color) => {
             if (color) {
                 callback(color, true);
@@ -1963,14 +1978,14 @@ Entry.Playground = class {
     }
 
     setTextColour(colour) {
-        $('.style_link.imbtn_pop_font_color').toggleClass('on', colour !== '#000000');
-        this.object.entity.setColour(colour);
+        $('.imbtn_pop_font_color em').css("background-color", colour);
         this.textEditArea.style.color = colour;
         this.textEditInput.style.color = colour;
     }
 
     setBackgroundColour(colour) {
-        $('.style_link.imbtn_pop_font_backgroundcolor').toggleClass('on', colour !== '#ffffff');
+        $('.imbtn_pop_font_backgroundcolor em').css("background-color", colour);
+        $('.imbtn_pop_font_backgroundcolor').toggleClass('clear', colour === "transparent" || colour === "#ffffff");
         this.object.entity.setBGColour(colour);
         this.textEditArea.style.backgroundColor = colour;
         this.textEditInput.style.backgroundColor = colour;

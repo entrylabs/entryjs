@@ -933,17 +933,66 @@
     }
 }
 .imbtn_pop_font_color {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    width: 66px;
+    height: 40px;
+    margin-left: 10px;
     .backgroundImage('btn_pop_font_color.png');
-    background-size: 38px auto;
+    background-size: 66px auto;
+    cursor: pointer;
+    em {
+        position: absolute;
+        left: 5px;
+        right: 5px;
+        top: 5px;
+        bottom: 5px;
+        background-color: #f9f9f9;
+        z-index: -1;
+    }
     &.on {
         .backgroundImage('btn_pop_font_color_on.png');
     }
 }
-.imbtn_pop_font_backgroundcolor {
+.imbtn_pop_font_paint, .imbtn_pop_font_backgroundcolor {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    width: 66px;
+    height: 40px;
+    margin-left: 10px;
     .backgroundImage('btn_pop_font_paint.png');
-    background-size: 38px auto;
+    background-size: 66px auto;
+    cursor: pointer;
+    em {
+        position: absolute;
+        left: 5px;
+        right: 5px;
+        top: 5px;
+        bottom: 5px;
+        z-index: -1;
+    }
     &.on {
         .backgroundImage('btn_pop_font_paint_on.png');
+        &.clear {
+            .backgroundImage('btn_pop_font_paint_clear_on.png');
+            em {
+                display: none;
+            }
+        }
+    }
+    &.clear {
+        .backgroundImage('btn_pop_font_paint_clear.png');
+        em {
+            display: none;
+        }
+    }
+    &.clear_on {
+        .backgroundImage('btn_pop_font_paint_clear_on.png');
+        em {
+            display: none;
+        }
     }
 }
 
