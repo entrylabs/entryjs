@@ -465,10 +465,19 @@ module.exports = {
                 isNotFor: [],
                 func(sprite, script) {
                     const operator = script.getField('OPERATOR', script);
-                    const [leftValue, rightValue] = script.getValues(
+                    let [leftValue, rightValue] = script.getValues(
                         ['LEFTHAND', 'RIGHTHAND'],
                         script
                     );
+
+                    const leftNumber = Number(leftValue);
+                    const rightNumber = Number(rightValue);
+                    if (!isNaN(leftNumber)) {
+                        leftValue = leftNumber;
+                    }
+                    if (!isNaN(rightNumber)) {
+                        rightValue = rightNumber;
+                    }
 
                     switch (operator) {
                         case 'EQUAL':

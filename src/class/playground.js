@@ -222,6 +222,7 @@ Entry.Playground = class {
             });
         }
 
+        // TODO: 백팩(나의보관함) 숨김처리
         if (!backpackDisable && false) {
             const backPackButton = Entry.createElement('div')
                 .addClass('entryPlaygroundBackPackButtonWorkspace')
@@ -2141,8 +2142,8 @@ Entry.Playground = class {
     }
 
     destroy() {
-        this.commentToggleButton_.unBindOnClick();
-        this.backPackButton_.unBindOnClick();
+        this.commentToggleButton_ && this.commentToggleButton_.unBindOnClick();
+        this.backPackButton_ && this.backPackButton_.unBindOnClick();
         this.blockBackPackEvent.off();
         this.blockBackPackAreaEvent.off();
         this.objectBackPackEvent.off();
