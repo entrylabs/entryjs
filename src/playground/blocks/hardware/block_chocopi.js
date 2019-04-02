@@ -911,7 +911,8 @@ Entry.Chocopi.getBlocks = function () {
                 var r = script.getNumberValue('r');
                 var g = script.getNumberValue('g');
                 var b = script.getNumberValue('b');
-                console.log([l, r, g, b]);
+                if(!Entry.hw.sendQueue.data)
+                    Entry.hw.sendQueue.data = {};
                 Entry.hw.sendQueue.data[port] = [l, r, g, b];
                 Entry.hw.update();
                 delete Entry.hw.sendQueue.data[port];
@@ -987,6 +988,8 @@ Entry.Chocopi.getBlocks = function () {
                 var id = script.getField('id');
                 var s = script.getNumberValue('power');
                 var d = script.getField('direction');
+                if(!Entry.hw.sendQueue.data)
+                    Entry.hw.sendQueue.data = {};
                 Entry.hw.sendQueue.data[port] = [id, s, d];
                 Entry.hw.update();
                 delete Entry.hw.sendQueue.data[port];
@@ -1053,13 +1056,15 @@ Entry.Chocopi.getBlocks = function () {
                 if (port == -1) return script.callReturn();
                 var id = script.getField('id');
                 var a = script.getNumberValue('angle');
+                if(!Entry.hw.sendQueue.data)
+                Entry.hw.sendQueue.data = {};                
                 Entry.hw.sendQueue.data[port] = [id, a];
                 Entry.hw.update();
                 delete Entry.hw.sendQueue.data[port];
                 return script.callReturn();
             },
             syntax: { js: [], py: ['Chocopi.servo(%1, %2, %3)'] },
-        },
+        },        
         chocopi_map_range: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
