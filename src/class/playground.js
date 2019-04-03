@@ -1979,6 +1979,7 @@ Entry.Playground = class {
 
     setTextColour(colour) {
         $('.imbtn_pop_font_color em').css("background-color", colour);
+        this.object.entity.setColour(colour);
         this.textEditArea.style.color = colour;
         this.textEditInput.style.color = colour;
     }
