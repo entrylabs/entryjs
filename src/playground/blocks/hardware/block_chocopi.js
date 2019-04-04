@@ -15,8 +15,8 @@ Entry.Chocopi = {
     setZero: function() {},
     getport: function(id, port) {
         if (!this.blocks) return -1;
-        if (this.blocks[port].id == id) return port;
-        for (var p in this.blocks) if (this.blocks[p].id == id) return p;
+        if (this.blocks[port] && this.blocks[port].id == id) return port;
+        for (var p in this.blocks) if (this.blocks[port] && this.blocks[p].id == id) return p;
         return -1;
     },
     connected: false,
@@ -293,6 +293,7 @@ Entry.Chocopi.getBlocks = function () {
                 var port = Entry.Chocopi.getport(9, script.getField('port'));
                 var sensor = script.getField('sensor');
                 if (port == -1) return false;
+                if(!Entry.Chocopi.p[port])Entry.Chocopi.p[port] = {ts:0, tv:[]}
                 return (Entry.Chocopi.p[port].ts & (1 << sensor)) > 0;
             },
             syntax: { js: [], py: ['Chocopi.touchStatus(%1, %2)'] },
@@ -359,6 +360,7 @@ Entry.Chocopi.getBlocks = function () {
                 var port = Entry.Chocopi.getport(9, script.getField('port'));
                 if (port == -1) return false;
                 var sensor = script.getField('sensor');
+                if(!Entry.Chocopi.p[port])Entry.Chocopi.p[port] = {ts:0, tv:[]}
                 return Entry.Chocopi.p[port].tv[sensor];
             },
             syntax: { js: [], py: ['Chocopi.touchValue(%1, %2)'] },
@@ -500,6 +502,7 @@ Entry.Chocopi.getBlocks = function () {
                 var port = Entry.Chocopi.getport(10, script.getField('port'));
                 if (port == -1) return false;
                 var sensor = script.getField('sensor');
+                if(!Entry.Chocopi.p[port])Entry.Chocopi.p[port] = {xyp:[]}
                 return Entry.Chocopi.p[port].xyp[sensor];
             },
             syntax: { js: [], py: ['Chocopi.joystick(%1, %2)'] },
@@ -691,6 +694,7 @@ Entry.Chocopi.getBlocks = function () {
                 var port = Entry.Chocopi.getport(11, script.getField('port'));
                 if (port == -1) return 0;
                 var sensor = script.getField('sensor');
+                if(!Entry.Chocopi.p[port])Entry.Chocopi.p[port] = {s:[]}
                 var v = Entry.Chocopi.p[port].s;
                 if (sensor < 9) return v[sensor];
                 switch (sensor) {
