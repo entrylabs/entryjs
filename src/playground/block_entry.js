@@ -7422,7 +7422,7 @@ function getBlocks() {
             statements: [],
             params: [
                 {
-                    type: 'TextInput',
+                    type: 'Text',
                     value: '?',
                     clearBG: true,
                     color: 'white',
@@ -7488,7 +7488,7 @@ function getBlocks() {
             ],
             params: [
                 {
-                    type: 'TextInput',
+                    type: 'Text',
                     value: '?',
                     clearBG: true,
                     color: 'white',
@@ -7525,7 +7525,7 @@ function getBlocks() {
             ],
             params: [
                 {
-                    type: 'TextInput',
+                    type: 'Text',
                     value: '?',
                     clearBG: true,
                     color: 'white',
@@ -7562,7 +7562,7 @@ function getBlocks() {
             ],
             params: [
                 {
-                    type: 'TextInput',
+                    type: 'Text',
                     value: '?',
                     clearBG: true,
                     color: 'white',
@@ -7576,7 +7576,7 @@ function getBlocks() {
                     type: 'LineBreak',
                 },
                 {
-                    type: 'TextInput',
+                    type: 'Text',
                     value: '?',
                     clearBG: true,
                     color: 'white',
@@ -7599,7 +7599,7 @@ function getBlocks() {
             statements: [],
             params: [
                 {
-                    type: 'TextInput',
+                    type: 'Text',
                     value: '?',
                     clearBG: true,
                     color: 'white',
@@ -7625,7 +7625,7 @@ function getBlocks() {
             statements: [],
             params: [
                 {
-                    type: 'TextInput',
+                    type: 'Text',
                     value: '?',
                     clearBG: true,
                     color: 'white',
