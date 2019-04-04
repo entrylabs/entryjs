@@ -7396,6 +7396,7 @@ function getBlocks() {
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
                 {
                     type: 'Indicator',
@@ -7422,10 +7423,11 @@ function getBlocks() {
             statements: [],
             params: [
                 {
-                    type: 'Text',
+                    type: 'TextInput',
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
                 {
                     type: 'Indicator',
@@ -7488,10 +7490,11 @@ function getBlocks() {
             ],
             params: [
                 {
-                    type: 'Text',
+                    type: 'TextInput',
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
                 {
                     type: 'Indicator',
@@ -7525,10 +7528,11 @@ function getBlocks() {
             ],
             params: [
                 {
-                    type: 'Text',
+                    type: 'TextInput',
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
                 {
                     type: 'Indicator',
@@ -7562,10 +7566,11 @@ function getBlocks() {
             ],
             params: [
                 {
-                    type: 'Text',
+                    type: 'TextInput',
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
                 {
                     type: 'Indicator',
@@ -7576,10 +7581,11 @@ function getBlocks() {
                     type: 'LineBreak',
                 },
                 {
-                    type: 'Text',
+                    type: 'TextInput',
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
             ],
             events: {},
@@ -7599,10 +7605,11 @@ function getBlocks() {
             statements: [],
             params: [
                 {
-                    type: 'Text',
+                    type: 'TextInput',
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
             ],
             events: {},
@@ -7625,10 +7632,11 @@ function getBlocks() {
             statements: [],
             params: [
                 {
-                    type: 'Text',
+                    type: 'TextInput',
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
             ],
             events: {},
