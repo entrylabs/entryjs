@@ -7396,6 +7396,7 @@ function getBlocks() {
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
                 {
                     type: 'Indicator',
@@ -7426,6 +7427,7 @@ function getBlocks() {
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
                 {
                     type: 'Indicator',
@@ -7492,6 +7494,7 @@ function getBlocks() {
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
                 {
                     type: 'Indicator',
@@ -7529,6 +7532,7 @@ function getBlocks() {
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
                 {
                     type: 'Indicator',
@@ -7566,6 +7570,7 @@ function getBlocks() {
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
                 {
                     type: 'Indicator',
@@ -7580,6 +7585,7 @@ function getBlocks() {
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
             ],
             events: {},
@@ -7603,6 +7609,7 @@ function getBlocks() {
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
             ],
             events: {},
@@ -7629,6 +7636,7 @@ function getBlocks() {
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
             ],
             events: {},
