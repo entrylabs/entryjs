@@ -11,6 +11,7 @@
         <% for (var css in htmlWebpackPlugin.files.css) { %>
         <link href="<%= htmlWebpackPlugin.files.css[css] %>" rel="stylesheet" />
         <% } %>
+        <link href="../example/entry-tool/entry-tool.css" rel="stylesheet"/>
     </head>
 
     <body>
@@ -58,6 +59,8 @@
 
         <!--codemirror-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.23.0/codemirror.js"></script>
+
+        <script src="../example/entry-tool/entry-tool.js"></script>
 
         <!--entryjs-->
         <script src="https://playentry.org/lib/components-webfontloader/webfont.js"></script>
