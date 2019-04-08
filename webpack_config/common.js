@@ -53,6 +53,7 @@ module.exports = {
         react: 'React',
         'react-dom': 'ReactDOM',
         '@entrylabs/tool': 'EntryTool',
+        'entry-paint': 'EntryPaint',
     },
     plugins: [
         new CleanWebpackPlugin(['dist'], {

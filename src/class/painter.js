@@ -1,6 +1,6 @@
 'use strict';
 
-Entry.Painter = function(view) {
+Entry.Painter2 = function(view) {
     this.view = view;
     this.baseUrl = Entry.painterBaseUrl;
 
@@ -18,7 +18,7 @@ Entry.Painter = function(view) {
     Entry.addEventListener('stop', this.attachKeyboardEvents.bind(this));
 
     //dropdown header dispose
-    $('body').on('mouseup', '.active li', function() {
+    $('body').on('mouseup', '.active li', () => {
         $('.painterTopHeader.active').removeClass('active');
     });
 
@@ -119,22 +119,20 @@ Entry.Painter = function(view) {
                 Entry.engine.toggleStop();
                 wasRun = true;
             }
-            entrylms.confirm(Lang.Menus.save_modified_shape).then(
-                function(result) {
-                    this.isConfirm = false;
-                    if (result === true) {
-                        this.file_save(true);
-                    } else {
-                        this.file.modified = false;
-                    }
+            entrylms.confirm(Lang.Menus.save_modified_shape).then((result) => {
+                this.isConfirm = false;
+                if (result === true) {
+                    this.file_save(true);
+                } else {
+                    this.file.modified = false;
+                }
 
-                    if (!wasRun) {
-                        this.afterModified(picture);
-                    } else {
-                        Entry.playground.injectPicture();
-                    }
-                }.bind(this)
-            );
+                if (!wasRun) {
+                    this.afterModified(picture);
+                } else {
+                    Entry.playground.injectPicture();
+                }
+            });
         }
         Entry.stage.updateObject();
         this.file.isUpdate = true;
@@ -374,7 +372,7 @@ Entry.Painter = function(view) {
         painterTopMenu.appendChild(painterTopMenuEdit);
 
         const painterTopMenuFileSave = ce('div', 'entryPainterTopMenuFileSave');
-        painterTopMenuFileSave.bindOnClick(function() {
+        painterTopMenuFileSave.bindOnClick(() => {
             painter.file_save(false);
         });
         painterTopMenuFileSave.addClass('entryPainterTopMenuFileSave');
@@ -382,7 +380,7 @@ Entry.Painter = function(view) {
         painterTopMenuFileDropdown.appendChild(painterTopMenuFileSave);
 
         const painterTopMenuFileSaveAsLink = ce('div', 'entryPainterTopMenuFileSaveAs');
-        painterTopMenuFileSaveAsLink.bindOnClick(function() {
+        painterTopMenuFileSaveAsLink.bindOnClick(() => {
             painter.file.mode = 'new';
             painter.file_save(false);
         });
@@ -395,7 +393,7 @@ Entry.Painter = function(view) {
         painterTopMenuEdit.appendChild(painterTopMenuEditDropdown);
 
         const painterTopMenuEditImport = ce('div', 'entryPainterTopMenuEditImport');
-        painterTopMenuEditImport.bindOnClick(function() {
+        painterTopMenuEditImport.bindOnClick(() => {
             Entry.dispatchEvent('openPictureImport');
         });
         painterTopMenuEditImport.addClass('entryPainterTopMenuEditImport');
@@ -403,7 +401,7 @@ Entry.Painter = function(view) {
         painterTopMenuEditDropdown.appendChild(painterTopMenuEditImport);
 
         const painterTopMenuEditCopy = ce('div', 'entryPainterTopMenuEditCopy');
-        painterTopMenuEditCopy.bindOnClick(function() {
+        painterTopMenuEditCopy.bindOnClick(() => {
             painter.copy();
         });
         painterTopMenuEditCopy.addClass('entryPlaygroundPainterTopMenuEditCopy');
@@ -411,7 +409,7 @@ Entry.Painter = function(view) {
         painterTopMenuEditDropdown.appendChild(painterTopMenuEditCopy);
 
         const painterTopMenuEditCut = ce('div', 'entryPainterTopMenuEditCut');
-        painterTopMenuEditCut.bindOnClick(function() {
+        painterTopMenuEditCut.bindOnClick(() => {
             painter.cut();
         });
         painterTopMenuEditCut.addClass('entryPlaygroundPainterTopMenuEditCut');
@@ -419,7 +417,7 @@ Entry.Painter = function(view) {
         painterTopMenuEditDropdown.appendChild(painterTopMenuEditCut);
 
         const painterTopMenuEditPaste = ce('div', 'entryPainterTopMenuEditPaste');
-        painterTopMenuEditPaste.bindOnClick(function() {
+        painterTopMenuEditPaste.bindOnClick(() => {
             painter.paste();
         });
         painterTopMenuEditPaste.addClass('entryPlaygroundPainterTopMenuEditPaste');
@@ -429,7 +427,7 @@ Entry.Painter = function(view) {
         const painterTopMenuEditEraseAll = ce('div', 'entryPainterTopMenuEditEraseAll');
         painterTopMenuEditEraseAll.addClass('entryPlaygroundPainterTopMenuEditEraseAll');
         painterTopMenuEditEraseAll.innerHTML = Lang.Workspace.remove_all;
-        painterTopMenuEditEraseAll.bindOnClick(function() {
+        painterTopMenuEditEraseAll.bindOnClick(() => {
             painter.lc.clear();
         });
         painterTopMenuEditDropdown.appendChild(painterTopMenuEditEraseAll);

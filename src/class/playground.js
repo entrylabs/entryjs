@@ -16,7 +16,7 @@ const Entry = require('../entry');
  * This manage all view related with block.
  * @constructor
  */
-Entry.Playground = class {
+Entry.Playground = class Playground {
     constructor() {
         this._destroyer = this._destroyer || new Destroyer();
         this._destroyer.destroy();
@@ -1940,7 +1940,7 @@ Entry.Playground = class {
             parent: $('body'),
         })[0];
 
-        $(target).addClass("on");
+        $(target).addClass('on');
         const colorPicker = new ColorPicker({
             data: {
                 color,
@@ -1948,7 +1948,7 @@ Entry.Playground = class {
                 canTransparent,
                 onOutsideClick: (color) => {
                     if (colorPicker) {
-                        $(target).removeClass("on");
+                        $(target).removeClass('on');
                         colorPicker.hide();
                         colorPicker.remove();
                     }
@@ -1978,15 +1978,18 @@ Entry.Playground = class {
     }
 
     setTextColour(colour) {
-        $('.imbtn_pop_font_color em').css("background-color", colour);
+        $('.imbtn_pop_font_color em').css('background-color', colour);
         this.object.entity.setColour(colour);
         this.textEditArea.style.color = colour;
         this.textEditInput.style.color = colour;
     }
 
     setBackgroundColour(colour) {
-        $('.imbtn_pop_font_backgroundcolor em').css("background-color", colour);
-        $('.imbtn_pop_font_backgroundcolor').toggleClass('clear', colour === "transparent" || colour === "#ffffff");
+        $('.imbtn_pop_font_backgroundcolor em').css('background-color', colour);
+        $('.imbtn_pop_font_backgroundcolor').toggleClass(
+            'clear',
+            colour === 'transparent' || colour === '#ffffff'
+        );
         this.object.entity.setBGColour(colour);
         this.textEditArea.style.backgroundColor = colour;
         this.textEditInput.style.backgroundColor = colour;
