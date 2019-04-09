@@ -5,7 +5,7 @@ export default class Toast {
 
         if (Toast.instance) {
             const instance = Toast.instance;
-            if ($boardView.find('.entryMobileToast')) {
+            if (!$boardView.find('.entryMobileToast').length) {
                 instance.board = board;
                 instance.$boardView = $boardView;
                 instance.$boardView.append(instance.$view);
