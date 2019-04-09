@@ -491,4 +491,4 @@ Entry.Painter2 = function(view) {
     p.clear = function() {
         this.toggleFullscreen(false);
     };
-})(Entry.Painter.prototype);
+})(Entry.Painter2.prototype);
