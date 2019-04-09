@@ -21,6 +21,7 @@ require('./class/hw');
 require('./class/hw_monitor');
 require('./class/intro');
 require('./class/object');
+require('./class/painter2');
 require('./class/painter');
 require('./class/pdf');
 require('./class/playground');
