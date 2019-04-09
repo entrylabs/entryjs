@@ -3,8 +3,14 @@ export default class Toast {
     constructor(board) {
         const $boardView = $(board.view);
 
-        if (!$boardView.find('.entryMobileToast') && Toast.instance) {
-            return Toast.instance;
+        if (Toast.instance) {
+            const instance = Toast.instance;
+            if ($boardView.find('.entryMobileToast')) {
+                instance.board = board;
+                instance.$boardView = $boardView;
+                instance.$boardView.append(instance.$view);
+            }
+            return instance;
         }
         this.board = board;
         this.$boardView = $boardView;
