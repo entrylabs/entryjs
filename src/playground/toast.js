@@ -4,13 +4,7 @@ export default class Toast {
         const $boardView = $(board.view);
 
         if (Toast.instance) {
-            const instance = Toast.instance;
-            if (!$boardView.find('.entryMobileToast').length) {
-                instance.board = board;
-                instance.$boardView = $boardView;
-                instance.$boardView.append(instance.$view);
-            }
-            return instance;
+            return Toast.instance;
         }
         this.board = board;
         this.$boardView = $boardView;
@@ -46,6 +40,7 @@ export default class Toast {
     }, 3000);
 
     destroy() {
+        this.removeToast.cancel();
         delete this.$boardView;
         delete this.board;
         delete this.$view;
