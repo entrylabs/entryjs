@@ -12,17 +12,22 @@ Entry.Painter = class Painter {
             mode: 'new', // new or edit
         };
 
+        this.isShow = false;
         this.clipboard = null;
-        this.initialize();
     }
 
     initialize() {
+        this.isShow = true;
         EntryPaint.init({ parent: this.view });
 
         Entry.addEventListener('pictureSelected', this.changePicture.bind(this));
     }
 
-    show() {}
+    show() {
+        if (!this.isShow) {
+            this.initialize();
+        }
+    }
 
     hide() {}
 
