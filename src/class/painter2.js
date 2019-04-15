@@ -18,8 +18,7 @@ Entry.Painter = class Painter {
 
     initialize() {
         this.isShow = true;
-        EntryPaint.init({ parent: this.view });
-
+        this.entryPaint = EntryPaint.create({ parent: this.view });
         Entry.addEventListener('pictureSelected', this.changePicture.bind(this));
     }
 
@@ -83,12 +82,13 @@ Entry.Painter = class Painter {
             )}/${picture.filename.substring(2, 4)}/image/${picture.filename}.png`;
         }
 
-        EntryPaint.BitmapImporter.import(image.src);
+        this.entryPaint.addBitmap(image.src);
     }
 
     afterModified(picture) {
         const file = this.file;
         file.modified = false;
+        this.entryPaint.reset();
 
         if (picture.id) {
             file.id = picture.id || Entry.generateHash();
