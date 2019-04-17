@@ -752,12 +752,12 @@ Entry.EntryObject = class {
                     }
                 },
             },
-            // {
-            //     text: Lang.Blocks.add_my_storage,
-            //     callback: () => {
-            //         this.addStorage();
-            //     },
-            // },
+            {
+                text: Lang.Blocks.add_my_storage,
+                callback: () => {
+                    this.addStorage();
+                },
+            },
             {
                 text: Lang.Blocks.export_object,
                 callback() {
@@ -1314,9 +1314,5 @@ Entry.EntryObject = class {
 
     _whenRotateEditable(func, obj) {
         return Entry.Utils.when(() => !(Entry.engine.isState('run') || obj.getLock()), func);
-    }
-
-    setDraggable(isDraggable) {
-        $(this.view_).attr('draggable', isDraggable);
     }
 };

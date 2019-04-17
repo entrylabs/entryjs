@@ -647,21 +647,13 @@ Entry.BlockView = class BlockView {
                 }
 
                 const dragInstance = this.dragInstance;
-                const backPackMode = !this.fromBlockMenu && Entry.playground.backPack.isShow;
-                if (backPackMode) {
-                    Entry.GlobalSvg.position({
-                        left: mouseEvent.pageX - dragInstance.offsetX,
-                        top: mouseEvent.pageY - dragInstance.offsetY,
-                    });
-                } else {
-                    this.moveBy(
-                        mouseEvent.pageX - dragInstance.offsetX,
-                        mouseEvent.pageY - dragInstance.offsetY,
-                        false,
-                        true
-                    );
-                    Entry.GlobalSvg.position();
-                }
+                this.moveBy(
+                    mouseEvent.pageX - dragInstance.offsetX,
+                    mouseEvent.pageY - dragInstance.offsetY,
+                    false,
+                    true
+                );
+                Entry.GlobalSvg.position();
 
                 dragInstance.set({
                     offsetX: mouseEvent.pageX,
@@ -731,6 +723,7 @@ Entry.BlockView = class BlockView {
         const dragMode = this.dragMode;
         const block = this.block;
         const workspaceMode = board.workspace.getMode();
+        const backPackMode = !this.fromBlockMenu && Entry.playground.backPack.isShow;
         this.removeDragging();
         this.set({ visible: true });
         this.dragMode = Entry.DRAG_MODE_NONE;
@@ -1282,6 +1275,11 @@ Entry.BlockView = class BlockView {
             const svgCommentGroup = notClone
                 ? this.svgCommentGroup
                 : this.svgCommentGroup && this.svgCommentGroup.cloneNode(true);
+
+            if (!notClone) {
+                svgGroup.removeAttribute('opacity');
+                svgGroup.setAttribute('class', 'block selected');
+            }
             const box = this._skeleton.box(this);
             const scale = notPng ? 1 : 1.5;
             let fontWeight = this.isWindow7() ? 0.9 : 0.95;
@@ -1435,15 +1433,15 @@ Entry.BlockView = class BlockView {
                 },
             };
 
-            // const addStorage = !EntryOptions.backpackDisable && {
-            //     text: Lang.Blocks.add_my_storage,
-            //     callback() {
-            //         Entry.dispatchEvent('addStorage', {
-            //             type: 'block',
-            //             data: block,
-            //         });
-            //     },
-            // };
+            const addStorage = !EntryOptions.backpackDisable && {
+                text: Lang.Blocks.add_my_storage,
+                callback() {
+                    Entry.dispatchEvent('addStorage', {
+                        type: 'block',
+                        data: block,
+                    });
+                },
+            };
 
             const download = {
                 text: save_as_image,
@@ -1469,8 +1467,9 @@ Entry.BlockView = class BlockView {
             }
 
             if (!isInBlockMenu) {
-                // options = [copyAndPaste, copy, remove, addStorage, ...options, comment].filter(x=>x);
-                options = [copyAndPaste, copy, remove, ...options, comment].filter((x) => x);
+                options = [copyAndPaste, copy, remove, addStorage, ...options, comment].filter(
+                    (x) => x
+                );
             }
 
             return options;
@@ -1482,10 +1481,12 @@ Entry.BlockView = class BlockView {
     }
 
     addStorage() {
-        Entry.dispatchEvent('addStorage', {
-            type: 'block',
-            data: this.block,
-        });
+        if (this.block.view) {
+            Entry.dispatchEvent('addStorage', {
+                type: 'block',
+                data: this.block,
+            });
+        }
     }
 
     clone() {
@@ -1669,6 +1670,7 @@ Entry.BlockView = class BlockView {
                 .replace('(defs)', new XMLSerializer().serializeToString(defs[0]))
                 .replace(/>\s+/g, '>')
                 .replace(/\s+</g, '<');
+            svgData = svgData.replace(/NS\d+:href/g, 'xlink:href');
             let src = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgData)))}`;
             svgData = null;
             if (notPng) {
@@ -1704,7 +1706,7 @@ Entry.BlockView = class BlockView {
             }
 
             if (notPng) {
-                return resolve(src);
+                return resolve(`${location.origin}${src}`);
             }
 
             width *= multiplier;
@@ -1722,12 +1724,16 @@ Entry.BlockView = class BlockView {
             const ctx = canvas.getContext('2d');
 
             img.onload = function() {
-                ctx.drawImage(img, 0, 0, width, height);
-                const data = canvas.toDataURL('image/png');
-                if (/\.png$/.test(src)) {
-                    Entry.BlockView.pngMap[src] = data;
+                try {
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const data = canvas.toDataURL('image/png');
+                    if (/\.png$/.test(src)) {
+                        Entry.BlockView.pngMap[src] = data;
+                    }
+                    return resolve(data);
+                } catch (e) {
+                    return reject('error occured');
                 }
-                return resolve(data);
             };
 
             img.onerror = function() {

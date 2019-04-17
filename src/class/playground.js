@@ -36,6 +36,8 @@ Entry.Playground = class {
             this.updateHW();
         });
         Entry.addEventListener('commentVisibleChanged', this.toggleCommentButtonVisible.bind(this));
+
+        Entry.windowResized.attach(this, this.clearClientRectMemo.bind(this));
     }
 
     setMode(mode) {
@@ -223,7 +225,7 @@ Entry.Playground = class {
         }
 
         // TODO: 백팩(나의보관함) 숨김처리
-        if (!backpackDisable && false) {
+        if (!backpackDisable) {
             const backPackButton = Entry.createElement('div')
                 .addClass('entryPlaygroundBackPackButtonWorkspace')
                 .appendTo(tabButtonView);
@@ -252,11 +254,16 @@ Entry.Playground = class {
                     Entry.dispatchEvent('changeBackPackTitle', id, title);
                 },
                 onCustomDragEnter: ({ type, value, onDragEnter }) => {
-                    if (Entry.GlobalSvg.isShow) {
+                    if (Entry.GlobalSvg.isShow && !Entry.GlobalSvg.isFromBlockMenu) {
                         const { _view = {} } = Entry.GlobalSvg;
                         onDragEnter({
                             type: 'block',
                             value: _view,
+                        });
+                    } else if (Entry.container.isObjectDragging) {
+                        onDragEnter({
+                            type: 'object',
+                            value: Entry.container.dragObjectKey,
                         });
                     }
                 },
@@ -302,22 +309,17 @@ Entry.Playground = class {
             this.blockBackPackEvent = eventDom;
             const areaDom = new EntryEvent(this.blockBackPackArea[0]);
             this.blockBackPackAreaEvent = areaDom;
-            areaDom.on(
-                'drop',
-                (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const id = e.dataTransfer.getData('text');
-                    Entry.dispatchEvent('addBackPackToEntry', 'block', id);
-                    this.blockBackPackArea.css({
-                        display: 'none',
-                    });
-                },
-                false
-            );
-            eventDom.on('dragenter', (e) => {
+            areaDom.on('mouseup', (e) => {
+                const data = this.backPack.getData('data');
+                Entry.dispatchEvent('addBackPackToEntry', 'block', data);
+                this.blockBackPackArea.css({
+                    display: 'none',
+                });
+            });
+            eventDom.on('mouseenter', () => {
+                const isDragging = this.backPack.getData('isDragging');
                 const type = this.backPack.getData('dragType');
-                if (type === 'block') {
+                if (isDragging && type === 'block') {
                     const { width, height, top, left } = blockView[0].getBoundingClientRect();
                     this.blockBackPackArea.css({
                         width: width - 134,
@@ -328,12 +330,7 @@ Entry.Playground = class {
                     });
                 }
             });
-            areaDom.on('dragover', (e) => {
-                e.preventDefault();
-            });
-            areaDom.on('dragleave', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
+            areaDom.on('mouseleave', (e) => {
                 this.blockBackPackArea.css({
                     display: 'none',
                 });
@@ -349,22 +346,20 @@ Entry.Playground = class {
             this.objectBackPackEvent = eventDom;
             const areaDom = new EntryEvent(this.objectBackPackArea[0]);
             this.objectBackPackAreaEvent = areaDom;
-            areaDom.on(
-                'drop',
-                (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const id = e.dataTransfer.getData('text');
-                    Entry.dispatchEvent('addBackPackToEntry', 'object', id);
-                    this.objectBackPackArea.css({
-                        display: 'none',
-                    });
-                },
-                false
-            );
-            eventDom.on('dragenter', (e) => {
+
+            areaDom.on('mouseup', (e) => {
+                console.log('mouseup');
+                const data = this.backPack.getData('data');
+                Entry.dispatchEvent('addBackPackToEntry', 'object', data);
+                this.objectBackPackArea.css({
+                    display: 'none',
+                });
+            });
+
+            eventDom.on('mouseenter', () => {
+                const isDragging = this.backPack.getData('isDragging');
                 const type = this.backPack.getData('dragType');
-                if (type === 'object') {
+                if (isDragging && type === 'object') {
                     const { width, height, top, left } = objectView[0].getBoundingClientRect();
                     this.objectBackPackArea.css({
                         width,
@@ -375,28 +370,100 @@ Entry.Playground = class {
                     });
                 }
             });
-            areaDom.on('dragover', (e) => {
-                e.preventDefault();
-            });
-            areaDom.on('dragleave', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
+            areaDom.on('mouseleave', (e) => {
                 this.objectBackPackArea.css({
                     display: 'none',
                 });
             });
         }
+
+        const globalEvent = new EntryEvent(document);
+        if (Entry.isMobile()) {
+            this.backPack.data = {
+                draggableOption: {
+                    lockAxis: 'y',
+                    distance: 30,
+                    onTouchEnd: (e) => {
+                        console.log('touchend !!!!');
+                        const { data } = globalEvent;
+                        if (data.isObjectMouseEnter) {
+                            this.objectBackPackAreaEvent.trigger('mouseup');
+                        } else if (data.isBlockMouseEnter) {
+                            this.blockBackPackAreaEvent.trigger('mouseup');
+                        }
+                    },
+                },
+            };
+            globalEvent.data = {};
+            this.globalEvent = globalEvent;
+            globalEvent.on(
+                'touchmove',
+                (e) => {
+                    const isDragging = this.backPack.getData('isDragging');
+                    if (isDragging) {
+                        const touch = e.touches[0];
+                        const touchPoint = {
+                            x: touch.pageX,
+                            y: touch.pageY,
+                        };
+                        const { data } = globalEvent;
+                        const { dom: objectDom } = this.objectBackPackEvent;
+                        const { dom: blockDom } = this.blockBackPackEvent;
+                        const objectRect = this.getBoundingClientRectMemo(objectDom);
+                        const blockRect = this.getBoundingClientRectMemo(blockDom, { width: -134 });
+                        if (
+                            !data.isObjectMouseEnter &&
+                            this.isPointInRect(touchPoint, objectRect)
+                        ) {
+                            data.isObjectMouseEnter = true;
+                            this.objectBackPackEvent.trigger('mouseenter');
+                        } else if (
+                            data.isObjectMouseEnter &&
+                            !this.isPointInRect(touchPoint, objectRect)
+                        ) {
+                            data.isObjectMouseEnter = false;
+                            this.objectBackPackAreaEvent.trigger('mouseleave');
+                        }
+                        if (!data.isBlockMouseEnter && this.isPointInRect(touchPoint, blockRect)) {
+                            data.isBlockMouseEnter = true;
+                            this.blockBackPackEvent.trigger('mouseenter');
+                        } else if (
+                            data.isBlockMouseEnter &&
+                            !this.isPointInRect(touchPoint, blockRect)
+                        ) {
+                            data.isBlockMouseEnter = false;
+                            this.blockBackPackAreaEvent.trigger('mouseleave');
+                        }
+                    }
+                },
+                { passive: false }
+            );
+        }
+    }
+
+    isPointInRect({ x, y }, rect) {
+        return x > rect.x && x < rect.x + rect.width && y > rect.y && y < rect.y + rect.height;
+    }
+
+    getBoundingClientRectMemo = _.memoize((target, offset = {}) => {
+        const rect = target.getBoundingClientRect();
+        Object.keys(offset).forEach((key) => {
+            rect[key] += offset[key];
+        });
+        return rect;
+    });
+
+    clearClientRectMemo() {
+        this.getBoundingClientRectMemo.cache = new _.memoize.Cache();
     }
 
     showBackPack(args) {
-        Entry.container.setDraggableObjects(true);
         this.backPack.setData({ ...args });
         this.backPack.show();
         this.backPackView.removeClass('entryRemove');
     }
 
     hideBackPack() {
-        Entry.container.setDraggableObjects(false);
         this.backPack.hide();
         this.backPackView.addClass('entryRemove');
     }
@@ -1940,7 +2007,7 @@ Entry.Playground = class {
             parent: $('body'),
         })[0];
 
-        $(target).addClass("on");
+        $(target).addClass('on');
         const colorPicker = new ColorPicker({
             data: {
                 color,
@@ -1948,7 +2015,7 @@ Entry.Playground = class {
                 canTransparent,
                 onOutsideClick: (color) => {
                     if (colorPicker) {
-                        $(target).removeClass("on");
+                        $(target).removeClass('on');
                         colorPicker.hide();
                         colorPicker.remove();
                     }
@@ -1978,14 +2045,17 @@ Entry.Playground = class {
     }
 
     setTextColour(colour) {
-        $('.imbtn_pop_font_color em').css("background-color", colour);
+        $('.imbtn_pop_font_color em').css('background-color', colour);
         this.textEditArea.style.color = colour;
         this.textEditInput.style.color = colour;
     }
 
     setBackgroundColour(colour) {
-        $('.imbtn_pop_font_backgroundcolor em').css("background-color", colour);
-        $('.imbtn_pop_font_backgroundcolor').toggleClass('clear', colour === "transparent" || colour === "#ffffff");
+        $('.imbtn_pop_font_backgroundcolor em').css('background-color', colour);
+        $('.imbtn_pop_font_backgroundcolor').toggleClass(
+            'clear',
+            colour === 'transparent' || colour === '#ffffff'
+        );
         this.object.entity.setBGColour(colour);
         this.textEditArea.style.backgroundColor = colour;
         this.textEditInput.style.backgroundColor = colour;
@@ -2163,6 +2233,7 @@ Entry.Playground = class {
         this.blockBackPackAreaEvent.off();
         this.objectBackPackEvent.off();
         this.objectBackPackAreaEvent.off();
+        this.globalEvent.destroy();
         this._destroyer.destroy();
     }
 };

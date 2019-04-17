@@ -48,13 +48,8 @@ class GlobalSvg {
         }
         this._view = view;
         this._mode = mode;
-
-        const fromBlockMenu = view.dragInstance && view.dragInstance.isNew;
-        const backPackMode = !fromBlockMenu && Entry.playground.backPack.isShow;
-        if (mode !== Entry.Workspace.MODE_VIMBOARD && !backPackMode) {
-            view.set({ visible: false });
-        }
-
+        this.isFromBlockMenu = view.dragInstance && view.dragInstance.isNew;
+        view.set({ visible: false });
         this.draw();
         this.show();
         this.align();
@@ -275,9 +270,27 @@ class GlobalSvg {
         const bLeft = blockMenu.offset().left;
         const bTop = blockMenu.offset().top;
         const bWidth = blockMenu.visible ? blockMenu.blockMenuWrapper.width() : 0;
-        if (mousePos.y > board.offset().top - 20 && mousePos.x > bLeft + bWidth) {
+        let backPackWidth = 0;
+        const windowWidth = window.innerWidth;
+        const fromBlockMenu = blockView.dragInstance && blockView.dragInstance.isNew;
+        const backPackMode = Entry.playground.backPack.isShow;
+        if (backPackMode) {
+            backPackWidth = 135;
+        }
+        // if (mode !== Entry.Workspace.MODE_VIMBOARD && !backPackMode) {
+        // }
+
+        if (
+            mousePos.y > board.offset().top - 20 &&
+            (mousePos.x > bLeft + bWidth && mousePos.x < windowWidth - backPackWidth)
+        ) {
             return this.DONE;
-        } else if (mousePos.y > bTop && mousePos.x > bLeft && blockMenu.visible) {
+        } else if (
+            mousePos.y > bTop &&
+            mousePos.x > bLeft &&
+            mousePos.x <= bLeft + bWidth &&
+            blockMenu.visible
+        ) {
             if (blockView.block && !blockView.block.isDeletable()) {
                 return this.RETURN;
             } else {
