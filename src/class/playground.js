@@ -348,7 +348,6 @@ Entry.Playground = class {
             this.objectBackPackAreaEvent = areaDom;
 
             areaDom.on('mouseup', (e) => {
-                console.log('mouseup');
                 const data = this.backPack.getData('data');
                 Entry.dispatchEvent('addBackPackToEntry', 'object', data);
                 this.objectBackPackArea.css({
@@ -384,7 +383,6 @@ Entry.Playground = class {
                     lockAxis: 'y',
                     distance: 30,
                     onTouchEnd: (e) => {
-                        console.log('touchend !!!!');
                         const { data } = globalEvent;
                         if (data.isObjectMouseEnter) {
                             this.objectBackPackAreaEvent.trigger('mouseup');

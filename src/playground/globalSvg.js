@@ -277,8 +277,6 @@ class GlobalSvg {
         if (backPackMode) {
             backPackWidth = 135;
         }
-        // if (mode !== Entry.Workspace.MODE_VIMBOARD && !backPackMode) {
-        // }
 
         if (
             mousePos.y > board.offset().top - 20 &&

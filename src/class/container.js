@@ -186,8 +186,12 @@ Entry.Container = class Container {
                     canSortable: true,
                     sortableTarget: ['entryObjectThumbnailWorkspace'],
                     items: this._getSortableObjectList(),
-                    itemWrapperStyle: {
-                        backgroundColor: '#aeaeae',
+                    itemShadowStyle: {
+                        position: 'absolute',
+                        height: '100%',
+                        width: '100%',
+                        backgroundColor: '#8aa3b2',
+                        border: 'solid 1px #728997',
                     },
                     onDragActionChange: (isDragging, key) => {
                         this.dragObjectKey = key;
