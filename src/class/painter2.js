@@ -3,6 +3,7 @@ import EntryPaint from 'entry-paint';
 Entry.Painter = class Painter {
     constructor(view) {
         this.view = view;
+        this.cache = [];
         this.baseUrl = Entry.painterBaseUrl;
 
         this.file = {
@@ -20,6 +21,12 @@ Entry.Painter = class Painter {
         this.isShow = true;
         this.entryPaint = EntryPaint.create({ parent: this.view });
         Entry.addEventListener('pictureSelected', this.changePicture.bind(this));
+        this.entryPaint.on('SNAPSHOT_SAVED', (e) => {
+            Entry.do('editPicture', e, this.entryPaint);
+            if (Entry.stage.selectedObject) {
+                this.file.modified = true;
+            }
+        });
     }
 
     show() {
@@ -69,22 +76,6 @@ Entry.Painter = class Painter {
         this.file.isUpdate = true;
     }
 
-    addPicture(picture, isOriginal) {
-        const image = new Image();
-
-        if (picture.fileurl) {
-            image.src = picture.fileurl;
-        } else {
-            // deprecated
-            image.src = `${Entry.defaultPath}/uploads/${picture.filename.substring(
-                0,
-                2
-            )}/${picture.filename.substring(2, 4)}/image/${picture.filename}.png`;
-        }
-
-        this.entryPaint.addBitmap(image.src);
-    }
-
     afterModified(picture) {
         const file = this.file;
         file.modified = false;
@@ -105,17 +96,39 @@ Entry.Painter = class Painter {
         Entry.stateManager.removeAllPictureCommand();
     }
 
+    addPicture(picture, isOriginal) {
+        const image = new Image();
+
+        if (picture.fileurl) {
+            image.src = picture.fileurl;
+        } else {
+            // deprecated
+            image.src = `${Entry.defaultPath}/uploads/${picture.filename.substring(
+                0,
+                2
+            )}/${picture.filename.substring(2, 4)}/image/${picture.filename}.png`;
+        }
+
+        const cache = this.cache[image.src];
+        if (cache) {
+            this.entryPaint.setPaperJSON(cache);
+        } else {
+            this.entryPaint.addBitmap(image.src);
+            this.cache[image.src] = this.entryPaint.getPaperJSON();
+        }
+    }
+
     fileSave(taskParam) {
         if (!Entry.stage.selectedObject) {
             return;
         }
-        // const dataURL = this.lc.getImage().toDataURL();
-        // this.file_ = JSON.parse(JSON.stringify(this.file));
-        // Entry.dispatchEvent('saveCanvasImage', {
-        //     file: this.file_,
-        //     image: dataURL,
-        //     task: taskParam,
-        // });
+        const dataURL = this.entryPaint.getDataURL();
+        this.file_ = JSON.parse(JSON.stringify(this.file));
+        Entry.dispatchEvent('saveCanvasImage', {
+            file: this.file_,
+            image: dataURL,
+            task: taskParam,
+        });
 
         this.file.isUpdate = false;
         this.file.modified = false;
