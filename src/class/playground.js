@@ -4,7 +4,7 @@
  */
 'use strict';
 
-import { Sortable, ColorPicker, Dropdown, BackPack } from '@entrylabs/tool';
+import { BackPack, ColorPicker, Dropdown, Sortable } from '@entrylabs/tool';
 import Toast from '../playground/toast';
 import EntryEvent from '@entrylabs/event';
 import { Destroyer } from '../util/destroyer/Destroyer';
@@ -466,13 +466,15 @@ Entry.Playground = class Playground {
         }
 
         this.mainWorkspace = new Entry.Workspace(initOpts);
-        this._destroyer.add(this.mainWorkspace);
         this.blockMenu = this.mainWorkspace.blockMenu;
         this.board = this.mainWorkspace.board;
         this.toast = new Toast(this.board);
         this.blockMenu.banClass('checker');
         this.banExpansionBlock();
         this.vimBoard = this.mainWorkspace.vimBoard;
+
+        this._destroyer.add(this.mainWorkspace);
+        this._destroyer.add(this.toast);
 
         if (Entry.hw) {
             this.updateHW();
