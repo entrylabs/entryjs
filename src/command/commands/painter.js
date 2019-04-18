@@ -8,9 +8,9 @@
 
     c[COMMAND_TYPES.editPicture] = {
         do() {
-            if (Entry.playground.painter.entryPaint.canRedo()) {
-                Entry.playground.painter.entryPaint.redo();
-            }
+            // if (Entry.playground.painter.entryPaint.canRedo()) {
+            Entry.playground.painter.entryPaint.redo();
+            // }
         },
         state() {},
         log(objectId) {
@@ -35,9 +35,9 @@
 
     c[COMMAND_TYPES.processPicture] = {
         do() {
-            if (Entry.playground.painter.entryPaint.canRedo()) {
-                Entry.playground.painter.entryPaint.redo();
-            }
+            // if (Entry.playground.painter.entryPaint.canRedo()) {
+            Entry.playground.painter.entryPaint.redo();
+            // }
         },
         state() {},
         log(objectId) {
