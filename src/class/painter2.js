@@ -29,6 +29,7 @@ Entry.Painter = class Painter {
             }
             this.isImport = false;
         });
+        Entry.windowResized.attach(this.view, this.entryPaint.realign);
     }
 
     show() {
