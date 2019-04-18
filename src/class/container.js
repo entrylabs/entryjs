@@ -198,7 +198,6 @@ Entry.Container = class Container {
                         this.isObjectDragging = isDragging;
                     },
                     onChangeList: (newIndex, oldIndex) => {
-                        console.log('moveElement', newIndex, oldIndex);
                         this.moveElement(newIndex, oldIndex);
                     },
                 },

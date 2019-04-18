@@ -2231,7 +2231,7 @@ Entry.Playground = class {
         this.blockBackPackAreaEvent.off();
         this.objectBackPackEvent.off();
         this.objectBackPackAreaEvent.off();
-        this.globalEvent.destroy();
+        this.globalEvent && this.globalEvent.destroy();
         this._destroyer.destroy();
     }
 };
