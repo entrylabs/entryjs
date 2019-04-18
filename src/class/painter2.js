@@ -21,11 +21,13 @@ Entry.Painter = class Painter {
         this.isShow = true;
         this.entryPaint = EntryPaint.create({ parent: this.view });
         Entry.addEventListener('pictureSelected', this.changePicture.bind(this));
+        this.isImport = true;
         this.entryPaint.on('SNAPSHOT_SAVED', (e) => {
             Entry.do('editPicture', e, this.entryPaint);
-            if (Entry.stage.selectedObject) {
+            if (!this.isImport && Entry.stage.selectedObject) {
                 this.file.modified = true;
             }
+            this.isImport = false;
         });
     }
 
@@ -79,6 +81,7 @@ Entry.Painter = class Painter {
     afterModified(picture) {
         const file = this.file;
         file.modified = false;
+        this.isImport = true;
         this.entryPaint.reset();
 
         if (picture.id) {
