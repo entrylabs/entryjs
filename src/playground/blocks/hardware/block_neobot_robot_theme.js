@@ -31,6 +31,11 @@ Entry.NeobotRobotTheme = {
             IN2: { name: 'PORT2', type: 'input', pos: { x: 314, y: 100 } },
             IN3: { name: 'PORT3', type: 'input', pos: { x: 484, y: 100 } },
             IN4: { name: 'PORT4', type: 'input', pos: { x: 653, y: 100 } },
+            //for test
+            OUT1: { name: 'OUT1', type: 'output', pos: { x: 145, y: 400} },
+            OUT2: { name: 'OUT2', type: 'output', pos: { x: 314, y: 400} },
+            DCL: { name: 'DCL', type: 'output', pos: { x: 484, y: 400} },
+            DCR: { name: 'DCR', type: 'output', pos: { x: 653, y: 400} },
         },
         mode: 'both',
     },
@@ -74,7 +79,6 @@ Entry.NeobotRobotTheme.setLanguage = function() {
                 neobot_servo_init: '%1의 Servo모터를 현재 위치로 초기화하기 %2',
                 neobot_servo_turn_type1: '%1의 Servo모터를 %2으로 %3도 회전하기 %4',
                 neobot_servo_turn_type2: '%1의 Servo모터를 %2도 회전하기 %3',
-                neobot_servo_turn_type3: '%1 Servo모터의 각도 회전방향 바꾸기(시계방향↔반시계방향) %2',
                 neobot_servo_turn_type4: '%1 Servo모터의 각도 회전속도를 %2로 정하기 %3',
                 neobot_servo_turn_type5: '%1의 Servo모터를 %2 %3 빠르기로 계속 회전하기 %4',
                 neobot_servo_mode_manual: '%1의 Servo모터를 수동 제어모드로 바꾸기 %2',
@@ -169,7 +173,6 @@ Entry.NeobotRobotTheme.setLanguage = function() {
                 neobot_servo_init: '%1의 Servo모터를 현재 위치로 초기화하기 %2',
                 neobot_servo_turn_type1: '%1의 Servo모터를 %2으로 %3도 회전하기 %4',
                 neobot_servo_turn_type2: '%1의 Servo모터를 %2도 회전하기 %3',
-                neobot_servo_turn_type3: '%1 Servo모터의 각도 회전방향 바꾸기(시계방향↔반시계방향) %2',
                 neobot_servo_turn_type4: '%1 Servo모터의 각도 회전속도를 %2로 정하기 %3',
                 neobot_servo_turn_type5: '%1의 Servo모터를 %2 %3 빠르기로 계속 회전하기 %4',
                 neobot_servo_mode_manual: '%1의 Servo모터를 수동 제어모드로 바꾸기 %2',
@@ -270,7 +273,6 @@ Entry.NeobotRobotTheme.blockMenuBlocks = [
     'neobot_servo_init',
     'neobot_servo_turn_type1',
     'neobot_servo_turn_type2',
-    'neobot_servo_turn_type3',
     'neobot_servo_turn_type4',
     'neobot_servo_turn_type5',
     'neobot_servo_mode_manual',
@@ -470,7 +472,8 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['+100', '+100'],
+                        ['MAX', '+100'],
+                        ['+100', '+99'],
                         ['+90', '+90'],
                         ['+80', '+80'],
                         ['+70', '+70'],
@@ -517,7 +520,7 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['100', '100'],
+                        ['100', '99'],
                         ['90', '90'],
                         ['80', '80'],
                         ['70', '70'],
@@ -528,7 +531,7 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                         ['20', '20'],
                         ['10', '10'],
                     ],
-                    value: '100',
+                    value: '99',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -682,10 +685,10 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                     var motor = script.getNumberField('MOTOR');
                     var duration = script.getNumberValue('DURATION');
 
-                    if (speed > 100) {
-                        speed = 100;
-                    } else if (speed < -100) {
-                        speed = -100;
+                    if (speed > 99) {
+                        speed = 99;
+                    } else if (speed < -99) {
+                        speed = -99;
                     }
 
                     speed += 100;
@@ -784,10 +787,10 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                 var direction = script.getNumberField('DIRECTION');
                 var speed = Entry.parseNumber(script.getNumberValue('SPEED'));
 
-                if (speed > 100) {
-                    speed = 100;
-                } else if (speed < -100) {
-                    speed = -100;
+                if (speed > 99) {
+                    speed = 99;
+                } else if (speed < -99) {
+                    speed = -99;
                 }
 
                 switch (direction) {
@@ -818,7 +821,8 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                 }
             },
         },
-
+        
+        // TODO check working
         neobot_motor_type3: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -861,33 +865,33 @@ Entry.NeobotRobotTheme.getBlocks = function() {
             },
             paramsKeyMap: {
                 MOTOR: 0,
-                PORT: 1,
+                SPEED: 1,
             },
             class: 'motor',
             isNotFor: ['neobot_robot_theme'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var motor = script.getNumberField('MOTOR');
-                var port = script.getStringField('PORT');
-                var speed = Entry.hw.portData[port];
+                var speed = Entry.parseNumber(script.getNumberValue('SPEED'));
 
-                if (speed > 100) {
-                    speed = 100;
-                } else if (speed < -100) {
-                    speed = -100;
+                if (speed > 99) {
+                    speed = 99;
+                } else if (speed < -99) {
+                    speed = -99;
                 }
-                speed += 100;
 
                 switch (motor) {
                     case 1:
-                        Entry.hw.sendQueue['DCL'] = speed;
-                        Entry.hw.sendQueue['DCR'] = speed;
+                        Entry.hw.sendQueue['DCL'] = speed + 100;
+                        Entry.hw.sendQueue['DCR'] = speed + 100;
                         break;
                     case 2:
-                        Entry.hw.sendQueue['DCL'] = speed;
+                        Entry.hw.sendQueue['DCL'] = (speed / 5) + 100;
+                        Entry.hw.sendQueue['DCR'] = 100;
                         break;
                     case 3:
-                        Entry.hw.sendQueue['DCR'] = speed;
+                        Entry.hw.sendQueue['DCL'] = 100;
+                        Entry.hw.sendQueue['DCR'] = (speed / 5) + 100;
                         break;
                 }
             },
@@ -935,20 +939,20 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                 var move = script.getNumberField('MOVE');
                 switch (move) {
                     case 1:
-                        Entry.hw.sendQueue['DCL'] = 100 + 100;
-                        Entry.hw.sendQueue['DCR'] = 100 + 100;
+                        Entry.hw.sendQueue['DCL'] = 100 + 99;
+                        Entry.hw.sendQueue['DCR'] = 100 + 99;
                         break;
                     case 2:
-                        Entry.hw.sendQueue['DCL'] = 100 - 100;
-                        Entry.hw.sendQueue['DCR'] = 100 - 100;
+                        Entry.hw.sendQueue['DCL'] = 100 - 99;
+                        Entry.hw.sendQueue['DCR'] = 100 - 99;
                         break;
                     case 3:
-                        Entry.hw.sendQueue['DCL'] = 100 - 100;
-                        Entry.hw.sendQueue['DCR'] = 100 + 100;
+                        Entry.hw.sendQueue['DCL'] = 100 - 20; // use 20 to make slower 
+                        Entry.hw.sendQueue['DCR'] = 100 + 20;
                         break;
                     case 4:
-                        Entry.hw.sendQueue['DCL'] = 100 + 100;
-                        Entry.hw.sendQueue['DCR'] = 100 - 100;
+                        Entry.hw.sendQueue['DCL'] = 100 + 20;
+                        Entry.hw.sendQueue['DCR'] = 100 - 20;
                         break;
                 }
                 return script.callReturn();
@@ -1795,10 +1799,10 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                         [Lang.Blocks.neobot_remote_btn_b, '2'],
                         [Lang.Blocks.neobot_remote_btn_c, '3'],
                         [Lang.Blocks.neobot_remote_btn_d, '4'],
-                        [Lang.Blocks.neobot_remote_btn_1, '5'],
-                        [Lang.Blocks.neobot_remote_btn_2, '6'],
-                        [Lang.Blocks.neobot_remote_btn_3, '7'],
-                        [Lang.Blocks.neobot_remote_btn_4, '8'],
+                        [Lang.Blocks.neobot_remote_btn_1, '1'],		//값이 5가 아니라 1
+                        [Lang.Blocks.neobot_remote_btn_2, '2'],		//값이 6이 아니라 2
+                        [Lang.Blocks.neobot_remote_btn_3, '3'],		//값이 7이 아니라 3
+                        [Lang.Blocks.neobot_remote_btn_4, '4'],		//값이 8이 아니라 4
                         [Lang.Blocks.neobot_remote_btn_up, '11'],
                         [Lang.Blocks.neobot_remote_btn_down, '12'],
                         [Lang.Blocks.neobot_remote_btn_left, '14'],
@@ -2040,7 +2044,7 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                     script.timeFlag = 1;
                     setTimeout(function() {
                         script.timeFlag = 0;
-                    }, 1000);
+                    }, 200);
                     return script;
                 } else if (script.timeFlag == 1) {
                     return script;
@@ -2053,62 +2057,6 @@ Entry.NeobotRobotTheme.getBlocks = function() {
             },
         },
 
-        neobot_servo_turn_type3: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT3', 'OUT3']],
-                    value: 'OUT1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                    null,
-                ],
-                type: 'neobot_servo_turn_type3',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            class: 'servo',
-            isNotFor: ['neobot_robot_theme'],
-            func: function(sprite, script) {
-                if (!script.isStart) {
-                    var port = script.getStringField('PORT', script);
-                    
-                    Entry.hw.sendQueue[port] = 0xBB;
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    setTimeout(function() {
-                        script.timeFlag = 0;
-                    }, 200);
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {
-                    delete script.timeFlag;
-                    delete script.isStart;
-                    Entry.engine.isContinue = false;
-                    return script.callReturn();
-                }
-                
-            },
-        },
-        
         neobot_servo_turn_type4: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2260,20 +2208,17 @@ Entry.NeobotRobotTheme.getBlocks = function() {
     
                     switch (direction) {
                         case 1:
-                            Entry.hw.sendQueue[port] = 0xBC;
+                            Entry.hw.sendQueue[port] = 0xCA - level;
                             break;
                         case 2:
-                            Entry.hw.sendQueue[port] = 0xBD;
+                            Entry.hw.sendQueue[port] = 0xDA - level;
                             break;
                     }
                     
                     script.isStart = true;
                     script.timeFlag = 1;
                     setTimeout(function() {
-                        Entry.hw.sendQueue[port] = 0xFA - level;
-                        setTimeout(function() {
-                            script.timeFlag = 0;
-                        }, 200);
+                        script.timeFlag = 0;
                     }, 200);
                     return script;
                 } else if (script.timeFlag == 1) {
