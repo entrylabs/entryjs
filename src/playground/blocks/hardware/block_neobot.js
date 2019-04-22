@@ -60,7 +60,7 @@ Entry.Neobot.setLanguage = function() {
                 neobot_right_motor: '오른쪽 모터를 %1 %2 의 속도로 회전 %3',
                 neobot_stop_right_motor: '오른쪽 모터를 정지 %1',
                 neobot_both_motor: '왼쪽 모터를 %1 %2 & 오른쪽 모터를 %3 %4 의 속도로 회전 %5',
-                neobot_all_motor: '양쪽 모터를 %1 %2의 속도로 %3초 동안 회전 %4',
+                neobot_all_motor: '양쪽 모터를 %1 %2의 속도로 %3 회전 %4',
                 neobot_motor_with_sensor: '%1 센서의 %2 ~ %3 값을 모터 속도로 바꾸고 %4 모터 회전 %5',
                 neobot_stop_all_motor: '양쪽 모터를 정지 %1',
                 neobot_robot: '로봇 %1 %2',
@@ -1350,7 +1350,7 @@ Entry.Neobot.getBlocks = function() {
                         ['20%', '51'],
                         ['10%', '26'],
                     ],
-                    value: '0',
+                    value: '255',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1397,21 +1397,17 @@ Entry.Neobot.getBlocks = function() {
                     var port = script.getStringField('PORT', script);
                     var value = script.getNumberField('VALUE', script);
                     var duration = script.getNumberField('DURATION', script);
-                    var timeout = 0;
 
+                    Entry.hw.sendQueue[port] = value;
                     if(duration == 0) {
-                        Entry.hw.sendQueue[port] = value;
                         return script.callReturn();
-                        timeout = 10; // 10ms
-                    } else {
-                        timeout = duration * 1000;
                     }
                     
                     script.isStart = true;
                     script.timeFlag = 1;
                     setTimeout(function() {
                         script.timeFlag = 0;
-                    }, timeout);
+                    }, duration * 1000);
                     return script;
                 } else if (script.timeFlag == 1) {
                     return script;
