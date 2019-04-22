@@ -1308,7 +1308,7 @@ Entry.BlockView = class BlockView {
             const texts = svgGroup.getElementsByTagName('text');
 
             const fontFamily =
-                "'NanumGothic', 'NanumGothic', '나눔고딕','NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum";
+                "'NanumGothic', '나눔고딕', 'NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', 'Noto Sans', Dotum";
             const boldTypes = ['≥', '≤'];
             const notResizeTypes = ['≥', '≤', '-', '>', '<', '=', '+', '-', 'x', '/'];
 
