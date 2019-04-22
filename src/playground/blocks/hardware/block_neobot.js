@@ -1843,7 +1843,7 @@ Entry.Neobot.getBlocks = function() {
                     script.timeFlag = 1;
                     setTimeout(function() {
                         Entry.hw.sendQueue[port] = 0x01;
-                        // Is it needed?
+                        // TODO check
                         /* var option = port;
                         if (option === 3) {
                             option = 4;
