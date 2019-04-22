@@ -1,6 +1,6 @@
 'use strict';
 
-var EntryStatic = {};
+const EntryStatic = {};
 
 EntryStatic.objectTypes = ['sprite', 'textBox'];
 
@@ -599,7 +599,7 @@ EntryStatic.objectSubCategories = {
 };
 
 Object.defineProperty(EntryStatic, 'fonts', {
-    get: function() {
+    get() {
         return [
             {
                 name: Lang.Fonts.batang,
@@ -666,7 +666,7 @@ Object.defineProperty(EntryStatic, 'fonts', {
                 family: 'UhBeemysen',
                 url: '/css/uhbeemysen.css',
                 visible: true,
-            }
+            },
         ];
     },
 });
@@ -788,6 +788,17 @@ EntryStatic.getQuestionCategoryData = function() {
             'hidden_boolean',
         ],
     };
+};
+
+EntryStatic.getDefaultFontFamily = function() {
+    const { type, fallbackType } = Lang || {};
+    const langType = type || fallbackType || 'en';
+    switch (langType) {
+        case 'jp':
+            return "'Noto Sans'";
+        default:
+            return "'NanumGothic', '나눔고딕', 'NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum";
+    }
 };
 
 // for server node js code
