@@ -23,8 +23,8 @@ Entry.Painter = class Painter {
         Entry.addEventListener('pictureSelected', this.changePicture.bind(this));
         this.isImport = true;
         this.entryPaint.on('SNAPSHOT_SAVED', (e) => {
-            Entry.do('editPicture', e, this.entryPaint);
             if (!this.isImport && Entry.stage.selectedObject) {
+                Entry.do('editPicture', e, this.entryPaint);
                 this.file.modified = true;
             }
             this.isImport = false;
@@ -39,6 +39,10 @@ Entry.Painter = class Painter {
     }
 
     hide() {}
+
+    getFilePath(filePath) {
+        return filePath.split('.').pop();
+    }
 
     changePicture(picture = {}) {
         if (this.file && this.file.id === picture.id) {
@@ -100,8 +104,15 @@ Entry.Painter = class Painter {
         Entry.stateManager.removeAllPictureCommand();
     }
 
-    addPicture(picture, isOriginal) {
+    getPictureExt(picture) {
+        return picture.fileurl
+            ? this.getFilePath(picture.fileurl)
+            : this.getFilePath(picture.label.ko);
+    }
+
+    addPicture(picture, isChangeShape) {
         const image = new Image();
+        const ext = this.getPictureExt(picture);
 
         if (picture.fileurl) {
             image.src = picture.fileurl;
@@ -110,15 +121,19 @@ Entry.Painter = class Painter {
             image.src = `${Entry.defaultPath}/uploads/${picture.filename.substring(
                 0,
                 2
-            )}/${picture.filename.substring(2, 4)}/image/${picture.filename}.png`;
+            )}/${picture.filename.substring(2, 4)}/image/${picture.filename}.${ext}`;
         }
 
-        const cache = this.cache[image.src];
+        const imageSrc = image.src;
+        const cache = this.cache[imageSrc];
+        isChangeShape && (this.isImport = true);
         if (cache) {
             this.entryPaint.setPaperJSON(cache);
+        } else if (ext === 'png') {
+            this.entryPaint.addBitmap(imageSrc);
+            this.cache[imageSrc] = this.entryPaint.getPaperJSON();
         } else {
-            this.entryPaint.addBitmap(image.src);
-            this.cache[image.src] = this.entryPaint.getPaperJSON();
+            this.entryPaint.addSVG(imageSrc);
         }
     }
 
