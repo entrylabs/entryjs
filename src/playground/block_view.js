@@ -1315,9 +1315,9 @@ Entry.BlockView = class BlockView {
                 text.setAttribute('font-family', fontFamily);
                 const size = parseInt(text.getAttribute('font-size'), 10);
                 const content = $(text).text();
-                if (_.includes(boldTypes, content)) {
-                    text.setAttribute('font-weight', '500');
-                }
+                // if (_.includes(boldTypes, content)) {
+                // text.setAttribute('font-weight', '500');
+                // }
 
                 if (content == 'q') {
                     const y = parseInt(text.getAttribute('y'), 10);
@@ -1329,7 +1329,7 @@ Entry.BlockView = class BlockView {
                 } else {
                     text.setAttribute('font-size', `${size * fontWeight}px`);
                 }
-                text.setAttribute('alignment-baseline', 'middle');
+                text.setAttribute('alignment-baseline', 'auto');
             });
 
             let counts = 0;
@@ -1355,6 +1355,8 @@ Entry.BlockView = class BlockView {
                             this.processSvg(svgGroup, scale, defs, notPng)
                                 .then((data) => {
                                     resolve(data);
+                                    window.a = data.src;
+                                    console.log(data.src);
                                 })
                                 .catch((err) => {
                                     reject(err);

@@ -795,7 +795,7 @@ EntryStatic.getDefaultFontFamily = function() {
     const langType = type || fallbackType || 'en';
     switch (langType) {
         case 'jp':
-            return "'Noto Sans'";
+            return "'Noto Sans JP Regular', 'Noto Sans'";
         default:
             return "'NanumGothic', '나눔고딕', 'NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum";
     }
