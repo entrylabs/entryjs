@@ -9,31 +9,28 @@ Entry.HW = class {
     constructor() {
         this.sessionRoomId = localStorage.getItem('entryhwRoomId');
         if (!this.sessionRoomId) {
-            this.sessionRoomId = this.createRandomRoomId();
+            this.sessionRoomId = this._createRandomRoomId();
             localStorage.setItem('entryhwRoomId', this.sessionRoomId);
         }
 
         this.TRIAL_LIMIT = 2;
-        this.connectTrial = 0;
-        this.isFirstConnect = true;
-        this.requireVerion = 'v1.6.1';
-        this.hwPopupCreate();
-        this.initSocket();
+        this.requireVerion = 'v1.7.0';
         this.connected = false;
         this.portData = {};
         this.sendQueue = {};
-        this.outputQueue = {};
-        this.settingQueue = {};
         this.selectedDevice = null;
         this.hwModule = null;
         this.socketType = null;
 
-        Entry.addEventListener('stop', this.setZero);
-
         this.hwInfo = Entry.HARDWARE_LIST;
+
+        this.hwPopupCreate();
+        this._initSocket();
+
+        Entry.addEventListener('stop', this.setZero);
     }
 
-    createRandomRoomId() {
+    _createRandomRoomId() {
         return 'xxxxxxxxyx'.replace(/[xy]/g, (c) => {
             const r = (Math.random() * 16) | 0;
             const v = c === 'x' ? r : (r & 0x3) | 0x8;
@@ -41,7 +38,7 @@ Entry.HW = class {
         });
     }
 
-    connectWebSocket(url, option) {
+    _connectWebSocket(url, option) {
         const socket = io(url, option);
         socket.io.reconnectionAttempts(this.TRIAL_LIMIT);
         socket.io.reconnectionDelayMax(1000);
@@ -82,92 +79,40 @@ Entry.HW = class {
         });
 
         socket.on('disconnect', () => {
-            this.initSocket();
+            this._initSocket();
         });
 
         return socket;
     }
 
-    initSocket() {
-        try {
-            const hw = this;
-            const protocol = '';
-            this.connected = false;
+    _initSocket() {
+        this.connected = false;
 
-            if (this.tlsSocketIo1) {
-                this.tlsSocketIo1.removeAllListeners();
-            }
-            if (this.tlsSocketIo2) {
-                this.tlsSocketIo2.removeAllListeners();
-            }
-            if (this.socketIo) {
-                this.socketIo.removeAllListeners();
-            }
+        this.tlsSocketIo1 && this.tlsSocketIo1.removeAllListeners();
+        this.tlsSocketIo2 && this.tlsSocketIo2.removeAllListeners();
+        this.socketIo && this.socketIo.removeAllListeners();
+        !this.isOpenHardware && this._checkOldClient();
 
-            if (!this.isOpenHardware) {
-                this.checkOldClient();
-            }
-            if (location.protocol.indexOf('https') > -1) {
-                try {
-                    this.tlsSocketIo1 = this.connectWebSocket(
-                        'https://hardware.playentry.org:23518',
-                        {
-                            query: {
-                                client: true,
-                                roomId: this.sessionRoomId,
-                            },
-                        }
-                    );
-                } catch (e) {}
-                try {
-                    this.tlsSocketIo2 = this.connectWebSocket(
-                        'https://hardware.play-entry.org:23518',
-                        {
-                            query: {
-                                client: true,
-                                roomId: this.sessionRoomId,
-                            },
-                        }
-                    );
-                } catch (e) {}
-            } else {
-                try {
-                    this.socketIo = this.connectWebSocket('http://127.0.0.1:23518', {
-                        query: {
-                            client: true,
-                            roomId: this.sessionRoomId,
-                        },
-                    });
-                } catch (e) {}
-                try {
-                    this.tlsSocketIo1 = this.connectWebSocket(
-                        'https://hardware.playentry.org:23518',
-                        {
-                            query: {
-                                client: true,
-                                roomId: this.sessionRoomId,
-                            },
-                        }
-                    );
-                } catch (e) {}
-                try {
-                    this.tlsSocketIo2 = this.connectWebSocket(
-                        'https://hardware.play-entry.org:23518',
-                        {
-                            query: {
-                                client: true,
-                                roomId: this.sessionRoomId,
-                            },
-                        }
-                    );
-                } catch (e) {}
-            }
+        const httpsServerAddress = 'https://hardware.playentry.org:23518';
+        const httpServerAddress = 'http://127.0.0.1:23518';
+        const connectHttpsWebSocket = (url) =>
+            this._connectWebSocket(url, {
+                query: {
+                    client: true,
+                    roomId: this.sessionRoomId,
+                },
+            });
 
-            Entry.dispatchEvent('hwChanged');
-        } catch (e) {}
+        if (location.protocol.indexOf('http') > -1) {
+            this.socketIo = connectHttpsWebSocket(httpServerAddress);
+        }
+        this.tlsSocketIo1 = connectHttpsWebSocket(httpsServerAddress);
+        this.tlsSocketIo2 = connectHttpsWebSocket(httpsServerAddress);
+
+        Entry.dispatchEvent('hwChanged');
     }
 
-    checkOldClient() {
+    _checkOldClient() {
         try {
             const hw = this;
             const websocket = new WebSocket('wss://hardware.play-entry.org:23518');
@@ -180,26 +125,24 @@ Entry.HW = class {
 
     retryConnect() {
         this.isOpenHardware = false;
-        Entry.HW.TRIAL_LIMIT = 5;
-        this.initSocket();
+        this.TRIAL_LIMIT = 5;
+        this._initSocket();
     }
 
     openHardwareProgram() {
-        const hw = this;
         this.isOpenHardware = true;
-        Entry.HW.TRIAL_LIMIT = 5;
+        this.TRIAL_LIMIT = 5;
         this.executeHardware();
 
         if (!this.socket || !this.socket.connected) {
             setTimeout(() => {
-                hw.initSocket();
+                this._initSocket();
             }, 1000);
         }
     }
 
     initHardware(socket) {
         this.socket = socket;
-        this.connectTrial = 0;
         this.connected = true;
         Entry.dispatchEvent('hwChanged');
         if (Entry.playground && Entry.playground.object) {
@@ -221,7 +164,6 @@ Entry.HW = class {
 
         Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
         this.socket = undefined;
-        this.connectTrial = 0;
         this.connected = false;
         this.selectedDevice = undefined;
         this.hwModule = undefined;
@@ -339,15 +281,10 @@ Entry.HW = class {
 
     downloadGuide() {
         Entry.dispatchEvent('hwDownload', 'manual');
-        // var url = "http://download.play-entry.org/data/hardware_manual.zip";
-        // window.open(url, 'download');
     }
 
     downloadSource() {
         Entry.dispatchEvent('hwDownload', 'ino');
-        // var url = "http://play-entry.com/down/board.ino";
-        // var win = window.open(url, '_blank');
-        // win.focus();
     }
 
     setZero() {
@@ -424,7 +361,7 @@ Entry.HW = class {
 
     executeHardware() {
         const hw = this;
-        var executeIeCustomLauncher = {
+        const executeIeCustomLauncher = {
             _bNotInstalled: false,
             init(sUrl, fpCallback) {
                 const width = 220;
@@ -441,7 +378,7 @@ Entry.HW = class {
             },
             runViewer(sUrl, fpCallback) {
                 this._w.document.write(
-                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`
+                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`,
                 );
                 let nCounter = 0;
                 const bNotInstalled = false;
