@@ -1304,6 +1304,21 @@ Entry.BlockView = class BlockView {
 
             const defs = this.getBoard().svgDom.find('defs');
 
+            const style = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+            style.setAttribute('type', 'text/css');
+            style.textContent = `
+                @font-face {
+                    font-family: 'EntryNG';
+                    src: url('https://playentry.org/fonts/NanumGothic-Bold.eot?#iefix') format('eot'), 
+                        url('https://playentry.org/fonts/NanumGothic-Bold.woff') format('woff'), 
+                        url('https://playentry.org/fonts/NanumGothic-Bold.woff2') format('woff2'), 
+                        url('https://playentry.org/fonts/NanumGothic-Bold.ttf') format('truetype'); 
+                    font-weight: normal; 
+                    font-style: normal; 
+                }
+            `;
+
+            defs.append(style);
             const images = svgGroup.getElementsByTagName('image');
             const texts = svgGroup.getElementsByTagName('text');
 
@@ -1315,20 +1330,21 @@ Entry.BlockView = class BlockView {
                 text.setAttribute('font-family', fontFamily);
                 const size = parseInt(text.getAttribute('font-size'), 10);
                 const content = $(text).text();
-                // if (_.includes(boldTypes, content)) {
-                // text.setAttribute('font-weight', '500');
-                // }
-
-                if (content == 'q') {
-                    const y = parseInt(text.getAttribute('y'), 10);
-                    text.setAttribute('y', y - 1);
+                if (_.includes(boldTypes, content)) {
+                    text.setAttribute('font-weight', '500');
                 }
+
+                // if (content == 'q') {
+                //     const y = parseInt(text.getAttribute('y'), 10);
+                //     text.setAttribute('y', y - 1);
+                // }
 
                 if (_.includes(notResizeTypes, content)) {
                     text.setAttribute('font-size', `${size}px`);
-                } else {
-                    text.setAttribute('font-size', `${size * fontWeight}px`);
                 }
+                // else {
+                //     text.setAttribute('font-size', `${size * fontWeight}px`);
+                // }
                 text.setAttribute('alignment-baseline', 'auto');
             });
 
