@@ -7,14 +7,17 @@ require('../playground/blocks');
 import axios from 'axios';
 
 Entry.HW = class {
+    // 하드웨어 프로그램 접속용 주소 (https)
     get httpsServerAddress() {
         return 'https://hardware.playentry.org:23518';
     }
 
+    // 하드웨어 프로그램 접속용 주소 (http)
     get httpServerAddress() {
         return 'http://127.0.0.1:23518';
     }
 
+    // 원격 모듈 업로드를 위한 주소
     get hardwareModuleUploadAddress() {
         return `${this.connectedAddress || this.httpServerAddress}/module`;
     }
@@ -27,7 +30,6 @@ Entry.HW = class {
         }
 
         this.TRIAL_LIMIT = 2;
-        this.requireVerion = 'v1.7.0';
         this.connected = false;
         this.portData = {};
         this.sendQueue = {};
@@ -37,7 +39,7 @@ Entry.HW = class {
 
         this.hwInfo = Entry.HARDWARE_LIST;
 
-        this.hwPopupCreate();
+        // this.hwPopupCreate();
         this._initSocket();
 
         Entry.addEventListener('stop', this.setZero);
@@ -59,12 +61,12 @@ Entry.HW = class {
         socket.on('connect', () => {
             this.socketType = 'WebSocket';
             this.connectedAddress = url;
-            this.initHardware(socket);
+            this._initHardware(socket);
         });
 
         socket.on('mode', (mode) => {
             if (socket.mode === 0 && mode === 1) {
-                this.disconnectHardware();
+                this._disconnectHardware();
             }
             this.socketMode = mode;
             socket.mode = mode;
@@ -75,8 +77,8 @@ Entry.HW = class {
                 let portData = {};
                 if (typeof data === 'string') {
                     switch (data) {
-                        case 'disconnectHardware': {
-                            this.disconnectHardware();
+                        case '_disconnectHardware': {
+                            this._disconnectHardware();
                             return;
                         }
                         default: {
@@ -105,7 +107,6 @@ Entry.HW = class {
         this.tlsSocketIo1 && this.tlsSocketIo1.removeAllListeners();
         this.tlsSocketIo2 && this.tlsSocketIo2.removeAllListeners();
         this.socketIo && this.socketIo.removeAllListeners();
-        !this.isOpenHardware && this._checkOldClient();
 
         const connectHttpsWebSocket = (url) =>
             this._connectWebSocket(url, {
@@ -122,17 +123,6 @@ Entry.HW = class {
         this.tlsSocketIo2 = connectHttpsWebSocket(this.httpsServerAddress);
 
         Entry.dispatchEvent('hwChanged');
-    }
-
-    _checkOldClient() {
-        try {
-            const hw = this;
-            const websocket = new WebSocket('wss://hardware.play-entry.org:23518');
-            websocket.onopen = function() {
-                hw.popupHelper.show('newVersion', true);
-                websocket.close();
-            };
-        } catch (e) {}
     }
 
     retryConnect() {
@@ -153,7 +143,7 @@ Entry.HW = class {
         }
     }
 
-    initHardware(socket) {
+    _initHardware(socket) {
         this.socket = socket;
         this.connected = true;
         console.log('Hardware Program connected'); // 하드웨어 프로그램 연결 성공, 스테이터스 변화 필요
@@ -166,6 +156,7 @@ Entry.HW = class {
     /**
      * 하드웨어 프로그램 내 http 서버를 통해 모듈파일을 전송한다.
      * 소켓이 정상연결되어있는 경우만 전송한다.
+     * entryjs 외부에서 사용한다.
      * @param {File} file
      */
     applyExternalModule(file) {
@@ -186,7 +177,7 @@ Entry.HW = class {
         }
     }
 
-    disconnectHardware() {
+    _disconnectHardware() {
         Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
         this.selectedDevice = undefined;
         this.hwModule = undefined;
@@ -344,10 +335,6 @@ Entry.HW = class {
                 this.hwModule.dataHandler(data);
             }
             return;
-        }
-
-        if (Entry.Utils.isNewVersion(version, this.requireVerion)) {
-            this.popupHelper.show('newVersion', true);
         }
 
         this.selectedDevice = key;
@@ -533,7 +520,7 @@ Entry.HW = class {
                 Entry.dispatchEvent('workspaceBindUnload', true);
             }, 100);
             setTimeout(() => {
-                if (isInstalled == false) {
+                if (isInstalled === false) {
                     hw.popupHelper.show('hwDownload', true);
                 }
                 window.onblur = null;
