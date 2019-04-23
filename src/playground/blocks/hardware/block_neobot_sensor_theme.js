@@ -4,7 +4,7 @@ Entry.NeobotSensorTheme = {
     url: 'http://www.neobot.co.kr',
     imageName: 'neobot_sensor_theme.png',
     title: {
-        "en": "NEOBOT Senosor Theme",
+        "en": "NEOBOT Sensor Theme",
         "ko": "네오봇 센서 테마"
     },
     LOCAL_MAP: [
@@ -25,8 +25,8 @@ Entry.NeobotSensorTheme = {
         'OPT'
     ],
     setZero: function () {
-        for(var port in Entry.Neobot.REMOTE_MAP) {
-            Entry.hw.sendQueue[Entry.Neobot.REMOTE_MAP[port]] = 0;
+        for(var port in Entry.NeobotSensorTheme.REMOTE_MAP) {
+            Entry.hw.sendQueue[Entry.NeobotSensorTheme.REMOTE_MAP[port]] = 0;
         }
         Entry.hw.update();
     },
@@ -174,7 +174,6 @@ Entry.NeobotSensorTheme.getBlocks = function() {
                 var port = script.getStringField('PORT');
                 return Entry.hw.portData[port];
             },
-            syntax: { js: [], py: ['Neobot.sensor_value(%1)'] },
         },
 
         neobot_st_sensor_connect_external: {
@@ -327,6 +326,44 @@ Entry.NeobotSensorTheme.getBlocks = function() {
         },
 
         // class decision
+        // un-used. use if required pluggable block.
+        neobot_st_compare_symbol :{
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            fontColor: '#fff',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.neobot_st_compare_symbol1, '='],
+                        [Lang.Blocks.neobot_st_compare_symbol2, '>'],
+                        [Lang.Blocks.neobot_st_compare_symbol3, '<'],
+                        [Lang.Blocks.neobot_st_compare_symbol4, '>='],
+                        [Lang.Blocks.neobot_st_compare_symbol5, '<='],
+                    ],
+                    value: '>',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'neobot_st_compare_symbol',
+            },
+            paramsKeyMap: {
+                SYMBOL: 0,
+            },
+            class: 'decision',
+            isNotFor: ['neobot_sensor_theme'],
+            func: function(sprite, script) {
+                return  script.getStringField('SYMBOL');
+            },
+        },
+
         neobot_st_decision_sensor_is_over: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
