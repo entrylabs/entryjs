@@ -31,10 +31,10 @@ Entry.NeobotRobotTheme = {
             IN3: { name: 'PORT3', type: 'input', pos: { x: 484, y: 100 } },
             IN4: { name: 'PORT4', type: 'input', pos: { x: 653, y: 100 } },
             // for test
-            OUT1: { name: 'OUT1', type: 'output', pos: { x: 145, y: 400} },
+            /* OUT1: { name: 'OUT1', type: 'output', pos: { x: 145, y: 400} },
             OUT2: { name: 'OUT2', type: 'output', pos: { x: 314, y: 400} },
             DCL: { name: 'DCL', type: 'output', pos: { x: 484, y: 400} },
-            DCR: { name: 'DCR', type: 'output', pos: { x: 653, y: 400} },
+            DCR: { name: 'DCR', type: 'output', pos: { x: 653, y: 400} }, */
         },
         mode: 'both',
     },
