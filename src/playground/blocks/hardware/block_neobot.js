@@ -51,7 +51,7 @@ Entry.Neobot.setLanguage = function() {
 
                 neobot_compare_symbol: '%1',
                 neobot_decision_sensor_is_over: "%1 의 센서값이 %2 %3",
-                neobot_decision_equal_with_sensor: '%1 의 센서값에 의해 %2 이 감지됨',
+                neobot_decision_equal_with_sensor: '%1 에 연결한 컬러센서가 %2 을 감지함',
                 neobot_remote_button : "무선리모컨의 %1 버튼을 누름",
 
                 get_motor_speed: '%1',
@@ -161,12 +161,12 @@ Entry.Neobot.setLanguage = function() {
             template: {
                 neobot_sensor_value: '%1 value',
                 neobot_sensor_connect_external: 'the %2 value connected %1',
-                neobot_sensor_convert_scale: "The value that is changed %1 sensor value %2 ~%3 to %4 ~ %5",
+                neobot_sensor_convert_scale: "the value that is changed %1 sensor value %2 ~%3 to %4 ~ %5",
                 
                 neobot_compare_symbol: '%1',
                 neobot_decision_sensor_is_over: "%1 sensor value %2 %3", 
-                neobot_decision_equal_with_sensor: "Being detected %2 by %1 sensor value",
-                neobot_remote_button : 'Pressing button %1 of wireless remote controller',
+                neobot_decision_equal_with_sensor: "being detected %2 by %1 color sensor",
+                neobot_remote_button : 'pressing button %1 of remote controller',
 
                 get_motor_speed: '%1',
                 neobot_left_motor: 'Rotate the left motor in %2 for speed %1 %3',
@@ -176,7 +176,7 @@ Entry.Neobot.setLanguage = function() {
                 neobot_both_motor: 'Rotate the left motor in %2 speed %1 & the right motor in %4 for speed %3 %5',
                 neobot_all_motor: 'Rotate both motors %2 speed %1 for %3 second(s) %4',
                 // removed by cky 190423
-                //neobot_motor_with_sensor: "Change %2 ~ %3 value of %1 sensor to speed and rotate %4 motor %5 ",
+                // neobot_motor_with_sensor: "Change %2 ~ %3 value of %1 sensor to speed and rotate %4 motor %5 ",
                 neobot_stop_all_motor: 'Stop both motors %1',
                 neobot_robot: 'Go %1 the robot %2',
 
@@ -188,7 +188,7 @@ Entry.Neobot.setLanguage = function() {
                 neobot_servo_init: 'Initialize servo motor connected %1 to current place %2',
                 neobot_servo_turn_type1: 'Rotate servo motor connected %1 to %2 at %3 degrees %4',
                 neobot_servo_turn_type2: 'Rotate servo motor connected %1 at %2 degrees %3',
-                neobot_servo_turn_type4: 'Set to %2 the angle rotation speed of servo motor connected %1 %3',
+                neobot_servo_turn_type4: 'Set to %2 the rotation speed of servo motor connected %1 %3',     //angle 단어 삭제
                 neobot_servo_turn_type5: 'Rotate servo motor connected %1 to %2 in %3 speed constantly',
                 neobot_servo_mode_manual: 'Change servo motor connected %1 to manual control mode %2',
                 neobot_servo_stop: 'Stop servo motor connected %1 %2',
