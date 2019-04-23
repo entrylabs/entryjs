@@ -61,7 +61,8 @@ Entry.Neobot.setLanguage = function() {
                 neobot_stop_right_motor: '오른쪽 모터를 정지 %1',
                 neobot_both_motor: '왼쪽 모터를 %1 %2 & 오른쪽 모터를 %3 %4 의 속도로 회전 %5',
                 neobot_all_motor: '양쪽 모터를 %1 %2의 속도로 %3 회전 %4',
-                neobot_motor_with_sensor: '%1 센서의 %2 ~ %3 값을 모터 속도로 바꾸고 %4 모터 회전 %5',
+                // removed by cky 190423
+                //neobot_motor_with_sensor: '%1 센서의 %2 ~ %3 값을 모터 속도로 바꾸고 %4 모터 회전 %5',
                 neobot_stop_all_motor: '양쪽 모터를 정지 %1',
                 neobot_robot: '로봇 %1 %2',
 
@@ -174,7 +175,8 @@ Entry.Neobot.setLanguage = function() {
                 neobot_stop_right_motor: 'Stop right motor %1',
                 neobot_both_motor: 'Rotate the left motor in %2 speed %1 & the right motor in %4 for speed %3 %5',
                 neobot_all_motor: 'Rotate both motors %2 speed %1 for %3 second(s) %4',
-                neobot_motor_with_sensor: "Change %2 ~ %3 value of %1 sensor to speed and rotate %4 motor %5 ",
+                // removed by cky 190423
+                //neobot_motor_with_sensor: "Change %2 ~ %3 value of %1 sensor to speed and rotate %4 motor %5 ",
                 neobot_stop_all_motor: 'Stop both motors %1',
                 neobot_robot: 'Go %1 the robot %2',
 
@@ -288,7 +290,8 @@ Entry.Neobot.blockMenuBlocks = [
     'neobot_stop_right_motor',
     'neobot_both_motor',
     'neobot_all_motor',
-    'neobot_motor_with_sensor',
+    // removed by cky 190423
+    //'neobot_motor_with_sensor',
     'neobot_stop_all_motor',
     'neobot_robot',
     // class output
@@ -1118,8 +1121,8 @@ Entry.Neobot.getBlocks = function() {
                 }
             },
         },
-        
-        neobot_motor_with_sensor: {
+        // removed by cky 190423
+        /*neobot_motor_with_sensor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1224,7 +1227,7 @@ Entry.Neobot.getBlocks = function() {
                     break;
                 }
             },
-        },
+        },*/
         neobot_stop_all_motor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1294,20 +1297,20 @@ Entry.Neobot.getBlocks = function() {
                 var move = script.getNumberField('MOVE');
                 switch (move) {
                     case 1:
-                    Entry.hw.sendQueue['DCL'] = 0x10 + 15;
-                    Entry.hw.sendQueue['DCR'] = 0x10 + 15;
+                    Entry.hw.sendQueue['DCL'] = 0x10 + 10;
+                    Entry.hw.sendQueue['DCR'] = 0x10 + 10;
                     break;
                     case 2:
-                    Entry.hw.sendQueue['DCL'] = 0x20 + 15;
-                    Entry.hw.sendQueue['DCR'] = 0x20 + 15;
+                    Entry.hw.sendQueue['DCL'] = 0x20 + 10;
+                    Entry.hw.sendQueue['DCR'] = 0x20 + 10;
                     break;
                     case 3:
-                    Entry.hw.sendQueue['DCL'] = 0x20 + 15;
-                    Entry.hw.sendQueue['DCR'] = 0x10 + 15;
+                    Entry.hw.sendQueue['DCL'] = 0x20 + 5;
+                    Entry.hw.sendQueue['DCR'] = 0x10 + 5;
                     break;
                     case 4:
-                    Entry.hw.sendQueue['DCL'] = 0x10 + 15;
-                    Entry.hw.sendQueue['DCR'] = 0x20 + 15;
+                    Entry.hw.sendQueue['DCL'] = 0x10 + 5;
+                    Entry.hw.sendQueue['DCR'] = 0x20 + 5;
                     break;
                     case 5:
                     Entry.hw.sendQueue['DCL'] = 0;
@@ -1406,6 +1409,7 @@ Entry.Neobot.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     setTimeout(function() {
+                        Entry.hw.sendQueue[port] = 0;
                         script.timeFlag = 0;
                     }, duration * 1000);
                     return script;
@@ -1414,7 +1418,6 @@ Entry.Neobot.getBlocks = function() {
                 } else {
                     delete script.timeFlag;
                     delete script.isStart;
-                    Entry.hw.sendQueue[port] = 0;
                     Entry.engine.isContinue = false;
                     return script.callReturn();
                 }
@@ -1456,13 +1459,13 @@ Entry.Neobot.getBlocks = function() {
             isNotFor: ['neobot'],
             func: function(sprite, script) {
                 var port = script.getStringField('PORT', script);
-                // TODO check whether option value is right or not.
-                var option = port;
+                // removed by cky 190423, no need to send OPT on this model
+                /* var option = port;
                 if (option === 3) {
                     option = 4;
                 }
                 Entry.hw.sendQueue[port] = 255;
-                Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & ~option;
+                Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & ~option; */
                 return script.callReturn();
             },
         },
@@ -1839,7 +1842,7 @@ Entry.Neobot.getBlocks = function() {
                     script.timeFlag = 1;
                     setTimeout(function() {
                         Entry.hw.sendQueue[port] = 0x01;
-                        // TODO check
+                        // removed by cky 190423, no need to send OPT on this model
                         /* var option = port;
                         if (option === 3) {
                             option = 4;
