@@ -55,6 +55,7 @@ Entry.NeobotSensorTheme = {
                 neobot_st_sensor_convert_scale: '%1 센서값 %2 ~ %3 를 %4 ~ %5 (으)로 바꾼 값',
 
                 neobot_st_compare_symbol: '%1',
+                neobot_st_decision_sensor_is_over: '%1 의 센서값이 %2 %3',
                 neobot_st_decision_equal_with_sensor: '%1 에 연결한 컬러센서가 %2 을 감지함',
 
                 neobot_st_output_led_on: '%1 에 연결한 LED 켜기 %2', 
@@ -549,6 +550,7 @@ Entry.NeobotSensorTheme.getBlocks = function() {
             isNotFor: ['neobot_sensor_theme'],
             func: function(sprite, script) {
                 var port = script.getStringField('PORT', script);
+                Entry.hw.sendQueue[port] = 255;
                 return script.callReturn();
             },
         },
