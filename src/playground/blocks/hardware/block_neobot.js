@@ -1459,13 +1459,7 @@ Entry.Neobot.getBlocks = function() {
             isNotFor: ['neobot'],
             func: function(sprite, script) {
                 var port = script.getStringField('PORT', script);
-                // removed by cky 190423, no need to send OPT on this model
-                /* var option = port;
-                if (option === 3) {
-                    option = 4;
-                }
                 Entry.hw.sendQueue[port] = 255;
-                Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & ~option; */
                 return script.callReturn();
             },
         },
@@ -1506,11 +1500,7 @@ Entry.Neobot.getBlocks = function() {
             func: function(sprite, script) {
                 var port = script.getStringField('PORT', script);
                 var option = port;
-                if (option === 3) {
-                    option = 4;
-                }
                 Entry.hw.sendQueue[port] = 0;
-                Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & ~option;
                 return script.callReturn();
             },
         },
@@ -1569,11 +1559,7 @@ Entry.Neobot.getBlocks = function() {
                 } else if (value > 255) {
                     value = 255;
                 }
-                if (option === 3) {
-                    option = 4;
-                }
                 Entry.hw.sendQueue[port] = value;
-                Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & ~option;
                 return script.callReturn();
             },
         },
@@ -1665,7 +1651,7 @@ Entry.Neobot.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     if (value > 65) {
-                        value = 65; //이게 원래 코드 이민준
+                        value = 65;
                     }
                     sq.SND = value;
                     setTimeout(function() {
@@ -1842,12 +1828,6 @@ Entry.Neobot.getBlocks = function() {
                     script.timeFlag = 1;
                     setTimeout(function() {
                         Entry.hw.sendQueue[port] = 0x01;
-                        // removed by cky 190423, no need to send OPT on this model
-                        /* var option = port;
-                        if (option === 3) {
-                            option = 4;
-                        }
-                        Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] | option; */
                         setTimeout(function() {
                             script.timeFlag = 0;
                         }, 200);
