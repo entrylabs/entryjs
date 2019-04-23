@@ -73,7 +73,7 @@ Entry.NeobotRobotTheme.setLanguage = function() {
                 neobot_rb_port_decision: ' %1 작동 (기준 값: %2)',
                 neobot_rb_top_decision: '윗면센서 작동 (기준 값: %1)',
                 neobot_rb_bottom_decision: '바닥면센서 작동 (기준 값: %1)',
-                neobot_rb_remote_decision : "무선리모컨의 %1 버튼을 누름",
+                neobot_rb_remote_decision : "리모컨의 %1 버튼을 누름",
 
                 neobot_rb_servo_init: '%1에 연결한 Servo모터를 현재 위치로 초기화하기 %2',
                 neobot_rb_servo_turn_type1: '%1에 연결한 Servo모터를 %2으로 %3도 회전하기 %4',
@@ -1758,10 +1758,10 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                         [Lang.Blocks.neobot_rb_remote_btn_b, '2'],
                         [Lang.Blocks.neobot_rb_remote_btn_c, '3'],
                         [Lang.Blocks.neobot_rb_remote_btn_d, '4'],
-                        [Lang.Blocks.neobot_rb_remote_btn_1, '1'],		//값이 5가 아니라 1
-                        [Lang.Blocks.neobot_rb_remote_btn_2, '2'],		//값이 6이 아니라 2
-                        [Lang.Blocks.neobot_rb_remote_btn_3, '3'],		//값이 7이 아니라 3
-                        [Lang.Blocks.neobot_rb_remote_btn_4, '4'],		//값이 8이 아니라 4
+                        [Lang.Blocks.neobot_rb_remote_btn_1, '1'],
+                        [Lang.Blocks.neobot_rb_remote_btn_2, '2'],
+                        [Lang.Blocks.neobot_rb_remote_btn_3, '3'],
+                        [Lang.Blocks.neobot_rb_remote_btn_4, '4'],
                         [Lang.Blocks.neobot_rb_remote_btn_up, '11'],
                         [Lang.Blocks.neobot_rb_remote_btn_down, '12'],
                         [Lang.Blocks.neobot_rb_remote_btn_left, '14'],
@@ -1784,7 +1784,7 @@ Entry.NeobotRobotTheme.getBlocks = function() {
             class: 'remote',
             isNotFor: ['neobot_robot_theme'],
             func: function(sprite, script) {
-                var key = script.getNumberField('KEY');
+                var key = script.getNumberValue('KEY');
                 var value = Entry.hw.portData['IR'];
                 if(key == value){
                     return true;

@@ -728,7 +728,7 @@ Entry.Neobot.getBlocks = function() {
             class: 'remote',
             isNotFor: ['neobot'],
             func: function(sprite, script) {
-                var key = script.getNumberField('KEY');
+                var key = script.getNumberValue('KEY');
                 var value = Entry.hw.portData['IR'];
                 if(key == value){
                     return true;
