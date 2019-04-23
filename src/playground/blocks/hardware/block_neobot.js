@@ -84,10 +84,10 @@ Entry.Neobot.setLanguage = function() {
             },
             Blocks: {
                 //for dropdown
-                neobot_port_1 : "1번포트",
-                neobot_port_2 : "2번포트",
-                neobot_port_3 : "3번포트",
-                neobot_port_4 : "4번포트",
+                neobot_port_1 : "IN1",
+                neobot_port_2 : "IN2",
+                neobot_port_3 : "IN3",
+                neobot_port_4 : "IN4",
                 neobot_port_bat : "배터리",
                 neobot_port_remot : "리모컨",
                 neobot_color_white : "흰색",
