@@ -47,33 +47,36 @@ Entry.Neobot.setLanguage = function() {
             template: {
                 neobot_sensor_value: '%1 값', 
                 neobot_sensor_connect_external: '%1 에 연결한 %2 값', 
-                neobot_sensor_convert_scale: '%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼 값',
+                neobot_sensor_convert_scale: '%1 센서값 %2 ~ %3 를 %4 ~ %5 (으)로 바꾼 값',
+
                 neobot_compare_symbol: '%1',
                 neobot_decision_sensor_is_over: "%1 의 센서값이 %2 %3",
-                neobot_decision_equal_with_sensor: '%1 의 센서값이 %2 을 감지함',
+                neobot_decision_equal_with_sensor: '%1 의 센서값에 의해 %2 이 감지됨',
                 neobot_remote_button : "무선리모컨의 %1 버튼을 누름",
+
                 get_motor_speed: '%1',
                 neobot_left_motor: '왼쪽 모터를 %1 %2 의 속도로 회전 %3',
                 neobot_stop_left_motor: '왼쪽 모터를 정지 %1',
                 neobot_right_motor: '오른쪽 모터를 %1 %2 의 속도로 회전 %3',
                 neobot_stop_right_motor: '오른쪽 모터를 정지 %1',
                 neobot_both_motor: '왼쪽 모터를 %1 %2 & 오른쪽 모터를 %3 %4 의 속도로 회전 %5',
-                neobot_all_motor: '양쪽 모터를 %1 %2의 속도로 %3초 동안 회전 %4',
-                neobot_motor_with_sensor: '%1 센서의 %2 ~ %3 값을 모터 속도에 맞게 바꿔서 %4 모터 회전 %5',
+                neobot_all_motor: '양쪽 모터를 %1 %2의 속도로 %3 회전 %4',
+                neobot_motor_with_sensor: '%1 센서의 %2 ~ %3 값을 모터 속도로 바꾸고 %4 모터 회전 %5',
                 neobot_stop_all_motor: '양쪽 모터를 정지 %1',
                 neobot_robot: '로봇 %1 %2',
-                neobot_set_output: '%1 에 %2 값만큼 출력 %3',
-                
+
+                neobot_output_led_type1: '%1 에 연결한 LED를 %2 밝기로 %3 켜기 %4',
                 neobot_output_led_on: '%1 에 연결한 LED 켜기 %2', 
                 neobot_output_led_off: '%1 에 연결한 LED 끄기 %2',
-                neobot_output_led_type1: '%1 의 LED를 %2 밝기로 %3 켜기 %4',
-                neobot_servo_init: '%1의 Servo모터를 현재 위치로 초기화하기 %2',
-                neobot_servo_turn_type1: '%1의 Servo모터를 %2으로 %3도 회전하기 %4',
-                neobot_servo_turn_type2: '%1의 Servo모터를 %2도 회전하기 %3',
-                neobot_servo_turn_type4: '%1 Servo모터의 각도 회전속도를 %2로 정하기 %3',
-                neobot_servo_turn_type5: '%1의 Servo모터를 %2 %3 빠르기로 계속 회전하기 %4',
-                neobot_servo_mode_manual: '%1의 Servo모터를 수동 제어모드로 바꾸기 %2',
-                neobot_servo_stop: '%1의 Servo모터 멈추기 %2',
+                neobot_set_output: '%1 에 %2 값만큼 출력 %3',
+
+                neobot_servo_init: '%1에 연결한 Servo모터를 현재 위치로 초기화하기 %2',
+                neobot_servo_turn_type1: '%1에 연결한 Servo모터를 %2으로 %3도 회전하기 %4',
+                neobot_servo_turn_type2: '%1에 연결한 Servo모터를 %2도 회전하기 %3',
+                neobot_servo_turn_type4: '%1에 연결한 Servo모터의 각도 회전속도를 %2로 정하기 %3',
+                neobot_servo_turn_type5: '%1에 연결한 Servo모터를 %2 %3 빠르기로 계속 회전하기 %4',
+                neobot_servo_mode_manual: '%1에 연결한 Servo모터를 수동 제어모드로 바꾸기 %2',
+                neobot_servo_stop: '%1에 연결한 Servo모터 멈추기 %2',
 
                 neobot_play_note_for: '멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4',
                 neobot_play_note_with_sensor: '컨트롤러에서 %1 센서의 %2 ~ %3 값으로 멜로디 연주하기 %4',
@@ -157,39 +160,39 @@ Entry.Neobot.setLanguage = function() {
             template: {
                 neobot_sensor_value: '%1 value',
                 neobot_sensor_connect_external: 'the %2 value connected %1',
-                neobot_sensor_convert_scale: "Change %1's area from %2 ~ %3 to %4 ~ %5",
+                neobot_sensor_convert_scale: "The value that is changed %1 sensor value %2 ~%3 to %4 ~ %5",
                 
                 neobot_compare_symbol: '%1',
-                neobot_decision_sensor_is_over: "%1's sensor value %2 %3", 
-                neobot_decision_equal_with_sensor: "%1's sensor value is %2",
-                neobot_remote_button : 'Press %1 button on the remote control',
+                neobot_decision_sensor_is_over: "%1 sensor value %2 %3", 
+                neobot_decision_equal_with_sensor: "Being detected %2 by %1 sensor value",
+                neobot_remote_button : 'Pressing button %1 of wireless remote controller',
 
                 get_motor_speed: '%1',
-                neobot_left_motor: 'Move left motor %1 for speed %2 %3',
-                neobot_stop_left_motor: 'Stop left motor',
-                neobot_right_motor: 'Move right motor %1 for speed %2 %3',
+                neobot_left_motor: 'Rotate the left motor in %2 for speed %1 %3',
+                neobot_stop_left_motor: 'Stop the left motor %1',
+                neobot_right_motor: 'Rotate the right motor in %2 for speed %1 %3',
                 neobot_stop_right_motor: 'Stop right motor %1',
-                neobot_both_motor: 'Move left motor %1 for speed %2 and right motor %3 for speed %4 %5', // TODO check
-                neobot_all_motor: 'Move both motors %2 speeds at %1 for %3 seconds %4',
-                neobot_motor_with_sensor: "Convert %2 ~ %3 area of %1's value to speed and move %4 motor %5 ", // TODO check
-                neobot_stop_all_motor: 'Stop both motors',
-                neobot_robot: 'Go robot %1 %2',
-                neobot_set_output: 'Output the value of the %1 port by %2 %3',
+                neobot_both_motor: 'Rotate the left motor in %2 speed %1 & the right motor in %4 for speed %3 %5',
+                neobot_all_motor: 'Rotate both motors %2 speed %1 for %3 second(s) %4',
+                neobot_motor_with_sensor: "Change %2 ~ %3 value of %1 sensor to speed and rotate %4 motor %5 ",
+                neobot_stop_all_motor: 'Stop both motors %1',
+                neobot_robot: 'Go %1 the robot %2',
 
-                neobot_output_led_on: 'Turn on the LED connected %1', // TODO check
-                neobot_output_led_off: 'Turn off the LED connected %1', // TODO check
-                neobot_output_led_type1: 'Turn on the LED connected %1 in %2 brightness for %3 second(s)', // TODO check
+                neobot_output_led_type1: 'Turn on the LED connected %1 in %2 brightness for %3 %4',
+                neobot_output_led_on: 'Turn on the LED connected %1 %2',
+                neobot_output_led_off: 'Turn off the LED connected %1 %2',
+                neobot_set_output: 'Output %1 port value to %2 %3',
 
-                neobot_servo_init: 'Initialize %1 servo motor reference angle to current location %2',
-                neobot_servo_turn_type1: 'Rotate %1 servo motor to %2 at %3 degrees %4',
-                neobot_servo_turn_type2: 'Rotate %1 servo motor at %2 degrees %3',
-                neobot_servo_turn_type4: 'Set to rotation speed connected %1 servo motor in %2 speed %3',
-                neobot_servo_turn_type5: 'Rotate %1 to %2 in %3 speed constantly %4',
-                neobot_servo_mode_manual: 'Change %1 to manual mode %2',
-                neobot_servo_stop: 'Stop %1 %2',
+                neobot_servo_init: 'Initialize servo motor connected %1 to current place %2',
+                neobot_servo_turn_type1: 'Rotate servo motor connected %1 to %2 at %3 degrees %4',
+                neobot_servo_turn_type2: 'Rotate servo motor connected %1 at %2 degrees %3',
+                neobot_servo_turn_type4: 'Set to %2 the angle rotation speed of servo motor connected %1 %3',
+                neobot_servo_turn_type5: 'Rotate servo motor connected %1 to %2 in %3 speed constantly',
+                neobot_servo_mode_manual: 'Change servo motor connected %1 to manual control mode %2',
+                neobot_servo_stop: 'Stop servo motor connected %1 %2',
 
-                neobot_play_note_for: 'Sound melody %1 at %2 octave for %3 %4',
-                neobot_play_note_with_sensor: "Sound melody for value %2 ~ %3 on the controller's %1 %4",
+                neobot_play_note_for: 'Make a sound the melody %1 to %2 octave(s) as %3 %4',
+                neobot_play_note_with_sensor: "Play the melody as %2 ~ %3 value of %1 sensor in the controller %4",
             },
             Blocks: {
                 //for dropdown
@@ -197,16 +200,16 @@ Entry.Neobot.setLanguage = function() {
                 neobot_port_2: 'port2',
                 neobot_port_3: 'port3',
                 neobot_port_4: 'port4',
-                neobot_port_bat: 'Battery',
-                neobot_port_remot: 'Remote',
-                neobot_color_white: 'White',
-                neobot_color_red: 'Red',
-                neobot_color_yellow: 'Yellow',
-                neobot_color_green: 'Green',
-                neobot_color_blue: 'Blue',
-                neobot_direction_forward: 'Forward',
-                neobot_direction_backward: 'Backward',
-                neobot_sound_silent: 'Silent',
+                neobot_port_bat: 'battery',
+                neobot_port_remot: 'remote',
+                neobot_color_white: 'white',
+                neobot_color_red: 'red',
+                neobot_color_yellow: 'yellow',
+                neobot_color_green: 'green',
+                neobot_color_blue: 'blue',
+                neobot_direction_forward: 'forward',
+                neobot_direction_backward: 'backward',
+                neobot_sound_silent: 'silent',
                 neobot_sound_do: 'Do',
                 neobot_sound_do_shop: 'Do#',
                 neobot_sound_re: 'Re',
@@ -219,10 +222,10 @@ Entry.Neobot.setLanguage = function() {
                 neobot_sound_la: 'La',
                 neobot_sound_la_shop: 'La#',
                 neobot_sound_ti: 'Ti',
-                neobot_sound_half_note: 'Half note',
-                neobot_sound_quarter_note: 'Quarter note',
-                neobot_sound_eighth_note: 'Eighth note',
-                neobot_sound_sixteenth_note: 'Sixteenth note',
+                neobot_sound_half_note: 'a half note',
+                neobot_sound_quarter_note: 'a quarter note',
+                neobot_sound_eighth_note: 'a eighth note',
+                neobot_sound_sixteenth_note: 'a sixteenth note',
                 neobot_sensor_infrared : 'IR sensor',
                 neobot_sensor_light : 'light sensor',
                 neobot_sensor_sound : 'sound sensor',
@@ -243,7 +246,7 @@ Entry.Neobot.setLanguage = function() {
                 neobot_remote_btn_down: '▼',
                 neobot_remote_btn_left: '◀',
                 neobot_remote_btn_right: '▶',
-                neobot_duration_cont: 'Keep',
+                neobot_duration_cont: 'constantly',
                 neobot_duration_1s: '1 second',
                 neobot_duration_2s: '2 seconds',
                 neobot_duration_3s: '3 seconds',
@@ -256,13 +259,13 @@ Entry.Neobot.setLanguage = function() {
                 neobot_motor_both: 'both',
                 neobot_motor_left: 'left',
                 neobot_motor_right: 'right',
-                neobot_motor_move_forward: 'forward',
-                neobot_motor_move_backward: 'backward',
-                neobot_motor_move_left: 'Turn Left',
-                neobot_motor_move_right: 'Turn Right',
-                neobot_motor_move_stop: 'Stop',
-                neobot_servo_dir_1: 'Clockwise',
-                neobot_servo_dir_2: 'Counterclockwise',
+                neobot_motor_move_forward: 'go forward',
+                neobot_motor_move_backward: 'go backward',
+                neobot_motor_move_left: 'turn Left',
+                neobot_motor_move_right: 'turn Right',
+                neobot_motor_move_stop: 'stop',
+                neobot_servo_dir_1: 'clockwise',
+                neobot_servo_dir_2: 'counterclockwise',
             },
         }, //
     };
@@ -1347,7 +1350,7 @@ Entry.Neobot.getBlocks = function() {
                         ['20%', '51'],
                         ['10%', '26'],
                     ],
-                    value: '0',
+                    value: '255',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1394,21 +1397,17 @@ Entry.Neobot.getBlocks = function() {
                     var port = script.getStringField('PORT', script);
                     var value = script.getNumberField('VALUE', script);
                     var duration = script.getNumberField('DURATION', script);
-                    var timeout = 0;
 
+                    Entry.hw.sendQueue[port] = value;
                     if(duration == 0) {
-                        Entry.hw.sendQueue[port] = value;
                         return script.callReturn();
-                        timeout = 10; // 10ms
-                    } else {
-                        timeout = duration * 1000;
                     }
                     
                     script.isStart = true;
                     script.timeFlag = 1;
                     setTimeout(function() {
                         script.timeFlag = 0;
-                    }, timeout);
+                    }, duration * 1000);
                     return script;
                 } else if (script.timeFlag == 1) {
                     return script;
@@ -1840,7 +1839,7 @@ Entry.Neobot.getBlocks = function() {
                     script.timeFlag = 1;
                     setTimeout(function() {
                         Entry.hw.sendQueue[port] = 0x01;
-                        // Is it needed?
+                        // TODO check
                         /* var option = port;
                         if (option === 3) {
                             option = 4;
