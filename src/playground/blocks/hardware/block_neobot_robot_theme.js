@@ -78,7 +78,7 @@ Entry.NeobotRobotTheme.setLanguage = function() {
                 neobot_rb_servo_init: '%1에 연결한 Servo모터를 현재 위치로 초기화하기 %2',
                 neobot_rb_servo_turn_type1: '%1에 연결한 Servo모터를 %2으로 %3도 회전하기 %4',
                 neobot_rb_servo_turn_type2: '%1에 연결한 Servo모터를 %2도 회전하기 %3',
-                neobot_rb_servo_turn_type4: '%1에 연결한 Servo모터의 각도 회전속도를 %2로 정하기 %3',
+                neobot_rb_servo_turn_type4: '%1에 연결한 Servo모터의 회전속도를 %2로 정하기 %3',
                 neobot_rb_servo_turn_type5: '%1에 연결한 Servo모터를 %2 %3 빠르기로 계속 회전하기 %4',
                 neobot_rb_servo_mode_manual: '%1에 연결한 Servo모터를 수동 제어모드로 바꾸기 %2',
                 neobot_rb_servo_stop: '%1에 연결한 Servo모터 멈추기 %2',
