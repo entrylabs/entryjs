@@ -31,10 +31,10 @@ Entry.NeobotRobotTheme = {
             IN3: { name: 'PORT3', type: 'input', pos: { x: 484, y: 100 } },
             IN4: { name: 'PORT4', type: 'input', pos: { x: 653, y: 100 } },
             // for test
-            /* OUT1: { name: 'OUT1', type: 'output', pos: { x: 145, y: 400} },
+            OUT1: { name: 'OUT1', type: 'output', pos: { x: 145, y: 400} },
             OUT2: { name: 'OUT2', type: 'output', pos: { x: 314, y: 400} },
             DCL: { name: 'DCL', type: 'output', pos: { x: 484, y: 400} },
-            DCR: { name: 'DCR', type: 'output', pos: { x: 653, y: 400} }, */
+            DCR: { name: 'DCR', type: 'output', pos: { x: 653, y: 400} },
         },
         mode: 'both',
     },
@@ -1076,7 +1076,7 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                 VALUE: 0,
             },
             func: function(sprite, script) {
-                return script.getStringField('VALUE');
+                return script.getNumberField('VALUE');
             },
         },
 
@@ -1089,10 +1089,10 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.neobot_rb_top_face, '1'],
-                        [Lang.Blocks.neobot_rb_bottom_face, '2'],
+                        [Lang.Blocks.neobot_rb_top_face, 'OUT1'],
+                        [Lang.Blocks.neobot_rb_bottom_face, 'OUT2'],
                     ],
-                    value: '1',
+                    value: 'OUT1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1287,7 +1287,7 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                 params: [
                     {
                         type: 'neobot_rb_surface',
-                        id: 'm61',
+                        id: 'm611',
                     },
                     {
                         type: 'neobot_rb_led',
@@ -1304,7 +1304,7 @@ Entry.NeobotRobotTheme.getBlocks = function() {
             class: 'led',
             isNotFor: ['neobot_robot_theme'],
             func: function(sprite, script) {
-                var surface = script.getNumberField('SURFACE');
+                var face = script.getStringValue('SURFACE');
                 var value = script.getNumberValue('VALUE');
 
                 if (value > 100) {
@@ -1312,15 +1312,8 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                 } else if (value < 0) {
                     value = 0;
                 }
-                    
-                switch (surface) {
-                    case 1:
-                        Entry.hw.sendQueue['OUT1'] = value;
-                    break;
-                    case 2:
-                        Entry.hw.sendQueue['OUT2'] = value;
-                    break;
-                }
+
+                Entry.hw.sendQueue[face] = value;
             },
         },
 
@@ -1353,7 +1346,7 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                 params: [
                     {
                         type: 'neobot_rb_surface',
-                        id: 'm62',
+                        id: 'm612',
                     },
                     {
                         type: 'neobot_rb_led',
@@ -1378,7 +1371,7 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                 var sq = Entry.hw.sendQueue;
 
                 if (!script.isStart) {
-                    var surface = script.getNumberField('SURFACE');
+                    var face = script.getStringValue('SURFACE');
                     var value = script.getNumberValue('VALUE');
                     var duration = script.getNumberValue('DURATION');
 
@@ -1391,22 +1384,16 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                     if (duration < 0) {
                         duration = 0;
                     }
-
-                    switch (surface) {
-                        case 1:
-                            Entry.hw.sendQueue['OUT1'] = value;
-                            break;
-                        case 2:
-                            Entry.hw.sendQueue['OUT2'] = value;
-                            break;
-                    }
-
+                    
+                    Entry.hw.sendQueue[face] = value;
+                    
                     if (duration === 0) {
                         return script.callReturn();
                     } else {
                         script.isStart = true;
                         script.timeFlag = 1;
                         setTimeout(function() {
+                            Entry.hw.sendQueue[face] = 0;
                             script.timeFlag = 0;
                         }, duration * 1000);
                         return script;
@@ -1416,14 +1403,6 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                 } else {
                     delete script.timeFlag;
                     delete script.isStart;
-                    switch (surface) {
-                        case 1:
-                            Entry.hw.sendQueue['OUT1'] = 0;
-                            break;
-                        case 2:
-                            Entry.hw.sendQueue['OUT2'] = 0;
-                            break;
-                    }
                     
                     Entry.engine.isContinue = false;
                     return script.callReturn();
@@ -1452,7 +1431,7 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                 params: [
                     {
                         type: 'neobot_rb_surface',
-                        id: 'm63',
+                        id: 'm613',
                     },
                     null,
                 ],
@@ -1464,15 +1443,8 @@ Entry.NeobotRobotTheme.getBlocks = function() {
             class: 'led',
             isNotFor: ['neobot_robot_theme'],
             func: function(sprite, script) {
-                var surface = script.getNumberField('SURFACE');
-                switch (surface) {
-                    case 1:
-                        Entry.hw.sendQueue['OUT1'] = 0;
-                        break;
-                    case 2:
-                        Entry.hw.sendQueue['OUT2'] = 0;
-                        break;
-                }
+                var face = script.getStringValue('SURFACE');
+                Entry.hw.sendQueue[face] = 0;
                 return script.callReturn();
             },
         },
@@ -1502,7 +1474,7 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                 params: [
                     {
                         type: 'neobot_rb_surface',
-                        id: 'm64',
+                        id: 'm614',
                     },
                     100,
                     null,
@@ -1516,7 +1488,7 @@ Entry.NeobotRobotTheme.getBlocks = function() {
             class: 'led',
             isNotFor: ['neobot_robot_theme'],
             func: function(sprite, script) {
-                var surface = script.getNumberField('SURFACE');
+                var face = script.getStringValue('SURFACE');
                 var value = script.getNumberValue('VALUE');
                 
                 if(value > 255) {
@@ -1526,14 +1498,7 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                     value = 0;
                 }
 
-                switch (surface) {
-                    case 1:
-                        Entry.hw.sendQueue['OUT1'] = value;
-                    break;
-                    case 2:
-                        Entry.hw.sendQueue['OUT2'] = value;
-                    break;
-                }
+                Entry.hw.sendQueue[face] = value;
             },
         },
 
@@ -1837,12 +1802,8 @@ Entry.NeobotRobotTheme.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'Dropdown',
-                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT3', 'OUT3']],
-                    value: 'OUT1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    type: 'Block',
+                    accept: 'string',
                 },
                 {
                     type: 'Indicator',
@@ -1853,25 +1814,28 @@ Entry.NeobotRobotTheme.getBlocks = function() {
             events: {},
             def: {
                 params: [
-                    null,
+                    {
+                        type: 'neobot_rb_surface',
+                        id: 'm615',
+                    },
                     null,
                 ],
                 type: 'neobot_rb_servo_init',
             },
             paramsKeyMap: {
-                PORT: 0,
+                SURFACE: 0,
             },
             class: 'servo',
             isNotFor: ['neobot_robot_theme'],
             func: function(sprite, script) {
                 if (!script.isStart) {
-                    var port = script.getStringField('PORT', script);
-                    Entry.hw.sendQueue[port] = 0xBA;
+                    var face = script.getStringValue('SURFACE');
+                    Entry.hw.sendQueue[face] = 0xBA;
                     
                     script.isStart = true;
                     script.timeFlag = 1;
                     setTimeout(function() {
-                        Entry.hw.sendQueue[port] = 0x01;
+                        Entry.hw.sendQueue[face] = 0x01;
                         setTimeout(function() {
                             script.timeFlag = 0;
                         }, 200);
@@ -1895,12 +1859,8 @@ Entry.NeobotRobotTheme.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'Dropdown',
-                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT3', 'OUT3']],
-                    value: 'OUT1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    type: 'Block',
+                    accept: 'string',
                 },
                 {
                     type: 'Dropdown',
@@ -1926,7 +1886,10 @@ Entry.NeobotRobotTheme.getBlocks = function() {
             events: {},
             def: {
                 params: [
-                    null,
+                    {
+                        type: 'neobot_rb_surface',
+                        id: 'm616',
+                    },
                     null,
                     180,
                     null,
@@ -1934,7 +1897,7 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                 type: 'neobot_rb_servo_turn_type1',
             },
             paramsKeyMap: {
-                PORT: 0,
+                SURFACE: 0,
                 DIRECTION: 1,
                 DEGREE: 2
             },
@@ -1942,16 +1905,16 @@ Entry.NeobotRobotTheme.getBlocks = function() {
             isNotFor: ['neobot_robot_theme'],
             func: function(sprite, script) {
                 if (!script.isStart) {
-                    var port = script.getStringField('PORT', script);
+                    var face = script.getStringValue('SURFACE');
                     var direction = script.getNumberField('DIRECTION');
                     var value = script.getNumberValue('DEGREE');
                     
                     switch (direction) {
                         case 1:
-                        Entry.hw.sendQueue[port] = 0xBC;
+                        Entry.hw.sendQueue[face] = 0xBC;
                         break;
                         case 2:
-                        Entry.hw.sendQueue[port] = 0xBD;
+                        Entry.hw.sendQueue[face] = 0xBD;
                         break;
                     }
                     
@@ -1965,7 +1928,7 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                             value = 0;
                         }
                         value = value + 1;
-                        Entry.hw.sendQueue[port] = value;
+                        Entry.hw.sendQueue[face] = value;
                         setTimeout(function() {
                             script.timeFlag = 0;
                         }, 1000);
@@ -1989,12 +1952,8 @@ Entry.NeobotRobotTheme.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'Dropdown',
-                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT3', 'OUT3']],
-                    value: 'OUT1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    type: 'Block',
+                    accept: 'string',
                 },
                 {
                     type: 'Block',
@@ -2009,21 +1968,24 @@ Entry.NeobotRobotTheme.getBlocks = function() {
             events: {},
             def: {
                 params: [
-                    null,
+                    {
+                        type: 'neobot_rb_surface',
+                        id: 'm617',
+                    },
                     180,
                     null,
                 ],
                 type: 'neobot_rb_servo_turn_type2',
             },
             paramsKeyMap: {
-                PORT: 0,
+                SURFACE: 0,
                 DEGREE: 1
             },
             class: 'servo',
             isNotFor: ['neobot_robot_theme'],
             func: function(sprite, script) {
                 if (!script.isStart) {
-                    var port = script.getStringField('PORT', script);
+                    var face = script.getStringValue('SURFACE');
                     var value = script.getNumberValue('DEGREE');
                     
                     if(value > 0xB4) {
@@ -2033,7 +1995,7 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                         value = 0x00;
                     }
                     value = value + 0x01;
-                    Entry.hw.sendQueue[port] = value;
+                    Entry.hw.sendQueue[face] = value;
                     script.isStart = true;
                     script.timeFlag = 1;
                     setTimeout(function() {
@@ -2058,12 +2020,8 @@ Entry.NeobotRobotTheme.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'Dropdown',
-                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT3', 'OUT3']],
-                    value: 'OUT1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    type: 'Block',
+                    accept: 'string',
                 },
                 {
                     type: 'Dropdown',
@@ -2093,23 +2051,26 @@ Entry.NeobotRobotTheme.getBlocks = function() {
             events: {},
             def: {
                 params: [
-                    null,
+                    {
+                        type: 'neobot_rb_surface',
+                        id: 'm618',
+                    },
                     null,
                     null,
                 ],
                 type: 'neobot_rb_servo_turn_type4',
             },
             paramsKeyMap: {
-                PORT: 0,
+                SURFACE: 0,
                 LEVEL: 1,
             },
             class: 'servo',
             isNotFor: ['neobot_robot_theme'],
             func: function(sprite, script) {
                 if (!script.isStart) {
-                    var port = script.getStringField('PORT', script);
+                    var face = script.getStringValue('SURFACE');
                     var level = script.getNumberField('LEVEL');
-                    Entry.hw.sendQueue[port] = 0xFA - level;
+                    Entry.hw.sendQueue[face] = 0xFA - level;
                     script.isStart = true;
                     script.timeFlag = 1;
                     setTimeout(function() {
@@ -2134,12 +2095,8 @@ Entry.NeobotRobotTheme.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'Dropdown',
-                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT3', 'OUT3']],
-                    value: 'OUT1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    type: 'Block',
+                    accept: 'string',
                 },
                 {
                     type: 'Dropdown',
@@ -2180,7 +2137,10 @@ Entry.NeobotRobotTheme.getBlocks = function() {
             events: {},
             def: {
                 params: [
-                    null,
+                    {
+                        type: 'neobot_rb_surface',
+                        id: 'm619',
+                    },
                     null,
                     null,
                     null,
@@ -2188,7 +2148,7 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                 type: 'neobot_rb_servo_turn_type5',
             },
             paramsKeyMap: {
-                PORT: 0,
+                SURFACE: 0,
                 DIRECTION: 1,
                 LEVEL: 2,
             },
@@ -2196,16 +2156,16 @@ Entry.NeobotRobotTheme.getBlocks = function() {
             isNotFor: ['neobot_robot_theme'],
             func: function(sprite, script) {
                 if (!script.isStart) {
-                    var port = script.getStringField('PORT', script);
+                    var face = script.getStringValue('SURFACE');
                     var direction = script.getNumberField('DIRECTION');
                     var level = script.getNumberField('LEVEL');
     
                     switch (direction) {
                         case 1:
-                            Entry.hw.sendQueue[port] = 0xCA - level;
+                            Entry.hw.sendQueue[face] = 0xCA - level;
                             break;
                         case 2:
-                            Entry.hw.sendQueue[port] = 0xDA - level;
+                            Entry.hw.sendQueue[face] = 0xDA - level;
                             break;
                     }
                     
@@ -2233,12 +2193,8 @@ Entry.NeobotRobotTheme.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'Dropdown',
-                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT3', 'OUT3']],
-                    value: 'OUT1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    type: 'Block',
+                    accept: 'string',
                 },
                 {
                     type: 'Indicator',
@@ -2249,21 +2205,24 @@ Entry.NeobotRobotTheme.getBlocks = function() {
             events: {},
             def: {
                 params: [
-                    null,
+                    {
+                        type: 'neobot_rb_surface',
+                        id: 'm620',
+                    },
                     null,
                 ],
                 type: 'neobot_rb_servo_mode_manual',
             },
             paramsKeyMap: {
-                PORT: 0,
+                SURFACE: 0,
             },
             class: 'servo',
             isNotFor: ['neobot_robot_theme'],
             func: function(sprite, script) {
                 if (!script.isStart) {
-                    var port = script.getStringField('PORT', script);
+                    var face = script.getStringValue('SURFACE');
                     
-                    Entry.hw.sendQueue[port] = 0x00;
+                    Entry.hw.sendQueue[face] = 0x00;
                     script.isStart = true;
                     script.timeFlag = 1;
                     setTimeout(function() {
@@ -2288,12 +2247,8 @@ Entry.NeobotRobotTheme.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'Dropdown',
-                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT3', 'OUT3']],
-                    value: 'OUT1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    type: 'Block',
+                    accept: 'string',
                 },
                 {
                     type: 'Indicator',
@@ -2304,21 +2259,24 @@ Entry.NeobotRobotTheme.getBlocks = function() {
             events: {},
             def: {
                 params: [
-                    null,
+                    {
+                        type: 'neobot_rb_surface',
+                        id: 'm621',
+                    },
                     null,
                 ],
                 type: 'neobot_rb_servo_stop',
             },
             paramsKeyMap: {
-                PORT: 0,
+                SURFACE: 0,
             },
             class: 'servo',
             isNotFor: ['neobot_robot_theme'],
             func: function(sprite, script) {
                 if (!script.isStart) {
-                    var port = script.getStringField('PORT', script);
+                    var face = script.getStringValue('SURFACE');
                     
-                    Entry.hw.sendQueue[port] = 0xFE;
+                    Entry.hw.sendQueue[face] = 0xFE;
                     script.isStart = true;
                     script.timeFlag = 1;
                     setTimeout(function() {
