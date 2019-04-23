@@ -523,10 +523,10 @@ Entry.NeobotSensorTheme.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['OUT1', 'OUT1'],
-                        ['OUT2', 'OUT2'],
-                        ['OUT3', 'OUT3'],
-                        ['OUT4', 'FND'],
+                        ['1번 포트', 'OUT1'],
+                        ['2번 포트', 'OUT2'],
+                        ['3번 포트', 'OUT3'],
+                        ['4번 포트', 'FND'],
                     ],
                     value: 'OUT1',
                     fontSize: 11,
@@ -569,10 +569,10 @@ Entry.NeobotSensorTheme.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['OUT1', 'OUT1'],
-                        ['OUT2', 'OUT2'],
-                        ['OUT3', 'OUT3'],
-                        ['OUT4', 'FND'],
+                        ['1번 포트', 'OUT1'],
+                        ['2번 포트', 'OUT2'],
+                        ['3번 포트', 'OUT3'],
+                        ['4번 포트', 'FND'],
                     ],
                     value: 'OUT1',
                     fontSize: 11,
@@ -615,10 +615,10 @@ Entry.NeobotSensorTheme.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['OUT1', 'OUT1'],
-                        ['OUT2', 'OUT2'],
-                        ['OUT3', 'OUT3'],
-                        ['OUT4', 'FND'],
+                        ['1번 포트', 'OUT1'],
+                        ['2번 포트', 'OUT2'],
+                        ['3번 포트', 'OUT3'],
+                        ['4번 포트', 'FND'],
                     ],
                     value: 'OUT1',
                     fontSize: 11,
