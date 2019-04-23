@@ -1758,10 +1758,10 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                         [Lang.Blocks.neobot_rb_remote_btn_b, '2'],
                         [Lang.Blocks.neobot_rb_remote_btn_c, '3'],
                         [Lang.Blocks.neobot_rb_remote_btn_d, '4'],
-                        [Lang.Blocks.neobot_rb_remote_btn_1, '1'],
-                        [Lang.Blocks.neobot_rb_remote_btn_2, '2'],
-                        [Lang.Blocks.neobot_rb_remote_btn_3, '3'],
-                        [Lang.Blocks.neobot_rb_remote_btn_4, '4'],
+                        [Lang.Blocks.neobot_rb_remote_btn_1, '5'],
+                        [Lang.Blocks.neobot_rb_remote_btn_2, '6'],
+                        [Lang.Blocks.neobot_rb_remote_btn_3, '7'],
+                        [Lang.Blocks.neobot_rb_remote_btn_4, '8'],
                         [Lang.Blocks.neobot_rb_remote_btn_up, '11'],
                         [Lang.Blocks.neobot_rb_remote_btn_down, '12'],
                         [Lang.Blocks.neobot_rb_remote_btn_left, '14'],
@@ -1784,8 +1784,10 @@ Entry.NeobotRobotTheme.getBlocks = function() {
             class: 'remote',
             isNotFor: ['neobot_robot_theme'],
             func: function(sprite, script) {
-                var key = script.getNumberValue('KEY');
+                var key = script.getNumberField('KEY');
                 var value = Entry.hw.portData['IR'];
+                if(key >= 5 && key <= 8)
+                    key -= 4;
                 if(key == value){
                     return true;
                 } else {
