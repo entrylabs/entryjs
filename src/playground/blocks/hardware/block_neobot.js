@@ -52,7 +52,7 @@ Entry.Neobot.setLanguage = function() {
                 neobot_compare_symbol: '%1',
                 neobot_decision_sensor_is_over: "%1 의 센서값이 %2 %3",
                 neobot_decision_equal_with_sensor: '%1 에 연결한 컬러센서가 %2 을 감지함',
-                neobot_remote_button : "무선리모컨의 %1 버튼을 누름",
+                neobot_remote_button : "리모컨의 %1 버튼을 누름",
 
                 get_motor_speed: '%1',
                 neobot_left_motor: '왼쪽 모터를 %1 %2 의 속도로 회전 %3',
