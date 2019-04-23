@@ -4,8 +4,21 @@
 'use strict';
 
 require('../playground/blocks');
+import axios from 'axios';
 
 Entry.HW = class {
+    get httpsServerAddress() {
+        return 'https://hardware.playentry.org:23518';
+    }
+
+    get httpServerAddress() {
+        return 'http://127.0.0.1:23518';
+    }
+
+    get hardwareModuleUploadAddress() {
+        return `${this.connectedAddress || this.httpServerAddress}/module`;
+    }
+
     constructor() {
         this.sessionRoomId = localStorage.getItem('entryhwRoomId');
         if (!this.sessionRoomId) {
@@ -45,6 +58,7 @@ Entry.HW = class {
         socket.io.timeout(1000);
         socket.on('connect', () => {
             this.socketType = 'WebSocket';
+            this.connectedAddress = url;
             this.initHardware(socket);
         });
 
@@ -93,8 +107,6 @@ Entry.HW = class {
         this.socketIo && this.socketIo.removeAllListeners();
         !this.isOpenHardware && this._checkOldClient();
 
-        const httpsServerAddress = 'https://hardware.playentry.org:23518';
-        const httpServerAddress = 'http://127.0.0.1:23518';
         const connectHttpsWebSocket = (url) =>
             this._connectWebSocket(url, {
                 query: {
@@ -104,10 +116,10 @@ Entry.HW = class {
             });
 
         if (location.protocol.indexOf('http') > -1) {
-            this.socketIo = connectHttpsWebSocket(httpServerAddress);
+            this.socketIo = connectHttpsWebSocket(this.httpServerAddress);
         }
-        this.tlsSocketIo1 = connectHttpsWebSocket(httpsServerAddress);
-        this.tlsSocketIo2 = connectHttpsWebSocket(httpsServerAddress);
+        this.tlsSocketIo1 = connectHttpsWebSocket(this.httpsServerAddress);
+        this.tlsSocketIo2 = connectHttpsWebSocket(this.httpsServerAddress);
 
         Entry.dispatchEvent('hwChanged');
     }
@@ -144,9 +156,33 @@ Entry.HW = class {
     initHardware(socket) {
         this.socket = socket;
         this.connected = true;
+        console.log('Hardware Program connected'); // 하드웨어 프로그램 연결 성공, 스테이터스 변화 필요
         Entry.dispatchEvent('hwChanged');
         if (Entry.playground && Entry.playground.object) {
             Entry.playground.setMenu(Entry.playground.object.objectType);
+        }
+    }
+
+    /**
+     * 하드웨어 프로그램 내 http 서버를 통해 모듈파일을 전송한다.
+     * 소켓이 정상연결되어있는 경우만 전송한다.
+     * @param {File} file
+     */
+    applyExternalModule(file) {
+        if (this.connected && file instanceof File) {
+            axios
+                .post(this.hardwareModuleUploadAddress, file)
+                .then(() => {
+                    // 하드웨어 연결 성공, 스테이터스 변화 필요
+                    console.log('Hardware connected');
+                })
+                .catch((e) => {
+                    // 하드웨어 연결 실패, 스테이터스 변화 필요
+                    console.error(e);
+                });
+        } else {
+            // 하드웨어가 연결되어있지 않은 경우의 처리
+            console.error('entry hardware is not connected or file is invalid');
         }
     }
 
@@ -378,7 +414,7 @@ Entry.HW = class {
             },
             runViewer(sUrl, fpCallback) {
                 this._w.document.write(
-                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`,
+                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`
                 );
                 let nCounter = 0;
                 const bNotInstalled = false;
