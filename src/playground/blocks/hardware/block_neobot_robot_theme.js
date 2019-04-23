@@ -801,12 +801,12 @@ Entry.NeobotRobotTheme.getBlocks = function() {
                         Entry.hw.sendQueue['DCR'] = 100 - speed;
                         break;
                     case 3: // left
-                        Entry.hw.sendQueue['DCL'] = 100;
+                        Entry.hw.sendQueue['DCL'] = (speed/5) + 100;
                         Entry.hw.sendQueue['DCR'] = speed + 100;
                         break;
                     case 4: // right
                         Entry.hw.sendQueue['DCL'] = speed + 100;
-                        Entry.hw.sendQueue['DCR'] = 100;
+                        Entry.hw.sendQueue['DCR'] = (speed/5) + 100;
                         break;
                     case 5: // left in place
                         Entry.hw.sendQueue['DCL'] = 100 - speed;
