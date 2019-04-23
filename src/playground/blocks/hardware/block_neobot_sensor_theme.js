@@ -526,7 +526,7 @@ Entry.NeobotSensorTheme.getBlocks = function() {
                         ['OUT1', 'OUT1'],
                         ['OUT2', 'OUT2'],
                         ['OUT3', 'OUT3'],
-                        ['OUT4', 'OUT4'],
+                        ['OUT4', 'FND'],
                     ],
                     value: 'OUT1',
                     fontSize: 11,
