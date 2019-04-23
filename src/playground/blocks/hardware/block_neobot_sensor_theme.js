@@ -378,6 +378,7 @@ Entry.NeobotSensorTheme.getBlocks = function() {
                         [Lang.Blocks.neobot_st_port_1, 'IN1'],
                         [Lang.Blocks.neobot_st_port_2, 'IN2'],
                         [Lang.Blocks.neobot_st_port_3, 'IN3'],
+                        [Lang.Blocks.neobot_st_port_4, 'BAT'],
                     ],
                     value: 'IN1',
                     fontSize: 11,
@@ -550,7 +551,12 @@ Entry.NeobotSensorTheme.getBlocks = function() {
             isNotFor: ['neobot_sensor_theme'],
             func: function(sprite, script) {
                 var port = script.getStringField('PORT', script);
+                var option = port;
+                if (option === 3) {
+                    option = 4;
+                }
                 Entry.hw.sendQueue[port] = 255;
+                Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & ~option;
                 return script.callReturn();
             },
         },
@@ -591,7 +597,12 @@ Entry.NeobotSensorTheme.getBlocks = function() {
             isNotFor: ['neobot_sensor_theme'],
             func: function(sprite, script) {
                 var port = script.getStringField('PORT', script);
+                var option = port;
+                if (option === 3) {
+                    option = 4;
+                }
                 Entry.hw.sendQueue[port] = 0;
+                Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & ~option;
                 return script.callReturn();
             },
         },
@@ -651,7 +662,12 @@ Entry.NeobotSensorTheme.getBlocks = function() {
                 } else if (value > 255) {
                     value = 255;
                 }
+                var option = port;
+                if (option === 3) {
+                    option = 4;
+                }
                 Entry.hw.sendQueue[port] = value;
+                Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & ~option;
                 return script.callReturn();
             },
         },
