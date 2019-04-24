@@ -1,5 +1,11 @@
 import EntryPaint from 'entry-paint';
+import axios from 'axios';
 
+const stringToElement = (htmlString) => {
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = htmlString;
+    return wrapper.children[0];
+};
 Entry.Painter = class Painter {
     constructor(view) {
         this.view = view;
@@ -40,7 +46,7 @@ Entry.Painter = class Painter {
 
     hide() {}
 
-    getFilePath(filePath) {
+    getExt(filePath) {
         return filePath.split('.').pop();
     }
 
@@ -104,15 +110,9 @@ Entry.Painter = class Painter {
         Entry.stateManager.removeAllPictureCommand();
     }
 
-    getPictureExt(picture) {
-        return picture.fileurl
-            ? this.getFilePath(picture.fileurl)
-            : this.getFilePath(picture.label.ko);
-    }
-
-    addPicture(picture, isChangeShape) {
+    async addPicture(picture, isChangeShape) {
         const image = new Image();
-        const ext = this.getPictureExt(picture);
+        const ext = this.getExt(picture.fileurl || picture.label.ko);
 
         if (picture.fileurl) {
             image.src = picture.fileurl;
@@ -133,7 +133,9 @@ Entry.Painter = class Painter {
             this.entryPaint.addBitmap(imageSrc);
             this.cache[imageSrc] = this.entryPaint.getPaperJSON();
         } else {
-            this.entryPaint.addSVG(imageSrc);
+            axios.get(imageSrc).then(({ data }) => {
+                this.entryPaint.addSVG(stringToElement(data));
+            });
         }
     }
 
