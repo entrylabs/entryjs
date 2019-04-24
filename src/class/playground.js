@@ -432,6 +432,9 @@ Entry.Playground = class {
                             data.isBlockMouseEnter = false;
                             this.blockBackPackAreaEvent.trigger('mouseleave');
                         }
+                    } else {
+                        this.objectBackPackAreaEvent.trigger('mouseleave');
+                        this.blockBackPackAreaEvent.trigger('mouseleave');
                     }
                 },
                 { passive: false }
