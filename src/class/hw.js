@@ -314,6 +314,10 @@ Entry.HW = class {
         Entry.dispatchEvent('hwDownload', 'ino');
     }
 
+    requestModulePage() {
+        Entry.dispatchEvent('hwModule');
+    }
+
     setZero() {
         if (!Entry.hw.hwModule) {
             return;

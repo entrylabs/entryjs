@@ -872,7 +872,7 @@ Entry.addEventListener = function(eventName, fn) {
 /**
  * Dispatch event
  * @param {!string} eventName
- * @param {?} params
+ * @param {*} args
  */
 Entry.dispatchEvent = function(eventName, ...args) {
     if (!this.events_) {

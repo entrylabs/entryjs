@@ -308,6 +308,27 @@ function getBlocks() {
                 ],
             },
         },
+        open_hardware_module: {
+            skeleton: 'basic_button',
+            template: '%1',
+            isNotFor: ['arduinoDisconnected'],
+            color: '#eee',
+            params: [
+                {
+                    type: 'Text',
+                    text: '????',
+                    color: '#4f80ff',
+                    align: 'center',
+                },
+            ],
+            events: {
+                mousedown: [
+                    function() {
+                        Entry.hw.requestModulePage();
+                    },
+                ],
+            },
+        },
         download_guide: {
             skeleton: 'basic_button',
             isNotFor: ['arduinoDisconnected'],
