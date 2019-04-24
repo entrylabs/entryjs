@@ -73,6 +73,8 @@ Entry.EntryObject = class {
         }
 
         this._isContextMenuEnabled = true;
+
+        this.isFolded = false;
     }
 
     /**
@@ -1089,10 +1091,32 @@ Entry.EntryObject = class {
         return rotationWrapperView;
     }
 
+    setObjectFold(isFold, isPass) {
+        const $view = $(this.view_);
+        if (isFold) {
+            $view.addClass('fold');
+        } else {
+            $view.removeClass('fold');
+        }
+        if (!isPass) {
+            this.isFolded = isFold;
+        }
+    }
+
+    resetObjectFold() {
+        this.setObjectFold(this.isFolded);
+    }
+
     createInformationView() {
         const informationView = Entry.createElement('div').addClass(
             'entryObjectInformationWorkspace'
         );
+        informationView.bindOnClick(() => {
+            const $view = $(this.view_);
+            if ($view.hasClass('selectedObject')) {
+                this.setObjectFold(!this.isFolded);
+            }
+        });
         return informationView;
     }
 

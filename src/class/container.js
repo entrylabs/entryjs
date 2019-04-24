@@ -26,6 +26,8 @@ Entry.Container = class Container {
          */
         this.cachedPicture = {};
 
+        this.selectedObject = null;
+
         /**
          * variable for canvas input
          * @type {String}
@@ -194,6 +196,11 @@ Entry.Container = class Container {
                         border: 'solid 1px #728997',
                     },
                     onDragActionChange: (isDragging, key) => {
+                        if (isDragging) {
+                            this.selectedObject.setObjectFold(isDragging, true);
+                        } else {
+                            this.selectedObject.resetObjectFold();
+                        }
                         this.dragObjectKey = key;
                         this.isObjectDragging = isDragging;
                     },
@@ -492,6 +499,7 @@ Entry.Container = class Container {
                     view.addClass(className);
                 } else {
                     view.removeClass(className);
+                    o.setObjectFold(false);
                 }
             }
 
@@ -548,6 +556,7 @@ Entry.Container = class Container {
         if (Entry.type !== 'minimize' && Entry.engine.isState('stop')) {
             Entry.stage.selectObject(object);
         }
+        this.selectedObject = object;
     }
 
     /**
