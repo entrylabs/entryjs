@@ -645,7 +645,6 @@ Entry.Utils.setSVGDom = function(SVGDom) {
 Entry.Utils.bindIOSDeviceWatch = function() {
     const Agent = Entry.Utils.mobileAgentParser();
     if (Agent.apple.device) {
-        console.log('APPLE! MOBILE DEVICE');
         let lastHeight = window.innerHeight || document.documentElement.clientHeight;
         let lastSVGDomHeight = 0;
         if (Entry.Utils.SVGDom) {
@@ -669,6 +668,8 @@ Entry.Utils.bindIOSDeviceWatch = function() {
         $(window).on('orientationchange', () => {
             Entry.windowResized.notify();
         });
+
+        window.addEventListener('pagehide', Entry.beforeUnload);
     }
 };
 
