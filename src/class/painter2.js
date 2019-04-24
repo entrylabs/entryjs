@@ -129,13 +129,13 @@ Entry.Painter = class Painter {
         isChangeShape && (this.isImport = true);
         if (cache) {
             this.entryPaint.setPaperJSON(cache);
-        } else if (ext === 'png') {
-            this.entryPaint.addBitmap(imageSrc);
-            this.cache[imageSrc] = this.entryPaint.getPaperJSON();
-        } else {
+        } else if (ext === 'svg') {
             axios.get(imageSrc).then(({ data }) => {
                 this.entryPaint.addSVG(stringToElement(data));
             });
+        } else {
+            this.entryPaint.addBitmap(imageSrc);
+            this.cache[imageSrc] = this.entryPaint.getPaperJSON();
         }
     }
 
