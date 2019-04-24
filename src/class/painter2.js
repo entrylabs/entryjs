@@ -47,7 +47,7 @@ Entry.Painter = class Painter {
     hide() {}
 
     getExt(filePath) {
-        return filePath.split('.').pop();
+        return filePath.split('.').pop() === 'svg' ? 'svg' : 'png';
     }
 
     changePicture(picture = {}) {
