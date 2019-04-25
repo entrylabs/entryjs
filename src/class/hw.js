@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @fileoverview HW object class for connect arduino.
  */
 'use strict';
@@ -82,7 +82,7 @@ Entry.HW = class {
                 let portData = {};
                 if (typeof data === 'string') {
                     switch (data) {
-                        case '_disconnectHardware': {
+                        case 'disconnectHardware': {
                             this._disconnectHardware();
                             return;
                         }
@@ -158,6 +158,7 @@ Entry.HW = class {
         }
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * 하드웨어 프로그램에 moduleName 에 맞는 파일을 요청하도록 신호를 보낸다.
      * entryjs 가 하드웨어 프로그램과 연동되어있는 경우만 실행된다.
