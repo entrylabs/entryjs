@@ -18,8 +18,8 @@ Entry.HW = class {
     }
 
     // 원격 모듈 업로드를 위한 주소
-    get hardwareModuleUploadAddress() {
-        return `${this.connectedAddress || this.httpServerAddress}/module`;
+    _getHardwareModuleUploadAddress(moduleName) {
+        return `${this.connectedAddress || this.httpServerAddress}/module/${moduleName}`;
     }
 
     constructor() {
@@ -39,7 +39,7 @@ Entry.HW = class {
 
         this.hwInfo = Entry.HARDWARE_LIST;
 
-        // this.hwPopupCreate();
+        this.hwPopupCreate();
         this._initSocket();
 
         Entry.addEventListener('stop', this.setZero);
@@ -154,15 +154,15 @@ Entry.HW = class {
     }
 
     /**
-     * 하드웨어 프로그램 내 http 서버를 통해 모듈파일을 전송한다.
-     * 소켓이 정상연결되어있는 경우만 전송한다.
-     * entryjs 외부에서 사용한다.
-     * @param {File} file
+     * 하드웨어 프로그램에 moduleName 에 맞는 파일을 요청하도록 신호를 보낸다.
+     * entryjs 가 하드웨어 프로그램과 연동되어있는 경우만 실행된다.
+     * 이 함수는 entryjs 외부에서 사용한다.
+     * @param {string} moduleName
      */
-    applyExternalModule(file) {
-        if (this.connected && file instanceof File) {
+    requestHardwareModule(moduleName) {
+        if (this.connected) {
             axios
-                .post(this.hardwareModuleUploadAddress, file)
+                .get(this._getHardwareModuleUploadAddress(moduleName))
                 .then(() => {
                     // 하드웨어 연결 성공, 스테이터스 변화 필요
                     console.log('Hardware connected');

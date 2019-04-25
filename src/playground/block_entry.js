@@ -311,7 +311,7 @@ function getBlocks() {
         open_hardware_module: {
             skeleton: 'basic_button',
             template: '%1',
-            isNotFor: ['arduinoDisconnected'],
+            isNotFor: ['arduinoDisconnected', 'arduinoConnected', 'arduinoConnect'],
             color: '#eee',
             params: [
                 {
