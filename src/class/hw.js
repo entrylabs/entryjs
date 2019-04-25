@@ -12,6 +12,11 @@ Entry.HW = class {
         return 'https://hardware.playentry.org:23518';
     }
 
+    // 하드웨어 프로그램 접속용 주소 (https)
+    get httpsServerAddress2() {
+        return 'https://hardware.play-entry.org:23518';
+    }
+
     // 하드웨어 프로그램 접속용 주소 (http)
     get httpServerAddress() {
         return 'http://127.0.0.1:23518';
@@ -120,7 +125,7 @@ Entry.HW = class {
             this.socketIo = connectHttpsWebSocket(this.httpServerAddress);
         }
         this.tlsSocketIo1 = connectHttpsWebSocket(this.httpsServerAddress);
-        this.tlsSocketIo2 = connectHttpsWebSocket(this.httpsServerAddress);
+        this.tlsSocketIo2 = connectHttpsWebSocket(this.httpsServerAddress2);
 
         Entry.dispatchEvent('hwChanged');
     }
