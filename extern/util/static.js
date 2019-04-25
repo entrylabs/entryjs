@@ -598,8 +598,9 @@ EntryStatic.objectSubCategories = {
     ],
 };
 
+/* eslint-disable */
 Object.defineProperty(EntryStatic, 'fonts', {
-    get() {
+    get: function() {
         return [
             {
                 name: Lang.Fonts.batang,
@@ -791,7 +792,9 @@ EntryStatic.getQuestionCategoryData = function() {
 };
 
 EntryStatic.getDefaultFontFamily = function() {
-    const { type, fallbackType } = Lang || {};
+    const localLang = Lang || {};
+    const type = localLang.type;
+    const fallbackType = localLang.fallbackType;
     const langType = type || fallbackType || 'en';
     switch (langType) {
         default:
