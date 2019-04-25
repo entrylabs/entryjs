@@ -110,9 +110,9 @@ Entry.Painter = class Painter {
         Entry.stateManager.removeAllPictureCommand();
     }
 
-    async addPicture(picture, isChangeShape) {
+    addPicture(picture, isChangeShape) {
         const image = new Image();
-        const ext = this.getExt(picture.fileurl || picture.label.ko);
+        const { extension = 'png' } = picture;
 
         if (picture.fileurl) {
             image.src = picture.fileurl;
@@ -121,7 +121,7 @@ Entry.Painter = class Painter {
             image.src = `${Entry.defaultPath}/uploads/${picture.filename.substring(
                 0,
                 2
-            )}/${picture.filename.substring(2, 4)}/image/${picture.filename}.${ext}`;
+            )}/${picture.filename.substring(2, 4)}/image/${picture.filename}.${extension}`;
         }
 
         const imageSrc = image.src;
@@ -129,7 +129,7 @@ Entry.Painter = class Painter {
         isChangeShape && (this.isImport = true);
         if (cache) {
             this.entryPaint.setPaperJSON(cache);
-        } else if (ext === 'svg') {
+        } else if (extension === 'svg') {
             axios.get(imageSrc).then(({ data }) => {
                 this.entryPaint.addSVG(stringToElement(data));
             });
