@@ -1312,7 +1312,7 @@ Entry.BlockView = class BlockView {
                     font-family: EntryNG;
                     src: local(NanumGothic), 
                         local(나눔고딕), 
-                        local(나눔고딕OTF), 
+                        local(나눔고딕 Regular), 
                         local(Noto Sans JP Bold), 
                         local(Noto Sans JP); 
                     font-weight: normal; 
