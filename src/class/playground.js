@@ -1727,9 +1727,10 @@ Entry.Playground = class Playground {
         const { Buttons = {} } = Lang || {};
         const { delete: delText = '삭제' } = Buttons;
         removeButton.appendTo(element).innerText = delText;
-        removeButton.bindOnClick(() => {
+        removeButton.bindOnClick((e) => {
             try {
                 if (Entry.playground.object.removePicture(picture.id)) {
+                    e.stopPropagation();
                     Entry.removeElement(element);
                     Entry.dispatchEvent('removePicture', picture);
                     Entry.toast.success(
