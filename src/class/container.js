@@ -201,6 +201,7 @@ Entry.Container = class Container {
                         } else {
                             this.selectedObject.resetObjectFold();
                         }
+                        Entry.playground.setBackpackPointEvent(isDragging);
                         this.dragObjectKey = key;
                         this.isObjectDragging = isDragging;
                     },

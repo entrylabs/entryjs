@@ -447,6 +447,12 @@ Entry.Playground = class {
         };
     }
 
+    setBackpackPointEvent(canPointEvent) {
+        this.backPack.data = {
+            canPointEvent,
+        };
+    }
+
     getPosition(event) {
         const position = {
             x: 0,

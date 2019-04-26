@@ -723,7 +723,6 @@ Entry.BlockView = class BlockView {
         const dragMode = this.dragMode;
         const block = this.block;
         const workspaceMode = board.workspace.getMode();
-        const backPackMode = !this.fromBlockMenu && Entry.playground.backPack.isShow;
         this.removeDragging();
         this.set({ visible: true });
         this.dragMode = Entry.DRAG_MODE_NONE;
@@ -1041,10 +1040,12 @@ Entry.BlockView = class BlockView {
 
     addDragging() {
         this.svgGroup.addClass('dragging');
+        Entry.playground.setBackpackPointEvent(true);
     }
 
     removeDragging() {
         this.svgGroup.removeClass('dragging');
+        Entry.playground.setBackpackPointEvent(false);
     }
 
     addSelected() {
