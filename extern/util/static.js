@@ -797,8 +797,6 @@ EntryStatic.getDefaultFontFamily = function() {
     const fallbackType = localLang.fallbackType;
     const langType = type || fallbackType || 'en';
     switch (langType) {
-        case 'jp':
-            return "'Nanum Gothic', NanumGothic, 나눔고딕, NanumGothicWeb, '맑은 고딕', 'Malgun Gothic', Dotum";
         default:
             return "EntryNG, NanumGothic, 나눔고딕, NanumGothicWeb, '맑은 고딕', 'Malgun Gothic', Dotum";
     }
