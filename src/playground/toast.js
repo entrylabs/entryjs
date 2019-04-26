@@ -38,6 +38,7 @@ export default class Toast {
     }, 3000);
 
     destroy() {
+        this.removeToast.cancel();
         delete this.$boardView;
         delete this.board;
         delete this.$view;
