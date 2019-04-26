@@ -101,6 +101,7 @@ Entry.HW = class {
 
         socket.on('disconnect', () => {
             // this._initSocket();
+            this.disconnectedSocket();
         });
 
         return socket;
@@ -191,21 +192,23 @@ Entry.HW = class {
     }
 
     disconnectedSocket() {
-        this.tlsSocketIo1 && this.tlsSocketIo1.close();
-        this.tlsSocketIo2 && this.tlsSocketIo2.close();
-        this.socketIo && this.socketIo.close();
+        if (this.connected) {
+            this.tlsSocketIo1 && this.tlsSocketIo1.close();
+            this.tlsSocketIo2 && this.tlsSocketIo2.close();
+            this.socketIo && this.socketIo.close();
 
-        Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
-        this.socket = undefined;
-        this.connected = false;
-        this.selectedDevice = undefined;
-        this.hwModule = undefined;
-        Entry.dispatchEvent('hwChanged');
-        Entry.toast.alert(
-            '하드웨어 프로그램 연결 종료',
-            '하드웨어 프로그램과의 연결이 종료되었습니다.',
-            false
-        );
+            Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
+            this.socket = undefined;
+            this.connected = false;
+            this.selectedDevice = undefined;
+            this.hwModule = undefined;
+            Entry.dispatchEvent('hwChanged');
+            Entry.toast.alert(
+                '하드웨어 프로그램 연결 종료',
+                '하드웨어 프로그램과의 연결이 종료되었습니다.',
+                false
+            );
+        }
     }
 
     setDigitalPortValue(port, value) {
