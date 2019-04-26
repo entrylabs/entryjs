@@ -1310,10 +1310,10 @@ Entry.BlockView = class BlockView {
             style.textContent = `
                 @font-face {
                     font-family: 'EntryNG';
-                    src: url('https://playentry.org/fonts/NanumGothic-Regular.eot?#iefix') format('eot'), 
-                        url('https://playentry.org/fonts/NanumGothic-Regular.woff') format('woff'), 
-                        url('https://playentry.org/fonts/NanumGothic-Regular.woff2') format('woff2'), 
-                        url('https://playentry.org/fonts/NanumGothic-Regular.ttf') format('truetype'); 
+                    src: url('https://playentry.org/fonts/NanumGothic-Bold.eot?#iefix') format('eot'), 
+                        url('https://playentry.org/fonts/NanumGothic-Bold.woff') format('woff'), 
+                        url('https://playentry.org/fonts/NanumGothic-Bold.woff2') format('woff2'), 
+                        url('https://playentry.org/fonts/NanumGothic-Bold.ttf') format('truetype'); 
                     font-weight: normal; 
                     font-style: normal; 
                 }
