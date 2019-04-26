@@ -316,7 +316,7 @@ function getBlocks() {
             params: [
                 {
                     type: 'Text',
-                    text: '????',
+                    text: '모듈 로드하기',
                     color: '#4f80ff',
                     align: 'center',
                 },
@@ -325,6 +325,27 @@ function getBlocks() {
                 mousedown: [
                     function() {
                         Entry.hw.requestModulePage();
+                    },
+                ],
+            },
+        },
+        disconnect_hardware: {
+            skeleton: 'basic_button',
+            template: '%1',
+            isNotFor: ['arduinoConnected', 'arduinoConnect'],
+            color: '#eee',
+            params: [
+                {
+                    type: 'Text',
+                    text: '하드웨어 연결끊기',
+                    color: '#4f80ff',
+                    align: 'center',
+                },
+            ],
+            events: {
+                mousedown: [
+                    function() {
+                        Entry.hw.disconnectedSocket();
                     },
                 ],
             },

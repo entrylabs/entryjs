@@ -100,7 +100,7 @@ Entry.HW = class {
         });
 
         socket.on('disconnect', () => {
-            this._initSocket();
+            // this._initSocket();
         });
 
         return socket;
