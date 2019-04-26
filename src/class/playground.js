@@ -380,51 +380,53 @@ Entry.Playground = class {
         const globalEvent = new EntryEvent(document);
         globalEvent.data = {};
         this.globalEvent = globalEvent;
-        this.backPack.on('show', () => {
-            globalEvent.off().on(
-                'touchmove.itemdrag mousemove.itemdrag',
-                (e) => {
-                    const isDragging = this.backPack.getData('isDragging');
-                    if (isDragging) {
-                        const point = this.getPosition(e);
-                        const { data } = globalEvent;
-                        const { dom: objectDom } = this.objectBackPackEvent;
-                        const { dom: blockDom } = this.blockBackPackEvent;
-                        const objectRect = this.getBoundingClientRectMemo(objectDom);
-                        const blockRect = this.getBoundingClientRectMemo(blockDom, {
-                            width: -134,
-                            right: -134,
-                        });
-                        if (!data.isObjectMouseEnter && this.isPointInRect(point, objectRect)) {
-                            data.isObjectMouseEnter = true;
-                            this.objectBackPackEvent.trigger('enteritem');
-                        } else if (
-                            data.isObjectMouseEnter &&
-                            !this.isPointInRect(point, objectRect)
-                        ) {
-                            data.isObjectMouseEnter = false;
+
+        this.backPack.on('onChangeDragging', (isDragging) => {
+            if (isDragging) {
+                globalEvent.off().on(
+                    'touchmove.itemdrag mousemove.itemdrag',
+                    (e) => {
+                        const isDragging = this.backPack.getData('isDragging');
+                        if (isDragging) {
+                            const point = this.getPosition(e);
+                            const { data } = globalEvent;
+                            const { dom: objectDom } = this.objectBackPackEvent;
+                            const { dom: blockDom } = this.blockBackPackEvent;
+                            const objectRect = this.getBoundingClientRectMemo(objectDom);
+                            const blockRect = this.getBoundingClientRectMemo(blockDom, {
+                                width: -134,
+                                right: -134,
+                            });
+                            if (!data.isObjectMouseEnter && this.isPointInRect(point, objectRect)) {
+                                data.isObjectMouseEnter = true;
+                                this.objectBackPackEvent.trigger('enteritem');
+                            } else if (
+                                data.isObjectMouseEnter &&
+                                !this.isPointInRect(point, objectRect)
+                            ) {
+                                data.isObjectMouseEnter = false;
+                                this.objectBackPackAreaEvent.trigger('leaveitem');
+                            }
+                            if (!data.isBlockMouseEnter && this.isPointInRect(point, blockRect)) {
+                                data.isBlockMouseEnter = true;
+                                this.blockBackPackEvent.trigger('enteritem');
+                            } else if (
+                                data.isBlockMouseEnter &&
+                                !this.isPointInRect(point, blockRect)
+                            ) {
+                                data.isBlockMouseEnter = false;
+                                this.blockBackPackAreaEvent.trigger('leaveitem');
+                            }
+                        } else {
                             this.objectBackPackAreaEvent.trigger('leaveitem');
-                        }
-                        if (!data.isBlockMouseEnter && this.isPointInRect(point, blockRect)) {
-                            data.isBlockMouseEnter = true;
-                            this.blockBackPackEvent.trigger('enteritem');
-                        } else if (
-                            data.isBlockMouseEnter &&
-                            !this.isPointInRect(point, blockRect)
-                        ) {
-                            data.isBlockMouseEnter = false;
                             this.blockBackPackAreaEvent.trigger('leaveitem');
                         }
-                    } else {
-                        this.objectBackPackAreaEvent.trigger('leaveitem');
-                        this.blockBackPackAreaEvent.trigger('leaveitem');
-                    }
-                },
-                { passive: false }
-            );
-        });
-        this.backPack.on('hide', () => {
-            globalEvent.off();
+                    },
+                    { passive: false }
+                );
+            } else {
+                globalEvent.off();
+            }
         });
 
         this.backPack.data = {
