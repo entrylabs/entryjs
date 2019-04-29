@@ -7732,7 +7732,7 @@ function inheritBlockSchema() {
 
 function assignBlocks() {
     Entry.block.converters = getConverters();
-    Entry.block = Object.assign({}, getBlocks(), blocks.getBlocks());
+    Entry.block = Object.assign(Entry.block, getBlocks(), blocks.getBlocks());
     if (EntryStatic.isPracticalCourse) {
         Object.assign(
             Entry.block,
