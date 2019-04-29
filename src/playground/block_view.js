@@ -1313,7 +1313,7 @@ Entry.BlockView = class BlockView {
                     src: local(NanumGothic), 
                         local(나눔고딕), 
                         local(나눔고딕 Regular), 
-                        local(Noto Sans JP Bold), 
+                        local(Noto Sans JP Regular), 
                         local(Noto Sans JP); 
                     font-weight: normal; 
                     font-style: normal; 
