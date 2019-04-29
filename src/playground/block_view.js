@@ -1688,7 +1688,7 @@ Entry.BlockView = class BlockView {
                 .replace('(defs)', new XMLSerializer().serializeToString(defs[0]))
                 .replace(/>\s+/g, '>')
                 .replace(/\s+</g, '<');
-            svgData = svgData.replace(/NS\d+:href/g, 'xlink:href');
+            svgData = svgData.replace(/NS\d+:href/gi, 'xlink:href');
             let src = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgData)))}`;
             svgData = null;
             if (notPng) {
