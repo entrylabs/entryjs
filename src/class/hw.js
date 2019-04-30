@@ -3,6 +3,8 @@
  */
 'use strict';
 
+import HardwareSocketMessageHandler from './hardware/hardwareSocketMessageHandler';
+
 require('../playground/blocks');
 
 Entry.HW = class {
@@ -70,26 +72,12 @@ Entry.HW = class {
             socket.mode = mode;
         });
 
-        socket.on('message', ({ data }) => {
-            if (data) {
-                let portData = {};
-                if (typeof data === 'string') {
-                    switch (data) {
-                        case 'disconnectHardware': {
-                            this._disconnectHardware();
-                            return;
-                        }
-                        default: {
-                            portData = JSON.parse(data);
-                            break;
-                        }
-                    }
-                } else if (_.isObject(data)) {
-                    portData = data;
-                }
-                this.checkDevice(portData);
-                this.updatePortData(portData);
-            }
+        const messageHandler = new HardwareSocketMessageHandler(socket);
+        messageHandler.addEventListener('init', this.requestHardwareModule.bind(this));
+        messageHandler.addEventListener('disconnect', this._disconnectHardware.bind(this));
+        messageHandler.addEventListener('data', (portData) => {
+            this.checkDevice(portData);
+            this.updatePortData(portData);
         });
 
         socket.on('disconnect', () => {
@@ -195,7 +183,7 @@ Entry.HW = class {
             Entry.toast.alert(
                 '하드웨어 프로그램 연결 종료',
                 '하드웨어 프로그램과의 연결이 종료되었습니다.',
-                false
+                false,
             );
         }
     }
@@ -260,8 +248,8 @@ Entry.HW = class {
                 .concat(
                     this.sendQueue.readablePorts.slice(
                         target + 1,
-                        this.sendQueue.readablePorts.length
-                    )
+                        this.sendQueue.readablePorts.length,
+                    ),
                 );
         }
     }
@@ -406,7 +394,7 @@ Entry.HW = class {
             },
             runViewer(sUrl, fpCallback) {
                 this._w.document.write(
-                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`
+                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`,
                 );
                 let nCounter = 0;
                 const bNotInstalled = false;
@@ -480,10 +468,11 @@ Entry.HW = class {
         function executeIe(customUrl) {
             navigator.msLaunchUri(
                 customUrl,
-                () => {},
+                () => {
+                },
                 () => {
                     hw.popupHelper.show('hwDownload', true);
-                }
+                },
             );
         }
 
