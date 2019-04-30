@@ -21,11 +21,6 @@ Entry.HW = class {
         return 'http://127.0.0.1:23518';
     }
 
-    // 원격 모듈 업로드를 위한 주소
-    _getHardwareModuleUploadAddress(moduleName) {
-        return `${this.connectedAddress || this.httpServerAddress}/module/${moduleName}`;
-    }
-
     constructor() {
         this.sessionRoomId = localStorage.getItem('entryhwRoomId');
         if (!this.sessionRoomId) {
@@ -64,7 +59,6 @@ Entry.HW = class {
         socket.io.timeout(1000);
         socket.on('connect', () => {
             this.socketType = 'WebSocket';
-            this.connectedAddress = url;
             this._initHardware(socket);
         });
 
