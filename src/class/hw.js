@@ -70,7 +70,7 @@ Entry.HW = class {
             socket.mode = mode;
         });
 
-        socket.on('message', ({ data, version }) => {
+        socket.on('message', ({ data }) => {
             if (data) {
                 let portData = {};
                 if (typeof data === 'string') {
@@ -87,7 +87,7 @@ Entry.HW = class {
                 } else if (_.isObject(data)) {
                     portData = data;
                 }
-                this.checkDevice(portData, version);
+                this.checkDevice(portData);
                 this.updatePortData(portData);
             }
         });
@@ -326,7 +326,7 @@ Entry.HW = class {
         Entry.hw.hwModule.setZero();
     }
 
-    checkDevice(data, version) {
+    checkDevice(data) {
         if (data.company === undefined) {
             return;
         }
