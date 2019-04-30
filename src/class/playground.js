@@ -1908,14 +1908,22 @@ Entry.Playground = class {
     }
 
     openDropDown = (options, target, callback, closeCallback) => {
+        const containers = $('.entry-widget-dropdown');
+        if (containers.length > 0) {
+            closeCallback();
+            return containers.remove();
+        }
+
         const container = Entry.Dom('div', {
             class: 'entry-widget-dropdown',
             parent: $('body'),
         })[0];
+
         const dropdownWidget = new Dropdown({
             data: {
                 items: options,
                 positionDom: target,
+                outsideExcludeDom:[target],
                 onOutsideClick: () => {
                     if (dropdownWidget) {
                         closeCallback();
