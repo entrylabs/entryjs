@@ -4,7 +4,6 @@
 'use strict';
 
 require('../playground/blocks');
-import axios from 'axios';
 
 Entry.HW = class {
     // 하드웨어 프로그램 접속용 주소 (https)
@@ -167,17 +166,13 @@ Entry.HW = class {
      * @param {string} moduleName
      */
     requestHardwareModule(moduleName) {
-        if (this.connected) {
-            axios
-                .get(this._getHardwareModuleUploadAddress(moduleName))
-                .then(() => {
-                    // 하드웨어 연결 성공, 스테이터스 변화 필요
-                    console.log('Hardware connected');
-                })
-                .catch((e) => {
-                    // 하드웨어 연결 실패, 스테이터스 변화 필요
-                    console.error(e);
-                });
+        if (this.connected && this.socket) {
+            this._sendSocketMessage({
+                action: 'init',
+                data: JSON.stringify({ name: moduleName }),
+                mode: this.socket.mode,
+                type: 'utf8',
+            });
         } else {
             // 하드웨어가 연결되어있지 않은 경우의 처리
             console.error('entry hardware is not connected or file is invalid');
@@ -278,20 +273,23 @@ Entry.HW = class {
     }
 
     update() {
-        if (!this.socket) {
-            return;
-        }
-        if (this.socket.disconnected) {
+        if (!this.socket || this.socket.disconnected) {
             return;
         }
         if (this.hwModule && this.hwModule.sendMessage) {
             this.hwModule.sendMessage(this);
         } else {
-            this.socket.emit('message', {
+            this._sendSocketMessage({
                 data: JSON.stringify(this.sendQueue),
                 mode: this.socket.mode,
                 type: 'utf8',
             });
+        }
+    }
+
+    _sendSocketMessage(message) {
+        if (this.connected && this.socket && !this.socket.disconnected) {
+            this.socket.emit('message', message);
         }
     }
 
