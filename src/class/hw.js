@@ -74,6 +74,13 @@ Entry.HW = class {
 
         const messageHandler = new HardwareSocketMessageHandler(socket);
         messageHandler.addEventListener('init', this.requestHardwareModule.bind(this));
+        messageHandler.addEventListener('state', (statement) => {
+            switch (statement) {
+                case 'disconnectHardware':
+                    this._disconnectHardware();
+                    break;
+            }
+        });
         messageHandler.addEventListener('disconnect', this._disconnectHardware.bind(this));
         messageHandler.addEventListener('data', (portData) => {
             this.checkDevice(portData);
