@@ -81,6 +81,8 @@ Entry.HW = class {
                     break;
             }
         });
+
+        // 1.7.0 버전 이전 하드웨어 프로그램 종료로직 대응으로 남겨두어야 한다.
         messageHandler.addEventListener('disconnect', this._disconnectHardware.bind(this));
         messageHandler.addEventListener('data', (portData) => {
             this.checkDevice(portData);
