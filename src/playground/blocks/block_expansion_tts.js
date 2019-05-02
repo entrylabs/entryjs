@@ -164,7 +164,7 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/sound_icon.svg',
+                    img: 'block_icon/expansion_icon.png',
                     size: 11,
                 },
             ],
@@ -233,7 +233,7 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
                 params.getPitch(),
                 {
                     type: 'Indicator',
-                    img: 'block_icon/sound_icon.svg',
+                    img: 'block_icon/expansion_icon.png',
                     size: 11,
                 },
             ],
