@@ -1372,8 +1372,6 @@ Entry.BlockView = class BlockView {
                             this.processSvg(svgGroup, scale, defs, notPng)
                                 .then((data) => {
                                     resolve(data);
-                                    window.a = data.src;
-                                    console.log(data.src);
                                 })
                                 .catch((err) => {
                                     reject(err);
