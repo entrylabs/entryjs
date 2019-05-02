@@ -4,7 +4,8 @@
  * action
  * - state { statement: String } : 현재 상태를 정의한다. 하드웨어의 연결 상태 체크용
  * - init { name: String } : 하드웨어 프로그램에 모듈을 다운받도록 요청
- * - TODO [default] { anyObject for data handle }: 이전의 hw.js 에 있는 로직을 그대로 복사. 수정요
+ * - default { anyObject for data handle }: 이전의 hw.js 에 있는 로직을 그대로 복사. 과거 코드 대응
+ *   - disconnect : 이전 disconnectHardware 와 동일
  */
 export default class {
     constructor(socket) {

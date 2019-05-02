@@ -10,20 +10,6 @@ const VARIABLE = 'variable';
 const HW = 'arduino';
 const splitterHPadding = 20;
 
-function _buildCategoryCodes(blocks, category) {
-    return blocks.reduce((threads, type) => {
-        const block = Entry.block[type];
-        if (!block || !block.def) {
-            return [...threads, [{ type, category }]];
-        } else {
-            return (block.defs || [block.def]).reduce(
-                (threads, d) => [...threads, [Object.assign(d, { category })]],
-                threads
-            );
-        }
-    }, []);
-}
-
 class BlockMenu {
     constructor(dom, align, categoryData, scroll, readOnly) {
         Entry.Model(this, false);
@@ -124,6 +110,20 @@ class BlockMenu {
         closeBlock: null,
         selectedBlockView: null,
     };
+
+    _buildCategoryCodes(blocks, category) {
+        return blocks.reduce((threads, type) => {
+            const block = Entry.block[type];
+            if (!block || !block.def) {
+                return [...threads, [{ type, category }]];
+            } else {
+                return (block.defs || [block.def]).reduce(
+                    (threads, d) => [...threads, [Object.assign(d, { category })]],
+                    threads
+                );
+            }
+        }, []);
+    }
 
     _generateView(categoryData) {
         const parent = this.view;
@@ -696,7 +696,7 @@ class BlockMenu {
             }
         }
 
-        _buildCategoryCodes(blocks, category).forEach((t) => {
+        this._buildCategoryCodes(blocks, category).forEach((t) => {
             if (!t || !t[0]) {
                 return;
             }
@@ -1084,7 +1084,7 @@ class BlockMenu {
             return;
         }
 
-        _buildCategoryCodes(blocks.filter((b) => !this.checkBanClass(Entry.block[b])), HW).forEach(
+        this._buildCategoryCodes(blocks.filter((b) => !this.checkBanClass(Entry.block[b])), HW).forEach(
             (t) => {
                 if (shouldHide) {
                     t[0].x = -99999;
