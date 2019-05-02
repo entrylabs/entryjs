@@ -567,82 +567,67 @@ EntryStatic.fonts = [
         name: Lang.Fonts.batang,
         family: 'KoPub Batang',
         url: '/css/kopubbatang.css',
+        visible: false,
     },
     {
         name: Lang.Fonts.jeju_hallasan,
         family: 'Jeju Hallasan',
         url: '/css/jejuhallasan.css',
+        visible: false,
     },
-    {
-        name: Lang.Fonts.gothic_coding,
-        family: 'Nanum Gothic Coding',
-        url: '/css/nanumgothiccoding.css',
-    },
-
     {
         name: Lang.Fonts.gothic,
         family: 'Nanum Gothic',
         url: '/css/nanumgothic.css',
+        visible: true,
     },
     {
         name: Lang.Fonts.myeongjo,
         family: 'Nanum Myeongjo',
         url: '/css/nanummyeongjo.css',
+        visible: true,
     },
     {
         name: Lang.Fonts.pen_script,
         family: 'Nanum Pen Script',
         url: '/css/nanumpenscript.css',
+        visible: true,
     },
     {
         name: Lang.Fonts.square_round,
-        family: 'Nanum Pen Script',
+        family: 'NanumSquareRound',
         url: '/css/square_round.css',
+        visible: true,
+    },
+    {
+        name: Lang.Fonts.gothic_coding,
+        family: 'Nanum Gothic Coding',
+        url: '/css/nanumgothiccoding.css',
+        visible: true,
     },
     {
         name: Lang.Fonts.jalnan,
         family: 'yg-jalnan',
         url: '/css/jalnan.css',
+        visible: true,
     },
     {
         name: Lang.Fonts.designhouse,
         family: 'designhouseOTFLight00',
         url: '/css/designhouse.css',
-    },
-    {
-        name: Lang.Fonts.malssami815,
-        family: 'Malssami815',
-        url: '/css/malssami815.css',
+        visible: true,
     },
     {
         name: Lang.Fonts.dunggeunmo,
         family: 'DungGeunMo',
         url: '/css/dunggeunmo.css',
-    },
-    {
-        name: Lang.Fonts.hs_bombaram,
-        family: 'HSBombaram',
-        url: '/css/hs_bombaram.css',
-    },
-    {
-        name: Lang.Fonts.yisunshin,
-        family: 'YiSunShinRegular',
-        url: '/css/yisunshin.css',
-    },
-    {
-        name: Lang.Fonts.goyang,
-        family: 'Goyang',
-        url: '/css/goyang.css',
-    },
-    {
-        name: Lang.Fonts.flower_road,
-        family: 'SangSangFlowerRoad',
-        url: '/css/flower_road.css',
+        visible: true,
     },
     {
         name: Lang.Fonts.uhbeemysen,
         family: 'UhBeemysen',
         url: '/css/uhbeemysen.css',
+        visible: true,
     }
 ];
 

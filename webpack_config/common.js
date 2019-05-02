@@ -52,6 +52,7 @@ module.exports = {
     externals: {
         react: 'React',
         'react-dom': 'ReactDOM',
+        '@entrylabs/tool': 'EntryTool',
     },
     plugins: [
         new CleanWebpackPlugin(['dist'], {

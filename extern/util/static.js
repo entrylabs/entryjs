@@ -1,5 +1,6 @@
 'use strict';
 
+/* eslint-disable */
 var EntryStatic = {};
 
 EntryStatic.objectTypes = ['sprite', 'textBox'];
@@ -688,6 +689,7 @@ EntryStatic.colorSet = {
             VARIABLE: '#CE38CE',
             HARDWARE: '#FFFFFF',
             EXPANSION: '#FF8888',
+            HIDDEN: '#FFFFFF',
         },
     },
     block: {
@@ -705,6 +707,7 @@ EntryStatic.colorSet = {
             FUNC: '#de5c04',
             HARDWARE: '#00b6b1',
             EXPANSION: '#ef6d6d',
+            HIDDEN: '#8aa3b2',
         },
         lighten: {
             START: '#3bce3b',
@@ -720,6 +723,7 @@ EntryStatic.colorSet = {
             FUNC: '#ff7b22',
             HARDWARE: '#78d5d3',
             EXPANSION: '#ffaeae',
+            HIDDEN: '#ffaeae',
         },
         darken: {
             START: '#009400',
@@ -735,6 +739,7 @@ EntryStatic.colorSet = {
             FUNC: '#a14100',
             HARDWARE: '#008380',
             EXPANSION: '#c63f3f',
+            HIDDEN: '#728997',
         },
         emphasize: {
             '#00b400': '#5BC982', //START
