@@ -33,10 +33,11 @@ Entry.moduleManager = new class {
      */
     registerHardwareModule(moduleObject) {
         Entry.HARDWARE_LIST[moduleObject.id] = moduleObject;
-        const blockObjects = this._getTemplatedLanguage(moduleObject);
+        const blockObjects = this._getTemplateAddedBlocks(moduleObject);
         const blockMenu = Entry.getMainWS().blockMenu;
 
         Object.entries(blockObjects).forEach(([blockName, block]) => {
+            block.isNotFor = [''];
             Entry.block[blockName] = block;
         });
         blockMenu
@@ -53,14 +54,14 @@ Entry.moduleManager = new class {
     /**
      * TODO 리로드 되는 경우 다시 불러오지 않기 때문에 템플릿정보 저장이 필요함
      */
-    _getTemplatedLanguage(hw) {
-        if (!hw.getBlocks) {
+    _getTemplateAddedBlocks(moduleObject) {
+        if (!moduleObject.getBlocks) {
             return {};
         }
-        const blockObjects = hw.getBlocks();
-        if (hw.setLanguage) {
-            const hwLang = hw.setLanguage();
-            const data = hwLang[Lang.type] || hwLang[Lang.fallbackType];
+        const blockObjects = moduleObject.getBlocks();
+        if (moduleObject.setLanguage) {
+            const langTemplate = moduleObject.setLanguage();
+            const data = langTemplate[Lang.type] || langTemplate[Lang.fallbackType];
             for (const key in data) {
                 Object.assign(Lang[key], data[key]);
             }
