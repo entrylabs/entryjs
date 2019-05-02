@@ -35,6 +35,11 @@ export default class {
         this.dispatchEvent('init', name);
     }
 
+    /**
+     * 1.7.0 이전 하드웨어 버전의 원활한 통신을 위해 남겨두어야 한다.
+     * @param data
+     * @private
+     */
     _onDefaultAction(data) {
         if (data) {
             let portData = {};

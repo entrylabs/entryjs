@@ -14,6 +14,8 @@ Entry.moduleManager = new class {
             // nothing to do yet
         };
         scriptElement.src = url;
+
+        // noinspection JSCheckFunctionSignatures
         document.body.appendChild(scriptElement);
     }
 
