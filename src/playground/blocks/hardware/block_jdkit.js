@@ -59,7 +59,7 @@ Entry.JDKit = {
         height: 355,
         listPorts: {
             'A6': {
-                name: Lang.template.jdcode_connect,
+                name: '드론연결상태',
                 type: 'input',
                 pos: {
                     x: 0,
@@ -67,7 +67,7 @@ Entry.JDKit = {
                 },
             },
             'A10': {
-                name: Lang.template.jdcode_ready,
+                name: '드론준비상태',
                 type: 'input',
                 pos: {
                     x: 0,
@@ -75,7 +75,7 @@ Entry.JDKit = {
                 },
             },
             'A8': {
-                name: Lang.Blocks.jdcode_tiltx,
+                name: '드론좌우기울기',
                 type: 'input',
                 pos: {
                     x: 0,
@@ -83,7 +83,7 @@ Entry.JDKit = {
                 },
             },
             'A9': {
-                name: Lang.Blocks.jdcode_tilty,
+                name: '드론앞뒤기울기',
                 type: 'input',
                 pos: {
                     x: 0,
@@ -91,7 +91,7 @@ Entry.JDKit = {
                 },
             },
             'A7': {
-                name: Lang.Blocks.jdcode_alt,
+                name: '드론높이',
                 type: 'input',
                 pos: {
                     x: 0,
@@ -135,7 +135,7 @@ Entry.JDKit = {
                 },
             },
             'A5': {
-                name: Lang.Blocks.jdcode_button,
+                name: '버튼',
                 type: 'input',
                 pos: {
                     x: 430,

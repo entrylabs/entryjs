@@ -5,7 +5,7 @@ Entry.ThinkBoard =
 	id: '21.2',	
     name: 'ThinkBoard',
     url: 'http://www.thinkfunedu.co.kr/',
-    imageName: 'ThinkBoard.png',
+    imageName: 'Thinkboard.png',
     title: 
 	{
         "ko": "씽크보드", 

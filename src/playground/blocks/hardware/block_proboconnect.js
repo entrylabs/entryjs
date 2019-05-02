@@ -490,7 +490,7 @@ Entry.ProboConnect.getBlocks = function() {
                 const value = Entry.hw.portData.InputData.Analog[port];
                 var color = Entry.ProboConnect.Color;
 
-                return color[target][0] <= rtn && rtn <= color[target][1];
+                return color[target][0] <= value && value <= color[target][1];
             },
         },
         connect_color_input_r: {
