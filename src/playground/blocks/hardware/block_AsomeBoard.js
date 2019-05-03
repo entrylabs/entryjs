@@ -1,491 +1,159 @@
 'use strict';
 
-const _set = require('lodash/set');
-const _get = require('lodash/get');
-const _merge = require('lodash/merge');
-
-Entry.AsomeBoard = new class AsomeBoard {
-    constructor() {
-        this.id = 'FF.FF';
-        this.url = 'http://www.asomeit.com/';
-        this.imageName = 'AsomeBoard.png';
-        this.title = {
-            en: 'AsomeBoard',
-            ko: 'AsomeBoard',
-        };
-        this.name = 'AsomeBoard';
-        this.blockIds = {};
-        this.isExecBlock = false;
-        this.cacheValues = [];
-        this.cacheIndex = 0;
-        this.radioTime = 0;
-    }
-
-    getHashKey() {
-        let key = new Date().getSeconds().toString(16);
-        if (key.length === 1) {
-            key += ((Math.random() * 16) | 0).toString(16);
+Entry.AsomeBoard = {
+    id: ['FF.FF', '1A.1'],
+    name: 'AsomeBoard',
+    url: 'http://www.arduino.cc/',
+    imageName: 'AsomeBoard.png',
+    title: {
+        ko: 'AsomeBoard',
+        en: 'AsomeBoard',
+    },
+    setZero: function() {
+        if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue = {
+                GET: {},
+                SET: {},
+            };
+        } else {
+            var keySet = Object.keys(Entry.hw.sendQueue.SET);
+            keySet.forEach(function(key) {
+                Entry.hw.sendQueue.SET[key].data = 0;
+                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+            });
         }
-        return Entry.generateHash() + key;
-    }
-
-    setZero() {
-        Entry.hw.sendQueue = {
-            [this.getHashKey()]: {
-                type: 'RST',
-            },
-        };
         Entry.hw.update();
-        this.blockIds = {};
-        this.isExecBlock = false;
-        this.execTimeFlag = false;
-        this.radioTime = 0;
-    }
+    },
+    sensorTypes: {
+        ALIVE: 0,
+        DIGITAL: 1,
+        ANALOG: 2,
+        PWM: 3,
+        SERVO_PIN: 4,
+        TONE: 5,
+        PULSEIN: 6,
+        ULTRASONIC: 7,
+        TIMER: 8,
+    },
+    toneTable: {
+        '0': 0,
+        C: 1,
+        CS: 2,
+        D: 3,
+        DS: 4,
+        E: 5,
+        F: 6,
+        FS: 7,
+        G: 8,
+        GS: 9,
+        A: 10,
+        AS: 11,
+        B: 12,
+    },
+    toneMap: {
+        '1': [33, 65, 131, 262, 523, 1046, 2093, 4186],
+        '2': [35, 69, 139, 277, 554, 1109, 2217, 4435],
+        '3': [37, 73, 147, 294, 587, 1175, 2349, 4699],
+        '4': [39, 78, 156, 311, 622, 1245, 2849, 4978],
+        '5': [41, 82, 165, 330, 659, 1319, 2637, 5274],
+        '6': [44, 87, 175, 349, 698, 1397, 2794, 5588],
+        '7': [46, 92, 185, 370, 740, 1480, 2960, 5920],
+        '8': [49, 98, 196, 392, 784, 1568, 3136, 6272],
+        '9': [52, 104, 208, 415, 831, 1661, 3322, 6645],
+        '10': [55, 110, 220, 440, 880, 1760, 3520, 7040],
+        '11': [58, 117, 233, 466, 932, 1865, 3729, 7459],
+        '12': [62, 123, 247, 494, 988, 1976, 3951, 7902],
+    },
+    highList: ['high', '1', 'on'],
+    lowList: ['low', '0', 'off'],
+    BlockState: {},
+};
 
-    sendMessage({ socket, sendQueue = {} }) {
-        if (!_.isEmpty(sendQueue)) {
-            const keys = Object.keys(sendQueue);
-            const uniqueKey = this.getHashKey();
-            socket.emit(
-                'message',
-                {
-                    data: JSON.stringify(sendQueue),
-                    mode: socket.mode,
-                    type: 'utf8',
-                    key: uniqueKey,
-                },
-                (data) => {
-                    if (data === uniqueKey) {
-                        keys.forEach((key) => {
-                            delete sendQueue[key];
-                        });
-                    }
-                }
-            );
-        }
-    }
+Entry.AsomeBoard.setLanguage = function() {
+    return {
+        ko: {
+            template: {
+                asomeboard_get_analog_value: 'Analog %1 번 센서값',
+                asomeboard_get_analog_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
+                asomeboard_get_ultrasonic_value: '울트라소닉 Trig %1 Echo %2 센서값',
+                asomeboard_toggle_led: '디지털 %1 번 핀 %2 %3',
+                asomeboard_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                asomeboard_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
+                asomeboard_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
+                asomeboard_get_digital: '디지털 %1 번 센서값',
+            },
+        },
+        en: {
+            template: {
+                asomeboard_get_analog_value: 'Analog %1 Sensor value',
+                asomeboard_get_analog_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
+                asomeboard_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
+                asomeboard_toggle_led: 'Digital %1 Pin %2 %3',
+                asomeboard_digital_pwm: 'Digital %1 Pin %2 %3',
+                asomeboard_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
+                asomeboard_set_servo: 'Set servo pin %1 angle as %2 %3',
+                asomeboard_get_digital: 'Digital %1 Sensor value',
+            },
+        },
+    };
+};
 
-    asyncFlowControl({ script, data }, scope) {
-        if (!this.isExecBlock && !scope.isStart) {
-            const blockId = this.getHashKey();
-            this.isExecBlock = true;
-            scope.isStart = true;
-            scope.timeFlag = 1;
-            this.nowBlockId = blockId;
-            this.blockIds[blockId] = false;
-            _merge(Entry.hw.sendQueue, {
-                [blockId]: data,
-            });
-            Entry.hw.update();
-            setTimeout(() => {
-                scope.timeFlag = 0;
-            });
-            return false;
-        } else if (this.blockIds[this.nowBlockId] && scope.timeFlag === 0) {
-            delete this.blockIds[this.nowBlockId];
-            delete scope.isStart;
-            this.execTimeFlag = 0;
-            this.execTimeFlag = undefined;
-            this.isExecBlock = false;
-            Entry.engine.isContinue = false;
-            return true;
-        }
-        return false;
-    }
-
-    postCallReturn(args) {
-        const { script } = args;
-        if (!this.asyncFlowControl(args, script)) {
-            return Entry.STATIC.BREAK;
-        }
-    }
-
-    checkValue(args) {
-        const { script, key } = args;
-        const { entity, executor } = script;
-        const { scope } = executor;
-        const { cacheValue = {} } = scope;
-        const value = _get(cacheValue, key);
-        if (value) {
-            return value;
-        } else if (!this.asyncFlowControl(args, scope)) {
-            throw new Entry.Utils.AsyncError();
-        }
-    }
-
-    afterSend(data) {
-        // Object.assign(data, {
-        //     OUTPUT: {},
-        // });
-    }
-
-    afterReceive({ blockId = '', RADIO }) {
-        if (blockId in this.blockIds) {
-            this.blockIds[blockId] = true;
-        } else if (RADIO && Entry.engine.isState('run') && RADIO.time > this.radioTime) {
-            this.radioTime = RADIO.time;
-            Entry.engine.fireEvent('AsomeBoardRadioReceive');
-        }
-    }
-}();
 Entry.AsomeBoard.blockMenuBlocks = [
-    //region AsomeBoard
-    'AsomeBoard_led_toggle',
-    'AsomeBoard_get_led',
-    'AsomeBoard_show_string',
-    'AsomeBoard_show_image',
-    'AsomeBoard_get_analog',
-    'AsomeBoard_get_analog_map',
-    'AsomeBoard_get_digital',
-    'AsomeBoard_get_button',
-    'AsomeBoard_get_sensor',
-    'AsomeBoard_get_accelerometer',
-    'AsomeBoard_play_note',
-    'AsomeBoard_change_bpm',
-    'AsomeBoard_set_bpm',
-    // "AsomeBoard_radio_receive_event",
-    //endregion AsomeBoard
+    // 'asomeboard_get_analog_value_map',
+    // 'asomeboard_get_ultrasonic_value',
+    'asomeboard_get_digital',
+    'asomeboard_toggle_led',
+    'asomeboard_digital_pwm',
+    'asomeboard_set_servo',
+    'asomeboard_set_tone',
 ];
+
 Entry.AsomeBoard.getBlocks = function() {
     return {
-        AsomeBoard_led_toggle: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            template: 'LED의 X:%1 Y:%2 %3 %4',
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Dropdown',
-                    options: [['켜기', 'on'], ['끄기', 'off'], ['반전', 'toggle']],
-                    value: 'on',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            class: 'AsomeBoardLed',
-            isNotFor: ['AsomeBoard'],
-            def: {
-                params: [
-                    {
-                        type: 'text',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['0'],
-                    },
-                ],
-                type: 'AsomeBoard_led_toggle',
-            },
-            paramsKeyMap: {
-                X: 0,
-                Y: 1,
-                VALUE: 2,
-            },
-            func: function(sprite, script) {
-                const value = script.getField('VALUE');
-                let x = script.getNumberValue('X');
-                let y = script.getNumberValue('Y');
-                x = Math.max(0, x);
-                x = Math.min(4, x);
-                y = Math.max(0, y);
-                y = Math.min(4, y);
-                const data = {
-                    type: 'SET_LED',
-                    data: {
-                        x,
-                        y,
-                        value,
-                    },
-                };
-                return Entry.AsomeBoard.postCallReturn({
-                    script,
-                    data,
-                });
-            },
-        },
-        AsomeBoard_get_led: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic_boolean_field',
-            statements: [],
-            template: 'LED의 X:%1 Y:%2 상태값',
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-            ],
-            events: {},
-            class: 'AsomeBoardLed',
-            isNotFor: ['AsomeBoard'],
-            def: {
-                params: [
-                    {
-                        type: 'text',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['0'],
-                    },
-                ],
-                type: 'AsomeBoard_get_led',
-            },
-            paramsKeyMap: {
-                X: 0,
-                Y: 1,
-            },
-            func: function(sprite, script) {
-                let x = script.getNumberValue('X');
-                let y = script.getNumberValue('Y');
-                x = Math.max(0, x);
-                x = Math.min(4, x);
-                y = Math.max(0, y);
-                y = Math.min(4, y);
-                const data = {
-                    type: 'GET_LED',
-                    data: {
-                        x,
-                        y,
-                    },
-                };
-                let returnData = Entry.AsomeBoard.checkValue({
-                    script,
-                    data,
-                    key: `LED.${x}.${y}`,
-                });
-                if (!returnData) {
-                    returnData = _get(Entry.hw.portData, ['LED']);
-                    const { executor } = script;
-                    const { scope } = executor;
-                    if (!scope.cacheValue) {
-                        scope.cacheValue = {};
-                    }
-                    _set(scope.cacheValue, `LED.${x}.${y}`, returnData);
-                }
-                return returnData;
-            },
-        },
-        AsomeBoard_show_string: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            template: '%1 출력하기 %2',
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            class: 'AsomeBoardLed',
-            isNotFor: ['AsomeBoard'],
-            def: {
-                params: [
-                    {
-                        type: 'text',
-                        params: ['Hello!'],
-                    },
-                ],
-                type: 'AsomeBoard_show_string',
-            },
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            func: function(sprite, script) {
-                let value = script.getStringValue('VALUE');
-                value = value.replace(
-                    /[^A-Za-z0-9_\`\~\!\@\#\$\%\^\&\*\(\)\-\=\+\\\{\}\[\]\'\"\;\:\<\,\>\.\?\/\s]/gim,
-                    ''
-                );
-                const data = {
-                    type: 'SET_STRING',
-                    data: {
-                        value,
-                    },
-                };
-                return Entry.AsomeBoard.postCallReturn({
-                    script,
-                    data,
-                });
-            },
-        },
-        AsomeBoard_show_image: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            template: '%1 아이콘 출력하기 %2',
+        //region AsomeBoard 아두이노 나노
+        asomeboard_analog_list: {
+            parent: 'arduino_ext_analog_list',
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        ['하트', 0],
-                        ['행복함', 4],
-                        ['삼각형', 32],
-                        ['사각형', 37],
-                        ['다이아몬드', 35],
+                        ['A0', '0'],
                     ],
-                    value: 0,
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
             ],
-            events: {},
-            class: 'AsomeBoardLed',
-            isNotFor: ['AsomeBoard'],
-            def: {
-                type: 'AsomeBoard_show_image',
-            },
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            func: function(sprite, script) {
-                const value = script.getField('VALUE');
-                const data = {
-                    type: 'SET_IMAGE',
-                    data: {
-                        value,
-                    },
-                };
-                return Entry.AsomeBoard.postCallReturn({
-                    script,
-                    data,
-                });
-            },
+            syntax: undefined,
         },
-        AsomeBoard_get_analog: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic_string_field',
-            statements: [],
-            template: '아날로그 핀 %1번 센서값',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['P0', 7], ['P1', 8], ['P2', 9]],
-                    value: 7,
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            class: 'AsomeBoardAnalog',
-            isNotFor: ['AsomeBoard'],
-            def: {
-                type: 'AsomeBoard_get_analog',
-            },
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            func: function(sprite, script) {
-                const value = script.getField('VALUE');
-                const data = {
-                    type: 'GET_ANALOG',
-                    data: {
-                        value,
-                    },
-                };
-                let returnData = Entry.AsomeBoard.checkValue({
-                    script,
-                    data,
-                    key: `GET_ANALOG.${value}`,
-                });
-                if (!returnData) {
-                    returnData = _get(Entry.hw.portData, ['GET_ANALOG']);
-                    const { executor } = script;
-                    const { scope } = executor;
-                    if (!scope.cacheValue) {
-                        scope.cacheValue = {};
-                    }
-                    _set(scope.cacheValue, `GET_ANALOG.${value}`, returnData);
-                }
-                return returnData;
-            },
-        },
-        AsomeBoard_get_analog_map: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic_string_field',
-            statements: [],
-            template: '아날로그 핀 %1번 센서값의 범위를 %2~%3 에서 %4~%5 (으)로 바꾼값',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['P0', 7], ['P1', 8], ['P2', 9]],
-                    value: 7,
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-            ],
-            events: {},
-            class: 'AsomeBoardAnalog',
-            isNotFor: ['AsomeBoard'],
+        asomeboard_get_analog_value: {
+            parent: 'arduino_ext_get_analog_value',
+            template: Lang.template.arduino_ext_get_analog_value,
             def: {
                 params: [
-                    null,
+                    {
+                        type: 'asomeboard_analog_list',
+                    },
+                ],
+                type: 'asomeboard_get_analog_value',
+            },
+            // isNotFor: ['AsomeBoard'],
+            syntax: undefined,
+        },
+        asomeboard_get_analog_value_map: {
+            parent: 'arduino_ext_get_analog_value_map',
+            template: Lang.template.arduino_ext_get_analog_value_map,
+            def: {
+                params: [
+                    {
+                        type: 'asomeboard_get_analog_value',
+                        params: [
+                            {
+                                type: 'asomeboard_analog_list',
+                            },
+                        ],
+                    },
                     {
                         type: 'number',
                         params: ['0'],
@@ -503,507 +171,124 @@ Entry.AsomeBoard.getBlocks = function() {
                         params: ['100'],
                     },
                 ],
-                type: 'AsomeBoard_get_analog_map',
+                type: 'asomeboard_get_analog_value_map',
             },
-            paramsKeyMap: {
-                PORT: 0,
-                VALUE2: 1,
-                VALUE3: 2,
-                VALUE4: 3,
-                VALUE5: 4,
-            },
-            func: function(sprite, script) {
-                const value = script.getField('PORT');
-                const data = {
-                    type: 'GET_ANALOG',
-                    data: {
-                        value,
-                    },
-                };
-                let returnData = Entry.AsomeBoard.checkValue({
-                    script,
-                    data,
-                    key: `GET_ANALOG.${value}`,
-                });
-                if (!returnData) {
-                    returnData = _get(Entry.hw.portData, ['GET_ANALOG']);
-                    const { executor } = script;
-                    const { scope } = executor;
-                    if (!scope.cacheValue) {
-                        scope.cacheValue = {};
-                    }
-                    _set(scope.cacheValue, `GET_ANALOG.${value}`, returnData);
-                }
-
-                var value2 = script.getNumberValue('VALUE2', script);
-                var value3 = script.getNumberValue('VALUE3', script);
-                var value4 = script.getNumberValue('VALUE4', script);
-                var value5 = script.getNumberValue('VALUE5', script);
-                var stringValue4 = script.getValue('VALUE4', script);
-                var stringValue5 = script.getValue('VALUE5', script);
-                var isFloat = false;
-
-                if (
-                    (Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) ||
-                    (Entry.Utils.isNumber(stringValue5) && stringValue5.indexOf('.') > -1)
-                ) {
-                    isFloat = true;
-                }
-
-                if (value2 > value3) {
-                    var swap = value2;
-                    value2 = value3;
-                    value3 = swap;
-                }
-                if (value4 > value5) {
-                    var swap = value4;
-                    value4 = value5;
-                    value5 = swap;
-                }
-                returnData -= value2;
-                returnData = returnData * ((value5 - value4) / (value3 - value2));
-                returnData += value4;
-                returnData = Math.min(value5, returnData);
-                returnData = Math.max(value4, returnData);
-
-                if (isFloat) {
-                    returnData = Math.round(returnData * 100) / 100;
-                } else {
-                    returnData = Math.round(returnData);
-                }
-                return returnData;
-            },
-        },
-        AsomeBoard_get_digital: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic_boolean_field',
-            statements: [],
-            template: '디지털 핀 %1번 센서값',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['P0', 7], ['P1', 8], ['P2', 9]],
-                    value: 7,
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            class: 'AsomeBoardDigital',
             isNotFor: ['AsomeBoard'],
-            def: {
-                type: 'AsomeBoard_get_digital',
-            },
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            func: function(sprite, script) {
-                let value = script.getField('VALUE');
-                const data = {
-                    type: 'GET_DIGITAL',
-                    data: {
-                        value,
-                    },
-                };
-                let returnData = Entry.AsomeBoard.checkValue({
-                    script,
-                    data,
-                    key: `GET_DIGITAL.${value}`,
-                });
-                if (!returnData) {
-                    returnData = _get(Entry.hw.portData, ['GET_DIGITAL']);
-                    const { executor } = script;
-                    const { scope } = executor;
-                    if (!scope.cacheValue) {
-                        scope.cacheValue = {};
-                    }
-                    _set(scope.cacheValue, `GET_DIGITAL.${value}`, returnData);
-                }
-                return returnData;
-            },
+            syntax: undefined,
         },
-        AsomeBoard_get_button: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic_boolean_field',
-            statements: [],
-            template: '%1버튼을 눌렀는가?',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['A', 1], ['B', 2]],
-                    value: 1,
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            class: 'AsomeBoardButton',
-            isNotFor: ['AsomeBoard'],
-            def: {
-                type: 'AsomeBoard_get_button',
-            },
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            func: function(sprite, script) {
-                let value = script.getField('VALUE');
-                const data = {
-                    type: 'GET_BUTTON',
-                    data: {
-                        value,
-                    },
-                };
-                let returnData = Entry.AsomeBoard.checkValue({
-                    script,
-                    data,
-                    key: `GET_BUTTON.${value}`,
-                });
-                if (!returnData) {
-                    returnData = _get(Entry.hw.portData, ['GET_BUTTON']);
-                    const { executor } = script;
-                    const { scope } = executor;
-                    if (!scope.cacheValue) {
-                        scope.cacheValue = {};
-                    }
-                    _set(scope.cacheValue, `GET_BUTTON.${value}`, returnData);
-                }
-                return returnData;
-            },
-        },
-        AsomeBoard_get_sensor: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic_string_field',
-            statements: [],
-            template: '%1 센서값',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['빛', 'lightLevel'],
-                        ['온도', 'temperature'],
-                        ['자기', 'compassHeading'],
-                    ],
-                    value: 'temperature',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            class: 'AsomeBoardSensor',
-            isNotFor: ['AsomeBoard'],
-            def: {
-                type: 'AsomeBoard_get_sensor',
-            },
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            func: function(sprite, script) {
-                let value = script.getField('VALUE');
-                const data = {
-                    type: 'GET_SENSOR',
-                    data: {
-                        value,
-                    },
-                };
-                let returnData = Entry.AsomeBoard.checkValue({
-                    script,
-                    data,
-                    key: `GET_SENSOR.${value}`,
-                });
-                if (!returnData) {
-                    returnData = _get(Entry.hw.portData, ['GET_SENSOR']);
-                    const { executor } = script;
-                    const { scope } = executor;
-                    if (!scope.cacheValue) {
-                        scope.cacheValue = {};
-                    }
-                    _set(scope.cacheValue, `GET_SENSOR.${value}`, returnData);
-                }
-                return returnData;
-            },
-        },
-        AsomeBoard_get_accelerometer: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic_string_field',
-            statements: [],
-            template: '가속도 센서 %1의 값',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['x축', 0], ['y축', 1], ['z축', 2], ['크기', 3]],
-                    value: 'x',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            class: 'AsomeBoardAccelerometer',
-            isNotFor: ['AsomeBoard'],
-            def: {
-                type: 'AsomeBoard_get_accelerometer',
-            },
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            func: function(sprite, script) {
-                let value = script.getField('VALUE');
-                const data = {
-                    type: 'GET_ACCELEROMETER',
-                    data: {
-                        value,
-                    },
-                };
-                let returnData = Entry.AsomeBoard.checkValue({
-                    script,
-                    data,
-                    key: `GET_ACCELEROMETER.${value}`,
-                });
-                if (!returnData) {
-                    returnData = _get(Entry.hw.portData, ['GET_ACCELEROMETER']);
-                    const { executor } = script;
-                    const { scope } = executor;
-                    if (!scope.cacheValue) {
-                        scope.cacheValue = {};
-                    }
-                    _set(scope.cacheValue, `GET_ACCELEROMETER.${value}`, returnData);
-                }
-                return returnData;
-            },
-        },
-        AsomeBoard_play_note: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
-            statements: [],
-            template: '%1음을 %2박자 연주하기 %3',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['Low C', 131],
-                        ['Low C#', 139],
-                        ['Low D', 147],
-                        ['Low Eb', 156],
-                        ['Low E', 165],
-                        ['Low F', 175],
-                        ['Low F#', 185],
-                        ['Low G', 196],
-                        ['Low G#', 208],
-                        ['Low A', 220],
-                        ['Low Bb', 233],
-                        ['Low B', 247],
-                        ['Middle C', 262],
-                        ['Middle C#', 277],
-                        ['Middle D', 294],
-                        ['Middle Eb', 311],
-                        ['Middle E', 330],
-                        ['Middle F', 349],
-                        ['Middle F#', 370],
-                        ['Middle G', 392],
-                        ['Middle G#', 415],
-                        ['Middle A', 440],
-                        ['Middle Bb', 466],
-                        ['Middle B', 494],
-                        ['High C', 523],
-                        ['High C#', 555],
-                        ['High D', 587],
-                        ['High Eb', 622],
-                        ['High E', 659],
-                        ['High F', 698],
-                        ['High F#', 740],
-                        ['High G', 784],
-                        ['High G#', 831],
-                        ['High A', 880],
-                        ['High Bb', 932],
-                        ['High B', 988],
-                    ],
-                    value: 262,
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['1', 1],
-                        ['1/2', 2],
-                        ['1/4', 4],
-                        ['1/8', 8],
-                        ['1/16', 16],
-                        ['2', 32],
-                        ['4', 64],
-                    ],
-                    value: 1,
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            class: 'AsomeBoardNote',
-            isNotFor: ['AsomeBoard'],
-            def: {
-                type: 'AsomeBoard_play_note',
-            },
-            paramsKeyMap: {
-                NOTE: 0,
-                BEAT: 1,
-            },
-            func: function(sprite, script) {
-                const note = script.getField('NOTE');
-                const beat = script.getField('BEAT');
-                const data = {
-                    type: 'PLAY_NOTE',
-                    data: {
-                        note,
-                        beat,
-                    },
-                };
-                return Entry.AsomeBoard.postCallReturn({
-                    script,
-                    data,
-                });
-            },
-        },
-        AsomeBoard_change_bpm: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
-            statements: [],
-            template: '연주 속도를 %1BPM 만큼 바꾸기 %2',
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            class: 'AsomeBoardNote',
-            isNotFor: ['AsomeBoard'],
+        asomeboard_get_ultrasonic_value: {
+            template: Lang.template.arduino_ext_get_ultrasonic_value,
+            parent: 'arduino_ext_get_ultrasonic_value',
             def: {
                 params: [
                     {
-                        type: 'number',
-                        params: [20],
+                        type: 'arduino_get_port_number',
+                        params: ['4'],
+                    },
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['3'],
                     },
                 ],
-                type: 'AsomeBoard_change_bpm',
+                type: 'asomeboard_get_ultrasonic_value',
             },
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            func: function(sprite, script) {
-                const value = script.getNumberValue('VALUE');
-                const data = {
-                    type: 'CHANGE_BPM',
-                    data: {
-                        value,
-                    },
-                };
-                return Entry.AsomeBoard.postCallReturn({
-                    script,
-                    data,
-                });
-            },
-        },
-        AsomeBoard_set_bpm: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
-            statements: [],
-            template: '연주 속도를 %1BPM으로 정하기 %2',
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            class: 'AsomeBoardNote',
             isNotFor: ['AsomeBoard'],
+            syntax: undefined,
+        },
+        asomeboard_get_digital: {
+            template: Lang.template.arduino_ext_get_digital,
+            parent: 'arduino_ext_get_digital',
             def: {
                 params: [
                     {
-                        type: 'number',
-                        params: [120],
+                        type: 'arduino_get_port_number',
                     },
                 ],
-                type: 'AsomeBoard_set_bpm',
+                type: 'asomeboard_get_digital',
             },
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            func: function(sprite, script) {
-                const value = script.getNumberValue('VALUE');
-                const data = {
-                    type: 'SET_BPM',
-                    data: {
-                        value,
-                    },
-                };
-                return Entry.AsomeBoard.postCallReturn({
-                    script,
-                    data,
-                });
-            },
-        },
-        AsomeBoard_radio_receive_event: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_event',
-            statements: [],
-            template: '%1라디오를 수신했을 때',
-            params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/start_icon_hardware.svg',
-                    size: 14,
-                    position: { x: 0, y: -2 },
-                },
-            ],
-            def: { params: [], type: 'AsomeBoard_radio_receive_event' },
-            paramsKeyMap: {},
-            class: 'AsomeBoardRadio',
             isNotFor: ['AsomeBoard'],
-            event: 'AsomeBoardRadioReceive',
-            func: function(sprite, script) {
-                return script.callReturn();
-            },
-            syntax: { js: [], py: [] },
+            syntax: undefined,
         },
+        asomeboard_toggle_led: {
+            template: Lang.template.arduino_ext_toggle_led,
+            parent: 'arduino_ext_toggle_led',
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                    },
+                    {
+                        type: 'arduino_get_digital_toggle',
+                        params: ['on'],
+                    },
+                    null,
+                ],
+                type: 'asomeboard_toggle_led',
+            },
+            isNotFor: ['AsomeBoard'],
+            syntax: undefined,
+        },
+        asomeboard_digital_pwm: {
+            template: Lang.template.arduino_ext_digital_pwm,
+            parent: 'arduino_ext_digital_pwm',
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_pwm_port_number',
+                    },
+                    {
+                        type: 'text',
+                        params: ['255'],
+                    },
+                    null,
+                ],
+                type: 'asomeboard_digital_pwm',
+            },
+            isNotFor: ['AsomeBoard'],
+            syntax: undefined,
+        },
+        asomeboard_set_tone: {
+            template: Lang.template.arduino_ext_set_tone,
+            parent: 'arduino_ext_set_tone',
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                        value: 4,
+                    },
+                    {
+                        type: 'arduino_ext_tone_list',
+                    },
+                    {
+                        type: 'arduino_ext_octave_list',
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'asomeboard_set_tone',
+            },
+            isNotFor: ['AsomeBoard'],
+            syntax: undefined,
+        },
+        asomeboard_set_servo: {
+            template: Lang.template.arduino_ext_set_servo,
+            parent: 'arduino_ext_set_servo',
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                    },
+                    null,
+                ],
+                type: 'asomeboard_set_servo',
+            },
+            isNotFor: ['AsomeBoard'],
+            syntax: undefined,
+        },
+        //endregion AsomeBoard 아두이노 나노
     };
 };
 
