@@ -24,6 +24,46 @@ Entry.AsomeBoard = {
         }
         Entry.hw.update();
     },
+    getHashKey: function() {
+        let key = new Date().getSeconds().toString(16);
+        if (key.length === 1) {
+            key += ((Math.random() * 16) | 0).toString(16);
+        }
+        return Entry.generateHash() + key;
+    },
+    asyncFlowControl: function({ script, data }, scope) {
+        if (!this.isExecBlock && !scope.isStart) {
+            const blockId = this.getHashKey();
+            this.isExecBlock = true;
+            scope.isStart = true;
+            scope.timeFlag = 1;
+            this.nowBlockId = blockId;
+            this.blockIds[blockId] = false;
+            _merge(Entry.hw.sendQueue, {
+                [blockId]: data,
+            });
+            Entry.hw.update();
+            setTimeout(() => {
+                scope.timeFlag = 0;
+            });
+            return false;
+        } else if (this.blockIds[this.nowBlockId] && scope.timeFlag === 0) {
+            delete this.blockIds[this.nowBlockId];
+            delete scope.isStart;
+            this.execTimeFlag = 0;
+            this.execTimeFlag = undefined;
+            this.isExecBlock = false;
+            Entry.engine.isContinue = false;
+            return true;
+        }
+        return false;
+    },
+    postCallReturn: function(args) {
+        const { script } = args;
+        if (!this.asyncFlowControl(args, script)) {
+            return Entry.STATIC.BREAK;
+        }
+    },
     sensorTypes: {
         ALIVE: 0,
         DIGITAL: 1,
@@ -101,11 +141,11 @@ Entry.AsomeBoard.setLanguage = function() {
 Entry.AsomeBoard.blockMenuBlocks = [
     // 'asomeboard_get_analog_value_map',
     // 'asomeboard_get_ultrasonic_value',
-    'asomeboard_get_digital',
+    // 'asomeboard_get_digital',
     'asomeboard_toggle_led',
-    'asomeboard_digital_pwm',
-    'asomeboard_set_servo',
-    'asomeboard_set_tone',
+    // 'asomeboard_digital_pwm',
+    // 'asomeboard_set_servo',
+    // 'asomeboard_set_tone',
 ];
 
 Entry.AsomeBoard.getBlocks = function() {
@@ -211,7 +251,27 @@ Entry.AsomeBoard.getBlocks = function() {
         },
         asomeboard_toggle_led: {
             template: Lang.template.arduino_ext_toggle_led,
-            parent: 'arduino_ext_toggle_led',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
             def: {
                 params: [
                     {
