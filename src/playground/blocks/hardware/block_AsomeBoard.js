@@ -226,6 +226,30 @@ Entry.AsomeBoard.getBlocks = function() {
                 type: 'asomeboard_toggle_led',
             },
             isNotFor: ['AsomeBoard'],
+            func: function(sprite, script) {
+                var port = script.getNumberValue('PORT');
+                var value = script.getValue('VALUE');
+
+                if (typeof value === 'string') {
+                    value = value.toLowerCase();
+                }
+                if (Entry.ArduinoExt.highList.indexOf(value) > -1) {
+                    value = 255;
+                } else if (Entry.ArduinoExt.lowList.indexOf(value) > -1) {
+                    value = 0;
+                } else {
+                    throw new Error();
+                }
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.ArduinoExt.sensorTypes.DIGITAL,
+                    data: value,
+                    time: new Date().getTime(),
+                };
+                return script.callReturn();
+            },
             syntax: undefined,
         },
         asomeboard_digital_pwm: {
