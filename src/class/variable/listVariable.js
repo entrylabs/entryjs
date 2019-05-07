@@ -43,9 +43,9 @@ class ListVariable extends Variable {
             this.titleView_.y = this.BORDER + 11;
         }
         this.view_.addChild(this.titleView_);
-
+        const { stage_list_resize_handle } = EntryStatic.images || {};
         this.resizeHandle_ = GEHelper.newSpriteWithCallback(
-            `${Entry.mediaFilePath}stage_list_resize_handle.png`,
+            stage_list_resize_handle || `${Entry.mediaFilePath}stage_list_resize_handle.png`,
             () => {
                 Entry.requestUpdate = true;
             }
@@ -297,6 +297,7 @@ class ListVariable extends Variable {
     _createListElementView(wrapperWidth) {
         const elementView = GEHelper.newContainer();
         const indexView = GEHelper.textHelper.newText('', this.FONT, '#000000', 'middle');
+        const colorSet = EntryStatic.colorSet.canvas || {};
         if (GEHelper.isWebGL) {
             indexView.y = this.GL_LIST_POS.INDEX_Y;
         } else {
@@ -309,7 +310,7 @@ class ListVariable extends Variable {
         elementView.valueWrapper = valueWrapper;
         elementView.valueWrapper.graphics
             .clear()
-            .f('#4f80ff')
+            .f(colorSet.listColor || '#4f80ff')
             .rr(18, 4, wrapperWidth, 17, 2);
 
         const valueView = GEHelper.textHelper.newText('', this.VALUE_FONT, '#ffffff', 'middle');

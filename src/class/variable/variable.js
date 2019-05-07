@@ -195,8 +195,8 @@ class Variable {
             if (this._valueWidth === null) {
                 this._valueWidth = this.valueView_.getMeasuredWidth();
             }
-
-            this._adjustSingleViewBox('#4f80ff');
+            const colorSet = EntryStatic.colorSet.canvas || {};
+            this._adjustSingleViewBox(colorSet.variableColor || '#4f80ff');
         }
 
         Entry.requestUpdate = true;
