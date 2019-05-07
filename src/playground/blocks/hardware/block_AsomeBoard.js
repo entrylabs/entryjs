@@ -1,9 +1,29 @@
 'use strict';
 
+String.format = function() {
+	var s = arguments[0];
+	for (var i = 0; i < arguments.length - 1; i++) {
+		var reg = new RegExp("\\{" + i + "\\}", "gm");
+		s = s.replace(reg, arguments[i + 1]);
+	}
+	return s;
+}
+
+function random_str(count)
+{
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for(var i=0; i <count; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
+
 Entry.AsomeBoard = {
     id: ['FF.FF', '1A.1'],
     name: 'AsomeBoard',
-    url: 'http://www.arduino.cc/',
+    url: 'http://www.asomeit.com/',
     imageName: 'AsomeBoard.png',
     title: {
         ko: 'AsomeBoard',
@@ -64,49 +84,6 @@ Entry.AsomeBoard = {
             return Entry.STATIC.BREAK;
         }
     },
-    sensorTypes: {
-        ALIVE: 0,
-        DIGITAL: 1,
-        ANALOG: 2,
-        PWM: 3,
-        SERVO_PIN: 4,
-        TONE: 5,
-        PULSEIN: 6,
-        ULTRASONIC: 7,
-        TIMER: 8,
-    },
-    toneTable: {
-        '0': 0,
-        C: 1,
-        CS: 2,
-        D: 3,
-        DS: 4,
-        E: 5,
-        F: 6,
-        FS: 7,
-        G: 8,
-        GS: 9,
-        A: 10,
-        AS: 11,
-        B: 12,
-    },
-    toneMap: {
-        '1': [33, 65, 131, 262, 523, 1046, 2093, 4186],
-        '2': [35, 69, 139, 277, 554, 1109, 2217, 4435],
-        '3': [37, 73, 147, 294, 587, 1175, 2349, 4699],
-        '4': [39, 78, 156, 311, 622, 1245, 2849, 4978],
-        '5': [41, 82, 165, 330, 659, 1319, 2637, 5274],
-        '6': [44, 87, 175, 349, 698, 1397, 2794, 5588],
-        '7': [46, 92, 185, 370, 740, 1480, 2960, 5920],
-        '8': [49, 98, 196, 392, 784, 1568, 3136, 6272],
-        '9': [52, 104, 208, 415, 831, 1661, 3322, 6645],
-        '10': [55, 110, 220, 440, 880, 1760, 3520, 7040],
-        '11': [58, 117, 233, 466, 932, 1865, 3729, 7459],
-        '12': [62, 123, 247, 494, 988, 1976, 3951, 7902],
-    },
-    highList: ['high', '1', 'on'],
-    lowList: ['low', '0', 'off'],
-    BlockState: {},
 };
 
 Entry.AsomeBoard.setLanguage = function() {
@@ -139,116 +116,11 @@ Entry.AsomeBoard.setLanguage = function() {
 };
 
 Entry.AsomeBoard.blockMenuBlocks = [
-    // 'asomeboard_get_analog_value_map',
-    // 'asomeboard_get_ultrasonic_value',
-    // 'asomeboard_get_digital',
     'asomeboard_toggle_led',
-    // 'asomeboard_digital_pwm',
-    // 'asomeboard_set_servo',
-    // 'asomeboard_set_tone',
 ];
 
 Entry.AsomeBoard.getBlocks = function() {
     return {
-        //region AsomeBoard 아두이노 나노
-        asomeboard_analog_list: {
-            parent: 'arduino_ext_analog_list',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['A0', '0'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            syntax: undefined,
-        },
-        asomeboard_get_analog_value: {
-            parent: 'arduino_ext_get_analog_value',
-            template: Lang.template.arduino_ext_get_analog_value,
-            def: {
-                params: [
-                    {
-                        type: 'asomeboard_analog_list',
-                    },
-                ],
-                type: 'asomeboard_get_analog_value',
-            },
-            // isNotFor: ['AsomeBoard'],
-            syntax: undefined,
-        },
-        asomeboard_get_analog_value_map: {
-            parent: 'arduino_ext_get_analog_value_map',
-            template: Lang.template.arduino_ext_get_analog_value_map,
-            def: {
-                params: [
-                    {
-                        type: 'asomeboard_get_analog_value',
-                        params: [
-                            {
-                                type: 'asomeboard_analog_list',
-                            },
-                        ],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['1023'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['100'],
-                    },
-                ],
-                type: 'asomeboard_get_analog_value_map',
-            },
-            isNotFor: ['AsomeBoard'],
-            syntax: undefined,
-        },
-        asomeboard_get_ultrasonic_value: {
-            template: Lang.template.arduino_ext_get_ultrasonic_value,
-            parent: 'arduino_ext_get_ultrasonic_value',
-            def: {
-                params: [
-                    {
-                        type: 'arduino_get_port_number',
-                        params: ['4'],
-                    },
-                    {
-                        type: 'arduino_get_port_number',
-                        params: ['3'],
-                    },
-                ],
-                type: 'asomeboard_get_ultrasonic_value',
-            },
-            isNotFor: ['AsomeBoard'],
-            syntax: undefined,
-        },
-        asomeboard_get_digital: {
-            template: Lang.template.arduino_ext_get_digital,
-            parent: 'arduino_ext_get_digital',
-            def: {
-                params: [
-                    {
-                        type: 'arduino_get_port_number',
-                    },
-                ],
-                type: 'asomeboard_get_digital',
-            },
-            isNotFor: ['AsomeBoard'],
-            syntax: undefined,
-        },
         asomeboard_toggle_led: {
             template: Lang.template.arduino_ext_toggle_led,
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -271,108 +143,50 @@ Entry.AsomeBoard.getBlocks = function() {
                     size: 12,
                 },
             ],
+            paramsKeyMap: {
+                PORT: 0,
+                VALUE: 1,
+            },
             events: {},
             def: {
                 params: [
                     {
-                        type: 'arduino_get_port_number',
+                        type: 'number',
+                        params: [0],
                     },
                     {
                         type: 'arduino_get_digital_toggle',
                         params: ['on'],
                     },
-                    null,
                 ],
                 type: 'asomeboard_toggle_led',
             },
             isNotFor: ['AsomeBoard'],
             func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
                 var port = script.getNumberValue('PORT');
                 var value = script.getValue('VALUE');
 
-                if (typeof value === 'string') {
-                    value = value.toLowerCase();
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = String.format("OutputPin({0}).{1}()", port, value);
+                    return script;
+                } 
+                
+                if (pd.msg_id.indexOf(script.msg_id) >= 0) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
                 }
-                if (Entry.ArduinoExt.highList.indexOf(value) > -1) {
-                    value = 255;
-                } else if (Entry.ArduinoExt.lowList.indexOf(value) > -1) {
-                    value = 0;
-                } else {
-                    throw new Error();
-                }
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
-                }
-                Entry.hw.sendQueue['SET'][port] = {
-                    type: Entry.ArduinoExt.sensorTypes.DIGITAL,
-                    data: value,
-                    time: new Date().getTime(),
-                };
-                return script.callReturn();
+
+                return script;
             },
             syntax: undefined,
         },
-        asomeboard_digital_pwm: {
-            template: Lang.template.arduino_ext_digital_pwm,
-            parent: 'arduino_ext_digital_pwm',
-            def: {
-                params: [
-                    {
-                        type: 'arduino_get_pwm_port_number',
-                    },
-                    {
-                        type: 'text',
-                        params: ['255'],
-                    },
-                    null,
-                ],
-                type: 'asomeboard_digital_pwm',
-            },
-            isNotFor: ['AsomeBoard'],
-            syntax: undefined,
-        },
-        asomeboard_set_tone: {
-            template: Lang.template.arduino_ext_set_tone,
-            parent: 'arduino_ext_set_tone',
-            def: {
-                params: [
-                    {
-                        type: 'arduino_get_port_number',
-                        value: 4,
-                    },
-                    {
-                        type: 'arduino_ext_tone_list',
-                    },
-                    {
-                        type: 'arduino_ext_octave_list',
-                    },
-                    {
-                        type: 'text',
-                        params: ['1'],
-                    },
-                    null,
-                ],
-                type: 'asomeboard_set_tone',
-            },
-            isNotFor: ['AsomeBoard'],
-            syntax: undefined,
-        },
-        asomeboard_set_servo: {
-            template: Lang.template.arduino_ext_set_servo,
-            parent: 'arduino_ext_set_servo',
-            def: {
-                params: [
-                    {
-                        type: 'arduino_get_port_number',
-                    },
-                    null,
-                ],
-                type: 'asomeboard_set_servo',
-            },
-            isNotFor: ['AsomeBoard'],
-            syntax: undefined,
-        },
-        //endregion AsomeBoard 아두이노 나노
     };
 };
 
