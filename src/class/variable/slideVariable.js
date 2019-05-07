@@ -72,9 +72,9 @@ class SlideVariable extends Variable {
         this.view_.addChild(this.slideBar_);
 
         const position = this.getSlidePosition(this.maxWidth);
-
+        const { stage_variable_slider } = EntryStatic.images || {};
         this.valueSetter_ = GEHelper.newSpriteWithCallback(
-            `${Entry.mediaFilePath}stage_variable_slider.png`,
+            stage_variable_slider || `${Entry.mediaFilePath}stage_variable_slider.png`,
             () => {
                 Entry.requestUpdate = true;
             }
@@ -177,7 +177,7 @@ class SlideVariable extends Variable {
                 .clear()
                 .f('#ffffff')
                 .ss(1, 2, 0)
-                .s(colorSet.variableSlideColor || '#aac5d5')
+                .s('#aac5d5')
                 .rr(0, -14, width, 42, 4);
             this.wrapper_.graphics
                 .clear()
