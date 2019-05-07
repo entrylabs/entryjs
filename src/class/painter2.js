@@ -10,7 +10,6 @@ Entry.Painter = class Painter {
     constructor(view) {
         this.view = view;
         this.cache = [];
-        this.baseUrl = Entry.painterBaseUrl;
 
         this.file = {
             id: Entry.generateHash(),
@@ -110,32 +109,37 @@ Entry.Painter = class Painter {
         Entry.stateManager.removeAllPictureCommand();
     }
 
-    addPicture(picture, isChangeShape) {
-        const image = new Image();
-        const { extension = 'png' } = picture;
-
-        if (picture.fileurl) {
-            image.src = picture.fileurl;
+    _getImageSrc(picture) {
+        const { imageType = 'png', fileurl, filename } = picture || {};
+        if (fileurl) {
+            return fileurl;
         } else {
-            // deprecated
-            image.src = `${Entry.defaultPath}/uploads/${picture.filename.substring(
-                0,
-                2
-            )}/${picture.filename.substring(2, 4)}/image/${picture.filename}.${extension}`;
+            const extention = imageType === 'paper' ? 'png' : imageType;
+            return `${Entry.defaultPath}/uploads/${filename.substring(0, 2)}/${filename.substring(
+                2,
+                4
+            )}/image/${filename}.${extention}`;
         }
+    }
 
-        const imageSrc = image.src;
-        const cache = this.cache[imageSrc];
+    addPicture(picture, isChangeShape) {
+        const { imageType = 'png', paper } = picture || {};
+        const imageSrc = this._getImageSrc(picture);
+
         isChangeShape && (this.isImport = true);
-        if (cache) {
-            this.entryPaint.setPaperJSON(cache);
-        } else if (extension === 'svg') {
-            axios.get(imageSrc).then(({ data }) => {
-                this.entryPaint.addSVG(stringToElement(data));
-            });
-        } else {
-            this.entryPaint.addBitmap(imageSrc);
-            this.cache[imageSrc] = this.entryPaint.getPaperJSON();
+
+        switch (imageType) {
+            case 'png':
+                this.entryPaint.addBitmap(imageSrc);
+                break;
+            case 'svg':
+                axios.get(imageSrc).then(({ data }) => {
+                    this.entryPaint.addSVG(stringToElement(data));
+                });
+                break;
+            case 'paper':
+                this.entryPaint.setPaperJSON(paper);
+                break;
         }
     }
 
@@ -144,9 +148,10 @@ Entry.Painter = class Painter {
             return;
         }
         const dataURL = this.entryPaint.getDataURL();
-        this.file_ = JSON.parse(JSON.stringify(this.file));
+        this.file.paperJson = this.entryPaint.getPaperJSON();
+        const file = JSON.parse(JSON.stringify(this.file));
         Entry.dispatchEvent('saveCanvasImage', {
-            file: this.file_,
+            file,
             image: dataURL,
             task: taskParam,
         });
