@@ -291,11 +291,11 @@ Entry.Playground = class {
         });
         const desc = Entry.Dom('div', {
             class: 'blockBackPackDesc',
-            text: Lang.Workspace.my_storage_block_drop,
+            text: Lang.Workspace.playground_block_drop,
         });
         const desc2 = Entry.Dom('div', {
-            class: 'blockBackPackDesc',
-            text: Lang.Workspace.my_storage_object_drop,
+            class: 'objectBackPackDesc',
+            text: Lang.Workspace.container_object_drop,
         });
         this.blockBackPackArea.append(icon);
         this.blockBackPackArea.append(desc);
