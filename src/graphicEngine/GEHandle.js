@@ -13,11 +13,11 @@ export var GEHandle = function(canvas) {
     }
     const colorSet = EntryStatic.colorSet.canvas || {};
     this.canvas = canvas;
-    this.borderColor = colorSet.borderCollapse || '#e2e2e2';
-    this.knobColor = colorSet.knobColor || '#4f80ff';
-    this.arrowColor = colorSet.arrowColor || '#ffb500';
-    this.centerColor = colorSet.centerColor || '#4f80ff';
-    this.rotateKnobColor = colorSet.rotateKnobColor || '#ffb500';
+    this.borderColor = colorSet.handleBorder || '#e2e2e2';
+    this.knobColor = colorSet.handleKnob || '#4f80ff';
+    this.arrowColor = colorSet.handleArrow || '#ffb500';
+    this.centerColor = colorSet.handleCenter || '#4f80ff';
+    this.rotateKnobColor = colorSet.handleRotateKnob || '#ffb500';
 
     this.x = 0;
     this.y = 0;

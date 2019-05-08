@@ -196,7 +196,7 @@ class Variable {
                 this._valueWidth = this.valueView_.getMeasuredWidth();
             }
             const colorSet = EntryStatic.colorSet.canvas || {};
-            this._adjustSingleViewBox(colorSet.variableColor || '#4f80ff');
+            this._adjustSingleViewBox(colorSet.variable || '#4f80ff');
         }
 
         Entry.requestUpdate = true;
@@ -211,11 +211,12 @@ class Variable {
      */
     _adjustSingleViewBox(boxFillAndStrokeColor) {
         // TODO slider updateView 만 rect_.graphics 를 따로 씀. rr 인자 constants 로 묶을 것.
+        const colorSet = EntryStatic.colorSet.canvas || {};
         this.rect_.graphics
             .clear()
             .f('#ffffff')
             .ss(1, 2, 0)
-            .s('#aac5d5')
+            .s(colorSet.border || '#aac5d5')
             .rr(0, -14, this._nameWidth + this._valueWidth + 35, 24, 4);
         this.wrapper_.graphics
             .clear()

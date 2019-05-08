@@ -177,13 +177,13 @@ class SlideVariable extends Variable {
                 .clear()
                 .f('#ffffff')
                 .ss(1, 2, 0)
-                .s('#aac5d5')
+                .s(colorSet.border || '#aac5d5')
                 .rr(0, -14, width, 42, 4);
             this.wrapper_.graphics
                 .clear()
-                .f(colorSet.variableColor || '#4f80ff')
+                .f(colorSet.slideVariable || '#4f80ff')
                 .ss(1, 2, 0)
-                .s(colorSet.variableColor || '#4f80ff')
+                .s(colorSet.slideVariable || '#4f80ff')
                 .rr(this._nameWidth + 14, -10, this._valueWidth + 15, 16, this.RECT_RADIUS);
 
             width = this._nameWidth + this._valueWidth + 26;

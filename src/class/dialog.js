@@ -53,7 +53,8 @@ Entry.Dialog.prototype.generateSpeak = function() {
     var height = bound.height;
     var width = bound.width >= 10 ? bound.width : 17;
     var rect = GEHelper.newGraphic();
-    rect.graphics.f("#f5f5f5").ss(2,'round').s("#6FC0DD").rr(
+    const colorSet = EntryStatic.colorSet.canvas || {};
+    rect.graphics.f(colorSet.dialogBG || "#f5f5f5").ss(2,'round').s(colorSet.dialog || "#6FC0DD").rr(
         -this.padding, -this.padding,
         width + 2*this.padding, height + 2*this.padding, this.padding);
     this.object.addChild(rect);
@@ -130,23 +131,24 @@ Entry.Dialog.prototype.update = function() {
 Entry.Dialog.prototype.createSpeakNotch = function(type) {
     var notch = GEHelper.newGraphic();
     notch.type = type;
+    const colorSet = EntryStatic.colorSet.canvas || {};
     if (type == 'ne')
-        notch.graphics.f("#f5f5f5").ss(2,'round').s("#6FC0DD")
+        notch.graphics.f("#f5f5f5").ss(2,'round').s(colorSet.dialog || "#6FC0DD")
             .mt(0,this.height+this.padding-1.5)
             .lt(-10,this.height+this.padding+20)
             .lt(20,this.height+this.padding-1.5);
     else if (type == 'nw')
-        notch.graphics.f("#f5f5f5").ss(2,'round').s("#6FC0DD")
+        notch.graphics.f("#f5f5f5").ss(2,'round').s(colorSet.dialog || "#6FC0DD")
             .mt(this.width,this.height+this.padding-1.5)
             .lt(this.width+10,this.height+this.padding+20)
             .lt(this.width-20,this.height+this.padding-1.5);
     else if (type == 'se')
-        notch.graphics.f("#f5f5f5").ss(2,'round').s("#6FC0DD")
+        notch.graphics.f("#f5f5f5").ss(2,'round').s(colorSet.dialog || "#6FC0DD")
             .mt(0,-this.padding+1.5)
             .lt(-10,-this.padding-20)
             .lt(20,-this.padding+1.5);
     else if (type == 'sw')
-        notch.graphics.f("#f5f5f5").ss(2,'round').s("#6FC0DD")
+        notch.graphics.f("#f5f5f5").ss(2,'round').s(colorSet.dialog || "#6FC0DD")
             .mt(this.width,-this.padding+1.5)
             .lt(this.width+10,-this.padding-20)
             .lt(this.width-20,-this.padding+1.5);

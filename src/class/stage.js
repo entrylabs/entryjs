@@ -578,7 +578,8 @@ Entry.Stage.prototype.showInputField = function() {
 
 
     function _createSubmitButton() {
-        const path = Entry.mediaFilePath + 'confirm_button.png';
+        const { confirm_button } = EntryStatic.images || {};
+        const path = confirm_button || Entry.mediaFilePath + 'confirm_button.png';
         let inputSubmitButton = GEHelper.newSpriteWithCallback(path, ()=>{
             Entry.requestUpdate = true;
         });
