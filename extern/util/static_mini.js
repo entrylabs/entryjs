@@ -1,10 +1,15 @@
 'use strict';
 
-var EntryStatic = {};
-
-EntryStatic.isPracticalCourse = true;
-
-EntryStatic.objectTypes = ['sprite', 'textBox'];
+/* eslint-disable */
+var EntryStatic = {
+    isPracticalCourse: true,
+    fontFamily: 'NanumGothic',
+    exportBlockFontFamily:
+        "NanumGothic, 'NanumGothic', '나눔고딕','NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum",
+    // fontOffsetY: 1,
+    heightLetter: 'M',
+    objectTypes: ['sprite', 'textBox'],
+};
 
 EntryStatic.usageList = [
     'usage_event',
@@ -507,10 +512,12 @@ EntryStatic.artPeriodOptions = [
 ];
 
 EntryStatic.getCategoryByBlock = function(blockName) {
-    if (!blockName) return false;
-    var allBlocks = EntryStatic.getAllBlocks();
-    for (var i = 0, len = allBlocks.length; i < len; i++) {
-        var blocks = allBlocks[i].blocks;
+    if (!blockName) {
+        return false;
+    }
+    let allBlocks = EntryStatic.getAllBlocks();
+    for (let i = 0, len = allBlocks.length; i < len; i++) {
+        let blocks = allBlocks[i].blocks;
         if (blocks.indexOf(blockName) > -1) {
             return allBlocks[i].category;
         }
@@ -538,19 +545,10 @@ EntryStatic.objectSubCategories = {
     people: [],
     animal: ['animal_flying', 'animal_land', 'animal_water', 'animal_others'],
     plant: ['plant_flower', 'plant_grass', 'plant_tree', 'plant_others'],
-    vehicles: [
-        'vehicles_flying',
-        'vehicles_land',
-        'vehicles_water',
-        'vehicles_others',
-    ],
+    vehicles: ['vehicles_flying', 'vehicles_land', 'vehicles_water', 'vehicles_others'],
     architect: ['architect_building', 'architect_monument', 'architect_others'],
     food: ['food_vegetables', 'food_meat', 'food_drink', 'food_others'],
-    environment: [
-        'environment_nature',
-        'environment_space',
-        'environment_others',
-    ],
+    environment: ['environment_nature', 'environment_space', 'environment_others'],
     stuff: ['stuff_living', 'stuff_hobby', 'stuff_others'],
     fantasy: [],
     interface: [],
@@ -628,7 +626,7 @@ EntryStatic.fonts = [
         family: 'UhBeemysen',
         url: '/css/uhbeemysen.css',
         visible: true,
-    }
+    },
 ];
 
 EntryStatic.colorSet = {

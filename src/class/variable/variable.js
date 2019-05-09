@@ -60,10 +60,10 @@ class Variable {
             this.x_ = variable.x ? variable.x : null;
             /** @type {number} */
             this.y_ = variable.y ? variable.y : null;
-
+            const fontFamily = EntryStatic.fontFamily || 'NanumGothic';
             this.BORDER = 6;
-            this.FONT = '10pt NanumGothic';
-            this.VALUE_FONT = '9pt NanumGothic';
+            this.FONT = `10pt ${fontFamily}`;
+            this.VALUE_FONT = `9pt ${fontFamily}`;
         }
 
         Entry.addEventListener('workspaceChangeMode', this.updateView.bind(this));
