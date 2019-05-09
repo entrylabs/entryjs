@@ -122,16 +122,23 @@ Entry.AsomeBoard.blockMenuBlocks = [
 Entry.AsomeBoard.getBlocks = function() {
     return {
         asomeboard_toggle_led: {
-            template: Lang.template.arduino_ext_toggle_led,
+            template: Lang.template.asomeboard_toggle_led,
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
+                    type: 'Dropdown',
+                    options: [
+                        [ '1',  '1'], [ '2',  '2'], [ '3',  '3'], [ '4',  '4'],
+                        [ '5',  '5'], [ '6',  '6'], [ '7',  '7'], [ '8',  '8'],
+                        ['12', '12'], 
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -150,14 +157,12 @@ Entry.AsomeBoard.getBlocks = function() {
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'number',
-                        params: [0],
-                    },
+                    null,
                     {
                         type: 'arduino_get_digital_toggle',
                         params: ['on'],
                     },
+                    null
                 ],
                 type: 'asomeboard_toggle_led',
             },
