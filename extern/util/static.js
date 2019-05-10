@@ -393,6 +393,9 @@ EntryStatic.getAllBlocks = function() {
                 'behaviorConductLifeSafety_title',
                 'count_lifeSafety_behavior',
                 'get_lifeSafety_behavior',
+                'tts_title',
+                'read_text',
+                'set_tts_property',
             ],
         },
         {
