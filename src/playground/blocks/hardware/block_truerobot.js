@@ -3,7 +3,7 @@
 Entry.trueRobot = {
     id: '19.1',
     name: 'trueRobot',
-    url: 'http://www.sigongmedia.co.kr',
+    url: 'http://www.i-screammedia.co.kr',
     imageName: 'truetrue.png',
     delayTime: 30,
     title: {
@@ -43,6 +43,16 @@ Entry.trueRobot = {
 
 		Entry.hw.update();
 
+		Entry.hw.sendQueue['SET'][Entry.trueRobot.PORT_MAP.colorled] = {
+				port: Entry.trueRobot.PORT_MAP.colorled,
+				dataA: 0,
+				dataB: 0,
+				dataC: 255,
+		};
+		
+		Entry.hw.update();
+			
+
 		Entry.hw.sendQueue['SET'] = {};
 		Entry.hw.sendQueue['SET'][Entry.trueRobot.PORT_MAP.linetracer] = {
                         port: Entry.trueRobot.PORT_MAP.led_line,
@@ -76,18 +86,7 @@ Entry.trueRobot = {
 		
 			}
 
-		setTimeout(function() {
-				Entry.hw.sendQueue['SET'][Entry.trueRobot.PORT_MAP.colorled] = {
-					port: Entry.trueRobot.PORT_MAP.colorled,
-					dataA: 0,
-					dataB: 0,
-					dataC: 255,
-				};
-					Entry.hw.update();
-					tempport++;	
-					settimer = settimer + 30;
-					}, settimer);
-			
+		
     },
 	monitorTemplate: {
 		imgPath: 'hw/truebot.png',
@@ -231,10 +230,10 @@ Entry.trueRobot.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['Left_Out', 'L2'],
-                        ['Left_In', 'L1'],
-                        ['Right_In', 'R1'],
-                        ['Right_Out', 'R2'],
+                        [Lang.Blocks.truetruebot_left+' 2', 'L2'],
+                        [Lang.Blocks.truetruebot_left+' 1', 'L1'],
+                        [Lang.Blocks.truetruebot_right+' 1', 'R1'],
+                        [Lang.Blocks.truetruebot_right+' 2', 'R2'],
                     ],
                     value: 'Left_Out',
                     fontSize: 11,
@@ -269,7 +268,7 @@ Entry.trueRobot.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['Left', 'ProxiLeft'], ['Right', 'ProxiRight']],
+                    options: [[Lang.Blocks.truetruebot_left, 'ProxiLeft'], [Lang.Blocks.truetruebot_right, 'ProxiRight']],
                     value: 'Left',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -306,10 +305,10 @@ Entry.trueRobot.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['X-axis', 'AccX'],
-                        ['Y-axis', 'AccY'],
-                        ['Z-axis', 'AccZ'],
-                        ['Tilt', 'AccStatus'],
+                        [Lang.Blocks.truetruebot_Xaxis, 'AccX'],
+                        [Lang.Blocks.truetruebot_Yaxis, 'AccY'],
+                        [Lang.Blocks.truetruebot_Zaxis, 'AccZ'],
+                        [Lang.Blocks.truetruebot_Tilt, 'AccStatus'],
                     ],
                     value: 'X-axis',
                     fontSize: 11,
@@ -345,10 +344,10 @@ Entry.trueRobot.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['Red', 'BColorRed'],
-                        ['Green', 'BColorGreen'],
-                        ['Blue', 'BColorBlue'],
-                        ['ColorKey', 'BColorKey'],
+                        [Lang.Blocks.truetruebot_head_color_red, 'BColorRed'],
+                        [Lang.Blocks.truetruebot_head_color_green, 'BColorGreen'],
+                        [Lang.Blocks.truetruebot_head_color_blue, 'BColorBlue'],
+                        [Lang.Blocks.truetruebot_ColorKey, 'BColorKey'],
                     ],
                     value: 'Red',
                     fontSize: 11,
@@ -383,7 +382,7 @@ Entry.trueRobot.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['Left', 'FColorLeftKey'], ['Right', 'FColorRightKey']],
+                    options: [[Lang.Blocks.truetruebot_left, 'FColorLeftKey'], [Lang.Blocks.truetruebot_right, 'FColorRightKey']],
                     value: 'Left',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -416,7 +415,7 @@ Entry.trueRobot.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['Left', '9'], ['Right', '10'], ['All', '11']],
+                    options: [[Lang.Blocks.truetruebot_left, '9'], [Lang.Blocks.truetruebot_right, '10'], ['All', '11']],
                     value: 'Left',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1791,24 +1790,24 @@ Entry.trueRobot.getBlocks = function() {
                     }
 
                     if (moveValue == 101) {
-                        if ( ( pd['L1'] > 170 ||  ( pd['L1'] + pd['L2'] > 170 & pd['L1'] > pd['L2'] ) ) && pd['L2'] >= 0 && pd['R2'] == 0 && pd['R1'] == 0) {
+                        if ( ( pd['L1'] > 170 ||  ( pd['L1'] + pd['L2'] > 170 & pd['L1'] > pd['L2'] ) ) && pd['L2'] >= 0 && pd['R2'] < 10 && pd['R1'] < 10) {
                             if (script.flag == 1) {
                                 script.tempcheck = 1;
                             }
-                        } else if (pd['L2'] > 0 && pd['L1'] == 0) {
+                        } else if (pd['L2'] > 0 && pd['L1'] < 10) {
                             script.flag = 1;
                         }
                     } else if (moveValue == 102) {
-                        if ( ( pd['R1'] > 170 ||  ( pd['R1'] + pd['R2'] > 170 & pd['R1'] > pd['R2'] ) ) && pd['R2'] >= 0 && pd['L2'] == 0 && pd['L1'] == 0) {
+                        if ( ( pd['R1'] > 170 ||  ( pd['R1'] + pd['R2'] > 170 & pd['R1'] > pd['R2'] ) ) && pd['R2'] >= 0 && pd['L2'] < 10 && pd['L1'] < 10) {
                             if (script.flag == 1) {
                                 script.tempcheck = 1;
                             }
-                        } else if (pd['R2'] > 0 && pd['R1'] == 0) {
+                        } else if (pd['R2'] > 0 && pd['R1'] < 10) {
                             script.flag = 1;
                         }
                     }
 
-					//console.log( script.tempcheck +"//"+ pd['L2'] +" :: "+ pd['L1'] +" :: "+ pd['R1'] +" :: "+ pd['R2'] );
+					//console.log( script.tempcheck +"//"+ pd['L2'] +" :: "+ pd['L1'] +" :: "+ pd['R1'] +" :: "+ pd['R2'] + " script.tempcheck : " + script.tempcheck + " script.flag : "+script.flag );
 
                     if (script.tempcheck == 1 && pd['L1'] < 230) {
                         script.tempcheck = 0;
@@ -1834,7 +1833,7 @@ Entry.trueRobot.getBlocks = function() {
 								return script;
 							}
                     }
-                    if (script.tempcheck == 2 && pd['R1'] < 230) {
+                    if (script.tempcheck == 1 && pd['R1'] < 230) {
                         script.tempcheck = 0;
                         script.checkCount++;
                         script.flag = 0;
@@ -1951,6 +1950,13 @@ Entry.trueRobot.setLanguage = function() {
                 truetruebot_move_backward: '뒤로',
                 truetruebot_move_right: '오른쪽으로',
                 truetruebot_move_left: '왼쪽으로',
+				truetruebot_right: '오른쪽',
+				truetruebot_left: '왼쪽',
+				truetruebot_Xaxis: 'X축',
+				truetruebot_Yaxis: 'Y축',
+				truetruebot_Zaxis: 'Z축',
+				truetruebot_Tilt: '기울기',
+				truetruebot_ColorKey: '컬러키',
             },
         },
         code: {
@@ -1994,6 +2000,13 @@ Entry.trueRobot.setLanguage = function() {
                 truetruebot_move_backward: '뒤로',
                 truetruebot_move_right: '오른쪽으로',
                 truetruebot_move_left: '왼쪽으로',
+				truetruebot_right: '오른쪽',
+				truetruebot_left: '왼쪽',
+				truetruebot_Xaxis: 'X축',
+				truetruebot_Yaxis: 'Y축',
+				truetruebot_Zaxis: 'Z축',
+				truetruebot_Tilt: '기울기',
+				truetruebot_ColorKey: '컬러키',
             },
         },
         ebs: {
@@ -2037,6 +2050,13 @@ Entry.trueRobot.setLanguage = function() {
                 truetruebot_move_backward: '뒤로',
                 truetruebot_move_right: '오른쪽으로',
                 truetruebot_move_left: '왼쪽으로',
+				truetruebot_right: '오른쪽',
+				truetruebot_left: '왼쪽',
+				truetruebot_Xaxis: 'X축',
+				truetruebot_Yaxis: 'Y축',
+				truetruebot_Zaxis: 'Z축',
+				truetruebot_Tilt: '기울기',
+				truetruebot_ColorKey: '컬러키',
             },
         },
         jp: {
@@ -2080,6 +2100,13 @@ Entry.trueRobot.setLanguage = function() {
                 truetruebot_move_backward: 'backward',
                 truetruebot_move_right: 'right',
                 truetruebot_move_left: 'left',
+				truetruebot_right: 'right',
+				truetruebot_left: 'left',
+				truetruebot_Xaxis: 'X-axis',
+				truetruebot_Yaxis: 'Y-axis',
+				truetruebot_Zaxis: 'Z-axis',
+				truetruebot_Tilt: 'Tilt',
+				truetruebot_ColorKey: 'ColorKey',
             },
         },
         vn: {
@@ -2123,6 +2150,13 @@ Entry.trueRobot.setLanguage = function() {
                 truetruebot_move_backward: 'backward',
                 truetruebot_move_right: 'right',
                 truetruebot_move_left: 'left',
+				truetruebot_right: 'right',
+				truetruebot_left: 'left',
+				truetruebot_Xaxis: 'X-axis',
+				truetruebot_Yaxis: 'Y-axis',
+				truetruebot_Zaxis: 'Z-axis',
+				truetruebot_Tilt: 'Tilt',
+				truetruebot_ColorKey: 'ColorKey',
             },
         },
         en: {
@@ -2166,6 +2200,13 @@ Entry.trueRobot.setLanguage = function() {
                 truetruebot_move_backward: 'backward',
                 truetruebot_move_right: 'right',
                 truetruebot_move_left: 'left',
+				truetruebot_right: 'right',
+				truetruebot_left: 'left',
+				truetruebot_Xaxis: 'X-axis',
+				truetruebot_Yaxis: 'Y-axis',
+				truetruebot_Zaxis: 'Z-axis',
+				truetruebot_Tilt: 'Tilt',
+				truetruebot_ColorKey: 'ColorKey',
             },
         },
     };
