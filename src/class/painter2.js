@@ -26,6 +26,7 @@ Entry.Painter = class Painter {
         this.isShow = true;
         this.entryPaint = EntryPaint.create({ parent: this.view });
         Entry.addEventListener('pictureSelected', this.changePicture.bind(this));
+
         this.isImport = true;
         this.entryPaint.on('SNAPSHOT_SAVED', (e) => {
             if (!this.isImport && Entry.stage.selectedObject) {
@@ -34,6 +35,7 @@ Entry.Painter = class Painter {
             }
             this.isImport = false;
         });
+
         Entry.windowResized.attach(this.view, this.entryPaint.realign);
     }
 
@@ -69,19 +71,11 @@ Entry.Painter = class Painter {
                 Entry.engine.toggleStop();
                 wasRun = true;
             }
+
             entrylms.confirm(Lang.Menus.save_modified_shape).then((result) => {
                 this.isConfirm = false;
-                if (result === true) {
-                    this.fileSave(true);
-                } else {
-                    this.file.modified = false;
-                }
-
-                if (!wasRun) {
-                    this.afterModified(picture);
-                } else {
-                    Entry.playground.injectPicture();
-                }
+                result ? this.fileSave(true) : (this.file.modified = false);
+                wasRun ? Entry.playground.injectPicture() : this.afterModified(picture);
             });
         }
         Entry.stage.updateObject();
@@ -105,21 +99,21 @@ Entry.Painter = class Painter {
             file.id = Entry.generateHash();
         }
 
-        // this.lc.undoStack = [];
         Entry.stateManager.removeAllPictureCommand();
     }
 
     _getImageSrc(picture) {
-        const { imageType = 'png', fileurl, filename } = picture || {};
+        const { fileurl } = picture || {};
         if (fileurl) {
             return fileurl;
-        } else {
-            const extention = imageType === 'paper' ? 'png' : imageType;
-            return `${Entry.defaultPath}/uploads/${filename.substring(0, 2)}/${filename.substring(
-                2,
-                4
-            )}/image/${filename}.${extention}`;
         }
+
+        const { imageType = 'png', filename } = picture || {};
+        const extention = imageType === 'paper' ? 'png' : imageType;
+        return `${Entry.defaultPath}/uploads/${filename.substring(0, 2)}/${filename.substring(
+            2,
+            4
+        )}/image/${filename}.${extention}`;
     }
 
     addPicture(picture, isChangeShape) {
