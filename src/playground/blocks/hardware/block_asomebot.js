@@ -251,6 +251,9 @@ Entry.AsomeBot.getBlocks = function() {
                 var sq = Entry.hw.sendQueue;
                 var pd = Entry.hw.portData;
 
+                sq.msg_id = random_str(16);
+                sq.msg = "print('#DT ' + str(hcsr04.get_distance()) + '  ###')";
+
                 return pd.distance;
             },
             syntax: undefined,
