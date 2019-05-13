@@ -787,6 +787,20 @@ class BlockMenu {
         return !_.includes(blockInfo.isFor || [], `category_${this.lastSelector}`);
     }
 
+    /**
+     * 특정 카테고리에 특정 블록명을 추가한다.
+     * 카테고리가 존재하지 않거나 블록명이 이미 등록된 경우 스킵한다.
+     * Entry.block 목록에 실제 데이터가 있는지, blockMenu 의 그리기 갱신이 필요한지는 상관하지 않는다.
+     * @param categoryName {string}
+     * @param blockName {string}
+     */
+    addCategoryData(categoryName, blockName) {
+        const selectedCategory = this._categoryData.find((element) => element.category === categoryName);
+        if (selectedCategory && selectedCategory.blocks.indexOf(blockName) === -1) {
+            selectedCategory.blocks.push(blockName);
+        }
+    }
+
     _addControl(dom) {
         const { _mouseWheel, onMouseDown, _scroller } = this;
 

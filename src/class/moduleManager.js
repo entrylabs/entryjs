@@ -37,18 +37,12 @@ Entry.moduleManager = new class {
         const blockMenu = Entry.getMainWS().blockMenu;
 
         Object.entries(blockObjects).forEach(([blockName, block]) => {
-            block.isNotFor = [''];
             Entry.block[blockName] = block;
+            blockMenu.addCategoryData('arduino', blockName);
         });
-        blockMenu
-            ._buildCategoryCodes(moduleObject.blockMenuBlocks, 'arduino')
-            .forEach((blockThreadSchema) => {
-                // blockThreadSchema[0].x = -99999;
-                blockMenu._createThread(blockThreadSchema);
-                // delete blockThreadSchema[0].x;
-            });
-        blockMenu.reDraw();
-        Entry.hw.checkDevice({ company: 'FF', model: 'FF' });
+        Entry.hw.hwModule = moduleObject;
+        blockMenu.hwCodeOutdated = true;
+        Entry.dispatchEvent('hwChanged');
     }
 
     /**
