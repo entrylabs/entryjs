@@ -6,6 +6,7 @@
 
 import { Destroyer } from './destroyer/Destroyer';
 import { GEHelper } from '../graphicEngine/GEHelper';
+
 require('./utils');
 
 /**
@@ -235,7 +236,7 @@ Entry.initialize_ = function() {
      * Initialize hardware manager.
      * @type {!Entry.Toast}
      */
-    this.hw = new Entry.HW();
+    this.hw = new Entry.HW2();
 
     if (Entry.enableActivityLogging) {
         this.reporter = new Entry.Reporter(false);

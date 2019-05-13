@@ -7,7 +7,7 @@ import HardwareSocketMessageHandler from './hardware/hardwareSocketMessageHandle
 
 require('../playground/blocks');
 
-Entry.HW = class {
+Entry.HW2 = class {
     // 하드웨어 프로그램 접속용 주소 (https)
     get httpsServerAddress() {
         return 'https://hardware.playentry.org:23518';
@@ -24,7 +24,6 @@ Entry.HW = class {
     }
 
     constructor() {
-        console.log('should not be constructed');
         this.sessionRoomId = localStorage.getItem('entryhwRoomId');
         if (!this.sessionRoomId) {
             this.sessionRoomId = this._createRandomRoomId();
