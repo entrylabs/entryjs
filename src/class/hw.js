@@ -192,7 +192,7 @@ Entry.HW = class {
             Entry.toast.alert(
                 '하드웨어 프로그램 연결 종료',
                 '하드웨어 프로그램과의 연결이 종료되었습니다.',
-                false,
+                false
             );
         }
     }
@@ -257,8 +257,8 @@ Entry.HW = class {
                 .concat(
                     this.sendQueue.readablePorts.slice(
                         target + 1,
-                        this.sendQueue.readablePorts.length,
-                    ),
+                        this.sendQueue.readablePorts.length
+                    )
                 );
         }
     }
@@ -332,7 +332,7 @@ Entry.HW = class {
             '.',
             Entry.Utils.convertIntToHex(data.model),
         ].join('');
-        if (key == this.selectedDevice) {
+        if (key === this.selectedDevice) {
             if (this.hwModule && this.hwModule.dataHandler) {
                 this.hwModule.dataHandler(data);
             }
@@ -349,29 +349,33 @@ Entry.HW = class {
         let descMsg = '';
         if (Entry.propertyPanel && this.hwModule.monitorTemplate) {
             descMsg = Lang.Msgs.hw_connection_success_desc;
-            if (!this.hwMonitor) {
-                this.hwMonitor = new Entry.HWMonitor(this.hwModule);
-            } else {
-                this.hwMonitor._hwModule = this.hwModule;
-                this.hwMonitor.initView();
-            }
-            Entry.propertyPanel.addMode('hw', this.hwMonitor);
-            const mt = this.hwModule.monitorTemplate;
-            if (mt.mode == 'both') {
-                mt.mode = 'list';
-                this.hwMonitor.generateListView();
-                mt.mode = 'general';
-                this.hwMonitor.generateView();
-                mt.mode = 'both';
-            } else if (mt.mode == 'list') {
-                this.hwMonitor.generateListView();
-            } else {
-                this.hwMonitor.generateView();
-            }
+            this._setHardwareMonitorTemplate();
         } else {
             descMsg = Lang.Msgs.hw_connection_success_desc2;
         }
         Entry.toast.success(Lang.Msgs.hw_connection_success, descMsg);
+    }
+
+    _setHardwareMonitorTemplate() {
+        if (!this.hwMonitor) {
+            this.hwMonitor = new Entry.HWMonitor(this.hwModule);
+        } else {
+            this.hwMonitor._hwModule = this.hwModule;
+            this.hwMonitor.initView();
+        }
+        Entry.propertyPanel.addMode('hw', this.hwMonitor);
+        const mt = this.hwModule.monitorTemplate;
+        if (mt.mode === 'both') {
+            mt.mode = 'list';
+            this.hwMonitor.generateListView();
+            mt.mode = 'general';
+            this.hwMonitor.generateView();
+            mt.mode = 'both';
+        } else if (mt.mode === 'list') {
+            this.hwMonitor.generateListView();
+        } else {
+            this.hwMonitor.generateView();
+        }
     }
 
     banHW() {
@@ -403,7 +407,7 @@ Entry.HW = class {
             },
             runViewer(sUrl, fpCallback) {
                 this._w.document.write(
-                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`,
+                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`
                 );
                 let nCounter = 0;
                 const bNotInstalled = false;
@@ -477,11 +481,10 @@ Entry.HW = class {
         function executeIe(customUrl) {
             navigator.msLaunchUri(
                 customUrl,
-                () => {
-                },
+                () => {},
                 () => {
                     hw.popupHelper.show('hwDownload', true);
-                },
+                }
             );
         }
 
@@ -540,61 +543,6 @@ Entry.HW = class {
                 this.popupHelper = new Entry.popupHelper(true);
             }
         }
-
-        this.popupHelper.addPopup('newVersion', {
-            type: 'confirm',
-            title: Lang.Msgs.new_version_title,
-            setPopupLayout(popup) {
-                const content = Entry.Dom('div', {
-                    class: 'contentArea',
-                });
-                const text = Entry.Dom('div', {
-                    class: 'textArea',
-                    parent: content,
-                });
-                const text1 = Entry.Dom('div', {
-                    class: 'text1',
-                    parent: text,
-                });
-                const text2 = Entry.Dom('div', {
-                    class: 'text2',
-                    parent: text,
-                });
-                const text3 = Entry.Dom('div', {
-                    class: 'text3',
-                    parent: text,
-                });
-                const text4 = Entry.Dom('div', {
-                    class: 'text4',
-                    parent: text,
-                });
-                const cancel = Entry.Dom('div', {
-                    classes: ['popupCancelBtn', 'popupDefaultBtn'],
-                    parent: content,
-                });
-                const ok = Entry.Dom('div', {
-                    classes: ['popupOkBtn', 'popupDefaultBtn'],
-                    parent: content,
-                });
-                text1.text(Lang.Msgs.new_version_text1);
-                text2.html(Lang.Msgs.new_version_text2);
-                text3.text(Lang.Msgs.new_version_text3);
-                text4.text(Lang.Msgs.new_version_text4);
-                cancel.text(Lang.Buttons.cancel);
-                ok.html(Lang.Msgs.new_version_download);
-
-                content.bindOnClick('.popupDefaultBtn', function(e) {
-                    const $this = $(this);
-                    if ($this.hasClass('popupOkBtn')) {
-                        hw.downloadConnector();
-                    }
-
-                    hw.popupHelper.hide('newVersion');
-                });
-
-                popup.append(content);
-            },
-        });
 
         this.popupHelper.addPopup('hwDownload', {
             type: 'confirm',
