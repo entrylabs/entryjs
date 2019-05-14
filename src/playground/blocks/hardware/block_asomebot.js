@@ -99,6 +99,7 @@ Entry.AsomeBot.setLanguage = function() {
                 asomebot_buzzer_close: '부저 끄기 %1',
 
                 asomebot_home: '차렷 %1',
+                asomebot_angle: '%1번 모터를 %2도로 %3초 동안 회전 %4',
                 asomebot_forward: '앞으로 전진 %1',
                 asomebot_backward: '뒤로 후진 %1',
                 asomebot_turn_left: '왼쪽으로 회전 %1',
@@ -128,6 +129,7 @@ Entry.AsomeBot.setLanguage = function() {
                 asomebot_buzzer_close: '부저 끄기 %1',
 
                 asomebot_home: 'attention %1',
+                asomebot_angle: '%1번 모터를 %2도로 %3초 동안 회전 %4',
                 asomebot_forward: 'Moving forward %1',
                 asomebot_backward: 'Moving backward %1',
                 asomebot_turn_left: 'Turn left %1',
@@ -159,6 +161,7 @@ Entry.AsomeBot.blockMenuBlocks = [
     'asomebot_buzzer_close',
 
     'asomebot_home',
+    'asomebot_angle',
     'asomebot_forward',
     'asomebot_backward',
     'asomebot_turn_left',
@@ -512,6 +515,86 @@ Entry.AsomeBot.getBlocks = function() {
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
                     sq.msg = String.format("asomebot.home()");
+                    return script;
+                } 
+                
+                if ((pd.msg_id) && (pd.msg_id.indexOf(script.msg_id) >= 0)) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
+        asomebot_angle: {
+            template: Lang.template.asomebot_angle,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+                VALUE2: 1,
+                VALUE3: 2,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0.5'],
+                    },
+                    null
+                ],
+                type: 'asomebot_angle',
+            },
+            class: 'Moving',
+            isNotFor: ['AsomeBot'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getValue('VALUE1');
+                var value2 = script.getValue('VALUE2');
+                var value3 = parseInt( parseFloat(script.getValue('VALUE3')) * 1000 );
+
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = String.format("asomebot.angles( [{0}], [{1}], {2})", value1, value2, String(value3));
                     return script;
                 } 
                 
