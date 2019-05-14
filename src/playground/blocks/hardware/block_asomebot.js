@@ -116,6 +116,11 @@ Entry.AsomeBot.setLanguage = function() {
                 asomebot_swing: '발목 비틀어서 발바닥 들기 %1 %2', // 왼쪽(left_swing), 오른쪽(right_swing)
                 asomebot_yaho: '야호 %1',
                 asomebot_moonwalk: '문워크 춤추기 %1',
+
+                asomebot_connect: '인터넷 연결하기 %1 %2 %3',
+                asomebot_open_ap: '공유기 모드로 변경하기 %1 %2',
+                asomebot_open_udp: '%1번 포트로 UDP 소켓 열기 %2',
+                asomebot_udp_msg: 'UDP 수신값',                
             },
         },
         en: {
@@ -146,6 +151,11 @@ Entry.AsomeBot.setLanguage = function() {
                 asomebot_swing: 'right %1 %2',
                 asomebot_yaho: 'right %1',
                 asomebot_moonwalk: 'right %1',
+
+                asomebot_connect: '인터넷 연결하기 %1 %2 %3',
+                asomebot_open_ap: '공유기 모드로 변경하기 %1 %2',
+                asomebot_open_udp: '%1번 포트로 UDP 소켓 열기 %2',
+                asomebot_udp_msg: 'UDP 수신값',                
             },
         },
     };
@@ -160,8 +170,8 @@ Entry.AsomeBot.blockMenuBlocks = [
     'asomebot_buzzer_tone',
     'asomebot_buzzer_close',
 
-    'asomebot_home',
     'asomebot_angle',
+    'asomebot_home',
     'asomebot_forward',
     'asomebot_backward',
     'asomebot_turn_left',
@@ -178,6 +188,11 @@ Entry.AsomeBot.blockMenuBlocks = [
     'asomebot_swing',
     'asomebot_yaho',
     'asomebot_moonwalk',
+ 
+    'asomebot_connect',
+    'asomebot_open_ap',
+    'asomebot_open_udp',
+    'asomebot_udp_msg',
 ];
 
 Entry.AsomeBot.getBlocks = function() {
@@ -1289,6 +1304,189 @@ Entry.AsomeBot.getBlocks = function() {
                 }
 
                 return script;
+            },
+            syntax: undefined,
+        },
+
+        // Internet
+        asomebot_connect: {
+            template: Lang.template.asomebot_connect,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+                VALUE2: 1,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['SSID'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['Password'],
+                    },
+                    null
+                ],
+                type: 'asomebot_connect',
+            },
+            class: 'Internet',
+            isNotFor: ['AsomeBot'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getStringValue('VALUE1');
+                var value2 = script.getStringValue('VALUE2');
+
+                sq.msg_id = random_str(16);
+                sq.msg = String.format("import internet; internet.connect('{0}', '{1}')", value1, value2);
+
+                return script.callReturn();
+            },
+            syntax: undefined,
+        },
+        asomebot_open_ap: {
+            template: Lang.template.asomebot_open_ap,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['SSID'],
+                    },
+                    null
+                ],
+                type: 'asomebot_open_ap',
+            },
+            class: 'Internet',
+            isNotFor: ['AsomeBot'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value = script.getStringValue('VALUE');
+
+                sq.msg_id = random_str(16);
+                sq.msg = String.format("import internet; internet.open_ap('{0}')", value);
+
+                return script.callReturn();
+            },
+            syntax: undefined,
+        },
+        asomebot_open_udp: {
+            template: Lang.template.asomebot_open_udp,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        defaultType: 'number',
+                        params: ['1234'],
+                    },
+                    null
+                ],
+                type: 'asomebot_open_udp',
+            },
+            class: 'Internet',
+            isNotFor: ['AsomeBot'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value = script.getValue('VALUE');
+
+                sq.msg_id = random_str(16);
+                sq.msg = String.format("import udp_socket; udp_socket.open({0})", value);
+
+                return script.callReturn();
+            },
+            syntax: undefined,
+        },
+        asomebot_udp_msg: {
+            template: Lang.template.asomebot_udp_msg,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'asomebot_udp_msg',
+            },
+            class: 'Internet',
+            isNotFor: ['AsomeBot'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                sq.msg_id = random_str(16);
+                sq.msg = "import udp_socket; udp_socket.read_text()";
+
+                return pd.distance;
             },
             syntax: undefined,
         },
