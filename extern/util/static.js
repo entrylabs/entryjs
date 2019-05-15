@@ -1,9 +1,14 @@
 'use strict';
 
 /* eslint-disable */
-var EntryStatic = {};
-
-EntryStatic.objectTypes = ['sprite', 'textBox'];
+var EntryStatic = {
+    fontFamily: 'NanumGothic',
+    exportBlockFontFamily:
+        "NanumGothic, 'NanumGothic', '나눔고딕','NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum",
+    // fontOffsetY: 1,
+    heightLetter: 'M',
+    objectTypes: ['sprite', 'textBox'],
+};
 
 EntryStatic.usageList = [
     'usage_sequence',
@@ -670,7 +675,7 @@ Object.defineProperty(EntryStatic, 'fonts', {
                 family: 'UhBeemysen',
                 url: '/css/uhbeemysen.css',
                 visible: true,
-            }
+            },
         ];
     },
 });
