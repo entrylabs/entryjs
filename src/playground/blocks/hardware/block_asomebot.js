@@ -117,10 +117,11 @@ Entry.AsomeBot.setLanguage = function() {
                 asomebot_yaho: '야호 %1',
                 asomebot_moonwalk: '문워크 춤추기 %1',
 
-                asomebot_connect: '인터넷 연결하기 %1 %2 %3',
-                asomebot_open_ap: '공유기 모드로 변경하기 %1 %2',
-                asomebot_open_udp: '%1번 포트로 UDP 소켓 열기 %2',
-                asomebot_udp_msg: 'UDP 수신값',                
+                internet_connect: '인터넷 연결하기 %1 %2 %3',
+                internet_open_ap: '공유기 모드로 변경하기 %1 %2',
+                internet_open_udp: '%1번 포트로 UDP 소켓 열기 %2',
+                internet_udp_msg: 'UDP 수신값',                
+                internet_send_msg: '%1코드로 %2메시지를 전송하기 %3',                
             },
         },
         en: {
@@ -152,10 +153,11 @@ Entry.AsomeBot.setLanguage = function() {
                 asomebot_yaho: 'right %1',
                 asomebot_moonwalk: 'right %1',
 
-                asomebot_connect: '인터넷 연결하기 %1 %2 %3',
-                asomebot_open_ap: '공유기 모드로 변경하기 %1 %2',
-                asomebot_open_udp: '%1번 포트로 UDP 소켓 열기 %2',
-                asomebot_udp_msg: 'UDP 수신값',                
+                internet_connect: '인터넷 연결하기 %1 %2 %3',
+                internet_open_ap: '공유기 모드로 변경하기 %1 %2',
+                internet_open_udp: '%1번 포트로 UDP 소켓 열기 %2',
+                internet_udp_msg: 'UDP 수신값',                
+                internet_send_msg: '%1코드로 %2메시지를 전송하기 %3',                
             },
         },
     };
@@ -189,10 +191,11 @@ Entry.AsomeBot.blockMenuBlocks = [
     'asomebot_yaho',
     'asomebot_moonwalk',
  
-    'asomebot_connect',
-    'asomebot_open_ap',
-    'asomebot_open_udp',
-    'asomebot_udp_msg',
+    'internet_connect',
+    'internet_open_ap',
+    'internet_open_udp',
+    'internet_udp_msg',
+    'internet_send_msg',
 ];
 
 Entry.AsomeBot.getBlocks = function() {
@@ -1320,8 +1323,8 @@ Entry.AsomeBot.getBlocks = function() {
         },
 
         // Internet
-        asomebot_connect: {
-            template: Lang.template.asomebot_connect,
+        internet_connect: {
+            template: Lang.template.internet_connect,
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1358,7 +1361,7 @@ Entry.AsomeBot.getBlocks = function() {
                     },
                     null
                 ],
-                type: 'asomebot_connect',
+                type: 'internet_connect',
             },
             class: 'Internet',
             isNotFor: ['AsomeBot'],
@@ -1387,8 +1390,8 @@ Entry.AsomeBot.getBlocks = function() {
             },
             syntax: undefined,
         },
-        asomebot_open_ap: {
-            template: Lang.template.asomebot_open_ap,
+        internet_open_ap: {
+            template: Lang.template.internet_open_ap,
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1416,7 +1419,7 @@ Entry.AsomeBot.getBlocks = function() {
                     },
                     null
                 ],
-                type: 'asomebot_open_ap',
+                type: 'internet_open_ap',
             },
             class: 'Internet',
             isNotFor: ['AsomeBot'],
@@ -1444,8 +1447,8 @@ Entry.AsomeBot.getBlocks = function() {
             },
             syntax: undefined,
         },
-        asomebot_open_udp: {
-            template: Lang.template.asomebot_open_udp,
+        internet_open_udp: {
+            template: Lang.template.internet_open_udp,
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1474,7 +1477,7 @@ Entry.AsomeBot.getBlocks = function() {
                     },
                     null
                 ],
-                type: 'asomebot_open_udp',
+                type: 'internet_open_udp',
             },
             class: 'Internet',
             isNotFor: ['AsomeBot'],
@@ -1502,8 +1505,8 @@ Entry.AsomeBot.getBlocks = function() {
             },
             syntax: undefined,
         },
-        asomebot_udp_msg: {
-            template: Lang.template.asomebot_udp_msg,
+        internet_udp_msg: {
+            template: Lang.template.internet_udp_msg,
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -1519,7 +1522,7 @@ Entry.AsomeBot.getBlocks = function() {
             events: {},
             def: {
                 params: [null],
-                type: 'asomebot_udp_msg',
+                type: 'internet_udp_msg',
             },
             class: 'Internet',
             isNotFor: ['AsomeBot'],
@@ -1531,6 +1534,73 @@ Entry.AsomeBot.getBlocks = function() {
                 sq.msg = "import udp_socket; udp_socket.read_text()";
 
                 return pd.distance;
+            },
+            syntax: undefined,
+        },
+        internet_send_msg: {
+            template: Lang.template.internet_send_msg,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+                VALUE2: 1,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['Code'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['Message'],
+                    },
+                    null
+                ],
+                type: 'internet_send_msg',
+            },
+            class: 'Internet',
+            isNotFor: ['AsomeBot'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getStringValue('VALUE1');
+                var value2 = script.getStringValue('VALUE2');
+
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = String.format("import internet; internet.send_msg('{0}', '{1}')", value1, value2);
+                    return script;
+                } 
+                
+                if ((pd.msg_id) && (pd.msg_id.indexOf(script.msg_id) >= 0)) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
             },
             syntax: undefined,
         },
