@@ -237,10 +237,21 @@ Entry.AsomeBot.getBlocks = function() {
 
                 var value = script.getValue('VALUE');
 
-                sq.msg_id = random_str(16);
-                sq.msg = String.format("OutputPin(4).{0}()", value);
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = String.format("OutputPin(4).{0}()", value);
+                    return script;
+                } 
+                
+                if ((pd.msg_id) && (pd.msg_id.indexOf(script.msg_id) >= 0)) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
 
-                return script.callReturn();
+                return script;
             },
             syntax: undefined,
         },
@@ -1358,10 +1369,21 @@ Entry.AsomeBot.getBlocks = function() {
                 var value1 = script.getStringValue('VALUE1');
                 var value2 = script.getStringValue('VALUE2');
 
-                sq.msg_id = random_str(16);
-                sq.msg = String.format("import internet; internet.connect('{0}', '{1}')", value1, value2);
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = String.format("import internet; internet.connect('{0}', '{1}')", value1, value2);
+                    return script;
+                } 
+                
+                if ((pd.msg_id) && (pd.msg_id.indexOf(script.msg_id) >= 0)) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
 
-                return script.callReturn();
+                return script;
             },
             syntax: undefined,
         },
@@ -1404,10 +1426,21 @@ Entry.AsomeBot.getBlocks = function() {
 
                 var value = script.getStringValue('VALUE');
 
-                sq.msg_id = random_str(16);
-                sq.msg = String.format("import internet; internet.open_ap('{0}')", value);
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = String.format("import internet; internet.open_ap('{0}')", value);
+                    return script;
+                } 
+                
+                if ((pd.msg_id) && (pd.msg_id.indexOf(script.msg_id) >= 0)) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
 
-                return script.callReturn();
+                return script;
             },
             syntax: undefined,
         },
@@ -1451,10 +1484,21 @@ Entry.AsomeBot.getBlocks = function() {
 
                 var value = script.getValue('VALUE');
 
-                sq.msg_id = random_str(16);
-                sq.msg = String.format("import udp_socket; udp_socket.open({0})", value);
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = String.format("import udp_socket; udp_socket.open({0})", value);
+                    return script;
+                } 
+                
+                if ((pd.msg_id) && (pd.msg_id.indexOf(script.msg_id) >= 0)) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
 
-                return script.callReturn();
+                return script;
             },
             syntax: undefined,
         },
