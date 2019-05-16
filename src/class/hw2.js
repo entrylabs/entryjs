@@ -7,6 +7,11 @@ import HardwareSocketMessageHandler from './hardware/hardwareSocketMessageHandle
 
 require('../playground/blocks');
 
+const hardwareModuleType = {
+    builtIn: 'builtin',
+    module: 'module',
+};
+
 Entry.HW2 = class {
     // 하드웨어 프로그램 접속용 주소 (https)
     get httpsServerAddress() {
@@ -36,6 +41,7 @@ Entry.HW2 = class {
         this.sendQueue = {};
         this.currentDeviceKey = null;
         this.hwModule = null;
+        this.hwModuleType = hardwareModuleType.builtIn; // builtin, module
         this.socketType = null;
 
         this._hwPopupCreate();
@@ -164,6 +170,12 @@ Entry.HW2 = class {
             // 하드웨어가 연결되어있지 않은 경우의 처리
             Entry.toast.warning('모듈 로드하기', '하드웨어 프로그램이 연결되어있지 않습니다.');
         }
+    }
+
+    setExternalModule(moduleObject) {
+        this.hwModule = moduleObject;
+        this.hwModuleType = hardwareModuleType.module;
+        Entry.dispatchEvent('hwChanged');
     }
 
     _disconnectHardware() {

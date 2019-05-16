@@ -48,8 +48,7 @@ Entry.moduleManager = new class {
             Entry.block[blockName] = block;
             blockMenu.addCategoryData('arduino', blockName);
         });
-        Entry.hw.hwModule = moduleObject;
-        blockMenu.hwCodeOutdated = true;
+        Entry.hw.setExternalModule(moduleObject);
         Entry.dispatchEvent('hwChanged');
     }
 
