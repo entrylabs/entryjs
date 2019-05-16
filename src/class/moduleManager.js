@@ -20,6 +20,10 @@ Entry.moduleManager = new class {
         scriptElement.onload = function() {
             // nothing to do yet
         };
+        scriptElement.onerror = function() {
+            Entry.toast.alert('모듈 로드실패', '모듈 불러오기에 실패했습니다.');
+            scriptElement.remove();
+        };
         scriptElement.src = url;
 
         // noinspection JSCheckFunctionSignatures
