@@ -38,8 +38,6 @@ Entry.HW2 = class {
         this.hwModule = null;
         this.socketType = null;
 
-        this.hwInfo = Entry.HARDWARE_LIST;
-
         this.hwPopupCreate();
         this._initSocket();
 
@@ -340,7 +338,7 @@ Entry.HW2 = class {
         }
 
         this.selectedDevice = key;
-        this.hwModule = this.hwInfo[key];
+        this.hwModule = Entry.HARDWARE_LIST[key];
         if (!this.hwModule) {
             return;
         }
@@ -379,13 +377,9 @@ Entry.HW2 = class {
     }
 
     banClassAllHardware() {
-        for (const i in this.hwInfo) {
-            const hwModule = this.hwInfo[i];
-            if (!hwModule) {
-                continue;
-            }
-            Entry.playground.mainWorkspace.blockMenu.banClass(hwModule.name, true);
-        }
+        Object.values(Entry.HARDWARE_LIST).forEach((hardwareObject) => {
+            Entry.playground.mainWorkspace.blockMenu.banClass(hardwareObject.name, true);
+        });
     }
 
     executeHardware() {
