@@ -84,7 +84,7 @@ Entry.HW2 = class {
         messageHandler.addEventListener('disconnect', this._disconnectHardware.bind(this));
         messageHandler.addEventListener('data', (portData) => {
             this.checkDevice(portData);
-            this.updatePortData(portData);
+            this._updatePortData(portData);
         });
 
         socket.on('disconnect', () => {
@@ -282,7 +282,7 @@ Entry.HW2 = class {
         }
     }
 
-    updatePortData(data) {
+    _updatePortData(data) {
         this.portData = data;
         if (this.hwMonitor && Entry.propertyPanel && Entry.propertyPanel.selected === 'hw') {
             this.hwMonitor.update(this.portData, this.sendQueue);
@@ -321,6 +321,12 @@ Entry.HW2 = class {
         this.hwModule.setZero();
     }
 
+    /**
+     * 디바이스의 연결상태를 체크한다.
+     * 만약 이미 바로 직전에 동일한 하드웨어와 연결된 경우는 dataHandler 로 데이터를 전송하기만 한다.
+     * 새로운 하드웨어의 연결인 경우는 연결 하드웨어를 치환하고 엔트리에 상태변경을 요청한다.
+     * @param data
+     */
     checkDevice(data) {
         if (data.company === undefined) {
             return;
@@ -374,12 +380,6 @@ Entry.HW2 = class {
         } else {
             this.hwMonitor.generateView();
         }
-    }
-
-    banClassAllHardware() {
-        Object.values(Entry.HARDWARE_LIST).forEach((hardwareObject) => {
-            Entry.playground.mainWorkspace.blockMenu.banClass(hardwareObject.name, true);
-        });
     }
 
     executeHardware() {

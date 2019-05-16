@@ -2044,15 +2044,19 @@ Entry.Playground = class {
 
     updateHW() {
         const blockMenu = _.result(this.mainWorkspace, 'blockMenu');
+        const hw = Entry.hw;
+
         if (!blockMenu) {
             return;
         }
 
-        const hw = Entry.hw;
+        // Entry Hardware List 에 등록된 모든 하드웨어 블록을 숨김처리
+        Object.values(Entry.HARDWARE_LIST).forEach((hardwareObject) => {
+            blockMenu.banClass(hardwareObject.name, true);
+        });
+
         if (hw && hw.connected) {
             blockMenu.banClass('arduinoDisconnected', true);
-
-            hw.banClassAllHardware();
 
             if (hw.hwModule) {
                 blockMenu.banClass('arduinoConnect', true);
@@ -2066,8 +2070,6 @@ Entry.Playground = class {
             blockMenu.banClass('arduinoConnected', true);
             blockMenu.banClass('arduinoConnect', true);
             blockMenu.unbanClass('arduinoDisconnected', true);
-
-            Entry.hw.banClassAllHardware();
         }
 
         blockMenu.hwCodeOutdated = true;
