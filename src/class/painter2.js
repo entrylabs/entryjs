@@ -20,12 +20,19 @@ Entry.Painter = class Painter {
 
         this.isShow = false;
         this.clipboard = null;
+        Entry.addEventListener('pictureImport', this.addPicture.bind(this));
+        Entry.addEventListener('run', this.detachKeyboardEvents.bind(this));
+        Entry.addEventListener('stop', this.attachKeyboardEvents.bind(this));
     }
 
     initialize() {
+        if (this.entryPaint) {
+            return;
+        }
+
         this.isShow = true;
+
         this.entryPaint = EntryPaint.create({ parent: this.view });
-        Entry.addEventListener('pictureSelected', this.changePicture.bind(this));
 
         this.isImport = true;
         this.entryPaint.on('SNAPSHOT_SAVED', (e) => {
@@ -35,7 +42,12 @@ Entry.Painter = class Painter {
             }
             this.isImport = false;
         });
+        this.entryPaint.on('NEW_PICTURE', this.newPicture.bind(this));
+        this.entryPaint.on('IMPORT_IMAGE', () => {
+            Entry.dispatchEvent('openPictureImport');
+        });
 
+        Entry.addEventListener('pictureSelected', this.changePicture.bind(this));
         Entry.windowResized.attach(this.view, this.entryPaint.realign);
     }
 
@@ -49,6 +61,23 @@ Entry.Painter = class Painter {
 
     getExt(filePath) {
         return filePath.split('.').pop() === 'svg' ? 'svg' : 'png';
+    }
+
+    newPicture() {
+        const newPicture = {
+            dimension: {
+                height: 1,
+                width: 1,
+            },
+            fileurl: `${Entry.mediaFilePath}_1x1.png`,
+            name: Lang.Workspace.new_picture,
+        };
+
+        newPicture.id = Entry.generateHash();
+        if (this.file && this.file.objectId) {
+            newPicture.objectId = this.file.objectId;
+        }
+        Entry.playground.addPicture(newPicture, true);
     }
 
     changePicture(picture = {}) {
@@ -152,5 +181,29 @@ Entry.Painter = class Painter {
 
         this.file.isUpdate = false;
         this.file.modified = false;
+    }
+
+    attachKeyboardEvents() {
+        this.detachKeyboardEvents();
+
+        const events = this._keyboardEvents;
+
+        let evt = Entry.keyPressed;
+        evt && events.push(evt.attach(this, this._keyboardPressControl));
+
+        evt = Entry.keyUpped;
+        evt && events.push(evt.attach(this, this._keyboardUpControl));
+    }
+
+    detachKeyboardEvents() {
+        const events = this._keyboardEvents;
+        if (!events || !events.length) {
+            return;
+        }
+
+        while (events.length) {
+            const evt = events.pop();
+            evt.destroy && evt.destroy();
+        }
     }
 };
