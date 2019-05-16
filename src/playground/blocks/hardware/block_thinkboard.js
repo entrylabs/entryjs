@@ -27,38 +27,9 @@ Entry.ThinkBoard =
             var keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach(function(key) 
             {             
-                if(Entry.hw.sendQueue.SET[key].type === '4')      // SERVO
-                {
-                    Entry.hw.sendQueue.SET[key].port = 0;
-                    Entry.hw.sendQueue.SET[key].data[0] = 0;            
-                    Entry.hw.sendQueue.SET[key].data[1] = 90;                    
-                }
-                else if(Entry.hw.sendQueue.SET[key].type === '12')      // MOTOR
-                {
-                    Entry.hw.sendQueue.SET[key].port = 0;
-                    Entry.hw.sendQueue.SET[key].data[0] = 4;            
-                    Entry.hw.sendQueue.SET[key].data[1] = 0;       
-                }
-                else Entry.hw.sendQueue.SET[key].data = 0;                              
+                Entry.hw.sendQueue.SET[key].data = 0;                                
                 Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-            });
-
-            /*
-            // SERVO
-            Entry.hw.sendQueue['SET'][0] = 
-    		{
-                type: Entry.ThinkBoard.sensorTypes.SERVO,
-                data: [0, 90],
-                time: new Date().getTime(),
-            };    
-            // MOTOR
-            Entry.hw.sendQueue['SET'][0] = 
-            {
-                type: Entry.ThinkBoard.sensorTypes.MOTOR,
-                data: [4, 0],
-                time: new Date().getTime(),
-            };
-            */                                      
+            });                                 
         } 
         Entry.hw.update();    
     },
@@ -170,8 +141,8 @@ Entry.ThinkBoard.setLanguage = function() {
 				"thinkboard_get_analog_usonic_mapping": "포트 %1 의 초음파 센서 값 %2 ~ %3 에서 %4 ~ %5 으로 변환값", 	
 				"thinkboard_get_analog_temp_value": "포트 %1 의 %2 센서 값",	
                 "thinkboard_digital_Laser_onoff": "포트 %1 의 레이저포인터 %2 %3",             
-                "thinkboard_digital_rgbled_onoff": "RGB LED %1 색 켜기",	
-				"thinkboard_digital_rgbled_off": "RGB LED 끄기",	                
+                "thinkboard_digital_rgbled_onoff": "RGB LED %1 색 켜기 %2",	
+				"thinkboard_digital_rgbled_off": "RGB LED 끄기 %1",	                
 //[4/19]  "thinkboard_digital_set_rgbled_value": "RGB LED 빨강 %1 초록 %2 파랑 %3 으로 켜기 %4",
 //[4/19]  "thinkboard_digital_rgbled_percent": "RGB LED 밝기를 %1 로 정하기 %2",
 				"thinkboard_get_digital_servo_value": "포트 %1 서보모터 %2 각도 값",
@@ -198,8 +169,8 @@ Entry.ThinkBoard.setLanguage = function() {
 				"thinkboard_get_analog_temp_value": "Port %1 and %2 Sensor Value",	
                 "thinkboard_digital_Laser_onoff": "Port %1 and Laserpoint %2 %3",	
 //[4/19]  "thinkboard_digital_rgbled_onoff": "RGB LED %1 Color %2 %3",		                
-                "thinkboard_digital_rgbled_onoff": "RGB LED %1 Color Turn On",	
-				"thinkboard_digital_rgbled_off": "RGB LED Turn Off",	                	
+                "thinkboard_digital_rgbled_onoff": "RGB LED %1 Color Turn On %2",	
+				"thinkboard_digital_rgbled_off": "RGB LED Turn Off %1",	                	
 //[4/19]  "thinkboard_digital_set_rgbled_value": "Turn On RGB LED with RED %1 GREEN %2 BLUE %3 value %4",
 //[4/19]  "thinkboard_digital_rgbled_percent": "Set RGB LED Brightness to %1 %2",		
 				"thinkboard_get_digital_servo_value": "Port %1 Servo Motor %2 Angle Value",
@@ -262,7 +233,7 @@ Entry.ThinkBoard.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
+                    img: 'block_icon/hardware_bzr.png',        // img: 'block_icon/hardware_icon.svg',
                     size: 11,
                 },
             ],
@@ -403,7 +374,7 @@ Entry.ThinkBoard.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
+                    img: 'block_icon/hardware_bzr2.png',
                     size: 11,
                 },
             ],
@@ -1353,7 +1324,7 @@ Entry.ThinkBoard.getBlocks = function() {
                 },				
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
+                    img: 'block_icon/hardware_laser.png',
                     size: 11,
                 },
             ],
@@ -1453,7 +1424,7 @@ Entry.ThinkBoard.getBlocks = function() {
 */                
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
+                    img: 'block_icon/hardware_led.png',
                     size: 11,
                 },
             ],
@@ -1546,7 +1517,7 @@ Entry.ThinkBoard.getBlocks = function() {
 */                
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
+                    img: 'block_icon/hardware_led.png',
                     size: 11,
                 },
             ],
@@ -1642,7 +1613,7 @@ Entry.ThinkBoard.getBlocks = function() {
                 },				
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
+                    img: 'block_icon/hardware_led.png',
                     size: 11,
                 },
             ],
@@ -1711,7 +1682,7 @@ Entry.ThinkBoard.getBlocks = function() {
                 },				
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
+                    img: 'block_icon/hardware_led.png',
                     size: 11,
                 },
             ],
@@ -1801,14 +1772,15 @@ Entry.ThinkBoard.getBlocks = function() {
             },
             paramsKeyMap: {
                 PORT: 0,
-                TYPE: 0,
+                MODE: 1,
             },
             class: 'ThinkBoard_SVO',
             isNotFor: ['ThinkBoard'],
             func: function(sprite, script) 
 			{
                 var port = script.getNumberValue('PORT');	
-                var type = script.getNumberValue('TYPE');	                
+                var mode = script.getNumberValue('MODE');	 
+                mode += 1;               
 				
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
@@ -1820,7 +1792,7 @@ Entry.ThinkBoard.getBlocks = function() {
                 }
                 Entry.hw.sendQueue['GET'][Entry.ThinkBoard.sensorTypes.SERVO] = 
 				{
-                    port: [port, type],
+                    port: [port, mode],
                     time: new Date().getTime(),
                 };
                 return Entry.hw.portData.SERVO[port] || 0;
@@ -1851,7 +1823,7 @@ Entry.ThinkBoard.getBlocks = function() {
                 },                
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
+                    img: 'block_icon/hardware_servo.png',
                     size: 11,
                 },
             ],
@@ -1875,18 +1847,19 @@ Entry.ThinkBoard.getBlocks = function() {
             paramsKeyMap: 
 			{
                 PORT: 0,
-                TYPE: 0,
-                ANGLE: 1,
+                MODE: 1,
+                ANGLE: 2,
             },
             class: 'ThinkBoard_SVO',
             isNotFor: ['ThinkBoard'],
             func: function(sprite, script) 
 			{
                 var port = script.getNumberValue('PORT', script);
-                var mode = script.getNumberValue('TYPE', script);                
+                var mode = script.getNumberValue('MODE', script);                
                 var angle = script.getNumberValue('ANGLE', script);
-				
-                if(mode == 0) angle = Math.min(180, angle);
+                mode += 1;
+                
+                if(mode == 1) angle = Math.min(180, angle);
                 else angle = Math.min(360, angle);
                 angle = Math.max(0, angle);
 				
@@ -1927,7 +1900,7 @@ Entry.ThinkBoard.getBlocks = function() {
                 },	                	
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
+                    img: 'block_icon/hardware_servo.png',
                     size: 11,
                 },
             ],
@@ -1949,17 +1922,18 @@ Entry.ThinkBoard.getBlocks = function() {
             },
             paramsKeyMap: {
                 PORT: 0,
-                TYPE: 0,
-                DIR: 1,
+                MODE: 1,
+                DIR: 2,
             },
             class: 'ThinkBoard_SVO',
             isNotFor: ['ThinkBoard'],
             func: function(sprite, script) 
 			{
                 var port = script.getNumberValue('PORT', script);
-                var mode = script.getNumberValue('TYPE', script);                
+                var mode = script.getNumberValue('MODE', script);                
                 var dir = script.getNumberValue('DIR', script);
-				
+                mode += 3;
+                
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                 }
@@ -1993,7 +1967,7 @@ Entry.ThinkBoard.getBlocks = function() {
                 },                
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
+                    img: 'block_icon/hardware_servo.png',
                     size: 11,
                 },
             ],
@@ -2012,16 +1986,17 @@ Entry.ThinkBoard.getBlocks = function() {
             },
             paramsKeyMap: {
                 PORT: 0,
-                TYPE: 0,
+                MODE: 1,
             },
             class: 'ThinkBoard_SVO',
             isNotFor: ['ThinkBoard'],
             func: function(sprite, script) 
 			{
                 var port = script.getNumberValue('PORT', script);
-                var mode = script.getNumberValue('TYPE', script);                
+                var mode = script.getNumberValue('MODE', script);                
 				var angle = 90;
-				
+                mode += 5;
+                
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                 }
@@ -2035,242 +2010,7 @@ Entry.ThinkBoard.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-
-        /*
-		// 12. 360도 서보 모터 - 1) 모터 각도 값		
-        thinkboard_get_digital_servo_360_value: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
-            statements: [],
-            template: Lang.template.thinkboard_get_digital_servo_360_value,
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'thinkboard_digital_port_list',
-                    },
-                ],
-                type: 'thinkboard_get_digital_servo_360_value',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            class: 'ThinkBoard_SVO2',
-            isNotFor: ['ThinkBoard'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');	
-				
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
-                }
-                delete Entry.hw.sendQueue['SET'][port];
-				
-                if (!Entry.hw.sendQueue['GET']) {
-                    Entry.hw.sendQueue['GET'] = {};
-                }
-                Entry.hw.sendQueue['GET'][
-                    Entry.ThinkBoard.sensorTypes.SERVO		
-                ] = {
-                    port: [port, 4],
-                    time: new Date().getTime(),
-                };
-                return Entry.hw.portData.SERVO[port] || 0;
-            },
-            syntax: { js: [], py: [] },
-        },	
-
-		// 12. 360도 서보 모터 - 2) 모터 각도 설정하기		
-		thinkboard_digital_set_servo_360_angle: 
-		{
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
-			fontColor: '#fff',			
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },				
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 11,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'thinkboard_digital_port_list',
-                    },
-                    {
-                        type: 'number',
-						params: ["0"],
-                    },				
-                    null,
-                ],
-                type: 'thinkboard_digital_set_servo_360_angle',
-            },
-            paramsKeyMap: 
-			{
-				PORT: 0,
-                ANGLE: 1,
-            },
-            class: 'ThinkBoard_SVO2',
-            isNotFor: ['ThinkBoard'],
-            func: function(sprite, script) 
-			{
-                var port = script.getNumberValue('PORT', script);
-                var angle = script.getNumberValue('ANGLE', script);
-				var mode = 4;
-				
-                angle = Math.min(360, angle);
-                angle = Math.max(0, angle);				
-				
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
-                }
-                Entry.hw.sendQueue['SET'][port] = 
-				{
-                    type: Entry.ThinkBoard.sensorTypes.SERVO,
-                    data: [mode, angle],
-                    time: new Date().getTime(),
-                };
-                return script.callReturn();
-            },
-            syntax: { js: [], py: [] },
-        },		
-		
-		// 13. 360도 서보 모터 - 3) 설정 방향 및 1도 바꾸기		
-		thinkboard_digital_set_servo_360_direction: 
-		{
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
-			fontColor: '#fff',			
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },				
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 11,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'thinkboard_digital_port_list',
-                    },			
-                    {
-                        type: 'thinkboard_motor_direction_list',
-                    },		
-                    null,
-                ],
-                type: 'thinkboard_digital_set_servo_360_direction',
-            },
-            paramsKeyMap: {
-				PORT: 0,
-                DIR: 1,
-            },
-            class: 'ThinkBoard_SVO2',
-            isNotFor: ['ThinkBoard'],
-            func: function(sprite, script) 
-			{
-                var port = script.getNumberValue('PORT', script);
-                var dir = script.getNumberValue('DIR', script);
-				var mode = 5;
-				
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
-                }
-                Entry.hw.sendQueue['SET'][port] = 
-				{
-                    type: Entry.ThinkBoard.sensorTypes.SERVO,
-                    data: [mode, dir],
-                    time: new Date().getTime(),
-                };
-                return script.callReturn();
-            },
-            syntax: { js: [], py: [] },
-        },
-		
-		// 14. 360도 서보 모터 - 4) 모터 정지하기		
-		thinkboard_digital_set_servo_360_stop: 
-		{
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
-			fontColor: '#fff',			
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 11,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'thinkboard_digital_port_list',
-                    },		
-                    null,
-                ],
-                type: 'thinkboard_digital_set_servo_360_stop',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            class: 'ThinkBoard_SVO2',
-            isNotFor: ['ThinkBoard'],
-            func: function(sprite, script) 
-			{
-                var port = script.getNumberValue('PORT', script);
-                var mode = 6; 
-				var angle = 90;
-				
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
-                }
-                Entry.hw.sendQueue['SET'][port] = 
-				{
-                    type: Entry.ThinkBoard.sensorTypes.SERVO,
-                    data: [mode, angle],
-                    time: new Date().getTime(),
-                };
-                return script.callReturn();
-            },
-            syntax: { js: [], py: [] },
-        },
-        */
-        		
+       		
 		// 15. DC 모터 - 1) 방향 바꾸기		
 		thinkboard_digital_set_motor_direction: 
 		{
@@ -2290,7 +2030,7 @@ Entry.ThinkBoard.getBlocks = function() {
                 },				
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
+                    img: 'block_icon/hardware_dc.png',
                     size: 11,
                 },
             ],
@@ -2352,7 +2092,7 @@ Entry.ThinkBoard.getBlocks = function() {
                 },				
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
+                    img: 'block_icon/hardware_dc.png',
                     size: 11,
                 },
             ],
@@ -2383,8 +2123,7 @@ Entry.ThinkBoard.getBlocks = function() {
 				var mode = 2;
 						
                 speed = Math.min(100, speed);
-                speed = Math.max(0, speed);		       
-                speed = speed*2.55;                             
+                speed = Math.max(0, speed);		                           
                 
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
@@ -2415,7 +2154,7 @@ Entry.ThinkBoard.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
+                    img: 'block_icon/hardware_dc.png',
                     size: 11,
                 },
             ],
