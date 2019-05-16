@@ -284,8 +284,8 @@ Entry.HW2 = class {
 
     updatePortData(data) {
         this.portData = data;
-        if (this.hwMonitor && Entry.propertyPanel && Entry.propertyPanel.selected == 'hw') {
-            this.hwMonitor.update();
+        if (this.hwMonitor && Entry.propertyPanel && Entry.propertyPanel.selected === 'hw') {
+            this.hwMonitor.update(this.portData, this.sendQueue);
         }
         if (this.hwModule && this.hwModule.afterReceive) {
             this.hwModule.afterReceive(this.portData);
