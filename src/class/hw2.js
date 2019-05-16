@@ -34,11 +34,11 @@ Entry.HW2 = class {
         this.connected = false;
         this.portData = {};
         this.sendQueue = {};
-        this.selectedDevice = null;
+        this.currentDeviceKey = null;
         this.hwModule = null;
         this.socketType = null;
 
-        this.hwPopupCreate();
+        this._hwPopupCreate();
         this._initSocket();
 
         Entry.addEventListener('stop', this.setZero);
@@ -110,7 +110,7 @@ Entry.HW2 = class {
                 },
             });
 
-        if (location.protocol.indexOf('http') > -1) {
+        if (location.protocol === 'http:') {
             this.socketIo = connectHttpsWebSocket(this.httpServerAddress);
         }
         this.tlsSocketIo1 = connectHttpsWebSocket(this.httpsServerAddress);
@@ -120,15 +120,13 @@ Entry.HW2 = class {
     }
 
     retryConnect() {
-        this.isOpenHardware = false;
         this.TRIAL_LIMIT = 5;
         this._initSocket();
     }
 
     openHardwareProgram() {
-        this.isOpenHardware = true;
         this.TRIAL_LIMIT = 5;
-        this.executeHardware();
+        this._executeHardware();
 
         if (!this.socket || !this.socket.connected) {
             setTimeout(() => {
@@ -170,7 +168,7 @@ Entry.HW2 = class {
 
     _disconnectHardware() {
         Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
-        this.selectedDevice = undefined;
+        this.currentDeviceKey = undefined;
         this.hwModule = undefined;
         Entry.dispatchEvent('hwChanged');
     }
@@ -184,7 +182,7 @@ Entry.HW2 = class {
             Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
             this.socket = undefined;
             this.connected = false;
-            this.selectedDevice = undefined;
+            this.currentDeviceKey = undefined;
             this.hwModule = undefined;
             Entry.dispatchEvent('hwChanged');
             Entry.toast.alert(
@@ -336,14 +334,14 @@ Entry.HW2 = class {
             '.',
             Entry.Utils.convertIntToHex(data.model),
         ].join('');
-        if (key === this.selectedDevice) {
+        if (key === this.currentDeviceKey) {
             if (this.hwModule && this.hwModule.dataHandler) {
                 this.hwModule.dataHandler(data);
             }
             return;
         }
 
-        this.selectedDevice = key;
+        this.currentDeviceKey = key;
         this.hwModule = Entry.HARDWARE_LIST[key];
         if (!this.hwModule) {
             return;
@@ -382,7 +380,7 @@ Entry.HW2 = class {
         }
     }
 
-    executeHardware() {
+    _executeHardware() {
         const hw = this;
         const executeIeCustomLauncher = {
             _bNotInstalled: false,
@@ -528,7 +526,7 @@ Entry.HW2 = class {
         }
     }
 
-    hwPopupCreate() {
+    _hwPopupCreate() {
         const hw = this;
         if (!this.popupHelper) {
             if (window.popupHelper) {
