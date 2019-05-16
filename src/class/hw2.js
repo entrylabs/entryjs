@@ -166,7 +166,7 @@ Entry.HW2 = class {
             });
         } else {
             // 하드웨어가 연결되어있지 않은 경우의 처리
-            console.error('entry hardware is not connected or file is invalid');
+            Entry.toast.warning('모듈 로드하기', '하드웨어 프로그램이 연결되어있지 않습니다.');
         }
     }
 
@@ -378,7 +378,7 @@ Entry.HW2 = class {
         }
     }
 
-    banHW() {
+    banClassAllHardware() {
         for (const i in this.hwInfo) {
             const hwModule = this.hwInfo[i];
             if (!hwModule) {

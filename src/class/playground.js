@@ -2052,7 +2052,7 @@ Entry.Playground = class {
         if (hw && hw.connected) {
             blockMenu.banClass('arduinoDisconnected', true);
 
-            hw.banHW();
+            hw.banClassAllHardware();
 
             if (hw.hwModule) {
                 blockMenu.banClass('arduinoConnect', true);
@@ -2067,7 +2067,7 @@ Entry.Playground = class {
             blockMenu.banClass('arduinoConnect', true);
             blockMenu.unbanClass('arduinoDisconnected', true);
 
-            Entry.hw.banHW();
+            Entry.hw.banClassAllHardware();
         }
 
         blockMenu.hwCodeOutdated = true;
