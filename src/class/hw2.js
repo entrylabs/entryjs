@@ -315,10 +315,10 @@ Entry.HW2 = class {
     }
 
     setZero() {
-        if (!Entry.hw.hwModule) {
+        if (!this.hwModule) {
             return;
         }
-        Entry.hw.hwModule.setZero();
+        this.hwModule.setZero();
     }
 
     checkDevice(data) {
