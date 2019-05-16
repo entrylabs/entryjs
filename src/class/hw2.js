@@ -12,6 +12,12 @@ const hardwareModuleType = {
     module: 'module',
 };
 
+const hardwareStatement = {
+    disconnected: 'disconnected',
+    socketConnected: 'socketConnected',
+    hardwareConnected: 'hardwareConnected',
+};
+
 Entry.HW2 = class {
     // 하드웨어 프로그램 접속용 주소 (https)
     get httpsServerAddress() {
@@ -47,7 +53,10 @@ Entry.HW2 = class {
         this._hwPopupCreate();
         this._initSocket();
 
-        Entry.addEventListener('stop', this.setZero);
+        Entry.addEventListener('stop', this.setZero.bind(this));
+
+        // 그냥 실행시켜도 되나, hwChanged 에 걸려있는 다른 이벤트 함수와 동일선상에 두기위함
+        Entry.addEventListener('hwChanged', this.refreshHardwareBlockMenu.bind(this));
     }
 
     _createRandomRoomId() {
@@ -172,16 +181,110 @@ Entry.HW2 = class {
         }
     }
 
+    /**
+     * 외부 하드웨어 모듈을 등록한다.
+     * 이때 기존 외부 하드웨어 모듈이 추가되어있는 경우를 대비하여,
+     * 현재 보여지고 있는 하드웨어 블록들을 전부 숨김처리한다.
+     * @param moduleObject
+     */
     setExternalModule(moduleObject) {
         this.hwModule = moduleObject;
         this.hwModuleType = hardwareModuleType.module;
+        this._banClassAllHardware();
         Entry.dispatchEvent('hwChanged');
+    }
+
+    /**
+     * 하드웨어 블록메뉴의 노출상태를 변경한다.
+     * 최초 실행시 모든 하드웨어 블록 숨김 / 미연결 상태 버튼 출력
+     * 현재 하드웨어 로드가 외부 모듈에 의한 것인 경우는 연결이 해제되어도 블록숨김을 실행하지 않는다.
+     */
+    refreshHardwareBlockMenu() {
+        const blockMenu = Entry.getMainWS().blockMenu;
+
+        if (!blockMenu) {
+            return;
+        }
+
+        if (!this.hwModule && this.hwModuleType === hardwareModuleType.builtIn) {
+            this._banClassAllHardware();
+        }
+
+        if (this.hwModule && this.hwModuleType === hardwareModuleType.module) {
+            blockMenu.unbanClass(this.hwModule.name);
+        }
+
+        const { disconnected, socketConnected, hardwareConnected } = hardwareStatement;
+        if (this.connected) {
+            if (this.hwModule) {
+                blockMenu.unbanClass(this.hwModule.name);
+                this._setHardwareDefaultMenu(hardwareConnected);
+            } else {
+                this._setHardwareDefaultMenu(socketConnected);
+            }
+        } else {
+            this._setHardwareDefaultMenu(disconnected);
+        }
+
+        blockMenu.hwCodeOutdated = true;
+        blockMenu._generateHwCode(true);
+        blockMenu.reDraw();
+    }
+
+    /**
+     * 하드웨어 버튼 노출상태를 변경한다.
+     * @param statement {hardwareStatement}
+     * @private
+     */
+    _setHardwareDefaultMenu(statement) {
+        const blockMenu = Entry.getMainWS().blockMenu;
+
+        if (!blockMenu) {
+            return;
+        }
+
+        const { disconnected, socketConnected, hardwareConnected } = hardwareStatement;
+
+        switch (statement) {
+            case disconnected:
+                blockMenu.unbanClass('arduinoDisconnected', true);
+                blockMenu.banClass('arduinoConnected', true);
+                blockMenu.banClass('arduinoConnect', true);
+                break;
+            case socketConnected:
+                blockMenu.banClass('arduinoDisconnected', true);
+                blockMenu.banClass('arduinoConnected', true);
+                blockMenu.unbanClass('arduinoConnect', true);
+                break;
+            case hardwareConnected:
+                blockMenu.banClass('arduinoDisconnected', true);
+                blockMenu.unbanClass('arduinoConnected', true);
+                blockMenu.banClass('arduinoConnect', true);
+                break;
+        }
+    }
+
+    /**
+     * 모든 하드웨어를 숨김처리한다. 현재 연결된 하드웨어도 예외는 없다.
+     * @private
+     */
+    _banClassAllHardware() {
+        const blockMenu = Entry.getMainWS().blockMenu;
+        if (!blockMenu) {
+            return;
+        }
+
+        Object.values(Entry.HARDWARE_LIST).forEach((hardware) => {
+            blockMenu.banClass(hardware.name, true);
+        });
     }
 
     _disconnectHardware() {
         Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
         this.currentDeviceKey = undefined;
-        this.hwModule = undefined;
+        if (this.hwModuleType === hardwareModuleType.builtIn) {
+            this.hwModule = undefined;
+        }
         Entry.dispatchEvent('hwChanged');
     }
 
@@ -195,7 +298,9 @@ Entry.HW2 = class {
             this.socket = undefined;
             this.connected = false;
             this.currentDeviceKey = undefined;
-            this.hwModule = undefined;
+            if (this.hwModuleType === hardwareModuleType.builtIn) {
+                this.hwModule = undefined;
+            }
             Entry.dispatchEvent('hwChanged');
             Entry.toast.alert(
                 '하드웨어 프로그램 연결 종료',
