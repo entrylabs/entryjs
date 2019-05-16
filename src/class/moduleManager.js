@@ -5,10 +5,17 @@ Entry.moduleManager = new class {
      * @param url 로드할 주소
      */
     loadScript(url) {
+        const scriptElementId = 'entryModuleScript';
+        const prevElement = document.getElementById(scriptElementId);
+        if (prevElement) {
+            prevElement.remove();
+        }
+
         if (!url) {
             return;
         }
         const scriptElement = document.createElement('script');
+        scriptElement.id = scriptElementId;
 
         scriptElement.onload = function() {
             // nothing to do yet
