@@ -154,6 +154,9 @@ Entry.HW2 = class {
         this.socket = socket;
         this.connected = true;
         console.log('Hardware Program connected'); // 하드웨어 프로그램 연결 성공, 스테이터스 변화 필요
+        if (this.hwModule && this.hwModuleType === hardwareModuleType.module) {
+            this.requestHardwareModule(this.hwModule.name);
+        }
         Entry.dispatchEvent('hwChanged');
         if (Entry.playground && Entry.playground.object) {
             Entry.playground.setMenu(Entry.playground.object.objectType);
