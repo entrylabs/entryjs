@@ -293,17 +293,18 @@ Entry.HW2 = class {
 
     disconnectedSocket() {
         if (this.connected) {
-            this.tlsSocketIo1 && this.tlsSocketIo1.close();
-            this.tlsSocketIo2 && this.tlsSocketIo2.close();
-            this.socketIo && this.socketIo.close();
-
             Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
-            this.socket = undefined;
             this.connected = false;
             this.currentDeviceKey = undefined;
             if (this.hwModuleType === hardwareModuleType.builtIn) {
                 this.hwModule = undefined;
             }
+
+            this.tlsSocketIo1 && this.tlsSocketIo1.close();
+            this.tlsSocketIo2 && this.tlsSocketIo2.close();
+            this.socketIo && this.socketIo.close();
+            this.socket = undefined;
+
             Entry.dispatchEvent('hwChanged');
             Entry.toast.alert(
                 '하드웨어 프로그램 연결 종료',
