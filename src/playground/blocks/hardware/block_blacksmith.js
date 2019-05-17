@@ -1198,7 +1198,7 @@ Entry.Blacksmith.getBlocks = function() {
                 py: ['blacksmith.set_digital_toggle(%1, %2, %3, %4)'],
             },
         },
-        blacksmith_set_digital_lcd: {
+        blacksmith_set_digital_dcmotor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',

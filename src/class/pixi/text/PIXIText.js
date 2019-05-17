@@ -6,11 +6,17 @@
 import PIXITextStyle from './PIXITextStyle';
 import { PIXIGlobal } from '../init/PIXIGlobal';
 
-var TextMetrics = PIXI.TextMetrics;
+let TextMetrics = PIXI.TextMetrics;
+let $textCanvasContainer;
 
 export class PIXIText extends PIXI.Text {
 
-    constructor(text, style, canvas) {
+    constructor(text, style) {
+        let canvas = document.createElement('canvas');
+        if (!$textCanvasContainer) {
+            $textCanvasContainer = $('#textCanvasContainer');
+        }
+        $textCanvasContainer.append(canvas);
         super(text, style, canvas);
         this.setFontScaleX(1);
         this.setFontScaleY(1);
@@ -65,19 +71,22 @@ export class PIXIText extends PIXI.Text {
         return this._measuredLineHeight;
     }
 
+    /** @deprecated */
     get measuredWidth() {
         this.updateText(true);
-        // console.log(`measuredWidth(${this._measuredWidth})`);
+        console.warn("[deprecated] - PIXIText.measuredWidth");
         return this._measuredWidth;
     }
+    /** @deprecated */
     get measuredHeight() {
         this.updateText(true);
-        // console.log(`measuredHeight(${this._measuredHeight})`);
+        console.warn("[deprecated] - PIXIText.measuredHeight");
         return this._measuredHeight;
     }
+    /** @deprecated */
     get measuredLineHeight() {
         this.updateText(true);
-        // console.log(`measuredLineHeight(${this._measuredLineHeight})`);
+        console.warn("[deprecated] - PIXIText.measuredLineHeight");
         return this._measuredLineHeight;
     }
 
@@ -321,6 +330,7 @@ export class PIXIText extends PIXI.Text {
     }
 
     destroy() {
+        $(this.canvas).remove();
         PIXIGlobal.fontLoadChecker.unmanage(this);
         super.destroy({children:false, baseTexture:true, texture: true});
     }

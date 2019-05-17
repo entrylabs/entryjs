@@ -7,10 +7,10 @@ import { PIXIZeroAlphaNoneInteractionPlugins } from '../plugins/PIXIZeroAlphaNon
 import { PIXIPixelPerfectInteractionPlugIn } from '../plugins/PIXIPixelPerfectInteractionPlugIn';
 import { PIXITempStore } from '../etc/PIXITempStore';
 import { PIXITextMetricsPlugIn } from '../plugins/PIXITextMetricsPlugIn';
-import { PIXIDebug } from '../debugs/Debugs';
 import { PIXIShortPropPlugin } from '../plugins/PIXIShortPropPlugin';
 import { PIXIGraphicOverride } from '../plugins/PIXIGraphicOverride';
 import { PIXIFontLoadHandler } from './PIXIFontLoadHandler';
+import { pixiGetChildAt } from '../plugins/pixiGetChildAt';
 
 class _PIXIGlobal {
     private _init: boolean;
@@ -24,15 +24,15 @@ class _PIXIGlobal {
         this._init = true;
         this._isWebGLSupported();
         this.fontLoadChecker = new PIXIFontLoadHandler();
-        PIXIDebug.internal_init();
         //this.baseAsset = new PIXIBaseAsset();
         ndgmr.initTempObject();
         (window as any).ndgmr = ndgmr;
         PIXITempStore.init();
         this.atlasManager = new PIXIAtlasManager();
         PIXIShortPropPlugin();
-        new PIXIZeroAlphaNoneInteractionPlugins();
-        new PIXIPixelPerfectInteractionPlugIn();
+        pixiGetChildAt();
+        PIXIZeroAlphaNoneInteractionPlugins();
+        PIXIPixelPerfectInteractionPlugIn();
         PIXITextMetricsPlugIn();
         PIXIGraphicOverride();
     }

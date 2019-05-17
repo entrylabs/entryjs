@@ -43,6 +43,7 @@ Entry.trueRobot = {
 
 		Entry.hw.update();
 
+
 		Entry.hw.sendQueue['SET'][Entry.trueRobot.PORT_MAP.colorled] = {
 				port: Entry.trueRobot.PORT_MAP.colorled,
 				dataA: 0,
@@ -52,6 +53,7 @@ Entry.trueRobot = {
 		
 		Entry.hw.update();
 			
+
 
 		Entry.hw.sendQueue['SET'] = {};
 		Entry.hw.sendQueue['SET'][Entry.trueRobot.PORT_MAP.linetracer] = {
@@ -86,7 +88,7 @@ Entry.trueRobot = {
 		
 			}
 
-		
+
     },
 	monitorTemplate: {
 		imgPath: 'hw/truebot.png',
@@ -191,6 +193,7 @@ Entry.trueRobot = {
 		},
         mode: 'both',
     },
+
 
 };
 
@@ -1790,7 +1793,9 @@ Entry.trueRobot.getBlocks = function() {
                     }
 
                     if (moveValue == 101) {
+
                         if ( ( pd['L1'] > 170 ||  ( pd['L1'] + pd['L2'] > 170 & pd['L1'] > pd['L2'] ) ) && pd['L2'] >= 0 && pd['R2'] < 10 && pd['R1'] < 10) {
+
                             if (script.flag == 1) {
                                 script.tempcheck = 1;
                             }
@@ -1798,7 +1803,9 @@ Entry.trueRobot.getBlocks = function() {
                             script.flag = 1;
                         }
                     } else if (moveValue == 102) {
+
                         if ( ( pd['R1'] > 170 ||  ( pd['R1'] + pd['R2'] > 170 & pd['R1'] > pd['R2'] ) ) && pd['R2'] >= 0 && pd['L2'] < 10 && pd['L1'] < 10) {
+
                             if (script.flag == 1) {
                                 script.tempcheck = 1;
                             }
@@ -1808,6 +1815,8 @@ Entry.trueRobot.getBlocks = function() {
                     }
 
 					//console.log( script.tempcheck +"//"+ pd['L2'] +" :: "+ pd['L1'] +" :: "+ pd['R1'] +" :: "+ pd['R2'] + " script.tempcheck : " + script.tempcheck + " script.flag : "+script.flag );
+
+
 
                     if (script.tempcheck == 1 && pd['L1'] < 230) {
                         script.tempcheck = 0;
@@ -1833,7 +1842,9 @@ Entry.trueRobot.getBlocks = function() {
 								return script;
 							}
                     }
+
                     if (script.tempcheck == 1 && pd['R1'] < 230) {
+
                         script.tempcheck = 0;
                         script.checkCount++;
                         script.flag = 0;

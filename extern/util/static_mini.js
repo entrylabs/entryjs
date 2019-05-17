@@ -567,32 +567,68 @@ EntryStatic.fonts = [
         name: Lang.Fonts.batang,
         family: 'KoPub Batang',
         url: '/css/kopubbatang.css',
-    },
-    {
-        name: Lang.Fonts.myeongjo,
-        family: 'Nanum Myeongjo',
-        url: '/css/nanummyeongjo.css',
-    },
-    {
-        name: Lang.Fonts.gothic,
-        family: 'Nanum Gothic',
-        url: '/css/nanumgothic.css',
-    },
-    {
-        name: Lang.Fonts.pen_script,
-        family: 'Nanum Pen Script',
-        url: '/css/nanumpenscript.css',
+        visible: false,
     },
     {
         name: Lang.Fonts.jeju_hallasan,
         family: 'Jeju Hallasan',
         url: '/css/jejuhallasan.css',
+        visible: false,
+    },
+    {
+        name: Lang.Fonts.gothic,
+        family: 'Nanum Gothic',
+        url: '/css/nanumgothic.css',
+        visible: true,
+    },
+    {
+        name: Lang.Fonts.myeongjo,
+        family: 'Nanum Myeongjo',
+        url: '/css/nanummyeongjo.css',
+        visible: true,
+    },
+    {
+        name: Lang.Fonts.pen_script,
+        family: 'Nanum Pen Script',
+        url: '/css/nanumpenscript.css',
+        visible: true,
+    },
+    {
+        name: Lang.Fonts.square_round,
+        family: 'NanumSquareRound',
+        url: '/css/square_round.css',
+        visible: true,
     },
     {
         name: Lang.Fonts.gothic_coding,
         family: 'Nanum Gothic Coding',
         url: '/css/nanumgothiccoding.css',
+        visible: true,
     },
+    {
+        name: Lang.Fonts.jalnan,
+        family: 'yg-jalnan',
+        url: '/css/jalnan.css',
+        visible: true,
+    },
+    {
+        name: Lang.Fonts.designhouse,
+        family: 'designhouseOTFLight00',
+        url: '/css/designhouse.css',
+        visible: true,
+    },
+    {
+        name: Lang.Fonts.dunggeunmo,
+        family: 'DungGeunMo',
+        url: '/css/dunggeunmo.css',
+        visible: true,
+    },
+    {
+        name: Lang.Fonts.uhbeemysen,
+        family: 'UhBeemysen',
+        url: '/css/uhbeemysen.css',
+        visible: true,
+    }
 ];
 
 EntryStatic.colorSet = {

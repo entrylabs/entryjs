@@ -1,7 +1,7 @@
 /*
  */
 'use strict';
-import EntryTool from 'entry-tool';
+import { Dropdown } from '@entrylabs/tool';
 import _cloneDeep from 'lodash/cloneDeep';
 /*
  *
@@ -95,10 +95,9 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         });
         const { options = [] } = this._contents;
         const convertedOptions = options.map(([key, value]) => {
-           return [this._convert(key, value), value];
+            return [this._convert(key, value), value];
         });
-        this.dropdownWidget = new EntryTool({
-            type: 'dropdownWidget',
+        this.dropdownWidget = new Dropdown({
             data: {
                 eventTypes: ['mousedown', 'touchstart', 'wheel'],
                 items: convertedOptions,
@@ -131,7 +130,8 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
             if (this._block == data.block && targetIndex == data.index) {
                 const options = this._menuGenerator(data.value);
                 this._contents.options = options;
-                this.applyValue(options[0][1]);
+                const value = this.getValue();
+                this.applyValue(!options.find(x => x[1] && x[1] === value) ? options[0][1] : value);
             }
         });
     }

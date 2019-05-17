@@ -1,3 +1,4 @@
+__webpack_public_path__ = global.PUBLIC_PATH_FOR_ENTRYJS || 'dist/';
 import 'simplebar/dist/simplebar.css';
 
 const Entry = {};
@@ -61,7 +62,6 @@ require('./parser-no/js');
 require('./parser-no/parser');
 require('./playground/block');
 require('./playground/block_entry');
-require('./playground/block_entry_mini');
 require('./playground/block_menu');
 require('./playground/block_menu_scroll');
 require('./playground/block_view');

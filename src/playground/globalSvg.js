@@ -48,7 +48,10 @@ class GlobalSvg {
         }
         this._view = view;
         this._mode = mode;
-        if (mode !== Entry.Workspace.MODE_VIMBOARD) {
+
+        const fromBlockMenu = view.dragInstance && view.dragInstance.isNew;
+        const backPackMode = !fromBlockMenu && Entry.playground.backPack.isShow;
+        if (mode !== Entry.Workspace.MODE_VIMBOARD && !backPackMode) {
             view.set({ visible: false });
         }
 
@@ -57,6 +60,10 @@ class GlobalSvg {
         this.align();
         this.position();
         return true;
+    }
+
+    getView() {
+        return this._view;
     }
 
     setComment(view, mode) {
@@ -102,8 +109,8 @@ class GlobalSvg {
             width: `${Math.round(bBox.width + 4)}px`,
             height: `${Math.round(bBox.height + 4)}px`,
         });
-        this.xScaleDiff = width * (this.scale - 1) / (this.scale * 2);
-        this.yscaleDiff = height * (this.scale - 1) / (this.scale * 2);
+        this.xScaleDiff = (width * (this.scale - 1)) / (this.scale * 2);
+        this.yscaleDiff = (height * (this.scale - 1)) / (this.scale * 2);
 
         this.svgGroup = Entry.SVG.createElement(blockView.svgGroup.cloneNode(true), { opacity: 1 });
         this.svg.appendChild(this.svgGroup);
@@ -199,22 +206,29 @@ class GlobalSvg {
     }
 
     show() {
+        this.isShow = true;
         this._container.removeClass('entryRemove');
     }
 
     hide() {
+        this.isShow = false;
         this._container.addClass('entryRemove');
     }
 
-    position() {
+    position(value) {
         const blockView = this._view;
         if (!blockView) {
             return;
         }
         const pos = blockView.getAbsoluteCoordinate();
         const offset = blockView.getBoard().offset();
-        this.left = pos.scaleX + (offset.left / this.scale - this._offsetX);
-        this.top = pos.scaleY + (offset.top / this.scale - this._offsetY);
+        if (value) {
+            this.left += value.left / this.scale;
+            this.top += value.top / this.scale;
+        } else {
+            this.left = pos.scaleX + (offset.left / this.scale - this._offsetX);
+            this.top = pos.scaleY + (offset.top / this.scale - this._offsetY);
+        }
         this._applyDomPos(this.left, this.top);
     }
 
@@ -274,8 +288,8 @@ class GlobalSvg {
         }
     }
 
-    addControl(e) {
-        this.onMouseDown.apply(this, arguments);
+    addControl(...args) {
+        this.onMouseDown(...args);
     }
 
     onMouseDown(e) {

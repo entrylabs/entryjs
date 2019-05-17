@@ -1,7 +1,9 @@
 'use strict';
 
-var path = require('path');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
 
 module.exports = {
     entry: {
@@ -10,11 +12,10 @@ module.exports = {
     output: {
         path: path.resolve('./dist'),
         publicPath: '/dist/',
-        chunkFilename: '[name].bundle.js',
         filename: '[name].js',
     },
     resolve: {
-        extensions: [".ts", ".tsx", ".js", ".json"]
+        extensions: ['.ts', '.tsx', '.js', '.json'],
     },
     module: {
         rules: [
@@ -44,13 +45,37 @@ module.exports = {
             },
             {
                 test: /\.tsx?$/,
-                loader: 'awesome-typescript-loader'
+                loader: 'awesome-typescript-loader',
             },
         ],
     },
+    externals: {
+        react: 'React',
+        'react-dom': 'ReactDOM',
+        '@entrylabs/tool': 'EntryTool',
+    },
     plugins: [
-        new ExtractTextPlugin({
-            filename: 'entry.css',
+        new CleanWebpackPlugin(['dist'], {
+            root: path.join(__dirname, '..'),
+        }),
+        new ManifestPlugin(),
+        new MiniCssExtractPlugin({
+            // Options similar to the same options in webpackOptions.output
+            // both options are optional
+            filename: '[name].css',
+            chunkFilename: '[id].css',
         }),
     ],
+    // optimization: {
+    //     runtimeChunk: 'single',
+    //     // splitChunks: {
+    //     //     chunks: 'all',
+    //     //     // cacheGroups: {
+    //     //     //     vendor: {
+    //     //     //         name: 'vendors',
+    //     //     //         chunks: 'all',
+    //     //     //     },
+    //     //     // },
+    //     // },
+    // },
 };
