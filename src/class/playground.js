@@ -254,7 +254,7 @@ Entry.Playground = class {
                     Entry.dispatchEvent('changeBackPackTitle', id, title);
                 },
                 onCustomDragEnter: ({ type, value, onDragEnter }) => {
-                    if (Entry.GlobalSvg.isShow && !Entry.GlobalSvg.isFromBlockMenu) {
+                    if (Entry.GlobalSvg.isShow && Entry.GlobalSvg.canAddStorageBlock) {
                         const { _view = {} } = Entry.GlobalSvg;
                         onDragEnter({
                             type: 'block',

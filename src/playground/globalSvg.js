@@ -61,6 +61,12 @@ class GlobalSvg {
         return this._view;
     }
 
+    get canAddStorageBlock() {
+        const { block = {} } = this._view || {};
+        const { copyable } = block;
+        return !this.isFromBlockMenu && copyable;
+    }
+
     setComment(view, mode) {
         if (view == this._view || view.readOnly || !view.movable) {
             return;
