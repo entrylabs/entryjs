@@ -756,6 +756,7 @@ Entry.EntryObject = class {
             },
             {
                 text: Lang.Blocks.add_my_storage,
+                enable: !Entry.engine.isState('run') && !!window.user,
                 callback: () => {
                     this.addStorage();
                 },

@@ -1109,15 +1109,33 @@ Entry.BlockView = class BlockView {
     }
 
     _setMovable() {
-        this.movable = this.block.isMovable() || this._skeleton.movable || true;
+        if (this.block.isMovable() !== null) {
+            this.movable = this.block.isMovable();
+        } else if (this._skeleton.movable !== undefined) {
+            this.movable = this._skeleton.movable;
+        } else {
+            this.movable = true;
+        }
     }
 
     _setReadOnly() {
-        this.readOnly = this.block.isReadOnly() || this._skeleton.readOnly || false;
+        if (this.block.isReadOnly() !== null) {
+            this.readOnly = this.block.isReadOnly();
+        } else if (this._skeleton.readOnly !== undefined) {
+            this.readOnly = this._skeleton.readOnly;
+        } else {
+            this.readOnly = false;
+        }
     }
 
     _setCopyable() {
-        this.copyable = this.block.isCopyable() || this._skeleton.copyable || true;
+        if (this.block.isCopyable() !== null) {
+            this.copyable = this.block.isCopyable();
+        } else if (this._skeleton.copyable !== undefined) {
+            this.copyable = this._skeleton.copyable;
+        } else {
+            this.copyable = true;
+        }
     }
 
     bumpAway(distance = 15, delay) {
@@ -1451,6 +1469,7 @@ Entry.BlockView = class BlockView {
 
             const addStorage = !EntryOptions.backpackDisable && {
                 text: Lang.Blocks.add_my_storage,
+                enable: copyable && !isBoardReadOnly && !!window.user,
                 callback() {
                     Entry.dispatchEvent('addStorage', {
                         type: 'block',
