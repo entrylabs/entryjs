@@ -40,8 +40,13 @@ Entry.moduleManager = new class {
      * @param moduleObject 하드웨어 모듈. 여타 하드웨어 모듈 파일 참조
      */
     registerHardwareModule(moduleObject) {
+        if (moduleObject.getBlocks) {
+            return;
+        }
+
         Entry.HARDWARE_LIST[moduleObject.id] = moduleObject;
-        const blockObjects = this._getTemplateAddedBlocks(moduleObject);
+        this._setLanguageTemplates(moduleObject);
+        const blockObjects = moduleObject.getBlocks();
         const blockMenu = Entry.getMainWS().blockMenu;
 
         Object.entries(blockObjects).forEach(([blockName, block]) => {
@@ -55,11 +60,7 @@ Entry.moduleManager = new class {
     /**
      * TODO 리로드 되는 경우 다시 불러오지 않기 때문에 템플릿정보 저장이 필요함
      */
-    _getTemplateAddedBlocks(moduleObject) {
-        if (!moduleObject.getBlocks) {
-            return {};
-        }
-        const blockObjects = moduleObject.getBlocks();
+    _setLanguageTemplates(moduleObject) {
         if (moduleObject.setLanguage) {
             const langTemplate = moduleObject.setLanguage();
             const data = langTemplate[Lang.type] || langTemplate[Lang.fallbackType];
@@ -67,7 +68,5 @@ Entry.moduleManager = new class {
                 Object.assign(Lang[key], data[key]);
             }
         }
-
-        return blockObjects;
     }
 }();
