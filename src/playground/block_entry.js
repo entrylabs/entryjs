@@ -338,7 +338,7 @@ function getBlocks() {
             events: {
                 mousedown: [
                     function() {
-                        Entry.hw.disconnectedSocket();
+                        Entry.hw.disconnectSocket();
                     },
                 ],
             },

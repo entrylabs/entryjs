@@ -104,7 +104,7 @@ Entry.HW2 = class {
 
         socket.on('disconnect', () => {
             // this._initSocket();
-            this.disconnectedSocket();
+            this.disconnectSocket();
         });
 
         return socket;
@@ -298,7 +298,7 @@ Entry.HW2 = class {
         Entry.dispatchEvent('hwChanged');
     }
 
-    disconnectedSocket() {
+    disconnectSocket() {
         if (this.connected) {
             Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
             this.connected = false;
