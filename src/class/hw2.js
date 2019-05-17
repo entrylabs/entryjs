@@ -150,6 +150,13 @@ Entry.HW2 = class {
         }
     }
 
+    /**
+     * 하드웨어 프로그램과의 연결을 시도한다.
+     * 만약 모듈이 로드되어있는 경우라면
+     * 동일한 하드웨어 모듈을 로드하도록 하드웨어에 요청한다.
+     * @param socket
+     * @private
+     */
     _initHardware(socket) {
         this.socket = socket;
         this.connected = true;
