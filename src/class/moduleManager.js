@@ -40,18 +40,22 @@ Entry.moduleManager = new class {
      * @param moduleObject 하드웨어 모듈. 여타 하드웨어 모듈 파일 참조
      */
     registerHardwareModule(moduleObject) {
-        if (!moduleObject.getBlocks) {
+        if (!moduleObject.getBlocks || !moduleObject.blockMenuBlocks) {
             return;
         }
 
         Entry.HARDWARE_LIST[moduleObject.id] = moduleObject;
         this._setLanguageTemplates(moduleObject);
         const blockObjects = moduleObject.getBlocks();
+        const blockMenuBlocks = moduleObject.blockMenuBlocks;
         const blockMenu = Entry.getMainWS().blockMenu;
 
         Object.entries(blockObjects).forEach(([blockName, block]) => {
             Entry.block[blockName] = block;
-            blockMenu.addCategoryData('arduino', blockName);
+
+            if (blockMenuBlocks.indexOf(blockName) > -1) {
+                blockMenu.addCategoryData('arduino', blockName);
+            }
         });
         Entry.hw.setExternalModule(moduleObject);
         Entry.dispatchEvent('hwChanged');
