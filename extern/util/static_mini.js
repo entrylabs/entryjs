@@ -6,7 +6,7 @@ var EntryStatic = {
     fontFamily: 'NanumGothic',
     exportBlockFontFamily:
         "NanumGothic, 'NanumGothic', '나눔고딕','NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum",
-    fontOffsetY: -2.4,
+    fontOffsetY: -2.5,
     heightLetter: 'M',
     objectTypes: ['sprite', 'textBox'],
 };
