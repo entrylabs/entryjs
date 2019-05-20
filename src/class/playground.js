@@ -567,13 +567,15 @@ Entry.Playground = class {
         }
 
         this.mainWorkspace = new Entry.Workspace(initOpts);
-        this._destroyer.add(this.mainWorkspace);
         this.blockMenu = this.mainWorkspace.blockMenu;
         this.board = this.mainWorkspace.board;
         this.toast = new Toast(this.board);
         this.blockMenu.banClass('checker');
         this.banExpansionBlock();
         this.vimBoard = this.mainWorkspace.vimBoard;
+
+        this._destroyer.add(this.mainWorkspace);
+        this._destroyer.add(this.toast);
 
         if (Entry.hw) {
             this.updateHW();
@@ -2007,14 +2009,22 @@ Entry.Playground = class {
     }
 
     openDropDown = (options, target, callback, closeCallback) => {
+        const containers = $('.entry-widget-dropdown');
+        if (containers.length > 0) {
+            closeCallback();
+            return containers.remove();
+        }
+
         const container = Entry.Dom('div', {
             class: 'entry-widget-dropdown',
             parent: $('body'),
         })[0];
+
         const dropdownWidget = new Dropdown({
             data: {
                 items: options,
                 positionDom: target,
+                outsideExcludeDom:[target],
                 onOutsideClick: () => {
                     if (dropdownWidget) {
                         closeCallback();
@@ -2080,6 +2090,7 @@ Entry.Playground = class {
 
     setTextColour(colour) {
         $('.imbtn_pop_font_color em').css('background-color', colour);
+        this.object.entity.setColour(colour);
         this.textEditArea.style.color = colour;
         this.textEditInput.style.color = colour;
     }

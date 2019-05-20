@@ -25,7 +25,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         this._isClearBG = content.clearBG || false;
         this._index = index;
         this._CONTENT_HEIGHT = this.getContentHeight();
-        this._font_size = 10;
+        this._font_size = content.fontSize || 10;
         this._neighborFields = null;
 
         this.renderStart();
@@ -66,7 +66,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
                 fill: this._contents.color || 'black',
                 'font-size': `${this._font_size}px`,
                 'font-weight': 'bold',
-                'font-family': 'NanumGothic',
+                'font-family': EntryStatic.fontFamily || 'NanumGothic',
             });
         }
 

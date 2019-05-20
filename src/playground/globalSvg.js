@@ -278,7 +278,6 @@ class GlobalSvg {
         const bWidth = blockMenu.visible ? blockMenu.blockMenuWrapper.width() : 0;
         let backPackWidth = 0;
         const windowWidth = window.innerWidth;
-        const fromBlockMenu = blockView.dragInstance && blockView.dragInstance.isNew;
         const backPackMode = Entry.playground.backPack.isShow;
         if (backPackMode) {
             backPackWidth = 135;

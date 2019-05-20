@@ -232,7 +232,7 @@ Entry.EntryObject = class {
         } else if (objectType === 'textBox') {
             this.thumbUrl = `${Entry.mediaFilePath}text_icon.png`;
         }
-        thumb.style.backgroundImage = `url(${this.thumbUrl})`;
+        thumb.style.backgroundImage = `url(${encodeURI(this.thumbUrl)})`;
     }
 
     /**

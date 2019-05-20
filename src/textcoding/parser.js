@@ -216,8 +216,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                     let annotation;
                     if (this.codeMirror) {
+                        let err;
                         if (error instanceof SyntaxError) {
-                            const err = this.findSyntaxError(error);
+                            err = this.findSyntaxError(error);
                             if (err) {
                                 annotation = {
                                     from: {line: err.from.line-1, ch: err.from.ch},
@@ -227,7 +228,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                             error.type = "syntax";
                         } else {
-                            const err = error.line;
+                            err = error.line;
                             if (err) {
                                 // 3 == 최초주석 및 import 구문
                                 annotation = {
