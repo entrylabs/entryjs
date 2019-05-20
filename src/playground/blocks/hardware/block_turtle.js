@@ -609,7 +609,7 @@ Entry.Turtle.setLanguage = () => ({
             turtle_move_backward_unit: '入力された数値[cm/秒/パルス]だけ後方向に移動します。',
             turtle_move_forward_unit: '入力された数値[cm/秒/パルス]だけ前方向に移動します。',
             turtle_pivot_around_wheel_unit_in_direction:
-                '[左/右]の車輪を中心に、入力された数値[角度/秒/パルス]だけ、[前/後]方向に[左/右]に回転します。',
+                '[左/右]の車輪を中心に、入力された数値[角度/秒/パルス]だけ、[前/後]方向に回転します。',
             turtle_play_note: '選択された音階（音名、オクターブ）が鳴ります。',
             turtle_play_note_for_beats:
                 '選択された音階（音名、オクターブ）が、入力された拍数分鳴ります。',
