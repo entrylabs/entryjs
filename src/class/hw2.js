@@ -216,12 +216,19 @@ Entry.HW2 = class {
             return;
         }
 
-        if (!this.hwModule && this.hwModuleType === hardwareModuleType.builtIn) {
-            this._banClassAllHardware();
+        if (this.hwModuleType === hardwareModuleType.builtIn) {
+            blockMenu.banClass('hardwareModuleStatus');
+            if (!this.hwModule) {
+                // NOTE 이 코드는 하드웨어 블록 초기화 작업도 겸하므로 삭제금지
+                this._banClassAllHardware();
+            }
         }
 
-        if (this.hwModule && this.hwModuleType === hardwareModuleType.module) {
-            blockMenu.unbanClass(this.hwModule.name);
+        if (this.hwModuleType === hardwareModuleType.module) {
+            blockMenu.unbanClass('hardwareModuleStatus');
+            if (this.hwModule) {
+                blockMenu.unbanClass(this.hwModule.name);
+            }
         }
 
         const { disconnected, socketConnected, hardwareConnected } = hardwareStatement;
@@ -272,6 +279,7 @@ Entry.HW2 = class {
                 blockMenu.banClass('arduinoConnect', true);
                 break;
         }
+        this._setHardwareStatusButton(statement);
     }
 
     /**
@@ -281,14 +289,31 @@ Entry.HW2 = class {
      * @private
      */
     _setHardwareStatusButton(statement) {
-        const blockMenu = Entry.getMainWS().blockMenu;
-        const hardwareStatusBlock = blockMenu.getThreadByBlockKey('hardware_status');
+        const { disconnected, socketConnected, hardwareConnected } = hardwareStatement;
+        let statusText;
+        let statusColor;
+        switch (statement) {
+            case disconnected:
+                statusText = '프로그램 연결안됨';
+                statusColor = '#4f80ff';
+            case socketConnected:
+                statusText = '하드웨어 연결안됨';
+                statusColor = '#AABBCC';
+                break;
+            case hardwareConnected:
+                statusText = '하드웨어 연결됨';
+                statusColor = '#FF9999';
+                break;
+            default:
+                return;
+        }
+
         Entry.Mutator.mutate('hardware_status', {
             params: [
                 {
                     type: 'Text',
-                    text: '하드웨어 연결됐나',
-                    color: '#4f80ff',
+                    text: statusText,
+                    color: statusColor,
                     align: 'center',
                 },
             ],
@@ -337,7 +362,7 @@ Entry.HW2 = class {
             Entry.toast.alert(
                 '하드웨어 프로그램 연결 종료',
                 '하드웨어 프로그램과의 연결이 종료되었습니다.',
-                false,
+                false
             );
         }
     }
@@ -402,8 +427,8 @@ Entry.HW2 = class {
                 .concat(
                     this.sendQueue.readablePorts.slice(
                         target + 1,
-                        this.sendQueue.readablePorts.length,
-                    ),
+                        this.sendQueue.readablePorts.length
+                    )
                 );
         }
     }
@@ -548,7 +573,7 @@ Entry.HW2 = class {
             },
             runViewer(sUrl, fpCallback) {
                 this._w.document.write(
-                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`,
+                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`
                 );
                 let nCounter = 0;
                 const bNotInstalled = false;
@@ -622,11 +647,10 @@ Entry.HW2 = class {
         function executeIe(customUrl) {
             navigator.msLaunchUri(
                 customUrl,
-                () => {
-                },
+                () => {},
                 () => {
                     hw.popupHelper.show('hwDownload', true);
-                },
+                }
             );
         }
 

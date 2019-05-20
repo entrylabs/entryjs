@@ -325,7 +325,7 @@ function getBlocks() {
         hardware_status: {
             skeleton: 'basic_button',
             template: '%1',
-            isNotFor: ['arduinoConnected', 'arduinoConnect'],
+            isNotFor: ['hardwareModuleStatus'],
             color: '#eee',
             params: [
                 {
