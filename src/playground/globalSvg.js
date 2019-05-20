@@ -275,7 +275,8 @@ class GlobalSvg {
         const blockMenu = board.workspace.blockMenu;
         const bLeft = blockMenu.offset().left;
         const bTop = blockMenu.offset().top;
-        const bWidth = blockMenu.visible ? blockMenu.blockMenuWrapper.width() : 0;
+        const bWidth = blockMenu.visible ? blockMenu.blockMenuContainer.width() : 0;
+
         let backPackWidth = 0;
         const windowWidth = window.innerWidth;
         const backPackMode = Entry.playground.backPack.isShow;
