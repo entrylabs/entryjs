@@ -40,7 +40,7 @@ Entry.moduleManager = new class {
      * @param moduleObject 하드웨어 모듈. 여타 하드웨어 모듈 파일 참조
      */
     registerHardwareModule(moduleObject) {
-        if (moduleObject.getBlocks) {
+        if (!moduleObject.getBlocks) {
             return;
         }
 
