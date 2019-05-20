@@ -275,6 +275,27 @@ Entry.HW2 = class {
     }
 
     /**
+     * 하드웨어 연결 상태를 표기하기 위한 임시 로직.
+     * TODO 디자인 및 기획변경이 필요하다.
+     * @param statement
+     * @private
+     */
+    _setHardwareStatusButton(statement) {
+        const blockMenu = Entry.getMainWS().blockMenu;
+        const hardwareStatusBlock = blockMenu.getThreadByBlockKey('hardware_status');
+        Entry.Mutator.mutate('hardware_status', {
+            params: [
+                {
+                    type: 'Text',
+                    text: '하드웨어 연결됐나',
+                    color: '#4f80ff',
+                    align: 'center',
+                },
+            ],
+        });
+    }
+
+    /**
      * 모든 하드웨어를 숨김처리한다. 현재 연결된 하드웨어도 예외는 없다.
      * @private
      */
@@ -316,7 +337,7 @@ Entry.HW2 = class {
             Entry.toast.alert(
                 '하드웨어 프로그램 연결 종료',
                 '하드웨어 프로그램과의 연결이 종료되었습니다.',
-                false
+                false,
             );
         }
     }
@@ -381,8 +402,8 @@ Entry.HW2 = class {
                 .concat(
                     this.sendQueue.readablePorts.slice(
                         target + 1,
-                        this.sendQueue.readablePorts.length
-                    )
+                        this.sendQueue.readablePorts.length,
+                    ),
                 );
         }
     }
@@ -527,7 +548,7 @@ Entry.HW2 = class {
             },
             runViewer(sUrl, fpCallback) {
                 this._w.document.write(
-                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`
+                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`,
                 );
                 let nCounter = 0;
                 const bNotInstalled = false;
@@ -601,10 +622,11 @@ Entry.HW2 = class {
         function executeIe(customUrl) {
             navigator.msLaunchUri(
                 customUrl,
-                () => {},
+                () => {
+                },
                 () => {
                     hw.popupHelper.show('hwDownload', true);
-                }
+                },
             );
         }
 

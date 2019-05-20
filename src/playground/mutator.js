@@ -1,29 +1,25 @@
-/*
- *
- */
 'use strict';
 
 /*
  *
  */
-Entry.Mutator = function() {};
-
-(function(m) {
-    m.mutate = function(blockType, schemaDiff, changeData) {
-        var blockSchema = Entry.block[blockType];
-        if (blockSchema.changeEvent === undefined)
+Entry.Mutator = new class {
+    mutate(blockType, schemaDiff, changeData) {
+        const blockSchema = Entry.block[blockType];
+        if (blockSchema.changeEvent === undefined) {
             blockSchema.changeEvent = new Entry.Event();
-        if (blockSchema.paramsBackupEvent === undefined)
-            blockSchema.paramsBackupEvent = new Entry.Event();
-        if (blockSchema.destroyParamsBackupEvent === undefined)
-            blockSchema.destroyParamsBackupEvent = new Entry.Event();
+        }
+        // if (blockSchema.paramsBackupEvent === undefined) {
+        //     blockSchema.paramsBackupEvent = new Entry.Event();
+        // }
+        // if (blockSchema.destroyParamsBackupEvent === undefined) {
+        //     blockSchema.destroyParamsBackupEvent = new Entry.Event();
+        // }
 
         //statements params template
-        blockSchema.template = schemaDiff.template;
-        blockSchema.params = schemaDiff.params;
+        blockSchema.template = Object.assign(blockSchema.template, schemaDiff.template);
+        blockSchema.params = Object.assign(blockSchema.params, schemaDiff.params);
 
-        blockSchema.changeEvent.notify(1, changeData);
-    };
-})(Entry.Mutator);
-
-(function(p) {})(Entry.Mutator.prototype);
+        blockSchema.changeEvent.notify(1, { isRestore: false, type: 'noChange' });
+    }
+}();

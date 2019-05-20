@@ -322,6 +322,22 @@ function getBlocks() {
                 ],
             },
         },
+        hardware_status: {
+            skeleton: 'basic_button',
+            template: '%1',
+            isNotFor: ['arduinoConnected', 'arduinoConnect'],
+            color: '#eee',
+            params: [
+                {
+                    type: 'Text',
+                    text: '하드웨어 연결안됨',
+                    color: '#4f80ff',
+                    align: 'center',
+                },
+            ],
+            events: {},
+            changeEvent: new Entry.Event(),
+        },
         disconnect_hardware: {
             skeleton: 'basic_button',
             template: '%1',
