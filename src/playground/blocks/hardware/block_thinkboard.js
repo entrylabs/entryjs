@@ -27,7 +27,15 @@ Entry.ThinkBoard =
             var keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach(function(key) 
             {             
-                Entry.hw.sendQueue.SET[key].data = 0;                                
+                if(Entry.hw.sendQueue.SET[key].type === '4')
+                {             
+                    Entry.hw.sendQueue['SET'][Entry.ThinkBoard.sensorTypes.SERVO] = 
+                    {
+                        port: [0, 0],
+                        time: new Date().getTime(),
+                    };                      
+                }
+                else Entry.hw.sendQueue.SET[key].data = 0;                                                                  
                 Entry.hw.sendQueue.SET[key].time = new Date().getTime();
             });                                 
         } 
@@ -119,7 +127,10 @@ Entry.ThinkBoard.blockMenuBlocks = [
 		'thinkboard_get_digital_servo_value',
 		'thinkboard_digital_set_servo_angle',
 		'thinkboard_digital_set_servo_direction',
-		'thinkboard_digital_set_servo_stop',
+        'thinkboard_digital_set_servo_stop',
+        'thinkboard_get_digital_servo_360_value',
+        'thinkboard_digital_set_servo_360_angle',
+        'thinkboard_digital_set_servo_360_stop',        
 		'thinkboard_digital_set_motor_direction',
 		'thinkboard_digital_set_motor_speed',
 		'thinkboard_digital_motor_stop',	
@@ -145,10 +156,13 @@ Entry.ThinkBoard.setLanguage = function() {
 				"thinkboard_digital_rgbled_off": "RGB LED 끄기 %1",	                
 //[4/19]  "thinkboard_digital_set_rgbled_value": "RGB LED 빨강 %1 초록 %2 파랑 %3 으로 켜기 %4",
 //[4/19]  "thinkboard_digital_rgbled_percent": "RGB LED 밝기를 %1 로 정하기 %2",
-				"thinkboard_get_digital_servo_value": "포트 %1 서보모터 %2 각도 값",
-				"thinkboard_digital_set_servo_angle": "포트 %1 서보모터 %2의 각도를 %3 으로 정하기 %4",
-				"thinkboard_digital_set_servo_direction": "포트 %1 서보모터 %2를 %3 방향으로 1도 바꾸기 %4",	
-				"thinkboard_digital_set_servo_stop": "포트 %1 서보모터 %2 정지하기 %3",
+                "thinkboard_get_digital_servo_value": "포트 %1 180 서보모터 각도 값",
+                "thinkboard_digital_set_servo_angle": "포트 %1 의 180 서보모터의 각도를 %2 으로 정하기 %3",
+                "thinkboard_digital_set_servo_direction": "포트 %1 의 180 서보모터를 %2 방향으로 1도 바꾸기 %3",
+                "thinkboard_digital_set_servo_stop": "포트 %1 의 180 서보모터 정지하기 %2",                
+                "thinkboard_get_digital_servo_360_value": "포트 %1 360 서보모터 속도 값",
+                "thinkboard_digital_set_servo_360_angle": "포트 %1 의 360 서보모터를 속도 %2 만큼 회전하기 %3",
+                "thinkboard_digital_set_servo_360_stop": "포트 %1 의 360 서보모터 정지하기 %2",                
 				"thinkboard_digital_set_motor_direction": "포트 %1 의 DC모터 방향을 %2 방향으로 정하기 %3",
 				"thinkboard_digital_set_motor_speed": "포트 %1 의 DC모터의 속도를 %2 %로 정하기 %3", 
 				"thinkboard_digital_motor_stop": "포트 %1 의 DC모터 정지하기 %2",			
@@ -173,10 +187,13 @@ Entry.ThinkBoard.setLanguage = function() {
 				"thinkboard_digital_rgbled_off": "RGB LED Turn Off %1",	                	
 //[4/19]  "thinkboard_digital_set_rgbled_value": "Turn On RGB LED with RED %1 GREEN %2 BLUE %3 value %4",
 //[4/19]  "thinkboard_digital_rgbled_percent": "Set RGB LED Brightness to %1 %2",		
-				"thinkboard_get_digital_servo_value": "Port %1 Servo Motor %2 Angle Value",
-				"thinkboard_digital_set_servo_angle": "Set Port %1 Servor Motor %2 Angle Value to %3 %4",		
-				"thinkboard_digital_set_servo_direction": "Set Port %1 Servor Motor %2 Direction 1 Angle to %3 %4",		
-				"thinkboard_digital_set_servo_stop": "Stop Port %1 Servo Motor %2 ",		
+                "thinkboard_get_digital_servo_value": "Port %1 180 Servo Motor Angle Value",
+                "thinkboard_digital_set_servo_angle": "Set Port %1 180 Servor Motor Angle Value to %2 %3",
+                "thinkboard_digital_set_servo_direction": "Set Port %1 180 Servor Motor Direction 1 Angle to %2 %3",
+                "thinkboard_digital_set_servo_stop": "Stop Port %1 180 Servo Motor %2",
+                "thinkboard_get_digital_servo_360_value": "Port %1 360 Servo Motor Angle Value",
+                "thinkboard_digital_set_servo_360_angle": "Set Port %1 360 Servor Motor Speed Value to %2 %3",  
+                "thinkboard_digital_set_servo_360_stop": "Stop Port %1 360 Servo Motor %2",          
 				"thinkboard_digital_set_motor_direction": "Set Port %1 DC Motor Direction to %2 %3",		
 				"thinkboard_digital_set_motor_speed": "Set Port %1 의 DC Motor Speed to %2 % %3", 	
 				"thinkboard_digital_motor_stop": "Stop Port %1 DC Motor %2",					
@@ -233,7 +250,7 @@ Entry.ThinkBoard.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_bzr.png',        // img: 'block_icon/hardware_icon.svg',
+                    img: 'block_icon/hardware_bzr2.png',        // img: 'block_icon/hardware_icon.svg',
                     size: 11,
                 },
             ],
@@ -1740,7 +1757,7 @@ Entry.ThinkBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         
-		// 11. 서보 모터 - 1) 모터 현재 각도 값	얻어오기	
+		// 11. 180 서보 모터 - 1) 모터 현재 각도 값	얻어오기	
         thinkboard_get_digital_servo_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
@@ -1752,41 +1769,27 @@ Entry.ThinkBoard.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },                
+                },      
             ],
             events: {},
             def: {
                 params: [
                     {
                         type: 'thinkboard_digital_port_list',
-                    },
-                    {
-                        type: 'thinkboard_digital_servo_list',
-                    },	                    
+                    },            
                 ],
                 type: 'thinkboard_get_digital_servo_value',
             },
             paramsKeyMap: {
                 PORT: 0,
-                MODE: 1,
             },
             class: 'ThinkBoard_SVO',
             isNotFor: ['ThinkBoard'],
             func: function(sprite, script) 
 			{
                 var port = script.getNumberValue('PORT');	
-                var mode = script.getNumberValue('MODE');	 
-                mode += 1;               
-				
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
-                }
-                delete Entry.hw.sendQueue['SET'][port];
-				
+                var mode = 0;       
+                
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
@@ -1800,156 +1803,8 @@ Entry.ThinkBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },	
 
-		// 11. 서보 모터 - 2) 모터 각도 설정하기		
+		// 11. 180 서보 모터 - 2) 모터 각도 설정하기		
 		thinkboard_digital_set_servo_angle: 
-		{
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
-			fontColor: '#fff',			
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },				
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },                
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_servo.png',
-                    size: 11,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'thinkboard_digital_port_list',
-                    },
-                    {
-                        type: 'thinkboard_digital_servo_list',
-                    },	                           
-                    {
-                        type: 'number',
-						params: ["0"],
-                    },				
-                    null,
-                ],
-                type: 'thinkboard_digital_set_servo_angle',
-            },
-            paramsKeyMap: 
-			{
-                PORT: 0,
-                MODE: 1,
-                ANGLE: 2,
-            },
-            class: 'ThinkBoard_SVO',
-            isNotFor: ['ThinkBoard'],
-            func: function(sprite, script) 
-			{
-                var port = script.getNumberValue('PORT', script);
-                var mode = script.getNumberValue('MODE', script);                
-                var angle = script.getNumberValue('ANGLE', script);
-                mode += 1;
-                
-                if(mode == 1) angle = Math.min(180, angle);
-                else angle = Math.min(360, angle);
-                angle = Math.max(0, angle);
-				
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
-                }
-                Entry.hw.sendQueue['SET'][port] = 
-				{
-                    type: Entry.ThinkBoard.sensorTypes.SERVO,
-                    data: [mode, angle],
-                    time: new Date().getTime(),
-                };
-                return script.callReturn();
-            },
-            syntax: { js: [], py: [] },
-        },
-		
-		// 11. 서보 모터 - 3) 설정 방향 및 1도 바꾸기		
-		thinkboard_digital_set_servo_direction: 
-		{
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-			fontColor: '#fff',			
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },			
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },	                	
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_servo.png',
-                    size: 11,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'thinkboard_digital_port_list',
-                    },			
-                    {
-                        type: 'thinkboard_digital_servo_list',
-                    },	                         
-                    {
-                        type: 'thinkboard_motor_direction_list',
-                    },		
-                    null,
-                ],
-                type: 'thinkboard_digital_set_servo_direction',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-                MODE: 1,
-                DIR: 2,
-            },
-            class: 'ThinkBoard_SVO',
-            isNotFor: ['ThinkBoard'],
-            func: function(sprite, script) 
-			{
-                var port = script.getNumberValue('PORT', script);
-                var mode = script.getNumberValue('MODE', script);                
-                var dir = script.getNumberValue('DIR', script);
-                mode += 3;
-                
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
-                }
-                Entry.hw.sendQueue['SET'][port] = 
-				{
-                    type: Entry.ThinkBoard.sensorTypes.SERVO,
-                    data: [mode, dir],
-                    time: new Date().getTime(),
-                };
-                return script.callReturn();
-            },
-            syntax: { js: [], py: [] },
-        },
-
-		// 11. 서보 모터 - 4) 모터 정지하기		
-		thinkboard_digital_set_servo_stop: 
 		{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,		
@@ -1978,24 +1833,144 @@ Entry.ThinkBoard.getBlocks = function() {
                         type: 'thinkboard_digital_port_list',
                     },	
                     {
-                        type: 'thinkboard_digital_servo_list',
-                    },	                     	
+                        type: 'number',
+						params: ["0"],
+                    },				
                     null,
                 ],
-                type: 'thinkboard_digital_set_servo_stop',
+                type: 'thinkboard_digital_set_servo_angle',
             },
-            paramsKeyMap: {
+            paramsKeyMap: 
+			{
                 PORT: 0,
-                MODE: 1,
+                ANGLE: 1,
             },
             class: 'ThinkBoard_SVO',
             isNotFor: ['ThinkBoard'],
             func: function(sprite, script) 
 			{
                 var port = script.getNumberValue('PORT', script);
-                var mode = script.getNumberValue('MODE', script);                
-				var angle = 90;
-                mode += 5;
+                var mode = 2;                
+                var angle = script.getNumberValue('ANGLE', script);
+                
+                angle = Math.min(180, angle);
+                angle = Math.max(0, angle);
+				
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][port] = 
+				{
+                    type: Entry.ThinkBoard.sensorTypes.SERVO,
+                    data: [mode, angle],
+                    time: new Date().getTime(),
+                };
+                return script.callReturn();
+            },
+            syntax: { js: [], py: [] },
+        },
+		
+		// 11. 180 서보 모터 - 3) 설정 방향 및 1도 바꾸기		
+		thinkboard_digital_set_servo_direction: 
+		{
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+			fontColor: '#fff',			
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },			         	
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_servo.png',
+                    size: 11,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'thinkboard_digital_port_list',
+                    },			                       
+                    {
+                        type: 'thinkboard_motor_direction_list',
+                    },		
+                    null,
+                ],
+                type: 'thinkboard_digital_set_servo_direction',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                DIR: 1,
+            },
+            class: 'ThinkBoard_SVO',
+            isNotFor: ['ThinkBoard'],
+            func: function(sprite, script) 
+			{
+                var port = script.getNumberValue('PORT', script);
+                var mode = 3;                
+                var dir = script.getNumberValue('DIR', script);
+                
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][port] = 
+				{
+                    type: Entry.ThinkBoard.sensorTypes.SERVO,
+                    data: [mode, dir],
+                    time: new Date().getTime(),
+                };
+                return script.callReturn();
+            },
+            syntax: { js: [], py: [] },
+        },
+
+		// 11. 180 서보 모터 - 4) 모터 정지하기		
+		thinkboard_digital_set_servo_stop: 
+		{
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,		
+			fontColor: '#fff',			
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },              
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_servo.png',
+                    size: 11,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'thinkboard_digital_port_list',
+                    },	                	
+                    null,
+                ],
+                type: 'thinkboard_digital_set_servo_stop',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'ThinkBoard_SVO',
+            isNotFor: ['ThinkBoard'],
+            func: function(sprite, script) 
+			{
+                var port = script.getNumberValue('PORT', script);
+                var mode = 4;                
+				var angle = 0;
                 
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
@@ -2010,7 +1985,165 @@ Entry.ThinkBoard.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-       		
+           
+        // 12. 360도 서보 모터 - 1) 모터 각도 값		
+        thinkboard_get_digital_servo_360_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: Lang.template.thinkboard_get_digital_servo_360_value,
+            params: [{
+                type: 'Block',
+                accept: 'string',
+            }, ],
+            events: {},
+            def: {
+                params: [{
+                    type: 'thinkboard_digital_port_list',
+                }, ],
+                type: 'thinkboard_get_digital_servo_360_value',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'ThinkBoard_SVO2',
+            isNotFor: ['ThinkBoard'],
+            func: function(sprite, script) {
+                var port = script.getNumberValue('PORT');
+                var mode = 1; // get current 360-Angle
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                delete Entry.hw.sendQueue['SET'][port];
+
+                if (!Entry.hw.sendQueue['GET']) {
+                    Entry.hw.sendQueue['GET'] = {};
+                }
+                Entry.hw.sendQueue['GET'][
+                    Entry.ThinkBoard.sensorTypes.SERVO
+                ] = {
+                    port: [port, mode],
+                    time: new Date().getTime(),
+                };
+                return Entry.hw.portData.SERVO[port] || 0;                
+            },
+            syntax: { js: [], py: [] },
+        },
+
+        // 12. 360도 서보 모터 - 2) 모터 각도 설정하기		
+        thinkboard_digital_set_servo_360_angle: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [{
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },           
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_servo.png',                    
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [{
+                        type: 'thinkboard_digital_port_list',
+                    },                    
+                    {
+                        type: 'number',
+                        params: ["0"],
+                    },
+                    null,
+                ],
+                type: 'thinkboard_digital_set_servo_360_angle',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                SPEED: 1,
+            },
+            class: 'ThinkBoard_SVO2',
+            isNotFor: ['ThinkBoard'],
+            func: function(sprite, script) {
+                var port = script.getNumberValue('PORT', script);
+                var speed = script.getNumberValue('SPEED', script);
+                var mode = 5;
+
+                speed = Math.min(360, speed);
+                speed = Math.max(0, speed);
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.ThinkBoard.sensorTypes.SERVO,
+                    data: [mode, speed],
+                    time: new Date().getTime(),
+                };
+                return script.callReturn();
+            },
+            syntax: { js: [], py: [] },
+        },
+
+        // 14. 360도 서보 모터 - 4) 모터 정지하기		
+        thinkboard_digital_set_servo_360_stop: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [{
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_servo.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [{
+                        type: 'thinkboard_digital_port_list',
+                    },
+                    null,
+                ],
+                type: 'thinkboard_digital_set_servo_360_stop',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'ThinkBoard_SVO2',
+            isNotFor: ['ThinkBoard'],
+            func: function(sprite, script) {
+                var port = script.getNumberValue('PORT', script);
+                var mode = 6; //script.getNumberValue('VALUE', script);
+                var angle = 90;
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.ThinkBoard.sensorTypes.SERVO,
+                    data: [mode, angle],
+                    time: new Date().getTime(),
+                };
+                return script.callReturn();
+            },
+            syntax: { js: [], py: [] },
+        },
+      
+
 		// 15. DC 모터 - 1) 방향 바꾸기		
 		thinkboard_digital_set_motor_direction: 
 		{
