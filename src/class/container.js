@@ -476,6 +476,7 @@ Entry.Container = class Container {
             Entry.playground.flushPlayground();
         }
 
+        this.updateListView();
         Entry.playground.reloadPlayground();
         GEHelper.resManager.imageRemoved('container::removeObject');
     }
