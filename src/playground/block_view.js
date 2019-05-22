@@ -1698,6 +1698,11 @@ Entry.BlockView = class BlockView {
             let svgData =
                 '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %W %H">(svgGroup)(defs)</svg>';
             const bBox = this.svgGroup.getBoundingClientRect();
+            const board = this.getBoard();
+            const { scale: blockScale } = board;
+            // console.log(this);
+            bBox.width = bBox.width / blockScale;
+            bBox.height = bBox.height / blockScale;
             svgData = svgData
                 .replace('(svgGroup)', new XMLSerializer().serializeToString(svgGroup))
                 .replace('%W', bBox.width * scale + 20)

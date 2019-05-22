@@ -206,7 +206,9 @@ Entry.Container = class Container {
                         this.isObjectDragging = isDragging;
                     },
                     onChangeList: (newIndex, oldIndex) => {
-                        this.moveElement(newIndex, oldIndex);
+                        if (newIndex !== oldIndex) {
+                            this.moveElement(newIndex, oldIndex);
+                        }
                     },
                 },
                 container: this.listView_,
