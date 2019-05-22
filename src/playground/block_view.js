@@ -1701,12 +1701,12 @@ Entry.BlockView = class BlockView {
             const board = this.getBoard();
             const { scale: blockScale } = board;
             // console.log(this);
-            bBox.width = bBox.width / blockScale;
-            bBox.height = bBox.height / blockScale;
+            const boxWidth = bBox.width / blockScale;
+            const boxHeight = bBox.height / blockScale;
             svgData = svgData
                 .replace('(svgGroup)', new XMLSerializer().serializeToString(svgGroup))
-                .replace('%W', bBox.width * scale + 20)
-                .replace('%H', bBox.height * scale + 5)
+                .replace('%W', boxWidth * scale + 20)
+                .replace('%H', boxHeight * scale + 5)
                 .replace('(defs)', new XMLSerializer().serializeToString(defs[0]))
                 .replace(/>\s+/g, '>')
                 .replace(/\s+</g, '<');
@@ -1716,18 +1716,18 @@ Entry.BlockView = class BlockView {
             if (notPng) {
                 resolve({
                     src,
-                    width: bBox.width,
-                    height: bBox.height,
+                    width: boxWidth,
+                    height: boxHeight,
                 });
                 svgGroup = null;
             } else {
-                this.loadImage(src, bBox.width, bBox.height, notPng, 1.5).then(
+                this.loadImage(src, boxWidth, boxHeight, notPng, 1.5).then(
                     (src) => {
                         svgGroup = null;
                         resolve({
                             src,
-                            width: bBox.width,
-                            height: bBox.height,
+                            width: boxWidth,
+                            height: boxHeight,
                         });
                     },
                     (err) => {
