@@ -207,7 +207,7 @@ Entry.Container = class Container {
                     },
                     onChangeList: (newIndex, oldIndex) => {
                         if (newIndex !== oldIndex) {
-                            this.moveElement(newIndex, oldIndex);
+                            Entry.do('objectReorder', newIndex, oldIndex);
                         }
                     },
                 },
@@ -626,26 +626,14 @@ Entry.Container = class Container {
      * @param {boolean?} isCallFromState
      * @return {Entry.State}
      */
-    moveElement(end, start, isCallFromState) {
+    moveElement(end, start) {
         const objs = this.getCurrentObjects();
         const startIndex = this.getAllObjects().indexOf(objs[start]);
         const endIndex = this.getAllObjects().indexOf(objs[end]);
-
-        if (!isCallFromState && Entry.stateManager) {
-            Entry.stateManager.addCommand(
-                'reorder object',
-                this,
-                this.moveElement,
-                endIndex,
-                startIndex,
-                true
-            );
-        }
         this.objects_.splice(endIndex, 0, this.objects_.splice(startIndex, 1)[0]);
         this.setCurrentObjects();
         this.updateListView();
         Entry.requestUpdate = true;
-        return new Entry.State(this, this.moveElement, endIndex, startIndex, true);
     }
 
     /**
