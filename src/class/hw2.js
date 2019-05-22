@@ -295,7 +295,9 @@ Entry.HW2 = class {
 
     /**
      * 하드웨어 연결 상태를 표기하기 위한 임시 로직.
+     * 모듈모드일때 unbanClass 되어 보여진다.
      * TODO 디자인 및 기획변경이 필요하다.
+     * @see this.refreshHardwareBlockMenu
      * @param statement
      * @private
      */
