@@ -8,7 +8,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Workspace.variable_create,
-                        color: '#4f80ff',
+                        color: '#333',
                         align: 'center',
                     },
                 ],
@@ -31,7 +31,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Workspace.create_list_block,
-                        color: '#4f80ff',
+                        color: '#333',
                         align: 'center',
                     },
                 ],
@@ -47,8 +47,7 @@ module.exports = {
                 },
             },
             ask_and_wait: {
-                color: EntryStatic.colorSet.block.default.VARIABLE,
-                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
+                color: '#E457DC',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -58,8 +57,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_icon.svg',
-                        size: 11,
+                        img: 'block_icon/variable_03.png',
+                        size: 12,
                     },
                 ],
                 events: {
@@ -145,10 +144,9 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.input(%1)'] },
             },
             get_canvas_input_value: {
-                color: EntryStatic.colorSet.block.default.VARIABLE,
-                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
+                color: '#E457DC',
                 skeleton: 'basic_string_field',
-                statements: [],
+                statements: [], 
                 params: [
                     {
                         type: 'Text',
@@ -200,8 +198,7 @@ module.exports = {
                 },
             },
             set_visible_answer: {
-                color: EntryStatic.colorSet.block.default.VARIABLE,
-                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
+                color: '#E457DC',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -212,14 +209,13 @@ module.exports = {
                             [Lang.Blocks.CALC_timer_visible_hide, 'HIDE'],
                         ],
                         value: 'SHOW',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_icon.svg',
-                        size: 11,
+                        img: 'block_icon/variable_03.png',
+                        size: 12,
                     },
                 ],
                 events: {
@@ -274,7 +270,7 @@ module.exports = {
                                     ],
                                     value: 'SHOW',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                                     converter: Entry.block.converters.returnStringValueLowerCase,
                                     codeMap: 'Entry.CodeMap.Entry.set_visible_answer[0]',
                                 },
@@ -284,8 +280,7 @@ module.exports = {
                 },
             },
             get_variable: {
-                color: EntryStatic.colorSet.block.default.VARIABLE,
-                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
+                color: '#E457DC',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -293,9 +288,8 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'variables',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                     },
                     {
                         type: 'Text',
@@ -353,7 +347,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'variables',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                                     converter: Entry.block.converters.returnRawStringKey,
                                 },
                             ],
@@ -362,8 +356,7 @@ module.exports = {
                 },
             },
             change_variable: {
-                color: EntryStatic.colorSet.block.default.VARIABLE,
-                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
+                color: '#E457DC',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -371,9 +364,8 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'variables',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                     },
                     {
                         type: 'Block',
@@ -381,8 +373,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_icon.svg',
-                        size: 11,
+                        img: 'block_icon/variable_03.png',
+                        size: 12,
                     },
                 ],
                 events: {
@@ -470,7 +462,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'variables',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                                     converter: Entry.block.converters.returnRawStringKey,
                                 },
                                 {
@@ -487,7 +479,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'variables',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                                     converter: Entry.block.converters.returnRawStringKey,
                                 },
                                 {
@@ -500,8 +492,7 @@ module.exports = {
                 },
             },
             set_variable: {
-                color: EntryStatic.colorSet.block.default.VARIABLE,
-                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
+                color: '#E457DC',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -509,9 +500,8 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'variables',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                     },
                     {
                         type: 'Block',
@@ -519,8 +509,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_icon.svg',
-                        size: 11,
+                        img: 'block_icon/variable_03.png',
+                        size: 12,
                     },
                 ],
                 events: {
@@ -589,7 +579,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'variables',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                                     converter: Entry.block.converters.returnRawStringKey,
                                 },
                                 {
@@ -602,8 +592,7 @@ module.exports = {
                 },
             },
             show_variable: {
-                color: EntryStatic.colorSet.block.default.VARIABLE,
-                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
+                color: '#E457DC',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -611,14 +600,13 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'variables',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_icon.svg',
-                        size: 11,
+                        img: 'block_icon/variable_03.png',
+                        size: 12,
                     },
                 ],
                 events: {
@@ -670,7 +658,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'variables',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                                     converter: Entry.block.converters.returnStringKey,
                                 },
                             ],
@@ -679,8 +667,7 @@ module.exports = {
                 },
             },
             hide_variable: {
-                color: EntryStatic.colorSet.block.default.VARIABLE,
-                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
+                color: '#E457DC',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -688,14 +675,13 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'variables',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_icon.svg',
-                        size: 11,
+                        img: 'block_icon/variable_03.png',
+                        size: 12,
                     },
                 ],
                 events: {
@@ -746,7 +732,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'variables',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                                     converter: Entry.block.converters.returnStringKey,
                                 },
                             ],
@@ -755,8 +741,7 @@ module.exports = {
                 },
             },
             value_of_index_from_list: {
-                color: EntryStatic.colorSet.block.default.VARIABLE,
-                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
+                color: '#E457DC',
                 fontColor: '#fff',
                 skeleton: 'basic_string_field',
                 statements: [],
@@ -770,9 +755,8 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'lists',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                     },
                     {
                         type: 'Text',
@@ -783,7 +767,6 @@ module.exports = {
                         type: 'Block',
                         isListIndex: true,
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Text',
@@ -869,7 +852,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'lists',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                                     converter: Entry.block.converters.returnRawStringKey,
                                 },
                                 undefined,
@@ -884,8 +867,7 @@ module.exports = {
                 },
             },
             add_value_to_list: {
-                color: EntryStatic.colorSet.block.default.VARIABLE,
-                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
+                color: '#E457DC',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -897,14 +879,13 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'lists',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_icon.svg',
-                        size: 11,
+                        img: 'block_icon/variable_03.png',
+                        size: 12,
                     },
                 ],
                 events: {
@@ -981,7 +962,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'lists',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                                     converter: Entry.block.converters.returnRawStringKey,
                                 },
                             ],
@@ -990,8 +971,7 @@ module.exports = {
                 },
             },
             remove_value_from_list: {
-                color: EntryStatic.colorSet.block.default.VARIABLE,
-                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
+                color: '#E457DC',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -999,20 +979,18 @@ module.exports = {
                         type: 'Block',
                         isListIndex: true,
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'lists',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_icon.svg',
-                        size: 11,
+                        img: 'block_icon/variable_03.png',
+                        size: 12,
                     },
                 ],
                 events: {
@@ -1096,7 +1074,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'lists',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                                     converter: Entry.block.converters.returnRawStringKey,
                                 },
                             ],
@@ -1105,8 +1083,7 @@ module.exports = {
                 },
             },
             insert_value_to_list: {
-                color: EntryStatic.colorSet.block.default.VARIABLE,
-                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
+                color: '#E457DC',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1118,20 +1095,18 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'lists',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                     },
                     {
                         type: 'Block',
                         isListIndex: true,
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_icon.svg',
-                        size: 11,
+                        img: 'block_icon/variable_03.png',
+                        size: 12,
                     },
                 ],
                 events: {
@@ -1223,7 +1198,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'lists',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                                     converter: Entry.block.converters.returnRawStringKey,
                                 },
                                 {
@@ -1237,8 +1212,7 @@ module.exports = {
                 },
             },
             change_value_list_index: {
-                color: EntryStatic.colorSet.block.default.VARIABLE,
-                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
+                color: '#E457DC',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1246,15 +1220,13 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'lists',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                     },
                     {
                         type: 'Block',
                         isListIndex: true,
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Block',
@@ -1262,8 +1234,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_icon.svg',
-                        size: 11,
+                        img: 'block_icon/variable_03.png',
+                        size: 12,
                     },
                 ],
                 events: {
@@ -1350,7 +1322,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'lists',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                                     converter: Entry.block.converters.returnRawStringKey,
                                 },
                                 {
@@ -1368,8 +1340,7 @@ module.exports = {
                 },
             },
             length_of_list: {
-                color: EntryStatic.colorSet.block.default.VARIABLE,
-                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
+                color: '#E457DC',
                 fontColor: '#fff',
                 skeleton: 'basic_string_field',
                 statements: [],
@@ -1383,9 +1354,8 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'lists',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                     },
                     {
                         type: 'Text',
@@ -1444,7 +1414,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'lists',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                                     converter: Entry.block.converters.returnRawStringKey,
                                 },
                             ],
@@ -1453,8 +1423,7 @@ module.exports = {
                 },
             },
             is_included_in_list: {
-                color: EntryStatic.colorSet.block.default.VARIABLE,
-                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
+                color: '#E457DC',
                 fontColor: '#fff',
                 skeleton: 'basic_boolean_field',
                 statements: [],
@@ -1468,9 +1437,8 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'lists',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                     },
                     {
                         type: 'Text',
@@ -1567,7 +1535,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'lists',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                                     converter: Entry.block.converters.returnRawStringKey,
                                 },
                                 undefined,
@@ -1581,8 +1549,7 @@ module.exports = {
                 },
             },
             show_list: {
-                color: EntryStatic.colorSet.block.default.VARIABLE,
-                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
+                color: '#E457DC',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1590,14 +1557,13 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'lists',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_icon.svg',
-                        size: 11,
+                        img: 'block_icon/variable_03.png',
+                        size: 12,
                     },
                 ],
                 events: {
@@ -1649,7 +1615,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'lists',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                                     converter: Entry.block.converters.returnStringKey,
                                 },
                             ],
@@ -1658,8 +1624,7 @@ module.exports = {
                 },
             },
             hide_list: {
-                color: EntryStatic.colorSet.block.default.VARIABLE,
-                outerLine: EntryStatic.colorSet.block.darken.VARIABLE,
+                color: '#E457DC',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1667,14 +1632,13 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'lists',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_icon.svg',
-                        size: 11,
+                        img: 'block_icon/variable_03.png',
+                        size: 12,
                     },
                 ],
                 events: {
@@ -1726,7 +1690,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'lists',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
                                     converter: Entry.block.converters.returnStringKey,
                                 },
                             ],

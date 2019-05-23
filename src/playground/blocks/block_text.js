@@ -2,9 +2,8 @@ module.exports = {
     getBlocks() {
         return {
             text_read: {
-                color: EntryStatic.colorSet.block.default.TEXT,
-                outerLine: EntryStatic.colorSet.block.darken.TEXT,
-                fontColor: EntryStatic.colorSet.common.WHITE,
+                color: '#FFCA36',
+                fontColor: '#FFFFFF',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -12,9 +11,13 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'textBoxWithSelf',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.TEXT,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_TEXT,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/text.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -58,7 +61,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'textBoxWithSelf',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.TEXT,
+                                    arrowColor: EntryStatic.ARROW_COLOR_TEXT,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                     codeMap: 'Entry.CodeMap.Entry.text_read[0]',
@@ -69,8 +72,7 @@ module.exports = {
                 },
             },
             text_write: {
-                color: EntryStatic.colorSet.block.default.TEXT,
-                outerLine: EntryStatic.colorSet.block.darken.TEXT,
+                color: '#FFCA36',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -80,8 +82,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/text_icon.svg',
-                        size: 11,
+                        img: 'block_icon/text.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -118,8 +120,7 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.write_text(%1)'] },
             },
             text_append: {
-                color: EntryStatic.colorSet.block.default.TEXT,
-                outerLine: EntryStatic.colorSet.block.darken.TEXT,
+                color: '#FFCA36',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -129,8 +130,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/text_icon.svg',
-                        size: 11,
+                        img: 'block_icon/text.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -167,8 +168,7 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.append_text(%1)'] },
             },
             text_prepend: {
-                color: EntryStatic.colorSet.block.default.TEXT,
-                outerLine: EntryStatic.colorSet.block.darken.TEXT,
+                color: '#FFCA36',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -178,8 +178,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/text_icon.svg',
-                        size: 11,
+                        img: 'block_icon/text.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -216,15 +216,14 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.prepend_text(%1)'] },
             },
             text_flush: {
-                color: EntryStatic.colorSet.block.default.TEXT,
-                outerLine: EntryStatic.colorSet.block.darken.TEXT,
+                color: '#FFCA36',
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/text_icon.svg',
-                        size: 11,
+                        img: 'block_icon/text.png',
+                        size: 12,
                     },
                 ],
                 events: {},

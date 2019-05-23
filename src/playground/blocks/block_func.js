@@ -9,7 +9,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Workspace.function_create,
-                        color: '#4f80ff',
+                        color: '#333',
                         align: 'center',
                     },
                 ],

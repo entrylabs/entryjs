@@ -20,20 +20,18 @@ module.exports = {
 
         return {
             move_direction: {
-                color: EntryStatic.colorSet.block.default.MOVING,
-                outerLine: EntryStatic.colorSet.block.darken.MOVING,
+                color: '#A751E3',
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/moving_icon.svg',
-                        size: 11,
+                        img: 'block_icon/moving_03.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -90,15 +88,14 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.move_to_direction(%1)'] },
             },
             bounce_wall: {
-                color: EntryStatic.colorSet.block.default.MOVING,
-                outerLine: EntryStatic.colorSet.block.darken.MOVING,
+                color: '#A751E3',
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/moving_icon.svg',
-                        size: 11,
+                        img: 'block_icon/moving_03.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -345,20 +342,18 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.bounce_on_edge()'] },
             },
             move_x: {
-                color: EntryStatic.colorSet.block.default.MOVING,
-                outerLine: EntryStatic.colorSet.block.darken.MOVING,
+                color: '#A751E3',
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/moving_icon.svg',
-                        size: 11,
+                        img: 'block_icon/moving_03.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -392,26 +387,24 @@ module.exports = {
                     sprite.setX(sprite.getX() + value);
                     if (sprite.brush && !sprite.brush.stop) {
                         sprite.brush.lineTo(sprite.getX(), sprite.getY() * -1);
-                    }
+                    } 
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.add_x(%1)'] },
             },
             move_y: {
-                color: EntryStatic.colorSet.block.default.MOVING,
-                outerLine: EntryStatic.colorSet.block.darken.MOVING,
+                color: '#A751E3',
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/moving_icon.svg',
-                        size: 11,
+                        img: 'block_icon/moving_03.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -451,30 +444,26 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.add_y(%1)'] },
             },
             move_xy_time: {
-                color: EntryStatic.colorSet.block.default.MOVING,
-                outerLine: EntryStatic.colorSet.block.darken.MOVING,
+                color: '#A751E3',
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/moving_icon.svg',
-                        size: 11,
+                        img: 'block_icon/moving_03.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -562,20 +551,18 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.add_xy_for_sec(%2, %3, %1)'] },
             },
             locate_x: {
-                color: EntryStatic.colorSet.block.default.MOVING,
-                outerLine: EntryStatic.colorSet.block.darken.MOVING,
+                color: '#A751E3',
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/moving_icon.svg',
-                        size: 11,
+                        img: 'block_icon/moving_03.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -615,20 +602,18 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.set_x(%1)'] },
             },
             locate_y: {
-                color: EntryStatic.colorSet.block.default.MOVING,
-                outerLine: EntryStatic.colorSet.block.darken.MOVING,
+                color: '#A751E3',
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/moving_icon.svg',
-                        size: 11,
+                        img: 'block_icon/moving_03.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -668,25 +653,22 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.set_y(%1)'] },
             },
             locate_xy: {
-                color: EntryStatic.colorSet.block.default.MOVING,
-                outerLine: EntryStatic.colorSet.block.darken.MOVING,
+                color: '#A751E3',
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/moving_icon.svg',
-                        size: 11,
+                        img: 'block_icon/moving_03.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -738,30 +720,26 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.set_xy(%1, %2)'] },
             },
             locate_xy_time: {
-                color: EntryStatic.colorSet.block.default.MOVING,
-                outerLine: EntryStatic.colorSet.block.darken.MOVING,
+                color: '#A751E3',
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/moving_icon.svg',
-                        size: 11,
+                        img: 'block_icon/moving_03.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -852,8 +830,7 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.set_xy_for_sec(%2, %3, %1)'] },
             },
             locate: {
-                color: EntryStatic.colorSet.block.default.MOVING,
-                outerLine: EntryStatic.colorSet.block.darken.MOVING,
+                color: '#A751E3',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -861,14 +838,13 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'spritesWithMouse',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.MOVING,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_MOVING,
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/moving_icon.svg',
-                        size: 11,
+                        img: 'block_icon/moving_03.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -915,7 +891,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'spritesWithMouse',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.MOVING,
+                                    arrowColor: EntryStatic.ARROW_COLOR_MOVING,
                                     converter: Entry.block.converters.returnStringKey,
                                     codeMap: 'Entry.CodeMap.Entry.locate[0]',
                                 },
@@ -925,28 +901,25 @@ module.exports = {
                 },
             },
             locate_object_time: {
-                color: EntryStatic.colorSet.block.default.MOVING,
-                outerLine: EntryStatic.colorSet.block.darken.MOVING,
+                color: '#A751E3',
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'spritesWithMouse',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.MOVING,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_MOVING,
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/moving_icon.svg',
-                        size: 11,
+                        img: 'block_icon/moving_03.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -1046,7 +1019,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'spritesWithMouse',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.MOVING,
+                                    arrowColor: EntryStatic.ARROW_COLOR_MOVING,
                                     converter: Entry.block.converters.returnStringKey,
                                     codeMap: 'Entry.CodeMap.Entry.locate_object_time[1]',
                                 },
@@ -1056,8 +1029,7 @@ module.exports = {
                 },
             },
             rotate_relative: {
-                color: EntryStatic.colorSet.block.default.MOVING,
-                outerLine: EntryStatic.colorSet.block.darken.MOVING,
+                color: '#A751E3',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1068,8 +1040,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/moving_icon.svg',
-                        size: 11,
+                        img: 'block_icon/moving_03.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -1105,8 +1077,7 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.add_rotation(%1)'] },
             },
             direction_relative: {
-                color: EntryStatic.colorSet.block.default.MOVING,
-                outerLine: EntryStatic.colorSet.block.darken.MOVING,
+                color: '#A751E3',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1117,8 +1088,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/moving_icon.svg',
-                        size: 11,
+                        img: 'block_icon/moving_03.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -1155,25 +1126,23 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.add_direction(%1)'] },
             },
             rotate_by_time: {
-                color: EntryStatic.colorSet.block.default.MOVING,
-                outerLine: EntryStatic.colorSet.block.darken.MOVING,
+                color: '#A751E3',
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Block',
-                        accept: 'string',
                         defaultType: 'angle',
+                        accept: 'string',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/moving_icon.svg',
-                        size: 11,
+                        img: 'block_icon/moving_03.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -1213,7 +1182,10 @@ module.exports = {
                 isNotFor: [],
                 func(sprite, script) {
                     if (!script.isStart) {
-                        let [timeValue, angleValue] = script.getValues(['VALUE', 'ANGLE'], script);
+                        let [timeValue, angleValue] = script.getValues(
+                            ['VALUE', 'ANGLE'],
+                            script
+                        );
                         timeValue = Number(timeValue);
                         angleValue = Number(angleValue);
 
@@ -1242,25 +1214,23 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.add_rotation_for_sec(%2, %1)'] },
             },
             direction_relative_duration: {
-                color: EntryStatic.colorSet.block.default.MOVING,
-                outerLine: EntryStatic.colorSet.block.darken.MOVING,
+                color: '#A751E3',
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Block',
-                        accept: 'string',
                         defaultType: 'angle',
+                        accept: 'string',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/moving_icon.svg',
-                        size: 11,
+                        img: 'block_icon/moving_03.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -1333,8 +1303,7 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.add_direction_for_sec(%2, %1)'] },
             },
             rotate_absolute: {
-                color: EntryStatic.colorSet.block.default.MOVING,
-                outerLine: EntryStatic.colorSet.block.darken.MOVING,
+                color: '#A751E3',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1345,8 +1314,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/moving_icon.svg',
-                        size: 11,
+                        img: 'block_icon/moving_03.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -1383,8 +1352,7 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.set_rotation(%1)'] },
             },
             direction_absolute: {
-                color: EntryStatic.colorSet.block.default.MOVING,
-                outerLine: EntryStatic.colorSet.block.darken.MOVING,
+                color: '#A751E3',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1395,8 +1363,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/moving_icon.svg',
-                        size: 11,
+                        img: 'block_icon/moving_03.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -1433,8 +1401,7 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.set_direction(%1)'] },
             },
             see_angle_object: {
-                color: EntryStatic.colorSet.block.default.MOVING,
-                outerLine: EntryStatic.colorSet.block.darken.MOVING,
+                color: '#A751E3',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1442,14 +1409,13 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'spritesWithMouse',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.MOVING,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_MOVING,
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/moving_icon.svg',
-                        size: 11,
+                        img: 'block_icon/moving_03.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -1516,7 +1482,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'spritesWithMouse',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.MOVING,
+                                    arrowColor: EntryStatic.ARROW_COLOR_MOVING,
                                     converter: Entry.block.converters.returnStringKey,
                                     codeMap: 'Entry.CodeMap.Entry.see_angle_object[0]',
                                 },
@@ -1526,25 +1492,23 @@ module.exports = {
                 },
             },
             move_to_angle: {
-                color: EntryStatic.colorSet.block.default.MOVING,
-                outerLine: EntryStatic.colorSet.block.darken.MOVING,
+                color: '#A751E3',
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Block',
-                        accept: 'string',
                         defaultType: 'angle',
+                        accept: 'string',
                     },
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/moving_icon.svg',
-                        size: 11,
+                        img: 'block_icon/moving_03.png',
+                        size: 12,
                     },
                 ],
                 events: {},
