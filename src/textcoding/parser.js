@@ -144,7 +144,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             error.message = "문법(Syntax) 오류입니다.";
                             error.type = 1;
                         } else {
-                            annotation = this.getLineNumber(error.node.start, error.node.end);
+                            const { node = {} } = error || {};
+                            const { start = 0, end = 0 } = node;
+                            annotation = this.getLineNumber(start, end);
                             annotation.message = error.message;
                             annotation.severity = "converting error";
                             error.type = 2;
