@@ -301,27 +301,6 @@ function getBlocks() {
                 ],
             },
         },
-        open_hardware_module: {
-            skeleton: 'basic_button',
-            template: '%1',
-            isNotFor: ['arduinoDisconnected', 'arduinoConnected', 'arduinoConnect'],
-            color: '#eee',
-            params: [
-                {
-                    type: 'Text',
-                    text: '모듈 로드하기',
-                    color: '#4f80ff',
-                    align: 'center',
-                },
-            ],
-            events: {
-                mousedown: [
-                    function() {
-                        Entry.hw.requestModulePage();
-                    },
-                ],
-            },
-        },
         disconnect_hardware: {
             skeleton: 'basic_button',
             template: '%1',
