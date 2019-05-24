@@ -749,6 +749,17 @@ EntryStatic.COMMAND_TYPES = {
     redo: 303,
 };
 
+EntryStatic.getDefaultFontFamily = function() {
+    const localLang = Lang || {};
+    const type = localLang.type;
+    const fallbackType = localLang.fallbackType;
+    const langType = type || fallbackType || 'en';
+    switch (langType) {
+        default:
+            return "EntryNG, NanumGothic, 나눔고딕, NanumGothicWeb, '맑은 고딕', 'Malgun Gothic', Dotum";
+    }
+};
+
 // for server node js code
 if (typeof exports == 'object') {
     exports.blockInfo = EntryStatic.blockInfo;
