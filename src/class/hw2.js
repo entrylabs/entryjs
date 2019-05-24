@@ -92,17 +92,13 @@ Entry.HW2 = class {
             statement 로는 before_connect, connected 등 하드웨어 프로그램의 상태 전부가 오지만
             WS 에서는 connected 외에 전부 socketConnected 상태로 머무르게 된다.
              */
-            const { socketConnected, hardwareConnected } = hardwareStatement;
             switch (statement) {
                 case 'disconnectHardware':
                     this._disconnectHardware();
-                    this._setHardwareStatusButton(socketConnected);
                     break;
                 case 'connected':
-                    this._setHardwareStatusButton(hardwareConnected);
                     break;
                 default:
-                    this._setHardwareStatusButton(socketConnected);
                     break;
             }
         });
@@ -294,46 +290,6 @@ Entry.HW2 = class {
     }
 
     /**
-     * 하드웨어 연결 상태를 표기하기 위한 임시 로직.
-     * 모듈모드일때 unbanClass 되어 보여진다.
-     * TODO 디자인 및 기획변경이 필요하다.
-     * @see this.refreshHardwareBlockMenu
-     * @param statement
-     * @private
-     */
-    _setHardwareStatusButton(statement) {
-        const { disconnected, socketConnected, hardwareConnected } = hardwareStatement;
-        let statusText;
-        let statusColor;
-        switch (statement) {
-            case socketConnected:
-                statusText = '하드웨어 연결안됨';
-                statusColor = '#AABBCC';
-                break;
-            case hardwareConnected:
-                statusText = '하드웨어 연결됨';
-                statusColor = '#FF9999';
-                break;
-            case disconnected:
-            default:
-                statusText = '프로그램 연결안됨';
-                statusColor = '#4f80ff';
-                break;
-        }
-
-        Entry.Mutator.mutate('hardware_status', {
-            params: [
-                {
-                    type: 'Text',
-                    text: statusText,
-                    color: statusColor,
-                    align: 'center',
-                },
-            ],
-        });
-    }
-
-    /**
      * 모든 하드웨어를 숨김처리한다. 현재 연결된 하드웨어도 예외는 없다.
      * @private
      */
@@ -364,8 +320,6 @@ Entry.HW2 = class {
             this.currentDeviceKey = undefined;
             if (this.hwModuleType === hardwareModuleType.builtIn) {
                 this.hwModule = undefined;
-            } else {
-                this._setHardwareStatusButton(hardwareStatement.disconnected);
             }
 
             this.tlsSocketIo1 && this.tlsSocketIo1.close();

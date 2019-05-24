@@ -407,7 +407,6 @@ EntryStatic.getAllBlocks = function() {
                 'arduino_cloud_pc_open',
                 'disconnect_hardware',
                 'open_hardware_module',
-                'hardware_status',
                 'arduino_noti',
             ].concat(EntryStatic.DynamicHardwareBlocks),
         },
