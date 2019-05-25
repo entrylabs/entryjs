@@ -156,8 +156,8 @@ Entry.AsomeBot.setLanguage = function() {
                 internet_connect: '인터넷 연결하기 %1 %2 %3',
                 internet_open_ap: '공유기 모드로 변경하기 %1 %2',
                 internet_open_udp: '%1번 포트로 UDP 소켓 열기 %2',
-                internet_udp_msg: 'UDP 수신값',                
-                internet_send_msg: '%1코드로 %2메시지를 전송하기 %3',                
+                internet_udp_msg: 'UDP 수신값',
+                internet_send_msg: '%1코드로 %2메시지를 전송하기 %3',
             },
         },
     };
@@ -283,8 +283,16 @@ Entry.AsomeBot.getBlocks = function() {
                 var sq = Entry.hw.sendQueue;
                 var pd = Entry.hw.portData;
 
-                sq.msg_id = random_str(16);
-                sq.msg = "print('#DT ' + str(hcsr04.get_distance()) + '  ###')";
+                if (!sprite.old_tick) {
+                    sprite.old_tick = new Date().getTime() - 1000;
+                }
+                var tick = new Date().getTime();
+
+                if ((tick - sprite.old_tick) > 500) {
+                    sq.msg_id = random_str(16);
+                    sq.msg = "print('#' + 'DT ' + str(hcsr04.get_distance()) + '  ###')";
+                    sprite.old_tick = tick;
+                }
 
                 return pd.distance;
             },
@@ -1530,8 +1538,16 @@ Entry.AsomeBot.getBlocks = function() {
                 var sq = Entry.hw.sendQueue;
                 var pd = Entry.hw.portData;
 
-                sq.msg_id = random_str(16);
-                sq.msg = "import udp_socket; udp_socket.read_text()";
+                if (!sprite.old_tick) {
+                    sprite.old_tick = new Date().getTime() - 1000;
+                }
+                var tick = new Date().getTime();
+
+                if ((tick - sprite.old_tick) > 500) {
+                    sq.msg_id = random_str(16);
+                    sq.msg = "import udp_socket; udp_socket.read_text()";
+                    sprite.old_tick = tick;
+                }
 
                 return pd.distance;
             },
