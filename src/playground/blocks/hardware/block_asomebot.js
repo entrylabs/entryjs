@@ -1543,13 +1543,13 @@ Entry.AsomeBot.getBlocks = function() {
                 }
                 var tick = new Date().getTime();
 
-                if ((tick - sprite.old_tick) > 500) {
+                if ((tick - sprite.old_tick) > 200) {
                     sq.msg_id = random_str(16);
                     sq.msg = "import udp_socket; udp_socket.read_text()";
                     sprite.old_tick = tick;
                 }
 
-                return pd.distance;
+                return pd.udp_msg;
             },
             syntax: undefined,
         },
