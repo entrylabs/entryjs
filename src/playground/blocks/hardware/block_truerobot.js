@@ -54,7 +54,6 @@ Entry.trueRobot = {
 		Entry.hw.update();
 			
 
-
 		Entry.hw.sendQueue['SET'] = {};
 		Entry.hw.sendQueue['SET'][Entry.trueRobot.PORT_MAP.linetracer] = {
                         port: Entry.trueRobot.PORT_MAP.led_line,
@@ -1813,7 +1812,6 @@ Entry.trueRobot.getBlocks = function() {
                             script.flag = 1;
                         }
                     }
-
 					//console.log( script.tempcheck +"//"+ pd['L2'] +" :: "+ pd['L1'] +" :: "+ pd['R1'] +" :: "+ pd['R2'] + " script.tempcheck : " + script.tempcheck + " script.flag : "+script.flag );
 
 

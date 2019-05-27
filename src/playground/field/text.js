@@ -36,7 +36,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
                 style: 'white-space: pre;',
                 'font-size': this._font_size + 'px',
                 'font-weight': 'bold',
-                'font-family': 'NanumGothic',
+                'font-family': EntryStatic.fontFamily || 'NanumGothic',
                 class: 'dragNone',
                 fill: this._color,
             });
@@ -57,17 +57,18 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 
         var { width, height } = this.getTextBBox();
         const x = this._align == 'center' ? -width / 2 : 0;
+        const offsetY = EntryStatic.fontOffsetY || 0;
         this.textElement.attr({
             x,
-            y: height * 0.25,
+            y: height * 0.5 + offsetY,
         });
 
-        if(this.textElement.childElementCount > 1) {
-            const {childNodes} = this.textElement;
-            for(let i  = 0; i < childNodes.length; i++) {
+        if (this.textElement.childElementCount > 1) {
+            const { childNodes } = this.textElement;
+            for (let i = 0; i < childNodes.length; i++) {
                 childNodes[i].attr({
                     x,
-                })
+                });
             }
         }
 

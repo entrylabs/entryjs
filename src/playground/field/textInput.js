@@ -66,7 +66,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
                 fill: this._contents.color || 'black',
                 'font-size': `${this._font_size}px`,
                 'font-weight': 'bold',
-                'font-family': 'NanumGothic',
+                'font-family': EntryStatic.fontFamily || 'NanumGothic',
             });
         }
 

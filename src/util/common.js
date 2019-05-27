@@ -9,3 +9,5 @@ exports.callApi = _memoize((key, opt) => {
     }
     return axios(options);
 });
+
+exports.toQueryString = (obj) => Object.keys(obj).map(k => `${k}=${obj[k]}`).join('&');
