@@ -11,12 +11,13 @@ export var GEHandle = function(canvas) {
     if (typeof createjs != 'object') {
         throw 'createjs is not founded';
     }
+    const colorSet = EntryStatic.colorSet.canvas || {};
     this.canvas = canvas;
-    this.borderColor = '#e2e2e2';
-    this.knobColor = '#4f80ff';
-    this.arrowColor = '#ffb500';
-    this.centerColor = '#4f80ff';
-    this.rotateKnobColor = '#ffb500';
+    this.borderColor = colorSet.handleBorder || '#e2e2e2';
+    this.knobColor = colorSet.handleKnob || '#4f80ff';
+    this.arrowColor = colorSet.handleArrow || '#ffb500';
+    this.centerColor = colorSet.handleCenter || '#4f80ff';
+    this.rotateKnobColor = colorSet.handleRotateKnob || '#ffb500';
 
     this.x = 0;
     this.y = 0;

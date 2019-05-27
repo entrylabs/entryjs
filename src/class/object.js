@@ -73,6 +73,8 @@ Entry.EntryObject = class {
         }
 
         this._isContextMenuEnabled = true;
+
+        this.isFolded = false;
     }
 
     /**
@@ -230,7 +232,7 @@ Entry.EntryObject = class {
         } else if (objectType === 'textBox') {
             this.thumbUrl = `${Entry.mediaFilePath}text_icon.png`;
         }
-        thumb.style.backgroundImage = `url(${this.thumbUrl})`;
+        thumb.style.backgroundImage = `url(${encodeURI(this.thumbUrl)})`;
     }
 
     /**
@@ -752,12 +754,13 @@ Entry.EntryObject = class {
                     }
                 },
             },
-            // {
-            //     text: Lang.Blocks.add_my_storage,
-            //     callback: () => {
-            //         this.addStorage();
-            //     },
-            // },
+            {
+                text: Lang.Blocks.add_my_storage,
+                enable: !Entry.engine.isState('run') && !!window.user,
+                callback: () => {
+                    this.addStorage();
+                },
+            },
             {
                 text: Lang.Blocks.export_object,
                 callback() {
@@ -1089,10 +1092,32 @@ Entry.EntryObject = class {
         return rotationWrapperView;
     }
 
+    setObjectFold(isFold, isPass) {
+        const $view = $(this.view_);
+        if (isFold) {
+            $view.addClass('fold');
+        } else {
+            $view.removeClass('fold');
+        }
+        if (!isPass) {
+            this.isFolded = isFold;
+        }
+    }
+
+    resetObjectFold() {
+        this.setObjectFold(this.isFolded);
+    }
+
     createInformationView() {
         const informationView = Entry.createElement('div').addClass(
             'entryObjectInformationWorkspace'
         );
+        informationView.bindOnClick(() => {
+            const $view = $(this.view_);
+            if ($view.hasClass('selectedObject')) {
+                this.setObjectFold(!this.isFolded);
+            }
+        });
         return informationView;
     }
 
@@ -1314,9 +1339,5 @@ Entry.EntryObject = class {
 
     _whenRotateEditable(func, obj) {
         return Entry.Utils.when(() => !(Entry.engine.isState('run') || obj.getLock()), func);
-    }
-
-    setDraggable(isDraggable) {
-        $(this.view_).attr('draggable', isDraggable);
     }
 };

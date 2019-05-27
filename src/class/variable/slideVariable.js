@@ -72,9 +72,9 @@ class SlideVariable extends Variable {
         this.view_.addChild(this.slideBar_);
 
         const position = this.getSlidePosition(this.maxWidth);
-
+        const { stage_variable_slider } = EntryStatic.images || {};
         this.valueSetter_ = GEHelper.newSpriteWithCallback(
-            `${Entry.mediaFilePath}stage_variable_slider.png`,
+            stage_variable_slider || `${Entry.mediaFilePath}stage_variable_slider.png`,
             () => {
                 Entry.requestUpdate = true;
             }
@@ -171,18 +171,19 @@ class SlideVariable extends Variable {
                 this._valueWidth = this.valueView_.getMeasuredWidth();
             }
             let width = this._nameWidth + this._valueWidth + 35;
+            const colorSet = EntryStatic.colorSet.canvas || {};
             width = Math.max(width, 90);
             this.rect_.graphics
                 .clear()
                 .f('#ffffff')
                 .ss(1, 2, 0)
-                .s('#aac5d5')
+                .s(colorSet.border || '#aac5d5')
                 .rr(0, -14, width, 42, 4);
             this.wrapper_.graphics
                 .clear()
-                .f('#4f80ff')
+                .f(colorSet.slideVariable || '#4f80ff')
                 .ss(1, 2, 0)
-                .s('#4f80ff')
+                .s(colorSet.slideVariable || '#4f80ff')
                 .rr(this._nameWidth + 14, -10, this._valueWidth + 15, 16, this.RECT_RADIUS);
 
             width = this._nameWidth + this._valueWidth + 26;
