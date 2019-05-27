@@ -1,9 +1,14 @@
 'use strict';
 
 /* eslint-disable */
-var EntryStatic = {};
-
-EntryStatic.objectTypes = ['sprite', 'textBox'];
+var EntryStatic = {
+    fontFamily: 'NanumGothic',
+    exportBlockFontFamily:
+        "NanumGothic, 'NanumGothic', '나눔고딕','NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum",
+    fontOffsetY: -2.5,
+    heightLetter: 'M',
+    objectTypes: ['sprite', 'textBox'],
+};
 
 EntryStatic.usageList = [
     'usage_sequence',
@@ -393,6 +398,9 @@ EntryStatic.getAllBlocks = function() {
                 'behaviorConductLifeSafety_title',
                 'count_lifeSafety_behavior',
                 'get_lifeSafety_behavior',
+                'tts_title',
+                'read_text',
+                'set_tts_property',
             ],
         },
         {
@@ -599,6 +607,7 @@ EntryStatic.objectSubCategories = {
     ],
 };
 
+/* eslint-disable */
 Object.defineProperty(EntryStatic, 'fonts', {
     get: function() {
         return [
@@ -667,7 +676,7 @@ Object.defineProperty(EntryStatic, 'fonts', {
                 family: 'UhBeemysen',
                 url: '/css/uhbeemysen.css',
                 visible: true,
-            }
+            },
         ];
     },
 });
@@ -793,6 +802,17 @@ EntryStatic.getQuestionCategoryData = function() {
             'hidden_boolean',
         ],
     };
+};
+
+EntryStatic.getDefaultFontFamily = function() {
+    const localLang = Lang || {};
+    const type = localLang.type;
+    const fallbackType = localLang.fallbackType;
+    const langType = type || fallbackType || 'en';
+    switch (langType) {
+        default:
+            return "EntryNG, NanumGothic, 나눔고딕, NanumGothicWeb, '맑은 고딕', 'Malgun Gothic', Dotum";
+    }
 };
 
 // for server node js code
