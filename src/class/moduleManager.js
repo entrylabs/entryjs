@@ -2,16 +2,17 @@ Entry.moduleManager = new class {
     /**
      * 해당 url 을 동적으로 로드한다.
      * 해당 함수는 굉장히 위험하므로 추가적인 방어로직이 필요하다.
-     * @param url 로드할 주소
+     * TODO baseUrl 관련해서 정리가 필요함
+     * @param moduleName {string} 로드할 모듈명
      */
-    loadScript(url) {
+    loadExternalModule(moduleName) {
         const scriptElementId = 'entryModuleScript';
         const prevElement = document.getElementById(scriptElementId);
         if (prevElement) {
             prevElement.remove();
         }
 
-        if (!url) {
+        if (!moduleName) {
             return;
         }
         const scriptElement = document.createElement('script');
@@ -24,7 +25,7 @@ Entry.moduleManager = new class {
             Entry.toast.alert('모듈 로드실패', '모듈 불러오기에 실패했습니다.');
             scriptElement.remove();
         };
-        scriptElement.src = url;
+        scriptElement.src = `/rest/hardware/${moduleName}/block`;
 
         // noinspection JSCheckFunctionSignatures
         document.body.appendChild(scriptElement);

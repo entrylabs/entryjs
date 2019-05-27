@@ -1,9 +1,9 @@
 /**
- * 엔트리 하드웨어와 엔트리 워크스페이스간 통신을 정리한 클래스
- * action, data(payload) 를 메세지로 받는다..
+ * 엔트리 하드웨어 -> 엔트리 워크스페이스간 통신을 정리한 클래스
+ * action, data(payload) 를 메세지로 받는다.
  * action
  * - state { statement: String } : 현재 상태를 정의한다. 하드웨어의 연결 상태 체크용
- * - init { name: String } : 하드웨어 프로그램에 모듈을 다운받도록 요청
+ * - init { name: String } : 현재 연결된 하드웨어의 모듈명을 전달 받고, 서버에서 블록데이터를 받아온다.
  * - default { anyObject for data handle }: 이전의 hw.js 에 있는 로직을 그대로 복사. 과거 코드 대응
  *   - disconnect : 이전 disconnectHardware 와 동일
  */
@@ -28,8 +28,16 @@ export default class {
         }
     }
 
-    _onStateAction({ statement }) {
-        this.dispatchEvent('state', statement);
+    /**
+     * 현재 하드웨어 연결 상태를 표기한다.
+     * connected 의 경우 어떤 하드웨어와 연결되었는지 표기된다.
+     * @param statement {string} 하드웨어 연결상태
+     * @param args
+     * @private
+     */
+    _onStateAction({ statement, args }) {
+        const [name] = args;
+        this.dispatchEvent('state', statement, name);
     }
 
     _onInitAction({ name }) {

@@ -86,8 +86,10 @@ Entry.HW2 = class {
         });
 
         const messageHandler = new HardwareSocketMessageHandler(socket);
-        messageHandler.addEventListener('init', this.requestHardwareModule.bind(this));
-        messageHandler.addEventListener('state', (statement) => {
+        messageHandler.addEventListener('init', (name) => {
+            Entry.moduleManager.loadExternalModule(name);
+        });
+        messageHandler.addEventListener('state', (statement, name) => {
             /*
             statement 로는 before_connect, connected 등 하드웨어 프로그램의 상태 전부가 오지만
             WS 에서는 connected 외에 전부 socketConnected 상태로 머무르게 된다.
@@ -97,6 +99,8 @@ Entry.HW2 = class {
                     this._disconnectHardware();
                     break;
                 case 'connected':
+                    // init action 과 동일동작
+                    Entry.moduleManager.loadExternalModule(name);
                     break;
                 default:
                     break;
@@ -169,33 +173,9 @@ Entry.HW2 = class {
         this.socket = socket;
         this.connected = true;
         console.log('Hardware Program connected'); // 하드웨어 프로그램 연결 성공, 스테이터스 변화 필요
-        if (this.hwModule && this.hwModuleType === hardwareModuleType.module) {
-            this.requestHardwareModule(this.hwModule.name);
-        }
         Entry.dispatchEvent('hwChanged');
         if (Entry.playground && Entry.playground.object) {
             Entry.playground.setMenu(Entry.playground.object.objectType);
-        }
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * 하드웨어 프로그램에 moduleName 에 맞는 파일을 요청하도록 신호를 보낸다.
-     * entryjs 가 하드웨어 프로그램과 연동되어있는 경우만 실행된다.
-     * 이 함수는 entryjs 외부에서 사용한다.
-     * @param {string} moduleName
-     */
-    requestHardwareModule(moduleName) {
-        if (this.connected && this.socket) {
-            this._sendSocketMessage({
-                action: 'init',
-                data: JSON.stringify({ name: moduleName }),
-                mode: this.socket.mode,
-                type: 'utf8',
-            });
-        } else {
-            // 하드웨어가 연결되어있지 않은 경우의 처리
-            Entry.toast.warning('모듈 로드하기', '하드웨어 프로그램이 연결되어있지 않습니다.');
         }
     }
 
@@ -224,19 +204,9 @@ Entry.HW2 = class {
             return;
         }
 
-        if (this.hwModuleType === hardwareModuleType.builtIn) {
-            blockMenu.banClass('hardwareModuleStatus');
-            if (!this.hwModule) {
-                // NOTE 이 코드는 하드웨어 블록 초기화 작업도 겸하므로 삭제금지
-                this._banClassAllHardware();
-            }
-        }
-
-        if (this.hwModuleType === hardwareModuleType.module) {
-            blockMenu.unbanClass('hardwareModuleStatus');
-            if (this.hwModule) {
-                blockMenu.unbanClass(this.hwModule.name);
-            }
+        if (!this.hwModule) {
+            // NOTE 이 코드는 하드웨어 블록 초기화 작업도 겸하므로 삭제금지
+            this._banClassAllHardware();
         }
 
         const { disconnected, socketConnected, hardwareConnected } = hardwareStatement;
@@ -307,9 +277,7 @@ Entry.HW2 = class {
     _disconnectHardware() {
         Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
         this.currentDeviceKey = undefined;
-        if (this.hwModuleType === hardwareModuleType.builtIn) {
-            this.hwModule = undefined;
-        }
+        this.hwModule = undefined;
         Entry.dispatchEvent('hwChanged');
     }
 
