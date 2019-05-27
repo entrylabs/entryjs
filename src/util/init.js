@@ -564,7 +564,7 @@ Entry.initSound = function(sound) {
             '/' +
             Entry.soundPath +
             sound.filename +
-            sound.ext || '.mp3';
+            (sound.ext || '.mp3');
 
     Entry.soundQueue.loadFile({
         id: sound.id,
