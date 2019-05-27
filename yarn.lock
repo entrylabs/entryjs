@@ -751,10 +751,15 @@
   dependencies:
     "@egjs/component" "^2.1.0"
 
-"@entrylabs/event@^1.0.2", "@entrylabs/event@latest":
+"@entrylabs/event@^1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@entrylabs/event/-/event-1.0.2.tgz#96dc0d0eb759cd627668889928c2768497126f78"
   integrity sha512-2GSF+9eJCIc/+9EqcZRq7vhmOnwJQeB6LYQIBiM7vv43qCu2odqkekE6VMC6ToMLQwZWBRbn8Qq0dR5hEFRwEg==
+
+"@entrylabs/event@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@entrylabs/event/-/event-1.0.3.tgz#a8754edcf4e44c0365a0e95b57801f3f52532e9d"
+  integrity sha512-IDC7sWnfe8GVQIEGsct9Bcsj1Nh4XikO6PG+veVuix0Zv/XH98NkFjmXiyrriJ/rjJoGFBq6sKesfmaFCCr3MA==
 
 "@entrylabs/postcss-url@^8.0.1":
   version "8.0.1"

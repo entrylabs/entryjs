@@ -33,8 +33,7 @@
     },
     "license": "MIT",
     "dependencies": {
-        "@entrylabs/event": "latest",
-        "@entrylabs/tool": "^1.1.2",
+        "@entrylabs/event": "^1.0.3",
         "@types/node": "^11.9.5",
         "autoprefixer": "^9.4.3",
         "axios": "^0.18.0",

@@ -336,6 +336,7 @@ Entry.Scene = class {
         Entry.stage.removeObjectContainer(scene);
         $(scene.view).remove();
         this.selectScene();
+        this.updateView();
     }
 
     /**

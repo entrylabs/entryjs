@@ -356,8 +356,8 @@ class BlockMenu {
                 const newBlock = Entry.do('addThreadFromBlockMenu', datum).value.getFirstBlock();
                 const newBlockView = newBlock && newBlock.view;
 
-                //if some error occured
-                //blockView is not exist
+                // if some error occured
+                // blockView is not exist
                 if (!newBlockView) {
                     _.result(newBlock, 'destroy');
                     return;
