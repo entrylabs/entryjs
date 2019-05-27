@@ -1830,10 +1830,34 @@ Entry.Utils.addBlockPattern = function(boardSvgDom, suffix) {
     return { pattern };
 };
 
-Entry.Utils.addNewBlock = function(script) {
+Entry.Utils.addNewBlock = function(item) {
+    const { script, functions, messages, variables } = item;
+    const parseScript = JSON.parse(script);
+    if (!parseScript) {
+        return;
+    }
+
+    if (
+        Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD &&
+        (!Entry.TextCodingUtil.canUsePythonVariables(variables) ||
+            !Entry.TextCodingUtil.canUsePythonFunctions(functions))
+    ) {
+        return entrylms.alert(Lang.Menus.object_import_syntax_error);
+    }
+
+    const objectIdMap = {};
+    variables.forEach((variable) => {
+        const { object } = variable;
+        if (object) {
+            variable.object = _.get(Entry, ['container', 'selectedObject', 'id'], '');
+        }
+    });
+    Entry.variableContainer.appendMessages(messages);
+    Entry.variableContainer.appendVariables(variables);
+    Entry.variableContainer.appendFunctions(functions);
     Entry.do(
         'addThread',
-        script.map((block) => {
+        parseScript.map((block) => {
             block.id = Entry.generateHash();
             return block;
         })

@@ -16,14 +16,15 @@ Entry.EXPANSION_BLOCK.tts = {
     descriptionKey: 'Msgs.expansion_tts_description',
     isInitialized: false,
     init() {
-        if (this.isInitialized) {
+        const tts = Entry.EXPANSION_BLOCK.tts;
+        if (tts.isInitialized) {
             return;
         }
-        this.soundQueue = new createjs.LoadQueue();
-        this.soundQueue.installPlugin(createjs.Sound);
-        this.soundQueue.on('complete', ({ currentTarget }) => {
+        tts.soundQueue = new createjs.LoadQueue();
+        tts.soundQueue.installPlugin(createjs.Sound);
+        tts.soundQueue.on('complete', ({ currentTarget }) => {
             const items = currentTarget.getItems().map(item => item.item);
-            this.loadQueue = this.loadQueue.filter(id => {
+            tts.loadQueue = tts.loadQueue.filter(id => {
                 const filtered = items.filter(item => item.id === id);
                 if (filtered.length > 0) {
                     createjs.Sound.play(id);
@@ -190,6 +191,7 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
             isNotFor: ['tts'],
             func(sprite, script) {
                 const tts = Entry.EXPANSION_BLOCK.tts;
+                tts.init();
                 const textObj = checkText(script.getStringValue('TEXT', script));
                 if (textObj.result && tts.isInitialized) {
                     const prop = sprite.getVoiceProp();
