@@ -1138,8 +1138,8 @@ Entry.VariableContainer = class VariableContainer {
      * @param {Entry.Variable} variable
      * @return {boolean} return true when success
      */
-    checkAllVariableName(name, variable) {
-        return this[variable].some(({ name_ }) => name_ === name);
+    checkAllVariableName(name, variable, key = 'name_') {
+        return this[variable].some(({ [key]: name_ }) => name_ === name);
     }
 
     _addVariableOrList(type, data) {
