@@ -38,7 +38,6 @@ Entry.STATIC = {
         sceneRemove: 2,
         sceneRename: 3,
         sceneSort: 4,
-        sceneSelect: 5,
 
         addThread: 101,
         destroyThread: 102,
@@ -83,7 +82,6 @@ Entry.STATIC = {
         entitySetModel: 217,
         objectAddExpansionBlock: 218,
         objectRemoveExpansionBlock: 219,
-        objectReorder: 220,
 
         do: 301,
         undo: 302,
@@ -116,6 +114,7 @@ Entry.STATIC = {
     },
 
     COMMAND_TYPES_NOT_ALWAYS: {
+        sceneSelect: 5,
 
         addObjectButtonClick: 210,
 

@@ -15,8 +15,8 @@ Entry.Chocopi = {
     setZero: function() {},
     getport: function(id, port) {
         if (!this.blocks) return -1;
-        if (this.blocks[port] && this.blocks[port].id == id) return port;
-        for (var p in this.blocks) if (this.blocks[port] && this.blocks[p].id == id) return p;
+        if (this.blocks[port].id == id) return port;
+        for (var p in this.blocks) if (this.blocks[p].id == id) return p;
         return -1;
     },
     connected: false,
@@ -39,7 +39,7 @@ Entry.Chocopi = {
         ['BLE8', 15],
     ],
     dataHandler: function(data) {
-        if (!Entry.hw.sendQueue.data) {
+        if (!this.connected) {
             this.connected = true;
             Entry.hw.sendQueue.init = true;
             Entry.hw.update();
@@ -293,7 +293,6 @@ Entry.Chocopi.getBlocks = function () {
                 var port = Entry.Chocopi.getport(9, script.getField('port'));
                 var sensor = script.getField('sensor');
                 if (port == -1) return false;
-                if(!Entry.Chocopi.p[port])Entry.Chocopi.p[port] = {ts:0, tv:[]}
                 return (Entry.Chocopi.p[port].ts & (1 << sensor)) > 0;
             },
             syntax: { js: [], py: ['Chocopi.touchStatus(%1, %2)'] },
@@ -360,7 +359,6 @@ Entry.Chocopi.getBlocks = function () {
                 var port = Entry.Chocopi.getport(9, script.getField('port'));
                 if (port == -1) return false;
                 var sensor = script.getField('sensor');
-                if(!Entry.Chocopi.p[port])Entry.Chocopi.p[port] = {ts:0, tv:[]}
                 return Entry.Chocopi.p[port].tv[sensor];
             },
             syntax: { js: [], py: ['Chocopi.touchValue(%1, %2)'] },
@@ -502,7 +500,6 @@ Entry.Chocopi.getBlocks = function () {
                 var port = Entry.Chocopi.getport(10, script.getField('port'));
                 if (port == -1) return false;
                 var sensor = script.getField('sensor');
-                if(!Entry.Chocopi.p[port])Entry.Chocopi.p[port] = {xyp:[]}
                 return Entry.Chocopi.p[port].xyp[sensor];
             },
             syntax: { js: [], py: ['Chocopi.joystick(%1, %2)'] },
@@ -694,7 +691,6 @@ Entry.Chocopi.getBlocks = function () {
                 var port = Entry.Chocopi.getport(11, script.getField('port'));
                 if (port == -1) return 0;
                 var sensor = script.getField('sensor');
-                if(!Entry.Chocopi.p[port])Entry.Chocopi.p[port] = {s:[]}
                 var v = Entry.Chocopi.p[port].s;
                 if (sensor < 9) return v[sensor];
                 switch (sensor) {
@@ -915,8 +911,7 @@ Entry.Chocopi.getBlocks = function () {
                 var r = script.getNumberValue('r');
                 var g = script.getNumberValue('g');
                 var b = script.getNumberValue('b');
-                if(!Entry.hw.sendQueue.data)
-                    Entry.hw.sendQueue.data = {};
+                console.log([l, r, g, b]);
                 Entry.hw.sendQueue.data[port] = [l, r, g, b];
                 Entry.hw.update();
                 delete Entry.hw.sendQueue.data[port];
@@ -992,8 +987,6 @@ Entry.Chocopi.getBlocks = function () {
                 var id = script.getField('id');
                 var s = script.getNumberValue('power');
                 var d = script.getField('direction');
-                if(!Entry.hw.sendQueue.data)
-                    Entry.hw.sendQueue.data = {};
                 Entry.hw.sendQueue.data[port] = [id, s, d];
                 Entry.hw.update();
                 delete Entry.hw.sendQueue.data[port];
@@ -1060,15 +1053,13 @@ Entry.Chocopi.getBlocks = function () {
                 if (port == -1) return script.callReturn();
                 var id = script.getField('id');
                 var a = script.getNumberValue('angle');
-                if(!Entry.hw.sendQueue.data)
-                Entry.hw.sendQueue.data = {};                
                 Entry.hw.sendQueue.data[port] = [id, a];
                 Entry.hw.update();
                 delete Entry.hw.sendQueue.data[port];
                 return script.callReturn();
             },
             syntax: { js: [], py: ['Chocopi.servo(%1, %2, %3)'] },
-        },        
+        },
         chocopi_map_range: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,

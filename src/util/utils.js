@@ -645,6 +645,7 @@ Entry.Utils.setSVGDom = function(SVGDom) {
 Entry.Utils.bindIOSDeviceWatch = function() {
     const Agent = Entry.Utils.mobileAgentParser();
     if (Agent.apple.device) {
+        console.log('APPLE! MOBILE DEVICE');
         let lastHeight = window.innerHeight || document.documentElement.clientHeight;
         let lastSVGDomHeight = 0;
         if (Entry.Utils.SVGDom) {
@@ -668,8 +669,6 @@ Entry.Utils.bindIOSDeviceWatch = function() {
         $(window).on('orientationchange', () => {
             Entry.windowResized.notify();
         });
-
-        window.addEventListener('pagehide', Entry.beforeUnload);
     }
 };
 
@@ -1463,7 +1462,7 @@ Entry.setBasicBrush = function(sprite) {
         const rgb = brush.rgb;
         const opacity = 1 - brush.opacity / 100;
 
-        if (isWebGL) {
+        if  (isWebGL) {
             brush.beginStrokeFast(Entry.rgb2Number(rgb.r, rgb.g, rgb.b), opacity);
         } else {
             brush.beginStroke(`rgba(${rgb.r},${rgb.g},${rgb.b},${opacity})`);
@@ -1473,7 +1472,7 @@ Entry.setBasicBrush = function(sprite) {
         brush.rgb = Entry.hex2rgb('#ff0000');
         brush.opacity = 0;
         brush.setStrokeStyle(1);
-        if (isWebGL) {
+        if  (isWebGL) {
             brush.beginStrokeFast(0xff0000, 1);
         } else {
             brush.beginStroke('rgba(255,0,0,1)');
@@ -1502,7 +1501,7 @@ Entry.setCloneBrush = function(sprite, parentBrush) {
 
     const rgb = brush.rgb;
     const opacity = 1 - brush.opacity / 100;
-    if (isWebGL) {
+    if  (isWebGL) {
         brush.beginStrokeFast(Entry.rgb2Number(rgb.r, rgb.g, rgb.b), opacity);
     } else {
         brush.beginStroke(`rgba(${rgb.r},${rgb.g},${rgb.b},${opacity})`);
@@ -1830,34 +1829,10 @@ Entry.Utils.addBlockPattern = function(boardSvgDom, suffix) {
     return { pattern };
 };
 
-Entry.Utils.addNewBlock = function(item) {
-    const { script, functions, messages, variables } = item;
-    const parseScript = JSON.parse(script);
-    if (!parseScript) {
-        return;
-    }
-
-    if (
-        Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD &&
-        (!Entry.TextCodingUtil.canUsePythonVariables(variables) ||
-            !Entry.TextCodingUtil.canUsePythonFunctions(functions))
-    ) {
-        return entrylms.alert(Lang.Menus.object_import_syntax_error);
-    }
-
-    const objectIdMap = {};
-    variables.forEach((variable) => {
-        const { object } = variable;
-        if (object) {
-            variable.object = _.get(Entry, ['container', 'selectedObject', 'id'], '');
-        }
-    });
-    Entry.variableContainer.appendMessages(messages);
-    Entry.variableContainer.appendVariables(variables);
-    Entry.variableContainer.appendFunctions(functions);
+Entry.Utils.addNewBlock = function(script) {
     Entry.do(
         'addThread',
-        parseScript.map((block) => {
+        script.map((block) => {
             block.id = Entry.generateHash();
             return block;
         })
@@ -2485,10 +2460,9 @@ Entry.Utils.copy = function(target) {
 
 //helper function for development and debug
 Entry.Utils.getAllObjectsBlockList = function() {
-    return Entry.container.objects_.reduce(
-        (prev, { script }) => prev.concat(script.getBlockList()),
-        []
-    );
+    return Entry.container.objects_.reduce((prev, { script }) => {
+        return prev.concat(script.getBlockList());
+    }, []);
 };
 
 Entry.Utils.toFixed = function(value, len) {
@@ -2747,3 +2721,4 @@ Entry.Utils.getMouseEvent = function(event) {
     }
     return mouseEvent;
 };
+

@@ -14,6 +14,7 @@ Entry.HW = function() {
 
     this.connectTrial = 0;
     this.isFirstConnect = true;
+    this.requireVerion = 'v1.6.1';
     this.hwPopupCreate();
     this.initSocket();
     this.connected = false;
@@ -321,6 +322,10 @@ p.checkDevice = function(data, version) {
             this.hwModule.dataHandler(data);
         }
         return;
+    }
+
+    if(Entry.Utils.isNewVersion(version, this.requireVerion)) {
+        this.popupHelper.show('newVersion', true);
     }
 
     this.selectedDevice = key;

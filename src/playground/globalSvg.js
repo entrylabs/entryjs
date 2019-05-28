@@ -48,8 +48,13 @@ class GlobalSvg {
         }
         this._view = view;
         this._mode = mode;
-        this.isFromBlockMenu = view.dragInstance && view.dragInstance.isNew;
-        view.set({ visible: false });
+
+        const fromBlockMenu = view.dragInstance && view.dragInstance.isNew;
+        const backPackMode = !fromBlockMenu && Entry.playground.backPack.isShow;
+        if (mode !== Entry.Workspace.MODE_VIMBOARD && !backPackMode) {
+            view.set({ visible: false });
+        }
+
         this.draw();
         this.show();
         this.align();
@@ -59,12 +64,6 @@ class GlobalSvg {
 
     getView() {
         return this._view;
-    }
-
-    get canAddStorageBlock() {
-        const { block = {} } = this._view || {};
-        const { copyable } = block;
-        return !this.isFromBlockMenu && copyable;
     }
 
     setComment(view, mode) {
@@ -275,26 +274,10 @@ class GlobalSvg {
         const blockMenu = board.workspace.blockMenu;
         const bLeft = blockMenu.offset().left;
         const bTop = blockMenu.offset().top;
-        const bWidth = blockMenu.visible ? blockMenu.blockMenuContainer.width() : 0;
-
-        let backPackWidth = 0;
-        const windowWidth = window.innerWidth;
-        const backPackMode = Entry.playground.backPack.isShow;
-        if (backPackMode) {
-            backPackWidth = 135;
-        }
-
-        if (
-            mousePos.y > board.offset().top - 20 &&
-            (mousePos.x > bLeft + bWidth && mousePos.x < windowWidth - backPackWidth)
-        ) {
+        const bWidth = blockMenu.visible ? blockMenu.blockMenuWrapper.width() : 0;
+        if (mousePos.y > board.offset().top - 20 && mousePos.x > bLeft + bWidth) {
             return this.DONE;
-        } else if (
-            mousePos.y > bTop &&
-            mousePos.x > bLeft &&
-            mousePos.x <= bLeft + bWidth &&
-            blockMenu.visible
-        ) {
+        } else if (mousePos.y > bTop && mousePos.x > bLeft && blockMenu.visible) {
             if (blockView.block && !blockView.block.isDeletable()) {
                 return this.RETURN;
             } else {

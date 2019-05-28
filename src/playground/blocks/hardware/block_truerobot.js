@@ -7,8 +7,8 @@ Entry.trueRobot = {
     imageName: 'truetrue.png',
     delayTime: 30,
     title: {
-		ko: '뚜루뚜루',
         en: 'TrueTrueRobot',
+        ko: '뚜루뚜루',
     },
     PORT_MAP: {
         singlemotor: 0x0a,
@@ -28,171 +28,36 @@ Entry.trueRobot = {
         linePort: 0xf0,
     },
     setZero: function() {
-		
-		
-        Entry.hw.sendQueue['SET'] = {};
-        
-		Entry.hw.sendQueue.leftValue = 0;
-		Entry.hw.sendQueue.rightValue = 0;	
-		Entry.hw.sendQueue['SET'][Entry.trueRobot.PORT_MAP.dualmotor] = {
-                        port: Entry.trueRobot.PORT_MAP.dualPort,
-                        dataA: 0,
-                        dataB: 0,
-                        dataC: 1,
-	    };
+        var portMap = Entry.trueRobot.PORT_MAP;
+        var portMap2 = Entry.trueRobot.PORT_MAP;
+        if (!Entry.hw.sendQueue['SET']) {
+            Entry.hw.sendQueue['SET'] = {};
+        }
+        var sq = Entry.hw.sendQueue;
 
-		Entry.hw.update();
+        var intoDevice;
+        var intoPort;
 
-		Entry.hw.sendQueue['SET'] = {};
-		Entry.hw.sendQueue['SET'][Entry.trueRobot.PORT_MAP.linetracer] = {
-                        port: Entry.trueRobot.PORT_MAP.led_line,
-                        dataA: 0,
-                        dataB: 0x07,
-                        dataC: 0x07,
-                    };
-
-		Entry.hw.update();
-
-		var portArray = new Array(4,9,10);
-
-		Entry.hw.sendQueue['SET'] = {};
-
-		var settimer = 100
-			for( var port in  portArray ){
-				var tempport = 0;
-			
-				setTimeout(function() {
-					Entry.hw.sendQueue['SET'][Entry.trueRobot.PORT_MAP.leds] = {
-                        port: portArray[tempport],
-                        dataA: 1,
-                        dataB: 0x07,
-                        dataC: 0x07,
-                    };
-					
-						Entry.hw.update();
-						tempport++;	
-						settimer = settimer + 30;
-						}, settimer);
-		
-			}
-
-		setTimeout(function() {
-				Entry.hw.sendQueue['SET'][Entry.trueRobot.PORT_MAP.colorled] = {
-					port: Entry.trueRobot.PORT_MAP.colorled,
-					dataA: 0,
-					dataB: 0,
-					dataC: 255,
-				};
-					Entry.hw.update();
-					tempport++;	
-					settimer = settimer + 30;
-					}, settimer);
-			
+        for (var port in portMap) {
+            sq[port] = portMap[port];
+            intoPort = portMap[port];
+            for (var device in portMap2) {
+                intoDevice = portMap2[port];
+                if (intoPort == 8) {
+                    var ckeckDataC = 255;
+                } else {
+                    var ckeckDataC = 0;
+                }
+                Entry.hw.sendQueue['SET'][intoDevice] = {
+                    port: intoPort,
+                    dataA: 0,
+                    dataB: 0,
+                    dataC: ckeckDataC,
+                };
+                Entry.hw.update();
+            }
+        }
     },
-	monitorTemplate: {
-		imgPath: 'hw/truebot.png',
-		width: 254,
-        height: 377,
-        listPorts: {
-			AccX: {
-                name: 'acc X',
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },
-			AccY: {
-                name: 'acc Y',
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },
-			AccZ: {
-                name: 'acc Z',
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },
-			AccStatus: {
-                name: 'acc Tilt',
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },
-			BColorRed: {
-                name: 'bottom R Value',
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },
-			BColorGreen: {
-                name: 'bottom G Value',
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },
-			BColorBlue: {
-                name: 'bottom B Value',
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },
-			BColorKey: {
-                name: 'bottom Color Key',
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },
-			leftValue: {
-                name: 'leftValue',
-                type: 'output',
-                pos: { x: 0, y: 0 },
-            },
-			rightValue: {
-                name: 'rightValue',
-                type: 'output',
-                pos: { x: 0, y: 0 },
-            },
-			
-		},
-		ports: {
-			FColorLeftKey: {
-                name: 'frontcolor Left',
-                type: 'input',
-                pos: { x: 135, y: 170 },
-            },
-			FColorRightKey: {
-                name: 'frontcolor Right',
-                type: 'input',
-                pos: { x: 115, y: 170 },
-            },
-			ProxiRight: {
-                name: 'proxi right',
-                type: 'input',
-                pos: { x: 102, y: 260 },
-            },
-			ProxiLeft: {
-                name: 'proxi left',
-                type: 'input',
-                pos: { x: 155, y: 260 },
-            },
-
-			L2: {
-                name: 'line Left Out',
-                type: 'input',
-                pos: { x: 50, y: 360 },
-            },
-			L1: {
-                name: 'line Left In',
-                type: 'input',
-                pos: { x: 80, y: 360 },
-            },
-			R1: {
-                name: 'line Right In',
-                type: 'input',
-                pos: { x: 170, y: 360 },
-            },
-			R2: {
-                name: 'line Right Out',
-                type: 'input',
-                pos: { x: 200, y: 360 },
-            },
-            
-		},
-        mode: 'both',
-    },
-
 };
 
 Entry.trueRobot.blockMenuBlocks = [
@@ -289,9 +154,7 @@ Entry.trueRobot.getBlocks = function() {
             func: function(sprite, script) {
                 var pd = Entry.hw.portData;
                 var dev = script.getField('position');
-				
-				Entry.trueRobot.monitorTemplate.listPorts.temperature = pd[dev];
-					
+
                 return pd[dev];
             },
             syntax: { js: [], py: [] },
@@ -526,7 +389,7 @@ Entry.trueRobot.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: ['0', '0', '1', null],
+                params: ['0', '0', '0', null],
                 type: 'truetrue_set_dualmotor',
             },
             paramsKeyMap: {
@@ -562,8 +425,6 @@ Entry.trueRobot.getBlocks = function() {
                     delayValue = Math.max(delayValue, -100);
                     delayValue = Math.min(delayValue, 100);
 
-					Entry.hw.sendQueue.leftValue = leftValue;
-					Entry.hw.sendQueue.rightValue = rightValue;
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: leftValue,
@@ -599,8 +460,7 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 } else {
                     Entry.engine.isContinue = false;
-					Entry.hw.sendQueue.leftValue = 0;
-					Entry.hw.sendQueue.rightValue = 0;
+
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: 0,
@@ -1173,9 +1033,7 @@ Entry.trueRobot.getBlocks = function() {
                         rightValue = -100;
                         delayValue = 0;
                     }
-										
-					Entry.hw.sendQueue.leftValue = leftValue;
-					Entry.hw.sendQueue.rightValue = rightValue;
+
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: leftValue,
@@ -1228,7 +1086,7 @@ Entry.trueRobot.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [101, '1', null],
+                params: [101, '0', null],
                 type: 'truetrue_set_sec_move',
             },
             paramsKeyMap: {
@@ -1246,11 +1104,6 @@ Entry.trueRobot.getBlocks = function() {
 
                 var timeValue = script.getNumberValue('delayValue');
                 var delayValue = script.getNumberValue('delayValue');
-
-				if( delayValue == 0 ){
-					script.isStart = true;
-				}
-
                 delayValue = Math.round(delayValue);
                 delayValue = Math.max(delayValue, -100);
                 delayValue = Math.min(delayValue, 100);
@@ -1270,8 +1123,7 @@ Entry.trueRobot.getBlocks = function() {
                         leftValue = -100;
                         rightValue = -100;
                     }
-					Entry.hw.sendQueue.leftValue = leftValue;
-					Entry.hw.sendQueue.rightValue = rightValue;
+
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: leftValue,
@@ -1305,8 +1157,7 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 } else {
                     Entry.engine.isContinue = false;
-					Entry.hw.sendQueue.leftValue = 0;
-					Entry.hw.sendQueue.rightValue = 0;
+
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: 0,
@@ -1379,8 +1230,7 @@ Entry.trueRobot.getBlocks = function() {
                         rightValue = 100;
                         delayValue = 0;
                     }
-					Entry.hw.sendQueue.leftValue = leftValue;
-					Entry.hw.sendQueue.rightValue = rightValue;
+
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: leftValue,
@@ -1433,7 +1283,7 @@ Entry.trueRobot.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [101, '1', null],
+                params: [101, '0', null],
                 type: 'truetrue_set_sec_rotate',
             },
             paramsKeyMap: {
@@ -1451,15 +1301,9 @@ Entry.trueRobot.getBlocks = function() {
 
                 var timeValue = script.getNumberValue('delayValue');
                 var delayValue = script.getNumberValue('delayValue');
-
-				if( delayValue == 0 ){
-					script.isStart = true;
-				}
-				
-				delayValue = Math.round(delayValue);
+                delayValue = Math.round(delayValue);
                 delayValue = Math.max(delayValue, -100);
                 delayValue = Math.min(delayValue, 100);
-
 
                 if (!script.isStart) {
                     script.isStart = true;
@@ -1470,14 +1314,13 @@ Entry.trueRobot.getBlocks = function() {
                     var rightValue;
 
                     if (moveValue == 101) {
-                        leftValue = 50;
-                        rightValue = -30;
+                        leftValue = 100;
+                        rightValue = -100;
                     } else if (moveValue == 102) {
-                        leftValue = -30;
-                        rightValue = 50;
+                        leftValue = -100;
+                        rightValue = 100;
                     }
-					Entry.hw.sendQueue.leftValue = leftValue;
-					Entry.hw.sendQueue.rightValue = rightValue;
+
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: leftValue,
@@ -1511,8 +1354,7 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 } else {
                     Entry.engine.isContinue = false;
-					Entry.hw.sendQueue.leftValue = 0;
-					Entry.hw.sendQueue.rightValue = 0;
+
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: 0,
@@ -1546,7 +1388,7 @@ Entry.trueRobot.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: ['1', null],
+                params: ['0', null],
                 type: 'truetrue_set_grid_block',
             },
             paramsKeyMap: {
@@ -1570,10 +1412,6 @@ Entry.trueRobot.getBlocks = function() {
                     script.bufferFlag = 2;
                 }
 
-				if( gridValue == 0 ) {
-					script.timeFlag = 3;
-				}
-
                 if (script.timeFlag == 0) {
                     script.timeFlag = 1;
 
@@ -1581,68 +1419,44 @@ Entry.trueRobot.getBlocks = function() {
                         leftValue = 100;
                         rightValue = 100;
                     } else if (pd['L1'] >= 0 || pd['R1'] >= 0) {
-                        if (pd['L1'] > pd['R1']-20) {
+                        if (pd['L1'] > pd['R1'] - 20) {
                             leftValue = 100;
                             rightValue = pd['L1'] - pd['R1'];
 
-                            // var maxright = rightValue;
-							
+                            var maxright = rightValue;
+
                             rightValue = Math.max(
-                                Math.min(Math.round(100 - 100 * rightValue / 230), 100),
-                                30
+                                Math.min(Math.round(100 - 100 * rightValue / 230), 70),
+                                0
                             );
-                        } else if (pd['R1'] > pd['L1']-20) {
+                        } else if (pd['L1'] < pd['R1'] - 20) {
                             leftValue = pd['R1'] - pd['L1'];
-
-
                             leftValue = Math.max(
-                                Math.min(Math.round(100 - 100 * leftValue / 230), 100),
-                                30
+                                Math.min(Math.round(100 - 100 * leftValue / 230), 70),
+                                0
                             );
 
                             rightValue = 100;
                         } else {
-
                             leftValue = 100;
                             rightValue = 100;
                         }
                     } else {
                         leftValue = 100;
                         rightValue = 100;
-					}
-					//console.log( script.tempcheck +"//"+ pd['L2'] +" :: "+ pd['L1'] +" :: "+ pd['R1'] +" :: "+ pd['R2'] );
+                    }
+
                     if (
-                        pd['L1'] >= 0 &&
-                        pd['R1'] >= 0 &&
+                        pd['L1'] > 0 &&
+                        pd['R1'] > 0 &&
                         pd['L2'] > 0 &&
                         pd['R2'] > 0 &&
-                        pd['L2'] + pd['L1'] >= 130 &&
-                        pd['R2'] + pd['R1'] >= 130
+                        pd['L2'] > 130 &&
+                        pd['R2'] > 130
                     ) {
                         if (script.flag == 1) {
                             script.checkCount++;
                             script.flag = 0;
-
-							if (script.checkCount < gridValue) {
-								Entry.hw.sendQueue.leftValue = 0;
-								Entry.hw.sendQueue.rightValue = 0;
-								Entry.hw.sendQueue['SET'][device] = {
-									port: Entry.trueRobot.PORT_MAP.dualPort,
-									dataA: 0,
-									dataB: 0,
-									dataC: 1,
-								};
-
-								script.timeFlag = 1;
-								
-								var myTimer = setTimeout(function() {
-									script.timeFlag = 0;
-								 }, 200);
-
-								return script;
-							}
-
-
                         }
                         if (script.checkCount >= gridValue) {
                             if (
@@ -1673,8 +1487,7 @@ Entry.trueRobot.getBlocks = function() {
                     if (!Entry.hw.sendQueue['SET']) {
                         Entry.hw.sendQueue['SET'] = {};
                     }
-					Entry.hw.sendQueue.leftValue = leftValue;
-					Entry.hw.sendQueue.rightValue = rightValue;
+
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: leftValue,
@@ -1694,8 +1507,7 @@ Entry.trueRobot.getBlocks = function() {
                     return script;
                 } else if (script.timeFlag == 3) {
                     clearTimeout(myTimer);
-					Entry.hw.sendQueue.leftValue = 0;
-					Entry.hw.sendQueue.rightValue = 0;
+
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: 0,
@@ -1740,7 +1552,7 @@ Entry.trueRobot.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [101, '1', null],
+                params: [101, '0', null],
                 type: 'truetrue_set_grid_rotate',
             },
             paramsKeyMap: {
@@ -1773,10 +1585,6 @@ Entry.trueRobot.getBlocks = function() {
                     script.tempcheck = 0;
                 }
 
-				if( rotateValue == 0 ) {
-					script.timeFlag = 3;
-				}
-
                 if (script.timeFlag == 0) {
                     script.timeFlag = 1;
 
@@ -1791,7 +1599,7 @@ Entry.trueRobot.getBlocks = function() {
                     }
 
                     if (moveValue == 101) {
-                        if ( ( pd['L1'] > 170 ||  ( pd['L1'] + pd['L2'] > 170 & pd['L1'] > pd['L2'] ) ) && pd['L2'] >= 0 && pd['R2'] == 0 && pd['R1'] == 0) {
+                        if (pd['L1'] > 0 && pd['L2'] == 0 && pd['R2'] == 0 && pd['R1'] == 0) {
                             if (script.flag == 1) {
                                 script.tempcheck = 1;
                             }
@@ -1799,75 +1607,33 @@ Entry.trueRobot.getBlocks = function() {
                             script.flag = 1;
                         }
                     } else if (moveValue == 102) {
-                        if ( ( pd['R1'] > 170 ||  ( pd['R1'] + pd['R2'] > 170 & pd['R1'] > pd['R2'] ) ) && pd['R2'] >= 0 && pd['L2'] == 0 && pd['L1'] == 0) {
+                        if (pd['R1'] > 0 && pd['R2'] == 0 && pd['L2'] == 0 && pd['L1'] == 0) {
                             if (script.flag == 1) {
-                                script.tempcheck = 1;
+                                script.tempcheck = 2;
                             }
                         } else if (pd['R2'] > 0 && pd['R1'] == 0) {
                             script.flag = 1;
                         }
                     }
 
-					//console.log( script.tempcheck +"//"+ pd['L2'] +" :: "+ pd['L1'] +" :: "+ pd['R1'] +" :: "+ pd['R2'] );
-
-                    if (script.tempcheck == 1 && pd['L1'] < 230) {
+                    if (script.tempcheck == 1 && pd['L1'] < 100) {
                         script.tempcheck = 0;
                         script.checkCount++;
                         script.flag = 0;
-
-						if (script.flag == 0 && script.checkCount < rotateValue) {
-								Entry.hw.sendQueue.leftValue = 0;
-								Entry.hw.sendQueue.rightValue = 0;
-								Entry.hw.sendQueue['SET'][device] = {
-									port: Entry.trueRobot.PORT_MAP.dualPort,
-									dataA: 0,
-									dataB: 0,
-									dataC: 1,
-								};
-
-								script.timeFlag = 1;
-								//console.log( "!!!!!!!!!!!" );
-								var myTimer = setTimeout(function() {
-									script.timeFlag = 0;
-								 }, 200);
-
-								return script;
-							}
                     }
-                    if (script.tempcheck == 2 && pd['R1'] < 230) {
+                    if (script.tempcheck == 2 && pd['R1'] < 100) {
                         script.tempcheck = 0;
                         script.checkCount++;
                         script.flag = 0;
-
-						if (script.flag == 0 && script.checkCount < rotateValue) {
-								Entry.hw.sendQueue.leftValue = 0;
-								Entry.hw.sendQueue.rightValue = 0;	
-								Entry.hw.sendQueue['SET'][device] = {
-									port: Entry.trueRobot.PORT_MAP.dualPort,
-									dataA: 0,
-									dataB: 0,
-									dataC: 1,
-								};
-
-								script.timeFlag = 1;
-								//console.log( "!!!!!!!!!!!" );
-								var myTimer = setTimeout(function() {
-									script.timeFlag = 0;
-								 }, 200);
-
-								return script;
-						}
                     }
 
-				
                     if (script.checkCount >= rotateValue) {
                         leftValue = 0;
                         rightValue = 0;
                         script.timeFlag = 1;
                         script.bufferFlag = 3;
                     }
-					Entry.hw.sendQueue.leftValue = leftValue;
-					Entry.hw.sendQueue.rightValue = rightValue;
+
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: leftValue,
@@ -1887,8 +1653,7 @@ Entry.trueRobot.getBlocks = function() {
                     return script;
                 } else if (script.timeFlag == 3) {
                     clearTimeout(myTimer);
-					Entry.hw.sendQueue.leftValue = 0;
-					Entry.hw.sendQueue.rightValue = 0;
+
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: 0,

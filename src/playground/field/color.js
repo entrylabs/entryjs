@@ -55,7 +55,7 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
             this.textElement = this.svgGroup.elem('text').attr({
                 style: 'white-space: pre;',
                 'font-size': `${this._fontSize}px`,
-                'font-family': EntryStatic.fontFamily || 'NanumGothic',
+                'font-family': 'NanumGothic',
                 class: 'dragNone',
                 fill: this._color,
             });

@@ -2504,6 +2504,8 @@ const miniBlock = {
         },
         class: 'robotis_led',
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
+
             var port = script.getStringField('PORT');
             var value = 0;
             var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
@@ -2561,6 +2563,7 @@ const miniBlock = {
         },
         class: 'robotis_touch',
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
             var port = script.getStringField('PORT');
             var value = 0;
 
@@ -2622,6 +2625,7 @@ const miniBlock = {
         },
         class: 'robotis_touch',
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
             var port = script.getStringField('PORT');
             var touch = script.getNumberField('TOUCH', script);
             var value = 0;
@@ -2676,6 +2680,7 @@ const miniBlock = {
         class: 'robotis_irs',
         //'isNotFor': ['mini'],
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
             var port = script.getStringField('PORT');
             var value = 0;
             var data_address = 0;
@@ -2777,6 +2782,7 @@ const miniBlock = {
         class: 'robotis_irs',
         //'isNotFor': ['mini'],
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
             var port = script.getStringField('PORT', script);
             var operator = script.getField('OPERATOR', script);
             var rightValue = script.getNumberValue('RIGHTVALUE', script);
@@ -2880,6 +2886,7 @@ const miniBlock = {
         },
         class: 'robotis_light',
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
             var port = script.getStringField('PORT');
             return Entry.hw.portData['LIGHT' + port];
         }
@@ -2935,6 +2942,7 @@ const miniBlock = {
         },
         class: 'robotis_light',
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
             var port = script.getNumberField('PORT', script);
             var operator = script.getField('OPERATOR', script);
             var rightValue = script.getNumberValue('RIGHTVALUE', script);
@@ -2983,6 +2991,7 @@ const miniBlock = {
         },
         class: 'robotis_userbutton',
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
             return Entry.hw.portData['USERBUTTONSTATE'];
         }
     }, robotis_userbutton_value_boolean: {
@@ -3009,6 +3018,7 @@ const miniBlock = {
         },
         class: 'robotis_userbutton',
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
             var port = script.getStringField('PORT');
             var value = Entry.hw.portData['USERBUTTONSTATE'];
             var isTouch = false;
@@ -3039,6 +3049,7 @@ const miniBlock = {
         },
         class: 'robotis_sound',
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
             return Entry.hw.portData['DETECTEDSOUNDE'];
         }
     },
@@ -3080,6 +3091,7 @@ const miniBlock = {
         },
         class: 'robotis_sound',
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
             var operator = script.getField('OPERATOR', script);
             var rightValue = script.getNumberValue('RIGHTVALUE', script);
             var leftValue = Entry.hw.portData['DETECTEDSOUNDE'];
@@ -3128,7 +3140,7 @@ const miniBlock = {
         },
         class: 'robotis_sound',
         func: function (sprite, script) {
-
+            Entry.hw.sendQueue['IS_EDU'] = true;
             var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
             var data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0];
             var data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
@@ -3161,6 +3173,7 @@ const miniBlock = {
         },
         class: 'robotis_sound',
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
             return Entry.hw.portData['DETECTINGSOUNDE1'];
         }
     },
@@ -3202,6 +3215,7 @@ const miniBlock = {
         },
         class: 'robotis_sound',
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
             var operator = script.getField('OPERATOR', script);
             var rightValue = script.getNumberValue('RIGHTVALUE', script);
             var leftValue = Entry.hw.portData['DETECTINGSOUNDE1'];
@@ -3259,6 +3273,7 @@ const miniBlock = {
         },
         class: 'robotis_color',
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
             var port = script.getStringField('PORT');
             var value = 0;
             var data_address = 0;
@@ -3375,6 +3390,7 @@ const miniBlock = {
         },
         class: 'robotis_color',
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
             var port = script.getField('PORT', script);
             var operator = script.getField('OPERATOR', script);
             var rightValue = script.getNumberField('RIGHTVALUE', script);
@@ -3461,6 +3477,7 @@ const miniBlock = {
         },
         class: 'robotis_humidity',
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
             var port = script.getStringField('PORT');
             var value = 0;
             var data_address = 0;
@@ -3544,6 +3561,7 @@ const miniBlock = {
         },
         class: 'robotis_humidity',
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
             var port = script.getNumberField('PORT', script);
             var operator = script.getField('OPERATOR', script);
             var rightValue = script.getNumberValue('RIGHTVALUE', script);
@@ -3629,6 +3647,7 @@ const miniBlock = {
         },
         class: 'robotis_temperature',
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
             var port = script.getStringField('PORT');
             var value = 0;
             var data_address = 0;
@@ -3712,6 +3731,7 @@ const miniBlock = {
         },
         class: 'robotis_temperature',
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
             var port = script.getNumberField('PORT', script);
             var operator = script.getField('OPERATOR', script);
             var rightValue = script.getNumberValue('RIGHTVALUE', script);
@@ -3824,6 +3844,7 @@ const miniBlock = {
         },
         class: 'robotis_motor',
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
             var duration = script.getNumberValue('DURATION');
             var wheel = script.getNumberField('WHEEL');
             var value = script.getNumberValue('SPEED');
@@ -3961,6 +3982,7 @@ const miniBlock = {
         class: 'robotis_motor',
         //'isNotFor': ['mini'],
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
             var wheel = script.getNumberField('WHEEL');
             var value = script.getNumberValue('SPEED');
             var direction = script.getStringField('DIRECTION');
@@ -4044,6 +4066,7 @@ const miniBlock = {
         },
         class: 'robotis_motor',
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
             var wheel = script.getNumberField('WHEEL');
             var value = 0;
 
@@ -4136,6 +4159,7 @@ const miniBlock = {
         },
         class: 'robotis_servo_motor',
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
             // instruction / address / length / value / default length
             var port = script.getField("PORT", script);
             var direction = script.getStringField('DIRECTION');
@@ -4334,6 +4358,7 @@ const miniBlock = {
         },
         class: 'robotis_servo_motor',
         func: function (sprite, script) {
+            Entry.hw.sendQueue['IS_EDU'] = true;
             // instruction / address / length / value / default length
             var port = script.getField("PORT", script);
             var value = script.getNumberValue('VALUE');
@@ -4516,7 +4541,7 @@ const miniBlock = {
         class: 'robotis_melody',
         //'isNotFor': ['mini'],
         func: function (sprite, script) {
-
+            Entry.hw.sendQueue['IS_EDU'] = true;
             var note = script.getNumberField('NOTE', script);
             var octave = script.getNumberField('OCTAVE', script);
             var cmBuzzerTime = script.getNumberField('DURATION', script);

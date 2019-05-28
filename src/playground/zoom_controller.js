@@ -48,14 +48,13 @@ Entry.ZoomController = class ZoomController {
     }
 
     renderStart(zoomGroup) {
-        const { btn_zoom_bg, btn_zoom_out, btn_zoom_reset } = EntryStatic.images || {};
         zoomGroup.svgZoom.elem('image', {
-            href: btn_zoom_bg || `${Entry.mediaFilePath}btn_zoom_bg.svg`,
+            href: `${Entry.mediaFilePath}btn_zoom_bg.svg`,
             width: this.CONTROLLER_WIDTH,
             height: this.CONTROLLER_HEIGHT,
         });
         zoomGroup.zoomOut = zoomGroup.svgZoom.elem('image', {
-            href: btn_zoom_out || `${Entry.mediaFilePath}btn_zoom_out.svg`,
+            href: `${Entry.mediaFilePath}btn_zoom_out.svg`,
             x: 4,
             y: 3,
             width: 32,
@@ -65,7 +64,7 @@ Entry.ZoomController = class ZoomController {
         });
         zoomGroup.zoomReset = zoomGroup.svgZoom.elem('image', {
             id: 'zoom_reset',
-            href: btn_zoom_reset || `${Entry.mediaFilePath}btn_zoom_reset.svg`,
+            href: `${Entry.mediaFilePath}btn_zoom_reset.svg`,
             x: 44,
             y: 3,
             width: 40,

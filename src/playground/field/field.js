@@ -395,7 +395,7 @@ Entry.Field = class Field {
     }
 
     getFontFamily() {
-        return window.loadFontFamily || EntryStatic.fontFamily || 'NanumGothic';
+        return window.loadFontFamily || 'NanumGothic';
     }
 
     getIndex() {
@@ -425,10 +425,9 @@ Entry.Field = class Field {
         const board = this._blockView.getBoard();
         const { scale = 1 } = board;
         invisibleContext.font = `${fontSize}px ${this.getFontFamily()}`;
-        const heightLetter = EntryStatic.heightLetter || 'M';
         bBox = {
             width: Math.round(invisibleContext.measureText(value).width * 100) / 100,
-            height: Math.round(invisibleContext.measureText(heightLetter).width * 100) / 100,
+            height: Math.round(invisibleContext.measureText('M').width * 100) / 100,
         };
 
         if (fontSize && window.fontLoaded && bBox.width && bBox.height) {

@@ -3,42 +3,36 @@
  */
 'use strict';
 
-const { createTooltip } = require('../command_util');
+var { createTooltip } = require('../command_util');
 
 (function(c) {
-    const COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
-
+    var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
+    
     c[COMMAND_TYPES.sceneAdd] = {
         /**
          * @param {!object|string} sceneId can be sceneId or scene object
-         * @param {?number} sceneIndex
+         * @param {?number} sceneIndex 
          * @param {?Array} objects will be add to new scene, for undo function
          */
-        do(sceneId, sceneIndex, objects) {
-            if (Entry.expectedAction) {
+        do: function(sceneId, sceneIndex, objects) {
+            if (Entry.expectedAction)
                 sceneId = Entry.expectedAction[1][1];
-            }
             Entry.scene.addScene(sceneId, sceneIndex);
-            if (objects) {
+            if (objects)
                 Entry.container.setObjects(objects);
-            }
         },
-        state(sceneId, sceneIndex) {
-            if (!sceneIndex) {
+        state: function(sceneId, sceneIndex) {
+            if (!sceneIndex)
                 sceneIndex = Entry.scene.getScenes().length;
-            }
-            if (Entry.expectedAction) {
+            if (Entry.expectedAction)
                 sceneId = Entry.expectedAction[1][1];
-            }
-            if (typeof sceneId !== 'string') {
+            if (typeof sceneId !== "string")
                 sceneId = sceneId.id;
-            }
             return [sceneId];
         },
-        log(sceneId) {
-            if (Entry.expectedAction) {
+        log: function(sceneId) {
+            if (Entry.expectedAction)
                 sceneId = Entry.expectedAction[1][1];
-            }
             return [['sceneId', sceneId]];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
@@ -47,51 +41,50 @@ const { createTooltip } = require('../command_util');
     };
 
     c[COMMAND_TYPES.sceneRemove] = {
-        do(sceneId) {
+        do: function(sceneId) {
             Entry.scene.removeScene(sceneId);
         },
-        state(sceneId) {
-            const scene = Entry.scene.getSceneById(sceneId);
-            const sceneJSON = {
+        state: function(sceneId) {
+            var scene = Entry.scene.getSceneById(sceneId);
+            var sceneJSON = {
                 id: scene.id,
-                name: scene.name,
-            };
-            const sceneIndex = Entry.scene.getScenes().indexOf(scene);
-            const objects = Entry.container.getSceneObjects(scene).map((o) => o.toJSON());
-            return [sceneJSON, sceneIndex, objects];
+                name: scene.name
+            }
+            var sceneIndex = Entry.scene.getScenes().indexOf(scene);
+            var objects = Entry.container.getSceneObjects(scene).map(function(o) {
+                return o.toJSON();
+            });
+            return [sceneJSON, sceneIndex, objects]
         },
-        log(sceneId) {
+        log: function(sceneId) {
             return [['sceneId', sceneId]];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         dom: ['scene', 'removeButton', '&0'],
         undo: 'sceneAdd',
     };
-
+    
     c[COMMAND_TYPES.sceneRename] = {
-        do(sceneId, newName) {
-            const scene = Entry.scene.getSceneById(sceneId);
-            scene.name = newName;
+        do: function(sceneId, newName) {
+            var scene = Entry.scene.getSceneById(sceneId);
+            scene.name = newName; 
             scene.view.nameField.value = newName;
-            setTimeout(() => {
+            setTimeout(function() {
                 Entry.scene.resize();
             }, 0);
         },
-        state(sceneId) {
-            const scene = Entry.scene.getSceneById(sceneId);
+        state: function(sceneId) {
+            var scene = Entry.scene.getSceneById(sceneId);
             return [sceneId, scene.name];
         },
-        log(sceneId, newName) {
+        log: function(sceneId, newName) {
             return [['sceneId', sceneId], ['newName', newName]];
         },
         restrict(data, domQuery, callback) {
-            const {
-                content: contentData,
-                tooltip: { title, content },
-            } = data;
+            var { content: contentData, tooltip: { title, content } } = data;
 
             callback();
-            const scene = Entry.scene.getSceneById(contentData[1][1]);
+            var scene = Entry.scene.getSceneById(contentData[1][1]);
             scene.view.nameField.focus();
             return createTooltip(title, content, domQuery, callback);
         },
@@ -99,16 +92,16 @@ const { createTooltip } = require('../command_util');
         dom: ['scene', 'nameField', '&0'],
         undo: 'sceneRename',
     };
-
+    
     c[COMMAND_TYPES.sceneSelect] = {
-        do(sceneId) {
-            const scene = Entry.scene.getSceneById(sceneId);
+        do: function(sceneId) {
+            var scene = Entry.scene.getSceneById(sceneId);
             Entry.scene.selectScene(scene);
         },
-        state(sceneId) {
+        state: function(sceneId) {
             return [Entry.scene.selectedScene.id];
         },
-        log(sceneId) {
+        log: function(sceneId) {
             return [['sceneId', sceneId]];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,

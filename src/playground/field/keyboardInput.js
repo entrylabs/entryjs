@@ -83,7 +83,7 @@ Entry.FieldKeyboard = class FieldDropdown extends Entry.Field {
                 fill: this._textColor,
                 'font-size': `${+that._font_size}px`,
                 'font-weight': 'bold',
-                'font-family': EntryStatic.fontFamily || 'NanumGothic',
+                'font-family': 'NanumGothic',
             });
         }
 

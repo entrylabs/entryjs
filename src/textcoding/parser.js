@@ -1,13 +1,13 @@
 /*
  *
  */
-'use strict';
+"use strict";
 
-require('./util/console');
-require('./parser/core/text/pyToBlock');
-require('./parser/core/text/jsToBlock');
-require('./parser/core/block/blockToPy');
-require('./parser/core/block/blockToJs');
+require("./util/console")
+require("./parser/core/text/pyToBlock")
+require("./parser/core/text/jsToBlock")
+require("./parser/core/block/blockToPy")
+require("./parser/core/block/blockToJs")
 
 Entry.Parser = function(mode, type, cm, syntax) {
     this._mode = mode; // maze ai workspace
@@ -29,14 +29,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
     this._onError = false;
     this._onRunError = false;
 
-    if (Entry.type === 'workspace') {
+    if (Entry.type === "workspace") {
         this._console = new Entry.Console();
 
-        const hwFunc = function() {
-            const _mode = this._mode;
-            if (_mode === null) {
-                return;
-            }
+        var hwFunc = function() {
+            var _mode = this._mode;
+            if (_mode === null) return;
             this.setAvailableCode();
 
             delete this._syntax_cache[_mode];
@@ -48,46 +46,46 @@ Entry.Parser = function(mode, type, cm, syntax) {
         //and update python hinter syntax
         Entry.addEventListener('hwCodeGenerated', hwFunc);
     }
+
 };
 
 (function(p) {
-    const SYNTAX_MAP = {
-        'Hamster.LINE_TRACER_MODE_OFF': '0',
-        'Hamster.LINE_TRACER_MODE_BLACK_LEFT_SENSOR': '1',
-        'Hamster.LINE_TRACER_MODE_BLACK_RIGHT_SENSOR': '2',
-        'Hamster.LINE_TRACER_MODE_BLACK_BOTH_SENSORS': '3',
-        'Hamster.LINE_TRACER_MODE_BLACK_TURN_LEFT': '4',
-        'Hamster.LINE_TRACER_MODE_BLACK_TURN_RIGHT': '5',
-        'Hamster.LINE_TRACER_MODE_BLACK_MOVE_FORWARD': '6',
-        'Hamster.LINE_TRACER_MODE_BLACK_UTURN': '7',
-        'Hamster.LINE_TRACER_MODE_WHITE_LEFT_SENSOR': '8',
-        'Hamster.LINE_TRACER_MODE_WHITE_RIGHT_SENSOR': '9',
-        'Hamster.LINE_TRACER_MODE_WHITE_BOTH_SENSORS': '10',
-        'Hamster.LINE_TRACER_MODE_WHITE_TURN_LEFT': '11',
-        'Hamster.LINE_TRACER_MODE_WHITE_TURN_RIGHT': '12',
-        'Hamster.LINE_TRACER_MODE_WHITE_MOVE_FORWARD': '13',
-        'Hamster.LINE_TRACER_MODE_WHITE_UTURN': '14',
+    var SYNTAX_MAP = {
+        "Hamster.LINE_TRACER_MODE_OFF": '0',
+        "Hamster.LINE_TRACER_MODE_BLACK_LEFT_SENSOR": '1',
+        "Hamster.LINE_TRACER_MODE_BLACK_RIGHT_SENSOR": '2',
+        "Hamster.LINE_TRACER_MODE_BLACK_BOTH_SENSORS": '3',
+        "Hamster.LINE_TRACER_MODE_BLACK_TURN_LEFT": '4',
+        "Hamster.LINE_TRACER_MODE_BLACK_TURN_RIGHT": '5',
+        "Hamster.LINE_TRACER_MODE_BLACK_MOVE_FORWARD": '6',
+        "Hamster.LINE_TRACER_MODE_BLACK_UTURN": '7',
+        "Hamster.LINE_TRACER_MODE_WHITE_LEFT_SENSOR": '8',
+        "Hamster.LINE_TRACER_MODE_WHITE_RIGHT_SENSOR": '9',
+        "Hamster.LINE_TRACER_MODE_WHITE_BOTH_SENSORS": '10',
+        "Hamster.LINE_TRACER_MODE_WHITE_TURN_LEFT": '11',
+        "Hamster.LINE_TRACER_MODE_WHITE_TURN_RIGHT": '12',
+        "Hamster.LINE_TRACER_MODE_WHITE_MOVE_FORWARD": '13',
+        "Hamster.LINE_TRACER_MODE_WHITE_UTURN": '14',
 
-        'Hamster.LED_OFF': '0',
-        'Hamster.LED_BLUE': '1',
-        'Hamster.LED_GREEN': '2',
-        'Hamster.LED_CYAN': '3',
-        'Hamster.LED_RED': '4',
-        'Hamster.LED_MAGENTA': '5',
-        'Hamster.LED_YELLOW': '6',
-        'Hamster.LED_WHITE': '7',
+        "Hamster.LED_OFF": '0',
+        "Hamster.LED_BLUE": '1',
+        "Hamster.LED_GREEN": '2',
+        "Hamster.LED_CYAN": '3',
+        "Hamster.LED_RED": '4',
+        "Hamster.LED_MAGENTA": '5',
+        "Hamster.LED_YELLOW": '6',
+        "Hamster.LED_WHITE": '7',
 
-        'Hamster.IO_MODE_ANALOG_INPUT': '0',
-        'Hamster.IO_MODE_DIGITAL_INPUT': '1',
-        'Hamster.IO_MODE_SERVO_OUTPUT': '8',
-        'Hamster.IO_MODE_PWM_OUTPUT': '9',
-        'Hamster.IO_MODE_DIGITAL_OUTPUT': '10',
+        "Hamster.IO_MODE_ANALOG_INPUT": '0',
+        "Hamster.IO_MODE_DIGITAL_INPUT": '1',
+        "Hamster.IO_MODE_SERVO_OUTPUT": '8',
+        "Hamster.IO_MODE_PWM_OUTPUT": '9',
+        "Hamster.IO_MODE_DIGITAL_OUTPUT": '10'
     };
 
     p.setParser = function(mode, type, cm) {
-        if (this._mode === mode && this._type === type) {
+        if (this._mode === mode && this._type === type)
             return;
-        }
 
         this._mode = mode;
         this._type = type;
@@ -110,79 +108,76 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 break;
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
                 this._execParser = new Entry.BlockToPyParser(this.syntax);
-                cm && cm.setOption('mode', { name: 'python', globalVars: true });
+                cm && cm.setOption("mode", {name: "python", globalVars: true});
                 this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
                 break;
         }
     };
 
     p.parse = function(code, parseMode) {
-        const type = this._type;
-        let result = '';
+        var type = this._type;
+        var result = "";
 
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
                 try {
-                    const threads = [];
+                    var threads = [];
                     threads.push(code);
-                    const astArray = [];
+                    var astArray = [];
 
-                    for (const index in threads) {
-                        let thread = threads[index];
+                    for(var index in threads) {
+                        var thread = threads[index];
                         thread = thread.trim();
-                        const ast = acorn.parse(thread);
+                        var ast = acorn.parse(thread);
                         astArray.push(ast);
                     }
 
                     result = this._execParser.Program(astArray);
                 } catch (error) {
                     if (this.codeMirror) {
-                        let annotation;
+                        var annotation;
                         if (error instanceof SyntaxError) {
                             annotation = {
-                                from: { line: error.loc.line - 1, ch: 0 },
-                                to: { line: error.loc.line - 1, ch: error.loc.column },
-                            };
-                            error.message = '문법(Syntax) 오류입니다.';
+                                from: {line: error.loc.line - 1, ch: 0},
+                                to: {line: error.loc.line - 1, ch: error.loc.column}
+                            }
+                            error.message = "문법(Syntax) 오류입니다.";
                             error.type = 1;
                         } else {
-                            const { node = {} } = error || {};
-                            const { start = 0, end = 0 } = node;
-                            annotation = this.getLineNumber(start, end);
+                            annotation = this.getLineNumber(error.node.start, error.node.end);
                             annotation.message = error.message;
-                            annotation.severity = 'converting error';
+                            annotation.severity = "converting error";
                             error.type = 2;
                         }
 
-                        this.codeMirror.markText(annotation.from, annotation.to, {
-                            className: 'CodeMirror-lint-mark-error',
+                        this.codeMirror.markText(
+                            annotation.from, annotation.to, {
+                            className: "CodeMirror-lint-mark-error",
                             __annotation: annotation,
-                            clearOnEnter: true,
+                            clearOnEnter: true
                         });
 
-                        let errorTitle;
-                        if (error.title) {
+                        var errorTitle;
+                        if(error.title)
                             errorTitle = error.title;
-                        } else {
+                        else
                             errorTitle = '문법 오류';
-                        }
 
-                        let errorMsg;
-                        if (error.type == 2 && error.message) {
+                        var errorMsg;
+                        if(error.type == 2 && error.message)
                             errorMsg = error.message;
-                        } else if (error.type == 2 && !error.message) {
+                        else if(error.type == 2 && !error.message)
                             errorMsg = '자바스크립트 코드를 확인해주세요.';
-                        } else if (error.type == 1) {
+                        else  if(error.type == 1)
                             errorMsg = '자바스크립트 문법을 확인해주세요.';
-                        }
 
                         Entry.toast.alert(errorTitle, errorMsg);
 
-                        const mode = {};
+                        var mode = {};
                         mode.boardType = Entry.Workspace.MODE_BOARD;
                         mode.textType = Entry.Vim.TEXT_TYPE_JS;
                         mode.runType = Entry.Vim.MAZE_MODE;
-                        Ntry.dispatchEvent('textError', mode);
+                        Ntry.dispatchEvent("textError", mode);
                         throw error;
                     }
                     result = [];
@@ -199,53 +194,49 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     const astArray = [];
                     let threadCount = 0;
                     let ast;
-                    for (let index = 0; index < threads.length; index++) {
+                    for(let index = 0; index < threads.length; index++) {
                         let thread = threads[index];
-                        if (thread.length === 0) {
+                        if(thread.length === 0)
                             continue;
-                        }
                         thread = thread.replace(/\t/gm, '    ');
                         ast = pyAstGenerator.generate(thread);
-                        if (!ast) {
+                        if(!ast)
                             continue;
-                        }
                         this._pyThreadCount = threadCount++;
-                        this._pyBlockCount[threadCount] = thread.split('\n').length - 1;
-                        if (ast.body.length !== 0) {
+                        this._pyBlockCount[threadCount] = thread.split("\n").length-1;
+                        if (ast.body.length !== 0)
                             astArray.push(ast);
-                        }
                     }
                     result = this._execParser.Programs(astArray);
                     this._onError = false;
                     break;
-                } catch (error) {
+                } catch(error) {
                     this._onError = true;
                     result = [];
 
                     let annotation;
                     if (this.codeMirror) {
-                        let err;
                         if (error instanceof SyntaxError) {
-                            err = this.findSyntaxError(error);
+                            const err = this.findSyntaxError(error);
                             if (err) {
                                 annotation = {
-                                    from: { line: err.from.line - 1, ch: err.from.ch },
-                                    to: { line: err.to.line - 1, ch: err.to.ch },
+                                    from: {line: err.from.line-1, ch: err.from.ch},
+                                    to: {line: err.to.line-1, ch: err.to.ch}
                                 };
                             }
 
-                            error.type = 'syntax';
+                            error.type = "syntax";
                         } else {
-                            err = error.line;
+                            const err = error.line;
                             if (err) {
                                 // 3 == 최초주석 및 import 구문
                                 annotation = {
-                                    from: { line: err.start.line + 3, ch: err.start.column },
-                                    to: { line: err.end.line + 3, ch: err.end.column },
+                                    from: {line: err.start.line + 3, ch: err.start.column},
+                                    to: {line: err.end.line + 3, ch: err.end.column}
                                 };
                             }
 
-                            error.type = 'converting';
+                            error.type = "converting";
                         }
 
                         if (annotation) {
@@ -259,23 +250,16 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             };
 
                             this._marker = this.codeMirror.markText(
-                                annotation.from,
-                                annotation.to,
-                                option
-                            );
+                                annotation.from, annotation.to, option);
                         }
 
                         let title = '';
                         let message = '';
-                        if (error.type === 'syntax') {
+                        if(error.type === "syntax") {
                             title = error.title;
-                            message = this.makeSyntaxErrorDisplay(
-                                error.subject,
-                                error.keyword,
-                                error.message,
-                                err.from.line
-                            );
-                        } else if (error.type === 'converting') {
+                            message = this.makeSyntaxErrorDisplay(error.subject, error.keyword, error.message, err.from.line);
+                        }
+                        else if(error.type === "converting") {
                             title = error.title;
                             message = error.message;
                         }
@@ -297,17 +281,13 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     result = '';
                     let funcKeysBackup;
 
-                    if (
-                        parseMode === Entry.Parser.PARSE_BLOCK &&
-                        code.type.substr(0, 5) === 'func_'
-                    ) {
+                    if (parseMode === Entry.Parser.PARSE_BLOCK && code.type.substr(0, 5) === 'func_') {
                         funcKeysBackup = Object.keys(this._execParser.funcDefMap);
                     }
 
                     const textCode = this._execParser.Code(code, parseMode);
-                    if (!this._pyHinter) {
+                    if (!this._pyHinter)
                         this._pyHinter = new Entry.PyHint(this.syntax);
-                    }
 
                     if (!this._hasDeclaration) {
                         this.initDeclaration();
@@ -329,20 +309,20 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         // Global Comment Append
                         const globalCommentList = this._execParser.globalCommentList;
                         if (globalCommentList.length > 0) {
-                            result += `${globalCommentList.join('\n')}\n\n`;
+                            result += globalCommentList.join('\n') + '\n\n';
                         }
 
                         // function Declaration
                         const funcDefMap = this._execParser.funcDefMap;
                         let fd = '';
-                        for (const funcKey in funcDefMap) {
-                            fd += `${funcDefMap[funcKey]}\n\n`;
+                        for (let funcKey in funcDefMap) {
+                            fd += funcDefMap[funcKey] + '\n\n';
                         }
 
                         result += fd;
                     } else if (parseMode === Entry.Parser.PARSE_BLOCK) {
                         if (funcKeysBackup && funcKeysBackup.indexOf(code.type) < 0) {
-                            result += `${this._execParser.funcDefMap[code.type]}\n\n`;
+                            result += this._execParser.funcDefMap[code.type] + '\n\n';
                         }
                     }
                     if (textCode) {
@@ -350,16 +330,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     }
 
                     result = result.replace(/\t/g, '    ');
-                    if (this._hasDeclaration) {
+                    if (this._hasDeclaration)
                         this.removeDeclaration();
-                    }
                 } catch (e) {
                     console.error(e);
                     if (e.block) {
-                        Entry.toast.alert(
-                            Lang.TextCoding.title_converting,
-                            Lang.TextCoding.alert_legacy_no_support
-                        );
+                        Entry.toast.alert(Lang.TextCoding.title_converting, Lang.TextCoding.alert_legacy_no_support);
                     }
                     throw e;
                 }
@@ -371,18 +347,18 @@ Entry.Parser = function(mode, type, cm, syntax) {
         return result;
     };
 
-    p.getLineNumber = function(start, end) {
-        const value = this.codeMirror.getValue();
-        const lines = {
-            from: {},
-            to: {},
+    p.getLineNumber = function (start, end) {
+        var value = this.codeMirror.getValue();
+        var lines = {
+            'from' : {},
+            'to' : {}
         };
 
-        const startline = value.substring(0, start).split(/\n/gi);
+        var startline = value.substring(0, start).split(/\n/gi);
         lines.from.line = startline.length - 1;
         lines.from.ch = startline[startline.length - 1].length;
 
-        const endline = value.substring(0, end).split(/\n/gi);
+        var endline = value.substring(0, end).split(/\n/gi);
         lines.to.line = endline.length - 1;
         lines.to.ch = endline[endline.length - 1].length;
 
@@ -390,44 +366,41 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.mappingSyntax = function(mode) {
-        const that = this;
-        if (this._syntax_cache[mode]) {
+        var that = this;
+        if (this._syntax_cache[mode])
             return this._syntax_cache[mode];
-        }
 
-        const types = Object.keys(Entry.block);
-        const availables = this.setAvailableCode();
-        const syntax = {};
-        if (mode === Entry.Vim.WORKSPACE_MODE) {
-            syntax['#dic'] = {};
-        }
+        var types = Object.keys(Entry.block);
+        var availables = this.setAvailableCode();
+        var syntax = {};
+        if(mode === Entry.Vim.WORKSPACE_MODE)
+            syntax["#dic"] = {};
 
-        for (let i = 0; i < types.length; i++) {
-            const type = types[i];
+        for (var i = 0; i < types.length; i++) {
+            var type = types[i];
             //if (Entry.type !== 'invisible' && (availables && (availables.indexOf(type) < 0)))
-            //continue;
+                //continue;
 
-            if (mode === Entry.Vim.MAZE_MODE && (availables && availables.indexOf(type) < 0)) {
+            if (mode === Entry.Vim.MAZE_MODE &&
+                (availables && (availables.indexOf(type) < 0)))
                 continue;
-            }
 
-            const block = Entry.block[type];
+            var block = Entry.block[type];
 
             if (mode === Entry.Vim.MAZE_MODE) {
-                const syntaxArray = block.syntax;
-                if (!syntaxArray) {
+                var syntaxArray = block.syntax;
+                if (!syntaxArray)
                     continue;
-                }
 
-                if (block.syntax.py) {
+                if(block.syntax.py)
                     continue;
-                }
 
-                let syntaxTemp = syntax;
+                var syntaxTemp = syntax;
 
-                for (let j = 0; j < syntaxArray.length; j++) {
+                for (var j = 0; j < syntaxArray.length; j++) {
                     var key = syntaxArray[j];
-                    if (j === syntaxArray.length - 2 && typeof syntaxArray[j + 1] === 'function') {
+                    if (j === syntaxArray.length - 2 &&
+                        typeof syntaxArray[j + 1] === "function") {
                         syntaxTemp[key] = syntaxArray[j + 1];
                         break;
                     }
@@ -442,16 +415,14 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 }
             } else if (mode === Entry.Vim.WORKSPACE_MODE) {
                 var key = type;
-                const pySyntax = block.syntax && block.syntax.py;
+                var pySyntax = block.syntax && block.syntax.py;
 
-                if (!pySyntax) {
-                    continue;
-                }
+                if (!pySyntax) continue;
 
-                pySyntax.map((s, i) => {
-                    let result, tokens;
+                pySyntax.map(function(s, i) {
+                    var result, tokens;
 
-                    if (typeof s === 'string') {
+                    if (typeof s === "string") {
                         result = {};
                         tokens = s;
                         result.key = key;
@@ -461,59 +432,42 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         result = s;
                         tokens = s.syntax;
                         s.key = key;
-                        if (!s.template) {
-                            result.template = s.syntax;
-                        }
-                        if (s.dic) {
-                            syntax['#dic'][s.dic] = key;
-                        }
+                        if (!s.template) result.template = s.syntax;
+                        if (s.dic) syntax["#dic"][s.dic] = key;
                     }
-                    if (i === 0) {
+                    if (i === 0)
                         result.isDefault = true;
-                    }
 
                     tokens = tokens.split('(');
 
                     if (/%/.test(tokens[1])) {
-                        if (tokens[0].length) {
-                            tokens = tokens[0];
-                        } else {
-                            tokens = tokens.join('(');
-                        }
-                    } else {
-                        tokens = tokens.join('(');
-                    }
+                        if (tokens[0].length) tokens = tokens[0];
+                        else tokens = tokens.join('(');
+                    } else tokens = tokens.join('(');
 
-                    tokens = tokens.replace(/\(\):?/, '');
+                    tokens = tokens.replace(/\(\):?/, "");
 
-                    if (s.keyOption) {
-                        tokens += `#${s.keyOption}`;
-                    }
+                    if (s.keyOption) tokens += "#" + s.keyOption;
 
-                    tokens = tokens.split('.');
+                    tokens = tokens.split(".");
 
-                    const newTokens = [];
+                    var newTokens = [];
                     newTokens.push(tokens.shift());
-                    const restToken = tokens.join('.');
-                    if (restToken !== '') {
-                        newTokens.push(restToken);
-                    }
+                    var restToken = tokens.join('.');
+                    if (restToken !== '') newTokens.push(restToken);
                     tokens = newTokens;
 
-                    let syntaxPointer = syntax;
+                    var syntaxPointer = syntax;
                     for (var i = 0; i < tokens.length; i++) {
-                        const syntaxKey = tokens[i];
+                        var syntaxKey = tokens[i];
                         if (i === tokens.length - 1) {
                             syntaxPointer[syntaxKey] = result;
-                            const anotherKey = that._getAnotherSyntaxKey(syntaxKey);
-                            if (anotherKey) {
+                            var anotherKey = that._getAnotherSyntaxKey(syntaxKey);
+                            if (anotherKey)
                                 syntaxPointer[anotherKey] = result;
-                            }
                             break;
                         }
-                        if (!syntaxPointer[syntaxKey]) {
-                            syntaxPointer[syntaxKey] = {};
-                        }
+                        if (!syntaxPointer[syntaxKey]) syntaxPointer[syntaxKey] = {};
                         syntaxPointer = syntaxPointer[syntaxKey];
                     }
                 });
@@ -523,17 +477,15 @@ Entry.Parser = function(mode, type, cm, syntax) {
         return syntax;
     };
 
-    p.setAvailableCode = function() {
-        const WS = Entry.getMainWS();
-        if (!WS) {
-            return;
-        }
+    p.setAvailableCode = function () {
+        var WS = Entry.getMainWS();
+        if (!WS) return;
 
-        const blockMenu = WS.blockMenu;
-        const board = WS.board;
-        const container = Entry.conatainer;
+        var blockMenu = WS.blockMenu;
+        var board = WS.board;
+        var container = Entry.conatainer;
 
-        let blocks = [];
+        var blocks = [];
 
         if (blockMenu && blockMenu.code) {
             blocks = blocks.concat(blockMenu.code.getBlockList());
@@ -545,8 +497,10 @@ Entry.Parser = function(mode, type, cm, syntax) {
             blocks = blocks.concat(board.code.getBlockList());
         }
 
-        blocks = blocks.map((b) => b.type);
-        blocks = blocks.filter((b, index) => blocks.indexOf(b) === index);
+        blocks = blocks.map(function(b) { return b.type });
+        blocks = blocks.filter(function(b, index) {
+            return blocks.indexOf(b) === index;
+        });
 
         this.availableCode = blocks;
 
@@ -554,11 +508,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.findSyntaxError = function(error, threadCount) {
-        const loc = error.loc;
+        var loc = error.loc;
         loc.line = loc.line + 2;
         return {
-            from: { line: loc.line, ch: loc.column },
-            to: { line: loc.line, ch: loc.column + error.tokLen },
+            from: {line: loc.line, ch: loc.column},
+            to: {line: loc.line, ch: loc.column + error.tokLen}
         };
     };
 
@@ -572,31 +526,30 @@ Entry.Parser = function(mode, type, cm, syntax) {
         let startLine = 0;
 
         // # 엔트리봇 ~ import Entry 제외
-        for (let i = 4; i < textArr.length; i++) {
-            const textLine = `${textArr[i]}\n`;
+        for(let i = 4; i < textArr.length; i++) {
+            let textLine = textArr[i] + '\n';
 
             if (textLine.trim().startsWith('#')) {
-                threads.push(`${textLine.trim()}\n`);
-            } else if (Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine.trim())) {
-                if (optText.length !== 0) {
+                threads.push(textLine.trim() + '\n');
+            } else if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine.trim())) {
+                if(optText.length !== 0) {
                     threads.push(makeLine(optText));
                     startLine = i - 2;
                 }
 
-                optText = '';
+                optText = "";
                 optText += textLine;
                 onEntryEvent = true;
             } else {
-                if (textLine.length === 1 && !onEntryEvent) {
-                    //empty line
+                if(textLine.length === 1 && !onEntryEvent) { //empty line
                     threads.push(makeLine(optText));
                     startLine = i - 2;
-                    optText = '';
-                } else if (textLine.length !== 1 && textLine.charAt(0) !== ' ' && onEntryEvent) {
-                    //general line
+                    optText = "";
+                }
+                else if(textLine.length !== 1 && textLine.charAt(0) !== ' ' && onEntryEvent) { //general line
                     threads.push(makeLine(optText));
                     startLine = i - 2;
-                    optText = '';
+                    optText = "";
                     onEntryEvent = false;
                 }
                 optText += textLine;
@@ -605,20 +558,18 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
         threads.push(makeLine(optText));
         function makeLine(text) {
-            return new Array(startLine + 1).join('\n') + text;
+            return new Array( startLine + 1 ).join( "\n" ) + text;
         }
         return threads;
     };
 
     p.makeSyntaxErrorDisplay = function(subject, keyword, message, line) {
-        let kw;
-        if (keyword) {
-            kw = `'${keyword}' `;
-        } else {
-            kw = '';
-        }
+        var kw;
+        if(keyword) kw = "\'" + keyword + "\' ";
+        else kw = '';
 
-        return `[${subject}]` + ` ${kw} : ${message} ` + `(line ${line})`;
+        return '[' + subject + ']' + ' ' + kw + ' : ' +
+                    message + ' ' + '(line ' + line + ')';
     };
 
     p.initDeclaration = function() {
@@ -633,16 +584,14 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p._getAnotherSyntaxKey = function(syntax) {
-        let replaced = false;
-        for (const key in SYNTAX_MAP) {
+        var replaced = false;
+        for (var key in SYNTAX_MAP) {
             if (syntax.indexOf(key) > -1) {
                 replaced = true;
-                syntax = syntax.replace(new RegExp(key, 'gm'), SYNTAX_MAP[key]);
+                syntax = syntax.replace(new RegExp(key, "gm"), SYNTAX_MAP[key]);
             }
         }
 
-        if (replaced) {
-            return syntax;
-        }
+        if (replaced) return syntax;
     };
 })(Entry.Parser.prototype);
