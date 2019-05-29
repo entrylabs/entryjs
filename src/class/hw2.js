@@ -86,10 +86,8 @@ Entry.HW2 = class {
         });
 
         const messageHandler = new HardwareSocketMessageHandler(socket);
-        messageHandler.addEventListener('init', (name) => {
-            Entry.moduleManager.loadExternalModule(name);
-        });
-        messageHandler.addEventListener('state', (statement, name) => {
+        messageHandler.addEventListener('init', this._loadExternalHardwareBlock.bind(this));
+        messageHandler.addEventListener('state', async (statement, name) => {
             /*
             statement 로는 before_connect, connected 등 하드웨어 프로그램의 상태 전부가 오지만
             WS 에서는 connected 외에 전부 socketConnected 상태로 머무르게 된다.
@@ -100,7 +98,7 @@ Entry.HW2 = class {
                     break;
                 case 'connected':
                     // init action 과 동일동작
-                    Entry.moduleManager.loadExternalModule(name);
+                    await this._loadExternalHardwareBlock(name);
                     break;
                 default:
                     break;
@@ -120,6 +118,14 @@ Entry.HW2 = class {
         });
 
         return socket;
+    }
+
+    async _loadExternalHardwareBlock(moduleName) {
+        try {
+            await Entry.moduleManager.loadExternalModule(moduleName);
+        } catch (e) {
+            Entry.toast.alert('모듈 로드실패', `${moduleName} 모듈 불러오기에 실패했습니다.`);
+        }
     }
 
     _initSocket() {

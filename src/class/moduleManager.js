@@ -2,33 +2,37 @@ Entry.moduleManager = new class {
     /**
      * 해당 url 을 동적으로 로드한다.
      * 해당 함수는 굉장히 위험하므로 추가적인 방어로직이 필요하다.
-     * TODO baseUrl 관련해서 정리가 필요함
      * @param moduleName {string} 로드할 모듈명
      */
     loadExternalModule(moduleName) {
-        const scriptElementId = 'entryModuleScript';
-        const prevElement = document.getElementById(scriptElementId);
-        if (prevElement) {
-            prevElement.remove();
-        }
+        return new Promise((resolve, reject) => {
+            const scriptElementId = `entryModuleScript${Date.now()}`;
 
-        if (!moduleName) {
-            return;
-        }
-        const scriptElement = document.createElement('script');
-        scriptElement.id = scriptElementId;
+            if (!moduleName) {
+                return;
+            }
+            const scriptElement = document.createElement('script');
+            scriptElement.id = scriptElementId;
 
-        scriptElement.onload = function() {
-            // nothing to do yet
-        };
-        scriptElement.onerror = function() {
-            Entry.toast.alert('모듈 로드실패', '모듈 불러오기에 실패했습니다.');
-            scriptElement.remove();
-        };
-        scriptElement.src = `/rest/hardware/${moduleName}/block`;
+            scriptElement.onload = function() {
+                if (!Entry.EXTERNAL_MODULE_LIST) {
+                    Entry.EXTERNAL_MODULE_LIST = [];
+                }
+                Entry.EXTERNAL_MODULE_LIST.push(moduleName);
+                scriptElement.remove();
+                resolve();
+            };
+            scriptElement.onerror = function(e) {
+                scriptElement.remove();
+                reject(e);
+            };
 
-        // noinspection JSCheckFunctionSignatures
-        document.body.appendChild(scriptElement);
+            // TODO baseUrl 관련해서 정리가 필요함
+            scriptElement.src = `/rest/hardware/${moduleName}/block`;
+
+            // noinspection JSCheckFunctionSignatures
+            document.body.appendChild(scriptElement);
+        });
     }
 
     /**
