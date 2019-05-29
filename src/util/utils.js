@@ -132,6 +132,7 @@ Entry.exportProject = function(project) {
     project.speed = Entry.FPS;
     project.interface = Entry.captureInterfaceState();
     project.expansionBlocks = Entry.expansionBlocks;
+    project.externalModules = Entry.EXTERNAL_MODULE_LIST;
 
     if (!objects || !objects.length) {
         return false;
