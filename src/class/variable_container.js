@@ -599,7 +599,7 @@ Entry.VariableContainer = class VariableContainer {
             .appendTo(localList);
 
         const { globalV, localV } = _.groupBy(this.variables_, ({ object_ }) => {
-            object_ ? 'localV' : 'globalV';
+            return object_ ? 'localV' : 'globalV';
         });
 
         const gLength = (globalV || []).length;
@@ -681,7 +681,7 @@ Entry.VariableContainer = class VariableContainer {
             .appendTo(localList);
 
         const { localV, globalV } = _.groupBy(this.lists_, ({ object_ }) => {
-            object_ ? 'localV' : 'globalV';
+            return object_ ? 'localV' : 'globalV';
         });
 
         const gLength = (globalV || []).length;
