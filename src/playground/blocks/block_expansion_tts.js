@@ -22,7 +22,6 @@ Entry.EXPANSION_BLOCK.tts = {
         }
         tts.soundQueue = new createjs.LoadQueue();
         tts.soundQueue.installPlugin(createjs.Sound);
-        tts.soundQueue.on("error", this._handleError, this);
         tts.soundQueue.on('complete', ({ currentTarget }) => {
             const items = currentTarget.getItems().map(item => item.item);
             tts.loadQueue = tts.loadQueue.filter(id => {
