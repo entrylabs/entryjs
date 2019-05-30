@@ -9,6 +9,7 @@ import Toast from '../playground/toast';
 import EntryEvent from '@entrylabs/event';
 import { Destroyer } from '../util/destroyer/Destroyer';
 
+
 const Entry = require('../entry');
 
 /**
@@ -571,7 +572,8 @@ Entry.Playground = class {
         this.board = this.mainWorkspace.board;
         this.toast = new Toast(this.board);
         this.blockMenu.banClass('checker');
-        this.banExpansionBlock();
+        // this.banExpansionBlock();
+        Entry.expansion.banAllExpansionBlock();
         this.vimBoard = this.mainWorkspace.vimBoard;
 
         this._destroyer.add(this.mainWorkspace);
@@ -1395,20 +1397,8 @@ Entry.Playground = class {
         }
     }
 
-    addExpansionBlock(block, isNew) {
-        const tempBlock = _.clone(block);
-        delete tempBlock.view;
-        if (isNew === true) {
-            delete tempBlock.id;
-        }
-
-        block = Entry.Utils.copy(tempBlock);
-
-        if (!block.id) {
-            block.id = Entry.generateHash();
-        }
-
-        Entry.do('objectAddExpansionBlock', block);
+    addExpansionBlock(...args) {
+        Entry.expansion.addExpansionBlock(...args);
     }
     /**
      * Add sound
@@ -2024,7 +2014,7 @@ Entry.Playground = class {
             data: {
                 items: options,
                 positionDom: target,
-                outsideExcludeDom:[target],
+                outsideExcludeDom: [target],
                 onOutsideClick: () => {
                     if (dropdownWidget) {
                         closeCallback();

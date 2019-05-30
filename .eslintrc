@@ -1,6 +1,14 @@
 {
     "plugins": ["prettier"],
+    "parser": "babel-eslint",
     "extends": ["plugin:prettier/recommended"],
+    "parserOptions": {
+        "ecmaVersion": 2017,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    },
     "rules": {
         "prefer-const": "warn",
         "no-var": "warn",
@@ -64,6 +72,8 @@
         "keyword-spacing": "warn"
     },
     "globals": {
+        "document": true,
+        "$": true,
         "_": true,
         "arcon": true,
         "goog": true,
@@ -92,6 +102,7 @@
         "entrylms": true,
         "require": true,
         "module": true,
+        "Symbol": true,
         "process": true
     }
 }
