@@ -21,7 +21,7 @@ function random_str(count)
 }
 
 Entry.AsomeBot = {
-    id: ['F0.F0', '1A.1'],
+    id: '32.1',
     name: 'AsomeBot',
     url: 'http://www.asomeit.com/',
     imageName: 'AsomeBot.png',
@@ -98,6 +98,7 @@ Entry.AsomeBot.setLanguage = function() {
                 asomebot_buzzer_tone: '부저를 %1주파수로 %2초 연주하기 %3',
                 asomebot_buzzer_close: '부저 끄기 %1',
 
+                asomebot_align: '중심잡기 %1 %2 %3 %4 %5',
                 asomebot_home: '차렷 %1',
                 asomebot_angle: '%1번 모터를 %2도로 %3초 동안 회전 %4',
                 asomebot_forward: '앞으로 전진 %1',
@@ -127,37 +128,38 @@ Entry.AsomeBot.setLanguage = function() {
         en: {
             template: {
                 asomebot_toggle_led: 'Blue LED %1 %2',
-                asomebot_get_ultrasonic_value: '초음파 센서 거리 센서값',
+                asomebot_get_ultrasonic_value: 'distance',
 
-                asomebot_buzzer_open: '부저 켜기 %1',
-                asomebot_buzzer_note: '부저를 %1음으로 %2초 연주하기 %3',
-                asomebot_buzzer_tone: '부저를 %1주파수로 %2초 연주하기 %3',
-                asomebot_buzzer_close: '부저 끄기 %1',
+                asomebot_buzzer_open: 'Buzzer on %1',
+                asomebot_buzzer_note: 'Play note %1 in %2 sec %3',
+                asomebot_buzzer_tone: 'Mkae sound on %1 Hz in %2 sec %3',
+                asomebot_buzzer_close: 'Buzzer off %1',
 
-                asomebot_home: 'attention %1',
-                asomebot_angle: '%1번 모터를 %2도로 %3초 동안 회전 %4',
+                asomebot_align: 'Set align %1 %2 %3 %4 %5',
+                asomebot_home: 'Attention %1',
+                asomebot_angle: 'Set angle of motor %1 to %2 degree in %3 sec %4',
                 asomebot_forward: 'Moving forward %1',
                 asomebot_backward: 'Moving backward %1',
                 asomebot_turn_left: 'Turn left %1',
                 asomebot_turn_right: 'Turn right %1',
 
-                asomebot_mouse: 'right %1 %2',
-                asomebot_flap: 'right %1',
-                asomebot_warigari: 'right %1',
-                asomebot_tock: 'right %1 %2',
-                asomebot_tick_tock: 'right %1',
-                asomebot_wiggle: 'right %1',
-                asomebot_swing2: 'right %1',
-                asomebot_ballet: 'right %1',
-                asomebot_swing: 'right %1 %2',
-                asomebot_yaho: 'right %1',
-                asomebot_moonwalk: 'right %1',
+                asomebot_mouse: 'Greeting %1 %2',
+                asomebot_flap: 'Flap %1',
+                asomebot_warigari: 'Twist %1',
+                asomebot_tock: 'Tock %1 %2',
+                asomebot_tick_tock: 'Tick tock %1',
+                asomebot_wiggle: 'Wiggle %1',
+                asomebot_swing2: 'Swing %1',
+                asomebot_ballet: 'Ballet %1',
+                asomebot_swing: 'Swing %1 %2',
+                asomebot_yaho: 'Yaho %1',
+                asomebot_moonwalk: 'Moonwalk %1',
 
-                internet_connect: '인터넷 연결하기 %1 %2 %3',
-                internet_open_ap: '공유기 모드로 변경하기 %1 %2',
-                internet_open_udp: '%1번 포트로 UDP 소켓 열기 %2',
-                internet_udp_msg: 'UDP 수신값',
-                internet_send_msg: '%1코드로 %2메시지를 전송하기 %3',
+                internet_connect: 'Connect to internet - %1 %2 %3',
+                internet_open_ap: 'Change to access point mode - %1 %2',
+                internet_open_udp: 'Open UDP socket on post %1 %2',
+                internet_udp_msg: 'UDP message',
+                internet_send_msg: 'Send message %2 to %1 %3',
             },
         },
     };
@@ -172,7 +174,8 @@ Entry.AsomeBot.blockMenuBlocks = [
     'asomebot_buzzer_tone',
     'asomebot_buzzer_close',
 
-    'asomebot_angle',
+    'asomebot_angle',    
+    'asomebot_align',
     'asomebot_home',
     'asomebot_forward',
     'asomebot_backward',
@@ -523,6 +526,97 @@ Entry.AsomeBot.getBlocks = function() {
         },
 
         // Moving
+        asomebot_align: {
+            template: Lang.template.asomebot_align,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+                VALUE2: 1,
+                VALUE3: 2,
+                VALUE4: 3,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['90'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['90'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['90'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['90'],
+                    },
+                    null
+                ],
+                type: 'asomebot_align',
+            },
+            class: 'Moving',
+            isNotFor: ['AsomeBot'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getValue('VALUE1');
+                var value2 = script.getValue('VALUE2');
+                var value3 = script.getValue('VALUE3');
+                var value4 = script.getValue('VALUE4');
+
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = String.format("asomebot_align.base = ({0}, {1}, {2}, {3})", value1, value2, value3, value4);
+                    return script;
+                } 
+                
+                if ((pd.msg_id) && (pd.msg_id.indexOf(script.msg_id) >= 0)) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
         asomebot_home: {
             template: Lang.template.asomebot_home,
             color: EntryStatic.colorSet.block.default.HARDWARE,
