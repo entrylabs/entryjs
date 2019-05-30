@@ -22,6 +22,7 @@ Entry.EXPANSION_BLOCK.tts = {
         }
         tts.soundQueue = new createjs.LoadQueue();
         tts.soundQueue.installPlugin(createjs.Sound);
+        tts.soundQueue.on("error", this._handleError, this);
         tts.soundQueue.on('complete', ({ currentTarget }) => {
             const items = currentTarget.getItems().map(item => item.item);
             tts.loadQueue = tts.loadQueue.filter(id => {
@@ -50,9 +51,9 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
                     [Lang.Blocks.tts_male, 'jinho'],
                     [Lang.Blocks.tts_kind, 'hana'],
                     [Lang.Blocks.tts_sweet, 'dinna'],
-                    // [Lang.Blocks.tts_echo, 'brown'],
-                    // [Lang.Blocks.tts_mischievous, 'minions'],
-                    // [Lang.Blocks.tts_dainty, 'sally'],
+                    [Lang.Blocks.tts_echo, 'brown'],
+                    [Lang.Blocks.tts_mischievous, 'minions'],
+                    [Lang.Blocks.tts_dainty, 'sally'],
                 ],
                 value: 'kyuri',
                 fontSize: 11,
