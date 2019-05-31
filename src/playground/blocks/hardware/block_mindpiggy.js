@@ -69,8 +69,6 @@ Entry.Mindpiggy.setLanguage = function () {
         ko: {
             // ko.js에 작성하던 내용
             template: {
-                mindpiggy_on_digital_value: '디지털 핀 %1 번을 켜기',
-                mindpiggy_off_digital_value: '디지털 핀 %1 번을 끄기',
                 mindpiggy_neopixel_mood_on_value: '무드등(D7) R %1 G %2 B %3 로 설정하기',
                 mindpiggy_neopixel_mood_pixel_on_value: '무드등(D7) %1 번째 픽셀을 R %2 G %3 B %4 로 설정하기',
                 mindpiggy_neopixel_mood_off_value: '무드등(D7) 끄기',
@@ -85,8 +83,6 @@ Entry.Mindpiggy.setLanguage = function () {
         en: {
             // en.js에 작성하던 내용
             template: {
-                mindpiggy_on_digital_value: 'turn on digital pin %1',
-                mindpiggy_off_digital_value: 'turn off digital pin %1',
                 mindpiggy_neopixel_mood_on_value: 'mood(D7) on R %2 G %3 B %4',
                 mindpiggy_neopixel_mood_pixel_on_value: 'mood(D7) %1 pixel on R %2 G %3 B %4',
                 mindpiggy_neopixel_mood_off_value: 'mood(D7) off',
@@ -162,10 +158,24 @@ Entry.Mindpiggy.getBlocks = function () {
             class:'MindpiggyBlock',
             isNotFor:['Mindpiggy'],
             func:function(sprite,script){
-                var RedValue = script.getNumberValue('RED');
-                var GreenValue = script.getNumberValue('GREEN');
-                var BlueValue = script.getNumberValue('BLUE');
-                Entry.hw.sendQueue.moodneopixel=[12,RedValue,GreenValue,BlueValue];
+                if (!script.isStart){
+                    var RedValue = script.getNumberValue('RED');
+                    var GreenValue = script.getNumberValue('GREEN');
+                    var BlueValue = script.getNumberValue('BLUE');
+                    Entry.hw.sendQueue.moodneopixel=[12,RedValue,GreenValue,BlueValue];
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    setTimeout(function() {
+                        script.timeFlag = 0;},20);
+                    console.log("Work");
+                    return script;
+                }else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.isStart;
+                    delete script.timeFlag;
+                    return script.callReturn();
+                }
             },
             syntax: { js: [], py: ['mindpiggy.neopixel_mood_on_value(%1, %2, %3)'] },
         },
@@ -223,11 +233,25 @@ Entry.Mindpiggy.getBlocks = function () {
             class : 'MindpiggyBlock',
             isNotFor : ['Mindpiggy'],
             func:function(sprite,script){
-                var Pixel = script.getNumberValue('PIXEL');
-                var RedValue = script.getNumberValue('RED');
-                var GreenValue = script.getNumberValue('GREEN');
-                var BlueValue = script.getNumberValue('BLUE');
-                Entry.hw.sendQueue.moodneopixel=[Pixel,RedValue,GreenValue,BlueValue];
+                if (!script.isStart){
+                    var Pixel = script.getNumberValue('PIXEL');
+                    var RedValue = script.getNumberValue('RED');
+                    var GreenValue = script.getNumberValue('GREEN');
+                    var BlueValue = script.getNumberValue('BLUE');
+                    Entry.hw.sendQueue.moodneopixel=[Pixel,RedValue,GreenValue,BlueValue];
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    setTimeout(function() {
+                        script.timeFlag = 0;},20);
+                    console.log("Work");
+                    return script;
+                }else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.isStart;
+                    delete script.timeFlag;
+                    return script.callReturn();
+                }
             },
             syntax: { js: [], py: ['mindpiggy.neopixel_mood_pixel_on_value(1%, 2%, 3%, 4%)'] },
         },
@@ -295,10 +319,24 @@ Entry.Mindpiggy.getBlocks = function () {
             class:'MindpiggyBlock',
             isNotFor:['Mindpiggy'],
             func:function(sprite,script){
-                var RedValue = script.getNumberValue('RED');
-                var GreenValue = script.getNumberValue('GREAN');
-                var BlueValue = script.getNumberValue('BLUE');
-                Entry.hw.sendQueue.chipneopixel=[RedValue,GreenValue,BlueValue];
+                if (!script.isStart){
+                    var RedValue = script.getNumberValue('RED');
+                    var GreenValue = script.getNumberValue('GREAN');
+                    var BlueValue = script.getNumberValue('BLUE');
+                    Entry.hw.sendQueue.chipneopixel=[RedValue,GreenValue,BlueValue];
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    setTimeout(function() {
+                        script.timeFlag = 0;},20);
+                    console.log("Work");
+                    return script;
+                }else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.isStart;
+                    delete script.timeFlag;
+                    return script.callReturn();
+                }
             },
             syntax: { js: [], py: ['mindpiggy.neopixel_chip_on_value(1%, 2%, 3%)'] },
         },
