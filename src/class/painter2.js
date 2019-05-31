@@ -54,6 +54,12 @@ Entry.Painter = class Painter {
             this.file.mode = 'new';
             this.fileSave(false);
         });
+        this.entryPaint.on('FULL_SCREEN_ON', () => {
+            this.toggleFullscreen(true);
+        });
+        this.entryPaint.on('FULL_SCREEN_OFF', () => {
+            this.toggleFullscreen(false);
+        });
 
         Entry.addEventListener('pictureSelected', this.changePicture.bind(this));
         Entry.windowResized.attach(this.view, this.entryPaint.realign);
@@ -239,6 +245,26 @@ Entry.Painter = class Painter {
         //     this.paste();
         // }
         // this.lc.trigger('keyDown', e);
+    }
+
+    toggleFullscreen(isFullscreen) {
+        const { pictureView_ } = Entry.playground;
+        const $view = $(this.view);
+        if ((isFullscreen !== true && $view.hasClass('fullscreen')) || isFullscreen === false) {
+            pictureView_.appendChild(this.view);
+            $view.removeClass('fullscreen');
+            if (this.fullscreenButton) {
+                this.fullscreenButton.setAttribute('title', Lang.Painter.fullscreen);
+                this.fullscreenButton.setAttribute('alt', Lang.Painter.fullscreen);
+            }
+        } else {
+            document.body.appendChild(this.view);
+            $view.addClass('fullscreen');
+            if (this.fullscreenButton) {
+                this.fullscreenButton.setAttribute('title', Lang.Painter.exit_fullscreen);
+                this.fullscreenButton.setAttribute('alt', Lang.Painter.exit_fullscreen);
+            }
+        }
     }
 
     clear() {}
