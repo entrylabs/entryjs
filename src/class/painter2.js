@@ -20,6 +20,7 @@ Entry.Painter = class Painter {
 
         this.isShow = false;
         this.clipboard = null;
+        this._keyboardEvents = [];
         Entry.addEventListener('pictureImport', this.addPicture.bind(this));
         Entry.addEventListener('run', this.detachKeyboardEvents.bind(this));
         Entry.addEventListener('stop', this.attachKeyboardEvents.bind(this));
@@ -45,6 +46,13 @@ Entry.Painter = class Painter {
         this.entryPaint.on('NEW_PICTURE', this.newPicture.bind(this));
         this.entryPaint.on('IMPORT_IMAGE', () => {
             Entry.dispatchEvent('openPictureImport');
+        });
+        this.entryPaint.on('SAVE_PICTURE', () => {
+            this.fileSave(false);
+        });
+        this.entryPaint.on('SAVE_NEW_PICTURE', () => {
+            this.file.mode = 'new';
+            this.fileSave(false);
         });
 
         Entry.addEventListener('pictureSelected', this.changePicture.bind(this));
@@ -206,4 +214,32 @@ Entry.Painter = class Painter {
             evt.destroy && evt.destroy();
         }
     }
+
+    _keyboardPressControl(e) {
+        // if (!this.isShow || Entry.Utils.isInInput(e)) {
+        //     return;
+        // }
+        // const keyCode = e.keyCode || e.which;
+        // const ctrlKey = e.ctrlKey;
+        // if (keyCode == 8 || keyCode == 46) {
+        //     //destroy
+        //     this.cut();
+        //     e.preventDefault();
+        // } else if (ctrlKey) {
+        //     if (keyCode == 67) {
+        //         //copy
+        //         this.copy();
+        //     } else if (keyCode == 88) {
+        //         //cut
+        //         this.cut();
+        //     }
+        // }
+        // if (ctrlKey && keyCode == 86) {
+        //     //paste
+        //     this.paste();
+        // }
+        // this.lc.trigger('keyDown', e);
+    }
+
+    clear() {}
 };
