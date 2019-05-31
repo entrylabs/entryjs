@@ -1693,13 +1693,13 @@ Entry.BlockView = class BlockView {
         );
     }
 
-    processSvg(svgGroup, scale, defs, notPng) {
+    processSvg(svgGroup, scale = 1, defs, notPng) {
         return new Promise((resolve, reject) => {
             let svgData =
                 '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %W %H">(svgGroup)(defs)</svg>';
             const bBox = this.svgGroup.getBoundingClientRect();
             const board = this.getBoard();
-            const { scale: blockScale } = board;
+            const { scale: blockScale = scale } = board;
             // console.log(this);
             const boxWidth = bBox.width / blockScale;
             const boxHeight = bBox.height / blockScale;
