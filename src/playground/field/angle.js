@@ -39,7 +39,7 @@ Entry.FieldAngle = class FieldAngle extends Entry.Field {
             x: this.X_PADDING / 2,
             y: this.TEXT_Y_PADDING,
             'font-size': '11px',
-            'font-family': 'NanumGothic',
+            'font-family': EntryStatic.fontFamily || 'NanumGothic',
         });
 
         this._setTextValue();
