@@ -8,7 +8,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Workspace.variable_create,
-                        color: '#4f80ff',
+                        color: EntryStatic.colorSet.common.BUTTON,
                         align: 'center',
                     },
                 ],
@@ -31,7 +31,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Workspace.create_list_block,
-                        color: '#4f80ff',
+                        color: EntryStatic.colorSet.common.BUTTON,
                         align: 'center',
                     },
                 ],

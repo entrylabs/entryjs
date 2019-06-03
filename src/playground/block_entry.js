@@ -245,7 +245,7 @@ function getBlocks() {
                 {
                     type: 'Text',
                     text: Lang.template.load_expansion_block,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
@@ -263,13 +263,13 @@ function getBlocks() {
         //region hardware 하드웨어 기본
         arduino_noti: {
             skeleton: 'basic_text',
-            color: '#ecf8ff',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
             template: '%1',
             params: [
                 {
                     type: 'Text',
                     text: Lang.Blocks.arduino_noti_text,
-                    color: '#333',
+                    color: EntryStatic.colorSet.common.TEXT,
                     align: 'center',
                 },
             ],
@@ -289,7 +289,7 @@ function getBlocks() {
                     text: !Entry.isOffline
                         ? Lang.Blocks.ARDUINO_download_connector
                         : Lang.Blocks.ARDUINO_open_connector,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
@@ -309,7 +309,7 @@ function getBlocks() {
                 {
                     type: 'Text',
                     text: Lang.Blocks.download_guide,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
@@ -329,7 +329,7 @@ function getBlocks() {
                 {
                     type: 'Text',
                     text: Lang.Blocks.ARDUINO_download_source,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
@@ -349,7 +349,7 @@ function getBlocks() {
                 {
                     type: 'Text',
                     text: Lang.Blocks.ARDUINO_connected,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
@@ -357,14 +357,14 @@ function getBlocks() {
         },
         arduino_connect: {
             skeleton: 'basic_text',
-            color: '#ecf8ff',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
             template: '%1',
             isNotFor: ['arduinoConnect'],
             params: [
                 {
                     type: 'Text',
                     text: Lang.Blocks.ARDUINO_connect,
-                    color: '#333',
+                    color: EntryStatic.colorSet.common.TEXT,
                     align: 'center',
                 },
             ],
@@ -378,7 +378,7 @@ function getBlocks() {
                 {
                     type: 'Text',
                     text: Lang.Blocks.ARDUINO_reconnect,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
@@ -399,7 +399,7 @@ function getBlocks() {
                 {
                     type: 'Text',
                     text: Lang.Blocks.ROBOT_reconnect,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
@@ -420,7 +420,7 @@ function getBlocks() {
                 {
                     type: 'Text',
                     text: Lang.Blocks.ARDUINO_open_connector,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
@@ -441,7 +441,7 @@ function getBlocks() {
                 {
                     type: 'Text',
                     text: Lang.Blocks.ARDUINO_cloud_pc_connector,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],

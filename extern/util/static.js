@@ -767,6 +767,9 @@ EntryStatic.colorSet = {
     common: {
         WHITE: '#FFFFFF',
         DARK: '#000000',
+        BUTTON: '#4f80ff',
+        TEXT: '#333',
+        TRANSPARENT: 'transparent'
     },
 };
 
