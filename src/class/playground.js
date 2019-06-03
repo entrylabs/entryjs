@@ -9,7 +9,6 @@ import Toast from '../playground/toast';
 import EntryEvent from '@entrylabs/event';
 import { Destroyer } from '../util/destroyer/Destroyer';
 
-
 const Entry = require('../entry');
 
 /**
@@ -1397,8 +1396,9 @@ Entry.Playground = class {
         }
     }
 
-    addExpansionBlock(...args) {
-        Entry.expansion.addExpansionBlock(...args);
+    addExpansionBlock(item) {
+        const { name } = item;
+        Entry.expansion.addExpansionBlock(name);
     }
     /**
      * Add sound

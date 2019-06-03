@@ -27,4 +27,18 @@ export default class Expansion {
     addExpansionBlock(blockName) {
         Entry.do('objectAddExpansionBlock', blockName);
     }
+
+    getExpansions(blockList) {
+        let expansionList = [];
+        const expansionBlockList = Object.keys(Entry.EXPANSION_BLOCK_LIST);
+        blockList.forEach((block) => {
+            const { _schema = {} } = block || {};
+            const { isFor, isNotFor = [] } = _schema;
+            const [expansionKey] = isNotFor;
+            if (expansionKey && isFor.indexOf('category_expansion') >= 0) {
+                expansionList = _.union(expansionList, [expansionKey]);
+            }
+        });
+        return expansionList;
+    }
 }

@@ -1831,7 +1831,7 @@ Entry.Utils.addBlockPattern = function(boardSvgDom, suffix) {
 };
 
 Entry.Utils.addNewBlock = function(item) {
-    const { script, functions, messages, variables } = item;
+    const { script, functions, messages, variables, expansionBlocks = [] } = item;
     const parseScript = JSON.parse(script);
     if (!parseScript) {
         return;
@@ -1852,6 +1852,9 @@ Entry.Utils.addNewBlock = function(item) {
             variable.object = _.get(Entry, ['container', 'selectedObject', 'id'], '');
         }
     });
+    expansionBlocks.forEach((blockName) => {
+        Entry.expansion.addExpansionBlock(blockName);
+    });
     Entry.variableContainer.appendMessages(messages);
     Entry.variableContainer.appendVariables(variables);
     Entry.variableContainer.appendFunctions(functions);
@@ -1866,10 +1869,7 @@ Entry.Utils.addNewBlock = function(item) {
 
 Entry.Utils.addNewObject = function(sprite) {
     if (sprite) {
-        const objects = sprite.objects;
-        const functions = sprite.functions;
-        const messages = sprite.messages;
-        const variables = sprite.variables;
+        const { objects, functions, messages, variables, expansionBlocks = [] } = sprite;
 
         if (
             Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD &&
@@ -1879,6 +1879,9 @@ Entry.Utils.addNewObject = function(sprite) {
             return entrylms.alert(Lang.Menus.object_import_syntax_error);
         }
         const objectIdMap = {};
+        expansionBlocks.forEach((blockName) => {
+            Entry.expansion.addExpansionBlock(blockName);
+        });
         variables.forEach((variable) => {
             const { object } = variable;
             if (object) {
