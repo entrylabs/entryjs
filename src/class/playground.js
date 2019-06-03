@@ -571,7 +571,8 @@ Entry.Playground = class {
         this.board = this.mainWorkspace.board;
         this.toast = new Toast(this.board);
         this.blockMenu.banClass('checker');
-        this.banExpansionBlock();
+        // this.banExpansionBlock();
+        Entry.expansion.banAllExpansionBlock();
         this.vimBoard = this.mainWorkspace.vimBoard;
 
         this._destroyer.add(this.mainWorkspace);
@@ -1395,20 +1396,9 @@ Entry.Playground = class {
         }
     }
 
-    addExpansionBlock(block, isNew) {
-        const tempBlock = _.clone(block);
-        delete tempBlock.view;
-        if (isNew === true) {
-            delete tempBlock.id;
-        }
-
-        block = Entry.Utils.copy(tempBlock);
-
-        if (!block.id) {
-            block.id = Entry.generateHash();
-        }
-
-        Entry.do('objectAddExpansionBlock', block);
+    addExpansionBlock(item) {
+        const { name } = item;
+        Entry.expansion.addExpansionBlock(name);
     }
     /**
      * Add sound
@@ -2024,7 +2014,7 @@ Entry.Playground = class {
             data: {
                 items: options,
                 positionDom: target,
-                outsideExcludeDom:[target],
+                outsideExcludeDom: [target],
                 onOutsideClick: () => {
                     if (dropdownWidget) {
                         closeCallback();
