@@ -239,7 +239,7 @@ function getBlocks() {
     return {
         expansionBlockAddButton: {
             skeleton: 'basic_button',
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             isNotFor: ['functionInit'],
             params: [
                 {
@@ -282,7 +282,7 @@ function getBlocks() {
         arduino_download_connector: {
             skeleton: 'basic_button',
             isNotFor: ['arduinoDisconnected'],
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             params: [
                 {
                     type: 'Text',
@@ -304,7 +304,7 @@ function getBlocks() {
         download_guide: {
             skeleton: 'basic_button',
             isNotFor: ['arduinoDisconnected'],
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             params: [
                 {
                     type: 'Text',
@@ -324,7 +324,7 @@ function getBlocks() {
         arduino_download_source: {
             skeleton: 'basic_button',
             isNotFor: ['arduinoDisconnected'],
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             params: [
                 {
                     type: 'Text',
@@ -343,7 +343,7 @@ function getBlocks() {
         },
         arduino_connected: {
             skeleton: 'basic_button',
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             isNotFor: ['arduinoConnected'],
             params: [
                 {
@@ -372,7 +372,7 @@ function getBlocks() {
         },
         arduino_reconnect: {
             skeleton: 'basic_button',
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             isNotFor: ['arduinoDisconnected'],
             params: [
                 {
@@ -392,7 +392,7 @@ function getBlocks() {
         },
         robot_reconnect: {
             skeleton: 'basic_button',
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             isNotFor: ['arduinoDisconnected'],
             template: '%1',
             params: [
@@ -413,7 +413,7 @@ function getBlocks() {
         },
         arduino_open: {
             skeleton: 'basic_button',
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             isNotFor: ['arduinoDisconnected'],
             template: '%1',
             params: [
@@ -434,7 +434,7 @@ function getBlocks() {
         },
         arduino_cloud_pc_open: {
             skeleton: 'basic_button',
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             isNotFor: ['arduinoConnect', 'arduinoConnected'],
             template: '%1',
             params: [
@@ -6847,12 +6847,12 @@ function getBlocks() {
         },
         basic_button: {
             skeleton: 'basic_button',
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             params: [
                 {
                     type: 'Text',
                     text: 'basic button',
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],

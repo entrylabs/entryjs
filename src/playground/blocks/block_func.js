@@ -3,7 +3,7 @@ module.exports = {
         return {
             functionAddButton: {
                 skeleton: 'basic_button',
-                color: '#eee',
+                color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
                 isNotFor: ['functionInit'],
                 params: [
                     {

@@ -3,7 +3,7 @@ module.exports = {
         return {
             variableAddButton: {
                 skeleton: 'basic_button',
-                color: '#eee',
+                color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
                 params: [
                     {
                         type: 'Text',
@@ -26,7 +26,7 @@ module.exports = {
             },
             listAddButton: {
                 skeleton: 'basic_button',
-                color: '#eee',
+                color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
                 params: [
                     {
                         type: 'Text',
