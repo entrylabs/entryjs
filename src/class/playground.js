@@ -407,15 +407,20 @@ Entry.Playground = class {
                                 data.isObjectMouseEnter = false;
                                 this.objectBackPackAreaEvent.trigger('leaveitem');
                             }
-                            if (!data.isBlockMouseEnter && this.isPointInRect(point, blockRect)) {
-                                data.isBlockMouseEnter = true;
-                                this.blockBackPackEvent.trigger('enteritem');
-                            } else if (
-                                data.isBlockMouseEnter &&
-                                !this.isPointInRect(point, blockRect)
-                            ) {
-                                data.isBlockMouseEnter = false;
-                                this.blockBackPackAreaEvent.trigger('leaveitem');
+                            if (Entry.getMainWS().mode === Entry.Workspace.MODE_BOARD) {
+                                if (
+                                    !data.isBlockMouseEnter &&
+                                    this.isPointInRect(point, blockRect)
+                                ) {
+                                    data.isBlockMouseEnter = true;
+                                    this.blockBackPackEvent.trigger('enteritem');
+                                } else if (
+                                    data.isBlockMouseEnter &&
+                                    !this.isPointInRect(point, blockRect)
+                                ) {
+                                    data.isBlockMouseEnter = false;
+                                    this.blockBackPackAreaEvent.trigger('leaveitem');
+                                }
                             }
                         } else {
                             this.objectBackPackAreaEvent.trigger('leaveitem');

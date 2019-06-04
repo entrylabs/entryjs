@@ -13,33 +13,20 @@ class TextCodingUtil {
     canUsePythonFunctions(functions) {
         return functions.every(({ content }) => {
             const code = new Entry.Code(content);
-            let paramBlock = code.getEventMap('funcDef')[0];
-            paramBlock = paramBlock && paramBlock.params[0];
+            const funcSchemaBlock = code.getEventMap('funcDef')[0];
+            // const funcSchemaBlock = targets[targetKey].content.getEventMap('funcDef')[0];
+            const functionBlock = funcSchemaBlock && funcSchemaBlock.params[0];
+            const { params } = functionBlock;
+            const [functionName, parameterBlock] = params;
 
-            if (!paramBlock) {
-                return true;
-            }
+            const errorMessage = this.getFunctionToPythonErrorMessage(
+                functionBlock,
+                functionName,
+                parameterBlock
+            );
 
-            if (paramBlock.type !== 'function_field_label') {
-                return false;
-            }
-
-            const params = paramBlock.params;
-
-            if (!params[1]) {
-                if (test(params[0])) {
-                    return false;
-                }
-            } else if (this.hasFunctionFieldLabel(params[1])) {
-                return false;
-            }
-
-            return true;
+            return !errorMessage;
         });
-
-        function test(name) {
-            return / /.test(name);
-        }
     }
 
     initQueue() {
@@ -554,21 +541,10 @@ class TextCodingUtil {
      * @return {Object} 에러 / 경고 오브젝트
      */
     validateFunctionToPython() {
-        const returnErrorResult = (errorMessage) =>
-            this._generateErrorObject(errorMessage, 'error');
         const vc = Entry.variableContainer;
         if (!vc) {
             return;
         }
-
-        const {
-            ALERT_FUNCTION_NAME_DISORDER,
-            ALERT_FUNCTION_NAME_FIELD_MULTI,
-            ALERT_FUNCTION_HAS_BOOLEAN,
-        } = Entry.TextCodingError;
-        const DISORDER = Lang.TextCoding[ALERT_FUNCTION_NAME_DISORDER];
-        const FIELD_MULTI = Lang.TextCoding[ALERT_FUNCTION_NAME_FIELD_MULTI];
-        const HAS_BOOLEAN = Lang.TextCoding[ALERT_FUNCTION_HAS_BOOLEAN];
 
         const targets = vc.functions_ || {};
 
@@ -577,36 +553,53 @@ class TextCodingUtil {
             const functionBlock = funcSchemaBlock && funcSchemaBlock.params[0];
             const { params } = functionBlock;
             const [functionName, parameterBlock] = params;
+            return this.getFunctionToPythonErrorMessage(
+                functionBlock,
+                functionName,
+                parameterBlock
+            );
+        }
+    }
 
-            if (!functionBlock) {
-                continue;
-            }
+    returnErrorResult = (errorMessage) => this._generateErrorObject(errorMessage, 'error');
 
-            // 함수의 첫 값이 함수명필드여야 한다.
-            if (functionBlock.type !== 'function_field_label') {
-                return returnErrorResult(DISORDER);
-            }
+    getFunctionToPythonErrorMessage(functionBlock, functionName, parameterBlock) {
+        const DISORDER = Lang.TextCoding[ALERT_FUNCTION_NAME_DISORDER];
+        const FIELD_MULTI = Lang.TextCoding[ALERT_FUNCTION_NAME_FIELD_MULTI];
+        const HAS_BOOLEAN = Lang.TextCoding[ALERT_FUNCTION_HAS_BOOLEAN];
+        const {
+            ALERT_FUNCTION_NAME_DISORDER,
+            ALERT_FUNCTION_NAME_FIELD_MULTI,
+            ALERT_FUNCTION_HAS_BOOLEAN,
+        } = Entry.TextCodingError;
+        if (!functionBlock) {
+            return;
+        }
 
-            // 함수명의 특수문자, 예약어, 숫자로 시작됨 여부 검사
-            // 공백검사는 하지 않는다. 공백은 __ 로 치환되기 때문이다.
-            const errorMessageObject =
-                this.validateNameNotStartWithNumber(functionName, 'f') ||
-                this.validateNameNotStartWithSpecials(functionName, 'f') ||
-                this.validateNameIsReservedKeyword(functionName, 'f');
+        // 함수의 첫 값이 함수명필드여야 한다.
+        if (functionBlock.type !== 'function_field_label') {
+            return this.returnErrorResult(DISORDER);
+        }
 
-            if (errorMessageObject) {
-                return errorMessageObject;
-            }
+        // 함수명의 특수문자, 예약어, 숫자로 시작됨 여부 검사
+        // 공백검사는 하지 않는다. 공백은 __ 로 치환되기 때문이다.
+        const errorMessageObject =
+            this.validateNameNotStartWithNumber(functionName, 'f') ||
+            this.validateNameNotStartWithSpecials(functionName, 'f') ||
+            this.validateNameIsReservedKeyword(functionName, 'f');
 
-            // 함수명 필드는 여러개 등장할 수 없다.
-            if (this.hasFunctionFieldLabel(parameterBlock)) {
-                return returnErrorResult(FIELD_MULTI);
-            }
+        if (errorMessageObject) {
+            return errorMessageObject;
+        }
 
-            // 'warning' 함수인자에 boolean 타입이 있는 경우 변환시 일반 필드화가 된다.
-            if (this.hasFunctionBooleanField(parameterBlock)) {
-                return this._generateErrorObject(HAS_BOOLEAN, 'warning');
-            }
+        // 함수명 필드는 여러개 등장할 수 없다.
+        if (this.hasFunctionFieldLabel(parameterBlock)) {
+            return this.returnErrorResult(FIELD_MULTI);
+        }
+
+        // 'warning' 함수인자에 boolean 타입이 있는 경우 변환시 일반 필드화가 된다.
+        if (this.hasFunctionBooleanField(parameterBlock)) {
+            return this._generateErrorObject(HAS_BOOLEAN, 'warning');
         }
     }
 
