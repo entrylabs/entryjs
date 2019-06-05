@@ -445,7 +445,7 @@ p.executeHardware = function() {
                 executeIeCustomLauncher.init(entryHardwareUrl,
                     function(bInstalled) {
                         if (bInstalled == false) {
-                            hw.popupHelper.show('hwDownload', true);
+                            hw.openHardwareDownloadPopup();
                         }
                     }
                 );
@@ -466,8 +466,8 @@ p.executeHardware = function() {
             function() {
             },
             function() {
-                hw.popupHelper.show('hwDownload', true);
-            }
+                hw.openHardwareDownloadPopup();
+            },
         );
     }
 
@@ -489,7 +489,7 @@ p.executeHardware = function() {
             }
 
             if(!isInstalled) {
-                hw.popupHelper.show('hwDownload', true);
+                hw.openHardwareDownloadPopup();
             }
 
             document.getElementsByTagName("body")[0].removeChild(iFrame);
@@ -510,12 +510,20 @@ p.executeHardware = function() {
         }, 100);
         setTimeout(function() {
             if (isInstalled == false) {
-                hw.popupHelper.show('hwDownload', true);
+                hw.openHardwareDownloadPopup();
             }
             window.onblur = null;
         }, 3000);
     }
 }
+
+p.openHardwareDownloadPopup = function() {
+    if (Entry.events_.openHardWareDownloadModal) {
+        Entry.dispatchEvent('openHardWareDownloadModal');
+    } else {
+        Entry.hw.popupHelper.show('hwDownload', true);
+    }
+};
 
 p.hwPopupCreate = function () {
     var hw = this;
@@ -636,4 +644,5 @@ p.hwPopupCreate = function () {
             popup.append(content);
         }
     });
+
 }
