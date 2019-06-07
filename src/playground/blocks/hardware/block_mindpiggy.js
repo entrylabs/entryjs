@@ -74,9 +74,9 @@ Entry.Mindpiggy.setLanguage = function () {
                 mindpiggy_neopixel_mood_off_value: '무드등(D7) 끄기 %1' ,
                 mindpiggy_neopixel_chip_on_value: '볼(D11) R %1 G %2 B %3 로 설정하기 %4',
                 mindpiggy_neopixel_chip_off_value: '볼(D11) 끄기 %1',
-                mindpiggy_get_vibration: '진동센서(D3) 값 %1',
-                mindpiggy_get_soundsensor: '사운드센서(A1) 값 %1',
-                mindpiggy_get_photo: '물체감지센서 %1핀 값 %2',
+                mindpiggy_get_vibration: '진동센서(D3) 값 ',
+                mindpiggy_get_soundsensor: '사운드센서(A1) 값 ',
+                mindpiggy_get_photo: '물체감지센서 %1핀 값 ',
                 mindpiggy_set_tone: '스피커(A0)를 %1 %2의 음으로 %3초 연주하기 %4',
             }
         },
@@ -88,9 +88,9 @@ Entry.Mindpiggy.setLanguage = function () {
                 mindpiggy_neopixel_mood_off_value: 'mood(D7) off %1',
                 mindpiggy_neopixel_chip_on_value: 'chip(D11)  on R %1 G %2 B %3 %4',
                 mindpiggy_neopixel_chip_off_value: 'chip(D11) off %1',
-                mindpiggy_get_vibration: 'vibration(D3) digital value %1',
-                mindpiggy_get_soundsensor: 'soundsensor(A1) analog value %1',
-                mindpiggy_get_photo: 'photointerrupt %1 pin digital value %2',
+                mindpiggy_get_vibration: 'vibration(D3) digital value ',
+                mindpiggy_get_soundsensor: 'soundsensor(A1) analog value ',
+                mindpiggy_get_photo: 'photointerrupt %1 pin digital value ',
                 mindpiggy_set_tone: 'play tone on node %1 octave %2 beat %3 %4',
             }
         }
@@ -393,16 +393,10 @@ Entry.Mindpiggy.getBlocks = function () {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_boolean_field',
-            params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
+            params: [],
             events: {},
             def: {
-                params: [null],
+                params: [],
                 type: 'mindpiggy_get_vibration',
             },
             paramsKeyMap: {
@@ -420,16 +414,10 @@ Entry.Mindpiggy.getBlocks = function () {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
-            params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
+            params: [],
             events: {},
             def: {
-                params: [null],
+                params: [],
                 type: 'mindpiggy_get_soundsensor',
             },
             paramsKeyMap: {},
@@ -456,15 +444,10 @@ Entry.Mindpiggy.getBlocks = function () {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
             ],
             events: {},
             def: {
-                params: [null],
+                params: [],
                 type: 'mindpiggy_get_photo',
             },
             paramsKeyMap: {
