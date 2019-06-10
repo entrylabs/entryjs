@@ -130,7 +130,8 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
             if (this._block == data.block && targetIndex == data.index) {
                 const options = this._menuGenerator(data.value);
                 this._contents.options = options;
-                this.applyValue(options[0][1]);
+                const value = this.getValue();
+                this.applyValue(!options.find(x => x[1] && x[1] === value) ? options[0][1] : value);
             }
         });
     }

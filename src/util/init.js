@@ -37,6 +37,7 @@ Entry.init = function(container, options) {
         options.libDir ? options.libDir : '/lib'
     }/literallycanvas-mobile/lib/img`;
     this.defaultPath = options.defaultDir || '';
+    this.soundPath = options.soundDir || '';
     this.blockInjectPath = options.blockInjectDir || '';
 
     if (this.type === 'workspace' && this.isPhone()) {
@@ -561,8 +562,9 @@ Entry.initSound = function(sound) {
             '/' +
             sound.filename.substring(2, 4) +
             '/' +
+            Entry.soundPath +
             sound.filename +
-            sound.ext;
+            (sound.ext || '.mp3');
 
     Entry.soundQueue.loadFile({
         id: sound.id,

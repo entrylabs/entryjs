@@ -4,7 +4,6 @@
  *
  */
 
-
 'use strict';
 
 import ColorSpoid from '../playground/colorSpoid';
@@ -44,8 +43,8 @@ Entry.Stage.prototype.initStage = function(canvas) {
 
     this.background = GEHelper.newGraphic();
     this.background.graphics.beginFill('#ffffff').drawRect(-480, -240, 960, 480);
-    this.variableContainer = GEHelper.newContainer("variableContainer");
-    this.dialogContainer = GEHelper.newContainer("dialogContainer");
+    this.variableContainer = GEHelper.newContainer('variableContainer');
+    this.dialogContainer = GEHelper.newContainer('dialogContainer');
 
     this.canvas.addChild(this.background);
     this.canvas.addChild(this.variableContainer);
@@ -252,7 +251,7 @@ Entry.Stage.prototype.setEntityIndex = function({ object }, index) {
     var selectedObjectContainer = Entry.stage.selectedObjectContainer;
     var currentIndex = selectedObjectContainer.getChildIndex(object);
 
-    if (currentIndex === -1 ||  currentIndex === index) {
+    if (currentIndex === -1 || currentIndex === index) {
         return;
     }
     selectedObjectContainer.setChildIndex(object, index);
@@ -297,7 +296,7 @@ Entry.Stage.prototype.initCoordinator = function() {
         y: -135,
         visible: false,
     });
-    if(!GEHelper.isWebGL) {
+    if (!GEHelper.isWebGL) {
         this.coordinator.tickEnabled = false;
     }
     this.canvas.addChild(this.coordinator);
@@ -491,27 +490,26 @@ Entry.Stage.prototype.endEdit = function() {
 };
 
 Entry.Stage.prototype.initWall = function() {
-    let wall = GEHelper.newContainer("wall");
+    let wall = GEHelper.newContainer('wall');
     wall.mouseEnabled = false;
     let tex = GEHelper.newWallTexture(Entry.mediaFilePath + 'media/bound.png');
     const newSide = (x, y, sx, sy) => {
         let sp = GEHelper.newWallSprite(tex);
         sp.x = x;
         sp.y = y;
-        sx ?  sp.scaleX = sx : 0;
-        sy ?  sp.scaleY = sy : 0;
+        sx ? (sp.scaleX = sx) : 0;
+        sy ? (sp.scaleY = sy) : 0;
         wall.addChild(sp);
         return sp;
     };
 
-    wall.up = newSide( -240, -135 - 30, 480 / 30, 0);
-    wall.down = newSide( -240, 135, 480 / 30, 0);
-    wall.right = newSide( 240, -135, 0, 270 / 30);
-    wall.left = newSide( -240 - 30, -135, 0, 270 / 30);
+    wall.up = newSide(-240, -135 - 30, 480 / 30, 0);
+    wall.down = newSide(-240, 135, 480 / 30, 0);
+    wall.right = newSide(240, -135, 0, 270 / 30);
+    wall.left = newSide(-240 - 30, -135, 0, 270 / 30);
 
     this.canvas.addChild(wall);
     this.wall = wall;
-
 };
 
 /**
@@ -521,13 +519,13 @@ Entry.Stage.prototype.showInputField = function() {
     const THIS = this;
     const isWebGL = GEHelper.isWebGL;
 
-    if(!this.inputField) {
+    if (!this.inputField) {
         this.inputField = _createInputField();
         this.inputSubmitButton = _createSubmitButton();
     }
 
     this.inputField.value('');
-    if(isWebGL) {
+    if (isWebGL) {
         this.canvas.addChild(this.inputField.getPixiView());
     }
     this.inputField.show();
@@ -544,7 +542,7 @@ Entry.Stage.prototype.showInputField = function() {
         let inputField = new classRef({
             canvas: document.getElementById('entryCanvas'),
             fontSize: 30 * scale,
-            fontFamily: 'NanumGothic',
+            fontFamily: EntryStatic.fontFamily || 'NanumGothic',
             fontColor: '#212121',
             width: Math.round(556 * scale),
             height: 26 * scale,
@@ -563,23 +561,23 @@ Entry.Stage.prototype.showInputField = function() {
             },
         });
 
-        if(isWebGL) {
+        if (isWebGL) {
             const canvas = THIS.canvas;
             const globalScale = canvas.scale.x;
             const textView = inputField.getPixiView();
-            textView.scale.set(1/globalScale);
+            textView.scale.set(1 / globalScale);
             textView.position.set(
-                (posX / globalScale - canvas.x / globalScale),
-                (posY / globalScale - canvas.y / globalScale),
+                posX / globalScale - canvas.x / globalScale,
+                posY / globalScale - canvas.y / globalScale
             );
         }
         return inputField;
-    }//_createInputField
-
+    } //_createInputField
 
     function _createSubmitButton() {
-        const path = Entry.mediaFilePath + 'confirm_button.png';
-        let inputSubmitButton = GEHelper.newSpriteWithCallback(path, ()=>{
+        const { confirm_button } = EntryStatic.images || {};
+        const path = confirm_button || Entry.mediaFilePath + 'confirm_button.png';
+        let inputSubmitButton = GEHelper.newSpriteWithCallback(path, () => {
             Entry.requestUpdate = true;
         });
         inputSubmitButton.mouseEnabled = true;
@@ -596,16 +594,16 @@ Entry.Stage.prototype.showInputField = function() {
             }
         });
         return inputSubmitButton;
-    }//_createSubmitButton
+    } //_createSubmitButton
 };
 
 /**
  * remove inputfield from the canvas
  */
 Entry.Stage.prototype.hideInputField = function() {
-    if(!this.inputField) return;
+    if (!this.inputField) return;
 
-    if(GEHelper.isWebGL) {
+    if (GEHelper.isWebGL) {
         this.canvas.removeChild(this.inputField.getPixiView());
     }
     this.inputField.value('');
@@ -659,7 +657,7 @@ Entry.Stage.prototype.selectObjectContainer = function(scene) {
  * init object containers
  */
 Entry.Stage.prototype.createObjectContainer = function(scene) {
-    return Object.assign(GEHelper.newContainer("[Stage] SceneContainer"), { scene });
+    return Object.assign(GEHelper.newContainer('[Stage] SceneContainer'), { scene });
 };
 
 /**
@@ -735,9 +733,9 @@ Entry.Stage.prototype.isEntitySelectable = function() {
 
 Entry.Stage.prototype.destroy = function() {
     let destroyOption;
-    if(GEHelper.isWebGL) {
-        destroyOption = {children: true, texture: false, baseTexture: false};
-        this.objectContainers.forEach( c => c.destroy(destroyOption) );
+    if (GEHelper.isWebGL) {
+        destroyOption = { children: true, texture: false, baseTexture: false };
+        this.objectContainers.forEach((c) => c.destroy(destroyOption));
         //this.handle.destroy(); // 추상화 아직 안됨.
         PIXIAtlasManager.clearProject();
     } else {

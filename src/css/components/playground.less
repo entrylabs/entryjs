@@ -183,20 +183,12 @@
 }
 
 .entryPlaygroundBackPackView {
-    height: 100%;
-    display: block;
-    right: 0;
-    top: 38px;
-    position: absolute;
-    z-index: 1;
-}
-.entryPlaygroundBackPackView {
     height: calc(100% - 47px);
     display: block;
     right: 0;
     top: 38px;
+    z-index: 301;
     position: absolute;
-    z-index: 1;
 
     .widget {
         height: 100%;
@@ -222,9 +214,10 @@
             margin-bottom: 11px;
             .backgroundImage('img_backpack_plus.svg');
         }
+        .objectBackPackDesc,
         .blockBackPackDesc {
             pointer-events: none;
-            font-family: NanumGothic;
+            font-family: EntryFont, NanumGothic;
             font-size: 12px;
             font-weight: bold;
             letter-spacing: -0.1px;
@@ -786,8 +779,8 @@
 .entryPlaygroundTextWorkspace .write_box .write_set .font_style_box .style_link {
     display: inline-block;
     overflow: hidden;
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
     margin-left: 10px;
     border: 1px solid #e2e2e2;
     background-color: #fff;
@@ -933,17 +926,67 @@
     }
 }
 .imbtn_pop_font_color {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    width: 66px;
+    height: 40px;
+    margin-left: 10px;
     .backgroundImage('btn_pop_font_color.png');
-    background-size: 38px auto;
+    background-size: 66px auto;
+    cursor: pointer;
+    em {
+        position: absolute;
+        left: 5px;
+        right: 5px;
+        top: 5px;
+        bottom: 5px;
+        background-color: #f9f9f9;
+        z-index: -1;
+    }
     &.on {
         .backgroundImage('btn_pop_font_color_on.png');
     }
 }
+.imbtn_pop_font_paint,
 .imbtn_pop_font_backgroundcolor {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    width: 66px;
+    height: 40px;
+    margin-left: 10px;
     .backgroundImage('btn_pop_font_paint.png');
-    background-size: 38px auto;
+    background-size: 66px auto;
+    cursor: pointer;
+    em {
+        position: absolute;
+        left: 5px;
+        right: 5px;
+        top: 5px;
+        bottom: 5px;
+        z-index: -1;
+    }
     &.on {
         .backgroundImage('btn_pop_font_paint_on.png');
+        &.clear {
+            .backgroundImage('btn_pop_font_paint_clear_on.png');
+            em {
+                display: none;
+            }
+        }
+    }
+    &.clear {
+        .backgroundImage('btn_pop_font_paint_clear.png');
+        em {
+            display: none;
+        }
+    }
+    &.clear_on {
+        .backgroundImage('btn_pop_font_paint_clear_on.png');
+        em {
+            display: none;
+        }
     }
 }
 

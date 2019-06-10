@@ -80,7 +80,7 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
                 fill: this._textColor,
                 'font-size': `${+that._font_size}px`,
                 'font-weight': 'bold',
-                'font-family': 'NanumGothic',
+                'font-family': EntryStatic.fontFamily || 'NanumGothic',
             });
         }
 
@@ -196,6 +196,7 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
             $(this._blockView.contentSvgGroup).trigger('optionChanged', {
                 block: this._block,
                 value: this.getValue(),
+                index: this._index,
             });
         });
         this.optionDomCreated();

@@ -4,7 +4,7 @@
 
 'use strict';
 
-import { Sortable } from '@entrylabs/tool';
+import { Draggable } from '@entrylabs/tool';
 import { GEHelper } from '../graphicEngine/GEHelper';
 
 /**
@@ -26,6 +26,8 @@ Entry.Container = class Container {
          */
         this.cachedPicture = {};
 
+        this.selectedObject = null;
+
         /**
          * variable for canvas input
          * @type {String}
@@ -38,6 +40,7 @@ Entry.Container = class Container {
          */
         this.copiedObject = null;
 
+        this.isObjectDragging = false;
         /**
          * Array for storing current scene objects
          * @type {Array.<object model>}
@@ -174,16 +177,41 @@ Entry.Container = class Container {
                 disabled: false,
             });
         } else {
-            this.sortableListViewWidget = new Sortable({
+            const draggableOption = {};
+            if (Entry.isMobile()) {
+                draggableOption.lockAxis = 'y';
+                draggableOption.distance = 50;
+            }
+            this.sortableListViewWidget = new Draggable({
                 data: {
-                    height: '100%',
+                    ...draggableOption,
+                    canSortable: true,
                     sortableTarget: ['entryObjectThumbnailWorkspace'],
-                    lockAxis: 'y',
                     items: this._getSortableObjectList(),
+                    itemShadowStyle: {
+                        position: 'absolute',
+                        height: '100%',
+                        width: '100%',
+                        backgroundColor: '#8aa3b2',
+                        border: 'solid 1px #728997',
+                    },
+                    onDragActionChange: (isDragging, key) => {
+                        if (isDragging) {
+                            this.selectedObject.setObjectFold(isDragging, true);
+                        } else {
+                            this.selectedObject.resetObjectFold();
+                        }
+                        Entry.playground.setBackpackPointEvent(isDragging);
+                        this.dragObjectKey = key;
+                        this.isObjectDragging = isDragging;
+                    },
+                    onChangeList: (newIndex, oldIndex) => {
+                        if (newIndex !== oldIndex) {
+                            Entry.do('objectReorder', newIndex, oldIndex);
+                        }
+                    },
                 },
                 container: this.listView_,
-            }).on('change', ([newIndex, oldIndex]) => {
-                this.moveElement(newIndex, oldIndex);
             });
         }
     }
@@ -197,10 +225,14 @@ Entry.Container = class Container {
     _getSortableObjectList(objects) {
         const targetObjects = objects || this.currentObjects_ || [];
 
-        return targetObjects.map((value) => ({
-            key: value.id,
-            item: value.view_,
-        }));
+        return targetObjects.map((value) => {
+            const { id, view_, thumbUrl } = value;
+            return {
+                key: id,
+                item: view_,
+                image: thumbUrl,
+            };
+        });
     }
 
     /**
@@ -260,18 +292,6 @@ Entry.Container = class Container {
             const target = this.getCurrentObjects()[0];
             target && this.selectObject(target.id);
         }
-    }
-
-    setDraggableObject(object, isDraggable) {
-        this.isDraggable = isDraggable;
-        object.setDraggable(isDraggable);
-    }
-
-    setDraggableObjects(isDraggable) {
-        this.isDraggable = isDraggable;
-        this.objects_.forEach((object) => {
-            object.setDraggable(isDraggable);
-        });
     }
 
     /**
@@ -365,7 +385,6 @@ Entry.Container = class Container {
             this.updateListView();
             Entry.variableContainer.updateViews();
             Entry.variableContainer.updateList();
-            this.setDraggableObject(object, this.isDraggable);
         }
     }
 
@@ -457,6 +476,7 @@ Entry.Container = class Container {
             Entry.playground.flushPlayground();
         }
 
+        this.updateListView();
         Entry.playground.reloadPlayground();
         GEHelper.resManager.imageRemoved('container::removeObject');
     }
@@ -483,6 +503,7 @@ Entry.Container = class Container {
                     view.addClass(className);
                 } else {
                     view.removeClass(className);
+                    o.setObjectFold(false);
                 }
             }
 
@@ -539,6 +560,7 @@ Entry.Container = class Container {
         if (Entry.type !== 'minimize' && Entry.engine.isState('stop')) {
             Entry.stage.selectObject(object);
         }
+        this.selectedObject = object;
     }
 
     /**
@@ -605,27 +627,14 @@ Entry.Container = class Container {
      * @param {boolean?} isCallFromState
      * @return {Entry.State}
      */
-    moveElement(start, end, isCallFromState) {
+    moveElement(end, start) {
         const objs = this.getCurrentObjects();
         const startIndex = this.getAllObjects().indexOf(objs[start]);
         const endIndex = this.getAllObjects().indexOf(objs[end]);
-
-        if (!isCallFromState && Entry.stateManager) {
-            Entry.stateManager.addCommand(
-                'reorder object',
-                this,
-                this.moveElement,
-                endIndex,
-                startIndex,
-                true
-            );
-        }
-
         this.objects_.splice(endIndex, 0, this.objects_.splice(startIndex, 1)[0]);
         this.setCurrentObjects();
         this.updateListView();
         Entry.requestUpdate = true;
-        return new Entry.State(this, this.moveElement, endIndex, startIndex, true);
     }
 
     /**

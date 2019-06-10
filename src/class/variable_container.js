@@ -598,9 +598,9 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('attr_box')
             .appendTo(localList);
 
-        const { globalV, localV } = _.groupBy(this.variables_, ({ object_ }) =>
-            (object_ ? 'localV' : 'globalV')
-        );
+        const { globalV, localV } = _.groupBy(this.variables_, ({ object_ }) => {
+            return object_ ? 'localV' : 'globalV';
+        });
 
         const gLength = (globalV || []).length;
         const lLength = (localV || []).length;
@@ -680,9 +680,9 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('attr_box')
             .appendTo(localList);
 
-        const { localV, globalV } = _.groupBy(this.lists_, ({ object_ }) =>
-            (object_ ? 'localV' : 'globalV')
-        );
+        const { localV, globalV } = _.groupBy(this.lists_, ({ object_ }) => {
+            return object_ ? 'localV' : 'globalV';
+        });
 
         const gLength = (globalV || []).length;
         const lLength = (localV || []).length;
@@ -797,10 +797,10 @@ Entry.VariableContainer = class VariableContainer {
 
     generateVariable(variable, data, key) {
         const name = variable.name_;
-        variable.generateView(data.length);
         variable.name_ = this.checkAllVariableName(name, key)
             ? Entry.getOrderedName(name, data, 'name_')
             : name;
+        variable.generateView(data.length);
     }
 
     /**
@@ -1070,7 +1070,10 @@ Entry.VariableContainer = class VariableContainer {
         if (ws && ws.overlayModefrom == Entry.Workspace.MODE_VIMBOARD) {
             if (func && func.description) {
                 const funcName = func.description.substring(1, func.description.length - 1);
-                const alertMsg = Entry.TextCodingUtil.isNameIncludeSpace(funcName, 'function');
+                const alertMsg = Entry.TextCodingUtil.validateNameIncludeSpace(
+                    funcName,
+                    'function'
+                );
                 if (alertMsg) {
                     entrylms.alert(alertMsg);
                     Entry.Func.cancelEdit();
@@ -1138,8 +1141,8 @@ Entry.VariableContainer = class VariableContainer {
      * @param {Entry.Variable} variable
      * @return {boolean} return true when success
      */
-    checkAllVariableName(name, variable) {
-        return this[variable].some(({ name_ }) => name_ === name);
+    checkAllVariableName(name, variable, key = 'name_') {
+        return this[variable].some(({ [key]: name_ }) => name_ === name);
     }
 
     _addVariableOrList(type, data) {
@@ -1150,7 +1153,7 @@ Entry.VariableContainer = class VariableContainer {
         const name = panel.view.name.value.trim();
 
         if (Entry.isTextMode) {
-            const alertMsg = Entry.TextCodingUtil.isNameIncludeSpace(name, type);
+            const alertMsg = Entry.TextCodingUtil.validateNameIncludeSpace(name, type);
             if (alertMsg) {
                 entrylms.alert(alertMsg);
                 this.resetVariableAddPanel(type);
@@ -1225,7 +1228,7 @@ Entry.VariableContainer = class VariableContainer {
         }
 
         if (Entry.isTextMode) {
-            const alertMsg = Entry.TextCodingUtil.isNameIncludeSpace(name, 'variable');
+            const alertMsg = Entry.TextCodingUtil.validateNameIncludeSpace(name, 'variable');
             if (alertMsg) {
                 entrylms.alert(alertMsg);
                 variable.listElement.nameField.value = variable.name_;
@@ -1262,7 +1265,7 @@ Entry.VariableContainer = class VariableContainer {
         }
 
         if (Entry.isTextMode) {
-            const alertMsg = Entry.TextCodingUtil.isNameIncludeSpace(name, 'list');
+            const alertMsg = Entry.TextCodingUtil.validateNameIncludeSpace(name, 'list');
             if (alertMsg) {
                 entrylms.alert(alertMsg);
                 list.listElement.nameField.value = list.name_;
