@@ -41,4 +41,8 @@ export default class Expansion {
         });
         return expansionList;
     }
+
+    destroy() {
+        // 우선 interface 만 정의함.
+    }
 }

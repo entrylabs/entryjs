@@ -2264,10 +2264,10 @@ Entry.Playground = class {
     destroy() {
         this.commentToggleButton_ && this.commentToggleButton_.unBindOnClick();
         this.backPackButton_ && this.backPackButton_.unBindOnClick();
-        this.blockBackPackEvent.off();
-        this.blockBackPackAreaEvent.off();
-        this.objectBackPackEvent.off();
-        this.objectBackPackAreaEvent.off();
+        this.blockBackPackEvent && this.blockBackPackEvent.off();
+        this.blockBackPackAreaEvent && this.blockBackPackAreaEvent.off();
+        this.objectBackPackEvent && this.objectBackPackEvent.off();
+        this.objectBackPackAreaEvent && this.objectBackPackAreaEvent.off();
         this.globalEvent && this.globalEvent.destroy();
         this._destroyer.destroy();
     }
