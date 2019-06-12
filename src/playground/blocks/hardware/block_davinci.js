@@ -198,7 +198,7 @@ Entry.Davinci.getBlocks = function() {
             ],
             events: {},
             class: 'DavinciLed',
-            //isNotFor: ['davinci'],
+            isNotFor: ['davinci'],
             def: {
                 params: [],
                 type: 'davinci_led_toggle',
@@ -261,7 +261,7 @@ Entry.Davinci.getBlocks = function() {
             ],
             events: {},
             class: 'DavinciLed',
-            //isNotFor: ['davinci'],
+            isNotFor: ['davinci'],
             def: {
                 params: [],
                 type: 'davinci_get_led',
@@ -317,7 +317,7 @@ Entry.Davinci.getBlocks = function() {
             ],
             events: {},
             class: 'DavinciLed',
-            //isNotFor: ['davinci'],
+            isNotFor: ['davinci'],
             def: {
                 params: [
                     {
@@ -390,7 +390,7 @@ Entry.Davinci.getBlocks = function() {
             ],
             events: {},
             class: 'DavinciLed',
-            //isNotFor: ['davinci'],
+            isNotFor: ['davinci'],
             def: {
                 type: 'davinci_show_image',
             },
@@ -416,7 +416,7 @@ Entry.Davinci.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            template: '아날로그 핀 %1번을 %2으로 설정 %4',
+            template: '아날로그 핀 %1번을 %2으로 설정 %3',
             params: [
                 {
                     type: 'Dropdown',
@@ -440,9 +440,8 @@ Entry.Davinci.getBlocks = function() {
             ],
             events: {},
             class: 'DavinciDirect',
-            //isNotFor: ['davinci'],
+            isNotFor: ['davinci'],
             def: {
-                params: [],
                 type: 'davinci_set_analog',
             },
             paramsKeyMap: {
@@ -471,7 +470,7 @@ Entry.Davinci.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            template: '디지털 핀 %1번을 %2 %4',
+            template: '디지털 핀 %1번을 %2 %3',
             params: [
                 {
                     type: 'Dropdown',
@@ -497,9 +496,8 @@ Entry.Davinci.getBlocks = function() {
             ],
             events: {},
             class: 'DavinciDirect',
-            //isNotFor: ['davinci'],
+            isNotFor: ['davinci'],
             def: {
-                params: [],
                 type: 'davinci_set_digital',
             },
             paramsKeyMap: {
@@ -542,7 +540,7 @@ Entry.Davinci.getBlocks = function() {
             ],
             events: {},
             class: 'DavinciDirect',
-            //isNotFor: ['davinci'],
+            isNotFor: ['davinci'],
             def: {
                 type: 'davinci_get_analog',
             },
@@ -593,7 +591,7 @@ Entry.Davinci.getBlocks = function() {
             ],
             events: {},
             class: 'DavinciDirect',
-            //isNotFor: ['davinci'],
+            isNotFor: ['davinci'],
             def: {
                 type: 'davinci_get_digital',
             },
@@ -644,7 +642,7 @@ Entry.Davinci.getBlocks = function() {
             ],
             events: {},
             class: 'DavinciSensor',
-            //isNotFor: ['davinci'],
+            isNotFor: ['davinci'],
             def: {
                 type: 'davinci_get_button',
             },
@@ -701,7 +699,7 @@ Entry.Davinci.getBlocks = function() {
             ],
             events: {},
             class: 'DavinciSensor',
-            //isNotFor: ['davinci'],
+            isNotFor: ['davinci'],
             def: {
                 type: 'davinci_get_sensor',
             },
@@ -756,7 +754,7 @@ Entry.Davinci.getBlocks = function() {
             ],
             events: {},
             class: 'DavinciSensor',
-            //isNotFor: ['davinci'],
+            isNotFor: ['davinci'],
             def: {
                 type: 'davinci_get_accelerometer',
             },
@@ -815,7 +813,7 @@ Entry.Davinci.getBlocks = function() {
             ],
             events: {},
             class: 'DavinciSensor',
-            //isNotFor: ['davinci'],
+            isNotFor: ['davinci'],
             def: {
                 type: 'davinci_get_gyro',
             },
@@ -874,7 +872,7 @@ Entry.Davinci.getBlocks = function() {
             ],
             events: {},
             class: 'DavinciSensor',
-            //isNotFor: ['davinci'],
+            isNotFor: ['davinci'],
             def: {
                 type: 'davinci_get_magnet',
             },
@@ -988,7 +986,7 @@ Entry.Davinci.getBlocks = function() {
             ],
             events: {},
             class: 'DavinciMusic',
-            //isNotFor: ['davinci'],
+            isNotFor: ['davinci'],
             def: {
                 type: 'davinci_play_note',
             },
@@ -1045,7 +1043,7 @@ Entry.Davinci.getBlocks = function() {
             ],
             events: {},
             class: 'DavinciMusic',
-            //isNotFor: ['davinci'],
+            isNotFor: ['davinci'],
             def: {
                 type: 'davinci_play_melody',
             },
@@ -1087,7 +1085,7 @@ Entry.Davinci.getBlocks = function() {
             ],
             events: {},
             class: 'DavinciMusic',
-            //isNotFor: ['davinci'],
+            isNotFor: ['davinci'],
             def: {
                 params: [
                     {
@@ -1135,7 +1133,7 @@ Entry.Davinci.getBlocks = function() {
             ],
             events: {},
             class: 'DavinciMusic',
-            //isNotFor: ['davinci'],
+            isNotFor: ['davinci'],
             def: {
                 params: [
                     {
