@@ -39,11 +39,9 @@ class BlockMenu {
         this._bannedClass = [];
         this._categories = [];
         this.suffix = 'blockMenu';
-        this._isSelectingMenu = false;
         this._dynamicThreads = [];
         this._setDynamicTimer = null;
         this._renderedCategories = {};
-        this.categoryRendered = false;
         this.readOnly = readOnly === undefined ? true : readOnly;
 
         this._threadsMap = {};
@@ -580,7 +578,6 @@ class BlockMenu {
             this.lastSelector = name;
         }
 
-        this._isSelectingMenu = true;
         switch (name) {
             case VARIABLE:
                 Entry.playground.checkVariables();
@@ -635,8 +632,6 @@ class BlockMenu {
             });
         }
 
-        this._isSelectingMenu = false;
-
         if (this.visible) {
             this._selectedCategoryView = elem;
             if (elem) {
@@ -650,7 +645,6 @@ class BlockMenu {
 
     _generateCategoryCodes(elems) {
         if (!elems) {
-            this.categoryRendered = false;
             this.view.addClass('init');
             elems = Object.keys(this._categoryElems);
         }
@@ -670,7 +664,6 @@ class BlockMenu {
             this._generateCodesTimer = null;
             this.view.removeClass('init');
             this.align();
-            this.categoryRendered = true;
             this.categoryDoneEvent.notify();
         }
     }
