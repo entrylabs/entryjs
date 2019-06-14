@@ -18,7 +18,7 @@ function _buildCategoryCodes(blocks, category) {
         } else {
             return (block.defs || [block.def]).reduce(
                 (threads, d) => [...threads, [Object.assign(d, { category })]],
-                threads
+                threads,
             );
         }
     }, []);
@@ -111,7 +111,7 @@ class BlockMenu {
             'setBlockMenuDynamic',
             function() {
                 this._setDynamicTimer = this._setDynamic.apply(this, arguments);
-            }.bind(this)
+            }.bind(this),
         );
 
         Entry.addEventListener('cancelBlockMenuDynamic', this._cancelDynamic.bind(this));
@@ -145,9 +145,9 @@ class BlockMenu {
             $(
                 `<svg id="${
                     this._svgId
-                }" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>`
+                    }" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>`,
             ),
-            { parent: this.blockMenuWrapper }
+            { parent: this.blockMenuWrapper },
         );
 
         this.svgDom.mouseenter(function() {
@@ -330,7 +330,7 @@ class BlockMenu {
                 if (Entry.toast) {
                     Entry.toast.alert(
                         Lang.Workspace.add_object_alert,
-                        Lang.Workspace.add_object_alert_msg
+                        Lang.Workspace.add_object_alert_msg,
                     );
                 }
                 if (this.selectedBlockView) {
@@ -474,7 +474,7 @@ class BlockMenu {
                 x2: this._svgWidth - splitterHPadding,
                 y2: topPos,
                 stroke: '#AAC5D5',
-            })
+            }),
         );
     }
 
@@ -521,7 +521,7 @@ class BlockMenu {
             const inVisible =
                 threads.reduce(
                     (count, type) => (this.checkBanClass(Entry.block[type]) ? count - 1 : count),
-                    threads.length
+                    threads.length,
                 ) === 0;
             const elem = this._categoryElems[category];
 
@@ -731,7 +731,7 @@ class BlockMenu {
 
         const count = threads.reduce(
             (count, block) => (this.checkBanClass(Entry.block[block]) ? count - 1 : count),
-            threads.length
+            threads.length,
         );
 
         const categoryElem = this._categoryElems[category];
@@ -953,6 +953,11 @@ class BlockMenu {
         this.categoryDoneEvent.notify();
     }
 
+    /**
+     * 카테고리의 목록 뷰를 그린다.
+     * @param data {{category: string, blocks: object[]}[]} EntryStatic.getAllBlocks
+     * @private
+     */
     _generateCategoryView(data) {
         if (!data) {
             return;
@@ -970,8 +975,12 @@ class BlockMenu {
         this.view.prepend(this.categoryWrapper);
 
         const fragment = document.createDocumentFragment();
+
+        /*
+        visible = static_mini 의 실과형 하드웨어에서만 사용됩니다. (EntryStatic 에 책임)
+         */
         data.forEach(({ category, visible }) =>
-            fragment.appendChild(this._generateCategoryElement(category, visible)[0])
+            fragment.appendChild(this._generateCategoryElement(category, visible)[0]),
         );
         this.firstSelector = _.head(data).category;
         this._categoryCol[0].appendChild(fragment);
@@ -1017,7 +1026,7 @@ class BlockMenu {
             'scroll',
             debounce(() => {
                 this.categoryIndicatorVisible.check();
-            }, 100)
+            }, 100),
         );
         setTimeout(() => {
             this.categoryIndicatorVisible.check();
@@ -1091,7 +1100,7 @@ class BlockMenu {
                 }
                 this._createThread(t);
                 delete t[0].x;
-            }
+            },
         );
 
         this.hwCodeOutdated = false;
