@@ -103,6 +103,7 @@
         "require": true,
         "module": true,
         "Symbol": true,
-        "process": true
+        "process": true,
+        "localStorage": true
     }
 }
