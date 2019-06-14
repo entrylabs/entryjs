@@ -4,7 +4,7 @@
  */
 'use strict';
 
-import { Sortable, ColorPicker, Dropdown, Backpack } from '@entrylabs/tool';
+import { Backpack, ColorPicker, Dropdown, Sortable } from '@entrylabs/tool';
 import Toast from '../playground/toast';
 import EntryEvent from '@entrylabs/event';
 import { Destroyer } from '../util/destroyer/Destroyer';
@@ -21,7 +21,6 @@ Entry.Playground = class {
         this._destroyer = this._destroyer || new Destroyer();
         this._destroyer.destroy();
         this.isTextBGMode_ = false;
-        this.enableArduino = false;
 
         /**
          * playground's current view type
