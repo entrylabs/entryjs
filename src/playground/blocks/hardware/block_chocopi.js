@@ -1101,8 +1101,8 @@ Entry.Chocopi.getBlocks = function () {
                 var x2 = script.getNumberValue('x2');
                 var y1 = script.getNumberValue('y1');
                 var y2 = script.getNumberValue('y2');
-                if (x1 === x2) return 0;
-                return (x - x1) * (y2 - y1) / (x2 - x1);
+                if (x1 === x2) return y1;
+                return y1 + (x - x1) * (y2 - y1) / (x2 - x1);
             },
             syntax: { js: [], py: ['Chocopi.mapRange(%1, %2, %3, %4, %5)'] },
         },
