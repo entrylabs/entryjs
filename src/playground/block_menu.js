@@ -8,6 +8,7 @@ import debounce from 'lodash/debounce';
 
 const VARIABLE = 'variable';
 const HW = 'arduino';
+const practicalCourseCategoryList = ['hw_motor', 'hw_melody', 'hw_sensor', 'hw_led', 'hw_robot'];
 const splitterHPadding = 20;
 
 function _buildCategoryCodes(blocks, category) {
@@ -65,9 +66,15 @@ class BlockMenu {
         this.hwCodeOutdated = false;
         this._svgId = `blockMenu${_.now()}`;
         this._clearCategory();
+
+        // disableHardware 인 경우, 하드웨어 카테고리와 실과형 로봇카테고리 전부를 제외한다.
         this._categoryData = _.remove(
             categoryData,
-            ({ category }) => !(disableHardware && category === HW)
+            ({ category }) =>
+                !(
+                    disableHardware &&
+                    (category === HW || practicalCourseCategoryList.indexOf(category) > -1)
+                )
         );
 
         this._generateView(this._categoryData);
