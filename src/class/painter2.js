@@ -152,7 +152,7 @@ Entry.Painter = class Painter {
         }
 
         const { imageType = 'png', filename } = picture || {};
-        const extention = imageType === 'paper' ? 'png' : imageType;
+        const extention = imageType === 'paper' ? 'svg' : imageType;
         return `${Entry.defaultPath}/uploads/${filename.substring(0, 2)}/${filename.substring(
             2,
             4
@@ -160,23 +160,18 @@ Entry.Painter = class Painter {
     }
 
     addPicture(picture, isChangeShape) {
-        const { imageType = 'png', paper } = picture || {};
+        const { imageType = 'png' } = picture || {};
         const imageSrc = this._getImageSrc(picture);
 
         isChangeShape && (this.isImport = true);
 
-        switch (imageType) {
-            case 'png':
-                this.entryPaint.addBitmap(imageSrc);
-                break;
-            case 'svg':
-                axios.get(imageSrc).then(({ data }) => {
-                    this.entryPaint.addSVG(stringToElement(data));
-                });
-                break;
-            case 'paper':
-                this.entryPaint.setPaperJSON(paper);
-                break;
+        if (imageType === 'png') {
+            this.entryPaint.addBitmap(imageSrc);
+        } else {
+            const options = imageType === 'svg' ? { moveCenter: true } : {};
+            axios.get(imageSrc).then(({ data }) => {
+                this.entryPaint.addSVG(data, options);
+            });
         }
     }
 
@@ -185,7 +180,7 @@ Entry.Painter = class Painter {
             return;
         }
         const dataURL = this.entryPaint.getDataURL();
-        this.file.paperJson = this.entryPaint.getPaperJSON();
+        this.file.svg = this.entryPaint.getSVG({ asString: true });
         const file = JSON.parse(JSON.stringify(this.file));
         Entry.dispatchEvent('saveCanvasImage', {
             file,
@@ -267,5 +262,7 @@ Entry.Painter = class Painter {
         }
     }
 
-    clear() {}
+    clear() {
+        this.toggleFullscreen(false);
+    }
 };
