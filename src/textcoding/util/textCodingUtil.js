@@ -553,12 +553,17 @@ class TextCodingUtil {
             const functionBlock = funcSchemaBlock && funcSchemaBlock.params[0];
             const { params } = functionBlock;
             const [functionName, parameterBlock] = params;
-            return this.getFunctionToPythonErrorMessage(
+            const result = this.getFunctionToPythonErrorMessage(
                 functionBlock,
                 functionName,
                 parameterBlock
             );
+
+            if (result) {
+                return result;
+            }
         }
+        return false;
     }
 
     returnErrorResult = (errorMessage) => this._generateErrorObject(errorMessage, 'error');
