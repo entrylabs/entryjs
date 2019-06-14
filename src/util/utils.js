@@ -2252,33 +2252,6 @@ Entry.Utils.isNewVersion = function(old_version = '', new_version = '') {
     }
 };
 
-Entry.Utils.getBlockCategory = (function() {
-    const map = {};
-    let allBlocks;
-    return function(blockType) {
-        if (!blockType) {
-            return;
-        }
-
-        if (map[blockType]) {
-            return map[blockType];
-        }
-
-        if (!allBlocks) {
-            allBlocks = EntryStatic.getAllBlocks();
-        }
-
-        for (let i = 0; i < allBlocks.length; i++) {
-            const data = allBlocks[i];
-            const category = data.category;
-            if (data.blocks.indexOf(blockType) > -1) {
-                map[blockType] = category;
-                return category;
-            }
-        }
-    };
-})();
-
 Entry.Utils.getUniqObjectsBlocks = function(objects) {
     const _typePicker = _.partial(_.result, _, 'type');
 
@@ -2306,53 +2279,6 @@ Entry.Utils.getObjectsBlocks = function(objects) {
         })
         .flatten()
         .value();
-};
-
-Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
-    if (!blockArr) {
-        return;
-    }
-    const that = this;
-
-    const data = EntryStatic.getAllBlocks();
-    const categoryIndexMap = {};
-    for (let i = 0; i < data.length; i++) {
-        const datum = data[i];
-        datum.blocks = [];
-        categoryIndexMap[datum.category] = i;
-    }
-
-    blockArr.forEach((b) => {
-        const category = that.getBlockCategory(b);
-        const index = categoryIndexMap[category];
-        if (index === undefined) {
-            return;
-        }
-        data[index].blocks.push(b);
-    });
-
-    const allBlocksInfo = EntryStatic.getAllBlocks();
-    for (let i = 0; i < allBlocksInfo.length; i++) {
-        const info = allBlocksInfo[i];
-        const category = info.category;
-        const blocks = info.blocks;
-        if (category === 'func') {
-            allBlocksInfo.splice(i, 1);
-            continue;
-        }
-        const selectedBlocks = data[i].blocks;
-        const sorted = [];
-
-        blocks.forEach((b) => {
-            if (selectedBlocks.indexOf(b) > -1) {
-                sorted.push(b);
-            }
-        });
-
-        data[i].blocks = sorted;
-    }
-
-    return data;
 };
 
 Entry.Utils.blur = function() {
