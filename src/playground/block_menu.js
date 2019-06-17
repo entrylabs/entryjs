@@ -8,6 +8,7 @@ import debounce from 'lodash/debounce';
 
 const VARIABLE = 'variable';
 const HW = 'arduino';
+const practicalCourseCategoryList = ['hw_motor', 'hw_melody', 'hw_sensor', 'hw_led', 'hw_robot'];
 const splitterHPadding = 20;
 
 function _buildCategoryCodes(blocks, category) {
@@ -27,6 +28,8 @@ function _buildCategoryCodes(blocks, category) {
 class BlockMenu {
     constructor(dom, align, categoryData, scroll, readOnly) {
         Entry.Model(this, false);
+        const { options = {} } = Entry;
+        const { disableHardware = false } = options;
 
         this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
         this._dAlign = this.align;
@@ -39,11 +42,9 @@ class BlockMenu {
         this._bannedClass = [];
         this._categories = [];
         this.suffix = 'blockMenu';
-        this._isSelectingMenu = false;
         this._dynamicThreads = [];
         this._setDynamicTimer = null;
         this._renderedCategories = {};
-        this.categoryRendered = false;
         this.readOnly = readOnly === undefined ? true : readOnly;
 
         this._threadsMap = {};
@@ -65,8 +66,18 @@ class BlockMenu {
         this.hwCodeOutdated = false;
         this._svgId = `blockMenu${_.now()}`;
         this._clearCategory();
-        this._categoryData = categoryData;
-        this._generateView(categoryData);
+
+        // disableHardware 인 경우, 하드웨어 카테고리와 실과형 로봇카테고리 전부를 제외한다.
+        this._categoryData = _.remove(
+            categoryData,
+            ({ category }) =>
+                !(
+                    disableHardware &&
+                    (category === HW || practicalCourseCategoryList.indexOf(category) > -1)
+                )
+        );
+
+        this._generateView(this._categoryData);
 
         this._splitters = [];
         this.setWidth();
@@ -93,7 +104,7 @@ class BlockMenu {
         this.observe(this, '_handleDragBlock', ['dragBlock']);
 
         this.changeCode(new Entry.Code([]));
-        categoryData && this._generateCategoryCodes();
+        this._categoryData && this._generateCategoryCodes();
 
         if (this._scroll) {
             this._scroller = new Entry.BlockMenuScroller(this);
@@ -580,7 +591,6 @@ class BlockMenu {
             this.lastSelector = name;
         }
 
-        this._isSelectingMenu = true;
         switch (name) {
             case VARIABLE:
                 Entry.playground.checkVariables();
@@ -635,8 +645,6 @@ class BlockMenu {
             });
         }
 
-        this._isSelectingMenu = false;
-
         if (this.visible) {
             this._selectedCategoryView = elem;
             if (elem) {
@@ -650,7 +658,6 @@ class BlockMenu {
 
     _generateCategoryCodes(elems) {
         if (!elems) {
-            this.categoryRendered = false;
             this.view.addClass('init');
             elems = Object.keys(this._categoryElems);
         }
@@ -670,7 +677,6 @@ class BlockMenu {
             this._generateCodesTimer = null;
             this.view.removeClass('init');
             this.align();
-            this.categoryRendered = true;
             this.categoryDoneEvent.notify();
         }
     }
@@ -953,6 +959,11 @@ class BlockMenu {
         this.categoryDoneEvent.notify();
     }
 
+    /**
+     * 카테고리의 목록 뷰를 그린다.
+     * @param data {{category: string, blocks: object[]}[]} EntryStatic.getAllBlocks
+     * @private
+     */
     _generateCategoryView(data) {
         if (!data) {
             return;
@@ -970,6 +981,10 @@ class BlockMenu {
         this.view.prepend(this.categoryWrapper);
 
         const fragment = document.createDocumentFragment();
+
+        /*
+        visible = static_mini 의 실과형 하드웨어에서만 사용됩니다. (EntryStatic 에 책임)
+         */
         data.forEach(({ category, visible }) =>
             fragment.appendChild(this._generateCategoryElement(category, visible)[0])
         );

@@ -2,6 +2,11 @@
     "plugins": ["prettier"],
     "parser": "babel-eslint",
     "extends": ["plugin:prettier/recommended"],
+    "env": {
+        "es6": true,
+        "browser": true,
+        "jquery": true
+    },
     "parserOptions": {
         "ecmaVersion": 2017,
         "sourceType": "module",
@@ -72,7 +77,6 @@
         "keyword-spacing": "warn"
     },
     "globals": {
-        "document": true,
         "$": true,
         "_": true,
         "arcon": true,
@@ -103,6 +107,6 @@
         "require": true,
         "module": true,
         "Symbol": true,
-        "process": true
+        "process": true,
     }
 }

@@ -14,8 +14,6 @@ Entry.HW = function() {
 
     this.connectTrial = 0;
     this.isFirstConnect = true;
-    this.hwPopupCreate();
-    this.initSocket();
     this.connected = false;
     this.portData = {};
     this.sendQueue = {};
@@ -25,6 +23,11 @@ Entry.HW = function() {
     this.hwModule = null;
     this.socketType = null;
 
+    const { options = {} } = Entry;
+    const { disableHardware = false } = options;
+
+    this.hwPopupCreate();
+    !disableHardware && this.initSocket();
     Entry.addEventListener('stop', this.setZero);
 
     this.hwInfo = Entry.HARDWARE_LIST;
