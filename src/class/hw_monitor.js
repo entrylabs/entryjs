@@ -11,7 +11,7 @@ Entry.HWMonitor = class HWMonitor {
 
         this._hwModule = hwModule;
         const that = this;
-        Entry.addEventListener('windowResized', function() {
+        Entry.addEventListener('windowResized', () => {
             const mode = that._hwModule.monitorTemplate.mode;
             if (mode === 'both') {
                 that.resize();
@@ -24,7 +24,7 @@ Entry.HWMonitor = class HWMonitor {
                 that.resize();
             }
         });
-        Entry.addEventListener('hwModeChange', function() {
+        Entry.addEventListener('hwModeChange', () => {
             that.changeMode();
         });
         this.changeOffset = 0; // 0 : off 1: on
@@ -82,13 +82,11 @@ Entry.HWMonitor = class HWMonitor {
             portsTemp.push(portView);
         }
 
-        portsTemp.sort(function(a, b) {
-            return a.box.x - b.box.x;
-        });
+        portsTemp.sort((a, b) => a.box.x - b.box.x);
 
         const portMap = this._portMap;
 
-        portsTemp.map(function(v) {
+        portsTemp.map((v) => {
             const degree = (Math.atan2(-v.box.y, v.box.x) / Math.PI + 2) % 2;
             let map;
 
@@ -201,7 +199,7 @@ Entry.HWMonitor = class HWMonitor {
         }
         const portMapList = this._portMapList;
 
-        portsTempList.map(function(v) {
+        portsTempList.map((v) => {
             portMapList.n.push(v);
         });
 
@@ -320,7 +318,7 @@ Entry.HWMonitor = class HWMonitor {
             if (port.type === 'input') {
                 let value = portData[key];
                 if (objectKeys.length > 0) {
-                    $.each(objectKeys, function(idx, valueKey) {
+                    $.each(objectKeys, (idx, valueKey) => {
                         if ($.isPlainObject(value)) {
                             value = value[valueKey] || 0;
                         } else {
@@ -336,7 +334,7 @@ Entry.HWMonitor = class HWMonitor {
             } else {
                 let value = sendQueue[key];
                 if (objectKeys.length > 0) {
-                    $.each(objectKeys, function(idx, valueKey) {
+                    $.each(objectKeys, (idx, valueKey) => {
                         if ($.isPlainObject(value)) {
                             value = value[valueKey] || 0;
                         } else {
@@ -369,7 +367,7 @@ Entry.HWMonitor = class HWMonitor {
             return;
         }
 
-        this.scale = this._template.height * (bRect.height / this._template.height) / 1000;
+        this.scale = (this._template.height * (bRect.height / this._template.height)) / 1000;
 
         if (this.hwView && this.scale) {
             this.hwView.attr({
@@ -394,7 +392,7 @@ Entry.HWMonitor = class HWMonitor {
         this._alignNS(ports, this._template.height * (this.scale / 3) + 5, 27);
 
         ports = this._portMap.n.concat();
-        this._alignNS(ports, -this._template.height * this.scale / 3 - 32, -27);
+        this._alignNS(ports, (-this._template.height * this.scale) / 3 - 32, -27);
     }
 
     alignList() {
@@ -413,7 +411,7 @@ Entry.HWMonitor = class HWMonitor {
         }
 
         ports = this._portMapList.n.concat();
-        this._alignNSList(ports, -this._template.width * this.scale / 2 - 32, -27);
+        this._alignNSList(ports, (-this._template.width * this.scale) / 2 - 32, -27);
     }
 
     _alignNS(ports, yCursor, gap) {

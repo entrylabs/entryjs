@@ -1,19 +1,21 @@
 'use strict';
 
-Entry.Recorder = function() {
-    this._recordData = [];
-    Entry.commander.addReporter(this);
-};
+Entry.Recorder = class Recorder {
+    constructor() {
+        this._recordData = [];
+        Entry.commander.addReporter(this);
+    }
 
-(function(p) {
-    p.add = function(data) {
-        var commandType = data[0];
-        if (!commandType) return;
-        var command = Entry.Command[commandType];
+    add = function(data) {
+        const commandType = data[0];
+        if (!commandType) {
+            return;
+        }
+        const command = Entry.Command[commandType];
         switch (command.recordable) {
             case Entry.STATIC.RECORDABLE.SUPPORT:
                 this._recordData.push(data);
-                Entry.toast.warning('Record', Lang.Command[commandType + '']);
+                Entry.toast.warning('Record', Lang.Command[`${commandType}`]);
                 return;
             case Entry.STATIC.RECORDABLE.SKIP:
                 return;
@@ -23,7 +25,7 @@ Entry.Recorder = function() {
         }
     };
 
-    p.getData = function() {
+    getData = function() {
         return this._recordData;
     };
-})(Entry.Recorder.prototype);
+};

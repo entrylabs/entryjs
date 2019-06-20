@@ -40,9 +40,7 @@ const obj = {
 
         expected.shift();
 
-        const ret = _.find(expected, ([key]) => {
-            return key === name;
-        });
+        const ret = _.find(expected, ([key]) => key === name);
         if (ret) {
             return ret[1];
         }

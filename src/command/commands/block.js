@@ -903,8 +903,8 @@
     c[COMMAND_TYPES.recoverBlockBelow] = {
         do(thread, targetPointer) {
             const board = this.editor.board;
-            var thread = board.code.createThread(thread);
-            board.insert(thread.getFirstBlock(), targetPointer);
+            const newThread = board.code.createThread(thread);
+            board.insert(newThread.getFirstBlock(), targetPointer);
         },
         state(thread, targetPointer) {
             return [thread[0]];

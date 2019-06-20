@@ -49,11 +49,7 @@ Entry.SVG.createElement = function(tag, options) {
     el.removeAttr = Entry.SVG.removeAttr;
 
     if (tag === 'text') {
-        el.setAttributeNS(
-            'http://www.w3.org/XML/1998/namespace',
-            'xml:space',
-            'preserve'
-        );
+        el.setAttributeNS('http://www.w3.org/XML/1998/namespace', 'xml:space', 'preserve');
     }
 
     if (this instanceof SVGElement) {
@@ -113,7 +109,7 @@ Entry.SVG.attr = function(options, property) {
 Entry.SVG.addClass = function(...classes) {
     const className = classes.reduce((acc, className) => {
         if (!this.hasClass(className)) {
-            acc += ` ${  className}`;
+            acc += ` ${className}`;
         }
         return acc;
     }, this.getAttribute('class'));
@@ -124,10 +120,7 @@ Entry.SVG.addClass = function(...classes) {
 Entry.SVG.removeClass = function(...classes) {
     const className = classes.reduce((acc, className) => {
         if (this.hasClass(className)) {
-            acc = acc.replace(
-                new RegExp(`(\\s|^)${  className  }(\\s|$)`),
-                ' '
-            );
+            acc = acc.replace(new RegExp(`(\\s|^)${className}(\\s|$)`), ' ');
         }
         return acc;
     }, this.getAttribute('class'));
@@ -142,7 +135,7 @@ Entry.SVG.hasClass = function(className) {
     if (!attr) {
         return false;
     } else {
-        return attr.match(new RegExp(`(\\s|^)${  className  }(\\s|$)`));
+        return attr.match(new RegExp(`(\\s|^)${className}(\\s|$)`));
     }
 };
 

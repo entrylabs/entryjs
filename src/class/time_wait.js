@@ -13,7 +13,7 @@ Entry.TimeWaitManager = {
         if (!Entry.timerInstances || Entry.timerInstances.length === 0) {
             return;
         }
-        Entry.timerInstances = Entry.timerInstances.filter(function(instance) {
+        Entry.timerInstances = Entry.timerInstances.filter((instance) => {
             if (instance.id === id) {
                 return false;
             } else {

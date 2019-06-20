@@ -10,7 +10,7 @@ import { Sortable } from '@entrylabs/tool';
  * This have view for scenes.
  * @constructor
  */
-Entry.Scene = class {
+Entry.Scene = class Scene {
     constructor() {
         this.scenes_ = [];
         this.selectedScene = null;

@@ -31,6 +31,6 @@ Entry.Pdf = class Pdf {
         const iframe = document.getElementById('pdfViewIframe');
         const w = container.offsetWidth;
         iframe.width = `${w}px`;
-        iframe.height = `${w * 9 / 16}px`;
+        iframe.height = `${(w * 9) / 16}px`;
     }
 };

@@ -39,7 +39,7 @@ Entry.Toast = class Toast {
         this.body_.appendChild(toast);
         const f = function() {
             toast.style.opacity = 1;
-            const timer = setInterval(function() {
+            const timer = setInterval(() => {
                 if (toast.style.opacity < 0.05) {
                     clearInterval(timer);
                     toast.style.display = 'none';
@@ -72,7 +72,7 @@ Entry.Toast = class Toast {
         this.body_.appendChild(toast);
         const f = function() {
             toast.style.opacity = 1;
-            const timer = setInterval(function() {
+            const timer = setInterval(() => {
                 if (toast.style.opacity < 0.05) {
                     clearInterval(timer);
                     toast.style.display = 'none';
@@ -109,7 +109,7 @@ Entry.Toast = class Toast {
         this.body_.appendChild(toast);
         const f = function() {
             toast.style.opacity = 1;
-            timer = setInterval(function() {
+            timer = setInterval(() => {
                 if (toast.style.opacity < 0.05) {
                     clearInterval(timer);
                     toast.style.display = 'none';

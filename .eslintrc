@@ -43,7 +43,7 @@
         "prefer-spread": "warn",
         "arrow-spacing": "warn",
         "arrow-body-style": ["warn", "as-needed"],
-        "no-confusing-arrow": ["warn", { "allowParens": true }],
+        "no-confusing-arrow": "off",
         "no-useless-constructor": "warn",
         "no-dupe-class-members": "warn",
         "no-duplicate-imports": "warn",
@@ -107,6 +107,6 @@
         "require": true,
         "module": true,
         "Symbol": true,
-        "process": true,
+        "process": true
     }
 }

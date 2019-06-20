@@ -1,29 +1,32 @@
 'use strict';
 
-Entry.ActivityReporter = function() {
-    this._activities = [];
-};
+Entry.ActivityReporter = class ActivityReporter {
+    constructor() {
+        this._activities = [];
+    }
 
-(function(p) {
-    p.add = function(data) {
-        if (!data || data.length === 0) return;
-        var activity;
-        if (data instanceof Entry.Activity) activity = data;
-        else {
-            var type = data.shift();
+    add(data) {
+        if (!data || data.length === 0) {
+            return;
+        }
+        let activity;
+        if (data instanceof Entry.Activity) {
+            activity = data;
+        } else {
+            const type = data.shift();
             activity = new Entry.Activity(type, data);
         }
 
         this._activities.push(activity);
-    };
+    }
 
-    p.clear = function() {
+    clear() {
         this._activities = [];
-    };
+    }
 
-    p.get = function() {
+    get() {
         return this._activities;
-    };
+    }
 
-    p.report = function() {};
-})(Entry.ActivityReporter.prototype);
+    report() {}
+};

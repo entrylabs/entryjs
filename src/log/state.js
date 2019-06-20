@@ -21,8 +21,9 @@ Entry.State = function(type, caller, func, param) {
      * parameters for function.
      * @type {Array}
      */
-    if (arguments.length > 3)
+    if (arguments.length > 3) {
         this.params = Array.prototype.slice.call(arguments).slice(3);
+    }
     /**
      * message for interface.
      * @type {?String}
@@ -42,6 +43,4 @@ Entry.State = function(type, caller, func, param) {
 /**
  * generate message for interface.
  */
-Entry.State.prototype.generateMessage = function() {
-
-};
+Entry.State.prototype.generateMessage = function() {};

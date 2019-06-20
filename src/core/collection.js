@@ -3,26 +3,26 @@
 /*
  * Entry Collection object constructor.
  */
+const ap = Array.prototype;
+Entry.Collection = class Collection {
+    constructor(data) {
+        this.length = 0;
 
-Entry.Collection = function(data) {
-    this.length = 0;
+        /*
+         * object for hashing data with id
+         * @private
+         */
+        this._hashMap = {};
 
-    /*
-     * object for hashing data with id
-     * @private
-     */
-    this._hashMap = {};
+        /*
+         * observers
+         */
+        this._observers = [];
+        this.set(data);
+    }
 
-    /*
-     * observers
-     */
-    this._observers = [];
-    this.set(data);
-};
-
-(function(p, ap) {
     /* setters */
-    p.set = function(data) {
+    set(data) {
         while (this.length) {
             ap.pop.call(this);
         }
@@ -39,14 +39,14 @@ Entry.Collection = function(data) {
                 ap.push.call(this, datum);
             }
         }
-    };
+    }
 
-    p.push = function(elem) {
+    push(elem) {
         this._hashMap[elem.id] = elem;
         ap.push.call(this, elem);
-    };
+    }
 
-    p.unshift = function() {
+    unshift() {
         const args = Array.prototype.slice.call(arguments, 0);
         const hashMap = this._hashMap;
         for (let i = args.length - 1; i >= 0; i--) {
@@ -54,39 +54,39 @@ Entry.Collection = function(data) {
             ap.unshift.call(this, datum);
             hashMap[datum.id] = datum;
         }
-    };
+    }
 
-    p.insert = function(datum, index) {
+    insert(datum, index) {
         ap.splice.call(this, index, 0, datum);
         this._hashMap[datum.id] = datum;
-    };
+    }
 
-    p.has = function(id) {
+    has(id) {
         return !!this._hashMap[id];
-    };
+    }
 
-    p.get = function(id) {
+    get(id) {
         return this._hashMap[id];
-    };
+    }
 
-    p.at = function(index) {
+    at(index) {
         return this[index];
-    };
+    }
 
-    p.getAll = function() {
+    getAll() {
         const len = this.length;
         const ret = [];
         for (let i = 0; i < len; i++) {
             ret.push(this[i]);
         }
         return ret;
-    };
+    }
 
-    p.indexOf = function(obj) {
+    indexOf(obj) {
         return ap.indexOf.call(this, obj);
-    };
+    }
 
-    p.find = function(cond) {
+    find(cond) {
         const ret = [];
         let flag;
 
@@ -104,38 +104,38 @@ Entry.Collection = function(data) {
             }
         }
         return ret;
-    };
+    }
 
-    p.pop = function() {
+    pop() {
         const datum = ap.pop.call(this);
         delete this._hashMap[datum.id];
         return datum;
-    };
+    }
 
-    p.shift = function() {
+    shift() {
         const datum = ap.shift.call(this);
         delete this._hashMap[datum.id];
         return datum;
-    };
+    }
 
-    p.slice = function(index, amount) {
+    slice(index, amount) {
         const data = ap.slice.call(this, index, amount);
         const hashMap = this._hashMap;
         for (const i in data) {
             delete hashMap[data[i].id];
         }
         return data;
-    };
+    }
 
-    p.remove = function(datum) {
+    remove(datum) {
         const index = this.indexOf(datum);
         if (index > -1) {
             delete this._hashMap[datum.id];
             this.splice(index, 1);
         }
-    };
+    }
 
-    p.splice = function(index, amount) {
+    splice(index, amount) {
         const args = ap.slice.call(arguments, 2);
         const hashMap = this._hashMap;
         amount = amount === undefined ? this.length - index : amount;
@@ -153,51 +153,51 @@ Entry.Collection = function(data) {
         }
 
         return splicedData;
-    };
+    }
 
-    p.clear = function() {
+    clear() {
         while (this.length) {
             ap.pop.call(this);
         }
         this._hashMap = {};
-    };
+    }
 
-    p.map = function(fn, param) {
+    map(fn, param) {
         const array = [];
         for (let i = 0, len = this.length; i < len; i++) {
             array.push(fn(this[i], param));
         }
         return array;
-    };
+    }
 
-    p.moveFromTo = function(from, to) {
+    moveFromTo(from, to) {
         const max = this.length - 1;
         if (from < 0 || to < 0 || from > max || to > max) {
             return;
         }
         ap.splice.call(this, to, 0, ap.splice.call(this, from, 1)[0]);
-    };
+    }
 
-    p.sort = function() {};
+    sort() {}
 
     /* import & export */
-    p.fromJSON = function() {};
+    fromJSON() {}
 
-    p.toJSON = function() {
+    toJSON() {
         const json = [];
         for (let i = 0, len = this.length; i < len; i++) {
             json.push(this[i].toJSON());
         }
         return json;
-    };
+    }
 
     /* observe methods */
-    p.observe = function() {};
+    observe() {}
 
-    p.unobserve = function() {};
+    unobserve() {}
 
-    p.notify = function() {};
+    notify() {}
 
     /* end function */
-    p.destroy = function() {};
-})(Entry.Collection.prototype, Array.prototype);
+    destroy() {}
+};

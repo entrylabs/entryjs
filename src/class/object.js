@@ -135,7 +135,9 @@ Entry.EntryObject = class EntryObject {
      */
     initEntity(model) {
         const json = {};
-        json.rotation = json.x = json.y = 0;
+        json.rotation = 0;
+        json.x = 0;
+        json.y = 0;
         json.direction = 90;
 
         if (this.objectType == 'sprite') {
@@ -152,13 +154,15 @@ Entry.EntryObject = class EntryObject {
                 scale = 200 / (dimension.width + dimension.height);
             }
 
-            json.scaleX = json.scaleY = scale;
+            json.scaleX = scale;
+            json.scaleY = scale;
             json.width = dimension.width;
             json.height = dimension.height;
         } else if (this.objectType == 'textBox') {
             json.regX = 25;
             json.regY = 12;
-            json.scaleX = json.scaleY = 1.5;
+            json.scaleX = 1.5;
+            json.scaleY = 1.5;
             json.width = 50;
             json.height = 24;
             json.text = model.text;
@@ -192,7 +196,8 @@ Entry.EntryObject = class EntryObject {
                 json.bgColor = options.bgColor || options.background;
                 json.lineBreak = options.lineBreak;
                 json.textAlign = textAlign;
-                json.scaleX = json.scaleY = scaleX;
+                json.scaleX = scaleX;
+                json.scaleY = scaleX;
                 if (options.lineBreak) {
                     json.width = width || 256;
                     json.height = height || json.width * 0.5625;
