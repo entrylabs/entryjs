@@ -15,9 +15,6 @@ Entry.HW = class HW {
 
         this.connectTrial = 0;
         this.isFirstConnect = true;
-        this.requireVerion = 'v1.6.1';
-        this.hwPopupCreate();
-        this.initSocket();
         this.connected = false;
         this.portData = {};
         this.sendQueue = {};
@@ -27,31 +24,38 @@ Entry.HW = class HW {
         this.hwModule = null;
         this.socketType = null;
 
+        const { options = {} } = Entry;
+        const { disableHardware = false } = options;
+
+        this.hwPopupCreate();
+        !disableHardware && this.initSocket();
         Entry.addEventListener('stop', this.setZero);
 
         this.hwInfo = Entry.HARDWARE_LIST;
     }
 
-    createRandomRoomId() {
-        return 'xxxxxxxxyx'.replace(/[xy]/g, function(c) {
+    static TRIAL_LIMIT = 2;
+
+    createRandomRoomId = function() {
+        return 'xxxxxxxxyx'.replace(/[xy]/g, (c) => {
             const r = (Math.random() * 16) | 0;
-            const v = c === 'x' ? r : (r & 0x3) | 0x8;
+            const v = c == 'x' ? r : (r & 0x3) | 0x8;
             return v.toString(16);
         });
-    }
+    };
 
-    connectWebSocket(url, option) {
+    connectWebSocket = function(url, option) {
         const hw = this;
         const socket = io(url, option);
         socket.io.reconnectionAttempts(Entry.HW.TRIAL_LIMIT);
         socket.io.reconnectionDelayMax(1000);
         socket.io.timeout(1000);
-        socket.on('connect', function() {
+        socket.on('connect', () => {
             hw.socketType = 'WebSocket';
             hw.initHardware(socket);
         });
 
-        socket.on('mode', function(mode) {
+        socket.on('mode', (mode) => {
             if (socket.mode === 0 && mode === 1) {
                 hw.disconnectHardware();
             }
@@ -59,7 +63,7 @@ Entry.HW = class HW {
             socket.mode = mode;
         });
 
-        socket.on('message', function({ data, version }) {
+        socket.on('message', ({ data, version }) => {
             if (data) {
                 let portData = {};
                 if (typeof data === 'string') {
@@ -82,15 +86,17 @@ Entry.HW = class HW {
             }
         });
 
-        socket.on('disconnect', function() {
+        socket.on('disconnect', () => {
             hw.initSocket();
         });
 
         return socket;
-    }
+    };
 
-    initSocket() {
+    initSocket = function() {
         try {
+            const hw = this;
+            const protocol = '';
             this.connected = false;
 
             if (this.tlsSocketIo1) {
@@ -110,17 +116,13 @@ Entry.HW = class HW {
                 try {
                     this.tlsSocketIo1 = this.connectWebSocket(
                         'https://hardware.playentry.org:23518',
-                        {
-                            query: { client: true, roomId: this.sessionRoomId },
-                        }
+                        { query: { client: true, roomId: this.sessionRoomId } }
                     );
                 } catch (e) {}
                 try {
                     this.tlsSocketIo2 = this.connectWebSocket(
                         'https://hardware.play-entry.org:23518',
-                        {
-                            query: { client: true, roomId: this.sessionRoomId },
-                        }
+                        { query: { client: true, roomId: this.sessionRoomId } }
                     );
                 } catch (e) {}
             } else {
@@ -132,26 +134,22 @@ Entry.HW = class HW {
                 try {
                     this.tlsSocketIo1 = this.connectWebSocket(
                         'https://hardware.playentry.org:23518',
-                        {
-                            query: { client: true, roomId: this.sessionRoomId },
-                        }
+                        { query: { client: true, roomId: this.sessionRoomId } }
                     );
                 } catch (e) {}
                 try {
                     this.tlsSocketIo2 = this.connectWebSocket(
                         'https://hardware.play-entry.org:23518',
-                        {
-                            query: { client: true, roomId: this.sessionRoomId },
-                        }
+                        { query: { client: true, roomId: this.sessionRoomId } }
                     );
                 } catch (e) {}
             }
 
             Entry.dispatchEvent('hwChanged');
         } catch (e) {}
-    }
+    };
 
-    checkOldClient() {
+    checkOldClient = function() {
         try {
             const hw = this;
             const websocket = new WebSocket('wss://hardware.play-entry.org:23518');
@@ -160,28 +158,28 @@ Entry.HW = class HW {
                 websocket.close();
             };
         } catch (e) {}
-    }
+    };
 
-    retryConnect() {
+    retryConnect = function() {
         this.isOpenHardware = false;
         Entry.HW.TRIAL_LIMIT = 5;
         this.initSocket();
-    }
+    };
 
-    openHardwareProgram() {
+    openHardwareProgram = function() {
         const hw = this;
         this.isOpenHardware = true;
         Entry.HW.TRIAL_LIMIT = 5;
         this.executeHardware();
 
         if (!this.socket || !this.socket.connected) {
-            setTimeout(function() {
+            setTimeout(() => {
                 hw.initSocket();
             }, 1000);
         }
-    }
+    };
 
-    initHardware(socket) {
+    initHardware = function(socket) {
         this.socket = socket;
         this.connectTrial = 0;
         this.connected = true;
@@ -189,16 +187,16 @@ Entry.HW = class HW {
         if (Entry.playground && Entry.playground.object) {
             Entry.playground.setMenu(Entry.playground.object.objectType);
         }
-    }
+    };
 
-    disconnectHardware() {
+    disconnectHardware = function() {
         Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
         this.selectedDevice = undefined;
         this.hwModule = undefined;
         Entry.dispatchEvent('hwChanged');
-    }
+    };
 
-    disconnectedSocket() {
+    disconnectedSocket = function() {
         this.tlsSocketIo1 && this.tlsSocketIo1.close();
         this.tlsSocketIo2 && this.tlsSocketIo2.close();
         this.socketIo && this.socketIo.close();
@@ -215,21 +213,21 @@ Entry.HW = class HW {
             '하드웨어 프로그램과의 연결이 종료되었습니다.',
             false
         );
-    }
+    };
 
-    setDigitalPortValue(port, value) {
+    setDigitalPortValue = function(port, value) {
         this.sendQueue[port] = value;
         this.removePortReadable(port);
-    }
+    };
 
-    getAnalogPortValue(port) {
+    getAnalogPortValue = function(port) {
         if (!this.connected) {
             return 0;
         }
         return this.portData[`a${port}`];
-    }
+    };
 
-    getDigitalPortValue(port) {
+    getDigitalPortValue = function(port) {
         if (!this.connected) {
             return 0;
         }
@@ -239,9 +237,9 @@ Entry.HW = class HW {
         } else {
             return 0;
         }
-    }
+    };
 
-    setPortReadable(port) {
+    setPortReadable = function(port) {
         if (!this.sendQueue.readablePorts) {
             this.sendQueue.readablePorts = [];
         }
@@ -257,8 +255,8 @@ Entry.HW = class HW {
         if (!isPass) {
             this.sendQueue.readablePorts.push(port);
         }
-    }
-    removePortReadable(port) {
+    };
+    removePortReadable = function(port) {
         if (!this.sendQueue.readablePorts && !Array.isArray(this.sendQueue.readablePorts)) {
             return;
         }
@@ -280,9 +278,9 @@ Entry.HW = class HW {
                     )
                 );
         }
-    }
+    };
 
-    update() {
+    update = function() {
         if (!this.socket) {
             return;
         }
@@ -298,44 +296,49 @@ Entry.HW = class HW {
                 type: 'utf8',
             });
         }
-    }
+    };
 
-    updatePortData(data) {
+    updatePortData = function(data) {
         this.portData = data;
-        if (this.hwMonitor && Entry.propertyPanel && Entry.propertyPanel.selected === 'hw') {
+        if (this.hwMonitor && Entry.propertyPanel && Entry.propertyPanel.selected == 'hw') {
             this.hwMonitor.update();
         }
         if (this.hwModule && this.hwModule.afterReceive) {
             this.hwModule.afterReceive(this.portData);
         }
-    }
+    };
 
-    closeConnection() {
+    closeConnection = function() {
         if (this.socket) {
             this.socket.close();
         }
-    }
+    };
 
-    downloadConnector() {
+    downloadConnector = function() {
         Entry.dispatchEvent('hwDownload', 'hardware');
-    }
+    };
 
-    downloadGuide() {
+    downloadGuide = function() {
         Entry.dispatchEvent('hwDownload', 'manual');
-    }
+        // var url = "http://download.play-entry.org/data/hardware_manual.zip";
+        // window.open(url, 'download');
+    };
 
-    downloadSource() {
+    downloadSource = function() {
         Entry.dispatchEvent('hwDownload', 'ino');
-    }
+        // var url = "http://play-entry.com/down/board.ino";
+        // var win = window.open(url, '_blank');
+        // win.focus();
+    };
 
-    setZero() {
+    setZero = function() {
         if (!Entry.hw.hwModule) {
             return;
         }
         Entry.hw.hwModule.setZero();
-    }
+    };
 
-    checkDevice(data, version) {
+    checkDevice = function(data, version) {
         if (data.company === undefined) {
             return;
         }
@@ -349,10 +352,6 @@ Entry.HW = class HW {
                 this.hwModule.dataHandler(data);
             }
             return;
-        }
-
-        if (Entry.Utils.isNewVersion(version, this.requireVerion)) {
-            this.popupHelper.show('newVersion', true);
         }
 
         this.selectedDevice = key;
@@ -373,13 +372,13 @@ Entry.HW = class HW {
             }
             Entry.propertyPanel.addMode('hw', this.hwMonitor);
             const mt = this.hwModule.monitorTemplate;
-            if (mt.mode === 'both') {
+            if (mt.mode == 'both') {
                 mt.mode = 'list';
                 this.hwMonitor.generateListView();
                 mt.mode = 'general';
                 this.hwMonitor.generateView();
                 mt.mode = 'both';
-            } else if (mt.mode === 'list') {
+            } else if (mt.mode == 'list') {
                 this.hwMonitor.generateListView();
             } else {
                 this.hwMonitor.generateView();
@@ -388,9 +387,9 @@ Entry.HW = class HW {
             descMsg = Lang.Msgs.hw_connection_success_desc2;
         }
         Entry.toast.success(Lang.Msgs.hw_connection_success, descMsg);
-    }
+    };
 
-    banHW() {
+    banHW = function() {
         for (const i in this.hwInfo) {
             const hwModule = this.hwInfo[i];
             if (!hwModule) {
@@ -398,11 +397,11 @@ Entry.HW = class HW {
             }
             Entry.playground.mainWorkspace.blockMenu.banClass(hwModule.name, true);
         }
-    }
+    };
 
-    executeHardware() {
+    executeHardware = function() {
         const hw = this;
-        const executeIeCustomLauncher = {
+        var executeIeCustomLauncher = {
             _bNotInstalled: false,
             init(sUrl, fpCallback) {
                 const width = 220;
@@ -412,7 +411,7 @@ Entry.HW = class HW {
                 const settings = `width=${width}, height=${height},  top=${top}, left=${left}`;
                 this._w = window.open('/views/hwLoading.html', 'entry_hw_launcher', settings);
                 let fnInterval = null;
-                fnInterval = setTimeout(function() {
+                fnInterval = setTimeout(() => {
                     executeIeCustomLauncher.runViewer(sUrl, fpCallback);
                     clearInterval(fnInterval);
                 }, 1000);
@@ -424,37 +423,31 @@ Entry.HW = class HW {
                 let nCounter = 0;
                 const bNotInstalled = false;
                 let nInterval = null;
-                nInterval = setInterval(
-                    function() {
-                        try {
-                            this._w.location.href;
-                        } catch (e) {
-                            this._bNotInstalled = true;
-                        }
+                nInterval = setInterval(() => {
+                    try {
+                        this._w.location.href;
+                    } catch (e) {
+                        this._bNotInstalled = true;
+                    }
 
-                        if (bNotInstalled || nCounter > 10) {
-                            clearInterval(nInterval);
-                            let nCloseCounter = 0;
-                            let nCloseInterval = null;
-                            nCloseInterval = setInterval(
-                                function() {
-                                    nCloseCounter++;
-                                    if (this._w.closed || nCloseCounter > 2) {
-                                        clearInterval(nCloseInterval);
-                                    } else {
-                                        this._w.close();
-                                    }
-                                    this._bNotInstalled = false;
-                                    nCounter = 0;
-                                }.bind(this),
-                                5000
-                            );
-                            fpCallback(!this._bNotInstalled);
-                        }
-                        nCounter++;
-                    }.bind(this),
-                    100
-                );
+                    if (bNotInstalled || nCounter > 10) {
+                        clearInterval(nInterval);
+                        let nCloseCounter = 0;
+                        let nCloseInterval = null;
+                        nCloseInterval = setInterval(() => {
+                            nCloseCounter++;
+                            if (this._w.closed || nCloseCounter > 2) {
+                                clearInterval(nCloseInterval);
+                            } else {
+                                this._w.close();
+                            }
+                            this._bNotInstalled = false;
+                            nCounter = 0;
+                        }, 5000);
+                        fpCallback(!this._bNotInstalled);
+                    }
+                    nCounter++;
+                }, 100);
             },
             set() {
                 this._bNotInstalled = true;
@@ -478,9 +471,9 @@ Entry.HW = class HW {
                 if (ieVersion < 9) {
                     alert(Lang.msgs.not_support_browser);
                 } else {
-                    executeIeCustomLauncher.init(entryHardwareUrl, function(bInstalled) {
+                    executeIeCustomLauncher.init(entryHardwareUrl, (bInstalled) => {
                         if (bInstalled == false) {
-                            hw.popupHelper.show('hwDownload', true);
+                            hw.openHardwareDownloadPopup();
                         }
                     });
                 }
@@ -499,9 +492,9 @@ Entry.HW = class HW {
         function executeIe(customUrl) {
             navigator.msLaunchUri(
                 customUrl,
-                function() {},
-                function() {
-                    hw.popupHelper.show('hwDownload', true);
+                () => {},
+                () => {
+                    hw.openHardwareDownloadPopup();
                 }
             );
         }
@@ -512,7 +505,7 @@ Entry.HW = class HW {
             iFrame.style = 'display:none';
             document.getElementsByTagName('body')[0].appendChild(iFrame);
             let fnTimeout = null;
-            fnTimeout = setTimeout(function() {
+            fnTimeout = setTimeout(() => {
                 let isInstalled = false;
                 try {
                     iFrame.contentWindow.location.href = customUrl;
@@ -524,7 +517,7 @@ Entry.HW = class HW {
                 }
 
                 if (!isInstalled) {
-                    hw.popupHelper.show('hwDownload', true);
+                    hw.openHardwareDownloadPopup();
                 }
 
                 document.getElementsByTagName('body')[0].removeChild(iFrame);
@@ -535,24 +528,32 @@ Entry.HW = class HW {
         function executeChrome(customUrl) {
             let isInstalled = false;
             window.focus();
-            $(window).one('blur', function() {
+            $(window).one('blur', () => {
                 isInstalled = true;
             });
             Entry.dispatchEvent('workspaceUnbindUnload', true);
             location.assign(encodeURI(customUrl));
-            setTimeout(function() {
+            setTimeout(() => {
                 Entry.dispatchEvent('workspaceBindUnload', true);
             }, 100);
-            setTimeout(function() {
+            setTimeout(() => {
                 if (isInstalled == false) {
-                    hw.popupHelper.show('hwDownload', true);
+                    hw.openHardwareDownloadPopup();
                 }
                 window.onblur = null;
             }, 3000);
         }
-    }
+    };
 
-    hwPopupCreate() {
+    openHardwareDownloadPopup = function() {
+        if (Entry.events_.openHardWareDownloadModal) {
+            Entry.dispatchEvent('openHardWareDownloadModal');
+        } else {
+            Entry.hw.popupHelper.show('hwDownload', true);
+        }
+    };
+
+    hwPopupCreate = function() {
         const hw = this;
         if (!this.popupHelper) {
             if (window.popupHelper) {
@@ -604,7 +605,7 @@ Entry.HW = class HW {
                 cancel.text(Lang.Buttons.cancel);
                 ok.html(Lang.Msgs.new_version_download);
 
-                content.bindOnClick('.popupDefaultBtn', function() {
+                content.bindOnClick('.popupDefaultBtn', function(e) {
                     const $this = $(this);
                     if ($this.hasClass('popupOkBtn')) {
                         hw.downloadConnector();
@@ -659,7 +660,7 @@ Entry.HW = class HW {
                 cancel.text(Lang.Buttons.cancel);
                 ok.html(Lang.Msgs.hw_download_btn);
 
-                content.bindOnClick('.popupDefaultBtn', function() {
+                content.bindOnClick('.popupDefaultBtn', function(e) {
                     const $this = $(this);
                     if ($this.hasClass('popupOkBtn')) {
                         hw.downloadConnector();
@@ -671,6 +672,5 @@ Entry.HW = class HW {
                 popup.append(content);
             },
         });
-    }
+    };
 };
-Entry.HW.TRIAL_LIMIT = 2;

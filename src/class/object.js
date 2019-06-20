@@ -4,13 +4,14 @@
 'use strict';
 
 import DomUtils from '../../src/util/domUtils';
+import { GEHelper } from '../graphicEngine/GEHelper';
 
 /**
  * Class for entry object.
  * @param {?object model} model for object
  * @constructor
  */
-Entry.EntryObject = class {
+Entry.EntryObject = class EntryObject {
     constructor(model) {
         if (model) {
             this.id = model.id;
@@ -27,7 +28,7 @@ Entry.EntryObject = class {
                 this.editObjectValues(false);
             });
 
-            this.sounds.forEach(function(s) {
+            this.sounds.forEach((s) => {
                 if (!s.id) {
                     s.id = Entry.generateHash();
                 }
@@ -58,64 +59,22 @@ Entry.EntryObject = class {
 
             Entry.stage.loadObject(this);
 
-            const entityId = this.entity.id;
-            const cachePicture = Entry.container.cachePicture.bind(Entry.container);
             const pictures = this.pictures;
 
             for (const i in pictures) {
-                ((picture) => {
-                    picture.objectId = this.id;
-                    if (!picture.id) {
-                        picture.id = Entry.generateHash();
-                    }
-
-                    const image = new Image();
-                    Entry.Loader.addQueue();
-
-                    image.onload = function() {
-                        delete this.triedCnt;
-                        cachePicture(picture.id + entityId, this);
-                        Entry.Loader.removeQueue();
-                        this.onload = null;
-                    };
-
-                    image.onerror = function() {
-                        if (!this.triedCnt) {
-                            if (Entry.type !== 'invisible') {
-                                console.log('err=', picture.name, 'load failed');
-                            }
-                            this.triedCnt = 1;
-                            this.src = getImageSrc(picture);
-                        } else if (this.triedCnt < 3) {
-                            this.triedCnt++;
-                            this.src = `${Entry.mediaFilePath}_1x1.png`;
-                        } else {
-                            //prevent infinite call
-                            delete this.triedCnt;
-                            Entry.Loader.removeQueue();
-                            this.onerror = null;
-                        }
-                    };
-
-                    image.src = getImageSrc(picture);
-                })(this.pictures[i]);
+                const picture = pictures[i];
+                picture.objectId = this.id;
+                if (!picture.id) {
+                    picture.id = Entry.generateHash();
+                }
+                GEHelper.resManager.reqResource(null, this.scene.id, picture);
             }
             Entry.requestUpdate = true;
         }
 
         this._isContextMenuEnabled = true;
 
-        function getImageSrc(picture) {
-            if (picture.fileurl) {
-                return picture.fileurl;
-            }
-
-            const fileName = picture.filename;
-            return `${Entry.defaultPath}/uploads/${fileName.substring(0, 2)}/${fileName.substring(
-                2,
-                4
-            )}/image/${fileName}.png`;
-        }
+        this.isFolded = false;
     }
 
     /**
@@ -175,36 +134,31 @@ Entry.EntryObject = class {
      * @return {entity model}
      */
     initEntity(model) {
-        const json = {
-            x: 0,
-            y: 0,
-        };
-        json.rotation = 0;
+        const json = {};
+        json.rotation = json.x = json.y = 0;
         json.direction = 90;
 
-        if (this.objectType === 'sprite') {
+        if (this.objectType == 'sprite') {
             const dimension = model.sprite.pictures[0].dimension;
             json.regX = dimension.width / 2;
             json.regY = dimension.height / 2;
             let scale;
             const mainCategory = model.sprite.category.main;
-            if (mainCategory === 'background' || mainCategory === 'new') {
+            if (mainCategory == 'background' || mainCategory == 'new') {
                 scale = Math.max(270 / dimension.height, 480 / dimension.width);
-            } else if (mainCategory === 'new') {
+            } else if (mainCategory == 'new') {
                 scale = 1;
             } else {
                 scale = 200 / (dimension.width + dimension.height);
             }
 
-            json.scaleX = scale;
-            json.scaleY = scale;
+            json.scaleX = json.scaleY = scale;
             json.width = dimension.width;
             json.height = dimension.height;
-        } else if (this.objectType === 'textBox') {
+        } else if (this.objectType == 'textBox') {
             json.regX = 25;
             json.regY = 12;
-            json.scaleX = 1.5;
-            json.scaleY = 1.5;
+            json.scaleX = json.scaleY = 1.5;
             json.width = 50;
             json.height = 24;
             json.text = model.text;
@@ -238,8 +192,7 @@ Entry.EntryObject = class {
                 json.bgColor = options.bgColor || options.background;
                 json.lineBreak = options.lineBreak;
                 json.textAlign = textAlign;
-                json.scaleX = scaleX;
-                json.scaleY = scaleX;
+                json.scaleX = json.scaleY = scaleX;
                 if (options.lineBreak) {
                     json.width = width || 256;
                     json.height = height || json.width * 0.5625;
@@ -265,23 +218,21 @@ Entry.EntryObject = class {
         const thumb = this.thumbnailView_;
         const picture = this.entity.picture;
         const objectType = this.objectType;
-
+        this.thumbUrl = '';
         if (objectType === 'sprite') {
             if (picture.fileurl) {
-                thumb.style.backgroundImage = `url("${picture.fileurl}")`;
+                this.thumbUrl = picture.fileurl;
             } else {
                 const fileName = picture.filename;
-                thumb.style.backgroundImage = `url("${
-                    Entry.defaultPath
-                }/uploads/${fileName.substring(0, 2)}/${fileName.substring(
-                    2,
-                    4
-                )}/thumb/${fileName}.png")`;
+                this.thumbUrl = `${Entry.defaultPath}/uploads/${fileName.substring(
+                    0,
+                    2
+                )}/${fileName.substring(2, 4)}/thumb/${fileName}.png`;
             }
         } else if (objectType === 'textBox') {
-            const textIconPath = `${Entry.mediaFilePath}/text_icon.png`;
-            thumb.style.backgroundImage = `url(${textIconPath})`;
+            this.thumbUrl = `${Entry.mediaFilePath}text_icon.png`;
         }
+        thumb.style.backgroundImage = `url(${encodeURI(this.thumbUrl)})`;
     }
 
     /**
@@ -372,9 +323,7 @@ Entry.EntryObject = class {
         if (picture === this.selectedPicture) {
             playground.selectPicture(pictures[0]);
         }
-
-        Entry.container.unCachePictures(this.entity, picture);
-
+        GEHelper.resManager.imageRemoved('EntityObject::removePicture');
         playground.injectPicture(this);
         playground.reloadPlayground();
         return true;
@@ -484,9 +433,7 @@ Entry.EntryObject = class {
      * @param {string} soundId
      */
     removeSound(soundId) {
-        const index = this.sounds.findIndex((sound) => {
-            return sound.id === soundId;
-        });
+        const index = this.sounds.findIndex((sound) => sound.id === soundId);
         this.sounds.splice(index, 1);
         Entry.playground.reloadPlayground();
         Entry.playground.injectSound();
@@ -565,7 +512,7 @@ Entry.EntryObject = class {
      * @param {?Entry.EntityObject} entity
      * @param {?xml block} script
      */
-    addCloneEntity(object, entity) {
+    addCloneEntity(object, entity, script) {
         if (this.clonedEntities.length > Entry.maxCloneLimit) {
             return;
         }
@@ -682,9 +629,7 @@ Entry.EntryObject = class {
 
     addCloneVariables({ id }, entity, variables, lists) {
         const _whereFunc = _.partial(_.filter, _, { object_: id });
-        const _cloneFunc = (v) => {
-            return v.clone();
-        };
+        const _cloneFunc = (v) => v.clone();
         const { variables_, lists_ } = Entry.variableContainer;
 
         entity.variables = (variables || _whereFunc(variables_)).map(_cloneFunc);
@@ -713,11 +658,11 @@ Entry.EntryObject = class {
         ];
 
         if (isLocked) {
-            inputs.forEach(function(input) {
+            inputs.forEach((input) => {
                 input.setAttribute('disabled', 'disabled');
             });
         } else {
-            inputs.forEach(function(input) {
+            inputs.forEach((input) => {
                 input.removeAttribute('disabled');
             });
         }
@@ -738,7 +683,7 @@ Entry.EntryObject = class {
         if (activate && !this.isEditing) {
             this.isEditing = true;
         } else {
-            inputs.forEach(function(input) {
+            inputs.forEach((input) => {
                 input.blur(true);
             });
 
@@ -770,9 +715,11 @@ Entry.EntryObject = class {
         }
         e.stopPropagation();
 
+        const { options = {} } = Entry;
+        const { backpackDisable } = options;
         const object = this;
         const container = Entry.container;
-        const options = [
+        const contextMenus = [
             {
                 text: Lang.Workspace.context_duplicate,
                 enable: !Entry.engine.isState('run'),
@@ -809,16 +756,34 @@ Entry.EntryObject = class {
                     }
                 },
             },
-            {
-                text: Lang.Blocks.export_object,
-                callback() {
-                    Entry.dispatchEvent('exportObject', object);
-                },
-            },
         ];
 
+        if (!backpackDisable) {
+            contextMenus.push({
+                text: Lang.Blocks.add_my_storage,
+                enable: !Entry.engine.isState('run') && !!window.user,
+                callback: () => {
+                    this.addStorage();
+                },
+            });
+        }
+
+        contextMenus.push({
+            text: Lang.Blocks.export_object,
+            callback() {
+                Entry.dispatchEvent('exportObject', object);
+            },
+        });
+
         const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
-        Entry.ContextMenu.show(options, 'workspace-contextmenu', { x, y });
+        Entry.ContextMenu.show(contextMenus, 'workspace-contextmenu', { x, y });
+    }
+
+    addStorage() {
+        Entry.dispatchEvent('addStorage', {
+            type: 'object',
+            data: this,
+        });
     }
 
     enableContextMenu() {
@@ -886,6 +851,9 @@ Entry.EntryObject = class {
         const objectId = this.id;
 
         this.view_ = this.createObjectView(objectId, exceptionsForMouseDown); // container
+        if (!Entry.objectEditable) {
+            this.view_.addClass('entryDisabled');
+        }
         this.view_.appendChild(this.createObjectInfoView()); // visible, lock
 
         const thumbnailView = this.createThumbnailView(objectId); // thumbnail
@@ -894,11 +862,9 @@ Entry.EntryObject = class {
 
         this.view_.appendChild(this.createWrapperView()); // name space
 
-        if (Entry.objectEditable && Entry.objectDeletable) {
-            const deleteView = this.createDeleteView(exceptionsForMouseDown, that); // delete
-            this.deleteView_ = deleteView;
-            this.view_.appendChild(deleteView);
-        }
+        const deleteView = this.createDeleteView(exceptionsForMouseDown, that); // delete
+        this.deleteView_ = deleteView;
+        this.view_.appendChild(deleteView);
 
         const rotationWrapperView = this.createRotationWrapperView();
         this.view_.appendChild(rotationWrapperView);
@@ -1132,23 +1098,47 @@ Entry.EntryObject = class {
         return rotationWrapperView;
     }
 
+    setObjectFold(isFold, isPass) {
+        const $view = $(this.view_);
+        if (isFold) {
+            $view.addClass('fold');
+        } else {
+            $view.removeClass('fold');
+        }
+        if (!isPass) {
+            this.isFolded = isFold;
+        }
+    }
+
+    resetObjectFold() {
+        this.setObjectFold(this.isFolded);
+    }
+
     createInformationView() {
         const informationView = Entry.createElement('div').addClass(
             'entryObjectInformationWorkspace'
         );
+        informationView.bindOnClick(() => {
+            const $view = $(this.view_);
+            if ($view.hasClass('selectedObject')) {
+                this.setObjectFold(!this.isFolded);
+            }
+        });
         return informationView;
     }
 
     createDeleteView(exceptionsForMouseDown) {
         const deleteView = Entry.createElement('div').addClass('entryObjectDeleteWorkspace');
         exceptionsForMouseDown.push(deleteView);
-        deleteView.bindOnClick((e) => {
-            e.stopPropagation();
-            if (Entry.engine.isState('run')) {
-                return;
-            }
-            Entry.do('removeObject', this.id);
-        });
+        if (Entry.objectEditable && Entry.objectDeletable) {
+            deleteView.bindOnClick((e) => {
+                e.stopPropagation();
+                if (Entry.engine.isState('run')) {
+                    return;
+                }
+                Entry.do('removeObject', this.id);
+            });
+        }
         return deleteView;
     }
 
@@ -1195,7 +1185,7 @@ Entry.EntryObject = class {
     createThumbnailView(objectId) {
         const thumbnail = Entry.createElement('div').addClass('entryObjectThumbnailWorkspace');
 
-        DomUtils.addEventListenerMultiple(thumbnail, 'mousedown touchstart', () => {
+        DomUtils.addEventListenerMultiple(thumbnail, 'mousedown touchstart', (e) => {
             Entry.do('containerSelectObject', objectId);
         });
 
@@ -1208,47 +1198,46 @@ Entry.EntryObject = class {
 
     createObjectInfoView() {
         const objectInfoView = Entry.createElement('ul').addClass('objectInfoView');
-        if (!Entry.objectEditable) {
-            objectInfoView.addClass('entryHide');
-        }
-
         const objectInfoVisible = Entry.createElement('li').addClass('objectInfo_visible');
         if (!this.entity.getVisible()) {
             objectInfoVisible.addClass('objectInfo_unvisible');
         }
-
-        objectInfoVisible.bindOnClick(() => {
-            if (Entry.engine.isState('run')) {
-                return;
-            }
-
-            const entity = this.entity;
-            const visible = entity.setVisible(!entity.getVisible());
-            if (visible) {
-                objectInfoVisible.removeClass('objectInfo_unvisible');
-            } else {
-                objectInfoVisible.addClass('objectInfo_unvisible');
-            }
-        });
 
         const objectInfoLock = Entry.createElement('li').addClass('objectInfo_unlock');
         if (this.getLock()) {
             objectInfoLock.addClass('objectInfo_lock');
         }
 
-        objectInfoLock.bindOnClick(() => {
-            if (Entry.engine.isState('run')) {
-                return;
-            }
+        if (Entry.objectEditable) {
+            objectInfoVisible.bindOnClick(() => {
+                if (Entry.engine.isState('run')) {
+                    return;
+                }
 
-            if (this.setLock(!this.getLock())) {
-                objectInfoLock.addClass('objectInfo_lock');
-            } else {
-                objectInfoLock.removeClass('objectInfo_lock');
-            }
+                const entity = this.entity;
+                const visible = entity.setVisible(!entity.getVisible());
+                if (visible) {
+                    objectInfoVisible.removeClass('objectInfo_unvisible');
+                } else {
+                    objectInfoVisible.addClass('objectInfo_unvisible');
+                }
+            });
 
-            this.updateInputViews(this.getLock());
-        });
+            objectInfoLock.bindOnClick(() => {
+                if (Entry.engine.isState('run')) {
+                    return;
+                }
+
+                if (this.setLock(!this.getLock())) {
+                    objectInfoLock.addClass('objectInfo_lock');
+                } else {
+                    objectInfoLock.removeClass('objectInfo_lock');
+                }
+
+                this.updateInputViews(this.getLock());
+            });
+        }
+
         objectInfoView.appendChild(objectInfoVisible);
         objectInfoView.appendChild(objectInfoLock);
         return objectInfoView;
@@ -1258,6 +1247,11 @@ Entry.EntryObject = class {
         const objectView = Entry.createElement('li', objectId).addClass(
             'entryContainerListElementWorkspace'
         );
+
+        $(objectView).on('dragstart', (e) => {
+            // e.originalEvent.dataTransfer.setDragImage(canvas, 25, 25);
+            e.originalEvent.dataTransfer.setData('text', objectId);
+        });
         const fragment = document.createDocumentFragment();
         fragment.appendChild(objectView);
         // generate context menu
@@ -1278,17 +1272,7 @@ Entry.EntryObject = class {
             }
         });
 
-        objectView.addEventListener('mousedown', (e) => {
-            if (Entry.Utils.isRightButton(e)) {
-                e.stopPropagation();
-                this._rightClick(e);
-            }
-        });
-
-        objectView.addEventListener('touchstart', (e) => {
-            e.eventFromEntryObject = true;
-            Entry.documentMousedown.notify(e);
-
+        const longPressEvent = (e) => {
             const doc = $(document);
             const touchEvent = Entry.Utils.convertMouseEvent(e);
             const mouseDownCoordinate = { x: touchEvent.clientX, y: touchEvent.clientY };
@@ -1322,6 +1306,24 @@ Entry.EntryObject = class {
                     longPressTimer = null;
                 }
             });
+        };
+
+        objectView.addEventListener('mousedown', (e) => {
+            if (Entry.Utils.isRightButton(e)) {
+                e.stopPropagation();
+                this._rightClick(e);
+            }
+
+            if (Entry.isMobile()) {
+                e.stopPropagation();
+                longPressEvent(e);
+            }
+        });
+
+        objectView.addEventListener('touchstart', (e) => {
+            e.eventFromEntryObject = true;
+            Entry.documentMousedown.notify(e);
+            longPressEvent(e);
         });
 
         return objectView;
@@ -1342,8 +1344,6 @@ Entry.EntryObject = class {
     }
 
     _whenRotateEditable(func, obj) {
-        return Entry.Utils.when(function() {
-            return !(Entry.engine.isState('run') || obj.getLock());
-        }, func);
+        return Entry.Utils.when(() => !(Entry.engine.isState('run') || obj.getLock()), func);
     }
 };

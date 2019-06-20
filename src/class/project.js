@@ -1,5 +1,72 @@
 'use strict';
 
+import { get, pick, isMatch } from 'lodash';
+
+function scriptCheck(script) {
+    if (script.length !== 1 || script[0].length !== 2) {
+        return false;
+    }
+
+    const whenRun = get(script, '0.0.type');
+    const repeat = get(script, '0.1.type');
+    const statements = get(script, '0.1.statements');
+    const move = get(script, '0.1.statements.0.0.type');
+
+    if (
+        whenRun !== 'when_run_button_click' ||
+        repeat !== 'repeat_basic' ||
+        statements.length !== 1 ||
+        statements[0].length !== 1 ||
+        move !== 'move_direction'
+    ) {
+        return false;
+    }
+
+    return true;
+}
+
+Entry.isDefaultProject = function(project) {
+    try {
+        if (Entry.stateManager.undoStack_.length) {
+            return false;
+        }
+
+        const script = JSON.parse(get(project, 'objects.0.script'));
+        const { scenes, variables, objects } = project;
+        if (
+            scenes.length !== 1 ||
+            variables.length !== 2 ||
+            objects.length !== 1 ||
+            !scriptCheck(script)
+        ) {
+            return false;
+        }
+        const pickData = pick(project, [
+            'scenes.0.id',
+            'variables.0.id',
+            'variables.0.value',
+            'variables.0.variableType',
+            'variables.0.x',
+            'variables.0.y',
+            'variables.1.id',
+            'variables.1.value',
+            'variables.1.variableType',
+            'variables.1.x',
+            'variables.1.y',
+            'objects.0.id',
+            'objects.0.scene',
+            'objects.0.sprite.sounds.0.id',
+            'objects.0.sprite.pictures.0.id',
+            'objects.0.sprite.pictures.1.id',
+            'expansionBlocks',
+            'speed',
+        ]);
+        return isMatch(Entry.getStartProject(), pickData);
+    } catch (e) {
+        return false;
+    }
+};
+
 Entry.getStartProject = function(mediaFilePath) {
     return {
         category: Lang.Menus.other,
@@ -16,7 +83,7 @@ Entry.getStartProject = function(mediaFilePath) {
                 visible: false,
                 value: '0',
                 variableType: 'timer',
-                x: 150,
+                x: 134,
                 y: -70,
                 array: [],
                 object: null,

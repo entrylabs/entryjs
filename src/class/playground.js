@@ -4,8 +4,10 @@
  */
 'use strict';
 
-import EntryTool from 'entry-tool';
+import { Backpack, ColorPicker, Dropdown, Sortable } from '@entrylabs/tool';
 import Toast from '../playground/toast';
+import EntryEvent from '@entrylabs/event';
+import { Destroyer } from '../util/destroyer/Destroyer';
 
 const Entry = require('../entry');
 
@@ -16,8 +18,9 @@ const Entry = require('../entry');
  */
 Entry.Playground = class Playground {
     constructor() {
+        this._destroyer = this._destroyer || new Destroyer();
+        this._destroyer.destroy();
         this.isTextBGMode_ = false;
-        this.enableArduino = false;
 
         /**
          * playground's current view type
@@ -32,6 +35,8 @@ Entry.Playground = class Playground {
             this.updateHW();
         });
         Entry.addEventListener('commentVisibleChanged', this.toggleCommentButtonVisible.bind(this));
+
+        Entry.windowResized.attach(this, this.clearClientRectMemo.bind(this));
     }
 
     setMode(mode) {
@@ -59,15 +64,15 @@ Entry.Playground = class Playground {
             const tabButtonView = Entry.createElement('div', 'entryButtonTab')
                 .addClass('entryPlaygroundButtonTabWorkspace')
                 .appendTo(this.view_);
-            this.createButtonTabView(tabButtonView);
             this.tabButtonView_ = tabButtonView;
+            this.createButtonTabView(tabButtonView);
 
             const curtainView = Entry.createElement('div', 'entryCurtain')
                 .addClass('entryPlaygroundCurtainWorkspace entryRemove')
                 .appendTo(this.view_);
             const [mentHead, mentTail = ''] = Lang.Workspace.cannot_edit_click_to_stop.split('.');
             curtainView.innerHTML = `${mentHead}.<br/>${mentTail}`;
-            curtainView.addEventListener('click', function() {
+            curtainView.addEventListener('click', () => {
                 Entry.engine.toggleStop();
             });
             this.curtainView_ = curtainView;
@@ -102,6 +107,12 @@ Entry.Playground = class Playground {
                 .appendTo(this.view_);
             this.generateCodeView(codeView);
             this.codeView_ = codeView;
+
+            const backPackView = Entry.createElement('div', 'entryBackPackView')
+                .addClass('entryPlaygroundBackPackView')
+                .appendTo(this.view_);
+            this.backPackView = backPackView;
+            this.createPackPackView(backPackView);
 
             const resizeHandle = Entry.createElement('div')
                 .addClass('entryPlaygroundResizeWorkspace', 'entryRemove')
@@ -196,16 +207,303 @@ Entry.Playground = class Playground {
     }
 
     createButtonTabView(tabButtonView) {
-        const commentToggleButton = Entry.createElement('div')
-            .addClass('entryPlaygroundCommentButtonWorkspace showComment')
-            .appendTo(tabButtonView);
-        commentToggleButton.setAttribute('alt', Lang.Blocks.show_all_comment);
-        commentToggleButton.setAttribute('title', Lang.Blocks.show_all_comment);
+        const { options = {} } = Entry;
+        const { commentDisable, backpackDisable } = options;
 
-        this.commentToggleButton_ = commentToggleButton;
-        commentToggleButton.bindOnClick(() => {
-            this.toggleCommentButton();
+        if (!commentDisable) {
+            const commentToggleButton = Entry.createElement('div')
+                .addClass('entryPlaygroundCommentButtonWorkspace showComment')
+                .appendTo(tabButtonView);
+            commentToggleButton.setAttribute('alt', Lang.Blocks.show_all_comment);
+            commentToggleButton.setAttribute('title', Lang.Blocks.show_all_comment);
+
+            this.commentToggleButton_ = commentToggleButton;
+            commentToggleButton.bindOnClick(() => {
+                this.toggleCommentButton();
+            });
+        }
+
+        // TODO: 백팩(나의보관함) 숨김처리
+        if (!backpackDisable) {
+            const backPackButton = Entry.createElement('div')
+                .addClass('entryPlaygroundBackPackButtonWorkspace')
+                .appendTo(tabButtonView);
+            backPackButton.setAttribute('alt', Lang.Blocks.show_all_comment);
+            backPackButton.setAttribute('title', Lang.Blocks.show_all_comment);
+
+            this.backPackButton_ = backPackButton;
+            backPackButton.bindOnClick(() => {
+                Entry.dispatchEvent('openBackPack');
+            });
+        }
+    }
+
+    createPackPackView(backPackView) {
+        this.backPack = new Backpack({
+            isShow: false,
+            data: {
+                items: [],
+                onClose: () => {
+                    Entry.dispatchEvent('closeBackPack');
+                },
+                onRemoveItem: (id) => {
+                    Entry.dispatchEvent('removeBackPackItem', id);
+                },
+                onChangeTitle: (id, title) => {
+                    Entry.dispatchEvent('changeBackPackTitle', id, title);
+                },
+                onCustomDragEnter: ({ type, value, onDragEnter }) => {
+                    if (Entry.GlobalSvg.isShow && Entry.GlobalSvg.canAddStorageBlock) {
+                        const { _view = {} } = Entry.GlobalSvg;
+                        onDragEnter({
+                            type: 'block',
+                            value: _view,
+                        });
+                    } else if (Entry.container.isObjectDragging) {
+                        onDragEnter({
+                            type: 'object',
+                            value: Entry.container.dragObjectKey,
+                        });
+                    }
+                },
+                onDropItem: ({ type, value }) => {
+                    if (type === 'object') {
+                        const object = Entry.container.getObject(value);
+                        object.addStorage();
+                    } else if (type === 'block') {
+                        if (value.addStorage) {
+                            value.addStorage();
+                        }
+                    }
+                },
+            },
+            container: this.backPackView,
         });
+        this.blockBackPackArea = Entry.Dom('div')
+            .addClass('blockBackPackDrop')
+            .appendTo(backPackView);
+        this.objectBackPackArea = Entry.Dom('div')
+            .addClass('objectBackPackDrop')
+            .appendTo(backPackView);
+        const icon = Entry.Dom('div', {
+            class: 'blockBackPackIcon',
+        });
+        const desc = Entry.Dom('div', {
+            class: 'blockBackPackDesc',
+            text: Lang.Workspace.playground_block_drop,
+        });
+        const desc2 = Entry.Dom('div', {
+            class: 'objectBackPackDesc',
+            text: Lang.Workspace.container_object_drop,
+        });
+        this.blockBackPackArea.append(icon);
+        this.blockBackPackArea.append(desc);
+        this.objectBackPackArea.append(icon.clone());
+        this.objectBackPackArea.append(desc2);
+
+        const { view: blockView } = this.board || {};
+        if (blockView) {
+            const dom = blockView[0];
+            const eventDom = new EntryEvent(dom);
+            this.blockBackPackEvent = eventDom;
+            const areaDom = new EntryEvent(this.blockBackPackArea[0]);
+            this.blockBackPackAreaEvent = areaDom;
+            areaDom.on('dropitem', (e) => {
+                const data = this.backPack.getData('data');
+                Entry.dispatchEvent('addBackPackToEntry', 'block', data);
+                this.blockBackPackArea.css({
+                    display: 'none',
+                });
+            });
+            eventDom.on('enteritem', () => {
+                const isDragging = this.backPack.getData('isDragging');
+                const type = this.backPack.getData('dragType');
+                if (isDragging && type === 'block') {
+                    const { width, height, top, left } = blockView[0].getBoundingClientRect();
+                    this.blockBackPackArea.css({
+                        width: width - 134,
+                        height,
+                        top,
+                        left,
+                        display: 'flex',
+                    });
+                }
+            });
+            areaDom.on('leaveitem', (e) => {
+                this.blockBackPackArea.css({
+                    display: 'none',
+                });
+            });
+        }
+
+        const { modes = {} } = Entry.propertyPanel || {};
+        const { object = {} } = modes;
+        const { contentDom: objectView } = object;
+        if (objectView) {
+            const dom = objectView[0];
+            const eventDom = new EntryEvent(dom);
+            this.objectBackPackEvent = eventDom;
+            const areaDom = new EntryEvent(this.objectBackPackArea[0]);
+            this.objectBackPackAreaEvent = areaDom;
+
+            areaDom.on('dropitem', (e) => {
+                const data = this.backPack.getData('data');
+                Entry.dispatchEvent('addBackPackToEntry', 'object', data);
+                this.objectBackPackArea.css({
+                    display: 'none',
+                });
+            });
+
+            eventDom.on('enteritem', () => {
+                const isDragging = this.backPack.getData('isDragging');
+                const type = this.backPack.getData('dragType');
+                if (isDragging && type === 'object') {
+                    const { width, height, top, left } = objectView[0].getBoundingClientRect();
+                    this.objectBackPackArea.css({
+                        width,
+                        height,
+                        top,
+                        left,
+                        display: 'flex',
+                    });
+                }
+            });
+
+            areaDom.on('leaveitem', (e) => {
+                this.objectBackPackArea.css({
+                    display: 'none',
+                });
+            });
+        }
+
+        const globalEvent = new EntryEvent(document);
+        globalEvent.data = {};
+        this.globalEvent = globalEvent;
+
+        this.backPack.on('onChangeDragging', (isDragging) => {
+            if (isDragging) {
+                globalEvent.off().on(
+                    'touchmove.itemdrag mousemove.itemdrag',
+                    (e) => {
+                        const isDragging = this.backPack.getData('isDragging');
+                        if (isDragging) {
+                            const point = this.getPosition(e);
+                            const { data } = globalEvent;
+                            const { dom: objectDom } = this.objectBackPackEvent;
+                            const { dom: blockDom } = this.blockBackPackEvent;
+                            const objectRect = this.getBoundingClientRectMemo(objectDom);
+                            const blockRect = this.getBoundingClientRectMemo(blockDom, {
+                                width: -134,
+                                right: -134,
+                            });
+                            if (!data.isObjectMouseEnter && this.isPointInRect(point, objectRect)) {
+                                data.isObjectMouseEnter = true;
+                                this.objectBackPackEvent.trigger('enteritem');
+                            } else if (
+                                data.isObjectMouseEnter &&
+                                !this.isPointInRect(point, objectRect)
+                            ) {
+                                data.isObjectMouseEnter = false;
+                                this.objectBackPackAreaEvent.trigger('leaveitem');
+                            }
+                            if (Entry.getMainWS().mode === Entry.Workspace.MODE_BOARD) {
+                                if (
+                                    !data.isBlockMouseEnter &&
+                                    this.isPointInRect(point, blockRect)
+                                ) {
+                                    data.isBlockMouseEnter = true;
+                                    this.blockBackPackEvent.trigger('enteritem');
+                                } else if (
+                                    data.isBlockMouseEnter &&
+                                    !this.isPointInRect(point, blockRect)
+                                ) {
+                                    data.isBlockMouseEnter = false;
+                                    this.blockBackPackAreaEvent.trigger('leaveitem');
+                                }
+                            }
+                        } else {
+                            this.objectBackPackAreaEvent.trigger('leaveitem');
+                            this.blockBackPackAreaEvent.trigger('leaveitem');
+                        }
+                    },
+                    { passive: false }
+                );
+            } else {
+                globalEvent.off();
+            }
+        });
+
+        this.backPack.data = {
+            draggableOption: {
+                lockAxis: 'y',
+                distance: 30,
+                onDropItem: (e) => {
+                    const { data } = globalEvent;
+                    if (data.isObjectMouseEnter) {
+                        data.isObjectMouseEnter = false;
+                        this.objectBackPackAreaEvent.trigger('dropitem');
+                    } else if (data.isBlockMouseEnter) {
+                        data.isBlockMouseEnter = false;
+                        this.blockBackPackAreaEvent.trigger('dropitem');
+                    }
+                },
+            },
+        };
+    }
+
+    setBackpackPointEvent(canPointEvent) {
+        this.backPack.data = {
+            canPointEvent,
+        };
+    }
+
+    getPosition(event) {
+        const position = {
+            x: 0,
+            y: 0,
+        };
+        if (event.touches && event.touches[0]) {
+            const touch = event.touches[0];
+            position.x = touch.pageX;
+            position.y = touch.pageY;
+        } else {
+            position.x = event.pageX;
+            position.y = event.pageY;
+        }
+        return position;
+    }
+
+    isPointInRect({ x, y }, { top, bottom, left, right }) {
+        return _.inRange(x, left, right) && _.inRange(y, top, bottom);
+    }
+
+    getBoundingClientRectMemo = _.memoize((target, offset = {}) => {
+        const rect = target.getBoundingClientRect();
+        const result = {
+            top: rect.top,
+            bottom: rect.bottom,
+            left: rect.left,
+            right: rect.right,
+        };
+        Object.keys(offset).forEach((key) => {
+            result[key] += offset[key];
+        });
+        return result;
+    });
+
+    clearClientRectMemo() {
+        this.getBoundingClientRectMemo.cache = new _.memoize.Cache();
+    }
+
+    showBackPack(args) {
+        this.backPack.setData({ ...args });
+        this.backPack.show();
+        this.backPackView.removeClass('entryRemove');
+    }
+
+    hideBackPack() {
+        this.backPack.hide();
+        this.backPackView.addClass('entryRemove');
     }
 
     toggleCommentButton() {
@@ -277,8 +575,12 @@ Entry.Playground = class Playground {
         this.board = this.mainWorkspace.board;
         this.toast = new Toast(this.board);
         this.blockMenu.banClass('checker');
-        this.banExpansionBlock();
+        // this.banExpansionBlock();
+        Entry.expansion.banAllExpansionBlock();
         this.vimBoard = this.mainWorkspace.vimBoard;
+
+        this._destroyer.add(this.mainWorkspace);
+        this._destroyer.add(this.toast);
 
         if (Entry.hw) {
             this.updateHW();
@@ -329,8 +631,7 @@ Entry.Playground = class Playground {
             return;
         }
 
-        this.pictureSortableListWidget = new EntryTool({
-            type: 'sortableWidget',
+        this.pictureSortableListWidget = new Sortable({
             data: {
                 height: '100%',
                 sortableTarget: ['entryPlaygroundPictureThumbnail'],
@@ -356,12 +657,10 @@ Entry.Playground = class Playground {
             return [];
         }
 
-        return this.object.pictures.map((value) => {
-            return {
-                key: value.id,
-                item: value.view,
-            };
-        });
+        return this.object.pictures.map((value) => ({
+            key: value.id,
+            item: value.view,
+        }));
     }
 
     /**
@@ -384,10 +683,11 @@ Entry.Playground = class Playground {
         const fontLink = Entry.createElement('a', 'entryTextBoxAttrFontName').addClass(
             'select_link imico_pop_select_arr_down'
         );
+
         fontLink.bindOnClick(() => {
-            const options = EntryStatic.fonts.map((font) => {
-                return [font.name, font];
-            });
+            const options = EntryStatic.fonts
+                .filter((font) => font.visible)
+                .map((font) => [font.name, font]);
             fontLink.addClass('imico_pop_select_arr_up');
             fontLink.removeClass('imico_pop_select_arr_down');
             this.openDropDown(
@@ -503,43 +803,39 @@ Entry.Playground = class Playground {
         through.setAttribute('title', Lang.Workspace.font_cancel);
         styleBox.appendChild(through);
 
-        const color = Entry.createElement('a').addClass('style_link imbtn_pop_font_color');
-        color.bindOnClick(() => {
-            return this.openColourPicker(
+        const color = Entry.createElement('a').addClass('imbtn_pop_font_color');
+        color.appendChild(Entry.createElement('em'));
+        color.bindOnClick(() =>
+            this.openColourPicker(
                 color,
                 this.object.entity.getColour(),
                 false,
                 this.setTextColour.bind(this)
-            );
-        });
+            )
+        );
         color.setAttribute('title', Lang.Workspace.font_color);
         styleBox.appendChild(color);
 
-        const backgroundColor = Entry.createElement('a').addClass(
-            'style_link imbtn_pop_font_backgroundcolor'
-        );
+        const backgroundColor = Entry.createElement('a').addClass('imbtn_pop_font_backgroundcolor');
         backgroundColor.setAttribute('title', Lang.Workspace.font_fill);
-        backgroundColor.bindOnClick(() => {
-            return this.openColourPicker(
+        backgroundColor.appendChild(Entry.createElement('em'));
+        backgroundColor.bindOnClick(() =>
+            this.openColourPicker(
                 backgroundColor,
                 this.object.entity.getBGColour(),
                 true,
                 this.setBackgroundColour.bind(this)
-            );
-        });
+            )
+        );
         styleBox.appendChild(backgroundColor);
 
         const writeTypeBox = Entry.createElement('div').addClass('write_type_box');
         const singleLine = Entry.createElement('a');
         singleLine.innerText = Lang.Buttons.single_line;
-        singleLine.bindOnClick(() => {
-            return Entry.playground.toggleLineBreak(false);
-        });
+        singleLine.bindOnClick(() => Entry.playground.toggleLineBreak(false));
         const multiLine = Entry.createElement('a');
         multiLine.innerText = Lang.Buttons.multi_line;
-        multiLine.bindOnClick(() => {
-            return Entry.playground.toggleLineBreak(true);
-        });
+        multiLine.bindOnClick(() => Entry.playground.toggleLineBreak(true));
         writeTypeBox.appendChild(singleLine);
         writeTypeBox.appendChild(multiLine);
         inputArea.appendChild(writeTypeBox);
@@ -568,7 +864,7 @@ Entry.Playground = class Playground {
         fontSizeSlider.appendChild(fontSizeKnob);
         this.fontSizeKnob = fontSizeKnob;
 
-        $(fontSizeKnob).bind('mousedown.fontKnob touchstart.fontKnob', function() {
+        $(fontSizeKnob).bind('mousedown.fontKnob touchstart.fontKnob', () => {
             const resizeOffset = $(fontSizeSlider).offset().left;
 
             const doc = $(document);
@@ -620,7 +916,7 @@ Entry.Playground = class Playground {
         textEditInput.onkeyup = textChangeApply;
         textEditInput.onchange = textChangeApply;
 
-        textEditInput.addEventListener('focusin', function() {
+        textEditInput.addEventListener('focusin', () => {
             textEditInput.prevText = textEditInput.value;
         });
         textEditInput.onblur = function() {
@@ -639,7 +935,7 @@ Entry.Playground = class Playground {
         textEditArea.onkeyup = textChangeApply;
         textEditArea.onchange = textChangeApply;
 
-        textEditArea.addEventListener('focusin', function() {
+        textEditArea.addEventListener('focusin', () => {
             textEditArea.prevText = textEditArea.value;
         });
         textEditArea.onblur = function() {
@@ -699,13 +995,13 @@ Entry.Playground = class Playground {
      * @param soundView
      */
     generateSoundView(soundView) {
-        if (Entry.type === 'workspace') {
+        if (Entry.type == 'workspace') {
             const soundAdd = Entry.createElement('div', 'entryAddSound');
             soundAdd.addClass('entryPlaygroundAddSound');
             const innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner').addClass(
                 'entryPlaygroundAddSoundInner'
             );
-            innerSoundAdd.bindOnClick(function() {
+            innerSoundAdd.bindOnClick(() => {
                 if (!Entry.container || Entry.container.isSceneObjectsExist()) {
                     Entry.do('playgroundClickAddSound');
                 } else {
@@ -736,8 +1032,7 @@ Entry.Playground = class Playground {
             return;
         }
 
-        this.soundSortableListWidget = new EntryTool({
-            type: 'sortableWidget',
+        this.soundSortableListWidget = new Sortable({
             data: {
                 height: '100%',
                 sortableTarget: ['entryPlaygroundSoundThumbnail'],
@@ -763,12 +1058,10 @@ Entry.Playground = class Playground {
             return [];
         }
 
-        return this.object.sounds.map((value) => {
-            return {
-                key: value.id,
-                item: value.view,
-            };
-        });
+        return this.object.sounds.map((value) => ({
+            key: value.id,
+            item: value.view,
+        }));
     }
 
     /**
@@ -778,8 +1071,8 @@ Entry.Playground = class Playground {
     injectObject(object) {
         /** @type {Entry.Entryobject} */
         if (!object) {
+            this.object = null; //[박봉배-2018.11.12] - 아래 위치에 있으면 죽은 object의 메서드를 호출함. 그래서 위로 올림.
             this.changeViewMode('code');
-            this.object = null;
             return;
         }
         if (object === this.object) {
@@ -826,6 +1119,13 @@ Entry.Playground = class Playground {
         _.result(this.blockMenu, 'clearRendered');
         this.reloadPlayground();
     }
+    /**
+     * Inject object
+     * @param {?Entry.EntryObject} object
+     */
+    injectEmptyObject() {
+        this.object = null;
+    }
 
     /**
      * Inject code
@@ -862,16 +1162,19 @@ Entry.Playground = class Playground {
         }
 
         if (!this.object) {
-            return Entry.dispatchEvent('pictureClear');
+            this.painter.lc && this.painter.lc.pointerDown();
+            delete Entry.stage.selectedObject;
+            Entry.dispatchEvent('pictureSelected');
+        } else {
+            (this.object.pictures || []).forEach((picture, i) => {
+                !picture.view && Entry.playground.generatePictureElement(picture);
+                const element = picture.view;
+                element.orderHolder.innerHTML = i + 1;
+            });
+
+            this.selectPicture(this.object.selectedPicture);
         }
 
-        (this.object.pictures || []).forEach((picture, i) => {
-            !picture.view && Entry.playground.generatePictureElement(picture);
-            const element = picture.view;
-            element.orderHolder.innerHTML = i + 1;
-        });
-
-        this.selectPicture(this.object.selectedPicture);
         this.updatePictureView();
     }
 
@@ -1019,12 +1322,15 @@ Entry.Playground = class Playground {
         this.textEditInput.value = text;
         this.textEditArea.value = text;
 
-        const font = EntryStatic.fonts.find((font) => {
-            return font.family === entity.getFontName();
-        });
+        const font = EntryStatic.fonts
+            .filter((font) => font.visible)
+            .find((font) => font.family === entity.getFontName());
         if (font) {
             $('#entryText #entryTextBoxAttrFontName').text(font.name);
             $('#entryText #entryTextBoxAttrFontName').data('font', font);
+        } else {
+            $('#entryText #entryTextBoxAttrFontName').text('');
+            $('#entryText #entryTextBoxAttrFontName').data('font', EntryStatic.fonts[0]);
         }
 
         $('.style_link.imbtn_pop_font_bold').toggleClass('on', entity.fontBold);
@@ -1064,15 +1370,19 @@ Entry.Playground = class Playground {
      */
     injectSound() {
         const view = this.soundListView_;
-        if (!view || !this.object) {
+        if (!view) {
             return;
         }
 
-        (this.object.sounds || []).forEach((sound, i) => {
-            !sound.view && Entry.playground.generateSoundElement(sound);
-            const element = sound.view;
-            element.orderHolder.innerHTML = i + 1;
-        });
+        if (!this.object) {
+            delete Entry.stage.selectedObject;
+        } else {
+            (this.object.sounds || []).forEach((sound, i) => {
+                !sound.view && Entry.playground.generateSoundElement(sound);
+                const element = sound.view;
+                element.orderHolder.innerHTML = i + 1;
+            });
+        }
 
         this.updateSoundsView();
     }
@@ -1090,20 +1400,9 @@ Entry.Playground = class Playground {
         }
     }
 
-    addExpansionBlock(block, isNew) {
-        const tempBlock = _.clone(block);
-        delete tempBlock.view;
-        if (isNew === true) {
-            delete tempBlock.id;
-        }
-
-        block = Entry.Utils.copy(tempBlock);
-
-        if (!block.id) {
-            block.id = Entry.generateHash();
-        }
-
-        Entry.do('objectAddExpansionBlock', block);
+    addExpansionBlock(item) {
+        const { name } = item;
+        Entry.expansion.addExpansionBlock(name);
     }
     /**
      * Add sound
@@ -1316,9 +1615,12 @@ Entry.Playground = class Playground {
         const that = this;
         $(handle).bind('mousedown touchstart', function(e) {
             e.preventDefault();
+            if (Entry.disposeEvent) {
+                Entry.disposeEvent.notify();
+            }
             that.resizing = true;
             if (Entry.documentMousemove) {
-                listener = Entry.documentMousemove.attach(this, function({ clientX }) {
+                listener = Entry.documentMousemove.attach(this, ({ clientX }) => {
                     if (that.resizing) {
                         Entry.resizeElement({
                             menuWidth: clientX - Entry.interfaceState.canvasWidth,
@@ -1326,7 +1628,7 @@ Entry.Playground = class Playground {
                     }
                 });
             }
-            $(document).bind('mouseup.resizeHandle touchend.resizeHandle', function() {
+            $(document).bind('mouseup.resizeHandle touchend.resizeHandle', () => {
                 $(document).unbind('.resizeHandle');
                 if (listener) {
                     that.resizing = false;
@@ -1374,6 +1676,13 @@ Entry.Playground = class Playground {
         }
     }
 
+    clear() {
+        this.flushPlayground();
+        if (this.painter) {
+            this.painter.clear();
+        }
+    }
+
     generatePictureElement(picture) {
         const element = Entry.createElement('li', picture.id)
             .addClass('entryPlaygroundPictureElement')
@@ -1384,7 +1693,7 @@ Entry.Playground = class Playground {
         element.picture = picture;
 
         Entry.Utils.disableContextmenu(picture.view);
-        Entry.ContextMenu.onContextmenu(picture.view, function(coordinate) {
+        Entry.ContextMenu.onContextmenu(picture.view, (coordinate) => {
             const options = [
                 {
                     text: Lang.Workspace.context_rename,
@@ -1505,9 +1814,9 @@ Entry.Playground = class Playground {
         element.appendChild(nameView);
         Entry.createElement('div', `s_${picture.id}`)
             .addClass('entryPlaygroundPictureSize')
-            .appendTo(element).innerHTML = `${picture.dimension.width} X ${
-            picture.dimension.height
-        }`;
+            .appendTo(
+                element
+            ).innerHTML = `${picture.dimension.width} X ${picture.dimension.height}`;
 
         const removeButton = Entry.createElement('div').addClass('entryPlayground_del');
         const { Buttons = {} } = Lang || {};
@@ -1545,7 +1854,7 @@ Entry.Playground = class Playground {
         element.sound = sound;
 
         Entry.Utils.disableContextmenu(sound.view);
-        Entry.ContextMenu.onContextmenu(sound.view, function(coordinate) {
+        Entry.ContextMenu.onContextmenu(sound.view, (coordinate) => {
             const options = [
                 {
                     text: Lang.Workspace.context_rename,
@@ -1624,7 +1933,7 @@ Entry.Playground = class Playground {
                 soundInstance = createjs.Sound.play(sound.id);
             }
 
-            soundInstance.addEventListener('complete', function() {
+            soundInstance.addEventListener('complete', () => {
                 thumbnailView.removeClass('entryPlaygroundSoundStop');
                 thumbnailView.addClass('entryPlaygroundSoundPlay');
                 isPlaying = false;
@@ -1694,22 +2003,34 @@ Entry.Playground = class Playground {
     }
 
     openDropDown = (options, target, callback, closeCallback) => {
-        const dropdownWidget = new EntryTool({
-            type: 'dropdownWidget',
+        const containers = $('.entry-widget-dropdown');
+        if (containers.length > 0) {
+            closeCallback();
+            return containers.remove();
+        }
+
+        const container = Entry.Dom('div', {
+            class: 'entry-widget-dropdown',
+            parent: $('body'),
+        })[0];
+
+        const dropdownWidget = new Dropdown({
             data: {
                 items: options,
                 positionDom: target,
+                outsideExcludeDom: [target],
                 onOutsideClick: () => {
                     if (dropdownWidget) {
                         closeCallback();
                         dropdownWidget.hide();
+                        dropdownWidget.remove();
+                    }
+                    if (container) {
+                        container.remove();
                     }
                 },
             },
-            container: Entry.Dom('div', {
-                class: 'entry-widget-dropdown',
-                parent: $('body'),
-            })[0],
+            container,
         }).on('select', (item) => {
             callback(item);
             closeCallback();
@@ -1719,22 +2040,30 @@ Entry.Playground = class Playground {
     };
 
     openColourPicker = (target, color, canTransparent, callback) => {
-        const colorPicker = new EntryTool({
-            type: 'colorPicker',
+        const container = Entry.Dom('div', {
+            class: 'entry-color-picker',
+            parent: $('body'),
+        })[0];
+
+        $(target).addClass('on');
+        const colorPicker = new ColorPicker({
             data: {
                 color,
                 positionDom: target,
                 canTransparent,
-                onOutsideClick: () => {
+                onOutsideClick: (color) => {
                     if (colorPicker) {
+                        $(target).removeClass('on');
                         colorPicker.hide();
+                        colorPicker.remove();
+                    }
+
+                    if (container) {
+                        container.remove();
                     }
                 },
             },
-            container: Entry.Dom('div', {
-                class: 'entry-color-picker',
-                parent: $('body'),
-            })[0],
+            container,
         }).on('change', (color) => {
             if (color) {
                 callback(color, true);
@@ -1754,14 +2083,18 @@ Entry.Playground = class Playground {
     }
 
     setTextColour(colour) {
-        $('.style_link.imbtn_pop_font_color').toggleClass('on', colour !== '#000000');
+        $('.imbtn_pop_font_color em').css('background-color', colour);
         this.object.entity.setColour(colour);
         this.textEditArea.style.color = colour;
         this.textEditInput.style.color = colour;
     }
 
     setBackgroundColour(colour) {
-        $('.style_link.imbtn_pop_font_backgroundcolor').toggleClass('on', colour !== '#ffffff');
+        $('.imbtn_pop_font_backgroundcolor em').css('background-color', colour);
+        $('.imbtn_pop_font_backgroundcolor').toggleClass(
+            'clear',
+            colour === 'transparent' || colour === '#ffffff'
+        );
         this.object.entity.setBGColour(colour);
         this.textEditArea.style.backgroundColor = colour;
         this.textEditInput.style.backgroundColor = colour;
@@ -1930,5 +2263,16 @@ Entry.Playground = class Playground {
         if (Entry.hasVariableManager) {
             this.variableTab.removeClass('entryRemove');
         }
+    }
+
+    destroy() {
+        this.commentToggleButton_ && this.commentToggleButton_.unBindOnClick();
+        this.backPackButton_ && this.backPackButton_.unBindOnClick();
+        this.blockBackPackEvent && this.blockBackPackEvent.off();
+        this.blockBackPackAreaEvent && this.blockBackPackAreaEvent.off();
+        this.objectBackPackEvent && this.objectBackPackEvent.off();
+        this.objectBackPackAreaEvent && this.objectBackPackAreaEvent.off();
+        this.globalEvent && this.globalEvent.destroy();
+        this._destroyer.destroy();
     }
 };

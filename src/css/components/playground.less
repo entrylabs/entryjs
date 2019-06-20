@@ -124,13 +124,13 @@
     color: white;
 }
 
-@introHeight: 52px;
+@introHeight: 66px;
 .entryPlaygroundIntro.active {
     position: relative;
     overflow: hidden;
     height: @introHeight;
-    top: 54px;
-    z-index:1;
+    top: 50px;
+    z-index: 1;
 }
 
 .entryPlaygroundWorkspace {
@@ -182,6 +182,52 @@
     background-color: #f1f1f1;
 }
 
+.entryPlaygroundBackPackView {
+    height: calc(100% - 47px);
+    display: block;
+    right: 0;
+    top: 38px;
+    z-index: 301;
+    position: absolute;
+
+    .widget {
+        height: 100%;
+    }
+
+    .blockBackPackDrop,
+    .objectBackPackDrop {
+        position: fixed;
+        display: none;
+        top: 0;
+        left: 0;
+        z-index: 400;
+        background-color: rgba(248, 241, 204, 0.9);
+        border: 2px dashed #ffc800;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+
+        .blockBackPackIcon {
+            pointer-events: none;
+            width: 32px;
+            height: 32px;
+            margin-bottom: 11px;
+            .backgroundImage('img_backpack_plus.svg');
+        }
+        .objectBackPackDesc,
+        .blockBackPackDesc {
+            pointer-events: none;
+            font-family: EntryFont, NanumGothic;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: -0.1px;
+            white-space: pre;
+            text-align: center;
+            color: #2c313d;
+        }
+    }
+}
+
 .entryPlaygroundButtonTabWorkspace {
     position: absolute;
     right: 0;
@@ -190,6 +236,7 @@
     background-color: #fff;
 
     .entryPlaygroundCommentButtonWorkspace {
+        float: left;
         .backgroundImage('btn-toggle-comment-off.png');
         background-repeat: no-repeat;
         background-size: 32px auto;
@@ -206,6 +253,26 @@
             border: 0;
             background-color: inherit;
         }
+    }
+
+    .entryPlaygroundBackPackButtonWorkspace {
+        &::before {
+            content: '';
+            display: inline-block;
+            width: 1px;
+            height: 16px;
+            background: #bfd8e6;
+            margin: 8px 0 0 -9px;
+        }
+        float: left;
+        .backgroundImage('back_pack_button.svg');
+        background-repeat: no-repeat;
+        background-size: 32px auto;
+        background-position: 50% 50%;
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        margin: 0 9px;
     }
 
     &.entryRemove.entryCode {
@@ -405,7 +472,7 @@
 }
 
 .entryPlaygroundCodeWorkspace {
-    overflow: hidden;
+    overflow: unset;
     position: absolute;
     left: 0;
     right: 0;
@@ -712,8 +779,8 @@
 .entryPlaygroundTextWorkspace .write_box .write_set .font_style_box .style_link {
     display: inline-block;
     overflow: hidden;
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
     margin-left: 10px;
     border: 1px solid #e2e2e2;
     background-color: #fff;
@@ -859,17 +926,67 @@
     }
 }
 .imbtn_pop_font_color {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    width: 66px;
+    height: 40px;
+    margin-left: 10px;
     .backgroundImage('btn_pop_font_color.png');
-    background-size: 38px auto;
+    background-size: 66px auto;
+    cursor: pointer;
+    em {
+        position: absolute;
+        left: 5px;
+        right: 5px;
+        top: 5px;
+        bottom: 5px;
+        background-color: #f9f9f9;
+        z-index: -1;
+    }
     &.on {
         .backgroundImage('btn_pop_font_color_on.png');
     }
 }
+.imbtn_pop_font_paint,
 .imbtn_pop_font_backgroundcolor {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    width: 66px;
+    height: 40px;
+    margin-left: 10px;
     .backgroundImage('btn_pop_font_paint.png');
-    background-size: 38px auto;
+    background-size: 66px auto;
+    cursor: pointer;
+    em {
+        position: absolute;
+        left: 5px;
+        right: 5px;
+        top: 5px;
+        bottom: 5px;
+        z-index: -1;
+    }
     &.on {
         .backgroundImage('btn_pop_font_paint_on.png');
+        &.clear {
+            .backgroundImage('btn_pop_font_paint_clear_on.png');
+            em {
+                display: none;
+            }
+        }
+    }
+    &.clear {
+        .backgroundImage('btn_pop_font_paint_clear.png');
+        em {
+            display: none;
+        }
+    }
+    &.clear_on {
+        .backgroundImage('btn_pop_font_paint_clear_on.png');
+        em {
+            display: none;
+        }
     }
 }
 
@@ -1270,7 +1387,7 @@
     }
 }
 
-.sortableWidget {
+.sortable {
     height: 100%;
 
     .rcs-custom-scrollbar {

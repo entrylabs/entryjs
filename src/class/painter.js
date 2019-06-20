@@ -3,7 +3,7 @@
 Entry.Painter = class Painter {
     constructor(view) {
         this.view = view;
-        this.baseUrl = Entry.painterBaseUrl || '/lib/literallycanvas-mobile/lib/img';
+        this.baseUrl = Entry.painterBaseUrl;
 
         this.file = {
             id: Entry.generateHash(),
@@ -19,7 +19,7 @@ Entry.Painter = class Painter {
         Entry.addEventListener('stop', this.attachKeyboardEvents.bind(this));
 
         //dropdown header dispose
-        $('body').on('mouseup', '.active li', function() {
+        $('body').on('mouseup', '.active li', () => {
             $('.painterTopHeader.active').removeClass('active');
         });
 
@@ -68,7 +68,9 @@ Entry.Painter = class Painter {
             } else {
                 Entry.do('editPicture', e, that.lc);
             }
-            that.file.modified = true;
+            if (Entry.stage.selectedObject) {
+                that.file.modified = true;
+            }
         };
 
         that.lc.on('clear', watchFunc);
@@ -97,7 +99,7 @@ Entry.Painter = class Painter {
         this.isShow = false;
     }
 
-    changePicture(picture) {
+    changePicture(picture = {}) {
         if (this.file && this.file.id === picture.id) {
             if (!this.file.isUpdate) {
                 Entry.stage.updateObject();
@@ -117,22 +119,20 @@ Entry.Painter = class Painter {
                 Entry.engine.toggleStop();
                 wasRun = true;
             }
-            entrylms.confirm(Lang.Menus.save_modified_shape).then(
-                function(result) {
-                    this.isConfirm = false;
-                    if (result === true) {
-                        this.file_save(true);
-                    } else {
-                        this.file.modified = false;
-                    }
+            entrylms.confirm(Lang.Menus.save_modified_shape).then((result) => {
+                this.isConfirm = false;
+                if (result === true) {
+                    this.file_save(true);
+                } else {
+                    this.file.modified = false;
+                }
 
-                    if (!wasRun) {
-                        this.afterModified(picture);
-                    } else {
-                        Entry.playground.injectPicture();
-                    }
-                }.bind(this)
-            );
+                if (!wasRun) {
+                    this.afterModified(picture);
+                } else {
+                    Entry.playground.injectPicture();
+                }
+            });
         }
         Entry.stage.updateObject();
         this.file.isUpdate = true;
@@ -143,12 +143,16 @@ Entry.Painter = class Painter {
         file.modified = false;
         this.lc.clear(false);
 
-        file.id = picture.id || Entry.generateHash();
-        file.name = picture.name;
-        file.mode = 'edit';
-        file.objectId = picture.objectId;
+        if (picture.id) {
+            file.id = picture.id || Entry.generateHash();
+            file.name = picture.name;
+            file.mode = 'edit';
+            file.objectId = picture.objectId;
 
-        this.addPicture(picture, true);
+            this.addPicture(picture, true);
+        } else {
+            file.id = Entry.generateHash();
+        }
         // INFO: picture 변경시마다 undoStack 리셋
         this.lc.undoStack = [];
         Entry.stateManager.removeAllPictureCommand();
@@ -218,9 +222,17 @@ Entry.Painter = class Painter {
         this.lc.tool.setShape(this.lc, shape);
     }
 
-    updateEditMenu() {}
+    updateEditMenu() {
+        const isSelected = this.lc.tool.name === 'SelectShape' ? 'block' : 'none';
+        // this._cutButton.style.display = isSelected;
+        // this._copyButton.style.display = isSelected;
+        // this._pasteButton.style.display = this.clipboard ? "block" : "none";
+    }
 
-    fileSave(taskParam) {
+    file_save(taskParam) {
+        if (!Entry.stage.selectedObject) {
+            return;
+        }
         this.lc.trigger('dispose');
         const dataURL = this.lc.getImage().toDataURL();
         this.file_ = JSON.parse(JSON.stringify(this.file));
@@ -235,11 +247,15 @@ Entry.Painter = class Painter {
     }
 
     newPicture() {
+        if (!Entry.stage.selectedObject) {
+            return;
+        }
         const newPicture = {
             dimension: {
                 height: 1,
                 width: 1,
             },
+            //filename: "_1x1",
             fileurl: `${Entry.mediaFilePath}_1x1.png`,
             name: Lang.Workspace.new_picture,
         };
@@ -256,24 +272,24 @@ Entry.Painter = class Painter {
             return;
         }
 
-        const keyCode = parseInt(e.keyCode || e.which, 10);
+        const keyCode = e.keyCode || e.which;
         const ctrlKey = e.ctrlKey;
 
-        if (keyCode === 8 || keyCode === 46) {
+        if (keyCode == 8 || keyCode == 46) {
             //destroy
             this.cut();
             e.preventDefault();
         } else if (ctrlKey) {
-            if (keyCode === 67) {
+            if (keyCode == 67) {
                 //copy
                 this.copy();
-            } else if (keyCode === 88) {
+            } else if (keyCode == 88) {
                 //cut
                 this.cut();
             }
         }
 
-        if (ctrlKey && keyCode === 86) {
+        if (ctrlKey && keyCode == 86) {
             //paste
             this.paste();
         }
@@ -286,6 +302,30 @@ Entry.Painter = class Painter {
         }
 
         this.lc.trigger('keyUp', e);
+    }
+
+    toggleFullscreen(isFullscreen) {
+        const { painter = {}, pictureView_ } = Entry.playground;
+        const { view = {} } = painter;
+        const $view = $(view);
+        if ((isFullscreen !== true && $view.hasClass('fullscreen')) || isFullscreen === false) {
+            pictureView_.appendChild(view);
+            $(view).removeClass('fullscreen');
+            if (this.fullscreenButton) {
+                this.fullscreenButton.setAttribute('title', Lang.Painter.fullscreen);
+                this.fullscreenButton.setAttribute('alt', Lang.Painter.fullscreen);
+            }
+        } else {
+            document.body.appendChild(view);
+            $(view).addClass('fullscreen');
+            if (this.fullscreenButton) {
+                this.fullscreenButton.setAttribute('title', Lang.Painter.exit_fullscreen);
+                this.fullscreenButton.setAttribute('alt', Lang.Painter.exit_fullscreen);
+            }
+        }
+        $(view)
+            .find('.lc-drawing.with-gui')
+            .trigger('resize');
     }
 
     initTopBar() {
@@ -301,25 +341,10 @@ Entry.Painter = class Painter {
         painterTopFullscreenButton.setAttribute('title', Lang.Painter.fullscreen);
         painterTopFullscreenButton.setAttribute('alt', Lang.Painter.fullscreen);
         painterTopFullscreenButton.addClass('entryPlaygroundPainterFullscreenButton');
-        painterTopFullscreenButton.bindOnClick(function() {
-            const { painter = {}, pictureView_ } = Entry.playground;
-            const { view = {} } = painter;
-            const $view = $(view);
-            if ($view.hasClass('fullscreen')) {
-                pictureView_.appendChild(view);
-                $(view).removeClass('fullscreen');
-                painterTopFullscreenButton.setAttribute('title', Lang.Painter.fullscreen);
-                painterTopFullscreenButton.setAttribute('alt', Lang.Painter.fullscreen);
-            } else {
-                document.body.appendChild(view);
-                $(view).addClass('fullscreen');
-                painterTopFullscreenButton.setAttribute('title', Lang.Painter.exit_fullscreen);
-                painterTopFullscreenButton.setAttribute('alt', Lang.Painter.exit_fullscreen);
-            }
-            $(view)
-                .find('.lc-drawing.with-gui')
-                .trigger('resize');
+        painterTopFullscreenButton.bindOnClick(() => {
+            this.toggleFullscreen();
         });
+        this.fullscreenButton = painterTopFullscreenButton;
         painterTop.appendChild(painterTopFullscreenButton);
 
         const painterTopMenu = ce('nav', 'entryPainterTopMenu');
@@ -347,17 +372,17 @@ Entry.Painter = class Painter {
         painterTopMenu.appendChild(painterTopMenuEdit);
 
         const painterTopMenuFileSave = ce('div', 'entryPainterTopMenuFileSave');
-        painterTopMenuFileSave.bindOnClick(function() {
-            painter.fileSave(false);
+        painterTopMenuFileSave.bindOnClick(() => {
+            painter.file_save(false);
         });
         painterTopMenuFileSave.addClass('entryPainterTopMenuFileSave');
         painterTopMenuFileSave.innerHTML = Lang.Workspace.painter_file_save;
         painterTopMenuFileDropdown.appendChild(painterTopMenuFileSave);
 
         const painterTopMenuFileSaveAsLink = ce('div', 'entryPainterTopMenuFileSaveAs');
-        painterTopMenuFileSaveAsLink.bindOnClick(function() {
+        painterTopMenuFileSaveAsLink.bindOnClick(() => {
             painter.file.mode = 'new';
-            painter.fileSave(false);
+            painter.file_save(false);
         });
         painterTopMenuFileSaveAsLink.addClass('entryPlaygroundPainterTopMenuFileSaveAs');
         painterTopMenuFileSaveAsLink.innerHTML = Lang.Workspace.painter_file_saveas;
@@ -368,7 +393,7 @@ Entry.Painter = class Painter {
         painterTopMenuEdit.appendChild(painterTopMenuEditDropdown);
 
         const painterTopMenuEditImport = ce('div', 'entryPainterTopMenuEditImport');
-        painterTopMenuEditImport.bindOnClick(function() {
+        painterTopMenuEditImport.bindOnClick(() => {
             Entry.dispatchEvent('openPictureImport');
         });
         painterTopMenuEditImport.addClass('entryPainterTopMenuEditImport');
@@ -376,7 +401,7 @@ Entry.Painter = class Painter {
         painterTopMenuEditDropdown.appendChild(painterTopMenuEditImport);
 
         const painterTopMenuEditCopy = ce('div', 'entryPainterTopMenuEditCopy');
-        painterTopMenuEditCopy.bindOnClick(function() {
+        painterTopMenuEditCopy.bindOnClick(() => {
             painter.copy();
         });
         painterTopMenuEditCopy.addClass('entryPlaygroundPainterTopMenuEditCopy');
@@ -384,7 +409,7 @@ Entry.Painter = class Painter {
         painterTopMenuEditDropdown.appendChild(painterTopMenuEditCopy);
 
         const painterTopMenuEditCut = ce('div', 'entryPainterTopMenuEditCut');
-        painterTopMenuEditCut.bindOnClick(function() {
+        painterTopMenuEditCut.bindOnClick(() => {
             painter.cut();
         });
         painterTopMenuEditCut.addClass('entryPlaygroundPainterTopMenuEditCut');
@@ -392,7 +417,7 @@ Entry.Painter = class Painter {
         painterTopMenuEditDropdown.appendChild(painterTopMenuEditCut);
 
         const painterTopMenuEditPaste = ce('div', 'entryPainterTopMenuEditPaste');
-        painterTopMenuEditPaste.bindOnClick(function() {
+        painterTopMenuEditPaste.bindOnClick(() => {
             painter.paste();
         });
         painterTopMenuEditPaste.addClass('entryPlaygroundPainterTopMenuEditPaste');
@@ -402,7 +427,7 @@ Entry.Painter = class Painter {
         const painterTopMenuEditEraseAll = ce('div', 'entryPainterTopMenuEditEraseAll');
         painterTopMenuEditEraseAll.addClass('entryPlaygroundPainterTopMenuEditEraseAll');
         painterTopMenuEditEraseAll.innerHTML = Lang.Workspace.remove_all;
-        painterTopMenuEditEraseAll.bindOnClick(function() {
+        painterTopMenuEditEraseAll.bindOnClick(() => {
             painter.lc.clear();
         });
         painterTopMenuEditDropdown.appendChild(painterTopMenuEditEraseAll);
@@ -461,5 +486,9 @@ Entry.Painter = class Painter {
             const evt = events.pop();
             evt.destroy && evt.destroy();
         }
+    }
+
+    clear() {
+        this.toggleFullscreen(false);
     }
 };

@@ -57,9 +57,7 @@ const { createTooltip } = require('../command_util');
                 name: scene.name,
             };
             const sceneIndex = Entry.scene.getScenes().indexOf(scene);
-            const objects = Entry.container.getSceneObjects(scene).map(function(o) {
-                return o.toJSON();
-            });
+            const objects = Entry.container.getSceneObjects(scene).map((o) => o.toJSON());
             return [sceneJSON, sceneIndex, objects];
         },
         log(sceneId) {
@@ -75,7 +73,7 @@ const { createTooltip } = require('../command_util');
             const scene = Entry.scene.getSceneById(sceneId);
             scene.name = newName;
             scene.view.nameField.value = newName;
-            setTimeout(function() {
+            setTimeout(() => {
                 Entry.scene.resize();
             }, 0);
         },
@@ -87,7 +85,10 @@ const { createTooltip } = require('../command_util');
             return [['sceneId', sceneId], ['newName', newName]];
         },
         restrict(data, domQuery, callback) {
-            const { content: contentData, tooltip: { title, content } } = data;
+            const {
+                content: contentData,
+                tooltip: { title, content },
+            } = data;
 
             callback();
             const scene = Entry.scene.getSceneById(contentData[1][1]);
@@ -104,7 +105,7 @@ const { createTooltip } = require('../command_util');
             const scene = Entry.scene.getSceneById(sceneId);
             Entry.scene.selectScene(scene);
         },
-        state() {
+        state(sceneId) {
             return [Entry.scene.selectedScene.id];
         },
         log(sceneId) {

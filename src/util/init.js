@@ -1,8 +1,12 @@
 /**
  * @fileoverview Initialize code fore Entry
  */
+
 'use strict';
 
+import { Destroyer } from './destroyer/Destroyer';
+import { GEHelper } from '../graphicEngine/GEHelper';
+import Expansion from '../class/Expansion';
 require('./utils');
 
 /**
@@ -30,7 +34,11 @@ Entry.init = function(container, options) {
     this.options = options;
     this.parseOptions(options);
     this.mediaFilePath = `${options.libDir ? options.libDir : '/lib'}/entry-js/images/`;
+    this.painterBaseUrl = `${
+        options.libDir ? options.libDir : '/lib'
+    }/literallycanvas-mobile/lib/img`;
     this.defaultPath = options.defaultDir || '';
+    this.soundPath = options.soundDir || '';
     this.blockInjectPath = options.blockInjectDir || '';
 
     if (this.type === 'workspace' && this.isPhone()) {
@@ -43,7 +51,6 @@ Entry.init = function(container, options) {
     if (this.type === 'minimize') {
         $(this.view_).addClass(this.type);
     }
-    // if (this.device === 'tablet') $(this.view_).addClass('tablet');
 
     Entry.initFonts(options.fonts);
     const { theme = 'default' } = options;
@@ -73,11 +80,11 @@ Entry.init = function(container, options) {
     };
     window.onbeforeunload = this.beforeUnload;
 
-    Entry.addEventListener('saveWorkspace', function() {
+    Entry.addEventListener('saveWorkspace', () => {
         Entry.addActivity('save');
     });
 
-    Entry.addEventListener('showBlockHelper', function() {
+    Entry.addEventListener('showBlockHelper', () => {
         Entry.propertyPanel.select('helper');
     });
 
@@ -126,8 +133,6 @@ Entry.loadAudio_ = function(filenames, name) {
 
     for (let i = 0; i < filenames.length; i++) {
         const filename = filenames[i];
-        //var path = Blockly.pathToBlockly + filename;
-        //createjs.Sound.registerSound(path, id, 4);
         Entry.soundQueue.loadFile({
             id: name,
             src: filename,
@@ -142,12 +147,17 @@ Entry.loadAudio_ = function(filenames, name) {
  * @private
  */
 Entry.initialize_ = function() {
+    /** @type {Destroyer} */
+    this._destroyer = this._destroyer || new Destroyer();
+    this._destroyer.destroy();
+
     /**
      * Initialize stage
      * @type {!Entry.Stage}
      * @type {!object}
      */
     this.stage = new Entry.Stage();
+    this._destroyer.add(this.stage);
 
     if (Entry.engine && Entry.engine.projectTimer) {
         Entry.engine.clearTimer();
@@ -158,6 +168,7 @@ Entry.initialize_ = function() {
      * @type {!object}
      */
     this.engine = new Entry.Engine();
+    this._destroyer.add(this.engine);
 
     /**
      * Initialize PropertyPanel.
@@ -174,6 +185,7 @@ Entry.initialize_ = function() {
      * @type {!object}
      */
     this.container = new Entry.Container();
+    this._destroyer.add(this.container);
 
     /**
      * Initialize helper.
@@ -182,8 +194,6 @@ Entry.initialize_ = function() {
      */
     this.helper = new Entry.Helper();
     this.youtube = new Entry.Youtube();
-    // this.tvCast = new Entry.TvCast();
-    // this.doneProject = new Entry.DoneProject();
     /**
      * Initialize container for objects.
      * @type {!Entry.VariableContainer}
@@ -199,13 +209,18 @@ Entry.initialize_ = function() {
      * @type {!object}
      */
     this.scene = new Entry.Scene();
+    this._destroyer.add(this.scene);
 
     /**
      * Initialize playground.
      * @type {!Entry.Playground}
      */
     this.playground = new Entry.Playground();
+    this._destroyer.add(this.playground);
 
+    this.expansion = new Expansion(this.playground);
+    this._destroyer.add(this.expansion);
+    this.intro = new Entry.Intro();
     /**
      * Initialize toast. Toast don't need generate view.
      * @type {!Entry.Toast}
@@ -226,6 +241,8 @@ Entry.initialize_ = function() {
     } else if (this.type === 'workspace' || this.type === 'phone') {
         this.reporter = new Entry.Reporter(true);
     }
+
+    GEHelper.INIT(this.options.useWebGL);
 };
 
 Entry.disposeContainer = function() {
@@ -242,6 +259,11 @@ Entry.disposeContainer = function() {
  */
 Entry.createDom = function(container, option) {
     const that = this;
+
+    const textCanvasContainer = Entry.createElement('div', 'textCanvasContainer');
+    textCanvasContainer.style.display = 'none';
+    container.appendChild(textCanvasContainer);
+
     if (!option || option === 'workspace') {
         Entry.documentMousedown.attach(that, that.cancelObjectEdit);
 
@@ -274,7 +296,7 @@ Entry.createDom = function(container, option) {
         canvas.height = 360;
         engineView.insertBefore(canvas, this.engine.buttonWrapper);
 
-        canvas.addEventListener('mousewheel', function(evt) {
+        canvas.addEventListener('mousewheel', (evt) => {
             const mousePosition = Entry.stage.mouseCoordinate;
             const tempList = Entry.variableContainer.getListById(mousePosition);
             const wheelDirection = evt.wheelDelta > 0;
@@ -308,6 +330,11 @@ Entry.createDom = function(container, option) {
 
         this.helper.generateView(this.containerView, option);
         this.propertyPanel.addMode('helper', this.helper);
+
+        const introView = Entry.createElement('div');
+        container.appendChild(introView);
+        this.introView = introView;
+        this.intro.generateView(this.introView, option);
 
         const playgroundView = Entry.createElement('div');
         container.appendChild(playgroundView);
@@ -531,7 +558,7 @@ Entry.initSound = function(sound) {
         `${Entry.defaultPath}/uploads/${sound.filename.substring(0, 2)}/${sound.filename.substring(
             2,
             4
-        )}/${sound.filename}${sound.ext}`;
+        )}/${Entry.soundPath}${sound.filename}${sound.ext || '.mp3'}`;
 
     Entry.soundQueue.loadFile({
         id: sound.id,

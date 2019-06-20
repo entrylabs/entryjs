@@ -3,7 +3,7 @@
  */
 'use strict';
 
-const { returnEmptyArr, createTooltip } = require('../command_util');
+const { createTooltip } = require('../command_util');
 
 (function(c) {
     const COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
@@ -12,7 +12,7 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
         do(objectId) {
             return Entry.container.selectObject(objectId);
         },
-        state() {
+        state(objectId) {
             const playground = Entry.playground;
             if (playground && playground.object) {
                 return [playground.object.id];
@@ -28,7 +28,7 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
         do(objectId) {
             Entry.container.getObject(objectId).toggleEditObject();
         },
-        state() {
+        state(objectId) {
             return [];
         },
         log(objectId) {
@@ -198,87 +198,47 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
     };
 
     c[COMMAND_TYPES.objectAddExpansionBlock] = {
-        do(block) {
-            const hashId = c[COMMAND_TYPES.objectAddExpansionBlock].hashId;
-            if (hashId) {
-                block.id = hashId;
-                delete c[COMMAND_TYPES.objectAddExpansionBlock].hashId;
-            }
-
+        do(blockName) {
             if (
                 typeof Entry.EXPANSION_BLOCK !== 'undefined' &&
-                typeof Entry.EXPANSION_BLOCK[block.name] !== 'undefined'
+                typeof Entry.EXPANSION_BLOCK[blockName] !== 'undefined'
             ) {
-                Entry.EXPANSION_BLOCK[block.name].init();
-                if (typeof Entry.expansionBlocks === 'undefined') {
+                Entry.EXPANSION_BLOCK[blockName].init();
+                if (typeof Entry.expansionBlocks == 'undefined') {
                     Entry.expansionBlocks = [];
                 }
-                Entry.expansionBlocks.push(block.name);
+                Entry.expansionBlocks = _.union(Entry.expansionBlocks, [blockName]);
             }
 
-            Entry.playground.blockMenu.unbanClass(block.name);
-            Entry.dispatchEvent('dismissModal');
+            Entry.playground.blockMenu.unbanClass(blockName);
+            // Entry.dispatchEvent('dismissModal');
         },
-        state(block) {
-            return [block];
+        state(blockName) {
+            return [blockName];
         },
-        log(block) {
-            const o = {};
-            o._id = block._id;
-            o.id = block.id;
-            o.filename = block.filename;
-            o.fileurl = block.fileurl;
-            o.name = block.name;
-            return [['block', o]];
+        log(blockName) {
+            return [['blockName', blockName]];
         },
         dom: ['.btn_confirm_modal'],
-        restrict(data, domQuery, callback) {
-            this.hashId = data.content[2][1].id;
-
-            const tooltip = new Entry.Tooltip(
-                [
-                    {
-                        title: data.tooltip.title,
-                        content: data.tooltip.content,
-                        target: '.btn_confirm_modal',
-                    },
-                ],
-                {
-                    callBack: callback,
-                    dimmed: true,
-                    restrict: true,
-                    render: false,
-                }
-            );
-
-            const event = Entry.getMainWS().widgetUpdateEvent;
-
-            if (!data.skip) {
-                Entry.dispatchEvent(
-                    'openSoundManager',
-                    data.content[2][1]._id,
-                    event.notify.bind(event)
-                );
-            }
-            return tooltip;
-        },
-        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
         validate: false,
         undo: 'objectRemoveExpansionBlock',
     };
 
     c[COMMAND_TYPES.objectRemoveExpansionBlock] = {
-        do(block) {
-            Entry.playground.blockMenu.banClass(block.name);
+        do(blockName) {
+            // 사용된 블록 전체에서 검색가능해질때 사용가능.
+            // Entry.expansionBlocks = _.pull(Entry.expansionBlocks, blockName);
+            Entry.playground.blockMenu.banClass(blockName);
         },
-        state(block) {
-            return [block];
+        state(blockName) {
+            return [blockName];
         },
-        log(block) {
-            return [['blockId', block._id]];
+        log(blockName) {
+            return [['blockName', blockName]];
         },
         dom: ['.btn_confirm_modal'],
-        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
         validate: false,
         undo: 'objectAddExpansionBlock',
     };
@@ -302,6 +262,20 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
         restrict: _inputRestrictor,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: 'objectNameEdit',
+    };
+
+    c[COMMAND_TYPES.objectReorder] = {
+        do(newIndex, oldIndex) {
+            Entry.container.moveElement(newIndex, oldIndex);
+        },
+        state(newIndex, oldIndex) {
+            return [oldIndex, newIndex];
+        },
+        log(newIndex, oldIndex) {
+            return [['newIndex', newIndex], ['oldIndex', oldIndex]];
+        },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        undo: 'objectReorder',
     };
 
     c[COMMAND_TYPES.objectUpdatePosX] = {
@@ -334,11 +308,12 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
             object.setInputBlurred('yInput');
             Entry.stage.updateObject();
         },
-        state(objectId) {
+        state(objectId, newY) {
             const { entity } = Entry.container.getObject(objectId);
             return [objectId, entity.getY()];
         },
         log(objectId, newY) {
+            const { entity } = Entry.container.getObject(objectId);
             return [['objectId', objectId], ['newY', newY]];
         },
         dom: ['container', 'objectId', '&0', 'yInput'],
@@ -355,11 +330,12 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
             object.setInputBlurred('sizeInput');
             Entry.stage.updateObject();
         },
-        state(objectId) {
+        state(objectId, newSize) {
             const { entity } = Entry.container.getObject(objectId);
             return [objectId, entity.getSize()];
         },
         log(objectId, newSize) {
+            const { entity } = Entry.container.getObject(objectId);
             return [['objectId', objectId], ['newSize', newSize]];
         },
         dom: ['container', 'objectId', '&0', 'sizeInput'],
@@ -376,11 +352,12 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
             object.setInputBlurred('rotationInput');
             Entry.stage.updateObject();
         },
-        state(objectId) {
+        state(objectId, newValue) {
             const { entity } = Entry.container.getObject(objectId);
             return [objectId, entity.getRotation()];
         },
         log(objectId, newValue) {
+            const { entity } = Entry.container.getObject(objectId);
             return [['objectId', objectId], ['newRotationValue', newValue]];
         },
         dom: ['container', 'objectId', '&0', 'rotationInput'],
@@ -397,11 +374,12 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
             object.setInputBlurred('directionInput');
             Entry.stage.updateObject();
         },
-        state(objectId) {
+        state(objectId, newValue) {
             const { entity } = Entry.container.getObject(objectId);
             return [objectId, entity.getDirection()];
         },
         log(objectId, newValue) {
+            const { entity } = Entry.container.getObject(objectId);
             return [['objectId', objectId], ['newDirectionValue', newValue]];
         },
         dom: ['container', 'objectId', '&0', 'directionInput'],
@@ -420,11 +398,12 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
             }
             Entry.stage.updateObject();
         },
-        state(objectId) {
+        state(objectId, newMethod) {
             const { entity, rotateMethod } = Entry.container.getObject(objectId);
             return [objectId, rotateMethod, entity.getRotation()];
         },
         log(objectId, newValue) {
+            const { entity } = Entry.container.getObject(objectId);
             return [['objectId', objectId], ['newDirectionValue', newValue]];
         },
         dom: ['container', 'objectId', '&0', 'rotationMethod', '&1'],
@@ -433,7 +412,7 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
     };
 
     c[COMMAND_TYPES.entitySetModel] = {
-        do(objectId, newModel) {
+        do(objectId, newModel, oldModel) {
             const { entity } = Entry.container.getObject(objectId);
             entity.setModel(newModel);
         },
@@ -461,9 +440,9 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
         }
 
         if (!_.isEmpty(domQuery)) {
-            const dom = Entry.getDom(domQuery);
-            if (dom && !Entry.Utils.isDomActive(dom)) {
-                dom.focus();
+            const query = Entry.getDom(domQuery);
+            if (query && !Entry.Utils.isDomActive(query)) {
+                query.focus();
                 callback();
             }
         }

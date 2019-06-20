@@ -3,6 +3,19 @@
 @image_url2: '../images/';
 
 html,
+body {
+    touch-action: none;
+    // position: fixed;
+    overflow: hidden;
+}
+
+#__next {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+html,
 body,
 .wrapper,
 .entry {
@@ -79,11 +92,11 @@ body,
     top: -9999px;
 }
 
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
     -webkit-appearance: none;
 }
 
-input[type=number] {
+input[type='number'] {
     -moz-appearance: textfield;
 }

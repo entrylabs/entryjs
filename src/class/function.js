@@ -464,7 +464,7 @@ Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
     schemaTemplate += ` %${booleanIndex + stringIndex + 1}`;
     schemaParams.push({
         type: 'Indicator',
-        img: 'block_icon/function_icon.svg',
+        img: 'block_icon/func_icon.svg',
         size: 12,
     });
 

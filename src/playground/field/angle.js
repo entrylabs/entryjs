@@ -2,7 +2,7 @@
  */
 'use strict';
 
-import EntryTool from 'entry-tool';
+import { Angle } from '@entrylabs/tool';
 
 Entry.FieldAngle = class FieldAngle extends Entry.Field {
     constructor(content, blockView, index) {
@@ -39,7 +39,7 @@ Entry.FieldAngle = class FieldAngle extends Entry.Field {
             x: this.X_PADDING / 2,
             y: this.TEXT_Y_PADDING,
             'font-size': '11px',
-            'font-family': 'NanumGothic',
+            'font-family': EntryStatic.fontFamily || 'NanumGothic',
         });
 
         this._setTextValue();
@@ -76,13 +76,12 @@ Entry.FieldAngle = class FieldAngle extends Entry.Field {
             parent: $('body'),
         });
 
-        this.angleWidget = new EntryTool({
-            type: 'angleWidget',
+        this.angleWidget = new Angle({
             data: {
                 angle: this.getValue(),
                 positionDom: this.svgGroup,
                 onOutsideClick: (angle) => {
-                    if(this.angleWidget) {
+                    if (this.angleWidget) {
                         this._applyValue(FieldAngle._refineDegree(angle));
                         this._setTextValue();
                         this.destroyOption();
@@ -90,22 +89,24 @@ Entry.FieldAngle = class FieldAngle extends Entry.Field {
                 },
             },
             container: this.optionGroup[0],
-        }).on('click', (eventName, value) => {
-            let nextValue = 0;
-            switch(eventName) {
-                case 'buttonPressed':{
-                    nextValue = this._getNextValue(value);
-                    break;
+        })
+            .on('click', (eventName, value) => {
+                let nextValue = 0;
+                switch (eventName) {
+                    case 'buttonPressed': {
+                        nextValue = this._getNextValue(value);
+                        break;
+                    }
+                    case 'backButtonPressed': {
+                        nextValue = this._getSubstringValue();
+                        break;
+                    }
                 }
-                case 'backButtonPressed':{
-                    nextValue = this._getSubstringValue();
-                    break;
-                }
-            }
-            this._applyValue(nextValue);
-        }).on('change', (value) => {
-            this._applyValue(String(value));
-        });
+                this._applyValue(nextValue);
+            })
+            .on('change', (value) => {
+                this._applyValue(String(value));
+            });
 
         this.optionGroup.focus();
         this.optionGroup.select();
@@ -131,7 +132,7 @@ Entry.FieldAngle = class FieldAngle extends Entry.Field {
             return returnValue;
         }
 
-        switch(value) {
+        switch (value) {
             case '-':
                 if (returnValue === '0') {
                     return '-';
@@ -182,7 +183,7 @@ Entry.FieldAngle = class FieldAngle extends Entry.Field {
         this.setValue(rangedValue);
         this.textElement.textContent = this.getValue();
 
-        if(this.angleWidget) {
+        if (this.angleWidget) {
             this.angleWidget.data = {
                 angle: FieldAngle._refineDegree(value),
             };
@@ -229,10 +230,7 @@ Entry.FieldAngle = class FieldAngle extends Entry.Field {
     }
 
     _setTextValue() {
-        this.textElement.textContent = this._convert(
-            this.getText(),
-            this.getValue()
-        );
+        this.textElement.textContent = this._convert(this.getText(), this.getValue());
     }
 
     static _refineDegree(value) {
@@ -243,7 +241,7 @@ Entry.FieldAngle = class FieldAngle extends Entry.Field {
         if (refinedDegree > 360) {
             refinedDegree %= 360;
         } else if (refinedDegree < 0) {
-            refinedDegree = (refinedDegree % 360);
+            refinedDegree = refinedDegree % 360;
         }
         refinedDegree = String(refinedDegree);
 

@@ -3,6 +3,8 @@
  */
 'use strict';
 
+import { GEHelper } from '../graphicEngine/GEHelper';
+
 /**
  * Class for a engine.
  * This have view for control running state.
@@ -19,18 +21,14 @@ Entry.Engine = class Engine {
 
         const _addEventListener = Entry.addEventListener.bind(Entry);
 
-        _addEventListener('canvasClick', () => {
-            return this.fireEvent('mouse_clicked');
-        });
-        _addEventListener('canvasClickCanceled', () => {
-            return this.fireEvent('mouse_click_cancled');
-        });
-        _addEventListener('entityClick', (entity) => {
-            return this.fireEventOnEntity('when_object_click', entity);
-        });
-        _addEventListener('entityClickCanceled', (entity) => {
-            return this.fireEventOnEntity('when_object_click_canceled', entity);
-        });
+        _addEventListener('canvasClick', () => this.fireEvent('mouse_clicked'));
+        _addEventListener('canvasClickCanceled', () => this.fireEvent('mouse_click_cancled'));
+        _addEventListener('entityClick', (entity) =>
+            this.fireEventOnEntity('when_object_click', entity)
+        );
+        _addEventListener('entityClickCanceled', (entity) =>
+            this.fireEventOnEntity('when_object_click_canceled', entity)
+        );
 
         if (Entry.type !== 'phone') {
             _addEventListener(
@@ -43,12 +41,8 @@ Entry.Engine = class Engine {
         }
 
         const $win = $(window);
-        _addEventListener('run', () => {
-            return $win.bind('keydown', arrowHandler);
-        });
-        _addEventListener('stop', () => {
-            return $win.unbind('keydown', arrowHandler);
-        });
+        _addEventListener('run', () => $win.bind('keydown', arrowHandler));
+        _addEventListener('stop', () => $win.unbind('keydown', arrowHandler));
 
         function arrowHandler(e) {
             const code = e.keyCode || e.which;
@@ -73,7 +67,7 @@ Entry.Engine = class Engine {
      */
     generateView(controlView, option = 'workspace') {
         this.option = option;
-        if (option === 'workspace') {
+        if (option == 'workspace') {
             /** @type {!Element} */
             this.view_ = controlView;
             this.view_.addClass('entryEngine_w').addClass('entryEngineWorkspace_w');
@@ -85,7 +79,7 @@ Entry.Engine = class Engine {
                     'entryEngineButtonWorkspace_w'
                 )
                 .appendTo(this.view_)
-                .bindOnClick(function() {
+                .bindOnClick(function(e) {
                     Entry.engine.toggleSpeedPanel();
                     this.blur();
                 });
@@ -97,7 +91,7 @@ Entry.Engine = class Engine {
                     'entryMaximizeButtonWorkspace_w'
                 )
                 .appendTo(this.view_)
-                .bindOnClick(function() {
+                .bindOnClick(function(e) {
                     Entry.engine.toggleFullScreen();
                     this.blur();
                 });
@@ -109,7 +103,7 @@ Entry.Engine = class Engine {
                     'entryCoordinateButtonWorkspace_w'
                 )
                 .appendTo(this.view_)
-                .bindOnClick(function() {
+                .bindOnClick(function(e) {
                     if (this.hasClass('toggleOn')) {
                         this.removeClass('toggleOn');
                     } else {
@@ -147,9 +141,7 @@ Entry.Engine = class Engine {
             this.runButton = Entry.createElement('button')
                 .addClass('entryEngineButtonWorkspace_w')
                 .addClass('entryRunButtonWorkspace_w')
-                .bindOnClick(() => {
-                    return Entry.do('toggleRun', 'runButton');
-                })
+                .bindOnClick(() => Entry.do('toggleRun', 'runButton'))
                 .appendTo(this.buttonWrapper);
             this.runButton.innerHTML = Lang.Workspace.run;
 
@@ -157,37 +149,14 @@ Entry.Engine = class Engine {
                 .addClass('entryEngineButtonWorkspace_w')
                 .addClass('entryRunButtonWorkspace_w2')
                 .appendTo(this.buttonWrapper)
-                .bindOnClick(() => {
-                    return Entry.engine.toggleRun();
-                });
-
-            this.stopButton = Entry.createElement('button')
-                .addClass('entryEngineButtonWorkspace_w')
-                .addClass('entryStopButtonWorkspace_w')
-                .addClass('entryRemove')
-                .bindOnClick(() => {
-                    return Entry.do('toggleStop', 'stopButton');
-                })
-                .appendTo(this.buttonWrapper);
-            this.stopButton.innerHTML = Lang.Workspace.stop;
-
-            this.stopButton2 = Entry.createElement('button')
-                .addClass('entryEngineButtonWorkspace_w')
-                .addClass('entryStopButtonWorkspace_w2')
-                .addClass('entryRemove')
-                .bindOnClick(function() {
-                    this.blur();
-                    Entry.engine.toggleStop();
-                })
-                .appendTo(this.buttonWrapper);
-            this.stopButton2.innerHTML = Lang.Workspace.stop;
+                .bindOnClick(() => Entry.engine.toggleRun());
 
             this.pauseButton = Entry.createElement('button')
                 .addClass('entryEngineButtonWorkspace_w')
                 .addClass('entryPauseButtonWorkspace_w')
                 .addClass('entryRemove')
                 .appendTo(this.buttonWrapper)
-                .bindOnClick(function() {
+                .bindOnClick(function(e) {
                     this.blur();
                     Entry.engine.togglePause();
                 });
@@ -201,7 +170,26 @@ Entry.Engine = class Engine {
                     this.blur();
                     Entry.engine.togglePause();
                 });
-        } else if (option === 'minimize') {
+
+            this.stopButton = Entry.createElement('button')
+                .addClass('entryEngineButtonWorkspace_w')
+                .addClass('entryStopButtonWorkspace_w')
+                .addClass('entryRemove')
+                .bindOnClick(() => Entry.do('toggleStop', 'stopButton'))
+                .appendTo(this.buttonWrapper);
+            this.stopButton.innerHTML = Lang.Workspace.stop;
+
+            this.stopButton2 = Entry.createElement('button')
+                .addClass('entryEngineButtonWorkspace_w')
+                .addClass('entryStopButtonWorkspace_w2')
+                .addClass('entryRemove')
+                .bindOnClick(function() {
+                    this.blur();
+                    Entry.engine.toggleStop();
+                })
+                .appendTo(this.buttonWrapper);
+            this.stopButton2.innerHTML = Lang.Workspace.stop;
+        } else if (option == 'minimize') {
             /** @type {!Element} */
             this.view_ = controlView;
             this.view_.addClass('entryEngine');
@@ -211,7 +199,7 @@ Entry.Engine = class Engine {
             this.maximizeButton.addClass('entryEngineButtonMinimize');
             this.maximizeButton.addClass('entryMaximizeButtonMinimize');
             this.view_.appendChild(this.maximizeButton);
-            this.maximizeButton.bindOnClick(function() {
+            this.maximizeButton.bindOnClick((e) => {
                 Entry.engine.toggleFullScreen();
             });
 
@@ -219,7 +207,7 @@ Entry.Engine = class Engine {
             this.coordinateButton.addClass('entryEngineButtonMinimize');
             this.coordinateButton.addClass('entryCoordinateButtonMinimize');
             this.view_.appendChild(this.coordinateButton);
-            this.coordinateButton.bindOnClick(function() {
+            this.coordinateButton.bindOnClick(function(e) {
                 if (this.hasClass('toggleOn')) {
                     this.removeClass('toggleOn');
                 } else {
@@ -234,7 +222,7 @@ Entry.Engine = class Engine {
             this.stopButton.addClass('entryRemove');
             this.stopButton.innerHTML = Lang.Workspace.stop;
             this.view_.appendChild(this.stopButton);
-            this.stopButton.bindOnClick(function() {
+            this.stopButton.bindOnClick(function(e) {
                 this.blur();
                 Entry.engine.toggleStop();
             });
@@ -245,7 +233,7 @@ Entry.Engine = class Engine {
             this.pauseButton.addClass('entryPauseButtonMinimize');
             this.pauseButton.addClass('entryRemove');
             this.view_.appendChild(this.pauseButton);
-            this.pauseButton.bindOnClick(function() {
+            this.pauseButton.bindOnClick(function(e) {
                 this.blur();
                 Entry.engine.togglePause();
             });
@@ -253,6 +241,14 @@ Entry.Engine = class Engine {
             this.mouseView = Entry.createElement('div');
             this.mouseView.addClass('entryMouseViewMinimize');
             this.mouseView.addClass('entryHide');
+
+            this.mouseViewInput = Entry.createElement('input').appendTo(this.mouseView);
+            $(this.mouseViewInput).attr('readonly', 'readonly');
+            $(this.mouseViewInput).attr(
+                'style',
+                'border: none;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;line-height: normal'
+            );
+
             this.view_.appendChild(this.mouseView);
 
             Entry.addEventListener('loadComplete', () => {
@@ -260,11 +256,9 @@ Entry.Engine = class Engine {
                     class: 'entryRunButtonBigMinimize',
                     parent: $('#entryCanvasWrapper'),
                 });
-                this.runButton.bindOnClick(() => {
-                    return Entry.engine.toggleRun();
-                });
+                this.runButton.bindOnClick(() => Entry.engine.toggleRun());
             });
-        } else if (option === 'phone') {
+        } else if (option == 'phone') {
             this.view_ = controlView;
             this.view_.addClass('entryEngine', 'entryEnginePhone');
 
@@ -275,18 +269,18 @@ Entry.Engine = class Engine {
             this.maximizeButton = Entry.createElement('button');
             this.maximizeButton.addClass('entryEngineButtonPhone', 'entryMaximizeButtonPhone');
             this.headerView_.appendChild(this.maximizeButton);
-            this.maximizeButton.bindOnClick(function() {
+            this.maximizeButton.bindOnClick((e) => {
                 Entry.engine.footerView_.addClass('entryRemove');
                 Entry.engine.headerView_.addClass('entryRemove');
                 Entry.launchFullScreen(Entry.engine.view_);
             });
-            document.addEventListener('fullscreenchange', function() {
+            document.addEventListener('fullscreenchange', (e) => {
                 Entry.engine.exitFullScreen();
             });
-            document.addEventListener('webkitfullscreenchange', function() {
+            document.addEventListener('webkitfullscreenchange', (e) => {
                 Entry.engine.exitFullScreen();
             });
-            document.addEventListener('mozfullscreenchange', function() {
+            document.addEventListener('mozfullscreenchange', (e) => {
                 Entry.engine.exitFullScreen();
             });
 
@@ -302,7 +296,7 @@ Entry.Engine = class Engine {
             this.runButton.innerHTML = Lang.Workspace.run;
 
             this.footerView_.appendChild(this.runButton);
-            this.runButton.bindOnClick(function() {
+            this.runButton.bindOnClick((e) => {
                 Entry.engine.toggleRun();
             });
 
@@ -318,7 +312,7 @@ Entry.Engine = class Engine {
             this.stopButton.innerHTML = Lang.Workspace.stop;
 
             this.footerView_.appendChild(this.stopButton);
-            this.stopButton.bindOnClick(function() {
+            this.stopButton.bindOnClick((e) => {
                 Entry.engine.toggleStop();
             });
         }
@@ -333,7 +327,7 @@ Entry.Engine = class Engine {
                 .parent()
                 .remove();
             delete this.speedLabel_;
-            $(this.speedProgress_).fadeOut(null, function() {
+            $(this.speedProgress_).fadeOut(null, function(e) {
                 $(this).remove();
                 delete this.speedProgress_;
             });
@@ -397,9 +391,9 @@ Entry.Engine = class Engine {
      * Start engine
      * @param {number} FPS
      */
-    start() {
+    start(FPS) {
         /** @type {!number} */
-        createjs.Ticker.setFPS(Entry.FPS);
+        GEHelper.Ticker.setFPS(Entry.FPS);
 
         if (!this.ticker) {
             this.ticker = setInterval(this.update, Math.floor(1000 / Entry.FPS));
@@ -410,7 +404,7 @@ Entry.Engine = class Engine {
      * Stop engine
      */
     stop() {
-        createjs.Ticker.reset();
+        GEHelper.Ticker.reset();
         clearInterval(this.ticker);
         this.ticker = null;
     }
@@ -438,6 +432,18 @@ Entry.Engine = class Engine {
      */
     computeFunction({ script }) {
         script.tick();
+    }
+
+    static computeThread(entity, script) {
+        Entry.engine.isContinue = true;
+        let isSame = false;
+        while (script && Entry.engine.isContinue && !isSame) {
+            Entry.engine.isContinue = !script.isRepeat;
+            const newScript = script.run();
+            isSame = newScript && newScript === script;
+            script = newScript;
+        }
+        return script;
     }
 
     /**
@@ -478,14 +484,14 @@ Entry.Engine = class Engine {
 
         Entry.addActivity('run');
 
-        if (this.state === 'stop') {
-            container.mapEntity(function(entity) {
+        if (this.state == 'stop') {
+            container.mapEntity((entity) => {
                 entity.takeSnapshot();
             });
-            variableContainer.mapVariable(function(variable) {
+            variableContainer.mapVariable((variable) => {
                 variable.takeSnapshot();
             });
-            variableContainer.mapList(function(variable) {
+            variableContainer.mapList((variable) => {
                 variable.takeSnapshot();
             });
             this.projectTimer.takeSnapshot();
@@ -498,7 +504,7 @@ Entry.Engine = class Engine {
             this.achieveEnabled = !(disableAchieve === false);
         }
         this.state = 'run';
-        if (Entry.type === 'mobile') {
+        if (Entry.type == 'mobile') {
             this.view_.addClass('entryEngineBlueWorkspace');
         }
 
@@ -550,7 +556,7 @@ Entry.Engine = class Engine {
 
         Entry.addActivity('stop');
 
-        container.mapEntity(function(entity) {
+        container.mapEntity((entity) => {
             entity.loadSnapshot();
             entity.object.filters = [];
             entity.resetFilter();
@@ -562,15 +568,15 @@ Entry.Engine = class Engine {
             }
         });
 
-        variableContainer.mapVariable(function(variable) {
+        variableContainer.mapVariable((variable) => {
             variable.loadSnapshot();
         });
-        variableContainer.mapList(function(variable) {
+        variableContainer.mapList((variable) => {
             variable.loadSnapshot();
         });
         this.stopProjectTimer();
         if (Entry.timerInstances) {
-            Entry.timerInstances.forEach(function(instance) {
+            Entry.timerInstances.forEach((instance) => {
                 instance.destroy();
             });
         }
@@ -632,7 +638,7 @@ Entry.Engine = class Engine {
      */
     togglePause() {
         const timer = Entry.engine.projectTimer;
-        if (this.state === 'pause') {
+        if (this.state == 'pause') {
             this.setEnableInputField(true);
             timer.pausedTime += new Date().getTime() - timer.pauseStart;
             if (timer.isPaused) {
@@ -652,7 +658,7 @@ Entry.Engine = class Engine {
             }
 
             if (Entry.timerInstances) {
-                Entry.timerInstances.forEach(function(instance) {
+                Entry.timerInstances.forEach((instance) => {
                     instance.resume();
                 });
             }
@@ -677,7 +683,7 @@ Entry.Engine = class Engine {
             }
 
             if (Entry.timerInstances) {
-                Entry.timerInstances.forEach(function(instance) {
+                Entry.timerInstances.forEach((instance) => {
                     instance.pause();
                 });
             }
@@ -685,8 +691,8 @@ Entry.Engine = class Engine {
         Entry.dispatchEvent('dispatchEventDidTogglePause');
     }
 
-    setPauseButton() {
-        if (this.state === 'pause') {
+    setPauseButton(option) {
+        if (this.state == 'pause') {
             if (this.pauseButton) {
                 this.pauseButton.innerHTML = Lang.Workspace.restart;
                 if (this.option !== 'minimize') {
@@ -743,7 +749,7 @@ Entry.Engine = class Engine {
      * @param {Entry.EntityObject} entity
      */
     fireEventOnEntity(eventName, entity) {
-        if (this.state === 'run') {
+        if (this.state == 'run') {
             Entry.container.mapEntityIncludeCloneOnScene(this.raiseEventOnEntity, [
                 entity,
                 eventName,
@@ -769,7 +775,7 @@ Entry.Engine = class Engine {
      * @param {keyboard event} e
      */
     captureKeyEvent(e, isForce) {
-        const keyCode = parseInt(e.keyCode, 10);
+        const keyCode = e.keyCode;
         const isWorkspace = Entry.type === 'workspace';
 
         if (Entry.Utils.isInInput(e) && !isForce) {
@@ -778,13 +784,13 @@ Entry.Engine = class Engine {
 
         //mouse shortcuts
         if (keyCode !== 17 && e.ctrlKey && isWorkspace) {
-            if (keyCode === 83) {
+            if (keyCode == 83) {
                 e.preventDefault();
                 Entry.dispatchEvent(e.shiftKey ? 'saveAsWorkspace' : 'saveWorkspace');
-            } else if (keyCode === 82) {
+            } else if (keyCode == 82) {
                 e.preventDefault();
                 Entry.engine.run();
-            } else if (keyCode === 90) {
+            } else if (keyCode == 90) {
                 e.preventDefault();
                 Entry.dispatchEvent(e.shiftKey ? 'redo' : 'undo');
             }
@@ -837,7 +843,7 @@ Entry.Engine = class Engine {
             if (Entry.engine.speedPanelOn) {
                 Entry.engine.toggleSpeedPanel();
             }
-            if (Entry.type !== 'workspace') {
+            if (Entry.type != 'workspace') {
                 const $doc = $(document);
                 const body = $(this.popup.body_);
                 body.css('top', $doc.scrollTop());
@@ -933,7 +939,7 @@ Entry.Engine = class Engine {
         timer.isInit = true;
         timer.isPaused = false;
         timer.pausedTime = 0;
-        timer.tick = setInterval(function() {
+        timer.tick = setInterval((e) => {
             Entry.engine.updateProjectTimer();
         }, 1000 / 60);
     }
@@ -980,7 +986,7 @@ Entry.Engine = class Engine {
             return;
         }
         const current = new Date().getTime();
-        if (typeof value === 'undefined') {
+        if (typeof value == 'undefined') {
             if (!timer.isPaused && !engine.isState('pause')) {
                 timer.setValue(
                     Math.max((current - (timer.start || current) - timer.pausedTime) / 1000, 0)
@@ -1042,16 +1048,8 @@ Entry.Engine = class Engine {
             this.addButton.addClass('entryRemove');
         }
     }
-};
 
-Entry.Engine.computeThread = function(entity, script) {
-    Entry.engine.isContinue = true;
-    let isSame = false;
-    while (script && Entry.engine.isContinue && !isSame) {
-        Entry.engine.isContinue = !script.isRepeat;
-        const newScript = script.run();
-        isSame = newScript && newScript === script;
-        script = newScript;
+    destroy() {
+        // 우선 interface 만 정의함.
     }
-    return script;
 };

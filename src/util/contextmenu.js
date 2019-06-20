@@ -1,6 +1,6 @@
 'use strict';
 
-import EntryTool from 'entry-tool';
+import { ContextMenu } from '@entrylabs/tool';
 import DomUtils from './domUtils';
 
 Entry.ContextMenu = {};
@@ -32,7 +32,7 @@ Entry.ContextMenu = {};
         if (this._hideEvent) {
             this._hideEvent.destroy();
         }
-        
+
         if (className !== undefined) {
             this._className = className;
             this.dom.addClass(className);
@@ -40,16 +40,16 @@ Entry.ContextMenu = {};
 
         this._hideEvent = Entry.documentMousedown.attach(this, this.hide);
         this.mouseCoordinate = coordinate || Entry.mouseCoordinate;
-        this.contextMenu = new EntryTool({
+        this.contextMenu = new ContextMenu({
             type: 'contextMenu',
             data: {
                 items: options,
                 coordinate: this.mouseCoordinate,
                 onOutsideClick: () => {
                     this.hide();
-                }
+                },
             },
-            container: this.dom[0]
+            container: this.dom[0],
         });
 
         this.visible = true;
@@ -102,67 +102,79 @@ Entry.ContextMenu = {};
     };
 
     ctx.onContextmenu = function(target, callback) {
-        DomUtils.addEventListenerMultiple(target, 'touchstart touchmove touchend mousedown', (e) => {
-            switch (e.type) {
-                case 'touchstart': {
-                    const startEvent = Entry.Utils.convertMouseEvent(e);
-                    this.coordi = {
-                        x: startEvent.clientX,
-                        y: startEvent.clientY,
-                    };
+        const longPressEvent = (e) => {
+            const startEvent = Entry.Utils.convertMouseEvent(e);
+            this.coordi = {
+                x: startEvent.clientX,
+                y: startEvent.clientY,
+            };
 
-                    if (this.longTouchEvent) {
-                        clearTimeout(this.longTouchEvent);
-                        this.longTouchEvent = null;
-                    }
-
-                    this.longTouchEvent = setTimeout(
-                        function() {
-                            callback(this.coordi);
-                            this.longTouchEvent = undefined;
-                        }.bind(this),
-                        900
-                    );
-                    break;
-                }
-                case 'touchmove': {
-                    const startEvent = Entry.Utils.convertMouseEvent(e);
-                    if (!this.coordi) {
-                        return;
-                    }
-                    const diff = Math.sqrt(
-                        Math.pow(startEvent.pageX - this.coordi.x, 2) + Math.pow(startEvent.pageY - this.coordi.y, 2)
-                    );
-
-                    if (diff > 5 && this.longTouchEvent) {
-                        clearTimeout(this.longTouchEvent);
-                        this.longTouchEvent = undefined;
-                    }
-                    break;
-                }
-                case 'touchend':
-                    // e.stopPropagation();
-                    if (this.longTouchEvent) {
-                        clearTimeout(this.longTouchEvent);
-                        this.longTouchEvent = undefined;
-                    }
-                    break;
-                case 'mousedown':
-                    if (Entry.Utils.isRightButton(e)) {
-                        e.stopPropagation();
-
-                        this.coordi = {
-                            x: e.clientX,
-                            y: e.clientY,
-                        };
-
-                        clearTimeout(this.longTouchEvent);
-                        this.longTouchEvent = undefined;
-                        callback(this.coordi);
-                    }
-                    break;
+            if (this.longTouchEvent) {
+                clearTimeout(this.longTouchEvent);
+                this.longTouchEvent = null;
             }
-        });
+
+            this.longTouchEvent = setTimeout(() => {
+                callback(this.coordi);
+                this.longTouchEvent = undefined;
+            }, 900);
+        };
+
+        DomUtils.addEventListenerMultiple(
+            target,
+            'touchstart touchmove touchend mousemove mouseup mousedown',
+            (e) => {
+                switch (e.type) {
+                    case 'touchstart': {
+                        longPressEvent(e);
+                        break;
+                    }
+                    case 'mousemove':
+                    case 'touchmove': {
+                        const startEvent = Entry.Utils.convertMouseEvent(e);
+                        if (!this.coordi) {
+                            return;
+                        }
+                        const diff = Math.sqrt(
+                            Math.pow(startEvent.pageX - this.coordi.x, 2) +
+                                Math.pow(startEvent.pageY - this.coordi.y, 2)
+                        );
+
+                        if (diff > 5 && this.longTouchEvent) {
+                            clearTimeout(this.longTouchEvent);
+                            this.longTouchEvent = undefined;
+                        }
+                        break;
+                    }
+                    case 'mouseup':
+                    case 'touchend':
+                        // e.stopPropagation();
+                        if (this.longTouchEvent) {
+                            clearTimeout(this.longTouchEvent);
+                            this.longTouchEvent = undefined;
+                        }
+                        break;
+                    case 'mousedown':
+                        if (Entry.Utils.isRightButton(e)) {
+                            e.stopPropagation();
+
+                            this.coordi = {
+                                x: e.clientX,
+                                y: e.clientY,
+                            };
+
+                            clearTimeout(this.longTouchEvent);
+                            this.longTouchEvent = undefined;
+                            callback(this.coordi);
+                        }
+
+                        if (Entry.isMobile()) {
+                            longPressEvent(e);
+                        }
+                        break;
+                }
+            }
+        );
     };
 
     function _bindEvent() {

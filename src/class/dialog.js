@@ -4,6 +4,8 @@
  * @fileoverview Show dialog on canvas
  */
 
+import { GEHelper } from '../graphicEngine/GEHelper';
+
 /**
  * Construct dialog
  * @param {!Entry.EntityObject} entity parent entity
@@ -20,7 +22,7 @@ Entry.Dialog = class Dialog {
         this.parent = entity;
         this.padding = 10;
         this.border = 2;
-        if (typeof message === 'number') {
+        if (typeof message == 'number') {
             message = String(message);
         }
         if (Entry.console) {
@@ -42,21 +44,31 @@ Entry.Dialog = class Dialog {
      * Generate speak dialog box
      */
     generateSpeak() {
-        /** @type {createjs.Container} Easel object */
-        this.object = new createjs.Container();
-        const text = new createjs.Text();
-        text.font = '15px NanumGothic';
-        text.textBaseline = 'top';
-        text.textAlign = 'left';
-        text.text = this.message_;
-        const bound = text.getTransformedBounds();
+        this.object = GEHelper.newContainer('[dialog] container');
+        const fontFamily = EntryStatic.fontFamily || 'NanumGothic';
+        const text = GEHelper.textHelper.newText(
+            this.message_,
+            `15px ${fontFamily}`,
+            '#000000',
+            'top',
+            'left'
+        );
+
+        let bound;
+        if (GEHelper.isWebGL) {
+            bound = text;
+        } else {
+            bound = text.getTransformedBounds();
+        }
+
         const height = bound.height;
         const width = bound.width >= 10 ? bound.width : 17;
-        const rect = new createjs.Shape();
+        const rect = GEHelper.newGraphic();
+        const colorSet = EntryStatic.colorSet.canvas || {};
         rect.graphics
-            .f('#f5f5f5')
+            .f(colorSet.dialogBG || '#f5f5f5')
             .ss(2, 'round')
-            .s('#6FC0DD')
+            .s(colorSet.dialog || '#6FC0DD')
             .rr(
                 -this.padding,
                 -this.padding,
@@ -80,11 +92,12 @@ Entry.Dialog = class Dialog {
      * Set position
      */
     update() {
-        let bound = this.parent.object.getTransformedBounds();
+        const parentObj = this.parent.object;
+        let bound = GEHelper.calcParentBound(parentObj);
         if (!bound && this.parent.type === 'textBox') {
             if (!this._isNoContentTried) {
                 this.parent.setText(' ');
-                bound = this.parent.object.getTransformedBounds();
+                bound = GEHelper.calcParentBound(parentObj);
                 this._isNoContentTried = true;
             } else {
                 delete this._isNoContentTried;
@@ -135,37 +148,38 @@ Entry.Dialog = class Dialog {
      * @return {createjs.Shape}
      */
     createSpeakNotch(type) {
-        const notch = new createjs.Shape();
+        const notch = GEHelper.newGraphic();
         notch.type = type;
-        if (type === 'ne') {
+        const colorSet = EntryStatic.colorSet.canvas || {};
+        if (type == 'ne') {
             notch.graphics
                 .f('#f5f5f5')
                 .ss(2, 'round')
-                .s('#6FC0DD')
+                .s(colorSet.dialog || '#6FC0DD')
                 .mt(0, this.height + this.padding - 1.5)
                 .lt(-10, this.height + this.padding + 20)
                 .lt(20, this.height + this.padding - 1.5);
-        } else if (type === 'nw') {
+        } else if (type == 'nw') {
             notch.graphics
                 .f('#f5f5f5')
                 .ss(2, 'round')
-                .s('#6FC0DD')
+                .s(colorSet.dialog || '#6FC0DD')
                 .mt(this.width, this.height + this.padding - 1.5)
                 .lt(this.width + 10, this.height + this.padding + 20)
                 .lt(this.width - 20, this.height + this.padding - 1.5);
-        } else if (type === 'se') {
+        } else if (type == 'se') {
             notch.graphics
                 .f('#f5f5f5')
                 .ss(2, 'round')
-                .s('#6FC0DD')
+                .s(colorSet.dialog || '#6FC0DD')
                 .mt(0, -this.padding + 1.5)
                 .lt(-10, -this.padding - 20)
                 .lt(20, -this.padding + 1.5);
-        } else if (type === 'sw') {
+        } else if (type == 'sw') {
             notch.graphics
                 .f('#f5f5f5')
                 .ss(2, 'round')
-                .s('#6FC0DD')
+                .s(colorSet.dialog || '#6FC0DD')
                 .mt(this.width, -this.padding + 1.5)
                 .lt(this.width + 10, -this.padding - 20)
                 .lt(this.width - 20, -this.padding + 1.5);

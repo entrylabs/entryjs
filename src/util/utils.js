@@ -1,5 +1,7 @@
 'use strict';
 
+import { GEHelper } from '../graphicEngine/GEHelper';
+
 Entry.Utils = {};
 
 Entry.TEXT_ALIGN_CENTER = 0;
@@ -32,7 +34,7 @@ Entry.loadProject = function(project) {
     Entry.variableContainer.setFunctions(project.functions);
     Entry.container.setObjects(project.objects);
     Entry.FPS = project.speed ? project.speed : 60;
-    createjs.Ticker.setFPS(Entry.FPS);
+    GEHelper.Ticker.setFPS(Entry.FPS);
 
     Entry.expansionBlocks = project.expansionBlocks || [];
     if (Entry.expansionBlocks.length > 0) {
@@ -102,6 +104,8 @@ Entry.clearProject = function() {
     Entry.variableContainer.clear();
     Entry.container.clear();
     Entry.scene.clear();
+    Entry.stateManager.clear();
+    GEHelper.resManager.clearProject();
     if (Entry.Loader) {
         Entry.Loader.loaded = false;
     }
@@ -144,10 +148,6 @@ Entry.exportProject = function(project) {
  */
 Entry.setBlock = function(objectType, XML) {
     Entry.playground.setMenuBlock(objectType, XML);
-};
-
-Entry.enableArduino = function() {
-    return;
 };
 
 /**
@@ -642,14 +642,13 @@ Entry.Utils.setSVGDom = function(SVGDom) {
 Entry.Utils.bindIOSDeviceWatch = function() {
     const Agent = Entry.Utils.mobileAgentParser();
     if (Agent.apple.device) {
-        console.log('APPLE! MOBILE DEVICE');
         let lastHeight = window.innerHeight || document.documentElement.clientHeight;
         let lastSVGDomHeight = 0;
         if (Entry.Utils.SVGDom) {
             lastSVGDomHeight = Entry.Utils.SVGDom.height();
         }
 
-        setInterval(function() {
+        setInterval(() => {
             const nowHeight = window.innerHeight || document.documentElement.clientHeight;
             let SVGDomCheck = false;
             if (Entry.Utils.SVGDom) {
@@ -663,9 +662,11 @@ Entry.Utils.bindIOSDeviceWatch = function() {
             lastHeight = nowHeight;
         }, 1000);
 
-        $(window).on('orientationchange', function() {
+        $(window).on('orientationchange', () => {
             Entry.windowResized.notify();
         });
+
+        window.addEventListener('pagehide', Entry.beforeUnload);
     }
 };
 
@@ -681,7 +682,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
             Entry.windowReszied.clear();
         }
         Entry.windowResized = new Entry.Event(window);
-        $(window).on('resize', function(e) {
+        $(window).on('resize', (e) => {
             Entry.windowResized.notify(e);
         });
         Entry.Utils.bindIOSDeviceWatch();
@@ -706,7 +707,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
 
         Entry.mouseCoordinate = {};
         Entry.documentMousemove = new Entry.Event(window);
-        doc.on('touchmove mousemove', function(e) {
+        doc.on('touchmove mousemove', (e) => {
             if (e.originalEvent && e.originalEvent.touches) {
                 e = e.originalEvent.touches[0];
             }
@@ -723,7 +724,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
-        doc.on('keydown', function(e) {
+        doc.on('keydown', (e) => {
             const keyCode = e.keyCode;
 
             if (Entry.pressedKeys.indexOf(keyCode) < 0) {
@@ -739,7 +740,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
             Entry.keyUpped.clear();
         }
         Entry.keyUpped = new Entry.Event(window);
-        doc.on('keyup', function(e) {
+        doc.on('keyup', (e) => {
             const keyCode = e.keyCode;
             const index = Entry.pressedKeys.indexOf(keyCode);
             if (index > -1) {
@@ -755,7 +756,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }
         Entry.disposeEvent = new Entry.Event(window);
         if (Entry.documentMousedown) {
-            Entry.documentMousedown.attach(this, function(e) {
+            Entry.documentMousedown.attach(this, (e) => {
                 Entry.disposeEvent.notify(e);
             });
         }
@@ -881,9 +882,7 @@ Entry.dispatchEvent = function(eventName, ...args) {
         return;
     }
 
-    events.forEach((func) => {
-        return func.apply(window, args);
-    });
+    events.forEach((func) => func.apply(window, args));
 };
 
 /**
@@ -895,9 +894,7 @@ Entry.removeEventListener = function(eventName, fn) {
     if (_.isEmpty(events)) {
         return;
     }
-    this.events_[eventName] = events.filter((a) => {
-        return fn !== a;
-    });
+    this.events_[eventName] = events.filter((a) => fn !== a);
 };
 
 /**
@@ -968,6 +965,17 @@ Entry.hex2rgb = function(hex) {
  */
 Entry.rgb2hex = function(r, g, b) {
     return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+};
+
+/**
+ *
+ * @param {number} r - 0~255 integer
+ * @param {number} g - 0~255 integer
+ * @param {number} b - 0~255 integer
+ * @return {number} 0~0xffffff integer
+ */
+Entry.rgb2Number = function(r, g, b) {
+    return (r << 16) + (g << 8) + Number(b);
 };
 
 /*
@@ -1344,7 +1352,7 @@ Entry.findObjsByKey = function(arr, keyName, key) {
     return result;
 };
 
-Entry.factorial = _.memoize(function(n) {
+Entry.factorial = _.memoize((n) => {
     if (n === 0 || n == 1) {
         return 1;
     }
@@ -1440,61 +1448,70 @@ Entry.getBrowserType = function() {
 };
 
 Entry.setBasicBrush = function(sprite) {
-    const brush = new createjs.Graphics();
+    const isWebGL = GEHelper.isWebGL;
+    const brush = GEHelper.brushHelper.newBrush();
     if (sprite.brush) {
         const parentBrush = sprite.brush;
         brush.thickness = parentBrush.thickness;
         brush.rgb = parentBrush.rgb;
-
         brush.opacity = parentBrush.opacity;
         brush.setStrokeStyle(brush.thickness);
-        brush.beginStroke(
-            `rgba(${brush.rgb.r},${brush.rgb.g},${brush.rgb.b},${1 - brush.opacity / 100})`
-        );
+
+        const rgb = brush.rgb;
+        const opacity = 1 - brush.opacity / 100;
+
+        if (isWebGL) {
+            brush.beginStrokeFast(Entry.rgb2Number(rgb.r, rgb.g, rgb.b), opacity);
+        } else {
+            brush.beginStroke(`rgba(${rgb.r},${rgb.g},${rgb.b},${opacity})`);
+        }
     } else {
         brush.thickness = 1;
         brush.rgb = Entry.hex2rgb('#ff0000');
         brush.opacity = 0;
         brush.setStrokeStyle(1);
-        brush.beginStroke('rgba(255,0,0,1)');
+        if (isWebGL) {
+            brush.beginStrokeFast(0xff0000, 1);
+        } else {
+            brush.beginStroke('rgba(255,0,0,1)');
+        }
     }
 
     brush.entity = sprite;
+    const shape = GEHelper.brushHelper.newShape(brush);
 
-    const shape = new createjs.Shape(brush);
     shape.entity = sprite;
     const selectedObjectContainer = Entry.stage.selectedObjectContainer;
     selectedObjectContainer.addChildAt(shape, selectedObjectContainer.getChildIndex(sprite.object));
 
-    if (sprite.brush) {
-        sprite.brush = null;
-    }
     sprite.brush = brush;
 
     sprite.shapes.push(shape);
 };
 
 Entry.setCloneBrush = function(sprite, parentBrush) {
-    const brush = new createjs.Graphics();
+    const isWebGL = GEHelper.isWebGL;
+    const brush = GEHelper.brushHelper.newBrush();
     brush.thickness = parentBrush.thickness;
     brush.rgb = parentBrush.rgb;
-
     brush.opacity = parentBrush.opacity;
     brush.setStrokeStyle(brush.thickness);
-    brush.beginStroke(
-        `rgba(${brush.rgb.r},${brush.rgb.g},${brush.rgb.b},${1 - brush.opacity / 100})`
-    );
 
-    const shape = new createjs.Shape(brush);
+    const rgb = brush.rgb;
+    const opacity = 1 - brush.opacity / 100;
+    if (isWebGL) {
+        brush.beginStrokeFast(Entry.rgb2Number(rgb.r, rgb.g, rgb.b), opacity);
+    } else {
+        brush.beginStroke(`rgba(${rgb.r},${rgb.g},${rgb.b},${opacity})`);
+    }
+
+    const shape = GEHelper.brushHelper.newShape(brush);
     shape.entity = sprite;
     const selectedObjectContainer = Entry.stage.selectedObjectContainer;
     selectedObjectContainer.addChildAt(shape, selectedObjectContainer.getChildIndex(sprite.object));
 
     brush.stop = parentBrush.stop;
 
-    if (sprite.brush) {
-        sprite.brush = null;
-    }
     sprite.brush = brush;
 
     sprite.shapes.push(shape);
@@ -1603,7 +1620,7 @@ Entry.convertToRoundedDecimals = function(value, decimals) {
 };
 
 Entry.attachEventListener = function(elem, eventType, func) {
-    setTimeout(function() {
+    setTimeout(() => {
         elem.addEventListener(eventType, func);
     }, 0);
 };
@@ -1808,6 +1825,103 @@ Entry.Utils.addBlockPattern = function(boardSvgDom, suffix) {
     }
 
     return { pattern };
+};
+
+Entry.Utils.addNewBlock = function(item) {
+    const { script, functions, messages, variables, expansionBlocks = [] } = item;
+    const parseScript = JSON.parse(script);
+    if (!parseScript) {
+        return;
+    }
+
+    if (
+        Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD &&
+        (!Entry.TextCodingUtil.canUsePythonVariables(variables) ||
+            !Entry.TextCodingUtil.canUsePythonFunctions(functions))
+    ) {
+        return entrylms.alert(Lang.Menus.object_import_syntax_error);
+    }
+
+    const objectIdMap = {};
+    variables.forEach((variable) => {
+        const { object } = variable;
+        if (object) {
+            variable.object = _.get(Entry, ['container', 'selectedObject', 'id'], '');
+        }
+    });
+    expansionBlocks.forEach((blockName) => {
+        Entry.expansion.addExpansionBlock(blockName);
+    });
+    Entry.variableContainer.appendMessages(messages);
+    Entry.variableContainer.appendVariables(variables);
+    Entry.variableContainer.appendFunctions(functions);
+    Entry.do(
+        'addThread',
+        parseScript.map((block) => {
+            block.id = Entry.generateHash();
+            return block;
+        })
+    );
+};
+
+Entry.Utils.addNewObject = function(sprite) {
+    if (sprite) {
+        const { objects, functions, messages, variables, expansionBlocks = [] } = sprite;
+
+        if (
+            Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD &&
+            (!Entry.TextCodingUtil.canUsePythonVariables(variables) ||
+                !Entry.TextCodingUtil.canUsePythonFunctions(functions))
+        ) {
+            return entrylms.alert(Lang.Menus.object_import_syntax_error);
+        }
+        const objectIdMap = {};
+        expansionBlocks.forEach((blockName) => {
+            Entry.expansion.addExpansionBlock(blockName);
+        });
+        variables.forEach((variable) => {
+            const { object } = variable;
+            if (object) {
+                const id = variable.id;
+                const idMap = objectIdMap[object];
+                variable.id = Entry.generateHash();
+                if (!idMap) {
+                    variable.object = Entry.generateHash();
+                    objectIdMap[object] = {
+                        objectId: variable.object,
+                        variableOriginId: [id],
+                        variableId: [variable.id],
+                    };
+                } else {
+                    variable.object = idMap.objectId;
+                    idMap.variableOriginId.push(id);
+                    idMap.variableId.push(variable.id);
+                }
+            }
+        });
+        Entry.variableContainer.appendMessages(messages);
+        Entry.variableContainer.appendVariables(variables);
+        Entry.variableContainer.appendFunctions(functions);
+
+        objects.forEach((object) => {
+            const idMap = objectIdMap[object.id];
+            if (idMap) {
+                let script = object.script;
+                idMap.variableOriginId.forEach((id, idx) => {
+                    const regex = new RegExp(id, 'gi');
+                    script = script.replace(regex, idMap.variableId[idx]);
+                });
+                object.script = script;
+                object.id = idMap.objectId;
+            } else if (Entry.container.getObject(object.id)) {
+                object.id = Entry.generateHash();
+            }
+            if (!object.objectType) {
+                object.objectType = 'sprite';
+            }
+            Entry.container.addObject(object, 0);
+        });
+    }
 };
 
 Entry.Utils.COLLISION = {
@@ -2138,33 +2252,6 @@ Entry.Utils.isNewVersion = function(old_version = '', new_version = '') {
     }
 };
 
-Entry.Utils.getBlockCategory = (function() {
-    const map = {};
-    let allBlocks;
-    return function(blockType) {
-        if (!blockType) {
-            return;
-        }
-
-        if (map[blockType]) {
-            return map[blockType];
-        }
-
-        if (!allBlocks) {
-            allBlocks = EntryStatic.getAllBlocks();
-        }
-
-        for (let i = 0; i < allBlocks.length; i++) {
-            const data = allBlocks[i];
-            const category = data.category;
-            if (data.blocks.indexOf(blockType) > -1) {
-                map[blockType] = category;
-                return category;
-            }
-        }
-    };
-})();
-
 Entry.Utils.getUniqObjectsBlocks = function(objects) {
     const _typePicker = _.partial(_.result, _, 'type');
 
@@ -2192,53 +2279,6 @@ Entry.Utils.getObjectsBlocks = function(objects) {
         })
         .flatten()
         .value();
-};
-
-Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
-    if (!blockArr) {
-        return;
-    }
-    const that = this;
-
-    const data = EntryStatic.getAllBlocks();
-    const categoryIndexMap = {};
-    for (let i = 0; i < data.length; i++) {
-        const datum = data[i];
-        datum.blocks = [];
-        categoryIndexMap[datum.category] = i;
-    }
-
-    blockArr.forEach(function(b) {
-        const category = that.getBlockCategory(b);
-        const index = categoryIndexMap[category];
-        if (index === undefined) {
-            return;
-        }
-        data[index].blocks.push(b);
-    });
-
-    const allBlocksInfo = EntryStatic.getAllBlocks();
-    for (let i = 0; i < allBlocksInfo.length; i++) {
-        const info = allBlocksInfo[i];
-        const category = info.category;
-        const blocks = info.blocks;
-        if (category === 'func') {
-            allBlocksInfo.splice(i, 1);
-            continue;
-        }
-        const selectedBlocks = data[i].blocks;
-        const sorted = [];
-
-        blocks.forEach(function(b) {
-            if (selectedBlocks.indexOf(b) > -1) {
-                sorted.push(b);
-            }
-        });
-
-        data[i].blocks = sorted;
-    }
-
-    return data;
 };
 
 Entry.Utils.blur = function() {
@@ -2348,7 +2388,7 @@ Entry.Utils.glideBlock = function(svgGroup, x, y, callback) {
         {
             duration: 1200,
             complete() {
-                setTimeout(function() {
+                setTimeout(() => {
                     svgDom.remove();
                     callback();
                 }, 500);
@@ -2371,9 +2411,10 @@ Entry.Utils.copy = function(target) {
 
 //helper function for development and debug
 Entry.Utils.getAllObjectsBlockList = function() {
-    return Entry.container.objects_.reduce(function(prev, { script }) {
-        return prev.concat(script.getBlockList());
-    }, []);
+    return Entry.container.objects_.reduce(
+        (prev, { script }) => prev.concat(script.getBlockList()),
+        []
+    );
 };
 
 Entry.Utils.toFixed = function(value, len) {
@@ -2395,7 +2436,7 @@ Entry.Utils.toFixed = function(value, len) {
 
 Entry.Utils.addSoundInstances = function(instance) {
     Entry.soundInstances.push(instance);
-    instance.on('complete', function() {
+    instance.on('complete', () => {
         const index = Entry.soundInstances.indexOf(instance);
         if (index > -1) {
             Entry.soundInstances.splice(index, 1);
@@ -2404,13 +2445,13 @@ Entry.Utils.addSoundInstances = function(instance) {
 };
 
 Entry.Utils.pauseSoundInstances = function() {
-    Entry.soundInstances.map(function(instance) {
+    Entry.soundInstances.map((instance) => {
         instance.paused = true;
     });
 };
 
 Entry.Utils.recoverSoundInstances = function() {
-    Entry.soundInstances.map(function(instance) {
+    Entry.soundInstances.map((instance) => {
         instance.paused = false;
     });
 };
@@ -2459,9 +2500,7 @@ Entry.Utils.recoverSoundInstances = function() {
     };
 })(HTMLElement.prototype);
 
-Entry.Utils.hasClass = (elem, name) => {
-    return ` ${elem.getAttribute('class')} `.indexOf(` ${name} `) >= 0;
-};
+Entry.Utils.hasClass = (elem, name) => ` ${elem.getAttribute('class')} `.indexOf(` ${name} `) >= 0;
 
 Entry.Utils.addClass = (elem, name) => {
     if (!Entry.Utils.hasClass(elem, name)) {
@@ -2571,9 +2610,7 @@ Entry.Utils.when = function(predicate, fn) {
 };
 
 Entry.Utils.whenEnter = function(fn) {
-    return Entry.Utils.when(({ keyCode } = {}) => {
-        return keyCode === 13;
-    }, fn);
+    return Entry.Utils.when(({ keyCode } = {}) => keyCode === 13, fn);
 };
 
 Entry.Utils.blurWhenEnter = Entry.Utils.whenEnter(function() {

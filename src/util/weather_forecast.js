@@ -411,6 +411,7 @@ Entry.EXPANSION_BLOCK.weather.getData = function(type, location, dateStr) {
 };
 
 Entry.EXPANSION_BLOCK.weather.getDate = function(key) {
+    Entry.EXPANSION_BLOCK.weather.date = Entry.EXPANSION_BLOCK.weather.date || new Date();
     const date = new Date(Entry.EXPANSION_BLOCK.weather.date);
     switch (key) {
         case 'yesterday':

@@ -1,3 +1,4 @@
+__webpack_public_path__ = global.PUBLIC_PATH_FOR_ENTRYJS || 'dist/';
 import 'simplebar/dist/simplebar.css';
 
 const Entry = {};
@@ -6,7 +7,7 @@ module.exports = Entry;
 global.Entry = Entry;
 
 require('core-js/fn/object/values');
-
+require('./graphicEngine/FakePIXI');
 require('./css/entry.less');
 require('./class/time_wait');
 require('./class/container');
@@ -18,6 +19,7 @@ require('./class/function');
 require('./class/helper');
 require('./class/hw');
 require('./class/hw_monitor');
+require('./class/intro');
 require('./class/object');
 require('./class/painter');
 require('./class/pdf');
@@ -58,7 +60,6 @@ require('./parser-no/js');
 require('./parser-no/parser');
 require('./playground/block');
 require('./playground/block_entry');
-require('./playground/block_entry_mini');
 require('./playground/block_menu');
 require('./playground/block_menu_scroll');
 require('./playground/block_view');

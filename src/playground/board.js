@@ -260,7 +260,7 @@ Entry.Board = class Board {
                 offsetY: mouseEvent.pageY,
             });
 
-            if (eventType === 'touchstart') {
+            if (eventType === 'touchstart' || Entry.isMobile()) {
                 longPressTimer = setTimeout(() => {
                     if (longPressTimer) {
                         longPressTimer = null;
@@ -529,9 +529,9 @@ Entry.Board = class Board {
                 continue;
             }
 
-            const metaData = this._getCodeBlocks(code, targetType).sort((a, b) => {
-                return a.point - b.point;
-            });
+            const metaData = this._getCodeBlocks(code, targetType).sort(
+                (a, b) => a.point - b.point
+            );
 
             metaData.unshift({ point: -Number.MAX_VALUE, blocks: [] });
 
@@ -580,9 +580,13 @@ Entry.Board = class Board {
                 return [];
         }
 
-        return code.getThreads().reduce((blocks, thread) => {
-            return blocks.concat(func.call(this, thread, thread.view.zIndex, null, targetType));
-        }, []);
+        return code
+            .getThreads()
+            .reduce(
+                (blocks, thread) =>
+                    blocks.concat(func.call(this, thread, thread.view.zIndex, null, targetType)),
+                []
+            );
     }
 
     _getNextMagnets(thread, zIndex, offset, targetType) {
@@ -1126,9 +1130,7 @@ Entry.Board = class Board {
             return;
         }
 
-        threads = threads.sort((a, b) => {
-            return a.getFirstBlock().view.x - b.getFirstBlock().view.x;
-        });
+        threads = threads.sort((a, b) => a.getFirstBlock().view.x - b.getFirstBlock().view.x);
 
         let block = threads[0].getFirstBlock();
         if (block) {
@@ -1140,6 +1142,7 @@ Entry.Board = class Board {
 
     _initContextOptions() {
         const that = this;
+        const { options = {} } = Entry;
         this._contextOptions = [
             {
                 activated: true,
@@ -1208,7 +1211,7 @@ Entry.Board = class Board {
                 },
             },
             {
-                activated: true,
+                activated: !options.commentDisable,
                 option: {
                     text: Lang.Blocks.add_comment,
                     enable: !this.readOnly,
@@ -1227,7 +1230,7 @@ Entry.Board = class Board {
                 },
             },
             {
-                activated: true,
+                activated: !options.commentDisable,
                 option: {
                     text: Lang.Blocks.hide_all_comment,
                     enable: !this.readOnly,

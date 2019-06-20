@@ -2,6 +2,7 @@
  *
  */
 'use strict';
+import { Destroyer } from '../util/destroyer/Destroyer';
 
 Entry.Workspace = class Workspace {
     schema = {
@@ -11,6 +12,8 @@ Entry.Workspace = class Workspace {
 
     constructor(options) {
         Entry.Model(this, false);
+        this._destroyer = this._destroyer || new Destroyer();
+        this._destroyer.destroy();
         this.scale = 1;
         this.dSetMode = Entry.Utils.debounce(this.setMode, 200);
         this.dReDraw = Entry.Utils.debounce(this.reDraw, 150);
@@ -37,6 +40,7 @@ Entry.Workspace = class Workspace {
                 option.scroll,
                 this.readOnly
             );
+            this._destroyer.add(this.blockMenu);
             this.blockMenu.workspace = this;
             this.blockMenu.observe(this, '_setSelectedBlockView', ['selectedBlockView'], false);
         }
@@ -175,7 +179,7 @@ Entry.Workspace = class Workspace {
         switch (this.mode) {
             case WORKSPACE.MODE_VIMBOARD: {
                 const alertMessage =
-                    Util.validateVariableToPython() ||
+                    Util.validateVariableAndListToPython() ||
                     Util.validateFunctionToPython() ||
                     Util.hasExpansionBlocks();
 
@@ -237,18 +241,17 @@ Entry.Workspace = class Workspace {
                     }
                     this.set({ selectedBoard: this.vimBoard });
                     blockMenu.banClass('functionInit');
+
                     this.mode = WORKSPACE.MODE_VIMBOARD;
 
                     if (this.oldTextType === VIM.TEXT_TYPE_JS) {
-                        mode.boardType = WORKSPACE.MODE_VIMBOARD;
-                        mode.textType = VIM.TEXT_TYPE_JS;
-                        mode.runType = VIM.MAZE_MODE;
-                        this.oldTextType = VIM.TEXT_TYPE_JS;
+                        this.boardType = WORKSPACE.MODE_VIMBOARD;
+                        this.textType = VIM.TEXT_TYPE_JS;
+                        this.runType = VIM.MAZE_MODE;
                     } else if (this.oldTextType === VIM.TEXT_TYPE_PY) {
-                        mode.boardType = WORKSPACE.MODE_VIMBOARD;
-                        mode.textType = VIM.TEXT_TYPE_PY;
-                        mode.runType = VIM.WORKSPACE_MODE;
-                        this.oldTextType = VIM.TEXT_TYPE_PY;
+                        this.boardType = WORKSPACE.MODE_VIMBOARD;
+                        this.textType = VIM.TEXT_TYPE_PY;
+                        this.runType = VIM.WORKSPACE_MODE;
                     }
                 }
                 Entry.commander.setCurrentEditor('board', this.board);
@@ -417,14 +420,19 @@ Entry.Workspace = class Workspace {
                     return;
                 }
             }
-
+            const mainWorksapceMode = Entry.playground.mainWorkspace.getMode();
+            const playgroundMode = Entry.playground.getViewMode();
+            const isBlockCodeView = (mainWorksapceMode === Entry.Workspace.MODE_OVERLAYBOARD ||
+                mainWorksapceMode === Entry.Workspace.MODE_BOARD) &&
+                (playgroundMode === 'code' || playgroundMode === 'variable');
             switch (keyCode) {
                 case 86: //paste
                     if (
                         !isBoardReadOnly &&
                         board &&
                         board instanceof Entry.Board &&
-                        Entry.clipboard
+                        Entry.clipboard &&
+                        isBlockCodeView
                     ) {
                         Entry.do('addThread', Entry.clipboard)
                             .value.getFirstBlock()
@@ -561,9 +569,11 @@ Entry.Workspace = class Workspace {
                         blockView.block.isDeletable() &&
                         !blockView.isFieldEditing()
                     ) {
-                        Entry.do('destroyBlock', blockView.block);
-                        this.board.set({ selectedBlockView: null });
-                        e.preventDefault();
+                        if (Entry.engine.isState('stop')) {
+                            Entry.do('destroyBlock', blockView.block);
+                            this.board.set({ selectedBlockView: null });
+                            e.preventDefault();
+                        }
                     }
                     break;
             }
@@ -718,6 +728,10 @@ Entry.Workspace = class Workspace {
         if (this.overlayBoard) {
             this.overlayBoard.setScale(scale);
         }
+    }
+
+    destroy() {
+        this._destroyer.destroy();
     }
 };
 

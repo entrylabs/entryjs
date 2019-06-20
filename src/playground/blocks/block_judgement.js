@@ -1,3 +1,5 @@
+import { GEHelper } from '../../graphicEngine/GEHelper';
+
 module.exports = {
     getBlocks() {
         return {
@@ -40,7 +42,7 @@ module.exports = {
                 statements: [],
                 params: [
                     {
-                        type: 'Dropdown',
+                        type: 'Keyboard',
                         options: [
                             [Lang.Blocks.START_press_some_key_up, '38'],
                             [Lang.Blocks.START_press_some_key_down, '40'],
@@ -257,14 +259,12 @@ module.exports = {
                                 return !!collision(object, wall.left, ath, false);
                         }
                     } else if (targetSpriteId === 'mouse') {
-                        const stage = Entry.stage.canvas;
-                        const pt = object.globalToLocal(stage.mouseX, stage.mouseY);
-                        return object.hitTest(pt.x, pt.y);
+                        return GEHelper.hitTestMouse(object);
                     } else {
                         const targetSprite = Entry.container.getEntity(targetSpriteId);
                         if (targetSprite.type === 'textBox' || sprite.type === 'textBox') {
-                            const targetBound = targetSprite.object.getTransformedBounds();
-                            const bound = object.getTransformedBounds();
+                            const targetBound = GEHelper.getTransformedBounds(targetSprite.object);
+                            const bound = GEHelper.getTransformedBounds(object);
                             if (Entry.checkCollisionRect(bound, targetBound)) {
                                 return true;
                             }
@@ -277,7 +277,7 @@ module.exports = {
                                 if (
                                     Entry.checkCollisionRect(
                                         bound,
-                                        entity.object.getTransformedBounds()
+                                        GEHelper.getTransformedBounds(entity.object)
                                     )
                                 ) {
                                     return true;
@@ -335,7 +335,6 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Dropdown',
@@ -354,7 +353,6 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                 ],
                 events: {},
@@ -467,22 +465,34 @@ module.exports = {
                 isNotFor: [],
                 func(sprite, script) {
                     const operator = script.getField('OPERATOR', script);
-                    const [leftValue, rightValue] = script.getValues(
+                    let [leftValue, rightValue] = script.getValues(
                         ['LEFTHAND', 'RIGHTHAND'],
                         script
                     );
+                    if (typeof leftValue === 'string' && leftValue.length) {
+                        const leftNumber = Number(leftValue);
+                        if (!isNaN(leftNumber)) {
+                            leftValue = leftNumber;
+                        }
+                    }
+                    if (typeof rightValue === 'string' && rightValue.length) {
+                        const rightNumber = Number(rightValue);
+                        if (!isNaN(rightNumber)) {
+                            rightValue = rightNumber;
+                        }
+                    }
 
                     switch (operator) {
                         case 'EQUAL':
-                            return leftValue == rightValue;
+                            return leftValue === rightValue;
                         case 'GREATER':
-                            return Number(leftValue) > Number(rightValue);
+                            return leftValue > rightValue;
                         case 'LESS':
-                            return Number(leftValue) < Number(rightValue);
+                            return leftValue < rightValue;
                         case 'GREATER_OR_EQUAL':
-                            return Number(leftValue) >= Number(rightValue);
+                            return leftValue >= rightValue;
                         case 'LESS_OR_EQUAL':
-                            return Number(leftValue) <= Number(rightValue);
+                            return leftValue <= rightValue;
                     }
                 },
                 syntax: {

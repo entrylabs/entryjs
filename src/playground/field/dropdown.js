@@ -1,6 +1,6 @@
 'use strict';
 
-import EntryTool from 'entry-tool';
+import { Dropdown } from '@entrylabs/tool';
 
 Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
     constructor(content, blockView, index, renderMode, i, isDynamic) {
@@ -80,7 +80,7 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
                 fill: this._textColor,
                 'font-size': `${+that._font_size}px`,
                 'font-weight': 'bold',
-                'font-family': 'NanumGothic',
+                'font-family': EntryStatic.fontFamily || 'NanumGothic',
             });
         }
 
@@ -179,7 +179,7 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
         const convertedOptions = options.map(([key, value]) => {
             return [this._convert(key, value), value];
         });
-        this.dropdownWidget = new EntryTool({
+        this.dropdownWidget = new Dropdown({
             type: 'dropdownWidget',
             data: {
                 eventTypes: ['mousedown', 'touchstart', 'wheel'],
@@ -196,6 +196,7 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
             $(this._blockView.contentSvgGroup).trigger('optionChanged', {
                 block: this._block,
                 value: this.getValue(),
+                index: this._index,
             });
         });
         this.optionDomCreated();

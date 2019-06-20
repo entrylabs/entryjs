@@ -3,14 +3,14 @@
  */
 'use strict';
 
-import EntryTool from 'entry-tool';
+import { Sortable } from '@entrylabs/tool';
 
 /**
  * Class for a scene controller.
  * This have view for scenes.
  * @constructor
  */
-Entry.Scene = class Scene {
+Entry.Scene = class {
     constructor() {
         this.scenes_ = [];
         this.selectedScene = null;
@@ -33,19 +33,21 @@ Entry.Scene = class Scene {
     generateView(sceneView, option) {
         this.view_ = sceneView;
         this.view_.addClass('entryScene');
-        if (!option || option === 'workspace') {
+        if (!option || option == 'workspace') {
             this.view_.addClass('entrySceneWorkspace');
 
             $(this.view_).on('mousedown touchstart', (e) => {
                 const offset = $(this.view_).offset();
                 const $window = $(window);
 
+                const slope = -40 / 55;
                 const selectedScene = this.selectedScene;
                 const selectedLeft = $(selectedScene.view)
                     .find('.entrySceneRemoveButtonCoverWorkspace')
                     .offset().left;
 
                 const x = e.pageX - offset.left + $window.scrollLeft() - selectedLeft;
+                const y = 40 - (e.pageY - offset.top + $window.scrollTop());
 
                 if (x < selectedLeft || x > selectedLeft + 55) {
                     return;
@@ -69,7 +71,7 @@ Entry.Scene = class Scene {
             'entrySceneElementWorkspace entrySceneAddButtonWorkspace'
         );
 
-        addButton.bindOnClick(() => {
+        addButton.bindOnClick((e) => {
             if (Entry.engine.isState('run')) {
                 return;
             }
@@ -83,8 +85,7 @@ Entry.Scene = class Scene {
         const listView = Entry.createElement('div');
         listView.addClass('entrySceneListWorkspace');
 
-        this.sceneSortableListWidget = new EntryTool({
-            type: 'sortableWidget',
+        this.sceneSortableListWidget = new Sortable({
             data: {
                 height: '100%',
                 sortableTarget: ['entrySceneRemoveButtonWorkspace', 'entrySceneInputCover'],
@@ -94,7 +95,6 @@ Entry.Scene = class Scene {
             },
             container: listView,
         });
-
         if (Entry.sceneEditable) {
             this.sceneSortableListWidget.on('change', ([newIndex, oldIndex]) => {
                 Entry.scene.moveScene(newIndex, oldIndex);
@@ -106,9 +106,7 @@ Entry.Scene = class Scene {
     updateSceneView() {
         const items = this._getSortableSceneList();
         if (this.sceneSortableListWidget) {
-            setTimeout(() => {
-                return this.sceneSortableListWidget.setData({ items });
-            }, 300);
+            setTimeout(() => this.sceneSortableListWidget.setData({ items }), 0);
         }
     }
 
@@ -117,12 +115,10 @@ Entry.Scene = class Scene {
             return [];
         }
 
-        return this.scenes_.map((value) => {
-            return {
-                key: value.id,
-                item: value.view,
-            };
-        });
+        return this.scenes_.map((value) => ({
+            key: value.id,
+            item: value.view,
+        }));
     }
 
     /**
@@ -172,7 +168,7 @@ Entry.Scene = class Scene {
     createRemoveButton(scene, removeButtonCover) {
         return Entry.createElement('button')
             .addClass('entrySceneRemoveButtonWorkspace')
-            .bindOnClick(() => {
+            .bindOnClick((e) => {
                 if (Entry.engine.isState('run')) {
                     return;
                 }
@@ -223,7 +219,7 @@ Entry.Scene = class Scene {
                 applyValue(value);
             }
         });
-        nameField.addEventListener('blur', () => {
+        nameField.addEventListener('blur', (e) => {
             if (nameField.value !== scene.name) {
                 Entry.do('sceneRename', scene.id, nameField.value);
             }
@@ -261,6 +257,9 @@ Entry.Scene = class Scene {
 
     updateView() {
         if (!Entry.type || Entry.type === 'workspace') {
+            // var parent = this.listView_;
+            // this.getScenes().forEach(({ view }) => parent.appendChild(view));
+
             if (this.addButton_) {
                 if (!this.isMax()) {
                     this.addButton_.removeClass('entryRemove');
@@ -303,7 +302,7 @@ Entry.Scene = class Scene {
             this.generateElement(scene);
         }
 
-        if (!index && typeof index !== 'number') {
+        if (!index && typeof index != 'number') {
             this.getScenes().push(scene);
         } else {
             this.getScenes().splice(index, 0, scene);
@@ -331,12 +330,13 @@ Entry.Scene = class Scene {
         scene = this.getSceneById(typeof scene === 'string' ? scene : scene.id);
 
         this.getScenes().splice(this.getScenes().indexOf(scene), 1);
-        Entry.container.getSceneObjects(scene).forEach((object) => {
-            return Entry.container.removeObject(object, true);
-        });
+        Entry.container
+            .getSceneObjects(scene)
+            .forEach((object) => Entry.container.removeObject(object, true));
         Entry.stage.removeObjectContainer(scene);
         $(scene.view).remove();
         this.selectScene();
+        this.updateView();
     }
 
     /**
@@ -414,9 +414,7 @@ Entry.Scene = class Scene {
      * @return {JSON}
      */
     toJSON() {
-        return this.getScenes().map((scene) => {
-            return _.pick(scene, ['id', 'name']);
-        });
+        return this.getScenes().map((scene) => _.pick(scene, ['id', 'name']));
     }
 
     /**
@@ -537,6 +535,7 @@ Entry.Scene = class Scene {
     resize() {
         const scenes = this.getScenes();
         const selectedScene = this.selectedScene;
+        const addButton = this.addButton_;
         const firstScene = scenes[0];
 
         if (scenes.length === 0 || !firstScene) {
@@ -544,6 +543,7 @@ Entry.Scene = class Scene {
         }
 
         const startPos = $(firstScene.view).offset().left;
+        const marginLeft = parseFloat($(selectedScene.view).css('margin-left'));
         let totalWidth = Math.floor($(this.view_).width() - startPos - 5);
         const LEFT_MARGIN = -40;
 
@@ -551,15 +551,15 @@ Entry.Scene = class Scene {
         let diff = 0;
         let isSelectedView = false;
         let selectedViewWidth = 0;
-        for (const i in scenes) {
-            const scene = scenes[i];
+        for (var i in scenes) {
+            var scene = scenes[i];
             let view = scene.view;
             view.addClass('minValue');
             isSelectedView = view === this.selectedScene.view;
             view = $(view);
 
             const width = parseFloat(Entry.computeInputWidth(scene.name));
-            const adjusted = width * 10 / 9;
+            const adjusted = (width * 10) / 9;
             if (scene === this.selectedScene) {
                 diff = adjusted - width;
             }
@@ -584,8 +584,9 @@ Entry.Scene = class Scene {
                 dummyWidth * len -
                 diff;
 
-            for (const i in scenes) {
-                const scene = scenes[i];
+            const fieldWidth = Math.floor(totalWidth / len);
+            for (i in scenes) {
+                scene = scenes[i];
                 if (selectedScene.id != scene.id) {
                     scene.view.removeClass('minValue');
                     // $(scene.inputWrapper).width(fieldWidth);
@@ -606,9 +607,7 @@ Entry.Scene = class Scene {
     }
 
     clear() {
-        this.scenes_.forEach((s) => {
-            return Entry.stage.removeObjectContainer(s);
-        });
+        this.scenes_.forEach((s) => Entry.stage.removeObjectContainer(s));
         this.scenes_ = [];
         this.selectedScene = null;
         this.updateView();
@@ -632,5 +631,9 @@ Entry.Scene = class Scene {
             default:
                 return;
         }
+    }
+
+    destroy() {
+        // 우선 interface 만 정의함.
     }
 };

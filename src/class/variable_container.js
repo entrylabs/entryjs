@@ -4,6 +4,7 @@
 'use strict';
 
 import SimpleBar from 'simplebar';
+
 /**
  * Block variable constructor
  * @param {variable model} variable
@@ -180,7 +181,10 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     updateVariableAddView(type = 'variable') {
-        const { info: { isCloud, object }, view } = this._getAddPanel(type);
+        const {
+            info: { isCloud, object },
+            view,
+        } = this._getAddPanel(type);
         const { cloudCheck, globalCheck, localCheck, cloudWrapper } = view;
 
         if (isCloud) {
@@ -224,11 +228,11 @@ Entry.VariableContainer = class VariableContainer {
         this.selected.listElement.addClass('unfold');
         if (object instanceof Entry.Variable) {
             if (object.type === 'variable') {
-                this.generateVariableSettingView();
-                this.renderVariableReference(object);
+                this.generateVariableSettingView(object);
+                this.updateVariableSettingView(object);
             } else if (object.type === 'list') {
-                this.generateListSettingView();
-                this.renderVariableReference(object);
+                this.generateListSettingView(object);
+                this.updateListSettingView(object);
             }
             if (object.object_) {
                 Entry.container.selectObject(object.object_, true);
@@ -250,9 +254,9 @@ Entry.VariableContainer = class VariableContainer {
     renderMessageReference(message) {
         const messageId = message.id;
 
-        const callers = this._messageRefs.filter(({ block: { params } }) => {
-            return _.includes(params, messageId);
-        });
+        const callers = this._messageRefs.filter(({ block: { params } }) =>
+            _.includes(params, messageId)
+        );
 
         message.usedView && $(message.usedView).remove();
         let usedWrapper;
@@ -305,9 +309,9 @@ Entry.VariableContainer = class VariableContainer {
     renderVariableReference(variable) {
         const variableId = variable.id_;
 
-        const callers = this._variableRefs.filter(({ block: { params } }) => {
-            return _.includes(params, variableId);
-        });
+        const callers = this._variableRefs.filter(({ block: { params } }) =>
+            _.includes(params, variableId)
+        );
 
         const usedWrapper = Entry.createElement('div').addClass('use_obj');
         const usedSubject = Entry.createElement('span')
@@ -360,8 +364,7 @@ Entry.VariableContainer = class VariableContainer {
         } else {
             Entry.createElement('li')
                 .addClass('text red')
-                .appendTo(listView).innerHTML =
-                Lang.Workspace.no_use;
+                .appendTo(listView).innerHTML = Lang.Workspace.no_use;
         }
 
         this.variableSettingView && this.variableSettingView.appendChild(usedWrapper);
@@ -372,9 +375,9 @@ Entry.VariableContainer = class VariableContainer {
      * @param {object} variable
      */
     renderFunctionReference(func) {
-        const callers = [...this._functionRefs].filter((item) => {
-            return item.block.data.type === `func_${func.id}`;
-        });
+        const callers = [...this._functionRefs].filter(
+            (item) => item.block.data.type === `func_${func.id}`
+        );
 
         func.usedView && $(func.usedView).remove();
         let usedWrapper;
@@ -394,7 +397,7 @@ Entry.VariableContainer = class VariableContainer {
                 const nameElement = Entry.createElement('span').addClass('text');
                 nameElement.innerHTML = caller.object.name;
                 element.appendChild(nameElement);
-                element.bindOnClick(function() {
+                element.bindOnClick(() => {
                     if (Entry.playground.object != caller.object) {
                         Entry.container.selectObject();
                         Entry.container.selectObject(caller.object.id, true);
@@ -452,6 +455,7 @@ Entry.VariableContainer = class VariableContainer {
                 this.updateFuncTab();
                 break;
         }
+        this.updateSelected();
     }
 
     makeChildVariableViews(arr, viewFunc, parent = this.listView_) {
@@ -471,9 +475,6 @@ Entry.VariableContainer = class VariableContainer {
                     });
             }
             parent.appendChild(data.listElement);
-            if (data.callerListElement) {
-                parent.appendChild(data.callerListElement);
-            }
         });
     }
 
@@ -525,9 +526,7 @@ Entry.VariableContainer = class VariableContainer {
         } else {
             this.messageAddButton_
                 .unBindOnClick()
-                .bindOnClick(() => {
-                    return Entry.do('variableContainerClickMessageAddButton');
-                })
+                .bindOnClick(() => Entry.do('variableContainerClickMessageAddButton'))
                 .removeClass('disabled');
         }
         listView.appendChild(this.messageAddButton_);
@@ -560,9 +559,7 @@ Entry.VariableContainer = class VariableContainer {
         } else {
             this.variableAddButton_
                 .unBindOnClick()
-                .bindOnClick(() => {
-                    return Entry.do('variableContainerClickVariableAddButton');
-                })
+                .bindOnClick(() => Entry.do('variableContainerClickVariableAddButton'))
                 .removeClass('disabled');
         }
 
@@ -645,9 +642,7 @@ Entry.VariableContainer = class VariableContainer {
         } else {
             this.listAddButton_
                 .unBindOnClick()
-                .bindOnClick(() => {
-                    return Entry.do('variableContainerClickListAddButton');
-                })
+                .bindOnClick(() => Entry.do('variableContainerClickListAddButton'))
                 .removeClass('disabled');
         }
         listView.appendChild(this.listAddButton_);
@@ -712,9 +707,7 @@ Entry.VariableContainer = class VariableContainer {
         } else {
             this.functionAddButton_
                 .unBindOnClick()
-                .bindOnClick(() => {
-                    return Entry.do('funcCreateStart', Entry.generateHash());
-                })
+                .bindOnClick(() => Entry.do('funcCreateStart', Entry.generateHash()))
                 .removeClass('disabled');
         }
         listView.appendChild(this.functionAddButton_);
@@ -754,11 +747,7 @@ Entry.VariableContainer = class VariableContainer {
             const message = messages[i];
             if (!message.id) {
                 message.id = Entry.generateHash();
-            } else if (
-                this.messages_.some((item) => {
-                    return item.id === message.id;
-                })
-            ) {
+            } else if (this.messages_.some((item) => item.id === message.id)) {
                 continue;
             }
             let name = message.name;
@@ -776,7 +765,7 @@ Entry.VariableContainer = class VariableContainer {
      */
     setVariables(variables = []) {
         variables.forEach((variable) => {
-            variable = new Entry.Variable(variable);
+            variable = Entry.Variable.create(variable);
             switch (variable.getType()) {
                 case 'variable':
                 case 'slide':
@@ -808,10 +797,10 @@ Entry.VariableContainer = class VariableContainer {
 
     generateVariable(variable, data, key) {
         const name = variable.name_;
-        variable.generateView(data.length);
         variable.name_ = this.checkAllVariableName(name, key)
             ? Entry.getOrderedName(name, data, 'name_')
             : name;
+        variable.generateView(data.length);
     }
 
     /**
@@ -819,27 +808,19 @@ Entry.VariableContainer = class VariableContainer {
      */
     appendVariables(variables) {
         for (const i in variables) {
-            const variable = new Entry.Variable(variables[i]);
+            const variable = Entry.Variable.create(variables[i]);
             if (!variable.id_) {
                 variable.id_ = Entry.generateHash();
             }
             const type = variable.getType();
             if (type === 'variable' || type === 'slide') {
-                if (
-                    this.variables_.some((item) => {
-                        return item.id_ === variable.id_;
-                    })
-                ) {
+                if (this.variables_.some((item) => item.id_ === variable.id_)) {
                     continue;
                 }
                 this.generateVariable(variable, this.variables_, 'variables_');
                 this.variables_.push(variable);
             } else if (type === 'list') {
-                if (
-                    this.lists_.some((item) => {
-                        return item.id_ === variable.id_;
-                    })
-                ) {
+                if (this.lists_.some((item) => item.id_ === variable.id_)) {
                     continue;
                 }
                 this.generateVariable(variable, this.lists_, 'lists_');
@@ -898,9 +879,7 @@ Entry.VariableContainer = class VariableContainer {
             };
         });
 
-        const isDuplecate = funcsParamNames.some(({ name }) => {
-            return funcParamName === name;
-        });
+        const isDuplecate = funcsParamNames.some(({ name }) => funcParamName === name);
 
         if (isDuplecate) {
             const orderedNumber = Entry.getOrderedNameNumber(
@@ -921,9 +900,7 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     getFunctionParamName(info) {
-        return info.reduce((acc, { name }) => {
-            return (acc += name);
-        }, '');
+        return info.reduce((acc, { name }) => (acc += name), '');
     }
 
     getFunctionParamInfo(parentParams) {
@@ -1093,7 +1070,10 @@ Entry.VariableContainer = class VariableContainer {
         if (ws && ws.overlayModefrom == Entry.Workspace.MODE_VIMBOARD) {
             if (func && func.description) {
                 const funcName = func.description.substring(1, func.description.length - 1);
-                const alertMsg = Entry.TextCodingUtil.isNameIncludeSpace(funcName, 'function');
+                const alertMsg = Entry.TextCodingUtil.validateNameIncludeSpace(
+                    funcName,
+                    'function'
+                );
                 if (alertMsg) {
                     entrylms.alert(alertMsg);
                     Entry.Func.cancelEdit();
@@ -1161,10 +1141,8 @@ Entry.VariableContainer = class VariableContainer {
      * @param {Entry.Variable} variable
      * @return {boolean} return true when success
      */
-    checkAllVariableName(name, variable) {
-        return this[variable].some(({ name_ }) => {
-            return name_ === name;
-        });
+    checkAllVariableName(name, variable, key = 'name_') {
+        return this[variable].some(({ [key]: name_ }) => name_ === name);
     }
 
     _addVariableOrList(type, data) {
@@ -1175,7 +1153,7 @@ Entry.VariableContainer = class VariableContainer {
         const name = panel.view.name.value.trim();
 
         if (Entry.isTextMode) {
-            const alertMsg = Entry.TextCodingUtil.isNameIncludeSpace(name, type);
+            const alertMsg = Entry.TextCodingUtil.validateNameIncludeSpace(name, type);
             if (alertMsg) {
                 entrylms.alert(alertMsg);
                 this.resetVariableAddPanel(type);
@@ -1190,7 +1168,7 @@ Entry.VariableContainer = class VariableContainer {
         this.resetVariableAddPanel(type);
 
         if (!(data instanceof Entry.Variable)) {
-            data = new Entry.Variable(data);
+            data = Entry.Variable.create(data);
         }
 
         if (type === 'variable') {
@@ -1250,7 +1228,7 @@ Entry.VariableContainer = class VariableContainer {
         }
 
         if (Entry.isTextMode) {
-            const alertMsg = Entry.TextCodingUtil.isNameIncludeSpace(name, 'variable');
+            const alertMsg = Entry.TextCodingUtil.validateNameIncludeSpace(name, 'variable');
             if (alertMsg) {
                 entrylms.alert(alertMsg);
                 variable.listElement.nameField.value = variable.name_;
@@ -1287,7 +1265,7 @@ Entry.VariableContainer = class VariableContainer {
         }
 
         if (Entry.isTextMode) {
-            const alertMsg = Entry.TextCodingUtil.isNameIncludeSpace(name, 'list');
+            const alertMsg = Entry.TextCodingUtil.validateNameIncludeSpace(name, 'list');
             if (alertMsg) {
                 entrylms.alert(alertMsg);
                 list.listElement.nameField.value = list.name_;
@@ -1350,7 +1328,7 @@ Entry.VariableContainer = class VariableContainer {
 
         const editBoxWrapper = createElement('div')
             .addClass('inpt_box')
-            .bindOnClick(function(e) {
+            .bindOnClick((e) => {
                 e.stopPropagation();
 
                 if (that.variableSettingView) {
@@ -1484,7 +1462,9 @@ Entry.VariableContainer = class VariableContainer {
         const messages = this.messages_;
         const exist = Entry.isExist(name, 'name', messages);
 
-        const { listElement: { nameField } } = message;
+        const {
+            listElement: { nameField },
+        } = message;
         const { playground, toast } = Entry;
 
         if (exist) {
@@ -1610,7 +1590,7 @@ Entry.VariableContainer = class VariableContainer {
 
         const editBoxWrapper = createElement('div')
             .addClass('inpt_box')
-            .bindOnClick(function(e) {
+            .bindOnClick((e) => {
                 e.stopPropagation();
 
                 if (that.listSettingView) {
@@ -1711,9 +1691,7 @@ Entry.VariableContainer = class VariableContainer {
             _.result(Entry.container, 'inputValue'),
         ]
             .filter(_.identity)
-            .map((v) => {
-                return v.toJSON ? v.toJSON() : v;
-            });
+            .map((v) => (v.toJSON ? v.toJSON() : v));
     }
 
     /**
@@ -1731,15 +1709,13 @@ Entry.VariableContainer = class VariableContainer {
     getFunctionJSON() {
         return _.reduce(
             this.functions_,
-            (acc, { id, content }) => {
-                return [
-                    ...acc,
-                    {
-                        id,
-                        content: content.stringify(),
-                    },
-                ];
-            },
+            (acc, { id, content }) => [
+                ...acc,
+                {
+                    id,
+                    content: content.stringify(),
+                },
+            ],
             []
         );
     }
@@ -1822,8 +1798,7 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('Workspace_text')
-            .appendTo(addSpaceGlobalWrapper).innerHTML =
-            Lang.Workspace.use_all_objects;
+            .appendTo(addSpaceGlobalWrapper).innerHTML = Lang.Workspace.use_all_objects;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -1848,8 +1823,7 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('entryVariableAddSpaceCloudSpanWorkspace')
-            .appendTo(addSpaceCloudWrapper).innerHTML =
-            Lang.Workspace.Variable_create_cloud;
+            .appendTo(addSpaceCloudWrapper).innerHTML = Lang.Workspace.Variable_create_cloud;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -1869,8 +1843,7 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('Workspace_text')
-            .appendTo(addSpaceLocalWrapper).innerHTML =
-            Lang.Workspace.Variable_use_this_object;
+            .appendTo(addSpaceLocalWrapper).innerHTML = Lang.Workspace.Variable_use_this_object;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -1911,7 +1884,7 @@ Entry.VariableContainer = class VariableContainer {
             delete variableInput.blurCallback;
             Entry.do(
                 'variableContainerAddVariable',
-                new Entry.Variable(this._makeVariableData('variable'))
+                Entry.Variable.create(this._makeVariableData('variable'))
             );
             const [variable] = this.variables_;
             this.updateSelectedVariable(variable);
@@ -1932,7 +1905,7 @@ Entry.VariableContainer = class VariableContainer {
         const blurCallback = () => {
             Entry.do(
                 'variableContainerAddList',
-                new Entry.Variable(this._makeVariableData('list'))
+                Entry.Variable.create(this._makeVariableData('list'))
             );
             const [list] = this.lists_;
             this.updateSelectedVariable(list);
@@ -2009,8 +1982,7 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('Workspace_text')
-            .appendTo(addSpaceGlobalWrapper).innerHTML =
-            Lang.Workspace.use_all_objects;
+            .appendTo(addSpaceGlobalWrapper).innerHTML = Lang.Workspace.use_all_objects;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -2035,8 +2007,7 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('entryVariableAddSpaceCloudSpanWorkspace')
-            .appendTo(addSpaceCloudWrapper).innerHTML =
-            Lang.Workspace.List_create_cloud;
+            .appendTo(addSpaceCloudWrapper).innerHTML = Lang.Workspace.List_create_cloud;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -2056,8 +2027,7 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('Workspace_text')
-            .appendTo(addSpaceLocalWrapper).innerHTML =
-            Lang.Workspace.Variable_use_this_object;
+            .appendTo(addSpaceLocalWrapper).innerHTML = Lang.Workspace.Variable_use_this_object;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -2231,13 +2201,13 @@ Entry.VariableContainer = class VariableContainer {
     generateTimer(timer) {
         timer =
             timer ||
-            new Entry.Variable({
+            Entry.Variable.create({
                 id: Entry.generateHash(),
                 name: Lang.Workspace.Variable_Timer,
                 value: 0,
                 variableType: 'timer',
                 visible: false,
-                x: 150,
+                x: 134,
                 y: -70,
             });
 
@@ -2254,7 +2224,7 @@ Entry.VariableContainer = class VariableContainer {
     generateAnswer(answer) {
         answer =
             answer ||
-            new Entry.Variable({
+            Entry.Variable.create({
                 id: Entry.generateHash(),
                 name: Lang.Blocks.VARIABLE_get_canvas_input_value,
                 value: 0,
@@ -2269,7 +2239,7 @@ Entry.VariableContainer = class VariableContainer {
         Entry.container.inputValue.setName(Lang.Blocks.VARIABLE_get_canvas_input_value);
     }
 
-    generateVariableSettingView() {
+    generateVariableSettingView(variable) {
         const that = this;
         const createElement = Entry.createElement;
         const _setFocused = Entry.Utils.setFocused;
@@ -2278,9 +2248,7 @@ Entry.VariableContainer = class VariableContainer {
         // 변수 속성 설정
         const element = createElement('div')
             .addClass('attr_inner_box')
-            .bindOnClick((e) => {
-                return e.stopPropagation();
-            });
+            .bindOnClick((e) => e.stopPropagation());
         if (this.variableSettingView) {
             $(this.variableSettingView).remove();
             delete this.variableSettingView;
@@ -2307,7 +2275,10 @@ Entry.VariableContainer = class VariableContainer {
         attrInputLabel.setAttribute('for', 'attr_cnt');
         attrInputLabel.innerHTML = Lang.Workspace.default_value;
 
-        const attrInput = createElement('input').appendTo(attrInputBox);
+        const attrInputWrapper = createElement('span')
+            .appendTo(attrInputBox)
+            .addClass('val_inptbox');
+        const attrInput = createElement('input').appendTo(attrInputWrapper);
         attrInput.setAttribute('type', 'text');
         attrInput.value = 0;
         attrInput.onkeypress = Entry.Utils.blurWhenEnter;
@@ -2371,8 +2342,7 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('dash')
-            .appendTo(slideCountBox).innerHTML =
-            '~';
+            .appendTo(slideCountBox).innerHTML = '~';
 
         const maxValueInput = createElement('input').appendTo(slideCountBox);
         maxValueInput.innerHTML = Lang.Workspace.max_value;
@@ -2393,6 +2363,7 @@ Entry.VariableContainer = class VariableContainer {
             Entry.do('variableSetMaxValue', v.id_, value);
         });
         element.maxValueInput = maxValueInput;
+        this.renderVariableReference(variable);
     }
 
     /**
@@ -2429,15 +2400,13 @@ Entry.VariableContainer = class VariableContainer {
     /**
      * 속성 > 리스트 편집창 표기
      */
-    generateListSettingView() {
+    generateListSettingView(list) {
         const createElement = Entry.createElement;
 
         // 리스트 속성 설정
         const element = createElement('div')
             .addClass('attr_inner_box')
-            .bindOnClick((e) => {
-                return e.stopPropagation();
-            });
+            .bindOnClick((e) => e.stopPropagation());
         if (this.listSettingView) {
             $(this.listSettingView).remove();
             delete this.listSettingView;
@@ -2458,6 +2427,7 @@ Entry.VariableContainer = class VariableContainer {
         this.generateListImportExportView(listAttr);
         this.generateListCountView(listAttr);
         this.generateListValuesView(listAttr);
+        this.renderVariableReference(list);
     }
 
     generateListImportExportView(element) {
@@ -2513,7 +2483,9 @@ Entry.VariableContainer = class VariableContainer {
         const buttonMinus = createElement('a')
             .addClass('btn_cnt')
             .bindOnClick(() => {
-                const { selected: { id_ } } = that;
+                const {
+                    selected: { id_ },
+                } = that;
                 Entry.do('listChangeLength', id_, 'minus');
             })
             .appendTo(countInputBox);
@@ -2524,7 +2496,9 @@ Entry.VariableContainer = class VariableContainer {
         const buttonPlus = createElement('a')
             .addClass('btn_cnt')
             .bindOnClick(() => {
-                const { selected: { id_ } } = that;
+                const {
+                    selected: { id_ },
+                } = that;
                 Entry.do('listChangeLength', id_, 'plus');
             })
             .appendTo(countInputBox);
@@ -2593,18 +2567,17 @@ Entry.VariableContainer = class VariableContainer {
             const fragment = document.createDocumentFragment();
             Entry.createElement('p')
                 .addClass('caution_dsc')
-                .appendTo(fragment).innerHTML =
-                Lang.Workspace.empty_of_list;
+                .appendTo(fragment).innerHTML = Lang.Workspace.empty_of_list;
             listValues.appendChild(fragment);
         } else {
-            const data = arr.map(({ data: value }, i) => {
-                return /* html */ `
+            const data = arr.map(({ data: value }, i) =>
+                /* html */ `
                     <li>
                         <span class='cnt'>${i + startIndex}</span>
                         <input value='${value}' type='text' data-index='${i}'/>
                         <a class='del' data-index='${i}'></a>
-                    </li>`.trim();
-            });
+                    </li>`.trim()
+            );
             infinityScroll.assignData(data);
             infinityScroll.show();
             $listValues.on(
@@ -2633,9 +2606,7 @@ Entry.VariableContainer = class VariableContainer {
         const times = value - arr.length;
         if (times && Entry.Utils.isNumber(value)) {
             if (times > 0) {
-                _.times(times, () => {
-                    return arr.push({ data: 0 });
-                });
+                _.times(times, () => arr.push({ data: 0 }));
             } else {
                 arr.length = value;
             }
@@ -2644,9 +2615,7 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     updateViews() {
-        [...this.variables_, ...this.lists_].forEach((v) => {
-            return v.updateView();
-        });
+        [...this.variables_, ...this.lists_].forEach((v) => v.updateView());
     }
 
     updateSelectedVariable(object, type = 'variable') {
@@ -2666,8 +2635,7 @@ Entry.VariableContainer = class VariableContainer {
             this.selected.listElement.removeClass('fold');
             this.selected.listElement.addClass('unfold');
             if (!this.variableSettingView) {
-                this.generateVariableSettingView();
-                this.renderVariableReference(object);
+                this.generateVariableSettingView(object);
             }
             this.updateVariableSettingView(object);
         } else if (objectType === 'list') {
@@ -2675,8 +2643,7 @@ Entry.VariableContainer = class VariableContainer {
             this.selected.listElement.removeClass('fold');
             this.selected.listElement.addClass('unfold');
             if (!this.listSettingView) {
-                this.generateListSettingView();
-                this.renderVariableReference(object);
+                this.generateListSettingView(object);
             }
             this.updateListSettingView(object);
         }
@@ -2782,89 +2749,9 @@ Entry.VariableContainer = class VariableContainer {
                 });
             });
         }
+        Entry.playground.viewMode_ !== 'default' && this.updateList();
 
         return datum;
-    }
-
-    getObjectVariables(blockList, keys) {
-        const findFuncKeys = keys || {};
-        let functions = [];
-        const jsonData = this.getVariableJSONByBlockList(blockList);
-        let variables = jsonData.variables;
-        let messages = jsonData.messages;
-
-        blockList.forEach(
-            function(block) {
-                const type = block.type;
-                if (type && type.indexOf('func_') === 0) {
-                    const id = type.substr(5);
-                    if (!findFuncKeys[id]) {
-                        const func = this.functions_[id];
-                        findFuncKeys[id] = true;
-                        functions.push({
-                            id,
-                            content: JSON.stringify(func.content.toJSON()),
-                        });
-
-                        blockList = func.content.getBlockList();
-                        const jsonData = this.getObjectVariables(blockList, findFuncKeys);
-                        functions = functions.concat(jsonData.functions);
-                        variables = variables.concat(jsonData.variables);
-                        messages = messages.concat(jsonData.messages);
-                    }
-                }
-            }.bind(this)
-        );
-
-        return {
-            functions,
-            variables,
-            messages,
-        };
-    }
-
-    getVariableJSONByBlockList(blockList) {
-        const variables = [];
-        const messages = [];
-        const variableSet = [...this.variables_, ...this.lists_, ...this.messages_].reduce(
-            (acc, data) => {
-                acc[data.id_ || data.id] = data;
-                return acc;
-            },
-            {}
-        );
-
-        blockList.forEach(function(block) {
-            const data = block.data || {};
-            const type = data.type;
-            if (!type) {
-                return;
-            }
-            const isMessage = _.includes(EntryStatic.messageBlockList, type);
-            const isVariable = _.includes(EntryStatic.variableBlockList, type);
-
-            if (isMessage || isVariable) {
-                block.data.params.forEach(function(param) {
-                    if (typeof param === 'string' && !!variableSet[param]) {
-                        const item = variableSet[param];
-                        if (isVariable) {
-                            variables.push(item.toJSON());
-                        } else {
-                            messages.push({
-                                id: item.id,
-                                name: item.name,
-                            });
-                        }
-                        variableSet[param] = undefined;
-                    }
-                });
-            }
-        });
-
-        return {
-            variables,
-            messages,
-        };
     }
 
     removeRef(type, block) {
@@ -2911,6 +2798,94 @@ Entry.VariableContainer = class VariableContainer {
                 });
             }
         }
+        Entry.playground.viewMode_ !== 'default' && this.updateList();
+    }
+
+    updateSelected() {
+        if (this.selected) {
+            const selected = this.selected;
+            this.selected = null;
+            this.select(selected);
+        }
+    }
+
+    getObjectVariables(blockList, keys) {
+        const findFuncKeys = keys || {};
+        let functions = [];
+        const jsonData = this.getVariableJSONByBlockList(blockList);
+        let variables = jsonData.variables;
+        let messages = jsonData.messages;
+
+        blockList.forEach((block) => {
+            const type = block.type;
+            if (type && type.indexOf('func_') === 0) {
+                const id = type.substr(5);
+                if (!findFuncKeys[id]) {
+                    const func = this.functions_[id];
+                    findFuncKeys[id] = true;
+                    functions.push({
+                        id,
+                        content: JSON.stringify(func.content.toJSON()),
+                    });
+
+                    blockList = func.content.getBlockList();
+                    const jsonData = this.getObjectVariables(blockList, findFuncKeys);
+                    functions = functions.concat(jsonData.functions);
+                    variables = variables.concat(jsonData.variables);
+                    messages = messages.concat(jsonData.messages);
+                }
+            }
+        });
+
+        return {
+            functions,
+            variables,
+            messages,
+        };
+    }
+
+    getVariableJSONByBlockList(blockList) {
+        const variables = [];
+        const messages = [];
+        const variableSet = [...this.variables_, ...this.lists_, ...this.messages_].reduce(
+            (acc, data) => {
+                acc[data.id_ || data.id] = data;
+                return acc;
+            },
+            {}
+        );
+
+        blockList.forEach((block) => {
+            const data = block.data || {};
+            const type = data.type;
+            if (!type) {
+                return;
+            }
+            const isMessage = _.includes(EntryStatic.messageBlockList, type);
+            const isVariable = _.includes(EntryStatic.variableBlockList, type);
+
+            if (isMessage || isVariable) {
+                block.data.params.forEach((param) => {
+                    if (typeof param === 'string' && !!variableSet[param]) {
+                        const item = variableSet[param];
+                        if (isVariable) {
+                            variables.push(item.toJSON());
+                        } else {
+                            messages.push({
+                                id: item.id,
+                                name: item.name,
+                            });
+                        }
+                        variableSet[param] = undefined;
+                    }
+                });
+            }
+        });
+
+        return {
+            variables,
+            messages,
+        };
     }
 
     _getBlockMenu() {
@@ -3058,7 +3033,10 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     _makeVariableData(type = 'variable') {
-        const { view, info: { isCloud, object } } = this._getAddPanel(type);
+        const {
+            view,
+            info: { isCloud, object },
+        } = this._getAddPanel(type);
 
         let name = view.name.value.trim();
         if (_.isEmpty(name)) {
@@ -3112,7 +3090,7 @@ Entry.VariableContainer = class VariableContainer {
 
         if (type === 'slide') {
             variableJSON.variableType = type;
-            newVariable = new Entry.Variable(variableJSON);
+            newVariable = Entry.Variable.create(variableJSON);
             variables.splice(variables.indexOf(v), 0, newVariable);
 
             if (newVariable.getValue() < 0) {
@@ -3125,7 +3103,7 @@ Entry.VariableContainer = class VariableContainer {
             if (value !== undefined) {
                 variableJSON.value = value;
             }
-            newVariable = new Entry.Variable(variableJSON);
+            newVariable = Entry.Variable.create(variableJSON);
             variables.splice(variables.indexOf(v), 0, newVariable);
         }
         this.createVariableView(newVariable);

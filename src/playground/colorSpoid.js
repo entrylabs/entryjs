@@ -100,7 +100,7 @@ class ColorSpoid extends EventEmitter {
                     const { x = 0, y = 0 } = colorPos;
                     const imageData = this.mainCanvasCtx.getImageData(x, y, 1, 1);
                     const [red, green, blue] = imageData.data;
-                    const background = 'rgb(' + red + ',' + green + ',' + blue + ')';
+                    const background = `rgb(${red}, ${green}, ${blue})`;
                     this.$colorPreview.css('background-color', background);
                     this.$magnifyRect.css('background-color', background);
                     this.color = `#${_padStart(red.toString(16), 2, '0')}${_padStart(
@@ -141,6 +141,7 @@ class ColorSpoid extends EventEmitter {
                 },
             });
         } else {
+            this.color = '';
             this.updateMagnifier({
                 event: mouseEvent,
                 isShow: false,
@@ -156,7 +157,7 @@ class ColorSpoid extends EventEmitter {
             this.moveMagnifer(e);
         });
         $(document).on('click.magnify touchend.magnify', (e) => {
-            this.emit('selectColor', this.color || '#ffffff');
+            this.emit('selectColor', this.color);
             this.remove();
         });
     }

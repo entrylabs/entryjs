@@ -25,11 +25,10 @@ Entry.Popup = class Popup {
         document.body.appendChild(this.body_);
         this.window_ = Entry.createElement('div');
         this.window_.addClass('entryPopupWindow');
-        if (Entry.targetChecker) {
+        if (Entry.targetChecker && !Entry.targetChecker.statusViewDisabled) {
             this.window_.addClass('targetCheckerPopup');
         }
-        // if (Entry.device === 'tablet') this.window_.addClass('tablet');
-        this.window_.bindOnClick(function() {});
+        this.window_.bindOnClick(() => {});
         Entry.addEventListener('windowResized', this.resize);
         window.popup = this;
         this.resize();
@@ -41,12 +40,14 @@ Entry.Popup = class Popup {
      */
     remove() {
         while (this.window_.hasChildNodes()) {
-            if (Entry.type === 'workspace') {
+            if (Entry.type == 'workspace') {
                 console.log(this.window_.firstChild, Entry.container.view_);
                 Entry.engineContainer.insertBefore(
                     this.window_.firstChild,
                     Entry.engineContainer.firstChild
                 );
+            } else if (Entry.type == 'minimize') {
+                Entry.view_.insertBefore(this.window_.lastChild, Entry.view_.firstChild);
             } else {
                 Entry.engineContainer.insertBefore(
                     this.window_.lastChild,
@@ -60,28 +61,32 @@ Entry.Popup = class Popup {
         Entry.removeEventListener('windowResized', this.resize);
         Entry.engine.popup = null;
         Entry.windowResized.notify();
-        if (Entry.type === 'workspace' && Entry.targetChecker) {
+        if (
+            Entry.type === 'workspace' &&
+            Entry.targetChecker &&
+            !Entry.targetChecker.statusViewDisabled
+        ) {
             Entry.targetChecker.getStatusView().remove();
         }
     }
 
     /**
      * Resize this view size when window size modified
-     * @param {event} e
      */
     resize() {
         const popup = window.popup;
         const popupWindow = popup.window_;
-        const bottomOffset = Entry.targetChecker ? 91 + 48 : 48;
+        const bottomOffset =
+            Entry.targetChecker && !Entry.targetChecker.statusViewDisabled ? 91 + 48 : 48;
         let maxWidth = window.innerWidth * 0.9;
         let maxHeight = window.innerHeight * 0.9 - bottomOffset;
         if (maxWidth * 9 <= maxHeight * 16) {
-            maxHeight = maxWidth / 16 * 9;
+            maxHeight = (maxWidth / 16) * 9;
             maxHeight += bottomOffset;
             popupWindow.style.width = `${String(maxWidth)}px`;
             popupWindow.style.height = `${String(maxHeight)}px`;
         } else {
-            maxWidth = maxHeight * 16 / 9;
+            maxWidth = (maxHeight * 16) / 9;
             maxHeight += bottomOffset;
             popupWindow.style.width = `${String(maxWidth)}px`;
             popupWindow.style.height = `${String(maxHeight)}px`;
@@ -90,7 +95,7 @@ Entry.Popup = class Popup {
         Entry.stage && Entry.stage.updateBoundRect();
     }
 
-    removeMouseDispose() {
+    emoveMouseDispose() {
         this.body_.unBindOnClick();
     }
 };

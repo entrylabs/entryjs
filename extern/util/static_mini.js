@@ -1,10 +1,15 @@
 'use strict';
 
-var EntryStatic = {};
-
-EntryStatic.isPracticalCourse = true;
-
-EntryStatic.objectTypes = ['sprite', 'textBox'];
+/* eslint-disable */
+var EntryStatic = {
+    isPracticalCourse: true,
+    fontFamily: 'NanumGothic',
+    exportBlockFontFamily:
+        "NanumGothic, 'NanumGothic', '나눔고딕','NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum",
+    fontOffsetY: -2.5,
+    heightLetter: 'M',
+    objectTypes: ['sprite', 'textBox'],
+};
 
 EntryStatic.usageList = [
     'usage_event',
@@ -316,12 +321,15 @@ EntryStatic.getAllBlocks = function() {
                 'robotis_detectingsound_value',
                 'robotis_detectedsound_value_boolean',
                 'robotis_detectingsound_value_boolean',
+                'robotis_detectedsound_value_init',
                 'robotis_color_value',
                 'robotis_color_value_boolean',
                 'robotis_humidity_value',
                 'robotis_humidity_value_boolean',
                 'robotis_temperature_value',
                 'robotis_temperature_value_boolean',
+                'robotis_userbutton_value',
+                'robotis_userbutton_value_boolean',
             ],
         },
         {
@@ -359,294 +367,11 @@ EntryStatic.getAllBlocks = function() {
         {
             category: 'arduino',
             visible: false,
-            blocks: [
-                'arduino_get_number_sensor_value',
-                'arduino_get_digital_value',
-                'arduino_toggle_led',
-                'arduino_toggle_pwm',
-                'arduino_convert_scale',
-                //arduinoExt
-                'arduino_ext_get_analog_value',
-                'arduino_ext_get_analog_value_map',
-                'arduino_ext_get_ultrasonic_value',
-                'arduino_ext_get_digital',
-                'arduino_ext_toggle_led',
-                'arduino_ext_digital_pwm',
-                'arduino_ext_set_servo',
-                'arduino_ext_set_tone',
-                //joystick
-                'joystick_get_number_sensor_value',
-                'joystick_get_digital_value',
-                'joystick_toggle_led',
-                'joystick_toggle_pwm',
-                'joystick_convert_scale',
-                //dplay
-                'dplay_get_number_sensor_value',
-                'dplay_get_value',
-                'dplay_get_gas_sensor_value',
-                'dplay_get_dust_sensor_value',
-                'dplay_get_CO2_sensor_value',
-                'dplay_convert_scale',
-                'dplay_get_digital_value',
-                'dplay_get_switch_status',
-                'dplay_get_tilt',
-                'dplay_toggle_led',
-                'dplay_toggle_pwm',
-                'dplay_select_led',
-                'dplay_DCmotor',
-                'dplay_DCmotor_speed',
-                'dplay_buzzer',
-                'dplay_servo',
-                'dplay_Robot_run',
-                'dplay_Robot_run_sec',
-                'dplay_robot_speed_sel',
-                'dplay_robot_speed_set',
-                'dplay_robot_stop',
-                //nemoino
-                'nemoino_get_named_sensor_value',
-                'nemoino_get_sound_status',
-                'nemoino_is_button_pressed',
-                'nemoino_get_accelerometer_direction',
-                'nemoino_get_accelerometer_value',
-                'nemoino_get_number_sensor_value',
-                'nemoino_get_digital_value',
-                'nemoino_toggle_led',
-                'nemoino_toggle_pwm',
-                'nemoino_convert_scale',
-                //neobot
-                'neobot_sensor_value',
-                'neobot_sensor_convert_scale',
-                'neobot_left_motor',
-                'neobot_stop_left_motor',
-                'neobot_right_motor',
-                'neobot_stop_right_motor',
-                'neobot_all_motor',
-                'neobot_stop_all_motor',
-                'neobot_set_servo',
-                'neobot_set_output',
-                'neobot_set_fnd',
-                'neobot_set_fnd_off',
-                'neobot_play_note_for',
-                'bitbrick_sensor_value',
-                'bitbrick_convert_scale',
-                'bitbrick_is_touch_pressed',
-                'bitbrick_turn_off_color_led',
-                'bitbrick_turn_on_color_led_by_rgb',
-                'bitbrick_turn_on_color_led_by_picker',
-                'bitbrick_turn_on_color_led_by_value',
-                'bitbrick_buzzer',
-                'bitbrick_turn_off_all_motors',
-                'bitbrick_dc_speed',
-                'bitbrick_dc_direction_speed',
-                'bitbrick_servomotor_angle',
-                'cobl_read_ultrason',
-                'cobl_read_potenmeter',
-                'cobl_read_irread1',
-                'cobl_read_irread2',
-                'cobl_read_joyx',
-                'cobl_read_joyy',
-                //"cobl_read_sens1",
-                //"cobl_read_sens2",
-                'cobl_read_tilt',
-                'cobl_read_temps',
-                'cobl_read_light',
-                'cobl_read_btn',
-                'cobl_led_control',
-                'cobl_servo_angle_control',
-                'cobl_melody',
-                'cobl_dcmotor',
-                'cobl_extention_port',
-                'cobl_external_led',
-                'cobl_7_segment',
-                'hamster_hand_found',
-                'hamster_value',
-                'hamster_move_forward_once',
-                'hamster_turn_once',
-                'hamster_move_forward_for_secs',
-                'hamster_move_backward_for_secs',
-                'hamster_turn_for_secs',
-                'hamster_change_both_wheels_by',
-                'hamster_set_both_wheels_to',
-                'hamster_change_wheel_by',
-                'hamster_set_wheel_to',
-                'hamster_follow_line_using',
-                'hamster_follow_line_until',
-                'hamster_set_following_speed_to',
-                'hamster_stop',
-                'hamster_set_led_to',
-                'hamster_clear_led',
-                'hamster_beep',
-                'hamster_change_buzzer_by',
-                'hamster_set_buzzer_to',
-                'hamster_clear_buzzer',
-                'hamster_play_note_for',
-                'hamster_rest_for',
-                'hamster_change_tempo_by',
-                'hamster_set_tempo_to',
-                'hamster_set_port_to',
-                'hamster_change_output_by',
-                'hamster_set_output_to',
-                'albert_hand_found',
-                'albert_is_oid_value',
-                'albert_value',
-                'albert_move_forward_for_secs',
-                'albert_move_backward_for_secs',
-                'albert_turn_for_secs',
-                'albert_change_both_wheels_by',
-                'albert_set_both_wheels_to',
-                'albert_change_wheel_by',
-                'albert_set_wheel_to',
-                'albert_stop',
-                'albert_set_pad_size_to',
-                'albert_move_to_x_y_on_board',
-                'albert_set_orientation_on_board',
-                'albert_set_eye_to',
-                'albert_clear_eye',
-                'albert_body_led',
-                'albert_front_led',
-                'albert_beep',
-                'albert_change_buzzer_by',
-                'albert_set_buzzer_to',
-                'albert_clear_buzzer',
-                'albert_play_note_for',
-                'albert_rest_for',
-                'albert_change_tempo_by',
-                'albert_set_tempo_to',
-                //sensorBoard
-                'sensorBoard_get_named_sensor_value',
-                'sensorBoard_is_button_pressed',
-                'sensorBoard_led',
-                'sensorBoard_get_number_sensor_value',
-                'sensorBoard_get_digital_value',
-                'sensorBoard_toggle_led',
-                'sensorBoard_toggle_pwm',
-                'sensorBoard_convert_scale',
-                //CODEino
-                'CODEino_get_named_sensor_value',
-                'CODEino_get_sound_status',
-                'CODEino_get_light_status',
-                'CODEino_is_button_pressed',
-                'CODEino_get_accelerometer_direction',
-                'CODEino_get_accelerometer_value',
-                //"CODEino_get_number_sensor_value",
-                'CODEino_get_digital_value',
-                //"CODEino_toggle_led",
-                //"CODEino_toggle_pwm",
-                'CODEino_convert_scale',
-                //2016-09-23
-                'CODEino_get_analog_value',
-                'CODEino_set_digital_value',
-                'CODEino_set_pwm_value',
-                'CODEino_led_by_value',
-                'CODEino_set_rgb_off',
-                'CODEino_set__led_by_rgb',
-                'CODEino_rgb_set_color',
-                'CODEino_set_rgb_value',
-                'CODEino_set_rgb_add_value',
-                //robotis_openCM70
-                'robotis_openCM70_sensor_value',
-                'robotis_openCM70_aux_sensor_value',
-                'robotis_openCM70_cm_buzzer_index',
-                'robotis_openCM70_cm_buzzer_melody',
-                'robotis_openCM70_cm_sound_detected_clear',
-                'robotis_openCM70_cm_led',
-                'robotis_openCM70_cm_motion',
-                'robotis_openCM70_aux_motor_speed',
-                'robotis_openCM70_aux_servo_mode',
-                'robotis_openCM70_aux_servo_speed',
-                'robotis_openCM70_aux_servo_position',
-                'robotis_openCM70_aux_led_module',
-                'robotis_openCM70_aux_custom',
-                'robotis_openCM70_cm_custom_value',
-                'robotis_openCM70_cm_custom',
-                'robotis_carCont_sensor_value',
-                'robotis_carCont_cm_led',
-                'robotis_carCont_cm_sound_detected_clear',
-                'robotis_carCont_aux_motor_speed',
-                'robotis_carCont_aux_motor_speed2',
-                'robotis_carCont_cm_calibration',
-
-                //XBOT Blocks added
-                'xbot_analogValue',
-                'xbot_digitalInput',
-                'xbot_digitalOutput',
-                'xbot_analogOutput',
-                'xbot_rgb',
-                'xbot_rgb_picker',
-                'xbot_buzzer',
-                'xbot_servo',
-                'xbot_oneWheel',
-                'xbot_twoWheel',
-                'xbot_lcd',
-                //end of XBOT Blocks added
-                // ardublock Added 2016-06-01
-                'ardublock_get_number_sensor_value',
-                'ardublock_get_digital_value',
-                'ardublock_toggle_led',
-                'ardublock_toggle_pwm',
-                'ardublock_convert_scale',
-                // ardublock Added 2016-06-01
-
-                'ev3_get_sensor_value',
-                'ev3_touch_sensor',
-                'ev3_color_sensor',
-                'ev3_motor_power',
-                'ev3_motor_power_on_time',
-                'ev3_motor_degrees',
-
-                'roduino_on_block',
-                'roduino_off_block',
-                'roduino_get_analog_value',
-                'roduino_get_digital_value',
-                'roduino_get_color',
-                'roduino_set_digital',
-                'roduino_motor',
-                'roduino_set_color_pin',
-
-                'schoolkit_on_block',
-                'schoolkit_off_block',
-                'schoolkit_get_input_value',
-                'schoolkit_set_output',
-                'schoolkit_motor',
-                'schoolkit_set_servo_value',
-
-                // codestar 2016-09-26
-                'codestar_color_single',
-                'codestar_3color',
-                'codestar_vibration',
-                'codestar_buzzer',
-                'codestar_buzzer_stop',
-                'codestar_drive',
-                'codestar_wheel',
-                'codestar_light',
-                'codestar_button',
-                'codestar_ir',
-                'codestar_sonar',
-                'codestar_mic',
-                'codestar_temperature',
-
-                //jeil science smartBoard. 2016-11-03
-                //smartBoard
-                'smartBoard_get_named_sensor_value',
-                'smartBoard_is_button_pressed',
-                'smartBoard_set_dc_motor_direction',
-                'smartBoard_set_dc_motor_speed',
-                'smartBoard_set_dc_motor_pwm',
-                'smartBoard_set_servo_port_power',
-                'smartBoard_set_servo_port_pwm',
-                'smartBoard_set_servo_speed',
-                'smartBoard_set_servo_angle',
-                'smartBoard_set_number_eight_pin',
-                'smartBoard_get_number_sensor_value',
-                'smartBoard_get_digital_value',
-                'smartBoard_toggle_led',
-                'smartBoard_toggle_pwm',
-                'smartBoard_convert_scale',
-            ],
+            blocks: EntryStatic.DynamicHardwareBlocks,
         },
     ];
 };
-
+EntryStatic.DynamicHardwareBlocks = [];
 EntryStatic.discussCategories = [
     // 'notice',
     'qna',
@@ -787,10 +512,12 @@ EntryStatic.artPeriodOptions = [
 ];
 
 EntryStatic.getCategoryByBlock = function(blockName) {
-    if (!blockName) return false;
-    var allBlocks = EntryStatic.getAllBlocks();
-    for (var i = 0, len = allBlocks.length; i < len; i++) {
-        var blocks = allBlocks[i].blocks;
+    if (!blockName) {
+        return false;
+    }
+    let allBlocks = EntryStatic.getAllBlocks();
+    for (let i = 0, len = allBlocks.length; i < len; i++) {
+        let blocks = allBlocks[i].blocks;
         if (blocks.indexOf(blockName) > -1) {
             return allBlocks[i].category;
         }
@@ -818,19 +545,10 @@ EntryStatic.objectSubCategories = {
     people: [],
     animal: ['animal_flying', 'animal_land', 'animal_water', 'animal_others'],
     plant: ['plant_flower', 'plant_grass', 'plant_tree', 'plant_others'],
-    vehicles: [
-        'vehicles_flying',
-        'vehicles_land',
-        'vehicles_water',
-        'vehicles_others',
-    ],
+    vehicles: ['vehicles_flying', 'vehicles_land', 'vehicles_water', 'vehicles_others'],
     architect: ['architect_building', 'architect_monument', 'architect_others'],
     food: ['food_vegetables', 'food_meat', 'food_drink', 'food_others'],
-    environment: [
-        'environment_nature',
-        'environment_space',
-        'environment_others',
-    ],
+    environment: ['environment_nature', 'environment_space', 'environment_others'],
     stuff: ['stuff_living', 'stuff_hobby', 'stuff_others'],
     fantasy: [],
     interface: [],
@@ -847,50 +565,69 @@ EntryStatic.fonts = [
         name: Lang.Fonts.batang,
         family: 'KoPub Batang',
         url: '/css/kopubbatang.css',
-    },
-    {
-        name: Lang.Fonts.myeongjo,
-        family: 'Nanum Myeongjo',
-        url: '/css/nanummyeongjo.css',
-    },
-    {
-        name: Lang.Fonts.gothic,
-        family: 'Nanum Gothic',
-        url: '/css/nanumgothic.css',
-    },
-    {
-        name: Lang.Fonts.pen_script,
-        family: 'Nanum Pen Script',
-        url: '/css/nanumpenscript.css',
+        visible: false,
     },
     {
         name: Lang.Fonts.jeju_hallasan,
         family: 'Jeju Hallasan',
         url: '/css/jejuhallasan.css',
+        visible: false,
+    },
+    {
+        name: Lang.Fonts.gothic,
+        family: 'Nanum Gothic',
+        url: '/css/nanumgothic.css',
+        visible: true,
+    },
+    {
+        name: Lang.Fonts.myeongjo,
+        family: 'Nanum Myeongjo',
+        url: '/css/nanummyeongjo.css',
+        visible: true,
+    },
+    {
+        name: Lang.Fonts.pen_script,
+        family: 'Nanum Pen Script',
+        url: '/css/nanumpenscript.css',
+        visible: true,
+    },
+    {
+        name: Lang.Fonts.square_round,
+        family: 'NanumSquareRound',
+        url: '/css/square_round.css',
+        visible: true,
     },
     {
         name: Lang.Fonts.gothic_coding,
         family: 'Nanum Gothic Coding',
         url: '/css/nanumgothiccoding.css',
+        visible: true,
+    },
+    {
+        name: Lang.Fonts.jalnan,
+        family: 'yg-jalnan',
+        url: '/css/jalnan.css',
+        visible: true,
+    },
+    {
+        name: Lang.Fonts.designhouse,
+        family: 'designhouseOTFLight00',
+        url: '/css/designhouse.css',
+        visible: true,
+    },
+    {
+        name: Lang.Fonts.dunggeunmo,
+        family: 'DungGeunMo',
+        url: '/css/dunggeunmo.css',
+        visible: true,
+    },
+    {
+        name: Lang.Fonts.uhbeemysen,
+        family: 'UhBeemysen',
+        url: '/css/uhbeemysen.css',
+        visible: true,
     },
 ];
-
-EntryStatic.getName = function(str, type) {
-    var dict = SpriteNames;
-    if (type == 'picture') dict = PictureNames;
-    else if (type == 'sound') dict = SoundNames;
-
-    var lang = navigator.language ? navigator.language : 'ko';
-    if (window.lang) lang = window.lang;
-
-    if (window.user && window.user.language) lang = window.user.language;
-
-    if (!dict || lang == 'ko' || lang == 'code') {
-        return str;
-    } else {
-        return dict[str] ? dict[str] : str;
-    }
-};
 
 EntryStatic.colorSet = {
     arrow: {
@@ -905,74 +642,80 @@ EntryStatic.colorSet = {
             JUDGE: '#89A1F7',
             CALC: '#E8B349',
             VARIABLE: '#CE38CE',
-            HARDWARE: '#097E84',
+            HARDWARE: '#FFFFFF',
             EXPANSION: '#FF8888',
         },
     },
     block: {
         default: {
-            START: '#10D35E',
-            FLOW: '#31C1EC',
-            MOVING: '#BF63FF',
-            LOOKS: '#FF5174',
-            BRUSH: '#FC7E01',
-            SOUND: '#82D214',
-            HARDWARE: '#00CFCA',
-            CALC: '#FEB71A',
-            VARIABLE: '#F57DF1',
-            FUNC: '#DE6E22',
-            JUDGE: '#7E8EFE',
-            TEXT: '#FC5D01',
-            EXPANSION: '#FF8888',
+            START: '#00b400',
+            FLOW: '#17a6d1',
+            MOVING: '#ad3efb',
+            LOOKS: '#ff3a61',
+            BRUSH: '#fc7e01',
+            TEXT: '#e43500',
+            SOUND: '#67b100',
+            JUDGE: '#4562f5',
+            CALC: '#f4af18',
+            VARIABLE: '#dd47d8',
+            FUNC: '#de5c04',
+            HARDWARE: '#00b6b1',
+            EXPANSION: '#ef6d6d',
         },
         lighten: {
-            //NOTE not have boolean, extension block color
-            START: '#53E68E',
-            FLOW: '#4ADAFB',
-            MOVING: '#CA7DFF',
-            LOOKS: '#FF7792',
-            BRUSH: '#FF9831',
-            SOUND: '#9FEC35',
-            HARDWARE: '#65E3E0',
-            CALC: '#FFDE82',
-            VARIABLE: '#FAA0F7',
-            FUNC: '#F3853B',
-            TEXT: '#FF9354',
+            START: '#3bce3b',
+            FLOW: '#3bce3b',
+            MOVING: '#bd65fb',
+            LOOKS: '#ff5577',
+            BRUSH: '#ff9831',
+            TEXT: '#ff6739',
+            SOUND: '#7ecc12',
+            JUDGE: '#99adff',
+            CALC: '#ffde82',
+            VARIABLE: '#f778f3',
+            FUNC: '#ff7b22',
+            HARDWARE: '#78d5d3',
+            EXPANSION: '#ffaeae',
         },
         darken: {
-            START: '#13BF68',
-            FLOW: '#08ACDD',
-            MOVING: '#B13EFE',
-            LOOKS: '#EE3157',
-            BRUSH: '#FC5E01',
-            SOUND: '#6EBC02',
-            HARDWARE: '#04B5B0',
-            CALC: '#FF9C00',
-            VARIABLE: '#EC52E7',
-            FUNC: '#C85404',
-            JUDGE: '#6173F5',
-            TEXT: '#E43500',
-            EXPANSION: '#EF6D6D',
+            START: '#009400',
+            FLOW: '#007ca2',
+            MOVING: '#8b19db',
+            LOOKS: '#c72042',
+            BRUSH: '#c72042',
+            TEXT: '#ad2800',
+            SOUND: '#508a00',
+            JUDGE: '#1b3ad8',
+            CALC: '#ff7f00',
+            VARIABLE: '#b819b3',
+            FUNC: '#a14100',
+            HARDWARE: '#008380',
+            EXPANSION: '#c63f3f',
         },
         emphasize: {
-            '#10D35E': '#5BC982',
-            '#31C1EC': '#62A5F4',
-            '#BF63FF': '#C08FF7',
-            '#FF5174': '#F46487',
-            '#FC7E01': '#FFB05A',
-            '#82D214': '#C4DD31',
-            '#00CFCA': '#09BAB5',
-            '#FEB71A': '#FCDA90',
-            '#F57DF1': '#F279F2',
-            '#DE6E22': '#DD884E',
-            '#7E8EFE': '#C0CBFF',
-            '#FC5D01': '#F2C670',
+            '#00b400': '#5BC982', //START
+            '#17a6d1': '#62A5F4', //FLOW
+            '#ad3efb': '#C08FF7', //MOVING
+            '#ff3a61': '#F46487', //LOOKS
+            '#fc7e01': '#FFB05A', //BRUSH
+            '#e43500': '#F2C670', //TEXT
+            '#67b100': '#C4DD31', //SOUND
+            '#4562f5': '#C0CBFF', //JUDGE
+            '#f4af18': '#FCDA90', //CALC
+            '#dd47d8': '#F279F2', //VARIABLE
+            '#de5c04': '#DD884E', //FUNC
+            '#00b6b1': '#09BAB5', //HARDWARE
+            //Not guided emphasize color for EXPANSION
         },
     },
     common: {
         WHITE: '#FFFFFF',
-        DARK: '#000000'
-    }
+        DARK: '#000000',
+        TRANSPARENT: 'transparent',
+        BUTTON: '#4f80ff',
+        BUTTON_BACKGROUND: '#eee',
+        TEXT: '#333',
+    },
 };
 
 EntryStatic.initOptions = {
@@ -987,6 +730,7 @@ EntryStatic.hwMiniSupportList = [
     'neobot',
     'roborobo_schoolkit',
     'robotis_openCM70',
+    'robotis_openCM70EDU',
 ];
 
 EntryStatic.COMMAND_TYPES = {
@@ -1007,6 +751,17 @@ EntryStatic.COMMAND_TYPES = {
     do: 301,
     undo: 302,
     redo: 303,
+};
+
+EntryStatic.getDefaultFontFamily = function() {
+    const localLang = Lang || {};
+    const type = localLang.type;
+    const fallbackType = localLang.fallbackType;
+    const langType = type || fallbackType || 'en';
+    switch (langType) {
+        default:
+            return "EntryNG, NanumGothic, 나눔고딕, NanumGothicWeb, '맑은 고딕', 'Malgun Gothic', Dotum";
+    }
 };
 
 // for server node js code
