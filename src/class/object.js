@@ -715,9 +715,11 @@ Entry.EntryObject = class {
         }
         e.stopPropagation();
 
+        const { options = {} } = Entry;
+        const { backpackDisable } = options;
         const object = this;
         const container = Entry.container;
-        const options = [
+        const contextMenus = [
             {
                 text: Lang.Workspace.context_duplicate,
                 enable: !Entry.engine.isState('run'),
@@ -754,23 +756,27 @@ Entry.EntryObject = class {
                     }
                 },
             },
-            {
+        ];
+
+        if (!backpackDisable) {
+            contextMenus.push({
                 text: Lang.Blocks.add_my_storage,
                 enable: !Entry.engine.isState('run') && !!window.user,
                 callback: () => {
                     this.addStorage();
                 },
+            });
+        }
+
+        contextMenus.push({
+            text: Lang.Blocks.export_object,
+            callback() {
+                Entry.dispatchEvent('exportObject', object);
             },
-            {
-                text: Lang.Blocks.export_object,
-                callback() {
-                    Entry.dispatchEvent('exportObject', object);
-                },
-            },
-        ];
+        });
 
         const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
-        Entry.ContextMenu.show(options, 'workspace-contextmenu', { x, y });
+        Entry.ContextMenu.show(contextMenus, 'workspace-contextmenu', { x, y });
     }
 
     addStorage() {

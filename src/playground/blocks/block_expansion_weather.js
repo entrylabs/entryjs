@@ -187,12 +187,12 @@ Entry.Expansion_Weather.getBlocks = function() {
     return {
         weather_title: {
             skeleton: 'basic_text',
-            color: '#ecf8ff',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
             params: [
                 {
                     type: 'Text',
                     text: Lang.template.weather_title_text,
-                    color: '#333',
+                    color: EntryStatic.colorSet.common.TEXT,
                     align: 'center',
                 },
             ],

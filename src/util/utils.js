@@ -151,10 +151,6 @@ Entry.setBlock = function(objectType, XML) {
     Entry.playground.setMenuBlock(objectType, XML);
 };
 
-Entry.enableArduino = function() {
-    return;
-};
-
 /**
  * This method is called when window closed;
  * @param {event} e
@@ -1833,7 +1829,7 @@ Entry.Utils.addBlockPattern = function(boardSvgDom, suffix) {
 };
 
 Entry.Utils.addNewBlock = function(item) {
-    const { script, functions, messages, variables } = item;
+    const { script, functions, messages, variables, expansionBlocks = [] } = item;
     const parseScript = JSON.parse(script);
     if (!parseScript) {
         return;
@@ -1854,6 +1850,9 @@ Entry.Utils.addNewBlock = function(item) {
             variable.object = _.get(Entry, ['container', 'selectedObject', 'id'], '');
         }
     });
+    expansionBlocks.forEach((blockName) => {
+        Entry.expansion.addExpansionBlock(blockName);
+    });
     Entry.variableContainer.appendMessages(messages);
     Entry.variableContainer.appendVariables(variables);
     Entry.variableContainer.appendFunctions(functions);
@@ -1868,10 +1867,7 @@ Entry.Utils.addNewBlock = function(item) {
 
 Entry.Utils.addNewObject = function(sprite) {
     if (sprite) {
-        const objects = sprite.objects;
-        const functions = sprite.functions;
-        const messages = sprite.messages;
-        const variables = sprite.variables;
+        const { objects, functions, messages, variables, expansionBlocks = [] } = sprite;
 
         if (
             Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD &&
@@ -1881,6 +1877,9 @@ Entry.Utils.addNewObject = function(sprite) {
             return entrylms.alert(Lang.Menus.object_import_syntax_error);
         }
         const objectIdMap = {};
+        expansionBlocks.forEach((blockName) => {
+            Entry.expansion.addExpansionBlock(blockName);
+        });
         variables.forEach((variable) => {
             const { object } = variable;
             if (object) {
@@ -2223,6 +2222,37 @@ Entry.Utils.hasSpecialCharacter = function(str) {
 
 Entry.Utils.debounce = _.debounce;
 
+Entry.Utils.isNewVersion = function(old_version = '', new_version = '') {
+    try {
+        if (old_version === '') {
+            return false;
+        }
+        old_version = old_version.replace('v', '');
+        new_version = new_version.replace('v', '');
+        const arrOld = old_version.split('.');
+        const arrNew = new_version.split('.');
+        const count = arrOld.length < arrNew.length ? arrOld.length : arrNew.length;
+        let isNew = false;
+        let isSame = true;
+        for (let i = 0; i < count; i++) {
+            if (Number(arrOld[i]) < Number(arrNew[i])) {
+                isNew = true;
+                isSame = false;
+            } else if (Number(arrOld[i]) > Number(arrNew[i])) {
+                isSame = false;
+            }
+        }
+
+        if (isSame && arrOld.length < arrNew.length) {
+            isNew = true;
+        }
+
+        return isNew;
+    } catch (e) {
+        return false;
+    }
+};
+
 Entry.Utils.getBlockCategory = (function() {
     const map = {};
     let allBlocks;
@@ -2277,53 +2307,6 @@ Entry.Utils.getObjectsBlocks = function(objects) {
         })
         .flatten()
         .value();
-};
-
-Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
-    if (!blockArr) {
-        return;
-    }
-    const that = this;
-
-    const data = EntryStatic.getAllBlocks();
-    const categoryIndexMap = {};
-    for (let i = 0; i < data.length; i++) {
-        const datum = data[i];
-        datum.blocks = [];
-        categoryIndexMap[datum.category] = i;
-    }
-
-    blockArr.forEach((b) => {
-        const category = that.getBlockCategory(b);
-        const index = categoryIndexMap[category];
-        if (index === undefined) {
-            return;
-        }
-        data[index].blocks.push(b);
-    });
-
-    const allBlocksInfo = EntryStatic.getAllBlocks();
-    for (let i = 0; i < allBlocksInfo.length; i++) {
-        const info = allBlocksInfo[i];
-        const category = info.category;
-        const blocks = info.blocks;
-        if (category === 'func') {
-            allBlocksInfo.splice(i, 1);
-            continue;
-        }
-        const selectedBlocks = data[i].blocks;
-        const sorted = [];
-
-        blocks.forEach((b) => {
-            if (selectedBlocks.indexOf(b) > -1) {
-                sorted.push(b);
-            }
-        });
-
-        data[i].blocks = sorted;
-    }
-
-    return data;
 };
 
 Entry.Utils.blur = function() {
