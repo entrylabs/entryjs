@@ -7,7 +7,7 @@
  * Constructor of popup
  * @constructor
  */
-Entry.PopupHelper = class {
+Entry.PopupHelper = class PopupHelper {
     constructor(reset) {
         this.popupList = {};
         this.nextPopupList = [];
@@ -35,7 +35,7 @@ Entry.PopupHelper = class {
                 return;
             }
             const $target = $(e.target);
-            spanArea.forEach(function(className) {
+            spanArea.forEach((className) => {
                 if ($target.hasClass(className)) {
                     that.hide();
                 }
@@ -92,15 +92,13 @@ Entry.PopupHelper = class {
             class: 'entryPopupHelperCloseButton',
         });
 
-        titleButton_.bindOnClick(
-            function() {
-                if (popupObject.closeEvent) {
-                    popupObject.closeEvent(this);
-                } else {
-                    this.hide();
-                }
-            }.bind(this)
-        );
+        titleButton_.bindOnClick(() => {
+            if (popupObject.closeEvent) {
+                popupObject.closeEvent(this);
+            } else {
+                this.hide();
+            }
+        });
 
         const popupWrapper_ = Entry.Dom('div', {
             class: 'entryPopupHelperWrapper',
