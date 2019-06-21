@@ -282,10 +282,10 @@ function getBlocks() {
         },
         arduino_download_connector: {
             skeleton: 'basic_text',
-            renderOptions: {
-                bottom: 5,
-                padding: 0,
-                margin: 1,
+            skeletonOptions: {
+                box: {
+                    offsetX: -5,
+                },
             },
             isNotFor: ['arduinoDisconnected'],
             color: EntryStatic.colorSet.common.TRANSPARENT,

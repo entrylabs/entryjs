@@ -665,13 +665,18 @@ Entry.skeleton.basic_text = {
     box(blockView) {
         const width = blockView ? blockView.contentWidth : 5;
         const height = blockView ? blockView.contentHeight : 18;
-        return {
-            offsetX: 0,
-            offsetY: 0,
-            width: width + 12,
-            height: Math.max(height + 2, 18),
-            marginBottom: 0,
-        };
+        const { skeletonOptions = {} } = blockView._schema;
+        const { box = {} } = skeletonOptions;
+        return Object.assign(
+            {
+                offsetX: 0,
+                offsetY: 0,
+                width: width + 12,
+                height: Math.max(height + 2, 18),
+                marginBottom: 0,
+            },
+            box
+        );
     },
     contentPos(blockView) {
         // apply scale required.
