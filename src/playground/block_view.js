@@ -139,10 +139,6 @@ Entry.BlockView = class BlockView {
 
         const svgGroup = this.svgGroup;
 
-        if (this._schema.css) {
-            attr.style = this._schema.css;
-        }
-
         svgGroup.attr(attr);
 
         (skeleton.classes || []).forEach((c) => svgGroup.addClass(c));
