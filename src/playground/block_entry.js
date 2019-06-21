@@ -269,27 +269,31 @@ function getBlocks() {
                 {
                     type: 'Text',
                     text: Lang.Blocks.arduino_noti_text,
-                    color: EntryStatic.colorSet.common.TEXT,
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
             def: {
                 type: 'arduino_noti',
             },
+            class: 'arduino_second',
             isNotFor: ['arduinoDisconnected'],
             events: {},
         },
         arduino_download_connector: {
-            skeleton: 'basic_button',
+            skeleton: 'basic_text',
+            renderOptions: {
+                bottom: 5,
+                padding: 0,
+                margin: 1,
+            },
             isNotFor: ['arduinoDisconnected'],
-            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
+            color: EntryStatic.colorSet.common.TRANSPARENT,
             params: [
                 {
                     type: 'Text',
-                    text: !Entry.isOffline
-                        ? Lang.Blocks.ARDUINO_download_connector
-                        : Lang.Blocks.ARDUINO_open_connector,
-                    color: EntryStatic.colorSet.common.BUTTON,
+                    text: Lang.Blocks.ARDUINO_download_connector,
+                    color: EntryStatic.colorSet.common.TEXT,
                     align: 'center',
                 },
             ],
@@ -302,14 +306,14 @@ function getBlocks() {
             },
         },
         download_guide: {
-            skeleton: 'basic_button',
+            skeleton: 'basic_text',
             isNotFor: ['arduinoDisconnected'],
-            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
+            color: EntryStatic.colorSet.common.TRANSPARENT,
             params: [
                 {
                     type: 'Text',
                     text: Lang.Blocks.download_guide,
-                    color: EntryStatic.colorSet.common.BUTTON,
+                    color: EntryStatic.colorSet.common.TEXT,
                     align: 'center',
                 },
             ],
@@ -322,17 +326,18 @@ function getBlocks() {
             },
         },
         arduino_download_source: {
-            skeleton: 'basic_button',
+            skeleton: 'basic_text',
             isNotFor: ['arduinoDisconnected'],
-            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
+            color: EntryStatic.colorSet.common.TRANSPARENT,
             params: [
                 {
                     type: 'Text',
                     text: Lang.Blocks.ARDUINO_download_source,
-                    color: EntryStatic.colorSet.common.BUTTON,
+                    color: EntryStatic.colorSet.common.TEXT,
                     align: 'center',
                 },
             ],
+            class: 'arduino_first',
             events: {
                 mousedown: [
                     function() {

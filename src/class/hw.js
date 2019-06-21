@@ -139,6 +139,7 @@ Entry.HW = class {
         this.socketIo && this.socketIo.removeAllListeners();
 
         const connectHttpsWebSocket = (url) =>
+            // TODO ajax 로 entry-hw 살아있는지 확인 후 연결시도 (TRIAL_LIMIT = ajax 로)
             this._connectWebSocket(url, {
                 query: {
                     client: true,

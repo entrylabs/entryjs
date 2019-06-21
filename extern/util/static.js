@@ -406,13 +406,13 @@ EntryStatic.getAllBlocks = function() {
         {
             category: 'arduino',
             blocks: [
-                'arduino_download_connector',
-                'download_guide',
-                'arduino_download_source',
-                'arduino_connect',
                 'arduino_reconnect',
                 'arduino_open',
                 'arduino_cloud_pc_open',
+                'arduino_connect',
+                'arduino_download_connector',
+                'download_guide',
+                'arduino_download_source',
                 'arduino_noti',
             ].concat(EntryStatic.DynamicHardwareBlocks),
         },
