@@ -81,7 +81,6 @@
                 };
                 initOption = $.extend(initOption, EntryStatic.initOptions);
                 Entry.init(document.getElementById('workspace'), initOption);
-                Entry.enableArduino();
                 Entry.loadProject();
 
                 Entry.addEventListener('hwChanged', function() {
