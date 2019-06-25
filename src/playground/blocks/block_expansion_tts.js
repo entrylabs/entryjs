@@ -34,7 +34,7 @@ Entry.EXPANSION_BLOCK.tts = {
                 return false;
             });
         });
-        Entry.EXPANSION_BLOCK.tts.isInitialized = true;
+        tts.isInitialized = true;
     },
     api: '/api/expansionBlock/tts/read',
     loadQueue: [],
@@ -137,12 +137,12 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
     return {
         tts_title: {
             skeleton: 'basic_text',
-            color: '#ecf8ff',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
             params: [
                 {
                     type: 'Text',
                     text: Lang.template.tts_title_text,
-                    color: '#333',
+                    color: EntryStatic.colorSet.common.TEXT,
                     align: 'center',
                 },
             ],
@@ -191,9 +191,16 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
             isNotFor: ['tts'],
             func(sprite, script) {
                 const tts = Entry.EXPANSION_BLOCK.tts;
+                if(tts.isInitialized) {
+                    const hasError = tts.soundQueue.getItems().find(item => !item.result);
+                    if(hasError) {
+                        tts.soundQueue.destroy();
+                        tts.isInitialized = false;
+                    }
+                }
                 tts.init();
                 const textObj = checkText(script.getStringValue('TEXT', script));
-                if (textObj.result && tts.isInitialized) {
+                if (textObj.result) {
                     const prop = sprite.getVoiceProp();
                     const id = `tts-${textObj.code}-${JSON.stringify(prop)}`;
                     const sound = tts.soundQueue.getItem(id);
