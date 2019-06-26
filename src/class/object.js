@@ -729,6 +729,7 @@ Entry.EntryObject = class {
             },
             {
                 text: Lang.Workspace.context_remove,
+                enable: !Entry.engine.isState('run'),
                 callback() {
                     Entry.dispatchEvent('removeObject', object);
                     const { id } = object;
