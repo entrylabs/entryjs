@@ -656,9 +656,9 @@ Entry.Playground = class {
         if (!this.object || !this.object.pictures) {
             return [];
         }
-
+        const id = this.object.id;
         return this.object.pictures.map((value) => ({
-            key: value.id,
+            key: `${id}-${value.id}`,
             item: value.view,
         }));
     }
@@ -1057,9 +1057,9 @@ Entry.Playground = class {
         if (!this.object || !this.object.sounds) {
             return [];
         }
-
+        const id = this.object.id;
         return this.object.sounds.map((value) => ({
-            key: value.id,
+            key: `${id}-${value.id}`,
             item: value.view,
         }));
     }
