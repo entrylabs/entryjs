@@ -15,7 +15,7 @@ Entry.EntryObject = class {
     constructor(model) {
         if (model) {
             this.id = model.id;
-            this.name = model.name || model.sprite.name;
+            this.name = String(model.name) || String(model.sprite.name);
             this.text = model.text || this.name;
             this.objectType = model.objectType || 'sprite';
             this.script = new Entry.Code(model.script || [], this);
