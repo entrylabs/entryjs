@@ -33,7 +33,7 @@ Entry.Painter = class Painter {
 
         this.isShow = true;
 
-        this.entryPaint = EntryPaint.create({ parent: this.view });
+        this.entryPaint = EntryPaint.create({ parent: this.view, mode: 'entry' });
 
         this.isImport = true;
         this.entryPaint.on('SNAPSHOT_SAVED', (e) => {
