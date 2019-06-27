@@ -1150,11 +1150,14 @@ Entry.EntryObject = class {
             }
         });
 
-        nameView.onkeypress = Entry.Utils.whenEnter(() => {
+        const onKeyPressed = Entry.Utils.whenEnter(() => {
             this.editObjectValues(false);
         });
 
+        nameView.onkeypress = onKeyPressed;
+
         nameView.onfocus = Entry.Utils.setFocused;
+
         const nameViewBlur = this._setBlurredTimer(() => {
             const object = Entry.container.getObject(this.id);
             if (!object) {

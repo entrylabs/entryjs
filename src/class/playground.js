@@ -1770,7 +1770,7 @@ Entry.Playground = class {
         function nameViewBlur() {
             if (this.value.trim() === '') {
                 return entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
-                    this.focus();
+                    nameView.focus();
                 });
             }
 
@@ -1782,7 +1782,7 @@ Entry.Playground = class {
             for (let i = 0; i < nameViewArray.length; i++) {
                 if (nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
                     return entrylms.alert(Lang.Workspace.name_already_exists).on('hide', () => {
-                        this.focus();
+                        nameView.focus();
                     });
                 }
             }
@@ -1946,8 +1946,8 @@ Entry.Playground = class {
 
         function nameViewBlur() {
             if (this.value.trim() === '') {
-                entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
-                    this.focus();
+                return entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
+                    nameView.focus();
                 });
             }
 
@@ -1959,7 +1959,7 @@ Entry.Playground = class {
             for (let i = 0; i < nameViewArray.length; i++) {
                 if (nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
                     return entrylms.alert(Lang.Workspace.name_already_exists).on('hide', () => {
-                        this.focus();
+                        nameView.focus();
                     });
                 }
             }
