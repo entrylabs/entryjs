@@ -741,8 +741,10 @@ Entry.Stage.prototype.destroy = function() {
     } else {
         //do nothing
     }
-    this._app.destroy(destroyOption);
-    this._app = null;
+    if (this._app) {
+        this._app.destroy(destroyOption);
+        this._app = null;
+    }
     this.handle = null;
     this.objectContainers = null;
 };

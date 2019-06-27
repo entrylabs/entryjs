@@ -4,7 +4,7 @@
  */
 'use strict';
 
-import { Sortable, ColorPicker, Dropdown, Backpack } from '@entrylabs/tool';
+import { Backpack, ColorPicker, Dropdown, Sortable } from '@entrylabs/tool';
 import Toast from '../playground/toast';
 import EntryEvent from '@entrylabs/event';
 import { Destroyer } from '../util/destroyer/Destroyer';
@@ -21,7 +21,6 @@ Entry.Playground = class Playground {
         this._destroyer = this._destroyer || new Destroyer();
         this._destroyer.destroy();
         this.isTextBGMode_ = false;
-        this.enableArduino = false;
 
         /**
          * playground's current view type
@@ -407,15 +406,20 @@ Entry.Playground = class Playground {
                                 data.isObjectMouseEnter = false;
                                 this.objectBackPackAreaEvent.trigger('leaveitem');
                             }
-                            if (!data.isBlockMouseEnter && this.isPointInRect(point, blockRect)) {
-                                data.isBlockMouseEnter = true;
-                                this.blockBackPackEvent.trigger('enteritem');
-                            } else if (
-                                data.isBlockMouseEnter &&
-                                !this.isPointInRect(point, blockRect)
-                            ) {
-                                data.isBlockMouseEnter = false;
-                                this.blockBackPackAreaEvent.trigger('leaveitem');
+                            if (Entry.getMainWS().mode === Entry.Workspace.MODE_BOARD) {
+                                if (
+                                    !data.isBlockMouseEnter &&
+                                    this.isPointInRect(point, blockRect)
+                                ) {
+                                    data.isBlockMouseEnter = true;
+                                    this.blockBackPackEvent.trigger('enteritem');
+                                } else if (
+                                    data.isBlockMouseEnter &&
+                                    !this.isPointInRect(point, blockRect)
+                                ) {
+                                    data.isBlockMouseEnter = false;
+                                    this.blockBackPackAreaEvent.trigger('leaveitem');
+                                }
                             }
                         } else {
                             this.objectBackPackAreaEvent.trigger('leaveitem');
@@ -571,7 +575,8 @@ Entry.Playground = class Playground {
         this.board = this.mainWorkspace.board;
         this.toast = new Toast(this.board);
         this.blockMenu.banClass('checker');
-        this.banExpansionBlock();
+        // this.banExpansionBlock();
+        Entry.expansion.banAllExpansionBlock();
         this.vimBoard = this.mainWorkspace.vimBoard;
 
         this._destroyer.add(this.mainWorkspace);
@@ -1395,20 +1400,9 @@ Entry.Playground = class Playground {
         }
     }
 
-    addExpansionBlock(block, isNew) {
-        const tempBlock = _.clone(block);
-        delete tempBlock.view;
-        if (isNew === true) {
-            delete tempBlock.id;
-        }
-
-        block = Entry.Utils.copy(tempBlock);
-
-        if (!block.id) {
-            block.id = Entry.generateHash();
-        }
-
-        Entry.do('objectAddExpansionBlock', block);
+    addExpansionBlock(item) {
+        const { name } = item;
+        Entry.expansion.addExpansionBlock(name);
     }
     /**
      * Add sound
@@ -2025,7 +2019,7 @@ Entry.Playground = class Playground {
             data: {
                 items: options,
                 positionDom: target,
-                outsideExcludeDom:[target],
+                outsideExcludeDom: [target],
                 onOutsideClick: () => {
                     if (dropdownWidget) {
                         closeCallback();
@@ -2275,10 +2269,10 @@ Entry.Playground = class Playground {
     destroy() {
         this.commentToggleButton_ && this.commentToggleButton_.unBindOnClick();
         this.backPackButton_ && this.backPackButton_.unBindOnClick();
-        this.blockBackPackEvent.off();
-        this.blockBackPackAreaEvent.off();
-        this.objectBackPackEvent.off();
-        this.objectBackPackAreaEvent.off();
+        this.blockBackPackEvent && this.blockBackPackEvent.off();
+        this.blockBackPackAreaEvent && this.blockBackPackAreaEvent.off();
+        this.objectBackPackEvent && this.objectBackPackEvent.off();
+        this.objectBackPackAreaEvent && this.objectBackPackAreaEvent.off();
         this.globalEvent && this.globalEvent.destroy();
         this._destroyer.destroy();
     }
