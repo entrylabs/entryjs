@@ -1769,11 +1769,9 @@ Entry.Playground = class {
 
         function nameViewBlur() {
             if (this.value.trim() === '') {
-                Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                entrylms.alert(Lang.Workspace.enter_the_name);
-                this.focus();
-                Entry.attachEventListener(this, 'blur', nameViewBlur);
-                return;
+                return entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
+                    this.focus();
+                });
             }
 
             let nameViewArray = $('.entryPlaygroundPictureName');
@@ -1783,11 +1781,9 @@ Entry.Playground = class {
 
             for (let i = 0; i < nameViewArray.length; i++) {
                 if (nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
-                    Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                    entrylms.alert(Lang.Workspace.name_already_exists);
-                    this.focus();
-                    Entry.attachEventListener(this, 'blur', nameViewBlur);
-                    return;
+                    return entrylms.alert(Lang.Workspace.name_already_exists).on('hide', () => {
+                        this.focus();
+                    });
                 }
             }
             const newValue = this.value;
@@ -1945,15 +1941,14 @@ Entry.Playground = class {
             .appendTo(element);
         nameView.sound = sound;
         nameView.value = sound.name;
+
         Entry.attachEventListener(nameView, 'blur', nameViewBlur);
 
         function nameViewBlur() {
             if (this.value.trim() === '') {
-                Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                entrylms.alert(Lang.Workspace.enter_the_name);
-                this.focus();
-                Entry.attachEventListener(this, 'blur', nameViewBlur);
-                return;
+                entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
+                    this.focus();
+                });
             }
 
             let nameViewArray = $('.entryPlaygroundSoundName');
@@ -1963,11 +1958,9 @@ Entry.Playground = class {
 
             for (let i = 0; i < nameViewArray.length; i++) {
                 if (nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
-                    Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                    entrylms.alert(Lang.Workspace.name_already_exists);
-                    this.focus();
-                    Entry.attachEventListener(this, 'blur', nameViewBlur);
-                    return;
+                    return entrylms.alert(Lang.Workspace.name_already_exists).on('hide', () => {
+                        this.focus();
+                    });
                 }
             }
             const newValue = this.value;

@@ -1155,15 +1155,19 @@ Entry.EntryObject = class {
         });
 
         nameView.onfocus = Entry.Utils.setFocused;
-        nameView.onblur = Entry.Utils.setBlurredTimer(() => {
+        const nameViewBlur = this._setBlurredTimer(() => {
             const object = Entry.container.getObject(this.id);
             if (!object) {
                 return;
+            } else if (nameView.value.trim() === '') {
+                return entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
+                    nameView.focus();
+                });
             }
-
             Entry.do('objectNameEdit', this.id, nameView.value);
         });
 
+        Entry.attachEventListener(nameView, 'blur', nameViewBlur);
         nameView.value = this.name;
         return nameView;
     }
