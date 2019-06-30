@@ -1,15 +1,59 @@
 'use strict';
 
-Entry.Mindpiggy = {
-    id: '29.1',
-    name: 'Mindpiggy',
-    url: 'http://inuscoop.com',
-    imageName: 'mindpiggy.png',
-    title: {
-        "en": 'mindpiggy',
-        "ko": '마인드피기'
-    },
-    setZero: function () {
+const _set = require('lodash/set');
+const _get = require('lodash/get');
+const _merge = require('lodash/merge');
+
+Entry.Mindpiggy = new class Mindpiggy{
+    constructor(){
+        this.id = '29.1';
+        this.name = 'Mindpiggy';
+        this.url =  'http://inuscoop.com';
+        this.imageName = 'mindpiggy.png';
+        this.title = {
+            en: 'mindpiggy',
+            ko: '마인드피기'
+        };
+        this.sensorTypes = {
+            DIGITAL:0,
+            ANALOG:1,
+            NEOPIXEL:2,
+            SPEAKER:3,
+            DCMOTOR:4,
+            REMOTE:5,
+        };
+        this.toneTable = {
+            '0': 0,
+            C: 1,
+            CS: 2,
+            D: 3,
+            DS: 4,
+            E: 5,
+            F: 6,
+            FS: 7,
+            G: 8,
+            GS: 9,
+            A: 10,
+            AS: 11,
+            B: 12,
+        };
+        this.toneMap = {
+            '1': [33, 65, 131, 262, 523, 1046, 2093, 4186],
+            '2': [35, 69, 139, 277, 554, 1109, 2217, 4435],
+            '3': [37, 73, 147, 294, 587, 1175, 2349, 4699],
+            '4': [39, 78, 156, 311, 622, 1245, 2849, 4978],
+            '5': [41, 82, 165, 330, 659, 1319, 2637, 5274],
+            '6': [44, 87, 175, 349, 698, 1397, 2794, 5588],
+            '7': [46, 92, 185, 370, 740, 1480, 2960, 5920],
+            '8': [49, 98, 196, 392, 784, 1568, 3136, 6272],
+            '9': [52, 104, 208, 415, 831, 1661, 3322, 6645],
+            '10': [55, 110, 220, 440, 880, 1760, 3520, 7040],
+            '11': [58, 117, 233, 466, 932, 1865, 3729, 7459],
+            '12': [62, 123, 247, 494, 988, 1976, 3951, 7902],
+        };
+    }
+
+    setZero(){
         Entry.hw.sendQueue = {
             GET: {},
             SET: {},
@@ -19,44 +63,7 @@ Entry.Mindpiggy = {
         //     Entry.hw.sendQueue.SET[key].data = 0;
         // });
         Entry.hw.update();
-    },
-    sensorTypes: {
-        DIGITAL:0,
-        ANALOG:1,
-        NEOPIXEL:2,
-        SPEAKER:3,
-        DCMOTOR:4,
-        REMOTE:5,
-    },
-    toneTable: {
-        '0': 0,
-        C: 1,
-        CS: 2,
-        D: 3,
-        DS: 4,
-        E: 5,
-        F: 6,
-        FS: 7,
-        G: 8,
-        GS: 9,
-        A: 10,
-        AS: 11,
-        B: 12,
-    },
-    toneMap: {
-        '1': [33, 65, 131, 262, 523, 1046, 2093, 4186],
-        '2': [35, 69, 139, 277, 554, 1109, 2217, 4435],
-        '3': [37, 73, 147, 294, 587, 1175, 2349, 4699],
-        '4': [39, 78, 156, 311, 622, 1245, 2849, 4978],
-        '5': [41, 82, 165, 330, 659, 1319, 2637, 5274],
-        '6': [44, 87, 175, 349, 698, 1397, 2794, 5588],
-        '7': [46, 92, 185, 370, 740, 1480, 2960, 5920],
-        '8': [49, 98, 196, 392, 784, 1568, 3136, 6272],
-        '9': [52, 104, 208, 415, 831, 1661, 3322, 6645],
-        '10': [55, 110, 220, 440, 880, 1760, 3520, 7040],
-        '11': [58, 117, 233, 466, 932, 1865, 3729, 7459],
-        '12': [62, 123, 247, 494, 988, 1976, 3951, 7902],
-    },
+    }
 };
 
 // 언어 적용
@@ -267,7 +274,7 @@ Entry.Mindpiggy.getBlocks = function () {
                 PORT: 0,
             },
             class: 'MindpiggyNomalBlock',
-            isNotFor: ['Mindpiggy'],
+            // isNotFor: ['Mindpiggy'],
             func: function(sprite, script) {
                 var port = script.getStringValue('PORT', script);
                 port = String(Number(port)+14);
@@ -351,7 +358,7 @@ Entry.Mindpiggy.getBlocks = function () {
                 VALUE5: 4,
             },
             class: 'MindpiggyNomalBlock',
-            isNotFor: ['Mindpiggy'],
+            // isNotFor: ['Mindpiggy'],
             func: function(sprite, script) {
                 var result = script.getValue('PORT', script);
                 var value2 = script.getNumberValue('VALUE2', script);
@@ -420,7 +427,7 @@ Entry.Mindpiggy.getBlocks = function () {
                 PORT: 0,
             },
             class: 'MindpiggyNomalBlock',
-            isNotFor: ['Mindpiggy'],
+            // isNotFor: ['Mindpiggy'],
             func: function(sprite, script) {
                 var port = script.getStringValue('PORT', script);
                 var val = Entry.hw.portData[port];
@@ -458,7 +465,7 @@ Entry.Mindpiggy.getBlocks = function () {
                 PORT: 0,
             },
             class: 'MindpiggyBlock',
-            isNotFor: ['Mindpiggy'],
+            // isNotFor: ['Mindpiggy'],
             func: function(sprite, script) {
                 var port = script.getStringValue('PORT', script);
                 var val = Entry.hw.portData[port];
@@ -540,7 +547,7 @@ Entry.Mindpiggy.getBlocks = function () {
                 VALUE: 1,
             },
             class: 'MindpiggyNomalBlock',
-            isNotFor: ['Mindpiggy'],
+            // isNotFor: ['Mindpiggy'],
             func: function(sprite, script) {
                 var port = script.getStringValue('PORT');
                 var value = script.getValue('VALUE');
@@ -596,7 +603,7 @@ Entry.Mindpiggy.getBlocks = function () {
                 VALUE: 1,
             },
             class: 'MindpiggyNomalBlock',
-            isNotFor: ['Mindpiggy'],
+            // isNotFor: ['Mindpiggy'],
             func: function(sprite, script) {
                 var port = script.getStringValue('PORT');
                 var value = script.getNumberValue('VALUE');
@@ -655,7 +662,7 @@ Entry.Mindpiggy.getBlocks = function () {
             },
             events:{},
             class:'MindpiggyBlock',
-            isNotFor:['Mindpiggy'],
+            // isNotFor:['Mindpiggy'],
             func:function(sprite,script){
                 var Red = script.getNumberValue('RED');
                 var Green = script.getNumberValue('GREEN');
@@ -710,7 +717,7 @@ Entry.Mindpiggy.getBlocks = function () {
             },
             events:{},
             class:'MindpiggyBlock',
-            isNotFor:['Mindpiggy'],
+            // isNotFor:['Mindpiggy'],
             func:function(sprite,script){
                 if (!script.isStart){
                     var Port = script.getStringValue('PORT');
@@ -784,7 +791,7 @@ Entry.Mindpiggy.getBlocks = function () {
             },
             events : {},
             class : 'MindpiggyBlock',
-            isNotFor : ['Mindpiggy'],
+            // isNotFor : ['Mindpiggy'],
             func:function(sprite,script){
                 if (!script.isStart){
                     var Port = script.getStringValue('PORT');
@@ -841,7 +848,7 @@ Entry.Mindpiggy.getBlocks = function () {
             },
             events : {},
             class : 'MindpiggyBlock',
-            isNotFor : ['Mindpiggy'],
+            // isNotFor : ['Mindpiggy'],
             func:function(sprite,script){
                 if (!script.isStart){
                     var Port = script.getStringValue('PORT');
@@ -892,7 +899,7 @@ Entry.Mindpiggy.getBlocks = function () {
                 EVENT : 0,
             },
             class: 'MindpiggyBlock',
-            isNotFor: ['Mindpiggy'],
+            // isNotFor: ['Mindpiggy'],
             func:function(sprite,script){
                 var getdata = Entry.hw.portData['3'];
                 if(!Entry.hw.sendQueue.GET)Entry.hw.sendQueue.GET={};
@@ -916,7 +923,7 @@ Entry.Mindpiggy.getBlocks = function () {
             },
             paramsKeyMap: {},
             class: 'MindpiggyBlock',
-            isNotFor: ['Mindpiggy'],
+            // isNotFor: ['Mindpiggy'],
             func:function(sprite,script){
                 var getdata = Entry.hw.portData['15'];
                 if(!Entry.hw.sendQueue.GET)Entry.hw.sendQueue.GET={};
@@ -953,7 +960,7 @@ Entry.Mindpiggy.getBlocks = function () {
                 PINNUM: 0,
             },
             class: 'MindpiggyBlock',
-            isNotFor: ['Mindpiggy'],
+            // isNotFor: ['Mindpiggy'],
             func:function(sprite,script){
                 var pinNum = script.getField('PINNUM');
                 var isSense;
@@ -1099,7 +1106,7 @@ Entry.Mindpiggy.getBlocks = function () {
                 DURATION: 3,
             },
             class: 'MindpiggyExtBlock',
-            isNotFor: ['Mindpiggy'],
+            // isNotFor: ['Mindpiggy'],
             func: function(sprite, script) {
                 var Port = script.getStringValue('PORT');
                 Port = String(Number(Port)+14);
@@ -1266,7 +1273,7 @@ Entry.Mindpiggy.getBlocks = function () {
             },
             events : {},
             class : 'MindpiggyExtBlock',
-            isNotFor : ['Mindpiggy'],
+            // isNotFor : ['Mindpiggy'],
             func:function(sprite,script){
                 var directionPort = script.getStringValue('PORT0');
                 var directionValue = script.getStringValue('VALUE0');
@@ -1316,7 +1323,7 @@ Entry.Mindpiggy.getBlocks = function () {
                 PORT: 0,
             },
             class: 'MindpiggyExtBlock',
-            isNotFor: ['Mindpiggy'],
+            // isNotFor: ['Mindpiggy'],
             func: function(sprite, script) {
                 // var port = script.getStringValue('PORT', script);
                 // port = String(Number(port)+14);
