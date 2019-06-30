@@ -366,12 +366,21 @@ EntryStatic.getAllBlocks = function() {
                 'show_list',
                 'hide_list',
             ],
+<<<<<<< HEAD
         },
         {
             category: 'func',
             blocks: ['functionAddButton'],
         },
         {
+=======
+        },
+        {
+            category: 'func',
+            blocks: ['functionAddButton'],
+        },
+        {
+>>>>>>> refs/remotes/entrylabs/develop-hw
             category: 'expansion',
             blocks: [
                 'expansionBlockAddButton',
@@ -406,6 +415,7 @@ EntryStatic.getAllBlocks = function() {
         {
             category: 'arduino',
             blocks: [
+<<<<<<< HEAD
 <<<<<<< HEAD
                 "arduino_download_connector",
                 "download_guide",
@@ -2918,6 +2928,8 @@ EntryStatic.blockInfo = {
 }
 
 =======
+=======
+>>>>>>> refs/remotes/entrylabs/develop-hw
                 'arduino_download_connector',
                 'download_guide',
                 'arduino_download_source',
@@ -2931,6 +2943,9 @@ EntryStatic.blockInfo = {
     ];
 };
 EntryStatic.DynamicHardwareBlocks = [];
+<<<<<<< HEAD
+>>>>>>> refs/remotes/entrylabs/develop-hw
+=======
 >>>>>>> refs/remotes/entrylabs/develop-hw
 EntryStatic.discussCategories = [
     // 'notice',

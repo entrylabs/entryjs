@@ -1,5 +1,6 @@
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
   "name": "entryjs",
   "title": "EntryJS",
   "description": "JavaScript library for visual programming",
@@ -53,6 +54,8 @@
     "mocha": "^2.5.3"
   }
 =======
+=======
+>>>>>>> refs/remotes/entrylabs/develop-hw
     "name": "entry-js",
     "title": "EntryJS",
     "description": "JavaScript library for visual programming",
@@ -163,5 +166,8 @@
         "reportFile": "report.xml",
         "indent": 4
     }
+<<<<<<< HEAD
+>>>>>>> refs/remotes/entrylabs/develop-hw
+=======
 >>>>>>> refs/remotes/entrylabs/develop-hw
 }
