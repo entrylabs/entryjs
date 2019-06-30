@@ -47,7 +47,7 @@ Entry.Cobl.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
-            template: '1. 초음파거리(0~400)',
+            template: '1. 초음?�거�?0~400)',
             def: {
                 type: 'cobl_read_ultrason',
             },
@@ -62,7 +62,7 @@ Entry.Cobl.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
-            template: '2.가변저항(0~1023)',
+            template: '2.가변?�??0~1023)',
             def: {
                 type: 'cobl_read_potenmeter',
             },
@@ -77,7 +77,7 @@ Entry.Cobl.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
-            template: '3.적외선센서1(0~1023)',
+            template: '3.?�외?�센??(0~1023)',
             def: {
                 type: 'cobl_read_irread1',
             },
@@ -92,7 +92,7 @@ Entry.Cobl.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
-            template: '4.적외선센서2(0~1023)',
+            template: '4.?�외?�센??(0~1023)',
             def: {
                 type: 'cobl_read_irread2',
             },
@@ -107,7 +107,7 @@ Entry.Cobl.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
-            template: '5.조이스틱X축(1, 0, -1)',
+            template: '5.조이?�틱X�?1, 0, -1)',
             def: {
                 type: 'cobl_read_joyx',
             },
@@ -122,7 +122,7 @@ Entry.Cobl.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
-            template: '6.조이스틱Y축(1, 0, -1)',
+            template: '6.조이?�틱Y�?1, 0, -1)',
             def: {
                 type: 'cobl_read_joyy',
             },
@@ -137,7 +137,7 @@ Entry.Cobl.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
-            template: '7.기울기센서(0~4)',
+            template: '7.기울기센??0~4)',
             def: {
                 type: 'cobl_read_tilt',
             },
@@ -152,7 +152,7 @@ Entry.Cobl.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
-            template: '8.색상센서',
+            template: '8.?�상?�서',
             def: {
                 type: 'cobl_read_color',
             },
@@ -162,9 +162,9 @@ Entry.Cobl.getBlocks = function() {
                 var colorval = Entry.hw.getAnalogPortValue('color');
 
                 if (colorval == 1) return '빨강';
-                else if (colorval == 2) return '녹색';
-                else if (colorval == 3) return '파랑';
-                else return '알수없음';
+                else if (colorval == 2) return '?�색';
+                else if (colorval == 3) return '?�랑';
+                else return '?�수?�음';
             },
         },
         cobl_read_humid: {
@@ -172,7 +172,7 @@ Entry.Cobl.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
-            template: '9.습도센서',
+            template: '9.?�도?�서',
             def: {
                 type: 'cobl_read_humid',
             },
@@ -187,7 +187,7 @@ Entry.Cobl.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
-            template: '10.온도센서@포트%1',
+            template: '10.?�도?�서@?�트%1',
             params: [
                 {
                     type: 'Dropdown',
@@ -225,7 +225,7 @@ Entry.Cobl.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
-            template: '11.빛센서@포트%1',
+            template: '11.빛센???�트%1',
             params: [
                 {
                     type: 'Dropdown',
@@ -260,7 +260,7 @@ Entry.Cobl.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
-            template: '12.버튼스위치@포트%1',
+            template: '12.버튼?�위�??�트%1',
             params: [
                 {
                     type: 'Dropdown',
@@ -295,7 +295,7 @@ Entry.Cobl.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
-            template: '13-1.무지개LED%1%2 %3',
+            template: '13-1.무�?개LED%1%2 %3',
             params: [
                 {
                     type: 'Dropdown',
@@ -310,12 +310,12 @@ Entry.Cobl.getBlocks = function() {
                         ['OFF', 'OFF'],
                         ['빨강', 'Red'],
                         ['주황', 'Orange'],
-                        ['노랑', 'Yellow'],
+                        ['?�랑', 'Yellow'],
                         ['초록', 'Green'],
-                        ['파랑', 'Blue'],
-                        ['남색', 'Dark Blue'],
+                        ['?�랑', 'Blue'],
+                        ['?�색', 'Dark Blue'],
                         ['보라', 'Purple'],
-                        ['흰색', 'White'],
+                        ['?�색', 'White'],
                     ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -351,7 +351,7 @@ Entry.Cobl.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
-            template: '13-2.무지개LED%1R%2G%3B%4 %5',
+            template: '13-2.무�?개LED%1R%2G%3B%4 %5',
             params: [
                 {
                     type: 'Dropdown',
@@ -465,16 +465,16 @@ Entry.Cobl.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
-                    value: 0,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
+            
                 },
             ],
             def: {
-                params: ['0'],
+                params: [
+                {
+                        type: 'number',
+                        params: ['90'],
+                },
+            ],
                 type: 'cobl_servo_angle_control',
             },
             paramsKeyMap: {
@@ -483,7 +483,7 @@ Entry.Cobl.getBlocks = function() {
             class: 'cobl',
             isNotFor: ['cobl'],
             func: function(sprite, script) {
-                var value = script.getNumberField('VALUE');
+                var value = script.getNumberValue('VALUE');
                 value = Math.round(value);
                 value = Math.max(value, 15);
                 value = Math.min(value, 165);
@@ -500,34 +500,34 @@ Entry.Cobl.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
-            template: '15.멜로디%1 시간%2(초) %3',
+            template: '15.멜로??1 ?�간%2(�? %3',
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        ['(낮은)솔', 'L_So'],
-                        ['(낮은)솔#', 'L_So#'],
-                        ['(낮은)라', 'L_La'],
-                        ['(낮은)라#', 'L_La#'],
-                        ['(낮은)시', 'L_Ti'],
-                        ['도', 'Do'],
-                        ['도#', 'Do#'],
-                        ['레', 'Re'],
-                        ['레#', 'Re#'],
-                        ['미', 'Mi'],
-                        ['파', 'Fa'],
-                        ['파#', 'Fa#'],
-                        ['솔', 'So'],
-                        ['솔#', 'So#'],
-                        ['라', 'La'],
-                        ['라#', 'La#'],
-                        ['시', 'Ti'],
-                        ['(높은)도', 'H_Do'],
-                        ['(높은)도#', 'H_Do#'],
-                        ['(높은)레', 'H_Re'],
-                        ['(높은)레#', 'H_Re#'],
-                        ['(높은)미', 'H_Mi'],
-                        ['(높은)파', 'H_Fa'],
+                        ['(???)??, 'L_So'],
+                        ['(???)??', 'L_So#'],
+                        ['(???)??, 'L_La'],
+                        ['(???)??', 'L_La#'],
+                        ['(???)??, 'L_Ti'],
+                        ['??, 'Do'],
+                        ['??', 'Do#'],
+                        ['??, 'Re'],
+                        ['??', 'Re#'],
+                        ['�?, 'Mi'],
+                        ['??, 'Fa'],
+                        ['??', 'Fa#'],
+                        ['??, 'So'],
+                        ['??', 'So#'],
+                        ['??, 'La'],
+                        ['??', 'La#'],
+                        ['??, 'Ti'],
+                        ['(?��?)??, 'H_Do'],
+                        ['(?��?)??', 'H_Do#'],
+                        ['(?��?)??, 'H_Re'],
+                        ['(?��?)??', 'H_Re#'],
+                        ['(?��?)�?, 'H_Mi'],
+                        ['(?��?)??, 'H_Fa'],
                     ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -556,7 +556,7 @@ Entry.Cobl.getBlocks = function() {
             isNotFor: ['cobl'],
             func: function(sprite, script) {
                 var melody = script.getStringField('MELODY');
-                var duration = script.getStringField('DURATION');
+                var duration = script.getNumberValue('DURATION');
 
                 Entry.hw.setDigitalPortValue('Melody', melody);
                 Entry.hw.setDigitalPortValue('Melody_DUR', duration);
@@ -573,7 +573,7 @@ Entry.Cobl.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
-            template: '16.회전모터%1%2속도%3 %4',
+            template: '16.?�전모터%1%2?�도%3 %4',
             params: [
                 {
                     type: 'Dropdown',
@@ -584,7 +584,7 @@ Entry.Cobl.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [['1.시계방향', '1'], ['2.반시계방향', '2'], ['3.정지', '3']],
+                    options: [['1.?�계방향', '1'], ['2.반시계방??, '2'], ['3.?��?', '3']],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -642,7 +642,7 @@ Entry.Cobl.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
-            template: '17.USB포트%1단계%2 %3',
+            template: '17.USB?�트%1?�계%2 %3',
             params: [
                 {
                     type: 'Dropdown',
@@ -704,7 +704,7 @@ Entry.Cobl.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
-            template: '18-1.외부LED%1 (1~64)%2 %3',
+            template: '18-1.?��?LED%1 (1~64)%2 %3',
             params: [
                 {
                     type: 'Block',
@@ -718,12 +718,12 @@ Entry.Cobl.getBlocks = function() {
                         ['OFF', 'OFF'],
                         ['빨강', 'Red'],
                         ['주황', 'Orange'],
-                        ['노랑', 'Yellow'],
+                        ['?�랑', 'Yellow'],
                         ['초록', 'Green'],
-                        ['파랑', 'Blue'],
-                        ['남색', 'Dark Blue'],
+                        ['?�랑', 'Blue'],
+                        ['?�색', 'Dark Blue'],
                         ['보라', 'Purple'],
-                        ['흰색', 'White'],
+                        ['?�색', 'White'],
                     ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -746,7 +746,7 @@ Entry.Cobl.getBlocks = function() {
             class: 'cobl',
             isNotFor: ['cobl'],
             func: function(sprite, script) {
-                var led = script.getStringField('PORT');
+                var led = script.getNumberValue('PORT');
                 var value = script.getStringField('OPERATOR');
 
                 Entry.hw.setDigitalPortValue('ELED_IDX', led);
@@ -801,7 +801,7 @@ Entry.Cobl.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
-            template: '18-2.외부LED%1(1~64)R%2G%3B%4 %5',
+            template: '18-2.?��?LED%1(1~64)R%2G%3B%4 %5',
             params: [
                 {
                     type: 'Block',
@@ -885,7 +885,7 @@ Entry.Cobl.getBlocks = function() {
             class: 'cobl',
             isNotFor: ['cobl'],
             func: function(sprite, script) {
-                var led = script.getNumberField('LED');
+                var led = script.getNumberValue('LED');
                 var r = script.getStringField('RED');
                 var g = script.getStringField('GREEN');
                 var b = script.getStringField('BLUE');
@@ -909,7 +909,7 @@ Entry.Cobl.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
-            template: '19.숫자전광판%1(0~9999) %2',
+            template: '19.?�자?�광??1(0~9999) %2',
             params: [
                 {
                     type: 'Block',
@@ -932,7 +932,7 @@ Entry.Cobl.getBlocks = function() {
             class: 'cobl',
             isNotFor: ['cobl'],
             func: function(sprite, script) {
-                var value = script.getNumberField('VALUE');
+                var value = script.getNumberValue('VALUE');
                 var value_s = value.toString();
                 var value_c = value_s.substring(0, 4);
                 Entry.hw.setDigitalPortValue('7SEG', value_c);
