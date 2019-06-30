@@ -3,19 +3,11 @@
  */
 'use strict';
 
-goog.provide("Entry.Extension");
-
 /**
  * @constructor
  */
-Entry.Extension = function() {
-};
+Entry.Extension = function() {};
 
 (function(p) {
-    p.renderView = function() {
-    };
-
-    p.toggleInformation = function() {
-    };
-
+    p.renderView = function() {};
 })(Entry.Extension.prototype);

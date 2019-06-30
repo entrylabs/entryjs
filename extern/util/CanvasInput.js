@@ -103,6 +103,11 @@
         self.mousedown(e, self);
       }, false);
 
+      self._canvas.addEventListener('touchstart', function(e) {
+        e = e || window.event;
+        self.mousedown(e, self);
+      }, false);
+
       self._canvas.addEventListener('mouseup', function(e) {
         e = e || window.event;
         self.mouseup(e, self);
@@ -942,22 +947,25 @@
      * @param  {CanvasInput} self
      */
     mousedown: function(e, self) {
-      var roundRect = Entry.stage.canvas.canvas.getBoundingClientRect();
-      var x = ((e.clientX - roundRect.left) / roundRect.width - 0.5) * 480;
-      var y = ((e.clientY - roundRect.top) / roundRect.height - 0.5) * -270;
+      e = Entry.Utils.convertMouseEvent(e);
+      var roundRect = Entry.stage.getBoundRect();
+      var scrollPos = Entry.Utils.getScrollPos();
+      var x = ((e.pageX - roundRect.left - scrollPos.left) / roundRect.width - 0.5) * 480;
+      var y = ((e.pageY - roundRect.top - scrollPos.top) / roundRect.height - 0.5) * -270;
 
       var mouse = self._mousePos(e),
-        isOver = self._overInput(x, y);
+          isOver = self._overInput(x, y);
 
       // setup the 'click' event
       self._mouseDown = isOver;
 
-      if (isOver && !Entry.stage.inputField._isHidden) {
+      var inputField = Entry.stage.inputField;
+      if (isOver && !inputField._isHidden) {
         self._hasFocus = true;
-        Entry.stage.inputField.focus();
-      } else if (!isOver && Entry.stage.inputField) {
+        inputField.focus();
+      } else if (!isOver && inputField) {
         self._hasFocus = false;
-        Entry.stage.inputField.blur();
+        inputField.blur();
       }
 
       // start the selection drag if inside the input

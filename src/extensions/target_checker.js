@@ -3,10 +3,9 @@
  */
 'use strict';
 
-goog.provide("Entry.TargetChecker");
 
-goog.require("Entry.Utils");
-goog.require("Entry.Extension");
+require("../util/utils")
+require("../extensions/extension")
 
 /**
  * @constructor
@@ -16,6 +15,7 @@ Entry.TargetChecker = function(code, isForEdit, type) {
     this.goals = [];
     this.publicGoals = [];
     this.unachievedGoals = [];
+    this.listener = {};
     this.remainPublicGoal = 0;
     this.lastMessage = "";
     if (this.isForEdit) {
@@ -58,6 +58,9 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     };
 
     p.generateStatusView = function(isForIframe) {
+        if(this.statusViewDisabled) {
+            return ;
+        }
         this._statusView = Entry.Dom('div', {
             class: "entryTargetStatus"
         });
@@ -193,7 +196,10 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
             this.unachievedGoals.indexOf(goalName) < 0;
     };
 
-    p.registerAchievement = function(block) {
+    p.registerAchievement = function(originBlock) {
+        const block = $.extend(true, {}, originBlock);
+        block.params = originBlock.params.map(p => p instanceof Entry.Block ? p.data.params[0] : p);
+
         if (this.isForEdit)
             this.watchingBlocks.push(block);
         if (block.params[1] && this.goals.indexOf(block.params[0] + "") < 0) {
@@ -206,7 +212,12 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     };
 
     p.reRegisterAll = function() {
-        var blocks = this.script.getBlockList(false, "check_lecture_goal");
+        const blocks = this.script.getBlockList(false, 'check_lecture_goal').map(originBlock => {
+            const block = $.extend(true, {}, originBlock);
+            block.params = originBlock.params.map(p => p instanceof Entry.Block ? p.data.params[0] : p);
+            return block;
+        });
+
         this.watchingBlocks = blocks;
         this.goals = _.uniq(
             blocks.filter(function(b) {return b.params[1] === 1})
@@ -222,6 +233,13 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     p.clearExecutor = function() {
         this.script.clearExecutors();
     };
+
+    p.clearListener = function () {
+        Object.values(this.listener).forEach((listener) => {
+            listener.destroy();
+        });
+        this.listener = {};
+    }
 
     p.destroy = function() {
         this.reset();
