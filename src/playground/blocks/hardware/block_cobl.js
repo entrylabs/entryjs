@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 
 Entry.Cobl = {
     id: '1.A',
