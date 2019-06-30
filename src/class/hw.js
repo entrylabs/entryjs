@@ -14,8 +14,6 @@ Entry.HW = function() {
 
     this.connectTrial = 0;
     this.isFirstConnect = true;
-    this.hwPopupCreate();
-    this.initSocket();
     this.connected = false;
     this.portData = {};
     this.sendQueue = {};
@@ -25,6 +23,11 @@ Entry.HW = function() {
     this.hwModule = null;
     this.socketType = null;
 
+    const { options = {} } = Entry;
+    const { disableHardware = false } = options;
+
+    this.hwPopupCreate();
+    !disableHardware && this.initSocket();
     Entry.addEventListener('stop', this.setZero);
 
     this.hwInfo = Entry.HARDWARE_LIST;
@@ -445,7 +448,7 @@ p.executeHardware = function() {
                 executeIeCustomLauncher.init(entryHardwareUrl,
                     function(bInstalled) {
                         if (bInstalled == false) {
-                            hw.popupHelper.show('hwDownload', true);
+                            hw.openHardwareDownloadPopup();
                         }
                     }
                 );
@@ -466,8 +469,8 @@ p.executeHardware = function() {
             function() {
             },
             function() {
-                hw.popupHelper.show('hwDownload', true);
-            }
+                hw.openHardwareDownloadPopup();
+            },
         );
     }
 
@@ -489,7 +492,7 @@ p.executeHardware = function() {
             }
 
             if(!isInstalled) {
-                hw.popupHelper.show('hwDownload', true);
+                hw.openHardwareDownloadPopup();
             }
 
             document.getElementsByTagName("body")[0].removeChild(iFrame);
@@ -510,12 +513,20 @@ p.executeHardware = function() {
         }, 100);
         setTimeout(function() {
             if (isInstalled == false) {
-                hw.popupHelper.show('hwDownload', true);
+                hw.openHardwareDownloadPopup();
             }
             window.onblur = null;
         }, 3000);
     }
 }
+
+p.openHardwareDownloadPopup = function() {
+    if (Entry.events_.openHardWareDownloadModal) {
+        Entry.dispatchEvent('openHardWareDownloadModal');
+    } else {
+        Entry.hw.popupHelper.show('hwDownload', true);
+    }
+};
 
 p.hwPopupCreate = function () {
     var hw = this;
@@ -636,4 +647,5 @@ p.hwPopupCreate = function () {
             popup.append(content);
         }
     });
+
 }

@@ -561,6 +561,7 @@ Entry.Container = class Container {
             Entry.stage.selectObject(object);
         }
         this.selectedObject = object;
+        object.updateCoordinateView();
     }
 
     /**
