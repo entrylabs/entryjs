@@ -21,7 +21,16 @@
     "url": "https://github.com/boolgom/entryjs/issues"
   },
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "easeljs": "^1.0.2",
+    "jQuery": "^1.7.4",
+    "jquery-ui": "^1.12.1",
+    "preloadjs": "^1.0.1",
+    "serve": "^11.0.2",
+    "soundjs": "^1.0.1",
+    "underscore": "^1.9.1",
+    "webfont": "^9.0.0"
+  },
   "devDependencies": {
     "chai": "^3.2.0",
     "closurecompiler": "1.5.2",
