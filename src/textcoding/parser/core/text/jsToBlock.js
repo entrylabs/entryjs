@@ -3,9 +3,6 @@
  */
 "use strict";
 
-goog.provide("Entry.JsToBlockParser");
-goog.require("Entry.TextCodingUtil");
-
 Entry.JsToBlockParser = function(syntax, parentParser) {
     this._type ="JsToBlockParser";
     this.syntax = syntax;
@@ -481,26 +478,26 @@ Entry.JsToBlockParser = function(syntax, parentParser) {
             var left = node.left;
 
             if(left.type == "Literal" || left.type == "Identifier") {
-                var arguments = [];
-                arguments.push(left);
+                var args = [];
+                args.push(left);
                 var paramsMeta = Entry.block[type].params;
 
                 for(var p in paramsMeta) {
                     var paramType = paramsMeta[p].type;
                     if(paramType == "Indicator") {
                         var pendingArg = {raw: null, type: "Literal", value: null};
-                        if(p < arguments.length)
-                            arguments.splice(p, 0, pendingArg);
+                        if(p < args.length)
+                            args.splice(p, 0, pendingArg);
                     }
                     else if(paramType == "Text") {
                         var pendingArg = {raw: "", type: "Literal", value: ""};
-                        if(p < arguments.length)
-                            arguments.splice(p, 0, pendingArg);
+                        if(p < args.length)
+                            args.splice(p, 0, pendingArg);
                     }
                 }
 
-                for(var i in arguments) {
-                    var argument = arguments[i];
+                for(var i in args) {
+                    var argument = args[i];
 
                     var param = this[argument.type](argument);
                     param = Entry.TextCodingUtil.radarVariableConvertor(param);
@@ -528,26 +525,26 @@ Entry.JsToBlockParser = function(syntax, parentParser) {
             var right = node.right;
 
             if(right.type == "Literal" || right.type == "Identifier") {
-                var arguments = [];
-                arguments.push(right);
+                var args = [];
+                args.push(right);
                 var paramsMeta = Entry.block[type].params;
 
                 for(var p in paramsMeta) {
                     var paramType = paramsMeta[p].type;
                     if(paramType == "Indicator") {
                         var pendingArg = {raw: null, type: "Literal", value: null};
-                        if(p < arguments.length)
-                            arguments.splice(p, 0, pendingArg);
+                        if(p < args.length)
+                            args.splice(p, 0, pendingArg);
                     }
                     else if(paramType == "Text") {
                         var pendingArg = {raw: "", type: "Literal", value: ""};
-                        if(p < arguments.length)
-                            arguments.splice(p, 0, pendingArg);
+                        if(p < args.length)
+                            args.splice(p, 0, pendingArg);
                     }
                 }
 
-                for(var i in arguments) {
-                    var argument = arguments[i];
+                for(var i in args) {
+                    var argument = args[i];
                     var param = this[argument.type](argument);
 
                     if(typeof param == "string") {
@@ -623,26 +620,26 @@ Entry.JsToBlockParser = function(syntax, parentParser) {
         var left = node.left;
 
         if(left.type == "Literal" || left.type == "Identifier") {
-            var arguments = [];
-            arguments.push(left);
+            var args = [];
+            args.push(left);
             var paramsMeta = Entry.block[type].params;
 
             for(var p in paramsMeta) {
                 var paramType = paramsMeta[p].type;
                 if(paramType == "Indicator") {
                     var pendingArg = {raw: null, type: "Literal", value: null};
-                    if(p < arguments.length)
-                        arguments.splice(p, 0, pendingArg);
+                    if(p < args.length)
+                        args.splice(p, 0, pendingArg);
                 }
                 else if(paramType == "Text") {
                     var pendingArg = {raw: "", type: "Literal", value: ""};
-                    if(p < arguments.length)
-                        arguments.splice(p, 0, pendingArg);
+                    if(p < args.length)
+                        args.splice(p, 0, pendingArg);
                 }
             }
 
-            for(var i in arguments) {
-                var argument = arguments[i];
+            for(var i in args) {
+                var argument = args[i];
                 var param = this[argument.type](argument);
                 if(param && param != null)
                     params.push(param);
@@ -663,8 +660,8 @@ Entry.JsToBlockParser = function(syntax, parentParser) {
         var right = node.right;
 
         if(right.type == "Literal" || right.type == "Identifier") {
-            var arguments = [];
-            arguments.push(right);
+            var args = [];
+            args.push(right);
             var paramsMeta = Entry.block[type].params;
             //var paramsDefMeta = Entry.block[type].def.params;
 
@@ -672,18 +669,18 @@ Entry.JsToBlockParser = function(syntax, parentParser) {
                 var paramType = paramsMeta[p].type;
                 if(paramType == "Indicator") {
                     var pendingArg = {raw: null, type: "Literal", value: null};
-                    if(p < arguments.length)
-                        arguments.splice(p, 0, pendingArg);
+                    if(p < args.length)
+                        args.splice(p, 0, pendingArg);
                 }
                 else if(paramType == "Text") {
                     var pendingArg = {raw: "", type: "Literal", value: ""};
-                    if(p < arguments.length)
-                        arguments.splice(p, 0, pendingArg);
+                    if(p < args.length)
+                        args.splice(p, 0, pendingArg);
                 }
             }
 
-            for(var i in arguments) {
-                var argument = arguments[i];
+            for(var i in args) {
+                var argument = args[i];
                 var param = this[argument.type](argument);
 
                 if(param && param != null)

@@ -1,52 +1,92 @@
 /* helper */
 @keyframes blockHelperUp {
-    0%  {top: 100%;}
-    100%{top: 0%;}
+    0% {
+        top: 100%;
+    }
+    100% {
+        top: 0%;
+    }
 }
 
 @-o-keyframes blockHelperUp {
-    0%  {top: 100%;}
-    100%{top: 0%;}
+    0% {
+        top: 100%;
+    }
+    100% {
+        top: 0%;
+    }
 }
 
 @-ms-keyframes blockHelperUp {
-    0%  {top: 100%;}
-    100%{top: 0%;}
+    0% {
+        top: 100%;
+    }
+    100% {
+        top: 0%;
+    }
 }
 
 @-moz-keyframes blockHelperUp {
-    0%  {top: 100%;}
-    100%{top: 0%;}
+    0% {
+        top: 100%;
+    }
+    100% {
+        top: 0%;
+    }
 }
 
 @-webkit-keyframes blockHelperUp {
-    0%  {top: 100%;}
-    100%{top: 0%;}
+    0% {
+        top: 100%;
+    }
+    100% {
+        top: 0%;
+    }
 }
 
 @keyframes blockHelperDown {
-    0%  {top: 0%;}
-    100%{top: 100%;}
+    0% {
+        top: 0%;
+    }
+    100% {
+        top: 100%;
+    }
 }
 
 @-o-keyframes blockHelperDown {
-    0%  {top: 0%;}
-    100%{top: 100%;}
+    0% {
+        top: 0%;
+    }
+    100% {
+        top: 100%;
+    }
 }
 
 @-ms-keyframes blockHelperDown {
-    0%  {top: 0%;}
-    100%{top: 100%;}
+    0% {
+        top: 0%;
+    }
+    100% {
+        top: 100%;
+    }
 }
 
 @-moz-keyframes blockHelperDown {
-    0%  {top: 0%;}
-    100%{top: 100%;}
+    0% {
+        top: 0%;
+    }
+    100% {
+        top: 100%;
+    }
 }
 
 @-webkit-keyframes blockHelperDown {
-    0%  {top: 0%;}
-    100%{top: 100%;}
+    0% {
+        top: 0%;
+    }
+    100% {
+        top: 100%;
+    }
 }
 
 #entryBlockHelperWorkspace {
@@ -54,14 +94,13 @@
     bottom: 0;
     width: 100%;
     height: 100%;
-    background-color: #fff;
-    z-index: 1000;
+    z-index: 200;
     /*.animation-name(blockHelperUp);*/
     /*.animation-duration(0.6s);*/
 }
 
 #entryBlockHelperWorkspace.lecture {
-    .animation-duration(0.0s);
+    .animation-duration(0s);
 }
 
 #entryBlockHelperWorkspace.dispose {
@@ -82,7 +121,7 @@
 
 #entryBlockHelperDisposeWorkspace {
     float: right;
-    .backgroundImage("block_helper_dispose.png");
+    .backgroundImage('block_helper_dispose.png');
     background-repeat: no-repeat;
     background-position: center;
     padding: 15px;
@@ -99,12 +138,8 @@
     overflow-x: hidden;
 }
 
-#entryBlockHelperContentWorkspace.lecture {
-    top: 0px;
-}
-
 .entryBlockHelperIntro {
-    .backgroundImage("block_help_icon.png");
+    .backgroundImage('block_help_icon.png');
     background-repeat: no-repeat;
     background-position: center top;
     margin-top: 28px;
@@ -116,7 +151,7 @@
 
 #entryBlockHelpBtn {
     position: absolute;
-    .backgroundImage("block_help.png");
+    .backgroundImage('block_help.png');
     background-repeat: no-repeat;
     background-position: center;
     padding: 15px;
@@ -129,11 +164,15 @@
     display: none;
 }
 
-#entryBlockHelperBlockWorkspace>.renderViewContainer {
+#entryBlockHelperBlockWorkspace > .renderViewContainer {
     width: 100%;
+
+    .renderView {
+        margin-right: 9px;
+    }
 }
 
-#entryBlockHelperBlockWorkspace>.renderViewContainer > svg {
+#entryBlockHelperBlockWorkspace > .renderViewContainer > svg {
     overflow: visible;
 }
 
@@ -147,53 +186,93 @@
 
 /* helper */
 @keyframes blockHelperUp {
-    0%  {top: 100%;}
-    100%{top: 0%;}
+    0% {
+        top: 100%;
+    }
+    100% {
+        top: 0%;
+    }
 }
 
 @-o-keyframes blockHelperUp {
-    0%  {top: 100%;}
-    100%{top: 0%;}
+    0% {
+        top: 100%;
+    }
+    100% {
+        top: 0%;
+    }
 }
 
 @-ms-keyframes blockHelperUp {
-    0%  {top: 100%;}
-    100%{top: 0%;}
+    0% {
+        top: 100%;
+    }
+    100% {
+        top: 0%;
+    }
 }
 
 @-moz-keyframes blockHelperUp {
-    0%  {top: 100%;}
-    100%{top: 0%;}
+    0% {
+        top: 100%;
+    }
+    100% {
+        top: 0%;
+    }
 }
 
 @-webkit-keyframes blockHelperUp {
-    0%  {top: 100%;}
-    100%{top: 0%;}
+    0% {
+        top: 100%;
+    }
+    100% {
+        top: 0%;
+    }
 }
 
 @keyframes blockHelperDown {
-    0%  {top: 0%;}
-    100%{top: 100%;}
+    0% {
+        top: 0%;
+    }
+    100% {
+        top: 100%;
+    }
 }
 
 @-o-keyframes blockHelperDown {
-    0%  {top: 0%;}
-    100%{top: 100%;}
+    0% {
+        top: 0%;
+    }
+    100% {
+        top: 100%;
+    }
 }
 
 @-ms-keyframes blockHelperDown {
-    0%  {top: 0%;}
-    100%{top: 100%;}
+    0% {
+        top: 0%;
+    }
+    100% {
+        top: 100%;
+    }
 }
 
 @-moz-keyframes blockHelperDown {
-    0%  {top: 0%;}
-    100%{top: 100%;}
+    0% {
+        top: 0%;
+    }
+    100% {
+        top: 100%;
+    }
 }
 
 @-webkit-keyframes blockHelperDown {
-    0%  {top: 0%;}
-    100%{top: 100%;}
+    0% {
+        top: 0%;
+    }
+    100% {
+        top: 100%;
+    }
 }
 
 #entryBlockHelperWorkspace {
@@ -207,7 +286,7 @@
 }
 
 #entryBlockHelperWorkspace.lecture {
-    .animation-duration(0.0s);
+    .animation-duration(0s);
 }
 
 #entryBlockHelperWorkspace.dispose {
@@ -227,7 +306,7 @@
 
 #entryBlockHelperDisposeWorkspace {
     float: right;
-    .backgroundImage("block_helper_dispose.png");
+    .backgroundImage('block_helper_dispose.png');
     background-repeat: no-repeat;
     background-position: center;
     padding: 15px;
@@ -242,10 +321,11 @@
     bottom: 0px;
     overflow-y: auto;
     overflow-x: hidden;
+    white-space: pre-line;
 }
 
 .entryBlockHelperIntro {
-    .backgroundImage("block_help_icon.png");
+    .backgroundImage('block_help_icon.png');
     background-repeat: no-repeat;
     background-position: center top;
     margin-top: 28px;
@@ -257,7 +337,7 @@
 
 #entryBlockHelpBtn {
     position: absolute;
-    .backgroundImage("block_help.png");
+    .backgroundImage('block_help.png');
     background-repeat: no-repeat;
     background-position: center;
     padding: 15px;
@@ -274,8 +354,8 @@
     text-align: center;
 }
 
-#entryBlockHelperBlockWorkspace>svg {
-    position: relative; 
+#entryBlockHelperBlockWorkspace > svg {
+    position: relative;
 }
 
 #entryBlockHelperDescriptionWorkspace {
@@ -291,7 +371,6 @@
     display: none;
 }
 
-
 #entryBlockHelperContentWorkspace.textMode {
     padding: 18px;
     top: 0;
@@ -301,7 +380,7 @@
     }
 
     .entryBlockHelperTitle {
-        font-family: NanumGothic;
+        font-family: EntryFont, NanumGothic;
         font-size: 18px;
         font-weight: bold;
         color: #3b3b3b;
@@ -320,8 +399,8 @@
         height: auto;
     }
 
-    #entryBlockHelperBlockWorkspace>div>svg {
-        position: relative; 
+    #entryBlockHelperBlockWorkspace > div > svg {
+        position: relative;
         left: auto;
     }
 
@@ -331,7 +410,7 @@
     }
 
     .entryBlockHelperContent {
-        font-family: NanumGothic;
+        font-family: EntryFont, NanumGothic;
         font-size: 14px;
         color: #3b3b3b;
         margin-top: 8px;
@@ -358,4 +437,3 @@
         margin-top: 8px;
     }
 }
-

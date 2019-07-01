@@ -1,30 +1,26 @@
 /*
  *
  */
-"use strict";
-
-goog.provide("Entry.BlockToJsParser");
-goog.require("Entry.TextCodingUtil");
+'use strict';
 
 Entry.BlockToJsParser = function(syntax, parentParser) {
-    this._type = "BlockToJsParser";
+    this._type = 'BlockToJsParser';
     this.syntax = syntax;
 
     this._parentParser = parentParser;
 
     this._iterVariableCount = 0;
-    this._iterVariableChunk = ["i", "j", "k"];
+    this._iterVariableChunk = ['i', 'j', 'k'];
 };
 
-(function(p){
+(function(p) {
     p.Code = function(code, parseMode) {
         this._parseMode = parseMode;
         /*if (code instanceof Entry.Thread)
             return this.Thread(code);*/
-        if (code instanceof Entry.Block)
-            return this.Block(code);
+        if (code instanceof Entry.Block) return this.Block(code);
 
-        var textCode = "",
+        var textCode = '',
             threads = code._data;
 
         for (var i = 0; i < threads.length; i++) {
@@ -36,60 +32,53 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
     };
 
     p.Thread = function(thread) {
-        if (thread instanceof Entry.Block)
-            return this.Block(thread);
-        var code = "",
+        if (thread instanceof Entry.Block) return this.Block(thread);
+        var code = '',
             blocks = thread.getBlocks();
 
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
-            if(i != blocks.length-1) {
+            if (i != blocks.length - 1) {
                 var block = this.Block(block);
-                if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
+                if (this._parseMode == Entry.Parser.PARSE_GENERAL) {
                     code += block + '\n';
-                } else if(this._parseMode == Entry.Parser.PARSE_SYNTAX) {
+                } else if (this._parseMode == Entry.Parser.PARSE_SYNTAX) {
                     code = block + '\n';
                 }
-            }
-            else {
+            } else {
                 var block = this.Block(block);
-                if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
+                if (this._parseMode == Entry.Parser.PARSE_GENERAL) {
                     code += block;
-                } else if(this._parseMode == Entry.Parser.PARSE_SYNTAX) {
+                } else if (this._parseMode == Entry.Parser.PARSE_SYNTAX) {
                     code = block;
                 }
-
             }
         }
         return code + '\n';
     };
 
     p.Block = function(block) {
-        if(block._schema.syntax.js)
-            var syntax = block._schema.syntax.js;
-        else
-            var syntax = block._schema.syntax;
+        if (block._schema.syntax.js) var syntax = block._schema.syntax.js;
+        else var syntax = block._schema.syntax;
 
-        if (!syntax)
-            return "";
+        if (!syntax) return '';
         var syntaxType = syntax[0];
         var block = this[syntaxType](block);
         return block;
     };
 
     p.Program = function(block) {
-        return "";
+        return '';
     };
 
     p.Scope = function(block) {
         var notParenthesis = false;
         var result = '';
-        var paramReg = /(%.)/mi;
-        if(block._schema.syntax.js) {
+        var paramReg = /(%.)/im;
+        if (block._schema.syntax.js) {
             var syntax = block._schema.syntax.js.concat();
             notParenthesis = true;
-        }
-        else {
+        } else {
             var syntax = block._schema.syntax.concat();
         }
 
@@ -109,30 +98,31 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
             if (paramReg.test(syntaxToken)) {
                 var paramIndex = syntaxToken.split('%')[1];
                 var index = parseInt(paramIndex) - 1;
-                if(schemaParams[index]) {
-                    if(schemaParams[index].type == "Image") {
+                if (schemaParams[index]) {
+                    if (schemaParams[index].type == 'Image') {
                         index++;
-                    } else if(schemaParams[index].type == "Block") {
+                    } else if (schemaParams[index].type == 'Block') {
                         var param = this.Block(dataParams[index]);
                         result += param;
                     } else {
-                        result += this[schemaParams[index].type](dataParams[index], schemaParams[index]);
+                        result += this[schemaParams[index].type](
+                            dataParams[index],
+                            schemaParams[index]
+                        );
                     }
                 }
-            }
-            else {
+            } else {
                 result += syntaxToken;
             }
         }
 
-        if(result.charAt(result.length-1) == '#') {
+        if (result.charAt(result.length - 1) == '#') {
             notParenthesis = true;
-            result = result.substring(0, result.length-1);
+            result = result.substring(0, result.length - 1);
             result = result.trim();
         }
 
-        if(!notParenthesis)
-            result += "();";
+        if (!notParenthesis) result += '();';
 
         result = Entry.TextCodingUtil.jsAdjustSyntax(block, result);
 
@@ -143,8 +133,8 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
 
     p.BasicFunction = function(block) {
         var statementCode = this.Thread(block.statements[0]);
-        var code = "function promise() {\n" +
-            this.indent(statementCode).trim() + "}";
+        var code =
+            'function promise() {\n' + this.indent(statementCode).trim() + '}';
         return code;
     };
 
@@ -153,9 +143,18 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
         var iterVariable = this.publishIterateVariable();
         var statementCode = this.Thread(block.statements[0]);
         this.unpublishIterateVariable();
-        var code = "for (var " + iterVariable + " = 0; " + iterVariable +
-            " < " + iterateNumber + "; " + iterVariable + "++) {\n" +
-            this.indent(statementCode) + "}";
+        var code =
+            'for (var ' +
+            iterVariable +
+            ' = 0; ' +
+            iterVariable +
+            ' < ' +
+            iterateNumber +
+            '; ' +
+            iterVariable +
+            '++) {\n' +
+            this.indent(statementCode) +
+            '}';
         return code;
     };
 
@@ -168,37 +167,37 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
 
             var paramBlock = block.data.params[0];
 
-            if(paramBlock && paramBlock.data.type == "True") {
+            if (paramBlock && paramBlock.data.type == 'True') {
                 var param = syntax[1];
-            }
-            else {
-                if(paramBlock === undefined)
-                    var param = syntax[1];
-                else
-                    var param = this.Block(paramBlock);
+            } else {
+                if (paramBlock === undefined) var param = syntax[1];
+                else var param = this.Block(paramBlock);
             }
 
-            code = "if (" + param + ") {\n" +
-                this.indent(statementCode1) + "}\n" +
-                "else {\n" + this.indent(statementCode2) + "}\n";
+            code =
+                'if (' +
+                param +
+                ') {\n' +
+                this.indent(statementCode1) +
+                '}\n' +
+                'else {\n' +
+                this.indent(statementCode2) +
+                '}\n';
         } else {
             var statementCode1 = this.Thread(block.statements[0]);
             var syntax = block._schema.syntax.concat();
 
             var paramBlock = block.data.params[0];
 
-            if(paramBlock && paramBlock.data.type == "True") {
+            if (paramBlock && paramBlock.data.type == 'True') {
                 var param = syntax[1];
-            }
-            else {
-                if(paramBlock === undefined)
-                    var param = syntax[1];
-                else
-                    var param = this.Block(paramBlock);
+            } else {
+                if (paramBlock === undefined) var param = syntax[1];
+                else var param = this.Block(paramBlock);
             }
 
-            code = "if (" + param + ") {\n" +
-                this.indent(statementCode1) + "}\n";
+            code =
+                'if (' + param + ') {\n' + this.indent(statementCode1) + '}\n';
         }
 
         return code;
@@ -207,22 +206,25 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
     p.BasicWhile = function(block) {
         var statementCode = this.Thread(block.statements[0]);
         var syntax = block._schema.syntax.concat();
-        var code = "while (" + syntax[1] + ") {\n" +
-            this.indent(statementCode) + "}\n";
+        var code =
+            'while (' +
+            syntax[1] +
+            ') {\n' +
+            this.indent(statementCode) +
+            '}\n';
         return code;
     };
 
     p.indent = function(textCode) {
-        var result = "";
-        var indentedCode = textCode.split("\n");
+        var result = '';
+        var indentedCode = textCode.split('\n');
 
-        for(var i in indentedCode) {
+        for (var i in indentedCode) {
             var item = indentedCode[i];
 
-            if(item.length == 0)
-                continue;
+            if (item.length == 0) continue;
 
-            result += ("\t" + item + "\n");
+            result += '\t' + item + '\n';
         }
 
         return result;
@@ -230,7 +232,7 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
 
     // iterate variable
     p.publishIterateVariable = function() {
-        var iterVariable = "";
+        var iterVariable = '';
         var iterVariableCount = this._iterVariableCount;
         do {
             var chunk = this._iterVariableChunk[iterVariableCount % 3];
@@ -244,20 +246,16 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
     };
 
     p.unpublishIterateVariable = function() {
-        if (this._iterVariableCount)
-            this._iterVariableCount--;
+        if (this._iterVariableCount) this._iterVariableCount--;
     };
 
     p.Dropdown = function(dataParam) {
         var value = dataParam;
-        if(value == 'OBSTACLE')
-            value = 'stone';
-        else if(value == 'ITEM')
-            value = value.toLowerCase();
-        else if(value == "WALL")
-            value = value.toLowerCase();
+        if (value == 'OBSTACLE') value = 'stone';
+        else if (value == 'ITEM') value = value.toLowerCase();
+        else if (value == 'WALL') value = value.toLowerCase();
 
-        var result = "\'" + value + "\'";
+        var result = "'" + value + "'";
 
         return result;
     };
@@ -271,33 +269,32 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
     p.DropdownDynamic = function(dataParam, schemaParam) {
         var object = Entry.playground.object;
 
-        if(dataParam == "null") {
-            dataParam = "none";
+        if (dataParam == 'null') {
+            dataParam = 'none';
         } else {
-            dataParam = Entry.TextCodingUtil.dropdownDynamicValueConvertor(dataParam, schemaParam);
+            dataParam = Entry.TextCodingUtil.dropdownDynamicValueConvertor(
+                dataParam,
+                schemaParam
+            );
         }
 
         return dataParam;
     };
 
     p.searchSyntax = function(datum) {
-        if (datum instanceof Entry.BlockView)
-            datum = datum.block;
-        return this._parentParser.parse(datum,
-            Entry.Parser.PARSE_SYNTAX);
+        if (datum instanceof Entry.BlockView) datum = datum.block;
+        return this._parentParser.parse(datum, Entry.Parser.PARSE_SYNTAX);
     };
 
     p.getAssistScope = function() {
-        if (this._assist)
-            return this._assist;
+        if (this._assist) return this._assist;
 
         var assist = {};
         for (var key in this.syntax.Scope) {
-            assist[key + '();\n'] = this.syntax.Scope[key];
+            if (key.indexOf('%') < 0)
+                assist[key + '();\n'] = this.syntax.Scope[key];
         }
         this._assist = assist;
         return assist;
     };
-
-
 })(Entry.BlockToJsParser.prototype);
