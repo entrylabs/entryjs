@@ -1,32 +1,29 @@
-/*
- *
- */
-"use strict";
-
-goog.provide("Entry.Command");
+'use strict';
 
 Entry.Command = {};
 
 (function(c) {
-    c['do'] = {
-        type: EntryStatic.COMMAND_TYPES['do'],
-        log: function(objectId) {
-            return [ c['do'].type ];
-        }
+    c[Entry.STATIC.COMMAND_TYPES.do] = {
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
+        log(objectId) {
+            return [];
+        },
+        skipUndoStack: true,
     };
 
-    c['undo'] = {
-        type: EntryStatic.COMMAND_TYPES['undo'],
-        log: function(objectId) {
-            return [ c['undo'].type ];
-        }
+    c[Entry.STATIC.COMMAND_TYPES.undo] = {
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
+        log(objectId) {
+            return [];
+        },
+        skipUndoStack: true,
     };
 
-    c['redo'] = {
-        type: EntryStatic.COMMAND_TYPES['redo'],
-        log: function(objectId) {
-            return [ c['redo'].type ];
-        }
+    c[Entry.STATIC.COMMAND_TYPES.redo] = {
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
+        log(objectId) {
+            return [];
+        },
+        skipUndoStack: true,
     };
-
 })(Entry.Command);

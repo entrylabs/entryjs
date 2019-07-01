@@ -1,0 +1,42 @@
+.entryCurtainElem {
+    position: fixed;
+    background-color: #3b3b3b;
+    opacity: 0.7;
+    z-index: 5001;
+
+    &.top {
+        width: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+    }
+    &.right {
+        right: 0;
+        bottom: 0;
+    }
+    &.bottom {
+        left: 0;
+        bottom: 0;
+    }
+    &.left {
+        left: 0;
+    }
+    .transition(opacity 0.4s ease-in-out);
+}
+
+.hideTooltip>.entryCurtainElem {
+    opacity: 0;
+}
+
+.entryCurtainCloseBtn {
+    width: 22px;
+    height: 22px;
+    position: fixed;
+    z-index: 10001;
+    right: 22px;
+    top: 22px;
+    .backgroundImage("curtain_close.png");
+    background-repeat: no-repeat;
+    background-color: transparent;
+    border: none;
+}

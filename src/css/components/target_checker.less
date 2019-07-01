@@ -1,0 +1,85 @@
+.entryTargetStatus {
+    font-family: EntryFont, NanumGothic;
+    height: 54px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+
+.entryTargetStatus .innerWrapper {
+    width: auto;
+    position: absolute;
+    background-color: #f4f4f4;
+    border-radius: 3px;
+    height: 54px;
+}
+
+.entryPopupWindow .entryTargetStatus {
+    height: 91px;
+}
+
+.iframeWithTargetStatus .innerWrapper {
+    width: 100%;
+}
+
+.entryPopupWindow .innerWrapper {
+    left: 16px;
+    right: 16px;
+}
+
+.iframeWithTargetStatus #entryCanvasWrapper {
+    bottom: 89px;
+}
+
+.iframeWithTargetStatus .entryEngine {
+    bottom: 54px;
+}
+
+.entryTargetStatus .statusIndicator {
+    display: inline-block;
+    width: 43px;
+    height: 41px;
+    text-align: center;
+    line-height: 41px;
+    font-size: 14px;
+    color: #fff;
+    .backgroundImage('status_dialog.png');
+    margin-left: 14px;
+    margin-top: 6px;
+}
+
+.entryTargetStatus .statusMessage {
+    font-size: 14px;
+    color: #3b3b3b;
+    left: 71px;
+    top: 0;
+    bottom: 0;
+    right: 10px;
+    display: table;
+    position: absolute;
+    width: 100%;
+    height: 54px;
+}
+
+.statusMessage p {
+    display: table-cell;
+    vertical-align: middle;
+    padding-right: 81px;
+}
+
+.targetCheckerPopup .entryEngine_w {
+    height: auto !important;
+    bottom: 91px;
+}
+
+.blueWS {
+    .entryTargetStatus .statusIndicator {
+        .backgroundImage('status_dialog_blue.png');
+    }
+}
+
+.purpleWS {
+    .entryTargetStatus .statusIndicator {
+        .backgroundImage('status_dialog_purple.png');
+    }
+}

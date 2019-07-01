@@ -1,281 +1,465 @@
-'use strict'
+'use strict';
 
-var EntryStatic = {};
-
-EntryStatic.objectTypes = [
-    "sprite",
-    "textBox"
-]
+/* eslint-disable */
+var EntryStatic = {
+    fontFamily: 'NanumGothic',
+    exportBlockFontFamily:
+        "NanumGothic, 'NanumGothic', '나눔고딕','NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum",
+    fontOffsetY: -2.5,
+    heightLetter: 'M',
+    objectTypes: ['sprite', 'textBox'],
+};
 
 EntryStatic.usageList = [
-    'usage_event','usage_signal','usage_scene','usage_repeat', 'usage_condition_repeat',
-    'usage_condition','usage_clone', 'usage_arrow_move', 'usage_rotation', 'usage_coordinate', 'usage_shape',
-    'usage_speak','usage_picture_effect', 'usage_textBox', 'usage_draw' , 'usage_sound',
-    'usage_confirm',  'usage_comp_operation' ,'usage_logical_operation' ,'usage_math_operation',
-    'usage_random', 'usage_timer', 'usage_variable', 'usage_list' ,'usage_ask_answer',
-    'usage_function', 'usage_arduino'
+    'usage_sequence',
+    'usage_repeat',
+    'usage_condition_repeat',
+    'usage_condition',
+    'usage_parallel',
+    'usage_event',
+    'usage_signal',
+    'usage_random',
+    'usage_variable',
+    'usage_ask_answer',
+    'usage_comp_operation',
+    'usage_math_operation',
+    'usage_logical_operation',
+    'usage_list',
+    'usage_function',
+    'usage_arrow_move',
+    'usage_coordinate',
+    'usage_rotation',
+    'usage_speak',
+    'usage_picture_effect',
+    'usage_shape',
+    'usage_sound',
+    'usage_draw',
+    'usage_confirm',
+    'usage_timer',
+    'usage_textBox',
+    'usage_scene',
+    'usage_clone',
+    'usage_hw',
+    'usage_expansion',
 ];
 
 EntryStatic.conceptList = [
-    'concept_resource_analytics', 'concept_individual', 'concept_abstractive','concept_procedual',
-     'concept_automation', 'concept_simulation', 'concept_parallel'
+    'concept_resource_analytics',
+    'concept_individual',
+    'concept_abstractive',
+    'concept_procedual',
+    'concept_automation',
+    'concept_simulation',
+    'concept_parallel',
 ];
 
 EntryStatic.subjectList = [
-    'subject_korean', 'subject_mathmatics',  'subject_social',
-    'subject_science', 'subject_english', 'subject_courtesy','subject_music', 'subject_paint',
-    'subject_athletic',  'subject_progmatic'
+    'subject_korean',
+    'subject_mathmatics',
+    'subject_social',
+    'subject_science',
+    'subject_english',
+    'subject_courtesy',
+    'subject_music',
+    'subject_paint',
+    'subject_athletic',
+    'subject_progmatic',
 ];
 
-EntryStatic.lectureLevels=[1,2,3];
+EntryStatic.lectureLevels = [1, 2, 3];
 
 // EntryStatic.lectureLevels = ['level_high', 'level_mid','level_row'];
 
 EntryStatic.lectureGrades = [
-    'e_1', 'e_2', 'e_3', 'e_4', 'e_5', 'e_6',
-    'm_1', 'm_2', 'm_3',
-    'general'
+    'e_1',
+    'e_2',
+    'e_3',
+    'e_4',
+    'e_5',
+    'e_6',
+    'm_1',
+    'm_2',
+    'm_3',
+    'general',
 ];
 
 EntryStatic.categoryList = [
-    'category_game', 'category_animation', 'category_media_art',
-    'category_physical', 'category_etc'
+    'category_game',
+    'category_animation',
+    'category_media_art',
+    'category_physical',
+    'category_etc',
 ];
 
-EntryStatic.requiredTimes = [1,2,3,4,5];
+EntryStatic.variableBlockList = [
+    'get_variable',
+    'change_variable',
+    'set_variable',
+    'show_variable',
+    'hide_variable',
+    'value_of_index_from_list',
+    'add_value_to_list',
+    'remove_value_from_list',
+    'insert_value_to_list',
+    'change_value_list_index',
+    'length_of_list',
+    'is_included_in_list',
+    'show_list',
+    'hide_list',
+];
+
+EntryStatic.messageBlockList = ['when_message_cast', 'message_cast', 'message_cast_wait'];
+
+EntryStatic.requiredTimes = [1, 2, 3, 4, 5];
 
 EntryStatic.searchProjectOption = [
-   {
-       'key':'search_updated',
-       'lang':'search_updated',
-       'value': 'updated'
-   },
-   {
-       'key':'search_recent',
-       'lang':'search_recent',
-       'value': 'recent'
-   },
-   {
-       'key':'search_complexity',
-       'lang':'search_complexity',
-       'value':'complexity'
-   },
-   {
-       'key':'search_staffPicked',
-       'lang':'search_staffPicked',
-       'value': 'staffPicked'
-   },
-   {
-       'key':'search_childCnt',
-       'lang':'search_childCnt',
-       'value': 'childCnt'
-   },
-   {
-       'key':'search_likeCnt',
-       'lang':'search_likeCnt',
-       'value': 'likeCnt'
-   }
-]
+    {
+        key: 'search_updated',
+        lang: 'search_updated',
+        value: 'updated',
+    },
+    {
+        key: 'search_recent',
+        lang: 'search_recent',
+        value: 'recent',
+    },
+    {
+        key: 'search_complexity',
+        lang: 'search_complexity',
+        value: 'complexity',
+    },
+    {
+        key: 'search_staffPicked',
+        lang: 'search_staffPicked',
+        value: 'staffPicked',
+    },
+    {
+        key: 'search_childCnt',
+        lang: 'search_childCnt',
+        value: 'childCnt',
+    },
+    {
+        key: 'search_likeCnt',
+        lang: 'search_likeCnt',
+        value: 'recentLikeCnt',
+    },
+];
+
+EntryStatic.categoryProjectOption = [
+    {
+        key: 'search_genre_all',
+        lang: 'search_전체',
+        value: '전체',
+    },
+    {
+        key: 'search_genre_game',
+        lang: 'search_게임',
+        value: '게임',
+    },
+    {
+        key: 'search_genre_animation',
+        lang: 'search_애니메이션',
+        value: '애니메이션',
+    },
+    {
+        key: 'search_genre_media',
+        lang: 'search_미디어아트',
+        value: '미디어아트',
+    },
+    {
+        key: 'search_genre_physical',
+        lang: 'search_피지컬',
+        value: '피지컬',
+    },
+    {
+        key: 'search_genre_etc',
+        lang: 'search_기타',
+        value: '기타',
+    },
+];
 
 EntryStatic.getAllBlocks = function() {
     return [
         {
-            category: "start",
+            category: 'start',
             blocks: [
-                "when_run_button_click",
-                "when_some_key_pressed",
-                "mouse_clicked",
-                "mouse_click_cancled",
-                "when_object_click",
-                "when_object_click_canceled",
-                "when_message_cast",
-                "message_cast",
-                "message_cast_wait",
-                "when_scene_start",
-                "start_scene",
-                "start_neighbor_scene",
-            ]
+                'when_run_button_click',
+                'when_some_key_pressed',
+                'mouse_clicked',
+                'mouse_click_cancled',
+                'when_object_click',
+                'when_object_click_canceled',
+                'when_message_cast',
+                'message_cast',
+                'message_cast_wait',
+                'when_scene_start',
+                'start_scene',
+                'start_neighbor_scene',
+                'check_object_property',
+                'check_block_execution',
+                'switch_scope',
+                'is_answer_submited',
+                'check_lecture_goal',
+                'check_variable_by_name',
+                'show_prompt',
+                'check_goal_success',
+                'positive_number',
+                'negative_number',
+                'wildcard_string',
+                'wildcard_boolean',
+                'register_score',
+            ],
         },
         {
-            category: "flow",
+            category: 'flow',
             blocks: [
-                "wait_second",
-                "repeat_basic",
-                "repeat_inf",
-                "repeat_while_true",
-                "stop_repeat",
-                "_if",
-                "if_else",
-                "wait_until_true",
-                "stop_object",
-                "restart_project",
-                "when_clone_start",
-                "create_clone",
-                "delete_clone",
-                "remove_all_clones"
-            ]
+                'wait_second',
+                'repeat_basic',
+                'repeat_inf',
+                'repeat_while_true',
+                'stop_repeat',
+                '_if',
+                'if_else',
+                'wait_until_true',
+                'stop_object',
+                'restart_project',
+                'when_clone_start',
+                'create_clone',
+                'delete_clone',
+                'remove_all_clones',
+            ],
         },
         {
-            category: "moving",
+            category: 'moving',
             blocks: [
-                "move_direction",
-                "bounce_wall",
-                "move_x",
-                "move_y",
-                "move_xy_time",
-                "locate_x",
-                "locate_y",
-                "locate_xy",
-                "locate_xy_time",
-                "locate",
-                "locate_object_time",
-                "rotate_relative",
-                "direction_relative",
-                "rotate_by_time",
-                "direction_relative_duration",
-                "rotate_absolute",
-                "direction_absolute",
-                "see_angle_object",
-                "move_to_angle"
-            ]
+                'move_direction',
+                'bounce_wall',
+                'move_x',
+                'move_y',
+                'move_xy_time',
+                'locate_x',
+                'locate_y',
+                'locate_xy',
+                'locate_xy_time',
+                'locate',
+                'locate_object_time',
+                'rotate_relative',
+                'direction_relative',
+                'rotate_by_time',
+                'direction_relative_duration',
+                'rotate_absolute',
+                'direction_absolute',
+                'see_angle_object',
+                'move_to_angle',
+            ],
         },
         {
-            category: "looks",
+            category: 'looks',
             blocks: [
-                "show",
-                "hide",
-                "dialog_time",
-                "dialog",
-                "remove_dialog",
-                "change_to_some_shape",
-                "change_to_next_shape",
-                "add_effect_amount",
-                "change_effect_amount",
-                "erase_all_effects",
-                "change_scale_size",
-                "set_scale_size",
-                "flip_x",
-                "flip_y",
-                "change_object_index"
-            ]
+                'show',
+                'hide',
+                'dialog_time',
+                'dialog',
+                'remove_dialog',
+                'change_to_some_shape',
+                'change_to_next_shape',
+                'add_effect_amount',
+                'change_effect_amount',
+                'erase_all_effects',
+                'change_scale_size',
+                'set_scale_size',
+                'flip_x',
+                'flip_y',
+                'change_object_index',
+            ],
         },
         {
-            category: "brush",
+            category: 'brush',
             blocks: [
-                "brush_stamp",
-                "start_drawing",
-                "stop_drawing",
-                "set_color",
-                "set_random_color",
-                "change_thickness",
-                "set_thickness",
-                "change_brush_transparency",
-                "set_brush_tranparency",
-                "brush_erase_all"
-            ]
+                'brush_stamp',
+                'start_drawing',
+                'stop_drawing',
+                'set_color',
+                'set_random_color',
+                'change_thickness',
+                'set_thickness',
+                'change_brush_transparency',
+                'set_brush_tranparency',
+                'brush_erase_all',
+            ],
         },
         {
-            category: "text",
-            blocks: [
-                "text_write",
-                "text_append",
-                "text_prepend",
-                "text_flush"
-            ]
+            category: 'text',
+            blocks: ['text_read', 'text_write', 'text_append', 'text_prepend', 'text_flush'],
         },
         {
-            category: "sound",
+            category: 'sound',
             blocks: [
-                "sound_something_with_block",
-                "sound_something_second_with_block",
-                "sound_from_to",
-                "sound_something_wait_with_block",
-                "sound_something_second_wait_with_block",
-                "sound_from_to_and_wait",
-                "sound_volume_change",
-                "sound_volume_set",
-                "sound_silent_all"
-            ]
+                'sound_something_with_block',
+                'sound_something_second_with_block',
+                'sound_from_to',
+                'sound_something_wait_with_block',
+                'sound_something_second_wait_with_block',
+                'sound_from_to_and_wait',
+                'sound_volume_change',
+                'sound_volume_set',
+                'sound_silent_all',
+            ],
         },
         {
-            category: "judgement",
+            category: 'judgement',
             blocks: [
-                "is_clicked",
-                "is_press_some_key",
-                "reach_something",
-                "boolean_basic_operator",
-                "boolean_and",
-                "boolean_or",
-                "boolean_not"
-            ]
+                'is_clicked',
+                'is_press_some_key',
+                'reach_something',
+                'boolean_basic_operator',
+                'boolean_and_or',
+                'boolean_not',
+            ],
         },
         {
-            category: "calc",
+            category: 'calc',
             blocks: [
-                "calc_basic",
-                "calc_rand",
-                "coordinate_mouse",
-                "coordinate_object",
-                "get_sound_volume",
-                "quotient_and_mod",
-                "calc_operation",
-                "get_project_timer_value",
-                "choose_project_timer_action",
-                "set_visible_project_timer",
-                "get_date",
-                "distance_something",
-                "get_sound_duration",
-                "length_of_string",
-                "combine_something",
-                "char_at",
-                "substring",
-                "index_of_string",
-                "replace_string",
-                "change_string_case"
-            ]
+                'calc_basic',
+                'calc_rand',
+                'coordinate_mouse',
+                'coordinate_object',
+                'get_sound_volume',
+                'quotient_and_mod',
+                'calc_operation',
+                'get_project_timer_value',
+                'choose_project_timer_action',
+                'set_visible_project_timer',
+                'get_date',
+                'distance_something',
+                'get_sound_duration',
+                'get_user_name',
+                'length_of_string',
+                'combine_something',
+                'char_at',
+                'substring',
+                'index_of_string',
+                'replace_string',
+                'change_string_case',
+            ],
         },
         {
-            category: "variable",
+            category: 'variable',
             blocks: [
-                "variableAddButton",
-                "listAddButton",
-                "ask_and_wait",
-                "get_canvas_input_value",
-                "set_visible_answer",
-                "get_variable",
-                "change_variable",
-                "set_variable",
-                "show_variable",
-                "hide_variable",
-                "value_of_index_from_list",
-                "add_value_to_list",
-                "remove_value_from_list",
-                "insert_value_to_list",
-                "change_value_list_index",
-                "length_of_list",
-                "is_included_in_list",
-                "show_list",
-                "hide_list"
-            ]
+                'variableAddButton',
+                'listAddButton',
+                'ask_and_wait',
+                'get_canvas_input_value',
+                'set_visible_answer',
+                'get_variable',
+                'change_variable',
+                'set_variable',
+                'show_variable',
+                'hide_variable',
+                'value_of_index_from_list',
+                'add_value_to_list',
+                'remove_value_from_list',
+                'insert_value_to_list',
+                'change_value_list_index',
+                'length_of_list',
+                'is_included_in_list',
+                'show_list',
+                'hide_list',
+            ],
+<<<<<<< HEAD
         },
         {
-            category: "func",
-            blocks: [
-                "functionAddButton",
-            ]
+            category: 'func',
+            blocks: ['functionAddButton'],
         },
         {
-            category: "arduino",
+=======
+        },
+        {
+            category: 'func',
+            blocks: ['functionAddButton'],
+        },
+        {
+>>>>>>> refs/remotes/entrylabs/develop-hw
+            category: 'expansion',
             blocks: [
+                'expansionBlockAddButton',
+                'weather_title',
+                'check_weather',
+                'check_finedust',
+                'get_weather_data',
+                'get_current_weather_data',
+                'get_today_temperature',
+                'check_city_weather',
+                'check_city_finedust',
+                'get_city_weather_data',
+                'get_current_city_weather_data',
+                'get_today_city_temperature',
+                'translate_title',
+                'get_translated_string',
+                'check_language',
+                'festival_title',
+                'count_festival',
+                'get_festival_info',
+                'behaviorConductDisaster_title',
+                'count_disaster_behavior',
+                'get_disaster_behavior',
+                'behaviorConductLifeSafety_title',
+                'count_lifeSafety_behavior',
+                'get_lifeSafety_behavior',
+                'tts_title',
+                'read_text',
+                'set_tts_property',
+            ],
+        },
+        {
+            category: 'arduino',
+            blocks: [
+<<<<<<< HEAD
+<<<<<<< HEAD
                 "arduino_download_connector",
+                "download_guide",
                 "arduino_download_source",
                 "arduino_connected",
+                "arduino_connect",
                 "arduino_reconnect",
+                "arduino_open",
+                "arduino_cloud_pc_open",
                 "arduino_get_number_sensor_value",
                 "arduino_get_digital_value",
                 "arduino_toggle_led",
                 "arduino_toggle_pwm",
                 "arduino_convert_scale",
+                //arduinoExt
+                "arduino_ext_get_analog_value",
+                "arduino_ext_get_analog_value_map",
+                "arduino_ext_get_ultrasonic_value",
+                "arduino_ext_get_digital",
+                "arduino_ext_toggle_led",
+                "arduino_ext_digital_pwm",
+                "arduino_ext_set_servo",
+                "arduino_ext_set_tone",
+                //arduinoNano
+                "arduino_nano_get_analog_value",
+                "arduino_nano_get_analog_value_map",
+                "arduino_nano_get_ultrasonic_value",
+                "arduino_nano_get_digital",
+                "arduino_nano_toggle_led",
+                "arduino_nano_digital_pwm",
+                "arduino_nano_set_servo",
+                "arduino_nano_set_tone",
+                //blacksmith
+                "blacksmith_get_analog_value",
+                "blacksmith_get_analog_mapping",
+                "blacksmith_get_digital_bluetooth",
+                "blacksmith_get_digital_ultrasonic",
+                "blacksmith_get_digital_toggle",
+                "blacksmith_set_digital_toggle",
+                "blacksmith_set_digital_pwm",
+                "blacksmith_set_digital_servo",
+                "blacksmith_set_digital_buzzer",
+                "blacksmith_set_digital_lcd",
+                "blacksmith_set_digital_bluetooth",
                 //joystick
                 "joystick_get_number_sensor_value",
                 "joystick_get_digital_value",
@@ -341,51 +525,75 @@ EntryStatic.getAllBlocks = function() {
                 "bitbrick_dc_speed",
                 "bitbrick_dc_direction_speed",
                 "bitbrick_servomotor_angle",
-				"hamster_hand_found",
+                "cobl_read_ultrason",
+                "cobl_read_potenmeter",
+                "cobl_read_irread1",
+                "cobl_read_irread2",
+                "cobl_read_joyx",
+                "cobl_read_joyy",
+                //"cobl_read_sens1",
+                //"cobl_read_sens2",
+                "cobl_read_tilt",
+                "cobl_read_temps",
+                "cobl_read_light",
+                "cobl_read_btn",
+                "cobl_led_control",
+				"cobl_rgb_boardled",
+                "cobl_servo_angle_control",
+                "cobl_melody",
+                "cobl_dcmotor",
+                "cobl_extention_port",
+                "cobl_external_RainBowled",
+                "cobl_external_led",
+                "cobl_7_segment",
+                "hamster_hand_found",
                 "hamster_value",
-				"hamster_move_forward_once",
-				"hamster_turn_once",
+                "hamster_move_forward_once",
+                "hamster_turn_once",
                 "hamster_move_forward_for_secs",
                 "hamster_move_backward_for_secs",
                 "hamster_turn_for_secs",
-				"hamster_change_both_wheels_by",
+                "hamster_change_both_wheels_by",
                 "hamster_set_both_wheels_to",
                 "hamster_change_wheel_by",
                 "hamster_set_wheel_to",
-				"hamster_follow_line_using",
-				"hamster_follow_line_until",
-				"hamster_set_following_speed_to",
+                "hamster_follow_line_using",
+                "hamster_follow_line_until",
+                "hamster_set_following_speed_to",
                 "hamster_stop",
-				"hamster_set_led_to",
+                "hamster_set_led_to",
                 "hamster_clear_led",
                 "hamster_beep",
-				"hamster_change_buzzer_by",
+                "hamster_change_buzzer_by",
                 "hamster_set_buzzer_to",
                 "hamster_clear_buzzer",
                 "hamster_play_note_for",
                 "hamster_rest_for",
                 "hamster_change_tempo_by",
                 "hamster_set_tempo_to",
-				"hamster_set_port_to",
-				"hamster_change_output_by",
-				"hamster_set_output_to",
+                "hamster_set_port_to",
+                "hamster_change_output_by",
+                "hamster_set_output_to",
                 "albert_hand_found",
-				"albert_value",
+                "albert_is_oid_value",
+                "albert_value",
                 "albert_move_forward_for_secs",
                 "albert_move_backward_for_secs",
                 "albert_turn_for_secs",
-				"albert_change_both_wheels_by",
+                "albert_change_both_wheels_by",
                 "albert_set_both_wheels_to",
                 "albert_change_wheel_by",
                 "albert_set_wheel_to",
                 "albert_stop",
-				"albert_set_pad_size_to",
-				"albert_set_eye_to",
+                "albert_set_pad_size_to",
+                "albert_move_to_x_y_on_board",
+                "albert_set_orientation_on_board",
+                "albert_set_eye_to",
                 "albert_clear_eye",
                 "albert_body_led",
                 "albert_front_led",
                 "albert_beep",
-				"albert_change_buzzer_by",
+                "albert_change_buzzer_by",
                 "albert_set_buzzer_to",
                 "albert_clear_buzzer",
                 "albert_play_note_for",
@@ -408,11 +616,22 @@ EntryStatic.getAllBlocks = function() {
                 "CODEino_is_button_pressed",
                 "CODEino_get_accelerometer_direction",
                 "CODEino_get_accelerometer_value",
-                "CODEino_get_number_sensor_value",
+                //"CODEino_get_number_sensor_value",
                 "CODEino_get_digital_value",
-                "CODEino_toggle_led",
-                "CODEino_toggle_pwm",
+                //"CODEino_toggle_led",
+                //"CODEino_toggle_pwm",
                 "CODEino_convert_scale",
+                //2016-09-23
+                "CODEino_get_analog_value",
+                "CODEino_set_digital_value",
+                "CODEino_set_pwm_value",
+                "CODEino_led_by_value",
+                "CODEino_set_rgb_off",
+                "CODEino_set__led_by_rgb",
+                "CODEino_rgb_set_color",
+                "CODEino_set_rgb_value",
+                "CODEino_set_rgb_add_value",
+                //robotis_openCM70
                 "robotis_openCM70_sensor_value",
                 "robotis_openCM70_aux_sensor_value",
                 "robotis_openCM70_cm_buzzer_index",
@@ -432,6 +651,7 @@ EntryStatic.getAllBlocks = function() {
                 "robotis_carCont_cm_led",
                 "robotis_carCont_cm_sound_detected_clear",
                 "robotis_carCont_aux_motor_speed",
+                "robotis_carCont_aux_motor_speed2",
                 "robotis_carCont_cm_calibration",
 
                 //XBOT Blocks added
@@ -448,12 +668,298 @@ EntryStatic.getAllBlocks = function() {
                 "xbot_lcd",
                 //end of XBOT Blocks added
                 // ardublock Added 2016-06-01
-                "ardublock_get_number_sensor_value",
-                "ardublock_get_digital_value",
+                //"ardublock_get_number_sensor_value",
+                //"ardublock_get_digital_value",
+                //"ardublock_toggle_led",
+                //"ardublock_toggle_pwm",
+                //"ardublock_convert_scale",
+                //"ardublock_get_ultrasonic_value",
+                "ardublock_get_analog_value",
+                "ardublock_get_analog_value_map",
+                "ardublock_get_ultrasonic_value",
+                "ardublock_get_digital",
                 "ardublock_toggle_led",
-                "ardublock_toggle_pwm",
-                "ardublock_convert_scale"
-				// ardublock Added 2016-06-01
+                "ardublock_digital_pwm",
+                "ardublock_set_servo",
+                "ardublock_set_tone",
+                "ardublock_set_left_motor",
+                "ardublock_set_right_motor",
+                "ardublock_get_left_cds_analog_value",
+                "ardublock_get_right_cds_analog_value",
+                "ardublock_toggle_left_led",
+                "ardublock_toggle_right_led",
+                "ardublock_get_sound_analog_value",
+                // ardublock Added 2016-06-01
+
+                "ev3_get_sensor_value",
+                "ev3_touch_sensor",
+                "ev3_color_sensor",
+                "ev3_motor_power",
+                "ev3_motor_power_on_time",
+                "ev3_motor_degrees",
+
+                "roduino_on_block",
+                "roduino_off_block",
+                "roduino_get_analog_value",
+                "roduino_get_digital_value",
+                "roduino_get_color",
+                "roduino_set_digital",
+                "roduino_motor",
+                "roduino_set_color_pin",
+
+                "schoolkit_on_block",
+                "schoolkit_off_block",
+                "schoolkit_get_input_value",
+                "schoolkit_set_output",
+                "schoolkit_motor",
+                "schoolkit_set_servo_value",
+
+                // codestar 2016-09-26
+                'codestar_color_single',
+                'codestar_3color',
+                'codestar_vibration',
+                'codestar_buzzer',
+                'codestar_buzzer_stop',
+                'codestar_drive',
+                'codestar_wheel',
+                'codestar_light',
+                'codestar_button',
+                'codestar_ir',
+                'codestar_sonar',
+                'codestar_mic',
+                'codestar_temperature',
+
+                //koreasci.com chocopi
+                'chocopi_sensor',
+                'chocopi_touch_event',
+                'chocopi_touch_status',
+                'chocopi_touch_value',
+                'chocopi_control_event',
+                'chocopi_control_joystick',
+                'chocopi_control_button',
+                'chocopi_motion_photogate_event',
+                'chocopi_motion_photogate_time',
+                'chocopi_motion_photogate_status',
+                'chocopi_motion_value',
+                'chocopi_led',
+                'chocopi_dc_motor',
+                'chocopi_servo_motor',
+
+                //jeil science smartBoard. 2016-11-03
+                //smartBoard
+                "smartBoard_get_named_sensor_value",
+                "smartBoard_convert_scale",
+                "smartBoard_is_button_pressed",
+                "smartBoard_set_dc_motor_direction",
+                "smartBoard_set_dc_motor_speed",
+                "smartBoard_set_dc_motor_pwm",
+                "smartBoard_set_servo_speed",
+                "smartBoard_set_servo_angle",
+                "smartBoard_set_number_eight_pin",
+                "smartBoard_set_gs1_pwm",
+
+                //robotori Add 20161129 begin
+                "robotori_digitalInput",
+                "robotori_analogInput",
+                "robotori_digitalOutput",
+                "robotori_analogOutput",
+                "robotori_servo",
+                "robotori_dc_direction",
+                //robotori add 20161129 end
+
+                //dadublock 2016-12-19
+                "dadublock_get_analog_value",
+                "dadublock_get_analog_value_map",
+                "dadublock_get_ultrasonic_value",
+                "dadublock_get_digital",
+                "dadublock_toggle_led",
+                "dadublock_digital_pwm",
+                "dadublock_set_servo",
+                "dadublock_set_tone",
+
+                //dadublock_car
+                "dadublock_car_get_analog_value",
+                "dadublock_car_get_analog_value_map",
+                "dadublock_car_get_ultrasonic_value",
+                "dadublock_car_get_digital",
+                "dadublock_car_toggle_led",
+                "dadublock_car_digital_pwm",
+                "dadublock_car_set_servo",
+                "dadublock_car_set_tone",
+                "dadublock_car_motor_stop",
+                "dadublock_car_motor",
+                "dadublock_car_get_irsensor",
+
+                // BYROBOT - DroneFighter Controller
+                "byrobot_dronefighter_controller_controller_value_button",
+                "byrobot_dronefighter_controller_controller_value_joystick",
+                "byrobot_dronefighter_controller_controller_if_button_press",
+                "byrobot_dronefighter_controller_controller_if_joystick_direction",
+                "byrobot_dronefighter_controller_controller_light_manual_single_off",
+                "byrobot_dronefighter_controller_controller_light_manual_single",
+                "byrobot_dronefighter_controller_controller_light_manual_single_input",
+                "byrobot_dronefighter_controller_controller_buzzer_off",
+                "byrobot_dronefighter_controller_controller_buzzer_scale",
+                "byrobot_dronefighter_controller_controller_buzzer_scale_delay",
+                "byrobot_dronefighter_controller_controller_buzzer_scale_reserve",
+                "byrobot_dronefighter_controller_controller_buzzer_hz",
+                "byrobot_dronefighter_controller_controller_buzzer_hz_delay",
+                "byrobot_dronefighter_controller_controller_buzzer_hz_reserve",
+                "byrobot_dronefighter_controller_controller_vibrator_off",
+                "byrobot_dronefighter_controller_controller_vibrator_on_delay",
+                "byrobot_dronefighter_controller_controller_vibrator_on_reserve",
+                "byrobot_dronefighter_controller_controller_vibrator_delay",
+                "byrobot_dronefighter_controller_controller_vibrator_reserve",
+                "byrobot_dronefighter_controller_controller_userinterface_preset",
+                "byrobot_dronefighter_controller_controller_userinterface",
+
+                // BYROBOT - DroneFighter Drive
+                "byrobot_dronefighter_drive_drone_value_attitude",
+                "byrobot_dronefighter_drive_drone_value_etc",
+                "byrobot_dronefighter_drive_controller_value_button",
+                "byrobot_dronefighter_drive_controller_value_joystick",
+                "byrobot_dronefighter_drive_controller_if_button_press",
+                "byrobot_dronefighter_drive_controller_if_joystick_direction",
+                "byrobot_dronefighter_drive_drone_control_car_stop",
+                "byrobot_dronefighter_drive_drone_control_double_one",
+                "byrobot_dronefighter_drive_drone_control_double_one_delay",
+                "byrobot_dronefighter_drive_drone_control_double",
+                "byrobot_dronefighter_drive_drone_motor_stop",
+                "byrobot_dronefighter_drive_drone_motorsingle",
+                "byrobot_dronefighter_drive_drone_motorsingle_input",
+                "byrobot_dronefighter_drive_drone_irmessage",
+                "byrobot_dronefighter_drive_drone_light_manual_single_off",
+                "byrobot_dronefighter_drive_drone_light_manual_single",
+                "byrobot_dronefighter_drive_drone_light_manual_single_input",
+                "byrobot_dronefighter_drive_controller_light_manual_single_off",
+                "byrobot_dronefighter_drive_controller_light_manual_single",
+                "byrobot_dronefighter_drive_controller_light_manual_single_input",
+                "byrobot_dronefighter_drive_controller_buzzer_off",
+                "byrobot_dronefighter_drive_controller_buzzer_scale",
+                "byrobot_dronefighter_drive_controller_buzzer_scale_delay",
+                "byrobot_dronefighter_drive_controller_buzzer_scale_reserve",
+                "byrobot_dronefighter_drive_controller_buzzer_hz",
+                "byrobot_dronefighter_drive_controller_buzzer_hz_delay",
+                "byrobot_dronefighter_drive_controller_buzzer_hz_reserve",
+                "byrobot_dronefighter_drive_controller_vibrator_off",
+                "byrobot_dronefighter_drive_controller_vibrator_on_delay",
+                "byrobot_dronefighter_drive_controller_vibrator_on_reserve",
+                "byrobot_dronefighter_drive_controller_vibrator_delay",
+                "byrobot_dronefighter_drive_controller_vibrator_reserve",
+
+                // BYROBOT - DroneFighter Flight
+                "byrobot_dronefighter_flight_drone_value_attitude",
+                "byrobot_dronefighter_flight_drone_value_etc",
+                "byrobot_dronefighter_flight_controller_value_button",
+                "byrobot_dronefighter_flight_controller_value_joystick",
+                "byrobot_dronefighter_flight_controller_if_button_press",
+                "byrobot_dronefighter_flight_controller_if_joystick_direction",
+                "byrobot_dronefighter_flight_drone_control_drone_stop",
+                "byrobot_dronefighter_flight_drone_control_coordinate",
+                "byrobot_dronefighter_flight_drone_control_drone_reset_heading",
+                "byrobot_dronefighter_flight_drone_control_quad_one",
+                "byrobot_dronefighter_flight_drone_control_quad_one_delay",
+                "byrobot_dronefighter_flight_drone_control_quad",
+                "byrobot_dronefighter_flight_drone_motor_stop",
+                "byrobot_dronefighter_flight_drone_motorsingle",
+                "byrobot_dronefighter_flight_drone_motorsingle_input",
+                "byrobot_dronefighter_flight_drone_irmessage",
+                "byrobot_dronefighter_flight_drone_light_manual_single_off",
+                "byrobot_dronefighter_flight_drone_light_manual_single",
+                "byrobot_dronefighter_flight_drone_light_manual_single_input",
+                "byrobot_dronefighter_flight_controller_light_manual_single_off",
+                "byrobot_dronefighter_flight_controller_light_manual_single",
+                "byrobot_dronefighter_flight_controller_light_manual_single_input",
+                "byrobot_dronefighter_flight_controller_buzzer_off",
+                "byrobot_dronefighter_flight_controller_buzzer_scale",
+                "byrobot_dronefighter_flight_controller_buzzer_scale_delay",
+                "byrobot_dronefighter_flight_controller_buzzer_scale_reserve",
+                "byrobot_dronefighter_flight_controller_buzzer_hz",
+                "byrobot_dronefighter_flight_controller_buzzer_hz_delay",
+                "byrobot_dronefighter_flight_controller_buzzer_hz_reserve",
+                "byrobot_dronefighter_flight_controller_vibrator_off",
+                "byrobot_dronefighter_flight_controller_vibrator_on_delay",
+                "byrobot_dronefighter_flight_controller_vibrator_on_reserve",
+                "byrobot_dronefighter_flight_controller_vibrator_delay",
+                "byrobot_dronefighter_flight_controller_vibrator_reserve",
+
+                //MODI
+                "modi_microphone_value",
+                "modi_environment_value",
+                "modi_dial_value",
+                "modi_gyroscope_value",
+                "modi_button_value",
+                "modi_is_button_touch",
+                "modi_button_true",
+                "modi_button_false",
+                "modi_infrared_value",
+                "modi_ultrasonic_value",
+                "modi_set_motor_value",
+                "modi_change_motor_upper_value",
+                "modi_change_motor_bottom_value",
+                "modi_clear_led",
+                "modi_set_led_rgb",
+                "modi_set_led_color",
+                "modi_set_basic_speaker",
+                "modi_set_custom_speaker",
+                "modi_change_speaker_frequence",
+                "modi_change_speaker_volume",
+                "modi_print_display_by_value",
+
+                // COCONUT
+                "coconut_move_motor",
+                "coconut_turn_motor",
+                "coconut_stop_motor",
+                "coconut_move_for_secs",
+                "coconut_turn_for_secs",
+                "coconut_turn_to_led",
+                "coconut_move_outmotor",
+                "coconut_set_led_to",
+                "coconut_clear_led",
+                "coconut_set_led_clear",
+                "coconut_set_led_time",
+                "coconut_beep",
+                "coconut_buzzer_time",
+                "coconut_buzzer_set_hz",
+                "coconut_clear_buzzer",
+                "coconut_play_buzzer",
+                "coconut_rest_buzzer",
+                "coconut_play_buzzer_led",
+                "coconut_play_midi",
+                "coconut_floor_sensor",
+                "coconut_floor_sensing",
+                "coconut_following_line",
+                "coconut_front_sensor",
+                "coconut_front_sensing",
+                "coconut_obstruct_sensing",
+                "coconut_avoid_mode",
+                "coconut_dotmatrix_set",
+                "coconut_dotmatrix_on",
+                "coconut_dotmatrix_off",
+                "coconut_dotmatrix_num",
+                "coconut_dotmatrix_small_eng",
+                "coconut_dotmatrix_big_eng",
+                "coconut_dotmatrix_kor",
+                "coconut_light_sensor",
+                "coconut_light_tmp",
+                "coconut_ac_sensor",
+                "coconut_outled_sensor",
+                "coconut_outspk_sensor",
+                "coconut_outspk_sensor_off",
+                "coconut_outinfrared_sensor",
+                "coconut_outcds_sensor",
+                "coconut_servomotor_angle",
+                //rokoboard Blocks
+                "rokoboard_get_sensor_value_by_name",
+                "rokoboard_is_button_pressed",
+                 //Altino Blocks added
+                "altino_analogValue",
+                "altino_rear_wheel",
+                "altino_steering",
+                "altino_sound",
+                "altino_light",
+                "altino_dot_display",
+                "altino_dot_display_line",
             ]
         }
     ]
@@ -502,18 +1008,16 @@ EntryStatic.blockInfo = {
         "xml": "<block type='xbot_buzzer'><field name='OCTAVE'>4</field><value name='VALUE'><block type='text'><field name='NAME'>0.5</field></block></value></block>",
         "class": "xbot_sensor"
     },
-	"xbot_digitalOutput": {
+    "xbot_digitalOutput": {
         "isNotFor": ["xbot_epor_edge"],
         "xml": "<block type='xbot_digitalOutput'></block>",
         "class": "xbot_sensor"
     },
-
-     "xbot_digitalInput": {
+    "xbot_digitalInput": {
         "isNotFor": ["xbot_epor_edge"],
         "xml": "<block type='xbot_digitalInput'></block>",
         "class": "xbot_sensor"
     },
-
     "xbot_analogValue": {
         "isNotFor": ["xbot_epor_edge"],
         "xml": "<block type='xbot_analogValue'></block>",
@@ -525,7 +1029,37 @@ EntryStatic.blockInfo = {
         "class": "xbot_sensor"
     },
     //end of XBOT Blocks added
-
+    //EV3 BLOCK
+    "ev3_get_sensor_value": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_get_sensor_value'></block>",
+        "class": "ev3_sensor"
+    },
+    "ev3_touch_sensor": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_touch_sensor'></block>",
+        "class": "ev3_sensor"
+    },
+    "ev3_color_sensor": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_color_sensor'></block>",
+        "class": "ev3_sensor"
+    },
+    "ev3_motor_power": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_motor_power'><value name='VALUE'><block type='number'><field name='NUM'>50</field></block></value></block>",
+        "class": "ev3_output"
+    },
+    "ev3_motor_power_on_time": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_motor_power_on_time'><value name='TIME'><block type='number'><field name='NUM'>2</field></block></value><value name='VALUE'><block type='number'><field name='NUM'>50</field></block></value></block>",
+        "class": "ev3_output"
+    },
+    "ev3_motor_degrees": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_motor_degrees'><value name='DEGREE'> <block type='angle'></block> </value></block>",
+        "class": "ev3_output"
+    },
     "when_run_button_click": {
         "xml": "<block type='when_run_button_click'></block>",
         "class": "event",
@@ -1329,6 +1863,12 @@ EntryStatic.blockInfo = {
         "usage": ["arduino"],
         "class": "button"
     },
+    "download_guide": {
+        "xml": "<btn text=\"Lang.Blocks.download_guide\" onclick=\"Entry.hw.downloadGuide()\"></btn>",
+        "isNotFor": ["arduinoDisconnected"],
+        "usage": ["arduino"],
+        "class": "button"
+    },
     "arduino_download_source": {
         "xml": "<btn text=\"Lang.Blocks.ARDUINO_download_source\" onclick=\"Entry.hw.downloadSource()\"></btn>",
         "isNotFor": ["arduinoDisconnected"],
@@ -1729,7 +2269,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='bitbrick_convert_scale'><value name='VALUE2'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE3'> <block type='number'><field name='NUM'>1023</field></block> </value><value name='VALUE4'> <block type='number'><field name='NUM'>-100</field></block> </value><value name='VALUE5'> <block type='number'><field name='NUM'>100</field></block> </value></block>",
         "class": "condition"
     },
-	"hamster_hand_found": {
+    "hamster_hand_found": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_hand_found'></block>",
         "class": "hamster_sensor"
@@ -1739,7 +2279,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='hamster_value'></block>",
         "class": "hamster_sensor"
     },
-	"hamster_move_forward_once": {
+    "hamster_move_forward_once": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_move_forward_once'></block>",
         "class": "hamster_board"
@@ -1764,7 +2304,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='hamster_turn_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
         "class": "hamster_wheel"
     },
-	"hamster_change_both_wheels_by": {
+    "hamster_change_both_wheels_by": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_change_both_wheels_by'><value name='LEFT'><block type='text'><field name='NAME'>10</field></block></value><value name='RIGHT'><block type='text'><field name='NAME'>10</field></block></value></block>",
         "class": "hamster_wheel"
@@ -1784,17 +2324,17 @@ EntryStatic.blockInfo = {
         "xml": "<block type='hamster_set_wheel_to'><value name='VALUE'><block type='text'><field name='NAME'>30</field></block></value></block>",
         "class": "hamster_wheel"
     },
-	"hamster_follow_line_using": {
+    "hamster_follow_line_using": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_follow_line_using'></block>",
         "class": "hamster_wheel"
     },
-	"hamster_follow_line_until": {
+    "hamster_follow_line_until": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_follow_line_until'></block>",
         "class": "hamster_wheel"
     },
-	"hamster_set_following_speed_to": {
+    "hamster_set_following_speed_to": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_set_following_speed_to'><field name='SPEED'>5</field></block>",
         "class": "hamster_wheel"
@@ -1804,7 +2344,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='hamster_stop'></block>",
         "class": "hamster_wheel"
     },
-	"hamster_set_led_to": {
+    "hamster_set_led_to": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_set_led_to'></block>",
         "class": "hamster_led"
@@ -1819,7 +2359,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='hamster_beep'></block>",
         "class": "hamster_buzzer"
     },
-	"hamster_change_buzzer_by": {
+    "hamster_change_buzzer_by": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_change_buzzer_by'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
         "class": "hamster_buzzer"
@@ -1870,17 +2410,17 @@ EntryStatic.blockInfo = {
         "class": "hamster_port"
     },
 
-	"albert_hand_found": {
+    "albert_hand_found": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_hand_found'></block>",
         "class": "albert_sensor"
     },
-	"albert_value": {
+    "albert_value": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_value'></block>",
         "class": "albert_sensor"
     },
-	"albert_move_forward_for_secs": {
+    "albert_move_forward_for_secs": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_move_forward_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
         "class": "albert_wheel"
@@ -1895,7 +2435,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='albert_turn_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
         "class": "albert_wheel"
     },
-	"albert_change_both_wheels_by": {
+    "albert_change_both_wheels_by": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_change_both_wheels_by'><value name='LEFT'><block type='text'><field name='NAME'>10</field></block></value><value name='RIGHT'><block type='text'><field name='NAME'>10</field></block></value></block>",
         "class": "albert_wheel"
@@ -1920,7 +2460,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='albert_stop'></block>",
         "class": "albert_wheel"
     },
-	"albert_set_pad_size_to": {
+    "albert_set_pad_size_to": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_set_pad_size_to'><value name='WIDTH'><block type='text'><field name='NAME'>108</field></block></value><value name='HEIGHT'><block type='text'><field name='NAME'>76</field></block></value></block>",
         "class": "albert_wheel"
@@ -1950,7 +2490,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='albert_beep'></block>",
         "class": "albert_buzzer"
     },
-	"albert_change_buzzer_by": {
+    "albert_change_buzzer_by": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_change_buzzer_by'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
         "class": "albert_buzzer"
@@ -2254,252 +2794,513 @@ EntryStatic.blockInfo = {
         "xml": "<block type='robotis_carCont_cm_calibration'><value name='VALUE'><block type='number'><field name='NUM'>0</field></block></value></block>",
         "class": "robotis_carCont_cm"
     },
+    "coconut_move_forward_once": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_move_forward_once'></block>",
+        "class": "coconut_board"
+    },
+
+    "coconut_turn_once": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_turn_once'></block>",
+        "class": "coconut_board"
+    },
+    "coconut_move_forward_for_secs": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_move_forward_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
+        "class": "coconut_wheel"
+    },
+    "coconut_move_backward_for_secs": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_move_backward_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
+        "class": "coconut_wheel"
+    },
+    "coconut_turn_for_secs": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_turn_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
+        "class": "coconut_wheel"
+    },
+    "coconut_change_both_wheels_by": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_change_both_wheels_by'><value name='LEFT'><block type='text'><field name='NAME'>10</field></block></value><value name='RIGHT'><block type='text'><field name='NAME'>10</field></block></value></block>",
+        "class": "coconut_wheel"
+    },
+    "coconut_set_both_wheels_to": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_set_both_wheels_to'><value name='LEFT'><block type='text'><field name='NAME'>30</field></block></value><value name='RIGHT'><block type='text'><field name='NAME'>30</field></block></value></block>",
+        "class": "coconut_wheel"
+    },
+    "coconut_change_wheel_by": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_change_wheel_by'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
+        "class": "coconut_wheel"
+    },
+    "coconut_set_wheel_to": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_set_wheel_to'><value name='VALUE'><block type='text'><field name='NAME'>30</field></block></value></block>",
+        "class": "coconut_wheel"
+    },
+    "coconut_follow_line_using": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_follow_line_using'></block>",
+        "class": "coconut_wheel"
+    },
+    "coconut_follow_line_until": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_follow_line_until'></block>",
+        "class": "coconut_wheel"
+    },
+    "coconut_set_following_speed_to": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_set_following_speed_to'><field name='SPEED'>5</field></block>",
+        "class": "coconut_wheel"
+    },
+    "coconut_stop": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_stop'></block>",
+        "class": "coconut_wheel"
+    },
+    "coconut_set_led_to": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_set_led_to'></block>",
+        "class": "coconut_led"
+    },
+    "coconut_clear_led": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_clear_led'></block>",
+        "class": "coconut_led"
+    },
+    "coconut_beep": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_beep'></block>",
+        "class": "coconut_buzzer"
+    },
+    "coconut_change_buzzer_by": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_change_buzzer_by'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
+        "class": "coconut_buzzer"
+    },
+    "coconut_set_buzzer_to": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_set_buzzer_to'><value name='VALUE'><block type='text'><field name='NAME'>1000</field></block></value></block>",
+        "class": "coconut_buzzer"
+    },
+    "coconut_clear_buzzer": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_clear_buzzer'></block>",
+        "class": "coconut_buzzer"
+    },
+    "coconut_play_note_for": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_play_note_for'><field name='OCTAVE'>4</field><value name='VALUE'><block type='text'><field name='NAME'>0.5</field></block></value></block>",
+        "class": "coconut_buzzer"
+    },
+    "coconut_rest_for": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_rest_for'><value name='VALUE'><block type='text'><field name='NAME'>0.25</field></block></value></block>",
+        "class": "coconut_buzzer"
+    },
+    "coconut_change_tempo_by": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_change_tempo_by'><value name='VALUE'><block type='text'><field name='NAME'>20</field></block></value></block>",
+        "class": "coconut_buzzer"
+    },
+    "coconut_set_tempo_to": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_set_tempo_to'><value name='VALUE'><block type='text'><field name='NAME'>60</field></block></value></block>",
+        "class": "coconut_buzzer"
+    },
+    "coconut_set_port_to": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_set_port_to'></block>",
+        "class": "coconut_port"
+    },
+    "coconut_change_output_by": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_change_output_by'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
+        "class": "coconut_port"
+    },
+    "coconut_set_output_to": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_set_output_to'><value name='VALUE'><block type='text'><field name='NAME'>100</field></block></value></block>",
+        "class": "coconut_port"
+    },
 }
 
+=======
+=======
+>>>>>>> refs/remotes/entrylabs/develop-hw
+                'arduino_download_connector',
+                'download_guide',
+                'arduino_download_source',
+                'arduino_connect',
+                'arduino_reconnect',
+                'arduino_open',
+                'arduino_cloud_pc_open',
+                'arduino_noti',
+            ].concat(EntryStatic.DynamicHardwareBlocks),
+        },
+    ];
+};
+EntryStatic.DynamicHardwareBlocks = [];
+<<<<<<< HEAD
+>>>>>>> refs/remotes/entrylabs/develop-hw
+=======
+>>>>>>> refs/remotes/entrylabs/develop-hw
 EntryStatic.discussCategories = [
-   // 'notice',
-   'qna',
-   'tips',
+    // 'notice',
+    'qna',
+    'tips',
     'free',
-   'report',
-   'notice'
+    'report',
+    'notice',
 ];
 
 EntryStatic.artCategories = [
     {
-        'key':'art_category_',
-        'lang':'art_category_all',
-        'value': ''
+        key: 'art_category_',
+        lang: 'art_category_all',
+        value: '',
     },
     {
-        'key':'art_category_게임',
-        'lang':'art_category_game',
-        'value': '게임'
+        key: 'art_category_게임',
+        lang: 'art_category_game',
+        value: '게임',
     },
     {
-        'key':'art_category_애니메이션',
-        'lang':'art_category_animation',
-        'value':'애니메이션'
+        key: 'art_category_애니메이션',
+        lang: 'art_category_animation',
+        value: '애니메이션',
     },
     {
-        'key':'art_category_미디어아트',
-        'lang':'art_category_media',
-        'value': '미디어아트'
+        key: 'art_category_미디어아트',
+        lang: 'art_category_media',
+        value: '미디어아트',
     },
     {
-        'key':'art_category_피지컬',
-        'lang':'art_category_physical',
-        'value': '피지컬'
+        key: 'art_category_피지컬',
+        lang: 'art_category_physical',
+        value: '피지컬',
     },
     {
-        'key':'art_category_기타',
-        'lang':'art_category_etc',
-        'value': '기타'
-    }
-]
+        key: 'art_category_기타',
+        lang: 'art_category_etc',
+        value: '기타',
+    },
+];
 
 EntryStatic.artSortOptions = [
     {
-        'key':'art_sort_updated',
-        'lang':'art_sort_updated',
-        'value': 'updated'
+        key: 'art_sort_updated',
+        lang: 'art_sort_updated',
+        value: 'updated',
     },
     {
-        'key':'art_sort_visit',
-        'lang':'art_sort_visit',
-        'value': 'visit'
+        key: 'art_sort_visit',
+        lang: 'art_sort_visit',
+        value: 'visit',
     },
     {
-        'key':'art_sort_likeCnt',
-        'lang':'art_sort_likeCnt',
-        'value': 'likeCnt'
+        key: 'art_sort_likeCnt',
+        lang: 'art_sort_likeCnt',
+        value: 'likeCnt',
     },
     {
-        'key':'art_sort_comment',
-        'lang':'art_sort_comment',
-        'value': 'comment'
+        key: 'art_sort_comment',
+        lang: 'art_sort_comment',
+        value: 'comment',
     },
-]
+];
 
 EntryStatic.discussSortOptions = [
     {
-        'lang':'discuss_sort_created',
-        'value': 'created'
+        lang: 'discuss_sort_created',
+        value: 'created',
     },
     {
-        'lang':'discuss_sort_visit',
-        'value': 'visit'
+        lang: 'discuss_sort_visit',
+        value: 'visit',
     },
     {
-        'lang':'discuss_sort_likesLength',
-        'value': 'likesLength'
+        lang: 'discuss_sort_likesLength',
+        value: 'likesLength',
     },
     {
-        'lang':'discuss_sort_commentsLength',
-        'value': 'commentsLength'
+        lang: 'discuss_sort_commentsLength',
+        value: 'commentsLength',
     },
-]
+];
 EntryStatic.discussPeriodOptions = [
     {
-        'key':'discuss_period_',
-        'lang':'discuss_period_all',
-        'value': ''
+        key: 'discuss_period_',
+        lang: 'discuss_period_all',
+        value: '',
     },
     {
-        'key':'discuss_period_1',
-        'lang':'discuss_period_day',
-        'value': '1'
+        key: 'discuss_period_1',
+        lang: 'discuss_period_day',
+        value: '1',
     },
     {
-        'key':'discuss_period_7',
-        'lang':'discuss_period_week',
-        'value': '7'
+        key: 'discuss_period_7',
+        lang: 'discuss_period_week',
+        value: '7',
     },
     {
-        'key':'discuss_period_30',
-        'lang':'discuss_period_month',
-        'value': '30'
+        key: 'discuss_period_30',
+        lang: 'discuss_period_month',
+        value: '30',
     },
     {
-        'key':'discuss_period_90',
-        'lang':'discuss_period_three_month',
-        'value': '90'
+        key: 'discuss_period_90',
+        lang: 'discuss_period_three_month',
+        value: '90',
     },
-]
-
+];
 
 EntryStatic.artPeriodOptions = [
     {
-        'key':'art_period_',
-        'lang':'art_period_all',
-        'value': ''
+        key: 'art_period_',
+        lang: 'art_period_all',
+        value: '',
     },
     {
-        'key':'art_period_1',
-        'lang':'art_period_day',
-        'value': '1'
+        key: 'art_period_1',
+        lang: 'art_period_day',
+        value: '1',
     },
     {
-        'key':'art_period_7',
-        'lang':'art_period_week',
-        'value': '7'
+        key: 'art_period_7',
+        lang: 'art_period_week',
+        value: '7',
     },
     {
-        'key':'art_period_30',
-        'lang':'art_period_month',
-        'value': '30'
+        key: 'art_period_30',
+        lang: 'art_period_month',
+        value: '30',
     },
     {
-        'key':'art_period_90',
-        'lang':'art_period_three_month',
-        'value': '90'
-    }
-]
+        key: 'art_period_90',
+        lang: 'art_period_three_month',
+        value: '90',
+    },
+];
 
 EntryStatic.getCategoryByBlock = function(blockName) {
-    if (!blockName)
+    if (!blockName) {
         return false;
-    var allBlocks = EntryStatic.getAllBlocks();
-    for (var i=0,len=allBlocks.length; i<len; i++) {
-        var blocks = allBlocks[i].blocks;
+    }
+    const allBlocks = EntryStatic.getAllBlocks();
+    for (let i = 0, len = allBlocks.length; i < len; i++) {
+        const blocks = allBlocks[i].blocks;
         if (blocks.indexOf(blockName) > -1) {
             return allBlocks[i].category;
         }
     }
     return false;
-}
-
-// for server node js code
-if (typeof exports == "object") {
-    exports.blockInfo = EntryStatic.blockInfo;
-    exports.getAllBlocks = EntryStatic.getAllBlocks;
-    exports.getCategoryByBlock = EntryStatic.getCategoryByBlock;
-}
-
-
-EntryStatic.objectMainCategories = ['entrybot_friends', 'people', 'animal', 'plant', 'vehicles',
-                'architect', 'food', 'environment', 'stuff', 'fantasy', 'interface',
-                'background'];
-
-EntryStatic.objectSubCategories = {
-    'entrybot_friends': [],
-    'people': [],
-    'animal': ['animal_flying', 'animal_land', 'animal_water', 'animal_others'],
-    'plant': ['plant_flower', 'plant_grass', 'plant_tree', 'plant_others'],
-    'vehicles': ['vehicles_flying', 'vehicles_land', 'vehicles_water', 'vehicles_others'],
-    'architect': ['architect_building', 'architect_monument', 'architect_others'],
-    'food': ['food_vegetables', 'food_meat', 'food_drink', 'food_others'],
-    'environment': ['environment_nature', 'environment_space', 'environment_others'],
-    'stuff': ['stuff_living', 'stuff_hobby', 'stuff_others'],
-    'fantasy': [],
-    'interface': [],
-    'background': ['background_outdoor', 'background_indoor', 'background_nature', 'background_others']
 };
 
-EntryStatic.fonts = [
-{
-    name: '바탕체',
-    family: 'KoPub Batang',
-    url: '/css/kopubbatang.css'
-},
-{
-    name: '명조체',
-    family: 'Nanum Myeongjo',
-    url: '/css/nanummyeongjo.css'
-},
-{
-    name: '고딕체',
-    family: 'Nanum Gothic',
-    url: '/css/nanumgothic.css'
-},
-{
-    name: '필기체',
-    family: 'Nanum Pen Script',
-    url: '/css/nanumpenscript.css'
-},
-{
-    name: '한라산체',
-    family: 'Jeju Hallasan',
-    url: '/css/jejuhallasan.css'
-},
-{
-    name: '코딩고딕체',
-    family: 'Nanum Gothic Coding',
-    url: '/css/nanumgothiccoding.css'
-}
+EntryStatic.objectMainCategories = [
+    'entrybot_friends',
+    'people',
+    'animal',
+    'plant',
+    'vehicles',
+    'architect',
+    'food',
+    'environment',
+    'stuff',
+    'fantasy',
+    'interface',
+    'background',
 ];
 
-EntryStatic.getName = function(str, type) {
-    var dict = SpriteNames;
-    if (type == 'picture')
-        dict = PictureNames;
-    else if (type == 'sound')
-        dict = SoundNames;
-
-    var lang = navigator.language ? navigator.language : 'ko';
-    if (window.lang)
-        lang = window.lang;
-
-    if (window.user && window.user.language)
-        lang = window.user.language;
-
-    if (!dict || lang == 'ko' || lang == 'code') {
-        return str;
-    } else {
-        return dict[str] ? dict[str] : str;
-    }
+EntryStatic.objectSubCategories = {
+    entrybot_friends: [],
+    people: [],
+    animal: ['animal_flying', 'animal_land', 'animal_water', 'animal_others'],
+    plant: ['plant_flower', 'plant_grass', 'plant_tree', 'plant_others'],
+    vehicles: ['vehicles_flying', 'vehicles_land', 'vehicles_water', 'vehicles_others'],
+    architect: ['architect_building', 'architect_monument', 'architect_others'],
+    food: ['food_vegetables', 'food_meat', 'food_drink', 'food_others'],
+    environment: ['environment_nature', 'environment_space', 'environment_others'],
+    stuff: ['stuff_living', 'stuff_hobby', 'stuff_others'],
+    fantasy: [],
+    interface: [],
+    background: [
+        'background_outdoor',
+        'background_indoor',
+        'background_nature',
+        'background_others',
+    ],
 };
 
-EntryStatic.ARROW_COLOR_START = '#2f975a';
-EntryStatic.ARROW_COLOR_FLOW = '#3a71bc';
-EntryStatic.ARROW_COLOR_MOVING = '#8641b6';
-EntryStatic.ARROW_COLOR_LOOKS = '#d8234e';
-EntryStatic.ARROW_COLOR_SOUNDS = '#83a617';
-EntryStatic.ARROW_COLOR_JUDGE = '#89a1f7';
-EntryStatic.ARROW_COLOR_CALC = '#e8b349';
-EntryStatic.ARROW_COLOR_VARIABLE = '#ce38ce';
-EntryStatic.ARROW_COLOR_HW = '#097e84';
+/* eslint-disable */
+Object.defineProperty(EntryStatic, 'fonts', {
+    get: function() {
+        return [
+            {
+                name: Lang.Fonts.batang,
+                family: 'KoPub Batang',
+                url: '/css/kopubbatang.css',
+                visible: false,
+            },
+            {
+                name: Lang.Fonts.jeju_hallasan,
+                family: 'Jeju Hallasan',
+                url: '/css/jejuhallasan.css',
+                visible: false,
+            },
+            {
+                name: Lang.Fonts.gothic,
+                family: 'Nanum Gothic',
+                url: '/css/nanumgothic.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.myeongjo,
+                family: 'Nanum Myeongjo',
+                url: '/css/nanummyeongjo.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.pen_script,
+                family: 'Nanum Pen Script',
+                url: '/css/nanumpenscript.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.square_round,
+                family: 'NanumSquareRound',
+                url: '/css/square_round.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.gothic_coding,
+                family: 'Nanum Gothic Coding',
+                url: '/css/nanumgothiccoding.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.jalnan,
+                family: 'yg-jalnan',
+                url: '/css/jalnan.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.designhouse,
+                family: 'designhouseOTFLight00',
+                url: '/css/designhouse.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.dunggeunmo,
+                family: 'DungGeunMo',
+                url: '/css/dunggeunmo.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.uhbeemysen,
+                family: 'UhBeemysen',
+                url: '/css/uhbeemysen.css',
+                visible: true,
+            },
+        ];
+    },
+});
 
+EntryStatic.colorSet = {
+    arrow: {
+        default: {
+            DEFAULT: '#FFFFFF',
+            START: '#FFFFFF',
+            FLOW: '#3A71BC',
+            MOVING: '#8641B6',
+            LOOKS: '#D8234E',
+            TEXT: '#DC9C32',
+            SOUND: '#83A617',
+            JUDGE: '#89A1F7',
+            CALC: '#E8B349',
+            VARIABLE: '#CE38CE',
+            HARDWARE: '#FFFFFF',
+            EXPANSION: '#FF8888',
+            HIDDEN: '#FFFFFF',
+        },
+    },
+    block: {
+        default: {
+            START: '#00b400',
+            FLOW: '#17a6d1',
+            MOVING: '#ad3efb',
+            LOOKS: '#ff3a61',
+            BRUSH: '#fc7e01',
+            TEXT: '#e43500',
+            SOUND: '#67b100',
+            JUDGE: '#4562f5',
+            CALC: '#f4af18',
+            VARIABLE: '#dd47d8',
+            FUNC: '#de5c04',
+            HARDWARE: '#00b6b1',
+            EXPANSION: '#ef6d6d',
+            HIDDEN: '#8aa3b2',
+        },
+        lighten: {
+            START: '#3bce3b',
+            FLOW: '#3bce3b',
+            MOVING: '#bd65fb',
+            LOOKS: '#ff5577',
+            BRUSH: '#ff9831',
+            TEXT: '#ff6739',
+            SOUND: '#7ecc12',
+            JUDGE: '#99adff',
+            CALC: '#ffde82',
+            VARIABLE: '#f778f3',
+            FUNC: '#ff7b22',
+            HARDWARE: '#78d5d3',
+            EXPANSION: '#ffaeae',
+            HIDDEN: '#ffaeae',
+        },
+        darken: {
+            START: '#009400',
+            FLOW: '#007ca2',
+            MOVING: '#8b19db',
+            LOOKS: '#c72042',
+            BRUSH: '#c72042',
+            TEXT: '#ad2800',
+            SOUND: '#508a00',
+            JUDGE: '#1b3ad8',
+            CALC: '#ff7f00',
+            VARIABLE: '#b819b3',
+            FUNC: '#a14100',
+            HARDWARE: '#008380',
+            EXPANSION: '#c63f3f',
+            HIDDEN: '#728997',
+        },
+        emphasize: {
+            '#00b400': '#5BC982', //START
+            '#17a6d1': '#62A5F4', //FLOW
+            '#ad3efb': '#C08FF7', //MOVING
+            '#ff3a61': '#F46487', //LOOKS
+            '#fc7e01': '#FFB05A', //BRUSH
+            '#e43500': '#F2C670', //TEXT
+            '#67b100': '#C4DD31', //SOUND
+            '#4562f5': '#C0CBFF', //JUDGE
+            '#f4af18': '#FCDA90', //CALC
+            '#dd47d8': '#F279F2', //VARIABLE
+            '#de5c04': '#DD884E', //FUNC
+            '#00b6b1': '#09BAB5', //HARDWARE
+            //Not guided emphasize color for EXPANSION
+        },
+    },
+    common: {
+        WHITE: '#FFFFFF',
+        DARK: '#000000',
+        TRANSPARENT: 'transparent',
+        BUTTON: '#4f80ff',
+        BUTTON_BACKGROUND: '#eee',
+        TEXT: '#333',
+    },
+};
 
 EntryStatic.COMMAND_TYPES = {
     addThread: 101,
@@ -2516,7 +3317,40 @@ EntryStatic.COMMAND_TYPES = {
 
     selectObject: 201,
 
-    'do': 301,
-    'undo': 302,
-    'redo': 303
+    do: 301,
+    undo: 302,
+    redo: 303,
 };
+
+EntryStatic.getQuestionCategoryData = function() {
+    return {
+        category: 'dummy',
+        blocks: [
+            'hidden_event',
+            'hidden_loop2',
+            'hidden_if_else2',
+            'hidden',
+            'hidden_string',
+            'hidden_boolean',
+        ],
+    };
+};
+
+EntryStatic.getDefaultFontFamily = function() {
+    const localLang = Lang || {};
+    const type = localLang.type;
+    const fallbackType = localLang.fallbackType;
+    const langType = type || fallbackType || 'en';
+    switch (langType) {
+        default:
+            return "EntryNG, NanumGothic, 나눔고딕, NanumGothicWeb, '맑은 고딕', 'Malgun Gothic', Dotum";
+    }
+};
+
+// for server node js code
+if (typeof exports === 'object') {
+    exports.blockInfo = EntryStatic.blockInfo;
+    exports.getAllBlocks = EntryStatic.getAllBlocks;
+    exports.getCategoryByBlock = EntryStatic.getCategoryByBlock;
+    exports.EntryStatic = EntryStatic;
+}

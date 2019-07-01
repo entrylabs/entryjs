@@ -54,6 +54,10 @@ this.ndgmr = this.ndgmr || {};
         b1 = getBounds(bitmap1);
         b2 = getBounds(bitmap2);
     }
+    if (Math.min(b1.width, b1.height, b2.width, b2.height) < 2)
+        threshold = 1;
+    else
+        threshold = 1;
     return calculateIntersection(b1,b2);
   }
   ndgmr.checkRectCollision = checkRectCollision;
@@ -87,7 +91,12 @@ this.ndgmr = this.ndgmr || {};
         return intersection;
     }
 
-    if (intersection.width === 0 || intersection.height == 0)
+    if (intersection.width === 0 || intersection.height === 0)
+        return false;
+
+    //chrome float point number bug
+    if (intersection.width/threshold < 1 ||
+          intersection.height/threshold < 1)
         return false;
 
     alphaThreshold = alphaThreshold || 0;

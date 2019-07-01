@@ -1,19 +1,16 @@
-"use strict";
-
-goog.provide("Entry.db");
+'use strict';
 
 Entry.db = {
     data: {},
-    typeMap: {}
+    typeMap: {},
 };
 
-(function(db){
+(function(db) {
     db.add = function(datum) {
         this.data[datum.id] = datum;
 
         var type = datum.type;
-        if (this.typeMap[type] === undefined)
-            this.typeMap[type] = {};
+        if (this.typeMap[type] === undefined) this.typeMap[type] = {};
         this.typeMap[type][datum.id] = datum;
     };
 
@@ -22,8 +19,7 @@ Entry.db = {
     };
 
     db.remove = function(id) {
-        if (!this.has(id))
-            return;
+        if (!this.has(id)) return;
 
         var datum = this.data[id];
         delete this.typeMap[datum.type][id];
@@ -34,13 +30,10 @@ Entry.db = {
         return this.data[id];
     };
 
-    db.find = function() {
-
-    };
+    db.find = function() {};
 
     db.clear = function() {
         this.data = {};
         this.typeMap = {};
     };
-
 })(Entry.db);

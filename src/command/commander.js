@@ -1,11 +1,9 @@
 /*
  *
  */
-"use strict";
+'use strict';
 
-goog.provide("Entry.Commander");
-
-goog.require("Entry.Command");
+const UTIL = require('./command_util');
 
 Entry.Commander = function(injectType) {
     if (injectType == 'workspace' || injectType == 'phone') {
@@ -15,7 +13,6 @@ Entry.Commander = function(injectType) {
          * @type {!object}
          */
         Entry.stateManager = new Entry.StateManager();
-
     }
     Entry.do = this.do.bind(this);
 
@@ -25,110 +22,143 @@ Entry.Commander = function(injectType) {
 
     this.reporters = [];
 
-    this._tempStorage = null;
-
     Entry.Command.editor = this.editor;
+
+    this.doEvent = new Entry.Event(this);
+    this.logEvent = new Entry.Event(this);
+
+    this.doCommandAll = Entry.doCommandAll;
+    this._storage = null;
 };
 
-
 (function(p) {
-    p.do = function(commandType) {
-        var that = this;
-        var argumentArray = Array.prototype.slice.call(arguments);
-        argumentArray.shift();
-        var command = Entry.Command[commandType];
-        if (Entry.stateManager) {
-            Entry.stateManager.addCommand.apply(
-                Entry.stateManager,
-                [commandType, this, this.do, command.undo]
-                    .concat(command.state.apply(this, argumentArray))
-            );
+    p.do = function(commandType, ...args) {
+        const {
+            stateManager,
+            Command: EntryCommand,
+            STATIC: { COMMAND_TYPES, getCommandName },
+        } = Entry;
+
+        if (typeof commandType === 'string') {
+            commandType = COMMAND_TYPES[commandType];
         }
-        var value = Entry.Command[commandType].do.apply(this, argumentArray);
 
         //intentionally delay reporting
-        setTimeout(function() {
-            that.report('do');
-            that.report(commandType, argumentArray);
-        }, 0);
+        this.report(COMMAND_TYPES.do);
+        this.report(commandType, args);
+
+        const command = EntryCommand[commandType];
+
+        console.log('commandType', commandType, getCommandName(commandType));
+
+        let state;
+
+        if (stateManager && !UTIL.checkIsSkip(commandType)) {
+            state = stateManager.addCommand(
+                ...[commandType, this, this.do, command.undo].concat(
+                    command.state.apply(this, args)
+                )
+            );
+        }
+        const value = command.do.apply(this, args);
+        this.doEvent.notify(commandType, args);
+        const id = state ? state.id : null;
 
         return {
-            value: value,
-            isPass: this.isPass.bind(this)
-        }
+            value,
+            isPass: function(isPass, skipCount) {
+                this.isPassById(id, isPass, skipCount);
+            }.bind(this),
+        };
     };
 
-    p.undo = function() {
-        var argumentArray = Array.prototype.slice.call(arguments);
-        var commandType = argumentArray.shift();
-        var commandFunc = Entry.Command[commandType];
+    p.undo = function(commandType, ...args) {
+        this.report(Entry.STATIC.COMMAND_TYPES.undo);
 
-        this.report('undo');
+        const command = Entry.Command[commandType];
 
-        if (Entry.stateManager) {
-            Entry.stateManager.addCommand.apply(
+        let state;
+        if (Entry.stateManager && command.skipUndoStack !== true) {
+            state = Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
-                [commandType, this, this.do, commandFunc.undo]
-                    .concat(commandFunc.state.apply(this, argumentArray))
+                [commandType, this, this.do, command.undo].concat(command.state.apply(this, args))
             );
         }
         return {
-            value: Entry.Command[commandType].do.apply(this, argumentArray),
-            isPass: this.isPass.bind(this)
-        }
+            value: command.do.apply(this, args),
+            isPass: function(isPass) {
+                this.isPassById(state.id, isPass);
+            }.bind(this),
+        };
     };
 
-    p.redo = function() {
-        var argumentArray = Array.prototype.slice.call(arguments);
-        var commandType = argumentArray.shift();
-        var commandFunc = Entry.Command[commandType];
+    p.redo = function(commandType, ...args) {
+        this.report(Entry.STATIC.COMMAND_TYPES.redo);
 
-        that.report('redo');
+        const command = Entry.Command[commandType];
 
-        if (Entry.stateManager) {
+        if (Entry.stateManager && command.skipUndoStack !== true) {
             Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
-                [commandType, this, this.undo, commandType]
-                    .concat(commandFunc.state.apply(null, argumentArray))
+                [commandType, this, this.undo, commandType].concat(command.state.apply(null, args))
             );
         }
-        commandFunc.undo.apply(this, argumentArray);
+        command.undo.apply(this, args);
     };
 
     p.setCurrentEditor = function(key, object) {
         this.editor[key] = object;
     };
 
-    p.isPass = function(isPass) {
-        isPass = isPass === undefined ? true : isPass;
-        if (Entry.stateManager) {
-            var lastCommand = Entry.stateManager.getLastCommand();
-            if (lastCommand) lastCommand.isPass = isPass;
+    p.isPass = function(isPass = true) {
+        if (!Entry.stateManager) {
+            return;
+        }
+
+        const lastCommand = Entry.stateManager.getLastCommand();
+        if (lastCommand) {
+            lastCommand.isPass = isPass;
+        }
+    };
+
+    p.isPassById = function(id, isPass = true, skipCount = 0) {
+        if (!id || !Entry.stateManager) {
+            return;
+        }
+
+        const lastCommand = Entry.stateManager.getLastCommandById(id);
+        if (lastCommand) {
+            lastCommand.isPass = isPass;
+            if (skipCount) {
+                lastCommand.skipCount = !!skipCount;
+            }
         }
     };
 
     p.addReporter = function(reporter) {
-        this.reporters.push(reporter);
+        reporter.logEventListener = this.logEvent.attach(reporter, reporter.add);
     };
 
     p.removeReporter = function(reporter) {
-        var index = this.reporters.indexOf(reporter);
-        if (index > -1) this.reporters.splice(index, 1);
+        if (reporter.logEventListener) {
+            this.logEvent.detatch(reporter.logEventListener);
+        }
+        delete reporter.logEventListener;
     };
 
     p.report = function(commandType, argumentsArray) {
-        var reporters = this.reporters;
-        if (reporters.length === 0) return;
+        let data;
 
-        var data;
-
-        if (commandType && Entry.Command[commandType] && Entry.Command[commandType].log)
-            data = Entry.Command[commandType].log.apply(this, argumentsArray)
-        else data = argumentsArray;
-        reporters.forEach(function(reporter) {
-            reporter.add(data);
-        });
+        if (commandType && Entry.Command[commandType] && Entry.Command[commandType].log) {
+            data = Entry.Command[commandType].log.apply(this, argumentsArray);
+        } else {
+            data = argumentsArray;
+        }
+        data.unshift(commandType);
+        this.logEvent.notify(data);
     };
 
-})(Entry.Commander.prototype)
-
+    p.applyOption = function() {
+        this.doCommandAll = Entry.doCommandAll;
+    };
+})(Entry.Commander.prototype);

@@ -7,6 +7,8 @@
     "globalstrict": true,
     "loopfunc": true,
     "validthis": true,
+    "esversion": 6,
+    "expr": true,
     "globals": {
         "goog": true,
         "acorn": true,
@@ -26,7 +28,13 @@
         "mina": true,
         "Touch": true,
         "io": true,
+        "LC": true,
         "ActiveXObject": true,
-        "CodeMirror": true
+        "CodeMirror": true,
+        "entrylms": true,
+        "require": true,
+        "module": true,
+        "process": true,
+        "_": true
     }
 }
