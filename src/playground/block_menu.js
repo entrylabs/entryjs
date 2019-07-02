@@ -327,7 +327,11 @@ class BlockMenu {
         const blockView = this.dragBlock;
         if (this._boardBlockView || blockView === null) {
             if (this.svg.widthBackup) {
-                this.foldBlockMenu();
+                const point = Entry.Utils.getPosition(e);
+                const rect = Entry.Utils.getBoundingClientRectMemo(this.blockMenuContainer[0]);
+                if (!Entry.Utils.isPointInRect(point, rect)) {
+                    this.foldBlockMenu();
+                }
             }
             return;
         }
