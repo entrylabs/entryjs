@@ -168,7 +168,8 @@ class BlockMenu {
             if (
                 !Entry.playground ||
                 Entry.playground.resizing ||
-                (selectedBlockView && selectedBlockView.dragMode === Entry.DRAG_MODE_DRAG)
+                (selectedBlockView && selectedBlockView.dragMode === Entry.DRAG_MODE_DRAG) ||
+                Entry.GlobalSvg.isShow
             ) {
                 return;
             }
@@ -183,26 +184,30 @@ class BlockMenu {
             }
         });
 
-        this.svgDom.mouseleave(function() {
-            const playground = Entry.playground;
-            if (!playground || playground.resizing) {
-                return;
-            }
-
-            if (that._scroller) {
-                that._scroller.setOpacity(0);
-            }
-
-            const widthBackup = this.widthBackup;
-            if (widthBackup) {
-                $(that.blockMenuWrapper).css('width', widthBackup);
-            }
-            delete this.widthBackup;
-            delete playground.focusBlockMenu;
+        this.svgDom.mouseleave(() => {
+            this.foldBlockMenu();
         });
 
         Entry.Utils.bindBlockViewHoverEvent(this, this.svgDom);
         $(window).scroll(this.updateOffset.bind(this));
+    }
+
+    foldBlockMenu() {
+        const playground = Entry.playground;
+        if (!playground || playground.resizing) {
+            return;
+        }
+
+        if (this._scroller) {
+            this._scroller.setOpacity(0);
+        }
+
+        const widthBackup = this.svg.widthBackup;
+        if (widthBackup) {
+            $(this.blockMenuWrapper).css('width', widthBackup);
+        }
+        delete this.svg.widthBackup;
+        delete playground.focusBlockMenu;
     }
 
     changeCode(code, isImmediate) {
@@ -321,9 +326,13 @@ class BlockMenu {
     cloneToGlobal(e) {
         const blockView = this.dragBlock;
         if (this._boardBlockView || blockView === null) {
+            if (this.svg.widthBackup) {
+                this.foldBlockMenu();
+            }
             return;
         }
 
+        Entry.Utils.clearClientRectMemo();
         const GS = Entry.GlobalSvg;
         const workspace = this.workspace;
         const workspaceMode = workspace.getMode();
@@ -335,7 +344,6 @@ class BlockMenu {
         const { x = 0, y = 0 } = blockView.mouseDownCoordinate || {};
         const dx = e.pageX - x;
         const dy = e.pageY - y;
-
         if (board && (workspaceMode === MODE_BOARD || workspaceMode === MODE_OVERLAYBOARD)) {
             if (!board.code) {
                 if (Entry.toast) {
@@ -384,6 +392,7 @@ class BlockMenu {
                 }
 
                 GS.setView(newBlockView, workspaceMode);
+            } else {
             }
         } else {
             if (GS.setView(blockView, workspaceMode)) {
