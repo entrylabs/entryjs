@@ -332,7 +332,6 @@ class BlockMenu {
             return;
         }
 
-        Entry.Utils.clearClientRectMemo();
         const GS = Entry.GlobalSvg;
         const workspace = this.workspace;
         const workspaceMode = workspace.getMode();
