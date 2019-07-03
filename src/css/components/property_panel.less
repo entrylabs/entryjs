@@ -1,34 +1,28 @@
 .propertyPanel {
-    z-index: 10;
-    position: absolute;
-    top: 326px;
+    // z-index: 10;
+    position: relative;
+    flex: 1;
+    margin-top: 16px;
+    left: 0px;
+    right: 16px;
     bottom: 0px;
-    width: 400px;
-    background-color: #e7e7e7;
-    border-top: 2px solid @blueHaneul;
+    height: 1px;
 }
 
 .propertyTab {
-    width: 50px;
+    overflow: hidden;
+    width: 25px;
     height: 100%;
-    background-color: #f5f5f5;
 }
-
-.collapsed .propertyTab {
-    width: 30px;
-}
-
 .propertyTabElement {
-    width: 100%;
-    height: 40px;
-    background-color: #dbdcdc;
-    background-repeat: no-repeat;
-    background-position: 50% 6px;
-    color: #9e9e9f;
-    font-size: 11px;
-    padding-top: 24px;
+    height: 38px;
+    margin-top: 4px;
     cursor: pointer;
-    text-align: center;
+    font-size: 0;
+    background-size: 25px auto;
+}
+.propertyTabElement:first-child {
+    margin-top: 0;
 }
 
 .collapsed .propertyTabElement {
@@ -37,46 +31,92 @@
     font-size: 0;
 }
 
-.propertyTabElement.selected {
-    background-color: #5096f5;
-    color: #fff;
+.propertyTabobject {
+    .backgroundImage('property/container_off.png');
+}
+.propertyTabobject.selected {
+    .backgroundImage('property/container_on.png');
+
+    .practical_course_mode & {
+        .backgroundImage('property/container_on_practical_course.png');
+    }
 }
 
-.propertyTabobject { .backgroundImage("property/container_off.png"); }
-.propertyTabobject.selected { .backgroundImage("property/container_on.png"); }
+.propertyTabhw {
+    .backgroundImage('property/hw_off.png');
+}
+.propertyTabhw.selected {
+    .backgroundImage('property/hw_on.png');
 
-.propertyTabhw { .backgroundImage("property/hw_off.png"); }
-.propertyTabhw.selected { .backgroundImage("property/hw_on.png"); }
+    .practical_course_mode & {
+        .backgroundImage('property/hw_on_practical_course.png');
+    }
+}
 
-.propertyTabtvCast {.backgroundImage("property/vedio_off.png");}
-.propertyTabtvCast.selected {.backgroundImage("property/vedio_on.png");}
+.propertyTabtvCast {
+    .backgroundImage('property/vedio_off.png');
+}
+.propertyTabtvCast.selected {
+    .backgroundImage('property/vedio_on.png');
+}
 
-.propertyTabyoutube {.backgroundImage("property/vedio_off.png");}
-.propertyTabyoutube.selected {.backgroundImage("property/vedio_on.png");}
+.propertyTabyoutube {
+    .backgroundImage('property/vedio_off.png');
+}
+.propertyTabyoutube.selected {
+    .backgroundImage('property/vedio_on.png');
+}
 
-.propertyTabgoal {.backgroundImage("property/doneproject.png");}
-.propertyTabgoal.selected {.backgroundImage("property/doneproject_on.png");}
+.propertyTabgoal {
+    .backgroundImage('property/doneproject.png');
+}
+.propertyTabgoal.selected {
+    .backgroundImage('property/doneproject_on.png');
+}
 
-.propertyTabpdf {.backgroundImage("property/pdf_off.png");}
-.propertyTabpdf.selected {.backgroundImage("property/pdf_on.png");}
+.propertyTabpdf {
+    .backgroundImage('property/pdf_off.png');
+}
+.propertyTabpdf.selected {
+    .backgroundImage('property/pdf_on.png');
+}
 
-.propertyTabconsole {.backgroundImage("property/console_off.png");}
-.propertyTabconsole.selected {.backgroundImage("property/console_on.png");}
+.propertyTabconsole {
+    .backgroundImage('property/console_off.png');
+}
+.propertyTabconsole.selected {
+    .backgroundImage('property/console_on.png');
+
+    .practical_course_mode & {
+        .backgroundImage('property/console_on_practical_course.png');
+    }
+}
 
 .propertyContent {
+    overflow: hidden;
     position: absolute;
-    top: 0; bottom: 0;
-    left: 50px; right: 0;
-    background-color: #363C46;
+    top: 0;
+    bottom: 0;
+    left: 25px;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #d6e9f4;
+    border-radius: 0 6px 6px 6px;
+}
+.propertyContent:after {
+    display: block;
+    clear: both;
+    content: '';
 }
 
 .propertyPanelCover {
     position: absolute;
-    top: 0; bottom: 0;
-    left: 0; right: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 .collapsed .propertyContent {
     left: 30px;
 }
-

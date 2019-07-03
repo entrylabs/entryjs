@@ -1,155 +1,206 @@
 'use strict';
 
-goog.provide('Entry.ContextMenu');
+import { ContextMenu } from '@entrylabs/tool';
+import DomUtils from './domUtils';
+
+Entry.ContextMenu = {};
 
 (function(ctx) {
+    const ATTR_KEY = 'data-option-index';
+
     ctx.visible = false;
     ctx._hideEvent = null;
 
     ctx.createDom = function() {
-
-        this.dom = Entry.Dom('ul', {
+        this.dom = Entry.Dom('div', {
             id: 'entry-contextmenu',
-            parent: $('body')
+            parent: $('body'),
         });
 
-        this.dom.bind('mousedown touchstart', function(e) {
-            e.stopPropagation();
-        });
-
-        Entry.Utils.disableContextmenu(this.dom);
+        _bindEvent.call(this);
     };
 
     ctx.show = function(options, className, coordinate) {
-        this._hideEvent = Entry.documentMousedown.attach(
-            this, function(){this.hide();}
-        );
-        if (!this.dom) this.createDom();
-        if (options.length === 0) return;
-        var that = this;
+        if (!options.length) {
+            return;
+        }
+
+        this._options = options;
+
+        this.createDom();
+
+        if (this._hideEvent) {
+            this._hideEvent.destroy();
+        }
+
         if (className !== undefined) {
             this._className = className;
             this.dom.addClass(className);
         }
 
-        var parent = this.dom;
+        this._hideEvent = Entry.documentMousedown.attach(this, this.hide);
+        this.mouseCoordinate = coordinate || Entry.mouseCoordinate;
+        this.contextMenu = new ContextMenu({
+            type: 'contextMenu',
+            data: {
+                items: options,
+                coordinate: this.mouseCoordinate,
+                onOutsideClick: () => {
+                    this.hide();
+                },
+            },
+            container: this.dom[0],
+        });
 
-        parent.empty();
-
-        for (var i=0, len=options.length; i<len; i++) {
-            var option = options[i];
-            var text = option.text;
-            var enable = option.enable !== false;
-
-            var elem = Entry.Dom('li', { parent: parent });
-
-            if (option.divider) className = 'divider';
-            else {
-                className = enable ? 'menuAble' : 'menuDisable';
-                var span = Entry.Dom('span', { parent: elem });
-
-                span.text(text);
-
-                if (enable && option.callback) {
-                    (function(elem, cb) {
-                        elem.mousedown(function(e){
-                            e.preventDefault();
-                            that.hide();
-                            cb(e);
-                        });
-                    })(elem, option.callback);
-                }
-            }
-            elem.addClass(className);
-        }
-
-        parent.removeClass('entryRemove');
         this.visible = true;
-        this.position(coordinate || Entry.mouseCoordinate);
     };
 
     ctx.position = function(pos) {
-        var dom = this.dom;
+        const dom = this.dom;
         dom.css({
             left: 0,
-            top: 0
+            top: 0,
         });
-        var width = dom.width();
-        var height = dom.height();
+        const width = dom.width();
+        const height = dom.height();
 
-        var win = $(window);
-        var winWidth = win.width();
-        var winHeight = win.height();
+        const win = $(window);
+        const winWidth = win.width();
+        const winHeight = win.height();
 
-        if (pos.x + width > winWidth)
+        if (pos.x + width > winWidth) {
             pos.x -= width + 3;
-        if (pos.y + height > winHeight)
+        }
+        if (pos.y + height > winHeight) {
             pos.y -= height;
+        }
 
         dom.css({
             left: pos.x,
-            top: pos.y
+            top: pos.y,
         });
-
     };
 
     ctx.hide = function() {
         this.visible = false;
-        this.dom.empty();
-        this.dom.addClass('entryRemove');
+        const dom = this.dom;
+        dom.addClass('entryRemove');
+
         if (this._className) {
-            this.dom.removeClass(this._className);
+            dom.removeClass(this._className);
             delete this._className;
         }
         if (this._hideEvent) {
-            Entry.documentMousedown.detach(this._hideEvent);
+            this._hideEvent.destroy();
             this._hideEvent = null;
+        }
+        if (this.contextMenu) {
+            this.contextMenu.isShow && this.contextMenu.hide();
+            this.contextMenu.remove();
+            this.contextMenu = null;
         }
     };
 
     ctx.onContextmenu = function(target, callback) {
-        target.on('touchstart mousemove mouseup contextmenu', function (e) {
-            switch(e.type) {
-                case 'touchstart':
-                    var startEvent = Entry.Utils.convertMouseEvent(e);
-                    this.coordi = {
-                        x: startEvent.clientX,
-                        y: startEvent.clientY,
-                    }
+        const longPressEvent = (e) => {
+            const startEvent = Entry.Utils.convertMouseEvent(e);
+            this.coordi = {
+                x: startEvent.clientX,
+                y: startEvent.clientY,
+            };
 
-                    this.longTouchEvent = setTimeout((function() {
-                        callback(this.coordi);
-                        this.longTouchEvent = undefined;
-                    }).bind(this), 900);
-                    break;
-                case 'mousemove':
-                    if(!this.coordi) return;
-                    var diff = Math.sqrt(Math.pow(e.pageX - this.coordi.x, 2) +
-                            Math.pow(e.pageY - this.coordi.y, 2));
-                    if (diff > 5 && this.longTouchEvent) {
-                        clearTimeout(this.longTouchEvent);
-                        this.longTouchEvent = undefined;
+            if (this.longTouchEvent) {
+                clearTimeout(this.longTouchEvent);
+                this.longTouchEvent = null;
+            }
+
+            this.longTouchEvent = setTimeout(() => {
+                callback(this.coordi);
+                this.longTouchEvent = undefined;
+            }, 900);
+        };
+
+        DomUtils.addEventListenerMultiple(
+            target,
+            'touchstart touchmove touchend mousemove mouseup mousedown',
+            (e) => {
+                switch (e.type) {
+                    case 'touchstart': {
+                        longPressEvent(e);
+                        break;
                     }
-                    break;
-                case 'mouseup':
-                    // e.stopPropagation();
-                    if (this.longTouchEvent) {
-                        clearTimeout(this.longTouchEvent);
-                        this.longTouchEvent = null;
+                    case 'mousemove':
+                    case 'touchmove': {
+                        const startEvent = Entry.Utils.convertMouseEvent(e);
+                        if (!this.coordi) {
+                            return;
+                        }
+                        const diff = Math.sqrt(
+                            Math.pow(startEvent.pageX - this.coordi.x, 2) +
+                                Math.pow(startEvent.pageY - this.coordi.y, 2)
+                        );
+
+                        if (diff > 5 && this.longTouchEvent) {
+                            clearTimeout(this.longTouchEvent);
+                            this.longTouchEvent = undefined;
+                        }
+                        break;
                     }
-                    break;
-                case 'contextmenu':
-                    clearTimeout(this.longTouchEvent);
-                    this.longTouchEvent = undefined;
-                    if(e.type === 'contextmenu') {
+                    case 'mouseup':
+                    case 'touchend':
                         // e.stopPropagation();
-                        // e.preventDefault();
-                        callback(this.coordi);
-                    }
-                    break;
+                        if (this.longTouchEvent) {
+                            clearTimeout(this.longTouchEvent);
+                            this.longTouchEvent = undefined;
+                        }
+                        break;
+                    case 'mousedown':
+                        if (Entry.Utils.isRightButton(e)) {
+                            e.stopPropagation();
+
+                            this.coordi = {
+                                x: e.clientX,
+                                y: e.clientY,
+                            };
+
+                            clearTimeout(this.longTouchEvent);
+                            this.longTouchEvent = undefined;
+                            callback(this.coordi);
+                        }
+
+                        if (Entry.isMobile()) {
+                            longPressEvent(e);
+                        }
+                        break;
+                }
+            }
+        );
+    };
+
+    function _bindEvent() {
+        const that = this;
+        this.dom.on('mousedown touchstart', (e) => {
+            e.stopPropagation();
+        });
+
+        //event delegation
+        this.dom.on('mousedown touchstart', 'li', function(e) {
+            e.stopPropagation();
+            const options = that._options;
+
+            if (_.isEmpty(options)) {
+                return that.hide();
+            }
+
+            const { enable, callback } = options[this.getAttribute(ATTR_KEY)];
+
+            if (enable && callback) {
+                e.preventDefault();
+                that.hide();
+                callback(e);
             }
         });
+
+        Entry.Utils.disableContextmenu(this.dom);
     }
-
-
 })(Entry.ContextMenu);

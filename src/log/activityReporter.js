@@ -1,7 +1,5 @@
 'use strict';
 
-goog.provide("Entry.ActivityReporter");
-
 Entry.ActivityReporter = function() {
     this._activities = [];
 };
@@ -10,8 +8,7 @@ Entry.ActivityReporter = function() {
     p.add = function(data) {
         if (!data || data.length === 0) return;
         var activity;
-        if (data instanceof Entry.Activity)
-            activity = data;
+        if (data instanceof Entry.Activity) activity = data;
         else {
             var type = data.shift();
             activity = new Entry.Activity(type, data);
@@ -28,5 +25,5 @@ Entry.ActivityReporter = function() {
         return this._activities;
     };
 
-    p.report = function() { };
+    p.report = function() {};
 })(Entry.ActivityReporter.prototype);

@@ -1,152 +1,149 @@
+body {
+    & > .sortableItem {
+        z-index: 250;
+    }
+}
+
 .entrySceneWorkspace {
-    height: 40px;
+    position: absolute;
+    left: 0;
+    top: 0;
     width: 100%;
-    background-color: @blueHaneul;
-    position: fixed;
+    height: 38px;
+    padding-top: 1px;
+    background-color: @baseblue;
     overflow: hidden;
+    z-index: 10;
+
+    .practical_course_mode & {
+        background-color: @basePurple;
+    }
 }
 
 .entrySceneListWorkspace {
-    margin: 0px;
-    padding: 0px 5px 0px 55px;
+    overflow: hidden;
     float: left;
+    margin: 0;
+    padding: 0 0 0 7px;
+    max-width: calc(100% - 43px);
+
+    .rcs-custom-scroll .rcs-outer-container {
+        overflow: visible;
+        .rcs-inner-container {
+            overflow: visible;
+        }
+    }
+
+    .sortableItem {
+        z-index: 15;
+    }
 }
+
 .entrySceneElementWorkspace {
-    float: left;
-    display: inline-block;
-    list-style-type: none;
+    overflow: hidden;
+    margin: 5px 2px 0 0;
     color: white;
-    font-size: 10pt;
     cursor: move;
-    border-radius: 20px;
-    margin-left: -40px;
-    position: relative;
-    margin-right: -2px;
+    z-index: 10;
 }
 
 .entrySceneElementWorkspace.selectedScene {
+    position: relative;
+    margin-top: 0;
     z-index: 888;
-}
-
-.entrySceneAddButtonWorkspace:hover {
-    background-color: #A3CAF5;   
 }
 .entrySceneAddButtonWorkspace{
     float: left;
-    margin-left: -23px;
-    margin-top: 8px;
-    width: 23px;
-    height: 23px;
     position: relative;
-    z-index: 999;
+    margin: 9px 0 0 -2px;
+    width: 44px;
+    height: 30px;
     cursor: pointer;
     .backgroundImage("top_icon_add_b_nor.png");
+    background-size: 44px auto;
 }
 
-.selectedScene .entrySceneLeftWorkspace {
-    .backgroundImage("top_tab_b_sel_left.png");
-}
-
-.entrySceneLeftWorkspace {
-    display: inline-block;
-    float: left;
-    width: 15px;
-    height: 40px;
-    .backgroundImage("top_tab_b_nor_left_blue.png");
+.selectedScene {
+    .entrySceneInputCover {
+        min-width: 97px;
+    }
 }
 
 .entrySceneInputCover {
-    margin-left: -1px;
-    display: inline-block;
-    float: left;
-    height: 40px;
-    width: 76px;
-    padding-top: 11px;
-    padding-right: 2px;
-    background-color: #0e68e3;
-}
-
-.minValue .entrySceneInputCover {
-    min-width: 70px;
+    display: block;
+    overflow: hidden;
+    height: 32px;
+    padding: 4px 10px 0;
+    border-bottom: 2px solid transparent;
+    background-color: #99c4ff;
+    border-radius: 10px 10px 0 0;
 }
 
 .entrySceneFieldWorkspace {
     cursor: text !important;
     display: inline-block;
+    overflow: hidden;
     margin: 0px;
-    height: 20px;
-    width: 90%;
-    color: white;
+    height: 24px;
+    width: 100%;
     border: 1px solid transparent;
-    background-color: #0e68e3;
-    padding: 0px 0px 0px 5px;
-}
-
-.entrySceneFieldWorkspace:focus {
-    background-color: #eee;
-    color: #000;
+    border-radius: 4px;
+    outline: 0;
+    background-color: transparent;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 24px;
 }
 
 .selectedScene .entrySceneInputCover {
-    background-color: white;
-    min-width: 70px;
+    height: 37px;
+    padding: 7px 30px 0 10px;
+    background-color: #fff;
+    border-radius: 8px 8px 0 0;
+    border-bottom-color: #ffb500;
 }
 
 .selectedScene .entrySceneFieldWorkspace {
-    background-color: white;
-    color: black;
+    background-color: #fff;
+    font-size: 14px;
+    color: #ffb500;
 }
-
-.entrySceneFieldWorkspace:hover, 
-.entrySceneFieldWorkspace:focus, 
-.entrySceneFieldWorkspace:active {
-    outline: none;
-    border: 1px solid gray;
+.selectedScene .entrySceneFieldWorkspace:focus {
+    font-size: 12px;
+    border: 1px solid #e2e2e2;
+    color: #2c313d;
 }
-
-.entrySceneRemoveButtonCoverWorkspace {
-    border: 0;
-    padding: 0;
-    width: 55px;
-    background-color: transparent;
-    display: inline-block;
-    float: left;
-    height: 40px;
-    position: relative;
-    .backgroundImage("top_tab_b_nor_right_blue.png");
-}
-
-.selectedScene .entrySceneRemoveButtonCoverWorkspace {
-    display: inline-block;
-    background: url("@{image_url}top_tab_b_sel_right.png");
-}
-
 .entrySceneRemoveButtonWorkspace {
-    border: 0;
-    padding: 0;
-    width: 12px;
-    background-color: #0e68e3;
-    height: 12px;
     position: absolute;
-    right: 50px;
-    top: 14px;
+    right: 0;
+    top: 3px;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 0;
     display: none;
     .backgroundImage("scene_delete_unselect.png");
-}
-
-.selectedScene .entrySceneRemoveButtonWorkspace {
-    background-color: white;
-    .backgroundImage("scene_delete.png");
+    background-size: 10px auto;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
 }
 
 .minValue .entrySceneRemoveButtonWorkspace {
-    display: inline-block;
+    display: none;
 }
 
-.entrySceneRemoveButtonWorkspace:hover {
-    .backgroundImage("scene_delete_hover.png");
+.selectedScene .entrySceneRemoveButtonWorkspace {
+    display: block;
+    top: 3px;
+    background-color: transparent;
+    .backgroundImage("scene_delete.png");
 }
 
+// .entrySceneRemoveButtonWorkspace:hover {
+//     .backgroundImage("scene_delete_hover.png");
+// }
 
 .entrySceneDummyView {
     width: 55px;
