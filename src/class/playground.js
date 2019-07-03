@@ -1930,7 +1930,7 @@ Entry.Playground = class {
                 isPlaying = true;
                 thumbnailView.removeClass('entryPlaygroundSoundPlay');
                 thumbnailView.addClass('entryPlaygroundSoundStop');
-                soundInstance = createjs.Sound.play(sound.id);
+                soundInstance = Entry.Utils.playSound(sound.id);
             }
 
             soundInstance.addEventListener('complete', () => {

@@ -2221,7 +2221,7 @@ function getBlocks() {
                 const sounds = sprite.parent.sounds;
                 const isExist = Entry.isExist(soundId, 'id', sounds);
                 if (isExist) {
-                    createjs.Sound.play(soundId);
+                    Entry.Utils.playSound(soundId);
                 }
                 return script.callReturn();
             },
@@ -2272,7 +2272,7 @@ function getBlocks() {
                 const sounds = sprite.parent.sounds;
                 const isExist = Entry.isExist(soundId, 'id', sounds);
                 if (isExist) {
-                    const instance = createjs.Sound.play(soundId);
+                    const instance = Entry.Utils.playSound(soundId);
                     Entry.Utils.addSoundInstances(instance);
                     setTimeout(() => {
                         instance.stop();
@@ -2318,7 +2318,7 @@ function getBlocks() {
                     const sounds = sprite.parent.sounds;
                     const isExist = Entry.isExist(soundId, 'id', sounds);
                     if (isExist) {
-                        const instance = createjs.Sound.play(soundId);
+                        const instance = Entry.Utils.playSound(soundId);
                         Entry.Utils.addSoundInstances(instance);
                         setTimeout(() => {
                             script.playState = 0;
@@ -2382,7 +2382,7 @@ function getBlocks() {
                     const sounds = sprite.parent.sounds;
                     const isExist = Entry.isExist(soundId, 'id', sounds);
                     if (isExist) {
-                        const instance = createjs.Sound.play(soundId);
+                        const instance = Entry.Utils.playSound(soundId);
                         const timeValue = script.getNumberValue('SECOND', script);
                         Entry.Utils.addSoundInstances(instance);
                         setTimeout(() => {

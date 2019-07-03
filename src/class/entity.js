@@ -28,7 +28,7 @@ Entry.EntityObject = class EntityObject {
         this.shapes = [];
         this._rndPosX = 0;
         this._rndPosY = 0;
-        this.voice = { speed : 0, pitch : 0, speaker : 'kyuri' };
+        this.voice = { speed: 0, pitch: 0, speaker: 'kyuri', volume: 1 };
         if (this.type === 'sprite') {
             this._rndPosX = GEHelper.rndPosition();
             this._rndPosY = GEHelper.rndPosition();
@@ -1204,8 +1204,8 @@ Entry.EntityObject = class EntityObject {
      * @return {effect}
      */
     setVoiceProp(prop) {
-        const { speed = 0, pitch = 0, speaker = 'kyuri' } = prop;
-        this.voice = { speed, pitch, speaker };
+        const { speed = 0, pitch = 0, speaker = 'kyuri', volume = 1 } = prop;
+        this.voice = { speed, pitch, speaker, volume };
     }
 
     /*

@@ -787,7 +787,7 @@ Entry.BlockView = class BlockView {
                                     );
                                     ripple = true;
                                 }
-                                createjs.Sound.play('entryMagneting');
+                                Entry.Utils.playSound('entryMagneting');
                             } else {
                                 Entry.do(`moveBlock${suffix}`, block).isPass(fromBlockMenu);
                                 this.dominate();
@@ -802,14 +802,14 @@ Entry.BlockView = class BlockView {
                         } else {
                             if (prevBlock) {
                                 this.set({ animating: false });
-                                createjs.Sound.play('entryMagneting');
+                                Entry.Utils.playSound('entryMagneting');
                                 this.bindPrev(prevBlock);
                                 block.insert(prevBlock);
                             } else {
                                 const parent = block.getThread().view.getParent();
 
                                 if (!(parent instanceof Entry.Board)) {
-                                    createjs.Sound.play('entryMagneting');
+                                    Entry.Utils.playSound('entryMagneting');
                                     Entry.do('insertBlock', block, parent);
                                 } else {
                                     const originPos = this.originPos;
@@ -821,7 +821,7 @@ Entry.BlockView = class BlockView {
                         break;
                     }
                     case gs.REMOVE:
-                        createjs.Sound.play('entryDelete');
+                        Entry.Utils.playSound('entryDelete');
                         Entry.do('destroyBlockBelow', this.block).isPass(fromBlockMenu);
                         break;
                 }
