@@ -340,6 +340,7 @@ module.exports = {
                         type: 'Dropdown',
                         options: [
                             ['=', 'EQUAL'],
+                            ['!=', 'NOT_EQUAL'],
                             ['>', 'GREATER'],
                             ['<', 'LESS'],
                             ['≥', 'GREATER_OR_EQUAL'],
@@ -392,6 +393,20 @@ module.exports = {
                                 params: ['10'],
                             },
                             'EQUAL',
+                            {
+                                type: 'text',
+                                params: ['10'],
+                            },
+                        ],
+                        type: 'boolean_basic_operator',
+                    },
+                    {
+                        params: [
+                            {
+                                type: 'text',
+                                params: ['10'],
+                            },
+                            'NOT_EQUAL',
                             {
                                 type: 'text',
                                 params: ['10'],
@@ -484,7 +499,9 @@ module.exports = {
 
                     switch (operator) {
                         case 'EQUAL':
-                            return leftValue === rightValue;
+                            return leftValue == rightValue;
+                        case 'NOT_EQUAL':
+                            return leftValue != rightValue;
                         case 'GREATER':
                             return leftValue > rightValue;
                         case 'LESS':
@@ -512,6 +529,7 @@ module.exports = {
                                     type: 'Dropdown',
                                     options: [
                                         ['=', 'EQUAL'],
+                                        ['!=', 'NOT_EQUAL'],
                                         ['>', 'GREATER'],
                                         ['<', 'LESS'],
                                         ['≥', 'GREATER_OR_EQUAL'],

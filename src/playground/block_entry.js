@@ -19,7 +19,7 @@ if (!Entry.block) {
 }
 
 function getConverters() {
-    const c =  {};
+    const c = {};
     c.keyboardCode = function(key, value) {
         let code;
 
@@ -109,6 +109,7 @@ function getConverters() {
     c.returnOperator = function(key, value) {
         const map = {
             EQUAL: '==',
+            NOT_EQUAL: '!=',
             GREATER: '>',
             LESS: '<',
             GREATER_OR_EQUAL: '>=',
@@ -118,6 +119,7 @@ function getConverters() {
             MULTI: '*',
             DIVIDE: '/',
             '==': 'EQUAL',
+            '!=': 'NOT_EQUAL',
             '>': 'GREATER',
             '<': 'LESS',
             '>=': 'GREATER_OR_EQUAL',
@@ -230,7 +232,7 @@ function getConverters() {
             return value.toUpperCase();
         }
     };
-    return c;;
+    return c;
 }
 
 const blocks = require('./blocks');
@@ -4754,13 +4756,9 @@ function getBlocks() {
                         }
                     }
                     if (isFoundMushroom) {
-                        Ntry.dispatchEvent(
-                            'unitAction',
-                            Ntry.STATIC.WRONG_ATTACK_OBSTACLE,
-                            () => {
-                                script.isAction = false;
-                            }
-                        );
+                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.WRONG_ATTACK_OBSTACLE, () => {
+                            script.isAction = false;
+                        });
                         return Entry.STATIC.BREAK;
                     }
                     const unitGrid = $.extend(
@@ -5629,7 +5627,7 @@ function getBlocks() {
                 if (!this.isContinue) {
                     const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
-                    let unitId;;
+                    let unitId;
                     let components;
                     $.each(entities, (id, entity) => {
                         unitId = id;

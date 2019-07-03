@@ -846,6 +846,7 @@ module.exports = {
                         type: 'Dropdown',
                         options: [
                             ['=', 'EQUAL'],
+                            ['!=', 'NOT_EQUAL'],
                             ['>', 'GREATER'],
                             ['<', 'LESS'],
                             ['≥', 'GREATER_OR_EQUAL'],
@@ -887,6 +888,9 @@ module.exports = {
                     switch (this.block.params[3]) {
                         case 'EQUAL':
                             returnVal = leftValue == rightValue;
+                            break;
+                        case 'NOT_EQUAL':
+                            returnVal = leftValue != rightValue;
                             break;
                         case 'GREATER':
                             returnVal = Number(leftValue) > Number(rightValue);
