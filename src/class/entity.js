@@ -50,7 +50,6 @@ Entry.EntityObject = class EntityObject {
              container on event 가 동작해버리는 이슈가 있었음. (issues/10463)
              textObject 를 정확히 그려진 부분만 interactive 하도록 플래그 수정
              */
-            this.textObject.isSprite = true;
             this.textObject.pixelPerfect = true;
 
             if (GEHelper.isWebGL) {
