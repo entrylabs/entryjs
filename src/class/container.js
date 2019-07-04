@@ -488,7 +488,7 @@ Entry.Container = class Container {
     selectObject(objectId, changeScene) {
         const object = this.getObject(objectId);
         const workspace = Entry.getMainWS();
-
+        const isSelected = object.isSelected();
         if (changeScene && object) {
             Entry.scene.selectScene(object.scene);
         }
@@ -561,7 +561,7 @@ Entry.Container = class Container {
             Entry.stage.selectObject(object);
         }
         this.selectedObject = object;
-        object.updateCoordinateView();
+        !isSelected && object.updateCoordinateView();
     }
 
     /**
