@@ -40,6 +40,15 @@ Entry.EntityObject = class EntityObject {
             this.object = GEHelper.newContainer();
             this._scaleAdaptor = GEHelper.newAScaleAdaptor(this.object);
             this.textObject = GEHelper.textHelper.newText("", '20px Nanum Gothic', "", 'middle', 'center');
+
+            /*
+             bgObject 가 transparent 인 경우에도 textObject 가 hit 처리되어서
+             container on event 가 동작해버리는 이슈가 있었음. (issues/10463)
+             textObject 를 정확히 그려진 부분만 interactive 하도록 플래그 수정
+             */
+            this.textObject.isSprite = true;
+            this.textObject.pixelPerfect = true;
+
             if(GEHelper.isWebGL) {
                 this.textObject.anchor.set(0.5, 0.5);
             }
@@ -93,8 +102,11 @@ Entry.EntityObject = class EntityObject {
                     if (entity.parent.getLock()) {
                         return;
                     }
-                    entity.setX(stageX * 0.75 - 240 + this.offset.x);
-                    entity.setY(-(stageY * 0.75 - 135) - this.offset.y);
+
+                    if (this.offset) {
+                        entity.setX(stageX * 0.75 - 240 + this.offset.x);
+                        entity.setY(-(stageY * 0.75 - 135) - this.offset.y);
+                    }
                     Entry.stage.updateObject();
                 }
             });
