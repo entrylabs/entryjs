@@ -41,9 +41,39 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         return _.result(this._blockView, 'getBoard');
     }
 
-    getBlockType = () => {
-        return 'field';
-    };
+    getBlockType = () => 'field';
+
+    getBlockList(excludePrimitive, type) {
+        const { value } = this;
+        try {
+            return _.chain(value.getBlockList(excludePrimitive, type))
+                .flatten()
+                .compact()
+                .value();
+        } catch (e) {
+            console.log(e);
+            return [];
+        }
+    }
+
+    stringify(excludeData, isNew) {
+        try {
+            return JSON.stringify(this.toJSON(isNew, undefined, excludeData));
+        } catch (e) {
+            console.error(e);
+            return '';
+        }
+    }
+
+    toJSON(isNew, index, excludeData, option) {
+        try {
+            const { value } = this;
+            return [value.toJSON(isNew, excludeData, option)];
+        } catch (e) {
+            console.error(e);
+            return [];
+        }
+    }
 
     renderStart(board, mode, renderMode, isReDraw) {
         if (!this.svgGroup) {
