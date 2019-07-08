@@ -70,8 +70,7 @@ Entry.Playground = class {
             const curtainView = Entry.createElement('div', 'entryCurtain')
                 .addClass('entryPlaygroundCurtainWorkspace entryRemove')
                 .appendTo(this.view_);
-            const [mentHead, mentTail = ''] = Lang.Workspace.cannot_edit_click_to_stop.split('.');
-            curtainView.innerHTML = `${mentHead}.<br/>${mentTail}`;
+            curtainView.innerHTML = Lang.Workspace.cannot_edit_click_to_stop;
             curtainView.addEventListener('click', () => {
                 Entry.engine.toggleStop();
             });
