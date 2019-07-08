@@ -2434,6 +2434,21 @@ Entry.Utils.toFixed = function(value, len) {
     }
 };
 
+Entry.Utils.setVolume = function(volume) {
+    this._volume = _.clamp(volume, 0, 1);
+};
+
+Entry.Utils.getVolume = function() {
+    if (this._volume || this._volume === 0) {
+        return this._volume;
+    }
+    return 1;
+};
+
+Entry.Utils.playSound = function(id, option = {}) {
+    return createjs.Sound.play(id, Object.assign({ volume: this._volume }, option));
+};
+
 Entry.Utils.addSoundInstances = function(instance) {
     Entry.soundInstances.push(instance);
     instance.on('complete', () => {
