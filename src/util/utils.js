@@ -2405,6 +2405,44 @@ Entry.Utils.getScrollPos = function() {
     };
 };
 
+Entry.Utils.isPointInRect = ({ x, y }, { top, bottom, left, right }) => {
+    return _.inRange(x, left, right) && _.inRange(y, top, bottom);
+};
+
+Entry.Utils.getBoundingClientRectMemo = _.memoize((target, offset = {}) => {
+    const rect = target.getBoundingClientRect();
+    const result = {
+        top: rect.top,
+        bottom: rect.bottom,
+        left: rect.left,
+        right: rect.right,
+    };
+    Object.keys(offset).forEach((key) => {
+        result[key] += offset[key];
+    });
+    return result;
+});
+
+Entry.Utils.clearClientRectMemo = () => {
+    Entry.Utils.getBoundingClientRectMemo.cache = new _.memoize.Cache();
+};
+
+Entry.Utils.getPosition = (event) => {
+    const position = {
+        x: 0,
+        y: 0,
+    };
+    if (event.touches && event.touches[0]) {
+        const touch = event.touches[0];
+        position.x = touch.pageX;
+        position.y = touch.pageY;
+    } else {
+        position.x = event.pageX;
+        position.y = event.pageY;
+    }
+    return position;
+};
+
 Entry.Utils.copy = function(target) {
     return JSON.parse(JSON.stringify(target));
 };
