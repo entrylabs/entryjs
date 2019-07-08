@@ -2610,7 +2610,7 @@ Entry.Utils.when = function(predicate, fn) {
 };
 
 Entry.Utils.whenEnter = function(fn) {
-    return Entry.Utils.when(({ keyCode } = {}) => keyCode === 13, fn);
+    return Entry.Utils.when(({ keyCode, repeat }) => keyCode === 13 && !repeat, fn);
 };
 
 Entry.Utils.blurWhenEnter = Entry.Utils.whenEnter(function() {

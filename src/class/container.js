@@ -347,10 +347,13 @@ Entry.Container = class Container {
      */
     addObject(objectModel, ...rest) {
         let target;
-        if (objectModel.sprite.name) {
+        if ('name' in objectModel.sprite) {
             target = objectModel.sprite;
-        } else if (objectModel.name) {
+        } else {
             target = objectModel;
+            if (!target.name) {
+                target.name = 'untitled';
+            }
         }
         target.name = Entry.getOrderedName(target.name, this.objects_);
         objectModel.id = objectModel.id || Entry.generateHash();
