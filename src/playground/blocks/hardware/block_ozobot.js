@@ -31,12 +31,12 @@ Entry.Ozobot = {
 		Entry.hw.update();
 	},
 	id: '2E.1',
-	name: 'Ozobot',
+	name: 'Ozobot Evo',
 	url: 'http://www.ozobot.kr',
 	imageName: 'ozobot.png',
 	title: {
-		ko: '오조봇',
-		en: 'Ozobot',
+		ko: '오조봇 이보',
+		en: 'Ozobot Evo',
 	},
 	monitorTemplate: {
 		imgPath: 'hw/ozobot.png',
@@ -50,14 +50,13 @@ Entry.Ozobot = {
 Entry.Ozobot.blockMenuBlocks = [
 	//region ozobot
 	'Ozobot_Sensor_floor_color',
-	'Ozobot_Sensor_line_color',
-	'Ozobot_Sensor_Obstacle',
-	'Ozobot_MoveWheel',
+	'Ozobot_Sensor_obstacle',
+	'Ozobot_Move_wheel',
 	'Ozobot_Move1',
 	'Ozobot_Move2',
 	'Ozobot_Rotate1',
 	'Ozobot_Rotate2',
-	'Ozobot_Move_Stop',
+	'Ozobot_Move_stop',
 	'Ozobot_LED_head',
 	'Ozobot_LED_head_floor',
 	'Ozobot_LED_head_random',
@@ -68,125 +67,87 @@ Entry.Ozobot.blockMenuBlocks = [
 	'Ozobot_Sound_emotion',
 	'Ozobot_Sound_direction',
 	'Ozobot_Sound_number',
+	'Ozobot_Sound_color',
 	'Ozobot_Sound_tone',
 	'Ozobot_Sound_tone_time',
 	'Ozobot_Sound_stop',
-	'Ozobot_Beep',
-	//endregion ozobot
+	'Ozobot_Power_off',
+	//end region ozobot
 ];
 Entry.Ozobot.getBlocks = function () {
 	return {
 		// Sensor
 		Ozobot_Sensor_floor_color: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic_boolean_field',
-            template: '바닥 색깔 %1',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['검은색', 0x00],
-                        ['빨간색', 0x01],
-                        ['초록색', 0x02],
-                        ['파란색', 0x03],
-                        ['자주색', 0x04],
-                        ['노란색', 0x05],
-                        ['흰색', 0x06],
-                    ],
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            def: {
-                params: [ 0 ],
-                type: 'Ozobot_Sensor_floor_color',
-            },
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            isNotFor: ['Ozobot'],
-            class: 'Ozobot_Sensor',
+			color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+			skeleton: 'basic_boolean_field',
+			template: '바닥 색깔 %1',
+			params: [
+				{
+					type: 'Dropdown',
+					options: [
+						['검은색', 0x00],
+						['빨간색', 0x01],
+						['초록색', 0x02],
+						['노란색', 0x03],
+						['파란색', 0x04],
+						['자주색', 0x05],
+						['흰색', 0x06],
+					],
+					fontSize: 11,
+					bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+					arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+				},
+			],
+			def: {
+				params: [0],
+				type: 'Ozobot_Sensor_floor_color',
+			},
+			paramsKeyMap: {
+				VALUE: 0,
+			},
+			isNotFor: ['Ozobot'],
+			class: 'Ozobot_Sensor',
 			func: function (sprite, script) {
 				var var1 = script.getNumberField('VALUE', script);
 				var pd = Entry.hw.portData;
 				if (var1 == pd.surface_color)
 					return true;
-                return false;
-            },
+				return false;
+			},
 		},
-		Ozobot_Sensor_line_color: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic_boolean_field',
-            template: '라인 색깔 %1',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['검은색', 0x00],
-                        ['빨간색', 0x01],
-                        ['초록색', 0x02],
-                        ['파란색', 0x03],
-                        ['자주색', 0x04],
-                        ['노란색', 0x05],
-                        ['흰색', 0x06],
-                    ],
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            def: {
-                params: [ 0 ],
-                type: 'Ozobot_Sensor_line_color',
-            },
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            isNotFor: ['Ozobot'],
-            class: 'Ozobot_Sensor',
-			func: function (sprite, script) {
-				var var1 = script.getNumberField('VALUE', script);
-				var pd = Entry.hw.portData;
-				if (var1 == pd.line_color)
-					return true;
-                return false;
-            },
-		},
-		Ozobot_Sensor_Obstacle: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic_boolean_field',
-            template: '%1',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['전방에 물체', 0x00],
-                        ['후방에 물체', 0x01],
-                    ],
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            def: {
-                params: [ 0 ],
-                type: 'Ozobot_Sensor_Obstacle',
-            },
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            isNotFor: ['Ozobot'],
-            class: 'Ozobot_Sensor',
+		Ozobot_Sensor_obstacle: {
+			color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+			skeleton: 'basic_boolean_field',
+			template: '%1',
+			params: [
+				{
+					type: 'Dropdown',
+					options: [
+						['앞쪽 장애물', 0x00],
+						['뒤쪽 장애물', 0x01],
+					],
+					fontSize: 11,
+					bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+					arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+				},
+			],
+			def: {
+				params: [0],
+				type: 'Ozobot_Sensor_obstacle',
+			},
+			paramsKeyMap: {
+				VALUE: 0,
+			},
+			isNotFor: ['Ozobot'],
+			class: 'Ozobot_Sensor',
 			func: function (sprite, script) {
 				var var1 = script.getNumberField('VALUE', script);
 				var pd = Entry.hw.portData;
 				switch (var1) {
 					case 0x00:
-						if(pd.obstacle_front_left || pd.obstacle_front_right)
+						if (pd.obstacle_front_left || pd.obstacle_front_right)
 							return true;
 						break;
 					case 0x01:
@@ -194,11 +155,11 @@ Entry.Ozobot.getBlocks = function () {
 							return true;
 						break;
 				}
-                return false;
-            },
+				return false;
+			},
 		},
 		// Movement
-		Ozobot_MoveWheel: {
+		Ozobot_Move_wheel: {
 			color: EntryStatic.colorSet.block.default.HARDWARE,
 			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
 			skeleton: 'basic',
@@ -259,7 +220,7 @@ Entry.Ozobot.getBlocks = function () {
 			events: {},
 			def: {
 				params: [0, 45, 0, 45],
-				type: 'Ozobot_MoveWheel',
+				type: 'Ozobot_Move_wheel',
 			},
 			paramsKeyMap: {
 				DIRECTION_LEFT: 0,
@@ -291,9 +252,9 @@ Entry.Ozobot.getBlocks = function () {
 				} else {
 					switch (Entry.Ozobot.state) {
 						case OzobotState.STATE_READY:
-							var timer = setTimeout(function () {
+							var timer = setTimeout(() => {
 								Entry.Ozobot.state = OzobotState.STATE_DONE;
-							}, 300);
+							}, 100);
 							Entry.Ozobot.state = OzobotState.STATE_WAIT;
 							return script;
 							break;
@@ -634,7 +595,7 @@ Entry.Ozobot.getBlocks = function () {
 				return script;
 			},
 		},
-		Ozobot_Move_Stop: {
+		Ozobot_Move_stop: {
 			color: EntryStatic.colorSet.block.default.HARDWARE,
 			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
 			skeleton: 'basic',
@@ -651,7 +612,7 @@ Entry.Ozobot.getBlocks = function () {
 			events: {},
 			def: {
 				params: [null],
-				type: 'Ozobot_Move_Stop',
+				type: 'Ozobot_Move_stop',
 			},
 			paramsKeyMap: {},
 			class: 'Ozobot_Movement',
@@ -674,9 +635,9 @@ Entry.Ozobot.getBlocks = function () {
 				} else {
 					switch (Entry.Ozobot.state) {
 						case OzobotState.STATE_READY:
-							var timer = setTimeout(function () {
+							var timer = setTimeout(() => {
 								Entry.Ozobot.state = OzobotState.STATE_DONE;
-							}, 1000);
+							}, 100);
 							Entry.Ozobot.state = OzobotState.STATE_WAIT;
 							return script;
 							break;
@@ -737,9 +698,9 @@ Entry.Ozobot.getBlocks = function () {
 				} else {
 					switch (Entry.Ozobot.state) {
 						case OzobotState.STATE_READY:
-							var timer = setTimeout(function () {
+							var timer = setTimeout(() => {
 								Entry.Ozobot.state = OzobotState.STATE_DONE;
-							}, 300);
+							}, 100);
 							Entry.Ozobot.state = OzobotState.STATE_WAIT;
 							return script;
 							break;
@@ -788,21 +749,21 @@ Entry.Ozobot.getBlocks = function () {
 					sq.pcnt = 2;
 					sq.p1 = 1;
 					sq.p2 = 0;
-					if(pd.surface_color == 8) {
+					if (pd.surface_color == 8) {
 						sq.p1 = 4;
 					}
-					if(pd.surface_color & 1) sq.p2 |= 16711680;
-					if(pd.surface_color & 2) sq.p2 |= 65280;
-					if(pd.surface_color & 4) sq.p2 |= 255;
+					if (pd.surface_color & 1) sq.p2 |= 16711680;
+					if (pd.surface_color & 2) sq.p2 |= 65280;
+					if (pd.surface_color & 4) sq.p2 |= 255;
 					Entry.Ozobot.isStarted = true;
 					Entry.Ozobot.state = OzobotState.STATE_READY;
 					return script;
 				} else {
 					switch (Entry.Ozobot.state) {
 						case OzobotState.STATE_READY:
-							var timer = setTimeout(function () {
+							var timer = setTimeout(() => {
 								Entry.Ozobot.state = OzobotState.STATE_DONE;
-							}, 300);
+							}, 100);
 							Entry.Ozobot.state = OzobotState.STATE_WAIT;
 							return script;
 							break;
@@ -824,7 +785,7 @@ Entry.Ozobot.getBlocks = function () {
 			skeleton: 'basic',
 			fontColor: '#fff',
 			statements: [],
-			template: '머리 불빛 무작위 %1',
+			template: '머리 불빛 색상 무작위 %1',
 			params: [
 				{
 					type: 'Indicator',
@@ -860,9 +821,9 @@ Entry.Ozobot.getBlocks = function () {
 				} else {
 					switch (Entry.Ozobot.state) {
 						case OzobotState.STATE_READY:
-							var timer = setTimeout(function () {
+							var timer = setTimeout(() => {
 								Entry.Ozobot.state = OzobotState.STATE_DONE;
-							}, 300);
+							}, 100);
 							Entry.Ozobot.state = OzobotState.STATE_WAIT;
 							return script;
 							break;
@@ -916,9 +877,9 @@ Entry.Ozobot.getBlocks = function () {
 				} else {
 					switch (Entry.Ozobot.state) {
 						case OzobotState.STATE_READY:
-							var timer = setTimeout(function () {
+							var timer = setTimeout(() => {
 								Entry.Ozobot.state = OzobotState.STATE_DONE;
-							}, 300);
+							}, 100);
 							Entry.Ozobot.state = OzobotState.STATE_WAIT;
 							return script;
 							break;
@@ -991,20 +952,20 @@ Entry.Ozobot.getBlocks = function () {
 					sq.act = 0;
 					sq.pcnt = 6;
 					sq.p1 = 0;
-					sq.p2 = parseInt(parseInt(var1.substr(1, 6), 16));
-					sq.p3 = parseInt(parseInt(var2.substr(1, 6), 16));
+					sq.p2 = parseInt(parseInt(var5.substr(1, 6), 16));
+					sq.p3 = parseInt(parseInt(var4.substr(1, 6), 16));
 					sq.p4 = parseInt(parseInt(var3.substr(1, 6), 16));
-					sq.p5 = parseInt(parseInt(var4.substr(1, 6), 16));
-					sq.p6 = parseInt(parseInt(var5.substr(1, 6), 16));
+					sq.p5 = parseInt(parseInt(var2.substr(1, 6), 16));
+					sq.p6 = parseInt(parseInt(var1.substr(1, 6), 16));
 					Entry.Ozobot.isStarted = true;
 					Entry.Ozobot.state = OzobotState.STATE_READY;
 					return script;
 				} else {
 					switch (Entry.Ozobot.state) {
 						case OzobotState.STATE_READY:
-							var timer = setTimeout(function () {
+							var timer = setTimeout(() => {
 								Entry.Ozobot.state = OzobotState.STATE_DONE;
-							}, 300);
+							}, 100);
 							Entry.Ozobot.state = OzobotState.STATE_WAIT;
 							return script;
 							break;
@@ -1026,7 +987,7 @@ Entry.Ozobot.getBlocks = function () {
 			skeleton: 'basic',
 			fontColor: '#fff',
 			statements: [],
-			template: '정면 불빛 무작위 %1',
+			template: '정면 불빛 색상 무작위 %1',
 			params: [
 				{
 					type: 'Indicator',
@@ -1082,9 +1043,9 @@ Entry.Ozobot.getBlocks = function () {
 				} else {
 					switch (Entry.Ozobot.state) {
 						case OzobotState.STATE_READY:
-							var timer = setTimeout(function () {
+							var timer = setTimeout(() => {
 								Entry.Ozobot.state = OzobotState.STATE_DONE;
-							}, 300);
+							}, 100);
 							Entry.Ozobot.state = OzobotState.STATE_WAIT;
 							return script;
 							break;
@@ -1142,9 +1103,9 @@ Entry.Ozobot.getBlocks = function () {
 				} else {
 					switch (Entry.Ozobot.state) {
 						case OzobotState.STATE_READY:
-							var timer = setTimeout(function () {
+							var timer = setTimeout(() => {
 								Entry.Ozobot.state = OzobotState.STATE_DONE;
-							}, 300);
+							}, 100);
 							Entry.Ozobot.state = OzobotState.STATE_WAIT;
 							return script;
 							break;
@@ -1188,7 +1149,7 @@ Entry.Ozobot.getBlocks = function () {
 			],
 			events: {},
 			def: {
-				params: [ 0 ],
+				params: [0],
 				type: 'Ozobot_Sound_emotion',
 			},
 			paramsKeyMap: {
@@ -1213,9 +1174,9 @@ Entry.Ozobot.getBlocks = function () {
 				} else {
 					switch (Entry.Ozobot.state) {
 						case OzobotState.STATE_READY:
-							var timer = setTimeout(function () {
+							var timer = setTimeout(() => {
 								Entry.Ozobot.state = OzobotState.STATE_DONE;
-							}, 300);
+							}, 3100);
 							Entry.Ozobot.state = OzobotState.STATE_WAIT;
 							return script;
 							break;
@@ -1242,10 +1203,10 @@ Entry.Ozobot.getBlocks = function () {
 				{
 					type: 'Dropdown',
 					options: [
-						['왼쪽', 0x01],
-						['오른쪽', 0x02],
-						['앞쪽', 0x00],
-						['뒤쪽', 0x03],
+						['Left', 0x01],
+						['Right', 0x02],
+						['Forward', 0x00],
+						['Back', 0x03],
 					],
 					fontSize: 11,
 					bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1259,7 +1220,7 @@ Entry.Ozobot.getBlocks = function () {
 			],
 			events: {},
 			def: {
-				params: [ 0 ],
+				params: [0],
 				type: 'Ozobot_Sound_direction',
 			},
 			paramsKeyMap: {
@@ -1284,9 +1245,9 @@ Entry.Ozobot.getBlocks = function () {
 				} else {
 					switch (Entry.Ozobot.state) {
 						case OzobotState.STATE_READY:
-							var timer = setTimeout(function () {
+							var timer = setTimeout(() => {
 								Entry.Ozobot.state = OzobotState.STATE_DONE;
-							}, 300);
+							}, 1600);
 							Entry.Ozobot.state = OzobotState.STATE_WAIT;
 							return script;
 							break;
@@ -1336,7 +1297,7 @@ Entry.Ozobot.getBlocks = function () {
 			],
 			events: {},
 			def: {
-				params: [ 1 ],
+				params: [1],
 				type: 'Ozobot_Sound_number',
 			},
 			paramsKeyMap: {
@@ -1361,9 +1322,84 @@ Entry.Ozobot.getBlocks = function () {
 				} else {
 					switch (Entry.Ozobot.state) {
 						case OzobotState.STATE_READY:
-							var timer = setTimeout(function () {
+							var timer = setTimeout(() => {
 								Entry.Ozobot.state = OzobotState.STATE_DONE;
-							}, 300);
+							}, 1600);
+							Entry.Ozobot.state = OzobotState.STATE_WAIT;
+							return script;
+							break;
+						case OzobotState.STATE_WAIT:
+							return script;
+							break;
+						case OzobotState.STATE_DONE:
+							Entry.Ozobot.isStarted = false;
+							return script.callReturn();
+							break;
+					}
+				}
+				return script;
+			},
+		},
+		Ozobot_Sound_color: {
+			color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+			skeleton: 'basic',
+			fontColor: '#fff',
+			statements: [],
+			template: '색깔 %1 말하기 %2',
+			params: [
+				{
+					type: 'Dropdown',
+					options: [
+						['Red', 0x01],
+						['Green', 0x02],
+						['Yellow', 0x03],
+						['Blue', 0x04],
+						['Purple', 0x05],
+						['Cyan', 0x06],
+						['White', 0x07],
+						['Black', 0x00]
+					],
+					fontSize: 11,
+					bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+					arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+				},
+				{
+					type: 'Indicator',
+					img: 'block_icon/hardware_icon.svg',
+					size: 12,
+				},
+			],
+			events: {},
+			def: {
+				params: [ 1 ],
+				type: 'Ozobot_Sound_color',
+			},
+			paramsKeyMap: {
+				COLOR: 0,
+			},
+			class: 'Ozobot_Sound',
+			isNotFor: ['Ozobot'],
+			func: function (sprite, script) {
+				var var1 = script.getNumberField('COLOR', script);
+				var sq = Entry.hw.sendQueue;
+				var pd = Entry.hw.portData;
+				if (!Entry.Ozobot.isStarted) {
+					sq.seq = Entry.Ozobot.sequance++;
+					sq.cat = 2;
+					sq.act = 1;
+					sq.pcnt = 2;
+					sq.p1 = 8;
+					sq.p2 = var1;
+					Entry.Ozobot.isStarted = true;
+					Entry.Ozobot.state = OzobotState.STATE_READY;
+					return script;
+				} else {
+					switch (Entry.Ozobot.state) {
+						case OzobotState.STATE_READY:
+							var timer = setTimeout(() => {
+								Entry.Ozobot.state = OzobotState.STATE_DONE;
+							}, 1600);
 							Entry.Ozobot.state = OzobotState.STATE_WAIT;
 							return script;
 							break;
@@ -1402,18 +1438,18 @@ Entry.Ozobot.getBlocks = function () {
 				{
 					type: 'Dropdown',
 					options: [
-						['C', 0x01],
-						['C#', 0x02],
-						['D', 0x03],
-						['D#', 0x04],
-						['E', 0x05],
-						['F', 0x06],
-						['F#', 0x07],
-						['G', 0x08],
-						['G#', 0x09],
-						['A', 0x0A],
-						['A#', 0x0B],
-						['B', 0x0C],
+						['도', 0x01],
+						['도#', 0x02],
+						['레', 0x03],
+						['레#', 0x04],
+						['미', 0x05],
+						['파', 0x06],
+						['파#', 0x07],
+						['솔', 0x08],
+						['솔#', 0x09],
+						['라', 0x0A],
+						['라#', 0x0B],
+						['시', 0x0C],
 					],
 					fontSize: 11,
 					bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1427,7 +1463,7 @@ Entry.Ozobot.getBlocks = function () {
 			],
 			events: {},
 			def: {
-				params: [ 5, 1 ],
+				params: [5, 1],
 				type: 'Ozobot_Sound_tone',
 			},
 			paramsKeyMap: {
@@ -1455,9 +1491,9 @@ Entry.Ozobot.getBlocks = function () {
 				} else {
 					switch (Entry.Ozobot.state) {
 						case OzobotState.STATE_READY:
-							var timer = setTimeout(function () {
+							var timer = setTimeout(() => {
 								Entry.Ozobot.state = OzobotState.STATE_DONE;
-							}, 300);
+							}, 600);
 							Entry.Ozobot.state = OzobotState.STATE_WAIT;
 							return script;
 							break;
@@ -1496,18 +1532,18 @@ Entry.Ozobot.getBlocks = function () {
 				{
 					type: 'Dropdown',
 					options: [
-						['C', 0x01],
-						['C#', 0x02],
-						['D', 0x03],
-						['D#', 0x04],
-						['E', 0x05],
-						['F', 0x06],
-						['F#', 0x07],
-						['G', 0x08],
-						['G#', 0x09],
-						['A', 0x0A],
-						['A#', 0x0B],
-						['B', 0x0C],
+						['도', 0x01],
+						['도#', 0x02],
+						['레', 0x03],
+						['레#', 0x04],
+						['미', 0x05],
+						['파', 0x06],
+						['파#', 0x07],
+						['솔', 0x08],
+						['솔#', 0x09],
+						['라', 0x0A],
+						['라#', 0x0B],
+						['시', 0x0C],
 					],
 					fontSize: 11,
 					bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1525,7 +1561,7 @@ Entry.Ozobot.getBlocks = function () {
 			],
 			events: {},
 			def: {
-				params: [ 5, 1, 1 ],
+				params: [5, 1, 1],
 				type: 'Ozobot_Sound_tone_time',
 			},
 			paramsKeyMap: {
@@ -1555,9 +1591,9 @@ Entry.Ozobot.getBlocks = function () {
 				} else {
 					switch (Entry.Ozobot.state) {
 						case OzobotState.STATE_READY:
-							var timer = setTimeout(function () {
+							var timer = setTimeout(() => {
 								Entry.Ozobot.state = OzobotState.STATE_DONE;
-							}, 100);
+							}, var3 * 1000 + 100);
 							Entry.Ozobot.state = OzobotState.STATE_WAIT;
 							return script;
 							break;
@@ -1589,7 +1625,7 @@ Entry.Ozobot.getBlocks = function () {
 			],
 			events: {},
 			def: {
-				params: [ null ],
+				params: [null],
 				type: 'Ozobot_Sound_stop',
 			},
 			paramsKeyMap: {},
@@ -1609,7 +1645,61 @@ Entry.Ozobot.getBlocks = function () {
 				} else {
 					switch (Entry.Ozobot.state) {
 						case OzobotState.STATE_READY:
-							var timer = setTimeout(function () {
+							var timer = setTimeout(() => {
+								Entry.Ozobot.state = OzobotState.STATE_DONE;
+							}, 100);
+							Entry.Ozobot.state = OzobotState.STATE_WAIT;
+							return script;
+							break;
+						case OzobotState.STATE_WAIT:
+							return script;
+							break;
+						case OzobotState.STATE_DONE:
+							Entry.Ozobot.isStarted = false;
+							return script.callReturn();
+							break;
+					}
+				}
+				return script;
+			},
+		},
+		Ozobot_Power_off: {
+			color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+			skeleton: 'basic',
+			fontColor: '#fff',
+			statements: [],
+			template: '전원 끄기 %1',
+			params: [
+				{
+					type: 'Indicator',
+					img: 'block_icon/hardware_icon.svg',
+					size: 12,
+				},
+			],
+			events: {},
+			def: {
+				params: [null],
+				type: 'Ozobot_Power_off',
+			},
+			paramsKeyMap: {},
+			class: 'Ozobot_Power',
+			isNotFor: ['Ozobot'],
+			func: function (sprite, script) {
+				var sq = Entry.hw.sendQueue;
+				var pd = Entry.hw.portData;
+				if (!Entry.Ozobot.isStarted) {
+					sq.seq = Entry.Ozobot.sequance++;
+					sq.cat = 2;
+					sq.act = 4;
+					sq.pcnt = 0;
+					Entry.Ozobot.isStarted = true;
+					Entry.Ozobot.state = OzobotState.STATE_READY;
+					return script;
+				} else {
+					switch (Entry.Ozobot.state) {
+						case OzobotState.STATE_READY:
+							var timer = setTimeout(() => {
 								Entry.Ozobot.state = OzobotState.STATE_DONE;
 							}, 100);
 							Entry.Ozobot.state = OzobotState.STATE_WAIT;
