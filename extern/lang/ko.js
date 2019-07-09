@@ -2125,13 +2125,13 @@ Lang.Blocks = {
     "FUNBOARD_sensor_slide": "슬라이드 (막대 조정)",
     "FUNBOARD_sensor_state_1": "작다",
     "FUNBOARD_sensor_state_2": "크다",
-    "FUNBOARD_touchbt_down": "노랑(B)",
+    "FUNBOARD_touchbt_down": "B(노랑)",
     "FUNBOARD_touchbt_enter": "   F",
     "FUNBOARD_touchbt_escape": "   G",
-    "FUNBOARD_touchbt_left": "초록(C)",
-    "FUNBOARD_touchbt_right": "파랑(D)",
+    "FUNBOARD_touchbt_left": "C(초록)",
+    "FUNBOARD_touchbt_right": "D(파랑)",
     "FUNBOARD_touchbt_space": "   E",
-    "FUNBOARD_touchbt_up": "빨강(A)",
+    "FUNBOARD_touchbt_up": "A(빨강)",
     "funboard_dotmatrix_set_off": "끄기",
     "funboard_dotmatrix_set_on": "켜기"
 };

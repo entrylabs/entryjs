@@ -2125,13 +2125,13 @@ Lang.Blocks = {
     "FUNBOARD_sensor_slide": "potentiometer",
     "FUNBOARD_sensor_state_1": "low",
     "FUNBOARD_sensor_state_2": "high",
-    "FUNBOARD_touchbt_down": "yellow(B)",
+    "FUNBOARD_touchbt_down": "B(yellow)",
     "FUNBOARD_touchbt_enter": "   F",
     "FUNBOARD_touchbt_escape": "   G",
-    "FUNBOARD_touchbt_left": "green(C)",
-    "FUNBOARD_touchbt_right": "blue(D)",
+    "FUNBOARD_touchbt_left": "C(green)",
+    "FUNBOARD_touchbt_right": "D(blue)",
     "FUNBOARD_touchbt_space": "   E",
-    "FUNBOARD_touchbt_up": "red(A)",
+    "FUNBOARD_touchbt_up": "A(red)",
     "funboard_dotmatrix_set_off": "off",
     "funboard_dotmatrix_set_on": "on"
 };
