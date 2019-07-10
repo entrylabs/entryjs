@@ -297,8 +297,14 @@ function getLocationMap() {
 Entry.EXPANSION_BLOCK.festival = {
     name: 'festival',
     imageName: 'festival.png',
-    title: 'template.festival_title_text',
-    description: 'Msgs.expansion_festival_description',
+    title: {
+        ko: '행사',
+        en: 'festival',
+        jp: 'イベント',
+    },
+    titleKey: 'template.festival_title_text',
+    description: Lang.Msgs.expansion_festival_description,
+    descriptionKey: 'Msgs.expansion_festival_description',
     isInitialized: false,
     init() {
         if (this.isInitialized) {
@@ -523,8 +529,8 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
                 const defaultValue = 0;
                 const params = {
                     area:
-                        Entry.EXPANSION_BLOCK.festival.locationMap[
-                            script.getField('LOCATION', script)
+                    Entry.EXPANSION_BLOCK.festival.locationMap[
+                        script.getField('LOCATION', script)
                         ].code,
                     month:
                         Entry.EXPANSION_BLOCK.festival.monthMap[script.getField('MONTH', script)],

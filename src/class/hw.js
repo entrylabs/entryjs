@@ -1,7 +1,4 @@
-﻿/**
- * @fileoverview HW object class for connect arduino.
- */
-'use strict';
+﻿'use strict';
 
 import HardwareSocketMessageHandler from './hardware/hardwareSocketMessageHandler';
 
@@ -297,6 +294,10 @@ Entry.HW = class {
             this.connected = false;
             this.currentDeviceKey = undefined;
 
+            /*
+            entryjs 내에 존재하던 기존 하드웨어의 경우 원래 프로세스에 따라 연결 종료시 보여주지 않는다.
+            만약 외부모듈인 경우, 하드웨어가 연결종료 되더라도 블록은 남는다.
+             */
             if (this.hwModuleType === hardwareModuleType.builtIn) {
                 this.hwModule = undefined;
             }

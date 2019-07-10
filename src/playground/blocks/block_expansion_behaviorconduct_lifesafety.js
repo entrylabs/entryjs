@@ -67,8 +67,14 @@ function getInitialCategoryMap() {
 Entry.EXPANSION_BLOCK.behaviorConductLifeSafety = {
     name: 'behaviorConductLifeSafety',
     imageName: 'firstaid.png',
-    title: 'template.behaviorConductLifeSafety_title_text',
-    description: 'Msgs.expansion_behaviorConductLifeSafety_description',
+    title: {
+        ko: '생활안전',
+        en: 'LifeSafety',
+        jp: '生活安全',
+    },
+    titleKey: 'template.behaviorConductLifeSafety_title_text',
+    description: Lang.Msgs.expansion_behaviorConductLifeSafety_description,
+    descriptionKey: 'Msgs.expansion_behaviorConductLifeSafety_description',
     isInitialized: false,
     init() {
         if (this.isInitialized) {
@@ -142,14 +148,14 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
                 callApi(key, {
                     url: `${Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.api}/${
                         params.category
-                    }/${params.subCategory}`,
+                        }/${params.subCategory}`,
                 })
                     .then((result) => {
                         if (result) {
                             const items = result.data.response.body.items.item.filter(
                                 (i) =>
                                     i.hasOwnProperty('actRmks') &&
-                                    i.safetyCate3 == params.subCategory2
+                                    i.safetyCate3 == params.subCategory2,
                             );
                             if (index) {
                                 return resolve(items[index - 1].actRmks);

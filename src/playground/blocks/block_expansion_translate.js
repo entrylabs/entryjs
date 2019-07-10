@@ -143,8 +143,14 @@ function getInitialCodeMap() {
 Entry.EXPANSION_BLOCK.translate = {
     name: 'translate',
     imageName: 'papago.png',
-    title: 'template.translate_title_text',
-    description: 'Msgs.expansion_translate_description',
+    title: {
+        ko: '번역',
+        en: 'translate',
+        jp: '翻訳',
+    },
+    titleKey: 'template.translate_title_text',
+    description: Lang.Msgs.expansion_translate_description,
+    descriptionKey: 'Msgs.expansion_translate_description',
     isInitialized: false,
     init() {
         if (this.isInitialized) {
