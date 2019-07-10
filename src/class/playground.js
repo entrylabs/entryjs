@@ -1263,6 +1263,7 @@ Entry.Playground = class Playground {
      */
     clonePicture(pictureId) {
         const sourcePicture = Entry.playground.object.getPicture(pictureId);
+        sourcePicture.imageType = 'paper';
         this.addPicture(sourcePicture, true);
     }
 
@@ -1814,9 +1815,9 @@ Entry.Playground = class Playground {
         element.appendChild(nameView);
         Entry.createElement('div', `s_${picture.id}`)
             .addClass('entryPlaygroundPictureSize')
-            .appendTo(element).innerHTML = `${picture.dimension.width} X ${
-            picture.dimension.height
-        }`;
+            .appendTo(
+                element
+            ).innerHTML = `${picture.dimension.width} X ${picture.dimension.height}`;
 
         const removeButton = Entry.createElement('div').addClass('entryPlayground_del');
         const { Buttons = {} } = Lang || {};
