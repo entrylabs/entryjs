@@ -30,7 +30,7 @@ Entry.Ozobot = {
 		}
 		Entry.hw.update();
 	},
-	id: '2E.1',
+	id: '24.2',
 	name: 'Ozobot Evo',
 	url: 'http://www.ozobot.kr',
 	imageName: 'ozobot.png',
