@@ -281,10 +281,10 @@ function getBlocks() {
             events: {},
         },
         arduino_download_connector: {
-            skeleton: 'basic_text',
+            skeleton: 'clickable_text',
             skeletonOptions: {
                 box: {
-                    offsetX: -5,
+                    offsetX: 3,
                 },
             },
             isNotFor: ['arduinoDisconnected'],
@@ -306,7 +306,12 @@ function getBlocks() {
             },
         },
         download_guide: {
-            skeleton: 'basic_text',
+            skeleton: 'clickable_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: 3,
+                },
+            },
             isNotFor: ['arduinoDisconnected'],
             color: EntryStatic.colorSet.common.TRANSPARENT,
             params: [
@@ -326,7 +331,12 @@ function getBlocks() {
             },
         },
         arduino_download_source: {
-            skeleton: 'basic_text',
+            skeleton: 'clickable_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: 3,
+                },
+            },
             isNotFor: ['arduinoDisconnected'],
             color: EntryStatic.colorSet.common.TRANSPARENT,
             params: [
