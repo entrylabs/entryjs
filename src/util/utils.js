@@ -2405,6 +2405,44 @@ Entry.Utils.getScrollPos = function() {
     };
 };
 
+Entry.Utils.isPointInRect = ({ x, y }, { top, bottom, left, right }) => {
+    return _.inRange(x, left, right) && _.inRange(y, top, bottom);
+};
+
+Entry.Utils.getBoundingClientRectMemo = _.memoize((target, offset = {}) => {
+    const rect = target.getBoundingClientRect();
+    const result = {
+        top: rect.top,
+        bottom: rect.bottom,
+        left: rect.left,
+        right: rect.right,
+    };
+    Object.keys(offset).forEach((key) => {
+        result[key] += offset[key];
+    });
+    return result;
+});
+
+Entry.Utils.clearClientRectMemo = () => {
+    Entry.Utils.getBoundingClientRectMemo.cache = new _.memoize.Cache();
+};
+
+Entry.Utils.getPosition = (event) => {
+    const position = {
+        x: 0,
+        y: 0,
+    };
+    if (event.touches && event.touches[0]) {
+        const touch = event.touches[0];
+        position.x = touch.pageX;
+        position.y = touch.pageY;
+    } else {
+        position.x = event.pageX;
+        position.y = event.pageY;
+    }
+    return position;
+};
+
 Entry.Utils.copy = function(target) {
     return JSON.parse(JSON.stringify(target));
 };
@@ -2432,6 +2470,21 @@ Entry.Utils.toFixed = function(value, len) {
         }
         return retValue;
     }
+};
+
+Entry.Utils.setVolume = function(volume) {
+    this._volume = _.clamp(volume, 0, 1);
+};
+
+Entry.Utils.getVolume = function() {
+    if (this._volume || this._volume === 0) {
+        return this._volume;
+    }
+    return 1;
+};
+
+Entry.Utils.playSound = function(id, option = {}) {
+    return createjs.Sound.play(id, Object.assign({ volume: this._volume }, option));
 };
 
 Entry.Utils.addSoundInstances = function(instance) {
@@ -2610,7 +2663,7 @@ Entry.Utils.when = function(predicate, fn) {
 };
 
 Entry.Utils.whenEnter = function(fn) {
-    return Entry.Utils.when(({ keyCode } = {}) => keyCode === 13, fn);
+    return Entry.Utils.when(({ keyCode, repeat }) => keyCode === 13 && !repeat, fn);
 };
 
 Entry.Utils.blurWhenEnter = Entry.Utils.whenEnter(function() {

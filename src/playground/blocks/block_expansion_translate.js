@@ -186,25 +186,33 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             return param;
         },
         getSourceLang(isPython) {
+            const value = Lang.type.replace("jp","ja");
+            const options = [
+                [Lang.Blocks.korean, 'ko'],
+                [Lang.Blocks.english, 'en'],
+                [Lang.Blocks.japan, 'ja'],
+                [Lang.Blocks.chinese_simplified, 'zh-CN'],
+                [Lang.Blocks.chinese_traditional, 'zh-TW'],
+                [Lang.Blocks.spanish, 'es'],
+                [Lang.Blocks.french, 'fr'],
+                [Lang.Blocks.german, 'de'],
+                [Lang.Blocks.russian, 'ru'],
+                [Lang.Blocks.portuguese, 'pt'],
+                [Lang.Blocks.thai, 'th'],
+                [Lang.Blocks.vietnamese, 'vi'],
+                [Lang.Blocks.indonesian, 'id'],
+                [Lang.Blocks.hindi, 'hi'],
+            ];
+            const index = options.findIndex((x) => x[1] === value);
+            if (index > 0) {
+                const temp = options[index];
+                options[index] = options[0];
+                options[0] = temp;
+            }
             const param = {
                 type: 'Dropdown',
-                options: [
-                    [Lang.Blocks.korean, 'ko'],
-                    [Lang.Blocks.english, 'en'],
-                    [Lang.Blocks.japan, 'ja'],
-                    [Lang.Blocks.chinese_simplified, 'zh-CN'],
-                    [Lang.Blocks.chinese_traditional, 'zh-TW'],
-                    [Lang.Blocks.spanish, 'es'],
-                    [Lang.Blocks.french, 'fr'],
-                    [Lang.Blocks.german, 'de'],
-                    [Lang.Blocks.russian, 'ru'],
-                    [Lang.Blocks.portuguese, 'pt'],
-                    [Lang.Blocks.thai, 'th'],
-                    [Lang.Blocks.vietnamese, 'vi'],
-                    [Lang.Blocks.indonesian, 'id'],
-                    [Lang.Blocks.hindi, 'hi'],
-                ],
-                value: 'ko',
+                options,
+                value,
                 fontSize: 11,
                 bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
                 arrowColor: EntryStatic.colorSet.common.WHITE,

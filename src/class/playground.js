@@ -70,8 +70,7 @@ Entry.Playground = class {
             const curtainView = Entry.createElement('div', 'entryCurtain')
                 .addClass('entryPlaygroundCurtainWorkspace entryRemove')
                 .appendTo(this.view_);
-            const [mentHead, mentTail = ''] = Lang.Workspace.cannot_edit_click_to_stop.split('.');
-            curtainView.innerHTML = `${mentHead}.<br/>${mentTail}`;
+            curtainView.innerHTML = Lang.Workspace.cannot_edit_click_to_stop;
             curtainView.addEventListener('click', () => {
                 Entry.engine.toggleStop();
             });
@@ -387,7 +386,7 @@ Entry.Playground = class {
                     (e) => {
                         const isDragging = this.backPack.getData('isDragging');
                         if (isDragging) {
-                            const point = this.getPosition(e);
+                            const point = Entry.Utils.getPosition(e);
                             const { data } = globalEvent;
                             const { dom: objectDom } = this.objectBackPackEvent;
                             const { dom: blockDom } = this.blockBackPackEvent;
@@ -396,12 +395,15 @@ Entry.Playground = class {
                                 width: -134,
                                 right: -134,
                             });
-                            if (!data.isObjectMouseEnter && this.isPointInRect(point, objectRect)) {
+                            if (
+                                !data.isObjectMouseEnter &&
+                                Entry.Utils.isPointInRect(point, objectRect)
+                            ) {
                                 data.isObjectMouseEnter = true;
                                 this.objectBackPackEvent.trigger('enteritem');
                             } else if (
                                 data.isObjectMouseEnter &&
-                                !this.isPointInRect(point, objectRect)
+                                !Entry.Utils.isPointInRect(point, objectRect)
                             ) {
                                 data.isObjectMouseEnter = false;
                                 this.objectBackPackAreaEvent.trigger('leaveitem');
@@ -409,13 +411,13 @@ Entry.Playground = class {
                             if (Entry.getMainWS().mode === Entry.Workspace.MODE_BOARD) {
                                 if (
                                     !data.isBlockMouseEnter &&
-                                    this.isPointInRect(point, blockRect)
+                                    Entry.Utils.isPointInRect(point, blockRect)
                                 ) {
                                     data.isBlockMouseEnter = true;
                                     this.blockBackPackEvent.trigger('enteritem');
                                 } else if (
                                     data.isBlockMouseEnter &&
-                                    !this.isPointInRect(point, blockRect)
+                                    !Entry.Utils.isPointInRect(point, blockRect)
                                 ) {
                                     data.isBlockMouseEnter = false;
                                     this.blockBackPackAreaEvent.trigger('leaveitem');
@@ -455,26 +457,6 @@ Entry.Playground = class {
         this.backPack.data = {
             canPointEvent,
         };
-    }
-
-    getPosition(event) {
-        const position = {
-            x: 0,
-            y: 0,
-        };
-        if (event.touches && event.touches[0]) {
-            const touch = event.touches[0];
-            position.x = touch.pageX;
-            position.y = touch.pageY;
-        } else {
-            position.x = event.pageX;
-            position.y = event.pageY;
-        }
-        return position;
-    }
-
-    isPointInRect({ x, y }, { top, bottom, left, right }) {
-        return _.inRange(x, left, right) && _.inRange(y, top, bottom);
     }
 
     getBoundingClientRectMemo = _.memoize((target, offset = {}) => {
@@ -656,9 +638,9 @@ Entry.Playground = class {
         if (!this.object || !this.object.pictures) {
             return [];
         }
-
+        const id = this.object.id;
         return this.object.pictures.map((value) => ({
-            key: value.id,
+            key: `${id}-${value.id}`,
             item: value.view,
         }));
     }
@@ -1057,9 +1039,9 @@ Entry.Playground = class {
         if (!this.object || !this.object.sounds) {
             return [];
         }
-
+        const id = this.object.id;
         return this.object.sounds.map((value) => ({
-            key: value.id,
+            key: `${id}-${value.id}`,
             item: value.view,
         }));
     }
@@ -1769,11 +1751,9 @@ Entry.Playground = class {
 
         function nameViewBlur() {
             if (this.value.trim() === '') {
-                Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                entrylms.alert(Lang.Workspace.enter_the_name);
-                this.focus();
-                Entry.attachEventListener(this, 'blur', nameViewBlur);
-                return;
+                return entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
+                    nameView.focus();
+                });
             }
 
             let nameViewArray = $('.entryPlaygroundPictureName');
@@ -1783,11 +1763,9 @@ Entry.Playground = class {
 
             for (let i = 0; i < nameViewArray.length; i++) {
                 if (nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
-                    Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                    entrylms.alert(Lang.Workspace.name_already_exists);
-                    this.focus();
-                    Entry.attachEventListener(this, 'blur', nameViewBlur);
-                    return;
+                    return entrylms.alert(Lang.Workspace.name_already_exists).on('hide', () => {
+                        nameView.focus();
+                    });
                 }
             }
             const newValue = this.value;
@@ -1930,7 +1908,7 @@ Entry.Playground = class {
                 isPlaying = true;
                 thumbnailView.removeClass('entryPlaygroundSoundPlay');
                 thumbnailView.addClass('entryPlaygroundSoundStop');
-                soundInstance = createjs.Sound.play(sound.id);
+                soundInstance = Entry.Utils.playSound(sound.id);
             }
 
             soundInstance.addEventListener('complete', () => {
@@ -1945,15 +1923,14 @@ Entry.Playground = class {
             .appendTo(element);
         nameView.sound = sound;
         nameView.value = sound.name;
+
         Entry.attachEventListener(nameView, 'blur', nameViewBlur);
 
         function nameViewBlur() {
             if (this.value.trim() === '') {
-                Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                entrylms.alert(Lang.Workspace.enter_the_name);
-                this.focus();
-                Entry.attachEventListener(this, 'blur', nameViewBlur);
-                return;
+                return entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
+                    nameView.focus();
+                });
             }
 
             let nameViewArray = $('.entryPlaygroundSoundName');
@@ -1963,11 +1940,9 @@ Entry.Playground = class {
 
             for (let i = 0; i < nameViewArray.length; i++) {
                 if (nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
-                    Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                    entrylms.alert(Lang.Workspace.name_already_exists);
-                    this.focus();
-                    Entry.attachEventListener(this, 'blur', nameViewBlur);
-                    return;
+                    return entrylms.alert(Lang.Workspace.name_already_exists).on('hide', () => {
+                        nameView.focus();
+                    });
                 }
             }
             const newValue = this.value;
