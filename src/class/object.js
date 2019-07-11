@@ -715,9 +715,11 @@ Entry.EntryObject = class {
         }
         e.stopPropagation();
 
+        const { options = {} } = Entry;
+        const { backpackDisable } = options;
         const object = this;
         const container = Entry.container;
-        const options = [
+        const contextMenus = [
             {
                 text: Lang.Workspace.context_duplicate,
                 enable: !Entry.engine.isState('run'),
@@ -727,6 +729,7 @@ Entry.EntryObject = class {
             },
             {
                 text: Lang.Workspace.context_remove,
+                enable: !Entry.engine.isState('run'),
                 callback() {
                     Entry.dispatchEvent('removeObject', object);
                     const { id } = object;
@@ -754,23 +757,27 @@ Entry.EntryObject = class {
                     }
                 },
             },
-            {
+        ];
+
+        if (!backpackDisable) {
+            contextMenus.push({
                 text: Lang.Blocks.add_my_storage,
                 enable: !Entry.engine.isState('run') && !!window.user,
                 callback: () => {
                     this.addStorage();
                 },
+            });
+        }
+
+        contextMenus.push({
+            text: Lang.Blocks.export_object,
+            callback() {
+                Entry.dispatchEvent('exportObject', object);
             },
-            {
-                text: Lang.Blocks.export_object,
-                callback() {
-                    Entry.dispatchEvent('exportObject', object);
-                },
-            },
-        ];
+        });
 
         const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
-        Entry.ContextMenu.show(options, 'workspace-contextmenu', { x, y });
+        Entry.ContextMenu.show(contextMenus, 'workspace-contextmenu', { x, y });
     }
 
     addStorage() {
@@ -1144,20 +1151,27 @@ Entry.EntryObject = class {
             }
         });
 
-        nameView.onkeypress = Entry.Utils.whenEnter(() => {
+        const onKeyPressed = Entry.Utils.whenEnter(() => {
             this.editObjectValues(false);
         });
 
+        nameView.onkeypress = onKeyPressed;
+
         nameView.onfocus = Entry.Utils.setFocused;
-        nameView.onblur = Entry.Utils.setBlurredTimer(() => {
+
+        const nameViewBlur = this._setBlurredTimer(() => {
             const object = Entry.container.getObject(this.id);
             if (!object) {
                 return;
+            } else if (nameView.value.trim() === '') {
+                return entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
+                    nameView.focus();
+                });
             }
-
             Entry.do('objectNameEdit', this.id, nameView.value);
         });
 
+        Entry.attachEventListener(nameView, 'blur', nameViewBlur);
         nameView.value = this.name;
         return nameView;
     }

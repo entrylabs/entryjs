@@ -1,6 +1,7 @@
 'use strict';
 
 import { GEHelper } from '../graphicEngine/GEHelper';
+
 Entry.Utils = {};
 
 Entry.TEXT_ALIGN_CENTER = 0;
@@ -147,10 +148,6 @@ Entry.exportProject = function(project) {
  */
 Entry.setBlock = function(objectType, XML) {
     Entry.playground.setMenuBlock(objectType, XML);
-};
-
-Entry.enableArduino = function() {
-    return;
 };
 
 /**
@@ -1831,7 +1828,7 @@ Entry.Utils.addBlockPattern = function(boardSvgDom, suffix) {
 };
 
 Entry.Utils.addNewBlock = function(item) {
-    const { script, functions, messages, variables } = item;
+    const { script, functions, messages, variables, expansionBlocks = [] } = item;
     const parseScript = JSON.parse(script);
     if (!parseScript) {
         return;
@@ -1852,6 +1849,9 @@ Entry.Utils.addNewBlock = function(item) {
             variable.object = _.get(Entry, ['container', 'selectedObject', 'id'], '');
         }
     });
+    expansionBlocks.forEach((blockName) => {
+        Entry.expansion.addExpansionBlock(blockName);
+    });
     Entry.variableContainer.appendMessages(messages);
     Entry.variableContainer.appendVariables(variables);
     Entry.variableContainer.appendFunctions(functions);
@@ -1866,10 +1866,7 @@ Entry.Utils.addNewBlock = function(item) {
 
 Entry.Utils.addNewObject = function(sprite) {
     if (sprite) {
-        const objects = sprite.objects;
-        const functions = sprite.functions;
-        const messages = sprite.messages;
-        const variables = sprite.variables;
+        const { objects, functions, messages, variables, expansionBlocks = [] } = sprite;
 
         if (
             Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD &&
@@ -1879,6 +1876,9 @@ Entry.Utils.addNewObject = function(sprite) {
             return entrylms.alert(Lang.Menus.object_import_syntax_error);
         }
         const objectIdMap = {};
+        expansionBlocks.forEach((blockName) => {
+            Entry.expansion.addExpansionBlock(blockName);
+        });
         variables.forEach((variable) => {
             const { object } = variable;
             if (object) {
@@ -2252,33 +2252,6 @@ Entry.Utils.isNewVersion = function(old_version = '', new_version = '') {
     }
 };
 
-Entry.Utils.getBlockCategory = (function() {
-    const map = {};
-    let allBlocks;
-    return function(blockType) {
-        if (!blockType) {
-            return;
-        }
-
-        if (map[blockType]) {
-            return map[blockType];
-        }
-
-        if (!allBlocks) {
-            allBlocks = EntryStatic.getAllBlocks();
-        }
-
-        for (let i = 0; i < allBlocks.length; i++) {
-            const data = allBlocks[i];
-            const category = data.category;
-            if (data.blocks.indexOf(blockType) > -1) {
-                map[blockType] = category;
-                return category;
-            }
-        }
-    };
-})();
-
 Entry.Utils.getUniqObjectsBlocks = function(objects) {
     const _typePicker = _.partial(_.result, _, 'type');
 
@@ -2306,53 +2279,6 @@ Entry.Utils.getObjectsBlocks = function(objects) {
         })
         .flatten()
         .value();
-};
-
-Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
-    if (!blockArr) {
-        return;
-    }
-    const that = this;
-
-    const data = EntryStatic.getAllBlocks();
-    const categoryIndexMap = {};
-    for (let i = 0; i < data.length; i++) {
-        const datum = data[i];
-        datum.blocks = [];
-        categoryIndexMap[datum.category] = i;
-    }
-
-    blockArr.forEach((b) => {
-        const category = that.getBlockCategory(b);
-        const index = categoryIndexMap[category];
-        if (index === undefined) {
-            return;
-        }
-        data[index].blocks.push(b);
-    });
-
-    const allBlocksInfo = EntryStatic.getAllBlocks();
-    for (let i = 0; i < allBlocksInfo.length; i++) {
-        const info = allBlocksInfo[i];
-        const category = info.category;
-        const blocks = info.blocks;
-        if (category === 'func') {
-            allBlocksInfo.splice(i, 1);
-            continue;
-        }
-        const selectedBlocks = data[i].blocks;
-        const sorted = [];
-
-        blocks.forEach((b) => {
-            if (selectedBlocks.indexOf(b) > -1) {
-                sorted.push(b);
-            }
-        });
-
-        data[i].blocks = sorted;
-    }
-
-    return data;
 };
 
 Entry.Utils.blur = function() {
@@ -2479,6 +2405,44 @@ Entry.Utils.getScrollPos = function() {
     };
 };
 
+Entry.Utils.isPointInRect = ({ x, y }, { top, bottom, left, right }) => {
+    return _.inRange(x, left, right) && _.inRange(y, top, bottom);
+};
+
+Entry.Utils.getBoundingClientRectMemo = _.memoize((target, offset = {}) => {
+    const rect = target.getBoundingClientRect();
+    const result = {
+        top: rect.top,
+        bottom: rect.bottom,
+        left: rect.left,
+        right: rect.right,
+    };
+    Object.keys(offset).forEach((key) => {
+        result[key] += offset[key];
+    });
+    return result;
+});
+
+Entry.Utils.clearClientRectMemo = () => {
+    Entry.Utils.getBoundingClientRectMemo.cache = new _.memoize.Cache();
+};
+
+Entry.Utils.getPosition = (event) => {
+    const position = {
+        x: 0,
+        y: 0,
+    };
+    if (event.touches && event.touches[0]) {
+        const touch = event.touches[0];
+        position.x = touch.pageX;
+        position.y = touch.pageY;
+    } else {
+        position.x = event.pageX;
+        position.y = event.pageY;
+    }
+    return position;
+};
+
 Entry.Utils.copy = function(target) {
     return JSON.parse(JSON.stringify(target));
 };
@@ -2506,6 +2470,21 @@ Entry.Utils.toFixed = function(value, len) {
         }
         return retValue;
     }
+};
+
+Entry.Utils.setVolume = function(volume) {
+    this._volume = _.clamp(volume, 0, 1);
+};
+
+Entry.Utils.getVolume = function() {
+    if (this._volume || this._volume === 0) {
+        return this._volume;
+    }
+    return 1;
+};
+
+Entry.Utils.playSound = function(id, option = {}) {
+    return createjs.Sound.play(id, Object.assign({ volume: this._volume }, option));
 };
 
 Entry.Utils.addSoundInstances = function(instance) {
@@ -2684,7 +2663,7 @@ Entry.Utils.when = function(predicate, fn) {
 };
 
 Entry.Utils.whenEnter = function(fn) {
-    return Entry.Utils.when(({ keyCode } = {}) => keyCode === 13, fn);
+    return Entry.Utils.when(({ keyCode, repeat }) => keyCode === 13 && !repeat, fn);
 };
 
 Entry.Utils.blurWhenEnter = Entry.Utils.whenEnter(function() {

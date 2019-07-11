@@ -239,13 +239,13 @@ function getBlocks() {
     return {
         expansionBlockAddButton: {
             skeleton: 'basic_button',
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             isNotFor: ['functionInit'],
             params: [
                 {
                     type: 'Text',
                     text: Lang.template.load_expansion_block,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
@@ -263,13 +263,13 @@ function getBlocks() {
         //region hardware 하드웨어 기본
         arduino_noti: {
             skeleton: 'basic_text',
-            color: '#ecf8ff',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
             template: '%1',
             params: [
                 {
                     type: 'Text',
                     text: Lang.Blocks.arduino_noti_text,
-                    color: '#333',
+                    color: EntryStatic.colorSet.common.TEXT,
                     align: 'center',
                 },
             ],
@@ -282,14 +282,14 @@ function getBlocks() {
         arduino_download_connector: {
             skeleton: 'basic_button',
             isNotFor: ['arduinoDisconnected'],
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             params: [
                 {
                     type: 'Text',
                     text: !Entry.isOffline
                         ? Lang.Blocks.ARDUINO_download_connector
                         : Lang.Blocks.ARDUINO_open_connector,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
@@ -304,12 +304,12 @@ function getBlocks() {
         download_guide: {
             skeleton: 'basic_button',
             isNotFor: ['arduinoDisconnected'],
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             params: [
                 {
                     type: 'Text',
                     text: Lang.Blocks.download_guide,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
@@ -324,12 +324,12 @@ function getBlocks() {
         arduino_download_source: {
             skeleton: 'basic_button',
             isNotFor: ['arduinoDisconnected'],
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             params: [
                 {
                     type: 'Text',
                     text: Lang.Blocks.ARDUINO_download_source,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
@@ -343,13 +343,13 @@ function getBlocks() {
         },
         arduino_connected: {
             skeleton: 'basic_button',
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             isNotFor: ['arduinoConnected'],
             params: [
                 {
                     type: 'Text',
                     text: Lang.Blocks.ARDUINO_connected,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
@@ -357,14 +357,14 @@ function getBlocks() {
         },
         arduino_connect: {
             skeleton: 'basic_text',
-            color: '#ecf8ff',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
             template: '%1',
             isNotFor: ['arduinoConnect'],
             params: [
                 {
                     type: 'Text',
                     text: Lang.Blocks.ARDUINO_connect,
-                    color: '#333',
+                    color: EntryStatic.colorSet.common.TEXT,
                     align: 'center',
                 },
             ],
@@ -372,13 +372,13 @@ function getBlocks() {
         },
         arduino_reconnect: {
             skeleton: 'basic_button',
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             isNotFor: ['arduinoDisconnected'],
             params: [
                 {
                     type: 'Text',
                     text: Lang.Blocks.ARDUINO_reconnect,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
@@ -392,14 +392,14 @@ function getBlocks() {
         },
         robot_reconnect: {
             skeleton: 'basic_button',
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             isNotFor: ['arduinoDisconnected'],
             template: '%1',
             params: [
                 {
                     type: 'Text',
                     text: Lang.Blocks.ROBOT_reconnect,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
@@ -413,14 +413,14 @@ function getBlocks() {
         },
         arduino_open: {
             skeleton: 'basic_button',
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             isNotFor: ['arduinoDisconnected'],
             template: '%1',
             params: [
                 {
                     type: 'Text',
                     text: Lang.Blocks.ARDUINO_open_connector,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
@@ -434,14 +434,14 @@ function getBlocks() {
         },
         arduino_cloud_pc_open: {
             skeleton: 'basic_button',
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             isNotFor: ['arduinoConnect', 'arduinoConnected'],
             template: '%1',
             params: [
                 {
                     type: 'Text',
                     text: Lang.Blocks.ARDUINO_cloud_pc_connector,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
@@ -2221,7 +2221,7 @@ function getBlocks() {
                 const sounds = sprite.parent.sounds;
                 const isExist = Entry.isExist(soundId, 'id', sounds);
                 if (isExist) {
-                    createjs.Sound.play(soundId);
+                    Entry.Utils.playSound(soundId);
                 }
                 return script.callReturn();
             },
@@ -2272,7 +2272,7 @@ function getBlocks() {
                 const sounds = sprite.parent.sounds;
                 const isExist = Entry.isExist(soundId, 'id', sounds);
                 if (isExist) {
-                    const instance = createjs.Sound.play(soundId);
+                    const instance = Entry.Utils.playSound(soundId);
                     Entry.Utils.addSoundInstances(instance);
                     setTimeout(() => {
                         instance.stop();
@@ -2318,7 +2318,7 @@ function getBlocks() {
                     const sounds = sprite.parent.sounds;
                     const isExist = Entry.isExist(soundId, 'id', sounds);
                     if (isExist) {
-                        const instance = createjs.Sound.play(soundId);
+                        const instance = Entry.Utils.playSound(soundId);
                         Entry.Utils.addSoundInstances(instance);
                         setTimeout(() => {
                             script.playState = 0;
@@ -2382,7 +2382,7 @@ function getBlocks() {
                     const sounds = sprite.parent.sounds;
                     const isExist = Entry.isExist(soundId, 'id', sounds);
                     if (isExist) {
-                        const instance = createjs.Sound.play(soundId);
+                        const instance = Entry.Utils.playSound(soundId);
                         const timeValue = script.getNumberValue('SECOND', script);
                         Entry.Utils.addSoundInstances(instance);
                         setTimeout(() => {
@@ -6847,12 +6847,12 @@ function getBlocks() {
         },
         basic_button: {
             skeleton: 'basic_button',
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             params: [
                 {
                     type: 'Text',
                     text: 'basic button',
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
