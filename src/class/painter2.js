@@ -166,12 +166,12 @@ Entry.Painter = class Painter {
         isChangeShape && (this.isImport = true);
 
         if (imageType === 'png') {
-            this.entryPaint.addBitmap(imageSrc, { isModeSync: this.isImport });
+            this.entryPaint.addBitmap(imageSrc, { isChangedLayer: this.isImport });
         } else {
             const options =
                 imageType === 'svg'
-                    ? { isModeSync: this.isImport }
-                    : { moveCenter: false, isModeSync: this.isImport };
+                    ? { isChangedLayer: this.isImport }
+                    : { moveCenter: false, isChangedLayer: this.isImport };
             axios.get(imageSrc).then(({ data }) => {
                 this.entryPaint.addSVG(data, options);
             });
