@@ -445,8 +445,8 @@ Entry.Ozobot.getBlocks = function () {
 				{
 					type: 'Dropdown',
 					options: [
-						['시계 방향', 0x00],
-						['반시계 방향', 0x01],
+						['시계 방향', 0x01],
+						['반시계 방향', 0x00],
 					],
 					fontSize: 11,
 					bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -523,8 +523,8 @@ Entry.Ozobot.getBlocks = function () {
 				{
 					type: 'Dropdown',
 					options: [
-						['시계 방향', 0x00],
-						['반시계 방향', 0x01],
+						['시계 방향', 0x01],
+						['반시계 방향', 0x00],
 					],
 					fontSize: 11,
 					bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
