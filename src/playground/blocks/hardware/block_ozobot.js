@@ -1355,7 +1355,6 @@ Entry.Ozobot.getBlocks = function () {
 						['Green', 0x02],
 						['Yellow', 0x03],
 						['Blue', 0x04],
-						['Purple', 0x05],
 						['Cyan', 0x06],
 						['White', 0x07],
 						['Black', 0x00]
