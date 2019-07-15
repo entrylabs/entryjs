@@ -31,9 +31,6 @@ Entry.Playground = class {
         Entry.addEventListener('textEdited', () => {
             this.injectText();
         });
-        Entry.addEventListener('hwChanged', () => {
-            this.updateHW();
-        });
         Entry.addEventListener('commentVisibleChanged', this.toggleCommentButtonVisible.bind(this));
 
         Entry.windowResized.attach(this, this.clearClientRectMemo.bind(this));
@@ -565,7 +562,7 @@ Entry.Playground = class {
         this._destroyer.add(this.toast);
 
         if (Entry.hw) {
-            this.updateHW();
+            Entry.hw.refreshHardwareBlockMenu();
         }
     }
 
@@ -2113,39 +2110,6 @@ Entry.Playground = class {
             blockMenu.banClass(block.name, true);
             blockMenu.banClass(`${block.name}_legacy`, true);
         });
-    }
-
-    updateHW() {
-        const blockMenu = _.result(this.mainWorkspace, 'blockMenu');
-        if (!blockMenu) {
-            return;
-        }
-
-        const hw = Entry.hw;
-        if (hw && hw.connected) {
-            blockMenu.banClass('arduinoDisconnected', true);
-
-            hw.banHW();
-
-            if (hw.hwModule) {
-                blockMenu.banClass('arduinoConnect', true);
-                blockMenu.unbanClass('arduinoConnected', true);
-                blockMenu.unbanClass(hw.hwModule.name);
-            } else {
-                blockMenu.banClass('arduinoConnected', true);
-                blockMenu.unbanClass('arduinoConnect', true);
-            }
-        } else {
-            blockMenu.banClass('arduinoConnected', true);
-            blockMenu.banClass('arduinoConnect', true);
-            blockMenu.unbanClass('arduinoDisconnected', true);
-
-            Entry.hw.banHW();
-        }
-
-        blockMenu.hwCodeOutdated = true;
-        blockMenu._generateHwCode(true);
-        blockMenu.reDraw();
     }
 
     toggleLineBreak(isLineBreak) {

@@ -132,6 +132,7 @@ Entry.exportProject = function(project) {
     project.speed = Entry.FPS;
     project.interface = Entry.captureInterfaceState();
     project.expansionBlocks = Entry.expansionBlocks;
+    project.externalModules = Entry.EXTERNAL_MODULE_LIST;
 
     if (!objects || !objects.length) {
         return false;
@@ -869,7 +870,7 @@ Entry.addEventListener = function(eventName, fn) {
 /**
  * Dispatch event
  * @param {!string} eventName
- * @param {?} params
+ * @param {*} args
  */
 Entry.dispatchEvent = function(eventName, ...args) {
     if (!this.events_) {
@@ -2251,6 +2252,33 @@ Entry.Utils.isNewVersion = function(old_version = '', new_version = '') {
         return false;
     }
 };
+
+Entry.Utils.getBlockCategory = (function() {
+    const map = {};
+    let allBlocks;
+    return function(blockType) {
+        if (!blockType) {
+            return;
+        }
+
+        if (map[blockType]) {
+            return map[blockType];
+        }
+
+        if (!allBlocks) {
+            allBlocks = EntryStatic.getAllBlocks();
+        }
+
+        for (let i = 0; i < allBlocks.length; i++) {
+            const data = allBlocks[i];
+            const category = data.category;
+            if (data.blocks.indexOf(blockType) > -1) {
+                map[blockType] = category;
+                return category;
+            }
+        }
+    };
+})();
 
 Entry.Utils.getUniqObjectsBlocks = function(objects) {
     const _typePicker = _.partial(_.result, _, 'type');

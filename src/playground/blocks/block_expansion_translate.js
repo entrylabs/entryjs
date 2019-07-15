@@ -139,6 +139,7 @@ function getInitialCodeMap() {
         },
     };
 }
+
 Entry.EXPANSION_BLOCK.translate = {
     name: 'translate',
     imageName: 'papago.png',
@@ -229,17 +230,13 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                 menuName(value) {
                     const langCodeMap = getInitialCodeMap();
                     if (value) {
-                        return langCodeMap[value].sub.map((code) => {
-                            return [langCodeMap[code].lang, code];
-                        });
+                        return langCodeMap[value].sub.map((code) => [langCodeMap[code].lang, code]);
                     }
 
                     if (this._contents.options) {
                         return this._contents.options;
                     } else {
-                        return langCodeMap.ko.sub.map((code) => {
-                            return [langCodeMap[code].lang, code];
-                        });
+                        return langCodeMap.ko.sub.map((code) => [langCodeMap[code].lang, code]);
                     }
                 },
                 targetIndex,
@@ -271,7 +268,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
         params.projectId = getProjectId();
         const key = `translate-${type}${JSON.stringify(params)}`;
         return new PromiseManager()
-            .Promise(function(resolve) {
+            .Promise((resolve) => {
                 callApi(key, {
                     url: `${Entry.EXPANSION_BLOCK.translate.api}translate/${type}`,
                     params,
@@ -282,19 +279,15 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                         }
                         return resolve(defaultValue);
                     })
-                    .catch(() => {
-                        return resolve(defaultValue);
-                    });
+                    .catch(() => resolve(defaultValue));
             })
-            .catch(() => {
-                return defaultValue;
-            });
+            .catch(() => defaultValue);
     };
 
     const checkLang = (query, defaultValue) => {
         const langCodeMap = getInitialCodeMap();
         return new PromiseManager()
-            .Promise(function(resolve) {
+            .Promise((resolve) => {
                 callApi(`translate-detect-${query}`, {
                     url: `${Entry.EXPANSION_BLOCK.translate.api}dect/langs`,
                     params: { query, projectId: getProjectId() },
@@ -309,13 +302,9 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                         }
                         return resolve(defaultValue);
                     })
-                    .catch(() => {
-                        return resolve(defaultValue);
-                    });
+                    .catch(() => resolve(defaultValue));
             })
-            .catch(() => {
-                return defaultValue;
-            });
+            .catch(() => defaultValue);
     };
 
     const checkText = function(text) {

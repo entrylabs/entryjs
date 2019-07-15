@@ -11,20 +11,6 @@ const HW = 'arduino';
 const practicalCourseCategoryList = ['hw_motor', 'hw_melody', 'hw_sensor', 'hw_led', 'hw_robot'];
 const splitterHPadding = 20;
 
-function _buildCategoryCodes(blocks, category) {
-    return blocks.reduce((threads, type) => {
-        const block = Entry.block[type];
-        if (!block || !block.def) {
-            return [...threads, [{ type, category }]];
-        } else {
-            return (block.defs || [block.def]).reduce(
-                (threads, d) => [...threads, [Object.assign(d, { category })]],
-                threads
-            );
-        }
-    }, []);
-}
-
 class BlockMenu {
     constructor(dom, align, categoryData, scroll, readOnly) {
         Entry.Model(this, false);
@@ -135,6 +121,20 @@ class BlockMenu {
         closeBlock: null,
         selectedBlockView: null,
     };
+
+    _buildCategoryCodes(blocks, category) {
+        return blocks.reduce((threads, type) => {
+            const block = Entry.block[type];
+            if (!block || !block.def) {
+                return [...threads, [{ type, category }]];
+            } else {
+                return (block.defs || [block.def]).reduce(
+                    (threads, d) => [...threads, [Object.assign(d, { category })]],
+                    threads
+                );
+            }
+        }, []);
+    }
 
     _generateView(categoryData) {
         const parent = this.view;
@@ -710,7 +710,7 @@ class BlockMenu {
             }
         }
 
-        _buildCategoryCodes(blocks, category).forEach((t) => {
+        this._buildCategoryCodes(blocks, category).forEach((t) => {
             if (!t || !t[0]) {
                 return;
             }
@@ -799,6 +799,20 @@ class BlockMenu {
         }
 
         return !_.includes(blockInfo.isFor || [], `category_${this.lastSelector}`);
+    }
+
+    /**
+     * 특정 카테고리에 특정 블록명을 추가한다.
+     * 카테고리가 존재하지 않거나 블록명이 이미 등록된 경우 스킵한다.
+     * Entry.block 목록에 실제 데이터가 있는지, blockMenu 의 그리기 갱신이 필요한지는 상관하지 않는다.
+     * @param categoryName {string}
+     * @param blockName {string}
+     */
+    addCategoryData(categoryName, blockName) {
+        const selectedCategory = this._categoryData.find((element) => element.category === categoryName);
+        if (selectedCategory && selectedCategory.blocks.indexOf(blockName) === -1) {
+            selectedCategory.blocks.push(blockName);
+        }
     }
 
     _addControl(dom) {
@@ -1107,7 +1121,7 @@ class BlockMenu {
             return;
         }
 
-        _buildCategoryCodes(blocks.filter((b) => !this.checkBanClass(Entry.block[b])), HW).forEach(
+        this._buildCategoryCodes(blocks.filter((b) => !this.checkBanClass(Entry.block[b])), HW).forEach(
             (t) => {
                 if (shouldHide) {
                     t[0].x = -99999;
