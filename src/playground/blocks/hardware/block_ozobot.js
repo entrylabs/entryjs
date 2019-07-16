@@ -106,7 +106,7 @@ Entry.Ozobot.getBlocks = function () {
 			paramsKeyMap: {
 				VALUE: 0,
 			},
-			isNotFor: ['Ozobot'],
+			isNotFor: ['Ozobot Evo'],
 			class: 'Ozobot_Sensor',
 			func: function (sprite, script) {
 				var var1 = script.getNumberField('VALUE', script);
@@ -140,7 +140,7 @@ Entry.Ozobot.getBlocks = function () {
 			paramsKeyMap: {
 				VALUE: 0,
 			},
-			isNotFor: ['Ozobot'],
+			isNotFor: ['Ozobot Evo'],
 			class: 'Ozobot_Sensor',
 			func: function (sprite, script) {
 				var var1 = script.getNumberField('VALUE', script);
@@ -229,7 +229,7 @@ Entry.Ozobot.getBlocks = function () {
 				SPEED_RIGHT: 3,
 			},
 			class: 'Ozobot_Movement',
-			isNotFor: ['Ozobot'],
+			isNotFor: ['Ozobot Evo'],
 			func: function (sprite, script) {
 				var sq = Entry.hw.sendQueue;
 				var pd = Entry.hw.portData;
@@ -321,7 +321,7 @@ Entry.Ozobot.getBlocks = function () {
 				SPEED: 2,
 			},
 			class: 'Ozobot_Movement',
-			isNotFor: ['Ozobot'],
+			isNotFor: ['Ozobot Evo'],
 			func: function (sprite, script) {
 				var sq = Entry.hw.sendQueue;
 				var pd = Entry.hw.portData;
@@ -394,7 +394,7 @@ Entry.Ozobot.getBlocks = function () {
 				SPEED: 1,
 			},
 			class: 'Ozobot_Movement',
-			isNotFor: ['Ozobot'],
+			isNotFor: ['Ozobot Evo'],
 			func: function (sprite, script) {
 				var sq = Entry.hw.sendQueue;
 				var pd = Entry.hw.portData;
@@ -473,7 +473,7 @@ Entry.Ozobot.getBlocks = function () {
 				ANGLE: 1,
 			},
 			class: 'Ozobot_Movement',
-			isNotFor: ['Ozobot'],
+			isNotFor: ['Ozobot Evo'],
 			func: function (sprite, script) {
 				var sq = Entry.hw.sendQueue;
 				var pd = Entry.hw.portData;
@@ -556,7 +556,7 @@ Entry.Ozobot.getBlocks = function () {
 				ANGLE: 1,
 			},
 			class: 'Ozobot_Movement',
-			isNotFor: ['Ozobot'],
+			isNotFor: ['Ozobot Evo'],
 			func: function (sprite, script) {
 				var sq = Entry.hw.sendQueue;
 				var pd = Entry.hw.portData;
@@ -616,7 +616,7 @@ Entry.Ozobot.getBlocks = function () {
 			},
 			paramsKeyMap: {},
 			class: 'Ozobot_Movement',
-			isNotFor: ['Ozobot'],
+			isNotFor: ['Ozobot Evo'],
 			func: function (sprite, script) {
 				var sq = Entry.hw.sendQueue;
 				var pd = Entry.hw.portData;
@@ -680,7 +680,7 @@ Entry.Ozobot.getBlocks = function () {
 				COLOR: 0,
 			},
 			class: 'Ozobot_LED',
-			isNotFor: ['Ozobot'],
+			isNotFor: ['Ozobot Evo'],
 			func: function (sprite, script) {
 				var var1 = script.getStringField('COLOR', script);
 				var sq = Entry.hw.sendQueue;
@@ -737,7 +737,7 @@ Entry.Ozobot.getBlocks = function () {
 			},
 			paramsKeyMap: {},
 			class: 'Ozobot_LED',
-			isNotFor: ['Ozobot'],
+			isNotFor: ['Ozobot Evo'],
 			func: function (sprite, script) {
 				var var1 = script.getStringField('COLOR', script);
 				var sq = Entry.hw.sendQueue;
@@ -800,7 +800,7 @@ Entry.Ozobot.getBlocks = function () {
 			},
 			paramsKeyMap: {},
 			class: 'Ozobot_LED',
-			isNotFor: ['Ozobot'],
+			isNotFor: ['Ozobot Evo'],
 			func: function (sprite, script) {
 				var var1 = script.getStringField('COLOR', script);
 				var sq = Entry.hw.sendQueue;
@@ -860,7 +860,7 @@ Entry.Ozobot.getBlocks = function () {
 			},
 			paramsKeyMap: {},
 			class: 'Ozobot_LED',
-			isNotFor: ['Ozobot'],
+			isNotFor: ['Ozobot Evo'],
 			func: function (sprite, script) {
 				var sq = Entry.hw.sendQueue;
 				var pd = Entry.hw.portData;
@@ -937,7 +937,7 @@ Entry.Ozobot.getBlocks = function () {
 				COLOR5: 4,
 			},
 			class: 'Ozobot_LED',
-			isNotFor: ['Ozobot'],
+			isNotFor: ['Ozobot Evo'],
 			func: function (sprite, script) {
 				var var1 = script.getStringField('COLOR1', script);
 				var var2 = script.getStringField('COLOR2', script);
@@ -1002,7 +1002,7 @@ Entry.Ozobot.getBlocks = function () {
 			},
 			paramsKeyMap: {},
 			class: 'Ozobot_LED',
-			isNotFor: ['Ozobot'],
+			isNotFor: ['Ozobot Evo'],
 			func: function (sprite, script) {
 				var var1 = script.getStringField('COLOR1', script);
 				var var2 = script.getStringField('COLOR2', script);
@@ -1082,7 +1082,7 @@ Entry.Ozobot.getBlocks = function () {
 			},
 			paramsKeyMap: {},
 			class: 'Ozobot_LED',
-			isNotFor: ['Ozobot'],
+			isNotFor: ['Ozobot Evo'],
 			func: function (sprite, script) {
 				var sq = Entry.hw.sendQueue;
 				var pd = Entry.hw.portData;
@@ -1156,7 +1156,7 @@ Entry.Ozobot.getBlocks = function () {
 				SOUND: 0,
 			},
 			class: 'Ozobot_Sound',
-			isNotFor: ['Ozobot'],
+			isNotFor: ['Ozobot Evo'],
 			func: function (sprite, script) {
 				var var1 = script.getNumberField('SOUND', script);
 				var sq = Entry.hw.sendQueue;
@@ -1227,7 +1227,7 @@ Entry.Ozobot.getBlocks = function () {
 				DIRECTION: 0,
 			},
 			class: 'Ozobot_Sound',
-			isNotFor: ['Ozobot'],
+			isNotFor: ['Ozobot Evo'],
 			func: function (sprite, script) {
 				var var1 = script.getNumberField('DIRECTION', script);
 				var sq = Entry.hw.sendQueue;
@@ -1304,7 +1304,7 @@ Entry.Ozobot.getBlocks = function () {
 				DIRECTION: 0,
 			},
 			class: 'Ozobot_Sound',
-			isNotFor: ['Ozobot'],
+			isNotFor: ['Ozobot Evo'],
 			func: function (sprite, script) {
 				var var1 = script.getNumberField('DIRECTION', script);
 				var sq = Entry.hw.sendQueue;
@@ -1378,7 +1378,7 @@ Entry.Ozobot.getBlocks = function () {
 				COLOR: 0,
 			},
 			class: 'Ozobot_Sound',
-			isNotFor: ['Ozobot'],
+			isNotFor: ['Ozobot Evo'],
 			func: function (sprite, script) {
 				var var1 = script.getNumberField('COLOR', script);
 				var sq = Entry.hw.sendQueue;
@@ -1470,7 +1470,7 @@ Entry.Ozobot.getBlocks = function () {
 				TONE: 1,
 			},
 			class: 'Ozobot_Sound',
-			isNotFor: ['Ozobot'],
+			isNotFor: ['Ozobot Evo'],
 			func: function (sprite, script) {
 				var var1 = script.getNumberField('OCTAV', script);
 				var var2 = script.getNumberField('TONE', script);
@@ -1569,7 +1569,7 @@ Entry.Ozobot.getBlocks = function () {
 				TIME: 2,
 			},
 			class: 'Ozobot_Sound',
-			isNotFor: ['Ozobot'],
+			isNotFor: ['Ozobot Evo'],
 			func: function (sprite, script) {
 				var var1 = script.getNumberField('OCTAV', script);
 				var var2 = script.getNumberField('TONE', script);
@@ -1629,7 +1629,7 @@ Entry.Ozobot.getBlocks = function () {
 			},
 			paramsKeyMap: {},
 			class: 'Ozobot_Sound',
-			isNotFor: ['Ozobot'],
+			isNotFor: ['Ozobot Evo'],
 			func: function (sprite, script) {
 				var sq = Entry.hw.sendQueue;
 				var pd = Entry.hw.portData;
@@ -1683,7 +1683,7 @@ Entry.Ozobot.getBlocks = function () {
 			},
 			paramsKeyMap: {},
 			class: 'Ozobot_Power',
-			isNotFor: ['Ozobot'],
+			isNotFor: ['Ozobot Evo'],
 			func: function (sprite, script) {
 				var sq = Entry.hw.sendQueue;
 				var pd = Entry.hw.portData;

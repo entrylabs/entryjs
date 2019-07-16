@@ -198,87 +198,47 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
     };
 
     c[COMMAND_TYPES.objectAddExpansionBlock] = {
-        do(block) {
-            const hashId = c[COMMAND_TYPES.objectAddExpansionBlock].hashId;
-            if (hashId) {
-                block.id = hashId;
-                delete c[COMMAND_TYPES.objectAddExpansionBlock].hashId;
-            }
-
+        do(blockName) {
             if (
                 typeof Entry.EXPANSION_BLOCK !== 'undefined' &&
-                typeof Entry.EXPANSION_BLOCK[block.name] !== 'undefined'
+                typeof Entry.EXPANSION_BLOCK[blockName] !== 'undefined'
             ) {
-                Entry.EXPANSION_BLOCK[block.name].init();
+                Entry.EXPANSION_BLOCK[blockName].init();
                 if (typeof Entry.expansionBlocks == 'undefined') {
                     Entry.expansionBlocks = [];
                 }
-                Entry.expansionBlocks.push(block.name);
+                Entry.expansionBlocks = _.union(Entry.expansionBlocks, [blockName]);
             }
 
-            Entry.playground.blockMenu.unbanClass(block.name);
-            Entry.dispatchEvent('dismissModal');
+            Entry.playground.blockMenu.unbanClass(blockName);
+            // Entry.dispatchEvent('dismissModal');
         },
-        state(block) {
-            return [block];
+        state(blockName) {
+            return [blockName];
         },
-        log(block) {
-            const o = {};
-            o._id = block._id;
-            o.id = block.id;
-            o.filename = block.filename;
-            o.fileurl = block.fileurl;
-            o.name = block.name;
-            return [['block', o]];
+        log(blockName) {
+            return [['blockName', blockName]];
         },
         dom: ['.btn_confirm_modal'],
-        restrict(data, domQuery, callback) {
-            this.hashId = data.content[2][1].id;
-
-            const tooltip = new Entry.Tooltip(
-                [
-                    {
-                        title: data.tooltip.title,
-                        content: data.tooltip.content,
-                        target: '.btn_confirm_modal',
-                    },
-                ],
-                {
-                    callBack: callback,
-                    dimmed: true,
-                    restrict: true,
-                    render: false,
-                }
-            );
-
-            const event = Entry.getMainWS().widgetUpdateEvent;
-
-            if (!data.skip) {
-                Entry.dispatchEvent(
-                    'openSoundManager',
-                    data.content[2][1]._id,
-                    event.notify.bind(event)
-                );
-            }
-            return tooltip;
-        },
-        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
         validate: false,
         undo: 'objectRemoveExpansionBlock',
     };
 
     c[COMMAND_TYPES.objectRemoveExpansionBlock] = {
-        do(block) {
-            Entry.playground.blockMenu.banClass(block.name);
+        do(blockName) {
+            // 사용된 블록 전체에서 검색가능해질때 사용가능.
+            // Entry.expansionBlocks = _.pull(Entry.expansionBlocks, blockName);
+            Entry.playground.blockMenu.banClass(blockName);
         },
-        state(block) {
-            return [block];
+        state(blockName) {
+            return [blockName];
         },
-        log(block) {
-            return [['blockId', block._id]];
+        log(blockName) {
+            return [['blockName', blockName]];
         },
         dom: ['.btn_confirm_modal'],
-        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
         validate: false,
         undo: 'objectAddExpansionBlock',
     };

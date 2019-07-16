@@ -2,12 +2,10 @@
  * @fileoverview entity object is class for entry object canvas view.
  */
 
-
 'use strict';
 
-import {GEHelper} from '../graphicEngine/GEHelper';
-import {GEDragHelper} from '../graphicEngine/GEDragHelper';
-import { clog } from './pixi/utils/logs';
+import { GEHelper } from '../graphicEngine/GEHelper';
+import { GEDragHelper } from '../graphicEngine/GEDragHelper';
 
 /**
  * Construct entity class
@@ -28,7 +26,8 @@ Entry.EntityObject = class EntityObject {
         this.shapes = [];
         this._rndPosX = 0;
         this._rndPosY = 0;
-        this.voice = { speed : 0, pitch : 0, speaker : 'kyuri' };
+        this.voice = { speed: 0, pitch: 0, speaker: 'kyuri', volume: 1 };
+
         if (this.type === 'sprite') {
             this._rndPosX = GEHelper.rndPosition();
             this._rndPosY = GEHelper.rndPosition();
@@ -39,14 +38,26 @@ Entry.EntityObject = class EntityObject {
         } else if (this.type === 'textBox') {
             this.object = GEHelper.newContainer();
             this._scaleAdaptor = GEHelper.newAScaleAdaptor(this.object);
-            this.textObject = GEHelper.textHelper.newText("", '20px Nanum Gothic', "", 'middle', 'center');
-            if(GEHelper.isWebGL) {
+            this.textObject = GEHelper.textHelper.newText(
+                '',
+                '20px Nanum Gothic',
+                '',
+                'middle',
+                'center'
+            );
+
+            /*
+             bgObject 가 transparent 인 경우에도 textObject 가 hit 처리되어서
+             container on event 가 동작해버리는 이슈가 있었음. (issues/10463)
+             textObject 를 정확히 그려진 부분만 interactive 하도록 플래그 수정
+             */
+            this.textObject.pixelPerfect = true;
+
+            if (GEHelper.isWebGL) {
                 this.textObject.anchor.set(0.5, 0.5);
             }
             this.bgObject = GEHelper.newGraphic();
-            this.bgObject.graphics
-                .beginFill("#ffffff")
-                .drawRect(0, 0, 100, 100);
+            this.bgObject.graphics.beginFill('#ffffff').drawRect(0, 0, 100, 100);
             this.object.addChild(this.bgObject);
             this.object.addChild(this.textObject);
 
@@ -68,8 +79,7 @@ Entry.EntityObject = class EntityObject {
             Entry.dispatchEvent('entityClick', this.entity);
             Entry.stage.isObjectClick = true;
 
-            if (Entry.type != 'minimize' && Entry.stage.isEntitySelectable()) {
-
+            if (Entry.type !== 'minimize' && Entry.stage.isEntitySelectable()) {
                 this.offset = {
                     x: -this.parent.x + this.entity.getX() - (stageX * 0.75 - 240),
                     y: -this.parent.y - this.entity.getY() - (stageY * 0.75 - 135),
@@ -93,8 +103,11 @@ Entry.EntityObject = class EntityObject {
                     if (entity.parent.getLock()) {
                         return;
                     }
-                    entity.setX(stageX * 0.75 - 240 + this.offset.x);
-                    entity.setY(-(stageY * 0.75 - 135) - this.offset.y);
+
+                    if (this.offset) {
+                        entity.setX(stageX * 0.75 - 240 + this.offset.x);
+                        entity.setY(-(stageY * 0.75 - 135) - this.offset.y);
+                    }
                     Entry.stage.updateObject();
                 }
             });
@@ -338,7 +351,7 @@ Entry.EntityObject = class EntityObject {
         }
         /** @type {number} */
         this.regX = regX;
-        if(GEHelper.isWebGL) {
+        if (GEHelper.isWebGL) {
             this._scaleAdaptor.pivot.setX(regX);
         } else {
             this.object.regX = this.regX;
@@ -364,7 +377,7 @@ Entry.EntityObject = class EntityObject {
         }
         /** @type {number} */
         this.regY = regY;
-        if(GEHelper.isWebGL) {
+        if (GEHelper.isWebGL) {
             this._scaleAdaptor.pivot.setY(regY);
         } else {
             this.object.regY = this.regY;
@@ -387,9 +400,9 @@ Entry.EntityObject = class EntityObject {
     setScaleX(scaleX) {
         /** @type {number} */
         this.scaleX = scaleX;
-        if(GEHelper.isWebGL) {
+        if (GEHelper.isWebGL) {
             this._scaleAdaptor.scale.setX(scaleX);
-            if(this.textObject) {
+            if (this.textObject) {
                 this.textObject.setFontScaleX(scaleX);
             }
         } else {
@@ -415,9 +428,9 @@ Entry.EntityObject = class EntityObject {
     setScaleY(scaleY) {
         /** @type {number} */
         this.scaleY = scaleY;
-        if(GEHelper.isWebGL) {
+        if (GEHelper.isWebGL) {
             this._scaleAdaptor.scale.setY(scaleY);
-            if(this.textObject) {
+            if (this.textObject) {
                 this.textObject.setFontScaleY(scaleY);
             }
         } else {
@@ -473,9 +486,9 @@ Entry.EntityObject = class EntityObject {
         //todo [박봉배] object.width -> object.$width 로 변경
         this.object.$width = this.width;
         if (this.textObject && this.getLineBreak()) {
-            if(GEHelper.isWebGL) {
+            if (GEHelper.isWebGL) {
                 this.textObject.style.wordWrapWidth = this.width;
-            }else{
+            } else {
                 this.textObject.lineWidth = this.width;
             }
         }
@@ -560,7 +573,7 @@ Entry.EntityObject = class EntityObject {
 
     setUnderLine(underLine = false) {
         this.underLine = underLine;
-        if(GEHelper.isWebGL) {
+        if (GEHelper.isWebGL) {
             this.textObject.style.underLine = underLine;
         } else {
             this.textObject.underLine = underLine;
@@ -574,7 +587,7 @@ Entry.EntityObject = class EntityObject {
 
     setStrike(strike = false) {
         this.strike = strike;
-        if(GEHelper.isWebGL) {
+        if (GEHelper.isWebGL) {
             this.textObject.style.cancelLine = strike;
         } else {
             this.textObject.strike = strike;
@@ -646,7 +659,7 @@ Entry.EntityObject = class EntityObject {
                 break;
             }
         }
-        if(GEHelper.isWebGL) {
+        if (GEHelper.isWebGL) {
             this.textObject.style.lineHeight = lineHeight;
         } else {
             this.textObject.lineHeight = lineHeight;
@@ -755,9 +768,7 @@ Entry.EntityObject = class EntityObject {
 
         return font
             .split(' ')
-            .filter((font) => {
-                return !/^(bold|italic)$/.test(font) && !~font.indexOf('px');
-            })
+            .filter((font) => !/^(bold|italic)$/.test(font) && !~font.indexOf('px'))
             .join(' ')
             .trim();
     }
@@ -801,8 +812,8 @@ Entry.EntityObject = class EntityObject {
 
         const textObj = this.textObject;
         const alignValue = Entry.TEXT_ALIGNS[textAlign];
-        if(GEHelper.isWebGL) {
-            let anchorX = [0.5, 0, 1];
+        if (GEHelper.isWebGL) {
+            const anchorX = [0.5, 0, 1];
             textObj.anchor.x = anchorX[textAlign];
             textObj.style.align = alignValue;
         } else {
@@ -839,25 +850,25 @@ Entry.EntityObject = class EntityObject {
         this.lineBreak = lineBreak;
 
         if (previousState && !this.lineBreak) {
-            if(isWebGL) {
+            if (isWebGL) {
                 this.textObject.style.wordWrap = false;
             } else {
                 this.textObject.lineWidth = null;
             }
             this.setHeight(this.textObject.getMeasuredLineHeight());
             this.setText(this.getText().replace(/\n/g, ''));
-            if(isWebGL) {
+            if (isWebGL) {
                 this.textObject.anchor.y = 0.5;
             }
         } else if (this.lineBreak) {
-            if(previousState === false) {
+            if (previousState === false) {
                 this.setFontSize(this.getFontSize() * this.getScaleX());
                 this.setHeight(this.textObject.getMeasuredLineHeight() * 3);
                 this.setWidth(this.getWidth() * this.getScaleX());
                 this.setScaleX(1);
                 this.setScaleY(1);
             }
-            if(isWebGL) {
+            if (isWebGL) {
                 this.textObject.anchor.y = 0;
                 this.textObject.style.wordWrap = true;
                 this.textObject.style.breakWords = true;
@@ -938,21 +949,31 @@ Entry.EntityObject = class EntityObject {
         this.setRegX(this.width / 2 + absoluteRegX);
         this.setRegY(this.height / 2 + absoluteRegY);
 
-
         /**
          * //이 코드는 createjs 일때만 호출 됨.
          * @param {AtlasImageLoadingInfo} info
          */
-        const onImageLoad = GEHelper.isWebGL ? null : ((info)=> {
-            if (this.removed) return;
-            if (info.source() !== this.object.image) return;
-            let hasFilter = !_.isEmpty(that.object.filters);
-            GEHelper.colorFilter.setCache(this, hasFilter);
-            Entry.requestUpdate = true;
-        });
+        const onImageLoad = GEHelper.isWebGL
+            ? null
+            : (info) => {
+                  if (this.removed) {
+                      return;
+                  }
+                  if (info.source() !== this.object.image) {
+                      return;
+                  }
+                  const hasFilter = !_.isEmpty(that.object.filters);
+                  GEHelper.colorFilter.setCache(this, hasFilter);
+                  Entry.requestUpdate = true;
+              };
 
-        GEHelper.resManager.reqResource(this.object, this.parent.scene.id, pictureModel, onImageLoad);
-        if(GEHelper.isWebGL) {
+        GEHelper.resManager.reqResource(
+            this.object,
+            this.parent.scene.id,
+            pictureModel,
+            onImageLoad
+        );
+        if (GEHelper.isWebGL) {
             this._scaleAdaptor.updateScaleFactor();
             this.object.refreshFilter();
         }
@@ -981,7 +1002,7 @@ Entry.EntityObject = class EntityObject {
             const adjust = Entry.adjustValueWithMaxMin;
 
             if (~diffEffects.indexOf('brightness')) {
-                let brightness = adjust(e.brightness, -100, 100);
+                const brightness = adjust(e.brightness, -100, 100);
                 f.push(GEHelper.colorFilter.brightness(brightness));
             }
 
@@ -990,6 +1011,7 @@ Entry.EntityObject = class EntityObject {
             }
 
             if (~diffEffects.indexOf('hsv')) {
+                /* eslint-disable */
                 let matrixValue = [
                     1, 0, 0, 0, 0,
                     0, 1, 0, 0, 0,
@@ -997,6 +1019,7 @@ Entry.EntityObject = class EntityObject {
                     0, 0, 0, 1, 0,
                     0, 0, 0, 0, 1,
                 ];
+                /* eslint-enable */
 
                 const degrees = e.hsv * 3.6;
                 const r = (degrees * 3 * Math.PI) / 180;
@@ -1009,6 +1032,7 @@ Entry.EntityObject = class EntityObject {
                 }
 
                 if (v > 0 && v <= 0.33) {
+                    /* eslint-disable */
                     matrixValue = [
                         1, 0, 0, 0, 0,
                         0, cosVal, sinVal, 0, 0,
@@ -1033,6 +1057,7 @@ Entry.EntityObject = class EntityObject {
                         0, 0, 0, 0, 1,
                     ];
                 }
+                /* eslint-enable */
 
                 const colorFilter = GEHelper.colorFilter.newColorMatrixFilter(matrixValue);
                 f.push(colorFilter);
@@ -1042,7 +1067,7 @@ Entry.EntityObject = class EntityObject {
                 e.alpha = adjust(e.alpha, 0, 1);
                 obj.alpha = e.alpha;
             }
-            if(GEHelper.isWebGL) {
+            if (GEHelper.isWebGL) {
                 obj.setFilterAndCache(f);
             } else {
                 obj.filters = f;
@@ -1071,7 +1096,7 @@ Entry.EntityObject = class EntityObject {
         }
 
         const object = this.object;
-        if(GEHelper.isWebGL) {
+        if (GEHelper.isWebGL) {
             object.setFilterAndCache(null);
         } else {
             object.filters = [];
@@ -1204,8 +1229,8 @@ Entry.EntityObject = class EntityObject {
      * @return {effect}
      */
     setVoiceProp(prop) {
-        const { speed = 0, pitch = 0, speaker = 'kyuri' } = prop;
-        this.voice = { speed, pitch, speaker };
+        const { speed = 0, pitch = 0, speaker = 'kyuri', volume = 1 } = prop;
+        this.voice = { speed, pitch, speaker, volume };
     }
 
     /*
@@ -1237,7 +1262,7 @@ Entry.EntityObject = class EntityObject {
         const shapes = this.shapes;
         const LEN = shapes.length;
         let s;
-        for(let i = 0 ; i < LEN ; i++ ) {
+        for (let i = 0; i < LEN; i++) {
             s = shapes[i];
             container.removeChild(s);
             s.destroy && s.destroy(true); //pixi 일때만 호출
@@ -1253,12 +1278,10 @@ Entry.EntityObject = class EntityObject {
         const width = this.getWidth();
         const height = this.getHeight();
         const bgColor = this.getBGColour();
-        const hasColor = (bgColor || "").indexOf("#") === 0;
+        const hasColor = (bgColor || '').indexOf('#') === 0;
         this.bgObject.alpha = hasColor ? 1 : 0;
 
-        this.bgObject.graphics
-            .beginFill(bgColor)
-            .drawRect(-width / 2, -height / 2, width, height);
+        this.bgObject.graphics.beginFill(bgColor).drawRect(-width / 2, -height / 2, width, height);
         if (this.getLineBreak()) {
             this.bgObject.x = 0;
         } else {
@@ -1284,7 +1307,7 @@ Entry.EntityObject = class EntityObject {
         const textObject = this.textObject;
         const isWebGL = GEHelper.isWebGL;
         if (this.lineBreak) {
-            if(isWebGL) {
+            if (isWebGL) {
                 textObject.y = -this.getHeight() / 2;
             } else {
                 textObject.y = textObject.getMeasuredLineHeight() / 2 - this.getHeight() / 2;
@@ -1305,7 +1328,7 @@ Entry.EntityObject = class EntityObject {
                     textObject.x = this.getWidth() / 2;
                     break;
             }
-            if(isWebGL) {
+            if (isWebGL) {
                 textObject.style.maxHeight = this.getHeight();
             } else {
                 textObject.maxHeight = this.getHeight();
@@ -1332,9 +1355,7 @@ Entry.EntityObject = class EntityObject {
     }
 
     removeStamps() {
-        this.stamps.forEach((s) => {
-            return s.destroy();
-        });
+        this.stamps.forEach((s) => s.destroy());
         this.stamps = [];
         Entry.requestUpdate = true;
     }
@@ -1354,7 +1375,7 @@ Entry.EntityObject = class EntityObject {
             delete object.entity;
         }
 
-        if(this._scaleAdaptor) {
+        if (this._scaleAdaptor) {
             this._scaleAdaptor.destroy();
             this._scaleAdaptor = null;
         }
@@ -1368,13 +1389,13 @@ Entry.EntityObject = class EntityObject {
         Entry.stage.unloadEntity(this);
 
         //pixi 전용 코드
-        object && object.destroy && object.destroy({children: true});
+        object && object.destroy && object.destroy({ children: true });
     }
 
     cache() {
         const { object } = this;
         if (object) {
-            if(!GEHelper.isWebGL) {
+            if (!GEHelper.isWebGL) {
                 object.cache(0, 0, this.getWidth(), this.getHeight());
             }
             Entry.requestUpdate = true;
@@ -1390,11 +1411,11 @@ Entry.EntityObject = class EntityObject {
 
     _syncFontStyle() {
         this.textObject.font = this.getFont();
-        if(!GEHelper.isWebGL) {
+        if (!GEHelper.isWebGL) {
             return;
         }
-        let style = this.textObject.style;
-        style.fontSize = this.getFontSize() + 'px';
+        const style = this.textObject.style;
+        style.fontSize = `${this.getFontSize()}px`;
         style.fontStyle = this.fontItalic ? 'italic' : 'normal';
         style.fontWeight = this.fontBold ? 'bold' : 'normal';
         style.fontFamily = this.fontType;

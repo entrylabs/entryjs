@@ -6,6 +6,7 @@
 
 import { Destroyer } from './destroyer/Destroyer';
 import { GEHelper } from '../graphicEngine/GEHelper';
+import Expansion from '../class/Expansion';
 require('./utils');
 
 /**
@@ -80,11 +81,11 @@ Entry.init = function(container, options) {
     };
     window.onbeforeunload = this.beforeUnload;
 
-    Entry.addEventListener('saveWorkspace', function() {
+    Entry.addEventListener('saveWorkspace', () => {
         Entry.addActivity('save');
     });
 
-    Entry.addEventListener('showBlockHelper', function() {
+    Entry.addEventListener('showBlockHelper', () => {
         Entry.propertyPanel.select('helper');
     });
 
@@ -222,6 +223,8 @@ Entry.initialize_ = function() {
     this.playground = new Entry.Playground();
     this._destroyer.add(this.playground);
 
+    this.expansion = new Expansion(this.playground);
+    this._destroyer.add(this.expansion);
     this.intro = new Entry.Intro();
     /**
      * Initialize toast. Toast don't need generate view.
@@ -299,7 +302,7 @@ Entry.createDom = function(container, option) {
         canvas.height = 360;
         engineView.insertBefore(canvas, this.engine.buttonWrapper);
 
-        canvas.addEventListener('mousewheel', function(evt) {
+        canvas.addEventListener('mousewheel', (evt) => {
             const mousePosition = Entry.stage.mouseCoordinate;
             const tempList = Entry.variableContainer.getListById(mousePosition);
             const wheelDirection = evt.wheelDelta > 0;
@@ -553,18 +556,15 @@ Entry.Utils.initEntryEvent_ = function() {
  * @param {sound object} sound
  */
 Entry.initSound = function(sound) {
-    if (!sound || !sound.duration || sound.duration == 0) return;
+    if (!sound || !sound.duration || sound.duration == 0) {
+        return;
+    }
     sound.path =
         sound.fileurl ||
-        Entry.defaultPath +
-            '/uploads/' +
-            sound.filename.substring(0, 2) +
-            '/' +
-            sound.filename.substring(2, 4) +
-            '/' +
-            Entry.soundPath +
-            sound.filename +
-            (sound.ext || '.mp3');
+        `${Entry.defaultPath}/uploads/${sound.filename.substring(0, 2)}/${sound.filename.substring(
+            2,
+            4
+        )}/${Entry.soundPath}${sound.filename}${sound.ext || '.mp3'}`;
 
     Entry.soundQueue.loadFile({
         id: sound.id,

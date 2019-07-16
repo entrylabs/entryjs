@@ -401,6 +401,7 @@ EntryStatic.getAllBlocks = function() {
                 'tts_title',
                 'read_text',
                 'set_tts_property',
+                'read_text_wait_with_block',
             ],
         },
         {
@@ -767,6 +768,10 @@ EntryStatic.colorSet = {
     common: {
         WHITE: '#FFFFFF',
         DARK: '#000000',
+        TRANSPARENT: 'transparent',
+        BUTTON: '#4f80ff',
+        BUTTON_BACKGROUND: '#eee',
+        TEXT: '#333',
     },
 };
 
