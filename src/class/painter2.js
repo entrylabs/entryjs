@@ -1,11 +1,6 @@
 import EntryPaint from 'entry-paint';
 import axios from 'axios';
 
-const stringToElement = (htmlString) => {
-    const wrapper = document.createElement('div');
-    wrapper.innerHTML = htmlString;
-    return wrapper.children[0];
-};
 Entry.Painter = class Painter {
     constructor(view) {
         this.view = view;
@@ -72,10 +67,6 @@ Entry.Painter = class Painter {
     }
 
     hide() {}
-
-    getExt(filePath) {
-        return filePath.split('.').pop() === 'svg' ? 'svg' : 'png';
-    }
 
     newPicture() {
         const newPicture = {
@@ -152,11 +143,10 @@ Entry.Painter = class Painter {
         }
 
         const { imageType = 'png', filename } = picture || {};
-        const extention = imageType === 'paper' ? 'svg' : imageType;
         return `${Entry.defaultPath}/uploads/${filename.substring(0, 2)}/${filename.substring(
             2,
             4
-        )}/image/${filename}.${extention}`;
+        )}/image/${filename}.${imageType}`;
     }
 
     addPicture(picture, isChangeShape) {
@@ -165,16 +155,18 @@ Entry.Painter = class Painter {
 
         isChangeShape && (this.isImport = true);
 
-        if (imageType === 'png') {
-            this.entryPaint.addBitmap(imageSrc, { isChangedLayer: this.isImport });
-        } else {
-            const options =
-                imageType === 'svg'
-                    ? { isChangedLayer: this.isImport }
-                    : { moveCenter: false, isChangedLayer: this.isImport };
-            axios.get(imageSrc).then(({ data }) => {
-                this.entryPaint.addSVG(data, options);
-            });
+        switch (imageType) {
+            case 'png':
+                this.entryPaint.addBitmap(imageSrc, { isChangedLayer: this.isImport });
+                break;
+            case 'svg':
+                this.entryPaint.addSVG(imageSrc);
+                break;
+            case 'json':
+                axios.get(imageSrc).then(({ data }) => {
+                    this.entryPaint.setPaperJSON(data);
+                });
+                break;
         }
     }
 
@@ -183,7 +175,7 @@ Entry.Painter = class Painter {
             return;
         }
         const dataURL = this.entryPaint.getDataURL();
-        this.file.svg = this.entryPaint.getSVG({ asString: true });
+        this.file.json = this.entryPaint.getPaperJSON();
         const file = JSON.parse(JSON.stringify(this.file));
         Entry.dispatchEvent('saveCanvasImage', {
             file,
@@ -263,6 +255,7 @@ Entry.Painter = class Painter {
                 this.fullscreenButton.setAttribute('alt', Lang.Painter.exit_fullscreen);
             }
         }
+        this.entryPaint.realign();
     }
 
     clear() {
