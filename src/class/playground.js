@@ -1263,7 +1263,6 @@ Entry.Playground = class Playground {
      */
     clonePicture(pictureId) {
         const sourcePicture = Entry.playground.object.getPicture(pictureId);
-        sourcePicture.imageType = 'paper';
         this.addPicture(sourcePicture, true);
     }
 

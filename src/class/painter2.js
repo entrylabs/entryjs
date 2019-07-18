@@ -1,6 +1,10 @@
 import EntryPaint from 'entry-paint';
 import axios from 'axios';
 
+const GrapicMode = {
+    BITMAP: 'BITMAP',
+    VECTOR: 'VECTOR',
+};
 Entry.Painter = class Painter {
     constructor(view) {
         this.view = view;
@@ -182,7 +186,7 @@ Entry.Painter = class Painter {
             image: dataURL,
             task: taskParam,
         });
-
+        Entry.playground.object.setPictureType(this.entryPaint.mode);
         this.file.isUpdate = false;
         this.file.modified = false;
     }

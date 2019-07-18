@@ -318,7 +318,7 @@ Entry.Container = class Container {
             throw new Error('No picture found');
         }
         pictures[index] = Object.assign(
-            _.pick(picture, ['dimension', 'id', 'filename', 'fileurl', 'name']),
+            _.pick(picture, ['dimension', 'id', 'filename', 'fileurl', 'name', 'imageType']),
             { view: pictures[index].view }
         );
     }

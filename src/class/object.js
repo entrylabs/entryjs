@@ -370,6 +370,20 @@ Entry.EntryObject = class {
         return this.pictures.indexOf(this.getPicture(value));
     }
 
+    setPictureType(mode, id = this.selectedPicture.id) {
+        const type = mode === 'BITMAP' ? 'png' : 'json';
+
+        if (!type) {
+            return;
+        }
+        for (const picture of this.pictures) {
+            if (picture.id === id) {
+                picture.imageType = type;
+                break;
+            }
+        }
+    }
+
     /**
      * Get previous picture object by Id.
      * @param {?string} pictureId
