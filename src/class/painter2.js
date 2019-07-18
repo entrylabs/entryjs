@@ -75,7 +75,7 @@ Entry.Painter = class Painter {
                 width: 1,
             },
             fileurl: `${Entry.mediaFilePath}_1x1.png`,
-            name: Lang.Workspace.new_picture,
+            name: Lang.Painter.new_picture,
         };
 
         newPicture.id = Entry.generateHash();
