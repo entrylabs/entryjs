@@ -252,65 +252,6 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
                 ],
             },
         },
-        set_tts_property: {
-            color: EntryStatic.colorSet.block.default.EXPANSION,
-            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                params.getSpeaker(),
-                params.getSpeed(),
-                params.getPitch(),
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/expansion_icon.png',
-                    size: 11,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    params.getSpeaker().value,
-                    params.getSpeed().value,
-                    params.getPitch().value,
-                    null,
-                ],
-                type: 'set_tts_property',
-            },
-            pyHelpDef: {
-                params: ['A&value', 'B&value', 'C&value'],
-                type: 'set_tts_property',
-            },
-            paramsKeyMap: {
-                SPEAKER: 0,
-                SPEED: 1,
-                PITCH: 2,
-            },
-            class: 'tts',
-            isNotFor: ['tts'],
-            func(sprite, script) {
-                const speaker = script.getField('SPEAKER', script);
-                const speed = script.getField('SPEED', script);
-                const pitch = script.getField('PITCH', script);
-                const volume = 1;
-                sprite.setVoiceProp({ speaker, speed, pitch, volume });
-                return script.callReturn();
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'TTS.set(%1, %2, %3)',
-                        blockType: 'param',
-                        textParams: [
-                            params.getSpeaker(true),
-                            params.getSpeed(true),
-                            params.getPitch(true),
-                        ],
-                    },
-                ],
-            },
-        },
         read_text_wait_with_block: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
             outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
@@ -378,6 +319,65 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
                     {
                         passTest: true,
                         syntax: 'Entry.play_sound_and_wait(%1)',
+                    },
+                ],
+            },
+        },
+        set_tts_property: {
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                params.getSpeaker(),
+                params.getSpeed(),
+                params.getPitch(),
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/expansion_icon.png',
+                    size: 11,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    params.getSpeaker().value,
+                    params.getSpeed().value,
+                    params.getPitch().value,
+                    null,
+                ],
+                type: 'set_tts_property',
+            },
+            pyHelpDef: {
+                params: ['A&value', 'B&value', 'C&value'],
+                type: 'set_tts_property',
+            },
+            paramsKeyMap: {
+                SPEAKER: 0,
+                SPEED: 1,
+                PITCH: 2,
+            },
+            class: 'tts',
+            isNotFor: ['tts'],
+            func(sprite, script) {
+                const speaker = script.getField('SPEAKER', script);
+                const speed = script.getField('SPEED', script);
+                const pitch = script.getField('PITCH', script);
+                const volume = 1;
+                sprite.setVoiceProp({ speaker, speed, pitch, volume });
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'TTS.set(%1, %2, %3)',
+                        blockType: 'param',
+                        textParams: [
+                            params.getSpeaker(true),
+                            params.getSpeed(true),
+                            params.getPitch(true),
+                        ],
                     },
                 ],
             },
