@@ -1,7 +1,7 @@
 'use strict';
 
 Entry.plrun = {
-    id: 'FF.1',
+    id: '2A.2',
     name: 'plrun',
     url: 'http://robotron.co.kr',
     imageName: 'plrun.png',
