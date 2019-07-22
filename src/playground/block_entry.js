@@ -269,27 +269,32 @@ function getBlocks() {
                 {
                     type: 'Text',
                     text: Lang.Blocks.arduino_noti_text,
-                    color: EntryStatic.colorSet.common.TEXT,
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
             def: {
                 type: 'arduino_noti',
             },
+            class: 'arduino_default_noti',
             isNotFor: ['arduinoDisconnected'],
             events: {},
         },
         arduino_download_connector: {
-            skeleton: 'basic_button',
+            skeleton: 'clickable_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: 3,
+                },
+            },
             isNotFor: ['arduinoDisconnected'],
-            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            class: 'arduino_default',
             params: [
                 {
                     type: 'Text',
-                    text: !Entry.isOffline
-                        ? Lang.Blocks.ARDUINO_download_connector
-                        : Lang.Blocks.ARDUINO_open_connector,
-                    color: EntryStatic.colorSet.common.BUTTON,
+                    text: Lang.Blocks.ARDUINO_download_connector,
+                    color: EntryStatic.colorSet.common.TEXT,
                     align: 'center',
                 },
             ],
@@ -302,14 +307,20 @@ function getBlocks() {
             },
         },
         download_guide: {
-            skeleton: 'basic_button',
+            skeleton: 'clickable_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: 3,
+                },
+            },
             isNotFor: ['arduinoDisconnected'],
-            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            class: 'arduino_default',
             params: [
                 {
                     type: 'Text',
                     text: Lang.Blocks.download_guide,
-                    color: EntryStatic.colorSet.common.BUTTON,
+                    color: EntryStatic.colorSet.common.TEXT,
                     align: 'center',
                 },
             ],
@@ -322,17 +333,23 @@ function getBlocks() {
             },
         },
         arduino_download_source: {
-            skeleton: 'basic_button',
+            skeleton: 'clickable_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: 3,
+                },
+            },
             isNotFor: ['arduinoDisconnected'],
-            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
+            color: EntryStatic.colorSet.common.TRANSPARENT,
             params: [
                 {
                     type: 'Text',
                     text: Lang.Blocks.ARDUINO_download_source,
-                    color: EntryStatic.colorSet.common.BUTTON,
+                    color: EntryStatic.colorSet.common.TEXT,
                     align: 'center',
                 },
             ],
+            class: 'arduino_default',
             events: {
                 mousedown: [
                     function() {
@@ -360,6 +377,7 @@ function getBlocks() {
             color: EntryStatic.colorSet.common.TRANSPARENT,
             template: '%1',
             isNotFor: ['arduinoConnect'],
+            class: 'arduino_default',
             params: [
                 {
                     type: 'Text',
@@ -382,6 +400,7 @@ function getBlocks() {
                     align: 'center',
                 },
             ],
+            class: 'arduino_default',
             events: {
                 mousedown: [
                     function() {
@@ -424,6 +443,7 @@ function getBlocks() {
                     align: 'center',
                 },
             ],
+            class: 'arduino_default',
             events: {
                 mousedown: [
                     function() {
@@ -445,6 +465,7 @@ function getBlocks() {
                     align: 'center',
                 },
             ],
+            class: 'arduino_default',
             events: {
                 mousedown: [
                     function() {
@@ -2221,7 +2242,7 @@ function getBlocks() {
                 const sounds = sprite.parent.sounds;
                 const isExist = Entry.isExist(soundId, 'id', sounds);
                 if (isExist) {
-                    createjs.Sound.play(soundId);
+                    Entry.Utils.playSound(soundId);
                 }
                 return script.callReturn();
             },
@@ -2272,7 +2293,7 @@ function getBlocks() {
                 const sounds = sprite.parent.sounds;
                 const isExist = Entry.isExist(soundId, 'id', sounds);
                 if (isExist) {
-                    const instance = createjs.Sound.play(soundId);
+                    const instance = Entry.Utils.playSound(soundId);
                     Entry.Utils.addSoundInstances(instance);
                     setTimeout(() => {
                         instance.stop();
@@ -2318,7 +2339,7 @@ function getBlocks() {
                     const sounds = sprite.parent.sounds;
                     const isExist = Entry.isExist(soundId, 'id', sounds);
                     if (isExist) {
-                        const instance = createjs.Sound.play(soundId);
+                        const instance = Entry.Utils.playSound(soundId);
                         Entry.Utils.addSoundInstances(instance);
                         setTimeout(() => {
                             script.playState = 0;
@@ -2382,7 +2403,7 @@ function getBlocks() {
                     const sounds = sprite.parent.sounds;
                     const isExist = Entry.isExist(soundId, 'id', sounds);
                     if (isExist) {
-                        const instance = createjs.Sound.play(soundId);
+                        const instance = Entry.Utils.playSound(soundId);
                         const timeValue = script.getNumberValue('SECOND', script);
                         Entry.Utils.addSoundInstances(instance);
                         setTimeout(() => {
@@ -7672,10 +7693,7 @@ function getBlocks() {
     };
 }
 
-setHardwareLanguage();
-assignBlocks();
-
-(function() {
+function inheritBlockSchema() {
     for (const type in Entry.block) {
         const block = Entry.block[type];
         if (!block.isNotFor) {
@@ -7692,11 +7710,11 @@ assignBlocks();
             Entry.block[type] = schema;
         }
     }
-})();
+}
 
 function assignBlocks() {
     Entry.block.converters = getConverters();
-    Entry.block = Object.assign({}, getBlocks(), blocks.getBlocks());
+    Entry.block = Object.assign(Entry.block, getBlocks(), blocks.getBlocks());
     if (EntryStatic.isPracticalCourse) {
         Object.assign(Entry.block, require('../playground/block_entry_mini').practicalCourseBlock);
     }
@@ -7721,7 +7739,9 @@ function setHardwareLanguage() {
 Entry.reloadBlock = function() {
     setHardwareLanguage();
     assignBlocks();
+    inheritBlockSchema();
 };
+Entry.reloadBlock();
 
 if (typeof exports === 'object') {
     exports.block = Entry.block;

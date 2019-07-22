@@ -23,15 +23,18 @@ Entry.EXPANSION_BLOCK.tts = {
         tts.soundQueue = new createjs.LoadQueue();
         tts.soundQueue.installPlugin(createjs.Sound);
         tts.soundQueue.on('complete', ({ currentTarget }) => {
-            const items = currentTarget.getItems().map(item => item.item);
-            tts.loadQueue = tts.loadQueue.filter(id => {
-                const filtered = items.filter(item => item.id === id);
-                if (filtered.length > 0) {
-                    createjs.Sound.play(id);
+            const items = currentTarget.getItems().map(({ item }) => item);
+            tts.loadQueue = tts.loadQueue.filter((id) => {
+                const filtered = items.find((item) => item.id === id);
+                if (filtered) {
+                    const instance = Entry.Utils.playSound(id, filtered.prop);
+                    Entry.Utils.addSoundInstances(instance);
+                    if (filtered.callback) {
+                        setTimeout(filtered.callback, instance.duration);
+                    }
                     return false;
                 }
-                setTimeout(() => Entry.Utils.addSoundInstances(createjs.Sound.play(id)), 1000);
-                return false;
+                return true;
             });
         });
         tts.isInitialized = true;
@@ -130,8 +133,40 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
         return {
             result: true,
             message: _trim(text),
-            code: hashCode(text),
+            hash: hashCode(text),
         };
+    };
+
+    const read = function({ message, hash, prop, callback }) {
+        checkError();
+        const tts = Entry.EXPANSION_BLOCK.tts;
+        const id = `tts-${hash}-${JSON.stringify(prop)}`;
+        const sound = tts.soundQueue.getItem(id);
+        if (sound) {
+            const instance = Entry.Utils.playSound(id, prop);
+            Entry.Utils.addSoundInstances(instance);
+            if (callback) {
+                setTimeout(callback, instance.duration);
+            }
+        } else {
+            const src = `${Entry.EXPANSION_BLOCK.tts.api}.mp3?${toQueryString({ text: encodeURI(message), ...prop })}`;
+            const type = createjs.LoadQueue.SOUND;
+            tts.soundQueue.loadFile({ id, src, type, prop, callback });
+            tts.loadQueue.push(id);
+        }
+        return id;
+    };
+
+    const checkError = function() {
+        const tts = Entry.EXPANSION_BLOCK.tts;
+        if (tts.isInitialized) {
+            const hasError = tts.soundQueue.getItems().find((item) => !item.result);
+            if (hasError) {
+                tts.soundQueue.destroy();
+                tts.isInitialized = false;
+            }
+        }
+        tts.init();
     };
 
     return {
@@ -176,7 +211,7 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
                         type: 'text',
                         params: [Lang.Blocks.entry],
                     },
-                    null
+                    null,
                 ],
                 type: 'read_text',
             },
@@ -190,28 +225,14 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
             class: 'tts',
             isNotFor: ['tts'],
             func(sprite, script) {
-                const tts = Entry.EXPANSION_BLOCK.tts;
-                if(tts.isInitialized) {
-                    const hasError = tts.soundQueue.getItems().find(item => !item.result);
-                    if(hasError) {
-                        tts.soundQueue.destroy();
-                        tts.isInitialized = false;
-                    }
-                }
-                tts.init();
-                const textObj = checkText(script.getStringValue('TEXT', script));
-                if (textObj.result) {
+                const { result, message, hash } = checkText(script.getStringValue('TEXT', script));
+                if (result) {
                     const prop = sprite.getVoiceProp();
-                    const id = `tts-${textObj.code}-${JSON.stringify(prop)}`;
-                    const sound = tts.soundQueue.getItem(id);
-                    if (sound) {
-                        Entry.Utils.addSoundInstances(createjs.Sound.play(id));
-                    } else {
-                        const src = `${Entry.EXPANSION_BLOCK.tts.api}.mp3?${toQueryString({ text: encodeURI(textObj.message), ...prop })}`;
-                        const type = createjs.LoadQueue.SOUND;
-                        tts.soundQueue.loadFile({ id, src, type });
-                        tts.loadQueue.push(id);
-                    }
+                    read({
+                        message,
+                        hash,
+                        prop,
+                    });
                 }
                 return script.callReturn();
             },
@@ -252,7 +273,7 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
                     params.getSpeaker().value,
                     params.getSpeed().value,
                     params.getPitch().value,
-                    null
+                    null,
                 ],
                 type: 'set_tts_property',
             },
@@ -271,7 +292,8 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
                 const speaker = script.getField('SPEAKER', script);
                 const speed = script.getField('SPEED', script);
                 const pitch = script.getField('PITCH', script);
-                sprite.setVoiceProp({ speaker, speed, pitch });
+                const volume = 1;
+                sprite.setVoiceProp({ speaker, speed, pitch, volume });
                 return script.callReturn();
             },
             syntax: {
@@ -285,6 +307,77 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
                             params.getSpeed(true),
                             params.getPitch(true),
                         ],
+                    },
+                ],
+            },
+        },
+        read_text_wait_with_block: {
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/expansion_icon.png',
+                    size: 11,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: [Lang.Blocks.entry],
+                    },
+                    null,
+                ],
+                type: 'read_text_wait_with_block',
+            },
+            pyHelpDef: {
+                params: ['A&value'],
+                type: 'read_text_wait_with_block',
+            },
+            paramsKeyMap: {
+                TEXT: 0,
+            },
+            class: 'tts',
+            isNotFor: ['tts'],
+            func(sprite, script) {
+                const { result, message, hash } = checkText(script.getStringValue('TEXT', script));
+                const prop = sprite.getVoiceProp();
+                if (result) {
+                    if (!script.isPlay) {
+                        script.isPlay = true;
+                        script.playState = 1;
+                        read({
+                            message,
+                            hash,
+                            prop,
+                            callback: () => {
+                                script.playState = 0;
+                            },
+                        });
+                        return script;
+                    } else if (script.playState == 1) {
+                        return script;
+                    } else {
+                        delete script.playState;
+                        delete script.isPlay;
+                        return script.callReturn();
+                    }
+                }
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        passTest: true,
+                        syntax: 'Entry.play_sound_and_wait(%1)',
                     },
                 ],
             },

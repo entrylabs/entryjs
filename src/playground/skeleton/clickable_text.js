@@ -1,4 +1,4 @@
-Entry.skeleton.basic_text = {
+Entry.skeleton.clickable_text = {
     path(blockView) {
         let width = blockView.contentWidth;
         let height = blockView.contentHeight;
@@ -35,5 +35,5 @@ Entry.skeleton.basic_text = {
     movable: false,
     readOnly: true,
     nextShadow: false,
-    classes: ['basicText'],
+    classes: ['clickableText'],
 };

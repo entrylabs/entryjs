@@ -18,8 +18,8 @@ Entry.robotori = {
         AOUT6: 0,
         AOUT9: 0,
         SERVO: 90,
-        rightMotor: 0,
-        leftMotor: 0,
+        RIGHT_MOTOR: 0xFF,  //default stop
+        LEFT_MOTOR: 0xFF,   //default stop
     },
     setZero: function() {
         //Entry.hw.sendQueue.readablePorts = [];
@@ -196,30 +196,38 @@ Entry.robotori.getBlocks = function() {
                 var dev = script.getStringField('DEVICE', script);
                 var value = script.getStringField('VALUE', script);
 
-                if (dev == 'D10' && value == 'ON') {
-                    sq.D10 = 1;
-                } else {
-                    sq.D10 = 0;
+                if(dev == 'D10')
+                {
+                    if(value == 'ON'){
+                        sq.D10 = 1;
+                    } else {
+                        sq.D10 = 0;
+                    }
                 }
-
-                if (dev == 'D11' && value == 'ON') {
-                    sq.D11 = 1;
-                } else {
-                    sq.D11 = 0;
+                else if(dev == 'D11')
+                {
+                    if(value == 'ON'){
+                        sq.D11 = 1;
+                    } else {
+                        sq.D11 = 0;
+                    }
                 }
-
-                if (dev == 'D12' && value == 'ON') {
-                    sq.D12 = 1;
-                } else {
-                    sq.D12 = 0;
+                else if(dev == 'D12') 
+                {
+                    if(value == 'ON'){
+                        sq.D12 = 1;
+                    } else {
+                        sq.D12 = 0;
+                    }
                 }
-
-                if (dev == 'D13' && value == 'ON') {
-                    sq.D13 = 1;
-                } else {
-                    sq.D13 = 0;
+                else if(dev == 'D13') 
+                {
+                    if(value == 'ON'){
+                        sq.D13 = 1;
+                    } else {
+                        sq.D13 = 0;
+                    }
                 }
-                //sq.D13 = 1;
                 return script.callReturn();
             },
         },
