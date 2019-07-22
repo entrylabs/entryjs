@@ -5,7 +5,7 @@
 
 /**
  * Block variable constructor
- * @param {variable model} variable
+ * @param {variable.model} variable
  * @constructor
  */
 Entry.Func = function(func) {
@@ -49,9 +49,15 @@ Entry.Func = function(func) {
 
     Entry.Func.updateMenu();
 };
-
+/**
+ * EmptyFunction
+ */
 Entry.Func.threads = {};
 
+/**
+ * 함수/값 등록
+ * @param {variable.model} Function
+ */
 Entry.Func.registerFunction = function(func) {
     if (!Entry.playground) {
         return;
@@ -73,6 +79,11 @@ Entry.Func.registerFunction = function(func) {
     func.blockMenuBlock = this._targetFuncBlock;
 };
 
+/**
+ * 함수/값 실행
+ * @param {hashValue} threadHash
+ * @return {Boolean} didScriptRan
+ */
 Entry.Func.executeFunction = function(threadHash) {
     let script = this.threads[threadHash];
     script = Entry.Engine.computeThread(script.entity, script);
@@ -85,14 +96,24 @@ Entry.Func.executeFunction = function(threadHash) {
     }
 };
 
+/**
+ * 쓰레드 전체 비우기
+ */
 Entry.Func.clearThreads = function() {
     this.threads = {};
 };
 
+/**
+ * 함수/값 전체 삭제
+ */
 Entry.Func.prototype.destroy = function() {
     this.blockMenuBlock && this.blockMenuBlock.destroy();
 };
 
+/**
+ * 함수/값 수정, 인자로 받은 함수/값 으로 현재 함수/값을 수정
+ * @param {variable.model} Function
+ */
 Entry.Func.edit = function(func) {
     if (!func) {
         return;
@@ -127,6 +148,10 @@ Entry.Func.edit = function(func) {
     );
 };
 
+/**
+ * 인자로 받은 수정 컨텐츠코드에 해당하는 부분 보여주는 뷰를 Init
+ * @param {String.BoardCode} content
+ */
 Entry.Func.initEditView = function(content) {
     if (!this.menuCode) {
         this.setupMenuCode();
@@ -147,6 +172,10 @@ Entry.Func.initEditView = function(content) {
     content.board.alignThreads();
 };
 
+/**
+ * 인자로 받은 message 를 통해 현재 수정 단계를 끝맻음, cancelEdit / save
+ * @param {String} message
+ */
 Entry.Func.endEdit = function(message) {
     this.unbindFuncChangeEvent();
     this.unbindWorkspaceStateChangeEvent();
@@ -176,6 +205,9 @@ Entry.Func.endEdit = function(message) {
     Entry.Func.isEdit = false;
 };
 
+/**
+ * 수정 하던 함수/값 저장합니다.
+ */
 Entry.Func.save = function() {
     this.targetFunc.generateBlock(true);
     Entry.variableContainer.saveFunction(this.targetFunc);
@@ -191,6 +223,9 @@ Entry.Func.save = function() {
     }
 };
 
+/**
+ * 수정 하던 것을 그만둡니다
+ */
 Entry.Func.cancelEdit = function() {
     if (!this.targetFunc) {
         return;
@@ -220,7 +255,11 @@ Entry.Func.cancelEdit = function() {
     }
 };
 
+/**
+ * 메뉴에 들어가야하는 부분에 대한 코드를 다시 생성합니다
+ */
 Entry.Func.setupMenuCode = function() {
+    debugger;
     const workspace = Entry.playground.mainWorkspace;
     if (!workspace) {
         return;
@@ -267,6 +306,9 @@ Entry.Func.setupMenuCode = function() {
     blockMenu.align();
 };
 
+/**
+ * 메뉴에 들어가야하는 부분에 대한 코드를 다시 세팅합니다 문제가 있다면 다시 생성합니다
+ */
 Entry.Func.refreshMenuCode = function() {
     if (!Entry.playground.mainWorkspace) {
         return;
@@ -279,6 +321,11 @@ Entry.Func.refreshMenuCode = function() {
     this._fieldBoolean.params[0].changeType(this.requestParamBlock('boolean'));
 };
 
+/**
+ * 값 블록을 요청합니다. type에 맞는 기본 값 블록을 리턴합니다.
+ * @param {String} type
+ * @return {Entry.block} String/Boolean 블록
+ */
 Entry.Func.requestParamBlock = function(type) {
     let blockPrototype;
     switch (type) {
@@ -297,6 +344,10 @@ Entry.Func.requestParamBlock = function(type) {
     return blockType;
 };
 
+/**
+ * 값 블록을 등록합니다. type에 맞는 타입으로 등록합니다.
+ * @param {String} type
+ */
 Entry.Func.registerParamBlock = function(type) {
     if (!type) {
         return;
@@ -317,6 +368,14 @@ Entry.Func.registerParamBlock = function(type) {
     Entry.Func.createParamBlock(type, blockPrototype, type);
 };
 
+/**
+ * 값 블록을 생성합니다. type에 맞는 타입으로 등록합니다.
+ * originalType 에 맞는 Lang Template 을 가져오며, blockPrototype 을 이용하여 만들어진 블럭을 type 에 맞게 등록하여 리턴합니다.
+ * @param {String} type
+ * @param {String} blockPrototype
+ * @param {String} originalType
+ * @return {Entry.block} blockSchema
+ */
 Entry.Func.createParamBlock = function(type, blockPrototype, originalType) {
     originalType = /string/gi.test(originalType)
         ? 'function_param_string'
@@ -332,6 +391,9 @@ Entry.Func.createParamBlock = function(type, blockPrototype, originalType) {
     return blockSchema;
 };
 
+/**
+ * 메뉴창을 갱신합니다.
+ */
 Entry.Func.updateMenu = function() {
     const workspace = Entry.getMainWS();
     if (!workspace) {
@@ -349,6 +411,9 @@ Entry.Func.updateMenu = function() {
     blockMenu.lastSelector === 'func' && blockMenu.align();
 };
 
+/**
+ * 함수/값 수정에 대한 기본 베이스 함수
+ */
 Entry.Func.prototype.edit = function() {
     if (Entry.Func.isEdit) {
         return;
@@ -361,6 +426,11 @@ Entry.Func.prototype.edit = function() {
     }
 };
 
+/**
+ * 인자로 받은 함수/값을 블록에 넣어서 생성
+ * @param {variable.model} Function
+ * @return {Object} block && description in singleObject
+ */
 Entry.Func.generateBlock = function(func) {
     const blockSchema = Entry.block[`func_${func.id}`];
     const block = {
@@ -396,12 +466,21 @@ Entry.Func.generateBlock = function(func) {
     return { block, description };
 };
 
+/**
+ * 블록 생성에 대한 기본 베이스 함수
+ * @param {UNKNOWN} UNKNOWN
+ */
 Entry.Func.prototype.generateBlock = function(toSave) {
     const generatedInfo = Entry.Func.generateBlock(this);
     this.block = generatedInfo.block;
     this.description = generatedInfo.description;
 };
 
+/**
+ * 워크스페이스 블럭 생성, 사용할 함수/값과, 복원인지 여부를 인자로 받음.
+ * @param {variable.model} targetFunc
+ * @param {Boolean} isRestore
+ */
 Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
     this.unbindFuncChangeEvent();
     targetFunc = targetFunc ? targetFunc : this.targetFunc;
@@ -537,6 +616,10 @@ Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
     this.bindFuncChangeEvent(targetFunc);
 };
 
+/**
+ * 함수/값 변경 이벤트에 대한 이벤트 리스너 함수를 인자로 받아서 부착
+ * @param {variable.model} targetFunc
+ */
 Entry.Func.bindFuncChangeEvent = function(targetFunc) {
     targetFunc = targetFunc ? targetFunc : this.targetFunc;
     if (!this._funcChangeEvent && targetFunc.content.getEventMap('funcDef')[0].view) {
@@ -546,6 +629,9 @@ Entry.Func.bindFuncChangeEvent = function(targetFunc) {
     }
 };
 
+/**
+ * 함수/값 변경에 대한 이벤트를 제거
+ */
 Entry.Func.unbindFuncChangeEvent = function() {
     if (!this._funcChangeEvent) {
         return;
@@ -554,6 +640,9 @@ Entry.Func.unbindFuncChangeEvent = function() {
     delete this._funcChangeEvent;
 };
 
+/**
+ * 워크스페이스 상태 변경에 대한 이벤트를 제거
+ */
 Entry.Func.unbindWorkspaceStateChangeEvent = function() {
     const event = this._workspaceStateEvent;
     if (!event) {

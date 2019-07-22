@@ -4,12 +4,45 @@
 'use strict';
 
 import { GEHelper } from '../graphicEngine/GEHelper';
-
 /**
- * Class for a engine.
- * This have view for control running state.
+ *
+ * 엔진은 Canvas 를 컨트롤하는 클래스이며, 스마트폰의 경우 stageMouseMove/ stageMouseOut 이벤트 리스너가 없음.
+ *
+ * ### Basic Constructor variables
+ *
+ * ### **1. State**
+ *
+ * 정의) Engine의 상태를 나타내는 변수이며, 가능한 타입 :
+ *
+ *      `typeof String, ['stop', 'pause', 'run'];`
+ *
+ *
+ * ### **2. popup**
+ *
+ * 정의) Engine이 사용할 팝업 reference 를 확인할 수 있는 부분입니다.
+ *
+ * `Entry.Popup` 을 값으로 받습니다.
+ *
+ * ** FYI, `toggleFullScreen()` 참조 **
+ *
+ *
+ * ### **3. isUpdating**
+ *
+ * 정의) 현재 Engine 이 업데이트 중인지 아닌지를 확인 하는 flag 성 변수입니다.
+ *
+ *
+ * ### **4. speeds**
+ *
+ * 정의) 엔진의 실행 가능 속도를 정의합니다. Entry.engine 의 실행부 좌상단의 계기판 버튼에 해당하는 변수 리스트 입니다.
+ *
+ *
+ * Class for a engine. This have view for control running state.
+ *
  * @constructor
+ * @return {NULL}
+ *
  */
+
 Entry.Engine = class Engine {
     constructor() {
         this.state = 'stop';
@@ -61,14 +94,20 @@ Entry.Engine = class Engine {
     }
 
     /**
-     * Control bar view generator.
+     * #### Params
+     * |     Name      |        Def        |              Default               |
+     * | :-----------: | :---------------: | :--------------------------------: |
+     * | `controlView` | Entry.controlView |                ---                 |
+     * |   `option`    |        ---        | "workspace" instance of **String** |
+     * |               |                   |                ---                 |
+     *   기본 뷰 initializing 을 담당  Control bar view generator.
      * @param {!Element} controlView controlView from Entry.
      * @param {?string} option for choose type of view.
+     * @return {NULL}
      */
     generateView(controlView, option = 'workspace') {
         this.option = option;
         if (option == 'workspace') {
-            /** @type {!Element} */
             this.view_ = controlView;
             this.view_.addClass('entryEngine_w').addClass('entryEngineWorkspace_w');
 
@@ -318,6 +357,11 @@ Entry.Engine = class Engine {
         }
     }
 
+    /**
+     *
+     * 엔진 속도 패널 on/off , 속도 패널 엘레멘트 관리
+     * @return {NULL}
+     */
     toggleSpeedPanel() {
         if (this.speedPanelOn) {
             this.speedPanelOn = false;
@@ -362,6 +406,13 @@ Entry.Engine = class Engine {
         }
     }
 
+    /**
+     *
+     * 엔진 속도 세팅 (1~60)
+     * @param {number} FPS 1~60의 프레임수를 넣을수 있음
+     * @return {NULL}
+     */
+
     setSpeedMeter(FPS) {
         let level = this.speeds.indexOf(FPS);
         if (level < 0) {
@@ -388,8 +439,11 @@ Entry.Engine = class Engine {
     }
 
     /**
-     * Start engine
-     * @param {number} FPS
+     *
+     * 엔진 렌더 시작
+     * ORIGINAL: Start engine
+     * @param {number} FPS 1~60의 시작 프레임수를 넣을수 있음
+     * @return {NULL}
      */
     start(FPS) {
         /** @type {!number} */
@@ -401,7 +455,10 @@ Entry.Engine = class Engine {
     }
 
     /**
-     * Stop engine
+     *
+     * 엔진 렌더 정지
+     * ORIGINAL: stop engine
+     * @return {NULL}
      */
     stop() {
         GEHelper.Ticker.reset();
@@ -410,7 +467,10 @@ Entry.Engine = class Engine {
     }
 
     /**
-     * Update canvas and object.
+     *
+     * 엔진 object연산 수행으로 업데이트, 하드웨어 연산시작
+     * ORIGINAL: Update canvas and object.
+     * @return {NULL}
      */
     update() {
         if (Entry.engine.isState('run')) {
@@ -420,22 +480,30 @@ Entry.Engine = class Engine {
     }
 
     /**
-     * compute each object with runningScript on entity.
+     *
+     * 현재 Scene에 올라와있는 오브젝트들에 대해서 mapping하는 클래스, 오브젝트의 함수도 매핑함
+     * ORIGINAL: compute each object with runningScript on entity.
+     * @return {NULL}
      */
     computeObjects() {
         Entry.container.mapObjectOnScene(this.computeFunction);
     }
 
     /**
-     * Compute function for map.
+     *
+     * 인자로 받은 script의 이벤트 기동
+     * ORIGINAL: Compute function for map.
      * @param {Entry.EntryObject} object
+     * @return {NULL}
      */
     computeFunction({ script }) {
         script.tick();
     }
 
     /**
-     * Check this state is same with argument
+     *
+     * engine.state === state 를 리턴
+     * ORIGINAL: Check this state is same with argument
      * @param {string} state
      * @return {boolean}
      */
@@ -444,7 +512,10 @@ Entry.Engine = class Engine {
     }
 
     /**
-     * Execute this function when click start button
+     *
+     * Engine 상태 토글 (isState === run ? isState = stop : isState = run)
+     * ORIGINAL: Execute this function when click start button
+     * @return {NULL}
      */
     run() {
         if (this.isState('run')) {
@@ -455,8 +526,13 @@ Entry.Engine = class Engine {
     }
 
     /**
-     * toggle this engine state run
+     *
+     * Engine 기동, achievement 에 대한 인식 변경포함
+     * ORIGINAL: toggle this engine state run
+     * @param {Boolean} disableAchieve
+     * @return {NULL}
      */
+
     toggleRun(disableAchieve) {
         const variableContainer = Entry.variableContainer;
         const container = Entry.container;
@@ -535,7 +611,10 @@ Entry.Engine = class Engine {
     }
 
     /**
-     * toggle this engine state stop
+     *
+     * Engine 정지
+     * ORIGINAL: toggle this engine state stop
+     * @return {NULL}
      */
     toggleStop() {
         const container = Entry.container;
@@ -613,7 +692,12 @@ Entry.Engine = class Engine {
         Entry.dispatchEvent('dispatchEventDidToggleStop');
         Entry.stage.selectObject(this.selectedObject);
     }
-
+    /**
+     *
+     * Engine의 입력 Element 보이기
+     * @param {Boolean} on inputField enabler
+     * @return {NULL}
+     */
     setEnableInputField(on) {
         const inputField = Entry.stage.inputField;
         if (inputField) {
@@ -625,7 +709,10 @@ Entry.Engine = class Engine {
     }
 
     /**
-     * toggle this engine state pause
+     *
+     * Engine 일시정지
+     * ORIGINAL:toggle this engine state pause
+     * @return {NULL}
      */
     togglePause() {
         const timer = Entry.engine.projectTimer;
@@ -681,7 +768,12 @@ Entry.Engine = class Engine {
         }
         Entry.dispatchEvent('dispatchEventDidTogglePause');
     }
-
+    /**
+     *
+     * 일시정지 버튼 변경, 옵션은 minimize 이거나 아니거나, 버튼에 대한 옵션이 변경됨
+     * @param {String} option
+     * @return {NULL}
+     */
     setPauseButton(option) {
         if (this.state == 'pause') {
             if (this.pauseButton) {
@@ -717,7 +809,10 @@ Entry.Engine = class Engine {
     }
 
     /**
+     *
+     * 엔진이 기동중이면 모든 오브젝트에 eventName인 이벤트를 전달
      * @param {string} eventName
+     * @return {NULL}
      */
     fireEvent(eventName) {
         if (this.state !== 'run') {
@@ -727,17 +822,23 @@ Entry.Engine = class Engine {
     }
 
     /**
-     * this is callback function for map.
+     *
+     * entity의 parent에 이벤트 전달
+     * ORIGINAL: this is callback function for map.
      * @param {Entry.EntryObject} object
      * @param {string} eventName
+     * @return {NULL}
      */
     raiseEvent(entity, eventName) {
         entity.parent.script.raiseEvent(eventName, entity);
     }
 
     /**
+     *
+     *  entity 에 eventName인 이벤트를 전달
      * @param {string} eventName
      * @param {Entry.EntityObject} entity
+     * @return {NULL}
      */
     fireEventOnEntity(eventName, entity) {
         if (this.state == 'run') {
@@ -749,9 +850,12 @@ Entry.Engine = class Engine {
     }
 
     /**
-     * this is callback function for map.
+     *
+     * 만약 param의 첫번째 인자가 entity라면, 해당 entity의 부모에 이벤트를 전달한다
+     * ORIGINAL: this is callback function for map.
      * @param {Entry.EntryObject} object
      * @param {Array} param
+     * @return {NULL}
      */
     raiseEventOnEntity(entity, param) {
         if (entity !== param[0]) {
@@ -762,8 +866,11 @@ Entry.Engine = class Engine {
     }
 
     /**
-     * capture keyboard press input
-     * @param {keyboard event} e
+     *
+     * 만약 isForce가 아니면 작동하지 않는 keyCapture, 엔진 정지상태일때 방향키는 sprite 이동 event로 인식
+     * ORIGINAL: capture keyboard press input
+     * @param {keyboardEvent} e
+     * @return {NULL}
      */
     captureKeyEvent(e, isForce) {
         const keyCode = e.keyCode;
@@ -801,16 +908,22 @@ Entry.Engine = class Engine {
     }
 
     /**
-     * this is callback function for map.
+     *
+     * entity에 keyEvent 전달
+     * ORIGINAL: this is callback function for map.
      * @param {Entry.EntryObject} object
      * @param {Array} param
+     * @return {NULL}
      */
     raiseKeyEvent(entity, [eventName, keyCode]) {
         return entity.parent.script.raiseEvent(eventName, entity, String(keyCode));
     }
 
     /**
-     * Update mouse coordinate
+     *
+     * 마우스 좌표값 업데이트
+     * ORIGINAL: Update mouse coordinate
+     * @return {NULL}
      */
     updateMouseView() {
         const { x, y } = Entry.stage.mouseCoordinate;
@@ -819,14 +932,20 @@ Entry.Engine = class Engine {
     }
 
     /**
-     * hide mouse coordinate
+     *
+     * 마우스 좌표값 숨기기
+     * ORIGINAL: hide mouse coordinate
+     * @return {NULL}
      */
     hideMouseView() {
         this.mouseView.addClass('entryHide');
     }
 
     /**
-     * Toggle full screen of canvas
+     *
+     * 팝업 전체화면 켜기
+     * ORIGINAL: Toggle full screen of canvas
+     * @return {NULL}
      */
     toggleFullScreen(popupClassName) {
         if (!this.popup) {
@@ -853,7 +972,11 @@ Entry.Engine = class Engine {
         }
         Entry.windowResized.notify();
     }
-
+    /**
+     *
+     *  팝업 전체화면 끄기
+     * @return {NULL}
+     */
     closeFullScreen() {
         if (this.popup) {
             this.popup.remove();
@@ -862,7 +985,11 @@ Entry.Engine = class Engine {
 
         Entry.windowResized.notify();
     }
-
+    /**
+     *
+     * 전체화면 exit
+     * @return {NULL}
+     */
     exitFullScreen() {
         if (document.webkitIsFullScreen || document.mozIsFullScreen || document.isFullScreen) {
         } else {
@@ -872,7 +999,12 @@ Entry.Engine = class Engine {
         Entry.windowResized.notify();
     }
 
-    //projectTimer to show
+    /**
+     *
+     * 엔트리 엔진에 있는 프로젝트 타이머 켜기
+     * ORIGINAL: projectTimer to show
+     * @return {NULL}
+     */
     showProjectTimer() {
         const timer = Entry.engine.projectTimer;
         if (!timer) {
@@ -881,7 +1013,14 @@ Entry.Engine = class Engine {
         this.projectTimer.setVisible(true);
     }
 
-    //decide Entry.engine.projectTimer to show
+    /**
+     *
+     * 엔트리 엔진에 있는 프로젝트 타이머 끄기
+     * ORIGINAL: decide Entry.engine.projectTimer to show
+     * @param {Entry.Block} removeBlock
+     * @param {Boolean} notIncludeSelf
+     * @return {NULL}
+     */
     hideProjectTimer(removeBlock, notIncludeSelf) {
         const timer = this.projectTimer;
         if (!timer || !timer.isVisible() || this.isState('run')) {
@@ -913,12 +1052,21 @@ Entry.Engine = class Engine {
         }
         timer.setVisible(false);
     }
-
+    /**
+     *
+     * 엔트리 엔진에 있는 프로젝트 타이머 관련 interval clear, tick.stop()
+     * @return {NULL}
+     */
     clearTimer() {
         clearInterval(this.ticker);
         clearInterval(this.projectTimer.tick);
     }
 
+    /**
+     *
+     * 엔트리 엔진에 있는 프로젝트 타이머 시작
+     * @return {NULL}
+     */
     startProjectTimer() {
         const timer = this.projectTimer;
 
@@ -935,6 +1083,11 @@ Entry.Engine = class Engine {
         }, 1000 / 60);
     }
 
+    /**
+     *
+     * 엔트리 엔진에 있는 프로젝트 타이머 정지
+     * @return {NULL}
+     */
     stopProjectTimer() {
         const timer = this.projectTimer;
         if (!timer) {
@@ -947,6 +1100,11 @@ Entry.Engine = class Engine {
         clearInterval(timer.tick);
     }
 
+    /**
+     *
+     * 엔트리 엔진에 있는 프로젝트 타이머 리셋
+     * @return {NULL}
+     */
     resetTimer() {
         const timer = this.projectTimer;
         if (!timer.isInit) {
@@ -970,6 +1128,12 @@ Entry.Engine = class Engine {
         delete timer.start;
     }
 
+    /**
+     *
+     * 엔트리 엔진에 있는 프로젝트 타이머 갱신(value값은 지정 가능, default empty)
+     * @param {*} value
+     * @return {NULL}
+     */
     updateProjectTimer(value) {
         const engine = Entry.engine;
         const timer = engine.projectTimer;
@@ -990,6 +1154,11 @@ Entry.Engine = class Engine {
         }
     }
 
+    /**
+     *
+     * 엔트리에 신호(value) 전송
+     * @return {NULL}
+     */
     raiseMessage(value) {
         Entry.message.notify(Entry.variableContainer.getMessage(value));
         return Entry.container.mapEntityIncludeCloneOnScene(this.raiseKeyEvent, [
@@ -998,6 +1167,12 @@ Entry.Engine = class Engine {
         ]);
     }
 
+    /**
+     *
+     * querySelector Equivalent, 버튼을 가져오는 클래스(run/stop/objectAdd)
+     * @param {Query[]} query
+     * @return {NULL}
+     */
     getDom(query) {
         if (query.length >= 1) {
             switch (query.shift()) {
@@ -1012,6 +1187,11 @@ Entry.Engine = class Engine {
         }
     }
 
+    /**
+     *
+     * 키보드 입력 eventListener 추가
+     * @return {NULL}
+     */
     attachKeyboardCapture() {
         if (Entry.keyPressed) {
             this._keyboardEvent && this.detachKeyboardCapture();
@@ -1019,6 +1199,11 @@ Entry.Engine = class Engine {
         }
     }
 
+    /**
+     *
+     * 키보드 입력 eventListener 제거
+     * @return {NULL}
+     */
     detachKeyboardCapture() {
         if (Entry.keyPressed && this._keyboardEvent) {
             this._keyboardEvent.destroy();
@@ -1026,6 +1211,11 @@ Entry.Engine = class Engine {
         }
     }
 
+    /**
+     *
+     *  엔진 옵션 적용 Entry.objectAddable 인지에 따라 **버튼**에 옵션 부여
+     * @return {NULL}
+     */
     applyOption() {
         const SMALL = 'small';
 
@@ -1040,11 +1230,23 @@ Entry.Engine = class Engine {
         }
     }
 
+    /**
+     *
+     * destroy interface definition
+     * @return {NULL}
+     */
     destroy() {
         // 우선 interface 만 정의함.
     }
 };
 
+/**
+ *
+ * 엔진이 돌아가는동안 각 쓰레드별로 script 계산하여 리턴
+ * @param {Entry.EntityObject} entity
+ * @param {Script} object
+ * @return {NULL}
+ */
 Entry.Engine.computeThread = function(entity, script) {
     Entry.engine.isContinue = true;
     let isSame = false;

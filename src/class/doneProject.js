@@ -2,6 +2,10 @@
 
 require("../util/static")
 
+/**
+ * 현재 사용하지 않는 클래스로 보임
+ * @param {*} id 
+ */
 Entry.DoneProject = function(id) {
 	this.generateView(id);
 };

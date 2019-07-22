@@ -1,8 +1,16 @@
+/**
+ * Class for a ExpansionBlock.
+ * This defines base structure for Expansion blocks.
+ * 현재 `**playground**` 객체를 받아들이는 생성자
+ * @constructor
+ */
 export default class Expansion {
     constructor(playground) {
         this.playground = playground;
     }
-
+    /**
+     * 확장블럭 전체 제거
+     */
     banAllExpansionBlock() {
         const { mainWorkspace } = this.playground;
         if (!mainWorkspace) {
@@ -19,15 +27,23 @@ export default class Expansion {
             blockMenu.banClass(`${block.name}_legacy`, true);
         });
     }
-
+    /**
+     * 확장블럭 제거
+     */
     banExpansionBlock(blockName) {
         Entry.do('objectRemoveExpansionBlock', blockName);
     }
-
+    /**
+     * 확장블럭 추가
+     */
     addExpansionBlock(blockName) {
         Entry.do('objectAddExpansionBlock', blockName);
     }
-
+    /**
+     * 확장블럭만 리턴하는 필터
+     * @param {Entry.Block[]} getBlockList
+     * @return {Entry.Block[]} expansionList
+     */
     getExpansions(blockList) {
         let expansionList = [];
         const expansionBlockList = Object.keys(Entry.EXPANSION_BLOCK_LIST);
@@ -41,7 +57,9 @@ export default class Expansion {
         });
         return expansionList;
     }
-
+    /**
+     * destroy Interface
+     */
     destroy() {
         // 우선 interface 만 정의함.
     }
