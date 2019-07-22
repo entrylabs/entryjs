@@ -442,6 +442,13 @@ Entry.Davinci.getBlocks = function() {
             class: 'DavinciDirect',
             isNotFor: ['davinci'],
             def: {
+                params: [
+                    null,
+                    {
+                        type: 'number',
+                        params: [0],
+                    },
+                ],
                 type: 'davinci_set_analog',
             },
             paramsKeyMap: {
@@ -449,8 +456,11 @@ Entry.Davinci.getBlocks = function() {
                 VALUE: 1,
             },
             func: function(_sprite, script) {
-                const value = script.getField('VALUE');
                 let pin = script.getField('PIN');
+                let value = script.getNumberValue('VALUE', script);
+
+                value = Math.min(value, 255);
+                value = Math.max(value, 0);
 
                 const data = {
                     type: 'SET_ANALOG',
