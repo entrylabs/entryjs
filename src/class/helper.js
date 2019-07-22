@@ -25,12 +25,15 @@ p.generateView = function(parentView, option) {
     this.parentView_ = parentView;
     var helper = this;
     helper.blockHelpData = EntryStatic.blockInfo;
+    var blockHelperWrapper = Entry.createElement('div',
+        'entryBlockHelperWorkspaceWrapper');
     var blockHelperView = Entry.createElement('div',
                             'entryBlockHelperWorkspace');
-    this.view = blockHelperView;
+    blockHelperWrapper.appendChild(blockHelperView);
+    this.view = blockHelperWrapper;
     if (Entry.isForLecture)
         blockHelperView.addClass('lecture');
-    helper.parentView_.appendChild(blockHelperView);
+    helper.parentView_.appendChild(blockHelperWrapper);
 
     var blockHelperContent =
         Entry.createElement('div', 'entryBlockHelperContentWorkspace');
