@@ -59,15 +59,15 @@
 |              computeObjects()               |            현재 Scene에 올라와있는 오브젝트들에 대해서 mapping하는 클래스, 오브젝트의 함수도 매핑함            |
 |           computeFunction(script)           |                                        인자로 받은 script의 이벤트 기동                                        |
 |        computeThread(entity, script)        | script가 있다면 engine이 가동중인지 확인, 만약 가동중이며, 현재 진행중인 스크립트와 같지 않다면 스크립트를 run |
-|               isState(state)                |                                         return engine.state === state                                          |
-|                    run()                    |                                           Engine 상태 토글 (isState)                                           |
-|                 toggleRun()                 |                                                  Engine 기동                                                   |
+|               isState(state)                |                                         engine.state === state 를 리턴                                         |
+|                    run()                    |                      Engine 상태 토글 (isState === run ? isState = stop : isState = run)                       |
+|          toggleRun(disableAchieve)          |                                 Engine 기동, achievement 에 대한 인식 변경포함                                 |
 |                toggleStop()                 |                                                  Engine 정지                                                   |
 |            setEnableInputField()            |                                          Engine의 입력 Element 보이기                                          |
 |                togglePause()                |                                                Engine 일시정지                                                 |
-|           setPauseButton(option)            |                              일시정지 버튼 변경, 옵션은 minimize 이거나 아니거나                               |
-|            fireEvent(eventName)             |                    엔진이 기동중이면 모든 entity의 부모entity 에 eventName인 이벤트를 전달                     |
-|        raiseEvent(entity, eventName)        |                                        entity의 parent에 에 이벤트 전달                                        |
+|           setPauseButton(option)            |                 일시정지 버튼 변경, 옵션은 minimize 이거나 아니거나, 버튼에 대한 옵션이 변경됨                 |
+|            fireEvent(eventName)             |                          엔진이 기동중이면 모든 오브젝트에 eventName인 이벤트를 전달                           |
+|        raiseEvent(entity, eventName)        |                                         entity의 parent에 이벤트 전달                                          |
 |    fireEventOnEntity(eventName, entity)     |                                      entity 에 eventName인 이벤트를 전달                                       |
 |      raiseEventOnEntity(entity, param)      |                 만약 param의 첫번째 인자가 entity라면, 해당 entity의 부모에 이벤트를 전달한다                  |
 |         captureKeyEvent(e, isForce)         |      만약 isForce가 아니면 작동하지 않는 keyCapture, 엔진 정지상태일때 방향키는 sprite 이동 event로 인식       |
@@ -77,19 +77,19 @@
 |             toggleFullScreen()              |                                               팝업 전체화면 켜기                                               |
 |              closeFullScreen()              |                                               팝업 전체화면 끄기                                               |
 |              exitFullScreen()               |                                                 전체화면 exit                                                  |
-|             showProjectTimer()              |                                                                                                                |
-|             hideProjectTimer()              |                                                                                                                |
-|                clearTimer()                 |                                                                                                                |
-|             startProjectTimer()             |                                                                                                                |
-|             stopProjectTimer()              |                                                                                                                |
-|                resetTimer()                 |                                                                                                                |
-|            updateProjectTimer()             |                                                                                                                |
-|               raiseMessage()                |                                                                                                                |
-|                  getDom()                   |                                                                                                                |
-|           attachKeyboardCapture()           |                                                                                                                |
-|           detachKeyboardCapture()           |                                                                                                                |
-|                applyOption()                |                                                                                                                |
-|                  destroy()                  |                                                                                                                |
+|             showProjectTimer()              |                                    엔트리 엔진에 있는 프로젝트 타이머 켜기                                     |
+|             hideProjectTimer()              |                                    엔트리 엔진에 있는 프로젝트 타이머 끄기                                     |
+|                clearTimer()                 |                          엔트리 엔진에 있는 프로젝트 타이머 인터벌 clear, tick.stop()                          |
+|             startProjectTimer()             |                                    엔트리 엔진에 있는 프로젝트 타이머 시작                                     |
+|             stopProjectTimer()              |                                    엔트리 엔진에 있는 프로젝트 타이머 정지                                     |
+|                resetTimer()                 |                                    엔트리 엔진에 있는 프로젝트 타이머 리셋                                     |
+|          updateProjectTimer(value)          |                  엔트리 엔진에 있는 프로젝트 타이머 갱신(value값은 지정 가능, default empty)                   |
+|             raiseMessage(value)             |                                           엔트리에 신호(value) 전송                                            |
+|                getDom(query)                |                      querySelector Equivalent, 버튼을 가져오는 클래스(run/stop/objectAdd)                      |
+|           attachKeyboardCapture()           |                                         키보드 입력 eventListener 추가                                         |
+|           detachKeyboardCapture()           |                                         키보드 입력 eventListener 제거                                         |
+|                applyOption()                |                         엔진 옵션 적용 objectAddable 인지에 따라 **버튼**에 옵션 부여                          |
+|                  destroy()                  |                                                    destroy                                                     |
 
 ---
 
@@ -132,156 +132,234 @@
 
 ### **`toggleSpeedPanel()`**
 
+**N/A**
+
 ---
 
 ### **`setSpeedMeter()`**
+
+**N/A**
 
 ---
 
 ### **`start()`**
 
+**N/A**
+
 ---
 
 ### **`stop()`**
+
+**N/A**
 
 ---
 
 ### **`update()`**
 
+**N/A**
+
 ---
 
 ### **`computeObjects()`**
+
+**N/A**
 
 ---
 
 ### **`computeFunction()`**
 
+**N/A**
+
 ---
 
 ### **`computeThread()`**
+
+**N/A**
 
 ---
 
 ### **`isState()`**
 
+**N/A**
+
 ---
 
 ### **`run()`**
+
+**N/A**
 
 ---
 
 ### **`toggleRun()`**
 
+**N/A**
+
 ---
 
 ### **`toggleStop()`**
+
+**N/A**
 
 ---
 
 ### **`setEnableInputField()`**
 
+**N/A**
+
 ---
 
 ### **`togglePause()`**
+
+**N/A**
 
 ---
 
 ### **`setPauseButton()`**
 
+**N/A**
+
 ---
 
 ### **`fireEvent()`**
+
+**N/A**
 
 ---
 
 ### **`raiseEvent()`**
 
+**N/A**
+
 ---
 
 ### **`fireEventOnEntity()`**
+
+**N/A**
 
 ---
 
 ### **`raiseEventOnEntity()`**
 
+**N/A**
+
 ---
 
 ### **`captureKeyEvent()`**
+
+**N/A**
 
 ---
 
 ### **`raiseKeyEvent()`**
 
+**N/A**
+
 ---
 
 ### **`updateMouseView()`**
+
+**N/A**
 
 ---
 
 ### **`hideMouseView()`**
 
+**N/A**
+
 ---
 
 ### **`toggleFullScreen()`**
+
+**N/A**
 
 ---
 
 ### **`closeFullScreen()`**
 
+**N/A**
+
 ---
 
 ### **`exitFullScreen()`**
+
+**N/A**
 
 ---
 
 ### **`showProjectTimer()`**
 
+**N/A**
+
 ---
 
 ### **`hideProjectTimer()`**
+
+**N/A**
 
 ---
 
 ### **`clearTimer()`**
 
+**N/A**
+
 ---
 
 ### **`startProjectTimer()`**
+
+**N/A**
 
 ---
 
 ### **`stopProjectTimer()`**
 
+**N/A**
+
 ---
 
 ### **`resetTimer()`**
+
+**N/A**
 
 ---
 
 ### **`updateProjectTimer()`**
 
+**N/A**
+
 ---
 
 ### **`raiseMessage()`**
+
+**N/A**
 
 ---
 
 ### **`getDom()`**
 
+**N/A**
+
 ---
 
 ### **`attachKeyboardCapture()`**
+
+**N/A**
 
 ---
 
 ### **`detachKeyboardCapture()`**
 
+**N/A**
+
 ---
 
 ### **`applyOption()`**
 
+**N/A**
+
 ---
 
 ### **`destroy()`**
+
+**N/A**
 
 ---
