@@ -27,13 +27,10 @@ Entry.ThinkBoard =
             var keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach(function(key) 
             {             
-                if(Entry.hw.sendQueue.SET[key].type === '4')
+                if(Entry.hw.sendQueue.SET[key].type === 4)
                 {             
-                    Entry.hw.sendQueue['SET'][Entry.ThinkBoard.sensorTypes.SERVO] = 
-                    {
-                        port: [0, 0],
-                        time: new Date().getTime(),
-                    };                      
+                    Entry.hw.sendQueue.SET[key].data[0] = 0;          
+                    Entry.hw.sendQueue.SET[key].data[1] = 0;                                          
                 }
                 else Entry.hw.sendQueue.SET[key].data = 0;                                                                  
                 Entry.hw.sendQueue.SET[key].time = new Date().getTime();
@@ -41,21 +38,6 @@ Entry.ThinkBoard =
         } 
         Entry.hw.update();    
     },
-
-
-    /*
-    Static: {
-        THINKBOARD_BLOCK_COLOR: '#00979D', // gray(#848484)
-        THINKBOARD_ARROW_COLOR_HW: '#00979D',
-        THINKBOARD_FONT_COLOR: '#000f0f', // cyan(#000f0f), lightgray(#000113), reddish-brown(#982600)
-        THINKBOARD_LED_ON: 255,
-        BUTTON_PRESS_VALUE: 0, // 버튼 눌림 값
-        THINKBOARD_MATRIX_STRING_MAX: 5, //문자열 입력 허용 최대 문자수//실제 적용갯수는 (이 값 - 1)
-        DELAY_SECOND: 0.1, //0.3//0.2
-        ANALOG_STATE_PERCENT: 0.5, //30%(306.9) , 50%(511.5)
-        MATRIX_REGISTED_SYMBOL_TOTAL: 10, //펌웨어에 등록되어 있는 symbol 갯수
-    },
-    */
 	
     sensorTypes: {
         ALIVE: 0,
@@ -160,8 +142,8 @@ Entry.ThinkBoard.setLanguage = function() {
                 "thinkboard_digital_set_servo_angle": "포트 %1 의 180 서보모터의 각도를 %2 으로 정하기 %3",
                 "thinkboard_digital_set_servo_direction": "포트 %1 의 180 서보모터를 %2 방향으로 1도 바꾸기 %3",
                 "thinkboard_digital_set_servo_stop": "포트 %1 의 180 서보모터 정지하기 %2",                
-                "thinkboard_get_digital_servo_360_value": "포트 %1 360 서보모터 속도 값",
-                "thinkboard_digital_set_servo_360_angle": "포트 %1 의 360 서보모터를 속도 %2 만큼 회전하기 %3",
+                "thinkboard_get_digital_servo_360_value": "포트 %1 360 서보모터 각도 값",
+                "thinkboard_digital_set_servo_360_angle": "포트 %1 의 360 서보모터의 각도를 %2 으로 정하기 %3",
                 "thinkboard_digital_set_servo_360_stop": "포트 %1 의 360 서보모터 정지하기 %2",                
 				"thinkboard_digital_set_motor_direction": "포트 %1 의 DC모터 방향을 %2 방향으로 정하기 %3",
 				"thinkboard_digital_set_motor_speed": "포트 %1 의 DC모터의 속도를 %2 %로 정하기 %3", 
@@ -192,7 +174,7 @@ Entry.ThinkBoard.setLanguage = function() {
                 "thinkboard_digital_set_servo_direction": "Set Port %1 180 Servor Motor Direction 1 Angle to %2 %3",
                 "thinkboard_digital_set_servo_stop": "Stop Port %1 180 Servo Motor %2",
                 "thinkboard_get_digital_servo_360_value": "Port %1 360 Servo Motor Angle Value",
-                "thinkboard_digital_set_servo_360_angle": "Set Port %1 360 Servor Motor Speed Value to %2 %3",  
+                "thinkboard_digital_set_servo_360_angle": "Set Port %1 360 Servor Motor Angle Value to %2 %3",  
                 "thinkboard_digital_set_servo_360_stop": "Stop Port %1 360 Servo Motor %2",          
 				"thinkboard_digital_set_motor_direction": "Set Port %1 DC Motor Direction to %2 %3",		
 				"thinkboard_digital_set_motor_speed": "Set Port %1 의 DC Motor Speed to %2 % %3", 	
@@ -534,7 +516,7 @@ Entry.ThinkBoard.getBlocks = function() {
             },
         },
 
-        thinkboard_digital_servo_list: {
+        thinkboard_digital_2_port_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
 			fontColor: '#fff',			
@@ -545,10 +527,10 @@ Entry.ThinkBoard.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['180', '0'],
-                        ['360', '1'],			
+                        ['IN/OUT2', '1'],
+                        ['IN/OUT4', '3'],						
                     ],
-                    value: '0',
+                    value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -560,10 +542,10 @@ Entry.ThinkBoard.getBlocks = function() {
                 params: [null],
             },
             paramsKeyMap: {
-                TYPE: 0,
+                PORT: 0,
             },
             func: function(sprite, script) {
-                return script.getStringField('TYPE');
+                return script.getStringField('PORT');
             },
         },
 
@@ -1521,17 +1503,7 @@ Entry.ThinkBoard.getBlocks = function() {
 			fontColor: '#fff',			
             skeleton: 'basic',
             statements: [],
-            params: [
-/*[4/19]                
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },           
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },				
-*/                
+            params: [    
                 {
                     type: 'Indicator',
                     img: 'block_icon/hardware_led.png',
@@ -1540,55 +1512,20 @@ Entry.ThinkBoard.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-/*[4/19]                    
-                    {
-                        type: 'thinkboard_analog_rgb_color_list',
-                    },                  
-                    {
-                        type: 'thinkboard_digital_port_onoff_list',
-                    },	
-*/                    				
+                params: [ 				
                     null,
                 ],
                 type: 'thinkboard_digital_rgbled_off',
             },
             paramsKeyMap: {
-//[4/19]   COLOR: 0,
-//				ONOFF: 1,
             },
             class: 'ThinkBoard_RGB',
             isNotFor: ['ThinkBoard'],
             func: function(sprite, script) 
 			{	
 				var port = 11;
-//[4/19]  var color = script.getNumberValue('COLOR', script);
-//[4/19]  var onoff = script.getNumberValue('ONOFF', script);
-
 				var rLED = 0, gLED = 0, bLED = 0;
-
-//[4/19]  if(onoff === 0) color = 0;
-/*[4/19]
-				switch(color)
-				{
-					case 0:	rLED = gLED = bLED = 0;			            // Black
-								break;
-					case 1:	rLED = gLED = bLED = 255;		         // white
-								break;					
-					case 2:	rLED = 255; gLED = bLED = 0;	        // Red
-								break;				
-					case 3:	rLED = bLED = 0; gLED = 255;	        // Lime
-								break;					
-					case 4:	rLED = gLED = 0; bLED = 255;	        // Blue
-								break;					
-					case 5:	rLED = gLED = 255; bLED = 0;            // Yellow
-								break;					
-					case 6:	rLED = 0; gLED = bLED = 255;            // Cyan
-								break;					
-					case 7:	rLED = bLED = 255; gLED = 0;		   // Magenta
-								break;
-				}
-*/									
+							
                 if (!Entry.hw.sendQueue['SET']) 
 				{
                     Entry.hw.sendQueue['SET'] = {};
@@ -1775,7 +1712,7 @@ Entry.ThinkBoard.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'thinkboard_digital_port_list',
+                        type: 'thinkboard_digital_2_port_list',
                     },            
                 ],
                 type: 'thinkboard_get_digital_servo_value',
@@ -1790,6 +1727,11 @@ Entry.ThinkBoard.getBlocks = function() {
                 var port = script.getNumberValue('PORT');	
                 var mode = 0;       
                 
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                    }
+                    delete Entry.hw.sendQueue['SET'][port];
+
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
@@ -1830,7 +1772,7 @@ Entry.ThinkBoard.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'thinkboard_digital_port_list',
+                        type: 'thinkboard_digital_2_port_list',
                     },	
                     {
                         type: 'number',
@@ -1897,7 +1839,7 @@ Entry.ThinkBoard.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'thinkboard_digital_port_list',
+                        type: 'thinkboard_digital_2_port_list',
                     },			                       
                     {
                         type: 'thinkboard_motor_direction_list',
@@ -1955,7 +1897,7 @@ Entry.ThinkBoard.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'thinkboard_digital_port_list',
+                        type: 'thinkboard_digital_2_port_list',
                     },	                	
                     null,
                 ],
@@ -2001,7 +1943,7 @@ Entry.ThinkBoard.getBlocks = function() {
             events: {},
             def: {
                 params: [{
-                    type: 'thinkboard_digital_port_list',
+                    type: 'thinkboard_digital_2_port_list',
                 }, ],
                 type: 'thinkboard_get_digital_servo_360_value',
             },
@@ -2057,7 +1999,7 @@ Entry.ThinkBoard.getBlocks = function() {
             events: {},
             def: {
                 params: [{
-                        type: 'thinkboard_digital_port_list',
+                        type: 'thinkboard_digital_2_port_list',
                     },                    
                     {
                         type: 'number',
@@ -2114,7 +2056,7 @@ Entry.ThinkBoard.getBlocks = function() {
             events: {},
             def: {
                 params: [{
-                        type: 'thinkboard_digital_port_list',
+                        type: 'thinkboard_digital_2_port_list',
                     },
                     null,
                 ],
@@ -2171,7 +2113,7 @@ Entry.ThinkBoard.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'thinkboard_digital_port_list',
+                        type: 'thinkboard_digital_2_port_list',
                     },			
                     {
                         type: 'thinkboard_motor_direction_list',
@@ -2233,7 +2175,7 @@ Entry.ThinkBoard.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'thinkboard_digital_port_list',
+                        type: 'thinkboard_digital_2_port_list',
                     },
                     {
                         type: 'number',
@@ -2295,7 +2237,7 @@ Entry.ThinkBoard.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'thinkboard_digital_port_list',
+                        type: 'thinkboard_digital_2_port_list',
                     },		
                     null,
                 ],
