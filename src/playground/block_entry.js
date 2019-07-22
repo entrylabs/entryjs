@@ -276,7 +276,7 @@ function getBlocks() {
             def: {
                 type: 'arduino_noti',
             },
-            class: 'arduino_second',
+            class: 'arduino_default_noti',
             isNotFor: ['arduinoDisconnected'],
             events: {},
         },
@@ -289,6 +289,7 @@ function getBlocks() {
             },
             isNotFor: ['arduinoDisconnected'],
             color: EntryStatic.colorSet.common.TRANSPARENT,
+            class: 'arduino_default',
             params: [
                 {
                     type: 'Text',
@@ -314,6 +315,7 @@ function getBlocks() {
             },
             isNotFor: ['arduinoDisconnected'],
             color: EntryStatic.colorSet.common.TRANSPARENT,
+            class: 'arduino_default',
             params: [
                 {
                     type: 'Text',
@@ -347,7 +349,7 @@ function getBlocks() {
                     align: 'center',
                 },
             ],
-            class: 'arduino_first',
+            class: 'arduino_default',
             events: {
                 mousedown: [
                     function() {
@@ -375,6 +377,7 @@ function getBlocks() {
             color: EntryStatic.colorSet.common.TRANSPARENT,
             template: '%1',
             isNotFor: ['arduinoConnect'],
+            class: 'arduino_default',
             params: [
                 {
                     type: 'Text',
@@ -397,6 +400,7 @@ function getBlocks() {
                     align: 'center',
                 },
             ],
+            class: 'arduino_default',
             events: {
                 mousedown: [
                     function() {
@@ -439,6 +443,7 @@ function getBlocks() {
                     align: 'center',
                 },
             ],
+            class: 'arduino_default',
             events: {
                 mousedown: [
                     function() {
@@ -460,6 +465,7 @@ function getBlocks() {
                     align: 'center',
                 },
             ],
+            class: 'arduino_default',
             events: {
                 mousedown: [
                     function() {
