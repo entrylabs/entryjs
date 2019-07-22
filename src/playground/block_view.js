@@ -1401,7 +1401,7 @@ Entry.BlockView = class BlockView {
         this.getDataUrl().then((data) => {
             const download = document.createElement('a');
             download.href = data.src;
-            let name = '엔트리 블록';
+            let name = Lang.Workspace.download_image_name;
             if (i) {
                 name += i;
             }
