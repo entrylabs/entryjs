@@ -38,5 +38,6 @@ extern/closure-library
 .vscode/*
 dist
 dist/entry.js
-documentation/*
+documentation/bootstrap/*
+documentation/markdown/*
 .idea/
