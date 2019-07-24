@@ -1,7 +1,7 @@
 import EntryPaint from 'entry-paint';
 import axios from 'axios';
 
-const GrapicMode = {
+const GraphicMode = {
     BITMAP: 'BITMAP',
     VECTOR: 'VECTOR',
 };
@@ -161,10 +161,15 @@ Entry.Painter = class Painter {
 
         switch (imageType) {
             case 'png':
-                this.entryPaint.addBitmap(imageSrc, { isChangedLayer: this.isImport });
+                this.entryPaint.addBitmap(imageSrc, {
+                    isChangedLayer: this.isImport,
+                    graphicsMode: this.isImport ? GraphicMode.BITMAP : '',
+                });
                 break;
             case 'svg':
-                this.entryPaint.addSVG(imageSrc);
+                this.entryPaint.addSVG(imageSrc, {
+                    graphicsMode: this.isImport ? GraphicMode.VECTOR : '',
+                });
                 break;
             case 'json':
                 axios.get(imageSrc).then(({ data }) => {
