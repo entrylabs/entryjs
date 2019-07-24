@@ -229,10 +229,11 @@ Entry.EntryObject = class {
                     2
                 )}/${fileName.substring(2, 4)}/thumb/${fileName}.png`;
             }
+            thumb.style.backgroundImage = `url(${encodeURI(this.thumbUrl)})`;
         } else if (objectType === 'textBox') {
-            this.thumbUrl = `${Entry.mediaFilePath}text_icon.png`;
+            this.thumbUrl = `${Entry.mediaFilePath}text_icon.svg`;
+            $(thumb).addClass('entryObjectTextBox');
         }
-        thumb.style.backgroundImage = `url(${encodeURI(this.thumbUrl)})`;
     }
 
     /**
