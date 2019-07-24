@@ -121,8 +121,8 @@ Entry.AsomeBot.setLanguage = function() {
                 internet_connect: '인터넷 연결하기 %1 %2 %3',
                 internet_open_ap: '공유기 모드로 변경하기 %1 %2',
                 internet_open_udp: '%1번 포트로 UDP 소켓 열기 %2',
-                internet_udp_msg: 'UDP 수신값',                
-                internet_send_msg: '%1코드로 %2메시지를 전송하기 %3',                
+                internet_udp_msg: 'UDP 수신값',
+                internet_send_msg: '%1코드로 %2메시지를 전송하기 %3',
             },
         },
         en: {
