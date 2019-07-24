@@ -5,6 +5,7 @@
 
 import { GEHelper } from '../graphicEngine/GEHelper';
 /**
+ * doxdox 'src/class/engine.js' --layout markdown --output documentation/src/class/engine.md
  *
  * 엔진은 Canvas 를 컨트롤하는 클래스이며, 스마트폰의 경우 stageMouseMove/ stageMouseOut 이벤트 리스너가 없음.
  *
@@ -970,6 +971,7 @@ Entry.Engine = class Engine {
             this.popup.remove();
             this.popup = null;
         }
+
         Entry.windowResized.notify();
     }
     /**

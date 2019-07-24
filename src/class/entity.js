@@ -8,6 +8,8 @@ import { GEHelper } from '../graphicEngine/GEHelper';
 import { GEDragHelper } from '../graphicEngine/GEDragHelper';
 
 /**
+ * doxdox 'src/class/entity.js' --layout markdown --output documentation/src/class/entity.md
+ *
  * Construct entity class
  * @param {!Entry.EntryObject} object
  * @constructor

@@ -8,6 +8,8 @@
 
 #### Entry.Dialog(entity, message, mode) 
 
+Dialog 클래스는 말하기블럭에 대한 클래스입니다.
+
 Construct dialog
 
 

@@ -5,8 +5,10 @@
  */
 
 import { GEHelper } from '../graphicEngine/GEHelper';
-
+//doxdox 'src/class/dialog.js' --layout markdown --output documentation/src/class/dialog.md
 /**
+ * Dialog 클래스는 말하기블럭에 대한 클래스입니다.
+ *
  * Construct dialog
  * @param {!Entry.EntityObject} entity parent entity
  * @param {!string} message to show on canvas

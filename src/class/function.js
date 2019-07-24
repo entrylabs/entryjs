@@ -4,6 +4,8 @@
 'use strict';
 
 /**
+ * doxdox 'src/class/function.js' --layout markdown --output documentation/src/class/function.md
+ *
  * Block variable constructor
  * @param {variable.model} variable
  * @constructor

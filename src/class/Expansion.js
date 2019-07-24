@@ -1,4 +1,6 @@
 /**
+ * doxdox 'src/class/Expansion.js' --layout markdown --output documentation/src/class/Expansion.md
+ *
  * Class for a ExpansionBlock.
  * This defines base structure for Expansion blocks.
  * 현재 `**playground**` 객체를 받아들이는 생성자

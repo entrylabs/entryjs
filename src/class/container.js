@@ -8,6 +8,10 @@ import { Draggable } from '@entrylabs/tool';
 import { GEHelper } from '../graphicEngine/GEHelper';
 
 /**
+ * doxdox 'src/class/container.js' --layout markdown --output documentation/src/class/container.md
+ *
+ * 엔트리의 컨테이너 클래스 입니다.
+ *
  * Class for a container.
  * This have view for objects.
  * @constructor
@@ -16,13 +20,13 @@ Entry.Container = class Container {
     constructor() {
         /**
          * Array for entry objects
-         * @type {Array.<Entry.EntryObject>}
+         * @type {Entry.EntryObject[]} {Array.<Entry.EntryObject>}
          */
         this.objects_ = [];
 
         /**
          * Dictionary for caching images
-         * @type {Dictionary.<createjs.Image}
+         * @type {createJS.Image} {Dictionary.<createjs.Image}
          */
         this.cachedPicture = {};
 
@@ -36,14 +40,14 @@ Entry.Container = class Container {
 
         /**
          * object model store copied object by context menu
-         * @type {object model}
+         * @type {Object.Model} {object model}
          */
         this.copiedObject = null;
 
         this.isObjectDragging = false;
         /**
          * Array for storing current scene objects
-         * @type {Array.<object model>}
+         * @type {Object.Model} {Array.<object model>}
          */
         this.currentObjects_ = null;
         this._extensionObjects = [];
@@ -171,6 +175,9 @@ Entry.Container = class Container {
         this.enableSort();
     }
 
+    /**
+     *
+     */
     enableSort() {
         if (this.sortableListViewWidget) {
             this.sortableListViewWidget.setData({
