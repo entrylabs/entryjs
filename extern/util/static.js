@@ -400,7 +400,6 @@ EntryStatic.getAllBlocks = function() {
                 'get_lifeSafety_behavior',
                 'tts_title',
                 'read_text',
-                'read_text_wait_with_block',
                 'set_tts_property',
                 'read_text_wait_with_block',
             ],
