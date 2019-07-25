@@ -125,6 +125,7 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
         this.colorPicker.data = {
             activeSpoid: true,
         };
+        Entry.stage.dropper.show();
         Entry.stage.colorSpoid.run().once('selectColor', (color) => {
             const data = { activeSpoid: false };
             if (color) {

@@ -7,6 +7,7 @@
 import { Destroyer } from './destroyer/Destroyer';
 import { GEHelper } from '../graphicEngine/GEHelper';
 import Expansion from '../class/Expansion';
+import Extension from '../extensions/extension';
 require('./utils');
 
 /**
@@ -350,6 +351,8 @@ Entry.createDom = function(container, option) {
 
         this.propertyPanel.select('object');
         this.helper.bindWorkspace(this.playground.mainWorkspace);
+
+        this.extension = new Extension();
     } else if (option === 'minimize') {
         const canvas = Entry.createElement('canvas');
         canvas.className = 'entryCanvasWorkspace minimize';
