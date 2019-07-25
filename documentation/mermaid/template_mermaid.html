@@ -5,25 +5,135 @@
         <link rel="stylesheet" href="mermaid.min.css" />
     </head>
     <body>
+        <p>
+            <h1> mermaid 표기 룰 </h1>
+            <h2>순서는 다음과 같습니다.</h2>
+            <hr/>
+            <p>
+                <h3>1. Entry 와의 상관관계를 작성,</h3>
+                
+                표기법 <br/>
+                Entry01 <--> TestClass01
+            </p>
+            <hr/>
+            <p>
+                <h3>2. import를 명시</h3>
+                표기법 <br/>
+                Entry02 <|-- Class02 : import
+            </p>
+            <hr/>
+            
+            <p>
+                <h3>3. 클래스 내의 관계도 명시</h3>
+                
+                표기법<br/>
+                Class03 --> VARIABLES
+            </p>
+            <hr/>
+            
+            <p>
+                <h3>4-1 생성자의 인자를 명시</h3>
+                표기법 <br/>               
+                VARIABLES : exampleVARIABLE<br/>
+                
+
+                <h4>4-2 변수 명시</h4>
+                VARIABLES : exampleVarFromConstructor = constructor.parameter<br/>
+                ## 만약 생성자와의 연관성이 있을 경우 위와같이 명시<br/>
+                <br/>
+                일반적인경우에는
+                <br/>
+                VARIABLES : exampleVARIABLE<br/>
+                위와같은 생성자 인자 명시와 같은방식으로<br/>
+                <br/>
+
+                <h4>4-3 함수 명시</h4>
+                FUNCTIONS : test()<br/>
+                localFUNCTIONS : _testlocal()<br/>
+
+                ## 만약 parameter나 포함되는 함수등 에 대해 그룹이 생성이 가능하며, 충분히 크다면 분리하여 다음과 같이 표기
+                <br/>
+                <textarea disabled style="width: 100%;height:150px;resize: none;">
+                    FUNCTIONS --* SyncModelParameter
+                    FUNCTIONS : syncModel_(SyncModelParameter)
+                    SyncModelParameter : x
+                    SyncModelParameter : y
+                    SyncModelParameter : regX
+                    SyncModelParameter : regY
+                    SyncModelParameter : scaleX
+                    SyncModelParameter : scaleY
+                </textarea>
+
+                
+                
+            </p>
+            <hr/>
+            
+            <hr/>
+            
+        </p>
+        <h2>
+            예제
+        </h2>
+        <textarea disabled style="width: 100%;height:150px;resize: none;">
+            classDiagram
+                Entry --> Entry01
+                Entry --> Entry02
+                Entry --> Entry03
+                Entry --> Entry04
+                Entry --> Entry05
+    
+                Entry01 <--> TestClass01
+                Entry02 <|-- import3 : import
+                Entry03 --> Class03
+                Entry04 : data04
+                Entry05 : function04
+                Entry05 --> localFunctions
+                Entry05 --> VARIABLES
+                Entry05 --> FUNCTIONS
+                CONSTRUCTOR --> VARIABLES
+                FUNCTIONS : test()
+                localFunctions : _testlocal()
+                VARIABLES: RANDOMDATA01
+                FUNCTIONS --* GETTERSandSETTERS
+                FUNCTIONS --* SyncModelParameter
+                FUNCTIONS : syncModel_(SyncModelParameter)
+                SyncModelParameter : x
+                SyncModelParameter : y
+                SyncModelParameter : regX
+                SyncModelParameter : regY
+                SyncModelParameter : scaleX
+                SyncModelParameter : scaleY
+        </textarea>
         <div class="mermaid">
             classDiagram
-                Class01 <|-- AveryLongClass : Cool
-                Class01 : size()
-                Class01 : int chimp
-                Class01 : int gorilla
+            Entry --> Entry01
+            Entry --> Entry02
+            Entry --> Entry03
+            Entry --> Entry04
+            Entry --> Entry05
 
-                Class03 *-- Class04
-                Class05 o-- Class06
-
-                Class07 .. Class08
-                Class07 : equals()
-                Class07 : Object[] elementData
-
-                Class08 <--> C2: Cool label
-
-                Class09 --> Class2 : Where am i?
-                Class09 --* Class3
-                Class09 --|> Class07
+            Entry01 <--> TestClass01
+            Entry02 <|-- import3 : import
+            Entry03 --> Class03
+            Entry04 : data04
+            Entry05 : function04
+            Entry05 --> localFunctions
+            Entry05 --> VARIABLES
+            Entry05 --> FUNCTIONS
+            CONSTRUCTOR --> VARIABLES
+            FUNCTIONS : test()
+            localFunctions : _testlocal()
+            VARIABLES: RANDOMDATA01
+            FUNCTIONS --* GETTERSandSETTERS
+            FUNCTIONS --* SyncModelParameter
+            FUNCTIONS : syncModel_(SyncModelParameter)
+            SyncModelParameter : x
+            SyncModelParameter : y
+            SyncModelParameter : regX
+            SyncModelParameter : regY
+            SyncModelParameter : scaleX
+            SyncModelParameter : scaleY
         </div>
         <script src="./mermaid@8.2.3/dist/mermaid.min.js"></script>
         <script>

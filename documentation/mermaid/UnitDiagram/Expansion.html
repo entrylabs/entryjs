@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="mermaid.min.css" />
+    </head>
+    <body>
+        <section>
+            <h1>
+                Expansion
+            </h1>
+            <div class="mermaid" id="Expansion">
+                classDiagram
+                    Entry <-->Expansion
+
+                    Expansion --> FUNCTIONS
+                    Expansion --> localFUNCTIONS
+                    Expansion --> CONSTRUCTOR
+                    Expansion --> VARIABLES
+                    CONSTRUCTOR --> VARIABLES
+                    
+                    CONSTRUCTOR : playground
+
+                    VARIABLES : playground = constructor.playground
+                   
+                    FUNCTIONS: banAllExpansionBlock()
+                    FUNCTIONS: banExpansionBlock()
+                    FUNCTIONS: addExpansionBlock()
+                    FUNCTIONS: getExpansions()
+                    FUNCTIONS: destroy()
+            </div>    
+        </section>
+        <script src="./../mermaid@8.2.3/dist/mermaid.min.js"></script>
+        <script>
+            mermaid.initialize({ startOnLoad: true });
+        </script>
+    </body>
+</html>

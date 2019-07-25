@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="mermaid.min.css" />
+    </head>
+    <body>
+        <section>
+            <h1>
+                DoneProject
+            </h1>
+            <div class="mermaid" id="DoneProject">
+                classDiagram
+                    Entry <-->DoneProject
+                    DoneProject <|-- GE :import
+                    
+                    DoneProject --> FUNCTIONS
+                    DoneProject --> localFUNCTIONS
+                    DoneProject --> VARIABLES
+                    CONSTRUCTOR --> VARIABLES
+                    DoneProject --> CONSTRUCTOR
+                    
+                    CONSTRUCTOR : projectId
+
+                    VARIABLES : projectId
+
+                    FUNCTIONS: generateView()
+                    FUNCTIONS: getView()
+                    FUNCTIONS: resize()
+            </div>    
+        </section>
+        <script src="./../mermaid@8.2.3/dist/mermaid.min.js"></script>
+        <script>
+            mermaid.initialize({ startOnLoad: true });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="mermaid.min.css" />
+    </head>
+    <body>
+        <section>
+            <h1>
+                Engine
+            </h1>
+            <div class="mermaid" id="Engine">
+                classDiagram
+                    Entry <-->Engine
+                    Entity <|-- GEHelper : import
+
+                    Engine --> FUNCTIONS
+                    Engine --> localFUNCTIONS
+                    Engine --> CONSTRUCTOR
+                    Engine --> VARIABLES
+                    CONSTRUCTOR --> VARIABLES
+                    CONSTRUCTOR --* EVENTLISTENERS
+                    
+                    CONSTRUCTOR : arrowHandler(evt)
+
+                    VARIABLES : state
+                    VARIABLES : popup
+                    VARIABLES : isUpdating
+                    VARIABLES : speeds : Array [1, 15, 30, 45, 60]
+                    VARIABLES : message_ : processedInput
+
+                    EVENTLISTENERS : run
+                    EVENTLISTENERS : stop
+                    EVENTLISTENERS : canvasClick
+                    EVENTLISTENERS : canvasClickCanceled
+                    EVENTLISTENERS : entityClick
+                    EVENTLISTENERS : entityClickCanceled
+                    EVENTLISTENERS : if(Entry.type!=phone){ stageMouseMove }
+                    EVENTLISTENERS : if(Entry.type!=phone){ stageMouseOut } 
+
+                    FUNCTIONS: generateView(controlView, option = 'workspace')
+                    FUNCTIONS: toggleSpeedPanel()
+                    FUNCTIONS: setSpeedMeter(FPS)
+                    FUNCTIONS: start(FPS)
+                    FUNCTIONS: stop()
+                    FUNCTIONS: update()
+                    FUNCTIONS: computeObjects()
+                    FUNCTIONS: computeFunction({ script })
+                    FUNCTIONS: isState(state)
+                    FUNCTIONS: run()
+                    FUNCTIONS: toggleRun(disableAchieve)
+                    FUNCTIONS: toggleStop()
+                    FUNCTIONS: setEnableInputField(on)
+                    FUNCTIONS: togglePause()
+                    FUNCTIONS: setPauseButton(option)
+                    FUNCTIONS: fireEvent(eventName)
+                    FUNCTIONS: raiseEvent(entity, eventName)
+                    FUNCTIONS: fireEventOnEntity(eventName, entity)
+                    FUNCTIONS: raiseEventOnEntity(entity, param)
+                    FUNCTIONS: captureKeyEvent(evt, isForce)
+                    FUNCTIONS: raiseKeyEvent(entity, [eventName, keyCode])
+                    FUNCTIONS: updateMouseView()
+                    FUNCTIONS: hideMouseView()
+                    FUNCTIONS: toggleFullScreen(popupClassName)
+                    FUNCTIONS: closeFullScreen()
+                    FUNCTIONS: exitFullScreen()
+                    FUNCTIONS: showProjectTimer()
+                    FUNCTIONS: hideProjectTimer(removeBlock, notIncludeSelf)
+                    FUNCTIONS: clearTimer()
+                    FUNCTIONS: startProjectTimer()
+                    FUNCTIONS: stopProjectTimer()
+                    FUNCTIONS: resetTimer()
+                    FUNCTIONS: updateProjectTimer(value)
+                    FUNCTIONS: raiseMessage(value)
+                    FUNCTIONS: getDom(query)
+                    FUNCTIONS: attachKeyboardCapture()
+                    FUNCTIONS: detachKeyboardCapture()
+                    FUNCTIONS: applyOption() 
+                    FUNCTIONS: destroy()
+
+            </div>    
+        </section>
+        <script src="./../mermaid@8.2.3/dist/mermaid.min.js"></script>
+        <script>
+            mermaid.initialize({ startOnLoad: true });
+        </script>
+    </body>
+</html>

@@ -910,7 +910,7 @@ Entry.Engine = class Engine {
 
     /**
      *
-     * entity에 keyEvent 전달
+     * entity의 Parent에 keyEvent 전달
      * ORIGINAL: this is callback function for map.
      * @param {Entry.EntryObject} object
      * @param {Array} param

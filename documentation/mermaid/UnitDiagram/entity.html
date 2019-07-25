@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="mermaid.min.css" />
+    </head>
+    <body>
+        <section>
+            <h1>
+                Entity (Entity Object)
+            </h1>
+            <div class="mermaid" id="Entity">
+                classDiagram
+                    Entry <-->Entity
+                    Entity <|-- GEHelper : import
+                    Entity <|-- GEDragHelper : import
+
+                    Entity --> CONSTRUCTOR
+                    Entity --> FUNCTIONS
+                    Entity --> VARIABLES
+                    CONSTRUCTOR --> VARIABLES
+                    VARIABLES --* VOICE
+                    FUNCTIONS --* SyncModelParameter
+                    Entity --> localFUNCTIONS
+                    FUNCTIONS --* GETTERSandSETTERS
+
+                    CONSTRUCTOR : object
+
+                    VARIABLES : parent = constructor.object
+                    VARIABLES : type  = constructor.object.type
+                    VARIABLES : flip
+                    VARIABLES : collision
+                    VARIABLES : id = generateHash
+                    VARIABLES : removed
+                    VARIABLES : stamps
+                    VARIABLES : shapes
+                    VARIABLES : _rndPosX
+                    VARIABLES : _rndPosY
+                    VARIABLES : voice
+
+                    VOICE : speed: 0
+                    VOICE : pitch: 0
+                    VOICE : speaker: 'kyuri'
+                    VOICE : volume: 1
+
+                    FUNCTIONS : injectModel(pictureModel, entityModel)
+                    FUNCTIONS : syncModel_(SyncModelParameter)
+                    FUNCTIONS : initCommand()
+                    FUNCTIONS : checkCommand()
+                    FUNCTIONS : setModel(entityModel)
+                    FUNCTIONS : GETTERS and SETTERS
+
+                    FUNCTIONS : applyFilter(isForce, forceEffects)
+                    FUNCTIONS : resetFilter()
+                    FUNCTIONS : updateDialog()
+                    FUNCTIONS : takeSnapshot()
+                    FUNCTIONS : loadSnapshot()
+                    FUNCTIONS : removeClone(isLast)
+                    FUNCTIONS : clearExecutor()
+                    FUNCTIONS : toJSON()
+                    FUNCTIONS : removeBrush()
+                    FUNCTIONS : eraseBrush()
+                    FUNCTIONS : updateBG()
+                    FUNCTIONS : alignTextBox()
+                    FUNCTIONS : syncDialogVisible()
+                    FUNCTIONS : addStamp()
+                    FUNCTIONS : removeStamps()
+                    FUNCTIONS : destroy(isClone)
+                    FUNCTIONS : cache()
+                    FUNCTIONS : reset()
+                    FUNCTIONS : _syncFontStyle()
+                    FUNCTIONS : syncFont()
+                    FUNCTIONS : toggleFontBold()
+                    FUNCTIONS : toggleFontItalic()
+
+                    localFUNCTIONS : _removeShapes()
+
+                    GETTERSandSETTERS : getVoiceProp()
+                    GETTERSandSETTERS : setVoiceProp(prop)
+                    GETTERSandSETTERS : setInitialEffectValue()
+                    GETTERSandSETTERS : getInitialEffectValue()
+                    GETTERSandSETTERS : setX(x)
+                    GETTERSandSETTERS : setY(y)
+                    GETTERSandSETTERS : getY(toFixedValue)
+                    GETTERSandSETTERS : getDirection(toFixedValue)
+                    GETTERSandSETTERS : setDirection(direction = 0, flippable)
+                    GETTERSandSETTERS : setRotation(rotation)
+                    GETTERSandSETTERS : getRotation(toFixedValue)
+                    GETTERSandSETTERS : setRegX(regX)
+                    GETTERSandSETTERS : getRegX()
+                    GETTERSandSETTERS : setRegY(regY)
+                    GETTERSandSETTERS : getRegY()
+                    GETTERSandSETTERS : setScaleX(scaleX)
+                    GETTERSandSETTERS : getScaleX()
+                    GETTERSandSETTERS : setScaleY(scaleY)
+                    GETTERSandSETTERS : getScaleY()
+                    GETTERSandSETTERS : setSize(size)
+                    GETTERSandSETTERS : getSize(toFixedValue)
+                    GETTERSandSETTERS : setWidth(width)
+                    GETTERSandSETTERS : getWidth()
+                    GETTERSandSETTERS : setHeight(height)
+                    GETTERSandSETTERS : getHeight()
+                    GETTERSandSETTERS : setColour(colour = rgb(0,0,0))
+                    GETTERSandSETTERS : getColour()
+                    GETTERSandSETTERS : setBGColour(colour = 'transparent')
+                    GETTERSandSETTERS : getBGColour()
+                    GETTERSandSETTERS : setUnderLine(underLine = false)
+                    GETTERSandSETTERS : getUnderLine()
+                    GETTERSandSETTERS : setStrike(strike = false)
+                    GETTERSandSETTERS : getStrike()
+                    GETTERSandSETTERS : getFont()
+                    GETTERSandSETTERS : setFont(font = '20px Nanum Gothic')
+                    GETTERSandSETTERS : setLineHeight()
+                    GETTERSandSETTERS : getFontType()
+                    GETTERSandSETTERS : setFontType(fontType = 'Nanum Gothic')
+                    GETTERSandSETTERS : getFontSize()
+                    GETTERSandSETTERS : setFontSize(fontSize = 20)
+                    GETTERSandSETTERS : setFontBold(isFontBold)
+                    GETTERSandSETTERS : setFontItalic(isFontItalic)
+                    GETTERSandSETTERS : getFontName()
+                    GETTERSandSETTERS : setText(text = '')
+                    GETTERSandSETTERS : getText()
+                    GETTERSandSETTERS : setTextAlign(textAlign = Entry.TEXT_ALIGN_CENTER)
+                    GETTERSandSETTERS : getTextAlign()
+                    GETTERSandSETTERS : setLineBreak(lineBreak = false)
+                    GETTERSandSETTERS : getLineBreak()
+                    GETTERSandSETTERS : setVisible(visible = true)
+                    GETTERSandSETTERS : getVisible()
+                    GETTERSandSETTERS : setImage(pictureModel)
+
+                    SyncModelParameter : x
+                    SyncModelParameter : y
+                    SyncModelParameter : regX
+                    SyncModelParameter : regY
+                    SyncModelParameter : scaleX
+                    SyncModelParameter : scaleY
+                    SyncModelParameter : rotation
+                    SyncModelParameter : direction
+                    SyncModelParameter : lineBreak
+                    SyncModelParameter : width
+                    SyncModelParameter : height
+                    SyncModelParameter : text
+                    SyncModelParameter : textAlign
+                    SyncModelParameter : fontSize
+                    SyncModelParameter : visible
+
+
+            </div>
+        </section>
+        <script src="./../mermaid@8.2.3/dist/mermaid.min.js"></script>
+        <script>
+            mermaid.initialize({ startOnLoad: true });
+        </script>
+    </body>
+</html>

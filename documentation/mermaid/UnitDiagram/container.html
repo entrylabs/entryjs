@@ -4,90 +4,103 @@
         <meta charset="utf-8" />
         <link rel="stylesheet" href="mermaid.min.css" />
     </head>
-    <body style="display: flex">
+    <body>
         <section>
             <h1>
                 Container
             </h1>
-            <div class="mermaid" id="container">
+            <div class="mermaid" id="Container">
                 classDiagram
-                    Container --> GE
-                    Container --> EntryTool
-    
-                    Container : EntryObject[] objects_
-                    Container : JSON cachedPicture
-                    Container : EntryObject SelectedObject
-                    Container : String inputValue
-                    Container : ObjectModel copiedObject
-                    Container : Boolean isObjectDragging
-                    Container : Boolean isObjectDragging
-                    Container : ObjectModel[] currentObjects_
-                    Container : ObjectModel[] _extensionObjects
-                    Container : _view
-    
-                    Container : generateView(containerView)
-                    Container : enableSort()
-                    Container : updateSortableObjectList(objects)
-                    Container : _getSortableObjectList(objects)
-                    Container : disableSort()
-                    Container : updateListView()
-                    Container : setObjects(objectModels)
-                    Container : getPictureElement(pictureId, objectId)
-                    Container : setPicture(picture)
-                    Container : selectPicture(pictureId, objectId)
-                    Container : addObject(objectModel, ...rest)
-                    Container : addObjectFunc(objectModel, index, isNotRender)
-                    Container : renderObject(object)
-                    Container : addExtension(obj)
-                    Container : removeExtension(obj)
-                    Container : addCloneObject(object, scene, isNotRender)
-                    Container : removeObject(id, isPass)
-                    Container : selectObject(objectId, changeScene)
-                    Container : getAllObjects()
-                    Container : getObject(objectId)
-                    Container : getEntity(objectId)
-                    Container : getVariable(variableId)
-                    Container : moveElement(end, start)
-                    Container : getDropdownList(menuName)
-                    Container : clearRunningState()
-                    Container : clearRunningStateOnScene()
-                    Container : mapObject(mapFunction, param)
-                    Container : mapObjectOnScene(mapFunction, param)
-                    Container : mapEntity(mapFunction, param)
-                    Container : mapEntityOnScene(mapFunction, param)
-                    Container : mapEntityIncludeClone(mapFunction, param)
-                    Container : mapEntityIncludeCloneOnScene(mapFunction, param)
-                    Container : getCachedPicture(pictureId)
-                    Container : cachePicture(pictureId, image)
-                    Container : unCachePictures(entity, pictures, isClone)
-                    Container : toJSON()
-                    Container : takeSequenceSnapshot()
-                    Container : loadSequenceSnapshot() 
-                    Container : getInputValue() 
-                    Container : setInputValue(inputValue)
-                    Container : resetSceneDuringRun()
-                    Container : setCopiedObject(object)
-                    Container : updateObjectsOrder()
-                    Container : getSceneObjects(scene)
-                    Container : setCurrentObjects()
-                    Container : getCurrentObjects()
-                    Container : getProjectWithJSON(project)
-                    Container : blurAllInputs()
-                    Container : showProjectAnswer()
-                    Container : hideProjectAnswer(removeBlock, notIncludeSelf)
-                    Container : getView()
-                    Container : resize()
-                    Container :  _rightClick(event)
-                    Container : removeFuncBlocks(functionType)
-                    Container : clear() 
-                    Container : selectNeighborObject(option)
-                    Container : getObjectIndex(objectId)
-                    Container : getDom(query)
-                    Container : isSceneObjectsExist()
-                    Container : adjustClonedValues(oldIds, newIds)
-                    Container : getBlockList()
-                    Container : scrollToObject(ObjectId)
-                    Container : destroy()
+                    Entry <-->Container
+
+                    Container <|-- GE : import
+                    Container <|-- EntryTool : import
+
+                    Container --> CONSTRUCTOR
+                    Container --> VARIABLES
+                    Container --> FUNCTIONS
+                    Container --> localFUNCTIONS
+                    CONSTRUCTOR --> VARIABLES
+                    CONSTRUCTOR --* EVENTLISTENERS
+
+                    EVENTLISTENERS : workspaceChangeMode
+                    EVENTLISTENERS : run
+                    EVENTLISTENERS : stop
+
+                    VARIABLES : EntryObject[] objects_
+                    VARIABLES : JSON cachedPicture
+                    VARIABLES : EntryObject SelectedObject
+                    VARIABLES : String inputValue
+                    VARIABLES : ObjectModel copiedObject
+                    VARIABLES : Boolean isObjectDragging
+                    VARIABLES : Boolean isObjectDragging
+                    VARIABLES : ObjectModel[] currentObjects_
+                    VARIABLES : ObjectModel[] _extensionObjects
+                    VARIABLES : _view
+                    FUNCTIONS : generateView(containerView)
+                    FUNCTIONS : enableSort()
+                    FUNCTIONS : updateSortableObjectList(objects)
+                    FUNCTIONS : disableSort()
+                    FUNCTIONS : updateListView()
+                    FUNCTIONS : setObjects(objectModels)
+                    FUNCTIONS : getPictureElement(pictureId, objectId)
+                    FUNCTIONS : setPicture(picture)
+                    FUNCTIONS : selectPicture(pictureId, objectId)
+                    FUNCTIONS : addObject(objectModel, ...rest)
+                    FUNCTIONS : addObjectFunc(objectModel, index, isNotRender)
+                    FUNCTIONS : renderObject(object)
+                    FUNCTIONS : addExtension(obj)
+                    FUNCTIONS : removeExtension(obj)
+                    FUNCTIONS : addCloneObject(object, scene, isNotRender)
+                    FUNCTIONS : removeObject(id, isPass)
+                    FUNCTIONS : selectObject(objectId, changeScene)
+                    FUNCTIONS : getAllObjects()
+                    FUNCTIONS : getObject(objectId)
+                    FUNCTIONS : getEntity(objectId)
+                    FUNCTIONS : getVariable(variableId)
+                    FUNCTIONS : moveElement(end, start)
+                    FUNCTIONS : getDropdownList(menuName)
+                    FUNCTIONS : clearRunningState()
+                    FUNCTIONS : clearRunningStateOnScene()
+                    FUNCTIONS : mapObject(mapFunction, param)
+                    FUNCTIONS : mapObjectOnScene(mapFunction, param)
+                    FUNCTIONS : mapEntity(mapFunction, param)
+                    FUNCTIONS : mapEntityOnScene(mapFunction, param)
+                    FUNCTIONS : mapEntityIncludeClone(mapFunction, param)
+                    FUNCTIONS : mapEntityIncludeCloneOnScene(mapFunction, param)
+                    FUNCTIONS : getCachedPicture(pictureId)
+                    FUNCTIONS : cachePicture(pictureId, image)
+                    FUNCTIONS : unCachePictures(entity, pictures, isClone)
+                    FUNCTIONS : toJSON()
+                    FUNCTIONS : takeSequenceSnapshot()
+                    FUNCTIONS : loadSequenceSnapshot() 
+                    FUNCTIONS : getInputValue() 
+                    FUNCTIONS : setInputValue(inputValue)
+                    FUNCTIONS : resetSceneDuringRun()
+                    FUNCTIONS : setCopiedObject(object)
+                    FUNCTIONS : updateObjectsOrder()
+                    FUNCTIONS : getSceneObjects(scene)
+                    FUNCTIONS : setCurrentObjects()
+                    FUNCTIONS : getCurrentObjects()
+                    FUNCTIONS : getProjectWithJSON(project)
+                    FUNCTIONS : blurAllInputs()
+                    FUNCTIONS : showProjectAnswer()
+                    FUNCTIONS : hideProjectAnswer(removeBlock, notIncludeSelf)
+                    FUNCTIONS : getView()
+                    FUNCTIONS : resize()
+                    FUNCTIONS : removeFuncBlocks(functionType)
+                    FUNCTIONS : clear() 
+                    FUNCTIONS : selectNeighborObject(option)
+                    FUNCTIONS : getObjectIndex(objectId)
+                    FUNCTIONS : getDom(query)
+                    FUNCTIONS : isSceneObjectsExist()
+                    FUNCTIONS : adjustClonedValues(oldIds, newIds)
+                    FUNCTIONS : getBlockList()
+                    FUNCTIONS : scrollToObject(ObjectId)
+                    FUNCTIONS : destroy()
+
+                    localFUNCTIONS : _getSortableObjectList(objects)
+                    localFUNCTIONS :  _rightClick(event)
                 </div>
         </section>
         <script src="./../mermaid@8.2.3/dist/mermaid.min.js"></script>
