@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="mermaid.min.css" />
+    </head>
+    <body style="display: flex">
+        <section>
+            <h1>
+                Container
+            </h1>
+            <div class="mermaid" id="container">
+                classDiagram
+                    Container --> GE
+                    Container --> EntryTool
+    
+                    Container : EntryObject[] objects_
+                    Container : JSON cachedPicture
+                    Container : EntryObject SelectedObject
+                    Container : String inputValue
+                    Container : ObjectModel copiedObject
+                    Container : Boolean isObjectDragging
+                    Container : Boolean isObjectDragging
+                    Container : ObjectModel[] currentObjects_
+                    Container : ObjectModel[] _extensionObjects
+                    Container : _view
+    
+                    Container : generateView(containerView)
+                    Container : enableSort()
+                    Container : updateSortableObjectList(objects)
+                    Container : _getSortableObjectList(objects)
+                    Container : disableSort()
+                    Container : updateListView()
+                    Container : setObjects(objectModels)
+                    Container : getPictureElement(pictureId, objectId)
+                    Container : setPicture(picture)
+                    Container : selectPicture(pictureId, objectId)
+                    Container : addObject(objectModel, ...rest)
+                    Container : addObjectFunc(objectModel, index, isNotRender)
+                    Container : renderObject(object)
+                    Container : addExtension(obj)
+                    Container : removeExtension(obj)
+                    Container : addCloneObject(object, scene, isNotRender)
+                    Container : removeObject(id, isPass)
+                    Container : selectObject(objectId, changeScene)
+                    Container : getAllObjects()
+                    Container : getObject(objectId)
+                    Container : getEntity(objectId)
+                    Container : getVariable(variableId)
+                    Container : moveElement(end, start)
+                    Container : getDropdownList(menuName)
+                    Container : clearRunningState()
+                    Container : clearRunningStateOnScene()
+                    Container : mapObject(mapFunction, param)
+                    Container : mapObjectOnScene(mapFunction, param)
+                    Container : mapEntity(mapFunction, param)
+                    Container : mapEntityOnScene(mapFunction, param)
+                    Container : mapEntityIncludeClone(mapFunction, param)
+                    Container : mapEntityIncludeCloneOnScene(mapFunction, param)
+                    Container : getCachedPicture(pictureId)
+                    Container : cachePicture(pictureId, image)
+                    Container : unCachePictures(entity, pictures, isClone)
+                    Container : toJSON()
+                    Container : takeSequenceSnapshot()
+                    Container : loadSequenceSnapshot() 
+                    Container : getInputValue() 
+                    Container : setInputValue(inputValue)
+                    Container : resetSceneDuringRun()
+                    Container : setCopiedObject(object)
+                    Container : updateObjectsOrder()
+                    Container : getSceneObjects(scene)
+                    Container : setCurrentObjects()
+                    Container : getCurrentObjects()
+                    Container : getProjectWithJSON(project)
+                    Container : blurAllInputs()
+                    Container : showProjectAnswer()
+                    Container : hideProjectAnswer(removeBlock, notIncludeSelf)
+                    Container : getView()
+                    Container : resize()
+                    Container :  _rightClick(event)
+                    Container : removeFuncBlocks(functionType)
+                    Container : clear() 
+                    Container : selectNeighborObject(option)
+                    Container : getObjectIndex(objectId)
+                    Container : getDom(query)
+                    Container : isSceneObjectsExist()
+                    Container : adjustClonedValues(oldIds, newIds)
+                    Container : getBlockList()
+                    Container : scrollToObject(ObjectId)
+                    Container : destroy()
+                </div>
+        </section>
+        <script src="./../mermaid@8.2.3/dist/mermaid.min.js"></script>
+        <script>
+            mermaid.initialize({ startOnLoad: true });
+        </script>
+    </body>
+</html>

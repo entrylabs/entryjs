@@ -31,6 +31,8 @@ for file in $(find src/class/* -name '*.js'); do
     doxdox "$file" --layout bootstrap --output documentation/bootstrap/"$file".html
 echo "$file"done; done
 
+doxdox "src/class/**/*.js" --layout bootstrap --output documentation/DOCUMENTATION.html
+
 # for file in src/class/*
 # do
 #     if [ -d "$file" ]

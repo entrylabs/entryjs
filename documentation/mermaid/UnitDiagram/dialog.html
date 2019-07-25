@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="mermaid.min.css" />
+    </head>
+    <body style="display: flex">
+        <section>
+            <h1>
+                Dialog
+            </h1>
+            <div class="mermaid" id="dialog">
+                classDiagram
+                    Dialog --> GE
+                    
+                    Dialog: constructor()
+                    Dialog: prototype.generateSpeak()
+                    Dialog: prototype.update()
+                    Dialog: prototype.createSpeakNotch()
+                    Dialog: prototype.remove()
+            </div>    
+        </section>
+        <script src="./../mermaid@8.2.3/dist/mermaid.min.js"></script>
+        <script>
+            mermaid.initialize({ startOnLoad: true });
+        </script>
+    </body>
+</html>

@@ -29,7 +29,8 @@
         "dev": "webpack -w",
         "test": "jest --colors",
         "clean": "rimraf ./dist",
-        "dist": "webpack"
+        "dist": "webpack",
+        "gendocs": "./scripts/doxdox.sh"
     },
     "license": "MIT",
     "dependencies": {
@@ -45,6 +46,7 @@
         "hyperid": "^1.4.1",
         "jest": "^24.1.0",
         "lodash": "^4.17.11",
+        "mermaid": "^8.2.3",
         "postcss-flexbugs-fixes": "^4.1.0",
         "simplebar": "^3.1.1",
         "uglifyjs-webpack-plugin": "^2.1.2",

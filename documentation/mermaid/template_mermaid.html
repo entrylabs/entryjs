@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="mermaid.min.css" />
+    </head>
+    <body>
+        <div class="mermaid">
+            classDiagram
+                Class01 <|-- AveryLongClass : Cool
+                Class01 : size()
+                Class01 : int chimp
+                Class01 : int gorilla
+
+                Class03 *-- Class04
+                Class05 o-- Class06
+
+                Class07 .. Class08
+                Class07 : equals()
+                Class07 : Object[] elementData
+
+                Class08 <--> C2: Cool label
+
+                Class09 --> Class2 : Where am i?
+                Class09 --* Class3
+                Class09 --|> Class07
+        </div>
+        <script src="./mermaid@8.2.3/dist/mermaid.min.js"></script>
+        <script>
+            mermaid.initialize({ startOnLoad: true });
+        </script>
+    </body>
+</html>
