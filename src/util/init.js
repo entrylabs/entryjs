@@ -325,6 +325,7 @@ Entry.createDom = function(container, option) {
 
         /** @type {!Element} */
         this.canvas_ = canvas;
+        this.extension = new Extension();
         this.stage.initStage(this.canvas_);
 
         const containerView = Entry.createElement('div');
@@ -351,8 +352,6 @@ Entry.createDom = function(container, option) {
 
         this.propertyPanel.select('object');
         this.helper.bindWorkspace(this.playground.mainWorkspace);
-
-        this.extension = new Extension();
     } else if (option === 'minimize') {
         const canvas = Entry.createElement('canvas');
         canvas.className = 'entryCanvasWorkspace minimize';

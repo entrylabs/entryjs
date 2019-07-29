@@ -7,7 +7,7 @@
 'use strict';
 
 import ColorSpoid from '../playground/colorSpoid';
-import { Dropper } from '@entrylabs/tool';
+import Extension from '../extensions/extension';
 import { GEHelper } from '../graphicEngine/GEHelper';
 import { GEHandle } from '../graphicEngine/GEHandle';
 import { PIXIAtlasManager } from './pixi/atlas/PIXIAtlasManager';
@@ -144,16 +144,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
     this.initWall();
     this.render();
     this.colorSpoid = new ColorSpoid(this, canvas);
-    const container = Entry.Dom('div', {
-        class: 'entryDropper',
-        parent: $('body'),
-    });
-    this.dropper = new Dropper({
-        data: {
-            container,
-            target: canvas,
-        },
-    });
+    this.dropper = Extension.getExtension('Dropper');
 };
 
 Entry.Stage.prototype.render = function stageRender() {
@@ -768,7 +759,7 @@ Entry.Stage.prototype.setEntitySelectable = function(value) {
 };
 
 Entry.Stage.prototype.isEntitySelectable = function() {
-    return Entry.engine.isState('stop') && this._entitySelectable && !this.colorSpoid.isRunning;
+    return Entry.engine.isState('stop') && this._entitySelectable && !this.dropper.isShow;
 };
 
 Entry.Stage.prototype.destroy = function() {

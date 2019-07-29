@@ -1,11 +1,15 @@
-export default class SingleInstance {
-    constructor(...props) {
-        if (this.constructor.instance) {
-            return this.constructor.instance;
+function singleInstance(MyClass) {
+    function getInstance(...props) {
+        if (!MyClass.instance) {
+            MyClass.instance = new MyClass(...props);
         }
-        this.constructor.instance = this;
-        this.initialize(...props);
+
+        return MyClass.instance;
     }
 
-    initialize() {}
+    return {
+        getInstance,
+    };
 }
+
+export default singleInstance;

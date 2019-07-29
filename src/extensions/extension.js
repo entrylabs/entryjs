@@ -1,21 +1,25 @@
 import Dropper from './dropper';
-
 export default class Extension {
+    #view = null;
     constructor() {
-        this.render();
+        this.renderView();
     }
 
-    render() {
-        this.view = Entry.Dom('div', {
-            class: 'entryExtension',
-            parent: $('body'),
-        });
+    renderView() {
+        console.log('renderView');
+        if (!this.#view) {
+            this.#view = Entry.Dom('div', {
+                class: 'entryExtension',
+                parent: $('body'),
+            });
+        }
     }
 
-    addExtension(key) {
+    static getExtension(key) {
+        // this.renderView();
         switch (key) {
             case 'Dropper':
-                new Dropper(parent, 'a', 'c');
+                return Dropper.getInstance();
         }
     }
 }
