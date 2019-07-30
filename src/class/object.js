@@ -5,6 +5,7 @@
 
 import DomUtils from '../../src/util/domUtils';
 import { GEHelper } from '../graphicEngine/GEHelper';
+const _findIndex = require('lodash/findIndex');
 
 /**
  * Class for entry object.
@@ -229,10 +230,11 @@ Entry.EntryObject = class {
                     2
                 )}/${fileName.substring(2, 4)}/thumb/${fileName}.png`;
             }
+            thumb.style.backgroundImage = `url(${encodeURI(this.thumbUrl)})`;
         } else if (objectType === 'textBox') {
-            this.thumbUrl = `${Entry.mediaFilePath}text_icon.png`;
+            this.thumbUrl = `${Entry.mediaFilePath}text_icon.svg`;
+            $(thumb).addClass('entryObjectTextBox');
         }
-        thumb.style.backgroundImage = `url(${encodeURI(this.thumbUrl)})`;
     }
 
     /**
@@ -433,7 +435,7 @@ Entry.EntryObject = class {
      * @param {string} soundId
      */
     removeSound(soundId) {
-        const index = this.sounds.findIndex((sound) => sound.id === soundId);
+        const index = _findIndex(this.sounds, (sound) => sound.id === soundId);
         this.sounds.splice(index, 1);
         Entry.playground.reloadPlayground();
         Entry.playground.injectSound();

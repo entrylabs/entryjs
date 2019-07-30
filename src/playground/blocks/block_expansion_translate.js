@@ -3,6 +3,7 @@
 const PromiseManager = require('../../core/promiseManager');
 const { callApi } = require('../../util/common');
 const _uniqueId = require('lodash/uniqueId');
+const _findIndex = require('lodash/findIndex');
 
 function getInitialCodeMap() {
     return {
@@ -204,7 +205,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                 [Lang.Blocks.indonesian, 'id'],
                 [Lang.Blocks.hindi, 'hi'],
             ];
-            const index = options.findIndex((x) => x[1] === value);
+            const index = _.findIndex(options, (x) => x[1] === value);
             if (index > 0) {
                 const temp = options[index];
                 options[index] = options[0];
