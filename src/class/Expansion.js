@@ -3,7 +3,14 @@
  *
  * Class for a ExpansionBlock.
  * This defines base structure for Expansion blocks.
- * 현재 `**playground**` 객체를 받아들이는 생성자
+ * `**playground**` 객체를 받아들이는 생성자
+ *
+ * ```javascript
+ * this = {
+ *      playground
+ * }
+ * ```
+ *
  * @constructor
  */
 export default class Expansion {

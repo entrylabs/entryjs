@@ -6,6 +6,27 @@
 /**
  * doxdox 'src/class/helper.js' --layout markdown --output documentation/src/class/helper.md
  *
+ * ```javascript
+ * this = {
+ *      visible
+ *      resize
+ *      parentView_
+ *      view
+ *      _contentView
+ *      blockHelperDescription_
+ *      _elementsTitle
+ *      _elementsContainer
+ *      codeMirror
+ *      _doc
+ *      _codeMirrorDesc
+ *      _renderView
+ *      code
+ *      first
+ *      _blockViewObserver
+ *      workspace
+ * }
+ * ```
+ *
  * Helper provide block description with 'blockHelper'
  */
 Entry.Helper = function() {

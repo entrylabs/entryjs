@@ -1,5 +1,28 @@
 'use strict';
-
+/**
+ * doxdox 'src/class/hw_monitor.js' --layout markdown --output documentation/src/class/hw_monitor.md
+ *
+ * ```javascript
+ * this = {
+ *      svgDom
+ *      _hwModule
+ *      changeOffset
+ *      scale
+ *      _listPortViews
+ *      snap
+ *      _svgGroup
+ *      _portMap
+ *      hwView
+ *      _template
+ *      pathGroup
+ *      listsnap
+ *      _portMapList
+ *      _rect
+ * }
+ * ```
+ *
+ * HWMonitorClass
+ */
 Entry.HWMonitor = class HardwareMonitor {
     constructor(hwModule) {
         this.svgDom = Entry.Dom(
@@ -536,4 +559,4 @@ Entry.HWMonitor = class HardwareMonitor {
         port.group.attr({ transform: `translate(${groupX},${y})` });
         port.path.attr({ d: path });
     }
-}
+};

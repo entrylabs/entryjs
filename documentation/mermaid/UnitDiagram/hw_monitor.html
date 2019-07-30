@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="mermaid.min.css" />
+    </head>
+    <body>
+        <section>
+            <h1>
+                HW_Monitor class
+            </h1>
+            <div class="mermaid" id="HW_Monitor">
+                classDiagram
+                    Entry <--> HWMonitor
+
+                    HWMonitor --> FUNCTIONS
+                    HWMonitor --> CONSTRUCTOR
+                    HWMonitor --> VARIABLES
+                    HWMonitor --> localFUNCTIONS
+                    CONSTRUCTOR --> VARIABLES
+                    
+                    CONSTRUCTOR : hwModule
+                    CONSTRUCTOR --* EVENTLISTENERS
+
+                    EVENTLISTENERS : hwModeChange
+
+                    VARIABLES : _hwModule = constructor.hwModule
+                    VARIABLES : changeOffset
+                    VARIABLES : scale
+                    VARIABLES : _listPortViews
+
+                    FUNCTIONS : initView()
+                    FUNCTIONS : generateView()
+                    FUNCTIONS : toggleMode(mode)
+                    FUNCTIONS : setHwmonitor(hwModule)
+                    FUNCTIONS : changeMode(e)
+                    FUNCTIONS : addPortEle(listPort, ports)
+                    FUNCTIONS : removePortEle(listPort, ports)
+                    FUNCTIONS : generateListView()
+                    FUNCTIONS : generatePortView(port, target)
+                    FUNCTIONS : getView()
+                    FUNCTIONS : update(portData, sendQueue)
+                    FUNCTIONS : resize()
+                    FUNCTIONS : resizeList()
+                    FUNCTIONS : align()
+                    FUNCTIONS : alignList()
+                    
+                    localFUNCTIONS : _alignNS(ports, yCursor, gap)
+                    localFUNCTIONS : _alignNSList(ports, yCursor)
+                    localFUNCTIONS : _movePort(port, x, y, prevPointer)
+            </div>    
+        </section>
+        <script src="./../mermaid@8.2.3/dist/mermaid.min.js"></script>
+        <script>
+            mermaid.initialize({ startOnLoad: true });
+        </script>
+    </body>
+</html>

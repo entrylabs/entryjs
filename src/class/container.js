@@ -10,10 +10,29 @@ import { GEHelper } from '../graphicEngine/GEHelper';
 /**
  * doxdox 'src/class/container.js' --layout markdown --output documentation/src/class/container.md
  *
- * 엔트리의 컨테이너 클래스 입니다.
+ * 엔트리의 컨테이너 클래스 입니다. 작품 실행창 바로 밑의 오브젝트 컨테이너와 관련되어있습니다.
  *
  * Class for a container.
- * This have view for objects.
+ * This has view for objects.
+ *
+ * ```javascript
+ * this = {
+ *      cachedPicture,
+ *      copiedObject,
+ *      currentObjects_m
+ *      inputValue: AnswerVariable {name_: "答え", id_: "1vu8", type: "answer", object_: null, isCloud_: false, …},
+ *      isObjectDragging,
+ *      listView_,
+ *      objects_,
+ *      selectedObject,
+ *      sortableListViewWidget,
+ *      visible,
+ *      _extensionListView,
+ *      _extensionObjects,
+ *      _rightClick,
+ *      _view
+ * }
+ * ```
  * @constructor
  */
 Entry.Container = class Container {
@@ -47,7 +66,7 @@ Entry.Container = class Container {
         this.isObjectDragging = false;
         /**
          * Array for storing current scene objects
-         * @type {Object.Model} {Array.<object model>}
+         * @type {Object.Model[]} {Array.<object model>}
          */
         this.currentObjects_ = null;
         this._extensionObjects = [];
@@ -284,7 +303,7 @@ Entry.Container = class Container {
 
     /**
      * Set objects
-     * @param {!Array.<object model>} objectModels
+     * @param {!Object.Model[]} !Array.<object model>, objectModels
      */
     setObjects(objectModels) {
         for (const i in objectModels) {
@@ -316,7 +335,7 @@ Entry.Container = class Container {
     }
     /**
      * Set Pictures
-     * @param {!Object picture} picture
+     * @param {!Object.Picture} Object picture
      */
     setPicture(picture) {
         const pictures = this.getObject(picture.objectId).pictures;
@@ -348,7 +367,7 @@ Entry.Container = class Container {
 
     /**
      * Add object
-     * @param {!object model} objectModel
+     * @param {!Object.Model} object model
      * @param {?number} index exist when user add object
      * @return {Entry.EntryObject}
      */
@@ -875,7 +894,7 @@ Entry.Container = class Container {
     /**
      * @deprecated 새로운 리소스 관리자 생겨서 이제 사용안함
      * cache picture
-     * @param {!picture object} pictureModel
+     * @param {!ObjectPicture} Object picture
      */
     cachePicture(pictureId, image) {
         this.cachedPicture[pictureId] = image;
@@ -998,8 +1017,8 @@ Entry.Container = class Container {
 
     /**
      *  get objects list belonged to specific scene
-     *  @param {scene model} scene
-     *  @return {Array<object model>}
+     *  @param {Scene.Model} scene model
+     *  @return {Array<Object.Model>} Array<object model>
      */
     getSceneObjects(scene) {
         scene = scene || Entry.scene.selectedScene;
@@ -1030,8 +1049,8 @@ Entry.Container = class Container {
 
     /**
      *  get project jsons in art_view for saving especially for art_viewcontroller
-     *  @param {!resource project} project
-     *  @return {entry project} project
+     *  @param {!resource.project} resource project
+     *  @return {Entry.project} project
      */
     getProjectWithJSON(project) {
         project.objects = this.toJSON();

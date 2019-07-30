@@ -10,6 +10,37 @@ import { GEDragHelper } from '../graphicEngine/GEDragHelper';
 /**
  * doxdox 'src/class/entity.js' --layout markdown --output documentation/src/class/entity.md
  *
+ * ```javascript
+ * this = {
+ *     parent
+ *     type
+ *     flip
+ *     collision
+ *     id
+ *     removed
+ *     stamps
+ *     shapes
+ *     _rndPosX
+ *     _rndPosY
+ *     voice
+ *     type
+ *     object
+ *     _scaleAdaptor
+ *     textObject
+ *     bgObject
+ *     fontType
+ *     fontSize
+ *     fontBold
+ *     fontItalic
+ *     underLine
+ *     strike
+ *     cursor
+ *     entity
+ *     bgColor
+ *     ...
+ * }
+ * ```
+ *
  * Construct entity class
  * @param {!Entry.EntryObject} object
  * @constructor

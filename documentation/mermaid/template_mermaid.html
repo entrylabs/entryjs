@@ -6,7 +6,7 @@
     </head>
     <body>
         <p>
-            <h1> mermaid 표기 룰 </h1>
+            <h1> mermaid.js 표기 룰 </h1>
             <h2>순서는 다음과 같습니다.</h2>
             <hr/>
             <p>
@@ -83,14 +83,14 @@
                 Entry --> Entry04
                 Entry --> Entry05
     
-                Entry01 <--> TestClass01
-                Entry02 <|-- import3 : import
-                Entry03 --> Class03
-                Entry04 : data04
-                Entry05 : function04
-                Entry05 --> localFunctions
-                Entry05 --> VARIABLES
-                Entry05 --> FUNCTIONS
+                Class01 <--> TestClass01
+                Class02 <|-- import3 : import
+                Class03 --> C3
+                Class04 : data04
+                Class05 : function04
+                Class05 --> localFunctions
+                Class05 --> VARIABLES
+                Class05 --> FUNCTIONS
                 CONSTRUCTOR --> VARIABLES
                 FUNCTIONS : test()
                 localFunctions : _testlocal()
@@ -107,20 +107,20 @@
         </textarea>
         <div class="mermaid">
             classDiagram
-            Entry --> Entry01
-            Entry --> Entry02
-            Entry --> Entry03
-            Entry --> Entry04
-            Entry --> Entry05
+            Entry --> Class01
+            Entry --> Class02
+            Entry --> Class03
+            Entry --> Class04
+            Entry --> Class05
 
-            Entry01 <--> TestClass01
-            Entry02 <|-- import3 : import
-            Entry03 --> Class03
-            Entry04 : data04
-            Entry05 : function04
-            Entry05 --> localFunctions
-            Entry05 --> VARIABLES
-            Entry05 --> FUNCTIONS
+            Class01 <--> TestClass01
+            Class02 <|-- import3 : import
+            Class03 --> C3
+            Class04 : data04
+            Class05 : function04
+            Class05 --> localFunctions
+            Class05 --> VARIABLES
+            Class05 --> FUNCTIONS
             CONSTRUCTOR --> VARIABLES
             FUNCTIONS : test()
             localFunctions : _testlocal()

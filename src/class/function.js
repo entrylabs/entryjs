@@ -7,6 +7,25 @@
  * doxdox 'src/class/function.js' --layout markdown --output documentation/src/class/function.md
  *
  * Block variable constructor
+ *
+ * ```javascript
+ * this = {
+ *      threads,
+ *      blockMenuBlock
+ *      targetFunc
+ *      menuCode
+ *      _workspaceStateEvent
+ *      _backupContent
+ *      _fieldLabel
+ *      _fieldString
+ *      _fieldBoolean
+ *      parentView
+ *      block
+ *      description
+ *      _funcChangeEvent
+ * }
+ * ```
+ *
  * @param {variable.model} variable
  * @constructor
  */

@@ -1,3 +1,14 @@
+/**
+ * doxdox 'src/class/moduleManager.js' --layout markdown --output documentation/src/class/moduleManager.md
+ *
+ * ```javascript
+ * this = {
+ * }
+ * ```
+ *
+ * moduleManagerClass
+ */
+
 Entry.moduleManager = new class {
     /**
      * 해당 url 을 동적으로 로드한다.

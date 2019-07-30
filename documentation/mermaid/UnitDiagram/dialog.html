@@ -7,15 +7,14 @@
     <body>
         <section>
             <h1>
-                Dialog
+                Dialog class
             </h1>
             <div class="mermaid" id="Dialog">
                 classDiagram
-                    Entry <-->Dialog
-                    Dialog <|-- GE :import
+                    Entry <--> Dialog
+                    Dialog <|-- GE : import
 
                     Dialog --> FUNCTIONS
-                    Dialog --> localFUNCTIONS
                     Dialog --> CONSTRUCTOR
                     Dialog --> VARIABLES
                     CONSTRUCTOR --> VARIABLES
@@ -33,11 +32,11 @@
                     VARIABLES : mode_
                     VARIABLES : message_ : processedInput
 
-                    FUNCTIONS: constructor()
-                    FUNCTIONS: generateSpeak()
-                    FUNCTIONS: update()
-                    FUNCTIONS: createSpeakNotch()
-                    FUNCTIONS: remove()
+                    FUNCTIONS : constructor()
+                    FUNCTIONS : generateSpeak()
+                    FUNCTIONS : update()
+                    FUNCTIONS : createSpeakNotch()
+                    FUNCTIONS : remove()
             </div>    
         </section>
         <script src="./../mermaid@8.2.3/dist/mermaid.min.js"></script>

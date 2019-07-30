@@ -7,14 +7,13 @@
     <body>
         <section>
             <h1>
-                Expansion
+                Expansion class
             </h1>
             <div class="mermaid" id="Expansion">
                 classDiagram
-                    Entry <-->Expansion
+                    Entry <--> Expansion
 
                     Expansion --> FUNCTIONS
-                    Expansion --> localFUNCTIONS
                     Expansion --> CONSTRUCTOR
                     Expansion --> VARIABLES
                     CONSTRUCTOR --> VARIABLES
@@ -24,9 +23,9 @@
                     VARIABLES : playground = constructor.playground
                    
                     FUNCTIONS: banAllExpansionBlock()
-                    FUNCTIONS: banExpansionBlock()
-                    FUNCTIONS: addExpansionBlock()
-                    FUNCTIONS: getExpansions()
+                    FUNCTIONS: banExpansionBlock(blockName)
+                    FUNCTIONS: addExpansionBlock(blockName)
+                    FUNCTIONS: getExpansions(blockList)
                     FUNCTIONS: destroy()
             </div>    
         </section>

@@ -15,6 +15,33 @@ const hardwareStatement = {
     hardwareConnected: 'hardwareConnected',
 };
 
+/**
+ * doxdox 'src/class/hw.js' --layout markdown --output documentation/src/class/hw.md
+ *
+ * ```javascript
+ * this = {
+ *      sessionRoomId
+ *      TRIAL_LIMIT
+ *      connected
+ *      portData
+ *      sendQueue
+ *      currentDeviceKey
+ *      hwModule
+ *      hwModuleType
+ *      socketType
+ *      tlsSocketIo1
+ *      tlsSocketIo2
+ *      socketIo
+ *      _w
+ *      _bNotInstalled
+ *      sessionRoomId
+ *      popupHelper
+ * }
+ * ```
+ *
+ * HwClass
+ */
+
 Entry.HW = class {
     // 하드웨어 프로그램 접속용 주소 (https)
     get httpsServerAddress() {

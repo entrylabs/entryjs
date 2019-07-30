@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="mermaid.min.css" />
+    </head>
+    <body>
+        <section>
+            <h1>
+                Helper class
+            </h1>
+            <div class="mermaid" id="Dialog">
+                classDiagram
+                    Entry <--> Helper
+
+                    Helper --> FUNCTIONS
+                    Helper --> CONSTRUCTOR
+                    Helper --> VARIABLES
+                    
+                    CONSTRUCTOR --* EVENTLISTENERS
+                    EVENTLISTENERS : workspaceChangeMode
+
+                    VARIABLES : visible
+                    VARIABLES : resize = Entry.Utils.debounce(this.resize, 300)
+
+                    FUNCTIONS : generateView()
+                    FUNCTIONS : bindWorkspace()
+                    FUNCTIONS : _updateSelectedBlock()
+                    FUNCTIONS : renderBlock()
+                    FUNCTIONS : getView()
+                    FUNCTIONS : resize()
+            </div>    
+        </section>
+        <script src="./../mermaid@8.2.3/dist/mermaid.min.js"></script>
+        <script>
+            mermaid.initialize({ startOnLoad: true });
+        </script>
+    </body>
+</html>

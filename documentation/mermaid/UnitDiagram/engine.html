@@ -7,7 +7,7 @@
     <body>
         <section>
             <h1>
-                Engine
+                Engine class
             </h1>
             <div class="mermaid" id="Engine">
                 classDiagram
@@ -15,13 +15,12 @@
                     Entity <|-- GEHelper : import
 
                     Engine --> FUNCTIONS
-                    Engine --> localFUNCTIONS
                     Engine --> CONSTRUCTOR
                     Engine --> VARIABLES
                     CONSTRUCTOR --> VARIABLES
-                    CONSTRUCTOR --* EVENTLISTENERS
                     
                     CONSTRUCTOR : arrowHandler(evt)
+                    CONSTRUCTOR --* EVENTLISTENERS
 
                     VARIABLES : state
                     VARIABLES : popup

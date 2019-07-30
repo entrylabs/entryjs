@@ -8,6 +8,49 @@ import { GEHelper } from '../graphicEngine/GEHelper';
 const _findIndex = require('lodash/findIndex');
 
 /**
+ * doxdox 'src/class/object.js' --layout markdown --output documentation/src/class/object.md
+ *
+ * ```javascript
+ * this = {
+ *      id
+ *      name
+ *      text
+ *      objectType
+ *      script
+ *      pictures
+ *      sounds
+ *      _setFocused
+ *      _setBlurredTimer
+ *      editObjectValueWhenEntryPress
+ *      sounds
+ *      lock
+ *      isEditing
+ *      objectType
+ *      selectedPicture
+ *      scene
+ *      entity
+ *      clonedEntities
+ *      _isContextMenuEnabled
+ *      isFolded
+ *      nameView_
+ *      thumbnailView_
+ *      thumbUrl
+ *      coordinateView_
+ *      rotateSpan
+ *      rotateInput_
+ *      directionInput_
+ *      rotateMethod
+ *      rotateModeAView_
+ *      rotateModeBView_
+ *      rotateModeCView_
+ *      isSelected_
+ *      isEditing
+ *      deleteView_
+ *      view_
+ *      informationView_
+ * }
+ * ```
+ *
  * Class for entry object.
  * @param {?object model} model for object
  * @constructor

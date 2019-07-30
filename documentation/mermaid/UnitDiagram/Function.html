@@ -7,37 +7,59 @@
     <body>
         <section>
             <h1>
-                Dialog
+                Function class
             </h1>
-            <div class="mermaid" id="Dialog">
+            <div class="mermaid" id="Function">
                 classDiagram
-                    Entry <-->Dialog
-                    Dialog <|-- GE :import
+                    Entry <--> Function
 
-                    Dialog --> FUNCTIONS
-                    Dialog --> localFUNCTIONS
-                    Dialog --> CONSTRUCTOR
-                    Dialog --> VARIABLES
+                    Function --> FUNCTIONS
+                    Function --> CONSTRUCTOR
+                    Function --> VARIABLES
                     CONSTRUCTOR --> VARIABLES
+                    FUNCTIONS --* prototypeFUNCTIONS
+                    CONSTRUCTOR : func
+
+                    VARIABLES --* contentLogic : OR Operations
+
+                    contentLogic : func.content
+                    contentLogic : Entry.Code(content) 
+                    contentLogic : new Entry.Code([[{type: 'function_create',copyable: false,deletable: false,x: 40,y: 40,},],])
+
+                    VARIABLES : id = func.id || Entry.generateHash
+                    VARIABLES : content = contentLogic
                     
-
-                    CONSTRUCTOR : entity
-                    CONSTRUCTOR : message
-                    CONSTRUCTOR : mode
-                    CONSTRUCTOR : isStamp
-
-                    VARIABLES : parent
-                    VARIABLES : padding : constant int 10
                     VARIABLES : border : constant int 2
-                    VARIABLES : message_
-                    VARIABLES : mode_
-                    VARIABLES : message_ : processedInput
+                    VARIABLES : block
+                    VARIABLES : blockMenuBlock
+                    VARIABLES : _backupContent
+                    VARIABLES : hashMap
+                    VARIABLES : paramMap
+                    VARIABLES : threads
 
-                    FUNCTIONS: constructor()
-                    FUNCTIONS: generateSpeak()
-                    FUNCTIONS: update()
-                    FUNCTIONS: createSpeakNotch()
-                    FUNCTIONS: remove()
+                    FUNCTIONS : registerFunction(func)
+                    FUNCTIONS : executeFunction(threadHash)
+                    FUNCTIONS : clearThreads()
+                    FUNCTIONS : destroy()
+                    FUNCTIONS : edit()
+                    FUNCTIONS : initEditView()
+                    FUNCTIONS : endEdit(message)
+                    FUNCTIONS : save()
+                    FUNCTIONS : cancelEdit()
+                    FUNCTIONS : setupMenuCode()
+                    FUNCTIONS : refreshMenuCode()
+                    FUNCTIONS : requestParamBlock(type)
+                    FUNCTIONS : registerParamBlock(type)
+                    FUNCTIONS : createParamBlock(type, blockPrototype, originalType)
+                    FUNCTIONS : updateMenu()
+                    FUNCTIONS : generateBlock(func)
+                    FUNCTIONS : generateWsBlock(targetFunc, isRestore)
+                    FUNCTIONS : bindFuncChangeEvent(targetFunc)
+                    FUNCTIONS : unbindFuncChangeEvent()
+                    FUNCTIONS : unbindWorkspaceStateChangeEvent()
+                    prototypeFUNCTIONS : prototype.edit()
+                    prototypeFUNCTIONS : prototype.generateBlock(toSave)
+                    
             </div>    
         </section>
         <script src="./../mermaid@8.2.3/dist/mermaid.min.js"></script>

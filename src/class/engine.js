@@ -11,34 +11,35 @@ import { GEHelper } from '../graphicEngine/GEHelper';
  *
  * ### Basic Constructor variables
  *
- * ### **1. State**
- *
- * 정의) Engine의 상태를 나타내는 변수이며, 가능한 타입 :
- *
- *      `typeof String, ['stop', 'pause', 'run'];`
- *
- *
- * ### **2. popup**
- *
- * 정의) Engine이 사용할 팝업 reference 를 확인할 수 있는 부분입니다.
- *
- * `Entry.Popup` 을 값으로 받습니다.
- *
- * ** FYI, `toggleFullScreen()` 참조 **
- *
- *
- * ### **3. isUpdating**
- *
- * 정의) 현재 Engine 이 업데이트 중인지 아닌지를 확인 하는 flag 성 변수입니다.
- *
- *
- * ### **4. speeds**
- *
- * 정의) 엔진의 실행 가능 속도를 정의합니다. Entry.engine 의 실행부 좌상단의 계기판 버튼에 해당하는 변수 리스트 입니다.
- *
- *
- * Class for a engine. This have view for control running state.
- *
+ * ```javascript
+ * this = {
+ *     achieveEnabled
+ *     addButton
+ *     buttonWrapper
+ *     coordinateButton
+ *     isContinue
+ *     isUpdating
+ *     maximizeButton
+ *     mouseView
+ *     mouseViewInput
+ *     option
+ *     pauseButton
+ *     pauseButtonFull
+ *     popup
+ *     projectTimer
+ *     runButton
+ *     runButton2
+ *     selectedObject
+ *     speedButton
+ *     speeds
+ *     state
+ *     stopButton
+ *     stopButton2
+ *     ticker
+ *     view_
+ *     _keyboardEvent
+ * }
+ * ```
  * @constructor
  * @return {NULL}
  *
