@@ -404,6 +404,7 @@ Entry.EXPANSION_BLOCK.weather.getData = function(type, location, dateStr) {
     return new PromiseManager().Promise(function(resolve) {
             callApi(url, { url })
                 .then((response) => {
+                    Entry.EXPANSION_BLOCK.weather.apiFail[type] = false;
                     resolve(resolveData(response.data[cityCode], type, dateStr));
                 })
                 .catch((error) => {
