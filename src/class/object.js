@@ -229,10 +229,11 @@ Entry.EntryObject = class {
                     2
                 )}/${fileName.substring(2, 4)}/thumb/${fileName}.png`;
             }
+            thumb.style.backgroundImage = `url(${encodeURI(this.thumbUrl)})`;
         } else if (objectType === 'textBox') {
-            this.thumbUrl = `${Entry.mediaFilePath}text_icon.png`;
+            this.thumbUrl = `${Entry.mediaFilePath}text_icon.svg`;
+            $(thumb).addClass('entryObjectTextBox');
         }
-        thumb.style.backgroundImage = `url(${encodeURI(this.thumbUrl)})`;
     }
 
     /**
@@ -743,6 +744,7 @@ Entry.EntryObject = class {
             },
             {
                 text: Lang.Workspace.context_remove,
+                enable: !Entry.engine.isState('run'),
                 callback() {
                     Entry.dispatchEvent('removeObject', object);
                     const { id } = object;
@@ -1164,20 +1166,27 @@ Entry.EntryObject = class {
             }
         });
 
-        nameView.onkeypress = Entry.Utils.whenEnter(() => {
+        const onKeyPressed = Entry.Utils.whenEnter(() => {
             this.editObjectValues(false);
         });
 
+        nameView.onkeypress = onKeyPressed;
+
         nameView.onfocus = Entry.Utils.setFocused;
-        nameView.onblur = Entry.Utils.setBlurredTimer(() => {
+
+        const nameViewBlur = this._setBlurredTimer(() => {
             const object = Entry.container.getObject(this.id);
             if (!object) {
                 return;
+            } else if (nameView.value.trim() === '') {
+                return entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
+                    nameView.focus();
+                });
             }
-
             Entry.do('objectNameEdit', this.id, nameView.value);
         });
 
+        Entry.attachEventListener(nameView, 'blur', nameViewBlur);
         nameView.value = this.name;
         return nameView;
     }

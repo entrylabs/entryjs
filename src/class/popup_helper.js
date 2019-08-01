@@ -3,7 +3,7 @@
  */
 'use strict';
 
-
+require('../util/utils');
 
 /**
  * Constructor of popup

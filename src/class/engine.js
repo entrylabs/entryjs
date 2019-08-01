@@ -575,6 +575,7 @@ Entry.Engine = class Engine {
         container.inputValue.loadSnapshot();
         Entry.scene.loadStartSceneSnapshot();
         Entry.Func.clearThreads();
+        Entry.Utils.setVolume(1);
         createjs.Sound.setVolume(1);
         createjs.Sound.stop();
         Entry.soundInstances = [];

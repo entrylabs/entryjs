@@ -4,6 +4,7 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -46,6 +47,13 @@ module.exports = {
             {
                 test: /\.tsx?$/,
                 loader: 'awesome-typescript-loader',
+                options: {
+                    useCache: true,
+                    cacheDirectory: path.join(__dirname, '..', 'node_modules', '.cache', 'awcache'),
+                    reportFiles: ['src/**/*.{ts,tsx}'],
+                    transpileOnly: true,
+                    useTranspileModule: true,
+                },
             },
         ],
     },
@@ -59,6 +67,17 @@ module.exports = {
         new CleanWebpackPlugin(['dist'], {
             root: path.join(__dirname, '..'),
         }),
+        new HardSourceWebpackPlugin(),
+        new HardSourceWebpackPlugin.ExcludeModulePlugin([
+            {
+                // HardSource works with mini-css-extract-plugin but due to how
+                // mini-css emits assets, assets are not emitted on repeated builds with
+                // mini-css and hard-source together. Ignoring the mini-css loader
+                // modules, but not the other css loader modules, excludes the modules
+                // that mini-css needs rebuilt to output assets every time.
+                test: /mini-css-extract-plugin[\\/]dist[\\/]loader/,
+            },
+        ]),
         new ManifestPlugin(),
         new MiniCssExtractPlugin({
             // Options similar to the same options in webpackOptions.output
@@ -67,16 +86,4 @@ module.exports = {
             chunkFilename: '[id].css',
         }),
     ],
-    // optimization: {
-    //     runtimeChunk: 'single',
-    //     // splitChunks: {
-    //     //     chunks: 'all',
-    //     //     // cacheGroups: {
-    //     //     //     vendor: {
-    //     //     //         name: 'vendors',
-    //     //     //         chunks: 'all',
-    //     //     //     },
-    //     //     // },
-    //     // },
-    // },
 };

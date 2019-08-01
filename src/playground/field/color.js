@@ -3,6 +3,7 @@
 'use strict';
 
 import { ColorPicker } from '@entrylabs/tool';
+import Extension from '../../extensions/extension';
 
 /*
  *
@@ -30,6 +31,7 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
         this._CONTENT_WIDTH = this.getContentWidth();
 
         this.renderStart();
+        this.dropper = Extension.getExtension('Dropper');
     }
 
     renderStart() {
@@ -125,16 +127,21 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
         this.colorPicker.data = {
             activeSpoid: true,
         };
-        Entry.stage.colorSpoid.run().once('selectColor', (color) => {
-            const data = { activeSpoid: false };
-            if (color) {
-                this.applyValue(color);
-                data.color = color;
-            }
-            this.colorPicker.setData(data);
-            delete this.isRunSpoid;
-        });
-    }, 1);
+        const { canvas } = Entry.stage.canvas || {};
+        this.dropper
+            .show({
+                target: canvas,
+            })
+            .once('pick', (color) => {
+                const data = { activeSpoid: false };
+                if (color) {
+                    this.applyValue(color);
+                    data.color = color;
+                }
+                this.colorPicker.setData(data);
+                delete this.isRunSpoid;
+            });
+    });
 
     renderOptions() {
         this.optionGroup = Entry.Dom('div', {

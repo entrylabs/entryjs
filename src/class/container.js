@@ -347,10 +347,13 @@ Entry.Container = class Container {
      */
     addObject(objectModel, ...rest) {
         let target;
-        if (objectModel.sprite.name) {
+        if ('name' in objectModel.sprite) {
             target = objectModel.sprite;
-        } else if (objectModel.name) {
+        } else {
             target = objectModel;
+            if (!target.name) {
+                target.name = 'untitled';
+            }
         }
         target.name = Entry.getOrderedName(target.name, this.objects_);
         objectModel.id = objectModel.id || Entry.generateHash();
@@ -488,7 +491,7 @@ Entry.Container = class Container {
     selectObject(objectId, changeScene) {
         const object = this.getObject(objectId);
         const workspace = Entry.getMainWS();
-
+        const isSelected = object.isSelected();
         if (changeScene && object) {
             Entry.scene.selectScene(object.scene);
         }
@@ -561,7 +564,7 @@ Entry.Container = class Container {
             Entry.stage.selectObject(object);
         }
         this.selectedObject = object;
-        object.updateCoordinateView();
+        !isSelected && object.updateCoordinateView();
     }
 
     /**
