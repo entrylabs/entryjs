@@ -6,7 +6,6 @@
 
 'use strict';
 
-import ColorSpoid from '../playground/colorSpoid';
 import Extension from '../extensions/extension';
 import { GEHelper } from '../graphicEngine/GEHelper';
 import { GEHandle } from '../graphicEngine/GEHandle';
@@ -143,7 +142,6 @@ Entry.Stage.prototype.initStage = function(canvas) {
 
     this.initWall();
     this.render();
-    this.colorSpoid = new ColorSpoid(this, canvas);
     this.dropper = Extension.getExtension('Dropper');
 };
 

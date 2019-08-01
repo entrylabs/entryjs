@@ -127,23 +127,20 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
         this.colorPicker.data = {
             activeSpoid: true,
         };
-        this.dropper.show(Entry.stage.canvas).once('pick', (a, b, c) => {
-            console.log('asd', a, b, c);
-
-            this.colorPicker.setData({
-                activeSpoid: false,
+        const { canvas } = Entry.stage.canvas || {};
+        this.dropper
+            .show({
+                target: canvas,
+            })
+            .once('pick', (color) => {
+                const data = { activeSpoid: false };
+                if (color) {
+                    this.applyValue(color);
+                    data.color = color;
+                }
+                this.colorPicker.setData(data);
+                delete this.isRunSpoid;
             });
-            delete this.isRunSpoid;
-        });
-        // Entry.stage.colorSpoid.run().once('selectColor', (color) => {
-        //     const data = { activeSpoid: false };
-        //     if (color) {
-        //         this.applyValue(color);
-        //         data.color = color;
-        //     }
-        //     this.colorPicker.setData(data);
-        //     delete this.isRunSpoid;
-        // });
     });
 
     renderOptions() {
