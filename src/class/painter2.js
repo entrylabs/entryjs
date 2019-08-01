@@ -185,6 +185,7 @@ Entry.Painter = class Painter {
         }
         const dataURL = this.entryPaint.getDataURL();
         this.file.json = this.entryPaint.getPaperJSON();
+        this.file.ext = 'json';
         const file = JSON.parse(JSON.stringify(this.file));
         Entry.dispatchEvent('saveCanvasImage', {
             file,
