@@ -10,11 +10,11 @@ const functionKeys = {
     SET_LED: 0x01,
     SET_STRING: 0x02,
     SET_IMAGE: 0x03,
+    GET_LED: 0x31,
 
     PLAY_NOTE: 0x04,
     CHANGE_BPM: 0x05,
     SET_BPM: 0x06,
-    GET_LED: 0x31,
     GET_ANALOG: 0x32,
     GET_DIGITAL: 0x33,
     GET_BUTTON: 0x34,
@@ -37,6 +37,7 @@ Entry.Microbit2 = new class Microbit2 {
         this.communicationType = 'manual';
         this.blockMenuBlocks = [
             'Microbit2_led_toggle',
+            'microbit2_get_led',
             'Microbit2_show_string',
             'microbit2_show_image',
             'Microbit2_get_accelerometer',
@@ -45,6 +46,7 @@ Entry.Microbit2 = new class Microbit2 {
 
     setZero() {
         this.requestCommand(functionKeys.RESET);
+        delete Entry.hw.portData.sensorData;
     }
 
     onReceiveData(portData) {
@@ -127,6 +129,57 @@ Entry.Microbit2 = new class Microbit2 {
                     const x = _clamp(script.getNumberValue('X'), 0, 4);
                     const y = _clamp(script.getNumberValue('Y'), 0, 4);
                     this.requestCommand(functionKeys.SET_LED, { x, y, value });
+                },
+            },
+            microbit2_get_led: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                fontColor: '#ffffff',
+                skeleton: 'basic_string_field',
+                statements: [],
+                template: 'LED의 X:%1 Y:%2 상태값',
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                ],
+                events: {},
+                class: 'Microbit2Led',
+                isNotFor: ['Microbit2'],
+                def: {
+                    params: [
+                        {
+                            type: 'text',
+                            params: ['0'],
+                        },
+                        {
+                            type: 'text',
+                            params: ['0'],
+                        },
+                    ],
+                    type: 'microbit2_get_led',
+                },
+                paramsKeyMap: {
+                    X: 0,
+                    Y: 1,
+                },
+                func: (sprite, script) => {
+                    const x = _clamp(script.getNumberValue('X'), 0, 4);
+                    const y = _clamp(script.getNumberValue('Y'), 0, 4);
+                    this.requestCommand(functionKeys.GET_LED, { x, y });
+                    const result = _get(
+                        Entry.hw.portData,
+                        ['payload', 'sensorData', 'led', x, y],
+                        0,
+                    );
+                    return result === -1 ? Entry.STATIC.BREAK : result;
                 },
             },
             Microbit2_show_string: {
