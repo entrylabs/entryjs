@@ -10,6 +10,7 @@ const functionKeys = {
     SET_LED: 0x01,
     SET_STRING: 0x02,
     SET_IMAGE: 0x03,
+    RESET_SCREEN: 0x09,
     GET_LED: 0x31,
     GET_ANALOG: 0x32,
     GET_DIGITAL: 0x33,
@@ -40,6 +41,7 @@ Entry.Microbit = new class Microbit {
             'microbit_get_led',
             'microbit_show_string',
             'microbit_show_image',
+            'microbit_reset_screen',
             'microbit_get_analog',
             'microbit_get_analog_map',
             'microbit_get_digital',
@@ -284,6 +286,30 @@ Entry.Microbit = new class Microbit {
                 func: (sprite, script) => {
                     const value = script.getField('VALUE');
                     this.requestCommand(functionKeys.SET_IMAGE, { value });
+                },
+            },
+            microbit_reset_screen: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                template: '화면 지우기 %1',
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                class: 'microbitLed',
+                isNotFor: ['microbit'],
+                def: {
+                    type: 'microbit_reset_screen',
+                },
+                paramsKeyMap: {},
+                func: (sprite, script) => {
+                    this.requestCommand(functionKeys.RESET_SCREEN);
                 },
             },
             microbit_get_analog: {
