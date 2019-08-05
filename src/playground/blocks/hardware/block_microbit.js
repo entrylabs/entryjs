@@ -620,8 +620,15 @@ Entry.Microbit = new class Microbit {
                 },
                 func: (sprite, script) => {
                     const value = script.getField('VALUE');
-                    this.requestCommandWithResponse(functionKeys.GET_BUTTON, [value]);
-                    return _get(Entry.hw.portData, ['payload', 'sensorData', 'button'], false);
+                    this.requestCommandWithResponse(functionKeys.GET_BUTTON);
+                    const buttonState = _get(
+                        Entry.hw.portData,
+                        ['payload', 'sensorData', 'button'],
+                        -1
+                    );
+
+                    // double equal 은 의도한 것임.
+                    return buttonState == value;
                 },
             },
             microbit_get_sensor: {
