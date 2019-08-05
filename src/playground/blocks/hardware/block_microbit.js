@@ -10,6 +10,8 @@ const functionKeys = {
     SET_LED: 0x01,
     SET_STRING: 0x02,
     SET_IMAGE: 0x03,
+    SET_DIGITAL: 0x07,
+    SET_ANALOG: 0x08,
     RESET_SCREEN: 0x09,
     GET_LED: 0x31,
     GET_ANALOG: 0x32,
@@ -27,7 +29,7 @@ const functionKeys = {
 
 Entry.Microbit = new class Microbit {
     constructor() {
-        this.id = '22.1';
+        this.id = 'FF.1';
         this.url = 'http://microbit.org/ko/';
         this.imageName = 'microbit.png';
         this.title = {
@@ -42,8 +44,10 @@ Entry.Microbit = new class Microbit {
             'microbit_show_string',
             'microbit_show_image',
             'microbit_reset_screen',
+            'microbit_set_analog',
             'microbit_get_analog',
             'microbit_get_analog_map',
+            'microbit_set_digital',
             'microbit_get_digital',
             'microbit_get_button',
             'microbit_get_sensor',
@@ -312,6 +316,55 @@ Entry.Microbit = new class Microbit {
                     this.requestCommand(functionKeys.RESET_SCREEN);
                 },
             },
+            microbit_set_analog: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                template: '%1 에 아날로그 값 %2 출력 %3',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [['P0', 0], ['P1', 1], ['P2', 2]],
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                class: 'microbitAnalog',
+                isNotFor: ['microbit'],
+                def: {
+                    params: [
+                        null,
+                        {
+                            type: 'number',
+                            params: ['1023'],
+                        },
+                    ],
+                    type: 'microbit_set_analog',
+                },
+                paramsKeyMap: {
+                    PIN: 0,
+                    VALUE: 1,
+                },
+                func: (sprite, script) => {
+                    const pinNumber = script.getField('PIN');
+                    const value = _clamp(script.getNumberValue('VALUE'), 0, 1023);
+                    this.requestCommand(functionKeys.SET_ANALOG, { pinNumber, value });
+                },
+            },
             microbit_get_analog: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -459,6 +512,52 @@ Entry.Microbit = new class Microbit {
                         returnData = Math.round(returnData);
                     }
                     return returnData;
+                },
+            },
+            microbit_set_digital: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                template: '%1 에 디지털 값 %2 출력 %3',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [['P0', 0], ['P1', 1], ['P2', 2]],
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [['0', 0], ['1', 1]],
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                class: 'microbitDigital',
+                isNotFor: ['microbit'],
+                def: {
+                    params: [],
+                    type: 'microbit_set_digital',
+                },
+                paramsKeyMap: {
+                    PIN: 0,
+                    VALUE: 1,
+                },
+                func: (sprite, script) => {
+                    const pinNumber = script.getField('PIN');
+                    const value = script.getNumberField('VALUE');
+                    this.requestCommand(functionKeys.SET_DIGITAL, { pinNumber, value });
                 },
             },
             microbit_get_digital: {
