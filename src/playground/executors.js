@@ -15,7 +15,7 @@ class Executor {
         this.id = Entry.Utils.generateId();
     }
 
-    execute(isFromOrigin) { 
+    execute(isFromOrigin) {
         if (this.isEnd()) {
             return;
         }
@@ -28,13 +28,20 @@ class Executor {
         const entity = this.entity;
 
         while (true) {
+            if (Entry.hw.communicationType === 'manual' && Entry.hw.pending) {
+                break;
+            }
+
             let returnVal = null;
             executedBlocks.push(this.scope.block);
 
             try {
                 const schema = this.scope.block.getSchema();
                 if (schema && Entry.skeleton[schema.skeleton].executable) {
-                    Entry.dispatchEvent('blockExecute', this.scope.block && this.scope.block.view);
+                    Entry.dispatchEvent(
+                        'blockExecute',
+                        this.scope.block && this.scope.block.view,
+                    );
                     returnVal = schema.func.call(this.scope, entity, this.scope);
                     this.scope.key = Entry.generateHash();
                 }
@@ -53,7 +60,6 @@ class Executor {
             if (this.isEnd()) {
                 return executedBlocks;
             }
-
 
             if (returnVal === undefined || returnVal === null || returnVal === Entry.STATIC.PASS) {
                 this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);

@@ -46,6 +46,7 @@ Entry.HW = class {
         this.hwModule = null;
         this.hwModuleType = hardwareModuleType.builtIn; // builtin, module
         this.socketType = null;
+        this._externalSocketMessageListener = [];
 
         const { options = {} } = Entry;
         const { disableHardware = false } = options;
@@ -110,6 +111,14 @@ Entry.HW = class {
         messageHandler.addEventListener('data', (portData) => {
             this.checkDevice(portData);
             this._updatePortData(portData);
+            this.pending = false;
+            if (
+                this.communicationType === 'manual' &&
+                this.hwModule &&
+                this.hwModule.onReceiveData
+            ) {
+                this.hwModule.onReceiveData(portData);
+            }
         });
 
         socket.on('disconnect', () => {
@@ -285,6 +294,7 @@ Entry.HW = class {
         Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
         this.currentDeviceKey = undefined;
         this.hwModule = undefined;
+        this._externalSocketMessageListener = [];
         Entry.dispatchEvent('hwChanged');
     }
 
@@ -311,7 +321,7 @@ Entry.HW = class {
             Entry.toast.alert(
                 '하드웨어 프로그램 연결 종료',
                 '하드웨어 프로그램과의 연결이 종료되었습니다.',
-                false
+                false,
             );
         }
     }
@@ -376,8 +386,8 @@ Entry.HW = class {
                 .concat(
                     this.sendQueue.readablePorts.slice(
                         target + 1,
-                        this.sendQueue.readablePorts.length
-                    )
+                        this.sendQueue.readablePorts.length,
+                    ),
                 );
         }
     }
@@ -389,6 +399,7 @@ Entry.HW = class {
         if (this.hwModule && this.hwModule.sendMessage) {
             this.hwModule.sendMessage(this);
         } else {
+            this.pending = true;
             this._sendSocketMessage({
                 data: JSON.stringify(this.sendQueue),
                 mode: this.socket.mode,
@@ -432,6 +443,7 @@ Entry.HW = class {
     }
 
     setZero() {
+        this.pending = false;
         if (!this.hwModule) {
             return;
         }
@@ -465,6 +477,7 @@ Entry.HW = class {
         if (!this.hwModule) {
             return;
         }
+        this.communicationType = this.hwModule.communicationType || 'auto';
         Entry.dispatchEvent('hwChanged');
 
         let descMsg = '';
@@ -518,7 +531,7 @@ Entry.HW = class {
             },
             runViewer(sUrl, fpCallback) {
                 this._w.document.write(
-                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`
+                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`,
                 );
                 let nCounter = 0;
                 const bNotInstalled = false;

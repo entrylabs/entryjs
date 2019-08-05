@@ -1,15 +1,16 @@
 'use strict';
 
 const _clamp = require('lodash/clamp');
+const _get = require('lodash/get');
 
 const functionKeys = {
     TEST_MESSAGE: 0xfa,
     RESET: 0xfe,
     CHECK_READY: 0xff,
-
     SET_LED: 0x01,
     SET_STRING: 0x02,
     SET_IMAGE: 0x03,
+
     PLAY_NOTE: 0x04,
     CHANGE_BPM: 0x05,
     SET_BPM: 0x06,
@@ -33,14 +34,21 @@ Entry.Microbit2 = new class Microbit2 {
             ko: '마이크로빗',
         };
         this.name = 'Microbit2';
+        this.communicationType = 'manual';
+        this.blockMenuBlocks = [
+            'Microbit2_led_toggle',
+            'Microbit2_show_string',
+            'microbit2_show_image',
+            'Microbit2_get_accelerometer',
+        ];
     }
 
     setZero() {
-        console.log('setZero called');
-        delete Entry.hw.portData.payload;
-        delete Entry.hw.sendQueue.checked;
-        delete Entry.hw.sendQueue.requested;
-        this.setRequestCommand(functionKeys.RESET);
+        this.requestCommand(functionKeys.RESET);
+    }
+
+    onReceiveData(portData) {
+        console.log('onReceiveData', portData);
     }
 
     getHashKey() {
@@ -48,47 +56,16 @@ Entry.Microbit2 = new class Microbit2 {
         if (key.length === 1) {
             key += ((Math.random() * 16) | 0).toString(16);
         }
-        const generatedId = Entry.generateHash(2) + key;
-        this.lastExecutedBlockId = generatedId;
-        return generatedId;
+        return Entry.generateHash(2) + key;
     }
 
-    pushBlockIdChecked(blockId) {
-        if (!Entry.hw.checked) {
-            Entry.hw.checked = [];
-        }
-        Entry.hw.checked.push(blockId);
-    }
-
-    setRequestCommand(type, payload) {
-        if (!Entry.hw.sendQueue.requested) {
-            Entry.hw.sendQueue.requested = [];
-        }
-        Entry.hw.sendQueue.requestedRevision = Date.now();
-        Entry.hw.sendQueue.requested.push({
+    requestCommand(type, payload) {
+        Entry.hw.sendQueue = {
             id: this.getHashKey(),
             type,
             payload,
-        });
+        };
         Entry.hw.update();
-    }
-
-    awaitForAcknowledgeSignal() {
-        // 마지막으로 실행한 블록이 실제로 실행됐는지 확인한다.
-        // 만약 setZero 및 첫실행이라 payload 가 없으면 그냥 넘어간다.
-        // 서버에서 executed 를 확인한다. executed 목록에 내 블록이 있으면 넘어간다.
-        // 넘어가면서 sendQueue.checked 에 내 블록아이디를 추가한다.
-        const { payload } = Entry.hw.portData;
-        if (
-            this.lastExecutedBlockId &&
-            payload &&
-            payload.executed.indexOf(this.lastExecutedBlockId) < 0
-        ) {
-            throw new Entry.Utils.AsyncError();
-        } else {
-            this.pushBlockIdChecked(this.lastExecutedBlockId);
-            this.lastExecutedBlockId = undefined;
-        }
     }
 
     getBlocks() {
@@ -146,18 +123,124 @@ Entry.Microbit2 = new class Microbit2 {
                     VALUE: 2,
                 },
                 func: (sprite, script) => {
-                    // 아이디를 생성한다.
-                    // 아이디를 마지막 블록실행 id 로 등록한다.
-                    // 커맨드 오브젝트를 만든다.
-                    // 커맨드 오브젝트를 requested에 등록한다.
-                    this.awaitForAcknowledgeSignal();
-                    console.log('logic start...');
                     const value = script.getField('VALUE');
                     const x = _clamp(script.getNumberValue('X'), 0, 4);
                     const y = _clamp(script.getNumberValue('Y'), 0, 4);
-                    console.log(x, y, value);
-                    this.setRequestCommand(functionKeys.SET_LED, { x, y, value });
-                    console.log('logic end...');
+                    this.requestCommand(functionKeys.SET_LED, { x, y, value });
+                },
+            },
+            Microbit2_show_string: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                template: '%1 출력하기 %2',
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                class: 'Microbit2Led',
+                isNotFor: ['Microbit2'],
+                def: {
+                    params: [
+                        {
+                            type: 'text',
+                            params: ['Hello!'],
+                        },
+                    ],
+                    type: 'Microbit2_show_string',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                func: (sprite, script) => {
+                    let value = script.getStringValue('VALUE');
+                    value = value.replace(
+                        /[^A-Za-z0-9_\`\~\!\@\#\$\%\^\&\*\(\)\-\=\+\\\{\}\[\]\'\"\;\:\<\,\>\.\?\/\s]/gim,
+                        '',
+                    );
+                    this.requestCommand(functionKeys.SET_STRING, value);
+                },
+            },
+            microbit2_show_image: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                template: '%1 아이콘 출력하기 %2',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            ['하트', 0],
+                            ['행복함', 2],
+                            ['삼각형', 13],
+                            ['사각형', 19],
+                            ['다이아몬드', 17],
+                        ],
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                class: 'Microbit2Led',
+                isNotFor: ['Microbit2'],
+                def: {
+                    type: 'microbit2_show_image',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                func: (sprite, script) => {
+                    const value = script.getField('VALUE');
+                    this.requestCommand(functionKeys.SET_IMAGE, { value });
+                },
+            },
+            Microbit2_get_accelerometer: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                fontColor: '#ffffff',
+                skeleton: 'basic_string_field',
+                statements: [],
+                template: '가속도 센서 %1의 값',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [['x축', 0], ['y축', 1], ['z축', 2], ['크기', 3]],
+                        value: 'x',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                events: {},
+                class: 'Microbit2Accelerometer',
+                isNotFor: ['Microbit2'],
+                def: {
+                    type: 'Microbit2_get_accelerometer',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                func: (sprite, script) => {
+                    const value = script.getField('VALUE');
+                    this.requestCommand(functionKeys.GET_ACCELEROMETER, { value });
+                    return _get(Entry.hw.portData, 'payload.sensorData.accelerometer', -1);
                 },
             },
         };
@@ -232,6 +315,4 @@ Entry.Microbit2 = new class Microbit2 {
     //     }
     // }
 }();
-Entry.Microbit2.blockMenuBlocks = ['Microbit2_led_toggle'];
-
 module.exports = Entry.Microbit2;
