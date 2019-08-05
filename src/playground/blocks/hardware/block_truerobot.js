@@ -256,10 +256,33 @@ Entry.trueRobot.getBlocks = function() {
             func: function(sprite, script) {
                 var pd = Entry.hw.portData;
                 var dev = script.getField('position');
-
                 return pd[dev];
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: '%1',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+								[Lang.Blocks.truetruebot_left+' 2', 'L2'],
+								[Lang.Blocks.truetruebot_left+' 1', 'L1'],
+								[Lang.Blocks.truetruebot_right+' 1', 'R1'],
+								[Lang.Blocks.truetruebot_right+' 2', 'R2'],
+								],
+								value: 'Left_Out',
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringValue,
+							},
+						],
+						keyOption: 'truetrue_get_linesensor',
+					},
+				],
+			},
         },
         truetrue_get_proxisensor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -295,7 +318,25 @@ Entry.trueRobot.getBlocks = function() {
 					
                 return pd[dev];
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: '%1',
+						textParams: [
+							{
+								options: [[Lang.Blocks.truetruebot_left, 'ProxiLeft'], [Lang.Blocks.truetruebot_right, 'ProxiRight']],
+								value: 'Left',
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringValue,
+							},
+						],
+						keyOption: 'truetrue_get_proxisensor',
+					},
+				],
+			},
         },
         truetrue_get_accsensor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -334,7 +375,30 @@ Entry.trueRobot.getBlocks = function() {
 
                 return pd[dev];
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: '%1',
+						textParams: [
+							{
+								options: [
+									[Lang.Blocks.truetruebot_Xaxis, 'AccX'],
+									[Lang.Blocks.truetruebot_Yaxis, 'AccY'],
+									[Lang.Blocks.truetruebot_Zaxis, 'AccZ'],
+									[Lang.Blocks.truetruebot_Tilt, 'AccStatus'],
+								],
+								value: 'X-axis',
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringValue,
+							},
+						],
+						keyOption: 'truetrue_get_accsensor',
+					},
+				],
+			},
         },
         truetrue_get_bottomcolorsensor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -373,7 +437,30 @@ Entry.trueRobot.getBlocks = function() {
 
                 return pd[dev];
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: '%1',
+						textParams: [
+							{
+								options: [
+									[Lang.Blocks.truetruebot_head_color_red, 'BColorRed'],
+									[Lang.Blocks.truetruebot_head_color_green, 'BColorGreen'],
+									[Lang.Blocks.truetruebot_head_color_blue, 'BColorBlue'],
+									[Lang.Blocks.truetruebot_ColorKey, 'BColorKey'],
+								],
+								value: 'Red',
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringValue,
+							},
+						],
+						keyOption: 'truetrue_get_bottomcolorsensor',
+					},
+				],
+			},
         },
         truetrue_get_frontcolorsensor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -407,7 +494,25 @@ Entry.trueRobot.getBlocks = function() {
 
                 return pd[dev];
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: '%1',
+						textParams: [
+							{
+								options: [[Lang.Blocks.truetruebot_left, 'FColorLeftKey'], [Lang.Blocks.truetruebot_right, 'FColorRightKey']],
+								value: 'Left',
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringValue,
+							},
+						],
+						keyOption: 'truetrue_get_frontcolorsensor',
+					},
+				],
+			},
         },
         truetrue_set_singlemotor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -499,7 +604,29 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_singlemotor(%1, %2)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [[Lang.Blocks.truetruebot_left, '9'], [Lang.Blocks.truetruebot_right, '10'], ['All', '11']],
+								value: 'Left',
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringOrNumberByValue,
+							},
+							{
+								type: 'Block',
+								accept: 'string',
+							},
+						],
+					},
+				],
+			},
         },
         truetrue_set_dualmotor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -699,7 +826,28 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_colorled(%1, %2 , %3)',
+						textParams: [
+							{
+								type: 'Block',
+								accept: 'string',
+							},
+							{
+								type: 'Block',
+								accept: 'string',
+							},
+							{
+								type: 'Block',
+								accept: 'string',
+							},						
+						],
+					},
+				],
+			},
         },
         truetrue_set_led_proxi: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -780,8 +928,41 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: [] },
-        },
+			syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_led_proxi(%1, %2)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_front_near_left, 9],
+									[Lang.Blocks.truetruebot_front_near_right, 10],
+								],
+								value: 9,
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringOrNumberByValue,
+							},
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_on, 'on'],
+									[Lang.Blocks.truetruebot_off, 'off'],
+								],
+								value: 'on',
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringValue,
+							},
+						],
+					},
+				],
+			},
+		},
         truetrue_set_led_colorsensor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -862,7 +1043,40 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_led_colorsensor(%1, %2)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_front_color, 3],
+									[Lang.Blocks.truetruebot_bottom_color, 4],
+								],
+								value: 3,
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringOrNumberByValue,
+							},
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_on, 'on'],
+									[Lang.Blocks.truetruebot_off, 'off'],
+								],
+								value: 'on',
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringValue,
+							},
+						],
+					},
+				],
+			},
         },
         truetrue_set_led_linesensor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -931,7 +1145,28 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_led_linesensor(%1)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_on, 'on'],
+									[Lang.Blocks.truetruebot_off, 'off'],
+								],
+								value: 'on',
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringValue,
+							},
+						],
+					},
+				],
+			},
         },
         truetrue_set_linetracer: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1001,7 +1236,28 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_linetracer(%1)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_on, 'on'],
+									[Lang.Blocks.truetruebot_off, 'off'],
+								],
+								value: 'on',
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringValue,
+							},
+						],
+					},
+				],
+			},
         },
         truetrue_set_head_colorled: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1114,7 +1370,34 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_head_colorled(%1)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_head_color_white, 101],
+									[Lang.Blocks.truetruebot_head_color_red, 102],
+									[Lang.Blocks.truetruebot_head_color_green, 103],
+									[Lang.Blocks.truetruebot_head_color_blue, 104],
+									[Lang.Blocks.truetruebot_head_color_cyan, 105],
+									[Lang.Blocks.truetruebot_head_color_magenta, 106],
+									[Lang.Blocks.truetruebot_head_color_yellow, 107],
+									[Lang.Blocks.truetruebot_head_color_off, 100],
+								],
+								value: 101,
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringOrNumberByValue,
+							},
+						],
+					},
+				],
+			},
         },
         truetrue_set_move: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1198,7 +1481,28 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_move(%1)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_move_forward, 101],
+									[Lang.Blocks.truetruebot_move_backward, 102],
+								],
+								value: 101,
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringOrNumberByValue,
+							},
+						],
+					},
+				],
+			},
         },
         truetrue_set_sec_move: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1320,7 +1624,28 @@ Entry.trueRobot.getBlocks = function() {
                     return script;
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_sec_move(%1)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_move_forward, 101],
+									[Lang.Blocks.truetruebot_move_backward, 102],
+								],
+								value: 101,
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringOrNumberByValue,
+							},
+						],
+					},
+				],
+			},
         },
         truetrue_set_rotate: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1403,7 +1728,28 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_rotate(%1)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_move_right, 101],
+									[Lang.Blocks.truetruebot_move_left, 102],
+								],
+								value: 101,
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringOrNumberByValue,
+							},
+						],
+					},
+				],
+			},
         },
         truetrue_set_sec_rotate: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1526,7 +1872,28 @@ Entry.trueRobot.getBlocks = function() {
                     return script;
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_sec_rotate(%1)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_move_right, 101],
+									[Lang.Blocks.truetruebot_move_left, 102],
+								],
+								value: 101,
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringOrNumberByValue,
+							},
+						],
+					},
+				],
+			},
         },
 
         truetrue_set_grid_block: {
@@ -1709,7 +2076,20 @@ Entry.trueRobot.getBlocks = function() {
 
                 return script;
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_grid_block(%1)',
+						textParams: [
+							{
+								type: 'Block',
+								accept: 'string',								
+							},
+						],
+					},
+				],
+			},
         },
 
         truetrue_set_grid_rotate: {
@@ -1909,7 +2289,32 @@ Entry.trueRobot.getBlocks = function() {
 
                 return script;
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_grid_rotate(%1, %2)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_move_right, 101],
+									[Lang.Blocks.truetruebot_move_left, 102],
+								],
+								value: 101,
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringOrNumberByValue,
+							},
+							{
+								type: 'Block',
+								accept: 'string',								
+							},
+						],
+					},
+				],
+			},
         },
     };
 };
