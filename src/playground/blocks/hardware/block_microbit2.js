@@ -11,10 +11,6 @@ const functionKeys = {
     SET_STRING: 0x02,
     SET_IMAGE: 0x03,
     GET_LED: 0x31,
-
-    PLAY_NOTE: 0x04,
-    CHANGE_BPM: 0x05,
-    SET_BPM: 0x06,
     GET_ANALOG: 0x32,
     GET_DIGITAL: 0x33,
     GET_BUTTON: 0x34,
@@ -22,6 +18,10 @@ const functionKeys = {
     GET_TEMPERATURE: 0x36,
     GET_COMPASS_HEADING: 0x37,
     GET_ACCELEROMETER: 0x38,
+
+    PLAY_NOTE: 0x04,
+    CHANGE_BPM: 0x05,
+    SET_BPM: 0x06,
 };
 
 Entry.Microbit2 = new class Microbit2 {
@@ -40,6 +40,11 @@ Entry.Microbit2 = new class Microbit2 {
             'microbit2_get_led',
             'Microbit2_show_string',
             'microbit2_show_image',
+            'microbit2_get_analog',
+            'microbit2_get_analog_map',
+            'microbit2_get_digital',
+            'microbit2_get_button',
+            'microbit2_get_sensor',
             'Microbit2_get_accelerometer',
         ];
     }
@@ -68,6 +73,32 @@ Entry.Microbit2 = new class Microbit2 {
             payload,
         };
         Entry.hw.update();
+    }
+
+    /**
+     * command 요청 후 데이터 송수신이 끝날 때까지 대기한다.
+     * @param type
+     * @param payload
+     */
+    requestCommandWithResponse(type, payload) {
+        if (!Entry.hw.pending && !this.isCommandRequested) {
+            // 첫 진입시 무조건 AsyncError
+            this.isCommandRequested = true;
+            Entry.hw.sendQueue = {
+                id: this.getHashKey(),
+                type,
+                payload,
+            };
+            Entry.hw.update();
+            throw new Entry.Utils.AsyncError();
+        } else if (Entry.hw.pending && this.isCommandRequested) {
+            // 두 번째 이상의 진입시도이며 작업이 아직 끝나지 않은 경우
+            throw new Entry.Utils.AsyncError();
+        } else {
+            // 두 번째 이상의 진입시도이며 pending 도 아닌 경우
+            // 블록 func 로직에서 다음 데이터를 처리한다.
+            delete this.isCommandRequested;
+        }
     }
 
     getBlocks() {
@@ -173,13 +204,8 @@ Entry.Microbit2 = new class Microbit2 {
                 func: (sprite, script) => {
                     const x = _clamp(script.getNumberValue('X'), 0, 4);
                     const y = _clamp(script.getNumberValue('Y'), 0, 4);
-                    this.requestCommand(functionKeys.GET_LED, { x, y });
-                    const result = _get(
-                        Entry.hw.portData,
-                        ['payload', 'sensorData', 'led', x, y],
-                        0,
-                    );
-                    return result === -1 ? Entry.STATIC.BREAK : result;
+                    this.requestCommandWithResponse(functionKeys.GET_LED, { x, y });
+                    return _get(Entry.hw.portData, ['payload', 'sensorData', 'led', x, y], 0);
                 },
             },
             Microbit2_show_string: {
@@ -218,7 +244,7 @@ Entry.Microbit2 = new class Microbit2 {
                     let value = script.getStringValue('VALUE');
                     value = value.replace(
                         /[^A-Za-z0-9_\`\~\!\@\#\$\%\^\&\*\(\)\-\=\+\\\{\}\[\]\'\"\;\:\<\,\>\.\?\/\s]/gim,
-                        '',
+                        ''
                     );
                     this.requestCommand(functionKeys.SET_STRING, value);
                 },
@@ -262,6 +288,271 @@ Entry.Microbit2 = new class Microbit2 {
                 func: (sprite, script) => {
                     const value = script.getField('VALUE');
                     this.requestCommand(functionKeys.SET_IMAGE, { value });
+                },
+            },
+            microbit2_get_analog: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                fontColor: '#ffffff',
+                skeleton: 'basic_string_field',
+                statements: [],
+                template: '아날로그 핀 %1번 센서값',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [['P0', 0], ['P1', 1], ['P2', 2]],
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                events: {},
+                class: 'Microbit2Analog',
+                isNotFor: ['Microbit2'],
+                def: {
+                    type: 'microbit2_get_analog',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                func: (sprite, script) => {
+                    const value = script.getField('VALUE');
+                    this.requestCommandWithResponse(functionKeys.GET_ANALOG, [value]);
+                    return _get(Entry.hw.portData, ['payload', 'sensorData', 'analog', value], 0);
+                },
+            },
+            microbit2_get_analog_map: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                fontColor: '#ffffff',
+                skeleton: 'basic_string_field',
+                statements: [],
+                template: '아날로그 핀 %1번 센서값의 범위를 %2~%3 에서 %4~%5 (으)로 바꾼값',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [['P0', 0], ['P1', 1], ['P2', 2]],
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                ],
+                events: {},
+                class: 'Microbit2Analog',
+                isNotFor: ['Microbit2'],
+                def: {
+                    params: [
+                        null,
+                        {
+                            type: 'number',
+                            params: ['0'],
+                        },
+                        {
+                            type: 'number',
+                            params: ['1023'],
+                        },
+                        {
+                            type: 'number',
+                            params: ['0'],
+                        },
+                        {
+                            type: 'number',
+                            params: ['100'],
+                        },
+                    ],
+                    type: 'microbit2_get_analog_map',
+                },
+                paramsKeyMap: {
+                    PORT: 0,
+                    VALUE2: 1,
+                    VALUE3: 2,
+                    VALUE4: 3,
+                    VALUE5: 4,
+                },
+                func: (sprite, script) => {
+                    const value = script.getField('VALUE');
+                    this.requestCommandWithResponse(functionKeys.GET_ANALOG, [value]);
+                    let returnData = _get(
+                        Entry.hw.portData,
+                        ['payload', 'sensorData', 'analog', value],
+                        0
+                    );
+
+                    let value2 = script.getNumberValue('VALUE2', script);
+                    let value3 = script.getNumberValue('VALUE3', script);
+                    let value4 = script.getNumberValue('VALUE4', script);
+                    let value5 = script.getNumberValue('VALUE5', script);
+                    const stringValue4 = script.getValue('VALUE4', script);
+                    const stringValue5 = script.getValue('VALUE5', script);
+                    let isFloat = false;
+
+                    if (
+                        (Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) ||
+                        (Entry.Utils.isNumber(stringValue5) && stringValue5.indexOf('.') > -1)
+                    ) {
+                        isFloat = true;
+                    }
+                    let swap;
+                    if (value2 > value3) {
+                        swap = value2;
+                        value2 = value3;
+                        value3 = swap;
+                    }
+                    if (value4 > value5) {
+                        swap = value4;
+                        value4 = value5;
+                        value5 = swap;
+                    }
+                    returnData -= value2;
+                    returnData = returnData * ((value5 - value4) / (value3 - value2));
+                    returnData += value4;
+                    returnData = Math.min(value5, returnData);
+                    returnData = Math.max(value4, returnData);
+
+                    if (isFloat) {
+                        returnData = Math.round(returnData * 100) / 100;
+                    } else {
+                        returnData = Math.round(returnData);
+                    }
+                    return returnData;
+                },
+            },
+            microbit2_get_digital: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                fontColor: '#ffffff',
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                template: '디지털 핀 %1번 센서값',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [['P0', 0], ['P1', 1], ['P2', 2]],
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                events: {},
+                class: 'Microbit2Digital',
+                isNotFor: ['Microbit2'],
+                def: {
+                    type: 'microbit2_get_digital',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                func: (sprite, script) => {
+                    const value = script.getField('VALUE');
+                    this.requestCommandWithResponse(functionKeys.GET_DIGITAL, [value]);
+                    return _get(Entry.hw.portData, ['payload', 'sensorData', 'digital', value], 0);
+                },
+            },
+            microbit2_get_button: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                fontColor: '#ffffff',
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                template: '%1버튼을 눌렀는가?',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [['A', 1], ['B', 2], ['A+B', 3]],
+                        value: 1,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                events: {},
+                class: 'Microbit2Button',
+                isNotFor: ['Microbit2'],
+                def: {
+                    type: 'microbit2_get_button',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                func: (sprite, script) => {
+                    const value = script.getField('VALUE');
+                    this.requestCommandWithResponse(functionKeys.GET_BUTTON, [value]);
+                    return _get(Entry.hw.portData, ['payload', 'sensorData', 'button'], false);
+                },
+            },
+            microbit2_get_sensor: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                fontColor: '#ffffff',
+                skeleton: 'basic_string_field',
+                statements: [],
+                template: '%1 센서값',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            ['빛', 'lightLevel'],
+                            ['온도', 'temperature'],
+                            ['자기', 'compassHeading'],
+                        ],
+                        value: 'temperature',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                events: {},
+                class: 'Microbit2Sensor',
+                isNotFor: ['Microbit2'],
+                def: {
+                    type: 'microbit2_get_sensor',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                func: (sprite, script) => {
+                    const value = script.getField('VALUE');
+                    let commandType;
+                    switch (value) {
+                        case 'lightLevel':
+                            commandType = functionKeys.GET_LIGHT_LEVEL;
+                            break;
+                        case 'temperature':
+                            commandType = functionKeys.GET_TEMPERATURE;
+                            break;
+                        case 'compassHeading':
+                            commandType = functionKeys.GET_COMPASS_HEADING;
+                            break;
+                        default:
+                            // 입력값이 정상적이지 않은 경우 온도값을 표기
+                            commandType = functionKeys.GET_TEMPERATURE;
+                            break;
+                    }
+                    this.requestCommandWithResponse(commandType);
+                    return _get(Entry.hw.portData, ['payload', 'sensorData', value], -1);
                 },
             },
             Microbit2_get_accelerometer: {
