@@ -13,6 +13,7 @@ const functionKeys = {
     SET_DIGITAL: 0x07,
     SET_ANALOG: 0x08,
     RESET_SCREEN: 0x09,
+    SET_ANALOG_PERIOD: 0x10,
     GET_LED: 0x31,
     GET_ANALOG: 0x32,
     GET_DIGITAL: 0x33,
@@ -45,6 +46,7 @@ Entry.Microbit = new class Microbit {
             'microbit_show_image',
             'microbit_reset_screen',
             'microbit_set_analog',
+            'microbit_set_analog_period',
             'microbit_get_analog',
             'microbit_get_analog_map',
             'microbit_set_digital',
@@ -363,6 +365,55 @@ Entry.Microbit = new class Microbit {
                     const pinNumber = script.getField('PIN');
                     const value = _clamp(script.getNumberValue('VALUE'), 0, 1023);
                     this.requestCommand(functionKeys.SET_ANALOG, { pinNumber, value });
+                },
+            },
+            microbit_set_analog_period: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                template: '%1 에 아날로그 PWM 출력 주기를 %2 (µs) 로 설정 %3',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [['P0', 0], ['P1', 1], ['P2', 2]],
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                class: 'microbitAnalog',
+                isNotFor: ['microbit'],
+                def: {
+                    params: [
+                        null,
+                        {
+                            type: 'number',
+                            params: ['20000'],
+                        },
+                    ],
+                    type: 'microbit_set_analog_period',
+                },
+                paramsKeyMap: {
+                    PIN: 0,
+                    VALUE: 1,
+                },
+                func: (sprite, script) => {
+                    const pinNumber = script.getField('PIN');
+                    const value = script.getNumberValue('VALUE');
+                    this.requestCommand(functionKeys.SET_ANALOG_PERIOD, { pinNumber, value });
                 },
             },
             microbit_get_analog: {
