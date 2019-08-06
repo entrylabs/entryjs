@@ -14,6 +14,8 @@ const functionKeys = {
     SET_ANALOG: 0x08,
     RESET_SCREEN: 0x09,
     SET_ANALOG_PERIOD: 0x10,
+    SET_SERVO: 0x11,
+    SET_SERVO_PERIOD: 0x12,
     GET_LED: 0x31,
     GET_ANALOG: 0x32,
     GET_DIGITAL: 0x33,
@@ -54,6 +56,8 @@ Entry.Microbit = new class Microbit {
             'microbit_get_button',
             'microbit_get_sensor',
             'microbit_get_accelerometer',
+            'microbit_set_servo',
+            'microbit_set_servo_period',
         ];
     }
 
@@ -752,7 +756,7 @@ Entry.Microbit = new class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitAccelerometer',
+                class: 'microbitSensor',
                 isNotFor: ['microbit'],
                 def: {
                     type: 'microbit_get_accelerometer',
@@ -764,6 +768,104 @@ Entry.Microbit = new class Microbit {
                     const value = script.getField('VALUE');
                     this.requestCommand(functionKeys.GET_ACCELEROMETER, { value });
                     return _get(Entry.hw.portData, 'payload.sensorData.accelerometer', -1);
+                },
+            },
+            microbit_set_servo: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                template: '%1 에 서보 값 %2 출력 %3',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [['P0', 0], ['P1', 1], ['P2', 2]],
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                class: 'microbitServo',
+                isNotFor: ['microbit'],
+                def: {
+                    params: [
+                        null,
+                        {
+                            type: 'number',
+                            params: ['180'],
+                        },
+                    ],
+                    type: 'microbit_set_servo',
+                },
+                paramsKeyMap: {
+                    PIN: 0,
+                    VALUE: 1,
+                },
+                func: (sprite, script) => {
+                    const pinNumber = script.getField('PIN');
+                    const value = _clamp(script.getNumberValue('VALUE'), 0, 180);
+                    this.requestCommand(functionKeys.SET_SERVO, { pinNumber, value });
+                },
+            },
+            microbit_set_servo_period: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                template: '%1 에 서보 펄스 폭을 %2 마이크로초로 설정 %3',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [['P0', 0], ['P1', 1], ['P2', 2]],
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                class: 'microbitServo',
+                isNotFor: ['microbit'],
+                def: {
+                    params: [
+                        null,
+                        {
+                            type: 'number',
+                            params: ['1500'],
+                        },
+                    ],
+                    type: 'microbit_set_servo_period',
+                },
+                paramsKeyMap: {
+                    PIN: 0,
+                    VALUE: 1,
+                },
+                func: (sprite, script) => {
+                    const pinNumber = script.getField('PIN');
+                    const value = script.getNumberValue('VALUE');
+                    this.requestCommand(functionKeys.SET_SERVO_PERIOD, { pinNumber, value });
                 },
             },
         };
