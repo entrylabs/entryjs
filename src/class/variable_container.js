@@ -4,6 +4,7 @@
 'use strict';
 
 import SimpleBar from 'simplebar';
+import axios from 'axios';
 
 /**
  * Block variable constructor
@@ -2720,9 +2721,9 @@ Entry.VariableContainer = class VariableContainer {
             csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         } catch (e) {}
 
-        $.ajax({
+        axios({
             url: `/api/project/variable/${projectId}`,
-            type: 'PUT',
+            method: 'PUT',
             headers: { 'csrf-token': csrfToken },
             data: {
                 variables,
