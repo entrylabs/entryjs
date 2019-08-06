@@ -2716,19 +2716,9 @@ Entry.VariableContainer = class VariableContainer {
             return;
         }
 
-        let csrfToken = '';
-        try {
-            csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        } catch (e) {}
-
-        axios({
-            url: `/api/project/variable/${projectId}`,
-            method: 'PUT',
-            headers: { 'csrf-token': csrfToken },
-            data: {
-                variables,
-                lists,
-            },
+        Entry.dispatchEvent('updateCloudVariable', {
+            variables,
+            lists,
         });
     }
 
