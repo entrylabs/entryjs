@@ -4,6 +4,7 @@
 'use strict';
 
 import SimpleBar from 'simplebar';
+import fetch from 'isomorphic-fetch';
 
 /**
  * Block variable constructor
@@ -2720,14 +2721,17 @@ Entry.VariableContainer = class VariableContainer {
             csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         } catch (e) {}
 
-        $.ajax({
-            url: `/api/project/variable/${projectId}`,
-            type: 'PUT',
-            headers: { 'csrf-token': csrfToken },
-            data: {
+        fetch(`/api/project/variable/${projectId}`, {
+            method: 'PUT',
+            headers: {
+                'csrf-token': csrfToken,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
                 variables,
                 lists,
-            },
+            }),
         });
     }
 
