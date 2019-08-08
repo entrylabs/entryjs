@@ -262,7 +262,7 @@ Entry.trueRobot.getBlocks = function() {
 				js: [],
 				py: [
 					{
-						syntax: '%1',
+						syntax: 'trueRobot.get_linesensor(%1)',
 						textParams: [
 							{
 								type: 'Dropdown',
@@ -278,8 +278,7 @@ Entry.trueRobot.getBlocks = function() {
 								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
 								converter: Entry.block.converters.returnStringValue,
 							},
-						],
-						keyOption: 'get_linesensor',
+						],						
 					},
 				],
 			},
@@ -322,9 +321,10 @@ Entry.trueRobot.getBlocks = function() {
 				js: [],
 				py: [
 					{
-						syntax: '%1',
+						syntax: 'trueRobot.get_proxisensor(%1)',
 						textParams: [
 							{
+								type: 'Dropdown',
 								options: [[Lang.Blocks.truetruebot_left, 'ProxiLeft'], [Lang.Blocks.truetruebot_right, 'ProxiRight']],
 								value: 'Left',
 								fontSize: 11,
@@ -332,8 +332,7 @@ Entry.trueRobot.getBlocks = function() {
 								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
 								converter: Entry.block.converters.returnStringValue,
 							},
-						],
-						keyOption: 'get_proxisensor',
+						],						
 					},
 				],
 			},
@@ -379,9 +378,10 @@ Entry.trueRobot.getBlocks = function() {
 				js: [],
 				py: [
 					{
-						syntax: '%1',
+						syntax: 'trueRobot.get_accsensor(%1)',
 						textParams: [
 							{
+								type: 'Dropdown',
 								options: [
 									[Lang.Blocks.truetruebot_Xaxis, 'AccX'],
 									[Lang.Blocks.truetruebot_Yaxis, 'AccY'],
@@ -394,8 +394,7 @@ Entry.trueRobot.getBlocks = function() {
 								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
 								converter: Entry.block.converters.returnStringValue,
 							},
-						],
-						keyOption: 'get_accsensor',
+						],						
 					},
 				],
 			},
@@ -441,9 +440,10 @@ Entry.trueRobot.getBlocks = function() {
 				js: [],
 				py: [
 					{
-						syntax: '%1',
+						syntax: 'trueRobot.get_bottomcolorsensor(%1)',
 						textParams: [
 							{
+								type: 'Dropdown',
 								options: [
 									[Lang.Blocks.truetruebot_head_color_red, 'BColorRed'],
 									[Lang.Blocks.truetruebot_head_color_green, 'BColorGreen'],
@@ -456,8 +456,7 @@ Entry.trueRobot.getBlocks = function() {
 								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
 								converter: Entry.block.converters.returnStringValue,
 							},
-						],
-						keyOption: 'get_bottomcolorsensor',
+						],						
 					},
 				],
 			},
@@ -498,9 +497,10 @@ Entry.trueRobot.getBlocks = function() {
 				js: [],
 				py: [
 					{
-						syntax: '%1',
+						syntax: 'trueRobot.get_frontcolorsensor(%1)',
 						textParams: [
 							{
+								type: 'Dropdown',
 								options: [[Lang.Blocks.truetruebot_left, 'FColorLeftKey'], [Lang.Blocks.truetruebot_right, 'FColorRightKey']],
 								value: 'Left',
 								fontSize: 11,
@@ -508,8 +508,7 @@ Entry.trueRobot.getBlocks = function() {
 								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
 								converter: Entry.block.converters.returnStringValue,
 							},
-						],
-						keyOption: 'get_frontcolorsensor',
+						],						
 					},
 				],
 			},
@@ -741,7 +740,28 @@ Entry.trueRobot.getBlocks = function() {
                     return script;
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_dualmotor(%1, %2 , %3)',
+						textParams: [
+							{
+								type: 'Block',
+								accept: 'string',
+							},
+							{
+								type: 'Block',
+								accept: 'string',
+							},
+							{
+								type: 'Block',
+								accept: 'string',
+							},						
+						],
+					},
+				],
+			},
         },
         truetrue_set_colorled: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
