@@ -31,6 +31,7 @@ Entry.byrobot_petrone_v2_controller =
     setZero: function()
     {
         // 초기화
+        this.transferBufferClear();
 
         // 한 번에 명령을 전송하면 hw까지 제대로 전달되지 않는 경우가 있어
         // 명령을 각각 분리하여 전송하게 함(2017.01.03)
@@ -50,8 +51,8 @@ Entry.byrobot_petrone_v2_controller =
     {
         /* 센서창 가림 현상을 해결하기 위해서 주석 처리함(2017.11.06)
         imgPath: "hw/byrobot_petrone_v2_controller.png",      // 배경 이미지
-        width: 500,     // 이미지의 폭
-        height: 500,    // 이미지의 높이
+        width: 256,     // 이미지의 폭
+        height: 256,    // 이미지의 높이
         */
 
         // 모니터 화면 상단에 차례대로 나열하는 값
@@ -116,7 +117,17 @@ Entry.byrobot_petrone_v2_controller =
      *  기능 함수
      ***************************************************************************************/
 
-    // 시간 지연
+
+    transferBufferClear: function()
+    {
+        Entry.hw.setDigitalPortValue('buffer_clear', 0);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['buffer_clear'];
+    },
+
+
     fit: function(min, value, max)
     {
         return Math.max(Math.min(value, max), min);
@@ -149,7 +160,7 @@ Entry.byrobot_petrone_v2_controller =
     },
 
 
-    transferLightColorRgb: function(target, mode, interval, red, green, blue)
+    transferLightModeColor: function(target, mode, interval, red, green, blue)
     {
         // 범위 조정
         target      = this.fit(0, target,   255);
@@ -190,11 +201,13 @@ Entry.byrobot_petrone_v2_controller =
 
             delete Entry.hw.sendQueue['target'];
             delete Entry.hw.sendQueue['display_clearall_pixel'];
-        } else {
+        }
+        else
+        {
             // 범위 조정
-            x = this.fit(0, x, 128);
-            y = this.fit(0, y, 64);
-            width = this.fit(0, width, 128);
+            x      = this.fit(0, x, 128);
+            y      = this.fit(0, y, 64);
+            width  = this.fit(0, width, 128);
             height = this.fit(0, height, 64);
 
             // 전송
@@ -220,9 +233,9 @@ Entry.byrobot_petrone_v2_controller =
     transferDisplayInvert: function(target, x, y, width, height)
     {
         // 범위 조정
-        x = this.fit(0, x, 128);
-        y = this.fit(0, y, 64);
-        width = this.fit(0, width, 128);
+        x      = this.fit(0, x, 128);
+        y      = this.fit(0, y, 64);
+        width  = this.fit(0, width, 128);
         height = this.fit(0, height, 64);
 
         // 전송
@@ -295,9 +308,9 @@ Entry.byrobot_petrone_v2_controller =
     transferDisplayDrawRect: function(target, x, y, width, height, pixel, flagFill, line)
     {
         // 범위 조정
-        x = this.fit(0, x, 128);
-        y = this.fit(0, y, 64);
-        width = this.fit(0, width, 128);
+        x      = this.fit(0, x, 128);
+        y      = this.fit(0, y, 64);
+        width  = this.fit(0, width, 128);
         height = this.fit(0, height, 64);
 
         // 전송
@@ -326,8 +339,8 @@ Entry.byrobot_petrone_v2_controller =
     transferDisplayDrawCircle: function(target, x, y, radius, pixel, flagFill)
     {
         // 범위 조정
-        x = this.fit(-50, x, 178);
-        y = this.fit(-50, y, 114);
+        x      = this.fit(-50, x, 178);
+        y      = this.fit(-50, y, 114);
         radius = this.fit(1, radius, 200);
 
         // 전송
@@ -378,8 +391,8 @@ Entry.byrobot_petrone_v2_controller =
     {
         // 범위 조정
         xStart = this.fit(0, xStart, 124);
-        xEnd = this.fit(0, xEnd, 128)
-        y = this.fit(0, y, 60);
+        xEnd   = this.fit(0, xEnd, 128)
+        y      = this.fit(0, y, 60);
 
         // 전송
         Entry.hw.setDigitalPortValue('target', target);
@@ -424,7 +437,7 @@ Entry.byrobot_petrone_v2_controller =
     transferVibrator: function(mode, timeOn, timeOff, timeRun)
     {
         // 범위 조정
-        timeOn = this.fit(1, timeOn, 60000);
+        timeOn  = this.fit(1, timeOn, 60000);
         timeOff = this.fit(1, timeOff, 60000);
 
         // 전송
@@ -500,7 +513,7 @@ Entry.byrobot_petrone_v2_controller =
         {
             case 'Start':
                 {
-                    this.transferLightColorRgb(target, mode, interval, red, green, blue);
+                    this.transferLightModeColor(target, mode, interval, red, green, blue);
                 }
                 return script;
 
