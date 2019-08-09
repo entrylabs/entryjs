@@ -2200,6 +2200,7 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     generateTimer(timer) {
+        const x = 240 - (Lang.Workspace.Variable_Timer.length * 12 + 70);
         timer =
             timer ||
             Entry.Variable.create({
@@ -2208,7 +2209,7 @@ Entry.VariableContainer = class VariableContainer {
                 value: 0,
                 variableType: 'timer',
                 visible: false,
-                x: 134,
+                x,
                 y: -70,
             });
 
