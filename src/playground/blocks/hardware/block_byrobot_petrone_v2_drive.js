@@ -184,7 +184,9 @@ Entry.byrobot_petrone_v2_drive =
         delete Entry.hw.sendQueue['light_manual_brightness'];
     },
 
-    transferLightMode: function(target, mode, interval) {
+
+    transferLightMode: function(target, mode, interval)
+    {
         // 범위 조정
         target = Math.max(target, 0);
         target = Math.min(target, 255);
@@ -501,6 +503,7 @@ Entry.byrobot_petrone_v2_drive =
         delete Entry.hw.sendQueue['vibrator_off'];
         delete Entry.hw.sendQueue['vibrator_total'];
     },
+
 
     transferIrMessage: function(irdirection, irmessage)
     {
@@ -1594,36 +1597,56 @@ Entry.byrobot_petrone_v2_controller.setLanguage = function ()
 
             // en.js에 작성하던 내용
             template: {
-                "byrobot_petrone_v2_controller_controller_buzzer_hz":                   "play %1 Hz sound %2",
-                "byrobot_petrone_v2_controller_controller_buzzer_hz_delay":             "play %1 Hz sound for %2 second %3",
-                "byrobot_petrone_v2_controller_controller_buzzer_hz_reserve":           "reserve to play %1 Hz sound for %2 second %3",
-                "byrobot_petrone_v2_controller_controller_buzzer_off":                  "turn off the buzzer %1",
-                "byrobot_petrone_v2_controller_controller_buzzer_scale":                "play %1 octave %2 %3",
-                "byrobot_petrone_v2_controller_controller_buzzer_scale_delay":          "play %1 octave %2 for %3 second %4",
-                "byrobot_petrone_v2_controller_controller_buzzer_scale_reserve":        "reserve to play %1 octave %2 for %3 second %4",
-                "byrobot_petrone_v2_controller_controller_display_clear":               "clear controller display x:%1, y:%2, width:%3, height:%4, color:%5 %6",
-                "byrobot_petrone_v2_controller_controller_display_clear_all":           "clear controller display with %1 color %2",
-                "byrobot_petrone_v2_controller_controller_display_draw_circle":         "draw a circle in controller display x:%1, y:%2, radius:%3, %4, %5, %6",
-                "byrobot_petrone_v2_controller_controller_display_draw_line":           "draw a line in controller display x1:%1, y1:%2, x2:%3, y2:%4, %5, %6 %7",
-                "byrobot_petrone_v2_controller_controller_display_draw_point":          "draw a point in controller display  x:%1, y:%2, color:%3 %4",
-                "byrobot_petrone_v2_controller_controller_display_draw_rect":           "draw a rectangle in controller display x:%1, y:%2, width:%3, height:%4, %5, %6, %7 %8",
-                "byrobot_petrone_v2_controller_controller_display_draw_string":         "draw a string in controller display x:%1, y:%2, font size:%3, %4, input:%5, %6",
-                "byrobot_petrone_v2_controller_controller_display_draw_string_align":   "draw aligned string in controller display x1:%1, x2:%2, y:%3, align:%4, font size:%5, %6, input:%7, %8",
-                "byrobot_petrone_v2_controller_controller_display_invert":              "invert controller display x:%1, y:%2, width:%3, height:%4 %5",
-                "byrobot_petrone_v2_controller_controller_if_button_press":             "when press %1",
-                "byrobot_petrone_v2_controller_controller_if_joystick_direction":       "when %1 stick move to %2",
-                "byrobot_petrone_v2_controller_controller_light_color_input":           "decide the color values of controller LED R %1, G %2, B %3 %4 %5",
-                "byrobot_petrone_v2_controller_controller_light_color_select":          "RGB combination examples of controller LED %1 %2 %3",
-                "byrobot_petrone_v2_controller_controller_light_manual_single":         "change the state of %1 controller LED to %2 %3",
-                "byrobot_petrone_v2_controller_controller_light_manual_single_input":   "change the brightness of %1 controller LED to %2 %3",
-                "byrobot_petrone_v2_controller_controller_light_manual_single_off":     "turn off all controller LEDs %1",
-                "byrobot_petrone_v2_controller_controller_value_button":                "%1",
-                "byrobot_petrone_v2_controller_controller_value_joystick":              "%1",
-                "byrobot_petrone_v2_controller_controller_vibrator_delay":              "vibration %1 second on, %2 second off for %3 seconds %4",
-                "byrobot_petrone_v2_controller_controller_vibrator_off":                "turn off the vibrator %1",
-                "byrobot_petrone_v2_controller_controller_vibrator_on_delay":           "turn on the vibrator for %1 second %2",
-                "byrobot_petrone_v2_controller_controller_vibrator_on_reserve":         "reserve turn on the vibrator for %1 second %2",
-                "byrobot_petrone_v2_controller_controller_vibrator_reserve":            "reserve vibration %1 second on, %2 second off for %3 seconds %4",            
+                "byrobot_petrone_v2_drive_controller_buzzer_hz": "play %1 Hz sound %2",
+                "byrobot_petrone_v2_drive_controller_buzzer_hz_delay": "play %1 Hz sound for %2 second %3",
+                "byrobot_petrone_v2_drive_controller_buzzer_hz_reserve": "reserve to play %1 Hz sound for %2 second %3",
+                "byrobot_petrone_v2_drive_controller_buzzer_off": "turn off the buzzer %1",
+                "byrobot_petrone_v2_drive_controller_buzzer_scale": "play %1 octave %2 %3",
+                "byrobot_petrone_v2_drive_controller_buzzer_scale_delay": "play %1 octave %2 for %3 second %4",
+                "byrobot_petrone_v2_drive_controller_buzzer_scale_reserve": "reserve to play %1 octave %2 for %3 second %4",
+                "byrobot_petrone_v2_drive_controller_display_clear": "clear controller display x:%1, y:%2, width:%3, height:%4, color:%5 %6",
+                "byrobot_petrone_v2_drive_controller_display_clear_all": "clear controller display with %1 color %2",
+                "byrobot_petrone_v2_drive_controller_display_draw_circle": "draw a circle in controller display x:%1, y:%2, radius:%3, %4, %5, %6",
+                "byrobot_petrone_v2_drive_controller_display_draw_line": "draw a line in controller display x1:%1, y1:%2, x2:%3, y2:%4, %5, %6 %7",
+                "byrobot_petrone_v2_drive_controller_display_draw_point": "draw a point in controller display  x:%1, y:%2, color:%3 %4",
+                "byrobot_petrone_v2_drive_controller_display_draw_rect": "draw a rectangle in controller display x:%1, y:%2, width:%3, height:%4, %5, %6, %7 %8",
+                "byrobot_petrone_v2_drive_controller_display_draw_string": "draw a string in controller display x:%1, y:%2, font size:%3, %4, input:%5, %6",
+                "byrobot_petrone_v2_drive_controller_display_draw_string_align": "draw aligned string in controller display x1:%1, x2:%2, y:%3, align:%4, font size:%5, %6, input:%7, %8",
+                "byrobot_petrone_v2_drive_controller_display_invert": "invert controller display x:%1, y:%2, width:%3, height:%4 %5",
+                "byrobot_petrone_v2_drive_controller_if_button_press": "when press %1",
+                "byrobot_petrone_v2_drive_controller_if_joystick_direction": "when %1 stick move to %2",
+                "byrobot_petrone_v2_drive_controller_light_color_rgb_input": "decide the color values of controller LED R %1, G %2, B %3 %4 %5",
+                "byrobot_petrone_v2_drive_controller_light_color_rgb_select": "RGB combination examples of controller LED %1 %2 %3",
+                "byrobot_petrone_v2_drive_controller_light_manual_single": "change the state of %1 controller LED to %2 %3",
+                "byrobot_petrone_v2_drive_controller_light_manual_single_input": "change the brightness of %1 controller LED to %2 %3",
+                "byrobot_petrone_v2_drive_controller_light_manual_single_off": "turn off all controller LEDs %1",
+                "byrobot_petrone_v2_drive_controller_value_button": "%1",
+                "byrobot_petrone_v2_drive_controller_value_joystick": "%1",
+                "byrobot_petrone_v2_drive_controller_vibrator_delay": "vibration %1 second on, %2 second off for %3 seconds %4",
+                "byrobot_petrone_v2_drive_controller_vibrator_off": "turn off the vibrator %1",
+                "byrobot_petrone_v2_drive_controller_vibrator_on_delay": "turn on the vibrator for %1 second %2",
+                "byrobot_petrone_v2_drive_controller_vibrator_on_reserve": "reserve turn on the vibrator for %1 second %2",
+                "byrobot_petrone_v2_drive_controller_vibrator_reserve": "reserve vibration %1 second on, %2 second off for %3 seconds %4",
+                "byrobot_petrone_v2_drive_drone_command_mode_vehicle_car": "Vehicle mode select %1 %2",
+                "byrobot_petrone_v2_drive_drone_control_car_stop": "stop %1",
+                "byrobot_petrone_v2_drive_drone_control_double": "set wheel to %1, forward/backward to %2 %3",
+                "byrobot_petrone_v2_drive_drone_control_double_delay": "set wheel to %1, forward/backward to %2 and run for %3 second %4",
+                "byrobot_petrone_v2_drive_drone_control_double_one": "set %1 to %2 %3",
+                "byrobot_petrone_v2_drive_drone_control_double_one_delay": "set %1 to %2 and run for %3 second %4",
+                "byrobot_petrone_v2_drive_drone_irmessage": "send %1 to the IR transmitter %2",
+                "byrobot_petrone_v2_drive_drone_light_color_rgb_input": "decide the color values of car %1 LED R %2, G %3, B %4 %5 %6",
+                "byrobot_petrone_v2_drive_drone_light_color_rgb_select": "RGB combination examples of car %1 LED %2 %3 %4",
+                "byrobot_petrone_v2_drive_drone_light_manual_single": "change the state of %1 car LED to %2 %3",
+                "byrobot_petrone_v2_drive_drone_light_manual_single_input": "change the brightness of %1 car LED to %2 %3",
+                "byrobot_petrone_v2_drive_drone_light_manual_single_off": "turn off all car LEDs %1",
+                "byrobot_petrone_v2_drive_drone_motor_stop": "turn off all motors %1",
+                "byrobot_petrone_v2_drive_drone_motorsingle": "set rotate for number %1 motor to %2 %3",
+                "byrobot_petrone_v2_drive_drone_motorsingle_input": "set rotate for number %1 motor to %2 %3",
+                "byrobot_petrone_v2_drive_drone_motorsingle_rotation": "set rotate for number %1 motor to %2 %3 %4",
+                "byrobot_petrone_v2_drive_drone_value_attitude": "%1",
+                "byrobot_petrone_v2_drive_drone_value_etc": "%1",
+                "byrobot_petrone_v2_drive_drone_value_imu": "%1",
+                "byrobot_petrone_v2_drive_drone_value_sensor": "%1",
             },
             
             Helper: {
