@@ -1,9 +1,6 @@
-const { get: _get } = require('lodash');
+import { get as _get } from 'lodash';
 
-/**
- * line entry 의 hardware font-light-weight noti 를 위해 만든 스켈레톤
- */
-Entry.skeleton.basic_text_light = {
+Entry.skeleton.basic_text = {
     path(blockView) {
         const paramText = _get(blockView, ['_schema', 'params', '0', 'text'], '').match(/[\r\n]/g);
         const textLines = paramText ? paramText.length + 1 : 1;
@@ -44,5 +41,5 @@ Entry.skeleton.basic_text_light = {
     movable: false,
     readOnly: true,
     nextShadow: false,
-    classes: ['basicTextLight'],
+    classes: ['basicText'],
 };

@@ -60,6 +60,7 @@
         "@babel/preset-env": "7.0.0",
         "@babel/runtime": "^7.0.0",
         "@egjs/visible": "^2.1.0",
+        "@types/lodash": "^4.14.136",
         "@types/pixi.js": "^4.8.6",
         "@types/webpack-env": "^1.14.0",
         "@typescript-eslint/parser": "^1.13.0",
