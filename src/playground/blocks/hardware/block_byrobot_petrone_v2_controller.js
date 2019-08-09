@@ -40,7 +40,7 @@ Entry.byrobot_petrone_v2_controller =
             this.transferVibrator(0, 0, 0, 0);
             this.transferbuzzer(0, 0, 0);
             this.transferLightManual(0x31, 0xff, 0); // 조종기, flags = 0xFF (전체선택)
-            this.transferCommand(0x31, 0x80, 0); // 조종기, command = 0x80 (DataStorageWrite)
+            this.transferCommand(0x31, 0x80, 0);     // 조종기, command = 0x80 (DataStorageWrite)
         }
     },
 
@@ -507,7 +507,7 @@ Entry.byrobot_petrone_v2_controller =
 
 
     // LED 수동 설정 - RGB 값 직접 지정
-    setLightColorRgb: function(script, target, mode, interval, red, green, blue)
+    setLightModeColor: function(script, target, mode, interval, red, green, blue)
     {
         switch (this.checkFinish(script, 40))
         {
@@ -924,6 +924,7 @@ Entry.byrobot_petrone_v2_controller =
 };
 
 
+
 /***************************************************************************************
  *  언어 적용
  ***************************************************************************************/
@@ -1205,8 +1206,8 @@ Entry.byrobot_petrone_v2_controller.setLanguage = function ()
                 "byrobot_petrone_v2_controller_controller_display_invert":              "invert controller display x:%1, y:%2, width:%3, height:%4 %5",
                 "byrobot_petrone_v2_controller_controller_if_button_press":             "when press %1",
                 "byrobot_petrone_v2_controller_controller_if_joystick_direction":       "when %1 stick move to %2",
-                "byrobot_petrone_v2_controller_controller_light_color_rgb_input":       "decide the color values of controller LED R %1, G %2, B %3 %4 %5",
-                "byrobot_petrone_v2_controller_controller_light_color_rgb_select":      "RGB combination examples of controller LED %1 %2 %3",
+                "byrobot_petrone_v2_controller_controller_light_color_input":           "decide the color values of controller LED R %1, G %2, B %3 %4 %5",
+                "byrobot_petrone_v2_controller_controller_light_color_select":          "RGB combination examples of controller LED %1 %2 %3",
                 "byrobot_petrone_v2_controller_controller_light_manual_single":         "change the state of %1 controller LED to %2 %3",
                 "byrobot_petrone_v2_controller_controller_light_manual_single_input":   "change the brightness of %1 controller LED to %2 %3",
                 "byrobot_petrone_v2_controller_controller_light_manual_single_off":     "turn off all controller LEDs %1",
@@ -1473,11 +1474,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -1531,11 +1528,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -1551,12 +1544,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
             func: function(sprite, script) {
                 var flags = parseInt(script.getField('FLAGS'));
                 var brightness = parseInt(script.getField('BRIGHTNESS'));
-                return Entry.byrobot_petrone_v2_controller.setLightManual(
-                    script,
-                    0x31,
-                    flags,
-                    brightness
-                );
+                return Entry.byrobot_petrone_v2_controller.setLightManual(script, 0x31, flags, brightness);
             },
         },
 
@@ -1648,7 +1636,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
                 var red = script.getNumberValue('RED');
                 var green = script.getNumberValue('GREEN');
                 var blue = script.getNumberValue('BLUE');
-                return Entry.byrobot_petrone_v2_controller.setLightColorRgb(script, 0x31, mode, interval, red, green, blue);
+                return Entry.byrobot_petrone_v2_controller.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
             },
         },
 
@@ -1726,7 +1714,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
                     case 'lavender':        red = 80;   green = 0;      blue = 200; break;
                 }
 
-                return Entry.byrobot_petrone_v2_controller.setLightColorRgb(script, 0x31, mode, interval, red, green, blue);
+                return Entry.byrobot_petrone_v2_controller.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
             },
         },
 
@@ -1749,11 +1737,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -1944,7 +1928,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.byrobot_petrone_v2_controller_display_line_solid, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_line_solid,  '0'],
                         [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dotted, '1'],
                         [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dashed, '2'],
                     ],
@@ -1953,11 +1937,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -2019,8 +1999,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_off, '0'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_on, '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_off,    '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_on,     '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -2030,7 +2010,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.byrobot_petrone_v2_controller_display_line_solid, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_line_solid,  '0'],
                         [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dotted, '1'],
                         [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dashed, '2'],
                     ],
@@ -2103,8 +2083,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_off, '0'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_on, '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_off,    '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_on,     '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -2157,8 +2137,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.byrobot_petrone_v2_controller_display_font_5x8, '0'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_display_font_10x16, '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_font_5x8,    '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_font_10x16,  '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -2224,9 +2204,9 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.byrobot_petrone_v2_controller_display_align_left, '0'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_display_align_center, '1'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_display_align_right, '2'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_align_left,      '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_align_center,    '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_align_right,     '2'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -2236,8 +2216,8 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.byrobot_petrone_v2_controller_display_font_5x8, '0'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_display_font_10x16, '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_font_5x8,    '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_font_10x16,  '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -2328,7 +2308,13 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['4', '3'], ['5', '4'], ['6', '5'], ['7', '6'], ['8', '7']],
+                    options: [
+                        ['4', '3'],
+                        ['5', '4'],
+                        ['6', '5'],
+                        ['7', '6'],
+                        ['8', '7'],
+                    ],
                     value: '4',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2338,18 +2324,18 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_mute, '-1'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c, '0'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs, '1'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d, '2'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds, '3'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e, '4'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f, '5'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs, '6'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g, '7'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs, '8'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a, '9'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as, '10'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b, '11'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c,    '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs,   '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d,    '2'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds,   '3'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e,    '4'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f,    '5'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs,   '6'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g,    '7'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs,   '8'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a,    '9'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as,   '10'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b,    '11'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -2390,7 +2376,13 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['4', '3'], ['5', '4'], ['6', '5'], ['7', '6'], ['8', '7']],
+                    options: [
+                        ['4', '3'],
+                        ['5', '4'],
+                        ['6', '5'],
+                        ['7', '6'],
+                        ['8', '7'],
+                    ],
                     value: '4',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2400,18 +2392,18 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_mute, '-1'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c, '0'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs, '1'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d, '2'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds, '3'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e, '4'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f, '5'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs, '6'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g, '7'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs, '8'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a, '9'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as, '10'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b, '11'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c,    '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs,   '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d,    '2'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds,   '3'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e,    '4'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f,    '5'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs,   '6'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g,    '7'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs,   '8'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a,    '9'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as,   '10'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b,    '11'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -2460,7 +2452,13 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['4', '3'], ['5', '4'], ['6', '5'], ['7', '6'], ['8', '7']],
+                    options: [
+                        ['4', '3'],
+                        ['5', '4'],
+                        ['6', '5'],
+                        ['7', '6'],
+                        ['8', '7'],
+                    ],
                     value: '4',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2470,18 +2468,18 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_mute, '-1'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c, '0'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs, '1'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d, '2'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds, '3'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e, '4'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f, '5'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs, '6'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g, '7'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs, '8'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a, '9'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as, '10'],
-                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b, '11'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c,    '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs,   '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d,    '2'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds,   '3'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e,    '4'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f,    '5'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs,   '6'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g,    '7'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs,   '8'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a,    '9'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as,   '10'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b,    '11'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -2496,10 +2494,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
                 params: [
                     null,
                     null,
-                    {
-                        type: 'text',
-                        params: ['1'],
-                    },
+                    {type: 'text', params: ['1']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_controller_controller_buzzer_scale_reserve',
