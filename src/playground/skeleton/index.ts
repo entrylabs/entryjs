@@ -1,10 +1,12 @@
 Entry.skeleton = function() {};
 
-/*
-type Point = { x: number; y: number; };
+type Point = {
+    x: number;
+    y: number;
+};
 
-interface skeletonSchema {
-    executable?: boolean = true;
+interface ISkeleton {
+    executable?: boolean;
     fontSize?: number;
     movable?: boolean;
     readOnly?: boolean;
@@ -14,27 +16,29 @@ interface skeletonSchema {
     outerLine?: string;
     morph?: ['prev', 'next']; // for pebble
     dropdownHeight?: number; // for pebble
-
-    path: (blockView) => string; // svg path string
-    box: (blockVIew) => {
+    path: (blockView: any) => string; // svg path string
+    box: (
+        blockView: any
+    ) => {
         offsetX: number;
         offsetY: number;
         width: number;
         height: number;
         marginBottom: number;
         topFieldHeight?: number;
-    }
+    };
     contentPos: () => Point;
-    magnets?: (blockView) => {
+    magnets?: (
+        blockView: any
+    ) => {
         next?: Point;
         previous?: Point;
         boolean?: {};
         string?: {};
         param?: {};
-    }
-    statementPos?: (blockView) => Point[];
+    };
+    statementPos?: (blockView: any) => Point[];
 }
-*/
 
 // index.js 를 제외한 playground/skeleton 디렉토리 하위의 모든 js 를 불러옴
 // https://webpack.js.org/guides/dependency-management/#requirecontext
