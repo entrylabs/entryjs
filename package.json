@@ -62,6 +62,7 @@
         "@egjs/visible": "^2.1.0",
         "@types/pixi.js": "^4.8.6",
         "@types/webpack-env": "^1.14.0",
+        "@typescript-eslint/parser": "^1.13.0",
         "awesome-typescript-loader": "^5.2.1",
         "babel-eslint": "^8.2.2",
         "babel-loader": "^8.0.0-beta",
