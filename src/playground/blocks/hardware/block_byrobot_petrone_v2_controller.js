@@ -57,6 +57,7 @@ Entry.byrobot_petrone_v2_controller =
 
         // 모니터 화면 상단에 차례대로 나열하는 값
         listPorts: {
+            /*
             joystick_left_x:                {name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_x,           type: 'input',  pos: { x: 0, y: 0 }},
             joystick_left_y:                {name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_y,           type: 'input',  pos: { x: 0, y: 0 }},
             joystick_left_direction:        {name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_direction,   type: 'input',  pos: { x: 0, y: 0 }},
@@ -68,6 +69,18 @@ Entry.byrobot_petrone_v2_controller =
             button_button:                  {name: Lang.Blocks.byrobot_petrone_v2_controller_button_button,             type: 'input',  pos: { x: 0, y: 0 }},
             button_event:                   {name: Lang.Blocks.byrobot_petrone_v2_controller_button_event,              type: 'input',  pos: { x: 0, y: 0 }},
             entryhw_countTransferReserved:  {name: Lang.Blocks.byrobot_petrone_v2_entryhw_count_transfer_reserved,      type: 'output', pos: { x: 0, y: 0 }},
+            // */
+            joystick_left_x:                {name: 'Left Joystick X',               type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_left_y:                {name: 'Left Joystick Y',               type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_left_direction:        {name: 'Left Joystick Direction',       type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_left_event:            {name: 'Left Joystick Event',           type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_right_x:               {name: 'Right Joystick X',              type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_right_y:               {name: 'Right Joystick Y',              type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_right_direction:       {name: 'Right Joystick Direction',      type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_right_event:           {name: 'Right Joystick Event',          type: 'input',  pos: { x: 0, y: 0 }},
+            button_button:                  {name: 'Button',                        type: 'input',  pos: { x: 0, y: 0 }},
+            button_event:                   {name: 'Button Event',                  type: 'input',  pos: { x: 0, y: 0 }},
+            entryhw_countTransferReserved:  {name: 'Transfer Buffer',               type: 'output', pos: { x: 0, y: 0 }},
         },
 
         // 모니터 화면 지정 위치와 선으로 연결하여 표시하는 값
@@ -928,7 +941,6 @@ Entry.byrobot_petrone_v2_controller =
 /***************************************************************************************
  *  언어 적용
  ***************************************************************************************/
-// 
 Entry.byrobot_petrone_v2_controller.setLanguage = function ()
 {
     return {
@@ -1228,10 +1240,10 @@ Entry.byrobot_petrone_v2_controller.setLanguage = function ()
 };
 
 
-
 /***************************************************************************************
  *  엔트리에 등록할 블록들의 블록명
  ***************************************************************************************/
+
 Entry.byrobot_petrone_v2_controller.blockMenuBlocks = [
     'byrobot_petrone_v2_controller_controller_value_button',
     'byrobot_petrone_v2_controller_controller_value_joystick',
