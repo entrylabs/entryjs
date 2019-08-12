@@ -57,6 +57,7 @@ Entry.Microbit = new class Microbit {
             'microbit_get_digital',
             'microbit_get_button',
             'microbit_is_tilt',
+            'microbit_get_tilt',
             'microbit_get_sensor',
             'microbit_get_accelerometer',
             'microbit_set_servo',
@@ -255,7 +256,7 @@ Entry.Microbit = new class Microbit {
                     let value = script.getStringValue('VALUE');
                     value = value.replace(
                         /[^A-Za-z0-9_\`\~\!\@\#\$\%\^\&\*\(\)\-\=\+\\\{\}\[\]\'\"\;\:\<\,\>\.\?\/\s]/gim,
-                        ''
+                        '',
                     );
                     this.requestCommand(functionKeys.SET_STRING, value);
                 },
@@ -530,7 +531,7 @@ Entry.Microbit = new class Microbit {
                     let returnData = _get(
                         Entry.hw.portData,
                         ['payload', 'sensorData', 'analog', value],
-                        0
+                        0,
                     );
 
                     let value2 = script.getNumberValue('VALUE2', script);
@@ -682,7 +683,7 @@ Entry.Microbit = new class Microbit {
                     const buttonState = _get(
                         Entry.hw.portData,
                         ['payload', 'sensorData', 'button'],
-                        -1
+                        -1,
                     );
 
                     // double equal 은 의도한 것임.
@@ -806,6 +807,70 @@ Entry.Microbit = new class Microbit {
                             return value >= 30 && value <= 180;
                         default:
                             return false;
+                    }
+                },
+            },
+            microbit_get_tilt: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                fontColor: '#ffffff',
+                skeleton: 'basic_string_field',
+                statements: [],
+                template: '%1 방향으로 기울어진 각도값',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [['왼쪽', 0], ['오른쪽', 1], ['앞쪽', 2], ['뒤쪽', 3]],
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                events: {},
+                class: 'microbitMove',
+                isNotFor: ['microbit'],
+                def: {
+                    type: 'microbit_get_tilt',
+                },
+                paramsKeyMap: {
+                    DIRECTION: 0,
+                },
+                func: (sprite, script) => {
+                    const direction = script.getField('DIRECTION');
+
+                    let command;
+                    const sensorDataMap = ['payload', 'sensorData', 'tilt'];
+                    switch (direction) {
+                        case 0:
+                        case 1: {
+                            command = functionKeys.GET_ROLL;
+                            sensorDataMap.push('roll');
+                            break;
+                        }
+                        case 2:
+                        case 3:
+                        default: {
+                            command = functionKeys.GET_PITCH;
+                            sensorDataMap.push('pitch');
+                            break;
+                        }
+                    }
+
+                    this.requestCommandWithResponse(command);
+                    const value = _get(Entry.hw.portData, sensorDataMap, -1);
+                    /*
+                    좌우 = 우측으로 기울일수록 +
+                    앞뒤 = 뒤로 기울일수록 +
+                     */
+                    switch (direction) {
+                        case 1: // 오른쪽
+                        case 3: // 뒤쪽
+                            return value;
+                        case 0: // 왼쪽
+                        case 2: // 앞쪽
+                        default:
+                            return -value;
                     }
                 },
             },
