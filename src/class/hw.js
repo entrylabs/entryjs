@@ -144,7 +144,7 @@ Entry.HW = class {
                 },
             });
 
-        if (location.protocol === 'http:') {
+        if (['http:', 'file:'].indexOf(location.protocol)) {
             this.socketIo = connectHttpsWebSocket(this.httpServerAddress);
         }
         this.tlsSocketIo1 = connectHttpsWebSocket(this.httpsServerAddress);
