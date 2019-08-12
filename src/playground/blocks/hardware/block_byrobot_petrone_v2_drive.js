@@ -2559,8 +2559,9 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     null,
                     null,
                     null,
+                    {type: 'text', params: ['255']},
                     null,
-                    {type: 'text', params: ['255']},],
+                ],
                 type: 'byrobot_petrone_v2_drive_drone_light_color_select',
             },
             paramsKeyMap: {

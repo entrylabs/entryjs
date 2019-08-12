@@ -1163,6 +1163,7 @@ Entry.byrobot_petrone_v2_flight =
         }
     },
 
+
     sendControlQuadSingle: function(script, controlTarget, value, time, flagDelay)
     {
         var timeDelay = 40;
@@ -1192,6 +1193,8 @@ Entry.byrobot_petrone_v2_flight =
             case 'Finish':
                 if (flagDelay)
                 {
+                    // 블럭을 빠져나갈 때 변경했던 값을 초기화
+
                     // 전송
                     Entry.hw.setDigitalPortValue('target', 0x30);
                     Entry.hw.setDigitalPortValue(controlTarget, 0);
@@ -1207,6 +1210,7 @@ Entry.byrobot_petrone_v2_flight =
                 return script.callReturn();
         }
     },
+
 
     sendControlQuad: function(script, roll, pitch, yaw, throttle, time, flagDelay)
     {
@@ -1419,8 +1423,8 @@ Entry.byrobot_petrone_v2_controller.setLanguage = function ()
                 "byrobot_petrone_v2_flight_controller_display_invert":              "색반전 x %1, y %2, 너비 %3, 높이 %4 %5",
                 "byrobot_petrone_v2_flight_controller_if_button_press":             "조종기 %1 눌렀을 때",
                 "byrobot_petrone_v2_flight_controller_if_joystick_direction":       "조종기 %1 조이스틱 %2 움직였을 때",
-                "byrobot_petrone_v2_flight_controller_light_color_rgb_input":       "조종기 LED 색지정 R %1, G %2, B %3 %4 %5",
-                "byrobot_petrone_v2_flight_controller_light_color_rgb_select":      "조종기 LED의 RGB 조합 예시 %1 %2 %3",
+                "byrobot_petrone_v2_flight_controller_light_color_input":       "조종기 LED 색지정 R %1, G %2, B %3 %4 %5",
+                "byrobot_petrone_v2_flight_controller_light_color_select":      "조종기 LED의 RGB 조합 예시 %1 %2 %3",
                 "byrobot_petrone_v2_flight_controller_light_manual_single":         "조종기 LED %1 %2 %3",
                 "byrobot_petrone_v2_flight_controller_light_manual_single_input":   "조종기 LED %1 밝기 %2 %3",
                 "byrobot_petrone_v2_flight_controller_light_manual_single_off":     "조종기 LED 끄기 %1",
@@ -1442,8 +1446,8 @@ Entry.byrobot_petrone_v2_controller.setLanguage = function ()
                 "byrobot_petrone_v2_flight_drone_control_quad_one":                 "드론 %1 %2% 정하기 %3",
                 "byrobot_petrone_v2_flight_drone_control_quad_one_delay":           "드론 %1 %2% %3 초 실행 %4",
                 "byrobot_petrone_v2_flight_drone_irmessage":                        "적외선으로 %1 값 보내기 %2",
-                "byrobot_petrone_v2_flight_drone_light_color_rgb_input":            "드론 %1 LED 색지정 R %2, G %3, B %4 %5 %6",
-                "byrobot_petrone_v2_flight_drone_light_color_rgb_select":           "드론 %1 LED의 RGB 조합 예시 %2 %3 %4",
+                "byrobot_petrone_v2_flight_drone_light_color_input":            "드론 %1 LED 색지정 R %2, G %3, B %4 %5 %6",
+                "byrobot_petrone_v2_flight_drone_light_color_select":           "드론 %1 LED의 RGB 조합 예시 %2 %3 %4",
                 "byrobot_petrone_v2_flight_drone_light_manual_single":              "드론 LED %1 %2 %3",
                 "byrobot_petrone_v2_flight_drone_light_manual_single_input":        "드론 LED %1 밝기 %2 %3",
                 "byrobot_petrone_v2_flight_drone_light_manual_single_off":          "드론 LED 끄기 %1",
@@ -1476,8 +1480,8 @@ Entry.byrobot_petrone_v2_controller.setLanguage = function ()
                 "byrobot_petrone_v2_flight_controller_display_invert":              "<br>조종기 OLED 화면에서 선택한 영역의 색을 반전시킵니다. x, y 좌표값과 너비, 높이를 지정합니다. 좌표(x, y) = (가로, 세로) 화면상의 위치입니다. 사용 가능한 값의 범위는 x값과 너비는 (0~128), y값과 높이는 (0~64)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
                 "byrobot_petrone_v2_flight_controller_if_button_press":             "<br>지정한 조종기의 버튼이 눌러졌을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
                 "byrobot_petrone_v2_flight_controller_if_joystick_direction":       "<br>조종기의 조이스틱을 지정한 방향으로 움직였을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
-                "byrobot_petrone_v2_flight_controller_light_color_rgb_input":       "<br>빛의 삼원색인 Red, Green, Blue 값을 지정하여 조종기 LED의 색상을 원하는대로 만들 수 있습니다.<br>10진수(0 ~ 255) 값을 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
-                "byrobot_petrone_v2_flight_controller_light_color_rgb_select":      "<br>RGB 색지정 블록을 이용해서 만들 수 있는<br> 조종기 LED 예시입니다.<br>RGB 색지정 블록을 이용해서 멋진 색깔을<br> 다양하게 만들어보세요.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
+                "byrobot_petrone_v2_flight_controller_light_color_input":           "<br>빛의 삼원색인 Red, Green, Blue 값을 지정하여 조종기 LED의 색상을 원하는대로 만들 수 있습니다.<br>10진수(0 ~ 255) 값을 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
+                "byrobot_petrone_v2_flight_controller_light_color_select":          "<br>RGB 색지정 블록을 이용해서 만들 수 있는<br> 조종기 LED 예시입니다.<br>RGB 색지정 블록을 이용해서 멋진 색깔을<br> 다양하게 만들어보세요.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_petrone_v2_flight_controller_light_manual_single":         "<br>조종기 LED를 조작하는데 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_petrone_v2_flight_controller_light_manual_single_input":   "<br>조종기 LED를 조작하는데 사용합니다.<br>2진수(0b00100000 ~ 0b11100000), 10진수(32 ~ 224), 16진수(0x20 ~ 0xE0) 값을 사용할 수 있습니다.  2진수로 표현한 값에서 각각의 비트는 LED의 Red, Green, Blue 색을 선택하는 스위치 역할을 합니다.  밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다. 값이 커질수록 더 밝아집니다. <br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_petrone_v2_flight_controller_light_manual_single_off":     "<br>조종기의 모든 LED를 끕니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED끄기</font>",
@@ -1499,8 +1503,8 @@ Entry.byrobot_petrone_v2_controller.setLanguage = function ()
                 "byrobot_petrone_v2_flight_drone_control_quad_one":                 "<br>드론 조종 값을 지정합니다. 입력 가능한 값의 범위는 -100 ~ 100입니다. 정지 상태에서 Throttle 값을 50이상으로 지정하면 드론이 이륙합니다. 명령 전달 후 바로 다음 블럭으로 넘어갑니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#조종</font>",
                 "byrobot_petrone_v2_flight_drone_control_quad_one_delay":           "<br>드론 조종 값을 지정합니다. 입력 가능한 값의 범위는 -100 ~ 100입니다. 정지 상태에서 Throttle 값을 50이상으로 지정하면 드론이 이륙합니다. 지정한 시간이 지나면 해당 조종 값을 0으로 변경합니다. 지정한 시간이 끝날 때까지 다음 블럭으로 넘어가지 않습니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#조종</font> <font color='forestgreen'>#시간지연</font>",
                 "byrobot_petrone_v2_flight_drone_irmessage":                        "<br>적외선으로 지정한 값을 보냅니다. 사용 가능한 값의 범위는 -2147483647 ~ 2147483647입니다.수신 방향이 추가되었습니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#적외선통신</font>",
-                "byrobot_petrone_v2_flight_drone_light_color_rgb_input":            "<br>빛의 삼원색인 Red, Green, Blue 값을 지정하여 드론의 눈 또는 팔 LED의 색상을 원하는대로 만들 수 있습니다.<br>10진수(0 ~ 255) 값을 사용합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
-                "byrobot_petrone_v2_flight_drone_light_color_rgb_select":           "<br>RGB 색지정 블록을 이용해서 만들 수 있는<br> 드론 LED 예시입니다.<br>RGB 색지정 블록을 이용해서 멋진 색깔을<br> 다양하게 만들어보세요.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
+                "byrobot_petrone_v2_flight_drone_light_color_input":                "<br>빛의 삼원색인 Red, Green, Blue 값을 지정하여 드론의 눈 또는 팔 LED의 색상을 원하는대로 만들 수 있습니다.<br>10진수(0 ~ 255) 값을 사용합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
+                "byrobot_petrone_v2_flight_drone_light_color_select":               "<br>RGB 색지정 블록을 이용해서 만들 수 있는<br> 드론 LED 예시입니다.<br>RGB 색지정 블록을 이용해서 멋진 색깔을<br> 다양하게 만들어보세요.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_petrone_v2_flight_drone_light_manual_single":              "<br>드론의 LED를 조작하는데 사용합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_petrone_v2_flight_drone_light_manual_single_input":        "<br>드론 LED를 조작하는데 사용합니다.<br>2진수(0b00000100 ~ 0b11111100), 10진수(4 ~ 252), 16진수(0x04 ~ 0xFC) 값을 사용할 수 있습니다.  2진수로 표현한 값에서 각각의 비트는 눈과 팔 LED의 Red, Green, Blue 색을 선택하는 스위치 역할을 합니다.  밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다. 값이 커질수록 더 밝아집니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_petrone_v2_flight_drone_light_manual_single_off":          "<br>드론의 모든 LED를 끕니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED끄기</font>",
@@ -1688,8 +1692,8 @@ Entry.byrobot_petrone_v2_controller.setLanguage = function ()
                 "byrobot_petrone_v2_flight_controller_display_invert": "invert controller display x:%1, y:%2, width:%3, height:%4 %5",
                 "byrobot_petrone_v2_flight_controller_if_button_press": "when press %1",
                 "byrobot_petrone_v2_flight_controller_if_joystick_direction": "when %1 stick move to %2",
-                "byrobot_petrone_v2_flight_controller_light_color_rgb_input": "decide the color values of controller LED R %1, G %2, B %3 %4 %5",
-                "byrobot_petrone_v2_flight_controller_light_color_rgb_select": "RGB combination examples of controller LED %1 %2 %3",
+                "byrobot_petrone_v2_flight_controller_light_color_input": "decide the color values of controller LED R %1, G %2, B %3 %4 %5",
+                "byrobot_petrone_v2_flight_controller_light_color_select": "RGB combination examples of controller LED %1 %2 %3",
                 "byrobot_petrone_v2_flight_controller_light_manual_single": "change the state of %1 controller LED to %2 %3",
                 "byrobot_petrone_v2_flight_controller_light_manual_single_input": "change the brightness of %1 controller LED to %2 %3",
                 "byrobot_petrone_v2_flight_controller_light_manual_single_off": "turn off all controller LEDs %1",
@@ -1711,8 +1715,8 @@ Entry.byrobot_petrone_v2_controller.setLanguage = function ()
                 "byrobot_petrone_v2_flight_drone_control_quad_one": "set %1 to %2 %3",
                 "byrobot_petrone_v2_flight_drone_control_quad_one_delay": "set %1 to %2 and run for %3 second %4",
                 "byrobot_petrone_v2_flight_drone_irmessage": "send %1 to the IR transmitter %2",
-                "byrobot_petrone_v2_flight_drone_light_color_rgb_input": "decide the color values of drone %1 LED R %2, G %3, B %4 %5 %6",
-                "byrobot_petrone_v2_flight_drone_light_color_rgb_select": "RGB combination examples of drone %1 LED %2 %3 %4",
+                "byrobot_petrone_v2_flight_drone_light_color_input": "decide the color values of drone %1 LED R %2, G %3, B %4 %5 %6",
+                "byrobot_petrone_v2_flight_drone_light_color_select": "RGB combination examples of drone %1 LED %2 %3 %4",
                 "byrobot_petrone_v2_flight_drone_light_manual_single": "change the state of %1 drone LED to %2 %3",
                 "byrobot_petrone_v2_flight_drone_light_manual_single_input": "change the brightness of %1 drone LED to %2 %3",
                 "byrobot_petrone_v2_flight_drone_light_manual_single_off": "turn off all drone LEDs %1",
@@ -1765,13 +1769,13 @@ Entry.byrobot_petrone_v2_flight.blockMenuBlocks = [
     'byrobot_petrone_v2_flight_drone_light_manual_single_off',
     'byrobot_petrone_v2_flight_drone_light_manual_single',
     'byrobot_petrone_v2_flight_drone_light_manual_single_input',
-    'byrobot_petrone_v2_flight_drone_light_color_rgb_input',
-    'byrobot_petrone_v2_flight_drone_light_color_rgb_select',
+    'byrobot_petrone_v2_flight_drone_light_color_input',
+    'byrobot_petrone_v2_flight_drone_light_color_select',
     'byrobot_petrone_v2_flight_controller_light_manual_single_off',
     'byrobot_petrone_v2_flight_controller_light_manual_single',
     'byrobot_petrone_v2_flight_controller_light_manual_single_input',
-    'byrobot_petrone_v2_flight_controller_light_color_rgb_input',
-    'byrobot_petrone_v2_flight_controller_light_color_rgb_select',
+    'byrobot_petrone_v2_flight_controller_light_color_input',
+    'byrobot_petrone_v2_flight_controller_light_color_select',
     'byrobot_petrone_v2_flight_controller_display_clear_all',
     'byrobot_petrone_v2_flight_controller_display_clear',
     'byrobot_petrone_v2_flight_controller_display_invert',
@@ -1794,31 +1798,27 @@ Entry.byrobot_petrone_v2_flight.blockMenuBlocks = [
     'byrobot_petrone_v2_flight_controller_vibrator_delay',
     'byrobot_petrone_v2_flight_controller_vibrator_reserve',
 ];
-Entry.byrobot_petrone_v2_flight.getBlocks = function() {
+
+
+
+Entry.byrobot_petrone_v2_flight.getBlocks = function()
+{
     return {
         //region byrobot 바이로봇
         /* BYROBOT PetroneV2 Flight Start */
-        byrobot_petrone_v2_flight_drone_value_attitude: {
+        byrobot_petrone_v2_flight_drone_value_attitude:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_attitude_roll,
-                            'imu_angleRoll',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_attitude_pitch,
-                            'imu_anglePitch',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_attitude_yaw,
-                            'imu_angleYaw',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_attitude_roll,    'imu_angleRoll'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_attitude_pitch,   'imu_anglePitch'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_attitude_yaw,     'imu_angleYaw'],
                     ],
                     value: 'imu_angleRoll', // 초기 선택항목 지정
                     fontSize: 11,
@@ -1840,39 +1840,24 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
         },
-        byrobot_petrone_v2_flight_drone_value_imu: {
+
+
+        byrobot_petrone_v2_flight_drone_value_imu:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_accel_x,
-                            'imu_accX',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_accel_y,
-                            'imu_accY',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_accel_z,
-                            'imu_accZ',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_gyro_roll,
-                            'imu_gyroRoll',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_gyro_pitch,
-                            'imu_gyroPitch',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_gyro_yaw,
-                            'imu_gyroYaw',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_accel_x,      'imu_accX'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_accel_y,      'imu_accY'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_accel_z,      'imu_accZ'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_gyro_roll,    'imu_gyroRoll'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_gyro_pitch,   'imu_gyroPitch'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_gyro_yaw,     'imu_gyroYaw'],
                     ],
                     value: 'imu_accX', // 초기 선택항목 지정
                     fontSize: 11,
@@ -1894,39 +1879,23 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
         },
-        byrobot_petrone_v2_flight_drone_value_sensor: {
+
+
+        byrobot_petrone_v2_flight_drone_value_sensor:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_pressure_temperature,
-                            'pressure_temperature',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_pressure_pressure,
-                            'pressure_pressure',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_imageflow_positionX,
-                            'imageflow_positionX',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_imageflow_positionY,
-                            'imageflow_positionY',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_range_bottom,
-                            'range_bottom',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_pressure_temperature, 'pressure_temperature'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_pressure_pressure,    'pressure_pressure'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionX,  'imageflow_positionX'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionY,  'imageflow_positionY'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_range_bottom,         'range_bottom'],
                     ],
                     value: 'pressure_temperature', // 초기 선택항목 지정
                     fontSize: 11,
@@ -1948,38 +1917,22 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
         },
-        byrobot_petrone_v2_flight_drone_value_etc: {
+
+
+        byrobot_petrone_v2_flight_drone_value_etc:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_state_mode_vehicle,
-                            'state_modeVehicle',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_state_mode_flight,
-                            'state_modeFlight',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_state_mode_coordinate,
-                            'state_coordinate',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_state_battery,
-                            'state_battery',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_irmessage,
-                            'irmessage_irdata',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_state_mode_vehicle,   'state_modeVehicle'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_state_mode_drive,     'state_modeDrive'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_state_battery,        'state_battery'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_irmessage,            'irmessage_irdata'],
                     ],
                     value: 'irmessage_irdata', // 초기 선택항목 지정
                     fontSize: 11,
@@ -2001,25 +1954,20 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
         },
-        byrobot_petrone_v2_flight_controller_value_button: {
+
+
+        byrobot_petrone_v2_flight_controller_value_button:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_button,
-                            'button_button',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_event,
-                            'button_event',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_button,   'button_button'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_event,    'button_event'],
                     ],
                     value: 'button_button', // 초기 선택항목 지정
                     fontSize: 11,
@@ -2041,55 +1989,26 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
         },
-        byrobot_petrone_v2_flight_controller_value_joystick: {
+
+
+        byrobot_petrone_v2_flight_controller_value_joystick:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_left_x,
-                            'joystick_left_x',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_left_y,
-                            'joystick_left_y',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_left_direction,
-                            'joystick_left_direction',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_left_event,
-                            'joystick_left_event',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_right_x,
-                            'joystick_right_x',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_right_y,
-                            'joystick_right_y',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_right_direction,
-                            'joystick_right_direction',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_right_event,
-                            'joystick_right_event',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_x,             'joystick_left_x'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_y,             'joystick_left_y'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_direction,     'joystick_left_direction'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_event,         'joystick_left_event'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_x,            'joystick_right_x'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_y,            'joystick_right_y'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_direction,    'joystick_right_direction'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_event,        'joystick_right_event'],
                     ],
                     value: 'joystick_left_x', // 초기 선택항목 지정
                     fontSize: 11,
@@ -2111,9 +2030,12 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
         },
-        byrobot_petrone_v2_flight_controller_if_button_press: {
+
+
+        byrobot_petrone_v2_flight_controller_if_button_press:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -2121,66 +2043,18 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_front_left,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_front_right,
-                            '2',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_front_left_right,
-                            '3',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_center_up_left,
-                            '4',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_center_up_right,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_center_up,
-                            '16',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_center_left,
-                            '32',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_center_right,
-                            '64',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_center_down,
-                            '128',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_bottom_left,
-                            '256',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_bottom_right,
-                            '512',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_bottom_left_right,
-                            '768',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_front_left,        '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_front_right,       '2'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_front_left_right,  '3'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_center_up_left,    '4'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_center_up_right,   '8'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_center_up,         '16'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_center_left,       '32'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_center_right,      '64'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_center_down,       '128'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_bottom_left,       '256'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_bottom_right,      '512'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_bottom_left_right, '768'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -2212,9 +2086,12 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-        byrobot_petrone_v2_flight_controller_if_joystick_direction: {
+
+
+        byrobot_petrone_v2_flight_controller_if_joystick_direction:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -2222,14 +2099,8 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_common_left,
-                            'joystick_left_direction',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_common_right,
-                            'joystick_right_direction',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_common_left, 'joystick_left_direction'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_right, 'joystick_right_direction'],
                     ],
                     value: 'joystick_left_direction',
                     fontSize: 11,
@@ -2239,51 +2110,15 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_left_up,
-                            '17',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_up,
-                            '18',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_right_up,
-                            '20',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_left,
-                            '33',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_center,
-                            '34',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_right,
-                            '36',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_left_down,
-                            '65',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_down,
-                            '66',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_right_down,
-                            '68',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_left_up,      '17'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_up,           '18'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_right_up,     '20'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_left,         '33'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_center,       '34'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_right,        '36'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_left_down,    '65'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_down,         '66'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_right_down,   '68'],
                     ],
                     value: '34',
                     fontSize: 11,
@@ -2294,8 +2129,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
             events: {},
             def: {
                 params: [null, null],
-                type:
-                    'byrobot_petrone_v2_flight_controller_if_joystick_direction',
+                type: 'byrobot_petrone_v2_flight_controller_if_joystick_direction',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -2312,80 +2146,48 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 else return false;
             },
         },
-        byrobot_petrone_v2_flight_controller_light_manual_single_off: {
+
+
+        byrobot_petrone_v2_flight_controller_light_manual_single_off:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [null],
-                type:
-                    'byrobot_petrone_v2_flight_controller_light_manual_single_off',
+                type: 'byrobot_petrone_v2_flight_controller_light_manual_single_off',
             },
             paramsKeyMap: {},
             class: 'byrobot_petrone_v2_flight_controller_light',
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
-                return Entry.byrobot_petrone_v2_flight.setLightManual(
-                    script,
-                    0x31,
-                    0xff,
-                    0
-                );
+                return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x31, 0xff, 0);
             },
         },
-        byrobot_petrone_v2_flight_controller_light_manual_single: {
+
+
+        byrobot_petrone_v2_flight_controller_light_manual_single:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_red,
-                            '128',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_green,
-                            '64',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_blue,
-                            '32',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_yellow,
-                            '192',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_magenta,
-                            '160',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_cyan,
-                            '96',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_white,
-                            '255',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_red,        '128'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_green,      '64'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_blue,       '32'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_yellow,     '192'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_magenta,    '160'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_cyan,       '96'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_white,      '255'],
                     ],
                     value: '128',
                     fontSize: 11,
@@ -2395,47 +2197,19 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_on,
-                            '220',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_off,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_b25,
-                            '75',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_b50,
-                            '125',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_b75,
-                            '200',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_b100,
-                            '255',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_on,     '220'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_off,    '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b25,    '75'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b50,    '125'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b75,    '200'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b100,   '255'],
                     ],
                     value: '220',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -2452,49 +2226,30 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
             func: function(sprite, script) {
                 var flags = parseInt(script.getField('FLAGS'));
                 var brightness = parseInt(script.getField('BRIGHTNESS'));
-                return Entry.byrobot_petrone_v2_flight.setLightManual(
-                    script,
-                    0x31,
-                    flags,
-                    brightness
-                );
+                return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x31, flags, brightness);
             },
         },
-        byrobot_petrone_v2_flight_controller_light_manual_single_input: {
+
+
+        byrobot_petrone_v2_flight_controller_light_manual_single_input:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'text',
-                        params: ['0b11100000'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['255'],
-                    },
+                    {type: 'text', params: ['0b11100000']},
+                    {type: 'text', params: ['255']},
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_flight_controller_light_manual_single_input',
+                type: 'byrobot_petrone_v2_flight_controller_light_manual_single_input',
             },
             paramsKeyMap: {
                 FLAGS: 0,
@@ -2505,150 +2260,86 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
             func: function(sprite, script) {
                 var flags = script.getNumberValue('FLAGS');
                 var brightness = script.getNumberValue('BRIGHTNESS');
-                return Entry.byrobot_petrone_v2_flight.setLightManual(
-                    script,
-                    0x31,
-                    flags,
-                    brightness
-                );
+                return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x31, flags, brightness);
             },
         },
-        byrobot_petrone_v2_flight_controller_light_color_rgb_input: {
+
+
+        byrobot_petrone_v2_flight_controller_light_color_input:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_hold,
-                            '0',
-                        ], // TeamHold = 0x12
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_flicker,
-                            '1',
-                        ], // TeamFlicker = 0x13
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_flicker_double,
-                            '2',
-                        ], // TeamFlickerDouble = 0x14
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_dimming,
-                            '3',
-                        ], // TeamDimming = 0x15
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold,             '0'],   // TeamHold             = 0x12
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker,          '1'],   // TeamFlicker          = 0x13
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double,   '2'],   // TeamFlickerDouble    = 0x14
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming,          '3'],   // TeamDimming          = 0x15
                     ],
                     value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'text',
-                        params: ['255'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['255'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['255'],
-                    },
+                    {type: 'text', params: ['255']},
+                    {type: 'text', params: ['255']},
+                    {type: 'text', params: ['255']},
                     null,
+                    {type: 'text', params: ['200']},
                     null,
                 ],
                 type:
-                    'byrobot_petrone_v2_flight_controller_light_color_rgb_input',
+                    'byrobot_petrone_v2_flight_controller_light_color_input',
             },
             paramsKeyMap: {
                 RED: 0,
                 GREEN: 1,
                 BLUE: 2,
-                ADDITION: 3,
+                MODE: 3,
+                INTERVAL: 4,
             },
             class: 'byrobot_petrone_v2_flight_controller_light',
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
-                var mode = 0x12 + parseInt(script.getField('ADDITION'));
+                var mode = 0x12 + parseInt(script.getField('MODE'));
+                var interval = script.getNumberValue('INTERVAL');
                 var red = script.getNumberValue('RED');
                 var green = script.getNumberValue('GREEN');
                 var blue = script.getNumberValue('BLUE');
-                return Entry.byrobot_petrone_v2_flight.setLightModeColor(
-                    script,
-                    0x31,
-                    mode,
-                    red,
-                    green,
-                    blue
-                );
+                return Entry.byrobot_petrone_v2_flight.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
             },
         },
-        byrobot_petrone_v2_flight_controller_light_color_rgb_select: {
+
+
+        byrobot_petrone_v2_flight_controller_light_color_select:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_sunset,
-                            'sunset',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_cottoncandy,
-                            'cottonCandy',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_muscat,
-                            'muscat',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_strawberrymilk,
-                            'strawberryMilk',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_emerald,
-                            'emerald',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_lavender,
-                            'lavender',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_sunset,          'sunset'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_cottoncandy,     'cottonCandy'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_muscat,          'muscat'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_strawberrymilk,  'strawberryMilk'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_emerald,         'emerald'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_lavender,        'lavender'],
                     ],
                     value: 'sunset',
                     fontSize: 11,
@@ -2658,111 +2349,67 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_hold,
-                            '0',
-                        ], // TeamHold = 0x12
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_flicker,
-                            '1',
-                        ], // TeamFlicker = 0x13
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_flicker_double,
-                            '2',
-                        ], // TeamFlickerDouble = 0x14
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_dimming,
-                            '3',
-                        ], // TeamDimming = 0x15
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold,             '0'], // TeamHold           = 0x12
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker,          '1'], // TeamFlicker        = 0x13
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double,   '2'], // TeamFlickerDouble  = 0x14
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming,          '3'], // TeamDimming        = 0x15
                     ],
                     value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
-                params: [null, null, null],
-                type:
-                    'byrobot_petrone_v2_flight_controller_light_color_rgb_select',
+                params: [
+                    null,
+                    null,
+                    {type: 'text', params: ['255']},
+                    null
+                ],
+                type: 'byrobot_petrone_v2_flight_controller_light_color_select',
             },
             paramsKeyMap: {
                 SELECT: 0,
-                ADDITION: 1,
+                MODE: 1,
+                INTERVAL: 2,
             },
             class: 'byrobot_petrone_v2_flight_controller_light',
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
-                var mode = 0x12 + parseInt(script.getField('ADDITION'));
+                var mode = 0x12 + parseInt(script.getField('MODE'));
+                var interval = script.getNumberValue('INTERVAL');
                 var select = script.getField('SELECT');
                 var red = 0;
                 var green = 0;
                 var blue = 0;
 
-                switch (select) {
-                    case 'sunset':
-                        red = 255;
-                        green = 100;
-                        blue = 0;
-                        break;
-                    case 'cottonCandy':
-                        red = 20;
-                        green = 250;
-                        blue = 150;
-                        break;
-                    case 'muscat':
-                        red = 70;
-                        green = 255;
-                        blue = 0;
-                        break;
-                    case 'strawberryMilk':
-                        red = 150;
-                        green = 60;
-                        blue = 20;
-                        break;
-                    case 'emerald':
-                        red = 0;
-                        green = 255;
-                        blue = 30;
-                        break;
-                    case 'lavender':
-                        red = 80;
-                        green = 0;
-                        blue = 200;
-                        break;
+                switch (select)
+                {
+                    case 'sunset':          red = 255;  green = 100;    blue = 0;   break;
+                    case 'cottonCandy':     red = 20;   green = 250;    blue = 150; break;
+                    case 'muscat':          red = 70;   green = 255;    blue = 0;   break;
+                    case 'strawberryMilk':  red = 150;  green = 60;     blue = 20;  break;
+                    case 'emerald':         red = 0;    green = 255;    blue = 30;  break;
+                    case 'lavender':        red = 80;   green = 0;      blue = 200; break;
                 }
 
-                return Entry.byrobot_petrone_v2_flight.setLightModeColor(
-                    script,
-                    0x31,
-                    mode,
-                    red,
-                    green,
-                    blue
-                );
+                return Entry.byrobot_petrone_v2_flight.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
             },
         },
-        byrobot_petrone_v2_flight_drone_light_manual_single_off: {
+
+
+        byrobot_petrone_v2_flight_drone_light_manual_single_off:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -2773,53 +2420,24 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
             class: 'byrobot_petrone_v2_flight_drone_light',
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
-                return Entry.byrobot_petrone_v2_flight.setLightManual(
-                    script,
-                    0x30,
-                    0xff,
-                    0
-                );
+                return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x30, 0xff, 0);
             },
         },
         byrobot_petrone_v2_flight_drone_light_manual_single: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_light_manual_eye_red,
-                            '128',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_light_manual_eye_green,
-                            '64',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_light_manual_eye_blue,
-                            '32',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_light_manual_arm_red,
-                            '16',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_light_manual_arm_green,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_light_manual_arm_blue,
-                            '4',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_eye_red,     '128'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_eye_green,   '64'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_eye_blue,    '32'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_arm_red,     '16'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_arm_green,   '8'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_arm_blue,    '4'],
                     ],
                     value: '128',
                     fontSize: 11,
@@ -2829,47 +2447,19 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_on,
-                            '220',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_off,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_b25,
-                            '75',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_b50,
-                            '125',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_b75,
-                            '200',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_b100,
-                            '255',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_on,     '220'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_off,    '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b25,    '75'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b50,    '125'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b75,    '200'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b100,   '255'],
                     ],
                     value: '220',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -2885,45 +2475,27 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
             func: function(sprite, script) {
                 var flags = parseInt(script.getField('FLAGS'));
                 var brightness = parseInt(script.getField('BRIGHTNESS'));
-                return Entry.byrobot_petrone_v2_flight.setLightManual(
-                    script,
-                    0x30,
-                    flags,
-                    brightness
-                );
+                return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x30, flags, brightness);
             },
         },
-        byrobot_petrone_v2_flight_drone_light_manual_single_input: {
+
+
+        byrobot_petrone_v2_flight_drone_light_manual_single_input:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'text',
-                        params: ['0b11111100'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['255'],
-                    },
+                    {type: 'text', params: ['0b11111100']},
+                    {type: 'text', params: ['255']},
                     null,
                 ],
                 type:
@@ -2938,152 +2510,94 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
             func: function(sprite, script) {
                 var flags = script.getNumberValue('FLAGS');
                 var brightness = script.getNumberValue('BRIGHTNESS');
-                return Entry.byrobot_petrone_v2_flight.setLightManual(
-                    script,
-                    0x30,
-                    flags,
-                    brightness
-                );
+                return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x30, flags, brightness);
             },
         },
-        byrobot_petrone_v2_flight_drone_light_color_rgb_input: {
+
+
+        byrobot_petrone_v2_flight_drone_light_color_input:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_light_color_eye,
-                            '18',
-                        ], // EyeHold = 0x12
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_light_color_arm,
-                            '66',
-                        ], // ArmHold = 0x42
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_eye, '18'], // EyeHold = 0x12
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_arm, '66'], // ArmHold = 0x42
                     ],
                     value: '18',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_hold,
-                            '0',
-                        ], // EyeHold = 0x12,          // ArmHold = 0x42
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_flicker,
-                            '1',
-                        ], // EyeFlicker = 0x13,       // ArmFlicker = 0x43
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_flicker_double,
-                            '2',
-                        ], // EyeFlickerDouble = 0x14, // ArmFlickerDouble = 0x44
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_dimming,
-                            '3',
-                        ], // EyeDimming = 0x15,       // ArmDimming = 0x45
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold,             '0'], // EyeHold = 0x12,          // ArmHold = 0x42
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker,          '1'], // EyeFlicker = 0x13,       // ArmFlicker = 0x43
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double,   '2'], // EyeFlickerDouble = 0x14, // ArmFlickerDouble = 0x44
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming,          '3'], // EyeDimming = 0x15,       // ArmDimming = 0x45
                     ],
                     value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
                     null,
-                    {
-                        type: 'text',
-                        params: ['255'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['255'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['255'],
-                    },
+                    {type: 'text', params: ['255']},
+                    {type: 'text', params: ['255']},
+                    {type: 'text', params: ['255']},
                     null,
+                    {type: 'text', params: ['255']},
                     null,
                 ],
-                type: 'byrobot_petrone_v2_flight_drone_light_color_rgb_input',
+                type: 'byrobot_petrone_v2_flight_drone_light_color_input',
             },
             paramsKeyMap: {
                 MODE: 0,
                 RED: 1,
                 GREEN: 2,
                 BLUE: 3,
-                ADDITION: 4,
+                MODESUB: 4,
+                INTERVAL: 5,
             },
             class: 'byrobot_petrone_v2_flight_drone_light',
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
-                var mode =
-                    parseInt(script.getField('MODE')) +
-                    parseInt(script.getField('ADDITION'));
+                var mode = parseInt(script.getField('MODE')) + parseInt(script.getField('MODESUB'));
                 var red = script.getNumberValue('RED');
                 var green = script.getNumberValue('GREEN');
                 var blue = script.getNumberValue('BLUE');
-                return Entry.byrobot_petrone_v2_flight.setLightModeColor(
-                    script,
-                    0x30,
-                    mode,
-                    red,
-                    green,
-                    blue
-                );
+                var interval = script.getNumberValue('INTERVAL');
+                return Entry.byrobot_petrone_v2_flight.setLightModeColor(script, 0x30, mode, interval, red, green, blue);
             },
         },
-        byrobot_petrone_v2_flight_drone_light_color_rgb_select: {
+
+
+        byrobot_petrone_v2_flight_drone_light_color_select:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_light_color_eye,
-                            '18',
-                        ], // EyeHold = 0x12
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_light_color_arm,
-                            '66',
-                        ], // ArmHold = 0x42
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_eye, '18'], // EyeHold = 0x12
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_arm, '66'], // ArmHold = 0x42
                     ],
                     value: '18',
                     fontSize: 11,
@@ -3093,36 +2607,12 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_sunset,
-                            'sunset',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_cottoncandy,
-                            'cottonCandy',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_muscat,
-                            'muscat',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_strawberrymilk,
-                            'strawberryMilk',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_emerald,
-                            'emerald',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_lavender,
-                            'lavender',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_sunset,          'sunset'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_cottoncandy,     'cottonCandy'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_muscat,          'muscat'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_strawberrymilk,  'strawberryMilk'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_emerald,         'emerald'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_lavender,        'lavender'],
                     ],
                     value: 'sunset',
                     fontSize: 11,
@@ -3132,132 +2622,79 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_hold,
-                            '0',
-                        ], // EyeHold = 0x12,          // ArmHold = 0x42
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_flicker,
-                            '1',
-                        ], // EyeFlicker = 0x13,       // ArmFlicker = 0x43
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_flicker_double,
-                            '2',
-                        ], // EyeFlickerDouble = 0x14, // ArmFlickerDouble = 0x44
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_dimming,
-                            '3',
-                        ], // EyeDimming = 0x15,       // ArmDimming = 0x45
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold,             '0'], // EyeHold = 0x12,          // ArmHold = 0x42
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker,          '1'], // EyeFlicker = 0x13,       // ArmFlicker = 0x43
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double,   '2'], // EyeFlickerDouble = 0x14, // ArmFlickerDouble = 0x44
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming,          '3'], // EyeDimming = 0x15,       // ArmDimming = 0x45
                     ],
                     value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
-                params: [null, null, null, null],
-                type: 'byrobot_petrone_v2_flight_drone_light_color_rgb_select',
+                params: [
+                    null,
+                    null,
+                    null,
+                    {type: 'text', params: ['255']},
+                    null,
+                ],
+                type: 'byrobot_petrone_v2_flight_drone_light_color_select',
             },
             paramsKeyMap: {
                 MODE: 0,
                 SELECT: 1,
-                ADDITION: 2,
+                MODESUB: 2,
+                INTERVAL: 3,
             },
             class: 'byrobot_petrone_v2_flight_drone_light',
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
-                var mode =
-                    parseInt(script.getField('MODE')) +
-                    parseInt(script.getField('ADDITION'));
+                var mode = parseInt(script.getField('MODE')) + parseInt(script.getField('MODESUB'));
                 var select = script.getField('SELECT');
                 var red = 0;
                 var green = 0;
                 var blue = 0;
 
-                switch (select) {
-                    case 'sunset':
-                        red = 255;
-                        green = 50;
-                        blue = 0;
-                        break;
-                    case 'cottonCandy':
-                        red = 20;
-                        green = 250;
-                        blue = 150;
-                        break;
-                    case 'muscat':
-                        red = 70;
-                        green = 255;
-                        blue = 0;
-                        break;
-                    case 'strawberryMilk':
-                        red = 150;
-                        green = 60;
-                        blue = 20;
-                        break;
-                    case 'emerald':
-                        red = 0;
-                        green = 255;
-                        blue = 30;
-                        break;
-                    case 'lavender':
-                        red = 80;
-                        green = 0;
-                        blue = 200;
-                        break;
+                switch (select)
+                {
+                    case 'sunset':          red = 255;  green = 100;    blue = 0;   break;
+                    case 'cottonCandy':     red = 20;   green = 250;    blue = 150; break;
+                    case 'muscat':          red = 70;   green = 255;    blue = 0;   break;
+                    case 'strawberryMilk':  red = 150;  green = 60;     blue = 20;  break;
+                    case 'emerald':         red = 0;    green = 255;    blue = 30;  break;
+                    case 'lavender':        red = 80;   green = 0;      blue = 200; break;
                 }
 
-                return Entry.byrobot_petrone_v2_flight.setLightModeColor(
-                    script,
-                    0x30,
-                    mode,
-                    red,
-                    green,
-                    blue
-                );
+                return Entry.byrobot_petrone_v2_flight.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
             },
         },
-        byrobot_petrone_v2_flight_controller_display_clear_all: {
+
+
+        byrobot_petrone_v2_flight_controller_display_clear_all:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -3271,84 +2708,42 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
                 var pixel = parseInt(script.getField('PIXEL'));
-                return Entry.byrobot_petrone_v2_flight.setDisplayClear(
-                    script,
-                    0x31,
-                    pixel,
-                    true,
-                    0,
-                    0,
-                    0,
-                    0
-                );
+                return Entry.byrobot_petrone_v2_flight.setDisplayClear(script, 0x31, pixel, true, 0, 0, 0, 0);
             },
         },
-        byrobot_petrone_v2_flight_controller_display_clear: {
+
+
+        byrobot_petrone_v2_flight_controller_display_clear:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'text',
-                        params: ['64'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['32'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['32'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['16'],
-                    },
+                    {type: 'text', params: ['64']},
+                    {type: 'text', params: ['32']},
+                    {type: 'text', params: ['32']},
+                    {type: 'text', params: ['16']},
                     null,
                     null,
                 ],
@@ -3369,65 +2764,31 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 var width = script.getNumberValue('WIDTH');
                 var height = script.getNumberValue('HEIGHT');
                 var pixel = parseInt(script.getField('PIXEL'));
-                return Entry.byrobot_petrone_v2_flight.setDisplayClear(
-                    script,
-                    0x31,
-                    pixel,
-                    false,
-                    x,
-                    y,
-                    width,
-                    height
-                );
+                return Entry.byrobot_petrone_v2_flight.setDisplayClear(script, 0x31, pixel, false, x, y, width, height);
             },
         },
-        byrobot_petrone_v2_flight_controller_display_invert: {
+
+
+        byrobot_petrone_v2_flight_controller_display_invert:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'text',
-                        params: ['32'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['16'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['64'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['32'],
-                    },
+                    {type: 'text', params: ['32']},
+                    {type: 'text', params: ['16']},
+                    {type: 'text', params: ['64']},
+                    {type: 'text', params: ['32']},
                     null,
                     null,
                 ],
@@ -3446,66 +2807,38 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 var y = script.getNumberValue('Y');
                 var width = script.getNumberValue('WIDTH');
                 var height = script.getNumberValue('HEIGHT');
-                return Entry.byrobot_petrone_v2_flight.setDisplayInvert(
-                    script,
-                    0x31,
-                    x,
-                    y,
-                    width,
-                    height
-                );
+                return Entry.byrobot_petrone_v2_flight.setDisplayInvert(script, 0x31, x, y, width, height);
             },
         },
-        byrobot_petrone_v2_flight_controller_display_draw_point: {
+
+
+        byrobot_petrone_v2_flight_controller_display_draw_point:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'text',
-                        params: ['64'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['32'],
-                    },
+                    {type: 'text', params: ['64']},
+                    {type: 'text', params: ['32']},
                     null,
                     null,
                 ],
@@ -3522,50 +2855,27 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 var x = script.getNumberValue('X');
                 var y = script.getNumberValue('Y');
                 var pixel = parseInt(script.getField('PIXEL'));
-                return Entry.byrobot_petrone_v2_flight.setDisplayDrawPoint(
-                    script,
-                    0x31,
-                    x,
-                    y,
-                    pixel
-                );
+                return Entry.byrobot_petrone_v2_flight.setDisplayDrawPoint(script, 0x31, x, y, pixel);
             },
         },
-        byrobot_petrone_v2_flight_controller_display_draw_line: {
+
+
+        byrobot_petrone_v2_flight_controller_display_draw_line:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -3575,52 +2885,24 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_line_solid,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_line_dotted,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_line_dashed,
-                            '2',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_line_solid,  '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dotted, '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dashed, '2'],
                     ],
                     value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'text',
-                        params: ['32'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['16'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['96'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['48'],
-                    },
+                    {type: 'text', params: ['32']},
+                    {type: 'text', params: ['16']},
+                    {type: 'text', params: ['96']},
+                    {type: 'text', params: ['48']},
                     null,
                     null,
                     null,
@@ -3644,53 +2926,27 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 var y2 = script.getNumberValue('Y2');
                 var pixel = parseInt(script.getField('PIXEL'));
                 var line = parseInt(script.getField('LINE'));
-                return Entry.byrobot_petrone_v2_flight.setDisplayDrawLine(
-                    script,
-                    0x31,
-                    x1,
-                    y1,
-                    x2,
-                    y2,
-                    pixel,
-                    line
-                );
+                return Entry.byrobot_petrone_v2_flight.setDisplayDrawLine(script, 0x31, x1, y1, x2, y2, pixel, line);
             },
         },
-        byrobot_petrone_v2_flight_controller_display_draw_rect: {
+
+
+        byrobot_petrone_v2_flight_controller_display_draw_rect:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -3700,16 +2956,8 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_flagfill_off,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_flagfill_on,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_off,    '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_on,     '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -3719,52 +2967,24 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_line_solid,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_line_dotted,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_line_dashed,
-                            '2',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_line_solid,  '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dotted, '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dashed, '2'],
                     ],
                     value: '2',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'text',
-                        params: ['64'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['32'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['32'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['16'],
-                    },
+                    {type: 'text', params: ['64']},
+                    {type: 'text', params: ['32']},
+                    {type: 'text', params: ['32']},
+                    {type: 'text', params: ['16']},
                     null,
                     null,
                     null,
@@ -3791,50 +3011,26 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 var pixel = parseInt(script.getField('PIXEL'));
                 var flagFill = parseInt(script.getField('FLAGFILL'));
                 var line = parseInt(script.getField('LINE'));
-                return Entry.byrobot_petrone_v2_flight.setDisplayDrawRect(
-                    script,
-                    0x31,
-                    x,
-                    y,
-                    width,
-                    height,
-                    pixel,
-                    flagFill,
-                    line
-                );
+                return Entry.byrobot_petrone_v2_flight.setDisplayDrawRect(script, 0x31, x, y, width, height, pixel, flagFill, line);
             },
         },
-        byrobot_petrone_v2_flight_controller_display_draw_circle: {
+
+
+        byrobot_petrone_v2_flight_controller_display_draw_circle:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -3844,49 +3040,27 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_flagfill_off,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_flagfill_on,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_off,    '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_on,     '1'],
                     ],
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'text',
-                        params: ['64'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['32'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['24'],
-                    },
+                    {type: 'text', params: ['64']},
+                    {type: 'text', params: ['32']},
+                    {type: 'text', params: ['24']},
                     null,
                     null,
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_flight_controller_display_draw_circle',
+                type: 'byrobot_petrone_v2_flight_controller_display_draw_circle',
             },
             paramsKeyMap: {
                 X: 0,
@@ -3903,44 +3077,25 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 var radius = script.getNumberValue('RADIUS');
                 var pixel = parseInt(script.getField('PIXEL'));
                 var flagFill = parseInt(script.getField('FLAGFILL'));
-                return Entry.byrobot_petrone_v2_flight.setDisplayDrawCircle(
-                    script,
-                    0x31,
-                    x,
-                    y,
-                    radius,
-                    pixel,
-                    flagFill
-                );
+                return Entry.byrobot_petrone_v2_flight.setDisplayDrawCircle(script, 0x31, x, y, radius, pixel, flagFill);
             },
         },
-        byrobot_petrone_v2_flight_controller_display_draw_string: {
+
+
+        byrobot_petrone_v2_flight_controller_display_draw_string:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_font_5x8,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_font_10x16,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_font_5x8,    '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_font_10x16,  '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -3950,53 +3105,28 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'text',
-                        params: ['4'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['24'],
-                    },
+                    {type: 'text', params: ['4']},
+                    {type: 'text', params: ['24']},
                     null,
                     null,
-                    {
-                        type: 'text',
-                        params: ['{Petrone V2}'],
-                    },
+                    {type: 'text', params: ['{Petrone V2}']},
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_flight_controller_display_draw_string',
+                type: 'byrobot_petrone_v2_flight_controller_display_draw_string',
             },
             paramsKeyMap: {
                 X: 0,
@@ -4013,53 +3143,27 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 var font = parseInt(script.getField('FONT'));
                 var pixel = parseInt(script.getField('PIXEL'));
                 var string = script.getStringValue('STRING');
-                return Entry.byrobot_petrone_v2_flight.setDisplayDrawString(
-                    script,
-                    0x31,
-                    x,
-                    y,
-                    font,
-                    pixel,
-                    string
-                );
+                return Entry.byrobot_petrone_v2_flight.setDisplayDrawString(script, 0x31, x, y, font, pixel, string);
             },
         },
-        byrobot_petrone_v2_flight_controller_display_draw_string_align: {
+
+
+        byrobot_petrone_v2_flight_controller_display_draw_string_align:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_align_left,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_align_center,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_align_right,
-                            '2',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_align_left,      '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_align_center,    '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_align_right,     '2'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -4069,16 +3173,8 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_font_5x8,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_font_10x16,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_font_5x8,    '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_font_10x16,  '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -4088,58 +3184,30 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'text',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['128'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['24'],
-                    },
+                    {type: 'text', params: ['0']},
+                    {type: 'text', params: ['128']},
+                    {type: 'text', params: ['24']},
                     null,
                     null,
                     null,
-                    {
-                        type: 'text',
-                        params: ['BYROBOT & U'],
-                    },
+                    {type: 'text', params: ['BYROBOT & U']},
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_flight_controller_display_draw_string_align',
+                type: 'byrobot_petrone_v2_flight_controller_display_draw_string_align',
             },
             paramsKeyMap: {
                 XSTART: 0,
@@ -4160,30 +3228,19 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 var font = parseInt(script.getField('FONT'));
                 var pixel = parseInt(script.getField('PIXEL'));
                 var string = script.getStringValue('STRING');
-                return Entry.byrobot_petrone_v2_flight.setDisplayDrawStringAlign(
-                    script,
-                    0x31,
-                    xStart,
-                    xEnd,
-                    y,
-                    align,
-                    font,
-                    pixel,
-                    string
-                );
+                return Entry.byrobot_petrone_v2_flight.setDisplayDrawStringAlign(script, 0x31, xStart, xEnd, y, align, font, pixel, string);
             },
         },
-        byrobot_petrone_v2_flight_controller_buzzer_off: {
+
+
+        byrobot_petrone_v2_flight_controller_buzzer_off:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -4197,9 +3254,12 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 return Entry.byrobot_petrone_v2_flight.setBuzzerStop(script);
             },
         },
-        byrobot_petrone_v2_flight_controller_buzzer_scale: {
+
+
+        byrobot_petrone_v2_flight_controller_buzzer_scale:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4220,70 +3280,26 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_buzzer_mute,
-                            '-1',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d,
-                            '2',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds,
-                            '3',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e,
-                            '4',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f,
-                            '5',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs,
-                            '6',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g,
-                            '7',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a,
-                            '9',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as,
-                            '10',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b,
-                            '11',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_mute, '-1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c,    '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs,   '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d,    '2'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds,   '3'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e,    '4'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f,    '5'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs,   '6'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g,    '7'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs,   '8'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a,    '9'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as,   '10'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b,    '11'],
                     ],
                     value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -4301,26 +3317,17 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 var scale = parseInt(script.getField('SCALE'));
 
                 if (scale == -1)
-                    return Entry.byrobot_petrone_v2_flight.setBuzzerMute(
-                        script,
-                        60000,
-                        false,
-                        true
-                    );
+                    return Entry.byrobot_petrone_v2_flight.setBuzzerMute(script, 60000, false, true);
                 else
-                    return Entry.byrobot_petrone_v2_flight.setBuzzerScale(
-                        script,
-                        octave,
-                        scale,
-                        60000,
-                        false,
-                        true
-                    );
+                    return Entry.byrobot_petrone_v2_flight.setBuzzerScale(script, octave, scale, 60000, false, true);
             },
         },
-        byrobot_petrone_v2_flight_controller_buzzer_scale_delay: {
+
+
+        byrobot_petrone_v2_flight_controller_buzzer_scale_delay:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4341,84 +3348,34 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_buzzer_mute,
-                            '-1',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d,
-                            '2',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds,
-                            '3',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e,
-                            '4',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f,
-                            '5',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs,
-                            '6',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g,
-                            '7',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a,
-                            '9',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as,
-                            '10',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b,
-                            '11',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_mute, '-1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c,    '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs,   '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d,    '2'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds,   '3'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e,    '4'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f,    '5'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs,   '6'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g,    '7'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs,   '8'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a,    '9'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as,   '10'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b,    '11'],
                     ],
                     value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
                     null,
                     null,
-                    {
-                        type: 'text',
-                        params: ['1'],
-                    },
+                    {type: 'text', params: ['1']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_flight_controller_buzzer_scale_delay',
@@ -4436,26 +3393,17 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 var time = parseInt(script.getNumberValue('TIME') * 1000);
 
                 if (scale == -1)
-                    return Entry.byrobot_petrone_v2_flight.setBuzzerMute(
-                        script,
-                        time,
-                        true,
-                        true
-                    );
+                    return Entry.byrobot_petrone_v2_flight.setBuzzerMute(script, time, true, true);
                 else
-                    return Entry.byrobot_petrone_v2_flight.setBuzzerScale(
-                        script,
-                        octave,
-                        scale,
-                        time,
-                        true,
-                        true
-                    );
+                    return Entry.byrobot_petrone_v2_flight.setBuzzerScale(script, octave, scale, time, true, true);
             },
         },
-        byrobot_petrone_v2_flight_controller_buzzer_scale_reserve: {
+
+
+        byrobot_petrone_v2_flight_controller_buzzer_scale_reserve:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4476,88 +3424,37 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_buzzer_mute,
-                            '-1',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d,
-                            '2',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds,
-                            '3',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e,
-                            '4',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f,
-                            '5',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs,
-                            '6',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g,
-                            '7',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a,
-                            '9',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as,
-                            '10',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b,
-                            '11',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_mute, '-1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c,    '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs,   '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d,    '2'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds,   '3'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e,    '4'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f,    '5'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs,   '6'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g,    '7'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs,   '8'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a,    '9'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as,   '10'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b,    '11'],
                     ],
                     value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
                     null,
                     null,
-                    {
-                        type: 'text',
-                        params: ['1'],
-                    },
+                    {type: 'text', params: ['1']},
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_flight_controller_buzzer_scale_reserve',
+                type: 'byrobot_petrone_v2_flight_controller_buzzer_scale_reserve',
             },
             paramsKeyMap: {
                 OCTAVE: 0,
@@ -4572,46 +3469,27 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 var time = parseInt(script.getNumberValue('TIME') * 1000);
 
                 if (scale == -1)
-                    return Entry.byrobot_petrone_v2_flight.setBuzzerMute(
-                        script,
-                        time,
-                        false,
-                        false
-                    );
+                    return Entry.byrobot_petrone_v2_flight.setBuzzerMute(script, time, false, false);
                 else
-                    return Entry.byrobot_petrone_v2_flight.setBuzzerScale(
-                        script,
-                        octave,
-                        scale,
-                        time,
-                        false,
-                        false
-                    );
+                    return Entry.byrobot_petrone_v2_flight.setBuzzerScale(script, octave, scale, time, false, false);
             },
         },
-        byrobot_petrone_v2_flight_controller_buzzer_hz: {
+
+
+        byrobot_petrone_v2_flight_controller_buzzer_hz:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'text',
-                        params: ['1000'],
-                    },
+                    {type: 'text', params: ['1000']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_flight_controller_buzzer_hz',
@@ -4623,46 +3501,27 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
                 var hz = parseInt(script.getNumberValue('HZ', script));
-                return Entry.byrobot_petrone_v2_flight.setBuzzerHz(
-                    script,
-                    hz,
-                    60000,
-                    false,
-                    true
-                );
+                return Entry.byrobot_petrone_v2_flight.setBuzzerHz(script, hz, 60000, false, true);
             },
         },
-        byrobot_petrone_v2_flight_controller_buzzer_hz_delay: {
+
+
+        byrobot_petrone_v2_flight_controller_buzzer_hz_delay:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'text',
-                        params: ['1000'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['1'],
-                    },
+                    {type: 'text', params: ['1000']},
+                    {type: 'text', params: ['1']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_flight_controller_buzzer_hz_delay',
@@ -4676,46 +3535,27 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
             func: function(sprite, script) {
                 var hz = parseInt(script.getNumberValue('HZ', script));
                 var time = parseInt(script.getNumberValue('TIME') * 1000);
-                return Entry.byrobot_petrone_v2_flight.setBuzzerHz(
-                    script,
-                    hz,
-                    time,
-                    true,
-                    true
-                );
+                return Entry.byrobot_petrone_v2_flight.setBuzzerHz(script, hz, time, true, true);
             },
         },
-        byrobot_petrone_v2_flight_controller_buzzer_hz_reserve: {
+
+
+        byrobot_petrone_v2_flight_controller_buzzer_hz_reserve:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'text',
-                        params: ['1000'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['1'],
-                    },
+                    {type: 'text', params: ['1000']},
+                    {type: 'text', params: ['1']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_flight_controller_buzzer_hz_reserve',
@@ -4729,26 +3569,19 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
             func: function(sprite, script) {
                 var hz = parseInt(script.getNumberValue('HZ', script));
                 var time = parseInt(script.getNumberValue('TIME') * 1000);
-                return Entry.byrobot_petrone_v2_flight.setBuzzerHz(
-                    script,
-                    hz,
-                    time,
-                    false,
-                    false
-                );
+                return Entry.byrobot_petrone_v2_flight.setBuzzerHz(script, hz, time, false, false);
             },
         },
-        byrobot_petrone_v2_flight_controller_vibrator_off: {
+
+
+        byrobot_petrone_v2_flight_controller_vibrator_off:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -4762,29 +3595,22 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 return Entry.byrobot_petrone_v2_flight.setVibratorStop(script);
             },
         },
-        byrobot_petrone_v2_flight_controller_vibrator_on_delay: {
+
+
+        byrobot_petrone_v2_flight_controller_vibrator_on_delay:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'text',
-                        params: ['1'],
-                    },
+                    {type: 'text', params: ['1']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_flight_controller_vibrator_on_delay',
@@ -4796,43 +3622,28 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
                 var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
-                return Entry.byrobot_petrone_v2_flight.setVibrator(
-                    script,
-                    timeOn,
-                    0,
-                    timeOn,
-                    true,
-                    true
-                );
+                return Entry.byrobot_petrone_v2_flight.setVibrator(script, timeOn, 0, timeOn, true, true);
             },
         },
-        byrobot_petrone_v2_flight_controller_vibrator_on_reserve: {
+
+
+        byrobot_petrone_v2_flight_controller_vibrator_on_reserve:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'text',
-                        params: ['1'],
-                    },
+                    {type: 'text', params: ['1']},
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_flight_controller_vibrator_on_reserve',
+                type: 'byrobot_petrone_v2_flight_controller_vibrator_on_reserve',
             },
             paramsKeyMap: {
                 TIMEON: 0,
@@ -4841,55 +3652,29 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
                 var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
-                return Entry.byrobot_petrone_v2_flight.setVibrator(
-                    script,
-                    timeOn,
-                    0,
-                    timeOn,
-                    false,
-                    false
-                );
+                return Entry.byrobot_petrone_v2_flight.setVibrator(script, timeOn, 0, timeOn, false, false);
             },
         },
-        byrobot_petrone_v2_flight_controller_vibrator_delay: {
+
+
+        byrobot_petrone_v2_flight_controller_vibrator_delay:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'text',
-                        params: ['0.02'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['0.2'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['1'],
-                    },
+                    {type: 'text', params: ['0.02']},
+                    {type: 'text', params: ['0.2']},
+                    {type: 'text', params: ['1']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_flight_controller_vibrator_delay',
@@ -4905,55 +3690,29 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
                 var timeOff = parseInt(script.getNumberValue('TIMEOFF') * 1000);
                 var timeRun = parseInt(script.getNumberValue('TIMERUN') * 1000);
-                return Entry.byrobot_petrone_v2_flight.setVibrator(
-                    script,
-                    timeOn,
-                    timeOff,
-                    timeRun,
-                    true,
-                    true
-                );
+                return Entry.byrobot_petrone_v2_flight.setVibrator(script, timeOn, timeOff, timeRun, true, true);
             },
         },
-        byrobot_petrone_v2_flight_controller_vibrator_reserve: {
+
+
+        byrobot_petrone_v2_flight_controller_vibrator_reserve:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'text',
-                        params: ['0.02'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['0.2'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['1'],
-                    },
+                    {type: 'text', params: ['0.02']},
+                    {type: 'text', params: ['0.2']},
+                    {type: 'text', params: ['1']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_flight_controller_vibrator_reserve',
@@ -4969,39 +3728,25 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
                 var timeOff = parseInt(script.getNumberValue('TIMEOFF') * 1000);
                 var timeRun = parseInt(script.getNumberValue('TIMERUN') * 1000);
-                return Entry.byrobot_petrone_v2_flight.setVibrator(
-                    script,
-                    timeOn,
-                    timeOff,
-                    timeRun,
-                    false,
-                    false
-                );
+                return Entry.byrobot_petrone_v2_flight.setVibrator(script, timeOn, timeOff, timeRun, false, false);
             },
         },
-        byrobot_petrone_v2_flight_drone_irmessage: {
+
+
+        byrobot_petrone_v2_flight_drone_irmessage:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'text',
-                        params: ['0'],
-                    },
+                    {type: 'text', params: ['0']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_flight_drone_irmessage',
@@ -5014,24 +3759,19 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
             func: function(sprite, script) {
                 var irdirection = 0;
                 var irmessage = script.getNumberValue('IRMESSAGE', script);
-                return Entry.byrobot_petrone_v2_flight.sendIrMessage(
-                    script,
-                    irdirection,
-                    irmessage
-                );
+                return Entry.byrobot_petrone_v2_flight.sendIrMessage(script, irdirection, irmessage);
             },
         },
-        byrobot_petrone_v2_flight_drone_motor_stop: {
+
+
+        byrobot_petrone_v2_flight_drone_motor_stop:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -5045,9 +3785,12 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 return Entry.byrobot_petrone_v2_flight.sendStop(script);
             },
         },
-        byrobot_petrone_v2_flight_drone_motorsingle: {
+
+
+        byrobot_petrone_v2_flight_drone_motorsingle:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -5059,24 +3802,14 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
                     null,
-                    {
-                        type: 'text',
-                        params: ['1000'],
-                    },
+                    {type: 'text', params: ['3000']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_flight_drone_motorsingle',
@@ -5094,45 +3827,27 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                     script.getNumberValue('MOTORSPEED', script)
                 );
 
-                return Entry.byrobot_petrone_v2_flight.setMotorSingle(
-                    script,
-                    motorIndex,
-                    motorRotation,
-                    motorSpeed
-                );
+                return Entry.byrobot_petrone_v2_flight.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
             },
         },
-        byrobot_petrone_v2_flight_drone_motorsingle_input: {
+
+
+        byrobot_petrone_v2_flight_drone_motorsingle_input:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'text',
-                        params: ['1'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['1000'],
-                    },
+                    {type: 'text', params: ['1']},
+                    {type: 'text', params: ['3000']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_flight_drone_motorsingle_input',
@@ -5151,17 +3866,15 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                     script.getNumberValue('MOTORSPEED', script)
                 );
 
-                return Entry.byrobot_petrone_v2_flight.setMotorSingle(
-                    script,
-                    motorIndex,
-                    motorRotation,
-                    motorSpeed
-                );
+                return Entry.byrobot_petrone_v2_flight.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
             },
         },
-        byrobot_petrone_v2_flight_drone_motorsingle_rotation: {
+
+
+        byrobot_petrone_v2_flight_drone_motorsingle_rotation:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -5176,41 +3889,23 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_motor_rotation_clockwise,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_motor_rotation_counterclockwise,
-                            '2',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_motor_rotation_clockwise,         '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_motor_rotation_counterclockwise,  '2'],
                     ],
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
                     null,
                     null,
-                    {
-                        type: 'text',
-                        params: ['1000'],
-                    },
+                    {type: 'text', params: ['3000']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_flight_drone_motorsingle_rotation',
@@ -5229,54 +3924,36 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                     script.getNumberValue('MOTORSPEED', script)
                 );
 
-                return Entry.byrobot_petrone_v2_flight.setMotorSingle(
-                    script,
-                    motorIndex,
-                    motorRotation,
-                    motorSpeed
-                );
+                return Entry.byrobot_petrone_v2_flight.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
             },
         },
-        byrobot_petrone_v2_flight_drone_command_mode_vehicle_drone: {
+
+
+        byrobot_petrone_v2_flight_drone_command_mode_vehicle_drone:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_vehicle_flight,
-                            '16',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_vehicle_flight_noguard,
-                            '17',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_vehicle_flight_fpv,
-                            '18',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_vehicle_flight,           '16'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_vehicle_flight_noguard,   '17'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_vehicle_flight_fpv,       '18'],
                     ],
                     value: '16',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [null, null],
-                type:
-                    'byrobot_petrone_v2_flight_drone_command_mode_vehicle_drone',
+                type: 'byrobot_petrone_v2_flight_drone_command_mode_vehicle_drone',
             },
             paramsKeyMap: {
                 VEHICLE: 0,
@@ -5285,23 +3962,19 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
                 var vehicle = script.getField('VEHICLE');
-                return Entry.byrobot_petrone_v2_flight.setModeVehicle(
-                    script,
-                    vehicle
-                );
+                return Entry.byrobot_petrone_v2_flight.setModeVehicle(script, vehicle);
             },
         },
-        byrobot_petrone_v2_flight_drone_control_drone_takeoff: {
+
+
+        byrobot_petrone_v2_flight_drone_control_drone_takeoff:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -5312,24 +3985,19 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
             class: 'byrobot_petrone_v2_flight_control_flight',
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
-                return Entry.byrobot_petrone_v2_flight.setEventFlight(
-                    script,
-                    0x11,
-                    200
-                ); // 0x11 : FlightEvent::TakeOff
+                return Entry.byrobot_petrone_v2_flight.setEventFlight(script, 0x11, 200); // 0x11 : FlightEvent::TakeOff
             },
         },
-        byrobot_petrone_v2_flight_drone_control_drone_landing: {
+
+
+        byrobot_petrone_v2_flight_drone_control_drone_landing:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -5340,24 +4008,19 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
             class: 'byrobot_petrone_v2_flight_control_flight',
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
-                return Entry.byrobot_petrone_v2_flight.setEventFlight(
-                    script,
-                    0x12,
-                    200
-                ); // 0x12 : FlightEvent::Landing
+                return Entry.byrobot_petrone_v2_flight.setEventFlight(script, 0x12, 200); // 0x12 : FlightEvent::Landing
             },
         },
-        byrobot_petrone_v2_flight_drone_control_drone_stop: {
+
+
+        byrobot_petrone_v2_flight_drone_control_drone_stop:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -5371,36 +4034,27 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 return Entry.byrobot_petrone_v2_flight.sendStop(script);
             },
         },
-        byrobot_petrone_v2_flight_drone_control_coordinate: {
+
+
+        byrobot_petrone_v2_flight_drone_control_coordinate:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_coordinate_world,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_coordinate_local,
-                            '2',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_coordinate_world, '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_coordinate_local, '2'],
                     ],
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -5414,97 +4068,62 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
                 var coordinate = script.getField('COORDINATE');
-                return Entry.byrobot_petrone_v2_flight.sendCommand(
-                    script,
-                    0x30,
-                    0x20,
-                    coordinate
-                );
+                return Entry.byrobot_petrone_v2_flight.sendCommand(script, 0x30, 0x20, coordinate);
             },
         },
-        byrobot_petrone_v2_flight_drone_control_drone_reset_heading: {
+
+
+        byrobot_petrone_v2_flight_drone_control_drone_reset_heading:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [null],
-                type:
-                    'byrobot_petrone_v2_flight_drone_control_drone_reset_heading',
+                type: 'byrobot_petrone_v2_flight_drone_control_drone_reset_heading',
             },
             paramsKeyMap: {},
             class: 'byrobot_petrone_v2_flight_control_flight',
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
-                return Entry.byrobot_petrone_v2_flight.sendCommand(
-                    script,
-                    0x30,
-                    0x22,
-                    0xa0
-                ); // 0x22 : CommandType::FlightEvent  // 0xA0 : FlightEvent::ResetHeading
+                return Entry.byrobot_petrone_v2_flight.sendCommand(script, 0x30, 0x22, 0xa0); // 0x22 : CommandType::FlightEvent  // 0xA0 : FlightEvent::ResetHeading
             },
         },
-        byrobot_petrone_v2_flight_drone_control_quad_one: {
+
+
+        byrobot_petrone_v2_flight_drone_control_quad_one:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_control_quad_roll,
-                            'control_roll',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_control_quad_pitch,
-                            'control_pitch',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_control_quad_yaw,
-                            'control_yaw',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_control_quad_throttle,
-                            'control_throttle',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_control_quad_roll,        'control_roll'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_control_quad_pitch,       'control_pitch'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_control_quad_yaw,         'control_yaw'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_control_quad_throttle,    'control_throttle'],
                     ],
                     value: 'control_throttle',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
                     null,
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
+                    {type: 'number', params: ['0']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_flight_drone_control_quad_one',
@@ -5519,76 +4138,41 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 var controlTarget = script.getField('CONTROLTARGET');
                 var value = parseInt(script.getNumberValue('VALUE', script));
 
-                return Entry.byrobot_petrone_v2_flight.sendControlQuadSingle(
-                    script,
-                    controlTarget,
-                    value,
-                    0,
-                    false
-                );
+                return Entry.byrobot_petrone_v2_flight.sendControlQuadSingle(script, controlTarget, value, 0, false);
             },
         },
-        byrobot_petrone_v2_flight_drone_control_quad_one_delay: {
+
+
+        byrobot_petrone_v2_flight_drone_control_quad_one_delay:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_control_quad_roll,
-                            'control_roll',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_control_quad_pitch,
-                            'control_pitch',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_control_quad_yaw,
-                            'control_yaw',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_control_quad_throttle,
-                            'control_throttle',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_control_quad_roll,        'control_roll'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_control_quad_pitch,       'control_pitch'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_control_quad_yaw,         'control_yaw'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_control_quad_throttle,    'control_throttle'],
                     ],
                     value: 'control_throttle',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
                     null,
-                    {
-                        type: 'number',
-                        params: ['100'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['1'],
-                    },
+                    {type: 'number', params: ['100']},
+                    {type: 'number', params: ['1']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_flight_drone_control_quad_one_delay',
@@ -5603,66 +4187,33 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
             func: function(sprite, script) {
                 var controlTarget = script.getField('CONTROLTARGET');
                 var value = parseInt(script.getNumberValue('VALUE', script));
-                var time = parseInt(
-                    script.getNumberValue('TIME', script) * 1000
-                );
+                var time = parseInt(script.getNumberValue('TIME', script) * 1000);
 
-                return Entry.byrobot_petrone_v2_flight.sendControlQuadSingle(
-                    script,
-                    controlTarget,
-                    value,
-                    time,
-                    true
-                );
+                return Entry.byrobot_petrone_v2_flight.sendControlQuadSingle(script, controlTarget, value, time, true);
             },
         },
-        byrobot_petrone_v2_flight_drone_control_quad: {
+
+
+        byrobot_petrone_v2_flight_drone_control_quad:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
+                    {type: 'number', params: ['0']},
+                    {type: 'number', params: ['0']},
+                    {type: 'number', params: ['0']},
+                    {type: 'number', params: ['0']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_flight_drone_control_quad',
@@ -5679,76 +4230,35 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 var roll = parseInt(script.getNumberValue('ROLL', script));
                 var pitch = parseInt(script.getNumberValue('PITCH', script));
                 var yaw = parseInt(script.getNumberValue('YAW', script));
-                var throttle = parseInt(
-                    script.getNumberValue('THROTTLE', script)
-                );
+                var throttle = parseInt(script.getNumberValue('THROTTLE', script));
 
-                return Entry.byrobot_petrone_v2_flight.sendControlQuad(
-                    script,
-                    roll,
-                    pitch,
-                    yaw,
-                    throttle,
-                    0,
-                    false
-                );
+                return Entry.byrobot_petrone_v2_flight.sendControlQuad(script, roll, pitch, yaw, throttle, 0, false);
             },
         },
-        byrobot_petrone_v2_flight_drone_control_quad_delay: {
+
+
+        byrobot_petrone_v2_flight_drone_control_quad_delay:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['1'],
-                    },
+                    {type: 'number', params: ['0']},
+                    {type: 'number', params: ['0']},
+                    {type: 'number', params: ['0']},
+                    {type: 'number', params: ['0']},
+                    {type: 'number', params: ['1']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_flight_drone_control_quad_delay',
@@ -5766,22 +4276,10 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
                 var roll = parseInt(script.getNumberValue('ROLL', script));
                 var pitch = parseInt(script.getNumberValue('PITCH', script));
                 var yaw = parseInt(script.getNumberValue('YAW', script));
-                var throttle = parseInt(
-                    script.getNumberValue('THROTTLE', script)
-                );
-                var time = parseInt(
-                    script.getNumberValue('TIME', script) * 1000
-                );
+                var throttle = parseInt(script.getNumberValue('THROTTLE', script));
+                var time = parseInt(script.getNumberValue('TIME', script) * 1000);
 
-                return Entry.byrobot_petrone_v2_flight.sendControlQuad(
-                    script,
-                    roll,
-                    pitch,
-                    yaw,
-                    throttle,
-                    time,
-                    true
-                );
+                return Entry.byrobot_petrone_v2_flight.sendControlQuad(script, roll, pitch, yaw, throttle, time, true);
             },
         },
         /* BYROBOT PetroneV2 Flight End */
@@ -5790,3 +4288,4 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
 };
 
 module.exports = Entry.byrobot_petrone_v2_flight;
+
