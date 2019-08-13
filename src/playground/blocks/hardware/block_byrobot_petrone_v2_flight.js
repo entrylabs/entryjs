@@ -63,6 +63,7 @@ Entry.byrobot_petrone_v2_flight =
         // 모니터 화면 상단에 차례대로 나열하는 값
         listPorts: {
             // 팀 상태 보여주기
+            /*
             state_modeVehicle:              {name: Lang.Blocks.byrobot_petrone_v2_drone_state_mode_vehicle,             type: 'input',  pos: { x: 0, y: 0 }},
             state_modeFlight:               {name: Lang.Blocks.byrobot_petrone_v2_drone_state_mode_flight,              type: 'input',  pos: { x: 0, y: 0 }},
             state_battery:                  {name: Lang.Blocks.byrobot_petrone_v2_drone_state_battery,                  type: 'input',  pos: { x: 0, y: 0 }},
@@ -93,6 +94,37 @@ Entry.byrobot_petrone_v2_flight =
             button_button:                  {name: Lang.Blocks.byrobot_petrone_v2_controller_button_button,             type: 'input',  pos: { x: 0, y: 0 }},
             button_event:                   {name: Lang.Blocks.byrobot_petrone_v2_controller_button_event,              type: 'input',  pos: { x: 0, y: 0 }},
             entryhw_countTransferReserved:  {name: Lang.Blocks.byrobot_petrone_v2_entryhw_count_transfer_reserved,      type: 'output', pos: { x: 0, y: 0 }},
+            // */
+            state_modeVehicle:              {name: 'Vehicle Mode',                  type: 'input',  pos: { x: 0, y: 0 }},
+            state_modeFlight:               {name: 'Flight Mode',                   type: 'input',  pos: { x: 0, y: 0 }},
+            state_battery:                  {name: 'Battery',                       type: 'input',  pos: { x: 0, y: 0 }},
+            imu_angleRoll:                  {name: 'Roll',                          type: 'input',  pos: { x: 0, y: 0 }},
+            imu_anglePitch:                 {name: 'Pitch',                         type: 'input',  pos: { x: 0, y: 0 }},
+            imu_angleYaw:                   {name: 'Yaw',                           type: 'input',  pos: { x: 0, y: 0 }},
+            imu_accX:                       {name: 'Accel X',                       type: 'input',  pos: { x: 0, y: 0 }},
+            imu_accY:                       {name: 'Accel Y',                       type: 'input',  pos: { x: 0, y: 0 }},
+            imu_accZ:                       {name: 'Accel Z',                       type: 'input',  pos: { x: 0, y: 0 }},
+            imu_gyroRoll:                   {name: 'Gyro Roll',                     type: 'input',  pos: { x: 0, y: 0 }},
+            imu_gyroPitch:                  {name: 'Gyro Pitch',                    type: 'input',  pos: { x: 0, y: 0 }},
+            imu_gyroYaw:                    {name: 'Gyro Yaw',                      type: 'input',  pos: { x: 0, y: 0 }},
+            pressure_temperature:           {name: 'Temperature(from Pressure)',    type: 'input',  pos: { x: 0, y: 0 }},
+            pressure_pressure:              {name: 'Pressure',                      type: 'input',  pos: { x: 0, y: 0 }},
+            imageflow_positionX:            {name: 'Position X',                    type: 'input',  pos: { x: 0, y: 0 }},
+            imageflow_positionY:            {name: 'Position Y',                    type: 'input',  pos: { x: 0, y: 0 }},
+            range_bottom:                   {name: 'Ground Range',                  type: 'input',  pos: { x: 0, y: 0 }},
+            irmessage_direction:            {name: 'IR Direction',                  type: 'input',  pos: { x: 0, y: 0 }},
+            irmessage_irdata:               {name: 'IR Data',                       type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_left_x:                {name: 'Left Joystick X',               type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_left_y:                {name: 'Left Joystick Y',               type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_left_direction:        {name: 'Left Joystick Direction',       type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_left_event:            {name: 'Left Joystick Event',           type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_right_x:               {name: 'Right Joystick X',              type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_right_y:               {name: 'Right Joystick Y',              type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_right_direction:       {name: 'Right Joystick Direction',      type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_right_event:           {name: 'Right Joystick Event',          type: 'input',  pos: { x: 0, y: 0 }},
+            button_button:                  {name: 'Button',                        type: 'input',  pos: { x: 0, y: 0 }},
+            button_event:                   {name: 'Button Event',                  type: 'input',  pos: { x: 0, y: 0 }},
+            entryhw_countTransferReserved:  {name: 'Transfer Buffer',               type: 'output', pos: { x: 0, y: 0 }},
         },
 
         // 모니터 화면 지정 위치와 선으로 연결하여 표시하는 값
@@ -1247,7 +1279,7 @@ Entry.byrobot_petrone_v2_flight =
  *  언어 적용
  ***************************************************************************************/
 // 
-Entry.byrobot_petrone_v2_controller.setLanguage = function ()
+Entry.byrobot_petrone_v2_flight.setLanguage = function ()
 {
     return {
         ko: {
@@ -1391,7 +1423,7 @@ Entry.byrobot_petrone_v2_controller.setLanguage = function ()
                 "byrobot_petrone_v2_drone_state_mode_drive":            "자동차 동작 상태",
                 "byrobot_petrone_v2_drone_state_mode_flight":           "비행 동작 상태",
                 "byrobot_petrone_v2_drone_state_mode_system":           "시스템 모드",
-                "byrobot_petrone_v2_drone_state_mode_vehicle":          "Vehicle mode",
+                "byrobot_petrone_v2_drone_state_mode_vehicle":          "Vehicle Mode",
                 "byrobot_petrone_v2_drone_team":                    "팀 ",
                 "byrobot_petrone_v2_drone_team_blue":               "블루",
                 "byrobot_petrone_v2_drone_team_red":                "레드",
