@@ -1659,7 +1659,7 @@ Entry.byrobot_petrone_v2_controller.setLanguage = function ()
 
 
 /***************************************************************************************
- *  엔트리에 등록할 블록들의 블록명
+ *  엔트리에 등록할 블록들의 이름
  ***************************************************************************************/
 Entry.byrobot_petrone_v2_drive.blockMenuBlocks = [
     'byrobot_petrone_v2_drive_drone_value_attitude',
