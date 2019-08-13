@@ -32,6 +32,20 @@ const functionKeys = {
     // SET_BPM: 0x06,
 };
 
+const microbitGestures = {
+    TILT_UP: 1,
+    TILT_DOWN: 2,
+    TILT_LEFT: 3,
+    TILT_RIGHT: 4,
+    FACE_UP: 5,
+    FACE_DOWN: 6,
+    FREEFALL: 7,
+    THREE_G: 8,
+    SIX_G: 9,
+    EIGHT_G: 10,
+    SHAKE: 11,
+};
+
 Entry.Microbit = new class Microbit {
     constructor() {
         this.id = 'FF.1';
@@ -43,6 +57,7 @@ Entry.Microbit = new class Microbit {
         };
         this.name = 'microbit';
         this.communicationType = 'manual';
+        this.lastGesture = -1;
         this.blockMenuBlocks = [
             'microbit_led_toggle',
             'microbit_get_led',
@@ -58,6 +73,7 @@ Entry.Microbit = new class Microbit {
             'microbit_get_button',
             'microbit_is_tilt',
             'microbit_get_tilt',
+            'microbit_get_gesture',
             'microbit_get_sensor',
             'microbit_get_accelerometer',
             'microbit_set_servo',
@@ -75,6 +91,7 @@ Entry.Microbit = new class Microbit {
 
     setZero() {
         this.requestCommand(functionKeys.RESET);
+        this.lastGesture = -1;
         delete Entry.hw.portData.sensorData;
     }
 
@@ -256,7 +273,7 @@ Entry.Microbit = new class Microbit {
                     let value = script.getStringValue('VALUE');
                     value = value.replace(
                         /[^A-Za-z0-9_\`\~\!\@\#\$\%\^\&\*\(\)\-\=\+\\\{\}\[\]\'\"\;\:\<\,\>\.\?\/\s]/gim,
-                        '',
+                        ''
                     );
                     this.requestCommand(functionKeys.SET_STRING, value);
                 },
@@ -531,7 +548,7 @@ Entry.Microbit = new class Microbit {
                     let returnData = _get(
                         Entry.hw.portData,
                         ['payload', 'sensorData', 'analog', value],
-                        0,
+                        0
                     );
 
                     let value2 = script.getNumberValue('VALUE2', script);
@@ -683,10 +700,11 @@ Entry.Microbit = new class Microbit {
                     const buttonState = _get(
                         Entry.hw.portData,
                         ['payload', 'sensorData', 'button'],
-                        -1,
+                        -1
                     );
 
                     // double equal 은 의도한 것임.
+                    // noinspection EqualityComparisonWithCoercionJS
                     return buttonState == value;
                 },
             },
@@ -904,6 +922,55 @@ Entry.Microbit = new class Microbit {
                     const value = script.getField('VALUE');
                     this.requestCommand(functionKeys.GET_ACCELEROMETER, { value });
                     return _get(Entry.hw.portData, 'payload.sensorData.accelerometer', -1);
+                },
+            },
+            microbit_get_gesture: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                fontColor: '#ffffff',
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                template: '%1 이 있는가?',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [['흔들림', 0], ['움직임', 1]],
+                        value: 1,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                events: {},
+                class: 'microbitMove',
+                isNotFor: ['microbit'],
+                def: {
+                    type: 'microbit_get_gesture',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                func: (sprite, script) => {
+                    const value = script.getField('VALUE');
+                    this.requestCommandWithResponse(functionKeys.GET_GESTURE);
+                    const gesture = _get(Entry.hw.portData, 'payload.sensorData.gesture', -1);
+
+                    /**
+                     * 제스쳐는 단 한번만 검사하기 위해 제스쳐가 이전과 다르게 변경된 경우만 검사한다.
+                     * 달라진 경우,
+                     * '흔들림' 이 있는가? = SHAKE event 인지만 검사
+                     * '움직임' 이 있는가? = 제스쳐의 변경 -> 움직임이기 때문에 무조건 true
+                     */
+                    if (this.lastGesture === gesture) {
+                        return false;
+                    } else {
+                        this.lastGesture = gesture;
+                        if (value === 0) {
+                            return this.lastGesture === microbitGestures.SHAKE;
+                        } else if (value === 1) {
+                            return true;
+                        }
+                    }
                 },
             },
             microbit_set_servo: {
