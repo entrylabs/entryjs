@@ -1,6 +1,7 @@
 'use strict';
 
 import { GEHelper } from '../graphicEngine/GEHelper';
+
 Entry.Utils = {};
 
 Entry.TEXT_ALIGN_CENTER = 0;
@@ -131,6 +132,7 @@ Entry.exportProject = function(project) {
     project.speed = Entry.FPS;
     project.interface = Entry.captureInterfaceState();
     project.expansionBlocks = Entry.expansionBlocks;
+    project.externalModules = Entry.EXTERNAL_MODULE_LIST;
 
     if (!objects || !objects.length) {
         return false;
@@ -147,10 +149,6 @@ Entry.exportProject = function(project) {
  */
 Entry.setBlock = function(objectType, XML) {
     Entry.playground.setMenuBlock(objectType, XML);
-};
-
-Entry.enableArduino = function() {
-    return;
 };
 
 /**
@@ -645,7 +643,6 @@ Entry.Utils.setSVGDom = function(SVGDom) {
 Entry.Utils.bindIOSDeviceWatch = function() {
     const Agent = Entry.Utils.mobileAgentParser();
     if (Agent.apple.device) {
-        console.log('APPLE! MOBILE DEVICE');
         let lastHeight = window.innerHeight || document.documentElement.clientHeight;
         let lastSVGDomHeight = 0;
         if (Entry.Utils.SVGDom) {
@@ -669,6 +666,8 @@ Entry.Utils.bindIOSDeviceWatch = function() {
         $(window).on('orientationchange', () => {
             Entry.windowResized.notify();
         });
+
+        window.addEventListener('pagehide', Entry.beforeUnload);
     }
 };
 
@@ -871,7 +870,7 @@ Entry.addEventListener = function(eventName, fn) {
 /**
  * Dispatch event
  * @param {!string} eventName
- * @param {?} params
+ * @param {*} args
  */
 Entry.dispatchEvent = function(eventName, ...args) {
     if (!this.events_) {
@@ -1462,7 +1461,7 @@ Entry.setBasicBrush = function(sprite) {
         const rgb = brush.rgb;
         const opacity = 1 - brush.opacity / 100;
 
-        if  (isWebGL) {
+        if (isWebGL) {
             brush.beginStrokeFast(Entry.rgb2Number(rgb.r, rgb.g, rgb.b), opacity);
         } else {
             brush.beginStroke(`rgba(${rgb.r},${rgb.g},${rgb.b},${opacity})`);
@@ -1472,7 +1471,7 @@ Entry.setBasicBrush = function(sprite) {
         brush.rgb = Entry.hex2rgb('#ff0000');
         brush.opacity = 0;
         brush.setStrokeStyle(1);
-        if  (isWebGL) {
+        if (isWebGL) {
             brush.beginStrokeFast(0xff0000, 1);
         } else {
             brush.beginStroke('rgba(255,0,0,1)');
@@ -1501,7 +1500,7 @@ Entry.setCloneBrush = function(sprite, parentBrush) {
 
     const rgb = brush.rgb;
     const opacity = 1 - brush.opacity / 100;
-    if  (isWebGL) {
+    if (isWebGL) {
         brush.beginStrokeFast(Entry.rgb2Number(rgb.r, rgb.g, rgb.b), opacity);
     } else {
         brush.beginStroke(`rgba(${rgb.r},${rgb.g},${rgb.b},${opacity})`);
@@ -1829,10 +1828,37 @@ Entry.Utils.addBlockPattern = function(boardSvgDom, suffix) {
     return { pattern };
 };
 
-Entry.Utils.addNewBlock = function(script) {
+Entry.Utils.addNewBlock = function(item) {
+    const { script, functions, messages, variables, expansionBlocks = [] } = item;
+    const parseScript = JSON.parse(script);
+    if (!parseScript) {
+        return;
+    }
+
+    if (
+        Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD &&
+        (!Entry.TextCodingUtil.canUsePythonVariables(variables) ||
+            !Entry.TextCodingUtil.canUsePythonFunctions(functions))
+    ) {
+        return entrylms.alert(Lang.Menus.object_import_syntax_error);
+    }
+
+    const objectIdMap = {};
+    variables.forEach((variable) => {
+        const { object } = variable;
+        if (object) {
+            variable.object = _.get(Entry, ['container', 'selectedObject', 'id'], '');
+        }
+    });
+    expansionBlocks.forEach((blockName) => {
+        Entry.expansion.addExpansionBlock(blockName);
+    });
+    Entry.variableContainer.appendMessages(messages);
+    Entry.variableContainer.appendVariables(variables);
+    Entry.variableContainer.appendFunctions(functions);
     Entry.do(
         'addThread',
-        script.map((block) => {
+        parseScript.map((block) => {
             block.id = Entry.generateHash();
             return block;
         })
@@ -1841,10 +1867,7 @@ Entry.Utils.addNewBlock = function(script) {
 
 Entry.Utils.addNewObject = function(sprite) {
     if (sprite) {
-        const objects = sprite.objects;
-        const functions = sprite.functions;
-        const messages = sprite.messages;
-        const variables = sprite.variables;
+        const { objects, functions, messages, variables, expansionBlocks = [] } = sprite;
 
         if (
             Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD &&
@@ -1854,6 +1877,9 @@ Entry.Utils.addNewObject = function(sprite) {
             return entrylms.alert(Lang.Menus.object_import_syntax_error);
         }
         const objectIdMap = {};
+        expansionBlocks.forEach((blockName) => {
+            Entry.expansion.addExpansionBlock(blockName);
+        });
         variables.forEach((variable) => {
             const { object } = variable;
             if (object) {
@@ -2283,53 +2309,6 @@ Entry.Utils.getObjectsBlocks = function(objects) {
         .value();
 };
 
-Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
-    if (!blockArr) {
-        return;
-    }
-    const that = this;
-
-    const data = EntryStatic.getAllBlocks();
-    const categoryIndexMap = {};
-    for (let i = 0; i < data.length; i++) {
-        const datum = data[i];
-        datum.blocks = [];
-        categoryIndexMap[datum.category] = i;
-    }
-
-    blockArr.forEach((b) => {
-        const category = that.getBlockCategory(b);
-        const index = categoryIndexMap[category];
-        if (index === undefined) {
-            return;
-        }
-        data[index].blocks.push(b);
-    });
-
-    const allBlocksInfo = EntryStatic.getAllBlocks();
-    for (let i = 0; i < allBlocksInfo.length; i++) {
-        const info = allBlocksInfo[i];
-        const category = info.category;
-        const blocks = info.blocks;
-        if (category === 'func') {
-            allBlocksInfo.splice(i, 1);
-            continue;
-        }
-        const selectedBlocks = data[i].blocks;
-        const sorted = [];
-
-        blocks.forEach((b) => {
-            if (selectedBlocks.indexOf(b) > -1) {
-                sorted.push(b);
-            }
-        });
-
-        data[i].blocks = sorted;
-    }
-
-    return data;
-};
-
 Entry.Utils.blur = function() {
     const elem = document.activeElement;
     elem && elem.blur && elem.blur();
@@ -2454,15 +2433,54 @@ Entry.Utils.getScrollPos = function() {
     };
 };
 
+Entry.Utils.isPointInRect = ({ x, y }, { top, bottom, left, right }) => {
+    return _.inRange(x, left, right) && _.inRange(y, top, bottom);
+};
+
+Entry.Utils.getBoundingClientRectMemo = _.memoize((target, offset = {}) => {
+    const rect = target.getBoundingClientRect();
+    const result = {
+        top: rect.top,
+        bottom: rect.bottom,
+        left: rect.left,
+        right: rect.right,
+    };
+    Object.keys(offset).forEach((key) => {
+        result[key] += offset[key];
+    });
+    return result;
+});
+
+Entry.Utils.clearClientRectMemo = () => {
+    Entry.Utils.getBoundingClientRectMemo.cache = new _.memoize.Cache();
+};
+
+Entry.Utils.getPosition = (event) => {
+    const position = {
+        x: 0,
+        y: 0,
+    };
+    if (event.touches && event.touches[0]) {
+        const touch = event.touches[0];
+        position.x = touch.pageX;
+        position.y = touch.pageY;
+    } else {
+        position.x = event.pageX;
+        position.y = event.pageY;
+    }
+    return position;
+};
+
 Entry.Utils.copy = function(target) {
     return JSON.parse(JSON.stringify(target));
 };
 
 //helper function for development and debug
 Entry.Utils.getAllObjectsBlockList = function() {
-    return Entry.container.objects_.reduce((prev, { script }) => {
-        return prev.concat(script.getBlockList());
-    }, []);
+    return Entry.container.objects_.reduce(
+        (prev, { script }) => prev.concat(script.getBlockList()),
+        []
+    );
 };
 
 Entry.Utils.toFixed = function(value, len) {
@@ -2480,6 +2498,21 @@ Entry.Utils.toFixed = function(value, len) {
         }
         return retValue;
     }
+};
+
+Entry.Utils.setVolume = function(volume) {
+    this._volume = _.clamp(volume, 0, 1);
+};
+
+Entry.Utils.getVolume = function() {
+    if (this._volume || this._volume === 0) {
+        return this._volume;
+    }
+    return 1;
+};
+
+Entry.Utils.playSound = function(id, option = {}) {
+    return createjs.Sound.play(id, Object.assign({ volume: this._volume }, option));
 };
 
 Entry.Utils.addSoundInstances = function(instance) {
@@ -2658,7 +2691,7 @@ Entry.Utils.when = function(predicate, fn) {
 };
 
 Entry.Utils.whenEnter = function(fn) {
-    return Entry.Utils.when(({ keyCode } = {}) => keyCode === 13, fn);
+    return Entry.Utils.when(({ keyCode, repeat }) => keyCode === 13 && !repeat, fn);
 };
 
 Entry.Utils.blurWhenEnter = Entry.Utils.whenEnter(function() {
@@ -2721,4 +2754,3 @@ Entry.Utils.getMouseEvent = function(event) {
     }
     return mouseEvent;
 };
-

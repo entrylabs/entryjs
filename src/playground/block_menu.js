@@ -8,25 +8,14 @@ import debounce from 'lodash/debounce';
 
 const VARIABLE = 'variable';
 const HW = 'arduino';
-const splitterHPadding = 20;
-
-function _buildCategoryCodes(blocks, category) {
-    return blocks.reduce((threads, type) => {
-        const block = Entry.block[type];
-        if (!block || !block.def) {
-            return [...threads, [{ type, category }]];
-        } else {
-            return (block.defs || [block.def]).reduce(
-                (threads, d) => [...threads, [Object.assign(d, { category })]],
-                threads
-            );
-        }
-    }, []);
-}
+const practicalCourseCategoryList = ['hw_motor', 'hw_melody', 'hw_sensor', 'hw_led', 'hw_robot'];
+const splitterHPadding = EntryStatic.splitterHPadding || 20;
 
 class BlockMenu {
     constructor(dom, align, categoryData, scroll, readOnly) {
         Entry.Model(this, false);
+        const { options = {} } = Entry;
+        const { disableHardware = false } = options;
 
         this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
         this._dAlign = this.align;
@@ -39,11 +28,9 @@ class BlockMenu {
         this._bannedClass = [];
         this._categories = [];
         this.suffix = 'blockMenu';
-        this._isSelectingMenu = false;
         this._dynamicThreads = [];
         this._setDynamicTimer = null;
         this._renderedCategories = {};
-        this.categoryRendered = false;
         this.readOnly = readOnly === undefined ? true : readOnly;
 
         this._threadsMap = {};
@@ -65,8 +52,18 @@ class BlockMenu {
         this.hwCodeOutdated = false;
         this._svgId = `blockMenu${_.now()}`;
         this._clearCategory();
-        this._categoryData = categoryData;
-        this._generateView(categoryData);
+
+        // disableHardware 인 경우, 하드웨어 카테고리와 실과형 로봇카테고리 전부를 제외한다.
+        this._categoryData = _.remove(
+            categoryData,
+            ({ category }) =>
+                !(
+                    disableHardware &&
+                    (category === HW || practicalCourseCategoryList.indexOf(category) > -1)
+                )
+        );
+
+        this._generateView(this._categoryData);
 
         this._splitters = [];
         this.setWidth();
@@ -93,7 +90,7 @@ class BlockMenu {
         this.observe(this, '_handleDragBlock', ['dragBlock']);
 
         this.changeCode(new Entry.Code([]));
-        categoryData && this._generateCategoryCodes();
+        this._categoryData && this._generateCategoryCodes();
 
         if (this._scroll) {
             this._scroller = new Entry.BlockMenuScroller(this);
@@ -124,6 +121,20 @@ class BlockMenu {
         closeBlock: null,
         selectedBlockView: null,
     };
+
+    _buildCategoryCodes(blocks, category) {
+        return blocks.reduce((threads, type) => {
+            const block = Entry.block[type];
+            if (!block || !block.def) {
+                return [...threads, [{ type, category }]];
+            } else {
+                return (block.defs || [block.def]).reduce(
+                    (threads, d) => [...threads, [Object.assign(d, { category })]],
+                    threads
+                );
+            }
+        }, []);
+    }
 
     _generateView(categoryData) {
         const parent = this.view;
@@ -157,7 +168,8 @@ class BlockMenu {
             if (
                 !Entry.playground ||
                 Entry.playground.resizing ||
-                (selectedBlockView && selectedBlockView.dragMode === Entry.DRAG_MODE_DRAG)
+                (selectedBlockView && selectedBlockView.dragMode === Entry.DRAG_MODE_DRAG) ||
+                Entry.GlobalSvg.isShow
             ) {
                 return;
             }
@@ -172,26 +184,30 @@ class BlockMenu {
             }
         });
 
-        this.svgDom.mouseleave(function() {
-            const playground = Entry.playground;
-            if (!playground || playground.resizing) {
-                return;
-            }
-
-            if (that._scroller) {
-                that._scroller.setOpacity(0);
-            }
-
-            const widthBackup = this.widthBackup;
-            if (widthBackup) {
-                $(that.blockMenuWrapper).css('width', widthBackup);
-            }
-            delete this.widthBackup;
-            delete playground.focusBlockMenu;
+        this.svgDom.mouseleave(() => {
+            this.foldBlockMenu();
         });
 
         Entry.Utils.bindBlockViewHoverEvent(this, this.svgDom);
         $(window).scroll(this.updateOffset.bind(this));
+    }
+
+    foldBlockMenu() {
+        const playground = Entry.playground;
+        if (!playground || playground.resizing) {
+            return;
+        }
+
+        if (this._scroller) {
+            this._scroller.setOpacity(0);
+        }
+
+        const widthBackup = this.svg.widthBackup;
+        if (widthBackup) {
+            $(this.blockMenuWrapper).css('width', widthBackup);
+        }
+        delete this.svg.widthBackup;
+        delete playground.focusBlockMenu;
     }
 
     changeCode(code, isImmediate) {
@@ -310,6 +326,9 @@ class BlockMenu {
     cloneToGlobal(e) {
         const blockView = this.dragBlock;
         if (this._boardBlockView || blockView === null) {
+            if (this.svg.widthBackup) {
+                this.foldBlockMenu();
+            }
             return;
         }
 
@@ -324,7 +343,6 @@ class BlockMenu {
         const { x = 0, y = 0 } = blockView.mouseDownCoordinate || {};
         const dx = e.pageX - x;
         const dy = e.pageY - y;
-
         if (board && (workspaceMode === MODE_BOARD || workspaceMode === MODE_OVERLAYBOARD)) {
             if (!board.code) {
                 if (Entry.toast) {
@@ -356,8 +374,8 @@ class BlockMenu {
                 const newBlock = Entry.do('addThreadFromBlockMenu', datum).value.getFirstBlock();
                 const newBlockView = newBlock && newBlock.view;
 
-                //if some error occured
-                //blockView is not exist
+                // if some error occured
+                // blockView is not exist
                 if (!newBlockView) {
                     _.result(newBlock, 'destroy');
                     return;
@@ -373,6 +391,7 @@ class BlockMenu {
                 }
 
                 GS.setView(newBlockView, workspaceMode);
+            } else {
             }
         } else {
             if (GS.setView(blockView, workspaceMode)) {
@@ -467,13 +486,14 @@ class BlockMenu {
     }
 
     _createSplitter(topPos) {
+        const { common = {} } = EntryStatic.colorSet || {};
         this._splitters.push(
             this.svgBlockGroup.elem('line', {
                 x1: splitterHPadding,
                 y1: topPos,
                 x2: this._svgWidth - splitterHPadding,
                 y2: topPos,
-                stroke: '#AAC5D5',
+                stroke: common.SPLITTER || '#AAC5D5',
             })
         );
     }
@@ -580,7 +600,6 @@ class BlockMenu {
             this.lastSelector = name;
         }
 
-        this._isSelectingMenu = true;
         switch (name) {
             case VARIABLE:
                 Entry.playground.checkVariables();
@@ -635,8 +654,6 @@ class BlockMenu {
             });
         }
 
-        this._isSelectingMenu = false;
-
         if (this.visible) {
             this._selectedCategoryView = elem;
             if (elem) {
@@ -650,7 +667,6 @@ class BlockMenu {
 
     _generateCategoryCodes(elems) {
         if (!elems) {
-            this.categoryRendered = false;
             this.view.addClass('init');
             elems = Object.keys(this._categoryElems);
         }
@@ -670,7 +686,6 @@ class BlockMenu {
             this._generateCodesTimer = null;
             this.view.removeClass('init');
             this.align();
-            this.categoryRendered = true;
             this.categoryDoneEvent.notify();
         }
     }
@@ -696,7 +711,7 @@ class BlockMenu {
             }
         }
 
-        _buildCategoryCodes(blocks, category).forEach((t) => {
+        this._buildCategoryCodes(blocks, category).forEach((t) => {
             if (!t || !t[0]) {
                 return;
             }
@@ -785,6 +800,20 @@ class BlockMenu {
         }
 
         return !_.includes(blockInfo.isFor || [], `category_${this.lastSelector}`);
+    }
+
+    /**
+     * 특정 카테고리에 특정 블록명을 추가한다.
+     * 카테고리가 존재하지 않거나 블록명이 이미 등록된 경우 스킵한다.
+     * Entry.block 목록에 실제 데이터가 있는지, blockMenu 의 그리기 갱신이 필요한지는 상관하지 않는다.
+     * @param categoryName {string}
+     * @param blockName {string}
+     */
+    addCategoryData(categoryName, blockName) {
+        const selectedCategory = this._categoryData.find((element) => element.category === categoryName);
+        if (selectedCategory && selectedCategory.blocks.indexOf(blockName) === -1) {
+            selectedCategory.blocks.push(blockName);
+        }
     }
 
     _addControl(dom) {
@@ -953,6 +982,11 @@ class BlockMenu {
         this.categoryDoneEvent.notify();
     }
 
+    /**
+     * 카테고리의 목록 뷰를 그린다.
+     * @param data {{category: string, blocks: object[]}[]} EntryStatic.getAllBlocks
+     * @private
+     */
     _generateCategoryView(data) {
         if (!data) {
             return;
@@ -970,6 +1004,10 @@ class BlockMenu {
         this.view.prepend(this.categoryWrapper);
 
         const fragment = document.createDocumentFragment();
+
+        /*
+        visible = static_mini 의 실과형 하드웨어에서만 사용됩니다. (EntryStatic 에 책임)
+         */
         data.forEach(({ category, visible }) =>
             fragment.appendChild(this._generateCategoryElement(category, visible)[0])
         );
@@ -1084,7 +1122,7 @@ class BlockMenu {
             return;
         }
 
-        _buildCategoryCodes(blocks.filter((b) => !this.checkBanClass(Entry.block[b])), HW).forEach(
+        this._buildCategoryCodes(blocks.filter((b) => !this.checkBanClass(Entry.block[b])), HW).forEach(
             (t) => {
                 if (shouldHide) {
                     t[0].x = -99999;

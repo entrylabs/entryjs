@@ -2578,7 +2578,6 @@ const miniBlock = {
                     value = Entry.hw.portData['TOUCH3'];
                     break;
             }
-            //var value = (Entry.hw.portData['IN' + port] > 125) ? 1 : 0;
             return value;
         }
     },

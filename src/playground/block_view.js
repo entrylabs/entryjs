@@ -139,10 +139,6 @@ Entry.BlockView = class BlockView {
 
         const svgGroup = this.svgGroup;
 
-        if (this._schema.css) {
-            attr.style = this._schema.css;
-        }
-
         svgGroup.attr(attr);
 
         (skeleton.classes || []).forEach((c) => svgGroup.addClass(c));
@@ -647,21 +643,13 @@ Entry.BlockView = class BlockView {
                 }
 
                 const dragInstance = this.dragInstance;
-                const backPackMode = !this.fromBlockMenu && Entry.playground.backPack.isShow;
-                if (backPackMode) {
-                    Entry.GlobalSvg.position({
-                        left: mouseEvent.pageX - dragInstance.offsetX,
-                        top: mouseEvent.pageY - dragInstance.offsetY,
-                    });
-                } else {
-                    this.moveBy(
-                        mouseEvent.pageX - dragInstance.offsetX,
-                        mouseEvent.pageY - dragInstance.offsetY,
-                        false,
-                        true
-                    );
-                    Entry.GlobalSvg.position();
-                }
+                this.moveBy(
+                    mouseEvent.pageX - dragInstance.offsetX,
+                    mouseEvent.pageY - dragInstance.offsetY,
+                    false,
+                    true
+                );
+                Entry.GlobalSvg.position();
 
                 dragInstance.set({
                     offsetX: mouseEvent.pageX,
@@ -795,7 +783,7 @@ Entry.BlockView = class BlockView {
                                     );
                                     ripple = true;
                                 }
-                                createjs.Sound.play('entryMagneting');
+                                Entry.Utils.playSound('entryMagneting');
                             } else {
                                 Entry.do(`moveBlock${suffix}`, block).isPass(fromBlockMenu);
                                 this.dominate();
@@ -810,14 +798,14 @@ Entry.BlockView = class BlockView {
                         } else {
                             if (prevBlock) {
                                 this.set({ animating: false });
-                                createjs.Sound.play('entryMagneting');
+                                Entry.Utils.playSound('entryMagneting');
                                 this.bindPrev(prevBlock);
                                 block.insert(prevBlock);
                             } else {
                                 const parent = block.getThread().view.getParent();
 
                                 if (!(parent instanceof Entry.Board)) {
-                                    createjs.Sound.play('entryMagneting');
+                                    Entry.Utils.playSound('entryMagneting');
                                     Entry.do('insertBlock', block, parent);
                                 } else {
                                     const originPos = this.originPos;
@@ -829,7 +817,7 @@ Entry.BlockView = class BlockView {
                         break;
                     }
                     case gs.REMOVE:
-                        createjs.Sound.play('entryDelete');
+                        Entry.Utils.playSound('entryDelete');
                         Entry.do('destroyBlockBelow', this.block).isPass(fromBlockMenu);
                         break;
                 }
@@ -1048,10 +1036,12 @@ Entry.BlockView = class BlockView {
 
     addDragging() {
         this.svgGroup.addClass('dragging');
+        Entry.playground.setBackpackPointEvent(true);
     }
 
     removeDragging() {
         this.svgGroup.removeClass('dragging');
+        Entry.playground.setBackpackPointEvent(false);
     }
 
     addSelected() {
@@ -1115,15 +1105,33 @@ Entry.BlockView = class BlockView {
     }
 
     _setMovable() {
-        this.movable = this.block.isMovable() || this._skeleton.movable || true;
+        if (this.block.isMovable() !== null) {
+            this.movable = this.block.isMovable();
+        } else if (this._skeleton.movable !== undefined) {
+            this.movable = this._skeleton.movable;
+        } else {
+            this.movable = true;
+        }
     }
 
     _setReadOnly() {
-        this.readOnly = this.block.isReadOnly() || this._skeleton.readOnly || false;
+        if (this.block.isReadOnly() !== null) {
+            this.readOnly = this.block.isReadOnly();
+        } else if (this._skeleton.readOnly !== undefined) {
+            this.readOnly = this._skeleton.readOnly;
+        } else {
+            this.readOnly = false;
+        }
     }
 
     _setCopyable() {
-        this.copyable = this.block.isCopyable() || this._skeleton.copyable || true;
+        if (this.block.isCopyable() !== null) {
+            this.copyable = this.block.isCopyable();
+        } else if (this._skeleton.copyable !== undefined) {
+            this.copyable = this._skeleton.copyable;
+        } else {
+            this.copyable = true;
+        }
     }
 
     bumpAway(distance = 15, delay) {
@@ -1282,6 +1290,11 @@ Entry.BlockView = class BlockView {
             const svgCommentGroup = notClone
                 ? this.svgCommentGroup
                 : this.svgCommentGroup && this.svgCommentGroup.cloneNode(true);
+
+            if (!notClone) {
+                svgGroup.removeAttribute('opacity');
+                svgGroup.setAttribute('class', 'block selected');
+            }
             const box = this._skeleton.box(this);
             const scale = notPng ? 1 : 1.5;
             let fontWeight = this.isWindow7() ? 0.9 : 0.95;
@@ -1306,11 +1319,25 @@ Entry.BlockView = class BlockView {
 
             const defs = this.getBoard().svgDom.find('defs');
 
+            const style = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+            style.setAttribute('type', 'text/css');
+            style.textContent = `
+                @font-face {
+                    font-family: EntryNG;
+                    src: local(NanumGothic), 
+                        local(나눔고딕), 
+                        local(나눔고딕 Regular), 
+                        local(Noto Sans JP Regular), 
+                        local(Noto Sans JP); 
+                    font-weight: normal; 
+                    font-style: normal; 
+                }`;
+
+            defs.append(style);
             const images = svgGroup.getElementsByTagName('image');
             const texts = svgGroup.getElementsByTagName('text');
 
-            const fontFamily =
-                "'NanumGothic', 'NanumGothic', '나눔고딕','NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum";
+            const fontFamily = EntryStatic.getDefaultFontFamily();
             const boldTypes = ['≥', '≤'];
             const notResizeTypes = ['≥', '≤', '-', '>', '<', '=', '+', '-', 'x', '/'];
 
@@ -1322,17 +1349,18 @@ Entry.BlockView = class BlockView {
                     text.setAttribute('font-weight', '500');
                 }
 
-                if (content == 'q') {
-                    const y = parseInt(text.getAttribute('y'), 10);
-                    text.setAttribute('y', y - 1);
-                }
+                // if (content == 'q') {
+                //     const y = parseInt(text.getAttribute('y'), 10);
+                //     text.setAttribute('y', y - 1);
+                // }
 
                 if (_.includes(notResizeTypes, content)) {
                     text.setAttribute('font-size', `${size}px`);
-                } else {
-                    text.setAttribute('font-size', `${size * fontWeight}px`);
                 }
-                text.setAttribute('alignment-baseline', 'middle');
+                // else {
+                //     text.setAttribute('font-size', `${size * fontWeight}px`);
+                // }
+                text.setAttribute('alignment-baseline', 'auto');
             });
 
             let counts = 0;
@@ -1373,7 +1401,7 @@ Entry.BlockView = class BlockView {
         this.getDataUrl().then((data) => {
             const download = document.createElement('a');
             download.href = data.src;
-            let name = '엔트리 블록';
+            let name = Lang.Workspace.download_image_name;
             if (i) {
                 name += i;
             }
@@ -1435,15 +1463,16 @@ Entry.BlockView = class BlockView {
                 },
             };
 
-            // const addStorage = !EntryOptions.backpackDisable && {
-            //     text: Lang.Blocks.add_my_storage,
-            //     callback() {
-            //         Entry.dispatchEvent('addStorage', {
-            //             type: 'block',
-            //             data: block,
-            //         });
-            //     },
-            // };
+            const addStorage = !EntryOptions.backpackDisable && {
+                text: Lang.Blocks.add_my_storage,
+                enable: copyable && !isBoardReadOnly && !!window.user,
+                callback() {
+                    Entry.dispatchEvent('addStorage', {
+                        type: 'block',
+                        data: block,
+                    });
+                },
+            };
 
             const download = {
                 text: save_as_image,
@@ -1469,8 +1498,9 @@ Entry.BlockView = class BlockView {
             }
 
             if (!isInBlockMenu) {
-                // options = [copyAndPaste, copy, remove, addStorage, ...options, comment].filter(x=>x);
-                options = [copyAndPaste, copy, remove, ...options, comment].filter((x) => x);
+                options = [copyAndPaste, copy, remove, addStorage, ...options, comment].filter(
+                    (x) => x
+                );
             }
 
             return options;
@@ -1482,10 +1512,12 @@ Entry.BlockView = class BlockView {
     }
 
     addStorage() {
-        Entry.dispatchEvent('addStorage', {
-            type: 'block',
-            data: this.block,
-        });
+        if (this.block.view) {
+            Entry.dispatchEvent('addStorage', {
+                type: 'block',
+                data: this.block,
+            });
+        }
     }
 
     clone() {
@@ -1657,35 +1689,41 @@ Entry.BlockView = class BlockView {
         );
     }
 
-    processSvg(svgGroup, scale, defs, notPng) {
+    processSvg(svgGroup, scale = 1, defs, notPng) {
         return new Promise((resolve, reject) => {
             let svgData =
                 '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %W %H">(svgGroup)(defs)</svg>';
             const bBox = this.svgGroup.getBoundingClientRect();
+            const board = this.getBoard();
+            const { scale: blockScale = scale } = board;
+            // console.log(this);
+            const boxWidth = bBox.width / blockScale;
+            const boxHeight = bBox.height / blockScale;
             svgData = svgData
                 .replace('(svgGroup)', new XMLSerializer().serializeToString(svgGroup))
-                .replace('%W', bBox.width * scale + 20)
-                .replace('%H', bBox.height * scale + 5)
+                .replace('%W', boxWidth * scale + 20)
+                .replace('%H', boxHeight * scale + 5)
                 .replace('(defs)', new XMLSerializer().serializeToString(defs[0]))
                 .replace(/>\s+/g, '>')
                 .replace(/\s+</g, '<');
+            svgData = svgData.replace(/NS\d+:href/gi, 'href');
             let src = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgData)))}`;
             svgData = null;
             if (notPng) {
                 resolve({
                     src,
-                    width: bBox.width,
-                    height: bBox.height,
+                    width: boxWidth,
+                    height: boxHeight,
                 });
                 svgGroup = null;
             } else {
-                this.loadImage(src, bBox.width, bBox.height, notPng, 1.5).then(
+                this.loadImage(src, boxWidth, boxHeight, notPng, 1.5).then(
                     (src) => {
                         svgGroup = null;
                         resolve({
                             src,
-                            width: bBox.width,
-                            height: bBox.height,
+                            width: boxWidth,
+                            height: boxHeight,
                         });
                     },
                     (err) => {
@@ -1704,7 +1742,7 @@ Entry.BlockView = class BlockView {
             }
 
             if (notPng) {
-                return resolve(src);
+                return resolve(`${location.origin}${src}`);
             }
 
             width *= multiplier;
@@ -1722,12 +1760,16 @@ Entry.BlockView = class BlockView {
             const ctx = canvas.getContext('2d');
 
             img.onload = function() {
-                ctx.drawImage(img, 0, 0, width, height);
-                const data = canvas.toDataURL('image/png');
-                if (/\.png$/.test(src)) {
-                    Entry.BlockView.pngMap[src] = data;
+                try {
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const data = canvas.toDataURL('image/png');
+                    if (/\.png$/.test(src)) {
+                        Entry.BlockView.pngMap[src] = data;
+                    }
+                    return resolve(data);
+                } catch (e) {
+                    return reject('error occured');
                 }
-                return resolve(data);
             };
 
             img.onerror = function() {

@@ -4,6 +4,7 @@
 'use strict';
 
 import SimpleBar from 'simplebar';
+import fetch from 'isomorphic-fetch';
 
 /**
  * Block variable constructor
@@ -598,9 +599,9 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('attr_box')
             .appendTo(localList);
 
-        const { globalV, localV } = _.groupBy(this.variables_, ({ object_ }) =>
-            (object_ ? 'localV' : 'globalV')
-        );
+        const { globalV, localV } = _.groupBy(this.variables_, ({ object_ }) => {
+            return object_ ? 'localV' : 'globalV';
+        });
 
         const gLength = (globalV || []).length;
         const lLength = (localV || []).length;
@@ -680,9 +681,9 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('attr_box')
             .appendTo(localList);
 
-        const { localV, globalV } = _.groupBy(this.lists_, ({ object_ }) =>
-            (object_ ? 'localV' : 'globalV')
-        );
+        const { localV, globalV } = _.groupBy(this.lists_, ({ object_ }) => {
+            return object_ ? 'localV' : 'globalV';
+        });
 
         const gLength = (globalV || []).length;
         const lLength = (localV || []).length;
@@ -797,10 +798,10 @@ Entry.VariableContainer = class VariableContainer {
 
     generateVariable(variable, data, key) {
         const name = variable.name_;
-        variable.generateView(data.length);
         variable.name_ = this.checkAllVariableName(name, key)
             ? Entry.getOrderedName(name, data, 'name_')
             : name;
+        variable.generateView(data.length);
     }
 
     /**
@@ -1070,7 +1071,10 @@ Entry.VariableContainer = class VariableContainer {
         if (ws && ws.overlayModefrom == Entry.Workspace.MODE_VIMBOARD) {
             if (func && func.description) {
                 const funcName = func.description.substring(1, func.description.length - 1);
-                const alertMsg = Entry.TextCodingUtil.validateNameIncludeSpace(funcName, 'function');
+                const alertMsg = Entry.TextCodingUtil.validateNameIncludeSpace(
+                    funcName,
+                    'function'
+                );
                 if (alertMsg) {
                     entrylms.alert(alertMsg);
                     Entry.Func.cancelEdit();
@@ -1138,8 +1142,8 @@ Entry.VariableContainer = class VariableContainer {
      * @param {Entry.Variable} variable
      * @return {boolean} return true when success
      */
-    checkAllVariableName(name, variable) {
-        return this[variable].some(({ name_ }) => name_ === name);
+    checkAllVariableName(name, variable, key = 'name_') {
+        return this[variable].some(({ [key]: name_ }) => name_ === name);
     }
 
     _addVariableOrList(type, data) {
@@ -2196,6 +2200,7 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     generateTimer(timer) {
+        const x = 240 - (Lang.Workspace.Variable_Timer.length * 12 + 70);
         timer =
             timer ||
             Entry.Variable.create({
@@ -2204,7 +2209,7 @@ Entry.VariableContainer = class VariableContainer {
                 value: 0,
                 variableType: 'timer',
                 visible: false,
-                x: 134,
+                x,
                 y: -70,
             });
 
@@ -2463,7 +2468,7 @@ Entry.VariableContainer = class VariableContainer {
     generateListCountView(element) {
         const that = this;
         const createElement = Entry.createElement;
-
+        
         const listCount = createElement('div')
             .addClass('list_cnt')
             .appendTo(element);
@@ -2490,13 +2495,31 @@ Entry.VariableContainer = class VariableContainer {
         buttonMinus.href = '#';
         this.listSettingView.minus = buttonMinus;
 
+        //List limit setting. [default value:5000, length: 4]
+        let limitValue = 5000;
+        let maxlength = 4;
+        
+        if(that.selected.array_ && that.selected.array_.length > 0 ){
+            const currentLeng = that.selected.array_.length.toString().length;
+            // 리스트 카운트가 5000 일떄만 설정
+            maxlength = currentLeng > maxlength ? currentLeng : maxlength;
+            limitValue = that.selected.array_.length > limitValue ? that.selected.array_.length : limitValue ;
+        }
+
         const buttonPlus = createElement('a')
             .addClass('btn_cnt')
             .bindOnClick(() => {
                 const {
                     selected: { id_ },
                 } = that;
-                Entry.do('listChangeLength', id_, 'plus');
+
+                const selectedLength = Entry.variableContainer.selected.array_.length;
+                
+                if( selectedLength >= limitValue ) {
+                    Entry.do('listChangeLength', id_, ''); 
+                }else{
+                    Entry.do('listChangeLength', id_, 'plus'); 
+                }
             })
             .appendTo(countInputBox);
         buttonPlus.innerHTML = '+';
@@ -2505,10 +2528,17 @@ Entry.VariableContainer = class VariableContainer {
 
         const countInput = createElement('input').appendTo(countInputBox);
         countInput.setAttribute('type', 'text');
+        countInput.setAttribute('maxlength', maxlength);
+        
         countInput.onblur = function() {
             const v = that.selected;
             let value = this.value;
             value = Entry.Utils.isNumber(value) ? value : v.array_.length;
+
+            if(value >= limitValue) { 
+               value = limitValue; 
+            }
+
             Entry.do('listChangeLength', v.id_, Number(value));
         };
         countInput.onkeypress = Entry.Utils.blurWhenEnter;
@@ -2692,14 +2722,17 @@ Entry.VariableContainer = class VariableContainer {
             csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         } catch (e) {}
 
-        $.ajax({
-            url: `/api/project/variable/${projectId}`,
-            type: 'PUT',
-            headers: { 'csrf-token': csrfToken },
-            data: {
+        fetch(`/api/project/variable/${projectId}`, {
+            method: 'PUT',
+            headers: {
+                'csrf-token': csrfToken,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
                 variables,
                 lists,
-            },
+            }),
         });
     }
 

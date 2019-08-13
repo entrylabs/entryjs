@@ -63,6 +63,7 @@ function getInitialCategoryMap() {
         },
     };
 }
+
 Entry.EXPANSION_BLOCK.behaviorConductLifeSafety = {
     name: 'behaviorConductLifeSafety',
     imageName: 'firstaid.png',
@@ -71,9 +72,9 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety = {
         en: 'LifeSafety',
         jp: '生活安全',
     },
-    titleKey: "template.behaviorConductLifeSafety_title_text",
+    titleKey: 'template.behaviorConductLifeSafety_title_text',
     description: Lang.Msgs.expansion_behaviorConductLifeSafety_description,
-    descriptionKey: "Msgs.expansion_behaviorConductLifeSafety_description",
+    descriptionKey: 'Msgs.expansion_behaviorConductLifeSafety_description',
     isInitialized: false,
     init() {
         if (this.isInitialized) {
@@ -82,15 +83,13 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety = {
         Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.isInitialized = true;
     },
     api: '/api/expansionBlock/behaviorConduct',
-    apiType: '03'
+    apiType: '03',
 };
 
 Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
     const categoryMap = getInitialCategoryMap();
     const getCategory = function() {
-        return Object.keys(categoryMap).map((category) => {
-            return [categoryMap[category].lang, category];
-        });
+        return Object.keys(categoryMap).map((category) => [categoryMap[category].lang, category]);
     };
     const defaultCategory = Object.keys(categoryMap)[0];
     const params = {
@@ -114,17 +113,19 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
                 value: null,
                 menuName(value) {
                     if (value) {
-                        return categoryMap[value].sub.map((category) => {
-                            return [Lang.Blocks[`behaviorConduct${category}`], category];
-                        });
+                        return categoryMap[value].sub.map((category) => [
+                            Lang.Blocks[`behaviorConduct${category}`],
+                            category,
+                        ]);
                     }
 
                     if (this._contents.options) {
                         return this._contents.options;
                     } else {
-                        return categoryMap[defaultCategory].sub.map((category) => {
-                            return [Lang.Blocks[`behaviorConduct${category}`], category];
-                        });
+                        return categoryMap[defaultCategory].sub.map((category) => [
+                            Lang.Blocks[`behaviorConduct${category}`],
+                            category,
+                        ]);
                     }
                 },
                 targetIndex,
@@ -143,20 +144,19 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
     const getBehavior = (params, defaultValue, index = null) => {
         const key = `behaviorConduct-${params.category}/${params.subCategory}`;
         return new PromiseManager()
-            .Promise(function(resolve) {
+            .Promise((resolve) => {
                 callApi(key, {
                     url: `${Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.api}/${
                         params.category
-                    }/${params.subCategory}`,
+                        }/${params.subCategory}`,
                 })
                     .then((result) => {
                         if (result) {
-                            const items = result.data.response.body.items.item.filter((i) => {
-                                return (
+                            const items = result.data.response.body.items.item.filter(
+                                (i) =>
                                     i.hasOwnProperty('actRmks') &&
-                                    i.safetyCate3 == params.subCategory2
-                                );
-                            });
+                                    i.safetyCate3 == params.subCategory2,
+                            );
                             if (index) {
                                 return resolve(items[index - 1].actRmks);
                             }
@@ -164,24 +164,20 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
                         }
                         return resolve(defaultValue);
                     })
-                    .catch(() => {
-                        return resolve(defaultValue);
-                    });
+                    .catch(() => resolve(defaultValue));
             })
-            .catch(() => {
-                return defaultValue;
-            });
+            .catch(() => defaultValue);
     };
 
     return {
         behaviorConductLifeSafety_title: {
             skeleton: 'basic_text',
-            color: '#ecf8ff',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
             params: [
                 {
                     type: 'Text',
                     text: Lang.template.behaviorConductLifeSafety_title_text,
-                    color: '#333',
+                    color: EntryStatic.colorSet.common.TEXT,
                     align: 'center',
                 },
             ],

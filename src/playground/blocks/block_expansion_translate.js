@@ -3,6 +3,7 @@
 const PromiseManager = require('../../core/promiseManager');
 const { callApi } = require('../../util/common');
 const _uniqueId = require('lodash/uniqueId');
+const _findIndex = require('lodash/findIndex');
 
 function getInitialCodeMap() {
     return {
@@ -139,6 +140,7 @@ function getInitialCodeMap() {
         },
     };
 }
+
 Entry.EXPANSION_BLOCK.translate = {
     name: 'translate',
     imageName: 'papago.png',
@@ -186,25 +188,33 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             return param;
         },
         getSourceLang(isPython) {
+            const value = Lang.type.replace("jp","ja");
+            const options = [
+                [Lang.Blocks.korean, 'ko'],
+                [Lang.Blocks.english, 'en'],
+                [Lang.Blocks.japan, 'ja'],
+                [Lang.Blocks.chinese_simplified, 'zh-CN'],
+                [Lang.Blocks.chinese_traditional, 'zh-TW'],
+                [Lang.Blocks.spanish, 'es'],
+                [Lang.Blocks.french, 'fr'],
+                [Lang.Blocks.german, 'de'],
+                [Lang.Blocks.russian, 'ru'],
+                [Lang.Blocks.portuguese, 'pt'],
+                [Lang.Blocks.thai, 'th'],
+                [Lang.Blocks.vietnamese, 'vi'],
+                [Lang.Blocks.indonesian, 'id'],
+                [Lang.Blocks.hindi, 'hi'],
+            ];
+            const index = _.findIndex(options, (x) => x[1] === value);
+            if (index > 0) {
+                const temp = options[index];
+                options[index] = options[0];
+                options[0] = temp;
+            }
             const param = {
                 type: 'Dropdown',
-                options: [
-                    [Lang.Blocks.korean, 'ko'],
-                    [Lang.Blocks.english, 'en'],
-                    [Lang.Blocks.japan, 'ja'],
-                    [Lang.Blocks.chinese_simplified, 'zh-CN'],
-                    [Lang.Blocks.chinese_traditional, 'zh-TW'],
-                    [Lang.Blocks.spanish, 'es'],
-                    [Lang.Blocks.french, 'fr'],
-                    [Lang.Blocks.german, 'de'],
-                    [Lang.Blocks.russian, 'ru'],
-                    [Lang.Blocks.portuguese, 'pt'],
-                    [Lang.Blocks.thai, 'th'],
-                    [Lang.Blocks.vietnamese, 'vi'],
-                    [Lang.Blocks.indonesian, 'id'],
-                    [Lang.Blocks.hindi, 'hi'],
-                ],
-                value: 'ko',
+                options,
+                value,
                 fontSize: 11,
                 bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
@@ -221,17 +231,13 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                 menuName(value) {
                     const langCodeMap = getInitialCodeMap();
                     if (value) {
-                        return langCodeMap[value].sub.map((code) => {
-                            return [langCodeMap[code].lang, code];
-                        });
+                        return langCodeMap[value].sub.map((code) => [langCodeMap[code].lang, code]);
                     }
 
                     if (this._contents.options) {
                         return this._contents.options;
                     } else {
-                        return langCodeMap.ko.sub.map((code) => {
-                            return [langCodeMap[code].lang, code];
-                        });
+                        return langCodeMap.ko.sub.map((code) => [langCodeMap[code].lang, code]);
                     }
                 },
                 targetIndex,
@@ -263,7 +269,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
         params.projectId = getProjectId();
         const key = `translate-${type}${JSON.stringify(params)}`;
         return new PromiseManager()
-            .Promise(function(resolve) {
+            .Promise((resolve) => {
                 callApi(key, {
                     url: `${Entry.EXPANSION_BLOCK.translate.api}translate/${type}`,
                     params,
@@ -274,19 +280,15 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                         }
                         return resolve(defaultValue);
                     })
-                    .catch(() => {
-                        return resolve(defaultValue);
-                    });
+                    .catch(() => resolve(defaultValue));
             })
-            .catch(() => {
-                return defaultValue;
-            });
+            .catch(() => defaultValue);
     };
 
     const checkLang = (query, defaultValue) => {
         const langCodeMap = getInitialCodeMap();
         return new PromiseManager()
-            .Promise(function(resolve) {
+            .Promise((resolve) => {
                 callApi(`translate-detect-${query}`, {
                     url: `${Entry.EXPANSION_BLOCK.translate.api}dect/langs`,
                     params: { query, projectId: getProjectId() },
@@ -301,13 +303,9 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                         }
                         return resolve(defaultValue);
                     })
-                    .catch(() => {
-                        return resolve(defaultValue);
-                    });
+                    .catch(() => resolve(defaultValue));
             })
-            .catch(() => {
-                return defaultValue;
-            });
+            .catch(() => defaultValue);
     };
 
     const checkText = function(text) {
@@ -334,12 +332,12 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
     return {
         translate_title: {
             skeleton: 'basic_text',
-            color: '#ecf8ff',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
             params: [
                 {
                     type: 'Text',
                     text: Lang.template.translate_title_text,
-                    color: '#333',
+                    color: EntryStatic.colorSet.common.TEXT,
                     align: 'center',
                 },
             ],
