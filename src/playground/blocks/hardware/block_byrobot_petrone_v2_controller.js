@@ -1059,7 +1059,7 @@ Entry.byrobot_petrone_v2_controller.setLanguage = function ()
                 "byrobot_petrone_v2_controller_controller_if_joystick_direction":       "조종기 %1 조이스틱 %2 움직였을 때",
                 "byrobot_petrone_v2_controller_controller_light_color_input":           "조종기 LED 색지정 R %1, G %2, B %3 %4 %5 %6",
                 "byrobot_petrone_v2_controller_controller_light_color_select":          "조종기 LED의 RGB 조합 예시 %1 %2 %3 %4",
-                "byrobot_petrone_v2_controller_controller_light_manual_single":         "조종기 LED %1 %2 %3",
+                "byrobot_petrone_v2_controller_controller_light_color_preset":          "조종기 LED %1 %2 %3",
                 "byrobot_petrone_v2_controller_controller_light_manual_single_input":   "조종기 LED %1 밝기 %2 %3",
                 "byrobot_petrone_v2_controller_controller_light_manual_single_off":     "조종기 LED 끄기 %1",
                 "byrobot_petrone_v2_controller_controller_value_button":                "%1",
@@ -1092,7 +1092,7 @@ Entry.byrobot_petrone_v2_controller.setLanguage = function ()
                 "byrobot_petrone_v2_controller_controller_if_joystick_direction":       "<br>조종기의 조이스틱을 지정한 방향으로 움직였을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
                 "byrobot_petrone_v2_controller_controller_light_color_input":           "<br>빛의 삼원색인 Red, Green, Blue 값을 지정하여 조종기 LED의 색상을 원하는대로 만들 수 있습니다.<br>10진수(0 ~ 255) 값을 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_petrone_v2_controller_controller_light_color_select":          "<br>RGB 색지정 블록을 이용해서 만들 수 있는<br> 조종기 LED 예시입니다.<br>RGB 색지정 블록을 이용해서 멋진 색깔을<br> 다양하게 만들어보세요.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
-                "byrobot_petrone_v2_controller_controller_light_manual_single":         "<br>조종기 LED를 조작하는데 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
+                "byrobot_petrone_v2_controller_controller_light_color_preset":          "<br>조종기 LED를 조작하는데 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_petrone_v2_controller_controller_light_manual_single_input":   "<br>조종기 LED를 조작하는데 사용합니다.<br>2진수(0b00100000 ~ 0b11100000), 10진수(32 ~ 224), 16진수(0x20 ~ 0xE0) 값을 사용할 수 있습니다.<br>2진수로 표현한 값에서 각각의 비트는 LED의 Red, Green, Blue 색을 선택하는 스위치 역할을 합니다.<br>밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다. 값이 커질수록 더 밝아집니다. <br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_petrone_v2_controller_controller_light_manual_single_off":     "<br>조종기의 모든 LED를 끕니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED끄기</font>",
                 "byrobot_petrone_v2_controller_controller_value_button":                "<br>조종기에서 눌러진 버튼과 관련된 이벤트를 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
@@ -1220,7 +1220,7 @@ Entry.byrobot_petrone_v2_controller.setLanguage = function ()
                 "byrobot_petrone_v2_controller_controller_if_joystick_direction":       "when %1 stick move to %2",
                 "byrobot_petrone_v2_controller_controller_light_color_input":           "decide the color values of controller LED R %1, G %2, B %3 %4 %5",
                 "byrobot_petrone_v2_controller_controller_light_color_select":          "RGB combination examples of controller LED %1 %2 %3",
-                "byrobot_petrone_v2_controller_controller_light_manual_single":         "change the state of %1 controller LED to %2 %3",
+                "byrobot_petrone_v2_controller_controller_light_color_preset":          "change the state of %1 controller LED to %2 %3",
                 "byrobot_petrone_v2_controller_controller_light_manual_single_input":   "change the brightness of %1 controller LED to %2 %3",
                 "byrobot_petrone_v2_controller_controller_light_manual_single_off":     "turn off all controller LEDs %1",
                 "byrobot_petrone_v2_controller_controller_value_button":                "%1",
@@ -1250,8 +1250,8 @@ Entry.byrobot_petrone_v2_controller.blockMenuBlocks = [
     'byrobot_petrone_v2_controller_controller_if_button_press',
     'byrobot_petrone_v2_controller_controller_if_joystick_direction',
     'byrobot_petrone_v2_controller_controller_light_manual_single_off',
-    'byrobot_petrone_v2_controller_controller_light_manual_single',
     'byrobot_petrone_v2_controller_controller_light_manual_single_input',
+    'byrobot_petrone_v2_controller_controller_light_color_preset',
     'byrobot_petrone_v2_controller_controller_light_color_input',
     'byrobot_petrone_v2_controller_controller_light_color_select',
     'byrobot_petrone_v2_controller_controller_display_clear_all',
@@ -1502,65 +1502,6 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
         },
 
 
-        byrobot_petrone_v2_controller_controller_light_manual_single:
-        {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_red,        '128'],
-                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_green,      '64'],
-                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_blue,       '32'],
-                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_yellow,     '192'],
-                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_magenta,    '160'],
-                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_cyan,       '96'],
-                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_white,      '255'],
-                    ],
-                    value: '128',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_on,     '220'],
-                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_off,    '0'],
-                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b25,    '75'],
-                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b50,    '125'],
-                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b75,    '200'],
-                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b100,   '255'],
-                    ],
-                    value: '220',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
-            ],
-            events: {},
-            def: {
-                params: [null, null, null],
-                type: 'byrobot_petrone_v2_controller_controller_light_manual_single',
-            },
-            paramsKeyMap: {
-                FLAGS: 0,
-                BRIGHTNESS: 1,
-            },
-            class: 'byrobot_petrone_v2_controller_controller_light',
-            isNotFor: ['byrobot_petrone_v2_controller'],
-            func: function(sprite, script) {
-                var flags = parseInt(script.getField('FLAGS'));
-                var brightness = parseInt(script.getField('BRIGHTNESS'));
-                return Entry.byrobot_petrone_v2_controller.setLightManual(script, 0x31, flags, brightness);
-            },
-        },
-
-
         byrobot_petrone_v2_controller_controller_light_manual_single_input:
         {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1591,6 +1532,81 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
                 var flags = script.getNumberValue('FLAGS');
                 var brightness = script.getNumberValue('BRIGHTNESS');
                 return Entry.byrobot_petrone_v2_controller.setLightManual(script, 0x31, flags, brightness);
+            },
+        },
+
+
+        byrobot_petrone_v2_controller_controller_light_color_preset:
+        {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_red,        'red'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_green,      'green'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_blue,       'blue'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_yellow,     'yellow'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_magenta,    'magenta'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_cyan,       'cyan'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_white,      'white'],
+                    ],
+                    value: 'red',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_on,     '220'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_off,    '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b25,    '75'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b50,    '125'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b75,    '200'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b100,   '255'],
+                    ],
+                    value: '220',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
+            ],
+            events: {},
+            def: {
+                params: [null, null, null],
+                type: 'byrobot_petrone_v2_controller_controller_light_color_preset',
+            },
+            paramsKeyMap: {
+                FLAGS: 0,
+                BRIGHTNESS: 1,
+            },
+            class: 'byrobot_petrone_v2_controller_controller_light',
+            isNotFor: ['byrobot_petrone_v2_controller'],
+            func: function(sprite, script) {
+                var mode = 0x12;
+                var interval = parseInt(script.getField('BRIGHTNESS'));
+                var select = script.getField('FLAGS');
+                var red = 0;
+                var green = 0;
+                var blue = 0;
+
+                switch (select)
+                {
+                    case 'red':     red = 255;  green = 0;    blue = 0;     break;
+                    case 'green':   red = 0;    green = 255;  blue = 0;     break;
+                    case 'blue':    red = 0;    green = 0;    blue = 255;   break;
+                    case 'cyan':    red = 0;    green = 255;  blue = 255;   break;
+                    case 'magenta': red = 255;  green = 0;    blue = 255;   break;
+                    case 'yellow':  red = 255;  green = 255;  blue = 0;     break;
+                    case 'white':   red = 255;  green = 255;  blue = 255;   break;
+                }
+
+                return Entry.byrobot_petrone_v2_controller.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
             },
         },
 

@@ -1455,9 +1455,9 @@ Entry.byrobot_petrone_v2_flight.setLanguage = function ()
                 "byrobot_petrone_v2_flight_controller_display_invert":              "색반전 x %1, y %2, 너비 %3, 높이 %4 %5",
                 "byrobot_petrone_v2_flight_controller_if_button_press":             "조종기 %1 눌렀을 때",
                 "byrobot_petrone_v2_flight_controller_if_joystick_direction":       "조종기 %1 조이스틱 %2 움직였을 때",
-                "byrobot_petrone_v2_flight_controller_light_color_input":       "조종기 LED 색지정 R %1, G %2, B %3 %4 %5",
-                "byrobot_petrone_v2_flight_controller_light_color_select":      "조종기 LED의 RGB 조합 예시 %1 %2 %3",
-                "byrobot_petrone_v2_flight_controller_light_manual_single":         "조종기 LED %1 %2 %3",
+                "byrobot_petrone_v2_flight_controller_light_color_input":           "조종기 LED 색지정 R %1, G %2, B %3 %4 %5 %6",
+                "byrobot_petrone_v2_flight_controller_light_color_select":          "조종기 LED의 RGB 조합 예시 %1 %2 %3 %4",
+                "byrobot_petrone_v2_flight_controller_light_color_preset":          "조종기 LED %1 %2 %3",
                 "byrobot_petrone_v2_flight_controller_light_manual_single_input":   "조종기 LED %1 밝기 %2 %3",
                 "byrobot_petrone_v2_flight_controller_light_manual_single_off":     "조종기 LED 끄기 %1",
                 "byrobot_petrone_v2_flight_controller_value_button":                "%1",
@@ -1478,9 +1478,9 @@ Entry.byrobot_petrone_v2_flight.setLanguage = function ()
                 "byrobot_petrone_v2_flight_drone_control_quad_one":                 "드론 %1 %2% 정하기 %3",
                 "byrobot_petrone_v2_flight_drone_control_quad_one_delay":           "드론 %1 %2% %3 초 실행 %4",
                 "byrobot_petrone_v2_flight_drone_irmessage":                        "적외선으로 %1 값 보내기 %2",
-                "byrobot_petrone_v2_flight_drone_light_color_input":            "드론 %1 LED 색지정 R %2, G %3, B %4 %5 %6",
-                "byrobot_petrone_v2_flight_drone_light_color_select":           "드론 %1 LED의 RGB 조합 예시 %2 %3 %4",
-                "byrobot_petrone_v2_flight_drone_light_manual_single":              "드론 LED %1 %2 %3",
+                "byrobot_petrone_v2_flight_drone_light_color_input":                "드론 %1 LED 색지정 R %2, G %3, B %4 %5 %6 %7",
+                "byrobot_petrone_v2_flight_drone_light_color_select":               "드론 %1 LED의 RGB 조합 예시 %2 %3 %4 %5",
+                "byrobot_petrone_v2_flight_drone_light_color_preset":               "드론 LED %1 %2 %3",
                 "byrobot_petrone_v2_flight_drone_light_manual_single_input":        "드론 LED %1 밝기 %2 %3",
                 "byrobot_petrone_v2_flight_drone_light_manual_single_off":          "드론 LED 끄기 %1",
                 "byrobot_petrone_v2_flight_drone_motor_stop":                       "모터 정지 %1",
@@ -1514,7 +1514,7 @@ Entry.byrobot_petrone_v2_flight.setLanguage = function ()
                 "byrobot_petrone_v2_flight_controller_if_joystick_direction":       "<br>조종기의 조이스틱을 지정한 방향으로 움직였을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
                 "byrobot_petrone_v2_flight_controller_light_color_input":           "<br>빛의 삼원색인 Red, Green, Blue 값을 지정하여 조종기 LED의 색상을 원하는대로 만들 수 있습니다.<br>10진수(0 ~ 255) 값을 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_petrone_v2_flight_controller_light_color_select":          "<br>RGB 색지정 블록을 이용해서 만들 수 있는<br> 조종기 LED 예시입니다.<br>RGB 색지정 블록을 이용해서 멋진 색깔을<br> 다양하게 만들어보세요.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
-                "byrobot_petrone_v2_flight_controller_light_manual_single":         "<br>조종기 LED를 조작하는데 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
+                "byrobot_petrone_v2_flight_controller_light_color_preset":         "<br>조종기 LED를 조작하는데 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_petrone_v2_flight_controller_light_manual_single_input":   "<br>조종기 LED를 조작하는데 사용합니다.<br>2진수(0b00100000 ~ 0b11100000), 10진수(32 ~ 224), 16진수(0x20 ~ 0xE0) 값을 사용할 수 있습니다.  2진수로 표현한 값에서 각각의 비트는 LED의 Red, Green, Blue 색을 선택하는 스위치 역할을 합니다.  밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다. 값이 커질수록 더 밝아집니다. <br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_petrone_v2_flight_controller_light_manual_single_off":     "<br>조종기의 모든 LED를 끕니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED끄기</font>",
                 "byrobot_petrone_v2_flight_controller_value_button":                "<br>조종기에서 눌러진 버튼과 관련된 이벤트를 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
@@ -1537,7 +1537,7 @@ Entry.byrobot_petrone_v2_flight.setLanguage = function ()
                 "byrobot_petrone_v2_flight_drone_irmessage":                        "<br>적외선으로 지정한 값을 보냅니다. 사용 가능한 값의 범위는 -2147483647 ~ 2147483647입니다.수신 방향이 추가되었습니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#적외선통신</font>",
                 "byrobot_petrone_v2_flight_drone_light_color_input":                "<br>빛의 삼원색인 Red, Green, Blue 값을 지정하여 드론의 눈 또는 팔 LED의 색상을 원하는대로 만들 수 있습니다.<br>10진수(0 ~ 255) 값을 사용합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_petrone_v2_flight_drone_light_color_select":               "<br>RGB 색지정 블록을 이용해서 만들 수 있는<br> 드론 LED 예시입니다.<br>RGB 색지정 블록을 이용해서 멋진 색깔을<br> 다양하게 만들어보세요.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
-                "byrobot_petrone_v2_flight_drone_light_manual_single":              "<br>드론의 LED를 조작하는데 사용합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
+                "byrobot_petrone_v2_flight_drone_light_color_preset":              "<br>드론의 LED를 조작하는데 사용합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_petrone_v2_flight_drone_light_manual_single_input":        "<br>드론 LED를 조작하는데 사용합니다.<br>2진수(0b00000100 ~ 0b11111100), 10진수(4 ~ 252), 16진수(0x04 ~ 0xFC) 값을 사용할 수 있습니다.  2진수로 표현한 값에서 각각의 비트는 눈과 팔 LED의 Red, Green, Blue 색을 선택하는 스위치 역할을 합니다.  밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다. 값이 커질수록 더 밝아집니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_petrone_v2_flight_drone_light_manual_single_off":          "<br>드론의 모든 LED를 끕니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED끄기</font>",
                 "byrobot_petrone_v2_flight_drone_motor_stop":                       "<br>모든 모터의 작동을 정지합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터정지</font>",
@@ -1726,7 +1726,7 @@ Entry.byrobot_petrone_v2_flight.setLanguage = function ()
                 "byrobot_petrone_v2_flight_controller_if_joystick_direction": "when %1 stick move to %2",
                 "byrobot_petrone_v2_flight_controller_light_color_input": "decide the color values of controller LED R %1, G %2, B %3 %4 %5",
                 "byrobot_petrone_v2_flight_controller_light_color_select": "RGB combination examples of controller LED %1 %2 %3",
-                "byrobot_petrone_v2_flight_controller_light_manual_single": "change the state of %1 controller LED to %2 %3",
+                "byrobot_petrone_v2_flight_controller_light_color_preset": "change the state of %1 controller LED to %2 %3",
                 "byrobot_petrone_v2_flight_controller_light_manual_single_input": "change the brightness of %1 controller LED to %2 %3",
                 "byrobot_petrone_v2_flight_controller_light_manual_single_off": "turn off all controller LEDs %1",
                 "byrobot_petrone_v2_flight_controller_value_button": "%1",
@@ -1749,7 +1749,7 @@ Entry.byrobot_petrone_v2_flight.setLanguage = function ()
                 "byrobot_petrone_v2_flight_drone_irmessage": "send %1 to the IR transmitter %2",
                 "byrobot_petrone_v2_flight_drone_light_color_input": "decide the color values of drone %1 LED R %2, G %3, B %4 %5 %6",
                 "byrobot_petrone_v2_flight_drone_light_color_select": "RGB combination examples of drone %1 LED %2 %3 %4",
-                "byrobot_petrone_v2_flight_drone_light_manual_single": "change the state of %1 drone LED to %2 %3",
+                "byrobot_petrone_v2_flight_drone_light_color_preset": "change the state of %1 drone LED to %2 %3",
                 "byrobot_petrone_v2_flight_drone_light_manual_single_input": "change the brightness of %1 drone LED to %2 %3",
                 "byrobot_petrone_v2_flight_drone_light_manual_single_off": "turn off all drone LEDs %1",
                 "byrobot_petrone_v2_flight_drone_motor_stop": "turn off all motors %1",
@@ -1799,13 +1799,13 @@ Entry.byrobot_petrone_v2_flight.blockMenuBlocks = [
     'byrobot_petrone_v2_flight_drone_motorsingle_rotation',
     'byrobot_petrone_v2_flight_drone_irmessage',
     'byrobot_petrone_v2_flight_drone_light_manual_single_off',
-    'byrobot_petrone_v2_flight_drone_light_manual_single',
     'byrobot_petrone_v2_flight_drone_light_manual_single_input',
+    'byrobot_petrone_v2_flight_drone_light_color_preset',
     'byrobot_petrone_v2_flight_drone_light_color_input',
     'byrobot_petrone_v2_flight_drone_light_color_select',
     'byrobot_petrone_v2_flight_controller_light_manual_single_off',
-    'byrobot_petrone_v2_flight_controller_light_manual_single',
     'byrobot_petrone_v2_flight_controller_light_manual_single_input',
+    'byrobot_petrone_v2_flight_controller_light_color_preset',
     'byrobot_petrone_v2_flight_controller_light_color_input',
     'byrobot_petrone_v2_flight_controller_light_color_select',
     'byrobot_petrone_v2_flight_controller_display_clear_all',
@@ -2203,7 +2203,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
         },
 
 
-        byrobot_petrone_v2_flight_controller_light_manual_single:
+        byrobot_petrone_v2_flight_controller_light_color_preset:
         {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2213,15 +2213,15 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_red,        '128'],
-                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_green,      '64'],
-                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_blue,       '32'],
-                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_yellow,     '192'],
-                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_magenta,    '160'],
-                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_cyan,       '96'],
-                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_white,      '255'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_red,        'red'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_green,      'green'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_blue,       'blue'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_yellow,     'yellow'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_magenta,    'magenta'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_cyan,       'cyan'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_white,      'white'],
                     ],
-                    value: '128',
+                    value: 'red',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2246,8 +2246,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             events: {},
             def: {
                 params: [null, null, null],
-                type:
-                    'byrobot_petrone_v2_flight_controller_light_manual_single',
+                type: 'byrobot_petrone_v2_flight_controller_light_color_preset',
             },
             paramsKeyMap: {
                 FLAGS: 0,
@@ -2256,9 +2255,25 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             class: 'byrobot_petrone_v2_flight_controller_light',
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
-                var flags = parseInt(script.getField('FLAGS'));
-                var brightness = parseInt(script.getField('BRIGHTNESS'));
-                return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x31, flags, brightness);
+                var mode = 0x12;
+                var interval = parseInt(script.getField('BRIGHTNESS'));
+                var select = script.getField('FLAGS');
+                var red = 0;
+                var green = 0;
+                var blue = 0;
+
+                switch (select)
+                {
+                    case 'red':     red = 255;  green = 0;    blue = 0;     break;
+                    case 'green':   red = 0;    green = 255;  blue = 0;     break;
+                    case 'blue':    red = 0;    green = 0;    blue = 255;   break;
+                    case 'cyan':    red = 0;    green = 255;  blue = 255;   break;
+                    case 'magenta': red = 255;  green = 0;    blue = 255;   break;
+                    case 'yellow':  red = 255;  green = 255;  blue = 0;     break;
+                    case 'white':   red = 255;  green = 255;  blue = 255;   break;
+                }
+
+                return Entry.byrobot_petrone_v2_flight.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
             },
         },
 
@@ -2455,7 +2470,10 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x30, 0xff, 0);
             },
         },
-        byrobot_petrone_v2_flight_drone_light_manual_single: {
+
+
+        byrobot_petrone_v2_flight_drone_light_color_preset:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -2464,14 +2482,14 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_eye_red,     '128'],
-                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_eye_green,   '64'],
-                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_eye_blue,    '32'],
-                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_arm_red,     '16'],
-                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_arm_green,   '8'],
-                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_arm_blue,    '4'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_eye_red,     'eye_red'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_eye_green,   'eye_green'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_eye_blue,    'eye_blue'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_arm_red,     'arm_red'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_arm_green,   'arm_green'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_arm_blue,    'arm_blue'],
                     ],
-                    value: '128',
+                    value: 'eye_red',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2496,7 +2514,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             events: {},
             def: {
                 params: [null, null, null],
-                type: 'byrobot_petrone_v2_flight_drone_light_manual_single',
+                type: 'byrobot_petrone_v2_flight_drone_light_color_preset',
             },
             paramsKeyMap: {
                 FLAGS: 0,
@@ -2505,9 +2523,24 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             class: 'byrobot_petrone_v2_flight_drone_light',
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
-                var flags = parseInt(script.getField('FLAGS'));
-                var brightness = parseInt(script.getField('BRIGHTNESS'));
-                return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x30, flags, brightness);
+                var mode = 0x12;
+                var interval = parseInt(script.getField('BRIGHTNESS'));
+                var select = script.getField('FLAGS');
+                var red = 0;
+                var green = 0;
+                var blue = 0;
+
+                switch (select)
+                {
+                    case 'eye_red':     mode = 0x12;    red = 255;  green = 0;    blue = 0;     break;
+                    case 'eye_green':   mode = 0x12;    red = 0;    green = 255;  blue = 0;     break;
+                    case 'eye_blue':    mode = 0x12;    red = 0;    green = 0;    blue = 255;   break;
+                    case 'arm_red':     mode = 0x42;    red = 255;  green = 0;    blue = 0;     break;
+                    case 'arm_green':   mode = 0x42;    red = 0;    green = 255;  blue = 0;     break;
+                    case 'arm_blue':    mode = 0x42;    red = 0;    green = 0;    blue = 255;   break;
+                }
+
+                return Entry.byrobot_petrone_v2_flight.setLightModeColor(script, 0x30, mode, interval, red, green, blue);
             },
         },
 
@@ -2557,8 +2590,8 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_eye, '18'], // EyeHold = 0x12
-                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_arm, '66'], // ArmHold = 0x42
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_eye, '0x12'], // EyeHold = 0x12
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_arm, '0x42'], // ArmHold = 0x42
                     ],
                     value: '18',
                     fontSize: 11,
@@ -2689,6 +2722,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             func: function(sprite, script) {
                 var mode = parseInt(script.getField('MODE')) + parseInt(script.getField('MODESUB'));
                 var select = script.getField('SELECT');
+                var interval = script.getNumberValue('INTERVAL');
                 var red = 0;
                 var green = 0;
                 var blue = 0;
@@ -2703,7 +2737,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                     case 'lavender':        red = 80;   green = 0;      blue = 200; break;
                 }
 
-                return Entry.byrobot_petrone_v2_flight.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
+                return Entry.byrobot_petrone_v2_flight.setLightModeColor(script, 0x30, mode, interval, red, green, blue);
             },
         },
 
