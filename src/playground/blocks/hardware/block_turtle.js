@@ -159,7 +159,7 @@ Entry.Turtle = {
         en: 'Turtle',
         ko: '거북이',
     },
-    monitorTemplate: {
+    monitorTemplate: () => ({
         imgPath: 'hw/turtle.png',
         width: 480,
         height: 354,
@@ -233,7 +233,7 @@ Entry.Turtle = {
             },
         },
         mode: 'both',
-    },
+    }),
 };
 
 Entry.Turtle.setLanguage = () => ({
