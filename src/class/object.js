@@ -235,7 +235,6 @@ Entry.EntryObject = class {
             const { type } = Lang || {};
             const filename = type === 'ko' ? 'text_icon_ko.svg' : 'text_icon.svg';
             this.thumbUrl = `${Entry.mediaFilePath}${filename}`;
-            // this.thumbUrl = `${Entry.mediaFilePath}text_icon.svg`;
             $(thumb).addClass('entryObjectTextBox');
         }
     }
