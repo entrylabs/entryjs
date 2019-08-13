@@ -1,4 +1,4 @@
-'use strict';
+'use strict'; 
 
 Entry.Arduino = {
     id: ['1.1', '4.2', '8.1'],
@@ -469,7 +469,7 @@ Entry.Arduino.getBlocks = function() {
                 VALUE: 0,
             },
             class: 'arduino_value',
-            //isNotFor: ['arduino'],
+            isNotFor: ['arduino'],
             func: function(sprite, script) {
                 var signal = script.getValue('VALUE', script);
                 return Entry.hw.getAnalogPortValue(signal[1]);
@@ -587,7 +587,6 @@ Entry.Arduino.getBlocks = function() {
             class: 'arduino_set',
             isNotFor: ['arduino'],
             func: function(sprite, script) {
-                console.log('arduino_toggle_led')
                 var port = script.getNumberValue('VALUE');
                 var operator = script.getField('OPERATOR');
                 var value = operator == 'on' ? 255 : 0;
@@ -664,7 +663,6 @@ Entry.Arduino.getBlocks = function() {
             class: 'arduino_set',
             isNotFor: ['arduino'],
             func: function(sprite, script) {
-                console.log('arduino_toggle_pwm')
                 var port = script.getNumberValue('PORT');
                 var value = script.getNumberValue('VALUE');
                 value = Math.round(value);
