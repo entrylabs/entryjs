@@ -48,7 +48,7 @@ Entry.ZoomController = class ZoomController {
     }
 
     renderStart(zoomGroup) {
-        const { btn_zoom_bg, btn_zoom_out, btn_zoom_reset } = EntryStatic.images || {};
+        const { btn_zoom_bg, btn_zoom_out, btn_zoom_reset, btn_zoom_in } = EntryStatic.images || {};
         zoomGroup.svgZoom.elem('image', {
             href: btn_zoom_bg || `${Entry.mediaFilePath}btn_zoom_bg.svg`,
             width: this.CONTROLLER_WIDTH,
@@ -74,7 +74,7 @@ Entry.ZoomController = class ZoomController {
             style: 'cursor: pointer;',
         });
         zoomGroup.zoomIn = zoomGroup.svgZoom.elem('image', {
-            href: `${Entry.mediaFilePath}btn_zoom_in.svg`,
+            href: btn_zoom_in || `${Entry.mediaFilePath}btn_zoom_in.svg`,
             x: 92,
             y: 3,
             width: 32,
