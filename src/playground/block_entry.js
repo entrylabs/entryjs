@@ -261,6 +261,25 @@ function getBlocks() {
             },
         },
         //region hardware 하드웨어 기본
+        arduino_noti_light: {
+            skeleton: 'basic_text_light',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_noti_text_light,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'arduino_noti_light',
+            },
+            class: 'arduino_default_noti',
+            isNotFor: ['arduinoDisconnected'],
+            events: {},
+        },
         arduino_noti: {
             skeleton: 'basic_text',
             color: EntryStatic.colorSet.common.TRANSPARENT,

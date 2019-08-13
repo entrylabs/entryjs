@@ -4,7 +4,7 @@
 'use strict';
 
 import SimpleBar from 'simplebar';
-import axios from 'axios';
+import fetch from 'isomorphic-fetch';
 
 /**
  * Block variable constructor
@@ -2716,9 +2716,22 @@ Entry.VariableContainer = class VariableContainer {
             return;
         }
 
-        Entry.dispatchEvent('updateCloudVariable', {
-            variables,
-            lists,
+        let csrfToken = '';
+        try {
+            csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        } catch (e) {}
+
+        fetch(`/api/project/variable/${projectId}`, {
+            method: 'PUT',
+            headers: {
+                'csrf-token': csrfToken,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                variables,
+                lists,
+            }),
         });
     }
 
