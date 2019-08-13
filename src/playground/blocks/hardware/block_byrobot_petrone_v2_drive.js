@@ -42,8 +42,8 @@ Entry.byrobot_petrone_v2_drive =
             this.transferbuzzer(0, 0, 0);
             this.transferLightManual(0x30, 0xff, 0);   // LED 초기화(모두 꺼짐)
             this.transferLightManual(0x31, 0xff, 0);   // LED 초기화(모두 꺼짐)
-            this.transferLightManual(0x30, 0x80, 200); // LED 초기화(눈 빨강)
-            this.transferLightManual(0x30, 0x10, 200); // LED 초기화(팔 빨강)
+            this.transferLightModeColor(0x30, 0x12, 200, 255, 0, 0); // LED 초기화(눈 빨강)
+            this.transferLightModeColor(0x30, 0x42, 200, 255, 0, 0); // LED 초기화(팔 빨강)
             this.transferMotorSingle(0, 1, 0);         // 1번 모터방향 초기화(시계방향)
             this.transferMotorSingle(1, 2, 0);         // 2번 모터방향 초기화(반시계방향)
         }
