@@ -122,7 +122,7 @@ Entry.HyACT_Xylobot.setLanguage = function() {
                 hyact_xylobot_list_octave_4_sol: 'G',
                 hyact_xylobot_list_octave_4_la: 'A',
                 hyact_xylobot_list_octave_4_si: 'B',
-                hyact_xylobot_list_octave_5_do: 'A high C',
+                hyact_xylobot_list_octave_5_do: 'High C',
                 hyact_xylobot_list_movement_on: 'On',
                 hyact_xylobot_list_movement_twinkle: 'Twinkle',
                 hyact_xylobot_list_movement_standby: 'Stand by',
