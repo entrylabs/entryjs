@@ -1,5 +1,6 @@
 import EntryPaint from 'entry-paint';
 import axios from 'axios';
+import Extension from '../extensions/extension';
 
 const GraphicMode = {
     BITMAP: 'BITMAP',
@@ -17,6 +18,7 @@ Entry.Painter = class Painter {
             mode: 'new', // new or edit
         };
 
+        this.dropper = Extension.getExtension('Dropper');
         this.isShow = false;
         this.clipboard = null;
         this._keyboardEvents = [];
@@ -33,6 +35,7 @@ Entry.Painter = class Painter {
         this.isShow = true;
 
         this.entryPaint = EntryPaint.create({ parent: this.view, mode: 'entry' });
+        this.entryPaint.setDropper && this.entryPaint.setDropper(this.dropper);
 
         this.isImport = true;
         this.entryPaint.on('SNAPSHOT_SAVED', (e) => {
