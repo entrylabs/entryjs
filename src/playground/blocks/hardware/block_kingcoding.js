@@ -1,8 +1,8 @@
 'use strict';
 
 Entry.Kingcoding = {
-    id: 'FF.FE',
-    name: 'kingcoding',
+    id: '34.1',  
+    name: 'Kingcoding',
     url: 'http://www.kingkongedu.co.kr/',
     imageName: 'kingcoderLine.png',
     title: {
@@ -16,7 +16,7 @@ Entry.Kingcoding = {
         Entry.hw.setDigitalPortValue(3, 0); //motor1 stop
         Entry.hw.setDigitalPortValue(4, 0); //motor1 stop
         Entry.hw.setDigitalPortValue(5, 0); //led off
-        Entry.hw.setDigitalPortValue(5, 0); //buzzer off
+        Entry.hw.setDigitalPortValue(6, 0); //buzzer off
 
         //다시 0으로 초기화
         //0,1,2 슬롯: 킹코더가 보낸 데이터 
@@ -81,12 +81,12 @@ Entry.Kingcoding.blockMenuBlocks = [
 
 Entry.Kingcoding.getBlocks = function() {
     return {
-        kingcoding_set_motor:{ //블록이름
+        kingcoding_set_motor:{ 
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [ //입력 파라미터 속성정의
+            params: [ 
                 {
                     type: 'Dropdown',
                     options: [['1번 정회전', '1'],
@@ -113,11 +113,11 @@ Entry.Kingcoding.getBlocks = function() {
                 },
             ],
             events: {},
-            def: { //파라미터에 들어갈 기본 값.
+            def: { 
                 params: [null, null],
-                type: 'kingcoding_set_motor', //상속, 블록명과 동일
+                type: 'kingcoding_set_motor', 
             },
-            paramsKeyMap: { // 실제 블록의 로직인 func 에서 해당 인덱스의 파라미터를 가져올때 쓸 key 값
+            paramsKeyMap: { 
                 PORT: 0,
             },
             class: 'Kingcoding',
@@ -195,12 +195,12 @@ Entry.Kingcoding.getBlocks = function() {
             syntax: { js: [], py: ['Kingcoding.set_motor(%1)'] },
         },
         
-         kingcoding_set_led:{ //블록이름
+         kingcoding_set_led:{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [ //입력 파라미터 속성정의
+            params: [ 
                 {
                     type: 'Dropdown',
                     options: [['적색 LED 켜기', '1'], 
@@ -223,11 +223,11 @@ Entry.Kingcoding.getBlocks = function() {
                 },
             ],
             events: {},
-            def: { //파라미터에 들어갈 기본 값.
+            def: { 
                 params: [null, null],
-                type: 'kingcoding_set_led', //상속, 블록명과 동일
+                type: 'kingcoding_set_led', 
             },
-            paramsKeyMap: { // 실제 블록의 로직인 func 에서 해당 인덱스의 파라미터를 가져올때 쓸 key 값
+            paramsKeyMap: { 
                 PORT: 0,
             },
             class: 'Kingcoding',
@@ -236,7 +236,7 @@ Entry.Kingcoding.getBlocks = function() {
                 if (!script.isStart) {
                     script.isStart = true;
                     script.timeFlag = 1;
-                    var timeValue = 25; //시간지연, 안주면 명령유실됨
+                    var timeValue = 25; //시간지연
                     const blockId = script.block.id;
                     Entry.TimeWaitManager.add(
                         blockId,
@@ -263,12 +263,12 @@ Entry.Kingcoding.getBlocks = function() {
             syntax: { js: [], py: ['Kingcoding.set_led(%1)'] },
         },
         
-         kingcoding_set_buzzer:{ //블록이름
+         kingcoding_set_buzzer:{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [ //입력 파라미터 속성정의
+            params: [ 
                 {
                     type: 'Dropdown',
                     options: [['낮은음', '1'], ['중간음', '2'],
@@ -286,11 +286,11 @@ Entry.Kingcoding.getBlocks = function() {
                 },
             ],
             events: {}, 
-            def: { //파라미터에 들어갈 기본 값.
+            def: { 
                 params: [null, null],
-                type: 'kingcoding_set_buzzer', //상속, 블록명과 동일
+                type: 'kingcoding_set_buzzer',
             },
-            paramsKeyMap: { // 실제 블록의 로직인 func 에서 해당 인덱스의 파라미터를 가져올때 쓸 key 값
+            paramsKeyMap: {
                 PORT: 0,
             },
             class: 'Kingcoding', 
@@ -300,7 +300,7 @@ Entry.Kingcoding.getBlocks = function() {
                 if (!script.isStart) {
                     script.isStart = true;
                     script.timeFlag = 1;
-                    var timeValue = 25;//시간지연, 안주면 명령유실됨
+                    var timeValue = 25;//시간지연
 
                     const blockId = script.block.id;
                     Entry.TimeWaitManager.add(
@@ -357,47 +357,7 @@ Entry.Kingcoding.getBlocks = function() {
                 ret = ret & 63  // mask: 00111111
                 console.log("anal 1 :"+ret)
                 return ret;
-                // if (!script.isStart) {
-                //     script.isStart = true;
-                //     script.timeFlag = 1;
-                //     var timeValue = 25;//시간지연, 안주면 명령유실됨
-
-                //     const blockId = script.block.id;
-                    
-                //     Entry.TimeWaitManager.add(
-                //         blockId,
-                //         function() {
-                //             script.timeFlag = 0;
-                //         },
-                //         timeValue
-                //     );
-
-                //     return script;
-                // } else if (script.timeFlag == 1) {
-                //     return script;
-                // } else {
-                //     delete script.timeFlag;
-                //     delete script.isStart;
-                //     Entry.engine.isContinue = false;
-                    
-                //     return ret;
-                // }
-
-
-
-                //시간 지연 주면 안됨
-                //Entry.hw.setDigitalPortValue(0, 29); //a1 값을 쓰기
-                // var ret = Entry.hw.getDigitalPortValue(0); //값을 받기
-                // console.log("anal 1 :"+ret)
-                // return ret;
                 
-                // setTimeout(function(){
-                //     //Entry.hw.setDigitalPortValue(0, 29); //a1 값을 쓰기
-                //     var ret = Entry.hw.getDigitalPortValue(0); //값을 받기
-                //     console.log("anal 1 :"+ret)
-                //     return ret;
-                //     }, 0
-                // ); 
             },
             syntax: { js: [], py: ['Kingcoding.sensor_1_value()'] },
         },
@@ -420,13 +380,11 @@ Entry.Kingcoding.getBlocks = function() {
                 params: [null],
                 type: 'kingcoding_get_number_sensor_2_value',
             },
-            // paramsKeyMap: {
-            //     PORT: 0,
-            // },
+
             class: 'Kingcoding',
             isNotFor: ['Kingcoding'],
             func: function(sprite, script) {
-                //시간 지연 주면 안됨
+                
                 Entry.hw.setDigitalPortValue(8,1); //a2 값을 요청
                 var ret = Entry.hw.getDigitalPortValue(1); //값을 받기
                 ret = ret & 63  // mask: 00111111
@@ -437,7 +395,7 @@ Entry.Kingcoding.getBlocks = function() {
                 {
                     syntax: 'Kingcoding.sensor_2_value()',
                     blockType: 'param',
-                },//'Kingcoding.sensor_2_value()'
+                },
             ] },
         },
         
@@ -466,7 +424,7 @@ Entry.Kingcoding.getBlocks = function() {
             class: 'Kingcoding',
             isNotFor: ['Kingcoding'],
             func: function(sprite, script) {
-                //시간 지연 주면 안됨
+                
                 Entry.hw.setDigitalPortValue(9, 1); //값 요청 
                 var ret = Entry.hw.getDigitalPortValue(2);
                 ret = ret & 1  // mask: 0000 0001
@@ -500,7 +458,7 @@ Entry.Kingcoding.getBlocks = function() {
             class: 'Kingcoding',
             isNotFor: ['Kingcoding'],
             func: function(sprite, script) {
-                //시간 지연 주면 안됨
+                
                 Entry.hw.setDigitalPortValue(10, 1); //값 요청 
                 var ret = Entry.hw.getDigitalPortValue(2);
                 ret = ret & 2  // mask: 0000 0010
