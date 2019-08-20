@@ -13,8 +13,8 @@ Entry.skeleton.basic_define = {
         )
             .replace(/%wh/gi, height)
             .replace(/%w/gi, width)
-            .replace(/%h/gi, height / 2)
-            .replace(/%bw/gi, width - 8)
+            .replace(/%h/gi, (height / 2) as any) // TODO blockView 인터페이스 완성시 삭제
+            .replace(/%bw/gi, (width - 8) as any)
             .replace(/%sh/gi, statementHeight + 1);
     },
     magnets() {
