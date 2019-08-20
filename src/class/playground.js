@@ -679,9 +679,11 @@ Entry.Playground = class {
                         textValue = textEditArea.value;
                     }
 
-                    if (/[\u4E00-\u9FFF]/.exec(textValue) != null) {
-                        font = options[0][1];
-                        entrylms.alert(Lang.Menus.not_supported_text);
+                    if (font === 'Nanum Pen Script' || font === 'Jeju Hallasan') {
+                        if (/[\u4E00-\u9FFF]/.exec(textValue) != null) {
+                            font = options[0][1];
+                            entrylms.alert(Lang.Menus.not_supported_text);
+                        }
                     }
                     fontLink.innerText = font.name;
                     $('#entryTextBoxAttrFontName').data('font', font);
