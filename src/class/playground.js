@@ -224,8 +224,8 @@ Entry.Playground = class {
             const backPackButton = Entry.createElement('div')
                 .addClass('entryPlaygroundBackPackButtonWorkspace')
                 .appendTo(tabButtonView);
-            backPackButton.setAttribute('alt', Lang.Blocks.show_all_comment);
-            backPackButton.setAttribute('title', Lang.Blocks.show_all_comment);
+            backPackButton.setAttribute('alt', Lang.Workspace.my_storage);
+            backPackButton.setAttribute('title', Lang.Workspace.my_storage);
 
             this.backPackButton_ = backPackButton;
             backPackButton.bindOnClick(() => {

@@ -48,7 +48,8 @@
         "postcss-flexbugs-fixes": "^4.1.0",
         "simplebar": "^3.1.1",
         "uglifyjs-webpack-plugin": "^2.1.2",
-        "webpack": "^4.28.3"
+        "webpack": "^4.28.3",
+        "xss-filters": "^1.2.7"
     },
     "devDependencies": {
         "@babel/core": "7.0.0",
@@ -61,7 +62,10 @@
         "@babel/preset-env": "7.0.0",
         "@babel/runtime": "^7.0.0",
         "@egjs/visible": "^2.1.0",
+        "@types/lodash": "^4.14.136",
         "@types/pixi.js": "^4.8.6",
+        "@types/webpack-env": "^1.14.0",
+        "@typescript-eslint/parser": "^1.13.0",
         "awesome-typescript-loader": "^5.2.1",
         "babel-eslint": "^8.2.2",
         "babel-loader": "^8.0.0-beta",
