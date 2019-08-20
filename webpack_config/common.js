@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const autoprefixer = require('autoprefixer');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
@@ -55,6 +56,52 @@ module.exports = {
                     transpileOnly: true,
                     useTranspileModule: true,
                 },
+            },
+            {
+                test: /\.(css|less)$/,
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            // you can specify a publ icPath here
+                            // by default it use publicPath in webpackOptions.output
+                            publicPath: '../',
+                        },
+                    },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            url: false,
+                            minimize: true,
+                            sourceMap: false,
+                        },
+                    },
+                    {
+                        loader: require.resolve('postcss-loader'),
+                        options: {
+                            ident: 'postcss',
+                            plugins: () => [
+                                require('postcss-flexbugs-fixes'),
+                                autoprefixer({
+                                    browsers: [
+                                        '>1%',
+                                        'last 4 versions',
+                                        'Firefox ESR',
+                                        'not ie < 9', // React doesn't support IE8 anyway
+                                    ],
+                                    flexbox: 'no-2009',
+                                    remove: false,
+                                }),
+                            ],
+                        },
+                    },
+                    {
+                        loader: 'less-loader',
+                        options: {
+                            sourceMap: false,
+                        },
+                    },
+                ],
             },
         ],
     },
