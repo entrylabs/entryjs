@@ -1,7 +1,7 @@
 'use strict';
 
-var path = require('path');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require('path');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 
 module.exports = {
@@ -50,7 +50,7 @@ module.exports = {
                                 plugins: () => [
                                     require('postcss-flexbugs-fixes'),
                                     autoprefixer({
-                                        browsers: [
+                                        overrideBrowserslist: [
                                             '>1%',
                                             'last 4 versions',
                                             'Firefox ESR',
