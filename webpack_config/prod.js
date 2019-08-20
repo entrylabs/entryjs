@@ -32,7 +32,6 @@ module.exports = merge(common, {
                         loader: 'css-loader',
                         options: {
                             url: false,
-                            minimize: true,
                             sourceMap: false,
                         },
                     },
@@ -42,6 +41,7 @@ module.exports = merge(common, {
                             ident: 'postcss',
                             plugins: () => [
                                 require('postcss-flexbugs-fixes'),
+                                require('cssnano')({ preset: 'default' }),
                                 autoprefixer({
                                     overrideBrowserslist: [
                                         '>1%',
