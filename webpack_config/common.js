@@ -37,6 +37,7 @@ module.exports = {
                 ],
             },
             {
+                // eslint-disable-next-line max-len
                 test: /\.(ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|cur)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
                 loader: 'url-loader',
                 options: {

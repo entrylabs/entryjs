@@ -1,7 +1,7 @@
 'use strict';
 
-var path = require('path');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require('path');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 
 module.exports = {
@@ -21,14 +21,6 @@ module.exports = {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 loader: 'eslint-loader',
-            },
-            {
-                test: /\.(ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|cur)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: 'url-loader',
-                options: {
-                    name: '[hash].[ext]',
-                    limit: 10000,
-                },
             },
             {
                 test: /\.(css|less)$/,
