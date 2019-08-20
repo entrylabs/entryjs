@@ -678,8 +678,10 @@ Entry.Playground = class {
                     if (that.object.entity.getLineBreak()) {
                         textValue = textEditArea.value;
                     }
-
-                    if (font === 'Nanum Pen Script' || font === 'Jeju Hallasan') {
+                    const { options = {} } = Entry;
+                    const { textOptions = {} } = options;
+                    const { hanjaEnable } = textOptions;
+                    if (!hanjaEnable) {
                         if (/[\u4E00-\u9FFF]/.exec(textValue) != null) {
                             font = options[0][1];
                             entrylms.alert(Lang.Menus.not_supported_text);
@@ -884,7 +886,10 @@ Entry.Playground = class {
             const entity = object.entity;
             const selected = $('#entryTextBoxAttrFontName').data('font');
             const defaultFont = EntryStatic.fonts[0];
-            if (selected.family === 'Nanum Pen Script' || selected.family === 'Jeju Hallasan') {
+            const { options = {} } = Entry;
+            const { textOptions = {} } = options;
+            const { hanjaEnable } = textOptions;
+            if (!hanjaEnable && (selected.family === 'Nanum Pen Script' || selected.family === 'Jeju Hallasan')) {
                 if (/[\u4E00-\u9FFF]/.exec(this.value) != null) {
                     $('#entryTextBoxAttrFontName').text(defaultFont.name);
                     entity.setFontType(defaultFont.family);
