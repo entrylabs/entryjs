@@ -72,7 +72,6 @@ module.exports = {
                         loader: 'css-loader',
                         options: {
                             url: false,
-                            minimize: true,
                             sourceMap: false,
                         },
                     },
@@ -82,8 +81,9 @@ module.exports = {
                             ident: 'postcss',
                             plugins: () => [
                                 require('postcss-flexbugs-fixes'),
+                                require('cssnano')({ preset: 'default' }),
                                 autoprefixer({
-                                    browsers: [
+                                    overrideBrowserslist: [
                                         '>1%',
                                         'last 4 versions',
                                         'Firefox ESR',

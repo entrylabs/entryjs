@@ -733,7 +733,7 @@ Entry.EntryObject = class {
             },
             {
                 text: Lang.Workspace.context_remove,
-                enable: !Entry.engine.isState('run'),
+                enable: !Entry.engine.isState('run') && !this.getLock(),
                 callback: () => {
                     if (this.getLock()) {
                         return true;
