@@ -475,7 +475,6 @@ Entry.Container = class Container {
         if (first) {
             this.selectObject(first.id);
         } else {
-            this.selectObject();
             Entry.playground.flushPlayground();
         }
 
@@ -489,6 +488,9 @@ Entry.Container = class Container {
      * @param {string} objectId
      */
     selectObject(objectId, changeScene) {
+        if (!objectId) {
+            return;
+        }
         const object = this.getObject(objectId);
         const workspace = Entry.getMainWS();
         const isSelected = object.isSelected();
