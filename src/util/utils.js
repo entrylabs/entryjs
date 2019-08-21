@@ -2502,6 +2502,12 @@ Entry.Utils.toFixed = function(value, len) {
 
 Entry.Utils.setVolume = function(volume) {
     this._volume = _.clamp(volume, 0, 1);
+
+    Entry.soundInstances
+        .filter(({ soundType }) => !soundType)
+        .forEach((instance) => {
+            instance.volume = this._volume;
+        });
 };
 
 Entry.Utils.getVolume = function() {

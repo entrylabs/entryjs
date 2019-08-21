@@ -28,6 +28,7 @@ Entry.EXPANSION_BLOCK.tts = {
                 const filtered = items.find((item) => item.id === id);
                 if (filtered) {
                     const instance = Entry.Utils.playSound(id, filtered.prop);
+                    instance.soundType = 'tts';
                     Entry.Utils.addSoundInstances(instance);
                     if (filtered.callback) {
                         setTimeout(filtered.callback, instance.duration);
@@ -144,6 +145,7 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
         const sound = tts.soundQueue.getItem(id);
         if (sound) {
             const instance = Entry.Utils.playSound(id, prop);
+            instance.soundType = 'tts';
             Entry.Utils.addSoundInstances(instance);
             if (callback) {
                 setTimeout(callback, instance.duration);
