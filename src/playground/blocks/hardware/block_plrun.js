@@ -9,15 +9,15 @@ Entry.plrun = {
         en: 'coding plrun',
         ko: '코딩 플런',
     },
-    setZero: function() {
+    setZero() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
                 GET: {},
                 SET: {},
             };
         } else {
-            var keySet = Object.keys(Entry.hw.sendQueue.SET);
-            keySet.forEach(function(key) {
+            const keySet = Object.keys(Entry.hw.sendQueue.SET);
+            keySet.forEach((key) => {
                 Entry.hw.sendQueue.SET[key].data = 0;
                 Entry.hw.sendQueue.SET[key].time = new Date().getTime();
             });
@@ -71,7 +71,7 @@ Entry.plrun = {
         WHITE: [1.0, 1.0, 1.0],
     },
     move: {
-        FORWARD: [1.0 ,1.0],
+        FORWARD: [1.0, 1.0],
         BACKWARD: [-1.0, -1.0],
         LEFT: [0.5, 1.0],
         RIGHT: [1.0, 0.5],
@@ -85,7 +85,7 @@ Entry.plrun.blockMenuBlocks = [
     'get_digital',
     'get_joystick',
     'get_joystick_button',
-    'get_button',    
+    'get_button',
     'set_vibrator',
     'set_fan',
     'set_led_color',
@@ -93,7 +93,7 @@ Entry.plrun.blockMenuBlocks = [
     'stop_led',
     'set_audio_octave',
     'set_audio_freq',
-    'stop_audio',    
+    'stop_audio',
 
     /*
     'set_servor',    
@@ -120,6 +120,11 @@ Entry.plrun.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -131,14 +136,14 @@ Entry.plrun.getBlocks = function() {
             },
             class: 'plrun',
             isNotFor: ['plrun'],
-            func: function(sprite, script) {
-                var operator = script.getField('OPERATOR');
-                var value = operator == 'on' ? 255 : 0;
+            func(sprite, script) {
+                const operator = script.getField('OPERATOR');
+                const value = operator == 'on' ? 255 : 0;
                 Entry.hw.setDigitalPortValue(2, value);
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
                 }
-                Entry.hw.sendQueue['SET'][2] = {
+                Entry.hw.sendQueue.SET[2] = {
                     type: Entry.plrun.sensorTypes.DIGITAL,
                     data: value,
                     time: new Date().getTime(),
@@ -154,18 +159,16 @@ Entry.plrun.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        [0, 0],
-                        [20, 50],
-                        [40, 100],
-                        [60, 150],
-                        [80, 200],
-                        [100, 250],
-                    ],
+                    options: [[0, 0], [20, 50], [40, 100], [60, 150], [80, 200], [100, 250]],
                     value: 150,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
                 },
             ],
             events: {},
@@ -178,15 +181,15 @@ Entry.plrun.getBlocks = function() {
             },
             class: 'plrun',
             isNotFor: ['plrun'],
-            func: function(sprite, script) {
-                var value = script.getField('VALUE');
+            func(sprite, script) {
+                let value = script.getField('VALUE');
                 value = Math.round(value);
                 value = Math.max(value, 0);
                 value = Math.min(value, 255);
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
                 }
-                Entry.hw.sendQueue['SET'][3] = {
+                Entry.hw.sendQueue.SET[3] = {
                     type: Entry.plrun.sensorTypes.PWM,
                     data: value,
                     time: new Date().getTime(),
@@ -213,14 +216,7 @@ Entry.plrun.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        [0, 0],
-                        [20, 50],
-                        [40, 100],
-                        [60, 150],
-                        [80, 200],
-                        [100, 250],
-                    ],
+                    options: [[0, 0], [20, 50], [40, 100], [60, 150], [80, 200], [100, 250]],
                     value: 150,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -237,6 +233,11 @@ Entry.plrun.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -250,22 +251,22 @@ Entry.plrun.getBlocks = function() {
             },
             class: 'plrun',
             isNotFor: ['plrun'],
-            func: function(sprite, script) {
-                var which = script.getField('WHICH', script);
-                var speed = script.getField('SPEED', script);
-                var direction = script.getField('DIRECTION', script);
-                var port = which == 0 ? [4, 5] : [7, 6];
-                var value = direction == 0 ? which == 0 ? 0 : 1 :  which == 0 ? 1 : 0;
+            func(sprite, script) {
+                const which = script.getField('WHICH', script);
+                const speed = script.getField('SPEED', script);
+                const direction = script.getField('DIRECTION', script);
+                const port = which == 0 ? [4, 5] : [7, 6];
+                const value = direction == 0 ? (which == 0 ? 0 : 1) : which == 0 ? 1 : 0;
 
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
                 }
-                Entry.hw.sendQueue['SET'][port[0]] = {
+                Entry.hw.sendQueue.SET[port[0]] = {
                     type: Entry.plrun.sensorTypes.DIGITAL,
                     data: value,
                     time: new Date().getTime(),
                 };
-                Entry.hw.sendQueue['SET'][port[1]] = {
+                Entry.hw.sendQueue.SET[port[1]] = {
                     type: Entry.plrun.sensorTypes.PWM,
                     data: speed,
                     time: new Date().getTime(),
@@ -290,6 +291,11 @@ Entry.plrun.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -301,14 +307,14 @@ Entry.plrun.getBlocks = function() {
             },
             class: 'plrun',
             isNotFor: ['plrun'],
-            func: function(sprite, script) {
-                var which = script.getField('WHICH', script);
-                var port = which == 0 ? [4, 5] : [7, 6];
+            func(sprite, script) {
+                const which = script.getField('WHICH', script);
+                const port = which == 0 ? [4, 5] : [7, 6];
 
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
                 }
-                Entry.hw.sendQueue['SET'][port[1]] = {
+                Entry.hw.sendQueue.SET[port[1]] = {
                     type: Entry.plrun.sensorTypes.PWM,
                     data: 0,
                     time: new Date().getTime(),
@@ -324,14 +330,7 @@ Entry.plrun.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        [0, 0],
-                        [20, 50],
-                        [40, 100],
-                        [60, 150],
-                        [80, 200],
-                        [100, 250],
-                    ],
+                    options: [[0, 0], [20, 50], [40, 100], [60, 150], [80, 200], [100, 250]],
                     value: 150,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -350,6 +349,11 @@ Entry.plrun.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -362,30 +366,30 @@ Entry.plrun.getBlocks = function() {
             },
             class: 'plrun',
             isNotFor: ['plrun'],
-            func: function(sprite, script) {
-                var direction = script.getField('DIRECTION', script);
-                var speed = script.getField('SPEED', script);
-                var value = [direction[0] * speed, direction[1] * speed];
+            func(sprite, script) {
+                const direction = script.getField('DIRECTION', script);
+                const speed = script.getField('SPEED', script);
+                const value = [direction[0] * speed, direction[1] * speed];
 
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
                 }
-                Entry.hw.sendQueue['SET'][4] = {
+                Entry.hw.sendQueue.SET[4] = {
                     type: Entry.plrun.sensorTypes.DIGITAL,
                     data: value[0] > 0 ? 0 : 1,
                     time: new Date().getTime(),
                 };
-                Entry.hw.sendQueue['SET'][5] = {
+                Entry.hw.sendQueue.SET[5] = {
                     type: Entry.plrun.sensorTypes.PWM,
                     data: Math.abs(value[0]),
                     time: new Date().getTime(),
                 };
-                Entry.hw.sendQueue['SET'][7] = {
+                Entry.hw.sendQueue.SET[7] = {
                     type: Entry.plrun.sensorTypes.DIGITAL,
                     data: value[1] > 0 ? 1 : 0,
                     time: new Date().getTime(),
                 };
-                Entry.hw.sendQueue['SET'][6] = {
+                Entry.hw.sendQueue.SET[6] = {
                     type: Entry.plrun.sensorTypes.PWM,
                     data: Math.abs(value[1]),
                     time: new Date().getTime(),
@@ -399,26 +403,30 @@ Entry.plrun.getBlocks = function() {
             skeleton: 'basic',
             statements: [],
             params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
                 params: [],
                 type: 'stop_move',
             },
-            paramsKeyMap: {
-            },
+            paramsKeyMap: {},
             class: 'plrun',
             isNotFor: ['plrun'],
-            func: function(sprite, script) {
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
+            func(sprite, script) {
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
                 }
-                Entry.hw.sendQueue['SET'][5] = {
+                Entry.hw.sendQueue.SET[5] = {
                     type: Entry.plrun.sensorTypes.PWM,
                     data: 0,
                     time: new Date().getTime(),
                 };
-                Entry.hw.sendQueue['SET'][6] = {
+                Entry.hw.sendQueue.SET[6] = {
                     type: Entry.plrun.sensorTypes.PWM,
                     data: 0,
                     time: new Date().getTime(),
@@ -437,6 +445,11 @@ Entry.plrun.getBlocks = function() {
                     accept: 'string',
                     defaultType: 'number',
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -448,8 +461,8 @@ Entry.plrun.getBlocks = function() {
             },
             class: 'plrun',
             isNotFor: ['plrun'],
-            func: function(sprite, script) {
-                var value = script.getNumberValue('VALUE', script);
+            func(sprite, script) {
+                let value = script.getNumberValue('VALUE', script);
                 value = Math.min(180, value);
                 value = Math.max(0, value);
 
@@ -459,7 +472,7 @@ Entry.plrun.getBlocks = function() {
                         SET: {},
                     };
                 }
-                Entry.hw.sendQueue['SET'][11] = {
+                Entry.hw.sendQueue.SET[11] = {
                     type: Entry.plrun.sensorTypes.SERVO_PIN,
                     data: value,
                     time: new Date().getTime(),
@@ -497,15 +510,7 @@ Entry.plrun.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        [1, 1],
-                        [2, 2],
-                        [3, 3],
-                        [4, 4],
-                        [5, 5],
-                        [6, 6],
-                        [7, 7],
-                    ],
+                    options: [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7]],
                     value: 4,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -525,7 +530,12 @@ Entry.plrun.getBlocks = function() {
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                }
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -539,13 +549,13 @@ Entry.plrun.getBlocks = function() {
             },
             class: 'plrun',
             isNotFor: ['plrun'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 if (!script.isStart) {
-                    var note = script.getField('NOTE', script);
-                    var octave = script.getField('OCTAVE', script) - 1;
-                    var duration = script.getField('DURATION', script);
-                    var value = Entry.plrun.toneMap[note][octave];
-    
+                    const note = script.getField('NOTE', script);
+                    const octave = script.getField('OCTAVE', script) - 1;
+                    const duration = script.getField('DURATION', script);
+                    const value = Entry.plrun.toneMap[note][octave];
+
                     if (!Entry.hw.sendQueue.SET) {
                         Entry.hw.sendQueue = {
                             GET: {},
@@ -556,16 +566,16 @@ Entry.plrun.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
 
-                    Entry.hw.sendQueue['SET'][8] = {
+                    Entry.hw.sendQueue.SET[8] = {
                         type: Entry.ArduinoExt.sensorTypes.TONE,
                         data: {
-                            value: value,
-                            duration: duration
+                            value,
+                            duration,
                         },
                         time: new Date().getTime(),
                     };
 
-                    setTimeout(function() {
+                    setTimeout(() => {
                         script.timeFlag = 0;
                     }, duration + 32);
                     return script;
@@ -574,11 +584,11 @@ Entry.plrun.getBlocks = function() {
                 } else {
                     delete script.timeFlag;
                     delete script.isStart;
-                    Entry.hw.sendQueue['SET'][8] = {
+                    Entry.hw.sendQueue.SET[8] = {
                         type: Entry.ArduinoExt.sensorTypes.TONE,
                         data: 0,
                         time: new Date().getTime(),
-                    };    
+                    };
                     Entry.engine.isContinue = false;
                     return script.callReturn();
                 }
@@ -591,20 +601,25 @@ Entry.plrun.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: "Block",
-                    accept: "string",
+                    type: 'Block',
+                    accept: 'string',
                     value: 3000,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
-                    type: "Block",
-                    accept: "string",
+                    type: 'Block',
+                    accept: 'string',
                     value: 1,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
                 },
             ],
             events: {},
@@ -618,9 +633,9 @@ Entry.plrun.getBlocks = function() {
             },
             class: 'plrun',
             isNotFor: ['plrun'],
-            func: function(sprite, script) {
-                var value = script.getNumberValue('HZ', script);
-                var duration = script.getNumberValue('SECOND', script) * 1000;
+            func(sprite, script) {
+                const value = script.getNumberValue('HZ', script);
+                const duration = script.getNumberValue('SECOND', script) * 1000;
 
                 if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue = {
@@ -628,11 +643,11 @@ Entry.plrun.getBlocks = function() {
                         SET: {},
                     };
                 }
-                Entry.hw.sendQueue['SET'][8] = {
+                Entry.hw.sendQueue.SET[8] = {
                     type: Entry.ArduinoExt.sensorTypes.TONE,
                     data: {
-                        value: value,
-                        duration: duration
+                        value,
+                        duration,
                     },
                     time: new Date().getTime(),
                 };
@@ -660,7 +675,12 @@ Entry.plrun.getBlocks = function() {
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                }
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -672,9 +692,9 @@ Entry.plrun.getBlocks = function() {
             },
             class: 'plrun',
             isNotFor: ['plrun'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 if (!script.isStart) {
-                    var duration = script.getField('DURATION', script);
+                    const duration = script.getField('DURATION', script);
 
                     if (!Entry.hw.sendQueue.SET) {
                         Entry.hw.sendQueue = {
@@ -686,16 +706,16 @@ Entry.plrun.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
 
-                    Entry.hw.sendQueue['SET'][8] = {
+                    Entry.hw.sendQueue.SET[8] = {
                         type: Entry.ArduinoExt.sensorTypes.TONE,
                         data: {
                             value: 0,
-                            duration: duration
+                            duration,
                         },
                         time: new Date().getTime(),
                     };
 
-                    setTimeout(function() {
+                    setTimeout(() => {
                         script.timeFlag = 0;
                     }, duration + 32);
                     return script;
@@ -704,11 +724,11 @@ Entry.plrun.getBlocks = function() {
                 } else {
                     delete script.timeFlag;
                     delete script.isStart;
-                    Entry.hw.sendQueue['SET'][8] = {
+                    Entry.hw.sendQueue.SET[8] = {
                         type: Entry.ArduinoExt.sensorTypes.TONE,
                         data: 0,
                         time: new Date().getTime(),
-                    };    
+                    };
                     Entry.engine.isContinue = false;
                     return script.callReturn();
                 }
@@ -720,29 +740,26 @@ Entry.plrun.getBlocks = function() {
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [
-            ],
+            params: [],
             events: {},
             def: {
-                params: [
-                ],
+                params: [],
                 type: 'get_ultrasonic',
             },
-            paramsKeyMap: {
-            },
+            paramsKeyMap: {},
             class: 'plrun',
             isNotFor: ['plrun'],
-            func: function(sprite, script) {
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
+            func(sprite, script) {
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
                 }
-                delete Entry.hw.sendQueue['SET'][9];
-                delete Entry.hw.sendQueue['SET'][10];
+                delete Entry.hw.sendQueue.SET[9];
+                delete Entry.hw.sendQueue.SET[10];
 
-                if (!Entry.hw.sendQueue['GET']) {
-                    Entry.hw.sendQueue['GET'] = {};
+                if (!Entry.hw.sendQueue.GET) {
+                    Entry.hw.sendQueue.GET = {};
                 }
-                Entry.hw.sendQueue['GET'][Entry.plrun.sensorTypes.ULTRASONIC] = {
+                Entry.hw.sendQueue.GET[Entry.plrun.sensorTypes.ULTRASONIC] = {
                     port: [10, 9],
                     time: new Date().getTime(),
                 };
@@ -786,31 +803,67 @@ Entry.plrun.getBlocks = function() {
             },
             class: 'plrun',
             isNotFor: ['plrun'],
-            func: function(sprite, script) {
-                var direction = script.getField('DIRECTION', script);
-                var ANALOG = Entry.hw.portData.ANALOG;
+            func(sprite, script) {
+                const direction = script.getField('DIRECTION', script);
+                const ANALOG = Entry.hw.portData.ANALOG;
 
-                var getValue = function(w) {
+                const getValue = function(w) {
                     return ANALOG[w] == 0 ? 0 : ANALOG[w] == 1023 ? 2 : 1;
                 };
 
-                if (direction == Entry.plrun.direction.CENTER && getValue(0) == 1 && getValue(1) == 1) {
+                if (
+                    direction == Entry.plrun.direction.CENTER &&
+                    getValue(0) == 1 &&
+                    getValue(1) == 1
+                ) {
                     return 1;
-                } else if (direction == Entry.plrun.direction.DOWN && getValue(0) == 1 && getValue(1) == 2) {
+                } else if (
+                    direction == Entry.plrun.direction.DOWN &&
+                    getValue(0) == 1 &&
+                    getValue(1) == 2
+                ) {
                     return 1;
-                } else if (direction == Entry.plrun.direction.LEFT && getValue(0) == 0 && getValue(1) == 1) {
+                } else if (
+                    direction == Entry.plrun.direction.LEFT &&
+                    getValue(0) == 0 &&
+                    getValue(1) == 1
+                ) {
                     return 1;
-                } else if (direction == Entry.plrun.direction.LEFT_DOWN && getValue(0) == 0 && getValue(1) == 2) {
+                } else if (
+                    direction == Entry.plrun.direction.LEFT_DOWN &&
+                    getValue(0) == 0 &&
+                    getValue(1) == 2
+                ) {
                     return 1;
-                } else if (direction == Entry.plrun.direction.LEFT_UP && getValue(0) == 0 && getValue(1) == 0) {
+                } else if (
+                    direction == Entry.plrun.direction.LEFT_UP &&
+                    getValue(0) == 0 &&
+                    getValue(1) == 0
+                ) {
                     return 1;
-                } else if (direction == Entry.plrun.direction.RIGHT && getValue(0) == 2 && getValue(1) == 1) {
+                } else if (
+                    direction == Entry.plrun.direction.RIGHT &&
+                    getValue(0) == 2 &&
+                    getValue(1) == 1
+                ) {
                     return 1;
-                } else if (direction == Entry.plrun.direction.RIGHT_DOWN && getValue(0) == 2 && getValue(1) == 2) {
+                } else if (
+                    direction == Entry.plrun.direction.RIGHT_DOWN &&
+                    getValue(0) == 2 &&
+                    getValue(1) == 2
+                ) {
                     return 1;
-                } else if (direction == Entry.plrun.direction.RIGHT_UP && getValue(0) == 2 && getValue(1) == 0) {
+                } else if (
+                    direction == Entry.plrun.direction.RIGHT_UP &&
+                    getValue(0) == 2 &&
+                    getValue(1) == 0
+                ) {
                     return 1;
-                } else if (direction == Entry.plrun.direction.UP && getValue(0) == 1 && getValue(1) == 0) {
+                } else if (
+                    direction == Entry.plrun.direction.UP &&
+                    getValue(0) == 1 &&
+                    getValue(1) == 0
+                ) {
                     return 1;
                 }
 
@@ -822,19 +875,17 @@ Entry.plrun.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_boolean_field',
             statements: [],
-            params: [
-            ],
+            params: [],
             events: {},
             def: {
                 params: [],
                 type: 'get_joystick_button',
             },
-            paramsKeyMap: {
-            },
+            paramsKeyMap: {},
             class: 'plrun',
             isNotFor: ['plrun'],
-            func: function(sprite, script) {
-                var ANALOG = Entry.hw.portData.ANALOG;
+            func(sprite, script) {
+                const ANALOG = Entry.hw.portData.ANALOG;
                 return ANALOG ? ANALOG[1] && ANALOG[2] != 0 : 0;
             },
         },
@@ -866,9 +917,9 @@ Entry.plrun.getBlocks = function() {
             },
             class: 'plrun',
             isNotFor: ['plrun'],
-            func: function(sprite, script) {
-                var which = script.getField("WHICH", script);
-                var ANALOG = Entry.hw.portData.ANALOG;
+            func(sprite, script) {
+                const which = script.getField('WHICH', script);
+                const ANALOG = Entry.hw.portData.ANALOG;
                 return ANALOG ? ANALOG[which] != 0 : 0;
             },
         },
@@ -879,28 +930,33 @@ Entry.plrun.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: "Block",
-                    accept: "string",
+                    type: 'Block',
+                    accept: 'string',
                     value: 100,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
-                    type: "Block",
-                    accept: "string",
+                    type: 'Block',
+                    accept: 'string',
                     value: 100,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
-                    type: "Block",
-                    accept: "string",
+                    type: 'Block',
+                    accept: 'string',
                     value: 100,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
                 },
             ],
             events: {},
@@ -915,11 +971,11 @@ Entry.plrun.getBlocks = function() {
             },
             class: 'plrun',
             isNotFor: ['plrun'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 if (!script.isStart) {
-                    var r = script.getNumberValue('R', script);
-                    var g = script.getNumberValue('G', script);
-                    var b = script.getNumberValue('B', script);
+                    let r = script.getNumberValue('R', script);
+                    let g = script.getNumberValue('G', script);
+                    let b = script.getNumberValue('B', script);
 
                     r = Math.max(Math.min(r, 255), 0);
                     g = Math.max(Math.min(g, 255), 0);
@@ -932,12 +988,12 @@ Entry.plrun.getBlocks = function() {
                         };
                     }
 
-                    Entry.hw.sendQueue['SET'][13] = {
+                    Entry.hw.sendQueue.SET[13] = {
                         type: Entry.plrun.sensorTypes.LED,
                         data: {
-                            r: r,
-                            g: g,
-                            b: b
+                            r,
+                            g,
+                            b,
                         },
                         time: new Date().getTime(),
                     };
@@ -945,7 +1001,7 @@ Entry.plrun.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
 
-                    setTimeout(function() {
+                    setTimeout(() => {
                         script.timeFlag = 0;
                     }, 50);
                     return script;
@@ -982,12 +1038,17 @@ Entry.plrun.getBlocks = function() {
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
-                    type: "Block",
-                    accept: "string",
+                    type: 'Block',
+                    accept: 'string',
                     value: 100,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
                 },
             ],
             events: {},
@@ -1001,17 +1062,17 @@ Entry.plrun.getBlocks = function() {
             },
             class: 'plrun',
             isNotFor: ['plrun'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 if (!script.isStart) {
-                    var color_type = script.getField('COLOR', script);
-                    var color = Entry.plrun.color[color_type];
-                    var brightness = script.getNumberValue('BRIGHTNESS', script);
+                    const color_type = script.getField('COLOR', script);
+                    const color = Entry.plrun.color[color_type];
+                    let brightness = script.getNumberValue('BRIGHTNESS', script);
 
                     brightness = Math.max(Math.min(brightness, 255), 0);
 
-                    var r = parseInt(color[0] * brightness);
-                    var g = parseInt(color[1] * brightness);
-                    var b = parseInt(color[2] * brightness);
+                    let r = parseInt(color[0] * brightness);
+                    let g = parseInt(color[1] * brightness);
+                    let b = parseInt(color[2] * brightness);
                     r = Math.max(Math.min(r, 255), 0);
                     g = Math.max(Math.min(g, 255), 0);
                     b = Math.max(Math.min(b, 255), 0);
@@ -1023,12 +1084,12 @@ Entry.plrun.getBlocks = function() {
                         };
                     }
 
-                    Entry.hw.sendQueue['SET'][13] = {
+                    Entry.hw.sendQueue.SET[13] = {
                         type: Entry.plrun.sensorTypes.LED,
                         data: {
-                            r: r,
-                            g: g,
-                            b: b
+                            r,
+                            g,
+                            b,
                         },
                         time: new Date().getTime(),
                     };
@@ -1036,7 +1097,7 @@ Entry.plrun.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
 
-                    setTimeout(function() {
+                    setTimeout(() => {
                         script.timeFlag = 0;
                     }, 50);
                     return script;
@@ -1056,17 +1117,21 @@ Entry.plrun.getBlocks = function() {
             skeleton: 'basic',
             statements: [],
             params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
                 params: [],
                 type: 'stop_led',
             },
-            paramsKeyMap: {
-            },
+            paramsKeyMap: {},
             class: 'plrun',
             isNotFor: ['plrun'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue = {
                         GET: {},
@@ -1074,16 +1139,16 @@ Entry.plrun.getBlocks = function() {
                     };
                 }
 
-                Entry.hw.sendQueue['SET'][13] = {
+                Entry.hw.sendQueue.SET[13] = {
                     type: Entry.plrun.sensorTypes.LED,
                     data: {
                         r: 0,
                         g: 0,
-                        b: 0
+                        b: 0,
                     },
                     time: new Date().getTime(),
                 };
-                
+
                 return script.callReturn();
             },
         },
@@ -1093,19 +1158,17 @@ Entry.plrun.getBlocks = function() {
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [
-            ],
+            params: [],
             events: {},
             def: {
                 params: [],
                 type: 'get_soil',
             },
-            paramsKeyMap: {
-            },
+            paramsKeyMap: {},
             class: 'plrun',
             isNotFor: ['plrun'],
-            func: function(sprite, script) {
-                var ANALOG = Entry.hw.portData.ANALOG;
+            func(sprite, script) {
+                const ANALOG = Entry.hw.portData.ANALOG;
                 return ANALOG ? ANALOG[3] || 0 : 0;
             },
         },
@@ -1115,19 +1178,17 @@ Entry.plrun.getBlocks = function() {
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [
-            ],
+            params: [],
             events: {},
             def: {
                 params: [],
                 type: 'get_analog',
             },
-            paramsKeyMap: {
-            },
+            paramsKeyMap: {},
             class: 'plrun',
             isNotFor: ['plrun'],
-            func: function(sprite, script) {
-                var ANALOG = Entry.hw.portData.ANALOG;
+            func(sprite, script) {
+                const ANALOG = Entry.hw.portData.ANALOG;
                 return ANALOG ? ANALOG[5] || 0 : 0;
             },
         },
@@ -1139,10 +1200,7 @@ Entry.plrun.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        [1, 11],
-                        [2, 12],
-                    ],
+                    options: [[1, 11], [2, 12]],
                     value: 11,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1159,14 +1217,14 @@ Entry.plrun.getBlocks = function() {
             },
             class: 'plrun',
             isNotFor: ['plrun'],
-            func: function(sprite, script) {
-                var port = script.getField('PORT', script);
-                var DIGITAL = Entry.hw.portData.DIGITAL;
-                if (!Entry.hw.sendQueue['GET']) {
-                    Entry.hw.sendQueue['GET'] = {};
+            func(sprite, script) {
+                const port = script.getField('PORT', script);
+                const DIGITAL = Entry.hw.portData.DIGITAL;
+                if (!Entry.hw.sendQueue.GET) {
+                    Entry.hw.sendQueue.GET = {};
                 }
-                Entry.hw.sendQueue['GET'][Entry.plrun.sensorTypes.DIGITAL] = {
-                    port: port,
+                Entry.hw.sendQueue.GET[Entry.plrun.sensorTypes.DIGITAL] = {
+                    port,
                     time: new Date().getTime(),
                 };
                 return DIGITAL ? DIGITAL[port] || 0 : 0;
@@ -1180,10 +1238,7 @@ Entry.plrun.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        [11, 11],
-                        [12, 12],
-                    ],
+                    options: [[11, 11], [12, 12]],
                     value: 11,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1197,6 +1252,11 @@ Entry.plrun.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
             ],
             events: {},
             def: {
@@ -1209,15 +1269,15 @@ Entry.plrun.getBlocks = function() {
             },
             class: 'plrun',
             isNotFor: ['plrun'],
-            func: function(sprite, script) {
-                var port = script.getField('PORT', script);
-                var operator = script.getField('OPERATOR');
-                var value = operator == 'on' ? 255 : 0;
+            func(sprite, script) {
+                const port = script.getField('PORT', script);
+                const operator = script.getField('OPERATOR');
+                const value = operator == 'on' ? 255 : 0;
                 Entry.hw.setDigitalPortValue(port, value);
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
                 }
-                Entry.hw.sendQueue['SET'][port] = {
+                Entry.hw.sendQueue.SET[port] = {
                     type: Entry.plrun.sensorTypes.DIGITAL,
                     data: value,
                     time: new Date().getTime(),
@@ -1231,19 +1291,17 @@ Entry.plrun.getBlocks = function() {
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [
-            ],
+            params: [],
             events: {},
             def: {
                 params: [],
                 type: 'get_analog_value',
             },
-            paramsKeyMap: {
-            },
+            paramsKeyMap: {},
             class: 'plrun',
             isNotFor: ['plrun'],
-            func: function(sprite, script) {
-                var ANALOG = Entry.hw.portData.ANALOG;
+            func(sprite, script) {
+                const ANALOG = Entry.hw.portData.ANALOG;
                 return ANALOG ? ANALOG[4] || 0 : 0;
             },
         },
@@ -1349,7 +1407,7 @@ Entry.plrun.getBlocks = function() {
         */
     };
 };
-Entry.plrun.setLanguage = function () {
+Entry.plrun.setLanguage = function() {
     return {
         ko: {
             Blocks: {
@@ -1386,32 +1444,32 @@ Entry.plrun.setLanguage = function () {
                 plrun_joystick_right_up: '오른쪽 위',
                 plrun_joystick_up: '위',
                 plrun_button_red: '빨강',
-                plrun_button_blue: '파랑'
+                plrun_button_blue: '파랑',
             },
             template: {
-                set_vibrator: '진동 알림 %1',
-                set_fan: '팬을 속도 %1(으)로 회전 시키기',
-                set_servor: '서보모터의 각도를 %1도로 정하기',
-                set_motor: 'DC모터 %1을 %2의 속도로 %3으로 회전하기',
-                stop_motor: 'DC모터 %1을 정지하기',
-                set_move: '로봇을 %1의 속도로 %2 하기',
-                stop_move: '로봇 정지하기',
-                set_audio_octave: '계명 %1음을 %2옥타브 %3으로 연주하기',
-                set_audio_freq: '펄스 %1Hz 음을 %2초 연주하기',
-                stop_audio: '%1 만큼 연주쉬기',
+                set_vibrator: '진동 알림 %1 %2',
+                set_fan: '팬을 속도 %1(으)로 회전 시키기 %2',
+                set_servor: '서보모터의 각도를 %1도로 정하기 %2',
+                set_motor: 'DC모터 %1을 %2의 속도로 %3으로 회전하기 %4',
+                stop_motor: 'DC모터 %1을 정지하기 %2',
+                set_move: '로봇을 %1의 속도로 %2 하기 %3',
+                stop_move: '로봇 정지하기 %1',
+                set_audio_octave: '계명 %1음을 %2옥타브 %3으로 연주하기 %4',
+                set_audio_freq: '펄스 %1Hz 음을 %2초 연주하기 %3',
+                stop_audio: '%1 만큼 연주쉬기 %2',
                 get_ultrasonic: '초음파센서 값 읽기',
                 get_joystick: '조이스틱 방향이 %1 인가?',
                 get_joystick_button: '조이스틱 버튼이 눌렸는가?',
                 get_button: '%1색 버튼이 눌렸는가?',
-                set_led: '컬러 LED 켜기- 빨강%1 초록%2 파랑%3',
-                set_led_color: 'LED %1색을 밝기 %2으로 켜기',
-                stop_led: 'LED 끄기',
+                set_led: '컬러 LED 켜기- 빨강%1 초록%2 파랑%3 %4',
+                set_led_color: 'LED %1색을 밝기 %2으로 켜기 %3',
+                stop_led: 'LED 끄기 %1',
                 get_soil: '토양 센서 값 읽기',
                 get_analog: '아날로그 값 읽기',
                 get_digital: '디지털 %1번 포트가 참인가?',
-                set_digital: '디지털 %1 포트에 %2 출력하기',
+                set_digital: '디지털 %1 포트에 %2 출력하기 %3',
                 get_analog_value: '가변저항 값 읽기',
-            }
+            },
         },
         en: {
             Blocks: {
@@ -1448,7 +1506,7 @@ Entry.plrun.setLanguage = function () {
                 plrun_joystick_right_up: 'right top',
                 plrun_joystick_up: 'top',
                 plrun_button_red: 'red',
-                plrun_button_blue: 'blue'
+                plrun_button_blue: 'blue',
             },
             template: {
                 set_vibrator: 'Set vibrator %1',
@@ -1473,9 +1531,9 @@ Entry.plrun.setLanguage = function () {
                 get_digital: 'Read digital port %1',
                 set_digital: 'Write digital port %1 to value %2',
                 get_analog_value: 'Read variable resistance',
-            }
-        }
-    }
+            },
+        },
+    };
 };
 
 module.exports = Entry.plrun;
