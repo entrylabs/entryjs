@@ -1925,67 +1925,6 @@ Entry.Utils.addNewObject = function(sprite) {
     }
 };
 
-Entry.Utils.addNewObject2 = function(sprite) {
-    if (sprite) {
-        const { objects, functions, messages, variables, expansionBlocks = [] } = sprite;
-
-        if (
-            Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD &&
-            (!Entry.TextCodingUtil.canUsePythonVariables(variables) ||
-                !Entry.TextCodingUtil.canUsePythonFunctions(functions))
-        ) {
-            return entrylms.alert(Lang.Menus.object_import_syntax_error);
-        }
-        const objectIdMap = {};
-        let newObjectId = '';
-        let oldObjectId = '';
-        expansionBlocks.forEach((blockName) => {
-            Entry.expansion.addExpansionBlock(blockName);
-        });
-        variables.forEach((variable) => {
-            const { object } = variable;
-            if (object) {
-                const id = variable.id;
-                variable.id = Entry.generateHash();
-                if (!newObjectId) {
-                    oldObjectId = object;
-                    newObjectId = Entry.generateHash();
-                }
-                variable.object = newObjectId;
-                objectIdMap[id] = variable.id;
-            }
-        });
-        Entry.variableContainer.appendMessages(messages);
-        Entry.variableContainer.appendVariables(variables);
-        functions.forEach((func) => {
-            _.forEach(objectIdMap, (newId, oldId) => {
-                const regex = new RegExp(oldId, 'gi');
-                const { content } = func;
-                func.content = content.replace(regex, newId);
-            });
-        });
-        Entry.variableContainer.appendFunctions(functions);
-
-        objects.forEach((object) => {
-            if (object.id === oldObjectId) {
-                let script = object.script;
-                _.forEach(objectIdMap, (newId, oldId) => {
-                    const regex = new RegExp(oldId, 'gi');
-                    script = script.replace(regex, newId);
-                });
-                object.script = script;
-                object.id = newObjectId;
-            } else if (Entry.container.getObject(object.id)) {
-                object.id = Entry.generateHash();
-            }
-            if (!object.objectType) {
-                object.objectType = 'sprite';
-            }
-            Entry.container.addObject(object, 0);
-        });
-    }
-};
-
 Entry.Utils.COLLISION = {
     NONE: 0,
     UP: 1,
