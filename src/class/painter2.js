@@ -195,7 +195,6 @@ Entry.Painter = class Painter {
             image: dataURL,
             task: taskParam,
         });
-        Entry.playground.object.setPictureType(this.entryPaint.mode);
         this.file.isUpdate = false;
         this.file.modified = false;
     }
