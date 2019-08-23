@@ -81,14 +81,6 @@ Entry.Microbit = new class Microbit {
         ];
     }
 
-    getHashKey() {
-        let key = new Date().getSeconds().toString(16);
-        if (key.length === 1) {
-            key += ((Math.random() * 16) | 0).toString(16);
-        }
-        return Entry.generateHash(2) + key;
-    }
-
     setZero() {
         this.requestCommand(functionKeys.RESET);
         this.lastGesture = -1;
@@ -97,7 +89,6 @@ Entry.Microbit = new class Microbit {
 
     requestCommand(type, payload) {
         Entry.hw.sendQueue = {
-            id: this.getHashKey(),
             type,
             payload,
         };
@@ -114,7 +105,6 @@ Entry.Microbit = new class Microbit {
             // 첫 진입시 무조건 AsyncError
             this.isCommandRequested = true;
             Entry.hw.sendQueue = {
-                id: this.getHashKey(),
                 type,
                 payload,
             };
