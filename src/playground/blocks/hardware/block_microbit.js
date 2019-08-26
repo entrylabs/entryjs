@@ -910,7 +910,7 @@ Entry.Microbit = new class Microbit {
                 },
                 func: (sprite, script) => {
                     const value = script.getField('VALUE');
-                    this.requestCommand(functionKeys.GET_ACCELEROMETER, { value });
+                    this.requestCommandWithResponse(functionKeys.GET_ACCELEROMETER, { value });
                     return _get(Entry.hw.portData, 'payload.sensorData.accelerometer', -1);
                 },
             },
