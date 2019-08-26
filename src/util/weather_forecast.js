@@ -1,7 +1,6 @@
 'use strict';
 
 const PromiseManager = require('../core/promiseManager');
-const _memoize = require('lodash/memoize');
 const { callApi } = require('../util/common');
 const { locationData } = require('../util/location');
 
@@ -409,7 +408,6 @@ Entry.EXPANSION_BLOCK.weather.getData = function(type, location, dateStr) {
                 })
                 .catch((error) => {
                     Entry.EXPANSION_BLOCK.weather.apiFail[type] = { error };
-                    callApi.cache = new _memoize.Cache;
                     resolve(Entry.EXPANSION_BLOCK.weather.defaultData);
                 });
         })
