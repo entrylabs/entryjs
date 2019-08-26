@@ -4,8 +4,8 @@
 'use strict';
 
 import SimpleBar from 'simplebar';
-import fetch from 'isomorphic-fetch';
-import xssFilters from 'xss-filters';
+import axios from 'axios';
+
 /**
  * Block variable constructor
  * @param {variable model} variable
@@ -125,19 +125,19 @@ Entry.VariableContainer = class VariableContainer {
     generateAddButtons() {
         const createElement = Entry.createElement;
         const variableAddButton = createElement('button').addClass('entryVariableAddWorkspace');
-        variableAddButton.textContent = Lang.Workspace.variable_add;
+        variableAddButton.innerHTML = Lang.Workspace.variable_add;
         this.variableAddButton_ = variableAddButton;
 
         const messageAddButton = createElement('button').addClass('entryVariableAddWorkspace');
-        messageAddButton.textContent = Lang.Workspace.message_create;
+        messageAddButton.innerHTML = Lang.Workspace.message_create;
         this.messageAddButton_ = messageAddButton;
 
         const listAddButton = createElement('button').addClass('entryVariableAddWorkspace');
-        listAddButton.textContent = Lang.Workspace.list_create;
+        listAddButton.innerHTML = Lang.Workspace.list_create;
         this.listAddButton_ = listAddButton;
 
         const functionAddButton = createElement('button').addClass('entryVariableAddWorkspace');
-        functionAddButton.textContent = Lang.Workspace.function_add;
+        functionAddButton.innerHTML = Lang.Workspace.function_add;
         this.functionAddButton_ = functionAddButton;
     }
 
@@ -276,7 +276,7 @@ Entry.VariableContainer = class VariableContainer {
                 element.appendChild(thumb);
                 Entry.createElement('span')
                     .addClass('text')
-                    .appendTo(element).textContent = `${caller.object.name} : ${
+                    .appendTo(element).innerHTML = `${caller.object.name} : ${
                     Lang.Blocks[`START_${caller.block.type}`]
                 }`;
                 element.bindOnClick((e) => {
@@ -298,7 +298,7 @@ Entry.VariableContainer = class VariableContainer {
             listView.appendChild(fragment);
         } else {
             usedWrapper = Entry.createElement('p').addClass('caution_dsc');
-            usedWrapper.textContent = Lang.Workspace.no_use;
+            usedWrapper.innerHTML = Lang.Workspace.no_use;
         }
         message.usedView = usedWrapper;
         message.listElement.appendChild(usedWrapper);
@@ -320,10 +320,10 @@ Entry.VariableContainer = class VariableContainer {
             .appendTo(usedWrapper);
 
         if (variable.type === 'variable') {
-            usedSubject.textContent = Lang.Workspace.Variable_used_objects;
+            usedSubject.innerHTML = Lang.Workspace.Variable_used_objects;
         } else {
             // variable.type === 'list'
-            usedSubject.textContent = Lang.Workspace.List_used_objects;
+            usedSubject.innerHTML = Lang.Workspace.List_used_objects;
         }
 
         const listView = Entry.createElement('ul')
@@ -341,7 +341,7 @@ Entry.VariableContainer = class VariableContainer {
                 element.appendChild(thumb);
                 Entry.createElement('span')
                     .addClass('text')
-                    .appendTo(element).textContent = `${caller.object.name} : ${
+                    .appendTo(element).innerHTML = `${caller.object.name} : ${
                     Lang.Blocks[`VARIABLE_${caller.block.type}`]
                 }`;
                 element.variable = variable;
@@ -365,7 +365,7 @@ Entry.VariableContainer = class VariableContainer {
         } else {
             Entry.createElement('li')
                 .addClass('text red')
-                .appendTo(listView).textContent = Lang.Workspace.no_use;
+                .appendTo(listView).innerHTML = Lang.Workspace.no_use;
         }
 
         this.variableSettingView && this.variableSettingView.appendChild(usedWrapper);
@@ -396,7 +396,7 @@ Entry.VariableContainer = class VariableContainer {
                 thumb.addClass('thmb');
                 element.appendChild(thumb);
                 const nameElement = Entry.createElement('span').addClass('text');
-                nameElement.textContent = caller.object.name;
+                nameElement.innerHTML = caller.object.name;
                 element.appendChild(nameElement);
                 element.bindOnClick(() => {
                     if (Entry.playground.object != caller.object) {
@@ -414,7 +414,7 @@ Entry.VariableContainer = class VariableContainer {
             listView.appendChild(fragment);
         } else {
             usedWrapper = Entry.createElement('p').addClass('caution_dsc');
-            usedWrapper.textContent = Lang.Workspace.no_use;
+            usedWrapper.innerHTML = Lang.Workspace.no_use;
         }
 
         func.usedView = usedWrapper;
@@ -605,8 +605,8 @@ Entry.VariableContainer = class VariableContainer {
 
         const gLength = (globalV || []).length;
         const lLength = (localV || []).length;
-        globalListTitle.textContent = `${Lang.Workspace.Variable_used_at_all_objects} (${gLength})`;
-        localListTitle.textContent = `${Lang.Workspace.Variable_used_at_special_object} (${lLength})`;
+        globalListTitle.innerHTML = `${Lang.Workspace.Variable_used_at_all_objects} (${gLength})`;
+        localListTitle.innerHTML = `${Lang.Workspace.Variable_used_at_special_object} (${lLength})`;
         this.foldTab(globalList, isGlobalFolded, gLength);
         this.foldTab(localList, isLocalFolded, lLength);
 
@@ -687,8 +687,8 @@ Entry.VariableContainer = class VariableContainer {
 
         const gLength = (globalV || []).length;
         const lLength = (localV || []).length;
-        globalListTitle.textContent = `${Lang.Workspace.List_used_all_objects} (${gLength})`;
-        localListTitle.textContent = `${Lang.Workspace.list_used_specific_objects} (${lLength})`;
+        globalListTitle.innerHTML = `${Lang.Workspace.List_used_all_objects} (${gLength})`;
+        localListTitle.innerHTML = `${Lang.Workspace.list_used_specific_objects} (${lLength})`;
         this.foldTab(globalList, isGlobalFolded, gLength);
         this.foldTab(localList, isLocalFolded, lLength);
 
@@ -1088,7 +1088,7 @@ Entry.VariableContainer = class VariableContainer {
             this.createFunctionView(func);
         }
         if (func.listElement) {
-            func.listElement.nameField.textContent = func.description;
+            func.listElement.nameField.innerHTML = func.description;
         }
 
         this.updateList();
@@ -1118,7 +1118,7 @@ Entry.VariableContainer = class VariableContainer {
         const editBoxInput = createElement('span')
             .addClass('input')
             .appendTo(editBoxInputWrapper);
-        editBoxInput.textContent = func.description;
+        editBoxInput.innerHTML = func.description;
 
         const delButton = createElement('a')
             .addClass('del')
@@ -1799,7 +1799,7 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('Workspace_text')
-            .appendTo(addSpaceGlobalWrapper).textContent = Lang.Workspace.use_all_objects;
+            .appendTo(addSpaceGlobalWrapper).innerHTML = Lang.Workspace.use_all_objects;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -1824,7 +1824,7 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('entryVariableAddSpaceCloudSpanWorkspace')
-            .appendTo(addSpaceCloudWrapper).textContent = Lang.Workspace.Variable_create_cloud;
+            .appendTo(addSpaceCloudWrapper).innerHTML = Lang.Workspace.Variable_create_cloud;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -1844,7 +1844,7 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('Workspace_text')
-            .appendTo(addSpaceLocalWrapper).textContent = Lang.Workspace.Variable_use_this_object;
+            .appendTo(addSpaceLocalWrapper).innerHTML = Lang.Workspace.Variable_use_this_object;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -1864,7 +1864,7 @@ Entry.VariableContainer = class VariableContainer {
             })
             .appendTo(addSpaceButtonWrapper);
         addSpaceCancelButton.href = '#';
-        addSpaceCancelButton.textContent = Lang.Buttons.cancel;
+        addSpaceCancelButton.innerHTML = Lang.Buttons.cancel;
 
         const addSpaceConfirmButton = createElement('a')
             .addClass('entryVariableAddSpaceConfirmWorkspace')
@@ -1874,7 +1874,7 @@ Entry.VariableContainer = class VariableContainer {
             })
             .appendTo(addSpaceButtonWrapper);
         addSpaceConfirmButton.href = '#';
-        addSpaceConfirmButton.textContent = Lang.Buttons.save;
+        addSpaceConfirmButton.innerHTML = Lang.Buttons.save;
         this.variableAddConfirmButton = addSpaceConfirmButton;
     }
 
@@ -1983,7 +1983,7 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('Workspace_text')
-            .appendTo(addSpaceGlobalWrapper).textContent = Lang.Workspace.use_all_objects;
+            .appendTo(addSpaceGlobalWrapper).innerHTML = Lang.Workspace.use_all_objects;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -2008,7 +2008,7 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('entryVariableAddSpaceCloudSpanWorkspace')
-            .appendTo(addSpaceCloudWrapper).textContent = Lang.Workspace.List_create_cloud;
+            .appendTo(addSpaceCloudWrapper).innerHTML = Lang.Workspace.List_create_cloud;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -2028,7 +2028,7 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('Workspace_text')
-            .appendTo(addSpaceLocalWrapper).textContent = Lang.Workspace.Variable_use_this_object;
+            .appendTo(addSpaceLocalWrapper).innerHTML = Lang.Workspace.Variable_use_this_object;
 
         createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
@@ -2048,7 +2048,7 @@ Entry.VariableContainer = class VariableContainer {
             })
             .appendTo(addSpaceButtonWrapper);
         addSpaceCancelButton.href = '#';
-        addSpaceCancelButton.textContent = Lang.Buttons.cancel;
+        addSpaceCancelButton.innerHTML = Lang.Buttons.cancel;
 
         const addSpaceConfirmButton = createElement('a')
             .addClass('entryVariableAddSpaceConfirmWorkspace')
@@ -2058,7 +2058,7 @@ Entry.VariableContainer = class VariableContainer {
             })
             .appendTo(addSpaceButtonWrapper);
         addSpaceConfirmButton.href = '#';
-        addSpaceConfirmButton.textContent = Lang.Buttons.save;
+        addSpaceConfirmButton.innerHTML = Lang.Buttons.save;
         this.listAddConfirmButton = addSpaceConfirmButton;
     }
 
@@ -2108,7 +2108,7 @@ Entry.VariableContainer = class VariableContainer {
             })
             .appendTo(buttonWrapper);
         msgCancel.href = '#';
-        msgCancel.textContent = Lang.Buttons.cancel;
+        msgCancel.innerHTML = Lang.Buttons.cancel;
 
         const msgConfirm = createElement('a')
             .addClass('entryVariableAddSpaceConfirmWorkspace')
@@ -2129,7 +2129,7 @@ Entry.VariableContainer = class VariableContainer {
             })
             .appendTo(buttonWrapper);
         msgConfirm.href = '#';
-        msgConfirm.textContent = Lang.Buttons.save;
+        msgConfirm.innerHTML = Lang.Buttons.save;
 
         msgAddSpace.nameField = msgNameInput;
     }
@@ -2200,7 +2200,6 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     generateTimer(timer) {
-        const x = 240 - (Lang.Workspace.Variable_Timer.length * 12 + 70);
         timer =
             timer ||
             Entry.Variable.create({
@@ -2209,7 +2208,7 @@ Entry.VariableContainer = class VariableContainer {
                 value: 0,
                 variableType: 'timer',
                 visible: false,
-                x,
+                x: 134,
                 y: -70,
             });
 
@@ -2263,7 +2262,7 @@ Entry.VariableContainer = class VariableContainer {
         const boxSubject = createElement('span')
             .addClass('box_sjt')
             .appendTo(varAttr);
-        boxSubject.textContent = Lang.Workspace.Variable_property;
+        boxSubject.innerHTML = Lang.Workspace.Variable_property;
 
         // 기본 값 입력 창
         const attrInputBox = createElement('div')
@@ -2275,7 +2274,7 @@ Entry.VariableContainer = class VariableContainer {
 
         const attrInputLabel = createElement('label').appendTo(attrInputBox);
         attrInputLabel.setAttribute('for', 'attr_cnt');
-        attrInputLabel.textContent = Lang.Workspace.default_value;
+        attrInputLabel.innerHTML = Lang.Workspace.default_value;
 
         const attrInputWrapper = createElement('span')
             .appendTo(attrInputBox)
@@ -2313,7 +2312,7 @@ Entry.VariableContainer = class VariableContainer {
         const slideCheckText = createElement('span')
             .addClass('chk_text')
             .appendTo(slideCheckBox);
-        slideCheckText.textContent = Lang.Workspace.slide;
+        slideCheckText.innerHTML = Lang.Workspace.slide;
 
         // 최소 최대 영역
         const slideCountBox = createElement('div')
@@ -2321,7 +2320,7 @@ Entry.VariableContainer = class VariableContainer {
             .appendTo(slideInputBox);
 
         const minValueInput = createElement('input').appendTo(slideCountBox);
-        minValueInput.textContent = Lang.Workspace.min_value;
+        minValueInput.innerHTML = Lang.Workspace.min_value;
         minValueInput.setAttribute('type', 'text');
 
         const v = that.selected;
@@ -2344,10 +2343,10 @@ Entry.VariableContainer = class VariableContainer {
 
         createElement('span')
             .addClass('dash')
-            .appendTo(slideCountBox).textContent = '~';
+            .appendTo(slideCountBox).innerHTML = '~';
 
         const maxValueInput = createElement('input').appendTo(slideCountBox);
-        maxValueInput.textContent = Lang.Workspace.max_value;
+        maxValueInput.innerHTML = Lang.Workspace.max_value;
         maxValueInput.setAttribute('type', 'text');
 
         if (vType === 'slide') {
@@ -2424,7 +2423,7 @@ Entry.VariableContainer = class VariableContainer {
         const boxSubject = createElement('span')
             .addClass('box_sjt')
             .appendTo(listAttr);
-        boxSubject.textContent = Lang.Workspace.list_property;
+        boxSubject.innerHTML = Lang.Workspace.list_property;
 
         this.generateListImportExportView(listAttr);
         this.generateListCountView(listAttr);
@@ -2453,7 +2452,7 @@ Entry.VariableContainer = class VariableContainer {
                 }
             })
             .appendTo(buttonBox);
-        buttonExport.textContent = Lang.Workspace.list_export;
+        buttonExport.innerHTML = Lang.Workspace.list_export;
 
         const buttonImport = createElement('a')
             .addClass('btn_list')
@@ -2462,7 +2461,7 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.dispatchEvent('openImportListModal');
             })
             .appendTo(buttonBox);
-        buttonImport.textContent = Lang.Workspace.list_import;
+        buttonImport.innerHTML = Lang.Workspace.list_import;
     }
 
     generateListCountView(element) {
@@ -2476,7 +2475,7 @@ Entry.VariableContainer = class VariableContainer {
         const countSubject = createElement('span')
             .addClass('cnt_sjt')
             .appendTo(listCount);
-        countSubject.textContent = Lang.Workspace.number_of_list;
+        countSubject.innerHTML = Lang.Workspace.number_of_list;
 
         const countInputBox = createElement('div')
             .addClass('cnt_inpt')
@@ -2491,7 +2490,7 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.do('listChangeLength', id_, 'minus');
             })
             .appendTo(countInputBox);
-        buttonMinus.textContent = '-';
+        buttonMinus.innerHTML = '-';
         buttonMinus.href = '#';
         this.listSettingView.minus = buttonMinus;
 
@@ -2522,7 +2521,7 @@ Entry.VariableContainer = class VariableContainer {
                 }
             })
             .appendTo(countInputBox);
-        buttonPlus.textContent = '+';
+        buttonPlus.innerHTML = '+';
         buttonPlus.href = '#';
         this.listSettingView.plus = buttonPlus;
 
@@ -2594,14 +2593,14 @@ Entry.VariableContainer = class VariableContainer {
             const fragment = document.createDocumentFragment();
             Entry.createElement('p')
                 .addClass('caution_dsc')
-                .appendTo(fragment).textContent = Lang.Workspace.empty_of_list;
+                .appendTo(fragment).innerHTML = Lang.Workspace.empty_of_list;
             listValues.appendChild(fragment);
         } else {
             const data = arr.map(({ data: value }, i) =>
                 /* html */ `
                     <li>
                         <span class='cnt'>${i + startIndex}</span>
-                        <input value='${xssFilters.inSingleQuotedAttr(value)}' type='text' data-index='${i}'/>
+                        <input value='${value}' type='text' data-index='${i}'/>
                         <a class='del' data-index='${i}'></a>
                     </li>`.trim()
             );
@@ -2717,22 +2716,9 @@ Entry.VariableContainer = class VariableContainer {
             return;
         }
 
-        let csrfToken = '';
-        try {
-            csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        } catch (e) {}
-
-        fetch(`/api/project/variable/${projectId}`, {
-            method: 'PUT',
-            headers: {
-                'csrf-token': csrfToken,
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                variables,
-                lists,
-            }),
+        Entry.dispatchEvent('updateCloudVariable', {
+            variables,
+            lists,
         });
     }
 
