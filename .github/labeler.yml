@@ -1,4 +1,3 @@
 enhancement: feature/**/*
 issue: issue/**/*
-hardware:
-  - *:develop-*
+hardware: *:develop-*
