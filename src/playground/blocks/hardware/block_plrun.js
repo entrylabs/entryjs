@@ -1527,7 +1527,7 @@ Entry.plrun.setLanguage = function() {
                 set_led_color: 'Turn on LED in %1 with %2 brightness',
                 stop_led: 'Turn off LED',
                 get_soil: 'Get soil sensor value',
-                get_analog: 'Read analog %1 value',
+                get_analog: 'Read analog value',
                 get_digital: 'Read digital port %1',
                 set_digital: 'Write digital port %1 to value %2',
                 get_analog_value: 'Read variable resistance',
