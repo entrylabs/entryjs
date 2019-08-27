@@ -2,10 +2,6 @@ import EntryPaint from 'entry-paint';
 import axios from 'axios';
 import Extension from '../extensions/extension';
 
-const GraphicMode = {
-    BITMAP: 'BITMAP',
-    VECTOR: 'VECTOR',
-};
 Entry.Painter = class Painter {
     constructor(view) {
         this.view = view;
@@ -25,6 +21,10 @@ Entry.Painter = class Painter {
         Entry.addEventListener('pictureImport', this.addPicture.bind(this));
         Entry.addEventListener('run', this.detachKeyboardEvents.bind(this));
         Entry.addEventListener('stop', this.attachKeyboardEvents.bind(this));
+    }
+
+    get graphicsMode() {
+        return this.entryPaint.graphicsMode;
     }
 
     initialize() {
@@ -143,7 +143,7 @@ Entry.Painter = class Painter {
         Entry.stateManager.removeAllPictureCommand();
     }
 
-    _getImageSrc(picture) {
+    getImageSrc(picture) {
         const { fileurl } = picture || {};
         if (fileurl) {
             return fileurl;
@@ -158,7 +158,7 @@ Entry.Painter = class Painter {
 
     addPicture(picture, isChangeShape) {
         const { imageType = 'png' } = picture || {};
-        const imageSrc = this._getImageSrc(picture);
+        const imageSrc = this.getImageSrc(picture);
 
         isChangeShape && (this.isImport = true);
 
@@ -166,12 +166,12 @@ Entry.Painter = class Painter {
             case 'png':
                 this.entryPaint.addBitmap(imageSrc, {
                     isChangedLayer: this.isImport,
-                    graphicsMode: this.isImport ? GraphicMode.BITMAP : '',
+                    graphicsMode: this.isImport ? this.graphicsMode.BITMAP : '',
                 });
                 break;
             case 'svg':
                 this.entryPaint.addSVG(imageSrc, {
-                    graphicsMode: this.isImport ? GraphicMode.VECTOR : '',
+                    graphicsMode: this.isImport ? this.graphicsMode.VECTOR : '',
                 });
                 break;
             case 'json':
@@ -187,8 +187,13 @@ Entry.Painter = class Painter {
             return;
         }
         const dataURL = this.entryPaint.getDataURL();
-        this.file.json = this.entryPaint.getPaperJSON();
-        this.file.ext = 'json';
+        if (this.entryPaint.mode === this.graphicsMode.VECTOR) {
+            this.file.svg = this.entryPaint.exportSVG();
+            this.file.ext = 'svg';
+        } else {
+            delete this.file.svg;
+            this.file.ext = 'png';
+        }
         const file = JSON.parse(JSON.stringify(this.file));
         Entry.dispatchEvent('saveCanvasImage', {
             file,

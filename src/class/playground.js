@@ -8,6 +8,7 @@ import { Backpack, ColorPicker, Dropdown, Sortable } from '@entrylabs/tool';
 import Toast from '../playground/toast';
 import EntryEvent from '@entrylabs/event';
 import { Destroyer } from '../util/destroyer/Destroyer';
+import { saveAs } from 'file-saver';
 
 const Entry = require('../entry');
 
@@ -1221,18 +1222,18 @@ Entry.Playground = class Playground {
      */
     downloadPicture(pictureId) {
         const picture = Entry.playground.object.getPicture(pictureId);
+        const { imageType = 'png' } = picture;
+
         if (picture.fileurl) {
-            window.open(
-                `/api/sprite/download/entryjs/${btoa(picture.fileurl)}/${encodeURIComponent(
+            saveAs(
+                `/api/sprite/download/entryjs/${picture.fileurl}/${encodeURIComponent(
                     picture.name
-                )}.png`
+                )}`,
+                `${picture.name}.${imageType}`
             );
         } else {
-            window.open(
-                `/api/sprite/download/image/${btoa(picture.filename)}/${encodeURIComponent(
-                    picture.name
-                )}.png`
-            );
+            const src = this.painter.getImageSrc(picture);
+            saveAs(src, `${picture.name}.${imageType}`);
         }
     }
 
