@@ -39,6 +39,17 @@ import { GEDragHelper } from '../graphicEngine/GEDragHelper';
  *     bgColor
  *     ...
  * }
+ *
+ *effect ={
+ *     blur,
+ *     hue,
+ *     hsv,
+ *     brightness,
+ *     contrast,
+ *     saturation,
+ *     alpha,
+ *}
+ *
  * ```
  *
  * Construct entity class
@@ -50,7 +61,7 @@ Entry.EntityObject = class EntityObject {
         /** @type {!string} */
         this.parent = object;
         this.type = object.objectType;
-        /** @type {Array<xml script>} */
+        /** @type {Array<xmlScript>} */
         this.flip = false;
         this.collision = Entry.Utils.COLLISION.NONE;
         this.id = Entry.generateHash();
@@ -148,9 +159,10 @@ Entry.EntityObject = class EntityObject {
     }
 
     /**
-     * Construct entity class
-     * @param {?picture model} pictureModel
-     * @param {?entity model} entityModel
+     * 현재 엔티티 모델에 이미지등의 데이터를 주입<br/>
+     * Original: Construct entity class
+     * @param {?picture.model} pictureModel
+     * @param {?entity.model} entityModel
      * @constructor
      */
     injectModel(pictureModel, entityModel) {
@@ -175,8 +187,9 @@ Entry.EntityObject = class EntityObject {
     }
 
     /**
-     * sync this model with parameter
-     * @param {!entity model} entityModel
+     * 현재 엔티티를 현재 파라미터로 들어온 엔티티애 동기화 시킴<br/>
+     * Original: sync this model with parameter
+     * @param {!entity.model} entityModel
      * @private
      */
     syncModel_({
@@ -212,7 +225,9 @@ Entry.EntityObject = class EntityObject {
         this.setFontSize(fontSize || this.getFontSize());
         this.setVisible(visible);
     }
-
+    /**
+     * 커맨드 시작
+     */
     initCommand() {
         if (!Entry.engine.isState('stop')) {
             return;
@@ -220,7 +235,9 @@ Entry.EntityObject = class EntityObject {
 
         this._entityModelBefore = this.toJSON();
     }
-
+    /**
+     * 현재 커맨드 확인
+     */
     checkCommand() {
         if (!Entry.engine.isState('stop')) {
             return;
@@ -238,8 +255,8 @@ Entry.EntityObject = class EntityObject {
     }
 
     /**
-     * for redo and undo
-     * @param {!entity model} entityModel
+     * 업데이트 정보 저장을 통한 되돌리기 다시하기를 할수 있게 해줌 for redo and undo
+     * @param {!entity.model} entityModel
      * @return {Entry.State} capture current state
      */
     setModel(entityModel) {
@@ -603,7 +620,10 @@ Entry.EntityObject = class EntityObject {
     getBGColour() {
         return this.bgColor;
     }
-
+    /**
+     * underline setter, for textBox object
+     * @param {boolean} underLine
+     */
     setUnderLine(underLine = false) {
         this.underLine = underLine;
         if (GEHelper.isWebGL) {
@@ -613,11 +633,17 @@ Entry.EntityObject = class EntityObject {
         }
         Entry.requestUpdate = true;
     }
-
+    /**
+     * underline getter, for textBox object
+     * @return {boolean}
+     */
     getUnderLine() {
         return this.underLine;
     }
-
+    /**
+     * strike setter, for textBox object
+     * @param {boolean} strike
+     */
     setStrike(strike = false) {
         this.strike = strike;
         if (GEHelper.isWebGL) {
@@ -627,13 +653,17 @@ Entry.EntityObject = class EntityObject {
         }
         Entry.requestUpdate = true;
     }
-
+    /**
+     * strike getter, for textBox object
+     * @return {boolean}
+     */
     getStrike() {
         return this.strike;
     }
 
     /**
      * font getter
+     * @return {Array<Fonts>}
      */
     getFont() {
         const fontArray = [];
@@ -649,7 +679,8 @@ Entry.EntityObject = class EntityObject {
     }
 
     /**
-     * font setter
+     * font setter, for textBox object
+     * @param {Array<Fonts>} strike
      */
     setFont(font = '20px Nanum Gothic') {
         if (this.parent.objectType !== 'textBox') {
@@ -679,7 +710,9 @@ Entry.EntityObject = class EntityObject {
         this.updateBG();
         Entry.stage.updateObject();
     }
-
+    /**
+     * line height setter, according to other attributes
+     */
     setLineHeight() {
         let lineHeight;
         switch (this.getFontType()) {
@@ -698,7 +731,9 @@ Entry.EntityObject = class EntityObject {
             this.textObject.lineHeight = lineHeight;
         }
     }
-
+    /**
+     * Synchronize fonts in all text objects
+     */
     syncFont() {
         const textObject = this.textObject;
         this._syncFontStyle();
@@ -718,6 +753,7 @@ Entry.EntityObject = class EntityObject {
 
     /**
      * font type getter
+     * @return {Font.type}
      */
     getFontType() {
         return this.fontType;
@@ -725,6 +761,7 @@ Entry.EntityObject = class EntityObject {
 
     /**
      * font type setter
+     * @param {?String.FontType} fontType
      */
     setFontType(fontType = 'Nanum Gothic') {
         if (this.parent.objectType !== 'textBox') {
@@ -952,7 +989,7 @@ Entry.EntityObject = class EntityObject {
 
     /**
      * Change picture
-     * @param {?picture model} pictureModel
+     * @param {?picture.model} pictureModel
      */
     setImage(pictureModel) {
         const that = this;
@@ -1015,7 +1052,9 @@ Entry.EntityObject = class EntityObject {
     }
 
     /**
-     * Apply easel filter
+     * Apply easel filter(effect) with selection of forced apply
+     * @param {boolean} isForce
+     * @param {Entity.effect} forceEffects
      */
     applyFilter(isForce, forceEffects) {
         const effects = this.effect;
@@ -1273,7 +1312,9 @@ Entry.EntityObject = class EntityObject {
         _.result(this, 'clearExecutor');
         this.destroy(true);
     }
-
+    /**
+     * Remove All Executors on this entity
+     */
     clearExecutor() {
         this.parent.script.clearExecutorsByEntity(this);
     }
@@ -1312,7 +1353,7 @@ Entry.EntityObject = class EntityObject {
         return json;
     }
 
-    /*
+    /**
      * Return initial effect value
      * @return {effect}
      */
@@ -1321,7 +1362,7 @@ Entry.EntityObject = class EntityObject {
         Entry.requestUpdate = true;
     }
 
-    /*
+    /**
      * Return initial effect value
      * @return {effect}
      */
@@ -1337,16 +1378,16 @@ Entry.EntityObject = class EntityObject {
         };
     }
 
-    /*
+    /**
      * Return initial effect value
-     * @return {effect}
+     * @return {effect} eff
      */
     setVoiceProp(prop) {
         const { speed = 0, pitch = 0, speaker = 'kyuri', volume = 1 } = prop;
         this.voice = { speed, pitch, speaker, volume };
     }
 
-    /*
+    /**
      * Return initial effect value
      * @return {effect}
      */
@@ -1354,7 +1395,7 @@ Entry.EntityObject = class EntityObject {
         return this.voice;
     }
 
-    /*
+    /**
      * remove brush
      */
     removeBrush() {
@@ -1362,14 +1403,16 @@ Entry.EntityObject = class EntityObject {
         this.brush = null;
     }
 
-    /*
+    /**
      * erase brush
      */
     eraseBrush() {
         this._removeShapes();
         Entry.requestUpdate = true;
     }
-
+    /**
+     * @local _removeShapes
+     */
     _removeShapes() {
         const container = Entry.stage.selectedObjectContainer;
         const shapes = this.shapes;
@@ -1382,7 +1425,9 @@ Entry.EntityObject = class EntityObject {
         }
         this.shapes = [];
     }
-
+    /**
+     * updateBG
+     */
     updateBG() {
         if (!this.bgObject) {
             return;
@@ -1412,7 +1457,9 @@ Entry.EntityObject = class EntityObject {
             }
         }
     }
-
+    /**
+     * alignTextBox
+     */
     alignTextBox() {
         if (this.type !== 'textBox') {
             return;
@@ -1451,13 +1498,17 @@ Entry.EntityObject = class EntityObject {
             textObject.y = 0;
         }
     }
-
+    /**
+     * syncDialogVisible
+     */
     syncDialogVisible() {
         if (this.dialog) {
             this.dialog.object.visible = this.visible;
         }
     }
-
+    /**
+     * addStamp
+     */
     addStamp() {
         const stampEntity = new Entry.StampEntity(this.parent, this);
         const stage = Entry.stage;
@@ -1466,13 +1517,18 @@ Entry.EntityObject = class EntityObject {
 
         Entry.requestUpdate = true;
     }
-
+    /**
+     * removeStamps
+     */
     removeStamps() {
         this.stamps.forEach((s) => s.destroy());
         this.stamps = [];
         Entry.requestUpdate = true;
     }
-
+    /**
+     * destroy
+     * @param {boolean} isClone
+     */
     destroy(isClone) {
         if (this.removed) {
             return;
@@ -1504,7 +1560,9 @@ Entry.EntityObject = class EntityObject {
         //pixi 전용 코드
         object && object.destroy && object.destroy({ children: true });
     }
-
+    /**
+     * cache
+     */
     cache() {
         const { object } = this;
         if (object) {
@@ -1514,14 +1572,18 @@ Entry.EntityObject = class EntityObject {
             Entry.requestUpdate = true;
         }
     }
-
+    /**
+     * reset
+     */
     reset() {
         this.loadSnapshot();
         this.resetFilter();
         _.result(this.dialog, 'remove');
         this.shapes.length && this.removeBrush();
     }
-
+    /**
+     * @local _syncFontStyle
+     */
     _syncFontStyle() {
         this.textObject.font = this.getFont();
         if (!GEHelper.isWebGL) {

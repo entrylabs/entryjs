@@ -52,7 +52,7 @@ const _findIndex = require('lodash/findIndex');
  * ```
  *
  * Class for entry object.
- * @param {?object model} model for object
+ * @param {?object.model} model for object
  * @constructor
  */
 Entry.EntryObject = class {
@@ -158,7 +158,7 @@ Entry.EntryObject = class {
 
     /**
      * Object script setter
-     * @param {!xml script} script
+     * @param {!xml.script} script
      */
     setScript(script) {
         this.script = script;
@@ -166,7 +166,7 @@ Entry.EntryObject = class {
 
     /**
      * Object script getter
-     * @return {!xml script} script
+     * @return {!xml.script} script
      */
     getScriptText() {
         return this.script.stringify();
@@ -174,8 +174,8 @@ Entry.EntryObject = class {
 
     /**
      * Initialize entity model if not exist
-     * @param {!object model} model for object
-     * @return {entity model}
+     * @param {!object.model} model for object
+     * @return {entity.model}
      */
     initEntity(model) {
         const json = {};
@@ -336,7 +336,7 @@ Entry.EntryObject = class {
 
     /**
      * Add picture object by picture model.
-     * @param {picture model} picture
+     * @param {picture.model} picture
      */
     addPicture(picture, index) {
         picture.objectId = this.id;
@@ -377,7 +377,7 @@ Entry.EntryObject = class {
     /**
      * Get picture object by Id.
      * @param {?string} pictureId
-     * @return {picture object}
+     * @return {picture.object}
      */
     getPicture(value) {
         //priority
@@ -418,7 +418,7 @@ Entry.EntryObject = class {
     /**
      * Get previous picture object by Id.
      * @param {?string} pictureId
-     * @return {picture object}
+     * @return {picture.object}
      */
     getPrevPicture(pictureId) {
         const pictures = this.pictures;
@@ -429,7 +429,7 @@ Entry.EntryObject = class {
     /**
      * Get next picture object by Id.
      * @param {?string} pictureId
-     * @return {picture object}
+     * @return {picture.object}
      */
     getNextPicture(pictureId) {
         const pictures = this.pictures;
@@ -441,7 +441,7 @@ Entry.EntryObject = class {
     /**
      * Select picture object by Id.
      * @param {!string} pictureId
-     * @return {picture object}
+     * @return {picture.object}
      */
     selectPicture(pictureId) {
         const picture = this.getPicture(pictureId);
@@ -456,7 +456,7 @@ Entry.EntryObject = class {
 
     /**
      * Add sound to object
-     * @param {sound model} sound
+     * @param {sound.model} sound
      */
     addSound(sound, index) {
         if (!sound.id) {
@@ -555,7 +555,7 @@ Entry.EntryObject = class {
      * Otherwise, this clone this object's entity.
      * @param {?Entry.EntryObject} object
      * @param {?Entry.EntityObject} entity
-     * @param {?xml block} script
+     * @param {?xml.block} script
      */
     addCloneEntity(object, entity, script) {
         if (this.clonedEntities.length > Entry.maxCloneLimit) {
@@ -641,7 +641,7 @@ Entry.EntryObject = class {
     /**
      * Get sound object by Id.
      * @param {?string} soundId
-     * @return {sound object}
+     * @return {sound.object}
      */
     getSound(value) {
         //priority
@@ -738,7 +738,7 @@ Entry.EntryObject = class {
 
     /**
      *  get only clonedEntities among clonedEntities except for stamp entity
-     *  @return {Array<clone Entity> } entities
+     *  @return {Array<clone.Entity> } entities
      */
     getClonedEntities() {
         return this.clonedEntities.concat();

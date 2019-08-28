@@ -7,7 +7,7 @@ import SimpleBar from 'simplebar';
 
 /**
  * Block variable constructor
- * @param {variable model} variable
+ * @param {variable.model} variable
  * @constructor
  */
 Entry.VariableContainer = class VariableContainer {
@@ -727,7 +727,7 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     /**
-     * @param {!Array.<message model>} objectModels
+     * @param {!Array.<message.model>} objectModels
      */
     setMessages(messages = []) {
         this.messages_ = messages.map((message) => {
@@ -740,7 +740,7 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     /**
-     * @param {!Array.<message model>} objectModels
+     * @param {!Array.<message.model>} objectModels
      */
     appendMessages(messages) {
         for (const i in messages) {
@@ -761,7 +761,7 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     /**
-     * @param {!Array.<variable model>} variables
+     * @param {!Array.<variable.model>} variables
      */
     setVariables(variables = []) {
         variables.forEach((variable) => {
@@ -804,7 +804,7 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     /**
-     * @param {!Array.<variable model>} variables
+     * @param {!Array.<variable.model>} variables
      */
     appendVariables(variables) {
         for (const i in variables) {
@@ -837,7 +837,7 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     /**
-     * @param {!Array.<function model>} variables
+     * @param {!Array.<function.model>} variables
      */
     setFunctions(functions = []) {
         functions.forEach((func) => {
@@ -848,7 +848,7 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     /**
-     * @param {!Array.<function model>} variables
+     * @param {!Array.<function.model>} variables
      */
     appendFunctions(functions = []) {
         for (const i in functions) {
@@ -1402,7 +1402,7 @@ Entry.VariableContainer = class VariableContainer {
 
     /**
      * Add event for block
-     * @param {message model} message
+     * @param {message.model} message
      * @return {boolean} return true when success
      */
     addMessage(message = {}) {
@@ -1436,7 +1436,7 @@ Entry.VariableContainer = class VariableContainer {
 
     /**
      * Add event
-     * @param {message model} message
+     * @param {message.model} message
      */
     removeMessage({ id }) {
         const message = this.getMessage(id);
@@ -1560,7 +1560,7 @@ Entry.VariableContainer = class VariableContainer {
 
     /**
      * Add list for block
-     * @param {list model} list
+     * @param {list.model} list
      * @return {boolean} return true when success
      */
     addList(list) {

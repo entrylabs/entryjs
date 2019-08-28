@@ -662,7 +662,7 @@ Entry.Stage.prototype.createObjectContainer = function(scene) {
 
 /**
  * remove object container
- * @param {scene model} scene
+ * @param {scene.model} scene
  */
 Entry.Stage.prototype.removeObjectContainer = function(scene) {
     var containers = this.objectContainers;
@@ -677,7 +677,7 @@ Entry.Stage.prototype.removeObjectContainer = function(scene) {
 
 /**
  * get object container
- * @param {scene model} scene
+ * @param {scene.model} scene
  */
 Entry.Stage.prototype.getObjectContainerByScene = function({ id }) {
     return _.find(this.objectContainers, ({ scene } = {}) => scene.id === id);

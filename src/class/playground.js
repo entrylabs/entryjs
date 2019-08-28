@@ -1159,7 +1159,7 @@ Entry.Playground = class {
 
     /**
      * Add picture
-     * @param {picture model} picture
+     * @param {picture.model} picture
      */
     addPicture(picture, isNew) {
         const tempPicture = _.clone(picture);
@@ -1385,7 +1385,7 @@ Entry.Playground = class {
     }
     /**
      * Add sound
-     * @param {sound model} sound
+     * @param {sound.model} sound
      * @param {boolean} NotForView if this is true, add element into object also.
      */
     addSound(sound, NotForView, isNew) {

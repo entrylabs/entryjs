@@ -123,7 +123,7 @@ Entry.Scene = class {
 
     /**
      * generate li element for scene
-     * @param {!scene model} scene
+     * @param {!scene.model} scene
      */
     generateElement(scene) {
         const viewTemplate = this.createViewTemplate(scene);
@@ -274,7 +274,7 @@ Entry.Scene = class {
 
     /**
      * add scenes
-     * @param {Array<scene model>} scenes
+     * @param {Array<scene.model>} scenes
      */
     addScenes(scenes) {
         this.scenes_ = scenes;
@@ -291,7 +291,7 @@ Entry.Scene = class {
     }
     /**
      * add scenes to this.scenes_
-     * @param {scene model} scene
+     * @param {scene.model} scene
      */
     addScene(scene, index) {
         if (scene === undefined || typeof scene === 'string') {
@@ -319,7 +319,7 @@ Entry.Scene = class {
 
     /**
      * remove scene from this.scenes_
-     * @param {!scene model} scene
+     * @param {!scene.model} scene
      */
     removeScene(scene) {
         if (this.getScenes().length <= 1) {
@@ -341,7 +341,7 @@ Entry.Scene = class {
 
     /**
      * select scene
-     * @param {scene model} scene
+     * @param {scene.model} scene
      */
     selectScene(scene) {
         scene = scene || this.getScenes()[0];
@@ -435,14 +435,14 @@ Entry.Scene = class {
     /**
      * get scene by scene id
      * @param {!String} sceneId
-     * @return {scene modal}
+     * @return {scene.modal}
      */
     getSceneById(id) {
         return _.find(this.getScenes(), { id }) || false;
     }
 
     /**
-     * @return {Array<Entry scene>}
+     * @return {Array<Entry.scene>}
      */
     getScenes() {
         return this.scenes_;
@@ -466,7 +466,7 @@ Entry.Scene = class {
     }
     /**
      * create scene
-     * @return {scene modal} scene
+     * @return {scene.modal} scene
      */
     createScene(sceneId) {
         const regex = /[0-9]/;
@@ -485,7 +485,7 @@ Entry.Scene = class {
 
     /**
      * clone scene by context menu
-     * @param {!scene model} scene
+     * @param {!scene.model} scene
      */
     cloneScene(scene) {
         if (this.isMax()) {
@@ -530,7 +530,7 @@ Entry.Scene = class {
 
     /**
      * resize html element by window size
-     * @param {!scene model} scene
+     * @param {!scene.model} scene
      */
     resize() {
         const scenes = this.getScenes();

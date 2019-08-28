@@ -1017,7 +1017,7 @@ Entry.Container = class Container {
 
     /**
      *  get objects list belonged to specific scene
-     *  @param {Scene.Model} scene model
+     *  @param {Scene.Model} scene.model
      *  @return {Array<Object.Model>} Array<object model>
      */
     getSceneObjects(scene) {

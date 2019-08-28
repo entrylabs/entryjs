@@ -1,4 +1,4 @@
-/*u
+/**
  * @fileoverview This manage control state and control bar.
  */
 'use strict';
@@ -442,7 +442,7 @@ Entry.Engine = class Engine {
 
     /**
      *
-     * 엔진 렌더 시작
+     * 엔진 렌더 시작<br/>
      * ORIGINAL: Start engine
      * @param {number} FPS 1~60의 시작 프레임수를 넣을수 있음
      * @return {NULL}
@@ -458,7 +458,7 @@ Entry.Engine = class Engine {
 
     /**
      *
-     * 엔진 렌더 정지
+     * 엔진 렌더 정지<br/>
      * ORIGINAL: stop engine
      * @return {NULL}
      */
@@ -470,7 +470,7 @@ Entry.Engine = class Engine {
 
     /**
      *
-     * 엔진 object연산 수행으로 업데이트, 하드웨어 연산시작
+     * 엔진 object연산 수행으로 업데이트, 하드웨어 연산시작<br/>
      * ORIGINAL: Update canvas and object.
      * @return {NULL}
      */
@@ -483,7 +483,7 @@ Entry.Engine = class Engine {
 
     /**
      *
-     * 현재 Scene에 올라와있는 오브젝트들에 대해서 mapping하는 클래스, 오브젝트의 함수도 매핑함
+     * 현재 Scene에 올라와있는 오브젝트들에 대해서 mapping하는 클래스, 오브젝트의 함수도 매핑함<br/>
      * ORIGINAL: compute each object with runningScript on entity.
      * @return {NULL}
      */
@@ -493,7 +493,7 @@ Entry.Engine = class Engine {
 
     /**
      *
-     * 인자로 받은 script의 이벤트 기동
+     * 인자로 받은 script의 이벤트 기동<br/>
      * ORIGINAL: Compute function for map.
      * @param {Entry.EntryObject} object
      * @return {NULL}
@@ -504,7 +504,7 @@ Entry.Engine = class Engine {
 
     /**
      *
-     * engine.state === state 를 리턴
+     * engine.state === state 를 리턴<br/>
      * ORIGINAL: Check this state is same with argument
      * @param {string} state
      * @return {boolean}
@@ -515,7 +515,7 @@ Entry.Engine = class Engine {
 
     /**
      *
-     * Engine 상태 토글 (isState === run ? isState = stop : isState = run)
+     * Engine 상태 토글 (isState === run ? isState = stop : isState = run)<br/>
      * ORIGINAL: Execute this function when click start button
      * @return {NULL}
      */
@@ -529,7 +529,7 @@ Entry.Engine = class Engine {
 
     /**
      *
-     * Engine 기동, achievement 에 대한 인식 변경포함
+     * Engine 기동, achievement 에 대한 인식 변경포함<br/>
      * ORIGINAL: toggle this engine state run
      * @param {Boolean} disableAchieve
      * @return {NULL}
@@ -614,7 +614,7 @@ Entry.Engine = class Engine {
 
     /**
      *
-     * Engine 정지
+     * Engine 정지<br/>
      * ORIGINAL: toggle this engine state stop
      * @return {NULL}
      */
@@ -695,7 +695,6 @@ Entry.Engine = class Engine {
         Entry.stage.selectObject(this.selectedObject);
     }
     /**
-     *
      * Engine의 입력 Element 보이기
      * @param {Boolean} on inputField enabler
      * @return {NULL}

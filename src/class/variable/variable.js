@@ -33,7 +33,7 @@ class Variable {
         /** @type {string} */
         this.id_ = variable.id ? variable.id : Entry.generateHash();
         this.type = variable.variableType || 'variable';
-        /** @type {entry object.id} */
+        /** @type {entry.object.id} */
         this.object_ = variable.object || null;
         /** @type {boolean} */
         this.isCloud_ = variable.isCloud || false;
@@ -42,7 +42,7 @@ class Variable {
         this._nameWidth = null;
         this._valueWidth = null;
 
-        /** @type {number||string} */
+        /** @type {number|string} */
         const parsedValue = Entry.parseNumber(variable.value);
         if (typeof parsedValue === 'number') {
             this.value_ = parsedValue;
