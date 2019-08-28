@@ -1,7 +1,7 @@
 'use strict';
 
 import { GEHelper } from '../graphicEngine/GEHelper';
-
+import _uniq from 'lodash/uniq';
 Entry.Utils = {};
 
 Entry.TEXT_ALIGN_CENTER = 0;
@@ -18,11 +18,15 @@ Entry.clipboard = null;
  * Load project
  * @param {?Project} project
  */
-Entry.loadProject = function(project) {
+
+Entry.loadProject = async function(project) {
     if (!project) {
         project = Entry.getStartProject(Entry.mediaFilePath);
     }
-
+    const fonts = _uniq(project.objects.filter((x) => x.objectType == 'textBox').map(x => x.entity.font.split(' ').slice(-1).pop()));
+    Entry.Utils.waitForWebfonts(fonts, () => {
+        Entry.dispatchEvent('fontLoaded');
+    });
     if (this.type === 'workspace') {
         Entry.stateManager.startIgnore();
     }
@@ -2005,9 +2009,12 @@ Entry.Utils.isChrome = function() {
     return /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
 };
 
-Entry.Utils.waitForWebfonts = function(fonts, callback) {
+Entry.Utils.waitForWebfonts = function(originFonts, callback) {
     let loadedFonts = 0;
-    if (fonts && fonts.length) {
+    const loadTimeout = 5000;
+    const unresolvedFonts = ['san-serif', 'Gothic'];
+    if (originFonts && originFonts.length) {
+        const fonts = originFonts.filter((font) => unresolvedFonts.indexOf(font) < 0);
         for (let i = 0, l = fonts.length; i < l; ++i) {
             let node = document.createElement('span');
             // Characters that vary significantly among different fonts
@@ -2032,28 +2039,39 @@ Entry.Utils.waitForWebfonts = function(fonts, callback) {
             node.style.fontFamily = fonts[i];
 
             let interval;
+
             function checkFont() {
                 // Compare current width with original width
                 if (node && node.offsetWidth != width) {
                     ++loadedFonts;
                     node.parentNode.removeChild(node);
                     node = null;
+                    if (interval) {
+                        clearInterval(interval);
+                        interval = null;
+                    }
                 }
 
                 // If all fonts have been loaded
-                if (loadedFonts >= fonts.length) {
-                    if (interval) {
-                        clearInterval(interval);
-                    }
-                    if (loadedFonts == fonts.length) {
-                        callback();
-                        return true;
-                    }
+                if (loadedFonts === fonts.length) {
+                    callback();
+                    return true;
                 }
             }
 
             if (!checkFont()) {
                 interval = setInterval(checkFont, 50);
+                setTimeout(function() {
+                    if (interval) {
+                        clearInterval(interval);
+                        console.log('font load fail', fonts[i]);
+                        ++loadedFonts;
+                        if (loadedFonts === fonts.length) {
+                            callback();
+                            return true;
+                        }
+                    }
+                }, loadTimeout);
             }
         }
     } else {
