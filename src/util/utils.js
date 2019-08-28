@@ -2010,6 +2010,12 @@ Entry.Utils.isChrome = function() {
 };
 
 Entry.Utils.waitForWebfonts = function(originFonts, callback) {
+    if (document.fonts) {
+        document.fonts.ready.then(function() {
+            callback();
+        });
+        return;
+    }
     let loadedFonts = 0;
     const loadTimeout = 5000;
     const unresolvedFonts = ['san-serif', 'Gothic'];
