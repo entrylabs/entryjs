@@ -158,7 +158,7 @@ p.bindWorkspace = function(workspace) {
 };
 
 /**
- * toggle on block helper
+ * toggle on block helper, 선택된 블럭에 대한 정보를 업데이트한뒤 렌더합니다
  */
 p._updateSelectedBlock = function() {
     var blockView = this.workspace.selectedBlockView;

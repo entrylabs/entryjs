@@ -201,7 +201,10 @@ Entry.Playground = class {
         this.tabViewElements.variable = variableTab;
         this.variableTab = variableTab;
     }
-
+    /**
+     * createButtonTabView
+     * @param {!Element} tabButtonView
+     */
     createButtonTabView(tabButtonView) {
         const { options = {} } = Entry;
         const { commentDisable, backpackDisable } = options;
@@ -233,7 +236,11 @@ Entry.Playground = class {
             });
         }
     }
-
+    /**
+     * createBackPackView
+     * @MethodNameTypo
+     * @param {!Element} backPackView
+     */
     createPackPackView(backPackView) {
         this.backPack = new Backpack({
             isShow: false,
@@ -449,13 +456,19 @@ Entry.Playground = class {
             },
         };
     }
-
+    /**
+     * set param event to backpack.data
+     * @param {BackPack.data} canPointEvent
+     */
     setBackpackPointEvent(canPointEvent) {
         this.backPack.data = {
             canPointEvent,
         };
     }
-
+    /**
+     * returns BoundingClientRectMemo
+     * @return {rectPositionJSON}
+     */
     getBoundingClientRectMemo = _.memoize((target, offset = {}) => {
         const rect = target.getBoundingClientRect();
         const result = {
@@ -469,22 +482,31 @@ Entry.Playground = class {
         });
         return result;
     });
-
+    /**
+     * clearClientRectMemo
+     */
     clearClientRectMemo() {
         this.getBoundingClientRectMemo.cache = new _.memoize.Cache();
     }
-
+    /**
+     * showBackPack with corresponding data in param
+     * @param {BackPack.dataKVSet} args
+     */
     showBackPack(args) {
         this.backPack.setData({ ...args });
         this.backPack.show();
         this.backPackView.removeClass('entryRemove');
     }
-
+    /**
+     * hideBackPack
+     */
     hideBackPack() {
         this.backPack.hide();
         this.backPackView.addClass('entryRemove');
     }
-
+    /**
+     * toggleCommentButton ~= toggleCommentButtonVisible 전체에 적용
+     */
     toggleCommentButton() {
         if (this.board.isVisibleComment) {
             this.toast.show(Lang.Blocks.hide_all_comment);
@@ -495,7 +517,9 @@ Entry.Playground = class {
         }
         this.toggleCommentButtonVisible();
     }
-
+    /**
+     * toggleCommentButtonVisible ~= toggleCommentButton, 개별 적용
+     */
     toggleCommentButtonVisible() {
         const button = this.commentToggleButton_;
 

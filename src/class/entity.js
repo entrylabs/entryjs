@@ -773,6 +773,7 @@ Entry.EntityObject = class EntityObject {
 
     /**
      * font size getter
+     * @return {font.size}
      */
     getFontSize() {
         return this.fontSize;
@@ -803,6 +804,7 @@ Entry.EntityObject = class EntityObject {
 
     /**
      * toggle bold on,off and return current
+     * @return {Boolean}
      */
     toggleFontBold() {
         this.fontBold = !this.fontBold;
@@ -826,7 +828,10 @@ Entry.EntityObject = class EntityObject {
         this.syncFont();
         return this.fontItalic;
     }
-
+    /**
+     * getFontName
+     * @return {Array<font.name>}
+     */
     getFontName() {
         if (this.type !== 'textBox') {
             return;

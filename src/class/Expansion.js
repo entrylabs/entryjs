@@ -38,12 +38,14 @@ export default class Expansion {
     }
     /**
      * 확장블럭 제거
+     * @param {String} blockName
      */
     banExpansionBlock(blockName) {
         Entry.do('objectRemoveExpansionBlock', blockName);
     }
     /**
      * 확장블럭 추가
+     * @param {String} blockName
      */
     addExpansionBlock(blockName) {
         Entry.do('objectAddExpansionBlock', blockName);

@@ -71,7 +71,7 @@ Entry.Func = function(func) {
     Entry.Func.updateMenu();
 };
 /**
- * EmptyFunction
+ * Init variable
  */
 Entry.Func.threads = {};
 

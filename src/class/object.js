@@ -513,7 +513,10 @@ Entry.EntryObject = class {
             stage.updateHandle();
         }
     }
-
+    /**
+     * initialize values in rotation method
+     * @param {string} rotateMethod
+     */
     initRotateValue(rotateMethod) {
         if (this.rotateMethod === rotateMethod) {
             return;
@@ -525,7 +528,9 @@ Entry.EntryObject = class {
         entity.rotation = 0.0;
         entity.flip = false;
     }
-
+    /**
+     * updateRotateMethodView to current rotateMethod
+     */
     updateRotateMethodView() {
         if (!this.rotateModeAView_) {
             return;
@@ -671,7 +676,13 @@ Entry.EntryObject = class {
 
         return null;
     }
-
+    /**
+     * add cloned variables to variable conatiner
+     * @param {?object.id} id
+     * @param {?entity} entity
+     * @param {?entity.variables} variables
+     * @param {?entity.lists} lists
+     */
     addCloneVariables({ id }, entity, variables, lists) {
         const _whereFunc = _.partial(_.filter, _, { object_: id });
         const _cloneFunc = (v) => v.clone();
@@ -680,17 +691,24 @@ Entry.EntryObject = class {
         entity.variables = (variables || _whereFunc(variables_)).map(_cloneFunc);
         entity.lists = (lists || _whereFunc(lists_)).map(_cloneFunc);
     }
-
+    /**
+     * @return {boolean}
+     */
     getLock() {
         return this.lock;
     }
-
+    /**
+     * @param {boolean} bool
+     */
     setLock(bool) {
         this.lock = bool;
         Entry.stage.updateObject();
         return bool;
     }
-
+    /**
+     * update input views depending on object.lock status
+     * @param {boolean} isLocked
+     */
     updateInputViews(isLocked) {
         isLocked = isLocked || this.getLock();
         const inputs = [
@@ -714,7 +732,10 @@ Entry.EntryObject = class {
 
         this.isEditing = !isLocked;
     }
-
+    /**
+     * 활성화가 되어있는지 그리고 작업중인지 확인후 값을 변경할수 있도록 설정해준다. 만약 비활성 혹은 수정중인경우 input blur 처리
+     * @param {boolean} activate
+     */
     editObjectValues(activate) {
         const inputs = [
             this.nameView_,
@@ -743,7 +764,9 @@ Entry.EntryObject = class {
     getClonedEntities() {
         return this.clonedEntities.concat();
     }
-
+    /**
+     * clears executors
+     */
     clearExecutor() {
         this.script.clearExecutors();
 
@@ -753,7 +776,9 @@ Entry.EntryObject = class {
         }
         this.entity.removeStamps();
     }
-
+    /**
+     * right click event
+     */
     _rightClick(e) {
         if (!this.isContextMenuEnabled()) {
             return;
@@ -824,26 +849,37 @@ Entry.EntryObject = class {
         const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
         Entry.ContextMenu.show(contextMenus, 'workspace-contextmenu', { x, y });
     }
-
+    /**
+     * 나의 보관함 추가
+     */
     addStorage() {
         Entry.dispatchEvent('addStorage', {
             type: 'object',
             data: this,
         });
     }
-
+    /**
+     * enableContextMenu
+     */
     enableContextMenu() {
         this._isContextMenuEnabled = true;
     }
-
+    /**
+     * disableContextMenu
+     */
     disableContextMenu() {
         this._isContextMenuEnabled = false;
     }
-
+    /**
+     * isContextMenuEnabled
+     * @return {Boolean}
+     */
     isContextMenuEnabled() {
         return this._isContextMenuEnabled && Entry.objectEditable;
     }
-
+    /**
+     * toggleEditObject
+     */
     toggleEditObject() {
         if (this.isEditing || Entry.engine.isState('run')) {
             return;
@@ -854,7 +890,11 @@ Entry.EntryObject = class {
             Entry.container.selectObject(this.id);
         }
     }
-
+    /**
+     * getDom
+     * @param {String} query target dom name
+     * @return {HTMLDomElement|RotationMethod.RotateView}
+     */
     getDom(query) {
         if (_.isEmpty(query)) {
             return this.view_;
@@ -881,7 +921,10 @@ Entry.EntryObject = class {
                 return this._getRotateView(query.shift());
         }
     }
-
+    /**
+     * set target InputBlurred
+     * @param {string} target target dom name
+     */
     setInputBlurred(...target) {
         target = this.getDom(target);
         if (!target) {
@@ -889,7 +932,10 @@ Entry.EntryObject = class {
         }
         target._focused = false;
     }
-
+    /**
+     * generateWorkspaceView
+     * @return {WorkspaceView}
+     */
     generateWorkspaceView() {
         const exceptionsForMouseDown = [];
 
@@ -924,7 +970,10 @@ Entry.EntryObject = class {
 
         return this.view_;
     }
-
+    /**
+     * createRotationMethodWrapperView
+     * @return {RotationMethodWrapper}
+     */
     createRotationMethodWrapperView() {
         const rotationMethodWrapper = Entry.createElement('div').addClass('rotationMethodWrapper');
 
@@ -970,7 +1019,10 @@ Entry.EntryObject = class {
 
         return rotationMethodWrapper;
     }
-
+    /**
+     * createRotateLabelWrapperView
+     * @return {RotateLabelWrapperView}
+     */
     createRotateLabelWrapperView() {
         const rotateLabelWrapperView = Entry.createElement('div').addClass(
             'entryObjectRotateLabelWrapperWorkspace'
@@ -1043,7 +1095,10 @@ Entry.EntryObject = class {
 
         return rotateLabelWrapperView;
     }
-
+    /**
+     * createCoordinationView
+     * @return {CoordinationView}
+     */
     createCoordinationView() {
         const coordinationView = Entry.createElement('span').addClass(
             'entryObjectCoordinateWorkspace'
@@ -1124,7 +1179,10 @@ Entry.EntryObject = class {
 
         return coordinationView;
     }
-
+    /**
+     * createRotationWrapperView
+     * @return {RotationWrapperView}
+     */
     createRotationWrapperView() {
         const rotationWrapperView = Entry.createElement('div').addClass(
             'entryObjectRotationWrapperWorkspace'
@@ -1143,7 +1201,11 @@ Entry.EntryObject = class {
 
         return rotationWrapperView;
     }
-
+    /**
+     * setObjectFold, if isFold, make the view component folded, if !isPass, update this.isFolded state
+     * @param {boolean} isFold
+     * @param {boolean} isPass
+     */
     setObjectFold(isFold, isPass) {
         const $view = $(this.view_);
         if (isFold) {
@@ -1155,11 +1217,16 @@ Entry.EntryObject = class {
             this.isFolded = isFold;
         }
     }
-
+    /**
+     * resetObjectFold
+     */
     resetObjectFold() {
         this.setObjectFold(this.isFolded);
     }
-
+    /**
+     * createInformationView
+     * @return {InformationView}
+     */
     createInformationView() {
         const informationView = Entry.createElement('div').addClass(
             'entryObjectInformationWorkspace'
@@ -1172,7 +1239,10 @@ Entry.EntryObject = class {
         });
         return informationView;
     }
-
+    /**
+     * createDeleteView
+     * @param {Array<MouseDownException>} exceptionsForMouseDown
+     */
     createDeleteView(exceptionsForMouseDown) {
         const deleteView = Entry.createElement('div').addClass('entryObjectDeleteWorkspace');
         exceptionsForMouseDown.push(deleteView);
@@ -1187,7 +1257,10 @@ Entry.EntryObject = class {
         }
         return deleteView;
     }
-
+    /**
+     * createNameView
+     * @return {NameView}
+     */
     createNameView() {
         const nameView = Entry.createElement('input').addClass('entryObjectNameWorkspace');
         nameView.addEventListener('click', (e) => {
@@ -1220,7 +1293,10 @@ Entry.EntryObject = class {
         nameView.value = this.name;
         return nameView;
     }
-
+    /**
+     * createWrapperView
+     * @return {WrapperView}
+     */
     createWrapperView() {
         const wrapperView = Entry.createElement('div').addClass('entryObjectWrapperWorkspace');
 
@@ -1234,7 +1310,11 @@ Entry.EntryObject = class {
 
         return wrapperView;
     }
-
+    /**
+     * createWrapperView
+     * @param {object.id} objectId
+     * @return {ThumbnailView}
+     */
     createThumbnailView(objectId) {
         const thumbnail = Entry.createElement('div').addClass('entryObjectThumbnailWorkspace');
 
@@ -1248,7 +1328,10 @@ Entry.EntryObject = class {
 
         return thumbnail;
     }
-
+    /**
+     * createObjectInfoView
+     * @return {objectInfoView}
+     */
     createObjectInfoView() {
         const objectInfoView = Entry.createElement('ul').addClass('objectInfoView');
         const objectInfoVisible = Entry.createElement('li').addClass('objectInfo_visible');
@@ -1295,7 +1378,12 @@ Entry.EntryObject = class {
         objectInfoView.appendChild(objectInfoLock);
         return objectInfoView;
     }
-
+    /**
+     * createObjectView
+     * @param {object.id} objectId
+     * @param {Array<MouseDownException>} exceptionsForMouseDown
+     * @return {objectView}
+     */
     createObjectView(objectId, exceptionsForMouseDown) {
         const objectView = Entry.createElement('li', objectId).addClass(
             'entryContainerListElementWorkspace'
@@ -1381,7 +1469,11 @@ Entry.EntryObject = class {
 
         return objectView;
     }
-
+    /**
+     * _getRotateView
+     * @param {string} type
+     * @return {rotateView}
+     */
     _getRotateView(type = 'free') {
         if (type === 'free') {
             return this.rotateModeAView_;
@@ -1391,11 +1483,19 @@ Entry.EntryObject = class {
             return this.rotateModeBView_;
         }
     }
-
+    /**
+     * getIndex
+     * @return {object.index}
+     */
     getIndex() {
         return Entry.container.getObjectIndex(this.id);
     }
-
+    /**
+     * _whenRotateEditable
+     * @param {function} func
+     * @param {object} obj
+     * @return {Entry.Utils.when}
+     */
     _whenRotateEditable(func, obj) {
         return Entry.Utils.when(() => !(Entry.engine.isState('run') || obj.getLock()), func);
     }
