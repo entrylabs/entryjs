@@ -2048,11 +2048,9 @@ Entry.Utils.waitForWebfonts = function(fonts, callback) {
 
             node.style.fontFamily = fonts[i];
 
-            let interval;
-
-            function checkFont() {
+            let interval = setInterval(() => {
                 // Compare current width with original width
-                if (node && node.offsetWidth != width) {
+                if (node && node.offsetWidth !== width) {
                     ++loadedFonts;
                     node.parentNode.removeChild(node);
                     node = null;
@@ -2067,22 +2065,18 @@ Entry.Utils.waitForWebfonts = function(fonts, callback) {
                     final();
                     return true;
                 }
-            }
-
-            if (!checkFont()) {
-                interval = setInterval(checkFont, 50);
-                setTimeout(() => {
-                    if (interval) {
-                        clearInterval(interval);
-                        console.log('font load fail', fonts[i]);
-                        ++loadedFonts;
-                        if (loadedFonts >= fonts.length) {
-                            final();
-                            return true;
-                        }
+            }, 50);
+            setTimeout(() => {
+                if (interval) {
+                    clearInterval(interval);
+                    console.log('font load fail', fonts[i]);
+                    ++loadedFonts;
+                    if (loadedFonts >= fonts.length) {
+                        final();
+                        return true;
                     }
-                }, loadTimeout);
-            }
+                }
+            }, loadTimeout);
         }
     } else {
         final();
