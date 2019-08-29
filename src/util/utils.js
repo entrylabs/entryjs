@@ -29,9 +29,9 @@ Entry.loadProject = function(project) {
     Entry.projectId = project._id;
     Entry.variableContainer.setVariables(project.variables);
     Entry.variableContainer.setMessages(project.messages);
+    Entry.variableContainer.setFunctions(project.functions);
     Entry.scene.addScenes(project.scenes);
     Entry.stage.initObjectContainers();
-    Entry.variableContainer.setFunctions(project.functions);
     Entry.container.setObjects(project.objects);
     Entry.FPS = project.speed ? project.speed : 60;
     GEHelper.Ticker.setFPS(Entry.FPS);
