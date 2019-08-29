@@ -2005,16 +2005,22 @@ Entry.Utils.isChrome = function() {
     return /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
 };
 
-Entry.Utils.waitForWebfonts = function(originFonts, callback) {
-    if (document.fonts) {
-        document.fonts.ready.then(function() {
-            callback && callback();
-        });
+Entry.Utils.getUsedFonts = function(project) {
+    if (!project) {
         return;
     }
+    const getFamily = (x) =>
+        x.entity.font
+            .split(' ')
+            .filter((t) => t.indexOf('bold') < 0 && t.indexOf('italic') < 0 && t.indexOf('px') < 0)
+            .join(' ');
+    return _uniq(project.objects.filter((x) => x.objectType === 'textBox').map(getFamily));
+};
+
+Entry.Utils.waitForWebfonts = function(originFonts, callback) {
     let loadedFonts = 0;
     const loadTimeout = 5000;
-    const unresolvedFonts = ['san-serif', 'Gothic'];
+    const unresolvedFonts = ['san-serif'];
     if (originFonts && originFonts.length) {
         const fonts = originFonts.filter((font) => unresolvedFonts.indexOf(font) < 0);
         for (let i = 0, l = fonts.length; i < l; ++i) {
@@ -2063,7 +2069,7 @@ Entry.Utils.waitForWebfonts = function(originFonts, callback) {
 
             if (!checkFont()) {
                 interval = setInterval(checkFont, 50);
-                setTimeout(function() {
+                setTimeout(() => {
                     if (interval) {
                         clearInterval(interval);
                         console.log('font load fail', fonts[i]);
@@ -2453,9 +2459,8 @@ Entry.Utils.getScrollPos = function() {
     };
 };
 
-Entry.Utils.isPointInRect = ({ x, y }, { top, bottom, left, right }) => {
-    return _.inRange(x, left, right) && _.inRange(y, top, bottom);
-};
+Entry.Utils.isPointInRect = ({ x, y }, { top, bottom, left, right }) =>
+    _.inRange(x, left, right) && _.inRange(y, top, bottom);
 
 Entry.Utils.getBoundingClientRectMemo = _.memoize((target, offset = {}) => {
     const rect = target.getBoundingClientRect();
