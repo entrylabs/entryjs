@@ -23,10 +23,6 @@ Entry.loadProject = async function(project) {
     if (!project) {
         project = Entry.getStartProject(Entry.mediaFilePath);
     }
-    const fonts = _uniq(project.objects.filter((x) => x.objectType == 'textBox').map(x => x.entity.font.split(' ').slice(-1).pop()));
-    Entry.Utils.waitForWebfonts(fonts, () => {
-        Entry.dispatchEvent('fontLoaded');
-    });
     if (this.type === 'workspace') {
         Entry.stateManager.startIgnore();
     }
@@ -2012,7 +2008,7 @@ Entry.Utils.isChrome = function() {
 Entry.Utils.waitForWebfonts = function(originFonts, callback) {
     if (document.fonts) {
         document.fonts.ready.then(function() {
-            callback();
+            callback && callback();
         });
         return;
     }
@@ -2060,7 +2056,7 @@ Entry.Utils.waitForWebfonts = function(originFonts, callback) {
 
                 // If all fonts have been loaded
                 if (loadedFonts === fonts.length) {
-                    callback();
+                    callback && callback();
                     return true;
                 }
             }
@@ -2072,8 +2068,8 @@ Entry.Utils.waitForWebfonts = function(originFonts, callback) {
                         clearInterval(interval);
                         console.log('font load fail', fonts[i]);
                         ++loadedFonts;
-                        if (loadedFonts === fonts.length) {
-                            callback();
+                        if (loadedFonts >= fonts.length) {
+                            callback && callback();
                             return true;
                         }
                     }
