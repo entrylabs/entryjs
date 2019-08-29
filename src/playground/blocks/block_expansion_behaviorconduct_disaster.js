@@ -7,7 +7,7 @@ function getInitialCategoryMap() {
     return {
         '01001': {
             lang: Lang.Blocks.behaviorConduct01001,
-            sub: ['01001002', '01001003', '01001004', '01001005'],
+            sub: ['01001001', '01001002', '01001003'],
         },
         '01002': {
             lang: Lang.Blocks.behaviorConduct01002,
@@ -19,27 +19,27 @@ function getInitialCategoryMap() {
         },
         '01004': {
             lang: Lang.Blocks.behaviorConduct01004,
-            sub: ['01004002', '01004003', '01004004'],
+            sub: ['01004001', '01004002'],
         },
         '01005': {
             lang: Lang.Blocks.behaviorConduct01005,
-            sub: ['01005002'],
+            sub: ['01005002', '01005003', '01005004'],
         },
         '01006': {
             lang: Lang.Blocks.behaviorConduct01006,
-            sub: ['01006002'],
+            sub: ['01006001', '01006002'],
         },
         '01007': {
             lang: Lang.Blocks.behaviorConduct01007,
-            sub: ['01007002', '01007003'],
+            sub: ['01007001'],
         },
         '01008': {
             lang: Lang.Blocks.behaviorConduct01008,
-            sub: ['01008002', '01008003', '01008004'],
+            sub: ['01008001', '01008002', '01008003'],
         },
         '01009': {
             lang: Lang.Blocks.behaviorConduct01009,
-            sub: ['01009001', '01009002', '01009003'],
+            sub: ['01009001', '01009002'],
         },
         '01010': {
             lang: Lang.Blocks.behaviorConduct01010,
@@ -55,7 +55,7 @@ function getInitialCategoryMap() {
         },
         '01014': {
             lang: Lang.Blocks.behaviorConduct01014,
-            sub: ['01014001', '01014002'],
+            sub: ['01014001'],
         },
     };
 }
@@ -129,6 +129,7 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function() {
                 fontSize: 11,
                 bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
+                defaultValue: (value, options) => options[0][1],
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
