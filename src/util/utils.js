@@ -2017,12 +2017,14 @@ Entry.Utils.getUsedFonts = function(project) {
     return _uniq(project.objects.filter((x) => x.objectType === 'textBox').map(getFamily));
 };
 
-Entry.Utils.waitForWebfonts = function(originFonts, callback) {
-    let loadedFonts = 0;
-    const loadTimeout = 5000;
-    const unresolvedFonts = ['san-serif'];
-    if (originFonts && originFonts.length) {
-        const fonts = originFonts.filter((font) => unresolvedFonts.indexOf(font) < 0);
+Entry.Utils.waitForWebfonts = function(fonts, callback) {
+    const final = () => {
+        console.log('font loaded');
+        callback && callback();
+    };
+    if (fonts && fonts.length) {
+        let loadedFonts = 0;
+        const loadTimeout = 5000;
         for (let i = 0, l = fonts.length; i < l; ++i) {
             let node = document.createElement('span');
             // Characters that vary significantly among different fonts
@@ -2062,7 +2064,7 @@ Entry.Utils.waitForWebfonts = function(originFonts, callback) {
 
                 // If all fonts have been loaded
                 if (loadedFonts === fonts.length) {
-                    callback && callback();
+                    final();
                     return true;
                 }
             }
@@ -2075,7 +2077,7 @@ Entry.Utils.waitForWebfonts = function(originFonts, callback) {
                         console.log('font load fail', fonts[i]);
                         ++loadedFonts;
                         if (loadedFonts >= fonts.length) {
-                            callback && callback();
+                            final();
                             return true;
                         }
                     }
@@ -2083,7 +2085,7 @@ Entry.Utils.waitForWebfonts = function(originFonts, callback) {
             }
         }
     } else {
-        callback && callback();
+        final();
         return true;
     }
 };
