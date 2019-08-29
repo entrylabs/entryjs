@@ -36,6 +36,7 @@
         "@entrylabs/event": "^1.0.3",
         "autoprefixer": "^9.4.3",
         "events": "^3.0.0",
+        "fontfaceonload": "^1.0.2",
         "hammerjs": "^2.0.8",
         "html-webpack-plugin": "^3.2.0",
         "html-webpack-template": "^6.2.0",

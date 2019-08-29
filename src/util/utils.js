@@ -2,6 +2,8 @@
 
 import { GEHelper } from '../graphicEngine/GEHelper';
 import _uniq from 'lodash/uniq';
+import FontFaceOnload from 'fontfaceonload';
+
 Entry.Utils = {};
 
 Entry.TEXT_ALIGN_CENTER = 0;
@@ -2018,70 +2020,26 @@ Entry.Utils.getUsedFonts = function(project) {
 };
 
 Entry.Utils.waitForWebfonts = function(fonts, callback) {
-    const final = () => {
+    return Promise.all(
+        fonts.map(
+            (font) =>
+                new Promise((resolve) => {
+                    FontFaceOnload(font, {
+                        success: function() {
+                            resolve();
+                        },
+                        error: function() {
+                            console.log('fail', font);
+                            resolve();
+                        },
+                        timeout: 5000,
+                    });
+                })
+        )
+    ).then(() => {
         console.log('font loaded');
         callback && callback();
-    };
-    if (fonts && fonts.length) {
-        let loadedFonts = 0;
-        const loadTimeout = 5000;
-        for (let i = 0, l = fonts.length; i < l; ++i) {
-            let node = document.createElement('span');
-            // Characters that vary significantly among different fonts
-            node.innerHTML = 'giItT1WQy@!-/#';
-            // Visible - so we can measure it - but not on the screen
-            node.style.position = 'absolute';
-            node.style.left = '-10000px';
-            node.style.top = '-10000px';
-            // Large font size makes even subtle changes obvious
-            node.style.fontSize = '300px';
-            // Reset any font properties
-            node.style.fontFamily = 'sans-serif';
-            node.style.fontVariant = 'normal';
-            node.style.fontStyle = 'normal';
-            node.style.fontWeight = 'normal';
-            node.style.letterSpacing = '0';
-            document.body.appendChild(node);
-
-            // Remember width with no applied web font
-            const width = node.offsetWidth;
-
-            node.style.fontFamily = fonts[i];
-
-            let interval = setInterval(() => {
-                // Compare current width with original width
-                if (node && node.offsetWidth !== width) {
-                    ++loadedFonts;
-                    node.parentNode.removeChild(node);
-                    node = null;
-                    if (interval) {
-                        clearInterval(interval);
-                        interval = null;
-                    }
-                }
-
-                // If all fonts have been loaded
-                if (loadedFonts === fonts.length) {
-                    final();
-                    return true;
-                }
-            }, 50);
-            setTimeout(() => {
-                if (interval) {
-                    clearInterval(interval);
-                    console.log('font load fail', fonts[i]);
-                    ++loadedFonts;
-                    if (loadedFonts >= fonts.length) {
-                        final();
-                        return true;
-                    }
-                }
-            }, loadTimeout);
-        }
-    } else {
-        final();
-        return true;
-    }
+    });
 };
 
 window.requestAnimFrame = (function() {
