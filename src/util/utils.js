@@ -19,7 +19,7 @@ Entry.clipboard = null;
  * @param {?Project} project
  */
 
-Entry.loadProject = async function(project) {
+Entry.loadProject = function(project) {
     if (!project) {
         project = Entry.getStartProject(Entry.mediaFilePath);
     }
