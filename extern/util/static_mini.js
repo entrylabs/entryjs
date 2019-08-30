@@ -355,13 +355,13 @@ EntryStatic.getAllBlocks = function() {
         {
             category: 'hw_robot',
             blocks: [
-                'arduino_download_connector',
-                'download_guide',
-                'arduino_connected',
-                'arduino_connect',
                 'robot_reconnect',
                 'arduino_open',
                 'arduino_cloud_pc_open',
+                'arduino_connect',
+                'arduino_download_connector',
+                'download_guide',
+                'arduino_connected',
             ],
         },
         {
