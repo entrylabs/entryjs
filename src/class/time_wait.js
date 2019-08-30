@@ -2,24 +2,26 @@
 
 Entry.TimeWaitManager = {
     add: function(id, cb, ms) {
-        if (!Entry.timerInstances)
-            Entry.timerInstances = [];
+        if (!Entry.timerInstances) Entry.timerInstances = [];
 
         var instance = new Entry.TimeWait(id, cb, ms);
         Entry.timerInstances.push(instance);
     },
     remove: function(id) {
-        if (!Entry.timerInstances || Entry.timerInstances.length == 0)
-            return;
+        if (!Entry.timerInstances || Entry.timerInstances.length == 0) return;
         Entry.timerInstances = Entry.timerInstances.filter(function(instance) {
-            if (instance.id === id)
-                return false;
-            else
-                return true;
+            if (instance.id === id) return false;
+            else return true;
         });
-    }
-}
-
+    },
+};
+/**
+ * Construct TimeWait class
+ * @param {String} id
+ * @param {Function} cb callback
+ * @param {Number} ms time in milli
+ * @constructor
+ */
 Entry.TimeWait = function(id, cb, ms) {
     this.id = id;
     this.cb = cb;
@@ -34,19 +36,19 @@ Entry.TimeWait = function(id, cb, ms) {
             this.cb();
             this.destroy();
         }
-    }
+    };
 
     p.pause = function() {
         if (this.timer) {
             this.ms = this.ms - (performance.now() - this.startTime);
             clearTimeout(this.timer);
         }
-    }
+    };
 
     p.resume = function() {
         this.timer = setTimeout(this.callback.bind(this), this.ms);
         this.startTime = performance.now();
-    }
+    };
 
     p.destroy = function() {
         delete this.timer;
@@ -54,5 +56,5 @@ Entry.TimeWait = function(id, cb, ms) {
         delete this.ms;
         delete this.startTime;
         Entry.TimeWaitManager.remove(this.id);
-    }
+    };
 })(Entry.TimeWait.prototype);

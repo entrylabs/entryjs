@@ -5,6 +5,7 @@
 
 /**
  * Constructor of popup
+ * @param {String} className
  * @constructor
  */
 Entry.Popup = function(className) {
@@ -22,7 +23,8 @@ Entry.Popup = function(className) {
     document.body.appendChild(this.body_);
     this.window_ = Entry.createElement('div');
     this.window_.addClass('entryPopupWindow');
-    if (Entry.targetChecker && !Entry.targetChecker.statusViewDisabled) this.window_.addClass('targetCheckerPopup');
+    if (Entry.targetChecker && !Entry.targetChecker.statusViewDisabled)
+        this.window_.addClass('targetCheckerPopup');
     // if (Entry.device === 'tablet') this.window_.addClass('tablet');
     this.window_.bindOnClick(function() {});
     Entry.addEventListener('windowResized', this.resize);
@@ -57,7 +59,11 @@ Entry.Popup.prototype.remove = function() {
     Entry.removeEventListener('windowResized', this.resize);
     Entry.engine.popup = null;
     Entry.windowResized.notify();
-    if (Entry.type === 'workspace' && Entry.targetChecker && !Entry.targetChecker.statusViewDisabled)
+    if (
+        Entry.type === 'workspace' &&
+        Entry.targetChecker &&
+        !Entry.targetChecker.statusViewDisabled
+    )
         Entry.targetChecker.getStatusView().remove();
 };
 
@@ -68,16 +74,17 @@ Entry.Popup.prototype.remove = function() {
 Entry.Popup.prototype.resize = function(e) {
     var popup = window.popup;
     var popupWindow = popup.window_;
-    var bottomOffset = Entry.targetChecker && !Entry.targetChecker.statusViewDisabled ? 91 + 48 : 48;
+    var bottomOffset =
+        Entry.targetChecker && !Entry.targetChecker.statusViewDisabled ? 91 + 48 : 48;
     var maxWidth = window.innerWidth * 0.9;
     var maxHeight = window.innerHeight * 0.9 - bottomOffset;
     if (maxWidth * 9 <= maxHeight * 16) {
-        maxHeight = maxWidth / 16 * 9;
+        maxHeight = (maxWidth / 16) * 9;
         maxHeight += bottomOffset;
         popupWindow.style.width = String(maxWidth) + 'px';
         popupWindow.style.height = String(maxHeight) + 'px';
     } else {
-        maxWidth = maxHeight * 16 / 9;
+        maxWidth = (maxHeight * 16) / 9;
         maxHeight += bottomOffset;
         popupWindow.style.width = String(maxWidth) + 'px';
         popupWindow.style.height = String(maxHeight) + 'px';
@@ -85,7 +92,10 @@ Entry.Popup.prototype.resize = function(e) {
 
     Entry.stage && Entry.stage.updateBoundRect();
 };
-
+/**
+ * remove Mouse click event, unBindOnClick
+ * @param {event} e
+ */
 Entry.Popup.prototype.removeMouseDispose = function(e) {
     this.body_.unBindOnClick();
 };

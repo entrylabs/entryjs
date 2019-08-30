@@ -26,7 +26,7 @@
  * }
  * ```
  *
- * @param {variable.model} variable
+ * @param {Function} func
  * @constructor
  */
 Entry.Func = function(func) {

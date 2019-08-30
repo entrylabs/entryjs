@@ -1,7 +1,17 @@
+/**
+ * Project related util functions
+ * @fileoverview  project util functions.
+ */
+
 'use strict';
 
 import { get, pick, isMatch } from 'lodash';
 
+/**
+ * check script if is correct
+ * @param {Array<script>} script
+ * @return {Boolean}
+ */
 function scriptCheck(script) {
     if (script.length !== 1 || script[0].length !== 2) {
         return false;
@@ -24,7 +34,11 @@ function scriptCheck(script) {
 
     return true;
 }
-
+/**
+ * check if isDefaultProject
+ * @param {Project} project
+ * @return {Boolean}
+ */
 Entry.isDefaultProject = function(project) {
     try {
         if (Entry.stateManager.undoStack_.length) {
@@ -66,7 +80,10 @@ Entry.isDefaultProject = function(project) {
         return false;
     }
 };
-
+/**
+ * getStartProject
+ * @param {String} mediaFilePath
+ */
 Entry.getStartProject = function(mediaFilePath) {
     return {
         category: Lang.Menus.other,

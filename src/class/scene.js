@@ -596,23 +596,35 @@ Entry.Scene = class {
             }
         }
     }
-
+    /**
+     * 다음 Scene 을 리턴
+     * @return {Scene}
+     */
     getNextScene() {
         const scenes = this.getScenes();
         return scenes[scenes.indexOf(this.selectedScene) + 1];
     }
-
+    /**
+     * return if number of scenes reached max number
+     * @return {Boolean}
+     */
     isMax() {
         return this.scenes_.length >= this.maxCount;
     }
-
+    /**
+     * clear all Scenes
+     */
     clear() {
         this.scenes_.forEach((s) => Entry.stage.removeObjectContainer(s));
         this.scenes_ = [];
         this.selectedScene = null;
         this.updateView();
     }
-
+    /**
+     * getDom
+     * @param {String} query
+     * @return {HTMLDomElement}
+     */
     getDom(query) {
         let scene;
         if (query.length > 1) {
@@ -632,7 +644,9 @@ Entry.Scene = class {
                 return;
         }
     }
-
+    /**
+     * destroy, emptyFunction
+     */
     destroy() {
         // 우선 interface 만 정의함.
     }

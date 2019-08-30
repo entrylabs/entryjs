@@ -3,8 +3,6 @@
  */
 'use strict';
 
-
-
 /**
  * Constructor of toast
  * @constructor
@@ -13,18 +11,25 @@ Entry.Toast = function() {
     this.toasts_ = [];
     /** @type {Element} */
     var exist = document.getElementById('entryToastContainer');
-    if (exist)
-        document.body.removeChild(exist);
+    if (exist) document.body.removeChild(exist);
     this.body_ = Entry.createElement('div', 'entryToastContainer');
     this.body_.addClass('entryToastContainer');
     document.body.appendChild(this.body_);
 };
-
+/**
+ * Constructor of warning
+ * @param {String} title
+ * @param {String} message
+ * @param {Boolean} isNotAutoDispose
+ * @constructor
+ */
 Entry.Toast.prototype.warning = function(title, message, isNotAutoDispose) {
     var toast = Entry.createElement('div', 'entryToast');
     toast.addClass('entryToast');
     toast.addClass('entryToastWarning');
-    toast.bindOnClick(function() {Entry.toast.body_.removeChild(this);});
+    toast.bindOnClick(function() {
+        Entry.toast.body_.removeChild(this);
+    });
     var toastTitle = Entry.createElement('div', 'entryToast');
     toastTitle.addClass('entryToastTitle');
     toastTitle.innerHTML = title;
@@ -37,24 +42,31 @@ Entry.Toast.prototype.warning = function(title, message, isNotAutoDispose) {
     this.body_.appendChild(toast);
     var f = function() {
         toast.style.opacity = 1;
-        var timer = setInterval(function () {
+        var timer = setInterval(function() {
             if (toast.style.opacity < 0.05) {
                 clearInterval(timer);
                 toast.style.display = 'none';
                 Entry.removeElement(toast);
             }
-            toast.style.opacity *= 0.90;
+            toast.style.opacity *= 0.9;
         }, 20);
     };
-    if (!isNotAutoDispose)
-        window.setTimeout(f, 1000);
+    if (!isNotAutoDispose) window.setTimeout(f, 1000);
 };
-
+/**
+ * Constructor of success
+ * @param {String} title
+ * @param {String} message
+ * @param {Boolean} isNotAutoDispose
+ * @constructor
+ */
 Entry.Toast.prototype.success = function(title, message, isNotAutoDispose) {
     var toast = Entry.createElement('div', 'entryToast');
     toast.addClass('entryToast');
     toast.addClass('entryToastSuccess');
-    toast.bindOnClick(function() {Entry.toast.body_.removeChild(this);});
+    toast.bindOnClick(function() {
+        Entry.toast.body_.removeChild(this);
+    });
     var toastTitle = Entry.createElement('div', 'entryToast');
     toastTitle.addClass('entryToastTitle');
     toastTitle.innerHTML = title;
@@ -67,19 +79,24 @@ Entry.Toast.prototype.success = function(title, message, isNotAutoDispose) {
     this.body_.appendChild(toast);
     var f = function() {
         toast.style.opacity = 1;
-        var timer = setInterval(function () {
+        var timer = setInterval(function() {
             if (toast.style.opacity < 0.05) {
                 clearInterval(timer);
                 toast.style.display = 'none';
                 Entry.removeElement(toast);
             }
-            toast.style.opacity *= 0.90;
+            toast.style.opacity *= 0.9;
         }, 20);
     };
-    if (!isNotAutoDispose)
-        window.setTimeout(f, 1000);
+    if (!isNotAutoDispose) window.setTimeout(f, 1000);
 };
-
+/**
+ * Constructor of alert
+ * @param {String} title
+ * @param {String} message
+ * @param {Boolean} isNotAutoDispose
+ * @constructor
+ */
 Entry.Toast.prototype.alert = function(title, message, isNotAutoDispose) {
     var toast = Entry.createElement('div', 'entryToast');
     var timer;
@@ -101,17 +118,15 @@ Entry.Toast.prototype.alert = function(title, message, isNotAutoDispose) {
     this.body_.appendChild(toast);
     var f = function() {
         toast.style.opacity = 1;
-        timer = setInterval(function () {
+        timer = setInterval(function() {
             if (toast.style.opacity < 0.05) {
                 clearInterval(timer);
                 toast.style.display = 'none';
                 //check element already removed from parent
-                if (toast.parentElement)
-                    Entry.toast.body_.removeChild(toast);
+                if (toast.parentElement) Entry.toast.body_.removeChild(toast);
             }
-            toast.style.opacity *= 0.90;
+            toast.style.opacity *= 0.9;
         }, 20);
     };
-    if (!isNotAutoDispose)
-        window.setTimeout(f, 5000);
+    if (!isNotAutoDispose) window.setTimeout(f, 5000);
 };

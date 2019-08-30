@@ -35,7 +35,10 @@ Entry.Playground = class {
 
         Entry.windowResized.attach(this, this.clearClientRectMemo.bind(this));
     }
-
+    /**
+     * setMode
+     * @param {String} mode
+     */
     setMode(mode) {
         this.mainWorkspace.setMode(mode);
     }
@@ -628,7 +631,9 @@ Entry.Playground = class {
             );
         }
     }
-
+    /**
+     * initSortablePictureWidget
+     */
     initSortablePictureWidget() {
         if (this.pictureSortableListWidget) {
             return;
@@ -646,7 +651,9 @@ Entry.Playground = class {
             Entry.playground.movePicture(newIndex, oldIndex);
         });
     }
-
+    /**
+     * updatePictureView
+     */
     updatePictureView() {
         if (this.pictureSortableListWidget) {
             this.pictureSortableListWidget.setData({
@@ -654,7 +661,9 @@ Entry.Playground = class {
             });
         }
     }
-
+    /**
+     * _getSortablePictureList
+     */
     _getSortablePictureList() {
         if (!this.object || !this.object.pictures) {
             return [];
@@ -1029,7 +1038,9 @@ Entry.Playground = class {
             soundView.appendChild(soundEditView);
         }
     }
-
+    /**
+     * initSortableSoundWidget
+     */
     initSortableSoundWidget() {
         if (this.soundSortableListWidget) {
             return;
@@ -1047,7 +1058,9 @@ Entry.Playground = class {
             Entry.playground.moveSound(newIndex, oldIndex);
         });
     }
-
+    /**
+     * updateSoundsView
+     */
     updateSoundsView() {
         if (this.soundSortableListWidget) {
             this.soundSortableListWidget.setData({
@@ -1055,7 +1068,9 @@ Entry.Playground = class {
             });
         }
     }
-
+    /**
+     * _getSortableSoundList
+     */
     _getSortableSoundList() {
         if (!this.object || !this.object.sounds) {
             return [];
@@ -1429,7 +1444,10 @@ Entry.Playground = class {
         Entry.do('objectAddSound', this.object.id, sound);
         this.injectSound();
     }
-
+    /**
+     * downloadSound
+     * @param {StringId} soundId
+     */
     downloadSound(soundId) {
         const sound = Entry.playground.object.getSound(soundId);
         if (sound.fileurl) {
@@ -1564,7 +1582,9 @@ Entry.Playground = class {
         this.viewMode_ = 'variable';
         this.selectedViewMode = 'variable';
     }
-
+    /**
+     * toggleOffVariableView
+     */
     toggleOffVariableView() {
         this.showBlockMenu();
         this.variableView_.addClass('entryRemove');
@@ -1585,22 +1605,32 @@ Entry.Playground = class {
         blockMenu.setMenu(true);
         this.currentObjectType = objectType;
     }
-
+    /**
+     * hideTabs, 탭 전체 적용
+     */
     hideTabs() {
         ['picture', 'text', 'sound', 'variable'].forEach(this.hideTab.bind(this));
     }
-
+    /**
+     * hideTab
+     * @param {TabNameString} item
+     */
     hideTab(item) {
         if (this.tabViewElements[item]) {
             this.tabViewElements[item].addClass('hideTab');
             this.tabViewElements[item].removeClass('showTab');
         }
     }
-
+    /**
+     * showTabs 탭 전체 적용
+     */
     showTabs() {
         ['picture', 'text', 'sound', 'variable'].forEach(this.showTab.bind(this));
     }
-
+    /**
+     * showTabs
+     * @param {TabNameString} item
+     */
     showTab(item) {
         if (this.tabViewElements[item]) {
             this.tabViewElements[item].addClass('showTab');
@@ -1667,7 +1697,9 @@ Entry.Playground = class {
             board.changeCode(null);
         }
     }
-
+    /**
+     * refreshPlayground
+     */
     refreshPlayground() {
         if (Entry.playground && Entry.playground.view_) {
             if (this.getViewMode() === 'picture') {
@@ -1678,14 +1710,19 @@ Entry.Playground = class {
             }
         }
     }
-
+    /**
+     * clear playground
+     */
     clear() {
         this.flushPlayground();
         if (this.painter) {
             this.painter.clear();
         }
     }
-
+    /**
+     * generatePictureElement
+     * @param {picture.model} picture
+     */
     generatePictureElement(picture) {
         const element = Entry.createElement('li', picture.id)
             .addClass('entryPlaygroundPictureElement')
@@ -1844,7 +1881,10 @@ Entry.Playground = class {
             }
         });
     }
-
+    /**
+     * generateSoundElement
+     * @param {sound.model} sound
+     */
     generateSoundElement(sound) {
         const element = Entry.createElement('sound', sound.id).addClass(
             'entryPlaygroundSoundElement'
@@ -1997,7 +2037,13 @@ Entry.Playground = class {
             }
         });
     }
-
+    /**
+     * openDropDown
+     * @param {JSON} options
+     * @param {HTMLDomElement} target
+     * @param {Function} callback
+     * @param {Function} closeCallback
+     */
     openDropDown = (options, target, callback, closeCallback) => {
         const containers = $('.entry-widget-dropdown');
         if (containers.length > 0) {
@@ -2034,7 +2080,13 @@ Entry.Playground = class {
         });
         return dropdownWidget;
     };
-
+    /**
+     * openColourPicker
+     * @param {HTMLDomElement} target
+     * @param {color} color
+     * @param {boolean} canTransparent
+     * @param {Function} callback
+     */
     openColourPicker = (target, color, canTransparent, callback) => {
         const container = Entry.Dom('div', {
             class: 'entry-color-picker',
@@ -2067,7 +2119,10 @@ Entry.Playground = class {
         });
         return colorPicker;
     };
-
+    /**
+     * selectSound
+     * @param {sound.model} sound
+     */
     selectSound(sound) {
         this.object.sounds.forEach((item) => {
             if (item.id !== sound.id) {
@@ -2077,14 +2132,20 @@ Entry.Playground = class {
             }
         });
     }
-
+    /**
+     * setTextColour
+     * @param {color} colour
+     */
     setTextColour(colour) {
         $('.imbtn_pop_font_color em').css('background-color', colour);
         this.object.entity.setColour(colour);
         this.textEditArea.style.color = colour;
         this.textEditInput.style.color = colour;
     }
-
+    /**
+     * setBackgroundColour
+     * @param {color} colour
+     */
     setBackgroundColour(colour) {
         $('.imbtn_pop_font_backgroundcolor em').css('background-color', colour);
         $('.imbtn_pop_font_backgroundcolor').toggleClass(
@@ -2095,11 +2156,16 @@ Entry.Playground = class {
         this.textEditArea.style.backgroundColor = colour;
         this.textEditInput.style.backgroundColor = colour;
     }
-
+    /**
+     * isTextBGMode
+     * @return {boolean}
+     */
     isTextBGMode() {
         return this.isTextBGMode_;
     }
-
+    /**
+     * checkVariables, check if variable exists in Entry.variableContainer
+     */
     checkVariables() {
         if (Entry.forEBS) {
             return;
@@ -2119,11 +2185,16 @@ Entry.Playground = class {
             blockMenu.banClass('variableNotExist');
         }
     }
-
+    /**
+     * getViewMode
+     * @return {String}
+     */
     getViewMode() {
         return this.viewMode_;
     }
-
+    /**
+     * banExpansionBlock
+     */
     banExpansionBlock() {
         const blockMenu = _.result(this.mainWorkspace, 'blockMenu');
         if (!blockMenu) {
@@ -2135,7 +2206,10 @@ Entry.Playground = class {
             blockMenu.banClass(`${block.name}_legacy`, true);
         });
     }
-
+    /**
+     * toggleLineBreak
+     * @param {boolean} isLineBreak
+     */
     toggleLineBreak(isLineBreak) {
         const { objectType, entity } = this.object || {};
         if (objectType !== 'textBox') {
@@ -2162,7 +2236,10 @@ Entry.Playground = class {
             $('.input_box .single').show();
         }
     }
-
+    /**
+     * setFontAlign
+     * @param {String} fontAlign
+     */
     setFontAlign(fontAlign) {
         if (this.object.objectType !== 'textBox') {
             return;
@@ -2183,15 +2260,23 @@ Entry.Playground = class {
         }
         this.object.entity.setTextAlign(fontAlign);
     }
-
+    /**
+     * hideBlockMenu
+     */
     hideBlockMenu() {
         this.mainWorkspace.getBlockMenu().hide();
     }
-
+    /**
+     * showBlockMenu
+     */
     showBlockMenu() {
         this.mainWorkspace.getBlockMenu().show();
     }
-
+    /**
+     * getDom
+     * @param {String} query
+     * @return {HTMLDomElement}
+     */
     getDom(query) {
         if (query.length) {
             switch (query.shift()) {
@@ -2210,7 +2295,9 @@ Entry.Playground = class {
         } else {
         }
     }
-
+    /**
+     * applyTabOption
+     */
     applyTabOption() {
         this.textboxTab.addClass('entryRemove');
         this.pictureTab.addClass('entryRemove');
@@ -2227,7 +2314,9 @@ Entry.Playground = class {
             this.variableTab.removeClass('entryRemove');
         }
     }
-
+    /**
+     * destroy
+     */
     destroy() {
         this.commentToggleButton_ && this.commentToggleButton_.unBindOnClick();
         this.backPackButton_ && this.backPackButton_.unBindOnClick();

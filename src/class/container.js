@@ -195,7 +195,7 @@ Entry.Container = class Container {
     }
 
     /**
-     *
+     *enableSort
      */
     enableSort() {
         if (this.sortableListViewWidget) {
@@ -241,13 +241,19 @@ Entry.Container = class Container {
             });
         }
     }
-
+    /**
+     * updateSortableObjectList
+     * @param {Array<object>} objects
+     */
     updateSortableObjectList(objects) {
         this.sortableListViewWidget.setData({
             items: this._getSortableObjectList(objects),
         });
     }
-
+    /**
+     * _getSortableObjectList
+     * @param {Array<object>} objects
+     */
     _getSortableObjectList(objects) {
         const targetObjects = objects || this.currentObjects_ || [];
 
@@ -385,7 +391,12 @@ Entry.Container = class Container {
         objectModel.id = objectModel.id || Entry.generateHash();
         return Entry.do('addObject', objectModel, ...rest);
     }
-
+    /**
+     * addObjectFunc
+     * @param {object} objectModel
+     * @param {number} index
+     * @param {boolean} isNotRender
+     */
     addObjectFunc(objectModel, index, isNotRender) {
         delete objectModel.scene;
         const object = new Entry.EntryObject(objectModel);
@@ -416,14 +427,20 @@ Entry.Container = class Container {
             Entry.variableContainer.updateList();
         }
     }
-
+    /**
+     * renderObject
+     * @param {object} object
+     */
     renderObject(object) {
         object.generateView();
         this.setCurrentObjects();
         this.selectObject(object.id);
         Entry.variableContainer.updateViews();
     }
-
+    /**
+     * addExtension
+     * @param {object} obj
+     */
     addExtension(obj) {
         this._extensionObjects.push(obj);
         if (this._extensionListView) {
@@ -431,7 +448,10 @@ Entry.Container = class Container {
         }
         return obj;
     }
-
+    /**
+     * removeExtension
+     * @param {object} obj
+     */
     removeExtension(obj) {
         if (!obj) {
             return;
@@ -791,7 +811,9 @@ Entry.Container = class Container {
             object.clearExecutor();
         });
     }
-
+    /**
+     * clearRunningStateOnScene
+     */
     clearRunningStateOnScene() {
         this.mapObjectOnScene((object) => {
             if (object instanceof Entry.TargetChecker) {
@@ -813,7 +835,13 @@ Entry.Container = class Container {
             mapFunction(object, param)
         );
     }
-
+    /**
+     * Apply map function to objects on scene. But this not replace object with returned one.
+     * So giving map function don't have to return object.
+     * And this support another arguments.
+     * @param {!function} mapFunction
+     * @param {} param
+     */
     mapObjectOnScene(mapFunction, param) {
         return [...this._extensionObjects, ...this.getCurrentObjects()].map((object) =>
             mapFunction(object, param)
@@ -830,7 +858,13 @@ Entry.Container = class Container {
     mapEntity(mapFunction, param) {
         return this.objects_.map(({ entity }) => mapFunction(entity, param));
     }
-
+    /**
+     * Apply map function to objects on scene. But this not replace object with returned one.
+     * So giving map function don't have to return object.
+     * And this support another arguments.
+     * @param {!function} mapFunction
+     * @param {} param
+     */
     mapEntityOnScene(mapFunction, param) {
         return this.getCurrentObjects().map(({ entity }) => mapFunction(entity, param));
     }
@@ -860,7 +894,14 @@ Entry.Container = class Container {
         }
         return output;
     }
-
+    /**
+     * Apply map function to objects on scene. But this not replace object with returned one.
+     * So giving map function don't have to return object.
+     * And this support another arguments.
+     * This also apply to cloned entities.
+     * @param {!function} mapFunction
+     * @param {} param
+     */
     mapEntityIncludeCloneOnScene(mapFunction, param) {
         const objects = this.getCurrentObjects();
         const length = objects.length;
@@ -992,7 +1033,9 @@ Entry.Container = class Container {
         }
         this.inputValue.complete = true;
     }
-
+    /**
+     * resetSceneDuringRun
+     */
     resetSceneDuringRun() {
         if (!Entry.engine.isState('run')) {
             return;
@@ -1004,11 +1047,16 @@ Entry.Container = class Container {
         this.clearRunningStateOnScene();
         Entry.stage.hideInputField();
     }
-
+    /**
+     * setCopiedObject
+     * @param {object} object
+     */
     setCopiedObject(object) {
         this.copiedObject = object;
     }
-
+    /**
+     * updateObjectsOrder
+     */
     updateObjectsOrder() {
         this.objects_ = Entry.scene
             .getScenes()
@@ -1059,7 +1107,9 @@ Entry.Container = class Container {
         project.scenes = Entry.scene.toJSON();
         return project;
     }
-
+    /**
+     * blurAllInputs
+     */
     blurAllInputs() {
         this.getSceneObjects().map(({ view_ }) => {
             $(view_)
@@ -1067,7 +1117,9 @@ Entry.Container = class Container {
                 .blur();
         });
     }
-
+    /**
+     * showProjectAnswer
+     */
     showProjectAnswer() {
         const answer = this.inputValue;
         if (!answer) {
@@ -1075,7 +1127,11 @@ Entry.Container = class Container {
         }
         answer.setVisible(true);
     }
-
+    /**
+     * hideProjectAnswer, and remove block of removeBlock in param, only if notIncludeSelf
+     * @param {block} removeBlock
+     * @param {boolean} notIncludeSelf
+     */
     hideProjectAnswer(removeBlock, notIncludeSelf) {
         const answer = this.inputValue;
         if (!answer || !answer.isVisible() || Entry.engine.isState('run')) {
@@ -1105,16 +1161,24 @@ Entry.Container = class Container {
         //hide canvas answer view
         answer.setVisible(false);
     }
-
+    /**
+     * getView
+     * @return {HTMLDomElement}
+     */
     getView() {
         return this._view;
     }
 
-    // dummy
+    /**
+     * resize, empty function
+     */
     resize() {
         return;
     }
-
+    /**
+     * container right click event function
+     * @param {event} e
+     */
     _rightClick = (e) => {
         e.stopPropagation();
         const touchEvent = Entry.Utils.convertMouseEvent(e);
@@ -1141,13 +1205,18 @@ Entry.Container = class Container {
             y: touchEvent.clientY,
         });
     };
-
+    /**
+     * removeFunctionBlocks
+     * @param {String} functionType
+     */
     removeFuncBlocks(functionType) {
         this.objects_.forEach(({ script }) => {
             script.removeBlocksByType(functionType);
         });
     }
-
+    /**
+     * clear container
+     */
     clear() {
         [...this.objects_, ...this._extensionObjects].forEach((o) => o.destroy());
         this.objects_ = [];
@@ -1156,7 +1225,10 @@ Entry.Container = class Container {
         // TODO: clear 때 this._extensionListView 도 비워 줘야 하는지 확인 필요.
         Entry.playground.clear();
     }
-
+    /**
+     * selectNeighborObject, option would be prev/next
+     * @param {String} option
+     */
     selectNeighborObject(option) {
         const objects = this.getCurrentObjects();
         if (!objects || objects.length === 0) {
@@ -1183,11 +1255,19 @@ Entry.Container = class Container {
 
         this.selectObject(object.id);
     }
-
+    /**
+     * get ObjectIndex
+     * @param {String} objectId
+     * @return {number}
+     */
     getObjectIndex(objectId) {
         return this.objects_.indexOf(this.getObject(objectId));
     }
-
+    /**
+     * getDom
+     * @param {String} query
+     * @return {HTMLDomElement}
+     */
     getDom(query) {
         if (query.length >= 1) {
             switch (query.shift()) {
@@ -1199,11 +1279,19 @@ Entry.Container = class Container {
         } else {
         }
     }
-
+    /**
+     * return true if sceneObjects are not empty
+     * @return {boolean}
+     */
     isSceneObjectsExist() {
         return !_.isEmpty(this.getSceneObjects());
     }
-
+    /**
+     * make comparisons on ids and change values
+     * @param {Array<String>} oldIds
+     * @param {Array<String>} newIds
+     * @return {boolean}
+     */
     adjustClonedValues(oldIds, newIds) {
         if (!(oldIds && newIds)) {
             return;
@@ -1232,18 +1320,26 @@ Entry.Container = class Container {
                 });
         });
     }
-
+    /**
+     * getBlockList
+     * @return {Array<block>}
+     */
     getBlockList() {
         return _.flatten(this.objects_.map(({ script }) => script.getBlockList()));
     }
-
+    /**
+     * scrollToObject
+     * @param {String} ObjectId
+     */
     scrollToObject(ObjectId) {
         const { view_ } = this.getObject(ObjectId);
 
         view_ && view_.scrollIntoView();
         document.body.scrollIntoView();
     }
-
+    /**
+     * destroy, emptyFunction
+     */
     destroy() {
         // 우선 interface 만 정의함.
     }

@@ -2,6 +2,10 @@
  * @fileoverview PropertyPanel shows project's property
  */
 'use strict';
+/**
+ * PropertyPanel
+ * @constructor
+ */
 
 Entry.PropertyPanel = function() {
     this.modes = {};
@@ -10,7 +14,9 @@ Entry.PropertyPanel = function() {
 
 (function(p) {
     /**
-     * Generate View
+     * Generate Property PanelView
+     * @param {HTMLDomElement} parentDom
+     * @param {option} option not used
      */
     p.generateView = function(parentDom, option) {
         const container = $(parentDom);
@@ -40,7 +46,11 @@ Entry.PropertyPanel = function() {
         });
         this.initializeSplitter(splitter);
     };
-
+    /**
+     * Generate View
+     * @param {HTMLDomElement} parentDom
+     * @param {option} option not used
+     */
     p.addMode = function(mode, contentObj) {
         if (this.modes[mode]) {
             this.removeMode(mode);
@@ -86,7 +96,10 @@ Entry.PropertyPanel = function() {
             });
         }
     };
-
+    /**
+     * removeMode in property panel
+     * @param {String} mode
+     */
     p.removeMode = function(mode) {
         if (this.modes[mode]) {
             this.modes[mode].tabDom.remove();
@@ -102,7 +115,10 @@ Entry.PropertyPanel = function() {
             this.select(keys[0]);
         }
     };
-
+    /**
+     * resize
+     * @param {number} canvasSize
+     */
     p.resize = function(canvasSize) {
         const selected = this.selected;
         if (!selected) {
@@ -132,7 +148,10 @@ Entry.PropertyPanel = function() {
             obj.resize && obj.resize();
         }
     };
-
+    /**
+     * select
+     * @param {String} modeName
+     */
     p.select = function(modeName) {
         for (const key in this.modes) {
             const mode = this.modes[key];
@@ -152,7 +171,10 @@ Entry.PropertyPanel = function() {
         selected.obj.visible = true;
         this.selected = modeName;
     };
-
+    /**
+     * initializeSplitter
+     * @param {HTMLDomElement} splitter
+     */
     p.initializeSplitter = function(splitter) {
         const that = this;
         splitter.bind('mousedown touchstart', function(e) {

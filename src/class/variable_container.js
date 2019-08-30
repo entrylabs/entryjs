@@ -48,7 +48,10 @@ Entry.VariableContainer = class VariableContainer {
 
         Entry.addEventListener('workspaceChangeMode', this.updateList.bind(this));
     }
-
+    /**
+     * create Dom element on view
+     * @param {HTMLDomElement} view
+     */
     createDom(view) {
         const createElement = Entry.createElement;
         const that = this;
@@ -120,7 +123,9 @@ Entry.VariableContainer = class VariableContainer {
 
         return view;
     }
-
+    /**
+     * generateAddButtons for variable
+     */
     generateAddButtons() {
         const createElement = Entry.createElement;
         const variableAddButton = createElement('button').addClass('entryVariableAddWorkspace');
@@ -179,7 +184,10 @@ Entry.VariableContainer = class VariableContainer {
         this.select();
         this.updateList();
     }
-
+    /**
+     * updateVariable
+     * @param {String} type
+     */
     updateVariableAddView(type = 'variable') {
         const {
             info: { isCloud, object },
@@ -243,7 +251,10 @@ Entry.VariableContainer = class VariableContainer {
             this.renderMessageReference(object);
         }
     }
-
+    /**
+     * getMessage through variable id
+     * @param {String} id
+     */
     getMessage(id) {
         return _.find(this.messages_, { id });
     }
@@ -457,7 +468,12 @@ Entry.VariableContainer = class VariableContainer {
         }
         this.updateSelected();
     }
-
+    /**
+     * makeChildVariableViews
+     * @param {Array<ChildVariable>} arr
+     * @param {Function} viewFunc
+     * @param {HTMLDomElement} parent default this.listView_
+     */
     makeChildVariableViews(arr, viewFunc, parent = this.listView_) {
         return _.each(arr, (data) => {
             !data.listElement && viewFunc(data);
@@ -477,7 +493,9 @@ Entry.VariableContainer = class VariableContainer {
             parent.appendChild(data.listElement);
         });
     }
-
+    /**
+     * clearListElement
+     */
     clearListElement() {
         const clearList = [this.listView_];
         for (const elem of clearList) {
@@ -494,7 +512,9 @@ Entry.VariableContainer = class VariableContainer {
             delete this.variableSettingView;
         }
     }
-
+    /**
+     * updateAllTabs (updateMessageTab/updateVariableTab/updateListTab/updateFuncTab)
+     */
     updateAllTab() {
         const createElement = Entry.createElement;
         const listView = this.listView_;
@@ -516,7 +536,9 @@ Entry.VariableContainer = class VariableContainer {
         this.makeChildVariableViews(this.functions_, this.createFunctionView.bind(this), list);
         listView.appendChild(listWrapper);
     }
-
+    /**
+     * updateMessageTab
+     */
     updateMessageTab() {
         const createElement = Entry.createElement;
         const listView = this.listView_;
@@ -545,7 +567,9 @@ Entry.VariableContainer = class VariableContainer {
         );
         listView.appendChild(messageList);
     }
-
+    /**
+     * updateVariableTab
+     */
     updateVariableTab() {
         const createElement = Entry.createElement;
         const listView = this.listView_;
@@ -615,7 +639,12 @@ Entry.VariableContainer = class VariableContainer {
         this.makeChildVariableViews(localV, this.createVariableView.bind(this), localListBox);
         this.updateVariableAddView('variable');
     }
-
+    /**
+     * fold target tab
+     * @param {HTMLDomElement} tab should be one of the tabs
+     * @param {Boolean} isFold
+     * @param {number} count
+     */
     foldTab(tab, isFold, count = 0) {
         if (!count) {
             return;
@@ -628,7 +657,9 @@ Entry.VariableContainer = class VariableContainer {
             tab.removeClass('fold');
         }
     }
-
+    /**
+     * updateListTab
+     */
     updateListTab() {
         const createElement = Entry.createElement;
         const listView = this.listView_;
@@ -697,7 +728,9 @@ Entry.VariableContainer = class VariableContainer {
         this.makeChildVariableViews(localV, this.createListView.bind(this), localListBox);
         this.updateVariableAddView('variable');
     }
-
+    /**
+     * updateFuncTab
+     */
     updateFuncTab() {
         const createElement = Entry.createElement;
         const listView = this.listView_;
@@ -794,7 +827,12 @@ Entry.VariableContainer = class VariableContainer {
 
         Entry.playground.reloadPlayground();
     }
-
+    /**
+     * generateVariable with parameter value
+     * @param {variable} variable
+     * @param {data} variable
+     * @param {String} key
+     */
     generateVariable(variable, data, key) {
         const name = variable.name_;
         variable.name_ = this.checkAllVariableName(name, key)
@@ -864,7 +902,10 @@ Entry.VariableContainer = class VariableContainer {
             this.functions_[parseFunc.id] = parseFunc;
         }
     }
-
+    /**
+     * changeFunctionName
+     * @param {Function} function
+     */
     changeFunctionName(func) {
         const params = func.content.getEventMap('funcDef')[0].params[0].data.params;
         const funcParamInfo = this.getFunctionParamInfo(params);
@@ -898,11 +939,19 @@ Entry.VariableContainer = class VariableContainer {
             Entry.Func.generateWsBlock(func);
         }
     }
-
+    /**
+     * getFunctionParamName from info
+     * @param {object} info
+     * @return {String}
+     */
     getFunctionParamName(info) {
         return info.reduce((acc, { name }) => (acc += name), '');
     }
-
+    /**
+     * getFunctionParamName from info
+     * @param {Array<param>} parentParams
+     * @return {object}
+     */
     getFunctionParamInfo(parentParams) {
         const info = [];
         parentParams.forEach((param, index) => {
@@ -944,7 +993,8 @@ Entry.VariableContainer = class VariableContainer {
 
     /**
      * get variable on canvas
-     * @return {Entry.Variable}
+     * @param {String} id_
+     * @param {Entry.entity} entity
      */
     getVariable(id_, entity = {}) {
         const criteria = { id_ };
@@ -958,6 +1008,8 @@ Entry.VariableContainer = class VariableContainer {
 
     /**
      * get variable on canvas
+     * @param {String} listId
+     * @param {Entry.Object} object parsed into isClone listId
      * @return {Entry.List}
      */
     getList(listId, { isClone, lists } = {}) {
@@ -972,6 +1024,7 @@ Entry.VariableContainer = class VariableContainer {
 
     /**
      * Create function
+     * @param {Function} func
      */
     createFunction(data) {
         if (Entry.Func.isEdit) {
@@ -996,7 +1049,10 @@ Entry.VariableContainer = class VariableContainer {
         }
         this.updateList();
     }
-
+    /**
+     * checkListPosition
+     * @param {Entry.Variable} variable
+     */
     checkListPosition(list, mouse) {
         const pos = {
             start_w: list.x_,
@@ -1012,7 +1068,11 @@ Entry.VariableContainer = class VariableContainer {
         }
         return false;
     }
-
+    /**
+     * returns list if there is any list included in mouse event
+     * @param {event} mouseevt
+     * @return {Array<list>}
+     */
     getListById(mouseevt) {
         const lists = this.lists_;
         const returnList = [];
@@ -1026,7 +1086,14 @@ Entry.VariableContainer = class VariableContainer {
         }
         return false;
     }
-
+    /**
+     * _getVariableByName
+     * @param {Array<Entry.variable>} arr
+     * @param {String} variableName
+     * @param {Boolean} isSelf
+     * @param {String} currentObjectId
+     * @return {Array<Object>}
+     */
     _getVariableByName(arr, variableName, isSelf, currentObjectId) {
         const object = _.result(Entry.playground, 'object');
         if (!currentObjectId && object) {
@@ -1050,11 +1117,23 @@ Entry.VariableContainer = class VariableContainer {
             }
         }
     }
-
+    /**
+     * getVariableByName utilizes local function _getVariableByName
+     * @param {String} variableName
+     * @param {Boolean} isSelf
+     * @param {String} currentObjectId
+     * @return {Array<Variable>}
+     */
     getVariableByName(variableName, isSelf, currentObjectId) {
         return this._getVariableByName(this.variables_, variableName, isSelf, currentObjectId);
     }
-
+    /**
+     * getVariableByName utilizes local function _getVariableByName
+     * @param {String} name
+     * @param {Boolean} isSelf
+     * @param {String} currentObjectId
+     * @return {Array<list>}
+     */
     getListByName(name, isSelf, currentObjectId) {
         return this._getVariableByName(this.lists_, name, isSelf, currentObjectId);
     }
@@ -1144,7 +1223,11 @@ Entry.VariableContainer = class VariableContainer {
     checkAllVariableName(name, variable, key = 'name_') {
         return this[variable].some(({ [key]: name_ }) => name_ === name);
     }
-
+    /**
+     * Add _addVariableOrList
+     * @param {String} type
+     * @return {Entry.Variable}
+     */
     _addVariableOrList(type, data) {
         if (!type) {
             return;
@@ -1193,7 +1276,10 @@ Entry.VariableContainer = class VariableContainer {
 
         this.updateList();
     }
-
+    /**
+     * addVariable
+     * @param {Entry.Variable} variable
+     */
     addVariable(variable) {
         this._addVariableOrList.call(this, 'variable', variable);
     }
@@ -1494,7 +1580,10 @@ Entry.VariableContainer = class VariableContainer {
             return toast.alert(title, message);
         }
     }
-
+    /**
+     * Activate view on message component
+     * @param {message} message
+     */
     activateMessageEditView(message) {
         $(message.listElement)
             .find('.entryVariableListElementNameWorkspace')
@@ -1503,6 +1592,7 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     /**
+     * createMessageView with message data
      * @param {object} message
      */
     createMessageView(message) {
@@ -1719,7 +1809,10 @@ Entry.VariableContainer = class VariableContainer {
             []
         );
     }
-
+    /**
+     * resetVariableAddPanel
+     * @param {String} type
+     */
     resetVariableAddPanel(type = 'variable') {
         const panel = this._getAddPanel(type);
         if (!panel.view) {
@@ -1732,7 +1825,9 @@ Entry.VariableContainer = class VariableContainer {
         panel.isOpen = false;
         this.updateVariableAddView(type);
     }
-
+    /**
+     * generateVariableAddView
+     */
     generateVariableAddView() {
         const createElement = Entry.createElement;
         const _whenEnter = Entry.Utils.whenEnter;
@@ -1876,7 +1971,9 @@ Entry.VariableContainer = class VariableContainer {
         addSpaceConfirmButton.innerHTML = Lang.Buttons.save;
         this.variableAddConfirmButton = addSpaceConfirmButton;
     }
-
+    /**
+     * _addVariable
+     */
     _addVariable() {
         const variableInput = Entry.getDom(['variableContainer', 'variableAddInput']);
         this.variableAddPanel.view.addClass('off');
@@ -1898,7 +1995,9 @@ Entry.VariableContainer = class VariableContainer {
         }
         this.resetVariableAddPanel('variable');
     }
-
+    /**
+     * _addList
+     */
     _addList() {
         const listInput = Entry.getDom(['variableContainer', 'listAddInput']);
         this.listAddPanel.view.addClass('off');
@@ -1920,7 +2019,9 @@ Entry.VariableContainer = class VariableContainer {
         }
         this.resetVariableAddPanel('list');
     }
-
+    /**
+     * generateListAddView
+     */
     generateListAddView() {
         const createElement = Entry.createElement;
         const _setFocused = Entry.Utils.setFocused;
@@ -2060,7 +2161,9 @@ Entry.VariableContainer = class VariableContainer {
         addSpaceConfirmButton.innerHTML = Lang.Buttons.save;
         this.listAddConfirmButton = addSpaceConfirmButton;
     }
-
+    /**
+     * generateMessageAddView
+     */
     generateMessageAddView() {
         const createElement = Entry.createElement;
         const that = this;
@@ -2132,7 +2235,10 @@ Entry.VariableContainer = class VariableContainer {
 
         msgAddSpace.nameField = msgNameInput;
     }
-
+    /**
+     * openVariableAddPanel
+     * @param {String} type
+     */
     openVariableAddPanel(type = 'variable') {
         Entry.playground.toggleOnVariableView();
         Entry.playground.changeViewMode('variable');
@@ -2153,7 +2259,10 @@ Entry.VariableContainer = class VariableContainer {
                 break;
         }
     }
-
+    /**
+     * addCloneLocalVariables
+     * @param {} param
+     */
     addCloneLocalVariables(param) {
         const that = this;
 
@@ -2197,7 +2306,10 @@ Entry.VariableContainer = class VariableContainer {
             return cloned;
         }
     }
-
+    /**
+     * generateTimer
+     * @param {Entry.Variable} timer
+     */
     generateTimer(timer) {
         timer =
             timer ||
@@ -2220,7 +2332,10 @@ Entry.VariableContainer = class VariableContainer {
         });
     }
 
-    //generate Answer
+    /**
+     * generateAnswer
+     * @param {Entry.Variable} answer
+     */
     generateAnswer(answer) {
         answer =
             answer ||
@@ -2238,7 +2353,10 @@ Entry.VariableContainer = class VariableContainer {
         Entry.container.inputValue = answer;
         Entry.container.inputValue.setName(Lang.Blocks.VARIABLE_get_canvas_input_value);
     }
-
+    /**
+     * generateVariableSettingView on variable
+     * @param {Entry.Variable} variable
+     */
     generateVariableSettingView(variable) {
         const that = this;
         const createElement = Entry.createElement;
@@ -2399,6 +2517,7 @@ Entry.VariableContainer = class VariableContainer {
 
     /**
      * 속성 > 리스트 편집창 표기
+     * @param {Entry.Variable.list} list
      */
     generateListSettingView(list) {
         const createElement = Entry.createElement;
@@ -2429,7 +2548,10 @@ Entry.VariableContainer = class VariableContainer {
         this.generateListValuesView(listAttr);
         this.renderVariableReference(list);
     }
-
+    /**
+     * generateListImportExportView
+     * @param {HTMLDomElement} element parent node of imp/exp view
+     */
     generateListImportExportView(element) {
         const that = this;
         const createElement = Entry.createElement;
@@ -2462,11 +2584,14 @@ Entry.VariableContainer = class VariableContainer {
             .appendTo(buttonBox);
         buttonImport.innerHTML = Lang.Workspace.list_import;
     }
-
+    /**
+     * generateListCountView
+     * @param {HTMLDomElement} element parent node of list count view
+     */
     generateListCountView(element) {
         const that = this;
         const createElement = Entry.createElement;
-        
+
         const listCount = createElement('div')
             .addClass('list_cnt')
             .appendTo(element);
@@ -2496,12 +2621,13 @@ Entry.VariableContainer = class VariableContainer {
         //List limit setting. [default value:5000, length: 4]
         let limitValue = 5000;
         let maxlength = 4;
-        
-        if(that.selected.array_ && that.selected.array_.length > 0 ){
+
+        if (that.selected.array_ && that.selected.array_.length > 0) {
             const currentLeng = that.selected.array_.length.toString().length;
             // 리스트 카운트가 5000 일떄만 설정
             maxlength = currentLeng > maxlength ? currentLeng : maxlength;
-            limitValue = that.selected.array_.length > limitValue ? that.selected.array_.length : limitValue ;
+            limitValue =
+                that.selected.array_.length > limitValue ? that.selected.array_.length : limitValue;
         }
 
         const buttonPlus = createElement('a')
@@ -2512,11 +2638,11 @@ Entry.VariableContainer = class VariableContainer {
                 } = that;
 
                 const selectedLength = Entry.variableContainer.selected.array_.length;
-                
-                if( selectedLength >= limitValue ) {
-                    Entry.do('listChangeLength', id_, ''); 
-                }else{
-                    Entry.do('listChangeLength', id_, 'plus'); 
+
+                if (selectedLength >= limitValue) {
+                    Entry.do('listChangeLength', id_, '');
+                } else {
+                    Entry.do('listChangeLength', id_, 'plus');
                 }
             })
             .appendTo(countInputBox);
@@ -2527,14 +2653,14 @@ Entry.VariableContainer = class VariableContainer {
         const countInput = createElement('input').appendTo(countInputBox);
         countInput.setAttribute('type', 'text');
         countInput.setAttribute('maxlength', maxlength);
-        
+
         countInput.onblur = function() {
             const v = that.selected;
             let value = this.value;
             value = Entry.Utils.isNumber(value) ? value : v.array_.length;
 
-            if(value >= limitValue) { 
-               value = limitValue; 
+            if (value >= limitValue) {
+                value = limitValue;
             }
 
             Entry.do('listChangeLength', v.id_, Number(value));
@@ -2542,7 +2668,10 @@ Entry.VariableContainer = class VariableContainer {
         countInput.onkeypress = Entry.Utils.blurWhenEnter;
         this.listSettingView.lengthInput = countInput;
     }
-
+    /**
+     * generateListValuesView
+     * @param {HTMLDomElement} element parent node of list values
+     */
     generateListValuesView(element) {
         const createElement = Entry.createElement;
 
@@ -2566,7 +2695,10 @@ Entry.VariableContainer = class VariableContainer {
             }
         );
     }
-
+    /**
+     * updateListSettingView
+     * @param {Entry.Variable.list} list
+     */
     updateListSettingView(list) {
         const view = this.listSettingView;
         const that = this;
@@ -2624,7 +2756,11 @@ Entry.VariableContainer = class VariableContainer {
         simpleBar.recalculate();
         list.updateView();
     }
-
+    /**
+     * setListLength
+     * @param {Entry.Variable.list} list
+     * @param {number} value length of the list
+     */
     setListLength(list, value) {
         value = Number(value);
         const arr = this.selected.array_;
@@ -2638,11 +2774,17 @@ Entry.VariableContainer = class VariableContainer {
         }
         this.updateListSettingView();
     }
-
+    /**
+     * updateViews for variables, lists
+     */
     updateViews() {
         [...this.variables_, ...this.lists_].forEach((v) => v.updateView());
     }
-
+    /**
+     * updateSelectedVariable
+     * @param {Entry.object} object
+     * @param {String} type
+     */
     updateSelectedVariable(object, type = 'variable') {
         const objectType = _.result(object, 'type');
         if (this.selected) {
@@ -2673,7 +2815,10 @@ Entry.VariableContainer = class VariableContainer {
             this.updateListSettingView(object);
         }
     }
-
+    /**
+     * removeLocalVariables
+     * @param {String} objectId
+     */
     removeLocalVariables(objectId) {
         if (!objectId) {
             return;
@@ -2685,7 +2830,9 @@ Entry.VariableContainer = class VariableContainer {
             }
         });
     }
-
+    /**
+     * updateCloudVariables
+     */
     updateCloudVariables() {
         const projectId = Entry.projectId;
         if (!Entry.cloudSavable || !projectId) {
@@ -2730,7 +2877,11 @@ Entry.VariableContainer = class VariableContainer {
             },
         });
     }
-
+    /**
+     * addReference to block
+     * @param {String} type
+     * @param {object} blockData
+     */
     addRef(type, blockData) {
         const wsMode = _.result(Entry.getMainWS(), 'getMode');
         if (!this.view_ || wsMode !== Entry.Workspace.MODE_BOARD) {
@@ -2778,7 +2929,11 @@ Entry.VariableContainer = class VariableContainer {
 
         return datum;
     }
-
+    /**
+     * removeReference to block
+     * @param {String} type
+     * @param {Entry.Block} blockData
+     */
     removeRef(type, block) {
         if (!Entry.playground.mainWorkspace) {
             return;
@@ -2825,7 +2980,9 @@ Entry.VariableContainer = class VariableContainer {
         }
         Entry.playground.viewMode_ !== 'default' && this.updateList();
     }
-
+    /**
+     * updateSelected
+     */
     updateSelected() {
         if (this.selected) {
             const selected = this.selected;
@@ -2833,7 +2990,11 @@ Entry.VariableContainer = class VariableContainer {
             this.select(selected);
         }
     }
-
+    /**
+     * getObjectVariables
+     * @param {Array<Entry.Block>} blockList
+     * @param {List<keys>} keys functionkeys
+     */
     getObjectVariables(blockList, keys) {
         const findFuncKeys = keys || {};
         let functions = [];
@@ -2868,7 +3029,11 @@ Entry.VariableContainer = class VariableContainer {
             messages,
         };
     }
-
+    /**
+     * get Variableslist according to the blocklist,
+     * @param {Array<Entry.Block>} blockList
+     * @return {JSON} consist of variables, messages where  messages = list of id and name
+     */
     getVariableJSONByBlockList(blockList) {
         const variables = [];
         const messages = [];
@@ -2912,11 +3077,20 @@ Entry.VariableContainer = class VariableContainer {
             messages,
         };
     }
-
+    /**
+     * _getBlockMenu
+     * @return {BlockMenu}
+     */
     _getBlockMenu() {
         return _.result(Entry.getMainWS(), 'getBlockMenu');
     }
-
+    /**
+     * _truncName
+     * @param {String} name
+     * @param {String} type
+     * @param {number} maxLen
+     * @return {String} substring of name
+     */
     _truncName(name, type, maxLen) {
         maxLen = maxLen || this._maxNameLength;
 
@@ -2933,7 +3107,9 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     _maxNameLength = 10;
-
+    /**
+     * clear variable container
+     */
     clear() {
         const _removeFunc = _.partial(_.result, _, 'remove');
         const _destroyFunc = _.partial(_.result, _, 'destroy');
@@ -2954,11 +3130,18 @@ Entry.VariableContainer = class VariableContainer {
         playground.reloadPlayground();
         this.updateList();
     }
-
+    /**
+     * _isPythonMode
+     * @return {Boolean} Entry.getMainWS(), 'isVimMode'
+     */
     _isPythonMode() {
         return _.result(Entry.getMainWS(), 'isVimMode');
     }
-
+    /**
+     * getDom
+     * @param {String} query target dom name
+     * @return {HTMLDomElement}
+     */
     getDom(query) {
         if (_.isEmpty(query)) {
             return;
@@ -3029,7 +3212,12 @@ Entry.VariableContainer = class VariableContainer {
                 return this.getVariable(query.shift()).listElement.nameField;
         }
     }
-
+    /**
+     * 변수, 리스트, 메세지 추가버튼이 눌린 경우에 대한 공통 함수
+     * @param {VariableContainer|this} type variableContainer
+     * @param {String} forceOpen targetted panel name
+     * @param {Object} doNotFocus other than forceOpen Panels
+     */
     _clickAddButton(type, forceOpen, doNotFocus) {
         const panel = this._getAddPanel(type);
         const panelView = panel.view;
@@ -3044,19 +3232,31 @@ Entry.VariableContainer = class VariableContainer {
             panel.isOpen = true;
         }
     }
-
+    /**
+     * clickVariableAddButton
+     * @param {Object} args other than forceOpen Panels
+     */
     clickVariableAddButton(...args) {
         this._clickAddButton.call(this, 'variable', ...args);
     }
-
+    /**
+     * clickListAddButton
+     * @param {Object} args other than forceOpen Panels
+     */
     clickListAddButton(...args) {
         this._clickAddButton.call(this, 'list', ...args);
     }
-
+    /**
+     * clickMessageAddButton
+     * @param {Object} args other than forceOpen Panels
+     */
     clickMessageAddButton(...args) {
         this._clickAddButton.call(this, 'message', ...args);
     }
-
+    /**
+     * _makeVariableData
+     * @param {String} type
+     */
     _makeVariableData(type = 'variable') {
         const {
             view,
@@ -3082,7 +3282,9 @@ Entry.VariableContainer = class VariableContainer {
             variableType: type,
         };
     }
-
+    /**
+     * applyOption
+     */
     applyOption() {
         const { variable, message, list, func } = this._filterTabs;
 
@@ -3100,7 +3302,12 @@ Entry.VariableContainer = class VariableContainer {
             view.disabled = !value;
         }
     }
-
+    /**
+     * setVariableSlidable
+     * @param {variable} v
+     * @param {String} type
+     * @param {String|number} value
+     */
     setVariableSlidable(v, type, value) {
         //no type changed
         //just return
@@ -3136,7 +3343,10 @@ Entry.VariableContainer = class VariableContainer {
         this.updateSelectedVariable(newVariable);
         newVariable.generateView();
     }
-
+    /**
+     * _getAddPanel of type
+     * @param {String} type
+     */
     _getAddPanel(type = 'variable') {
         return this[`${type}AddPanel`];
     }

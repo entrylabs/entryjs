@@ -478,17 +478,23 @@ Entry.Stage.prototype.updateHandle = function() {
     entity.setRotation(handle.rotation);
     this.editEntity = false;
 };
-
+/**
+ * send start edit command
+ */
 Entry.Stage.prototype.startEdit = function() {
     var { entity } = this.selectedObject || {};
     _.result(entity, 'initCommand');
 };
-
+/**
+ * send end edit command,(checkCommand)
+ */
 Entry.Stage.prototype.endEdit = function() {
     var { entity } = this.selectedObject || {};
     _.result(entity, 'checkCommand');
 };
-
+/**
+ * enable boundaries in stage
+ */
 Entry.Stage.prototype.initWall = function() {
     let wall = GEHelper.newContainer('wall');
     wall.mouseEnabled = false;
@@ -682,7 +688,10 @@ Entry.Stage.prototype.removeObjectContainer = function(scene) {
 Entry.Stage.prototype.getObjectContainerByScene = function({ id }) {
     return _.find(this.objectContainers, ({ scene } = {}) => scene.id === id);
 };
-
+/**
+ * move sprite according to shiftKey, KeyCode in event
+ * @param {event} e parsed to shiftKey and keyCode
+ */
 Entry.Stage.prototype.moveSprite = function({ shiftKey, keyCode }) {
     var selectedObject = this.selectedObject;
     if (!selectedObject || !Entry.stage.focused || selectedObject.getLock()) {
@@ -708,29 +717,47 @@ Entry.Stage.prototype.moveSprite = function({ shiftKey, keyCode }) {
     }
     this.updateObject();
 };
-
+/**
+ * getBoundRect of Stage
+ * @param {event} e
+ */
 Entry.Stage.prototype.getBoundRect = function(e) {
     if (!this._boundRect) return this.updateBoundRect();
     return this._boundRect;
 };
-
+/**
+ * updateBoundRect of Stage
+ * @param {event} e
+ */
 Entry.Stage.prototype.updateBoundRect = function(e) {
     return (this._boundRect = this.canvas.canvas.getBoundingClientRect());
 };
-
+/**
+ * getDom
+ * @param {String} query
+ * @return {CanavasElement}
+ */
 Entry.Stage.prototype.getDom = function(query) {
     var key = query.shift();
     if (key === 'canvas') return this.canvas.canvas;
 };
-
+/**
+ * set value as entitySelectable
+ * @param {Boolean} value
+ */
 Entry.Stage.prototype.setEntitySelectable = function(value) {
     this._entitySelectable = value;
 };
-
+/**
+ * isEntitySelectable
+ * @return {Boolean}
+ */
 Entry.Stage.prototype.isEntitySelectable = function() {
     return Entry.engine.isState('stop') && this._entitySelectable && !this.colorSpoid.isRunning;
 };
-
+/**
+ * destroy
+ */
 Entry.Stage.prototype.destroy = function() {
     let destroyOption;
     if (GEHelper.isWebGL) {
