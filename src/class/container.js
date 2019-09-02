@@ -464,6 +464,7 @@ Entry.Container = class Container {
         object.destroy();
         objects.splice(index, 1);
         Entry.variableContainer.removeLocalVariables(object.id);
+        Entry.engine.hideProjectTimer();
 
         if (isPass === true) {
             return;
