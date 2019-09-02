@@ -450,11 +450,6 @@ Entry.Container = class Container {
         }
     }
 
-    /**
-     * Delete object
-     * @param {!Entry.EntryObject} object
-     * @return {Entry.State}
-     */
     removeObject(id, isPass) {
         const objects = this.objects_;
 
