@@ -2941,14 +2941,12 @@ Entry.VariableContainer = class VariableContainer {
 
     clear() {
         const _removeFunc = _.partial(_.result, _, 'remove');
-        const _destroyFunc = _.partial(_.result, _, 'destroy');
-
         const { engine = {}, container = {}, playground } = Entry;
 
         [...this.variables_, ...this.lists_].forEach(_removeFunc);
         _removeFunc(engine.projectTimer);
         _removeFunc(container.inputValue);
-        _.each(this.functions_, _destroyFunc);
+        _.each(this.functions_, this.removeFunction.bind(this));
 
         this.viewMode_ = 'all';
         this.variables_ = [];
