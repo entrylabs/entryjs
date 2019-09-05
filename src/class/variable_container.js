@@ -2134,6 +2134,11 @@ Entry.VariableContainer = class VariableContainer {
         msgAddSpace.nameField = msgNameInput;
     }
 
+    /**
+     * 자료형 블록메뉴에서 변수, 리스트 추가 버튼 클릭시 발생하는 함수
+     * 패널을 속성탭으로 옮기고 해당 타입의 컨테이너를 오픈한다.
+     * @param type {'variable'|'list'|'message'}
+     */
     openVariableAddPanel(type = 'variable') {
         Entry.playground.toggleOnVariableView();
         Entry.playground.changeViewMode('variable');
@@ -2141,13 +2146,16 @@ Entry.VariableContainer = class VariableContainer {
             case 'variable':
                 this.selectFilter(type);
                 this.updateVariableAddView(type);
+                this.clickVariableAddButton(true);
                 break;
             case 'list':
                 this.selectFilter(type);
                 this.updateVariableAddView(type);
+                this.clickListAddButton(true);
                 break;
             case 'message':
                 this.selectFilter(type);
+                this.clickMessageAddButton(true);
                 break;
         }
     }
