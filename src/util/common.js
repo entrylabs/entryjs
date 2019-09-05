@@ -5,9 +5,11 @@ const _assign = require('lodash/assign');
 
 const Common = {
     toQueryString: (obj) =>
-        Object.keys(obj)
-            .map((k) => `${k}=${obj[k]}`)
-            .join('&'),
+        encodeURI(
+            Object.keys(obj)
+                .map((k) => `${k}=${obj[k]}`)
+                .join('&')
+        ),
     callApi: _memoize(async (key, opt) => {
         const options = _assign(
             {
