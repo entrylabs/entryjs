@@ -2139,17 +2139,14 @@ Entry.VariableContainer = class VariableContainer {
         Entry.playground.changeViewMode('variable');
         switch (type) {
             case 'variable':
-                this._getAddPanel().isOpen = true;
                 this.selectFilter(type);
                 this.updateVariableAddView(type);
                 break;
             case 'list':
-                this.listAddPanel.isOpen = true;
                 this.selectFilter(type);
                 this.updateVariableAddView(type);
                 break;
             case 'message':
-                this.messageAddPanel.isOpen = true;
                 this.selectFilter(type);
                 break;
         }
