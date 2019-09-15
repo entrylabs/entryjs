@@ -101,10 +101,18 @@ Entry.AsomeBot.setLanguage = function() {
                 asomebot_align: '중심잡기 %1 %2 %3 %4 %5',
                 asomebot_home: '차렷 %1',
                 asomebot_angle: '%1번 모터를 %2도로 %3초 동안 회전 %4',
+
                 asomebot_forward: '앞으로 전진 %1',
+                asomebot_forward2: '앞으로 전진 %1 %2 %3',
+
                 asomebot_backward: '뒤로 후진 %1',
+                asomebot_backward2: '뒤로 후진 %1 %2 %3',
+
                 asomebot_turn_left: '왼쪽으로 회전 %1',
+                asomebot_turn_left2: '왼쪽으로 회전 %1 %2',
+
                 asomebot_turn_right: '오른쪽으로 회전 %1',
+                asomebot_turn_right2: '오른쪽으로 회전 %1 %2',
 
                 asomebot_mouse: '발인사하기 %1 %2', // 왼쪽, 오른쪽
                 asomebot_flap: '깡총 뛰기 %1',
@@ -138,10 +146,18 @@ Entry.AsomeBot.setLanguage = function() {
                 asomebot_align: 'Set align %1 %2 %3 %4 %5',
                 asomebot_home: 'Attention %1',
                 asomebot_angle: 'Set angle of motor %1 to %2 degree in %3 sec %4',
+
                 asomebot_forward: 'Moving forward %1',
+                asomebot_forward2: 'Moving forward %1 %2 %3',
+
                 asomebot_backward: 'Moving backward %1',
+                asomebot_backward2: 'Moving backward %1 %2 %3',
+
                 asomebot_turn_left: 'Turn left %1',
+                asomebot_turn_left2: 'Turn left %1 %2',
+
                 asomebot_turn_right: 'Turn right %1',
+                asomebot_turn_right2: 'Turn right %1 %2',
 
                 asomebot_mouse: 'Greeting %1 %2',
                 asomebot_flap: 'Flap %1',
@@ -177,10 +193,18 @@ Entry.AsomeBot.blockMenuBlocks = [
     'asomebot_angle',
     'asomebot_align',
     'asomebot_home',
+
     'asomebot_forward',
+    'asomebot_forward2',
+
     'asomebot_backward',
+    'asomebot_backward2',
+
     'asomebot_turn_left',
+    'asomebot_turn_left2',
+
     'asomebot_turn_right',
+    'asomebot_turn_right2',
 
     'asomebot_mouse',
     'asomebot_flap',
@@ -894,6 +918,260 @@ Entry.AsomeBot.getBlocks = function() {
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
                     sq.msg = format_str("asomebot.turn_righ()");
+                    return script;
+                } 
+                
+                if ((pd.msg_id) && (pd.msg_id.indexOf(script.msg_id) >= 0)) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
+        asomebot_forward2: {
+            template: Lang.template.asomebot_forward2,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+                VALUE2: 1,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['150'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['300'],
+                    },
+                    null
+                ],
+                type: 'asomebot_forward2',
+            },
+            class: 'Moving',
+            isNotFor: ['AsomeBot'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getValue('VALUE1');
+                var value2 = script.getValue('VALUE2');
+
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = format_str("asomebot.forward(s1={0}, s2={1})", value1, value2);
+                    return script;
+                } 
+                
+                if ((pd.msg_id) && (pd.msg_id.indexOf(script.msg_id) >= 0)) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
+        asomebot_backward2: {
+            template: Lang.template.asomebot_backward2,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+                VALUE2: 1,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['150'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['300'],
+                    },
+                    null
+                ],
+                type: 'asomebot_backward2',
+            },
+            class: 'Moving',
+            isNotFor: ['AsomeBot'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getValue('VALUE1');
+                var value2 = script.getValue('VALUE2');
+
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = format_str("asomebot.backward(s1={0}, s2={1})", value1, value2);
+                    return script;
+                } 
+                
+                if ((pd.msg_id) && (pd.msg_id.indexOf(script.msg_id) >= 0)) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
+        asomebot_turn_left2: {
+            template: Lang.template.asomebot_turn_left2,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['300'],
+                    },
+                    null
+                ],
+                type: 'asomebot_turn_left2',
+            },
+            class: 'Moving',
+            isNotFor: ['AsomeBot'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getValue('VALUE1');
+
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = format_str("asomebot.turn_left(s={0})", value1);
+                    return script;
+                } 
+                
+                if ((pd.msg_id) && (pd.msg_id.indexOf(script.msg_id) >= 0)) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
+        asomebot_turn_right2: {
+            template: Lang.template.asomebot_turn_right2,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['300'],
+                    },
+                    null
+                ],
+                type: 'asomebot_turn_right2',
+            },
+            class: 'Moving',
+            isNotFor: ['AsomeBot'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getValue('VALUE1');
+
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = format_str("asomebot.turn_right(s={0})", value1);
                     return script;
                 } 
                 
