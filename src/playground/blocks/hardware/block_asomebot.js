@@ -1633,17 +1633,23 @@ Entry.AsomeBot.getBlocks = function() {
                 var pd = Entry.hw.portData;
 
                 if (!sprite.old_tick) {
+                    sprite.old_id = "";
                     sprite.old_tick = new Date().getTime() - 1000;
                 }
                 var tick = new Date().getTime();
 
-                if ((tick - sprite.old_tick) > 200) {
+                if ((tick - sprite.old_tick) > 300) {
                     sq.msg_id = random_str(16);
-                    sq.msg = "import udp_socket; udp_socket.read_text()";
+                    sq.msg = "udp_socket.read_text()";
                     sprite.old_tick = tick;
                 }
 
-                return pd.udp_msg;
+                if (sprite.old_id != pd.udp_id) {
+                    sprite.old_id = pd.udp_id;
+                    return pd.udp_msg;
+                } else {
+                    return pd.udp_id;
+                }
             },
             syntax: undefined,
         },
