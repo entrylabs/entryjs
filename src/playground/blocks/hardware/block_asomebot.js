@@ -468,7 +468,7 @@ Entry.AsomeBot.getBlocks = function() {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
-                    sq.msg = format_str("music.tone({0}); delay({1}); music.mute()", value1, String(value2));
+                    sq.msg = format_str("music.tone({0}, {1})", value1, String(value2));
                     return script;
                 } 
                 
