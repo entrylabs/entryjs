@@ -107,7 +107,7 @@ Entry.AsomeBot.setLanguage = function() {
                 asomebot_turn_right: '오른쪽으로 회전 %1',
 
                 asomebot_mouse: '발인사하기 %1 %2', // 왼쪽, 오른쪽
-                asomebot_flap: '깡총 뒤기 %1',
+                asomebot_flap: '깡총 뛰기 %1',
                 asomebot_warigari: '트위스트 춤추기 %1',
                 asomebot_tock: '발바닥 까닥하기 %1 %2', // 왼쪽, 오른쪽
                 asomebot_tick_tock: '발목 비틀어서 까닥하기 %1',
@@ -1364,9 +1364,9 @@ Entry.AsomeBot.getBlocks = function() {
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
                     if (value == '1') {
-                        sq.msg = format_str("asomebot.swing_left()");
+                        sq.msg = format_str("asomebot.left_swing()");
                     } else {
-                        sq.msg = format_str("asomebot.swing_right()");
+                        sq.msg = format_str("asomebot.right_swing()");
                     }
                     return script;
                 } 
