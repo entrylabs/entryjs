@@ -174,7 +174,7 @@ Entry.AsomeBot.blockMenuBlocks = [
     'asomebot_buzzer_tone',
     'asomebot_buzzer_close',
 
-    'asomebot_angle',    
+    'asomebot_angle',
     'asomebot_align',
     'asomebot_home',
     'asomebot_forward',
@@ -331,7 +331,7 @@ Entry.AsomeBot.getBlocks = function() {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
-                    sq.msg = "turnoff_pins(); import music; music.open(1)"
+                    sq.msg = "turnoff_pins( (1, 5, 6, 7, 8) ); import music; music.open(1)"
                     return script;
                 } 
                 
@@ -510,7 +510,7 @@ Entry.AsomeBot.getBlocks = function() {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
-                    sq.msg = "turnoff_pins(); import asomebot; asomebot.ready(5, 6, 7,8)"
+                    sq.msg = "turnoff_pins( (1, 5, 6, 7, 8) ); import asomebot; asomebot.ready(5, 6, 7,8)"
                     return script;
                 } 
                 
@@ -603,7 +603,7 @@ Entry.AsomeBot.getBlocks = function() {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
-                    sq.msg = format_str("asomebot_align.base = ({0}, {1}, {2}, {3})", value1, value2, value3, value4);
+                    sq.msg = format_str("asomebot.align({0}, {1}, {2}, {3})", value1, value2, value3, value4);
                     return script;
                 } 
                 
