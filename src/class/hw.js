@@ -113,8 +113,8 @@ Entry.HW = class {
         });
 
         socket.on('disconnect', () => {
-            // this._initSocket();
-            this.disconnectSocket();
+            // cloud PC 연결 클릭시 순간 disconnect 되고 재연결을 시도하기 위한 로직
+            this._initSocket();
         });
 
         return socket;
@@ -144,7 +144,7 @@ Entry.HW = class {
                 },
             });
 
-        if (location.protocol === 'http:') {
+        if (['http:', 'file:'].indexOf(location.protocol) > -1) {
             this.socketIo = connectHttpsWebSocket(this.httpServerAddress);
         }
         this.tlsSocketIo1 = connectHttpsWebSocket(this.httpsServerAddress);

@@ -1,8 +1,12 @@
+import { get as _get } from 'lodash';
+
 Entry.skeleton.basic_text = {
     path(blockView) {
+        const paramText = _get(blockView, ['_schema', 'params', '0', 'text'], '').match(/[\r\n]/g);
+        const textLines = paramText ? paramText.length + 1 : 1;
         let width = blockView.contentWidth;
         let height = blockView.contentHeight;
-        height = Math.max(18, height + 2);
+        height = Math.max(18, height + 2) * textLines;
         width = Math.max(0, width - height + 12);
         const halfHeight = height / 2;
         return (
@@ -11,8 +15,10 @@ Entry.skeleton.basic_text = {
         );
     },
     box(blockView) {
+        const paramText = _get(blockView, ['_schema', 'params', '0', 'text'], '').match(/[\r\n]/g);
+        const textLines = paramText ? paramText.length + 1 : 1;
         const width = blockView ? blockView.contentWidth : 5;
-        const height = blockView ? blockView.contentHeight : 18;
+        const height = (blockView ? blockView.contentHeight : 18) * textLines;
         const { skeletonOptions = {} } = blockView._schema;
         const { box = {} } = skeletonOptions;
         return Object.assign(

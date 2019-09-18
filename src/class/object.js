@@ -5,6 +5,7 @@
 
 import DomUtils from '../../src/util/domUtils';
 import { GEHelper } from '../graphicEngine/GEHelper';
+const _findIndex = require('lodash/findIndex');
 
 /**
  * Class for entry object.
@@ -231,7 +232,9 @@ Entry.EntryObject = class {
             }
             thumb.style.backgroundImage = `url(${encodeURI(this.thumbUrl)})`;
         } else if (objectType === 'textBox') {
-            this.thumbUrl = `${Entry.mediaFilePath}text_icon.svg`;
+            const { type } = Lang || {};
+            const filename = type === 'ko' ? 'text_icon_ko.svg' : 'text_icon.svg';
+            this.thumbUrl = `${Entry.mediaFilePath}${filename}`;
             $(thumb).addClass('entryObjectTextBox');
         }
     }
@@ -434,7 +437,7 @@ Entry.EntryObject = class {
      * @param {string} soundId
      */
     removeSound(soundId) {
-        const index = this.sounds.findIndex((sound) => sound.id === soundId);
+        const index = _findIndex(this.sounds, (sound) => sound.id === soundId);
         this.sounds.splice(index, 1);
         Entry.playground.reloadPlayground();
         Entry.playground.injectSound();
@@ -730,8 +733,11 @@ Entry.EntryObject = class {
             },
             {
                 text: Lang.Workspace.context_remove,
-                enable: !Entry.engine.isState('run'),
-                callback() {
+                enable: !Entry.engine.isState('run') && !this.getLock(),
+                callback: () => {
+                    if (this.getLock()) {
+                        return true;
+                    }
                     Entry.dispatchEvent('removeObject', object);
                     const { id } = object;
                     Entry.do('removeObject', id);
@@ -1135,7 +1141,7 @@ Entry.EntryObject = class {
         if (Entry.objectEditable && Entry.objectDeletable) {
             deleteView.bindOnClick((e) => {
                 e.stopPropagation();
-                if (Entry.engine.isState('run')) {
+                if (this.getLock() || Entry.engine.isState('run')) {
                     return;
                 }
                 Entry.do('removeObject', this.id);

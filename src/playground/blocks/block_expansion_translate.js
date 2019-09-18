@@ -2,7 +2,21 @@
 
 const PromiseManager = require('../../core/promiseManager');
 const { callApi } = require('../../util/common');
-const _uniqueId = require('lodash/uniqueId');
+
+/**
+ * 비공식으로 엔트리에서 사용되고 있는 언어코드 (vn, ja)의 경우 공식 언어코드로 치환한다.
+ * @param {string}originalLanguage
+ */
+function replaceLanguageCode(originalLanguage) {
+    switch (originalLanguage) {
+        case 'jp':
+            return 'ja';
+        case 'vn':
+            return 'vi';
+        default:
+            return originalLanguage;
+    }
+}
 
 function getInitialCodeMap() {
     return {
@@ -187,7 +201,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             return param;
         },
         getSourceLang(isPython) {
-            const value = Lang.type.replace("jp","ja");
+            const value = replaceLanguageCode(Lang.type);
             const options = [
                 [Lang.Blocks.korean, 'ko'],
                 [Lang.Blocks.english, 'en'],
@@ -204,7 +218,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                 [Lang.Blocks.indonesian, 'id'],
                 [Lang.Blocks.hindi, 'hi'],
             ];
-            const index = options.findIndex((x) => x[1] === value);
+            const index = _.findIndex(options, (x) => x[1] === value);
             if (index > 0) {
                 const temp = options[index];
                 options[index] = options[0];
@@ -230,7 +244,11 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                 menuName(value) {
                     const langCodeMap = getInitialCodeMap();
                     if (value) {
-                        return langCodeMap[value].sub.map((code) => [langCodeMap[code].lang, code]);
+                        const convertedLangCode = replaceLanguageCode(value);
+                        return langCodeMap[convertedLangCode].sub.map((code) => [
+                            langCodeMap[code].lang,
+                            code,
+                        ]);
                     }
 
                     if (this._contents.options) {

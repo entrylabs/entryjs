@@ -2,6 +2,24 @@
     "plugins": ["prettier"],
     "parser": "babel-eslint",
     "extends": ["plugin:prettier/recommended"],
+    "overrides": [
+        {
+            "files": ["*.ts"],
+            "parser": "@typescript-eslint/parser",
+            "rules": {
+                "no-unused-vars": "off"
+            }
+        },
+        {
+            "files": ["*.d.ts"],
+            "parser": "@typescript-eslint/parser",
+            "rules": {
+                "no-unused-vars": "off",
+                "no-var": "off",
+                "no-useless-constructor": "off"
+            }
+        }
+    ],
     "env": {
         "es6": true,
         "browser": true,
@@ -107,6 +125,6 @@
         "require": true,
         "module": true,
         "Symbol": true,
-        "process": true,
+        "process": true
     }
 }

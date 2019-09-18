@@ -450,11 +450,6 @@ Entry.Container = class Container {
         }
     }
 
-    /**
-     * Delete object
-     * @param {!Entry.EntryObject} object
-     * @return {Entry.State}
-     */
     removeObject(id, isPass) {
         const objects = this.objects_;
 
@@ -464,6 +459,7 @@ Entry.Container = class Container {
         object.destroy();
         objects.splice(index, 1);
         Entry.variableContainer.removeLocalVariables(object.id);
+        Entry.engine.hideProjectTimer();
 
         if (isPass === true) {
             return;
@@ -475,7 +471,6 @@ Entry.Container = class Container {
         if (first) {
             this.selectObject(first.id);
         } else {
-            this.selectObject();
             Entry.playground.flushPlayground();
         }
 
@@ -489,6 +484,9 @@ Entry.Container = class Container {
      * @param {string} objectId
      */
     selectObject(objectId, changeScene) {
+        if (!objectId) {
+            return;
+        }
         const object = this.getObject(objectId);
         const workspace = Entry.getMainWS();
         const isSelected = object.isSelected();
