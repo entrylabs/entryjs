@@ -1,5 +1,4 @@
 import EntryPaint from 'entry-paint';
-import axios from 'axios';
 import Extension from '../extensions/extension';
 
 Entry.Painter = class Painter {
@@ -172,11 +171,6 @@ Entry.Painter = class Painter {
             case 'svg':
                 this.entryPaint.addSVG(imageSrc, {
                     graphicsMode: this.isImport ? this.graphicsMode.VECTOR : '',
-                });
-                break;
-            case 'json':
-                axios.get(imageSrc).then(({ data }) => {
-                    this.entryPaint.setPaperJSON(data);
                 });
                 break;
         }
