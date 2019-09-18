@@ -784,10 +784,14 @@ Entry.Blacksmith.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][Entry.Blacksmith.sensorTypes.DIGITAL] = {
-                    port: port,
-                    time: new Date().getTime(),
-                };
+                if(Entry.hw.sendQueue.SET[port]){
+                    return Entry.hw.sendQueue.SET[port].data;
+                }else{
+                    Entry.hw.sendQueue['GET'][Entry.Blacksmith.sensorTypes.DIGITAL] = {
+                        port: port,
+                        time: new Date().getTime(),
+                    };
+                }
 
                 return DIGITAL ? DIGITAL[port] || 0 : 0;
             },
