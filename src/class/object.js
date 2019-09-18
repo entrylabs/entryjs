@@ -232,7 +232,9 @@ Entry.EntryObject = class {
             }
             thumb.style.backgroundImage = `url(${encodeURI(this.thumbUrl)})`;
         } else if (objectType === 'textBox') {
-            this.thumbUrl = `${Entry.mediaFilePath}text_icon.svg`;
+            const { type } = Lang || {};
+            const filename = type === 'ko' ? 'text_icon_ko.svg' : 'text_icon.svg';
+            this.thumbUrl = `${Entry.mediaFilePath}${filename}`;
             $(thumb).addClass('entryObjectTextBox');
         }
     }
@@ -731,8 +733,11 @@ Entry.EntryObject = class {
             },
             {
                 text: Lang.Workspace.context_remove,
-                enable: !Entry.engine.isState('run'),
-                callback() {
+                enable: !Entry.engine.isState('run') && !this.getLock(),
+                callback: () => {
+                    if (this.getLock()) {
+                        return true;
+                    }
                     Entry.dispatchEvent('removeObject', object);
                     const { id } = object;
                     Entry.do('removeObject', id);
@@ -1136,7 +1141,7 @@ Entry.EntryObject = class {
         if (Entry.objectEditable && Entry.objectDeletable) {
             deleteView.bindOnClick((e) => {
                 e.stopPropagation();
-                if (Entry.engine.isState('run')) {
+                if (this.getLock() || Entry.engine.isState('run')) {
                     return;
                 }
                 Entry.do('removeObject', this.id);
