@@ -18,9 +18,10 @@ Entry.Blacksmith = {
         } else {
             var keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach(function(key) {
-                if(Entry.hw.sendQueue.SET[key].type==Entry.Blacksmith.sensorTypes.DCMOTOR)
+                if(Entry.hw.sendQueue.SET[key].type==Entry.Blacksmith.sensorTypes.DCMOTOR){
                     Entry.hw.sendQueue.SET[key].data.value1=0;
-                else{
+                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                }else{
                     Entry.hw.sendQueue.SET[key].data = 0;
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
                 }
