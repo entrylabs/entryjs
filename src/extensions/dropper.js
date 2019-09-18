@@ -5,8 +5,6 @@ class DropperExtension {
     #view = null;
     #dropper = null;
     constructor() {
-        console.log('DropperExtension');
-        // this.parent = parent;
         return this.#createView();
     }
 
@@ -23,14 +21,6 @@ class DropperExtension {
 
         return this.#dropper;
     }
-
-    // show(target) {
-    //     this.#dropper.show({
-    //         target,
-    //     });
-
-    //     return this.#
-    // }
 }
 
 export default singleInstance(DropperExtension);

@@ -6,7 +6,6 @@ export default class Extension {
     }
 
     renderView() {
-        console.log('renderView');
         if (!this.#view) {
             this.#view = Entry.Dom('div', {
                 class: 'entryExtension',
@@ -16,7 +15,6 @@ export default class Extension {
     }
 
     static getExtension(key) {
-        // this.renderView();
         switch (key) {
             case 'Dropper':
                 return Dropper.getInstance();
