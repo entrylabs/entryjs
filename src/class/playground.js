@@ -2019,17 +2019,22 @@ Entry.Playground = class {
     };
 
     openColourPicker = (target, color, canTransparent, callback) => {
+        const containers = $('.entry-color-picker');
+        if (containers.length > 0) {
+            $(target).removeClass('on');
+            return containers.remove();
+        }
         const container = Entry.Dom('div', {
             class: 'entry-color-picker',
             parent: $('body'),
         })[0];
-
         $(target).addClass('on');
         const colorPicker = new ColorPicker({
             data: {
                 color,
                 positionDom: target,
                 canTransparent,
+                outsideExcludeDom: [target],
                 onOutsideClick: (color) => {
                     if (colorPicker) {
                         $(target).removeClass('on');
