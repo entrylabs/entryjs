@@ -1395,6 +1395,7 @@ Entry.getPicturesJSON = function(pictures = [], isClone) {
         o.fileurl = p.fileurl;
         o.name = p.name;
         o.scale = p.scale;
+        p.imageType && (o.imageType = p.imageType);
         acc.push(o);
         return acc;
     }, []);

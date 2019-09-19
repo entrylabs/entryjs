@@ -8,6 +8,7 @@ import { Backpack, ColorPicker, Dropdown, Sortable } from '@entrylabs/tool';
 import Toast from '../playground/toast';
 import EntryEvent from '@entrylabs/event';
 import { Destroyer } from '../util/destroyer/Destroyer';
+import { saveAs } from 'file-saver';
 
 const Entry = require('../entry');
 
@@ -16,7 +17,7 @@ const Entry = require('../entry');
  * This manage all view related with block.
  * @constructor
  */
-Entry.Playground = class {
+Entry.Playground = class Playground {
     constructor() {
         this._destroyer = this._destroyer || new Destroyer();
         this._destroyer.destroy();
@@ -1228,18 +1229,18 @@ Entry.Playground = class {
      */
     downloadPicture(pictureId) {
         const picture = Entry.playground.object.getPicture(pictureId);
+        const { imageType = 'png' } = picture;
+
         if (picture.fileurl) {
-            window.open(
-                `/api/sprite/download/entryjs/${btoa(picture.fileurl)}/${encodeURIComponent(
+            saveAs(
+                `/api/sprite/download/entryjs/${picture.fileurl}/${encodeURIComponent(
                     picture.name
-                )}.png`
+                )}`,
+                `${picture.name}.${imageType}`
             );
         } else {
-            window.open(
-                `/api/sprite/download/image/${btoa(picture.filename)}/${encodeURIComponent(
-                    picture.name
-                )}.png`
-            );
+            const src = this.painter.getImageSrc(picture);
+            saveAs(src, `${picture.name}.${imageType}`);
         }
     }
 
@@ -1796,17 +1797,18 @@ Entry.Playground = class {
         element.appendChild(nameView);
         Entry.createElement('div', `s_${picture.id}`)
             .addClass('entryPlaygroundPictureSize')
-            .appendTo(element).innerHTML = `${picture.dimension.width} X ${
-            picture.dimension.height
-        }`;
+            .appendTo(
+                element
+            ).innerHTML = `${picture.dimension.width} X ${picture.dimension.height}`;
 
         const removeButton = Entry.createElement('div').addClass('entryPlayground_del');
         const { Buttons = {} } = Lang || {};
         const { delete: delText = '삭제' } = Buttons;
         removeButton.appendTo(element).innerText = delText;
-        removeButton.bindOnClick(() => {
+        removeButton.bindOnClick((e) => {
             try {
                 if (Entry.playground.object.removePicture(picture.id)) {
+                    e.stopPropagation();
                     Entry.removeElement(element);
                     Entry.dispatchEvent('removePicture', picture);
                     Entry.toast.success(
