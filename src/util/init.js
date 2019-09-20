@@ -64,6 +64,8 @@ Entry.init = function(container, options) {
             console.log('not exist theme!', e);
         }
     }
+
+    Entry.paintMode = options.paintMode || 'entry-paint';
     this.createDom(container, this.type);
     this.loadInterfaceState();
     this.overridePrototype();
@@ -97,8 +99,6 @@ Entry.init = function(container, options) {
     } else {
         createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin]);
     }
-
-    Entry.paintMode = options.paintMode || 'entry-paint';
 
     Entry.soundQueue = new createjs.LoadQueue();
     Entry.soundQueue.installPlugin(createjs.Sound);
