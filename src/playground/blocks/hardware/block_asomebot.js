@@ -917,7 +917,7 @@ Entry.AsomeBot.getBlocks = function() {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
-                    sq.msg = format_str("asomebot.turn_righ()");
+                    sq.msg = format_str("asomebot.turn_right()");
                     return script;
                 } 
                 
