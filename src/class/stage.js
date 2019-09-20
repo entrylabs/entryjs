@@ -254,7 +254,7 @@ Entry.Stage.prototype.setEntityIndex = function({ object }, index) {
     if (currentIndex === -1 || currentIndex === index) {
         return;
     }
-    selectedObjectContainer.setChildIndex(object, index);
+    selectedObjectContainer.addChildAt(object, index);
     Entry.requestUpdate = true;
 };
 
@@ -266,12 +266,11 @@ Entry.Stage.prototype.sortZorder = function() {
         length = objects.length,
         container = this.selectedObjectContainer,
         index = 0;
-
     for (var i = length - 1; i >= 0; i--) {
         var {
             entity: { object },
         } = objects[i];
-        container.setChildIndex(object, index++);
+        container.addChildAt(object, index++);
     }
 
     Entry.requestUpdate = true;
