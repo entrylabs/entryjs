@@ -372,9 +372,7 @@ Entry.Field = class Field {
             case 'dropdown':
             case 'dropdownDynamic':
                 return _.chain(this._contents.options)
-                    .find(([, optionValue]) => {
-                        return optionValue === value;
-                    })
+                    .find(([, optionValue]) => optionValue === value)
                     .head()
                     .value();
             case 'textInput':
