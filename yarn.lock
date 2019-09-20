@@ -4126,6 +4126,11 @@ follow-redirects@^1.0.0:
   dependencies:
     debug "^3.0.0"
 
+fontfaceonload@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/fontfaceonload/-/fontfaceonload-1.0.2.tgz#b783b4d252ab559a073b697586c49cd21c8ff5e7"
+  integrity sha1-t4O00lKrVZoHO2l1hsSc0hyP9ec=
+
 for-in@^1.0.1, for-in@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/for-in/-/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"
