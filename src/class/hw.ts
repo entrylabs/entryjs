@@ -14,7 +14,7 @@ enum HardwareStatement {
     hardwareConnected = 'hardwareConnected',
 }
 
-class Hardware {
+class Hardware implements Entry.Hardware {
     get httpsServerAddress() {
         return 'https://hardware.playentry.org:23518';
     } // 하드웨어 프로그램 접속용 주소
@@ -40,8 +40,8 @@ class Hardware {
     public sendQueue: UnknownAny;
 
     // 현재 연결된 모듈 컨트롤용
+    public hwModule?: Entry.HardwareModule;
     private currentDeviceKey?: string;
-    private hwModule?: Entry.HardwareModule;
     private hwModuleType: HardwareModuleType;
     private hwMonitor?: Entry.HardwareMonitor;
 
@@ -177,7 +177,7 @@ class Hardware {
         this._initSocket();
     }
 
-    openHardwareProgram() {
+    openHarwareProgram() {
         this.socketConnectionRetryCount = 5;
         this._executeHardware();
 
@@ -669,7 +669,7 @@ class Hardware {
         if (Entry.events_.openHardWareDownloadModal) {
             Entry.dispatchEvent('openHardWareDownloadModal');
         } else {
-            Entry.hw.popupHelper.show('hwDownload', true);
+            this.popupHelper.show('hwDownload', true);
         }
     }
 

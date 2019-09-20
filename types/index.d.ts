@@ -48,9 +48,8 @@ declare module Entry {
     export var options: EntryOptions;
     export var toast: ToastLegacy;
     export var playground: Playground;
-    export var playground: Playground;
     export var propertyPanel: PropertyPanel;
-    export var hw: UnknownAny; // hw.ts
+    export var HW: Hardware; // hw.ts
     export var container: Container;
 
     // 엔트리에서 네임스페이스에 할당되어있는 특정 객체들
