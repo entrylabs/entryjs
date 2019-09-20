@@ -678,6 +678,48 @@ Object.defineProperty(EntryStatic, 'fonts', {
                 url: '/css/uhbeemysen.css',
                 visible: true,
             },
+            {
+                name: Lang.Fonts.sd_comic_stencil,
+                family: 'SDComicStencil',
+                url: '/css/SDComicStencil.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.sd_childfundkorea,
+                family: 'SDChildfundkorea',
+                url: '/css/SDChildfundkorea.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.sd_cinema_theater,
+                family: 'SDCinemaTheater',
+                url: '/css/SDCinemaTheater.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.sd_mapssi,
+                family: 'SDMapssi',
+                url: '/css/SDMapssi.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.sd_shabang,
+                family: 'SDShabang',
+                url: '/css/SDShabang.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.sd_woodcarving,
+                family: 'SDWoodcarving',
+                url: '/css/SDWoodcarving.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.sd_yongbi,
+                family: 'SDYongbi',
+                url: '/css/SDYongbi.css',
+                visible: true,
+            },
         ];
     },
 });

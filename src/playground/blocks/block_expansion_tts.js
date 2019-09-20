@@ -318,7 +318,7 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
                 py: [
                     {
                         passTest: true,
-                        syntax: 'Entry.play_sound_and_wait(%1)',
+                        syntax: 'TTS.read_and_wait(%1)',
                     },
                 ],
             },

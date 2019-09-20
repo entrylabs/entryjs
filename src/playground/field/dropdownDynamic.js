@@ -81,16 +81,28 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         }
 
         this._contents.options = options;
-        let value = this.getValue();
-        if (this._blockView.isInBlockMenu || !value || value == 'null') {
-            value = options.length !== 0 ? options[0][1] : null;
-        }
-
         this._updateOptions();
         if (reDraw && this._menuName === 'variables') {
             this.value = undefined;
         }
-        this.setValue(value, reDraw);
+        this.setValue(this.getOptionCheckedValue(), reDraw);
+    }
+
+    getOptionCheckedValue() {
+        const { options, defaultValue } = this._contents;
+        let value = this.getValue();
+
+        if (this._blockView.isInBlockMenu || !value || value == 'null') {
+            value = options.length !== 0 ? options[0][1] : null;
+        }
+        const matched = _.find(options, ([, cValue]) => cValue === value);
+        if (!matched && defaultValue) {
+            if (_.isFunction(defaultValue)) {
+                return defaultValue(value, options);
+            }
+            return defaultValue;
+        }
+        return value;
     }
 
     renderOptions() {

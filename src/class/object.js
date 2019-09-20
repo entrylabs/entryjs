@@ -733,8 +733,11 @@ Entry.EntryObject = class {
             },
             {
                 text: Lang.Workspace.context_remove,
-                enable: !Entry.engine.isState('run'),
-                callback() {
+                enable: !Entry.engine.isState('run') && !this.getLock(),
+                callback: () => {
+                    if (this.getLock()) {
+                        return true;
+                    }
                     Entry.dispatchEvent('removeObject', object);
                     const { id } = object;
                     Entry.do('removeObject', id);
@@ -1138,7 +1141,7 @@ Entry.EntryObject = class {
         if (Entry.objectEditable && Entry.objectDeletable) {
             deleteView.bindOnClick((e) => {
                 e.stopPropagation();
-                if (Entry.engine.isState('run')) {
+                if (this.getLock() || Entry.engine.isState('run')) {
                     return;
                 }
                 Entry.do('removeObject', this.id);
