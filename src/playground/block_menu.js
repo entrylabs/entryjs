@@ -32,6 +32,7 @@ class BlockMenu {
         this._setDynamicTimer = null;
         this._renderedCategories = {};
         this.readOnly = readOnly === undefined ? true : readOnly;
+        this.scale = 1;
 
         this._threadsMap = {};
         let $dom;

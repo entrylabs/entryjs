@@ -569,14 +569,14 @@ class TextCodingUtil {
     returnErrorResult = (errorMessage) => this._generateErrorObject(errorMessage, 'error');
 
     getFunctionToPythonErrorMessage(functionBlock, functionName, parameterBlock) {
-        const DISORDER = Lang.TextCoding[ALERT_FUNCTION_NAME_DISORDER];
-        const FIELD_MULTI = Lang.TextCoding[ALERT_FUNCTION_NAME_FIELD_MULTI];
-        const HAS_BOOLEAN = Lang.TextCoding[ALERT_FUNCTION_HAS_BOOLEAN];
         const {
             ALERT_FUNCTION_NAME_DISORDER,
             ALERT_FUNCTION_NAME_FIELD_MULTI,
             ALERT_FUNCTION_HAS_BOOLEAN,
         } = Entry.TextCodingError;
+        const DISORDER = Lang.TextCoding[ALERT_FUNCTION_NAME_DISORDER];
+        const FIELD_MULTI = Lang.TextCoding[ALERT_FUNCTION_NAME_FIELD_MULTI];
+        const HAS_BOOLEAN = Lang.TextCoding[ALERT_FUNCTION_HAS_BOOLEAN];
         if (!functionBlock) {
             return;
         }

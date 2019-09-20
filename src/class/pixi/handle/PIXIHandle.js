@@ -333,8 +333,8 @@ export var PIXIHandle = function(canvas) {
         var res = Math.sqrt(x * x + y * y);
         if (res > standard && Entry.engine.isState('stop')) {
             Entry.toast.warning(
-                '이런! 조심하세요!',
-                '오브젝트의 중심이 이미지에서 크게 벗어나서 원위치로 되돌렸습니다.'
+                Lang.Workspace.toast_error_title_object_center,
+                Lang.Workspace.toast_error_contents_object_center,
             );
             return true;
         }

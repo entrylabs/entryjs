@@ -56,6 +56,7 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
 
     c[COMMAND_TYPES.funcEditCancel] = {
         do() {
+            Entry.Func.isEdit = false;
             Entry.getMainWS().setMode(Entry.Workspace.MODE_BOARD, 'cancelEdit');
         },
         state: returnEmptyArr,
