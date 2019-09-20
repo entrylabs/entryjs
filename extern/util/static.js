@@ -599,7 +599,7 @@ EntryStatic.objectSubCategories = {
     environment: ['environment_nature', 'environment_space', 'environment_others'],
     stuff: ['stuff_living', 'stuff_hobby', 'stuff_others'],
     fantasy: [],
-    interface: [],
+    interface: ['interface_website', 'interface_game', 'interface_others'],
     background: [
         'background_outdoor',
         'background_indoor',
