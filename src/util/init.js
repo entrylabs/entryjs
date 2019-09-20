@@ -98,6 +98,8 @@ Entry.init = function(container, options) {
         createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin]);
     }
 
+    Entry.paintMode = options.paintMode || 'entry-paint';
+
     Entry.soundQueue = new createjs.LoadQueue();
     Entry.soundQueue.installPlugin(createjs.Sound);
     Entry.soundInstances = [];

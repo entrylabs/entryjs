@@ -598,11 +598,18 @@ Entry.Playground = class Playground {
                 .addClass('entryPlaygroundPictureList')
                 .appendTo(PictureView);
 
-            this.painter = new Entry.Painter(
-                Entry.createElement('div', 'entryPainter')
-                    .addClass('entryPlaygroundPainter')
-                    .appendTo(PictureView)
-            );
+            const painterDom = Entry.createElement('div', 'entryPainter')
+                .addClass('entryPlaygroundPainter')
+                .appendTo(PictureView);
+
+            switch (Entry.paintMode) {
+                case 'entry-paint':
+                    new Entry.Painter(painterDom);
+                    break;
+                case 'literallycanvas':
+                    new Entry.LiterallycanvasPainter(painterDom);
+                    break;
+            }
         }
     }
 
@@ -890,7 +897,10 @@ Entry.Playground = class Playground {
             const { options = {} } = Entry;
             const { textOptions = {} } = options;
             const { hanjaEnable } = textOptions;
-            if (!hanjaEnable && (selected.family === 'Nanum Pen Script' || selected.family === 'Jeju Hallasan')) {
+            if (
+                !hanjaEnable &&
+                (selected.family === 'Nanum Pen Script' || selected.family === 'Jeju Hallasan')
+            ) {
                 if (/[\u4E00-\u9FFF]/.exec(this.value) != null) {
                     $('#entryTextBoxAttrFontName').text(defaultFont.name);
                     entity.setFontType(defaultFont.family);
@@ -1797,9 +1807,9 @@ Entry.Playground = class Playground {
         element.appendChild(nameView);
         Entry.createElement('div', `s_${picture.id}`)
             .addClass('entryPlaygroundPictureSize')
-            .appendTo(
-                element
-            ).innerHTML = `${picture.dimension.width} X ${picture.dimension.height}`;
+            .appendTo(element).innerHTML = `${picture.dimension.width} X ${
+            picture.dimension.height
+        }`;
 
         const removeButton = Entry.createElement('div').addClass('entryPlayground_del');
         const { Buttons = {} } = Lang || {};

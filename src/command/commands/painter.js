@@ -8,7 +8,7 @@
 
     c[COMMAND_TYPES.editPicture] = {
         do() {
-            Entry.playground.painter.entryPaint.redo();
+            Entry.playground.painter.redo();
         },
         state() {},
         log(objectId) {
@@ -21,7 +21,7 @@
     c[COMMAND_TYPES.uneditPicture] = {
         type: Entry.STATIC.COMMAND_TYPES.uneditPicture,
         do() {
-            Entry.playground.painter.entryPaint.undo();
+            Entry.playground.painter.undo();
         },
         state() {},
         log(objectId) {
@@ -33,7 +33,7 @@
 
     c[COMMAND_TYPES.processPicture] = {
         do() {
-            Entry.playground.painter.entryPaint.redo();
+            Entry.playground.painter.redo();
         },
         state() {},
         log(objectId) {
@@ -46,7 +46,7 @@
 
     c[COMMAND_TYPES.unprocessPicture] = {
         do() {
-            Entry.playground.painter.entryPaint.undo();
+            Entry.playground.painter.undo();
         },
         state() {},
         log(objectId) {
