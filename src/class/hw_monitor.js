@@ -141,7 +141,7 @@ Entry.HWMonitor = class HardwareMonitor {
         }
     }
 
-    setHwmonitor(hwModule) {
+    setHwModule(hwModule) {
         this._hwmodule = hwModule;
     }
 
@@ -539,4 +539,4 @@ Entry.HWMonitor = class HardwareMonitor {
         port.group.attr({ transform: `translate(${groupX},${y})` });
         port.path.attr({ d: path });
     }
-}
+};

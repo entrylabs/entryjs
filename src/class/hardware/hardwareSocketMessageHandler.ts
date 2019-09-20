@@ -81,7 +81,7 @@ export default class {
         }
     }
 
-    addEventListener(type: string, callback: () => void) {
+    addEventListener(type: string, callback: (...args: any[]) => void) {
         if (!(type in this.listeners)) {
             this.listeners[type] = [];
         }
