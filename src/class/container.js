@@ -318,7 +318,7 @@ Entry.Container = class Container {
             throw new Error('No picture found');
         }
         pictures[index] = Object.assign(
-            _.pick(picture, ['dimension', 'id', 'filename', 'fileurl', 'name']),
+            _.pick(picture, ['dimension', 'id', 'filename', 'fileurl', 'name', 'imageType']),
             { view: pictures[index].view }
         );
     }
@@ -450,11 +450,6 @@ Entry.Container = class Container {
         }
     }
 
-    /**
-     * Delete object
-     * @param {!Entry.EntryObject} object
-     * @return {Entry.State}
-     */
     removeObject(id, isPass) {
         const objects = this.objects_;
 
@@ -464,6 +459,7 @@ Entry.Container = class Container {
         object.destroy();
         objects.splice(index, 1);
         Entry.variableContainer.removeLocalVariables(object.id);
+        Entry.engine.hideProjectTimer();
 
         if (isPass === true) {
             return;

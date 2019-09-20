@@ -31,9 +31,9 @@ Entry.loadProject = function(project) {
     Entry.projectId = project._id;
     Entry.variableContainer.setVariables(project.variables);
     Entry.variableContainer.setMessages(project.messages);
+    Entry.variableContainer.setFunctions(project.functions);
     Entry.scene.addScenes(project.scenes);
     Entry.stage.initObjectContainers();
-    Entry.variableContainer.setFunctions(project.functions);
     Entry.container.setObjects(project.objects);
     Entry.FPS = project.speed ? project.speed : 60;
     GEHelper.Ticker.setFPS(Entry.FPS);
@@ -1397,6 +1397,7 @@ Entry.getPicturesJSON = function(pictures = [], isClone) {
         o.fileurl = p.fileurl;
         o.name = p.name;
         o.scale = p.scale;
+        p.imageType && (o.imageType = p.imageType);
         acc.push(o);
         return acc;
     }, []);
@@ -2495,6 +2496,7 @@ Entry.Utils.playSound = function(id, option = {}) {
 };
 
 Entry.Utils.addSoundInstances = function(instance) {
+    console.log('add sound instance');
     Entry.soundInstances.push(instance);
     instance.on('complete', () => {
         const index = Entry.soundInstances.indexOf(instance);

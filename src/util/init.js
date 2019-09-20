@@ -7,6 +7,7 @@
 import { Destroyer } from './destroyer/Destroyer';
 import { GEHelper } from '../graphicEngine/GEHelper';
 import Expansion from '../class/Expansion';
+import Extension from '../extensions/extension';
 require('./utils');
 
 /**
@@ -324,6 +325,7 @@ Entry.createDom = function(container, option) {
 
         /** @type {!Element} */
         this.canvas_ = canvas;
+        this.extension = new Extension();
         this.stage.initStage(this.canvas_);
 
         const containerView = Entry.createElement('div');
