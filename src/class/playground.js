@@ -604,10 +604,10 @@ Entry.Playground = class Playground {
 
             switch (Entry.paintMode) {
                 case 'entry-paint':
-                    new Entry.Painter(painterDom);
+                    this.painter = new Entry.Painter(painterDom);
                     break;
                 case 'literallycanvas':
-                    new Entry.LiterallycanvasPainter(painterDom);
+                    this.painter = new Entry.LiterallycanvasPainter(painterDom);
                     break;
             }
         }
