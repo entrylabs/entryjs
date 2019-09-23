@@ -2863,11 +2863,11 @@ Entry.VariableContainer = class VariableContainer {
                         content: JSON.stringify(func.content.toJSON()),
                     });
 
-                    blockList = func.content.getBlockList();
-                    const jsonData = this.getObjectVariables(blockList, findFuncKeys);
-                    functions = functions.concat(jsonData.functions);
-                    variables = variables.concat(jsonData.variables);
-                    messages = messages.concat(jsonData.messages);
+                    const contentBlockList = func.content.getBlockList();
+                    const jsonData = this.getObjectVariables(contentBlockList, findFuncKeys);
+                    functions = _.unionBy(functions, jsonData.functions, 'id');
+                    variables = _.unionBy(variables, jsonData.variables, 'id');
+                    messages = _.unionBy(messages, jsonData.messages, 'id');
                 }
             }
         });

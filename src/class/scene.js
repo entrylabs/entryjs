@@ -314,6 +314,11 @@ Entry.Scene = class {
         if (Entry.creationChangedEvent) {
             Entry.creationChangedEvent.notify();
         }
+        const { playground = {} } = Entry || {};
+        const { mainWorkspace } = playground;
+        if (mainWorkspace) {
+            mainWorkspace.reDraw();
+        }
         return scene;
     }
 
