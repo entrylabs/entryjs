@@ -27,7 +27,7 @@ Entry.Painter = class Painter {
     }
 
     initialize() {
-        if (this.entryPaint) {
+        if (this.entryPaint || !EntryPaint) {
             return;
         }
 
@@ -82,6 +82,7 @@ Entry.Painter = class Painter {
             },
             fileurl: `${Entry.mediaFilePath}_1x1.png`,
             name: Lang.Painter.new_picture,
+            imageType: this._getImageType(),
         };
 
         newPicture.id = Entry.generateHash();
@@ -176,6 +177,14 @@ Entry.Painter = class Painter {
         }
     }
 
+    _getImageType() {
+        if (this.entryPaint.mode === this.graphicsMode.VECTOR) {
+            return 'svg';
+        } else {
+            return 'png';
+        }
+    }
+
     fileSave(taskParam) {
         if (!Entry.stage.selectedObject) {
             return;
@@ -183,11 +192,10 @@ Entry.Painter = class Painter {
         const dataURL = this.entryPaint.getDataURL();
         if (this.entryPaint.mode === this.graphicsMode.VECTOR) {
             this.file.svg = this.entryPaint.exportSVG();
-            this.file.ext = 'svg';
         } else {
             delete this.file.svg;
-            this.file.ext = 'png';
         }
+        this.file.ext = this._getImageType();
         const file = JSON.parse(JSON.stringify(this.file));
         Entry.dispatchEvent('saveCanvasImage', {
             file,
@@ -242,10 +250,18 @@ Entry.Painter = class Painter {
                 this.fullscreenButton.setAttribute('alt', Lang.Painter.exit_fullscreen);
             }
         }
-        this.entryPaint.realign();
+        this.entryPaint && this.entryPaint.realign();
     }
 
     clear() {
         this.toggleFullscreen(false);
+    }
+
+    undo() {
+        this.entryPaint.undo();
+    }
+
+    redo() {
+        this.entryPaint.redo();
     }
 };

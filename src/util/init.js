@@ -64,6 +64,8 @@ Entry.init = function(container, options) {
             console.log('not exist theme!', e);
         }
     }
+
+    Entry.paintMode = options.paintMode || 'entry-paint';
     this.createDom(container, this.type);
     this.loadInterfaceState();
     this.overridePrototype();
