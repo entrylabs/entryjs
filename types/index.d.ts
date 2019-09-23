@@ -51,6 +51,7 @@ declare module Entry {
     export var propertyPanel: PropertyPanel;
     export var HW: Hardware; // hw.ts
     export var container: Container;
+    export var stage: Stage;
 
     // 엔트리에서 네임스페이스에 할당되어있는 특정 객체들
     export var HARDWARE_LIST: { [hardwareName: string]: HardwareModule };
@@ -83,10 +84,16 @@ declare module Entry {
         selected: string;
     }
 
+    export interface Stage {
+        canvas: PIXI.Container | any;
+        _app: PIXI.Application | any;
+    }
+
     /**
      * 과거 엔트리 토스트
      */
     type ToastLegacyFunction = (title: string, message: string, isNotAutoDispose?: boolean) => void;
+
     export interface ToastLegacy {
         alert: ToastLegacyFunction;
         warning: ToastLegacyFunction;
@@ -99,5 +106,6 @@ declare module Entry {
     export interface EntryOptions {
         disableHardware?: boolean;
     }
+
     // Entry namespace 에 필요한 객체가 있으면 추가해주세요.
 }
