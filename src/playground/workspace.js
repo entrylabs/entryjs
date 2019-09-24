@@ -587,7 +587,7 @@ Entry.Workspace = class Workspace {
         function checkObjectAndAlert(object, message) {
             if (!object) {
                 message =
-                    message || '오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.';
+                    message || Lang.Workspace.object_not_exist_error;
                 entrylms.alert(message);
                 return false;
             }
