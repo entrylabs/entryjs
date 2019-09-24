@@ -1,6 +1,6 @@
-import EntryPaint from 'entry-paint';
 import Extension from '../extensions/extension';
 
+let EntryPaint;
 Entry.Painter = class Painter {
     constructor(view) {
         this.view = view;
@@ -20,6 +20,14 @@ Entry.Painter = class Painter {
         Entry.addEventListener('pictureImport', this.addPicture.bind(this));
         Entry.addEventListener('run', this.detachKeyboardEvents.bind(this));
         Entry.addEventListener('stop', this.attachKeyboardEvents.bind(this));
+        this.importEntryPaint();
+    }
+
+    async importEntryPaint() {
+        EntryPaint = (await import('entry-paint')).default;
+        if (this.requestShow) {
+            this.initialize();
+        }
     }
 
     get graphicsMode() {
@@ -28,6 +36,7 @@ Entry.Painter = class Painter {
 
     initialize() {
         if (this.entryPaint || !EntryPaint) {
+            this.requestShow = true;
             return;
         }
 
