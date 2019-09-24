@@ -1,5 +1,5 @@
 # entryjs
-entryjs는 엔트리 교육연구소에서 개발한 HTML5 기반의 블록코딩 라이브러리 입니다.
+entryjs는 엔트리에서 개발한 HTML5 기반의 블록코딩 라이브러리 입니다.
 [엔트리](http://play-entry.org) 사이트에 접속하시면 entryjs를 사용한 블록코딩 환경을 확인해 볼 수 있습니다.
 
 ## 시작하기

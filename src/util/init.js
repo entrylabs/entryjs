@@ -7,6 +7,7 @@
 import { Destroyer } from './destroyer/Destroyer';
 import { GEHelper } from '../graphicEngine/GEHelper';
 import Expansion from '../class/Expansion';
+import Extension from '../extensions/extension';
 require('./utils');
 
 /**
@@ -63,6 +64,8 @@ Entry.init = function(container, options) {
             console.log('not exist theme!', e);
         }
     }
+
+    Entry.paintMode = options.paintMode || 'entry-paint';
     this.createDom(container, this.type);
     this.loadInterfaceState();
     this.overridePrototype();
@@ -324,6 +327,7 @@ Entry.createDom = function(container, option) {
 
         /** @type {!Element} */
         this.canvas_ = canvas;
+        this.extension = new Extension();
         this.stage.initStage(this.canvas_);
 
         const containerView = Entry.createElement('div');
