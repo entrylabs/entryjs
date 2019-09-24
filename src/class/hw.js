@@ -465,6 +465,7 @@ Entry.HW = class {
         if (!this.hwModule) {
             return;
         }
+        this._banClassAllHardware();
         Entry.dispatchEvent('hwChanged');
 
         let descMsg = '';
