@@ -386,6 +386,7 @@ Entry.HW = class {
         if (!this.socket || this.socket.disconnected) {
             return;
         }
+
         if (this.hwModule && this.hwModule.sendMessage) {
             this.hwModule.sendMessage(this);
         } else {
@@ -395,6 +396,8 @@ Entry.HW = class {
                 type: 'utf8',
             });
         }
+
+        this.hwModule && this.hwModule.afterSend && this.hwModule.afterSend(this.sendQueue);
     }
 
     _sendSocketMessage(message) {
@@ -465,6 +468,7 @@ Entry.HW = class {
         if (!this.hwModule) {
             return;
         }
+        this._banClassAllHardware();
         Entry.dispatchEvent('hwChanged');
 
         let descMsg = '';
