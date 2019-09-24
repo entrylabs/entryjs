@@ -142,7 +142,7 @@ Entry.Code = class Code {
         const executors = this.executors;
         const watchEvent = this.watchEvent;
         const shouldNotifyWatch = watchEvent.hasListeners();
-        let ret;
+        let result;
         let executedBlocks = [];
 
         const _executeEvent = _.partial(Entry.dispatchEvent, 'blockExecute');
@@ -150,12 +150,15 @@ Entry.Code = class Code {
 
         for (let i = 0; i < executors.length; i++) {
             const executor = executors[i];
-            if (!executor.isEnd()) {
+            if (executor.isPause()) {
+                // console.log('executor paused', executor);
+            } else if (!executor.isEnd()) {
                 const { view } = executor.scope.block || {};
                 _executeEvent(view);
-                ret = executor.execute(true);
+                result = executor.execute(true);
                 if (shouldNotifyWatch) {
-                    executedBlocks = executedBlocks.concat(ret);
+                    const { blocks } = result;
+                    executedBlocks = executedBlocks.concat(blocks);
                 }
             } else {
                 _executeEndEvent(this.board);
