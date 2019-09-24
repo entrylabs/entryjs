@@ -674,7 +674,7 @@ Entry.Playground = class Playground {
         fontLink.bindOnClick(() => {
             const options = EntryStatic.fonts
                 .filter((font) => font.visible)
-                .map((font) => [font.name, font]);
+                .map((font) => [font.name, font, font.style]);
             fontLink.addClass('imico_pop_select_arr_up');
             fontLink.removeClass('imico_pop_select_arr_down');
             this.openDropDown(
