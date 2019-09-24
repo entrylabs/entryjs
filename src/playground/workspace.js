@@ -422,8 +422,9 @@ Entry.Workspace = class Workspace {
             }
             const mainWorksapceMode = Entry.playground.mainWorkspace.getMode();
             const playgroundMode = Entry.playground.getViewMode();
-            const isBlockCodeView = (mainWorksapceMode === Entry.Workspace.MODE_OVERLAYBOARD ||
-                mainWorksapceMode === Entry.Workspace.MODE_BOARD) &&
+            const isBlockCodeView =
+                (mainWorksapceMode === Entry.Workspace.MODE_OVERLAYBOARD ||
+                    mainWorksapceMode === Entry.Workspace.MODE_BOARD) &&
                 (playgroundMode === 'code' || playgroundMode === 'variable');
             switch (keyCode) {
                 case 86: //paste
@@ -586,8 +587,7 @@ Entry.Workspace = class Workspace {
 
         function checkObjectAndAlert(object, message) {
             if (!object) {
-                message =
-                    message || Lang.Workspace.object_not_exist_error;
+                message = message || Lang.Workspace.object_not_exist_error;
                 entrylms.alert(message);
                 return false;
             }
