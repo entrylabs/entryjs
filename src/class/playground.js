@@ -1243,9 +1243,9 @@ Entry.Playground = class Playground {
 
         if (picture.fileurl) {
             saveAs(
-                `/api/sprite/download/entryjs/${picture.fileurl}/${encodeURIComponent(
+                `/api/sprite/download/entryjs/${btoa(picture.fileurl)}/${encodeURIComponent(
                     picture.name
-                )}`,
+                )}.png`,
                 `${picture.name}.${imageType}`
             );
         } else {
