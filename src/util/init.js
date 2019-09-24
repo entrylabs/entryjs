@@ -65,7 +65,7 @@ Entry.init = function(container, options) {
         }
     }
 
-    Entry.paintMode = options.paintMode || 'entry-paint';
+    Entry.paintMode = options.paintMode || 'literallycanvas';
     this.createDom(container, this.type);
     this.loadInterfaceState();
     this.overridePrototype();
