@@ -63,16 +63,19 @@ Entry.Painter = class Painter {
         });
 
         Entry.addEventListener('pictureSelected', this.changePicture.bind(this));
-        Entry.windowResized.attach(this.view, this.entryPaint.realign);
     }
 
     show() {
         if (!this.isShow) {
             this.initialize();
         }
+        this.realign && Entry.windowResized.detach(this.realign);
+        this.realign = Entry.windowResized.attach(this.view, this.entryPaint.realign);
     }
 
-    hide() {}
+    hide() {
+        this.entryPaint && Entry.windowResized.detach(this.realign);
+    }
 
     newPicture() {
         const newPicture = {
