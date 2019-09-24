@@ -6085,7 +6085,11 @@ Lang.Hw = {
     "joystick": "joystick",
     "port": "port",
     "potentiometer": "potentiometer",
-    "servo": "servo"
+    "servo": "servo",
+    "hw_module_load_fail_title" : "Failed to load module",
+    "hw_module_load_fail_desc" : " has not been loaded.",
+    "hw_module_terminaltion_title": "HW Connection Closed",
+    "hw_module_terminaltion_desc": "Connection to hardware program has been closed.",
 };
 Lang.template = {
     "albert_hand_found": "tìm tay?",
