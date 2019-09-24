@@ -6085,11 +6085,7 @@ Lang.Hw = {
     "joystick": "조이스틱",
     "port": "포트",
     "potentiometer": "포텐시오미터",
-    "servo": "서보",
-    "hw_module_load_fail_title" : "모듈 로드실패",
-    "hw_module_load_fail_desc" : " 모듈 불러오기에 실패했습니다.",
-    "hw_module_terminaltion_title": '하드웨어 프로그램 연결 종료',
-    "hw_module_terminaltion_desc": '하드웨어 프로그램과의 연결이 종료되었습니다.',
+    "servo": "서보"
 };
 Lang.template = {
     "albert_hand_found": "손 찾음?",

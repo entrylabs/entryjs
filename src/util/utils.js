@@ -1960,7 +1960,7 @@ Entry.Utils.createMouseEvent = function(type, event) {
 
 Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     let block = scope.block;
-    message = message || 'Runtime Error';
+    message = message || '런타임 에러 발생';
 
     const engine = Entry.engine;
 
@@ -1998,7 +1998,7 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
 
 Entry.Utils.AsyncError = function(message) {
     this.name = 'AsyncError';
-    this.message = message || 'Waiting for callback';
+    this.message = message || '비동기 호출 대기';
 };
 
 Entry.Utils.AsyncError.prototype = new Error();

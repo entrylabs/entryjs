@@ -124,7 +124,7 @@ Entry.HW = class {
         try {
             await Entry.moduleManager.loadExternalModule(moduleName);
         } catch (e) {
-            Entry.toast.alert(Lang.Hw.hw_module_load_fail_title, `${moduleName} ${Lang.Hw.hw_module_load_fail_desc}`);
+            Entry.toast.alert('모듈 로드실패', `${moduleName} 모듈 불러오기에 실패했습니다.`);
         }
     }
 
@@ -309,8 +309,8 @@ Entry.HW = class {
 
             Entry.dispatchEvent('hwChanged');
             Entry.toast.alert(
-                Lang.Hw.hw_module_terminaltion_title,
-                Lang.Hw.hw_module_terminaltion_desc,
+                '하드웨어 프로그램 연결 종료',
+                '하드웨어 프로그램과의 연결이 종료되었습니다.',
                 false
             );
         }
