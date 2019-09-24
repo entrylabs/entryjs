@@ -221,12 +221,11 @@ module.exports = {
                         let [start, end] = script.getValues(['START', 'END'], script);
                         start = Number(start) * 1000;
                         end = Number(end) * 1000;
-                        const instance = Entry.Utils.playSound(sound.id, {
+
+                        Entry.Utils.playSound(sound.id, {
                             startTime: Math.min(start, end),
                             duration: Math.max(start, end) - Math.min(start, end),
                         });
-                        Entry.Utils.addSoundInstances(instance);
-
                     }
                     return script.callReturn();
                 },
@@ -376,7 +375,6 @@ module.exports = {
                         if (sound) {
                             script.playState = 1;
                             const instance = Entry.Utils.playSound(sound.id);
-                            Entry.Utils.addSoundInstances(instance);
                             const timeValue = script.getNumberValue('SECOND', script);
                             setTimeout(function() {
                                 instance.stop();
@@ -486,12 +484,11 @@ module.exports = {
                             const startValue = Math.min(start, end);
                             const endValue = Math.max(start, end);
                             const duration = endValue - startValue;
-                            const instance = Entry.Utils.playSound(sound.id, {
+
+                            Entry.Utils.playSound(sound.id, {
                                 startTime: startValue,
                                 duration,
                             });
-                            Entry.Utils.addSoundInstances(instance);
-
 
                             setTimeout(function() {
                                 script.playState = 0;

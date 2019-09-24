@@ -272,7 +272,11 @@ Entry.Mindpiggy.getBlocks = function () {
                 var port = script.getStringValue('PORT', script);
                 port = String(Number(port)+14);
                 var ANALOG = Entry.hw.portData[port];
-                return ANALOG ? ANALOG['data'] || 0 : 0;
+                 if (!Entry.hw.sendQueue['GET'])Entry.hw.sendQueue['GET'] = {};
+                    Entry.hw.sendQueue['GET'][port]={
+                        type: Entry.Mindpiggy.sensorTypes.ANALOG,
+                    };
+                    return ANALOG ? ANALOG['data'] || 0 : 0;
             },
             syntax: {js: [], py: ['mindpiggy.analogRead(%1)']},
         },
@@ -423,7 +427,6 @@ Entry.Mindpiggy.getBlocks = function () {
                 if (!Entry.hw.sendQueue['GET'])Entry.hw.sendQueue['GET'] = {};
                 Entry.hw.sendQueue['GET'][port]={
                     type: Entry.Mindpiggy.sensorTypes.DIGITAL,
-                    time: new Date().getTime(),
                 };
                 return val? val['data'] : 0;
 
@@ -462,7 +465,6 @@ Entry.Mindpiggy.getBlocks = function () {
                 if (!Entry.hw.sendQueue['GET'])Entry.hw.sendQueue['GET'] = {};
                 Entry.hw.sendQueue['GET'][port]={
                     type: Entry.Mindpiggy.sensorTypes.DIGITAL,
-                    time: new Date().getTime(),
                 };
                 return val? val['data'] : 0;
 
@@ -549,7 +551,6 @@ Entry.Mindpiggy.getBlocks = function () {
                 Entry.hw.sendQueue['SET'][port] = {
                     type: Entry.Mindpiggy.sensorTypes.DIGITAL,
                     data: value,
-                    time: new Date().getTime(),
                 };
             },
             syntax: { js: [],  py: ['mindpiggy.digitalWrite(%1, %2)'] },
@@ -606,7 +607,6 @@ Entry.Mindpiggy.getBlocks = function () {
                 Entry.hw.sendQueue['SET'][port] = {
                     type: Entry.Mindpiggy.sensorTypes.DIGITAL,
                     data: value,
-                    time: new Date().getTime(),
                 };
             },
             syntax: { js: [], py: ['mindpiggy.analogWrite(%1, %2)' ] },
@@ -719,7 +719,6 @@ Entry.Mindpiggy.getBlocks = function () {
                     Entry.hw.sendQueue['SET'][Port]={
                         type : Entry.Mindpiggy.sensorTypes.NEOPIXEL,
                         data : [0,255,rgbValue[0],rgbValue[1],rgbValue[2]],
-                        time: new Date().getTime(),
                     };
                     script.isStart = true;
                     script.timeFlag = 1;
@@ -795,7 +794,6 @@ Entry.Mindpiggy.getBlocks = function () {
                     Entry.hw.sendQueue['SET'][Port]={
                         type : Entry.Mindpiggy.sensorTypes.NEOPIXEL,
                         data : [Pixel,Pixel,rgb[0],rgb[1],rgb[2]],
-                        time: new Date().getTime(),
                     };
                     script.isStart = true;
                     script.timeFlag = 1;
@@ -851,7 +849,6 @@ Entry.Mindpiggy.getBlocks = function () {
                     Entry.hw.sendQueue['SET'][Port]={
                     type : Entry.Mindpiggy.sensorTypes.NEOPIXEL,
                     data : [0,255,0,0,0],
-                    time: new Date().getTime(),
                 };
                     script.isStart = true;
                     script.timeFlag = 1;
@@ -901,7 +898,6 @@ Entry.Mindpiggy.getBlocks = function () {
                 if(!Entry.hw.sendQueue.GET)Entry.hw.sendQueue.GET={};
                 Entry.hw.sendQueue.GET['3']={
                     type : Entry.Mindpiggy.sensorTypes.DIGITAL,
-                    time: new Date().getTime(),
                 };
                 return getdata ? getdata.data : 0;
             },
@@ -926,7 +922,6 @@ Entry.Mindpiggy.getBlocks = function () {
                 if(!Entry.hw.sendQueue.GET)Entry.hw.sendQueue.GET={};
                 Entry.hw.sendQueue.GET['15']={
                     type : Entry.Mindpiggy.sensorTypes.ANALOG,
-                    time: new Date().getTime(),
                 };
                 return getdata ? getdata.data : 0;
             },
@@ -1131,7 +1126,6 @@ Entry.Mindpiggy.getBlocks = function () {
                         Entry.hw.sendQueue['SET'][Port]={
                             type:Entry.Mindpiggy.sensorTypes.SPEAKER,
                             data:[0,0],
-                            time: new Date().getTime(),
                         };
                         return script.callReturn();
                     }
@@ -1159,7 +1153,6 @@ Entry.Mindpiggy.getBlocks = function () {
                     Entry.hw.sendQueue['SET'][Port]={
                         type:Entry.Mindpiggy.sensorTypes.SPEAKER,
                         data:[frequency,duration],
-                        time: new Date().getTime(),
                     };
 
                     setTimeout(function() {
@@ -1176,7 +1169,6 @@ Entry.Mindpiggy.getBlocks = function () {
                     Entry.hw.sendQueue['SET'][Port]={
                         type:Entry.Mindpiggy.sensorTypes.SPEAKER,
                         data:[0,0],
-                        time: new Date().getTime(),
                     };
 
                     Entry.engine.isContinue = false;
@@ -1289,12 +1281,10 @@ Entry.Mindpiggy.getBlocks = function () {
                 Entry.hw.sendQueue['SET'][directionPort]={
                     type:Entry.Mindpiggy.sensorTypes.DCMOTOR,
                     data:[directionValue,1],
-                    time: new Date().getTime(),
                 };
                 Entry.hw.sendQueue['SET'][speedPort]={
                     type:Entry.Mindpiggy.sensorTypes.DCMOTOR,
                     data:[speedValue,0],
-                    time: new Date().getTime(),
                 };
             },
             syntax: { js: [], py: [] },
@@ -1332,9 +1322,8 @@ Entry.Mindpiggy.getBlocks = function () {
                 // port = String(Number(port)+14);
                 var REMOTE = Entry.hw.portData['A0'];
                 if (!Entry.hw.sendQueue['GET'])Entry.hw.sendQueue['GET'] = {};
-                Entry.hw.sendQueue['GET']['14']={
+                Entry.hw.sendQueue['GET']['A0']={
                     type: Entry.Mindpiggy.sensorTypes.REMOTE,
-                    time: new Date().getTime(),
                 };
                 if(REMOTE && (REMOTE['data']!=255))return REMOTE['data'];
                 else return String('x');
