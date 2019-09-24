@@ -9,13 +9,14 @@ class Executor {
         this.entity = entity;
         this._callStack = [];
         this.register = {};
+        this.paused = false;
         this.parentExecutor = null;
         this.valueMap = {};
         this.valueState = {};
         this.id = Entry.Utils.generateId();
     }
 
-    execute(isFromOrigin) { 
+    execute(isFromOrigin) {
         if (this.isEnd()) {
             return;
         }
@@ -54,8 +55,30 @@ class Executor {
                 return executedBlocks;
             }
 
-
-            if (returnVal === undefined || returnVal === null || returnVal === Entry.STATIC.PASS) {
+            if (returnVal instanceof Promise) {
+                this.paused = true;
+                returnVal
+                    .then((value) => {
+                        if (this.scope.block) {
+                            this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
+                        }
+                        this.valueMap = {};
+                        this.valueState = {};
+                        this.paused = false;
+                    })
+                    .catch((e) => {
+                        if (this.isFuncExecutor) {
+                            throw e;
+                        } else {
+                            Entry.Utils.stopProjectWithToast(this.scope, undefined, e);
+                        }
+                    });
+                break;
+            } else if (
+                returnVal === undefined ||
+                returnVal === null ||
+                returnVal === Entry.STATIC.PASS
+            ) {
                 this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
                 this.valueMap = {};
                 this.valueState = {};
@@ -124,6 +147,10 @@ class Executor {
     end() {
         Entry.dispatchEvent('blockExecuteEnd', this.scope.block && this.scope.block.view);
         this.scope.block = null;
+    }
+
+    isPause() {
+        return this.paused;
     }
 
     isEnd() {

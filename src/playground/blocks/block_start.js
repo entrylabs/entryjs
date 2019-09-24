@@ -1,6 +1,56 @@
 module.exports = {
     getBlocks() {
         return {
+            async_test: {
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
+                template: 'test %1',
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/start_icon.svg',
+                        size: 11,
+                    },
+                ],
+                def: {
+                    type: 'async_test',
+                },
+                class: 'async',
+                isNotFor: ['async'],
+                func(sprite, script) {
+                    console.log('ha?');
+                    return new Promise((r) => {
+                        setTimeout(() => {
+                            console.log('comp r');
+                            r();
+                            sprite.setX(sprite.getX() + 12);
+                            sprite.setImage(sprite.parent.getPrevPicture(sprite.picture.id));
+                        }, Math.random() * 5000);
+                    });
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'Entry.send_signal(%1)',
+                            textParams: [
+                                {
+                                    type: 'DropdownDynamic',
+                                    value: null,
+                                    menuName: 'messages',
+                                    fontSize: 11,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.START,
+                                    converter: Entry.block.converters.returnStringKey,
+                                    paramType: 'signal',
+                                },
+                                undefined,
+                            ],
+                        },
+                    ],
+                },
+            },
             when_run_button_click: {
                 color: EntryStatic.colorSet.block.default.START,
                 outerLine: EntryStatic.colorSet.block.darken.START,

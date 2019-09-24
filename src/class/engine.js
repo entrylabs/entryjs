@@ -4,6 +4,7 @@
 'use strict';
 
 import { GEHelper } from '../graphicEngine/GEHelper';
+import ExecuteEntity from './ExecuteEntity';
 
 /**
  * Class for a engine.
@@ -12,6 +13,7 @@ import { GEHelper } from '../graphicEngine/GEHelper';
  */
 Entry.Engine = class Engine {
     constructor() {
+        this.executeEntity = new ExecuteEntity();
         this.state = 'stop';
         this.popup = null;
         this.isUpdating = true;
@@ -565,6 +567,7 @@ Entry.Engine = class Engine {
         Entry.addActivity('stop');
 
         container.mapEntity((entity) => {
+            this.executeEntity.stop(entity);
             entity.loadSnapshot();
             entity.object.filters = [];
             entity.resetFilter();
@@ -755,9 +758,14 @@ Entry.Engine = class Engine {
      * @param {Entry.EntryObject} object
      * @param {string} eventName
      */
-    raiseEvent(entity, eventName) {
-        entity.parent.script.raiseEvent(eventName, entity);
-    }
+    raiseEvent = (entity, eventName) => {
+        console.log(
+            this,
+            entity === this.executeEntity.get(entity),
+            entity.__proto__ === this.executeEntity.get(entity).__proto__
+        );
+        entity.parent.script.raiseEvent(eventName, this.executeEntity.get(entity));
+    };
 
     /**
      * @param {string} eventName
