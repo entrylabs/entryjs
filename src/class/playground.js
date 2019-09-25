@@ -1240,17 +1240,24 @@ Entry.Playground = class Playground {
     downloadPicture(pictureId) {
         const picture = Entry.playground.object.getPicture(pictureId);
         const { imageType = 'png' } = picture;
-
-        if (picture.fileurl) {
-            saveAs(
-                `/api/sprite/download/entryjs/${btoa(picture.fileurl)}/${encodeURIComponent(
-                    picture.name
-                )}.png`,
-                `${picture.name}.${imageType}`
-            );
-        } else {
-            const src = this.painter.getImageSrc(picture);
-            saveAs(src, `${picture.name}.${imageType}`);
+        /**
+            Logic in try phrase will be disregarded after renewal.
+            nt11576
+        */
+        try {
+            if (picture.fileurl) {
+                saveAs(
+                    `/api/sprite/download/entryjs/${btoa(picture.fileurl)}/${encodeURIComponent(
+                        picture.name
+                    )}.png`,
+                    `${picture.name}.${imageType}`
+                );
+            } else {
+                const src = this.painter.getImageSrc(picture);
+                saveAs(src, `${picture.name}.${imageType}`);
+            }
+        } catch (e) {
+            Entry.dispatchEvent('downloadPicture', picture);
         }
     }
 
@@ -1436,6 +1443,8 @@ Entry.Playground = class Playground {
             } else {
                 window.open(sound.fileurl);
             }
+        } else if (sound.path) {
+            Entry.dispatchEvent('downloadSound', sound);
         } else {
             window.open(
                 `/api/sprite/download/sound/${encodeURIComponent(
@@ -1807,9 +1816,9 @@ Entry.Playground = class Playground {
         element.appendChild(nameView);
         Entry.createElement('div', `s_${picture.id}`)
             .addClass('entryPlaygroundPictureSize')
-            .appendTo(element).innerHTML = `${picture.dimension.width} X ${
-            picture.dimension.height
-        }`;
+            .appendTo(
+                element
+            ).innerHTML = `${picture.dimension.width} X ${picture.dimension.height}`;
 
         const removeButton = Entry.createElement('div').addClass('entryPlayground_del');
         const { Buttons = {} } = Lang || {};
