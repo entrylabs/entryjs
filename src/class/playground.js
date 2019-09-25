@@ -1433,9 +1433,7 @@ Entry.Playground = class Playground {
 
     downloadSound(soundId) {
         const sound = Entry.playground.object.getSound(soundId);
-        if (sound.path) {
-            Entry.dispatchEvent('downloadSound', sound);
-        } else if (sound.fileurl) {
+        if (sound.fileurl) {
             if (sound.fileurl.indexOf('bark.mp3') > -1) {
                 window.open(
                     `/api/sprite/download/entryjs/${btoa(sound.fileurl)}/${encodeURIComponent(
@@ -1445,6 +1443,8 @@ Entry.Playground = class Playground {
             } else {
                 window.open(sound.fileurl);
             }
+        } else if (sound.path) {
+            Entry.dispatchEvent('downloadSound', sound);
         } else {
             window.open(
                 `/api/sprite/download/sound/${encodeURIComponent(
