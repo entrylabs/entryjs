@@ -24,7 +24,8 @@ Entry.Painter = class Painter {
     }
 
     async importEntryPaint() {
-        EntryPaint = (await import('entry-paint')).default;
+        EntryPaint = window.EntryPaint.default;
+        // EntryPaint = (await import('entry-paint')).default;
         if (this.requestShow) {
             this.initialize();
         }
