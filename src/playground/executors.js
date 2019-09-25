@@ -60,7 +60,7 @@ class Executor {
             if (returnVal instanceof Promise) {
                 this.paused = true;
                 returnVal
-                    .then((value) => {
+                    .then(() => {
                         if (this.scope.block && Entry.engine.isState('run')) {
                             this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
                         }
@@ -72,7 +72,6 @@ class Executor {
                         this.paused = false;
                     })
                     .catch((e) => {
-                        console.log('eeeee', e);
                         this.paused = false;
                         if (e.name === 'AsyncError') {
                             returnVal = Entry.STATIC.BREAK;
