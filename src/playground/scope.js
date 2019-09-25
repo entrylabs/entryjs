@@ -97,11 +97,15 @@ class Scope {
 
     getValue(key, scope) {
         const executorValueMap = this.executor.valueMap;
-        const fieldBlock = this.block.params[this._getParamIndex(key, scope)];
-        const blockId = fieldBlock.data.id;
+        if (this.block) {
+            const fieldBlock = this.block.params[this._getParamIndex(key, scope)];
+            const blockId = fieldBlock.data.id;
 
-        this._setExecutorValueMap([fieldBlock]);
-        return executorValueMap[blockId];
+            this._setExecutorValueMap([fieldBlock]);
+            return executorValueMap[blockId];
+        } else {
+            throw new Entry.Utils.AsyncError('no block');
+        }
     }
 
     /**

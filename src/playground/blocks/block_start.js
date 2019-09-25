@@ -1,4 +1,3 @@
-window.a = 0;
 module.exports = {
     getBlocks() {
         return {
@@ -10,31 +9,59 @@ module.exports = {
                 statements: [],
                 params: [
                     {
+                        type: 'Block',
+                        accept: 'string',
+                    },
+                    {
                         type: 'Indicator',
                         img: 'block_icon/start_icon.svg',
                         size: 11,
                     },
                 ],
                 def: {
+                    params: [
+                        {
+                            type: 'text',
+                            params: [Lang.Blocks.block_hi],
+                        },
+                    ],
                     type: 'async_test',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
                 },
                 class: 'async',
                 isNotFor: ['async'],
                 func(sprite, script) {
                     console.log('ha?');
-                    return new Promise((r) => {
+                    return new Promise((r, re) => {
                         setTimeout(() => {
-                            console.log('comp r');
-                            r();
-                            sprite.setX(sprite.getX() + 12);
-                            sprite.setImage(sprite.parent.getPrevPicture(sprite.picture.id));
-                            const message = Entry.convertToRoundedDecimals(
-                                `message=${window.a++}`,
-                                3
-                            );
-                            new Entry.Dialog(sprite, message, 'speak');
-                            sprite.syncDialogVisible(sprite.getVisible());
+                            try {
+                                r(script.getValue('VALUE', script));
+                            } catch (e) {
+                                re(e);
+                            }
                         }, 2000);
+                    }).then((message) => {
+                        return new Promise((r, re) => {
+                            try {
+                                sprite.setX(sprite.getX() + 12);
+                                sprite.setImage(sprite.parent.getPrevPicture(sprite.picture.id));
+                                if (message === '') {
+                                    message = '    ';
+                                } else if (typeof message === 'boolean') {
+                                    message = message ? 'True' : 'False';
+                                } else {
+                                    message = `${message}`;
+                                }
+                                message = Entry.convertToRoundedDecimals(message, 3);
+                                new Entry.Dialog(sprite, message, 'speak');
+                                sprite.syncDialogVisible(sprite.getVisible());
+                                r();
+                            } catch (e) {
+                                re(e);
+                            }
+                        });
                     });
                 },
                 syntax: {
