@@ -59,8 +59,11 @@ class Executor {
                 this.paused = true;
                 returnVal
                     .then((value) => {
-                        if (this.scope.block) {
+                        if (this.scope.block && Entry.engine.isState('run')) {
                             this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
+                        }
+                        if (this.scope.block === null && this._callStack.length) {
+                            this.scope = this._callStack.pop();
                         }
                         this.valueMap = {};
                         this.valueState = {};

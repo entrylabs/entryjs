@@ -1,3 +1,4 @@
+window.a = 0;
 module.exports = {
     getBlocks() {
         return {
@@ -27,7 +28,13 @@ module.exports = {
                             r();
                             sprite.setX(sprite.getX() + 12);
                             sprite.setImage(sprite.parent.getPrevPicture(sprite.picture.id));
-                        }, Math.random() * 5000);
+                            const message = Entry.convertToRoundedDecimals(
+                                `message=${window.a++}`,
+                                3
+                            );
+                            new Entry.Dialog(sprite, message, 'speak');
+                            sprite.syncDialogVisible(sprite.getVisible());
+                        }, 2000);
                     });
                 },
                 syntax: {
