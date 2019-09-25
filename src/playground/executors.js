@@ -72,7 +72,11 @@ class Executor {
                         this.paused = false;
                     })
                     .catch((e) => {
-                        if (this.isFuncExecutor) {
+                        console.log('eeeee', e);
+                        this.paused = false;
+                        if (e.name === 'AsyncError') {
+                            returnVal = Entry.STATIC.BREAK;
+                        } else if (this.isFuncExecutor) {
                             throw e;
                         } else {
                             Entry.Utils.stopProjectWithToast(this.scope, undefined, e);
