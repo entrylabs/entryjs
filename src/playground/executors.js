@@ -65,7 +65,9 @@ class Executor {
                             this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
                         }
                         if (this.scope.block === null && this._callStack.length) {
-                            this.scope = this._callStack.pop();
+                            this.scope = new Entry.Scope(this.scope.block.getFirstBlock(), this);
+                            this._callStack = [];
+                            // this.scope = this._callStack.pop();
                         }
                         this.valueMap = {};
                         this.valueState = {};
