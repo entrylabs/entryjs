@@ -33,18 +33,10 @@ module.exports = {
                 class: 'async',
                 isNotFor: ['async'],
                 func(sprite, script) {
-                    console.log('ha?');
                     return new Promise((r, re) => {
-                        setTimeout(() => {
+                        setTimeout(async () => {
                             try {
-                                r(script.getValue('VALUE', script));
-                            } catch (e) {
-                                re(e);
-                            }
-                        }, 2000);
-                    }).then((message) => {
-                        return new Promise((r, re) => {
-                            try {
+                                let message = await script.getAsyncValue('VALUE', script);
                                 sprite.setX(sprite.getX() + 12);
                                 sprite.setImage(sprite.parent.getPrevPicture(sprite.picture.id));
                                 if (message === '') {
@@ -61,8 +53,75 @@ module.exports = {
                             } catch (e) {
                                 re(e);
                             }
-                        });
+                        }, 2000);
                     });
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'Entry.send_signal(%1)',
+                            textParams: [
+                                {
+                                    type: 'DropdownDynamic',
+                                    value: null,
+                                    menuName: 'messages',
+                                    fontSize: 11,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.START,
+                                    converter: Entry.block.converters.returnStringKey,
+                                    paramType: 'signal',
+                                },
+                                undefined,
+                            ],
+                        },
+                    ],
+                },
+            },
+            async_test2: {
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
+                template: 'test %1',
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/start_icon.svg',
+                        size: 11,
+                    },
+                ],
+                def: {
+                    params: [
+                        {
+                            type: 'text',
+                            params: [Lang.Blocks.block_hi],
+                        },
+                    ],
+                    type: 'async_test2',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'async',
+                isNotFor: ['async'],
+                async func(sprite, script) {
+                    sprite.setX(sprite.getX() + 12);
+                    sprite.setImage(sprite.parent.getPrevPicture(sprite.picture.id));
+                    let message = await script.getAsyncValue('VALUE', script);
+                    if (message === '') {
+                        message = '    ';
+                    } else if (typeof message === 'boolean') {
+                        message = message ? 'True' : 'False';
+                    } else {
+                        message = `${message}`;
+                    }
+                    message = Entry.convertToRoundedDecimals(message, 3);
+                    new Entry.Dialog(sprite, message, 'speak');
+                    sprite.syncDialogVisible(sprite.getVisible());
                 },
                 syntax: {
                     js: [],
