@@ -674,7 +674,7 @@ Entry.Playground = class Playground {
         fontLink.bindOnClick(() => {
             const options = EntryStatic.fonts
                 .filter((font) => font.visible)
-                .map((font) => [font.name, font]);
+                .map((font) => [font.name, font, font.style]);
             fontLink.addClass('imico_pop_select_arr_up');
             fontLink.removeClass('imico_pop_select_arr_down');
             this.openDropDown(
@@ -1240,17 +1240,24 @@ Entry.Playground = class Playground {
     downloadPicture(pictureId) {
         const picture = Entry.playground.object.getPicture(pictureId);
         const { imageType = 'png' } = picture;
-
-        if (picture.fileurl) {
-            saveAs(
-                `/api/sprite/download/entryjs/${picture.fileurl}/${encodeURIComponent(
-                    picture.name
-                )}`,
-                `${picture.name}.${imageType}`
-            );
-        } else {
-            const src = this.painter.getImageSrc(picture);
-            saveAs(src, `${picture.name}.${imageType}`);
+        /**
+            Logic in try phrase will be disregarded after renewal.
+            nt11576
+        */
+        try {
+            if (picture.fileurl) {
+                saveAs(
+                    `/api/sprite/download/entryjs/${btoa(picture.fileurl)}/${encodeURIComponent(
+                        picture.name
+                    )}.png`,
+                    `${picture.name}.${imageType}`
+                );
+            } else {
+                const src = this.painter.getImageSrc(picture);
+                saveAs(src, `${picture.name}.${imageType}`);
+            }
+        } catch (e) {
+            Entry.dispatchEvent('downloadPicture', picture);
         }
     }
 
@@ -1436,6 +1443,8 @@ Entry.Playground = class Playground {
             } else {
                 window.open(sound.fileurl);
             }
+        } else if (sound.path.indexOf('sound') > -1) {
+            Entry.dispatchEvent('downloadSound', sound);
         } else {
             window.open(
                 `/api/sprite/download/sound/${encodeURIComponent(
@@ -1807,9 +1816,9 @@ Entry.Playground = class Playground {
         element.appendChild(nameView);
         Entry.createElement('div', `s_${picture.id}`)
             .addClass('entryPlaygroundPictureSize')
-            .appendTo(element).innerHTML = `${picture.dimension.width} X ${
-            picture.dimension.height
-        }`;
+            .appendTo(
+                element
+            ).innerHTML = `${picture.dimension.width} X ${picture.dimension.height}`;
 
         const removeButton = Entry.createElement('div').addClass('entryPlayground_del');
         const { Buttons = {} } = Lang || {};
@@ -2031,17 +2040,22 @@ Entry.Playground = class Playground {
     };
 
     openColourPicker = (target, color, canTransparent, callback) => {
+        const containers = $('.entry-color-picker');
+        if (containers.length > 0) {
+            $(target).removeClass('on');
+            return containers.remove();
+        }
         const container = Entry.Dom('div', {
             class: 'entry-color-picker',
             parent: $('body'),
         })[0];
-
         $(target).addClass('on');
         const colorPicker = new ColorPicker({
             data: {
                 color,
                 positionDom: target,
                 canTransparent,
+                outsideExcludeDom: [target],
                 onOutsideClick: (color) => {
                     if (colorPicker) {
                         $(target).removeClass('on');

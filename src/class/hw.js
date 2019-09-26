@@ -124,7 +124,7 @@ Entry.HW = class {
         try {
             await Entry.moduleManager.loadExternalModule(moduleName);
         } catch (e) {
-            Entry.toast.alert('모듈 로드실패', `${moduleName} 모듈 불러오기에 실패했습니다.`);
+            Entry.toast.alert(Lang.Hw.hw_module_load_fail_title, `${moduleName} ${Lang.Hw.hw_module_load_fail_desc}`);
         }
     }
 
@@ -309,8 +309,8 @@ Entry.HW = class {
 
             Entry.dispatchEvent('hwChanged');
             Entry.toast.alert(
-                '하드웨어 프로그램 연결 종료',
-                '하드웨어 프로그램과의 연결이 종료되었습니다.',
+                Lang.Hw.hw_module_terminaltion_title,
+                Lang.Hw.hw_module_terminaltion_desc,
                 false
             );
         }
@@ -386,6 +386,7 @@ Entry.HW = class {
         if (!this.socket || this.socket.disconnected) {
             return;
         }
+
         if (this.hwModule && this.hwModule.sendMessage) {
             this.hwModule.sendMessage(this);
         } else {
@@ -395,6 +396,8 @@ Entry.HW = class {
                 type: 'utf8',
             });
         }
+
+        this.hwModule && this.hwModule.afterSend && this.hwModule.afterSend(this.sendQueue);
     }
 
     _sendSocketMessage(message) {
@@ -465,6 +468,7 @@ Entry.HW = class {
         if (!this.hwModule) {
             return;
         }
+        this._banClassAllHardware();
         Entry.dispatchEvent('hwChanged');
 
         let descMsg = '';
