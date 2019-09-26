@@ -1443,7 +1443,7 @@ Entry.Playground = class Playground {
             } else {
                 window.open(sound.fileurl);
             }
-        } else if (sound.path) {
+        } else if (sound.path.indexOf('sound') > -1) {
             Entry.dispatchEvent('downloadSound', sound);
         } else {
             window.open(
