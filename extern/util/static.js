@@ -184,6 +184,7 @@ EntryStatic.getAllBlocks = function() {
             category: 'start',
             blocks: [
                 'async_test',
+                'async_test2',
                 'when_run_button_click',
                 'when_some_key_pressed',
                 'mouse_clicked',

@@ -37,7 +37,11 @@ Entry.Event = class Event {
     notify() {
         const args = arguments;
         this._listeners.slice().forEach(function(listener) {
-            listener.fn.apply(listener.obj, args);
+            try {
+                listener.fn.apply(listener.obj, args);
+            } catch (e) {
+                console.warn(e, listener, listener.fn);
+            }
         });
     }
 

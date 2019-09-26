@@ -14,6 +14,7 @@ import { GEHelper } from '../graphicEngine/GEHelper';
  * @constructor
  */
 Entry.Dialog = function(entity, message, mode, isStamp) {
+    if (entity.isEngineStop) return;
     if (entity.dialog) entity.dialog.remove();
     entity.dialog = this;
     this.parent = entity;
