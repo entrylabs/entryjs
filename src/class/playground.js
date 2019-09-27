@@ -1198,7 +1198,6 @@ Entry.Playground = class Playground {
 
         Entry.do('objectAddPicture', picture.objectId || this.object.id, picture, isSelect);
         this.injectPicture();
-        this.selectPicture(picture);
     }
 
     /**
