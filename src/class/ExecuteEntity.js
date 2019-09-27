@@ -332,6 +332,10 @@ class CloneEntity {
     }
 }
 
+function getCloneEntity(entity) {
+    return Object.assign(Object.create(Object.getPrototypeOf(entity)), entity);
+}
+
 export default class ExecuteEntity {
     constructor() {
         this.entityMap = new WeakMap();
@@ -341,7 +345,7 @@ export default class ExecuteEntity {
         if (this.entityMap.has(entity)) {
             return this.entityMap.get(entity);
         } else {
-            const cloneEntity = new CloneEntity(entity);
+            const cloneEntity = getCloneEntity(entity);
             this.entityMap.set(entity, cloneEntity);
             return cloneEntity;
         }
@@ -350,7 +354,10 @@ export default class ExecuteEntity {
     stop(entity) {
         if (this.entityMap.has(entity)) {
             const cloneEntity = this.entityMap.get(entity);
-            cloneEntity.isEngineStop = true;
+            Object.getOwnPropertyNames(cloneEntity.__proto__).forEach((name) => {
+                cloneEntity[name] = () => {};
+            });
+            // cloneEntity.isEngineStop = true;
             if (cloneEntity.dialog) {
                 cloneEntity.dialog.remove();
             }

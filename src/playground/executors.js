@@ -2,11 +2,12 @@
  *
  */
 'use strict';
-
 class Executor {
-    constructor(block, entity) {
+    constructor(block, entity, code) {
         this.scope = new Entry.Scope(block, this);
+        this.isUpdateTime = 0;
         this.entity = entity;
+        this.code = code;
         this._callStack = [];
         this.register = {};
         this.paused = false;
@@ -17,6 +18,9 @@ class Executor {
     }
 
     execute(isFromOrigin) {
+        if (Entry.isTurbo && !this.isUpdateTime) {
+            this.isUpdateTime = performance.now();
+        }
         if (this.isEnd()) {
             return;
         }
@@ -32,23 +36,23 @@ class Executor {
             let returnVal = null;
             executedBlocks.push(this.scope.block);
 
-            try {
-                const schema = this.scope.block.getSchema();
-                if (schema && Entry.skeleton[schema.skeleton].executable) {
-                    Entry.dispatchEvent('blockExecute', this.scope.block && this.scope.block.view);
-                    returnVal = schema.func.call(this.scope, entity, this.scope);
-                    this.scope.key = Entry.generateHash();
-                }
-            } catch (e) {
-                if (e.name === 'AsyncError') {
-                    returnVal = Entry.STATIC.BREAK;
-                } else if (this.isFuncExecutor) {
-                    //function executor
-                    throw e;
-                } else {
-                    Entry.Utils.stopProjectWithToast(this.scope, undefined, e);
-                }
+            // try {
+            const schema = this.scope.block.getSchema();
+            if (schema && Entry.skeleton[schema.skeleton].executable) {
+                Entry.dispatchEvent('blockExecute', this.scope.block && this.scope.block.view);
+                returnVal = schema.func.call(this.scope, entity, this.scope);
+                this.scope.key = Entry.generateHash();
             }
+            // } catch (e) {
+            //     if (e.name === 'AsyncError') {
+            //         returnVal = Entry.STATIC.BREAK;
+            //     } else if (this.isFuncExecutor) {
+            //         //function executor
+            //         throw e;
+            //     } else {
+            //         Entry.Utils.stopProjectWithToast(this.scope, undefined, e);
+            //     }
+            // }
 
             //executor can be ended after block function call
             if (this.isEnd()) {
@@ -63,9 +67,7 @@ class Executor {
                             this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
                         }
                         if (this.scope.block === null && this._callStack.length) {
-                            this.scope = new Entry.Scope(this.scope.block.getFirstBlock(), this);
-                            this._callStack = [];
-                            // this.scope = this._callStack.pop();
+                            this.scope = this._callStack.pop();
                         }
                         this.valueMap = {};
                         this.valueState = {};
@@ -95,6 +97,7 @@ class Executor {
                         const oldScope = this.scope;
                         this.scope = this._callStack.pop();
                         if (this.scope.isLooped !== oldScope.isLooped) {
+                            this.isLooped = true;
                             break;
                         }
                     } else {

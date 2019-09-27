@@ -455,6 +455,7 @@ module.exports = {
                         sumValue = `${variableValue}${value}`;
                     }
 
+                    // console.log(value, variableValue, sumValue);
                     variable.setValue(sumValue);
                     return script.callReturn();
                 },
