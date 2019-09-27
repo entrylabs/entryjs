@@ -49,6 +49,7 @@ Entry.ZoomController = class ZoomController {
 
     renderStart(zoomGroup) {
         const { btn_zoom_bg, btn_zoom_out, btn_zoom_reset, btn_zoom_in } = EntryStatic.images || {};
+        const isIE = Entry.getBrowserType().indexOf('IE') >= 0;
         zoomGroup.svgZoom.elem('image', {
             href: btn_zoom_bg || `${Entry.mediaFilePath}btn_zoom_bg.svg`,
             width: this.CONTROLLER_WIDTH,
@@ -61,7 +62,7 @@ Entry.ZoomController = class ZoomController {
             width: 32,
             height: 32,
             filter: 'url(#entryButtonShadowFilter)',
-            style: 'cursor: zoom-out;',
+            style: `cursor: ${isIE ? 'default' : 'zoom-out'};`,
         });
         zoomGroup.zoomReset = zoomGroup.svgZoom.elem('image', {
             id: 'zoom_reset',
@@ -80,7 +81,7 @@ Entry.ZoomController = class ZoomController {
             width: 32,
             height: 32,
             filter: 'url(#entryButtonShadowFilter)',
-            style: 'cursor: zoom-in;',
+            style: `cursor: ${isIE ? 'default' : 'zoom-in'};`,
         });
     }
 
