@@ -1152,7 +1152,7 @@ Entry.Playground = class Playground {
     /**
      * Inject picture
      */
-    injectPicture() {
+    injectPicture(isSelect = true) {
         const view = this.pictureListView_;
         if (!view) {
             return;
@@ -1169,7 +1169,7 @@ Entry.Playground = class Playground {
                 element.orderHolder.innerHTML = i + 1;
             });
 
-            this.selectPicture(this.object.selectedPicture);
+            isSelect && this.selectPicture(this.object.selectedPicture);
         }
 
         this.updatePictureView();
@@ -1179,7 +1179,7 @@ Entry.Playground = class Playground {
      * Add picture
      * @param {picture model} picture
      */
-    addPicture(picture, isNew) {
+    addPicture(picture, isNew, isSelect = true) {
         const tempPicture = _.clone(picture);
 
         if (isNew === true) {
@@ -1196,7 +1196,7 @@ Entry.Playground = class Playground {
 
         this.generatePictureElement(picture);
 
-        Entry.do('objectAddPicture', picture.objectId || this.object.id, picture);
+        Entry.do('objectAddPicture', picture.objectId || this.object.id, picture, isSelect);
         this.injectPicture();
         this.selectPicture(picture);
     }
