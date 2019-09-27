@@ -2,11 +2,12 @@
  *
  */
 'use strict';
-
 class Executor {
-    constructor(block, entity) {
+    constructor(block, entity, code) {
         this.scope = new Entry.Scope(block, this);
+        this.isUpdateTime = 0;
         this.entity = entity;
+        this.code = code;
         this._callStack = [];
         this.register = {};
         this.paused = false;
@@ -17,6 +18,9 @@ class Executor {
     }
 
     execute(isFromOrigin) {
+        if (Entry.isTurbo && !this.isUpdateTime) {
+            this.isUpdateTime = performance.now();
+        }
         if (this.isEnd()) {
             return;
         }
@@ -65,9 +69,7 @@ class Executor {
                             this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
                         }
                         if (this.scope.block === null && this._callStack.length) {
-                            this.scope = new Entry.Scope(this.scope.block.getFirstBlock(), this);
-                            this._callStack = [];
-                            // this.scope = this._callStack.pop();
+                            this.scope = this._callStack.pop();
                         }
                         this.valueMap = {};
                         this.valueState = {};
@@ -97,6 +99,7 @@ class Executor {
                         const oldScope = this.scope;
                         this.scope = this._callStack.pop();
                         if (this.scope.isLooped !== oldScope.isLooped) {
+                            this.isLooped = true;
                             break;
                         }
                     } else {

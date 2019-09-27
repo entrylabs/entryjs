@@ -514,7 +514,8 @@ Entry.Engine = class Engine {
             return;
         }
         clearInterval(this.ticker);
-        this.ticker = setInterval(this.update, Math.floor(1000 / FPS));
+        Entry.tickTime = Math.floor(1000 / FPS);
+        this.ticker = setInterval(this.update, Entry.tickTime);
         Entry.FPS = FPS;
     }
 
@@ -527,7 +528,8 @@ Entry.Engine = class Engine {
         GEHelper.Ticker.setFPS(Entry.FPS);
 
         if (!this.ticker) {
-            this.ticker = setInterval(this.update, Math.floor(1000 / Entry.FPS));
+            Entry.tickTime = Math.floor(1000 / Entry.FPS);
+            this.ticker = setInterval(this.update, Entry.tickTime);
         }
     }
 
@@ -875,11 +877,6 @@ Entry.Engine = class Engine {
      * @param {string} eventName
      */
     raiseEvent = (entity, eventName) => {
-        console.log(
-            this,
-            entity === this.executeEntity.get(entity),
-            entity.__proto__ === this.executeEntity.get(entity).__proto__
-        );
         entity.parent.script.raiseEvent(eventName, this.executeEntity.get(entity));
     };
 
