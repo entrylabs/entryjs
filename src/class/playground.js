@@ -1197,7 +1197,6 @@ Entry.Playground = class Playground {
         this.generatePictureElement(picture);
 
         Entry.do('objectAddPicture', picture.objectId || this.object.id, picture, isSelect);
-        this.injectPicture();
     }
 
     /**
