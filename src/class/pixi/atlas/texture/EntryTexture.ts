@@ -3,12 +3,13 @@ import { EntryBaseTexture } from './EntryBaseTexture';
 import { EntryTextureBase } from './EntryTextureBase';
 
 export class EntryTexture extends EntryTextureBase {
-
-    constructor(baseTexture: EntryBaseTexture, imageRect:ImageRect) {
+    constructor(baseTexture: EntryBaseTexture, imageRect: ImageRect) {
         super(baseTexture, imageRect);
     }
 
-    getBaseTexture():EntryBaseTexture {
-        return this.baseTexture as EntryBaseTexture;
+    getBaseTexture(): EntryBaseTexture {
+        const result = this.baseTexture as EntryBaseTexture;
+        result._frame = this._frame;
+        return result;
     }
 }

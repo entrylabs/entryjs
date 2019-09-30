@@ -100,12 +100,16 @@ export class SceneTextures implements ISceneTextures {
             return;
         }
         let baseTex = tex.getBaseTexture();
-
-        try {
-            baseTex.updateSource(info.source());
-        } catch (e) {
-            console.log(e);
+        const source = info.source();
+        if (baseTex._frame) {
+            if (baseTex._frame.height != info.srcHeight) {
+                baseTex._frame.height = info.srcHeight;
+            }
+            if (baseTex._frame.width != info.srcWidth) {
+                baseTex._frame.width = info.srcWidth;
+            }
         }
+        baseTex.updateSource(source);
 
         Entry.requestUpdate = true;
     }
