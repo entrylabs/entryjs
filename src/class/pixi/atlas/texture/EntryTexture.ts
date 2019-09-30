@@ -8,8 +8,6 @@ export class EntryTexture extends EntryTextureBase {
     }
 
     getBaseTexture(): EntryBaseTexture {
-        const result = this.baseTexture as EntryBaseTexture;
-        result._frame = this._frame;
-        return result;
+        return this.baseTexture as EntryBaseTexture;
     }
 }
