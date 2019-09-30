@@ -61,7 +61,7 @@ Entry.ZoomController = class ZoomController {
             width: 32,
             height: 32,
             filter: 'url(#entryButtonShadowFilter)',
-            style: 'cursor: zoom-out;',
+            style: 'cursor: default; cursor: -moz-zoom-out; cursor: -webkit-zoom-out; cursor: -ms-zoom-out; cursor: -o-zoom-out;',
         });
         zoomGroup.zoomReset = zoomGroup.svgZoom.elem('image', {
             id: 'zoom_reset',
@@ -80,7 +80,7 @@ Entry.ZoomController = class ZoomController {
             width: 32,
             height: 32,
             filter: 'url(#entryButtonShadowFilter)',
-            style: 'cursor: zoom-in;',
+            style: 'cursor: default; cursor: -moz-zoom-in; cursor: -webkit-zoom-in; cursor: -ms-zoom-in; cursor: -o-zoom-in;',
         });
     }
 
