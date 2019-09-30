@@ -143,7 +143,7 @@ Entry.Stage = class Stage {
 
         this.initWall();
         this.render();
-        // this.dropper = Extension.getExtension('Dropper');
+        this.dropper = Extension.getExtension('Dropper');
     }
     render = function stageRender() {
         if (Entry.stage.timer) {
