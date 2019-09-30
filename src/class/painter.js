@@ -140,7 +140,6 @@ Entry.Painter = class Painter {
         const file = this.file;
         file.modified = false;
         this.isImport = true;
-        this.entryPaint.reset();
 
         if (picture.id) {
             file.id = picture.id || Entry.generateHash();
@@ -178,7 +177,6 @@ Entry.Painter = class Painter {
         switch (imageType) {
             case 'png':
                 this.entryPaint.addBitmap(imageSrc, {
-                    isChangedLayer: this.isImport,
                     graphicsMode: this.isImport ? this.graphicsMode.BITMAP : '',
                 });
                 break;
