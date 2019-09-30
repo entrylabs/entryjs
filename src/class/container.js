@@ -471,6 +471,7 @@ Entry.Container = class Container {
         if (first) {
             this.selectObject(first.id);
         } else {
+            Entry.stage.selectObject(null);
             Entry.playground.flushPlayground();
         }
 

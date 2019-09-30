@@ -1,6 +1,6 @@
-import EntryPaint from 'entry-paint';
 import Extension from '../extensions/extension';
 
+let EntryPaint;
 Entry.Painter = class Painter {
     constructor(view) {
         this.view = view;
@@ -20,6 +20,15 @@ Entry.Painter = class Painter {
         Entry.addEventListener('pictureImport', this.addPicture.bind(this));
         Entry.addEventListener('run', this.detachKeyboardEvents.bind(this));
         Entry.addEventListener('stop', this.attachKeyboardEvents.bind(this));
+        this.importEntryPaint();
+    }
+
+    async importEntryPaint() {
+        EntryPaint = window.EntryPaint.default;
+        // EntryPaint = (await import('entry-paint')).default;
+        if (this.requestShow) {
+            this.initialize();
+        }
     }
 
     get graphicsMode() {
@@ -28,6 +37,7 @@ Entry.Painter = class Painter {
 
     initialize() {
         if (this.entryPaint || !EntryPaint) {
+            this.requestShow = true;
             return;
         }
 
@@ -63,16 +73,19 @@ Entry.Painter = class Painter {
         });
 
         Entry.addEventListener('pictureSelected', this.changePicture.bind(this));
-        Entry.windowResized.attach(this.view, this.entryPaint.realign);
     }
 
     show() {
         if (!this.isShow) {
             this.initialize();
         }
+        this.realign && Entry.windowResized.detach(this.realign);
+        this.realign = Entry.windowResized.attach(this.view, this.entryPaint.realign);
     }
 
-    hide() {}
+    hide() {
+        this.entryPaint && Entry.windowResized.detach(this.realign);
+    }
 
     newPicture() {
         const newPicture = {
