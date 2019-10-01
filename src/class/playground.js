@@ -1714,19 +1714,7 @@ Entry.Playground = class Playground {
                 {
                     text: Lang.Workspace.context_remove,
                     callback() {
-                        if (Entry.playground.object.removePicture(picture.id)) {
-                            Entry.removeElement(element);
-                            Entry.dispatchEvent('removePicture', picture);
-                            Entry.toast.success(
-                                Lang.Workspace.shape_remove_ok,
-                                `${picture.name} ${Lang.Workspace.shape_remove_ok_msg}`
-                            );
-                        } else {
-                            Entry.toast.alert(
-                                Lang.Workspace.shape_remove_fail,
-                                Lang.Workspace.shape_remove_fail_msg
-                            );
-                        }
+                        this._removePicture(picture, element);
                     },
                 },
                 {
@@ -1824,20 +1812,8 @@ Entry.Playground = class Playground {
         removeButton.appendTo(element).innerText = delText;
         removeButton.bindOnClick((e) => {
             try {
-                if (Entry.playground.object.removePicture(picture.id)) {
-                    e.stopPropagation();
-                    Entry.removeElement(element);
-                    Entry.dispatchEvent('removePicture', picture);
-                    Entry.toast.success(
-                        Lang.Workspace.shape_remove_ok,
-                        `${picture.name} ${Lang.Workspace.shape_remove_ok_msg}`
-                    );
-                } else {
-                    Entry.toast.alert(
-                        Lang.Workspace.shape_remove_fail,
-                        Lang.Workspace.shape_remove_fail_msg
-                    );
-                }
+                e.stopPropagation();
+                this._removePicture(picture, element);
             } catch (e) {
                 Entry.toast.alert(
                     Lang.Workspace.shape_remove_fail,
@@ -1845,6 +1821,23 @@ Entry.Playground = class Playground {
                 );
             }
         });
+    }
+
+    _removePicture(picture, element) {
+        console.log(Entry.playground.object.pictures.length);
+        if (Entry.playground.object.pictures.length > 1) {
+            Entry.do('objectRemovePicture', picture.objectId, picture);
+            Entry.removeElement(element);
+            Entry.toast.success(
+                Lang.Workspace.shape_remove_ok,
+                `${picture.name} ${Lang.Workspace.shape_remove_ok_msg}`
+            );
+        } else {
+            Entry.toast.alert(
+                Lang.Workspace.shape_remove_fail,
+                Lang.Workspace.shape_remove_fail_msg
+            );
+        }
     }
 
     generateSoundElement(sound) {

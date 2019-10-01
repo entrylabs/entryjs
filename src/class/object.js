@@ -317,7 +317,7 @@ Entry.EntryObject = class {
     removePicture(pictureId) {
         const pictures = this.pictures;
         if (pictures.length < 2) {
-            return false;
+            return;
         }
 
         const playground = Entry.playground;
@@ -330,7 +330,6 @@ Entry.EntryObject = class {
         GEHelper.resManager.imageRemoved('EntityObject::removePicture');
         playground.injectPicture(this);
         playground.reloadPlayground();
-        return true;
     }
 
     /**
