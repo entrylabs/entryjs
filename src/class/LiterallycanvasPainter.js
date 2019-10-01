@@ -158,6 +158,19 @@ Entry.LiterallycanvasPainter = class LiterallycanvasPainter {
         Entry.stateManager.removeAllPictureCommand();
     }
 
+    getImageSrc(picture) {
+        const { fileurl } = picture || {};
+        if (fileurl) {
+            return fileurl;
+        }
+
+        const { imageType = 'png', filename } = picture || {};
+        return `${Entry.defaultPath}/uploads/${filename.substring(0, 2)}/${filename.substring(
+            2,
+            4
+        )}/image/${filename}.${imageType}`;
+    }
+
     addPicture(picture, isOriginal) {
         const image = new Image();
 
