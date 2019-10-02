@@ -31,7 +31,8 @@ Entry.EXPANSION_BLOCK.tts = {
                     instance.soundType = 'tts';
                     Entry.Utils.addSoundInstances(instance);
                     if (filtered.callback) {
-                        setTimeout(filtered.callback, instance.duration);
+                        const duration = instance.duration > 0 ? instance.duration : filtered.duration * 300;
+                        setTimeout(filtered.callback, duration);
                     }
                     return false;
                 }
@@ -153,7 +154,7 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
         } else {
             const src = `${Entry.EXPANSION_BLOCK.tts.api}.mp3?${toQueryString({ text: message, ...prop })}`;
             const type = createjs.LoadQueue.SOUND;
-            tts.soundQueue.loadFile({ id, src, type, prop, callback });
+            tts.soundQueue.loadFile({ id, src, type, prop, callback, duration: message.length });
             tts.loadQueue.push(id);
         }
         return id;
