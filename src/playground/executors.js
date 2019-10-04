@@ -36,23 +36,24 @@ class Executor {
             let returnVal = null;
             executedBlocks.push(this.scope.block);
 
-            // try {
-            const schema = this.scope.block.getSchema();
-            if (schema && Entry.skeleton[schema.skeleton].executable) {
-                Entry.dispatchEvent('blockExecute', this.scope.block && this.scope.block.view);
-                returnVal = schema.func.call(this.scope, entity, this.scope);
-                this.scope.key = Entry.generateHash();
+            try {
+                const schema = this.scope.block.getSchema();
+                if (schema && Entry.skeleton[schema.skeleton].executable) {
+                    Entry.dispatchEvent('blockExecute', this.scope.block && this.scope.block.view);
+                    // returnVal = schema.func.call(this.scope, entity, this.scope);
+                    returnVal = this.scope.run(entity);
+                    this.scope.key = Entry.generateHash();
+                }
+            } catch (e) {
+                if (e.name === 'AsyncError') {
+                    returnVal = Entry.STATIC.BREAK;
+                } else if (this.isFuncExecutor) {
+                    //function executor
+                    throw e;
+                } else {
+                    Entry.Utils.stopProjectWithToast(this.scope, undefined, e);
+                }
             }
-            // } catch (e) {
-            //     if (e.name === 'AsyncError') {
-            //         returnVal = Entry.STATIC.BREAK;
-            //     } else if (this.isFuncExecutor) {
-            //         //function executor
-            //         throw e;
-            //     } else {
-            //         Entry.Utils.stopProjectWithToast(this.scope, undefined, e);
-            //     }
-            // }
 
             //executor can be ended after block function call
             if (this.isEnd()) {
@@ -67,7 +68,11 @@ class Executor {
                             this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
                         }
                         if (this.scope.block === null && this._callStack.length) {
+                            const oldScope = this.scope;
                             this.scope = this._callStack.pop();
+                            if (this.scope.isLooped !== oldScope.isLooped) {
+                                this.isLooped = true;
+                            }
                         }
                         this.valueMap = {};
                         this.valueState = {};

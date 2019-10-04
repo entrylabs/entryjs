@@ -6,6 +6,7 @@
 import SimpleBar from 'simplebar';
 import fetch from 'isomorphic-fetch';
 import xssFilters from 'xss-filters';
+import CloudVariable from '../extensions/CloudVariable';
 /**
  * Block variable constructor
  * @param {variable model} variable
@@ -13,6 +14,7 @@ import xssFilters from 'xss-filters';
  */
 Entry.VariableContainer = class VariableContainer {
     constructor() {
+        this.cloudVariable = CloudVariable.getInstance();
         this.variables_ = [];
         this.messages_ = [];
         this.lists_ = [];
@@ -2473,7 +2475,7 @@ Entry.VariableContainer = class VariableContainer {
     generateListCountView(element) {
         const that = this;
         const createElement = Entry.createElement;
-        
+
         const listCount = createElement('div')
             .addClass('list_cnt')
             .appendTo(element);
@@ -2503,12 +2505,13 @@ Entry.VariableContainer = class VariableContainer {
         //List limit setting. [default value:5000, length: 4]
         let limitValue = 5000;
         let maxlength = 4;
-        
-        if(that.selected.array_ && that.selected.array_.length > 0 ){
+
+        if (that.selected.array_ && that.selected.array_.length > 0) {
             const currentLeng = that.selected.array_.length.toString().length;
             // 리스트 카운트가 5000 일떄만 설정
             maxlength = currentLeng > maxlength ? currentLeng : maxlength;
-            limitValue = that.selected.array_.length > limitValue ? that.selected.array_.length : limitValue ;
+            limitValue =
+                that.selected.array_.length > limitValue ? that.selected.array_.length : limitValue;
         }
 
         const buttonPlus = createElement('a')
@@ -2519,11 +2522,11 @@ Entry.VariableContainer = class VariableContainer {
                 } = that;
 
                 const selectedLength = Entry.variableContainer.selected.array_.length;
-                
-                if( selectedLength >= limitValue ) {
-                    Entry.do('listChangeLength', id_, ''); 
-                }else{
-                    Entry.do('listChangeLength', id_, 'plus'); 
+
+                if (selectedLength >= limitValue) {
+                    Entry.do('listChangeLength', id_, '');
+                } else {
+                    Entry.do('listChangeLength', id_, 'plus');
                 }
             })
             .appendTo(countInputBox);
@@ -2534,14 +2537,14 @@ Entry.VariableContainer = class VariableContainer {
         const countInput = createElement('input').appendTo(countInputBox);
         countInput.setAttribute('type', 'text');
         countInput.setAttribute('maxlength', maxlength);
-        
+
         countInput.onblur = function() {
             const v = that.selected;
             let value = this.value;
             value = Entry.Utils.isNumber(value) ? value : v.array_.length;
 
-            if(value >= limitValue) { 
-               value = limitValue; 
+            if (value >= limitValue) {
+                value = limitValue;
             }
 
             Entry.do('listChangeLength', v.id_, Number(value));
@@ -2606,7 +2609,9 @@ Entry.VariableContainer = class VariableContainer {
                 /* html */ `
                     <li>
                         <span class='cnt'>${i + startIndex}</span>
-                        <input value='${xssFilters.inSingleQuotedAttr(value)}' type='text' data-index='${i}'/>
+                        <input value='${xssFilters.inSingleQuotedAttr(
+                            value
+                        )}' type='text' data-index='${i}'/>
                         <a class='del' data-index='${i}'></a>
                     </li>`.trim()
             );
