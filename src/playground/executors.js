@@ -40,14 +40,13 @@ class Executor {
                 const schema = this.scope.block.getSchema();
                 if (schema && Entry.skeleton[schema.skeleton].executable) {
                     Entry.dispatchEvent('blockExecute', this.scope.block && this.scope.block.view);
-                    returnVal = schema.func.call(this.scope, entity, this.scope);
+                    // returnVal = schema.func.call(this.scope, entity, this.scope);
+                    returnVal = this.scope.run(entity);
                     this.scope.key = Entry.generateHash();
                 }
             } catch (e) {
                 if (e.name === 'AsyncError') {
                     returnVal = Entry.STATIC.BREAK;
-                } else if (e.name === 'IncompatibleError') {
-                    Entry.Utils.stopProjectWithToast(this.scope, e.message, e);
                 } else if (this.isFuncExecutor) {
                     //function executor
                     throw e;
@@ -69,7 +68,11 @@ class Executor {
                             this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
                         }
                         if (this.scope.block === null && this._callStack.length) {
+                            const oldScope = this.scope;
                             this.scope = this._callStack.pop();
+                            if (this.scope.isLooped !== oldScope.isLooped) {
+                                this.isLooped = true;
+                            }
                         }
                         this.valueMap = {};
                         this.valueState = {};

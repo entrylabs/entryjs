@@ -6,6 +6,7 @@
 import SimpleBar from 'simplebar';
 import fetch from 'isomorphic-fetch';
 import xssFilters from 'xss-filters';
+import CloudVariable from '../extensions/CloudVariable';
 
 /**
  * Block variable constructor
@@ -14,6 +15,7 @@ import xssFilters from 'xss-filters';
  */
 Entry.VariableContainer = class VariableContainer {
     constructor() {
+        this.cloudVariable = CloudVariable.getInstance();
         this.variables_ = [];
         this.messages_ = [];
         this.lists_ = [];
