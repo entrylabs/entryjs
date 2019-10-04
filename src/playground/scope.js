@@ -15,7 +15,7 @@ class Scope {
     getParam(index) {
         const fieldBlock = this.block.params[index];
         const newScope = new Entry.Scope(fieldBlock, this.executor);
-        const result = newScope.run(this.entity);
+        const result = newScope.run(this.entity, true);
         return result;
     }
 
@@ -25,7 +25,7 @@ class Scope {
             if (param instanceof Entry.Block) {
                 const fieldBlock = param;
                 const newScope = new Entry.Scope(fieldBlock, that.executor);
-                return newScope.run(this.entity);
+                return newScope.run(this.entity, true);
             } else {
                 return param;
             }
@@ -168,26 +168,22 @@ class Scope {
         return Entry.STATIC.BREAK;
     }
 
-    run(entity) {
+    run(entity, isValue) {
         const values = this.getParams();
         const isPromise = values.some((value) => {
             return value instanceof Promise;
         });
         const schema = this.block.getSchema();
+        if (!schema.func) {
+            return;
+        }
         if (!isPromise) {
             this.values = values;
             return schema.func.call(this, entity, this);
         } else {
-            return Promise.all(values).then((values) => {
-                return new Promise(async (resolve, reject) => {
-                    try {
-                        this.values = values;
-                        await schema.func.call(this, entity, this);
-                        resolve();
-                    } catch (e) {
-                        reject(e);
-                    }
-                });
+            return Promise.all(values).then(async (values) => {
+                this.values = values;
+                return await schema.func.call(this, entity, this);
             });
         }
     }
