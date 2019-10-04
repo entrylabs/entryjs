@@ -2,6 +2,7 @@ import io from 'socket.io-client';
 import { dmet, dmetVariable, dmetList } from './dmet';
 import singleInstance from '../core/singleInstance';
 import { runInContext } from 'vm';
+import { thisTypeAnnotation } from '@babel/types';
 
 class CloudVariableExtension {
     #cvSocket = null;
@@ -42,6 +43,7 @@ class CloudVariableExtension {
                 }
             });
             socket.on('welcome', (variables) => {
+                console.log(variables);
                 try {
                     this.#data = new dmet(variables);
                 } catch (e) {
@@ -119,29 +121,41 @@ class CloudVariableExtension {
                 this.#cvSocket.emit('action', operation, (isUpdate, operation) => {
                     if (isUpdate) {
                         this.#data.exec(operation);
+                        resolve(operation);
+                    } else {
+                        resolve();
                     }
-                    resolve(operation);
                 });
             } else {
                 this.#data.exec(operation);
                 resolve(operation);
             }
         }).then((operation) => {
-            const { id, value } = operation;
-            const variable = Entry.variableContainer.getVariable(id);
-            variable.value_ = value;
-            variable._valueWidth = null;
-            variable.updateView();
+            if (operation) {
+                this.#applyValue(operation);
+            }
         });
     }
 
     #execDmet(operation) {
         this.#data.exec(operation);
-        const { id, value } = operation;
-        const variable = Entry.variableContainer.getVariable(id);
-        variable.value_ = value;
-        variable._valueWidth = null;
-        variable.updateView();
+        this.#applyValue(operation);
+    }
+
+    #applyValue(operation) {
+        const { id, value, data, variableType } = operation;
+        if (variableType === 'variable') {
+            const variable = Entry.variableContainer.getVariable(id);
+            variable.value_ = value;
+            variable._valueWidth = null;
+            variable.updateView();
+        } else if (variableType === 'list') {
+            const list = Entry.variableContainer.getList(id);
+            const { array } = this.get(operation);
+            console.log('applyValue', list, array);
+            list.array_ = array;
+            list.updateView();
+        }
     }
 
     set(target, value) {
@@ -160,7 +174,19 @@ class CloudVariableExtension {
         return this.#data && this.#data.get(target);
     }
 
-    insert(target, index, value) {
+    append(target, data) {
+        if (!this.#cvSocket) {
+            return;
+        }
+        const variable = this.#data.get(target);
+        const operation = variable.getOperation({
+            type: 'append',
+            data,
+        });
+        return this.#run(operation);
+    }
+
+    insert(target, index, data) {
         if (!this.#cvSocket) {
             return;
         }
@@ -168,7 +194,7 @@ class CloudVariableExtension {
         const operation = variable.getOperation({
             type: 'insert',
             index,
-            value,
+            data,
         });
         return this.#run(operation);
     }
@@ -185,7 +211,7 @@ class CloudVariableExtension {
         return this.#run(operation);
     }
 
-    replace(target, index, value) {
+    replace(target, index, data) {
         if (!this.#cvSocket) {
             return;
         }
@@ -193,7 +219,7 @@ class CloudVariableExtension {
         const operation = variable.getOperation({
             type: 'replace',
             index,
-            value,
+            data,
         });
         return this.#run(operation);
     }
