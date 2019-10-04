@@ -431,7 +431,7 @@ module.exports = {
                 },
                 class: 'variable',
                 isNotFor: ['variableNotExist'],
-                func(sprite, script) {
+                async func(sprite, script) {
                     const variableId = script.getField('VARIABLE', script);
                     let value = script.getValue('VALUE', script);
                     let fixed = 0;
@@ -441,6 +441,7 @@ module.exports = {
                     }
 
                     const variable = Entry.variableContainer.getVariable(variableId, sprite);
+                    const { isCloud_ } = variable;
                     let variableValue = variable.getValue();
                     let sumValue;
                     if (Entry.Utils.isNumber(value) && variable.isNumber()) {
@@ -454,10 +455,15 @@ module.exports = {
                     } else {
                         sumValue = `${variableValue}${value}`;
                     }
-
-                    // console.log(value, variableValue, sumValue);
-                    variable.setValue(sumValue);
-                    return script.callReturn();
+                    if (!isCloud_) {
+                        variable.setValue(sumValue);
+                        return script.callReturn();
+                    } else {
+                        return new Promise(async (resolve) => {
+                            await variable.setValue(sumValue);
+                            resolve();
+                        });
+                    }
                 },
                 syntax: {
                     js: [],
@@ -574,8 +580,17 @@ module.exports = {
                     const variableId = script.getField('VARIABLE', script);
                     const value = script.getValue('VALUE', script);
                     const variable = Entry.variableContainer.getVariable(variableId, sprite);
-                    variable.setValue(value);
-                    return script.callReturn();
+                    const { isCloud_ } = variable;
+
+                    if (!isCloud_) {
+                        variable.setValue(value);
+                        return script.callReturn();
+                    } else {
+                        return new Promise(async (resolve) => {
+                            await variable.setValue(value);
+                            resolve();
+                        });
+                    }
                 },
                 syntax: {
                     js: [],
