@@ -2874,6 +2874,11 @@ cssstyle@^1.0.0:
   dependencies:
     cssom "0.3.x"
 
+cuid@^2.1.6:
+  version "2.1.6"
+  resolved "https://registry.navercorp.com:443/api/npm/npm-naver/cuid/-/cuid-2.1.6.tgz#dc3a20b5a7497d36d32c0bf8a2997524c9c796c4"
+  integrity sha1-3DogtadJfTbTLAv4opl1JMnHlsQ=
+
 custom-event@~1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/custom-event/-/custom-event-1.0.1.tgz#5d02a46850adf1b4a317946a3928fccb5bfd0425"
@@ -9743,6 +9748,11 @@ uglifyjs-webpack-plugin@^2.1.2:
     uglify-js "^3.6.0"
     webpack-sources "^1.4.0"
     worker-farm "^1.7.0"
+
+uid@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.navercorp.com:443/api/npm/npm-naver/uid/-/uid-0.0.2.tgz#5e4a5d4b78138b4f70f89fd3c76fc59aa9d2f103"
+  integrity sha1-XkpdS3gTi09w+J/Tx2/FmqnS8QM=
 
 ultron@~1.1.0:
   version "1.1.1"

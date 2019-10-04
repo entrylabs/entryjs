@@ -153,6 +153,8 @@ class ListVariable extends Variable {
         Entry.stage.loadVariable(this);
     }
 
+    pushValue(value) {}
+
     updateView() {
         if (!this.view_) {
             return;

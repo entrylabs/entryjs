@@ -35,6 +35,7 @@
     "dependencies": {
         "@entrylabs/event": "^1.0.3",
         "autoprefixer": "^9.4.3",
+        "cuid": "^2.1.6",
         "events": "^3.0.0",
         "file-saver": "^2.0.2",
         "fontfaceonload": "^1.0.2",
@@ -47,6 +48,7 @@
         "postcss-flexbugs-fixes": "^4.1.0",
         "simplebar": "^3.1.1",
         "uglifyjs-webpack-plugin": "^2.1.2",
+        "uid": "^0.0.2",
         "webpack": "^4.28.3",
         "xss-filters": "^1.2.7"
     },

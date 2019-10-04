@@ -8,7 +8,7 @@ import { Destroyer } from './destroyer/Destroyer';
 import { GEHelper } from '../graphicEngine/GEHelper';
 import Expansion from '../class/Expansion';
 import Extension from '../extensions/extension';
-
+import CloudVariable from '../extensions/CloudVariable';
 require('./utils');
 
 /**
@@ -42,6 +42,7 @@ Entry.init = function(container, options) {
     this.defaultPath = options.defaultDir || '';
     this.soundPath = options.soundDir || '';
     this.blockInjectPath = options.blockInjectDir || '';
+    this.cloudVariable = CloudVariable.getInstance();
 
     if (this.type === 'workspace' && this.isPhone()) {
         this.type = 'phone';
