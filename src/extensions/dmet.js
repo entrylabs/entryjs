@@ -25,6 +25,10 @@ class dmetList {
         return this.#array;
     }
 
+    get array() {
+        return this.#array;
+    }
+
     get isDmet() {
         return true;
     }
@@ -42,14 +46,14 @@ class dmetList {
     }
 
     set #data(array) {
-        this.#array = array.map((value) => {
+        this.#array = array.map((data) => {
             const key = generateId();
-            const data = {
+            const item = {
                 key,
-                value,
+                data,
             };
-            this.#object[key] = data;
-            return data;
+            this.#object[key] = item;
+            return item;
         });
     }
 
@@ -58,9 +62,9 @@ class dmetList {
         if (Array.isArray(data)) {
             this.#data = data;
         } else if (data.isDmet || isPlainObject(data)) {
-            const { list = [], value = [], _id, id = this.#id, ...info } = data;
-            if (Array.isArray(value)) {
-                this.#array = value;
+            const { list = [], array, value, _id, id = this.#id, ...info } = data;
+            if (Array.isArray(array)) {
+                this.#array = array;
                 this.#array.map((value) => {
                     const { key } = value;
                     this.#object[key] = value;
@@ -69,7 +73,7 @@ class dmetList {
                 this.#array = list.map((key) => {
                     const data = {
                         key,
-                        value: value[key],
+                        data: value[key],
                     };
                     this.#object[key] = data;
                     return data;
@@ -82,8 +86,8 @@ class dmetList {
             this.#info = info;
         } else if ('toJSON' in data) {
             const plainObject = data.toJSON();
-            const { value = [], _id, id = this.#id, ...info } = plainObject;
-            this.#array = value;
+            const { array = [], _id, id = this.#id, ...info } = plainObject;
+            this.#array = array;
             this._id = _id;
             this.#id = id;
             this.#info = info;
@@ -117,7 +121,7 @@ class dmetList {
 
     #skipOperation = ['append', 'insert'];
 
-    getOperation({ type, key, index, value, newKey } = {}) {
+    getOperation({ type, key, index, data, newKey } = {}) {
         if (this.#skipOperation.indexOf(type) === -1 && typeof index === 'number') {
             const data = this.get(index);
             key = data.key;
@@ -126,13 +130,13 @@ class dmetList {
         switch (type) {
             case 'append':
                 attach = {
-                    value,
+                    data,
                 };
                 break;
             case 'insert':
                 attach = {
                     index,
-                    value,
+                    data,
                 };
                 break;
             case 'delete':
@@ -140,7 +144,7 @@ class dmetList {
                 break;
             case 'replace':
                 attach = {
-                    value,
+                    data,
                     newKey,
                 };
                 break;
@@ -176,36 +180,36 @@ class dmetList {
             _id: this._id || undefined,
             id: this.#id,
             key: this.#key,
-            value: this.#array,
+            array: this.#array,
             isDmet: true,
             variableType: 'list',
         };
     }
 
-    #append({ key, value } = {}) {
+    #append({ key, data } = {}) {
         if (!key) {
             key = generateId();
         }
         const newData = {
             key,
-            value,
+            data,
         };
         this.#object[key] = newData;
         this.#array.push(newData);
-        return this.getOperation({ type: 'append', key, index: -1, value });
+        return this.getOperation({ type: 'append', key, index: -1, data });
     }
 
-    #insert({ key, index, value } = {}) {
+    #insert({ key, index, data } = {}) {
         if (!key) {
             key = generateId();
         }
         const newData = {
             key,
-            value,
+            data,
         };
         this.#object[key] = newData;
         this.#array.splice(index, 0, newData);
-        return this.getOperation({ type: 'insert', key, index, value });
+        return this.getOperation({ type: 'insert', key, index, data });
     }
 
     #delete({ key, index }) {
@@ -222,16 +226,16 @@ class dmetList {
         return this.getOperation({ type: 'delete', key });
     }
 
-    #replace({ key, value, newKey = generateId() }) {
-        const data = this.get(key);
-        if (!data) {
+    #replace({ key, data, newKey = generateId() }) {
+        const item = this.get(key);
+        if (!item) {
             throw 'not found data';
         }
-        delete this.#object[data.key];
-        data.key = newKey;
-        data.value = value;
-        this.#object[newKey] = data;
-        return this.getOperation({ type: 'replace', key, value, newKey });
+        delete this.#object[item.key];
+        item.key = newKey;
+        item.data = data;
+        this.#object[newKey] = item;
+        return this.getOperation({ type: 'replace', key, data, newKey });
     }
 }
 

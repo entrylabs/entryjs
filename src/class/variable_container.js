@@ -2451,8 +2451,8 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('btn_list')
             .bindOnClick((e) => {
                 e.stopPropagation();
-                const { array_, name_ } = that.selected;
-
+                const { name_ } = that.selected;
+                const array_ = that.selected.getArray();
                 if (array_.length === 0) {
                     entrylms.alert(Lang.Menus.nothing_to_export);
                 } else {
@@ -2506,12 +2506,12 @@ Entry.VariableContainer = class VariableContainer {
         let limitValue = 5000;
         let maxlength = 4;
 
-        if (that.selected.array_ && that.selected.array_.length > 0) {
-            const currentLeng = that.selected.array_.length.toString().length;
+        const array_ = that.selected.getArray();
+        if (array_ && array_.length > 0) {
+            const currentLeng = array_.length.toString().length;
             // 리스트 카운트가 5000 일떄만 설정
             maxlength = currentLeng > maxlength ? currentLeng : maxlength;
-            limitValue =
-                that.selected.array_.length > limitValue ? that.selected.array_.length : limitValue;
+            limitValue = array_.length > limitValue ? array_.length : limitValue;
         }
 
         const buttonPlus = createElement('a')
@@ -2521,7 +2521,8 @@ Entry.VariableContainer = class VariableContainer {
                     selected: { id_ },
                 } = that;
 
-                const selectedLength = Entry.variableContainer.selected.array_.length;
+                const array_ = Entry.variableContainer.selected.getArray();
+                const selectedLength = array_.length;
 
                 if (selectedLength >= limitValue) {
                     Entry.do('listChangeLength', id_, '');
@@ -2541,7 +2542,8 @@ Entry.VariableContainer = class VariableContainer {
         countInput.onblur = function() {
             const v = that.selected;
             let value = this.value;
-            value = Entry.Utils.isNumber(value) ? value : v.array_.length;
+            const array_ = v.getArray();
+            value = Entry.Utils.isNumber(value) ? value : array_.length;
 
             if (value >= limitValue) {
                 value = limitValue;
@@ -2585,7 +2587,7 @@ Entry.VariableContainer = class VariableContainer {
         }
         list = list || this.selected;
         const { infinityScroll, listValues, lengthInput, simpleBar, scrollBox } = view;
-        const arr = list.array_ || [];
+        const arr = list.getArray() || [];
         lengthInput.value = arr.length;
         if (arr.length > 4) {
             scrollBox.addClass('on');
@@ -2639,7 +2641,7 @@ Entry.VariableContainer = class VariableContainer {
 
     setListLength(list, value) {
         value = Number(value);
-        const arr = this.selected.array_;
+        const arr = this.selected.getArray();
         const times = value - arr.length;
         if (times && Entry.Utils.isNumber(value)) {
             if (times > 0) {
