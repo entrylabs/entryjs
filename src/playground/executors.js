@@ -209,6 +209,45 @@ class Executor {
         }
     }
 
+    checkExecutorError(error) {
+        if (error.name === 'AsyncError') {
+            return Entry.STATIC.BREAK;
+        } else if (this.isFuncExecutor) {
+            throw error;
+        } else {
+            Entry.Utils.stopProjectWithToast(this.scope, undefined, error);
+        }
+    }
+
+    checkExecutorResult(returnVal) {
+        if (returnVal === undefined || returnVal === null || returnVal === Entry.STATIC.PASS) {
+            this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
+            this.valueMap = {};
+            this.valueState = {};
+            if (this.scope.block === null) {
+                if (this._callStack.length) {
+                    const oldScope = this.scope;
+                    this.scope = this._callStack.pop();
+                    if (this.scope.isLooped !== oldScope.isLooped) {
+                        this.isLooped = true;
+                        return true;
+                    }
+                } else {
+                    return true;
+                }
+            }
+        } else if (returnVal === Entry.STATIC.CONTINUE) {
+            this.valueMap = {};
+            this.valueState = {};
+        } else if (returnVal === this.scope) {
+            this.valueMap = {};
+            this.valueState = {};
+            return true;
+        } else if (returnVal === Entry.STATIC.BREAK) {
+            return true;
+        }
+    }
+
     stepInto(thread) {
         if (!(thread instanceof Entry.Thread)) {
             console.error('Must step in to thread');
