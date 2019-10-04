@@ -1687,6 +1687,54 @@ Entry.Playground = class Playground {
         }
     }
 
+    nameViewBlur() {
+        if (!Entry.playground.nameViewFocus) {
+            return;
+        }
+        if (this.nameView.value.trim() === '') {
+            entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
+                this.nameView.focus();
+            });
+            return true;
+        }
+
+        let nameViewArray = $('.entryPlaygroundPictureName');
+        if (nameViewArray.length !== Entry.playground.object.pictures.length) {
+            nameViewArray = nameViewArray.slice(0, -1); // pop last element (드래그 시 발생하는 임시 엘리먼트임)
+        }
+
+        for (let i = 0; i < nameViewArray.length; i++) {
+            if (
+                nameViewArray.eq(i).val() == this.nameView.value &&
+                nameViewArray[i] != this.nameView
+            ) {
+                entrylms.alert(Lang.Workspace.name_already_exists).on('hide', () => {
+                    this.nameView.focus();
+                });
+                return true;
+            }
+        }
+        const newValue = this.nameView.value;
+        this.nameView.picture.name = newValue;
+        const playground = Entry.playground;
+        if (playground) {
+            if (playground.object) {
+                const pic = playground.object.getPicture(this.nameView.picture.id);
+                if (pic) {
+                    pic.name = newValue;
+                }
+            }
+            const painter = playground.painter;
+            if (painter && painter.file) {
+                painter.file.name = newValue;
+            }
+
+            playground.reloadPlayground();
+        }
+        Entry.dispatchEvent('pictureNameChanged', this.nameView.picture);
+        Entry.playground.nameViewFocus = false;
+    }
+
     generatePictureElement(picture) {
         const element = Entry.createElement('li', picture.id)
             .addClass('entryPlaygroundPictureElement')
@@ -1757,46 +1805,11 @@ Entry.Playground = class Playground {
             .addClass('entryEllipsis');
         nameView.picture = picture;
         nameView.value = picture.name;
-        Entry.attachEventListener(nameView, 'blur', nameViewBlur);
-
-        function nameViewBlur() {
-            if (this.value.trim() === '') {
-                return entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
-                    nameView.focus();
-                });
-            }
-
-            let nameViewArray = $('.entryPlaygroundPictureName');
-            if (nameViewArray.length !== Entry.playground.object.pictures.length) {
-                nameViewArray = nameViewArray.slice(0, -1); // pop last element (드래그 시 발생하는 임시 엘리먼트임)
-            }
-
-            for (let i = 0; i < nameViewArray.length; i++) {
-                if (nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
-                    return entrylms.alert(Lang.Workspace.name_already_exists).on('hide', () => {
-                        nameView.focus();
-                    });
-                }
-            }
-            const newValue = this.value;
-            this.picture.name = newValue;
-            const playground = Entry.playground;
-            if (playground) {
-                if (playground.object) {
-                    const pic = playground.object.getPicture(this.picture.id);
-                    if (pic) {
-                        pic.name = newValue;
-                    }
-                }
-                const painter = playground.painter;
-                if (painter && painter.file) {
-                    painter.file.name = newValue;
-                }
-
-                playground.reloadPlayground();
-            }
-            Entry.dispatchEvent('pictureNameChanged', this.picture);
-        }
+        Entry.attachEventListener(nameView, 'blur', this.nameViewBlur.bind(this));
+        Entry.attachEventListener(nameView, 'focus', (e) => {
+            this.nameView = e.target;
+            this.nameViewFocus = true;
+        });
 
         nameView.onkeypress = Entry.Utils.blurWhenEnter;
         element.appendChild(nameView);
@@ -1824,7 +1837,6 @@ Entry.Playground = class Playground {
     }
 
     _removePicture(picture, element) {
-        console.log(Entry.playground.object.pictures.length);
         if (Entry.playground.object.pictures.length > 1) {
             Entry.do('objectRemovePicture', picture.objectId, picture);
             Entry.removeElement(element);
