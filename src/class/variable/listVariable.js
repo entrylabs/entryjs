@@ -166,6 +166,30 @@ class ListVariable extends Variable {
         }
     }
 
+    setArray(array) {
+        if (!this.isCloud_) {
+            this.array_ = array;
+            this.updateView();
+            Entry.requestUpdateTwice = true;
+        } else {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const target = {
+                        variableType: this.type,
+                        id: this.id_,
+                    };
+                    await this.cloudVariable.append(target, value);
+                    const { array } = this.cloudVariable.get(target);
+                    this.array_ = array;
+                    this.updateView();
+                    resolve();
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        }
+    }
+
     appendValue(value) {
         if (!this.isCloud_) {
             if (!this.array_) {
