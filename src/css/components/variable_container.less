@@ -197,6 +197,7 @@
     text-align: center;
     text-decoration: none;
     line-height: 42px;
+    -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
 .entryVariableAdd_box .entryVariableAddWorkspace.disabled {
@@ -231,6 +232,15 @@
     color: #2c313d;
     letter-spacing: -0.2px;
     line-height: 11px;
+}
+.entryVariableAdd_box .message_inpt input[type='text']::-webkit-input-placeholder {
+    color: #979797;
+}
+.entryVariableAdd_box .message_inpt input[type='text']:-ms-input-placeholder {
+    color: #979797;
+}
+.entryVariableAdd_box .message_inpt input[type='text']::-ms-input-placeholder {
+    color: #979797;
 }
 .entryVariableAdd_box .message_inpt input[type='text']::placeholder {
     color: #979797;
@@ -275,7 +285,20 @@
     color: #2c313d;
     letter-spacing: -0.2px;
     line-height: 11px;
+    -webkit-box-sizing: border-box;
     box-sizing: border-box;
+}
+.entryVariableAddSpaceNameWrapperWorkspace
+    .entryVariableAddSpaceInputWorkspace::-webkit-input-placeholder {
+    color: #979797;
+}
+.entryVariableAddSpaceNameWrapperWorkspace
+    .entryVariableAddSpaceInputWorkspace:-ms-input-placeholder {
+    color: #979797;
+}
+.entryVariableAddSpaceNameWrapperWorkspace
+    .entryVariableAddSpaceInputWorkspace::-ms-input-placeholder {
+    color: #979797;
 }
 .entryVariableAddSpaceNameWrapperWorkspace .entryVariableAddSpaceInputWorkspace::placeholder {
     color: #979797;
@@ -326,6 +349,7 @@
     .entryVariableAddSpaceCloudSpanWorkspace {
     display: inline-block;
     margin-top: 2px;
+    white-space: pre;
 }
 .entryVariableAddSpaceGlobalWrapperWorkspace
     .entryVariableAddSpaceCloudWrapperWorkspace
@@ -416,6 +440,7 @@
 }
 .entryVariableSplitterWorkspace .list .inpt_box {
     position: relative;
+    -webkit-box-sizing: content-box;
     box-sizing: content-box;
     padding: 13px 112px 13px 38px;
     background-color: #d6e9f4;
@@ -481,6 +506,7 @@
     color: #2c313d;
     letter-spacing: -0.2px;
     line-height: 11px;
+    -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
 .entryVariableSplitterWorkspace .list .inpt span {
@@ -491,7 +517,12 @@
     color: #2c313d;
     letter-spacing: -0.2px;
     line-height: 11px;
+    -webkit-box-sizing: border-box;
     box-sizing: border-box;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    display: block;
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box {
     display: none;
@@ -523,6 +554,8 @@
     content: '';
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .attr_inpt {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     position: relative;
     padding: 0 34px 10px 0;
@@ -533,6 +566,8 @@
     display: none;
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .attr_inpt label {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 1 auto;
     flex: 0 1 auto;
     font-size: 12px;
     font-weight: 600;
@@ -544,6 +579,8 @@
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .attr_inpt .val_inptbox {
     display: block;
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
     flex: 1 1 auto;
     margin-left: 8px;
 }
@@ -559,6 +596,7 @@
     color: #2c313d;
     letter-spacing: -0.2px;
     line-height: 11px;
+    -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .slide_inpt {
@@ -660,6 +698,7 @@
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .use_obj .obj_list li {
     position: relative;
+    -webkit-box-sizing: content-box;
     box-sizing: content-box;
     list-style: none;
     height: 33px;
@@ -750,6 +789,7 @@
     float: right;
     overflow: hidden;
     position: relative;
+    -webkit-box-sizing: content-box;
     box-sizing: content-box;
     width: 40px;
     height: 32px;
@@ -802,6 +842,7 @@
     font-weight: 600;
     line-height: 14px;
     text-align: center;
+    -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .cnt_group {
@@ -863,6 +904,7 @@
     color: #2c313d;
     letter-spacing: -0.2px;
     line-height: 11px;
+    -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .caution_dsc {
@@ -887,6 +929,7 @@
 }
 .entryVariableSplitterWorkspace .list .use_block .obj_list li {
     position: relative;
+    -webkit-box-sizing: content-box;
     box-sizing: content-box;
     list-style: none;
     height: 33px;
@@ -1060,6 +1103,7 @@
 .entryVariableSplitterWorkspace .list.default_func.unfold .inpt_box,
 .entryVariableSplitterWorkspace .list.default_message.unfold .inpt_box {
     background-color: #fff;
+    -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
 }
 .entryVariableSplitterWorkspace .list.default_func.unfold .inpt_box:after,

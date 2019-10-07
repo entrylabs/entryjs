@@ -318,7 +318,7 @@ Entry.Container = class Container {
             throw new Error('No picture found');
         }
         pictures[index] = Object.assign(
-            _.pick(picture, ['dimension', 'id', 'filename', 'fileurl', 'name']),
+            _.pick(picture, ['dimension', 'id', 'filename', 'fileurl', 'name', 'imageType']),
             { view: pictures[index].view }
         );
     }
@@ -450,11 +450,6 @@ Entry.Container = class Container {
         }
     }
 
-    /**
-     * Delete object
-     * @param {!Entry.EntryObject} object
-     * @return {Entry.State}
-     */
     removeObject(id, isPass) {
         const objects = this.objects_;
 
@@ -464,6 +459,7 @@ Entry.Container = class Container {
         object.destroy();
         objects.splice(index, 1);
         Entry.variableContainer.removeLocalVariables(object.id);
+        Entry.engine.hideProjectTimer();
 
         if (isPass === true) {
             return;
@@ -475,7 +471,7 @@ Entry.Container = class Container {
         if (first) {
             this.selectObject(first.id);
         } else {
-            this.selectObject();
+            Entry.stage.selectObject(null);
             Entry.playground.flushPlayground();
         }
 
@@ -489,9 +485,12 @@ Entry.Container = class Container {
      * @param {string} objectId
      */
     selectObject(objectId, changeScene) {
+        if (!objectId) {
+            return;
+        }
         const object = this.getObject(objectId);
         const workspace = Entry.getMainWS();
-        const isSelected = object.isSelected();
+        const isSelected = object && object.isSelected();
         if (changeScene && object) {
             Entry.scene.selectScene(object.scene);
         }
@@ -564,7 +563,7 @@ Entry.Container = class Container {
             Entry.stage.selectObject(object);
         }
         this.selectedObject = object;
-        !isSelected && object.updateCoordinateView();
+        !isSelected && object && object.updateCoordinateView();
     }
 
     /**
@@ -699,32 +698,46 @@ Entry.Container = class Container {
             case 'messages':
                 result = Entry.variableContainer.messages_.map(({ name, id }) => [name, id]);
                 break;
-            case 'variables':
+            case 'variables': {
+                const object = Entry.playground.object;
+                if (!object) {
+                    break;
+                }
                 Entry.variableContainer.variables_.forEach((variable) => {
                     if (
                         variable.object_ &&
                         Entry.playground.object &&
-                        variable.object_ != Entry.playground.object.id
+                        (variable.object_ != Entry.playground.object.id || Entry.Func.isEdit)
                     ) {
                         return;
                     }
                     result.push([variable.getName(), variable.getId()]);
                 });
                 if (!result || result.length === 0) {
-                    result.push([Lang.Blocks.VARIABLE_variable, 'null']);
+                    // result.push([Lang.Blocks.VARIABLE_variable, 'null']);
+                    result = [];
                 }
                 break;
+            }
             case 'lists': {
-                const object = Entry.playground.object || object;
+                const object = Entry.playground.object;
+                if (!object) {
+                    break;
+                }
                 Entry.variableContainer.lists_.forEach((list) => {
-                    if (list.object_ && object && list.object_ != object.id) {
+                    if (
+                        list.object_ &&
+                        object &&
+                        (list.object_ != object.id || Entry.Func.isEdit)
+                    ) {
                         return;
                     }
                     result.push([list.getName(), list.getId()]);
                 });
 
                 if (!result || result.length === 0) {
-                    result.push([Lang.Blocks.VARIABLE_list, 'null']);
+                    // result.push([Lang.Blocks.VARIABLE_list, 'null']);
+                    result = [];
                 }
                 break;
             }
@@ -732,7 +745,7 @@ Entry.Container = class Container {
                 result = Entry.scene.getScenes().map(({ name, id }) => [name, id]);
                 break;
             case 'sounds': {
-                const object = Entry.playground.object || object;
+                const object = Entry.playground.object;
                 if (!object) {
                     break;
                 }

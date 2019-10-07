@@ -9,16 +9,19 @@ Entry.skeleton.pebble_loop = {
             50
         );
         return (
-            'M 0,9 a 9,9 0 0,0 9,-9 h %cw q 25,0 25,25 v' +
-            '%ch q 0,25 -25,25 h -%cw a 9,9 0 0,1 -18,0 ' +
-            'h -%cw q -25,0 -25,-25 v -%ch q 0,-25 25,-25 h %cw a 9,9 0 0,0 9,9 ' +
-            'M 0,49 a 9,9 0 0,1 -9,-9 h -28 a 25,25 0 0,0 -25,25 v' +
-            '%cih a 25,25 0 0,0 25,25 h 28 a 9,9 0 0,0 18,0 ' +
-            'h 28 a 25,25 0 0,0 25,-25 v -%cih a 25,25 0 0,0 -25,-25 h -28 a 9,9 0 0,1 -9,9 z'
-        )
-            .replace(/%cw/gi, contentWidth / 2 - 21)
-            .replace(/%ch/gi, statementHeight + 4)
-            .replace(/%cih/gi, statementHeight - 50);
+            (
+                'M 0,9 a 9,9 0 0,0 9,-9 h %cw q 25,0 25,25 v' +
+                '%ch q 0,25 -25,25 h -%cw a 9,9 0 0,1 -18,0 ' +
+                'h -%cw q -25,0 -25,-25 v -%ch q 0,-25 25,-25 h %cw a 9,9 0 0,0 9,9 ' +
+                'M 0,49 a 9,9 0 0,1 -9,-9 h -28 a 25,25 0 0,0 -25,25 v' +
+                '%cih a 25,25 0 0,0 25,25 h 28 a 9,9 0 0,0 18,0 ' +
+                'h 28 a 25,25 0 0,0 25,-25 v -%cih a 25,25 0 0,0 -25,-25 h -28 a 9,9 0 0,1 -9,9 z'
+            )
+                // TODO blockView 인터페이스 완성시 삭제
+                .replace(/%cw/gi, (contentWidth / 2 - 21) as any)
+                .replace(/%ch/gi, (statementHeight + 4) as any)
+                .replace(/%cih/gi, (statementHeight - 50) as any)
+        );
     },
     magnets(blockView) {
         const contentHeight = Math.max(blockView.contentHeight + 2, 41);

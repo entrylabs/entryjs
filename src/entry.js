@@ -27,6 +27,7 @@ require('./class/helper');
 require('./class/intro');
 require('./class/object');
 require('./class/painter');
+require('./class/LiterallycanvasPainter');
 require('./class/pdf');
 require('./class/playground');
 require('./class/popup');

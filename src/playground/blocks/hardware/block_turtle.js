@@ -1,165 +1,33 @@
 'use strict';
 
 Entry.Turtle = {
-    PORT_MAP: {
-        module: 'turtle',
-        leftWheel: 0,
-        rightWheel: 0,
-        ledRed: 0,
-        ledGreen: 0,
-        ledBlue: 0,
-        buzzer: 0,
-        pulse: 0,
-        pulseId: 0,
-        note: 0,
-        sound: 0,
-        soundRepeat: 1,
-        soundId: 0,
-        lineTracerMode: 0,
-        lineTracerModeId: 0,
-        lineTracerGain: 5,
-        lineTracerSpeed: 5,
-        motionId: 0,
-        motionType: 0,
-        motionUnit: 0,
-        motionSpeed: 0,
-        motionValue: 0,
-        motionRadius: 0,
-    },
     setZero() {
-        const portMap = Entry.Turtle.PORT_MAP;
-        const sq = Entry.hw.sendQueue;
-        for (const port in portMap) {
-            sq[port] = portMap[port];
+        Entry.Robomation.setZero();
+    },
+    afterReceive(pd) {
+        Entry.Robomation.afterReceive(pd, false);
+    },
+    afterSend(sq) {
+        Entry.Robomation.afterSend(sq);
+    },
+    getRobot() {
+        const robot = Entry.Robomation.getRobot('turtle', 0);
+        if (robot) {
+            robot.setMotoring(Entry.hw.sendQueue);
         }
-        Entry.hw.update();
-        const turtle = Entry.Turtle;
-        turtle.pulseId = 0;
-        turtle.soundId = 0;
-        turtle.lineTracerModeId = 0;
-        turtle.motionId = 0;
-        turtle.clickedId = -1;
-        turtle.doubleClickedId = -1;
-        turtle.longPressedId = -1;
-        turtle.colorPatternId = -1;
-        turtle.wheelStateId = -1;
-        turtle.soundStateId = -1;
-        turtle.lineTracerStateId = -1;
-        turtle.tempo = 60;
-        turtle.removeAllTimeouts();
-    },
-    pulseId: 0,
-    soundId: 0,
-    lineTracerModeId: 0,
-    motionId: 0,
-    clickedId: -1,
-    doubleClickedId: -1,
-    longPressedId: -1,
-    colorPatternId: -1,
-    wheelStateId: -1,
-    soundStateId: -1,
-    lineTracerStateId: -1,
-    tempo: 60,
-    timeouts: [],
-    removeTimeout(id) {
-        clearTimeout(id);
-        const timeouts = this.timeouts;
-        const index = timeouts.indexOf(id);
-        if (index >= 0) {
-            timeouts.splice(index, 1);
-        }
-    },
-    removeAllTimeouts() {
-        const timeouts = this.timeouts;
-        for (const i in timeouts) {
-            clearTimeout(timeouts[i]);
-        }
-        this.timeouts = [];
-    },
-    setModule(sq) {
-        sq.module = 'turtle';
-    },
-    setPulse(sq, pulse) {
-        this.pulseId = (this.pulseId % 255) + 1;
-        sq.pulse = pulse;
-        sq.pulseId = this.pulseId;
-    },
-    setSound(sq, sound, count) {
-        if (typeof count != 'number') {
-            count = 1;
-        }
-        if (count < 0) {
-            count = -1;
-        }
-        if (count) {
-            this.soundId = (this.soundId % 255) + 1;
-            sq.sound = sound;
-            sq.soundRepeat = count;
-            sq.soundId = this.soundId;
-        }
-    },
-    setLineTracerMode(sq, mode) {
-        this.lineTracerModeId = (this.lineTracerModeId % 255) + 1;
-        sq.lineTracerMode = mode;
-        sq.lineTracerModeId = this.lineTracerModeId;
-    },
-    setMotion(sq, type, unit, speed, value, radius) {
-        this.motionId = (this.motionId % 255) + 1;
-        sq.motionType = type;
-        sq.motionUnit = unit;
-        sq.motionSpeed = speed;
-        sq.motionValue = value;
-        sq.motionRadius = radius;
-        sq.motionId = this.motionId;
-    },
-    setLedColor(sq, color) {
-        if (color == 'RED') {
-            sq.ledRed = 255;
-            sq.ledGreen = 0;
-            sq.ledBlue = 0;
-        } else if (color == 'ORANGE') {
-            sq.ledRed = 255;
-            sq.ledGreen = 63;
-            sq.ledBlue = 0;
-        } else if (color == 'YELLOW') {
-            sq.ledRed = 255;
-            sq.ledGreen = 255;
-            sq.ledBlue = 0;
-        } else if (color == 'GREEN') {
-            sq.ledRed = 0;
-            sq.ledGreen = 255;
-            sq.ledBlue = 0;
-        } else if (color == 'CYAN') {
-            sq.ledRed = 0;
-            sq.ledGreen = 255;
-            sq.ledBlue = 255;
-        } else if (color == 'BLUE') {
-            sq.ledRed = 0;
-            sq.ledGreen = 0;
-            sq.ledBlue = 255;
-        } else if (color == 'VIOLET') {
-            sq.ledRed = 63;
-            sq.ledGreen = 0;
-            sq.ledBlue = 255;
-        } else if (color == 'MAGENTA') {
-            sq.ledRed = 255;
-            sq.ledGreen = 0;
-            sq.ledBlue = 255;
-        } else if (color == 'WHITE') {
-            sq.ledRed = 255;
-            sq.ledGreen = 255;
-            sq.ledBlue = 255;
-        }
+        return robot;
     },
     id: '2.9',
     name: 'turtle',
-    url: 'http://turtle.school',
+    url: 'http://www.robomation.net',
     imageName: 'turtle.png',
     title: {
         en: 'Turtle',
         ko: '거북이',
+        jp: 'カメ',
+        vn: 'Turtle',
     },
-    monitorTemplate: {
+    monitorTemplate: () => ({
         imgPath: 'hw/turtle.png',
         width: 480,
         height: 354,
@@ -233,7 +101,7 @@ Entry.Turtle = {
             },
         },
         mode: 'both',
-    },
+    }),
 };
 
 Entry.Turtle.setLanguage = () => ({
@@ -275,6 +143,8 @@ Entry.Turtle.setLanguage = () => ({
             turtle_turn_unit_with_radius_in_direction:
                 '%1 으로 %2 %3 반지름 %4 cm를 %5 방향으로 돌기 %6',
             turtle_value: '%1',
+            turtle_boolean: '%1?',
+            turtle_pick_head_led: '머리 LED를 %1로 정하기 %2',
         },
         Helper: {
             turtle_button_state:
@@ -333,6 +203,9 @@ Entry.Turtle.setLanguage = () => ({
                 '입력한 반지름의 원을 그리면서 입력한 각도(도)/시간(초)/펄스만큼 왼쪽/오른쪽, 머리/꼬리 방향으로 회전합니다.',
             turtle_value:
                 '색깔 번호: 컬러 센서가 감지한 색깔의 번호 (값의 범위: -1 ~ 8, 초기값: -1)<br/>색깔 패턴: 컬러 센서가 감지한 색깔 패턴의 값 (값의 범위: -1 ~ 88, 초기값: -1)<br/>바닥 센서: 바닥 센서의 값 (값의 범위: 0 ~ 100, 초기값: 0)<br/>버튼: 거북이 등 버튼의 상태 값 (누르면 1, 아니면 0, 초기값: 0)<br/>x축 가속도: 가속도 센서의 X축 값 (값의 범위: -32768 ~ 32767, 초기값: 0) 로봇이 전진하는 방향이 X축의 양수 방향입니다.<br/>y축 가속도: 가속도 센서의 Y축 값 (값의 범위: -32768 ~ 32767, 초기값: 0) 로봇의 왼쪽 방향이 Y축의 양수 방향입니다.<br/>z축 가속도: 가속도 센서의 Z축 값 (값의 범위: -32768 ~ 32767, 초기값: 0) 로봇의 위쪽 방향이 Z축의 양수 방향입니다.',
+            turtle_boolean:
+                "앞으로 기울임: 앞으로 기울이면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>뒤로 기울임: 뒤로 기울이면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>왼쪽으로 기울임: 왼쪽으로 기울이면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>오른쪽으로 기울임: 오른쪽으로 기울이면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>거꾸로 뒤집음: 거꾸로 뒤집으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>기울이지 않음: 기울이지 않으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>배터리 정상: 배터리 잔량이 충분하면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>배터리 부족: 배터리 잔량이 부족하면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>배터리 없음: 배터리 잔량이 없으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.",
+            turtle_pick_head_led: '머리 LED를 선택한 색깔로 켭니다.',
         },
         Blocks: {
             turtle_acceleration_x: 'x축 가속도',
@@ -381,12 +254,26 @@ Entry.Turtle.setLanguage = () => ({
             turtle_unit_pulse: '펄스',
             turtle_unit_sec: '초',
             turtle_note_c: '도',
+            turtle_note_c_sharp: '도♯(레♭)',
             turtle_note_d: '레',
+            turtle_note_d_sharp: '레♯(미♭)',
             turtle_note_e: '미',
             turtle_note_f: '파',
+            turtle_note_f_sharp: '파♯(솔♭)',
             turtle_note_g: '솔',
+            turtle_note_g_sharp: '솔♯(라♭)',
             turtle_note_a: '라',
+            turtle_note_a_sharp: '라♯(시♭)',
             turtle_note_b: '시',
+            turtle_tilt_forward: '앞으로 기울임',
+            turtle_tilt_backward: '뒤로 기울임',
+            turtle_tilt_left: '왼쪽으로 기울임',
+            turtle_tilt_right: '오른쪽으로 기울임',
+            turtle_tilt_flip: '거꾸로 뒤집음',
+            turtle_tilt_not: '기울이지 않음',
+            turtle_battery_normal: '배터리 정상',
+            turtle_battery_low: '배터리 부족',
+            turtle_battery_empty: '배터리 없음',
         },
     },
     en: {
@@ -427,6 +314,8 @@ Entry.Turtle.setLanguage = () => ({
             turtle_turn_unit_with_radius_in_direction:
                 'turn %1 %2 %3 with radius %4 cm in %5 direction %6',
             turtle_value: '%1',
+            turtle_boolean: '%1?',
+            turtle_pick_head_led: 'set head led to %1 %2',
         },
         Helper: {
             turtle_button_state:
@@ -488,6 +377,9 @@ Entry.Turtle.setLanguage = () => ({
                 'Turns left/right drawing the circle of the entered radius in the head/tail direction for the number of degrees/seconds/pulses entered.',
             turtle_value:
                 'color number: color number detected by the color sensor (range: -1 to 8, initial value: -1)<br/>color pattern: value of the color pattern detected by the color sensor (range: -1 ~ 88, initial value: -1) <br/>floor: value of floor sensor (range: 0 to 100, initial value: 0)<br/>button: status of the button (when pressed 1, otherwise 0, initial value: 0)<br/>x acceleration: x-axis value of acceleration sensor (range: -32768 to 32767, initial value: 0) The direction in which the robot moves forward is the positive direction of the x axis.<br/>y acceleration: y-axis value of acceleration sensor (range: -32768 to 32767, initial value: 0) The left direction of the robot is the positive direction of the y axis.<br/>z acceleration: z-axis value of acceleration sensor (range: -32768 to 32767, initial value: 0) The upward direction of the robot is the positive direction of the z axis.',
+            turtle_boolean:
+                'tilt forward: If tilted forward, true, otherwise false<br/>tilt backward: If tilted backward, true, otherwise false<br/>tilt left: If tilted to the left, true, otherwise false<br/>tilt right: If tilted to the right, true, otherwise false<br/>tilt flip: If upside-down, true, otherwise false<br/>not tilt: If not tilted, true, otherwise false<br/>battery normal: If the battery is enough, true, otherwise false<br/>battery low: If the battery is low, true, otherwise false<br/>battery empty: If the battery is empty, true, otherwise false',
+            turtle_pick_head_led: 'Turns the head LED to the selected color.',
         },
         Blocks: {
             turtle_acceleration_x: 'x acceleration',
@@ -536,12 +428,26 @@ Entry.Turtle.setLanguage = () => ({
             turtle_unit_pulse: 'pulses',
             turtle_unit_sec: 'seconds',
             turtle_note_c: 'C',
+            turtle_note_c_sharp: 'C♯(D♭)',
             turtle_note_d: 'D',
+            turtle_note_d_sharp: 'D♯(E♭)',
             turtle_note_e: 'E',
             turtle_note_f: 'F',
+            turtle_note_f_sharp: 'F♯(G♭)',
             turtle_note_g: 'G',
+            turtle_note_g_sharp: 'G♯(A♭)',
             turtle_note_a: 'A',
+            turtle_note_a_sharp: 'A♯(B♭)',
             turtle_note_b: 'B',
+            turtle_tilt_forward: 'tilt forward',
+            turtle_tilt_backward: 'tilt backward',
+            turtle_tilt_left: 'tilt left',
+            turtle_tilt_right: 'tilt right',
+            turtle_tilt_flip: 'tilt flip',
+            turtle_tilt_not: 'not tilt',
+            turtle_battery_normal: 'battery normal',
+            turtle_battery_low: 'battery low',
+            turtle_battery_empty: 'battery empty',
         },
     },
     jp: {
@@ -582,6 +488,8 @@ Entry.Turtle.setLanguage = () => ({
             turtle_turn_unit_in_place: '%1 へ %2 %3 その場で回る %4',
             turtle_turn_unit_with_radius_in_direction: '%1 へ %2 %3 半径 %4 cmで %5 方向に回る %6',
             turtle_value: '%1',
+            turtle_boolean: '%1?',
+            turtle_pick_head_led: '頭のLEDの色を %1 にする %2',
         },
         Helper: {
             turtle_button_state:
@@ -640,6 +548,9 @@ Entry.Turtle.setLanguage = () => ({
                 '入力された数値[角度/秒/パルス]だけ、入力された半径（cm）で、[前/後]方向に回転します。',
             turtle_value:
                 '色番号：カラーセンサーが感知した色の番号（範囲：-1〜8、初期値：-1）<br/>色のパターン：カラーセンサーが感知した色のパターンの値（範囲：-1〜88、初期値：-1）<br/>床センサー：床センサーの値（範囲：0〜100、初期値：0）<br/>ボタン：ボタンの状態（クリックした時：1、それ以外：0、初期値：0）<br/>前後の速さ：加速度センサーの前後（x軸）の速さの値（範囲：-32768〜32767、初期値：0）タートルが前進する方向はx軸の正方向です。<br/>左右の速さ：加速度センサーの左右（y軸）の速さの値（範囲：-32768〜32767、初期値：0）タートルの左方向がy軸の正方向です。<br/>上下の速さ：加速度センサーの上下（z軸）の速さの値（範囲：-32768〜32767、初期値：0）タートルの上方向がz軸の正方向です。<br/>',
+            turtle_boolean:
+                'tilt forward: If tilted forward, true, otherwise false<br/>tilt backward: If tilted backward, true, otherwise false<br/>tilt left: If tilted to the left, true, otherwise false<br/>tilt right: If tilted to the right, true, otherwise false<br/>tilt flip: If upside-down, true, otherwise false<br/>not tilt: If not tilted, true, otherwise false<br/>battery normal: If the battery is enough, true, otherwise false<br/>battery low: If the battery is low, true, otherwise false<br/>battery empty: If the battery is empty, true, otherwise false',
+            turtle_pick_head_led: '頭のLEDライトを選択された色にします。',
         },
         Blocks: {
             turtle_acceleration_x: '前後の速さ',
@@ -688,192 +599,200 @@ Entry.Turtle.setLanguage = () => ({
             turtle_unit_pulse: 'パルス',
             turtle_unit_sec: '秒',
             turtle_note_c: 'ド',
+            turtle_note_c_sharp: 'ド♯(レ♭)',
             turtle_note_d: 'レ',
+            turtle_note_d_sharp: 'レ♯(ミ♭)',
             turtle_note_e: 'ミ',
             turtle_note_f: 'ファ',
+            turtle_note_f_sharp: 'ファ♯(ソ♭)',
             turtle_note_g: 'ソ',
+            turtle_note_g_sharp: 'ソ♯(ラ♭)',
             turtle_note_a: 'ラ',
+            turtle_note_a_sharp: 'ラ♯(シ♭)',
             turtle_note_b: 'シ',
+            turtle_tilt_forward: '前に傾けたか',
+            turtle_tilt_backward: '後に傾けたか',
+            turtle_tilt_left: '左に傾けたか',
+            turtle_tilt_right: '右に傾けたか',
+            turtle_tilt_flip: '上下裏返したか',
+            turtle_tilt_not: '傾けなかったか',
+            turtle_battery_normal: '電池が正常か',
+            turtle_battery_low: '電池が足りないか',
+            turtle_battery_empty: '電池がないか',
         },
     },
     vn: {
         template: {
-            turtle_button_state: '버튼을 %1 ?',
-            turtle_change_buzzer_by: '버저 음을 %1 만큼 바꾸기 %2',
-            turtle_change_head_led_by_rgb: '머리 LED를 R: %1 G: %2 B: %3 만큼 바꾸기 %4',
-            turtle_change_tempo_by: '연주 속도를 %1 만큼 바꾸기 %2',
-            turtle_change_wheel_by: '%1 바퀴 %2 만큼 바꾸기 %3',
-            turtle_change_wheels_by_left_right: '왼쪽 바퀴 %1 오른쪽 바퀴 %2 만큼 바꾸기 %3',
-            turtle_clear_head_led: '머리 LED 끄기 %1',
-            turtle_clear_sound: '소리 끄기 %1',
-            turtle_cross_intersection: '검은색 교차로 건너가기 %1',
-            turtle_follow_line: '%1 선을 따라가기 %2',
-            turtle_follow_line_until: '검은색 선을 따라 %1 까지 이동하기 %2',
-            turtle_follow_line_until_black: '%1 선을 따라 검은색까지 이동하기 %2',
-            turtle_is_color_pattern: '색깔 패턴이 %1 %2 인가?',
-            turtle_move_backward_unit: '뒤로 %1 %2 이동하기 %3',
-            turtle_move_forward_unit: '앞으로 %1 %2 이동하기 %3',
+            turtle_button_state: 'button %1 ?',
+            turtle_change_buzzer_by: 'change buzzer by %1 %2',
+            turtle_change_head_led_by_rgb: 'change head led by r: %1 g: %2 b: %3 %4',
+            turtle_change_tempo_by: 'change tempo by %1 %2',
+            turtle_change_wheel_by: 'change %1 wheel by %2 %3',
+            turtle_change_wheels_by_left_right: 'change wheels by left: %1 right: %2 %3',
+            turtle_clear_head_led: 'clear head led %1',
+            turtle_clear_sound: 'clear sound %1',
+            turtle_cross_intersection: 'cross black intersection %1',
+            turtle_follow_line: 'follow %1 line %2',
+            turtle_follow_line_until: 'follow black line until %1 %2',
+            turtle_follow_line_until_black: 'follow %1 line until black %2',
+            turtle_is_color_pattern: 'color pattern %1 %2 ?',
+            turtle_move_backward_unit: 'move backward %1 %2 %3',
+            turtle_move_forward_unit: 'move forward %1 %2 %3',
             turtle_pivot_around_wheel_unit_in_direction:
-                '%1 바퀴 중심으로 %2 %3 %4 방향으로 돌기 %5',
-            turtle_play_note: '%1 %2 음을 연주하기 %3',
-            turtle_play_note_for_beats: '%1 %2 음을 %3 박자 연주하기 %4',
-            turtle_play_sound_times: '%1 소리 %2 번 재생하기 %3',
-            turtle_play_sound_times_until_done: '%1 소리 %2 번 재생하고 기다리기 %3',
-            turtle_rest_for_beats: '%1 박자 쉬기 %2',
-            turtle_set_buzzer_to: '버저 음을 %1 (으)로 정하기 %2',
-            turtle_set_following_speed_to: '선 따라가기 속도를 %1 (으)로 정하기 %2',
-            turtle_set_head_led_to: '머리 LED를 %1 으로 정하기 %2',
-            turtle_set_head_led_to_rgb: '머리 LED를 R: %1 G: %2 B: %3 (으)로 정하기 %4',
-            turtle_set_tempo_to: '연주 속도를 %1 BPM으로 정하기 %2',
-            turtle_set_wheel_to: '%1 바퀴 %2 (으)로 정하기 %3',
-            turtle_set_wheels_to_left_right: '왼쪽 바퀴 %1 오른쪽 바퀴 %2 (으)로 정하기 %3',
-            turtle_stop: '정지하기 %1',
-            turtle_touching_color: '%1 에 닿았는가?',
-            turtle_turn_at_intersection: '검은색 교차로에서 %1 으로 돌기 %2',
-            turtle_turn_unit_in_place: '%1 으로 %2 %3 제자리 돌기 %4',
+                'pivot around %1 wheel %2 %3 in %4 direction %5',
+            turtle_play_note: 'play note %1 %2 %3',
+            turtle_play_note_for_beats: 'play note %1 %2 for %3 beats %4',
+            turtle_play_sound_times: 'play sound %1 %2 times %3',
+            turtle_play_sound_times_until_done: 'play sound %1 %2 times until done %3',
+            turtle_rest_for_beats: 'rest for %1 beats %2',
+            turtle_set_buzzer_to: 'set buzzer to %1 %2',
+            turtle_set_following_speed_to: 'set following speed to %1 %2',
+            turtle_set_head_led_to: 'set head led to %1 %2',
+            turtle_set_head_led_to_rgb: 'set head led to r: %1 g: %2 b: %3 %4',
+            turtle_set_tempo_to: 'set tempo to %1 bpm %2',
+            turtle_set_wheel_to: 'set %1 wheel to %2 %3',
+            turtle_set_wheels_to_left_right: 'set wheels to left: %1 right: %2 %3',
+            turtle_stop: 'stop %1',
+            turtle_touching_color: 'touching %1 ?',
+            turtle_turn_at_intersection: 'turn %1 at black intersection %2',
+            turtle_turn_unit_in_place: 'turn %1 %2 %3 in place %4',
             turtle_turn_unit_with_radius_in_direction:
-                '%1 으로 %2 %3 반지름 %4 cm를 %5 방향으로 돌기 %6',
+                'turn %1 %2 %3 with radius %4 cm in %5 direction %6',
             turtle_value: '%1',
+            turtle_boolean: '%1?',
+            turtle_pick_head_led: 'set head led to %1 %2',
         },
         Helper: {
             turtle_button_state:
-                "등 버튼을 클릭했으면/더블클릭했으면/길게 눌렀으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.",
+                'If the button clicked/double-clicked/long-pressed, true, otherwise false.',
             turtle_change_buzzer_by:
-                '버저 소리의 현재 음 높이(Hz)에 입력한 값을 더합니다. 소수점 둘째 자리까지 입력할 수 있습니다.',
+                'Adds the entered value to the current pitch (Hz) of the buzzer sound. You can enter up to two decimal places.',
             turtle_change_head_led_by_rgb:
-                '머리 LED의 현재 R, G, B 값에 입력한 값을 각각 더합니다.',
+                'Adds the entered values to the current R, G, B values of the head LED, respectively.',
             turtle_change_tempo_by:
-                '연주하거나 쉬는 속도의 현재 BPM(분당 박자 수)에 입력한 값을 더합니다.',
+                'Adds the entered value to the current BPM (beats per minute) of the playing or resting speed.',
             turtle_change_wheel_by:
-                '왼쪽/오른쪽/양쪽 바퀴의 현재 속도 값(%)에 입력한 값을 더합니다. 더한 결과가 양수 값이면 바퀴가 앞으로 회전하고, 음수 값이면 뒤로 회전합니다.',
+                'Adds the entered value to the current speed value (%) of the left/right/both wheels. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
             turtle_change_wheels_by_left_right:
-                '왼쪽과 오른쪽 바퀴의 현재 속도 값(%)에 입력한 값을 각각 더합니다. 더한 결과가 양수 값이면 바퀴가 앞으로 회전하고, 음수 값이면 뒤로 회전합니다.',
-            turtle_clear_head_led: '머리 LED를 끕니다.',
-            turtle_clear_sound: '소리를 끕니다.',
+                'Adds the entered values to the current speed values (%) of the left and right wheels respectively. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
+            turtle_clear_head_led: 'Turns off the head LED.',
+            turtle_clear_sound: 'Turns off sound.',
             turtle_cross_intersection:
-                '검은색 교차로에서 잠시 앞으로 이동한 후 검은색 선을 찾아 다시 이동합니다.',
-            turtle_follow_line: '하얀색 바탕 위에서 선택한 색깔의 선을 따라 이동합니다.',
+                'Moves forward for a moment at the black intersection, then finds the black line and moves again.',
+            turtle_follow_line: 'Moves along the selected color line on a white background.',
             turtle_follow_line_until:
-                '하얀색 바탕 위에서 검은색 선을 따라 이동하다가 선택한 색깔을 컬러 센서가 감지하면 정지합니다.',
+                'Moves along the black line on a white background and stops when the color sensor detects the selected color.',
             turtle_follow_line_until_black:
-                '하얀색 바탕 위에서 선택한 색깔의 선을 따라 이동하다가 컬러 센서가 검은색을 감지하면 정지합니다.',
+                'Moves along the selected color line on a white background and stops when the color sensor detects black.',
             turtle_is_color_pattern:
-                "선택한 색깔 패턴을 컬러 센서가 감지하였으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.",
-            turtle_move_backward_unit: '입력한 거리(cm)/시간(초)/펄스만큼 뒤로 이동합니다.',
-            turtle_move_forward_unit: '입력한 거리(cm)/시간(초)/펄스만큼 앞으로 이동합니다.',
+                'If the color sensor detects the selected color pattern, true, otherwise false.',
+            turtle_move_backward_unit:
+                'Moves backward for the number of cm/seconds/pulses entered.',
+            turtle_move_forward_unit: 'Moves forward for the number of cm/seconds/pulses entered.',
             turtle_pivot_around_wheel_unit_in_direction:
-                '왼쪽/오른쪽 바퀴 중심으로 입력한 각도(도)/시간(초)/펄스만큼 머리/꼬리 방향으로 회전합니다.',
-            turtle_play_note: '선택한 계이름과 옥타브의 음을 계속 소리 냅니다.',
+                'Pivots around the left/right wheel in the head/tail direction for the number of degrees/seconds/pulses entered.',
+            turtle_play_note: 'It sounds the selected tone and octave.',
             turtle_play_note_for_beats:
-                '선택한 계이름과 옥타브의 음을 입력한 박자만큼 소리 냅니다.',
-            turtle_play_sound_times: '선택한 소리를 입력한 횟수만큼 재생합니다.',
+                'It sounds the selected tone and octave as much as the beat you entered.',
+            turtle_play_sound_times: 'Plays the selected sound as many times as entered.',
             turtle_play_sound_times_until_done:
-                '선택한 소리를 입력한 횟수만큼 재생하고, 재생이 완료될 때까지 기다립니다.',
-            turtle_rest_for_beats: '입력한 박자만큼 쉽니다.',
+                'Plays the selected sound as many times as entered, and waits for completion.',
+            turtle_rest_for_beats: 'Rests as much as the beat you entered.',
             turtle_set_buzzer_to:
-                '버저 소리의 음 높이를 입력한 값(Hz)으로 설정합니다. 소수점 둘째 자리까지 입력할 수 있습니다. 숫자 0을 입력하면 소리를 끕니다.',
+                'Sets the pitch of the buzzer sound to the entered value (Hz). You can enter up to two decimal places. Entering the number 0 turns off the buzzer sound.',
             turtle_set_following_speed_to:
-                '선을 따라 이동하는 속도(1 ~ 8)를 설정합니다. 숫자가 클수록 이동하는 속도가 빠릅니다.',
-            turtle_set_head_led_to: '머리 LED를 선택한 색깔로 켭니다.',
-            turtle_set_head_led_to_rgb: '머리 LED의 R, G, B 값을 입력한 값으로 각각 설정합니다.',
-            turtle_set_tempo_to: '연주하거나 쉬는 속도를 입력한 BPM(분당 박자 수)으로 설정합니다.',
+                'Sets the speed (1 to 8) to move along the line. The larger the number, the faster the movement.',
+            turtle_set_head_led_to: 'Turns the head LED to the selected color.',
+            turtle_set_head_led_to_rgb:
+                'Sets the R, G, B values of the head LED to the entered values.',
+            turtle_set_tempo_to:
+                'Sets the playing or resting speed to the entered BPM (beats per minute).',
             turtle_set_wheel_to:
-                '왼쪽/오른쪽/양쪽 바퀴의 속도를 입력한 값(-400 ~ 400%)으로 설정합니다. 양수 값을 입력하면 바퀴가 앞으로 회전하고, 음수 값을 입력하면 뒤로 회전합니다. 숫자 0을 입력하면 정지합니다.',
+                'Sets the speed of the left/right/both wheels to the entered value (-400 to 400%). If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
             turtle_set_wheels_to_left_right:
-                '왼쪽과 오른쪽 바퀴의 속도를 입력한 값(-400 ~ 400%)으로 각각 설정합니다. 양수 값을 입력하면 바퀴가 앞으로 회전하고, 음수 값을 입력하면 뒤로 회전합니다. 숫자 0을 입력하면 정지합니다.',
-            turtle_stop: '양쪽 바퀴를 정지합니다.',
+                'Sets the speed of the left and right wheels to the entered values (-400 to 400%), respectively. If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
+            turtle_stop: 'Stops both wheels.',
             turtle_touching_color:
-                "선택한 색깔을 컬러 센서가 감지하였으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.",
+                'If the color sensor detects the selected color, true, otherwise false.',
             turtle_turn_at_intersection:
-                '검은색 교차로에서 잠시 앞으로 이동한 후 제자리에서 왼쪽/오른쪽/뒤쪽으로 회전하고 검은색 선을 찾아 다시 이동합니다.',
+                'Moves forward for a moment at the black intersection, then turns left/right/back in place, finds the black line and moves again.',
             turtle_turn_unit_in_place:
-                '입력한 각도(도)/시간(초)/펄스만큼 왼쪽/오른쪽 방향으로 제자리에서 회전합니다.',
+                'Turns left/right in place for the number of degrees/seconds/pulses entered.',
             turtle_turn_unit_with_radius_in_direction:
-                '입력한 반지름의 원을 그리면서 입력한 각도(도)/시간(초)/펄스만큼 왼쪽/오른쪽, 머리/꼬리 방향으로 회전합니다.',
+                'Turns left/right drawing the circle of the entered radius in the head/tail direction for the number of degrees/seconds/pulses entered.',
             turtle_value:
-                '색깔 번호: 컬러 센서가 감지한 색깔의 번호 (값의 범위: -1 ~ 8, 초기값: -1)<br/>색깔 패턴: 컬러 센서가 감지한 색깔 패턴의 값 (값의 범위: -1 ~ 88, 초기값: -1)<br/>바닥 센서: 바닥 센서의 값 (값의 범위: 0 ~ 100, 초기값: 0)<br/>버튼: 거북이 등 버튼의 상태 값 (누르면 1, 아니면 0, 초기값: 0)<br/>x축 가속도: 가속도 센서의 X축 값 (값의 범위: -32768 ~ 32767, 초기값: 0) 로봇이 전진하는 방향이 X축의 양수 방향입니다.<br/>y축 가속도: 가속도 센서의 Y축 값 (값의 범위: -32768 ~ 32767, 초기값: 0) 로봇의 왼쪽 방향이 Y축의 양수 방향입니다.<br/>z축 가속도: 가속도 센서의 Z축 값 (값의 범위: -32768 ~ 32767, 초기값: 0) 로봇의 위쪽 방향이 Z축의 양수 방향입니다.',
+                'color number: color number detected by the color sensor (range: -1 to 8, initial value: -1)<br/>color pattern: value of the color pattern detected by the color sensor (range: -1 ~ 88, initial value: -1) <br/>floor: value of floor sensor (range: 0 to 100, initial value: 0)<br/>button: status of the button (when pressed 1, otherwise 0, initial value: 0)<br/>x acceleration: x-axis value of acceleration sensor (range: -32768 to 32767, initial value: 0) The direction in which the robot moves forward is the positive direction of the x axis.<br/>y acceleration: y-axis value of acceleration sensor (range: -32768 to 32767, initial value: 0) The left direction of the robot is the positive direction of the y axis.<br/>z acceleration: z-axis value of acceleration sensor (range: -32768 to 32767, initial value: 0) The upward direction of the robot is the positive direction of the z axis.',
+            turtle_boolean:
+                'tilt forward: If tilted forward, true, otherwise false<br/>tilt backward: If tilted backward, true, otherwise false<br/>tilt left: If tilted to the left, true, otherwise false<br/>tilt right: If tilted to the right, true, otherwise false<br/>tilt flip: If upside-down, true, otherwise false<br/>not tilt: If not tilted, true, otherwise false<br/>battery normal: If the battery is enough, true, otherwise false<br/>battery low: If the battery is low, true, otherwise false<br/>battery empty: If the battery is empty, true, otherwise false',
+            turtle_pick_head_led: 'Turns the head LED to the selected color.',
         },
         Blocks: {
-            turtle_acceleration_x: 'x축 가속도',
-            turtle_acceleration_y: 'y축 가속도',
-            turtle_acceleration_z: 'z축 가속도',
-            turtle_back: '뒤쪽',
-            turtle_both: '양쪽',
-            turtle_button: '버튼',
-            turtle_buzzer: '버저',
-            turtle_clicked: '클릭했는가',
-            turtle_color_any: '아무 색',
-            turtle_color_black: '검은색',
-            turtle_color_blue: '파란색',
-            turtle_color_green: '초록색',
-            turtle_color_number: '색깔 번호',
-            turtle_color_orange: '주황색',
-            turtle_color_pattern: '색깔 패턴',
-            turtle_color_purple: '자주색',
-            turtle_color_red: '빨간색',
-            turtle_color_sky_blue: '하늘색',
-            turtle_color_violet: '보라색',
-            turtle_color_white: '하얀색',
-            turtle_color_yellow: '노란색',
-            turtle_double_clicked: '더블클릭했는가',
-            turtle_floor: '바닥 센서',
-            turtle_head: '머리',
-            turtle_head_color: '머리 색깔',
-            turtle_left: '왼쪽',
-            turtle_left_wheel: '왼쪽 바퀴',
-            turtle_long_pressed: '길게~눌렀는가',
-            turtle_note: '음표',
-            turtle_right: '오른쪽',
-            turtle_right_wheel: '오른쪽 바퀴',
-            turtle_sound_beep: '삐',
-            turtle_sound_birthday: '생일',
-            turtle_sound_dibidibidip: '디비디비딥',
-            turtle_sound_engine: '엔진',
-            turtle_sound_good_job: '잘 했어요',
-            turtle_sound_march: '행진',
-            turtle_sound_random_beep: '무작위 삐',
-            turtle_sound_robot: '로봇',
-            turtle_sound_siren: '사이렌',
-            turtle_tail: '꼬리',
+            turtle_acceleration_x: 'x acceleration',
+            turtle_acceleration_y: 'y acceleration',
+            turtle_acceleration_z: 'z acceleration',
+            turtle_back: 'back',
+            turtle_both: 'both',
+            turtle_button: 'button',
+            turtle_buzzer: 'buzzer',
+            turtle_clicked: 'clicked',
+            turtle_color_any: 'any color',
+            turtle_color_black: 'black',
+            turtle_color_blue: 'blue',
+            turtle_color_green: 'green',
+            turtle_color_number: 'color number',
+            turtle_color_orange: 'orange',
+            turtle_color_pattern: 'color pattern',
+            turtle_color_purple: 'purple',
+            turtle_color_red: 'red',
+            turtle_color_sky_blue: 'sky blue',
+            turtle_color_violet: 'violet',
+            turtle_color_white: 'white',
+            turtle_color_yellow: 'yellow',
+            turtle_double_clicked: 'double-clicked',
+            turtle_floor: 'floor',
+            turtle_head: 'head',
+            turtle_head_color: 'head color',
+            turtle_left: 'left',
+            turtle_left_wheel: 'left wheel',
+            turtle_long_pressed: 'long-pressed',
+            turtle_note: 'note',
+            turtle_right: 'right',
+            turtle_right_wheel: 'right wheel',
+            turtle_sound_beep: 'beep',
+            turtle_sound_birthday: 'birthday',
+            turtle_sound_dibidibidip: 'dibidibidip',
+            turtle_sound_engine: 'engine',
+            turtle_sound_good_job: 'good job',
+            turtle_sound_march: 'march',
+            turtle_sound_random_beep: 'random beep',
+            turtle_sound_robot: 'robot',
+            turtle_sound_siren: 'siren',
+            turtle_tail: 'tail',
             turtle_unit_cm: 'cm',
-            turtle_unit_deg: '도',
-            turtle_unit_pulse: '펄스',
-            turtle_unit_sec: '초',
-            turtle_note_c: {
-                ko: '도',
-                en: 'C',
-                code: 'C',
-            },
-            turtle_note_d: {
-                ko: '레',
-                en: 'D',
-                code: 'D',
-            },
-            turtle_note_e: {
-                ko: '미',
-                en: 'E',
-                code: 'E',
-            },
-            turtle_note_f: {
-                ko: '파',
-                en: 'F',
-                code: 'F',
-            },
-            turtle_note_g: {
-                ko: '솔',
-                en: 'G',
-                code: 'G',
-            },
-            turtle_note_a: {
-                ko: '라',
-                en: 'A',
-                code: 'A',
-            },
-            turtle_note_b: {
-                ko: '시',
-                en: 'B',
-                code: 'B',
-            },
+            turtle_unit_deg: 'degrees',
+            turtle_unit_pulse: 'pulses',
+            turtle_unit_sec: 'seconds',
+            turtle_note_c: 'C',
+            turtle_note_c_sharp: 'C♯(D♭)',
+            turtle_note_d: 'D',
+            turtle_note_d_sharp: 'D♯(E♭)',
+            turtle_note_e: 'E',
+            turtle_note_f: 'F',
+            turtle_note_f_sharp: 'F♯(G♭)',
+            turtle_note_g: 'G',
+            turtle_note_g_sharp: 'G♯(A♭)',
+            turtle_note_a: 'A',
+            turtle_note_a_sharp: 'A♯(B♭)',
+            turtle_note_b: 'B',
+            turtle_tilt_forward: 'tilt forward',
+            turtle_tilt_backward: 'tilt backward',
+            turtle_tilt_left: 'tilt left',
+            turtle_tilt_right: 'tilt right',
+            turtle_tilt_flip: 'tilt flip',
+            turtle_tilt_not: 'not tilt',
+            turtle_battery_normal: 'battery normal',
+            turtle_battery_low: 'battery low',
+            turtle_battery_empty: 'battery empty',
         },
     },
 });
@@ -882,12 +801,13 @@ Entry.Turtle.blockMenuBlocks = [
     'turtle_touching_color',
     'turtle_is_color_pattern',
     'turtle_button_state',
+    'turtle_boolean',
     'turtle_value',
     'turtle_move_forward_unit',
     'turtle_move_backward_unit',
     'turtle_turn_unit_in_place',
-    'turtle_turn_unit_with_radius_in_direction',
     'turtle_pivot_around_wheel_unit_in_direction',
+    'turtle_turn_unit_with_radius_in_direction',
     'turtle_change_wheels_by_left_right',
     'turtle_set_wheels_to_left_right',
     'turtle_change_wheel_by',
@@ -900,6 +820,7 @@ Entry.Turtle.blockMenuBlocks = [
     'turtle_set_following_speed_to',
     'turtle_stop',
     'turtle_set_head_led_to',
+    'turtle_pick_head_led',
     'turtle_change_head_led_by_rgb',
     'turtle_set_head_led_to_rgb',
     'turtle_clear_head_led',
@@ -917,7 +838,6 @@ Entry.Turtle.blockMenuBlocks = [
 
 Entry.Turtle.getBlocks = function() {
     return {
-        //region turtle 터틀
         turtle_touching_color: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -955,14 +875,14 @@ Entry.Turtle.getBlocks = function() {
             class: 'turtle_sensor',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const pd = Entry.hw.portData;
-                return Number(script.getField('COLOR')) - 1 == pd.colorNumber;
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.checkTouchingColor(script) : false;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.touching(%1)',
+                        syntax: 'Turtle.is_color_red()',
                         blockType: 'param',
                         textParams: [
                             {
@@ -982,10 +902,218 @@ Entry.Turtle.getBlocks = function() {
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnValuePartialUpperCase,
-                                codeMap: 'Entry.CodeMap.Turtle.touching_colors',
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
+                        params: ['2'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_orange()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '2'],
+                                    [Lang.Blocks.turtle_color_orange, '3'],
+                                    [Lang.Blocks.turtle_color_yellow, '4'],
+                                    [Lang.Blocks.turtle_color_green, '5'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '6'],
+                                    [Lang.Blocks.turtle_color_blue, '7'],
+                                    [Lang.Blocks.turtle_color_purple, '8'],
+                                    [Lang.Blocks.turtle_color_black, '1'],
+                                    [Lang.Blocks.turtle_color_white, '9'],
+                                ],
+                                value: '2',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['3'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_yellow()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '2'],
+                                    [Lang.Blocks.turtle_color_orange, '3'],
+                                    [Lang.Blocks.turtle_color_yellow, '4'],
+                                    [Lang.Blocks.turtle_color_green, '5'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '6'],
+                                    [Lang.Blocks.turtle_color_blue, '7'],
+                                    [Lang.Blocks.turtle_color_purple, '8'],
+                                    [Lang.Blocks.turtle_color_black, '1'],
+                                    [Lang.Blocks.turtle_color_white, '9'],
+                                ],
+                                value: '2',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['4'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_green()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '2'],
+                                    [Lang.Blocks.turtle_color_orange, '3'],
+                                    [Lang.Blocks.turtle_color_yellow, '4'],
+                                    [Lang.Blocks.turtle_color_green, '5'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '6'],
+                                    [Lang.Blocks.turtle_color_blue, '7'],
+                                    [Lang.Blocks.turtle_color_purple, '8'],
+                                    [Lang.Blocks.turtle_color_black, '1'],
+                                    [Lang.Blocks.turtle_color_white, '9'],
+                                ],
+                                value: '2',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['5'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_sky_blue()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '2'],
+                                    [Lang.Blocks.turtle_color_orange, '3'],
+                                    [Lang.Blocks.turtle_color_yellow, '4'],
+                                    [Lang.Blocks.turtle_color_green, '5'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '6'],
+                                    [Lang.Blocks.turtle_color_blue, '7'],
+                                    [Lang.Blocks.turtle_color_purple, '8'],
+                                    [Lang.Blocks.turtle_color_black, '1'],
+                                    [Lang.Blocks.turtle_color_white, '9'],
+                                ],
+                                value: '2',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['6'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_blue()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '2'],
+                                    [Lang.Blocks.turtle_color_orange, '3'],
+                                    [Lang.Blocks.turtle_color_yellow, '4'],
+                                    [Lang.Blocks.turtle_color_green, '5'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '6'],
+                                    [Lang.Blocks.turtle_color_blue, '7'],
+                                    [Lang.Blocks.turtle_color_purple, '8'],
+                                    [Lang.Blocks.turtle_color_black, '1'],
+                                    [Lang.Blocks.turtle_color_white, '9'],
+                                ],
+                                value: '2',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['7'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_purple()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '2'],
+                                    [Lang.Blocks.turtle_color_orange, '3'],
+                                    [Lang.Blocks.turtle_color_yellow, '4'],
+                                    [Lang.Blocks.turtle_color_green, '5'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '6'],
+                                    [Lang.Blocks.turtle_color_blue, '7'],
+                                    [Lang.Blocks.turtle_color_purple, '8'],
+                                    [Lang.Blocks.turtle_color_black, '1'],
+                                    [Lang.Blocks.turtle_color_white, '9'],
+                                ],
+                                value: '2',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['8'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_black()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '2'],
+                                    [Lang.Blocks.turtle_color_orange, '3'],
+                                    [Lang.Blocks.turtle_color_yellow, '4'],
+                                    [Lang.Blocks.turtle_color_green, '5'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '6'],
+                                    [Lang.Blocks.turtle_color_blue, '7'],
+                                    [Lang.Blocks.turtle_color_purple, '8'],
+                                    [Lang.Blocks.turtle_color_black, '1'],
+                                    [Lang.Blocks.turtle_color_white, '9'],
+                                ],
+                                value: '2',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['1'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_white()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '2'],
+                                    [Lang.Blocks.turtle_color_orange, '3'],
+                                    [Lang.Blocks.turtle_color_yellow, '4'],
+                                    [Lang.Blocks.turtle_color_green, '5'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '6'],
+                                    [Lang.Blocks.turtle_color_blue, '7'],
+                                    [Lang.Blocks.turtle_color_purple, '8'],
+                                    [Lang.Blocks.turtle_color_black, '1'],
+                                    [Lang.Blocks.turtle_color_white, '9'],
+                                ],
+                                value: '2',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['9'],
                     },
                 ],
             },
@@ -1040,17 +1168,14 @@ Entry.Turtle.getBlocks = function() {
             class: 'turtle_sensor',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const pd = Entry.hw.portData;
-                return (
-                    Number(script.getField('COLOR1')) * 10 + Number(script.getField('COLOR2')) ==
-                    pd.colorPattern
-                );
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.checkColorPattern(script) : false;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.match_color_pattern(%1, %2)',
+                        syntax: 'Turtle.is_color_pattern_red_red()',
                         blockType: 'param',
                         textParams: [
                             {
@@ -1067,8 +1192,7 @@ Entry.Turtle.getBlocks = function() {
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnValuePartialUpperCase,
-                                codeMap: 'Entry.CodeMap.Turtle.pattern_colors',
+                                converter: Entry.block.converters.returnStringValue,
                             },
                             {
                                 type: 'Dropdown',
@@ -1084,10 +1208,1375 @@ Entry.Turtle.getBlocks = function() {
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnValuePartialUpperCase,
-                                codeMap: 'Entry.CodeMap.Turtle.pattern_colors',
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
+                        params: ['1', '1'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_red_yellow()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['1', '3'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_red_green()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['1', '4'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_red_sky_blue()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['1', '5'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_red_blue()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['1', '6'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_red_purple()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['1', '7'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_yellow_red()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['3', '1'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_yellow_yellow()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['3', '3'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_yellow_green()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['3', '4'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_yellow_sky_blue()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['3', '5'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_yellow_blue()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['3', '6'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_yellow_purple()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['3', '7'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_green_red()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['4', '1'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_green_yellow()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['4', '3'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_green_green()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['4', '4'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_green_sky_blue()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['4', '5'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_green_blue()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['4', '6'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_green_purple()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['4', '7'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_sky_blue_red()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['5', '1'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_sky_blue_yellow()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['5', '3'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_sky_blue_green()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['5', '4'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_sky_blue_sky_blue()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['5', '5'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_sky_blue_blue()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['5', '6'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_sky_blue_purple()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['5', '7'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_blue_red()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['6', '1'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_blue_yellow()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['6', '3'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_blue_green()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['6', '4'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_blue_sky_blue()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['6', '5'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_blue_blue()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['6', '6'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_blue_purple()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['6', '7'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_purple_red()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['7', '1'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_purple_yellow()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['7', '3'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_purple_green()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['7', '4'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_purple_sky_blue()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['7', '5'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_purple_blue()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['7', '6'],
+                    },
+                    {
+                        syntax: 'Turtle.is_color_pattern_purple_purple()',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '1'],
+                                    [Lang.Blocks.turtle_color_yellow, '3'],
+                                    [Lang.Blocks.turtle_color_green, '4'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '5'],
+                                    [Lang.Blocks.turtle_color_blue, '6'],
+                                    [Lang.Blocks.turtle_color_purple, '7'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['7', '7'],
                     },
                 ],
             },
@@ -1118,20 +2607,19 @@ Entry.Turtle.getBlocks = function() {
                 type: 'turtle_button_state',
             },
             paramsKeyMap: {
-                EVENT: 0,
+                STATE: 0,
             },
             class: 'turtle_sensor',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const pd = Entry.hw.portData;
-                const event = script.getField('EVENT');
-                return pd[event] == 1;
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.checkButtonState(script) : false;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.clicked()',
+                        syntax: 'Turtle.is_button(%1)',
                         blockType: 'param',
                         textParams: [
                             {
@@ -1148,47 +2636,77 @@ Entry.Turtle.getBlocks = function() {
                                 converter: Entry.block.converters.returnStringValue,
                             },
                         ],
-                        params: ['clicked'],
                     },
+                ],
+            },
+        },
+        turtle_boolean: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.turtle_tilt_forward, 'TILT_FORWARD'],
+                        [Lang.Blocks.turtle_tilt_backward, 'TILT_BACKWARD'],
+                        [Lang.Blocks.turtle_tilt_left, 'TILT_LEFT'],
+                        [Lang.Blocks.turtle_tilt_right, 'TILT_RIGHT'],
+                        [Lang.Blocks.turtle_tilt_flip, 'TILT_FLIP'],
+                        [Lang.Blocks.turtle_tilt_not, 'TILT_NOT'],
+                        [Lang.Blocks.turtle_battery_normal, 'BATTERY_NORMAL'],
+                        [Lang.Blocks.turtle_battery_low, 'BATTERY_LOW'],
+                        [Lang.Blocks.turtle_battery_empty, 'BATTERY_EMPTY'],
+                    ],
+                    value: 'TILT_FORWARD',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [],
+                type: 'turtle_boolean',
+            },
+            paramsKeyMap: {
+                DEVICE: 0,
+            },
+            class: 'turtle_sensor',
+            isNotFor: ['turtle'],
+            func(sprite, script) {
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.checkBoolean(script) : false;
+            },
+            syntax: {
+                js: [],
+                py: [
                     {
-                        syntax: 'Turtle.double_clicked()',
+                        syntax: 'Turtle.boolean_value(%1)',
                         blockType: 'param',
                         textParams: [
                             {
                                 type: 'Dropdown',
                                 options: [
-                                    [Lang.Blocks.turtle_clicked, 'clicked'],
-                                    [Lang.Blocks.turtle_double_clicked, 'doubleClicked'],
-                                    [Lang.Blocks.turtle_long_pressed, 'longPressed'],
+                                    [Lang.Blocks.turtle_tilt_forward, 'TILT_FORWARD'],
+                                    [Lang.Blocks.turtle_tilt_backward, 'TILT_BACKWARD'],
+                                    [Lang.Blocks.turtle_tilt_left, 'TILT_LEFT'],
+                                    [Lang.Blocks.turtle_tilt_right, 'TILT_RIGHT'],
+                                    [Lang.Blocks.turtle_tilt_flip, 'TILT_FLIP'],
+                                    [Lang.Blocks.turtle_tilt_not, 'TILT_NOT'],
+                                    [Lang.Blocks.turtle_battery_normal, 'BATTERY_NORMAL'],
+                                    [Lang.Blocks.turtle_battery_low, 'BATTERY_LOW'],
+                                    [Lang.Blocks.turtle_battery_empty, 'BATTERY_EMPTY'],
                                 ],
-                                value: 'clicked',
+                                value: 'TILT_FORWARD',
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter: Entry.block.converters.returnStringValue,
                             },
                         ],
-                        params: ['doubleClicked'],
-                    },
-                    {
-                        syntax: 'Turtle.long_pressed()',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.turtle_clicked, 'clicked'],
-                                    [Lang.Blocks.turtle_double_clicked, 'doubleClicked'],
-                                    [Lang.Blocks.turtle_long_pressed, 'longPressed'],
-                                ],
-                                value: 'clicked',
-                                fontSize: 11,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnStringValue,
-                            },
-                        ],
-                        params: ['longPressed'],
                     },
                 ],
             },
@@ -1228,15 +2746,16 @@ Entry.Turtle.getBlocks = function() {
             class: 'turtle_sensor',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const pd = Entry.hw.portData;
-                const dev = script.getField('DEVICE');
-                return pd[dev];
+                const robot = Entry.Turtle.getRobot();
+                if (robot) {
+                    return robot.getValue(script);
+                }
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.color_number()',
+                        syntax: 'Turtle.sensor_value(%1)',
                         blockType: 'param',
                         textParams: [
                             {
@@ -1257,151 +2776,6 @@ Entry.Turtle.getBlocks = function() {
                                 converter: Entry.block.converters.returnStringValue,
                             },
                         ],
-                        params: ['colorNumber'],
-                    },
-                    {
-                        syntax: 'Turtle.color_pattern()',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.turtle_color_number, 'colorNumber'],
-                                    [Lang.Blocks.turtle_color_pattern, 'colorPattern'],
-                                    [Lang.Blocks.turtle_floor, 'floor'],
-                                    [Lang.Blocks.turtle_button, 'button'],
-                                    [Lang.Blocks.turtle_acceleration_x, 'accelerationX'],
-                                    [Lang.Blocks.turtle_acceleration_y, 'accelerationY'],
-                                    [Lang.Blocks.turtle_acceleration_z, 'accelerationZ'],
-                                ],
-                                value: 'colorNumber',
-                                fontSize: 11,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnStringValue,
-                            },
-                        ],
-                        params: ['colorPattern'],
-                    },
-                    {
-                        syntax: 'Turtle.floor()',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.turtle_color_number, 'colorNumber'],
-                                    [Lang.Blocks.turtle_color_pattern, 'colorPattern'],
-                                    [Lang.Blocks.turtle_floor, 'floor'],
-                                    [Lang.Blocks.turtle_button, 'button'],
-                                    [Lang.Blocks.turtle_acceleration_x, 'accelerationX'],
-                                    [Lang.Blocks.turtle_acceleration_y, 'accelerationY'],
-                                    [Lang.Blocks.turtle_acceleration_z, 'accelerationZ'],
-                                ],
-                                value: 'colorNumber',
-                                fontSize: 11,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnStringValue,
-                            },
-                        ],
-                        params: ['floor'],
-                    },
-                    {
-                        syntax: 'Turtle.button()',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.turtle_color_number, 'colorNumber'],
-                                    [Lang.Blocks.turtle_color_pattern, 'colorPattern'],
-                                    [Lang.Blocks.turtle_floor, 'floor'],
-                                    [Lang.Blocks.turtle_button, 'button'],
-                                    [Lang.Blocks.turtle_acceleration_x, 'accelerationX'],
-                                    [Lang.Blocks.turtle_acceleration_y, 'accelerationY'],
-                                    [Lang.Blocks.turtle_acceleration_z, 'accelerationZ'],
-                                ],
-                                value: 'colorNumber',
-                                fontSize: 11,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnStringValue,
-                            },
-                        ],
-                        params: ['button'],
-                    },
-                    {
-                        syntax: 'Turtle.acceleration_x()',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.turtle_color_number, 'colorNumber'],
-                                    [Lang.Blocks.turtle_color_pattern, 'colorPattern'],
-                                    [Lang.Blocks.turtle_floor, 'floor'],
-                                    [Lang.Blocks.turtle_button, 'button'],
-                                    [Lang.Blocks.turtle_acceleration_x, 'accelerationX'],
-                                    [Lang.Blocks.turtle_acceleration_y, 'accelerationY'],
-                                    [Lang.Blocks.turtle_acceleration_z, 'accelerationZ'],
-                                ],
-                                value: 'colorNumber',
-                                fontSize: 11,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnStringValue,
-                            },
-                        ],
-                        params: ['accelerationX'],
-                    },
-                    {
-                        syntax: 'Turtle.acceleration_y()',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.turtle_color_number, 'colorNumber'],
-                                    [Lang.Blocks.turtle_color_pattern, 'colorPattern'],
-                                    [Lang.Blocks.turtle_floor, 'floor'],
-                                    [Lang.Blocks.turtle_button, 'button'],
-                                    [Lang.Blocks.turtle_acceleration_x, 'accelerationX'],
-                                    [Lang.Blocks.turtle_acceleration_y, 'accelerationY'],
-                                    [Lang.Blocks.turtle_acceleration_z, 'accelerationZ'],
-                                ],
-                                value: 'colorNumber',
-                                fontSize: 11,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnStringValue,
-                            },
-                        ],
-                        params: ['accelerationY'],
-                    },
-                    {
-                        syntax: 'Turtle.acceleration_z()',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.turtle_color_number, 'colorNumber'],
-                                    [Lang.Blocks.turtle_color_pattern, 'colorPattern'],
-                                    [Lang.Blocks.turtle_floor, 'floor'],
-                                    [Lang.Blocks.turtle_button, 'button'],
-                                    [Lang.Blocks.turtle_acceleration_x, 'accelerationX'],
-                                    [Lang.Blocks.turtle_acceleration_y, 'accelerationY'],
-                                    [Lang.Blocks.turtle_acceleration_z, 'accelerationZ'],
-                                ],
-                                value: 'colorNumber',
-                                fontSize: 11,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnStringValue,
-                            },
-                        ],
-                        params: ['accelerationZ'],
                     },
                 ],
             },
@@ -1453,39 +2827,8 @@ Entry.Turtle.getBlocks = function() {
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                const pd = Entry.hw.portData;
-                const turtle = Entry.Turtle;
-                turtle.setModule(sq);
-                if (!script.isStart) {
-                    script.isStart = true;
-                    sq.leftWheel = 0;
-                    sq.rightWheel = 0;
-                    turtle.setPulse(sq, 0);
-                    turtle.setLineTracerMode(sq, 0);
-                    const field = script.getField('UNIT');
-                    let unit = 1;
-                    if (field == 'SEC') {
-                        unit = 2;
-                    } else if (field == 'PULSE') {
-                        unit = 3;
-                    }
-                    const value = script.getNumberValue('VALUE');
-                    turtle.setMotion(sq, 1, unit, 0, value, 0);
-                    return script;
-                } else {
-                    if (pd.wheelStateId != turtle.wheelStateId) {
-                        turtle.wheelStateId = pd.wheelStateId;
-                        if (pd.wheelState == 0) {
-                            delete script.isStart;
-                            Entry.engine.isContinue = false;
-                            sq.leftWheel = 0;
-                            sq.rightWheel = 0;
-                            return script.callReturn();
-                        }
-                    }
-                    return script;
-                }
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.moveForwardUnit(script) : script;
             },
             syntax: {
                 js: [],
@@ -1508,8 +2851,7 @@ Entry.Turtle.getBlocks = function() {
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnValuePartialUpperCase,
-                                codeMap: 'Entry.CodeMap.Turtle.units',
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
                     },
@@ -1563,39 +2905,8 @@ Entry.Turtle.getBlocks = function() {
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                const pd = Entry.hw.portData;
-                const turtle = Entry.Turtle;
-                turtle.setModule(sq);
-                if (!script.isStart) {
-                    script.isStart = true;
-                    sq.leftWheel = 0;
-                    sq.rightWheel = 0;
-                    turtle.setPulse(sq, 0);
-                    turtle.setLineTracerMode(sq, 0);
-                    const field = script.getField('UNIT');
-                    let unit = 1;
-                    if (field == 'SEC') {
-                        unit = 2;
-                    } else if (field == 'PULSE') {
-                        unit = 3;
-                    }
-                    const value = script.getNumberValue('VALUE');
-                    turtle.setMotion(sq, 2, unit, 0, value, 0);
-                    return script;
-                } else {
-                    if (pd.wheelStateId != turtle.wheelStateId) {
-                        turtle.wheelStateId = pd.wheelStateId;
-                        if (pd.wheelState == 0) {
-                            delete script.isStart;
-                            Entry.engine.isContinue = false;
-                            sq.leftWheel = 0;
-                            sq.rightWheel = 0;
-                            return script.callReturn();
-                        }
-                    }
-                    return script;
-                }
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.moveBackwardUnit(script) : script;
             },
             syntax: {
                 js: [],
@@ -1618,8 +2929,7 @@ Entry.Turtle.getBlocks = function() {
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnValuePartialUpperCase,
-                                codeMap: 'Entry.CodeMap.Turtle.units',
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
                     },
@@ -1686,50 +2996,14 @@ Entry.Turtle.getBlocks = function() {
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                const pd = Entry.hw.portData;
-                const turtle = Entry.Turtle;
-                turtle.setModule(sq);
-                if (!script.isStart) {
-                    script.isStart = true;
-                    sq.leftWheel = 0;
-                    sq.rightWheel = 0;
-                    turtle.setPulse(sq, 0);
-                    turtle.setLineTracerMode(sq, 0);
-                    const direction = script.getField('DIRECTION');
-                    const field = script.getField('UNIT');
-                    let unit = 1;
-                    if (field == 'SEC') {
-                        unit = 2;
-                    } else if (field == 'PULSE') {
-                        unit = 3;
-                    }
-                    const value = script.getNumberValue('VALUE');
-                    if (direction == 'LEFT') {
-                        turtle.setMotion(sq, 3, unit, 0, value, 0);
-                    } else {
-                        turtle.setMotion(sq, 4, unit, 0, value, 0);
-                    }
-                    return script;
-                } else {
-                    if (pd.wheelStateId != turtle.wheelStateId) {
-                        turtle.wheelStateId = pd.wheelStateId;
-                        if (pd.wheelState == 0) {
-                            delete script.isStart;
-                            Entry.engine.isContinue = false;
-                            sq.leftWheel = 0;
-                            sq.rightWheel = 0;
-                            return script.callReturn();
-                        }
-                    }
-                    return script;
-                }
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.turnUnit(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.turn_left(%2, %3)',
+                        syntax: 'Turtle.turn(%1, %2, %3)',
                         textParams: [
                             {
                                 type: 'Dropdown',
@@ -1758,47 +3032,9 @@ Entry.Turtle.getBlocks = function() {
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnValuePartialUpperCase,
-                                codeMap: 'Entry.CodeMap.Turtle.units',
-                            },
-                        ],
-                        params: ['LEFT'],
-                    },
-                    {
-                        syntax: 'Turtle.turn_right(%2, %3)',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.turtle_left, 'LEFT'],
-                                    [Lang.Blocks.turtle_right, 'RIGHT'],
-                                ],
-                                value: 'LEFT',
-                                fontSize: 11,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter: Entry.block.converters.returnStringValue,
                             },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.turtle_unit_deg, 'DEG'],
-                                    [Lang.Blocks.turtle_unit_sec, 'SEC'],
-                                    [Lang.Blocks.turtle_unit_pulse, 'PULSE'],
-                                ],
-                                value: 'DEG',
-                                fontSize: 11,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnValuePartialUpperCase,
-                                codeMap: 'Entry.CodeMap.Turtle.units',
-                            },
                         ],
-                        params: ['RIGHT'],
                     },
                 ],
             },
@@ -1877,65 +3113,19 @@ Entry.Turtle.getBlocks = function() {
                 VALUE: 1,
                 UNIT: 2,
                 RADIUS: 3,
-                HEAD: 4,
+                TOWARD: 4,
             },
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                const pd = Entry.hw.portData;
-                const turtle = Entry.Turtle;
-                turtle.setModule(sq);
-                if (!script.isStart) {
-                    script.isStart = true;
-                    sq.leftWheel = 0;
-                    sq.rightWheel = 0;
-                    turtle.setPulse(sq, 0);
-                    turtle.setLineTracerMode(sq, 0);
-                    const direction = script.getField('DIRECTION');
-                    const field = script.getField('UNIT');
-                    let unit = 1;
-                    if (field == 'SEC') {
-                        unit = 2;
-                    } else if (field == 'PULSE') {
-                        unit = 3;
-                    }
-                    const value = script.getNumberValue('VALUE');
-                    const head = script.getField('HEAD');
-                    const radius = script.getNumberValue('RADIUS');
-                    if (direction == 'LEFT') {
-                        if (head == 'HEAD') {
-                            turtle.setMotion(sq, 9, unit, 0, value, radius);
-                        } else {
-                            turtle.setMotion(sq, 10, unit, 0, value, radius);
-                        }
-                    } else {
-                        if (head == 'HEAD') {
-                            turtle.setMotion(sq, 11, unit, 0, value, radius);
-                        } else {
-                            turtle.setMotion(sq, 12, unit, 0, value, radius);
-                        }
-                    }
-                    return script;
-                } else {
-                    if (pd.wheelStateId != turtle.wheelStateId) {
-                        turtle.wheelStateId = pd.wheelStateId;
-                        if (pd.wheelState == 0) {
-                            delete script.isStart;
-                            Entry.engine.isContinue = false;
-                            sq.leftWheel = 0;
-                            sq.rightWheel = 0;
-                            return script.callReturn();
-                        }
-                    }
-                    return script;
-                }
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.swingUnit(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.swing_left(%2, %3, %4, %5)',
+                        syntax: 'Turtle.circle(%1, %2, %3, %4, %5)',
                         textParams: [
                             {
                                 type: 'Dropdown',
@@ -1964,42 +3154,6 @@ Entry.Turtle.getBlocks = function() {
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnValuePartialUpperCase,
-                                codeMap: 'Entry.CodeMap.Turtle.units',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.turtle_head, 'HEAD'],
-                                    [Lang.Blocks.turtle_tail, 'TAIL'],
-                                ],
-                                value: 'HEAD',
-                                fontSize: 11,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnValuePartialUpperCase,
-                                codeMap: 'Entry.CodeMap.Turtle.head_tail',
-                            },
-                        ],
-                        params: ['LEFT'],
-                    },
-                    {
-                        syntax: 'Turtle.swing_right(%2, %3, %4, %5)',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.turtle_left, 'LEFT'],
-                                    [Lang.Blocks.turtle_right, 'RIGHT'],
-                                ],
-                                value: 'LEFT',
-                                fontSize: 11,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter: Entry.block.converters.returnStringValue,
                             },
                             {
@@ -2009,24 +3163,6 @@ Entry.Turtle.getBlocks = function() {
                             {
                                 type: 'Dropdown',
                                 options: [
-                                    [Lang.Blocks.turtle_unit_deg, 'DEG'],
-                                    [Lang.Blocks.turtle_unit_sec, 'SEC'],
-                                    [Lang.Blocks.turtle_unit_pulse, 'PULSE'],
-                                ],
-                                value: 'DEG',
-                                fontSize: 11,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnValuePartialUpperCase,
-                                codeMap: 'Entry.CodeMap.Turtle.units',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Dropdown',
-                                options: [
                                     [Lang.Blocks.turtle_head, 'HEAD'],
                                     [Lang.Blocks.turtle_tail, 'TAIL'],
                                 ],
@@ -2034,11 +3170,9 @@ Entry.Turtle.getBlocks = function() {
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnValuePartialUpperCase,
-                                codeMap: 'Entry.CodeMap.Turtle.head_tail',
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
-                        params: ['RIGHT'],
                     },
                 ],
             },
@@ -2105,67 +3239,22 @@ Entry.Turtle.getBlocks = function() {
                 type: 'turtle_pivot_around_wheel_unit_in_direction',
             },
             paramsKeyMap: {
-                DIRECTION: 0,
+                WHEEL: 0,
                 VALUE: 1,
                 UNIT: 2,
-                HEAD: 3,
+                TOWARD: 3,
             },
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                const pd = Entry.hw.portData;
-                const turtle = Entry.Turtle;
-                turtle.setModule(sq);
-                if (!script.isStart) {
-                    script.isStart = true;
-                    sq.leftWheel = 0;
-                    sq.rightWheel = 0;
-                    turtle.setPulse(sq, 0);
-                    turtle.setLineTracerMode(sq, 0);
-                    const direction = script.getField('DIRECTION');
-                    const field = script.getField('UNIT');
-                    let unit = 1;
-                    if (field == 'SEC') {
-                        unit = 2;
-                    } else if (field == 'PULSE') {
-                        unit = 3;
-                    }
-                    const value = script.getNumberValue('VALUE');
-                    const head = script.getField('HEAD');
-                    if (direction == 'LEFT') {
-                        if (head == 'HEAD') {
-                            turtle.setMotion(sq, 5, unit, 0, value, 0);
-                        } else {
-                            turtle.setMotion(sq, 6, unit, 0, value, 0);
-                        }
-                    } else {
-                        if (head == 'HEAD') {
-                            turtle.setMotion(sq, 7, unit, 0, value, 0);
-                        } else {
-                            turtle.setMotion(sq, 8, unit, 0, value, 0);
-                        }
-                    }
-                    return script;
-                } else {
-                    if (pd.wheelStateId != turtle.wheelStateId) {
-                        turtle.wheelStateId = pd.wheelStateId;
-                        if (pd.wheelState == 0) {
-                            delete script.isStart;
-                            Entry.engine.isContinue = false;
-                            sq.leftWheel = 0;
-                            sq.rightWheel = 0;
-                            return script.callReturn();
-                        }
-                    }
-                    return script;
-                }
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.pivotUnit(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.pivot_left(%2, %3, %4)',
+                        syntax: 'Turtle.pivot(%1, %2, %3, %4)',
                         textParams: [
                             {
                                 type: 'Dropdown',
@@ -2194,8 +3283,7 @@ Entry.Turtle.getBlocks = function() {
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnValuePartialUpperCase,
-                                codeMap: 'Entry.CodeMap.Turtle.units',
+                                converter: Entry.block.converters.returnStringValue,
                             },
                             {
                                 type: 'Dropdown',
@@ -2204,63 +3292,12 @@ Entry.Turtle.getBlocks = function() {
                                     [Lang.Blocks.turtle_tail, 'TAIL'],
                                 ],
                                 value: 'HEAD',
-                                fontSize: 11,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnValuePartialUpperCase,
-                                codeMap: 'Entry.CodeMap.Turtle.head_tail',
-                            },
-                        ],
-                        params: ['LEFT'],
-                    },
-                    {
-                        syntax: 'Turtle.pivot_right(%2, %3, %4)',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.turtle_left, 'LEFT'],
-                                    [Lang.Blocks.turtle_right, 'RIGHT'],
-                                ],
-                                value: 'LEFT',
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter: Entry.block.converters.returnStringValue,
                             },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.turtle_unit_deg, 'DEG'],
-                                    [Lang.Blocks.turtle_unit_sec, 'SEC'],
-                                    [Lang.Blocks.turtle_unit_pulse, 'PULSE'],
-                                ],
-                                value: 'DEG',
-                                fontSize: 11,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnValuePartialUpperCase,
-                                codeMap: 'Entry.CodeMap.Turtle.units',
-                            },
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.turtle_head, 'HEAD'],
-                                    [Lang.Blocks.turtle_tail, 'TAIL'],
-                                ],
-                                value: 'HEAD',
-                                fontSize: 11,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnValuePartialUpperCase,
-                                codeMap: 'Entry.CodeMap.Turtle.head_tail',
-                            },
                         ],
-                        params: ['RIGHT'],
                     },
                 ],
             },
@@ -2307,23 +3344,14 @@ Entry.Turtle.getBlocks = function() {
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                const left = script.getNumberValue('LEFT');
-                const right = script.getNumberValue('RIGHT');
-                const turtle = Entry.Turtle;
-                turtle.setModule(sq);
-                turtle.setPulse(sq, 0);
-                turtle.setLineTracerMode(sq, 0);
-                turtle.setMotion(sq, 0, 0, 0, 0, 0);
-                sq.leftWheel = sq.leftWheel != undefined ? sq.leftWheel + left : left;
-                sq.rightWheel = sq.rightWheel != undefined ? sq.rightWheel + right : right;
-                return script.callReturn();
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.changeWheels(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.wheels_by(%1, %2)',
+                        syntax: 'Turtle.add_wheels(%1, %2)',
                         textParams: [
                             {
                                 type: 'Block',
@@ -2380,21 +3408,14 @@ Entry.Turtle.getBlocks = function() {
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                const turtle = Entry.Turtle;
-                turtle.setModule(sq);
-                turtle.setPulse(sq, 0);
-                turtle.setLineTracerMode(sq, 0);
-                turtle.setMotion(sq, 0, 0, 0, 0, 0);
-                sq.leftWheel = script.getNumberValue('LEFT');
-                sq.rightWheel = script.getNumberValue('RIGHT');
-                return script.callReturn();
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.setWheels(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.wheels(%1, %2)',
+                        syntax: 'Turtle.set_wheels(%1, %2)',
                         textParams: [
                             {
                                 type: 'Block',
@@ -2450,35 +3471,20 @@ Entry.Turtle.getBlocks = function() {
                 type: 'turtle_change_wheel_by',
             },
             paramsKeyMap: {
-                DIRECTION: 0,
-                VALUE: 1,
+                WHEEL: 0,
+                VELOCITY: 1,
             },
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                const direction = script.getField('DIRECTION');
-                const value = script.getNumberValue('VALUE');
-                const turtle = Entry.Turtle;
-                turtle.setModule(sq);
-                turtle.setPulse(sq, 0);
-                turtle.setLineTracerMode(sq, 0);
-                turtle.setMotion(sq, 0, 0, 0, 0, 0);
-                if (direction == 'LEFT') {
-                    sq.leftWheel = sq.leftWheel != undefined ? sq.leftWheel + value : value;
-                } else if (direction == 'RIGHT') {
-                    sq.rightWheel = sq.rightWheel != undefined ? sq.rightWheel + value : value;
-                } else {
-                    sq.leftWheel = sq.leftWheel != undefined ? sq.leftWheel + value : value;
-                    sq.rightWheel = sq.rightWheel != undefined ? sq.rightWheel + value : value;
-                }
-                return script.callReturn();
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.changeWheel(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.left_wheel_by(%2)',
+                        syntax: 'Turtle.add_wheel(%1, %2)',
                         textParams: [
                             {
                                 type: 'Dropdown',
@@ -2498,54 +3504,6 @@ Entry.Turtle.getBlocks = function() {
                                 accept: 'string',
                             },
                         ],
-                        params: ['LEFT'],
-                    },
-                    {
-                        syntax: 'Turtle.right_wheel_by(%2)',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.turtle_left, 'LEFT'],
-                                    [Lang.Blocks.turtle_right, 'RIGHT'],
-                                    [Lang.Blocks.turtle_both, 'BOTH'],
-                                ],
-                                value: 'LEFT',
-                                fontSize: 11,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnStringValue,
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                        params: ['RIGHT'],
-                    },
-                    {
-                        syntax: 'Turtle.wheels_by(%2)',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.turtle_left, 'LEFT'],
-                                    [Lang.Blocks.turtle_right, 'RIGHT'],
-                                    [Lang.Blocks.turtle_both, 'BOTH'],
-                                ],
-                                value: 'LEFT',
-                                fontSize: 11,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnStringValue,
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                        params: ['BOTH'],
-                        keyOption: 'SAME',
                     },
                 ],
             },
@@ -2591,35 +3549,20 @@ Entry.Turtle.getBlocks = function() {
                 type: 'turtle_set_wheel_to',
             },
             paramsKeyMap: {
-                DIRECTION: 0,
-                VALUE: 1,
+                WHEEL: 0,
+                VELOCITY: 1,
             },
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                const direction = script.getField('DIRECTION');
-                const value = script.getNumberValue('VALUE');
-                const turtle = Entry.Turtle;
-                turtle.setModule(sq);
-                turtle.setPulse(sq, 0);
-                turtle.setLineTracerMode(sq, 0);
-                turtle.setMotion(sq, 0, 0, 0, 0, 0);
-                if (direction == 'LEFT') {
-                    sq.leftWheel = value;
-                } else if (direction == 'RIGHT') {
-                    sq.rightWheel = value;
-                } else {
-                    sq.leftWheel = value;
-                    sq.rightWheel = value;
-                }
-                return script.callReturn();
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.setWheel(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.left_wheel(%2)',
+                        syntax: 'Turtle.set_wheel(%1, %2)',
                         textParams: [
                             {
                                 type: 'Dropdown',
@@ -2639,54 +3582,6 @@ Entry.Turtle.getBlocks = function() {
                                 accept: 'string',
                             },
                         ],
-                        params: ['LEFT'],
-                    },
-                    {
-                        syntax: 'Turtle.right_wheel(%2)',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.turtle_left, 'LEFT'],
-                                    [Lang.Blocks.turtle_right, 'RIGHT'],
-                                    [Lang.Blocks.turtle_both, 'BOTH'],
-                                ],
-                                value: 'LEFT',
-                                fontSize: 11,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnStringValue,
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                        params: ['RIGHT'],
-                    },
-                    {
-                        syntax: 'Turtle.wheels(%2)',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.turtle_left, 'LEFT'],
-                                    [Lang.Blocks.turtle_right, 'RIGHT'],
-                                    [Lang.Blocks.turtle_both, 'BOTH'],
-                                ],
-                                value: 'LEFT',
-                                fontSize: 11,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnStringValue,
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                        params: ['BOTH'],
-                        keyOption: 'SAME',
                     },
                 ],
             },
@@ -2728,22 +3623,14 @@ Entry.Turtle.getBlocks = function() {
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                const turtle = Entry.Turtle;
-                turtle.setModule(sq);
-                sq.leftWheel = 0;
-                sq.rightWheel = 0;
-                turtle.setPulse(sq, 0);
-                turtle.setMotion(sq, 0, 0, 0, 0, 0);
-                const mode = Number(script.getField('COLOR'));
-                turtle.setLineTracerMode(sq, mode);
-                return script.callReturn();
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.followLine(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.follow_line(%1)',
+                        syntax: 'Turtle.follow_black_line()',
                         textParams: [
                             {
                                 type: 'Dropdown',
@@ -2758,10 +3645,94 @@ Entry.Turtle.getBlocks = function() {
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnValuePartialUpperCase,
-                                codeMap: 'Entry.CodeMap.Turtle.line_colors',
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
+                        params: ['10'],
+                    },
+                    {
+                        syntax: 'Turtle.follow_red_line()',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_black, '10'],
+                                    [Lang.Blocks.turtle_color_red, '11'],
+                                    [Lang.Blocks.turtle_color_green, '13'],
+                                    [Lang.Blocks.turtle_color_blue, '15'],
+                                    [Lang.Blocks.turtle_color_any, '17'],
+                                ],
+                                value: '10',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['11'],
+                    },
+                    {
+                        syntax: 'Turtle.follow_green_line()',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_black, '10'],
+                                    [Lang.Blocks.turtle_color_red, '11'],
+                                    [Lang.Blocks.turtle_color_green, '13'],
+                                    [Lang.Blocks.turtle_color_blue, '15'],
+                                    [Lang.Blocks.turtle_color_any, '17'],
+                                ],
+                                value: '10',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['13'],
+                    },
+                    {
+                        syntax: 'Turtle.follow_blue_line()',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_black, '10'],
+                                    [Lang.Blocks.turtle_color_red, '11'],
+                                    [Lang.Blocks.turtle_color_green, '13'],
+                                    [Lang.Blocks.turtle_color_blue, '15'],
+                                    [Lang.Blocks.turtle_color_any, '17'],
+                                ],
+                                value: '10',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['15'],
+                    },
+                    {
+                        syntax: 'Turtle.follow_any_line()',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_black, '10'],
+                                    [Lang.Blocks.turtle_color_red, '11'],
+                                    [Lang.Blocks.turtle_color_green, '13'],
+                                    [Lang.Blocks.turtle_color_blue, '15'],
+                                    [Lang.Blocks.turtle_color_any, '17'],
+                                ],
+                                value: '10',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['17'],
                     },
                 ],
             },
@@ -2805,37 +3776,14 @@ Entry.Turtle.getBlocks = function() {
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                const pd = Entry.hw.portData;
-                const turtle = Entry.Turtle;
-                turtle.setModule(sq);
-                if (!script.isStart) {
-                    script.isStart = true;
-                    sq.leftWheel = 0;
-                    sq.rightWheel = 0;
-                    turtle.setPulse(sq, 0);
-                    turtle.setMotion(sq, 0, 0, 0, 0, 0);
-                    const mode = Number(script.getField('COLOR'));
-                    turtle.setLineTracerMode(sq, mode);
-                    return script;
-                } else {
-                    if (pd.lineTracerStateId != turtle.lineTracerStateId) {
-                        turtle.lineTracerStateId = pd.lineTracerStateId;
-                        if (pd.lineTracerState == 0x02) {
-                            delete script.isStart;
-                            Entry.engine.isContinue = false;
-                            turtle.setLineTracerMode(sq, 0);
-                            return script.callReturn();
-                        }
-                    }
-                    return script;
-                }
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.followLineUntil(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.follow_black_line_until(%1)',
+                        syntax: 'Turtle.follow_black_line_until_red()',
                         textParams: [
                             {
                                 type: 'Dropdown',
@@ -2852,10 +3800,148 @@ Entry.Turtle.getBlocks = function() {
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnValuePartialUpperCase,
-                                codeMap: 'Entry.CodeMap.Turtle.target_colors',
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
+                        params: ['61'],
+                    },
+                    {
+                        syntax: 'Turtle.follow_black_line_until_yellow()',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '61'],
+                                    [Lang.Blocks.turtle_color_yellow, '62'],
+                                    [Lang.Blocks.turtle_color_green, '63'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '64'],
+                                    [Lang.Blocks.turtle_color_blue, '65'],
+                                    [Lang.Blocks.turtle_color_purple, '66'],
+                                    [Lang.Blocks.turtle_color_any, '67'],
+                                ],
+                                value: '61',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['62'],
+                    },
+                    {
+                        syntax: 'Turtle.follow_black_line_until_green()',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '61'],
+                                    [Lang.Blocks.turtle_color_yellow, '62'],
+                                    [Lang.Blocks.turtle_color_green, '63'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '64'],
+                                    [Lang.Blocks.turtle_color_blue, '65'],
+                                    [Lang.Blocks.turtle_color_purple, '66'],
+                                    [Lang.Blocks.turtle_color_any, '67'],
+                                ],
+                                value: '61',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['63'],
+                    },
+                    {
+                        syntax: 'Turtle.follow_black_line_until_sky_blue()',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '61'],
+                                    [Lang.Blocks.turtle_color_yellow, '62'],
+                                    [Lang.Blocks.turtle_color_green, '63'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '64'],
+                                    [Lang.Blocks.turtle_color_blue, '65'],
+                                    [Lang.Blocks.turtle_color_purple, '66'],
+                                    [Lang.Blocks.turtle_color_any, '67'],
+                                ],
+                                value: '61',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['64'],
+                    },
+                    {
+                        syntax: 'Turtle.follow_black_line_until_blue()',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '61'],
+                                    [Lang.Blocks.turtle_color_yellow, '62'],
+                                    [Lang.Blocks.turtle_color_green, '63'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '64'],
+                                    [Lang.Blocks.turtle_color_blue, '65'],
+                                    [Lang.Blocks.turtle_color_purple, '66'],
+                                    [Lang.Blocks.turtle_color_any, '67'],
+                                ],
+                                value: '61',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['65'],
+                    },
+                    {
+                        syntax: 'Turtle.follow_black_line_until_purple()',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '61'],
+                                    [Lang.Blocks.turtle_color_yellow, '62'],
+                                    [Lang.Blocks.turtle_color_green, '63'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '64'],
+                                    [Lang.Blocks.turtle_color_blue, '65'],
+                                    [Lang.Blocks.turtle_color_purple, '66'],
+                                    [Lang.Blocks.turtle_color_any, '67'],
+                                ],
+                                value: '61',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['66'],
+                    },
+                    {
+                        syntax: 'Turtle.follow_black_line_until_any()',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '61'],
+                                    [Lang.Blocks.turtle_color_yellow, '62'],
+                                    [Lang.Blocks.turtle_color_green, '63'],
+                                    [Lang.Blocks.turtle_color_sky_blue, '64'],
+                                    [Lang.Blocks.turtle_color_blue, '65'],
+                                    [Lang.Blocks.turtle_color_purple, '66'],
+                                    [Lang.Blocks.turtle_color_any, '67'],
+                                ],
+                                value: '61',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['67'],
                     },
                 ],
             },
@@ -2896,37 +3982,14 @@ Entry.Turtle.getBlocks = function() {
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                const pd = Entry.hw.portData;
-                const turtle = Entry.Turtle;
-                turtle.setModule(sq);
-                if (!script.isStart) {
-                    script.isStart = true;
-                    sq.leftWheel = 0;
-                    sq.rightWheel = 0;
-                    turtle.setPulse(sq, 0);
-                    turtle.setMotion(sq, 0, 0, 0, 0, 0);
-                    const mode = Number(script.getField('COLOR'));
-                    turtle.setLineTracerMode(sq, mode);
-                    return script;
-                } else {
-                    if (pd.lineTracerStateId != turtle.lineTracerStateId) {
-                        turtle.lineTracerStateId = pd.lineTracerStateId;
-                        if (pd.lineTracerState == 0x02) {
-                            delete script.isStart;
-                            Entry.engine.isContinue = false;
-                            turtle.setLineTracerMode(sq, 0);
-                            return script.callReturn();
-                        }
-                    }
-                    return script;
-                }
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.followLineUntilBlack(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.follow_line_until_black(%1)',
+                        syntax: 'Turtle.follow_red_line_until_black()',
                         textParams: [
                             {
                                 type: 'Dropdown',
@@ -2940,10 +4003,70 @@ Entry.Turtle.getBlocks = function() {
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnValuePartialUpperCase,
-                                codeMap: 'Entry.CodeMap.Turtle.color_lines',
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
+                        params: ['71'],
+                    },
+                    {
+                        syntax: 'Turtle.follow_green_line_until_black()',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '71'],
+                                    [Lang.Blocks.turtle_color_green, '73'],
+                                    [Lang.Blocks.turtle_color_blue, '75'],
+                                    [Lang.Blocks.turtle_color_any, '77'],
+                                ],
+                                value: '71',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['73'],
+                    },
+                    {
+                        syntax: 'Turtle.follow_blue_line_until_black()',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '71'],
+                                    [Lang.Blocks.turtle_color_green, '73'],
+                                    [Lang.Blocks.turtle_color_blue, '75'],
+                                    [Lang.Blocks.turtle_color_any, '77'],
+                                ],
+                                value: '71',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['75'],
+                    },
+                    {
+                        syntax: 'Turtle.follow_any_line_until_black()',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_color_red, '71'],
+                                    [Lang.Blocks.turtle_color_green, '73'],
+                                    [Lang.Blocks.turtle_color_blue, '75'],
+                                    [Lang.Blocks.turtle_color_any, '77'],
+                                ],
+                                value: '71',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        params: ['77'],
                     },
                 ],
             },
@@ -2968,36 +4091,14 @@ Entry.Turtle.getBlocks = function() {
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                const pd = Entry.hw.portData;
-                const turtle = Entry.Turtle;
-                turtle.setModule(sq);
-                if (!script.isStart) {
-                    script.isStart = true;
-                    sq.leftWheel = 0;
-                    sq.rightWheel = 0;
-                    turtle.setPulse(sq, 0);
-                    turtle.setMotion(sq, 0, 0, 0, 0, 0);
-                    turtle.setLineTracerMode(sq, 40);
-                    return script;
-                } else {
-                    if (pd.lineTracerStateId != turtle.lineTracerStateId) {
-                        turtle.lineTracerStateId = pd.lineTracerStateId;
-                        if (pd.lineTracerState == 0x02) {
-                            delete script.isStart;
-                            Entry.engine.isContinue = false;
-                            turtle.setLineTracerMode(sq, 0);
-                            return script.callReturn();
-                        }
-                    }
-                    return script;
-                }
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.crossIntersection(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.intersection_forward()',
+                        syntax: 'Turtle.cross_forward()',
                     },
                 ],
             },
@@ -3037,37 +4138,14 @@ Entry.Turtle.getBlocks = function() {
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                const pd = Entry.hw.portData;
-                const turtle = Entry.Turtle;
-                turtle.setModule(sq);
-                if (!script.isStart) {
-                    script.isStart = true;
-                    sq.leftWheel = 0;
-                    sq.rightWheel = 0;
-                    turtle.setPulse(sq, 0);
-                    turtle.setMotion(sq, 0, 0, 0, 0, 0);
-                    const mode = Number(script.getField('DIRECTION'));
-                    Entry.Turtle.setLineTracerMode(sq, mode);
-                    return script;
-                } else {
-                    if (pd.lineTracerStateId != turtle.lineTracerStateId) {
-                        turtle.lineTracerStateId = pd.lineTracerStateId;
-                        if (pd.lineTracerState == 0x02) {
-                            delete script.isStart;
-                            Entry.engine.isContinue = false;
-                            turtle.setLineTracerMode(sq, 0);
-                            return script.callReturn();
-                        }
-                    }
-                    return script;
-                }
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.turnAtIntersection(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.intersection_left()',
+                        syntax: 'Turtle.cross_left()',
                         textParams: [
                             {
                                 type: 'Dropdown',
@@ -3086,7 +4164,7 @@ Entry.Turtle.getBlocks = function() {
                         params: ['20'],
                     },
                     {
-                        syntax: 'Turtle.intersection_right()',
+                        syntax: 'Turtle.cross_right()',
                         textParams: [
                             {
                                 type: 'Dropdown',
@@ -3105,7 +4183,7 @@ Entry.Turtle.getBlocks = function() {
                         params: ['30'],
                     },
                     {
-                        syntax: 'Turtle.intersection_uturn()',
+                        syntax: 'Turtle.cross_uturn()',
                         textParams: [
                             {
                                 type: 'Dropdown',
@@ -3166,18 +4244,14 @@ Entry.Turtle.getBlocks = function() {
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                Entry.Turtle.setModule(sq);
-                const speed = Number(script.getField('SPEED'));
-                sq.lineTracerSpeed = speed;
-                sq.lineTracerGain = speed;
-                return script.callReturn();
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.setLineTracerSpeed(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.line_tracer_speed(%1)',
+                        syntax: 'Turtle.set_line_speed(%1)',
                         textParams: [
                             {
                                 type: 'Dropdown',
@@ -3222,15 +4296,8 @@ Entry.Turtle.getBlocks = function() {
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                const turtle = Entry.Turtle;
-                turtle.setModule(sq);
-                sq.leftWheel = 0;
-                sq.rightWheel = 0;
-                turtle.setPulse(sq, 0);
-                turtle.setLineTracerMode(sq, 0);
-                turtle.setMotion(sq, 0, 0, 0, 0, 0);
-                return script.callReturn();
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.stop(script) : script;
             },
             syntax: {
                 js: [],
@@ -3282,17 +4349,14 @@ Entry.Turtle.getBlocks = function() {
             class: 'turtle_led',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                const color = script.getField('COLOR');
-                Entry.Turtle.setModule(sq);
-                Entry.Turtle.setLedColor(sq, color);
-                return script.callReturn();
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.setHeadColor(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.led_color(%1)',
+                        syntax: 'Turtle.set_led(%1)',
                         textParams: [
                             {
                                 type: 'Dropdown',
@@ -3311,8 +4375,51 @@ Entry.Turtle.getBlocks = function() {
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnValuePartialUpperCase,
-                                codeMap: 'Entry.CodeMap.Turtle.led_colors',
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        turtle_pick_head_led: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Color',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null, null],
+                type: 'turtle_pick_head_led',
+            },
+            paramsKeyMap: {
+                COLOR: 0,
+            },
+            class: 'turtle_led',
+            isNotFor: ['turtle'],
+            func(sprite, script) {
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.pickHeadColor(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Turtle.pick_led(%1)',
+                        textParams: [
+                            {
+                                type: 'Color',
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
                     },
@@ -3370,21 +4477,14 @@ Entry.Turtle.getBlocks = function() {
             class: 'turtle_led',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                Entry.Turtle.setModule(sq);
-                const red = script.getNumberValue('RED');
-                const green = script.getNumberValue('GREEN');
-                const blue = script.getNumberValue('BLUE');
-                sq.ledRed = sq.ledRed != undefined ? sq.ledRed + red : red;
-                sq.ledGreen = sq.ledGreen != undefined ? sq.ledGreen + green : green;
-                sq.ledBlue = sq.ledBlue != undefined ? sq.ledBlue + blue : blue;
-                return script.callReturn();
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.changeHeadRgb(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.led_by(%1, %2, %3)',
+                        syntax: 'Turtle.add_rgb(%1, %2, %3)',
                         textParams: [
                             {
                                 type: 'Block',
@@ -3454,18 +4554,14 @@ Entry.Turtle.getBlocks = function() {
             class: 'turtle_led',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                Entry.Turtle.setModule(sq);
-                sq.ledRed = script.getNumberValue('RED');
-                sq.ledGreen = script.getNumberValue('GREEN');
-                sq.ledBlue = script.getNumberValue('BLUE');
-                return script.callReturn();
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.setHeadRgb(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.led(%1, %2, %3)',
+                        syntax: 'Turtle.set_rgb(%1, %2, %3)',
                         textParams: [
                             {
                                 type: 'Block',
@@ -3504,18 +4600,14 @@ Entry.Turtle.getBlocks = function() {
             class: 'turtle_led',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                Entry.Turtle.setModule(sq);
-                sq.ledRed = 0;
-                sq.ledGreen = 0;
-                sq.ledBlue = 0;
-                return script.callReturn();
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.clearHead(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.led(0)',
+                        syntax: 'Turtle.clear_led()',
                     },
                 ],
             },
@@ -3573,22 +4665,14 @@ Entry.Turtle.getBlocks = function() {
             class: 'turtle_sound',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                Entry.Turtle.setModule(sq);
-                sq.buzzer = 0;
-                sq.note = 0;
-                const sound = Number(script.getField('SOUND'));
-                const count = script.getNumberValue('COUNT');
-                if (count) {
-                    Entry.Turtle.setSound(sq, sound, count);
-                }
-                return script.callReturn();
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.playSound(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.sound(%1, %2)',
+                        syntax: 'Turtle.play_sound_beep(%2)',
                         textParams: [
                             {
                                 type: 'Dropdown',
@@ -3607,14 +4691,219 @@ Entry.Turtle.getBlocks = function() {
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnValuePartialUpperCase,
-                                codeMap: 'Entry.CodeMap.Turtle.sounds',
+                                converter: Entry.block.converters.returnStringValue,
                             },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
+                            { type: 'Block', accept: 'string' },
                         ],
+                        params: ['1'],
+                    },
+                    {
+                        syntax: 'Turtle.play_sound_random_beep(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_sound_beep, '1'],
+                                    [Lang.Blocks.turtle_sound_random_beep, '2'],
+                                    [Lang.Blocks.turtle_sound_siren, '3'],
+                                    [Lang.Blocks.turtle_sound_engine, '4'],
+                                    [Lang.Blocks.turtle_sound_robot, '5'],
+                                    [Lang.Blocks.turtle_sound_march, '6'],
+                                    [Lang.Blocks.turtle_sound_birthday, '7'],
+                                    [Lang.Blocks.turtle_sound_dibidibidip, '8'],
+                                    [Lang.Blocks.turtle_sound_good_job, '9'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['2'],
+                    },
+                    {
+                        syntax: 'Turtle.play_sound_siren(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_sound_beep, '1'],
+                                    [Lang.Blocks.turtle_sound_random_beep, '2'],
+                                    [Lang.Blocks.turtle_sound_siren, '3'],
+                                    [Lang.Blocks.turtle_sound_engine, '4'],
+                                    [Lang.Blocks.turtle_sound_robot, '5'],
+                                    [Lang.Blocks.turtle_sound_march, '6'],
+                                    [Lang.Blocks.turtle_sound_birthday, '7'],
+                                    [Lang.Blocks.turtle_sound_dibidibidip, '8'],
+                                    [Lang.Blocks.turtle_sound_good_job, '9'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['3'],
+                    },
+                    {
+                        syntax: 'Turtle.play_sound_engine(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_sound_beep, '1'],
+                                    [Lang.Blocks.turtle_sound_random_beep, '2'],
+                                    [Lang.Blocks.turtle_sound_siren, '3'],
+                                    [Lang.Blocks.turtle_sound_engine, '4'],
+                                    [Lang.Blocks.turtle_sound_robot, '5'],
+                                    [Lang.Blocks.turtle_sound_march, '6'],
+                                    [Lang.Blocks.turtle_sound_birthday, '7'],
+                                    [Lang.Blocks.turtle_sound_dibidibidip, '8'],
+                                    [Lang.Blocks.turtle_sound_good_job, '9'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['4'],
+                    },
+                    {
+                        syntax: 'Turtle.play_sound_robot(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_sound_beep, '1'],
+                                    [Lang.Blocks.turtle_sound_random_beep, '2'],
+                                    [Lang.Blocks.turtle_sound_siren, '3'],
+                                    [Lang.Blocks.turtle_sound_engine, '4'],
+                                    [Lang.Blocks.turtle_sound_robot, '5'],
+                                    [Lang.Blocks.turtle_sound_march, '6'],
+                                    [Lang.Blocks.turtle_sound_birthday, '7'],
+                                    [Lang.Blocks.turtle_sound_dibidibidip, '8'],
+                                    [Lang.Blocks.turtle_sound_good_job, '9'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['5'],
+                    },
+                    {
+                        syntax: 'Turtle.play_sound_march(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_sound_beep, '1'],
+                                    [Lang.Blocks.turtle_sound_random_beep, '2'],
+                                    [Lang.Blocks.turtle_sound_siren, '3'],
+                                    [Lang.Blocks.turtle_sound_engine, '4'],
+                                    [Lang.Blocks.turtle_sound_robot, '5'],
+                                    [Lang.Blocks.turtle_sound_march, '6'],
+                                    [Lang.Blocks.turtle_sound_birthday, '7'],
+                                    [Lang.Blocks.turtle_sound_dibidibidip, '8'],
+                                    [Lang.Blocks.turtle_sound_good_job, '9'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['6'],
+                    },
+                    {
+                        syntax: 'Turtle.play_sound_birthday(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_sound_beep, '1'],
+                                    [Lang.Blocks.turtle_sound_random_beep, '2'],
+                                    [Lang.Blocks.turtle_sound_siren, '3'],
+                                    [Lang.Blocks.turtle_sound_engine, '4'],
+                                    [Lang.Blocks.turtle_sound_robot, '5'],
+                                    [Lang.Blocks.turtle_sound_march, '6'],
+                                    [Lang.Blocks.turtle_sound_birthday, '7'],
+                                    [Lang.Blocks.turtle_sound_dibidibidip, '8'],
+                                    [Lang.Blocks.turtle_sound_good_job, '9'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['7'],
+                    },
+                    {
+                        syntax: 'Turtle.play_sound_dibidibidip(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_sound_beep, '1'],
+                                    [Lang.Blocks.turtle_sound_random_beep, '2'],
+                                    [Lang.Blocks.turtle_sound_siren, '3'],
+                                    [Lang.Blocks.turtle_sound_engine, '4'],
+                                    [Lang.Blocks.turtle_sound_robot, '5'],
+                                    [Lang.Blocks.turtle_sound_march, '6'],
+                                    [Lang.Blocks.turtle_sound_birthday, '7'],
+                                    [Lang.Blocks.turtle_sound_dibidibidip, '8'],
+                                    [Lang.Blocks.turtle_sound_good_job, '9'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['8'],
+                    },
+                    {
+                        syntax: 'Turtle.play_sound_good_job(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_sound_beep, '1'],
+                                    [Lang.Blocks.turtle_sound_random_beep, '2'],
+                                    [Lang.Blocks.turtle_sound_siren, '3'],
+                                    [Lang.Blocks.turtle_sound_engine, '4'],
+                                    [Lang.Blocks.turtle_sound_robot, '5'],
+                                    [Lang.Blocks.turtle_sound_march, '6'],
+                                    [Lang.Blocks.turtle_sound_birthday, '7'],
+                                    [Lang.Blocks.turtle_sound_dibidibidip, '8'],
+                                    [Lang.Blocks.turtle_sound_good_job, '9'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['9'],
                     },
                 ],
             },
@@ -3672,43 +4961,14 @@ Entry.Turtle.getBlocks = function() {
             class: 'turtle_sound',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                const pd = Entry.hw.portData;
-                const turtle = Entry.Turtle;
-                turtle.setModule(sq);
-                if (!script.isStart) {
-                    script.isStart = true;
-                    sq.buzzer = 0;
-                    sq.note = 0;
-                    const sound = Number(script.getField('SOUND'));
-                    const count = script.getNumberValue('COUNT');
-                    if (count) {
-                        turtle.setSound(sq, sound, count);
-                        return script;
-                    } else {
-                        turtle.sound = 0;
-                        turtle.soundRepeat = 1;
-                        delete script.isStart;
-                        Entry.engine.isContinue = false;
-                        return script.callReturn();
-                    }
-                } else {
-                    if (pd.soundStateId != turtle.soundStateId) {
-                        turtle.soundStateId = pd.soundStateId;
-                        if (pd.soundState == 0) {
-                            delete script.isStart;
-                            Entry.engine.isContinue = false;
-                            return script.callReturn();
-                        }
-                    }
-                    return script;
-                }
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.playSoundUntil(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.sound_until_done(%1, %2)',
+                        syntax: 'Turtle.play_sound_until_done_beep(%2)',
                         textParams: [
                             {
                                 type: 'Dropdown',
@@ -3727,14 +4987,219 @@ Entry.Turtle.getBlocks = function() {
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnValuePartialUpperCase,
-                                codeMap: 'Entry.CodeMap.Turtle.sounds',
+                                converter: Entry.block.converters.returnStringValue,
                             },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
+                            { type: 'Block', accept: 'string' },
                         ],
+                        params: ['1'],
+                    },
+                    {
+                        syntax: 'Turtle.play_sound_until_done_random_beep(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_sound_beep, '1'],
+                                    [Lang.Blocks.turtle_sound_random_beep, '2'],
+                                    [Lang.Blocks.turtle_sound_siren, '3'],
+                                    [Lang.Blocks.turtle_sound_engine, '4'],
+                                    [Lang.Blocks.turtle_sound_robot, '5'],
+                                    [Lang.Blocks.turtle_sound_march, '6'],
+                                    [Lang.Blocks.turtle_sound_birthday, '7'],
+                                    [Lang.Blocks.turtle_sound_dibidibidip, '8'],
+                                    [Lang.Blocks.turtle_sound_good_job, '9'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['2'],
+                    },
+                    {
+                        syntax: 'Turtle.play_sound_until_done_siren(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_sound_beep, '1'],
+                                    [Lang.Blocks.turtle_sound_random_beep, '2'],
+                                    [Lang.Blocks.turtle_sound_siren, '3'],
+                                    [Lang.Blocks.turtle_sound_engine, '4'],
+                                    [Lang.Blocks.turtle_sound_robot, '5'],
+                                    [Lang.Blocks.turtle_sound_march, '6'],
+                                    [Lang.Blocks.turtle_sound_birthday, '7'],
+                                    [Lang.Blocks.turtle_sound_dibidibidip, '8'],
+                                    [Lang.Blocks.turtle_sound_good_job, '9'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['3'],
+                    },
+                    {
+                        syntax: 'Turtle.play_sound_until_done_engine(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_sound_beep, '1'],
+                                    [Lang.Blocks.turtle_sound_random_beep, '2'],
+                                    [Lang.Blocks.turtle_sound_siren, '3'],
+                                    [Lang.Blocks.turtle_sound_engine, '4'],
+                                    [Lang.Blocks.turtle_sound_robot, '5'],
+                                    [Lang.Blocks.turtle_sound_march, '6'],
+                                    [Lang.Blocks.turtle_sound_birthday, '7'],
+                                    [Lang.Blocks.turtle_sound_dibidibidip, '8'],
+                                    [Lang.Blocks.turtle_sound_good_job, '9'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['4'],
+                    },
+                    {
+                        syntax: 'Turtle.play_sound_until_done_robot(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_sound_beep, '1'],
+                                    [Lang.Blocks.turtle_sound_random_beep, '2'],
+                                    [Lang.Blocks.turtle_sound_siren, '3'],
+                                    [Lang.Blocks.turtle_sound_engine, '4'],
+                                    [Lang.Blocks.turtle_sound_robot, '5'],
+                                    [Lang.Blocks.turtle_sound_march, '6'],
+                                    [Lang.Blocks.turtle_sound_birthday, '7'],
+                                    [Lang.Blocks.turtle_sound_dibidibidip, '8'],
+                                    [Lang.Blocks.turtle_sound_good_job, '9'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['5'],
+                    },
+                    {
+                        syntax: 'Turtle.play_sound_until_done_march(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_sound_beep, '1'],
+                                    [Lang.Blocks.turtle_sound_random_beep, '2'],
+                                    [Lang.Blocks.turtle_sound_siren, '3'],
+                                    [Lang.Blocks.turtle_sound_engine, '4'],
+                                    [Lang.Blocks.turtle_sound_robot, '5'],
+                                    [Lang.Blocks.turtle_sound_march, '6'],
+                                    [Lang.Blocks.turtle_sound_birthday, '7'],
+                                    [Lang.Blocks.turtle_sound_dibidibidip, '8'],
+                                    [Lang.Blocks.turtle_sound_good_job, '9'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['6'],
+                    },
+                    {
+                        syntax: 'Turtle.play_sound_until_done_birthday(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_sound_beep, '1'],
+                                    [Lang.Blocks.turtle_sound_random_beep, '2'],
+                                    [Lang.Blocks.turtle_sound_siren, '3'],
+                                    [Lang.Blocks.turtle_sound_engine, '4'],
+                                    [Lang.Blocks.turtle_sound_robot, '5'],
+                                    [Lang.Blocks.turtle_sound_march, '6'],
+                                    [Lang.Blocks.turtle_sound_birthday, '7'],
+                                    [Lang.Blocks.turtle_sound_dibidibidip, '8'],
+                                    [Lang.Blocks.turtle_sound_good_job, '9'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['7'],
+                    },
+                    {
+                        syntax: 'Turtle.play_sound_until_done_dibidibidip(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_sound_beep, '1'],
+                                    [Lang.Blocks.turtle_sound_random_beep, '2'],
+                                    [Lang.Blocks.turtle_sound_siren, '3'],
+                                    [Lang.Blocks.turtle_sound_engine, '4'],
+                                    [Lang.Blocks.turtle_sound_robot, '5'],
+                                    [Lang.Blocks.turtle_sound_march, '6'],
+                                    [Lang.Blocks.turtle_sound_birthday, '7'],
+                                    [Lang.Blocks.turtle_sound_dibidibidip, '8'],
+                                    [Lang.Blocks.turtle_sound_good_job, '9'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['8'],
+                    },
+                    {
+                        syntax: 'Turtle.play_sound_until_done_good_job(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_sound_beep, '1'],
+                                    [Lang.Blocks.turtle_sound_random_beep, '2'],
+                                    [Lang.Blocks.turtle_sound_siren, '3'],
+                                    [Lang.Blocks.turtle_sound_engine, '4'],
+                                    [Lang.Blocks.turtle_sound_robot, '5'],
+                                    [Lang.Blocks.turtle_sound_march, '6'],
+                                    [Lang.Blocks.turtle_sound_birthday, '7'],
+                                    [Lang.Blocks.turtle_sound_dibidibidip, '8'],
+                                    [Lang.Blocks.turtle_sound_good_job, '9'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['9'],
                     },
                 ],
             },
@@ -3767,24 +5232,19 @@ Entry.Turtle.getBlocks = function() {
                 type: 'turtle_change_buzzer_by',
             },
             paramsKeyMap: {
-                VALUE: 0,
+                HZ: 0,
             },
             class: 'turtle_sound',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                Entry.Turtle.setModule(sq);
-                const value = script.getNumberValue('VALUE');
-                sq.buzzer = sq.buzzer != undefined ? sq.buzzer + value : value;
-                sq.note = 0;
-                Entry.Turtle.setSound(sq, 0);
-                return script.callReturn();
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.changeBuzzer(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.buzzer_by(%1)',
+                        syntax: 'Turtle.add_buzzer(%1)',
                     },
                 ],
             },
@@ -3817,23 +5277,19 @@ Entry.Turtle.getBlocks = function() {
                 type: 'turtle_set_buzzer_to',
             },
             paramsKeyMap: {
-                VALUE: 0,
+                HZ: 0,
             },
             class: 'turtle_sound',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                Entry.Turtle.setModule(sq);
-                sq.buzzer = script.getNumberValue('VALUE');
-                sq.note = 0;
-                Entry.Turtle.setSound(sq, 0);
-                return script.callReturn();
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.setBuzzer(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.buzzer(%1)',
+                        syntax: 'Turtle.set_buzzer(%1)',
                     },
                 ],
             },
@@ -3858,27 +5314,14 @@ Entry.Turtle.getBlocks = function() {
             class: 'turtle_sound',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                Entry.Turtle.setModule(sq);
-                sq.buzzer = 0;
-                sq.note = 0;
-                Entry.Turtle.setSound(sq, 0);
-                return script.callReturn();
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.clearSound(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.sound(0)',
-                        params: [null],
-                    },
-                    {
-                        syntax: 'Turtle.sound(Turtle.SOUND_OFF)',
-                        params: [null],
-                    },
-                    {
-                        syntax: 'Turtle.buzzer(0)',
-                        params: [null],
+                        syntax: 'Turtle.clear_sound()',
                     },
                 ],
             },
@@ -3892,18 +5335,18 @@ Entry.Turtle.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [`${Lang.Blocks.turtle_note_c}`, '4'],
-                        [`${Lang.Blocks.turtle_note_c}#`, '5'],
-                        [`${Lang.Blocks.turtle_note_d}`, '6'],
-                        [`${Lang.Blocks.turtle_note_e}b`, '7'],
-                        [`${Lang.Blocks.turtle_note_e}`, '8'],
-                        [`${Lang.Blocks.turtle_note_f}`, '9'],
-                        [`${Lang.Blocks.turtle_note_f}#`, '10'],
-                        [`${Lang.Blocks.turtle_note_g}`, '11'],
-                        [`${Lang.Blocks.turtle_note_g}#`, '12'],
-                        [`${Lang.Blocks.turtle_note_a}`, '13'],
-                        [`${Lang.Blocks.turtle_note_b}b`, '14'],
-                        [`${Lang.Blocks.turtle_note_b}`, '15'],
+                        [Lang.Blocks.turtle_note_c, '4'],
+                        [Lang.Blocks.turtle_note_c_sharp, '5'],
+                        [Lang.Blocks.turtle_note_d, '6'],
+                        [Lang.Blocks.turtle_note_d_sharp, '7'],
+                        [Lang.Blocks.turtle_note_e, '8'],
+                        [Lang.Blocks.turtle_note_f, '9'],
+                        [Lang.Blocks.turtle_note_f_sharp, '10'],
+                        [Lang.Blocks.turtle_note_g, '11'],
+                        [Lang.Blocks.turtle_note_g_sharp, '12'],
+                        [Lang.Blocks.turtle_note_a, '13'],
+                        [Lang.Blocks.turtle_note_a_sharp, '14'],
+                        [Lang.Blocks.turtle_note_b, '15'],
                     ],
                     value: '4',
                     fontSize: 11,
@@ -3944,44 +5387,36 @@ Entry.Turtle.getBlocks = function() {
             class: 'turtle_sound',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                let note = script.getNumberField('NOTE', script);
-                const octave = script.getNumberField('OCTAVE', script);
-                Entry.Turtle.setModule(sq);
-                sq.buzzer = 0;
-                note += (octave - 1) * 12;
-                sq.note = note;
-                Entry.Turtle.setSound(sq, 0);
-                return script.callReturn();
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.playNote(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.pitch(%1, %2)',
+                        syntax: 'Turtle.play_pitch_c(%2)',
                         textParams: [
                             {
                                 type: 'Dropdown',
                                 options: [
-                                    [`${Lang.Blocks.turtle_note_c}`, '4'],
-                                    [`${Lang.Blocks.turtle_note_c}#`, '5'],
-                                    [`${Lang.Blocks.turtle_note_d}`, '6'],
-                                    [`${Lang.Blocks.turtle_note_e}b`, '7'],
-                                    [`${Lang.Blocks.turtle_note_e}`, '8'],
-                                    [`${Lang.Blocks.turtle_note_f}`, '9'],
-                                    [`${Lang.Blocks.turtle_note_f}#`, '10'],
-                                    [`${Lang.Blocks.turtle_note_g}`, '11'],
-                                    [`${Lang.Blocks.turtle_note_g}#`, '12'],
-                                    [`${Lang.Blocks.turtle_note_a}`, '13'],
-                                    [`${Lang.Blocks.turtle_note_b}b`, '14'],
-                                    [`${Lang.Blocks.turtle_note_b}`, '15'],
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
                                 ],
                                 value: '4',
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnValuePartialUpperCase,
-                                codeMap: 'Entry.CodeMap.Turtle.notes',
+                                converter: Entry.block.converters.returnStringValue,
                             },
                             {
                                 type: 'Dropdown',
@@ -4001,6 +5436,502 @@ Entry.Turtle.getBlocks = function() {
                                 converter: Entry.block.converters.returnStringOrNumberByValue,
                             },
                         ],
+                        params: ['4'],
+                    },
+                    {
+                        syntax: 'Turtle.play_pitch_c_sharp(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                        ],
+                        params: ['5'],
+                    },
+                    {
+                        syntax: 'Turtle.play_pitch_d(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                        ],
+                        params: ['6'],
+                    },
+                    {
+                        syntax: 'Turtle.play_pitch_d_sharp(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                        ],
+                        params: ['7'],
+                    },
+                    {
+                        syntax: 'Turtle.play_pitch_e(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                        ],
+                        params: ['8'],
+                    },
+                    {
+                        syntax: 'Turtle.play_pitch_f(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                        ],
+                        params: ['9'],
+                    },
+                    {
+                        syntax: 'Turtle.play_pitch_f_sharp(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                        ],
+                        params: ['10'],
+                    },
+                    {
+                        syntax: 'Turtle.play_pitch_g(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                        ],
+                        params: ['11'],
+                    },
+                    {
+                        syntax: 'Turtle.play_pitch_g_sharp(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                        ],
+                        params: ['12'],
+                    },
+                    {
+                        syntax: 'Turtle.play_pitch_a(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                        ],
+                        params: ['13'],
+                    },
+                    {
+                        syntax: 'Turtle.play_pitch_a_sharp(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                        ],
+                        params: ['14'],
+                    },
+                    {
+                        syntax: 'Turtle.play_pitch_b(%2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                        ],
+                        params: ['15'],
                     },
                 ],
             },
@@ -4014,18 +5945,18 @@ Entry.Turtle.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [`${Lang.Blocks.turtle_note_c}`, '4'],
-                        [`${Lang.Blocks.turtle_note_c}#`, '5'],
-                        [`${Lang.Blocks.turtle_note_d}`, '6'],
-                        [`${Lang.Blocks.turtle_note_e}b`, '7'],
-                        [`${Lang.Blocks.turtle_note_e}`, '8'],
-                        [`${Lang.Blocks.turtle_note_f}`, '9'],
-                        [`${Lang.Blocks.turtle_note_f}#`, '10'],
-                        [`${Lang.Blocks.turtle_note_g}`, '11'],
-                        [`${Lang.Blocks.turtle_note_g}#`, '12'],
-                        [`${Lang.Blocks.turtle_note_a}`, '13'],
-                        [`${Lang.Blocks.turtle_note_b}b`, '14'],
-                        [`${Lang.Blocks.turtle_note_b}`, '15'],
+                        [Lang.Blocks.turtle_note_c, '4'],
+                        [Lang.Blocks.turtle_note_c_sharp, '5'],
+                        [Lang.Blocks.turtle_note_d, '6'],
+                        [Lang.Blocks.turtle_note_d_sharp, '7'],
+                        [Lang.Blocks.turtle_note_e, '8'],
+                        [Lang.Blocks.turtle_note_f, '9'],
+                        [Lang.Blocks.turtle_note_f_sharp, '10'],
+                        [Lang.Blocks.turtle_note_g, '11'],
+                        [Lang.Blocks.turtle_note_g_sharp, '12'],
+                        [Lang.Blocks.turtle_note_a, '13'],
+                        [Lang.Blocks.turtle_note_a_sharp, '14'],
+                        [Lang.Blocks.turtle_note_b, '15'],
                     ],
                     value: '4',
                     fontSize: 11,
@@ -4074,76 +6005,41 @@ Entry.Turtle.getBlocks = function() {
             paramsKeyMap: {
                 NOTE: 0,
                 OCTAVE: 1,
-                VALUE: 2,
+                BEAT: 2,
             },
             class: 'turtle_sound',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                const turtle = Entry.Turtle;
-                turtle.setModule(sq);
-                if (!script.isStart) {
-                    let note = script.getNumberField('NOTE', script);
-                    const octave = script.getNumberField('OCTAVE', script);
-                    const beat = script.getNumberValue('VALUE', script);
-                    note += (octave - 1) * 12;
-                    const timeValue = (beat * 60 * 1000) / turtle.tempo;
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    sq.buzzer = 0;
-                    sq.note = note;
-                    turtle.setSound(sq, 0);
-                    if (timeValue > 100) {
-                        var timer1 = setTimeout(() => {
-                            sq.note = 0;
-                            turtle.removeTimeout(timer1);
-                        }, timeValue - 100);
-                        turtle.timeouts.push(timer1);
-                    }
-                    var timer2 = setTimeout(() => {
-                        script.timeFlag = 0;
-                        turtle.removeTimeout(timer2);
-                    }, timeValue);
-                    turtle.timeouts.push(timer2);
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {
-                    delete script.isStart;
-                    delete script.timeFlag;
-                    Entry.engine.isContinue = false;
-                    sq.note = 0;
-                    return script.callReturn();
-                }
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.playNoteBeat(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.note(%1, %2, %3)',
+                        syntax: 'Turtle.play_note_c(%2, %3)',
                         textParams: [
                             {
                                 type: 'Dropdown',
                                 options: [
-                                    [`${Lang.Blocks.turtle_note_c}`, '4'],
-                                    [`${Lang.Blocks.turtle_note_c}#`, '5'],
-                                    [`${Lang.Blocks.turtle_note_d}`, '6'],
-                                    [`${Lang.Blocks.turtle_note_e}b`, '7'],
-                                    [`${Lang.Blocks.turtle_note_e}`, '8'],
-                                    [`${Lang.Blocks.turtle_note_f}`, '9'],
-                                    [`${Lang.Blocks.turtle_note_f}#`, '10'],
-                                    [`${Lang.Blocks.turtle_note_g}`, '11'],
-                                    [`${Lang.Blocks.turtle_note_g}#`, '12'],
-                                    [`${Lang.Blocks.turtle_note_a}`, '13'],
-                                    [`${Lang.Blocks.turtle_note_b}b`, '14'],
-                                    [`${Lang.Blocks.turtle_note_b}`, '15'],
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
                                 ],
                                 value: '4',
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnValuePartialUpperCase,
-                                codeMap: 'Entry.CodeMap.Turtle.notes',
+                                converter: Entry.block.converters.returnStringValue,
                             },
                             {
                                 type: 'Dropdown',
@@ -4162,11 +6058,515 @@ Entry.Turtle.getBlocks = function() {
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter: Entry.block.converters.returnStringOrNumberByValue,
                             },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
+                            { type: 'Block', accept: 'string' },
                         ],
+                        params: ['4'],
+                    },
+                    {
+                        syntax: 'Turtle.play_note_c_sharp(%2, %3)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['5'],
+                    },
+                    {
+                        syntax: 'Turtle.play_note_d(%2, %3)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['6'],
+                    },
+                    {
+                        syntax: 'Turtle.play_note_d_sharp(%2, %3)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['7'],
+                    },
+                    {
+                        syntax: 'Turtle.play_note_e(%2, %3)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['8'],
+                    },
+                    {
+                        syntax: 'Turtle.play_note_f(%2, %3)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['9'],
+                    },
+                    {
+                        syntax: 'Turtle.play_note_f_sharp(%2, %3)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['10'],
+                    },
+                    {
+                        syntax: 'Turtle.play_note_g(%2, %3)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['11'],
+                    },
+                    {
+                        syntax: 'Turtle.play_note_g_sharp(%2, %3)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['12'],
+                    },
+                    {
+                        syntax: 'Turtle.play_note_a(%2, %3)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['13'],
+                    },
+                    {
+                        syntax: 'Turtle.play_note_a_sharp(%2, %3)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['14'],
+                    },
+                    {
+                        syntax: 'Turtle.play_note_b(%2, %3)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.turtle_note_c, '4'],
+                                    [Lang.Blocks.turtle_note_c_sharp, '5'],
+                                    [Lang.Blocks.turtle_note_d, '6'],
+                                    [Lang.Blocks.turtle_note_d_sharp, '7'],
+                                    [Lang.Blocks.turtle_note_e, '8'],
+                                    [Lang.Blocks.turtle_note_f, '9'],
+                                    [Lang.Blocks.turtle_note_f_sharp, '10'],
+                                    [Lang.Blocks.turtle_note_g, '11'],
+                                    [Lang.Blocks.turtle_note_g_sharp, '12'],
+                                    [Lang.Blocks.turtle_note_a, '13'],
+                                    [Lang.Blocks.turtle_note_a_sharp, '14'],
+                                    [Lang.Blocks.turtle_note_b, '15'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                        params: ['15'],
                     },
                 ],
             },
@@ -4199,59 +6599,25 @@ Entry.Turtle.getBlocks = function() {
                 type: 'turtle_rest_for_beats',
             },
             paramsKeyMap: {
-                VALUE: 0,
+                BEAT: 0,
             },
             class: 'turtle_sound',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                const turtle = Entry.Turtle;
-                turtle.setModule(sq);
-                if (!script.isStart) {
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    let timeValue = script.getNumberValue('VALUE');
-                    timeValue = (timeValue * 60 * 1000) / turtle.tempo;
-                    sq.buzzer = 0;
-                    sq.note = 0;
-                    turtle.setSound(sq, 0);
-                    var timer = setTimeout(() => {
-                        script.timeFlag = 0;
-                        turtle.removeTimeout(timer);
-                    }, timeValue);
-                    turtle.timeouts.push(timer);
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {
-                    delete script.isStart;
-                    delete script.timeFlag;
-                    Entry.engine.isContinue = false;
-                    return script.callReturn();
-                }
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.restBeat(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.note(0, %1)',
+                        syntax: 'Turtle.rest(%1)',
                         textParams: [
                             {
                                 type: 'Block',
                                 accept: 'string',
                             },
                         ],
-                        keyOption: '0',
-                    },
-                    {
-                        syntax: 'Turtle.note(Turtle.NOTE_OFF, %1)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                        keyOption: 'Turtle.NOTE_OFF',
                     },
                 ],
             },
@@ -4284,24 +6650,19 @@ Entry.Turtle.getBlocks = function() {
                 type: 'turtle_change_tempo_by',
             },
             paramsKeyMap: {
-                VALUE: 0,
+                BPM: 0,
             },
             class: 'turtle_sound',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const turtle = Entry.Turtle;
-                turtle.setModule(Entry.hw.sendQueue);
-                turtle.tempo += script.getNumberValue('VALUE');
-                if (turtle.tempo < 1) {
-                    turtle.tempo = 1;
-                }
-                return script.callReturn();
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.changeTempo(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.tempo_by(%1)',
+                        syntax: 'Turtle.add_tempo(%1)',
                         textParams: [
                             {
                                 type: 'Block',
@@ -4340,24 +6701,19 @@ Entry.Turtle.getBlocks = function() {
                 type: 'turtle_set_tempo_to',
             },
             paramsKeyMap: {
-                VALUE: 0,
+                BPM: 0,
             },
             class: 'turtle_sound',
             isNotFor: ['turtle'],
             func(sprite, script) {
-                const turtle = Entry.Turtle;
-                turtle.setModule(Entry.hw.sendQueue);
-                turtle.tempo = script.getNumberValue('VALUE');
-                if (turtle.tempo < 1) {
-                    turtle.tempo = 1;
-                }
-                return script.callReturn();
+                const robot = Entry.Turtle.getRobot();
+                return robot ? robot.setTempo(script) : script;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Turtle.tempo(%1)',
+                        syntax: 'Turtle.set_tempo(%1)',
                         textParams: [
                             {
                                 type: 'Block',
@@ -4368,7 +6724,6 @@ Entry.Turtle.getBlocks = function() {
                 ],
             },
         },
-        //endregion turtle 터틀
     };
 };
 
