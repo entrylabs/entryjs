@@ -334,6 +334,9 @@ Entry.Container = class Container {
             object.selectedPicture = picture_;
             object.entity.setImage(picture_);
             object.updateThumbnailView();
+            this.sortableListViewWidget.setData({
+                items: this._getSortableObjectList(),
+            });
             return object.id;
         }
         throw new Error('No picture found');
