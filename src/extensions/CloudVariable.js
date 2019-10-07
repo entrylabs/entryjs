@@ -27,9 +27,7 @@ class CloudVariableExtension {
         });
         socket.on('action', this.#execDmet.bind(this));
         socket.on('create', this.#createVariable.bind(this));
-        socket.on('disconnect', (reason) => {
-            this.#data = null;
-        });
+
         this.#cvSocket = socket;
         return new Promise((resolve) => {
             socket.on('connect_error', () => {
@@ -49,6 +47,10 @@ class CloudVariableExtension {
                 } catch (e) {
                     console.warn(e);
                 }
+                resolve();
+            });
+            socket.on('disconnect', (reason) => {
+                this.#data = new dmet(this.#defaultData);
                 resolve();
             });
         });
