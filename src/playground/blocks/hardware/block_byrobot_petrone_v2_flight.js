@@ -1962,7 +1962,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.byrobot_petrone_v2_drone_state_mode_vehicle,   'state_modeVehicle'],
-                        [Lang.Blocks.byrobot_petrone_v2_drone_state_mode_drive,     'state_modeDrive'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_state_mode_flight,    'state_modeFlight'],
                         [Lang.Blocks.byrobot_petrone_v2_drone_state_battery,        'state_battery'],
                         [Lang.Blocks.byrobot_petrone_v2_drone_irmessage,            'irmessage_irdata'],
                     ],
@@ -2590,8 +2590,8 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_eye, '0x12'], // EyeHold = 0x12
-                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_arm, '0x42'], // ArmHold = 0x42
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_eye, '18'], // EyeHold = 0x12
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_arm, '66'], // ArmHold = 0x42
                     ],
                     value: '18',
                     fontSize: 11,
