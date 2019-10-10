@@ -1,8 +1,6 @@
 import io from 'socket.io-client';
 import { dmet, dmetVariable, dmetList } from './dmet';
 import singleInstance from '../core/singleInstance';
-import { runInContext } from 'vm';
-import { thisTypeAnnotation } from '@babel/types';
 
 class CloudVariableExtension {
     #cvSocket = null;
@@ -13,11 +11,15 @@ class CloudVariableExtension {
         return this.#data;
     }
 
+    setServerInfo(cvServer) {
+        this.cvServer = cvServer;
+    }
+
     async connect(cvServer) {
-        if (this.#cvSocket) {
+        if (this.#cvSocket || !this.cvServer) {
             return;
         }
-        const { url, query } = cvServer;
+        const { url, query } = this.cvServer;
         const socket = io(url, {
             query: {
                 q: query,
@@ -27,10 +29,18 @@ class CloudVariableExtension {
         });
         socket.on('action', this.#execDmet.bind(this));
         socket.on('create', this.#createVariable.bind(this));
+        socket.on('reset', (variables) => {
+            try {
+                this.#data = new dmet(variables);
+            } catch (e) {
+                console.warn(e);
+            }
+        });
 
         this.#cvSocket = socket;
         return new Promise((resolve) => {
             socket.on('connect_error', () => {
+                console.log('connect_error');
                 if (!this.#data) {
                     try {
                         this.#data = new dmet(this.#defaultData);
@@ -41,6 +51,7 @@ class CloudVariableExtension {
                 }
             });
             socket.on('welcome', (variables) => {
+                console.log('welcome');
                 console.log(variables);
                 try {
                     this.#data = new dmet(variables);
@@ -50,6 +61,7 @@ class CloudVariableExtension {
                 resolve();
             });
             socket.on('disconnect', (reason) => {
+                console.log('disconnect');
                 this.#data = new dmet(this.#defaultData);
                 resolve();
             });
@@ -148,15 +160,18 @@ class CloudVariableExtension {
         const { id, value, data, variableType } = operation;
         if (variableType === 'variable') {
             const variable = Entry.variableContainer.getVariable(id);
-            variable.value_ = value;
-            variable._valueWidth = null;
-            variable.updateView();
+            if (variable) {
+                variable.value_ = value;
+                variable._valueWidth = null;
+                variable.updateView();
+            }
         } else if (variableType === 'list') {
             const list = Entry.variableContainer.getList(id);
-            const { array } = this.get(operation);
-            console.log('applyValue', list, array);
-            list.array_ = array;
-            list.updateView();
+            if (list) {
+                const { array } = this.get(operation);
+                list.array_ = array;
+                list.updateView();
+            }
         }
     }
 
@@ -165,6 +180,9 @@ class CloudVariableExtension {
             return;
         }
         const variable = this.#data.get(target);
+        if (!variable) {
+            return;
+        }
         const operation = variable.getOperation({
             type: 'set',
             value,
@@ -181,6 +199,9 @@ class CloudVariableExtension {
             return;
         }
         const variable = this.#data.get(target);
+        if (!variable) {
+            return;
+        }
         const operation = variable.getOperation({
             type: 'append',
             data,
@@ -193,6 +214,9 @@ class CloudVariableExtension {
             return;
         }
         const variable = this.#data.get(target);
+        if (!variable) {
+            return;
+        }
         const operation = variable.getOperation({
             type: 'insert',
             index,
@@ -206,6 +230,9 @@ class CloudVariableExtension {
             return;
         }
         const variable = this.#data.get(target);
+        if (!variable) {
+            return;
+        }
         const operation = variable.getOperation({
             type: 'delete',
             index,
@@ -218,6 +245,9 @@ class CloudVariableExtension {
             return;
         }
         const variable = this.#data.get(target);
+        if (!variable) {
+            return;
+        }
         const operation = variable.getOperation({
             type: 'replace',
             index,
