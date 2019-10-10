@@ -178,7 +178,7 @@ class ListVariable extends Variable {
                         variableType: this.type,
                         id: this.id_,
                     };
-                    await this.cloudVariable.append(target, value);
+                    await this.cloudVariable.append(target, array);
                     const { array } = this.cloudVariable.get(target);
                     this.array_ = array;
                     this.updateView();
@@ -207,8 +207,14 @@ class ListVariable extends Variable {
                         id: this.id_,
                     };
                     await this.cloudVariable.append(target, value);
-                    const { array } = this.cloudVariable.get(target);
-                    this.array_ = array;
+                    const list = this.cloudVariable.get(target);
+                    if (list) {
+                        this.array_ = list.array;
+                    } else {
+                        this.array_.push({
+                            data: value,
+                        });
+                    }
                     this.updateView();
                     resolve();
                 } catch (e) {
@@ -230,8 +236,12 @@ class ListVariable extends Variable {
                         id: this.id_,
                     };
                     await this.cloudVariable.delete(target, index);
-                    const { array } = this.cloudVariable.get(target);
-                    this.array_ = array;
+                    const list = this.cloudVariable.get(target);
+                    if (list) {
+                        this.array_ = list.array;
+                    } else {
+                        this.array_.splice(index - 1, 1);
+                    }
                     this.updateView();
                     resolve();
                 } catch (e) {
@@ -243,7 +253,7 @@ class ListVariable extends Variable {
 
     insertValue(index, data) {
         if (!this.isCloud_) {
-            this.array.splice(index - 1, 0, { data });
+            this.array_.splice(index - 1, 0, { data });
             this.updateView();
         } else {
             return new Promise(async (resolve, reject) => {
@@ -253,8 +263,12 @@ class ListVariable extends Variable {
                         id: this.id_,
                     };
                     await this.cloudVariable.insert(target, index - 1, data);
-                    const { array } = this.cloudVariable.get(target);
-                    this.array_ = array;
+                    const list = this.cloudVariable.get(target);
+                    if (list) {
+                        this.array_ = list.array;
+                    } else {
+                        this.array_.splice(index - 1, 0, { data });
+                    }
                     this.updateView();
                     resolve();
                 } catch (e) {
@@ -276,8 +290,12 @@ class ListVariable extends Variable {
                         id: this.id_,
                     };
                     await this.cloudVariable.replace(target, index - 1, data);
-                    const { array } = this.cloudVariable.get(target);
-                    this.array_ = array;
+                    const list = this.cloudVariable.get(target);
+                    if (list) {
+                        this.array_ = list.array;
+                    } else {
+                        this.array_[index - 1].data = data;
+                    }
                     this.updateView();
                     resolve();
                 } catch (e) {
