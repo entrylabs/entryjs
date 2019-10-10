@@ -1272,7 +1272,7 @@ Entry.Playground = class Playground {
      * Select picture
      * @param {picture}
      */
-    selectPicture(picture) {
+    selectPicture(picture, removed) {
         const pictures = this.object.pictures;
         for (let i = 0, len = pictures.length; i < len; i++) {
             const target = pictures[i];
@@ -1293,7 +1293,7 @@ Entry.Playground = class Playground {
             if (!picture.objectId) {
                 picture.objectId = this.object.id;
             }
-            Entry.dispatchEvent('pictureSelected', picture);
+            Entry.dispatchEvent('pictureSelected', picture, removed);
         }
     }
 

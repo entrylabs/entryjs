@@ -105,7 +105,7 @@ Entry.Painter = class Painter {
         Entry.playground.addPicture(newPicture, true);
     }
 
-    changePicture(picture = {}) {
+    changePicture(picture = {}, removed) {
         if (this.file && this.file.id === picture.id) {
             if (!this.file.isUpdate) {
                 Entry.stage.updateObject();
@@ -126,22 +126,30 @@ Entry.Painter = class Painter {
                 wasRun = true;
             }
 
-            this.alertSaveModifiedPicture(wasRun, picture);
+            if (removed) {
+                this.updatePicture(picture);
+            } else {
+                this.alertSaveModifiedPicture(picture, wasRun);
+            }
         }
         Entry.stage.updateObject();
         this.file.isUpdate = true;
     }
 
-    alertSaveModifiedPicture(wasRun = true, picture = {}) {
+    updatePicture(picture = {}, wasRun = true, result = true) {
+        this.isConfirm = false;
+        result ? this.fileSave(true) : (this.file.modified = false);
+        wasRun ? Entry.playground.injectPicture() : this.afterModified(picture);
+        Entry.stage.updateObject();
+    }
+
+    alertSaveModifiedPicture(picture, wasRun) {
         if (!this.file.modified) {
             return;
         }
 
         entrylms.confirm(Lang.Menus.save_modified_shape).then((result) => {
-            this.isConfirm = false;
-            result ? this.fileSave(true) : (this.file.modified = false);
-            wasRun ? Entry.playground.injectPicture() : this.afterModified(picture);
-            Entry.stage.updateObject();
+            this.updatePicture(picture, wasRun, result);
         });
     }
 

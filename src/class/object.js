@@ -325,7 +325,7 @@ Entry.EntryObject = class {
 
         pictures.splice(pictures.indexOf(picture), 1);
         if (picture === this.selectedPicture) {
-            playground.selectPicture(pictures[0]);
+            playground.selectPicture(pictures[0], true);
         }
         GEHelper.resManager.imageRemoved('EntityObject::removePicture');
         playground.injectPicture(this);
