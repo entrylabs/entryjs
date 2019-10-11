@@ -2345,7 +2345,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                     {type: 'text', params: ['255']},
                     {type: 'text', params: ['255']},
                     null,
-                    {type: 'text', params: ['200']},
+                    {type: 'text', params: ['500']},
                     null,
                 ],
                 type:
@@ -2414,7 +2414,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 params: [
                     null,
                     null,
-                    {type: 'text', params: ['255']},
+                    {type: 'text', params: ['500']},
                     null
                 ],
                 type: 'byrobot_petrone_v2_flight_controller_light_color_select',
@@ -2625,7 +2625,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                     {type: 'text', params: ['255']},
                     {type: 'text', params: ['255']},
                     null,
-                    {type: 'text', params: ['255']},
+                    {type: 'text', params: ['500']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_flight_drone_light_color_input',
@@ -2706,7 +2706,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                     null,
                     null,
                     null,
-                    {type: 'text', params: ['255']},
+                    {type: 'text', params: ['500']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_flight_drone_light_color_select',
