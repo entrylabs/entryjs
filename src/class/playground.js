@@ -1762,7 +1762,7 @@ Entry.Playground = class Playground {
                 {
                     text: Lang.Workspace.context_remove,
                     callback() {
-                        this._removePicture(picture, element);
+                        Entry.playground._removePicture(picture, element);
                     },
                 },
                 {
