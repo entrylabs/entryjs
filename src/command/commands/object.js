@@ -44,15 +44,15 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
     };
 
     c[COMMAND_TYPES.objectAddPicture] = {
-        do(objectId, picture) {
+        do(objectId, picture, isSelect = true) {
             const hashId = c[COMMAND_TYPES.objectAddPicture].hashId;
             if (hashId) {
                 picture.id = hashId;
                 delete c[COMMAND_TYPES.objectAddPicture].hashId;
             }
             Entry.container.getObject(objectId).addPicture(picture);
-            Entry.playground.injectPicture();
-            Entry.playground.selectPicture(picture);
+            Entry.playground.injectPicture(isSelect);
+            isSelect && Entry.playground.selectPicture(picture);
             Entry.dispatchEvent('dismissModal');
         },
         state(objectId, picture) {
