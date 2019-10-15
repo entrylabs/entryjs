@@ -77,6 +77,42 @@ module.exports = {
                     py: [],
                 },
             },
+            get_microphone_volume: {
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
+                skeleton: 'basic_string_field',
+                statements: [],
+                template: '마이크 소릿값',
+                params: [],
+                events: {},
+                def: {
+                    type: 'get_microphone_volume',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'test',
+                isNotFor: [],
+                func(sprite, script) {
+                    if (!audioUtils.isAudioInitComplete) {
+                        new Promise(async (resolve) => {
+                            if (!audioUtils.isAudioInitComplete) {
+                                await audioUtils.initUserMedia();
+                            }
+                            resolve();
+                        }).finally(() => {
+                            throw new Entry.Utils.AsyncError();
+                        });
+                        throw new Entry.Utils.AsyncError();
+                    }
+
+                    return audioUtils.currentVolume;
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
             when_run_button_click: {
                 color: EntryStatic.colorSet.block.default.START,
                 outerLine: EntryStatic.colorSet.block.darken.START,
