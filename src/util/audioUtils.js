@@ -102,8 +102,11 @@ class AudioUtils {
     }
 
     isAudioConnected() {
+        if (!this._isBrowserSupportAudio() || !this.isAudioInitComplete || !this._userMediaStream) {
+            return false;
+        }
         const tracks = this._userMediaStream.getAudioTracks();
-        return tracks && tracks.some((track) => track.enabled);
+        return tracks && tracks.some((track) => track.readyState === 'live');
     }
 
     _connectNodes(...connectableNodes) {
