@@ -1,6 +1,82 @@
+import audioUtils from '../../util/audioUtils';
+
 module.exports = {
     getBlocks() {
         return {
+            toggle_microphone: {
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
+                skeleton: 'basic_string_field',
+                statements: [],
+                template: '%1 초간의 음성을 문자로 바꾼 값',
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [3],
+                    type: 'toggle_microphone',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'test',
+                isNotFor: [],
+                func(sprite, script) {
+                    if (!Entry.microphone) {
+                        Entry.microphone = {
+                            isPending: false,
+                        };
+                    }
+
+                    const value = script.getValue('VALUE');
+                    const { result, isPending } = Entry.microphone;
+
+                    if (!audioUtils.isAudioSupport) {
+                        // Browser 미지원
+                        throw new Error('브라우저가 미지원입니다.');
+                    }
+
+                    if (isPending) {
+                        throw new Entry.Utils.AsyncError();
+                    }
+                    if (result) {
+                        delete Entry.microphone.result;
+                        return result;
+                    }
+
+                    Entry.microphone.isPending = true;
+                    new Promise(async (resolve, reject) => {
+                        try {
+                            if (!audioUtils.isAudioInitComplete) {
+                                await audioUtils.initUserMedia();
+                            }
+                            await audioUtils.startRecord(value * 1000);
+                            resolve('hello');
+                        } catch (e) {
+                            reject(e);
+                        }
+                    })
+                        .then((value) => {
+                            Entry.microphone.result = value;
+                        })
+                        .catch((e) => {
+                            console.error(e);
+                        })
+                        .finally(() => {
+                            Entry.microphone.isPending = false;
+                        });
+                    throw new Entry.Utils.AsyncError();
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
             when_run_button_click: {
                 color: EntryStatic.colorSet.block.default.START,
                 outerLine: EntryStatic.colorSet.block.darken.START,
@@ -493,7 +569,7 @@ module.exports = {
                         throw new Error('value can not be null or undefined');
                     }
 
-                    setTimeout(function() {
+                    setTimeout(() => {
                         Entry.engine.raiseMessage(value);
                     });
                 },
