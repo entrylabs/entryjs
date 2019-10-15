@@ -696,6 +696,8 @@ Entry.Playground = class Playground {
                         }
                     }
                     fontLink.innerText = font.name;
+                    $(this.textEditArea).css('font-family', font.family);
+                    $(this.textEditInput).css('font-family', font.family);
                     $('#entryTextBoxAttrFontName').data('font', font);
                     this.object.entity.setFontType(font.family);
                 },
