@@ -39,3 +39,6 @@ extern/closure-library
 dist
 dist/entry.js
 .idea/
+
+package.json
+package-lock.json
