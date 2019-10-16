@@ -124,7 +124,10 @@ Entry.HW = class {
         try {
             await Entry.moduleManager.loadExternalModule(moduleName);
         } catch (e) {
-            Entry.toast.alert(Lang.Hw.hw_module_load_fail_title, `${moduleName} ${Lang.Hw.hw_module_load_fail_desc}`);
+            Entry.toast.alert(
+                Lang.Hw.hw_module_load_fail_title,
+                `${moduleName} ${Lang.Hw.hw_module_load_fail_desc}`
+            );
         }
     }
 
@@ -316,19 +319,31 @@ Entry.HW = class {
         }
     }
 
+    /**
+     * @deprecated
+     */
     setDigitalPortValue(port, value) {
+        console.warn('this function will be deprecated. please use Entry.hw.portData directly.');
         this.sendQueue[port] = value;
         this.removePortReadable(port);
     }
 
+    /**
+     * @deprecated
+     */
     getAnalogPortValue(port) {
+        console.warn('this function will be deprecated. please use Entry.hw.portData directly.');
         if (!this.connected) {
             return 0;
         }
         return this.portData[`a${port}`];
     }
 
+    /**
+     * @deprecated
+     */
     getDigitalPortValue(port) {
+        console.warn('this function will be deprecated. please use Entry.hw.portData directly.');
         if (!this.connected) {
             return 0;
         }
