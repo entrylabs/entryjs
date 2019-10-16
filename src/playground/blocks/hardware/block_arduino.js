@@ -523,8 +523,8 @@ Entry.Arduino.getBlocks = function() {
                 if (name === 'ArduinoExt') {
                     return Entry.block.arduino_ext_get_digital.func(sprite, script);
                 } else {
-                    var signal = script.getNumberValue('PORT', script);
-                    return Entry.hw.getDigitalPortValue(signal);
+                    const signal = script.getNumberValue('PORT', script);
+                    return Entry.hw.portData.DIGITAL[signal];
                 }
             },
             syntax: {
