@@ -43,14 +43,13 @@ class AudioUtils {
             });
             const audioContext = new AudioContext();
             const streamSrc = audioContext.createMediaStreamSource(mediaStream);
-            const gainNode = audioContext.createGain(); // 볼륨 전체 세팅용 노드
             const analyserNode = audioContext.createAnalyser();
             const scriptNode = audioContext.createScriptProcessor(2048, 1, 1);
             const streamDest = audioContext.createMediaStreamDestination();
             const mediaRecorder = new MediaRecorder(streamDest.stream);
 
             // 순서대로 노드 커넥션을 맺는다.
-            this._connectNodes(streamSrc, gainNode, analyserNode, scriptNode, streamDest);
+            this._connectNodes(streamSrc, analyserNode, scriptNode, streamDest);
             scriptNode.onaudioprocess = this._handleScriptProcess(analyserNode);
 
             this._userMediaStream = mediaStream;
