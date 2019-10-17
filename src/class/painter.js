@@ -95,7 +95,7 @@ Entry.Painter = class Painter {
             },
             fileurl: `${Entry.mediaFilePath}_1x1.png`,
             name: Lang.Painter.new_picture,
-            imageType: this._getImageType(),
+            imageType: 'png',
         };
 
         newPicture.id = Entry.generateHash();
