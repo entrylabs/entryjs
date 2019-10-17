@@ -91,8 +91,7 @@ class AudioUtils {
     }
 
     stopRecord() {
-        if (!this.isAudioInitComplete) {
-            console.error('audio not initialized');
+        if (!this.isAudioInitComplete || !this.isRecording) {
             return;
         }
 
