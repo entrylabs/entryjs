@@ -4,6 +4,7 @@
 'use strict';
 
 import { GEHelper } from '../graphicEngine/GEHelper';
+import audioUtils from '../util/audioUtils';
 
 /**
  * Class for a engine.
@@ -405,6 +406,7 @@ Entry.Engine = class Engine {
      */
     stop() {
         GEHelper.Ticker.reset();
+        audioUtils.stopRecord();
         clearInterval(this.ticker);
         this.ticker = null;
     }

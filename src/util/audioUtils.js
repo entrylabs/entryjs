@@ -78,9 +78,7 @@ class AudioUtils {
             this._audioChunks = [];
             this.isRecording = true;
 
-            this._mediaRecorder.addEventListener('dataavailable', this._handleRecorderOnData);
-            this._mediaRecorder.addEventListener('stop', this._handleRecorderOnStop);
-
+            this._addRecordListeners();
             this._mediaRecorder.start();
 
             setTimeout(() => {
@@ -90,13 +88,25 @@ class AudioUtils {
         });
     }
 
-    stopRecord() {
+    /**
+     * 녹음을 종료한다. silent = true 인 경우 API 콜을 하지 않기 위해 리스너를 먼저 제거하고 stop 한다.
+     * @param {object=} option
+     * @param {boolean} [option.silent=false]
+     */
+    stopRecord(option = { silent: false }) {
         if (!this.isAudioInitComplete || !this.isRecording) {
             return;
         }
 
         this.isRecording = false;
-        this._mediaRecorder.stop();
+
+        if (option.silent) {
+            this._removeRecordListeners();
+            this._mediaRecorder.stop();
+        } else {
+            this._mediaRecorder.stop();
+            this._removeRecordListeners();
+        }
     }
 
     isAudioConnected() {
@@ -121,14 +131,26 @@ class AudioUtils {
         return navigator.mediaDevices && navigator.mediaDevices.getUserMedia && MediaRecorder;
     }
 
+    _addRecordListeners() {
+        if (this._mediaRecorder) {
+            this._mediaRecorder.addEventListener('dataavailable', this._handleRecorderOnData);
+            this._mediaRecorder.addEventListener('stop', this._handleRecorderOnStop);
+        }
+    }
+
+    _removeRecordListeners() {
+        if (this._mediaRecorder) {
+            this._mediaRecorder.removeEventListener('dataavailable', this._handleRecorderOnData);
+            this._mediaRecorder.removeEventListener('stop', this._handleRecorderOnStop);
+        }
+    }
+
     _handleRecorderOnData = (event) => {
         this._audioChunks.push(event.data);
     };
 
     _handleRecorderOnStop = (event) => {
-        this._mediaRecorder.removeEventListener('dataavailable', this._handleRecorderOnData);
-        this._mediaRecorder.removeEventListener('stop', this._handleRecorderOnStop);
-
+        this._removeRecordListeners();
         const blob = new Blob(this._audioChunks, { type: 'audio/wav' });
         console.log(URL.createObjectURL(blob));
     };
