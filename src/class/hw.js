@@ -39,7 +39,7 @@ Entry.HW = class {
         }
 
         this.TRIAL_LIMIT = 2;
-        this.connected = false;
+        this.programConnected = false;
         this.portData = {};
         this.sendQueue = {};
         this.currentDeviceKey = null;
@@ -89,8 +89,8 @@ Entry.HW = class {
         messageHandler.addEventListener('init', this._loadExternalHardwareBlock.bind(this));
         messageHandler.addEventListener('state', async (statement, name) => {
             /*
-            statement 로는 before_connect, connected 등 하드웨어 프로그램의 상태 전부가 오지만
-            WS 에서는 connected 외에 전부 socketConnected 상태로 머무르게 된다.
+            statement 로는 before_connect, programConnected 등 하드웨어 프로그램의 상태 전부가 오지만
+            WS 에서는 programConnected 외에 전부 socketConnected 상태로 머무르게 된다.
              */
             switch (statement) {
                 case 'disconnectHardware':
@@ -129,7 +129,7 @@ Entry.HW = class {
     }
 
     _initSocket() {
-        this.connected = false;
+        this.programConnected = false;
 
         this.tlsSocketIo1 && this.tlsSocketIo1.removeAllListeners();
         this.tlsSocketIo2 && this.tlsSocketIo2.removeAllListeners();
@@ -178,8 +178,8 @@ Entry.HW = class {
      */
     _initHardware(socket) {
         this.socket = socket;
-        this.connected = true;
-        console.log('Hardware Program connected'); // 하드웨어 프로그램 연결 성공, 스테이터스 변화 필요
+        this.programConnected = true;
+        console.log('Hardware Program Connected'); // 하드웨어 프로그램 연결 성공, 스테이터스 변화 필요
         Entry.dispatchEvent('hwChanged');
         if (Entry.playground && Entry.playground.object) {
             Entry.playground.setMenu(Entry.playground.object.objectType);
@@ -205,7 +205,8 @@ Entry.HW = class {
      * 현재 하드웨어 로드가 외부 모듈에 의한 것인 경우는 연결이 해제되어도 블록숨김을 실행하지 않는다.
      */
     refreshHardwareBlockMenu() {
-        const blockMenu = Entry.getMainWS().blockMenu;
+        const workspace = Entry.getMainWS();
+        const blockMenu = workspace && workspace.blockMenu;
 
         if (!blockMenu) {
             return;
@@ -217,7 +218,7 @@ Entry.HW = class {
         }
 
         const { disconnected, socketConnected, hardwareConnected } = hardwareStatement;
-        if (this.connected) {
+        if (this.programConnected) {
             if (this.hwModule) {
                 blockMenu.unbanClass(this.hwModule.name);
                 this._setHardwareDefaultMenu(hardwareConnected);
@@ -289,9 +290,9 @@ Entry.HW = class {
     }
 
     disconnectSocket() {
-        if (this.connected) {
+        if (this.programConnected) {
             Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
-            this.connected = false;
+            this.programConnected = false;
             this.currentDeviceKey = undefined;
 
             /*
@@ -322,14 +323,14 @@ Entry.HW = class {
     }
 
     getAnalogPortValue(port) {
-        if (!this.connected) {
+        if (!this.programConnected || !this.hwModule) {
             return 0;
         }
         return this.portData[`a${port}`];
     }
 
     getDigitalPortValue(port) {
-        if (!this.connected) {
+        if (!this.programConnected || !this.hwModule) {
             return 0;
         }
         this.setPortReadable(port);
@@ -401,7 +402,7 @@ Entry.HW = class {
     }
 
     _sendSocketMessage(message) {
-        if (this.connected && this.socket && !this.socket.disconnected) {
+        if (this.programConnected && this.socket && !this.socket.disconnected) {
             this.socket.emit('message', message);
         }
     }
