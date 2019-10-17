@@ -26,51 +26,13 @@ module.exports = {
                 },
                 class: 'test',
                 isNotFor: [],
-                func(sprite, script) {
-                    if (!Entry.microphone) {
-                        Entry.microphone = {
-                            isPending: false,
-                        };
-                    }
-
+                async func(sprite, script) {
                     const value = script.getValue('VALUE');
-                    const { result, isPending } = Entry.microphone;
-
-                    if (!audioUtils.isAudioSupport) {
-                        // Browser 미지원
-                        throw new Error('브라우저가 미지원입니다.');
+                    if (!audioUtils.isAudioInitComplete) {
+                        await audioUtils.initUserMedia();
                     }
-
-                    if (isPending) {
-                        throw new Entry.Utils.AsyncError();
-                    }
-                    if (result) {
-                        delete Entry.microphone.result;
-                        return result;
-                    }
-
-                    Entry.microphone.isPending = true;
-                    new Promise(async (resolve, reject) => {
-                        try {
-                            if (!audioUtils.isAudioInitComplete) {
-                                await audioUtils.initUserMedia();
-                            }
-                            await audioUtils.startRecord(value * 1000);
-                            resolve('hello');
-                        } catch (e) {
-                            reject(e);
-                        }
-                    })
-                        .then((value) => {
-                            Entry.microphone.result = value;
-                        })
-                        .catch((e) => {
-                            console.error(e);
-                        })
-                        .finally(() => {
-                            Entry.microphone.isPending = false;
-                        });
-                    throw new Entry.Utils.AsyncError();
+                    await audioUtils.startRecord(value * 1000);
+                    return 'hello';
                 },
                 syntax: {
                     js: [],
@@ -93,19 +55,10 @@ module.exports = {
                 },
                 class: 'test',
                 isNotFor: [],
-                func(sprite, script) {
+                async func(sprite, script) {
                     if (!audioUtils.isAudioInitComplete) {
-                        new Promise(async (resolve) => {
-                            if (!audioUtils.isAudioInitComplete) {
-                                await audioUtils.initUserMedia();
-                            }
-                            resolve();
-                        }).finally(() => {
-                            throw new Entry.Utils.AsyncError();
-                        });
-                        throw new Entry.Utils.AsyncError();
+                        await audioUtils.initUserMedia();
                     }
-
                     return audioUtils.currentVolume;
                 },
                 syntax: {
