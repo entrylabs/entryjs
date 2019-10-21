@@ -69,6 +69,13 @@ class SlideVariable extends Variable {
             .s('#d8d8d8')
             .ss(1)
             .rr(10, 10, this.maxWidth, 15, 4);
+        this.slideBar_.on(GEDragHelper.types.DOWN, (evt) => {
+            if (!Entry.engine.isState('run')) {
+                return;
+            }
+            const value = evt.stageX * 0.75 - (this.getX() + 240 + 5) + 5;
+            slide.setSlideCommandX(value);
+        });
         this.view_.addChild(this.slideBar_);
 
         const position = this.getSlidePosition(this.maxWidth);

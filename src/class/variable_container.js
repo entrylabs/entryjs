@@ -3122,29 +3122,20 @@ Entry.VariableContainer = class VariableContainer {
         if (v.getType() === type) {
             return;
         }
-
-        let newVariable;
-
         const variables = this.variables_;
         const variableJSON = v.toJSON();
-
+        variableJSON.variableType = type;
+        let newVariable = Entry.Variable.create(variableJSON);
+        variables.splice(variables.indexOf(v), 0, newVariable);
+        if (value !== undefined) {
+            variableJSON.value = value;
+        }
         if (type === 'slide') {
-            variableJSON.variableType = type;
-            newVariable = Entry.Variable.create(variableJSON);
-            variables.splice(variables.indexOf(v), 0, newVariable);
-
             if (newVariable.getValue() < 0) {
                 newVariable.setValue(0);
             } else if (newVariable.getValue() > 100) {
                 newVariable.setValue(100);
             }
-        } else if (type === 'variable') {
-            variableJSON.variableType = type;
-            if (value !== undefined) {
-                variableJSON.value = value;
-            }
-            newVariable = Entry.Variable.create(variableJSON);
-            variables.splice(variables.indexOf(v), 0, newVariable);
         }
         this.createVariableView(newVariable);
         this.removeVariable(v);
