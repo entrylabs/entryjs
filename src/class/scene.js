@@ -357,6 +357,9 @@ Entry.Scene = class {
         if (this.selectedScene && this.selectedScene.id == scene.id) {
             return;
         }
+        if (Entry.playground.nameViewFocus && Entry.playground.nameViewBlur()) {
+            return;
+        }
 
         const prevSelected = this.selectedScene;
         if (prevSelected) {
