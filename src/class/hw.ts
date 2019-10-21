@@ -262,7 +262,8 @@ class Hardware implements Entry.Hardware {
      * @private
      */
     _setHardwareDefaultMenu(statement: HardwareStatement) {
-        const blockMenu = Entry.getMainWS().blockMenu;
+        const workspace = Entry.getMainWS();
+        const blockMenu = workspace && workspace.blockMenu;
 
         if (!blockMenu) {
             return;
@@ -294,7 +295,8 @@ class Hardware implements Entry.Hardware {
      * @private
      */
     _banClassAllHardware() {
-        const blockMenu = Entry.getMainWS().blockMenu;
+        const workspace = Entry.getMainWS();
+        const blockMenu = workspace && workspace.blockMenu;
         if (!blockMenu) {
             return;
         }
