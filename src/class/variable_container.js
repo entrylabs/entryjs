@@ -2617,7 +2617,8 @@ Entry.VariableContainer = class VariableContainer {
                 'input',
                 Entry.Utils.setBlurredTimer(function() {
                     const index = this.getAttribute('data-index');
-                    Entry.do('listSetDefaultValue', list.id_, index, this.value);
+                    list.array_[index] = { data: this.value };
+                    list.updateView();
                 })
             );
             $listValues.on('focus', 'input', Entry.Utils.setFocused);
