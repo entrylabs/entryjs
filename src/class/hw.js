@@ -323,7 +323,7 @@ Entry.HW = class {
      * @deprecated
      */
     setDigitalPortValue(port, value) {
-        console.warn('this function will be deprecated. please use Entry.hw.portData directly.');
+        console.warn('this function will be deprecated. please use Entry.hw.sendQueue directly.');
         this.sendQueue[port] = value;
         this.removePortReadable(port);
     }
@@ -355,7 +355,11 @@ Entry.HW = class {
         }
     }
 
+    /**
+     * @deprecated
+     */
     setPortReadable(port) {
+        console.warn('this function will be deprecated. please control port state directly.');
         if (!this.sendQueue.readablePorts) {
             this.sendQueue.readablePorts = [];
         }
@@ -373,7 +377,11 @@ Entry.HW = class {
         }
     }
 
+    /**
+     * @deprecated
+     */
     removePortReadable(port) {
+        console.warn('this function will be deprecated. please use Entry.hw.sendQueue directly.');
         if (!this.sendQueue.readablePorts && !Array.isArray(this.sendQueue.readablePorts)) {
             return;
         }
