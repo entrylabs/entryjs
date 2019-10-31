@@ -694,7 +694,12 @@ Entry.Engine = class Engine {
             if (this.pauseButtonFull) {
                 this.pauseButtonFull.innerHTML = Lang.Workspace.restart;
                 if (this.option !== 'minimize') {
-                    this.pauseButtonFull.removeClass('entryPauseButtonWorkspace_full');
+                    // workspace && buttonWrapper check
+                    if (this.buttonWrapper) {
+                        this.pauseButtonFull.addClass('entryPauseButtonWorkspace_full');
+                    } else {
+                        this.pauseButtonFull.removeClass('entryPauseButtonWorkspace_full');
+                    }
                     this.pauseButtonFull.addClass('entryRestartButtonWorkspace_full');
                 }
             }
