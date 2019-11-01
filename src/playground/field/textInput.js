@@ -242,8 +242,10 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         });
 
         inputField.on('blur', (e) => {
-            console.log('blur');
-            this.destroyOption(undefined, true);
+            const isOptionGroupVisible = !!this.optionGroup.get(0).style.display;
+            if (!isOptionGroupVisible) {
+                this.destroyOption(undefined, true);
+            }
         });
 
         const { scale = 1 } = this.board;
