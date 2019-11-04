@@ -2945,6 +2945,7 @@ Entry.VariableContainer = class VariableContainer {
     _maxNameLength = 10;
 
     clear() {
+        this.select(null);
         const _removeFunc = _.partial(_.result, _, 'remove');
         const { engine = {}, container = {}, playground } = Entry;
 
@@ -2958,6 +2959,10 @@ Entry.VariableContainer = class VariableContainer {
         this.lists_ = [];
         this.messages_ = [];
         this.functions_ = {};
+
+        this._variableRefs = [];
+        this._messageRefs = [];
+        this._functionRefs = [];
 
         playground.reloadPlayground();
         this.updateList();
