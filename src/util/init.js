@@ -103,6 +103,13 @@ Entry.init = function(container, options) {
     Entry.soundQueue = new createjs.LoadQueue();
     Entry.soundQueue.installPlugin(createjs.Sound);
     Entry.soundInstances = [];
+    Entry.soundQueue.urls = new Set();
+    Entry.soundQueue.on('fileload', (event) => {
+        Entry.soundQueue.urls.delete(event.item.src);
+        const total = Entry.soundQueue.total;
+        const now = Entry.soundQueue.urls.size;
+        console.log('sound load progress', ((total - now) / total) * 100);
+    });
 
     Entry.loadAudio_(
         [
@@ -569,7 +576,8 @@ Entry.initSound = function(sound) {
             2,
             4
         )}/${Entry.soundPath}${sound.filename}${sound.ext || '.mp3'}`;
-
+    Entry.soundQueue.urls.add(sound.path);
+    Entry.soundQueue.total = Entry.soundQueue.urls.size;
     Entry.soundQueue.loadFile({
         id: sound.id,
         src: sound.path,
