@@ -6,6 +6,7 @@
 import SimpleBar from 'simplebar';
 import fetch from 'isomorphic-fetch';
 import xssFilters from 'xss-filters';
+
 /**
  * Block variable constructor
  * @param {variable model} variable
