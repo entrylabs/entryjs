@@ -1962,7 +1962,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.byrobot_petrone_v2_drone_state_mode_vehicle,   'state_modeVehicle'],
-                        [Lang.Blocks.byrobot_petrone_v2_drone_state_mode_drive,     'state_modeDrive'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_state_mode_flight,    'state_modeFlight'],
                         [Lang.Blocks.byrobot_petrone_v2_drone_state_battery,        'state_battery'],
                         [Lang.Blocks.byrobot_petrone_v2_drone_irmessage,            'irmessage_irdata'],
                     ],
@@ -2345,7 +2345,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                     {type: 'text', params: ['255']},
                     {type: 'text', params: ['255']},
                     null,
-                    {type: 'text', params: ['200']},
+                    {type: 'text', params: ['500']},
                     null,
                 ],
                 type:
@@ -2414,7 +2414,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 params: [
                     null,
                     null,
-                    {type: 'text', params: ['255']},
+                    {type: 'text', params: ['500']},
                     null
                 ],
                 type: 'byrobot_petrone_v2_flight_controller_light_color_select',
@@ -2590,8 +2590,8 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_eye, '0x12'], // EyeHold = 0x12
-                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_arm, '0x42'], // ArmHold = 0x42
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_eye, '18'], // EyeHold = 0x12
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_arm, '66'], // ArmHold = 0x42
                     ],
                     value: '18',
                     fontSize: 11,
@@ -2625,7 +2625,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                     {type: 'text', params: ['255']},
                     {type: 'text', params: ['255']},
                     null,
-                    {type: 'text', params: ['255']},
+                    {type: 'text', params: ['500']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_flight_drone_light_color_input',
@@ -2706,7 +2706,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                     null,
                     null,
                     null,
-                    {type: 'text', params: ['255']},
+                    {type: 'text', params: ['500']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_flight_drone_light_color_select',

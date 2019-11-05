@@ -341,19 +341,31 @@ class Hardware implements Entry.Hardware {
         }
     }
 
+    /**
+     * @deprecated
+     */
     setDigitalPortValue(port: any, value: any) {
+        console.warn('this function will be deprecated. please use Entry.hw.sendQueue directly.');
         this.sendQueue[port] = value;
         this.removePortReadable(port);
     }
 
+    /**
+     * @deprecated
+     */
     getAnalogPortValue(port: any) {
+        console.warn('this function will be deprecated. please use Entry.hw.portData directly.');
         if (!this.programConnected || !this.hwModule) {
             return 0;
         }
         return this.portData[`a${port}`];
     }
 
+    /**
+     * @deprecated
+     */
     getDigitalPortValue(port: any) {
+        console.warn('this function will be deprecated. please use Entry.hw.portData directly.');
         if (!this.programConnected || !this.hwModule) {
             return 0;
         }
@@ -365,7 +377,11 @@ class Hardware implements Entry.Hardware {
         }
     }
 
+    /**
+     * @deprecated
+     */
     setPortReadable(port: any) {
+        console.warn('this function will be deprecated. please control port state directly.');
         if (!this.sendQueue.readablePorts) {
             this.sendQueue.readablePorts = [];
         }
@@ -383,7 +399,11 @@ class Hardware implements Entry.Hardware {
         }
     }
 
+    /**
+     * @deprecated
+     */
     removePortReadable(port: any) {
+        console.warn('this function will be deprecated. please use Entry.hw.sendQueue directly.');
         if (!this.sendQueue.readablePorts && !Array.isArray(this.sendQueue.readablePorts)) {
             return;
         }
