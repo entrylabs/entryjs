@@ -603,13 +603,12 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
     };
 
     c[listSetDefaultValue] = {
-        do(id, idx, data) {
+        do(id, idx = 0, data = '0') {
             const VC = getVC();
             const list = VC.getList(id);
             list.array_[idx] = { data };
-
             VC.updateListSettingView();
-            list.updateView();
+            //list.updateView();
         },
         state(id, idx) {
             const { array_ } = getVC().getList(id);
