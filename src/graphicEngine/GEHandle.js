@@ -364,7 +364,7 @@ export var GEHandle = function(canvas) {
         if (res > standard && Entry.engine.isState('stop')) {
             Entry.toast.warning(
                 Lang.Workspace.toast_error_title_object_center,
-                Lang.Workspace.toast_error_contents_object_center,
+                Lang.Workspace.toast_error_contents_object_center
             );
             return true;
         }
