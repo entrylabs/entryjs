@@ -170,6 +170,11 @@ Entry.Scene = class {
             .addClass('entrySceneRemoveButtonWorkspace')
             .bindOnClick((e) => {
                 if (Entry.engine.isState('run')) {
+                    return ;
+                }
+                const isDeletable = Entry.scene.getScenes().length > 1;
+                if (!isDeletable) {
+                    Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.Scene_delete_error, false);
                     return;
                 }
                 Entry.do('sceneRemove', scene.id);
