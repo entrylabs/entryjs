@@ -458,6 +458,11 @@ Entry.Engine = class Engine {
      * toggle this engine state run
      */
     toggleRun(disableAchieve) {
+        const isSupportWebAudio = window.AudioContext || window.webkitAudioContext;
+        if (isSupportWebAudio && !this.isSoundInitialized) {
+            createjs.WebAudioPlugin.playEmptySound();
+            this.isSoundInitialized = true;
+        }
         const variableContainer = Entry.variableContainer;
         const container = Entry.container;
         const WS = Entry.getMainWS();
