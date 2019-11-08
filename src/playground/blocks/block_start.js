@@ -31,8 +31,8 @@ module.exports = {
                     if (!audioUtils.isAudioInitComplete) {
                         await audioUtils.initUserMedia();
                     }
-                    await audioUtils.startRecord(value * 1000);
-                    return 'hello';
+                    let result = await audioUtils.startRecord(value * 1000);
+                    return result;
                 },
                 syntax: {
                     js: [],

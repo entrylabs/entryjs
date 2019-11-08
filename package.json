@@ -34,6 +34,7 @@
     "license": "MIT",
     "dependencies": {
         "@entrylabs/event": "^1.0.3",
+        "audiobuffer-to-wav": "^1.0.0",
         "autoprefixer": "^9.4.3",
         "events": "^3.0.0",
         "file-saver": "^2.0.2",
