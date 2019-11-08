@@ -1,7 +1,16 @@
 /**
  * 언더바가 붙은 함수 및 변수를 외부에서 쓰지 마세요
- * @author extracold1209
+ * @author extracold1209, wodnjs6512
  */
+
+const { voiceApiConnect } = require('./websocket');
+var toWav = require('audiobuffer-to-wav');
+
+const STATUS_CODE = {
+    CONNECTED: 'CONNECTED',
+    NOT_RECOGNIZED: 'NOT_RECOGNIZED',
+};
+
 class AudioUtils {
     get currentVolume() {
         return this._currentVolume;
@@ -16,6 +25,7 @@ class AudioUtils {
         this._mediaRecorder = undefined;
         this._currentVolume = -1;
         this._audioChunks = [];
+        this.result = null;
     }
 
     /**
@@ -41,20 +51,29 @@ class AudioUtils {
             const mediaStream = await navigator.mediaDevices.getUserMedia({
                 audio: true,
             });
-            const audioContext = new AudioContext();
+            const audioContext = new AudioContext({ sampleRate: 16000 });
             const streamSrc = audioContext.createMediaStreamSource(mediaStream);
             const analyserNode = audioContext.createAnalyser();
             const scriptNode = audioContext.createScriptProcessor(2048, 1, 1);
             const streamDest = audioContext.createMediaStreamDestination();
             const mediaRecorder = new MediaRecorder(streamDest.stream);
-
             // 순서대로 노드 커넥션을 맺는다.
             this._connectNodes(streamSrc, analyserNode, scriptNode, streamDest);
             scriptNode.onaudioprocess = this._handleScriptProcess(analyserNode);
 
+            this._audioContext = audioContext;
             this._userMediaStream = mediaStream;
             this._mediaRecorder = mediaRecorder;
             this.isAudioInitComplete = true;
+
+            // 음성 인식 api 를 사용하기 위함
+            // 음성 인식은 websocket 을 통해서 WAV로 전송하게 되어있음.
+            // 첫번째 파라미터는 프로토콜을 제외한 hostname+port 조합
+            // ex)'localhost:4001'
+            const socketClient = await voiceApiConnect(null, (data) => {
+                this.result = data;
+            });
+            this._socketClient = socketClient;
             return true;
         } catch (e) {
             console.error('error occurred while init audio input', e);
@@ -64,7 +83,7 @@ class AudioUtils {
     }
 
     startRecord(recordMilliSecond = 3000) {
-        return new Promise((resolve) => {
+        return new Promise(async (resolve) => {
             if (!this.isAudioInitComplete) {
                 console.error('audio not initialized');
                 resolve();
@@ -75,15 +94,39 @@ class AudioUtils {
                 resolve();
                 return;
             }
+            if (this._audioContext.state === 'suspended') {
+                await this.initUserMedia();
+            }
             this._audioChunks = [];
             this.isRecording = true;
 
-            this._addRecordListeners();
             this._mediaRecorder.start();
 
+            this._socketClient.onmessage = (e) => {
+                switch (e.data) {
+                    case STATUS_CODE.CONNECTED:
+                        console.log('Received String: ', e.data, ' ');
+                        break;
+                    case STATUS_CODE.NOT_RECOGNIZED:
+                        this._socketClient.close();
+                        resolve('');
+                        break;
+                    default:
+                        const parsed = JSON.parse(e.data);
+                        const isArray = Array.isArray(parsed);
+                        if (isArray) {
+                            this._socketClient.close();
+                            resolve(parsed[0]);
+                        } else if (typeof e.data === 'string') {
+                            console.log('Received String: ', e.data, ' ');
+                        } else {
+                            console.log('Received : ', e.data, ' ');
+                        }
+                        break;
+                }
+            };
             setTimeout(() => {
                 this.stopRecord();
-                resolve();
             }, recordMilliSecond);
         });
     }
@@ -93,7 +136,7 @@ class AudioUtils {
      * @param {object=} option
      * @param {boolean} [option.silent=false]
      */
-    stopRecord(option = { silent: false }) {
+    async stopRecord(option = { silent: false }) {
         if (!this.isAudioInitComplete || !this.isRecording) {
             return;
         }
@@ -101,12 +144,20 @@ class AudioUtils {
         this.isRecording = false;
 
         if (option.silent) {
-            this._removeRecordListeners();
+            this._mediaRecorder.onstop = () => {
+                console.log('silent stop');
+            };
             this._mediaRecorder.stop();
         } else {
             this._mediaRecorder.stop();
-            this._removeRecordListeners();
+            this._mediaRecorder.onstop = () => {
+                console.log('proper stop');
+            };
         }
+        this._audioContext.suspend();
+        this._userMediaStream.getTracks().forEach((track) => {
+            track.stop();
+        });
     }
 
     isAudioConnected() {
@@ -131,30 +182,6 @@ class AudioUtils {
         return navigator.mediaDevices && navigator.mediaDevices.getUserMedia && MediaRecorder;
     }
 
-    _addRecordListeners() {
-        if (this._mediaRecorder) {
-            this._mediaRecorder.addEventListener('dataavailable', this._handleRecorderOnData);
-            this._mediaRecorder.addEventListener('stop', this._handleRecorderOnStop);
-        }
-    }
-
-    _removeRecordListeners() {
-        if (this._mediaRecorder) {
-            this._mediaRecorder.removeEventListener('dataavailable', this._handleRecorderOnData);
-            this._mediaRecorder.removeEventListener('stop', this._handleRecorderOnStop);
-        }
-    }
-
-    _handleRecorderOnData = (event) => {
-        this._audioChunks.push(event.data);
-    };
-
-    _handleRecorderOnStop = (event) => {
-        this._removeRecordListeners();
-        const blob = new Blob(this._audioChunks, { type: 'audio/wav' });
-        console.log(URL.createObjectURL(blob));
-    };
-
     _handleScriptProcess = (analyserNode) => (audioProcessingEvent) => {
         const array = new Uint8Array(analyserNode.frequencyBinCount);
         analyserNode.getByteFrequencyData(array);
@@ -170,6 +197,12 @@ class AudioUtils {
             for (let sample = 0; sample < inputBuffer.length; sample++) {
                 outputData[sample] = inputData[sample];
             }
+        }
+        // websocket 으로 서버 전송
+        const client = this._socketClient;
+
+        if (client.readyState === client.OPEN) {
+            client.send(toWav(outputBuffer));
         }
     };
 }
