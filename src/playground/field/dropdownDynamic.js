@@ -69,6 +69,19 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         return null;
     }
 
+    _isBlockInBoardWhenFunctionEdit() {
+        const view = this._block.getView() || { _board: {} };
+        return view._board.suffix === 'board' && Entry.Func.isEdit;
+    }
+
+    getTextByValue(value) {
+        if (this._isBlockInBoardWhenFunctionEdit()) {
+            return this.textElement.textContent;
+        }
+
+        return super.getTextByValue(value);
+    }
+
     _updateValue(reDraw) {
         const object = this._block.getCode().object;
         let options = [];
@@ -82,7 +95,8 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
 
         this._contents.options = options;
         this._updateOptions();
-        if (reDraw && this._menuName === 'variables') {
+
+        if (reDraw && this._menuName === 'variables' && !this._isBlockInBoardWhenFunctionEdit()) {
             this.value = undefined;
         }
         this.setValue(this.getOptionCheckedValue(), reDraw);
