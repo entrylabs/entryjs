@@ -4,7 +4,7 @@ Entry.Pingpong_G1 = {
     id: '35.1',
     name: 'Pingpong_G1',
     url: 'http://roborisen.com',
-    imageName: 'pingpong.png',
+    imageName: 'pingpong_g1.png',
     delayTime: 30,
     title: {
 		ko: '핑퐁 G1',
@@ -23,7 +23,8 @@ Entry.Pingpong_G1 = {
 		TILT_Y: 0,
 		TILT_Z: 0,
 		BUTTON: 0,
-		PROXIMITY: 0
+		PROXIMITY: 0,
+		AIN: 0
 	},
 	prev_sensor_data: {
 		MOVE_X: 0,
@@ -33,7 +34,8 @@ Entry.Pingpong_G1 = {
 		TILT_Y: 0,
 		TILT_Z: 0,
 		BUTTON: 0,
-		PROXIMITY: 0
+		PROXIMITY: 0,
+		AIN: 0
 	},
 
     setZero: function() {
@@ -71,8 +73,8 @@ Entry.Pingpong_G1 = {
 	},
 	monitorTemplate: {
 		imgPath: 'hw/pingpong_g1.png',
-		width: 254,
-        height: 377,
+		width: 400,
+        height: 400,
         listPorts: {
 			BUTTON: {
 				name: 'button',
@@ -111,6 +113,11 @@ Entry.Pingpong_G1 = {
 			},
 			PROXIMITY: {
 				name: 'proximity',
+				type: 'input',
+				pos: { x:0, y:0 },
+			},
+			AIN: {
+				name: 'ain',
 				type: 'input',
 				pos: { x:0, y:0 },
 			},
@@ -153,10 +160,12 @@ Entry.Pingpong_G1.blockMenuBlocks = [
 	'pingpong_g1_get_tilt_triangle',
 	'pingpong_g1_get_tilt_star',
 	'pingpong_g1_get_tilt_rectangle',
+	//'pingpong_g1_is_top_shape',
+	'pingpong_g1_get_sensor_value',
 	'pingpong_g1_motor_rotate',
+	'pingpong_g1_rotate_servo_mortor',
 	'pingpong_g1_set_led_color',
 	'pingpong_g1_set_dotmatrix',
-	//'pingpong_g1_is_top_shape',
 ];
 
 Entry.Pingpong_G1.getBlocks = function() {
@@ -184,7 +193,7 @@ Entry.Pingpong_G1.getBlocks = function() {
 			event: 'pp_when_button_pressed',
             func: function(sprite, script) {
                 var buttonData = Entry.hw.portData.BUTTON;
-				console.log('event: button_pressed? ' + buttonData);
+				//console.log('event: button_pressed? ' + buttonData);
 
                 if (buttonData != 1) {
 					return this.die();
@@ -358,24 +367,22 @@ Entry.Pingpong_G1.getBlocks = function() {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
-            params: [
-				{ type: 'Text',  text: 'circle tilt', color: '#fff', },
-			],
+            params: [],
 			events: {
 				viewAdd: [ function() {
-					console.log('... viewAdd called!');
+					//console.log('... viewAdd called!');
 				}],
 				viewDestroy: [ function() {
-					console.log('... viewDestroy called!');
+					//console.log('... viewDestroy called!');
 				}],
 				dataAdd: [ function(block) {
-					console.log(' ...... dataAdd called');
+					//console.log(' ...... dataAdd called');
 				}],
 				dataDestroy: [ function(block) {
-					console.log(' ...... dataDestroy called');
+					//console.log(' ...... dataDestroy called');
 				}],
 			},
-            def: { params: [null], type: 'pingpong_g1_get_tilt_circle' },
+            def: { params: [], type: 'pingpong_g1_get_tilt_circle' },
             paramsKeyMap: { },
             class: 'Pingpong_G1',
             isNotFor: ['Pingpong_G1'],
@@ -422,6 +429,39 @@ Entry.Pingpong_G1.getBlocks = function() {
 				return Entry.hw.portData.TILT_Y;
             },
 		},
+		pingpong_g1_get_sensor_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            params: [
+				{
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.pingpong_sensor_proximity, 'PROXIMITY'],
+                        [Lang.Blocks.pingpong_sensor_ain, 'AIN'],
+                    ],
+					value: 'PROXIMITY',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+				},
+			],
+            def: { params: [], type: 'pingpong_g1_get_sensor_value' },
+            paramsKeyMap: {	SENSOR: 0, },
+            class: 'Pingpong_G1',
+            isNotFor: ['Pingpong_G1'],
+            func: function(sprite, script) {
+                const sensor_type = script.getStringField('SENSOR', script);
+                var pd = Entry.hw.portData;
+				var value = 0;
+				switch (sensor_type) {
+					case 'PROXIMITY': value = pd.PROXIMITY; break;
+					case 'AIN':  value = pd.AIN; break;
+					default: break;
+				}
+				return value;
+            },
+		},
 		//pingpong_g1_is_top_shape: '큐브 윗면에 %1 모양이 있는가?',
 
 		pingpong_g1_set_dotmatrix: {
@@ -454,7 +494,7 @@ Entry.Pingpong_G1.getBlocks = function() {
             //events: {},
             def: { params: [null], type: 'pingpong_g1_set_dotmatrix' },
             paramsKeyMap: { CMD: 0 },
-            class: 'Pingpong_G1',
+            class: 'Pingpong_G1_peripheral',
 			template: 'dot matrix %1 %2',
             isNotFor: ['Pingpong_G1'],
             func: function(sprite, script) {
@@ -513,7 +553,7 @@ Entry.Pingpong_G1.getBlocks = function() {
             //events: {},
             def: { params: [null], type: 'pingpong_g1_set_led_color' },
             paramsKeyMap: { COLOR: 0 },
-            class: 'Pingpong_G1',
+            class: 'Pingpong_G1_led',
             isNotFor: ['Pingpong_G1'],
             func: function(sprite, script) {
 				const color = script.getNumberField('COLOR');
@@ -572,7 +612,7 @@ Entry.Pingpong_G1.getBlocks = function() {
             //events: {},
             def: { params: [null, null], type: 'pingpong_g1_motor_rotate' },
             paramsKeyMap: { DIR: 0, DEGREE: 1, },
-            class: 'Pingpong_G1',
+            class: 'Pingpong_G1_motor',
             isNotFor: ['Pingpong_G1'],
             func: function(sprite, script) {
 				const dir = script.getStringField('DIR');
@@ -623,6 +663,63 @@ Entry.Pingpong_G1.getBlocks = function() {
 				return script;
             },
 		},
+		pingpong_g1_rotate_servo_mortor: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            //statements: [],
+            params: [
+                {
+                    type: 'Block',
+					accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+			],
+            //events: {},
+            def: { params: [ { type: 'angle', }, ], type: 'pingpong_g1_rotate_servo_mortor' },
+            paramsKeyMap: { DEGREE: 0, },
+            class: 'Pingpong_G1_motor',
+            isNotFor: ['Pingpong_G1'],
+            func: function(sprite, script) {
+				var angle = script.getValue('DEGREE', script);
+
+				//console.log(' servo: angle = ', angle);
+				angle = Math.min( Math.max(angle,0), 180 );
+
+				if (!script.is_start) {
+					script.is_start = true;
+					script.step_flag = 1;
+
+					var packet = makePacketHeader(0xE1, 0x00, [2, 0, angle, 1]);	// SERVO_MOTOR
+
+					//FIXME
+					Entry.Pingpong_G1.send_cmd_id++;
+					Entry.hw.sendQueue.COMMAND = {
+						id: Entry.Pingpong_G1.send_cmd_id,
+						data: packet,
+					};
+
+					var delay_ms = 400;
+					var myTimer = setTimeout(function() {
+						script.step_flag = 2;
+					}, delay_ms);
+					return script;
+				} else if (script.step_flag == 2) {
+					delete script.is_start;
+					delete script.step_flag;
+                    //Entry.engine.isContinue = false;
+                    return script.callReturn();
+				}
+
+				return script;
+            },
+		},
+
     };
 };
 
@@ -639,7 +736,9 @@ Entry.Pingpong_G1.setLanguage = function() {
 				pingpong_g1_get_tilt_triangle: '세모 방향 큐브 기울기',
 				pingpong_g1_get_tilt_star: '별 방향 큐브 기울기',
 				pingpong_g1_get_tilt_rectangle: '네모 방향 큐브 기울기',
+				pingpong_g1_get_sensor_value: '%1 센서값',
 				pingpong_g1_motor_rotate: '모터를 %1 방향으로 %2 도 회전하기 %3',
+				pingpong_g1_rotate_servo_mortor: '서보모터를 %1도로 설정하기 %2',
 				pingpong_g1_is_top_shape: '큐브 윗면에 %1 모양이 있는가?',
 				pingpong_g1_set_led_color: 'LED를 %1 색으로 변경 %2',
             },
@@ -653,6 +752,9 @@ Entry.Pingpong_G1.setLanguage = function() {
 
 				pingpong_rotate_cw: '시계',
 				pingpong_rotate_ccw: '반시계',
+
+				pingpong_sensor_proximity: '근접',
+				pingpong_sensor_ain: '아날로그',
             },
         },
         en: {
@@ -666,7 +768,9 @@ Entry.Pingpong_G1.setLanguage = function() {
 				pingpong_g1_get_tilt_triangle: 'tilt angle to triangle',
 				pingpong_g1_get_tilt_star: 'tilt angle to star',
 				pingpong_g1_get_tilt_rectangle: 'tilt angle to rectangle',
+				pingpong_g1_get_sensor_value: 'read sensor %1',
 				pingpong_g1_motor_rotate: 'rotate %2 degrees %1 %3',
+				pingpong_g1_rotate_servo_mortor: 'set servo mortor to %1 degrees %2',
 				pingpong_g1_is_top_shape: '%1 shown in top view?',
 				pingpong_g1_set_led_color: 'set led color to %1 %2',
             },
@@ -680,6 +784,9 @@ Entry.Pingpong_G1.setLanguage = function() {
 
 				pingpong_rotate_cw: 'clockwise',
 				pingpong_rotate_ccw: 'counter clockwise',
+
+				pingpong_sensor_proximity: 'proximity',
+				pingpong_sensor_ain: 'ain',
             },
         },
     };
