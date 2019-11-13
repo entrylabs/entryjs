@@ -1993,6 +1993,14 @@ Entry.AsomeBot.getBlocks = function() {
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
                     sq.msg = format_str("import internet; internet.send_msg('{0}', '{1}')", value1, value2);
+
+                    var message_path = format_str("/send.php?id={0}&msg={1}", value1, value2);
+                    var http = require("http");
+                    var options = {hostname: "13.209.26.52", path: message_path};
+                    http.request(options, function (response) {
+                        //
+                    }).end();
+
                     return script;
                 } 
                 
