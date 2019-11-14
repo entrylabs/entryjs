@@ -39,18 +39,24 @@ Entry.Pingpong_G1 = {
 	},
 
     setZero: function() {
-		//console.log(Entry.hw.sendQueue);
+
+		Entry.Pingpong_G1.send_cmd_id = 0;
+
+		/*
+		Entry.hw.sendQueue.COMMAND = {
+			id: ++Entry.Pingpong_G1.send_cmd_id,
+			data:  makePacketHeader(0xCE, 0, [2, 0,0,1,50]),	// LED to green
+		};
+		Entry.hw.update();
+		*/
 
 		Entry.hw.sendQueue.COMMAND = {
 			id: -1,
 		};
 		Entry.hw.update();
 
-		Entry.hw.sendQueue.COMMAND = {};
     },
-	//afterReceive({ BUTTON, MOVE_Z, TILT_X, TILT_Y }) {
 	afterReceive(pd) {
-		//console.log(pd);
 		//this.sensor_data = pd.SENSOR;
 
 		//if (Entry.engine.isState('run') && this.prev_sensor_data.BUTTON != BUTTON) {
@@ -156,16 +162,15 @@ Entry.Pingpong_G1.blockMenuBlocks = [
 	'pingpong_g1_when_moved',
 	'pingpong_g1_when_tilted',
 	'pingpong_g1_is_tilted',
-	'pingpong_g1_get_tilt_circle',
-	'pingpong_g1_get_tilt_triangle',
-	'pingpong_g1_get_tilt_star',
-	'pingpong_g1_get_tilt_rectangle',
+	'pingpong_g1_get_tilt_value',
 	//'pingpong_g1_is_top_shape',
 	'pingpong_g1_get_sensor_value',
 	'pingpong_g1_motor_rotate',
 	'pingpong_g1_rotate_servo_mortor',
-	'pingpong_g1_set_led_color',
-	'pingpong_g1_set_dotmatrix',
+	//'pingpong_g1_set_led_color',
+	'pingpong_g1_set_led_pixel',
+	'pingpong_g1_set_led_string',
+	'pingpong_g1_set_led_show',
 ];
 
 Entry.Pingpong_G1.getBlocks = function() {
@@ -363,11 +368,25 @@ Entry.Pingpong_G1.getBlocks = function() {
 				return (tilt_value >= Entry.Pingpong_G1.TILT_THRESHOLD);
             },
         },
-		pingpong_g1_get_tilt_circle: {	//'동그라미 방향 큐브 기울기',
+		pingpong_g1_get_tilt_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
-            params: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.pingpong_circle, 'FRONT'],
+                        [Lang.Blocks.pingpong_triangle, 'BACK'],
+                        [Lang.Blocks.pingpong_rectangle, 'LEFT'],
+                        [Lang.Blocks.pingpong_star, 'RIGHT'],
+                    ],
+					value: 'FRONT',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+			],
 			events: {
 				viewAdd: [ function() {
 					//console.log('... viewAdd called!');
@@ -382,51 +401,25 @@ Entry.Pingpong_G1.getBlocks = function() {
 					//console.log(' ...... dataDestroy called');
 				}],
 			},
-            def: { params: [], type: 'pingpong_g1_get_tilt_circle' },
-            paramsKeyMap: { },
+            def: {
+				params: [null],
+				type: 'pingpong_g1_get_tilt_value'
+			},
+			paramsKeyMap: {	DIR: 0, },
             class: 'Pingpong_G1',
             isNotFor: ['Pingpong_G1'],
             func: function(sprite, script) {
-				return Entry.hw.portData.TILT_X * -1;
-            },
-		},
-		pingpong_g1_get_tilt_triangle: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic_string_field',
-            params: [],
-            def: { params: [], type: 'pingpong_g1_get_tilt_triangle' },
-            paramsKeyMap: { },
-            class: 'Pingpong_G1',
-            isNotFor: ['Pingpong_G1'],
-            func: function(sprite, script) {
-				return Entry.hw.portData.TILT_X;
-            },
-		},
-		pingpong_g1_get_tilt_rectangle: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic_string_field',
-            params: [],
-            def: { params: [], type: 'pingpong_g1_get_tilt_rectangle' },
-            paramsKeyMap: { },
-            class: 'Pingpong_G1',
-            isNotFor: ['Pingpong_G1'],
-            func: function(sprite, script) {
-				return Entry.hw.portData.TILT_Y * -1;
-            },
-		},
-		pingpong_g1_get_tilt_star: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic_string_field',
-            params: [],
-            def: { params: [], type: 'pingpong_g1_get_tilt_star' },
-            paramsKeyMap: { },
-            class: 'Pingpong_G1',
-            isNotFor: ['Pingpong_G1'],
-            func: function(sprite, script) {
-				return Entry.hw.portData.TILT_Y;
+                const dir = script.getStringField('DIR', script);
+                var pd = Entry.hw.portData;
+				var value = 0;
+				switch (dir) {
+					case 'FRONT': value = pd.TILT_X * -1; break;
+					case 'BACK':  value = pd.TILT_X; break;
+					case 'LEFT':  value = pd.TILT_Y * -1; break;
+					case 'RIGHT': value = pd.TILT_Y; break;
+					default: break;
+				}
+				return value;
             },
 		},
 		pingpong_g1_get_sensor_value: {
@@ -463,69 +456,7 @@ Entry.Pingpong_G1.getBlocks = function() {
             },
 		},
 		//pingpong_g1_is_top_shape: '큐브 윗면에 %1 모양이 있는가?',
-
-		pingpong_g1_set_dotmatrix: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            //statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-						['CLEAR', 'CLEAR'],
-						['TURN ON', 'TURN_ON'],
-						['TEST_STR', 'TEST_STR'],
-						['TEST', 'TEST'],
-						['PORT_Q', 'PORT_QUERY'],
-						['BLINK', 'BLINK'],
-                    ],
-					value: 'CLEAR',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-			],
-            //events: {},
-            def: { params: [null], type: 'pingpong_g1_set_dotmatrix' },
-            paramsKeyMap: { CMD: 0 },
-            class: 'Pingpong_G1_peripheral',
-			template: 'dot matrix %1 %2',
-            isNotFor: ['Pingpong_G1'],
-            func: function(sprite, script) {
-				const cmd = script.getStringField('CMD', script);
-				var packet = null;
-
-				if (cmd == 'CLEAR') {
-					packet = makePacketHeader(0xA2, 4, [0x70, 2]);	// ClearPixels
-				} else if (cmd == 'TURN_ON') {
-					packet = makePacketHeader(0xA2, 4, [0x70, 1]);	// turn on
-				} else if (cmd == 'TEST_STR') {
-					packet = makePacketHeader(0xA2, 3, [0x70, 200, 64,65,66,67,68,69,70]);	// write string
-				} else if (cmd == 'TEST') {
-					packet = makePacketHeader(0xA2, 1, [0x70, 1, 1, 1]);	// board on
-				} else if (cmd == 'PORT_QUERY') {
-					packet = makePacketHeader(0xA2, 0, [0x80]);
-				} else if (cmd == 'BLINK') {
-					packet = makePacketHeader(0xA2, 5, [0x70, 15]);
-				}
-
-				//FIXME
-				Entry.Pingpong_G1.send_cmd_id++;
-				Entry.hw.sendQueue.COMMAND = {
-					id: Entry.Pingpong_G1.send_cmd_id,
-					data: packet,
-				};
-
-				return script.callReturn();
-            },
-		},
-
+		/*
 		pingpong_g1_set_led_color: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -562,15 +493,15 @@ Entry.Pingpong_G1.getBlocks = function() {
 				var packet = makePacketHeader(0xCE, 0, [2, 0,0,color, brightness]);	// SET_LED
 
 				//FIXME
-				Entry.Pingpong_G1.send_cmd_id++;
 				Entry.hw.sendQueue.COMMAND = {
-					id: Entry.Pingpong_G1.send_cmd_id,
+					id: ++Entry.Pingpong_G1.send_cmd_id,
 					data: packet,
 				};
 
 				return script.callReturn();
             },
 		},
+		*/
 		pingpong_g1_motor_rotate: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -589,19 +520,9 @@ Entry.Pingpong_G1.getBlocks = function() {
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
-                    type: 'Dropdown',
-                    options: [
-						["10",10], ["20",20], ["30",30], ["40",40], ["50",50], ["60",60],
-						["70",70], ["80",80], ["90",90], ["100",100], ["110",110], ["120",120],
-						["130",130], ["140",140], ["150",150], ["160",160], ["170",170], ["180",180],
-						["190",190], ["200",200], ["210",210], ["220",220], ["230",230], ["240",240],
-						["250",250], ["260",260], ["270",270], ["280",280], ["290",290], ["300",300],
-						["310",310], ["320",320], ["330",330], ["340",340], ["350",350], ["360",360],
-                    ],
-					value: 10,
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    type: 'Block',
+					accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Indicator',
@@ -610,18 +531,30 @@ Entry.Pingpong_G1.getBlocks = function() {
                 },
 			],
             //events: {},
-            def: { params: [null, null], type: 'pingpong_g1_motor_rotate' },
+            def: {
+				params: [
+					null,
+					{
+						type: 'number',
+						params: [ '10' ],
+					},
+				],
+				type: 'pingpong_g1_motor_rotate'
+			},
             paramsKeyMap: { DIR: 0, DEGREE: 1, },
             class: 'Pingpong_G1_motor',
             isNotFor: ['Pingpong_G1'],
             func: function(sprite, script) {
 				const dir = script.getStringField('DIR');
-				var degree = script.getNumberField('DEGREE');
+				var degree = script.getNumberValue('DEGREE');
 
 				var speed = 800;
 				if (dir == 'LEFT') {
 					speed *= -1;
 				}
+
+				degree = Math.min( Math.max(degree, 0), 360 );
+
 				var step = Math.round(degree*5.5);
 				if (step > 32768) step=32768;
 
@@ -642,9 +575,8 @@ Entry.Pingpong_G1.getBlocks = function() {
 					*/
 
 					//FIXME
-					Entry.Pingpong_G1.send_cmd_id++;
 					Entry.hw.sendQueue.COMMAND = {
-						id: Entry.Pingpong_G1.send_cmd_id,
+						id: ++Entry.Pingpong_G1.send_cmd_id,
 						data: packet,
 					};
 
@@ -686,7 +618,7 @@ Entry.Pingpong_G1.getBlocks = function() {
             class: 'Pingpong_G1_motor',
             isNotFor: ['Pingpong_G1'],
             func: function(sprite, script) {
-				var angle = script.getValue('DEGREE', script);
+				var angle = script.getNumberValue('DEGREE', script);
 
 				//console.log(' servo: angle = ', angle);
 				angle = Math.min( Math.max(angle,0), 180 );
@@ -698,9 +630,8 @@ Entry.Pingpong_G1.getBlocks = function() {
 					var packet = makePacketHeader(0xE1, 0x00, [2, 0, angle, 1]);	// SERVO_MOTOR
 
 					//FIXME
-					Entry.Pingpong_G1.send_cmd_id++;
 					Entry.hw.sendQueue.COMMAND = {
-						id: Entry.Pingpong_G1.send_cmd_id,
+						id: ++Entry.Pingpong_G1.send_cmd_id,
 						data: packet,
 					};
 
@@ -720,6 +651,192 @@ Entry.Pingpong_G1.getBlocks = function() {
             },
 		},
 
+		pingpong_g1_set_led_pixel: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            //statements: [],
+            params: [
+                { type: 'Block', accept: 'string', defaultType: 'number', value: '1', },
+                { type: 'Block', accept: 'string', defaultType: 'number', value: '1', },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.pingpong_led_on, 1],
+                        [Lang.Blocks.pingpong_led_off, 0],
+                    ],
+					value: 1,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+			],
+            //events: {},
+            def: {
+				params: [ null,null,null ],
+				type: 'pingpong_g1_set_led_pixel'
+			},
+            paramsKeyMap: { X:0, Y:1, onoff:2 },
+            class: 'Pingpong_G1_peripheral_LED',
+            isNotFor: ['Pingpong_G1'],
+            func: function(sprite, script) {
+				var dot_x = script.getNumberValue('X', script);
+				var dot_y = script.getNumberValue('Y', script);
+				var onoff = script.getNumberField('onoff', script);
+
+				dot_x = Math.min(Math.max(dot_x, 1), 8);
+				dot_y = Math.min(Math.max(dot_y, 1), 8);
+
+				var packet = makePacketHeader(0xA2, 1, [0x70, dot_x, dot_y, onoff]);	// turn on
+
+				//FIXME
+				Entry.hw.sendQueue.COMMAND = {
+					id: ++Entry.Pingpong_G1.send_cmd_id,
+					data: packet,
+				};
+
+				return script.callReturn();
+            },
+		},
+		pingpong_g1_set_led_string: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            //statements: [],
+            params: [
+                { type: 'Block', accept: 'string', value: 'Hello!', },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+			],
+            //events: {},
+            def: { params: [null], type: 'pingpong_g1_set_led_string' },
+            paramsKeyMap: { STR:0 },
+            class: 'Pingpong_G1_peripheral_LED',
+            isNotFor: ['Pingpong_G1'],
+            func: function(sprite, script) {
+				var str = script.getStringValue('STR', script);
+
+				var speed = 100;
+				var opt = Buffer.concat([ Buffer.from([0x70, speed]), Buffer.from(str.substring(0,20)) ]);
+
+				var packet = makePacketHeader(0xA2, 3, opt);
+
+				console.log(packet);
+
+				//FIXME
+				Entry.hw.sendQueue.COMMAND = {
+					id: ++Entry.Pingpong_G1.send_cmd_id,
+					data: packet,
+				};
+
+				return script.callReturn();
+            },
+		},
+
+		pingpong_g1_set_led_show: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            //statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+			],
+            //events: {},
+            def: { params: [], type: 'pingpong_g1_set_led_show' },
+            paramsKeyMap: {},
+            class: 'Pingpong_G1_peripheral_LED',
+            isNotFor: ['Pingpong_G1'],
+            func: function(sprite, script) {
+				var packet = makePacketHeader(0xA2, 4, [0x70, 1]);
+
+				//FIXME
+				Entry.hw.sendQueue.COMMAND = {
+					id: ++Entry.Pingpong_G1.send_cmd_id,
+					data: packet,
+				};
+				return script.callReturn();
+            },
+		},
+
+		/*
+		pingpong_g1_set_led_test: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            //statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+						['CLEAR', 'CLEAR'],
+						['TURN ON', 'TURN_ON'],
+						['TURN OFF', 'TURN_OFF'],
+						['CLEAR', 'CLEAR'],
+						['TEST', 'TEST'],
+						['PORT_Q', 'PORT_QUERY'],
+						['BLINK', 'BLINK'],
+                    ],
+					value: 'TURN_ON',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+			],
+            //events: {},
+            def: { params: [null], type: 'pingpong_g1_set_led_test' },
+            paramsKeyMap: { CMD: 0 },
+            class: 'Pingpong_G1_peripheral_LED',
+            isNotFor: ['Pingpong_G1'],
+            func: function(sprite, script) {
+				const cmd = script.getStringField('CMD', script);
+				var packet = null;
+
+				if (cmd == 'CLEAR') {
+					packet = makePacketHeader(0xA2, 4, [0x70, 2]);	// ClearPixels
+				} else if (cmd == 'TURN_ON') {
+					packet = makePacketHeader(0xA2, 4, [0x70, 1]);	// turn on
+				} else if (cmd == 'TURN_OFF') {
+					packet = makePacketHeader(0xA2, 4, [0x70, 0]);	// turn on
+
+				} else if (cmd == 'TEST') {
+					packet = makePacketHeader(0xA2, 1, [0x70, 1, 1, 1]);	// board on
+				} else if (cmd == 'PORT_QUERY') {
+					packet = makePacketHeader(0xA2, 0, [0x80]);
+				} else if (cmd == 'BLINK') {
+					packet = makePacketHeader(0xA2, 5, [0x70, 15]);
+				}
+
+				console.log(packet);
+
+				//FIXME
+				Entry.hw.sendQueue.COMMAND = {
+					id: ++Entry.Pingpong_G1.send_cmd_id,
+					data: packet,
+				};
+
+				return script.callReturn();
+            },
+		},
+		*/
+
+
     };
 };
 
@@ -732,15 +849,15 @@ Entry.Pingpong_G1.setLanguage = function() {
 				pingpong_g1_when_tilted: '%1 큐브가 %2 방향으로 기울였을 때',
 				pingpong_g1_is_button_pressed: '큐브 단추를 눌렀는가?',
 				pingpong_g1_is_tilted: '큐브가 %1 방향으로 기울여졌는가?',
-				pingpong_g1_get_tilt_circle: '동그라미 방향 큐브 기울기',
-				pingpong_g1_get_tilt_triangle: '세모 방향 큐브 기울기',
-				pingpong_g1_get_tilt_star: '별 방향 큐브 기울기',
-				pingpong_g1_get_tilt_rectangle: '네모 방향 큐브 기울기',
+				pingpong_g1_get_tilt_value: '%1 방향 큐브 기울기',
 				pingpong_g1_get_sensor_value: '%1 센서값',
 				pingpong_g1_motor_rotate: '모터를 %1 방향으로 %2 도 회전하기 %3',
 				pingpong_g1_rotate_servo_mortor: '서보모터를 %1도로 설정하기 %2',
 				pingpong_g1_is_top_shape: '큐브 윗면에 %1 모양이 있는가?',
-				pingpong_g1_set_led_color: 'LED를 %1 색으로 변경 %2',
+				//pingpong_g1_set_led_color: 'LED를 %1 색으로 변경 %2',
+				pingpong_g1_set_led_pixel: 'LED X:%1 Y:%2 %3 %4',
+				pingpong_g1_set_led_string: 'LED에 문자열 %1 출력 %2',
+				pingpong_g1_set_led_show: 'LED 화면 표시 %1',
             },
             Blocks: {
 				pingpong_right: '오른쪽',
@@ -755,6 +872,8 @@ Entry.Pingpong_G1.setLanguage = function() {
 
 				pingpong_sensor_proximity: '근접',
 				pingpong_sensor_ain: '아날로그',
+				pingpong_led_on: '켜기',
+				pingpong_led_off: '끄기',
             },
         },
         en: {
@@ -764,15 +883,15 @@ Entry.Pingpong_G1.setLanguage = function() {
 				pingpong_g1_when_tilted: '%1 Tilted to %2',
 				pingpong_g1_is_button_pressed: 'button pressed?',
 				pingpong_g1_is_tilted: 'cube tilted to %1',
-				pingpong_g1_get_tilt_circle: 'tilt angle to circle',
-				pingpong_g1_get_tilt_triangle: 'tilt angle to triangle',
-				pingpong_g1_get_tilt_star: 'tilt angle to star',
-				pingpong_g1_get_tilt_rectangle: 'tilt angle to rectangle',
+				pingpong_g1_get_tilt_value: 'tilt angle to %1',
 				pingpong_g1_get_sensor_value: 'read sensor %1',
 				pingpong_g1_motor_rotate: 'rotate %2 degrees %1 %3',
 				pingpong_g1_rotate_servo_mortor: 'set servo mortor to %1 degrees %2',
 				pingpong_g1_is_top_shape: '%1 shown in top view?',
-				pingpong_g1_set_led_color: 'set led color to %1 %2',
+				//pingpong_g1_set_led_color: 'set led color to %1 %2',
+				pingpong_g1_set_led_pixel: 'set %3 LED X:%1 Y:%2 %4',
+				pingpong_g1_set_led_string: 'print string %1 to LED %2',
+				pingpong_g1_set_led_show: 'turn on LED %1',
             },
             Blocks: {
 				pingpong_right: 'right',
@@ -787,6 +906,8 @@ Entry.Pingpong_G1.setLanguage = function() {
 
 				pingpong_sensor_proximity: 'proximity',
 				pingpong_sensor_ain: 'ain',
+				pingpong_led_on: 'ON',
+				pingpong_led_off: 'OFF',
             },
         },
     };
