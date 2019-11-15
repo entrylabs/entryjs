@@ -3,7 +3,7 @@
 Entry.Pingpong_G1 = {
     id: '35.1',
     name: 'Pingpong_G1',
-    url: 'http://roborisen.com',
+    url: 'https://www.roborisen.com',
     imageName: 'pingpong_g1.png',
     delayTime: 30,
     title: {
