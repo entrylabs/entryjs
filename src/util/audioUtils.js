@@ -99,11 +99,11 @@ class AudioUtils {
                 resolve();
                 return;
             }
-            // if (this.isRecording) {
-            //     console.error('audio is already recording');
-            //     resolve();
-            //     return;
-            // }
+            if (this.isRecording) {
+                console.error('audio is already recording');
+                resolve();
+                return;
+            }
             if (this._audioContext.state === 'suspended') {
                 await this.initUserMedia();
             }
@@ -177,6 +177,7 @@ class AudioUtils {
         this._userMediaStream.getTracks().forEach((track) => {
             track.stop();
         });
+
         clearTimeout(this._properStopCall);
         clearTimeout(this._noInputStopCall);
     }
@@ -219,9 +220,9 @@ class AudioUtils {
                 outputData[sample] = inputData[sample];
             }
         }
-        console.log(this._currentVolume);
+        // console.log(this._currentVolume);
         if (this._currentVolume > 60) {
-            console.log('clearTimeout');
+            console.log('No MIC input for certain amount of time.');
             clearTimeout(this._noInputStopCall);
         }
         // websocket 으로 서버 전송
