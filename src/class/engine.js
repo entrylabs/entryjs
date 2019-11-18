@@ -563,7 +563,7 @@ Entry.Engine = class Engine {
         const variableContainer = Entry.variableContainer;
 
         Entry.Utils.blur();
-
+        audioUtils.stopRecord();
         Entry.addActivity('stop');
 
         container.mapEntity((entity) => {
