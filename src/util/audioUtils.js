@@ -20,7 +20,6 @@ class AudioUtils {
         this.isAudioSupport = this._isBrowserSupportAudio(); // 브라우저 지원 확인
         this.isAudioInitComplete = false; // 유저 인풋 연결 확인
         this.isRecording = false;
-
         this._userMediaStream = undefined;
         this._mediaRecorder = undefined;
         this._currentVolume = -1;
@@ -28,6 +27,14 @@ class AudioUtils {
         this.result = null;
     }
 
+    async checkUserMicAvailable() {
+        try {
+            await navigator.mediaDevices.getUserMedia({ audio: true });
+            return true;
+        } catch (err) {
+            return false;
+        }
+    }
     /**
      * 웹 오디오 노드 스트림을 정의한다.
      * 각 스트림은 아래와 같은 역할을 한다.
@@ -54,11 +61,14 @@ class AudioUtils {
             const audioContext = new AudioContext({ sampleRate: 16000 });
             const streamSrc = audioContext.createMediaStreamSource(mediaStream);
             const analyserNode = audioContext.createAnalyser();
+            const biquadFilter = audioContext.createBiquadFilter();
+            biquadFilter.type = 'highpass';
+            biquadFilter.frequency.value = 60;
             const scriptNode = audioContext.createScriptProcessor(2048, 1, 1);
             const streamDest = audioContext.createMediaStreamDestination();
             const mediaRecorder = new MediaRecorder(streamDest.stream);
             // 순서대로 노드 커넥션을 맺는다.
-            this._connectNodes(streamSrc, analyserNode, scriptNode, streamDest);
+            this._connectNodes(streamSrc, analyserNode, biquadFilter, scriptNode, streamDest);
             scriptNode.onaudioprocess = this._handleScriptProcess(analyserNode);
 
             this._audioContext = audioContext;
@@ -82,18 +92,18 @@ class AudioUtils {
         }
     }
 
-    startRecord(recordMilliSecond = 3000) {
+    startRecord(recordMilliSecond) {
         return new Promise(async (resolve) => {
             if (!this.isAudioInitComplete) {
                 console.error('audio not initialized');
                 resolve();
                 return;
             }
-            if (this.isRecording) {
-                console.error('audio is already recording');
-                resolve();
-                return;
-            }
+            // if (this.isRecording) {
+            //     console.error('audio is already recording');
+            //     resolve();
+            //     return;
+            // }
             if (this._audioContext.state === 'suspended') {
                 await this.initUserMedia();
             }
@@ -110,6 +120,7 @@ class AudioUtils {
                     case STATUS_CODE.NOT_RECOGNIZED:
                         this._socketClient.close();
                         resolve('');
+                        this.stopRecord();
                         break;
                     default:
                         const parsed = JSON.parse(e.data);
@@ -117,6 +128,7 @@ class AudioUtils {
                         if (isArray) {
                             this._socketClient.close();
                             resolve(parsed[0]);
+                            this.stopRecord();
                         } else if (typeof e.data === 'string') {
                             console.log('Received String: ', e.data, ' ');
                         } else {
@@ -125,12 +137,19 @@ class AudioUtils {
                         break;
                 }
             };
-            setTimeout(() => {
+            this._properStopCall = setTimeout(this.stopRecord, recordMilliSecond);
+            this._noInputStopCall = setTimeout(() => {
                 this.stopRecord();
-            }, recordMilliSecond);
+                clearTimeout(this._properStopCall);
+            }, 3000);
         });
     }
 
+    _stopMediaRecorder() {
+        if (this._mediaRecorder.state == 'recording') {
+            this._mediaRecorder.stop();
+        }
+    }
     /**
      * 녹음을 종료한다. silent = true 인 경우 API 콜을 하지 않기 위해 리스너를 먼저 제거하고 stop 한다.
      * @param {object=} option
@@ -147,9 +166,9 @@ class AudioUtils {
             this._mediaRecorder.onstop = () => {
                 console.log('silent stop');
             };
-            this._mediaRecorder.stop();
+            this._stopMediaRecorder();
         } else {
-            this._mediaRecorder.stop();
+            this._stopMediaRecorder();
             this._mediaRecorder.onstop = () => {
                 console.log('proper stop');
             };
@@ -158,6 +177,8 @@ class AudioUtils {
         this._userMediaStream.getTracks().forEach((track) => {
             track.stop();
         });
+        clearTimeout(this._properStopCall);
+        clearTimeout(this._noInputStopCall);
     }
 
     isAudioConnected() {
@@ -197,6 +218,11 @@ class AudioUtils {
             for (let sample = 0; sample < inputBuffer.length; sample++) {
                 outputData[sample] = inputData[sample];
             }
+        }
+        console.log(this._currentVolume);
+        if (this._currentVolume > 60) {
+            console.log('clearTimeout');
+            clearTimeout(this._noInputStopCall);
         }
         // websocket 으로 서버 전송
         const client = this._socketClient;
