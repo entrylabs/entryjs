@@ -1,6 +1,8 @@
 'use strict';
 
 import { GEHelper } from '../graphicEngine/GEHelper';
+import _uniq from 'lodash/uniq';
+import FontFaceOnload from 'fontfaceonload';
 
 Entry.Utils = {};
 
@@ -18,20 +20,20 @@ Entry.clipboard = null;
  * Load project
  * @param {?Project} project
  */
+
 Entry.loadProject = function(project) {
     if (!project) {
         project = Entry.getStartProject(Entry.mediaFilePath);
     }
-
     if (this.type === 'workspace') {
         Entry.stateManager.startIgnore();
     }
     Entry.projectId = project._id;
     Entry.variableContainer.setVariables(project.variables);
     Entry.variableContainer.setMessages(project.messages);
+    Entry.variableContainer.setFunctions(project.functions);
     Entry.scene.addScenes(project.scenes);
     Entry.stage.initObjectContainers();
-    Entry.variableContainer.setFunctions(project.functions);
     Entry.container.setObjects(project.objects);
     Entry.FPS = project.speed ? project.speed : 60;
     GEHelper.Ticker.setFPS(Entry.FPS);
@@ -1395,6 +1397,7 @@ Entry.getPicturesJSON = function(pictures = [], isClone) {
         o.fileurl = p.fileurl;
         o.name = p.name;
         o.scale = p.scale;
+        o.imageType = p.imageType || 'png';
         acc.push(o);
         return acc;
     }, []);
@@ -1957,7 +1960,7 @@ Entry.Utils.createMouseEvent = function(type, event) {
 
 Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     let block = scope.block;
-    message = message || '런타임 에러 발생';
+    message = message || 'Runtime Error';
 
     const engine = Entry.engine;
 
@@ -1995,7 +1998,7 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
 
 Entry.Utils.AsyncError = function(message) {
     this.name = 'AsyncError';
-    this.message = message || '비동기 호출 대기';
+    this.message = message || 'Waiting for callback';
 };
 
 Entry.Utils.AsyncError.prototype = new Error();
@@ -2005,61 +2008,39 @@ Entry.Utils.isChrome = function() {
     return /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
 };
 
-Entry.Utils.waitForWebfonts = function(fonts, callback) {
-    let loadedFonts = 0;
-    if (fonts && fonts.length) {
-        for (let i = 0, l = fonts.length; i < l; ++i) {
-            let node = document.createElement('span');
-            // Characters that vary significantly among different fonts
-            node.innerHTML = 'giItT1WQy@!-/#';
-            // Visible - so we can measure it - but not on the screen
-            node.style.position = 'absolute';
-            node.style.left = '-10000px';
-            node.style.top = '-10000px';
-            // Large font size makes even subtle changes obvious
-            node.style.fontSize = '300px';
-            // Reset any font properties
-            node.style.fontFamily = 'sans-serif';
-            node.style.fontVariant = 'normal';
-            node.style.fontStyle = 'normal';
-            node.style.fontWeight = 'normal';
-            node.style.letterSpacing = '0';
-            document.body.appendChild(node);
-
-            // Remember width with no applied web font
-            const width = node.offsetWidth;
-
-            node.style.fontFamily = fonts[i];
-
-            let interval;
-            function checkFont() {
-                // Compare current width with original width
-                if (node && node.offsetWidth != width) {
-                    ++loadedFonts;
-                    node.parentNode.removeChild(node);
-                    node = null;
-                }
-
-                // If all fonts have been loaded
-                if (loadedFonts >= fonts.length) {
-                    if (interval) {
-                        clearInterval(interval);
-                    }
-                    if (loadedFonts == fonts.length) {
-                        callback();
-                        return true;
-                    }
-                }
-            }
-
-            if (!checkFont()) {
-                interval = setInterval(checkFont, 50);
-            }
-        }
-    } else {
-        callback && callback();
-        return true;
+Entry.Utils.getUsedFonts = function(project) {
+    if (!project) {
+        return;
     }
+    const getFamily = (x) =>
+        x.entity.font
+            .split(' ')
+            .filter((t) => t.indexOf('bold') < 0 && t.indexOf('italic') < 0 && t.indexOf('px') < 0)
+            .join(' ');
+    return _uniq(project.objects.filter((x) => x.objectType === 'textBox').map(getFamily));
+};
+
+Entry.Utils.waitForWebfonts = function(fonts, callback) {
+    return Promise.all(
+        fonts.map(
+            (font) =>
+                new Promise((resolve) => {
+                    FontFaceOnload(font, {
+                        success: function() {
+                            resolve();
+                        },
+                        error: function() {
+                            console.log('fail', font);
+                            resolve();
+                        },
+                        timeout: 5000,
+                    });
+                })
+        )
+    ).then(() => {
+        console.log('font loaded');
+        callback && callback();
+    });
 };
 
 window.requestAnimFrame = (function() {
@@ -2433,9 +2414,8 @@ Entry.Utils.getScrollPos = function() {
     };
 };
 
-Entry.Utils.isPointInRect = ({ x, y }, { top, bottom, left, right }) => {
-    return _.inRange(x, left, right) && _.inRange(y, top, bottom);
-};
+Entry.Utils.isPointInRect = ({ x, y }, { top, bottom, left, right }) =>
+    _.inRange(x, left, right) && _.inRange(y, top, bottom);
 
 Entry.Utils.getBoundingClientRectMemo = _.memoize((target, offset = {}) => {
     const rect = target.getBoundingClientRect();
@@ -2502,6 +2482,12 @@ Entry.Utils.toFixed = function(value, len) {
 
 Entry.Utils.setVolume = function(volume) {
     this._volume = _.clamp(volume, 0, 1);
+
+    Entry.soundInstances
+        .filter(({ soundType }) => !soundType)
+        .forEach((instance) => {
+            instance.volume = this._volume;
+        });
 };
 
 Entry.Utils.getVolume = function() {
@@ -2516,6 +2502,7 @@ Entry.Utils.playSound = function(id, option = {}) {
 };
 
 Entry.Utils.addSoundInstances = function(instance) {
+    console.log('add sound instance');
     Entry.soundInstances.push(instance);
     instance.on('complete', () => {
         const index = Entry.soundInstances.indexOf(instance);

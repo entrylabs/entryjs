@@ -9,7 +9,7 @@ import debounce from 'lodash/debounce';
 const VARIABLE = 'variable';
 const HW = 'arduino';
 const practicalCourseCategoryList = ['hw_motor', 'hw_melody', 'hw_sensor', 'hw_led', 'hw_robot'];
-const splitterHPadding = 20;
+const splitterHPadding = EntryStatic.splitterHPadding || 20;
 
 class BlockMenu {
     constructor(dom, align, categoryData, scroll, readOnly) {
@@ -32,6 +32,7 @@ class BlockMenu {
         this._setDynamicTimer = null;
         this._renderedCategories = {};
         this.readOnly = readOnly === undefined ? true : readOnly;
+        this.scale = 1;
 
         this._threadsMap = {};
         let $dom;
@@ -486,13 +487,14 @@ class BlockMenu {
     }
 
     _createSplitter(topPos) {
+        const { common = {} } = EntryStatic.colorSet || {};
         this._splitters.push(
             this.svgBlockGroup.elem('line', {
                 x1: splitterHPadding,
                 y1: topPos,
                 x2: this._svgWidth - splitterHPadding,
                 y2: topPos,
-                stroke: '#AAC5D5',
+                stroke: common.SPLITTER || '#AAC5D5',
             })
         );
     }

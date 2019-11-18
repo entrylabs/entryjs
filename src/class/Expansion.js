@@ -35,7 +35,7 @@ export default class Expansion {
             const { _schema = {} } = block || {};
             const { isFor, isNotFor = [] } = _schema;
             const [expansionKey] = isNotFor;
-            if (expansionKey && isFor.indexOf('category_expansion') >= 0) {
+            if (expansionKey && isFor && isFor.indexOf('category_expansion') >= 0) {
                 expansionList = _.union(expansionList, [expansionKey]);
             }
         });

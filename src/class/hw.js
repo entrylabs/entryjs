@@ -68,107 +68,115 @@ Entry.HW = class {
         });
     }
 
-    _connectWebSocket(url, option) {
-        const socket = io(url, option);
-        socket.io.reconnectionAttempts(this.TRIAL_LIMIT);
-        socket.io.reconnectionDelayMax(1000);
-        socket.io.timeout(1000);
-        socket.on('connect', () => {
-            this.socketType = 'WebSocket';
-            this._initHardware(socket);
-        });
-
-        socket.on('mode', (mode) => {
-            if (socket.mode === 0 && mode === 1) {
-                this._disconnectHardware();
-            }
-            this.socketMode = mode;
-            socket.mode = mode;
-        });
-
-        const messageHandler = new HardwareSocketMessageHandler(socket);
-        messageHandler.addEventListener('init', this._loadExternalHardwareBlock.bind(this));
-        messageHandler.addEventListener('state', async (statement, name) => {
-            /*
-            statement 로는 before_connect, connected 등 하드웨어 프로그램의 상태 전부가 오지만
-            WS 에서는 connected 외에 전부 socketConnected 상태로 머무르게 된다.
-             */
-            switch (statement) {
-                case 'disconnectHardware':
-                    this._disconnectHardware();
-                    break;
-                case 'connected':
-                    // init action 과 동일동작
-                    await this._loadExternalHardwareBlock(name);
-                    break;
-                default:
-                    break;
-            }
-        });
-
-        // 1.7.0 버전 이전 하드웨어 프로그램 종료로직 대응으로 남겨두어야 한다.
-        messageHandler.addEventListener('disconnect', this._disconnectHardware.bind(this));
-        messageHandler.addEventListener('data', (portData) => {
-            this.checkDevice(portData);
-            this._updatePortData(portData);
-            this.pending = false;
-            if (
-                this.communicationType === 'manual' &&
-                this.hwModule &&
-                this.hwModule.onReceiveData
-            ) {
-                this.hwModule.onReceiveData(portData);
-            }
-        });
-
-        socket.on('disconnect', () => {
-            // cloud PC 연결 클릭시 순간 disconnect 되고 재연결을 시도하기 위한 로직
-            this._initSocket();
-        });
-
-        return socket;
-    }
-
     async _loadExternalHardwareBlock(moduleName) {
         try {
             await Entry.moduleManager.loadExternalModule(moduleName);
         } catch (e) {
-            Entry.toast.alert('모듈 로드실패', `${moduleName} 모듈 불러오기에 실패했습니다.`);
+            Entry.toast.alert(
+                Lang.Hw.hw_module_load_fail_title,
+                `${moduleName} ${Lang.Hw.hw_module_load_fail_desc}`,
+            );
         }
     }
 
     _initSocket() {
         this.connected = false;
 
-        this.tlsSocketIo1 && this.tlsSocketIo1.removeAllListeners();
-        this.tlsSocketIo2 && this.tlsSocketIo2.removeAllListeners();
-        this.socketIo && this.socketIo.removeAllListeners();
-
         const connectHttpsWebSocket = (url) =>
             // TODO ajax 로 entry-hw 살아있는지 확인 후 연결시도 (TRIAL_LIMIT = ajax 로)
-            this._connectWebSocket(url, {
+            this._trySocketConnect(url, {
                 query: {
                     client: true,
                     roomId: this.sessionRoomId,
                 },
             });
 
-        if (['http:', 'file:'].indexOf(location.protocol)) {
-            this.socketIo = connectHttpsWebSocket(this.httpServerAddress);
+        if (this.socket) {
+            this.socket.connect();
+        } else {
+            connectHttpsWebSocket(this.httpsServerAddress)
+                .catch(() => connectHttpsWebSocket(this.httpsServerAddress2))
+                .catch(() => {
+                    if (['http:', 'file:'].indexOf(location.protocol) > -1) {
+                        return connectHttpsWebSocket(this.httpServerAddress);
+                    }
+                })
+                .catch(() => {
+                    console.warn('All hardware socket connection failed');
+                });
         }
-        this.tlsSocketIo1 = connectHttpsWebSocket(this.httpsServerAddress);
-        this.tlsSocketIo2 = connectHttpsWebSocket(this.httpsServerAddress2);
 
         Entry.dispatchEvent('hwChanged');
     }
 
+    _trySocketConnect(url, option) {
+        return new Promise((resolve, reject) => {
+            const socket = io(url, option);
+            socket.io.reconnectionAttempts(this.TRIAL_LIMIT);
+            socket.io.reconnectionDelayMax(1000);
+            socket.io.timeout(1000);
+            socket.on('connect', () => {
+                this._initHardware(socket);
+                socket.on('mode', (mode) => {
+                    if (socket.mode === 0 && mode === 1) {
+                        this._disconnectHardware();
+                    }
+                    this.socketMode = mode;
+                    socket.mode = mode;
+                });
+
+                const messageHandler = new HardwareSocketMessageHandler(socket);
+                messageHandler.addEventListener('init', this._loadExternalHardwareBlock.bind(this));
+                messageHandler.addEventListener('state', async (statement, name) => {
+                    /*
+                    statement 로는 before_connect, connected 등 하드웨어 프로그램의 상태 전부가 오지만
+                    WS 에서는 connected 외에 전부 socketConnected 상태로 머무르게 된다.
+                     */
+                    switch (statement) {
+                        case 'disconnectHardware':
+                            this._disconnectHardware();
+                            break;
+                        case 'connected':
+                            // init action 과 동일동작
+                            await this._loadExternalHardwareBlock(name);
+                            break;
+                        default:
+                            break;
+                    }
+                });
+
+                // 1.7.0 버전 이전 하드웨어 프로그램 종료로직 대응으로 남겨두어야 한다.
+                messageHandler.addEventListener('disconnect', this._disconnectHardware.bind(this));
+                messageHandler.addEventListener('data', (portData) => {
+                    this.checkDevice(portData);
+                    this._updatePortData(portData);
+                    this.pending = false;
+                    if (
+                        this.communicationType === 'manual' &&
+                        this.hwModule &&
+                        this.hwModule.onReceiveData
+                    ) {
+                        this.hwModule.onReceiveData(portData);
+                    }
+                });
+
+                socket.on('disconnect', () => {
+                    // cloud PC 연결 클릭시 순간 disconnect 되고 재연결을 시도하기 위한 로직
+                    this._initSocket();
+                });
+                resolve();
+            });
+            socket.on('reconnect_failed', () => {
+                reject();
+            });
+        });
+    }
+
     retryConnect() {
-        this.TRIAL_LIMIT = 5;
         this._initSocket();
     }
 
     openHardwareProgram() {
-        this.TRIAL_LIMIT = 5;
         this._executeHardware();
 
         if (!this.socket || !this.socket.connected) {
@@ -312,33 +320,43 @@ Entry.HW = class {
                 this.hwModule = undefined;
             }
 
-            this.tlsSocketIo1 && this.tlsSocketIo1.close();
-            this.tlsSocketIo2 && this.tlsSocketIo2.close();
-            this.socketIo && this.socketIo.close();
+            this.socket && this.socket.close();
             this.socket = undefined;
 
             Entry.dispatchEvent('hwChanged');
             Entry.toast.alert(
-                '하드웨어 프로그램 연결 종료',
-                '하드웨어 프로그램과의 연결이 종료되었습니다.',
+                Lang.Hw.hw_module_terminaltion_title,
+                Lang.Hw.hw_module_terminaltion_desc,
                 false,
             );
         }
     }
 
+    /**
+     * @deprecated
+     */
     setDigitalPortValue(port, value) {
+        console.warn('this function will be deprecated. please use Entry.hw.sendQueue directly.');
         this.sendQueue[port] = value;
         this.removePortReadable(port);
     }
 
+    /**
+     * @deprecated
+     */
     getAnalogPortValue(port) {
+        console.warn('this function will be deprecated. please use Entry.hw.portData directly.');
         if (!this.connected) {
             return 0;
         }
         return this.portData[`a${port}`];
     }
 
+    /**
+     * @deprecated
+     */
     getDigitalPortValue(port) {
+        console.warn('this function will be deprecated. please use Entry.hw.portData directly.');
         if (!this.connected) {
             return 0;
         }
@@ -350,7 +368,11 @@ Entry.HW = class {
         }
     }
 
+    /**
+     * @deprecated
+     */
     setPortReadable(port) {
+        console.warn('this function will be deprecated. please control port state directly.');
         if (!this.sendQueue.readablePorts) {
             this.sendQueue.readablePorts = [];
         }
@@ -368,7 +390,11 @@ Entry.HW = class {
         }
     }
 
+    /**
+     * @deprecated
+     */
     removePortReadable(port) {
+        console.warn('this function will be deprecated. please use Entry.hw.sendQueue directly.');
         if (!this.sendQueue.readablePorts && !Array.isArray(this.sendQueue.readablePorts)) {
             return;
         }
@@ -396,6 +422,7 @@ Entry.HW = class {
         if (!this.socket || this.socket.disconnected) {
             return;
         }
+
         if (this.hwModule && this.hwModule.sendMessage) {
             this.hwModule.sendMessage(this);
         } else {
@@ -406,6 +433,8 @@ Entry.HW = class {
                 type: 'utf8',
             });
         }
+
+        this.hwModule && this.hwModule.afterSend && this.hwModule.afterSend(this.sendQueue);
     }
 
     _sendSocketMessage(message) {
@@ -478,6 +507,7 @@ Entry.HW = class {
             return;
         }
         this.communicationType = this.hwModule.communicationType || 'auto';
+        this._banClassAllHardware();
         Entry.dispatchEvent('hwChanged');
 
         let descMsg = '';
@@ -608,7 +638,7 @@ Entry.HW = class {
                 () => {},
                 () => {
                     hw.openHardwareDownloadPopup();
-                }
+                },
             );
         }
 

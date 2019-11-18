@@ -314,6 +314,11 @@ Entry.Scene = class {
         if (Entry.creationChangedEvent) {
             Entry.creationChangedEvent.notify();
         }
+        const { playground = {} } = Entry || {};
+        const { mainWorkspace } = playground;
+        if (mainWorkspace) {
+            mainWorkspace.reDraw();
+        }
         return scene;
     }
 
@@ -350,6 +355,9 @@ Entry.Scene = class {
         container.resetSceneDuringRun();
 
         if (this.selectedScene && this.selectedScene.id == scene.id) {
+            return;
+        }
+        if (Entry.playground.nameViewFocus && Entry.playground.nameViewBlur()) {
             return;
         }
 

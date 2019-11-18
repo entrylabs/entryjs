@@ -6,7 +6,7 @@
 
 'use strict';
 
-import ColorSpoid from '../playground/colorSpoid';
+import Extension from '../extensions/extension';
 import { GEHelper } from '../graphicEngine/GEHelper';
 import { GEHandle } from '../graphicEngine/GEHandle';
 import { PIXIAtlasManager } from './pixi/atlas/PIXIAtlasManager';
@@ -54,7 +54,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
     this.initHandle();
     this.mouseCoordinate = { x: 0, y: 0 };
 
-    var _addEventListener = Entry.addEventListener.bind(Entry);
+    const _addEventListener = Entry.addEventListener.bind(Entry);
 
     if (Entry.isPhone()) {
         canvas.ontouchstart = function(e) {
@@ -66,7 +66,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
             Entry.dispatchEvent('canvasClickCanceled', e);
         };
     } else {
-        var downFunc = function(e) {
+        const downFunc = function(e) {
             Entry.dispatchEvent('canvasClick', e);
             Entry.stage.isClick = true;
         };
@@ -74,7 +74,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
         canvas.onmousedown = downFunc;
         canvas.ontouchstart = downFunc;
 
-        var upFunc = function(e) {
+        const upFunc = function(e) {
             Entry.stage.isClick = false;
             Entry.dispatchEvent('canvasClickCanceled', e);
         };
@@ -91,7 +91,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
     _addEventListener('loadComplete', this.sortZorder.bind(this));
     Entry.windowResized.attach(this, this.updateBoundRect.bind(this));
 
-    var razyScroll = _.debounce(() => {
+    const razyScroll = _.debounce(() => {
         Entry.windowResized.notify();
     }, 200);
 
@@ -99,11 +99,11 @@ Entry.Stage.prototype.initStage = function(canvas) {
         window.requestAnimationFrame(razyScroll);
     });
 
-    var moveFunc = function(e) {
+    const moveFunc = function(e) {
         e.preventDefault();
-        var { pageX, pageY } = Entry.Utils.convertMouseEvent(e);
-        var roundRect = Entry.stage.getBoundRect();
-        var scrollPos = Entry.Utils.getScrollPos();
+        const { pageX, pageY } = Entry.Utils.convertMouseEvent(e);
+        const roundRect = Entry.stage.getBoundRect();
+        const scrollPos = Entry.Utils.getScrollPos();
         this.mouseCoordinate = {
             x: Entry.Utils.toFixed(
                 ((pageX - roundRect.left - scrollPos.left) / roundRect.width - 0.5) * 480
@@ -119,17 +119,17 @@ Entry.Stage.prototype.initStage = function(canvas) {
     canvas.ontouchmove = moveFunc;
 
     canvas.onmouseout = () => Entry.dispatchEvent('stageMouseOut');
+    const updateObjectFunc = () => {
+        if (Entry.engine.isState('stop')) {
+            Entry.stage.updateObject();
+        }
+    };
     _addEventListener('updateObject', updateObjectFunc);
     _addEventListener('run', () => Entry.removeEventListener('updateObject', updateObjectFunc));
     _addEventListener('stop', () => _addEventListener('updateObject', updateObjectFunc));
-
-    var updateObjectFunc = () => {
-        if (Entry.engine.isState('stop')) Entry.stage.updateObject();
-    };
-
     _addEventListener('canvasInputComplete', () => {
         try {
-            var inputValue = this.inputField.value();
+            const inputValue = this.inputField.value();
             this.hideInputField();
             if (inputValue) {
                 ((c) => {
@@ -142,12 +142,14 @@ Entry.Stage.prototype.initStage = function(canvas) {
 
     this.initWall();
     this.render();
-    this.colorSpoid = new ColorSpoid(this, canvas);
+    this.dropper = Extension.getExtension('Dropper');
 };
 
 Entry.Stage.prototype.render = function stageRender() {
-    if (Entry.stage.timer) clearTimeout(Entry.stage.timer);
-    var time = _.now();
+    if (Entry.stage.timer) {
+        clearTimeout(Entry.stage.timer);
+    }
+    let time = _.now();
     Entry.stage.update();
     time = _.now() - time;
     Entry.stage.timer = setTimeout(stageRender, 16 - (time % 16) + 16 * Math.floor(time / 16));
@@ -157,7 +159,9 @@ Entry.Stage.prototype.render = function stageRender() {
  * redraw canvas
  */
 Entry.Stage.prototype.update = function() {
-    if (Entry.type === 'invisible') return;
+    if (Entry.type === 'invisible') {
+        return;
+    }
 
     if (!Entry.requestUpdate) {
         Entry.requestUpdate = false;
@@ -169,10 +173,15 @@ Entry.Stage.prototype.update = function() {
         this.objectUpdated = false;
     }
 
-    var inputField = this.inputField;
-    if (inputField && !inputField._isHidden) inputField.render();
-    if (Entry.requestUpdateTwice) Entry.requestUpdateTwice = false;
-    else Entry.requestUpdate = false;
+    const inputField = this.inputField;
+    if (inputField && !inputField._isHidden) {
+        inputField.render();
+    }
+    if (Entry.requestUpdateTwice) {
+        Entry.requestUpdateTwice = false;
+    } else {
+        Entry.requestUpdate = false;
+    }
 };
 
 Entry.Stage.prototype.updateForce = function() {
@@ -194,9 +203,12 @@ Entry.Stage.prototype.loadObject = function({ entity: { object }, scene }) {
  * @param {Entry.EntityObject} entity
  */
 Entry.Stage.prototype.loadEntity = function({ parent, object }, index) {
-    var objContainer = Entry.stage.getObjectContainerByScene(parent.scene);
-    if (index > -1) objContainer.addChildAt(object, index);
-    else objContainer.addChild(object);
+    const objContainer = Entry.stage.getObjectContainerByScene(parent.scene);
+    if (index > -1) {
+        objContainer.addChildAt(object, index);
+    } else {
+        objContainer.addChild(object);
+    }
     Entry.requestUpdate = true;
 };
 
@@ -248,8 +260,8 @@ Entry.Stage.prototype.setEntityIndex = function({ object }, index) {
     if (index === -1) {
         return;
     }
-    var selectedObjectContainer = Entry.stage.selectedObjectContainer;
-    var currentIndex = selectedObjectContainer.getChildIndex(object);
+    const selectedObjectContainer = Entry.stage.selectedObjectContainer;
+    const currentIndex = selectedObjectContainer.getChildIndex(object);
 
     if (currentIndex === -1 || currentIndex === index) {
         return;
@@ -262,13 +274,17 @@ Entry.Stage.prototype.setEntityIndex = function({ object }, index) {
  * sort Z index of objects
  */
 Entry.Stage.prototype.sortZorder = function() {
-    var objects = Entry.container.getCurrentObjects().slice(),
+    let objects = Entry.container.getCurrentObjects().slice(),
         length = objects.length,
         container = this.selectedObjectContainer,
         index = 0;
 
-    for (var i = length - 1; i >= 0; i--) {
-        var {
+    if (container) {
+        container.children.length = length;
+    }
+
+    for (let i = length - 1; i >= 0; i--) {
+        const {
             entity: { object },
         } = objects[i];
         container.setChildIndex(object, index++);
@@ -288,7 +304,7 @@ Entry.Stage.prototype.sortZorderRun = function() {
  * Initialize coordinate on canvas. It is toggle by Engine.
  */
 Entry.Stage.prototype.initCoordinator = function() {
-    let tex = GEHelper.newSpriteWithCallback(Entry.mediaFilePath + 'workspace_coordinate.png');
+    const tex = GEHelper.newSpriteWithCallback(`${Entry.mediaFilePath}workspace_coordinate.png`);
     this.coordinator = Object.assign(tex, {
         scaleX: 0.5,
         scaleY: 0.5,
@@ -316,8 +332,11 @@ Entry.Stage.prototype.toggleCoordinator = function() {
  */
 Entry.Stage.prototype.selectObject = function(object) {
     //todo
-    if (!object) this.selectedObject = null;
-    else this.selectedObject = object;
+    if (!object) {
+        this.selectedObject = null;
+    } else {
+        this.selectedObject = object;
+    }
     this.updateObject();
 };
 
@@ -341,15 +360,17 @@ Entry.Stage.prototype.updateObject = function() {
     }
     Entry.requestUpdate = true;
     this.handle.setDraggable(true);
-    if (this.editEntity) return;
-    var object = this.selectedObject;
+    if (this.editEntity) {
+        return;
+    }
+    const object = this.selectedObject;
     if (object) {
         if (object.objectType == 'textBox') {
             this.handle.toggleCenter(false);
         } else {
             this.handle.toggleCenter(true);
         }
-        var rotateMethod = object.getRotateMethod();
+        const rotateMethod = object.getRotateMethod();
         if (rotateMethod == 'free') {
             this.handle.toggleRotation(true);
             this.handle.toggleDirection(true);
@@ -370,17 +391,17 @@ Entry.Stage.prototype.updateObject = function() {
             this.handle.toggleResize(true);
         }
         this.handle.setVisible(true);
-        var entity = object.entity;
+        const entity = object.entity;
         this.handle.setWidth(entity.getScaleX() * entity.getWidth());
         this.handle.setHeight(entity.getScaleY() * entity.getHeight());
-        var regX, regY;
+        let regX, regY;
         if (entity.type == 'textBox') {
             // maybe 0.
             if (entity.getLineBreak()) {
                 regX = entity.regX * entity.scaleX;
                 regY = -entity.regY * entity.scaleY;
             } else {
-                var fontAlign = entity.getTextAlign();
+                const fontAlign = entity.getTextAlign();
                 regY = -entity.regY * entity.scaleY;
                 switch (fontAlign) {
                     case Entry.TEXT_ALIGN_LEFT:
@@ -399,7 +420,7 @@ Entry.Stage.prototype.updateObject = function() {
             regY = (entity.height / 2 - entity.regY) * entity.scaleY;
         }
 
-        var rotation = (entity.getRotation() / 180) * Math.PI;
+        const rotation = (entity.getRotation() / 180) * Math.PI;
 
         this.handle.setX(entity.getX() - regX * Math.cos(rotation) - regY * Math.sin(rotation));
         this.handle.setY(-entity.getY() - regX * Math.sin(rotation) + regY * Math.cos(rotation));
@@ -422,22 +443,26 @@ Entry.Stage.prototype.updateObject = function() {
 // handle -> object
 Entry.Stage.prototype.updateHandle = function() {
     this.editEntity = true;
-    var handle = this.handle;
-    var entity = this.selectedObject.entity;
+    const handle = this.handle;
+    const entity = this.selectedObject.entity;
     if (entity.lineBreak) {
         entity.setHeight(handle.height / entity.getScaleY());
         entity.setWidth(handle.width / entity.getScaleX());
     } else {
         if (entity.width !== 0) {
-            var scaleX = Math.abs(handle.width / entity.width);
-            if (entity.flip) scaleX *= -1;
+            let scaleX = Math.abs(handle.width / entity.width);
+            if (entity.flip) {
+                scaleX *= -1;
+            }
 
             entity.setScaleX(scaleX);
         }
 
-        if (entity.height !== 0) entity.setScaleY(handle.height / entity.height);
+        if (entity.height !== 0) {
+            entity.setScaleY(handle.height / entity.height);
+        }
     }
-    var direction = (handle.rotation / 180) * Math.PI;
+    const direction = (handle.rotation / 180) * Math.PI;
     if (entity.type == 'textBox') {
         entity.syncFont();
         var newRegX = handle.regX / entity.scaleX;
@@ -480,21 +505,21 @@ Entry.Stage.prototype.updateHandle = function() {
 };
 
 Entry.Stage.prototype.startEdit = function() {
-    var { entity } = this.selectedObject || {};
+    const { entity } = this.selectedObject || {};
     _.result(entity, 'initCommand');
 };
 
 Entry.Stage.prototype.endEdit = function() {
-    var { entity } = this.selectedObject || {};
+    const { entity } = this.selectedObject || {};
     _.result(entity, 'checkCommand');
 };
 
 Entry.Stage.prototype.initWall = function() {
-    let wall = GEHelper.newContainer('wall');
+    const wall = GEHelper.newContainer('wall');
     wall.mouseEnabled = false;
-    let tex = GEHelper.newWallTexture(Entry.mediaFilePath + 'media/bound.png');
+    const tex = GEHelper.newWallTexture(`${Entry.mediaFilePath}media/bound.png`);
     const newSide = (x, y, sx, sy) => {
-        let sp = GEHelper.newWallSprite(tex);
+        const sp = GEHelper.newWallSprite(tex);
         sp.x = x;
         sp.y = y;
         sx ? (sp.scaleX = sx) : 0;
@@ -534,12 +559,12 @@ Entry.Stage.prototype.showInputField = function() {
     Entry.requestUpdateTwice = true;
 
     function _createInputField() {
-        let scale = 1 / 1.5;
-        let posX = 202 * scale;
-        let posY = 450 * scale;
+        const scale = 1 / 1.5;
+        const posX = 202 * scale;
+        const posY = 450 * scale;
         const isWebGL = GEHelper.isWebGL;
         const classRef = isWebGL ? window.PIXICanvasInput : CanvasInput;
-        let inputField = new classRef({
+        const inputField = new classRef({
             canvas: document.getElementById('entryCanvas'),
             fontSize: 30 * scale,
             fontFamily: EntryStatic.fontFamily || 'NanumGothic',
@@ -556,7 +581,7 @@ Entry.Stage.prototype.showInputField = function() {
             y: posY,
             readonly: false,
             topPosition: true,
-            onsubmit: function() {
+            onsubmit() {
                 Entry.dispatchEvent('canvasInputComplete');
             },
         });
@@ -576,8 +601,8 @@ Entry.Stage.prototype.showInputField = function() {
 
     function _createSubmitButton() {
         const { confirm_button } = EntryStatic.images || {};
-        const path = confirm_button || Entry.mediaFilePath + 'confirm_button.png';
-        let inputSubmitButton = GEHelper.newSpriteWithCallback(path, () => {
+        const path = confirm_button || `${Entry.mediaFilePath}confirm_button.png`;
+        const inputSubmitButton = GEHelper.newSpriteWithCallback(path, () => {
             Entry.requestUpdate = true;
         });
         inputSubmitButton.mouseEnabled = true;
@@ -587,7 +612,7 @@ Entry.Stage.prototype.showInputField = function() {
         inputSubmitButton.y = 89;
         inputSubmitButton.cursor = 'pointer';
 
-        let eventType = isWebGL ? 'pointerdown' : 'mousedown';
+        const eventType = isWebGL ? 'pointerdown' : 'mousedown';
         inputSubmitButton.on(eventType, () => {
             if (!THIS.inputField._readonly) {
                 Entry.dispatchEvent('canvasInputComplete');
@@ -601,7 +626,9 @@ Entry.Stage.prototype.showInputField = function() {
  * remove inputfield from the canvas
  */
 Entry.Stage.prototype.hideInputField = function() {
-    if (!this.inputField) return;
+    if (!this.inputField) {
+        return;
+    }
 
     if (GEHelper.isWebGL) {
         this.canvas.removeChild(this.inputField.getPixiView());
@@ -618,18 +645,20 @@ Entry.Stage.prototype.hideInputField = function() {
  * init object containers
  */
 Entry.Stage.prototype.initObjectContainers = function() {
-    var scenes = Entry.scene.scenes_;
+    const scenes = Entry.scene.scenes_;
     if (!_.isEmpty(scenes)) {
-        for (var i = 0; i < scenes.length; i++) {
+        for (let i = 0; i < scenes.length; i++) {
             this.objectContainers[i] = this.createObjectContainer(scenes[i]);
         }
         this.selectedObjectContainer = this.objectContainers[0];
     } else {
-        var obj = this.createObjectContainer(Entry.scene.selectedScene);
+        const obj = this.createObjectContainer(Entry.scene.selectedScene);
         this.objectContainers.push(obj);
         this.selectedObjectContainer = obj;
     }
-    if (Entry.type !== 'invisible') this.canvas.addChild(this.selectedObjectContainer);
+    if (Entry.type !== 'invisible') {
+        this.canvas.addChild(this.selectedObjectContainer);
+    }
     this.selectObjectContainer(Entry.scene.selectedScene);
 };
 
@@ -638,14 +667,14 @@ Entry.Stage.prototype.initObjectContainers = function() {
  * @param {Entry.Scene} scene
  */
 Entry.Stage.prototype.selectObjectContainer = function(scene) {
-    var containers = this.objectContainers;
-    var canvas = this.canvas;
+    const containers = this.objectContainers;
+    const canvas = this.canvas;
 
     if (_.isEmpty(canvas) || _.isEmpty(containers)) {
         return;
     }
     GEHelper.resManager.activateScene(scene && scene.id);
-    var newContainer = this.getObjectContainerByScene(scene);
+    const newContainer = this.getObjectContainerByScene(scene);
 
     containers.forEach(canvas.removeChild.bind(canvas));
 
@@ -665,9 +694,9 @@ Entry.Stage.prototype.createObjectContainer = function(scene) {
  * @param {scene model} scene
  */
 Entry.Stage.prototype.removeObjectContainer = function(scene) {
-    var containers = this.objectContainers;
-    var objContainer = this.getObjectContainerByScene(scene);
-    var canvas = this.canvas;
+    const containers = this.objectContainers;
+    const objContainer = this.getObjectContainerByScene(scene);
+    const canvas = this.canvas;
     if (canvas) {
         canvas.removeChild(objContainer);
     }
@@ -684,14 +713,14 @@ Entry.Stage.prototype.getObjectContainerByScene = function({ id }) {
 };
 
 Entry.Stage.prototype.moveSprite = function({ shiftKey, keyCode }) {
-    var selectedObject = this.selectedObject;
+    const selectedObject = this.selectedObject;
     if (!selectedObject || !Entry.stage.focused || selectedObject.getLock()) {
         return;
     }
 
-    var distance = shiftKey ? 1 : 5;
+    const distance = shiftKey ? 1 : 5;
 
-    var entity = selectedObject.entity;
+    const entity = selectedObject.entity;
     switch (keyCode) {
         case 38: //up
             entity.setY(entity.getY() + distance);
@@ -710,7 +739,9 @@ Entry.Stage.prototype.moveSprite = function({ shiftKey, keyCode }) {
 };
 
 Entry.Stage.prototype.getBoundRect = function(e) {
-    if (!this._boundRect) return this.updateBoundRect();
+    if (!this._boundRect) {
+        return this.updateBoundRect();
+    }
     return this._boundRect;
 };
 
@@ -719,8 +750,10 @@ Entry.Stage.prototype.updateBoundRect = function(e) {
 };
 
 Entry.Stage.prototype.getDom = function(query) {
-    var key = query.shift();
-    if (key === 'canvas') return this.canvas.canvas;
+    const key = query.shift();
+    if (key === 'canvas') {
+        return this.canvas.canvas;
+    }
 };
 
 Entry.Stage.prototype.setEntitySelectable = function(value) {
@@ -728,7 +761,7 @@ Entry.Stage.prototype.setEntitySelectable = function(value) {
 };
 
 Entry.Stage.prototype.isEntitySelectable = function() {
-    return Entry.engine.isState('stop') && this._entitySelectable && !this.colorSpoid.isRunning;
+    return Entry.engine.isState('stop') && this._entitySelectable && !this.dropper.isShow;
 };
 
 Entry.Stage.prototype.destroy = function() {

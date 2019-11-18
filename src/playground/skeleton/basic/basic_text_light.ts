@@ -1,8 +1,15 @@
-Entry.skeleton.basic_text = {
+import { get as _get } from 'lodash';
+
+/**
+ * line entry 의 hardware font-light-weight noti 를 위해 만든 스켈레톤
+ */
+Entry.skeleton.basic_text_light = {
     path(blockView) {
+        const paramText = _get(blockView, ['_schema', 'params', '0', 'text'], '').match(/[\r\n]/g);
+        const textLines = paramText ? paramText.length + 1 : 1;
         let width = blockView.contentWidth;
         let height = blockView.contentHeight;
-        height = Math.max(18, height + 2);
+        height = Math.max(18, height + 2) * textLines;
         width = Math.max(0, width - height + 12);
         const halfHeight = height / 2;
         return (
@@ -11,8 +18,10 @@ Entry.skeleton.basic_text = {
         );
     },
     box(blockView) {
+        const paramText = _get(blockView, ['_schema', 'params', '0', 'text'], '').match(/[\r\n]/g);
+        const textLines = paramText ? paramText.length + 1 : 1;
         const width = blockView ? blockView.contentWidth : 5;
-        const height = blockView ? blockView.contentHeight : 18;
+        const height = (blockView ? blockView.contentHeight : 18) * textLines;
         const { skeletonOptions = {} } = blockView._schema;
         const { box = {} } = skeletonOptions;
         return Object.assign(
@@ -35,5 +44,5 @@ Entry.skeleton.basic_text = {
     movable: false,
     readOnly: true,
     nextShadow: false,
-    classes: ['basicText'],
+    classes: ['basicTextLight'],
 };

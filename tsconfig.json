@@ -8,13 +8,7 @@
         "downlevelIteration": true,
         "moduleResolution": "node",
         "lib": ["es6", "dom"],
-        "allowJs": true
-    },
-    "include": [
-        "./src/class/pixi/**/*.ts",
-        "./src/class/maxrect-packer/*.ts",
-        "./src/graphicEngine/*.ts",
-        "./src/util/*.ts",
-        "./src/test.ts"
-    ]
+        "allowJs": true,
+        "typeRoots": ["./types", "./node_modules/@types"]
+    }
 }

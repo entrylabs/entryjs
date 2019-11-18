@@ -108,23 +108,22 @@ Entry.Func.edit = function(func) {
     this.cancelEdit();
 
     this.targetFunc = func;
+    Entry.Func.isEdit = true;
+    Entry.getMainWS().blockMenu.deleteRendered('variable');
     if (this.initEditView(func.content) === false) {
+        Entry.Func.isEdit = false;
         return;
     } // edit fail
-    Entry.Func.isEdit = true;
     this.bindFuncChangeEvent(func);
     this.updateMenu();
-    setTimeout(
-        function() {
-            const schema = Entry.block[`func_${func.id}`];
-            if (schema && schema.paramsBackupEvent) {
-                schema.paramsBackupEvent.notify();
-            }
+    setTimeout(() => {
+        const schema = Entry.block[`func_${func.id}`];
+        if (schema && schema.paramsBackupEvent) {
+            schema.paramsBackupEvent.notify();
+        }
 
-            this._backupContent = func.content.stringify();
-        }.bind(this),
-        0
-    );
+        this._backupContent = func.content.stringify();
+    }, 0);
 };
 
 Entry.Func.initEditView = function(content) {
@@ -145,6 +144,7 @@ Entry.Func.initEditView = function(content) {
         }
     });
     content.board.alignThreads();
+    return true;
 };
 
 Entry.Func.endEdit = function(message) {
@@ -168,12 +168,13 @@ Entry.Func.endEdit = function(message) {
     this._backupContent = null;
 
     delete this.targetFunc;
+    Entry.Func.isEdit = false;
+    Entry.getMainWS().blockMenu.deleteRendered('variable');
     const blockSchema = Entry.block[`func_${targetFuncId}`];
     if (blockSchema && blockSchema.destroyParamsBackupEvent) {
         blockSchema.destroyParamsBackupEvent.notify();
     }
     this.updateMenu();
-    Entry.Func.isEdit = false;
 };
 
 Entry.Func.save = function() {
@@ -354,8 +355,10 @@ Entry.Func.prototype.edit = function() {
         return;
     }
     Entry.Func.isEdit = true;
+    Entry.getMainWS().blockMenu.deleteRendered('variable');
     if (!Entry.Func.svg) {
-        Entry.Func.initEditView();
+        const result = Entry.Func.initEditView();
+        Entry.Func.isEdit = result;
     } else {
         this.parentView.appendChild(this.svg);
     }

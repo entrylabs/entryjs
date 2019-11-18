@@ -28,9 +28,11 @@ Entry.EXPANSION_BLOCK.tts = {
                 const filtered = items.find((item) => item.id === id);
                 if (filtered) {
                     const instance = Entry.Utils.playSound(id, filtered.prop);
+                    instance.soundType = 'tts';
                     Entry.Utils.addSoundInstances(instance);
                     if (filtered.callback) {
-                        setTimeout(filtered.callback, instance.duration);
+                        const duration = instance.duration > 0 ? instance.duration : filtered.duration * 300;
+                        setTimeout(filtered.callback, duration);
                     }
                     return false;
                 }
@@ -144,14 +146,15 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
         const sound = tts.soundQueue.getItem(id);
         if (sound) {
             const instance = Entry.Utils.playSound(id, prop);
+            instance.soundType = 'tts';
             Entry.Utils.addSoundInstances(instance);
             if (callback) {
                 setTimeout(callback, instance.duration);
             }
         } else {
-            const src = `${Entry.EXPANSION_BLOCK.tts.api}.mp3?${toQueryString({ text: encodeURI(message), ...prop })}`;
+            const src = `${Entry.EXPANSION_BLOCK.tts.api}.mp3?${toQueryString({ text: message, ...prop })}`;
             const type = createjs.LoadQueue.SOUND;
-            tts.soundQueue.loadFile({ id, src, type, prop, callback });
+            tts.soundQueue.loadFile({ id, src, type, prop, callback, duration: message.length });
             tts.loadQueue.push(id);
         }
         return id;
@@ -318,7 +321,7 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
                 py: [
                     {
                         passTest: true,
-                        syntax: 'Entry.play_sound_and_wait(%1)',
+                        syntax: 'TTS.read_and_wait(%1)',
                     },
                 ],
             },
@@ -381,77 +384,6 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
                     },
                 ],
             },
-        },
-        read_text_wait_with_block: {
-            color: EntryStatic.colorSet.block.default.EXPANSION,
-            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/expansion_icon.png',
-                    size: 11,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'text',
-                        params: [Lang.Blocks.entry],
-                    },
-                    null,
-                ],
-                type: 'read_text_wait_with_block',
-            },
-            pyHelpDef: {
-                params: ['A&value'],
-                type: 'read_text_wait_with_block',
-            },
-            paramsKeyMap: {
-                TEXT: 0,
-            },
-            class: 'tts',
-            isNotFor: ['tts'],
-            func(sprite, script) {
-                const { result, message, hash } = checkText(script.getStringValue('TEXT', script));
-                const prop = sprite.getVoiceProp();
-                if (result) {
-                    if (!script.isPlay) {
-                        script.isPlay = true;
-                        script.playState = 1;
-                        read({
-                            message,
-                            hash,
-                            prop,
-                            callback: () => {
-                                script.playState = 0;
-                            },
-                        });
-                        return script;
-                    } else if (script.playState == 1) {
-                        return script;
-                    } else {
-                        delete script.playState;
-                        delete script.isPlay;
-                        return script.callReturn();
-                    }
-                }
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        passTest: true,
-                        syntax: 'Entry.play_sound_and_wait(%1)',
-                    },
-                ],
-            },
-        },
+        }
     };
 };

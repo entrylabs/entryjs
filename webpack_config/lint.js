@@ -1,7 +1,7 @@
 'use strict';
 
-var path = require('path');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require('path');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 
 module.exports = {
@@ -39,7 +39,6 @@ module.exports = {
                             loader: 'css-loader',
                             options: {
                                 url: false,
-                                minimize: true,
                                 sourceMap: false,
                             },
                         },
@@ -49,8 +48,9 @@ module.exports = {
                                 ident: 'postcss',
                                 plugins: () => [
                                     require('postcss-flexbugs-fixes'),
+                                    require('cssnano')({ preset: 'default' }),
                                     autoprefixer({
-                                        browsers: [
+                                        overrideBrowserslist: [
                                             '>1%',
                                             'last 4 versions',
                                             'Firefox ESR',

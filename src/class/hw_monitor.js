@@ -51,7 +51,10 @@ Entry.HWMonitor = class HardwareMonitor {
             w: [],
         };
 
-        const monitorTemplate = this._hwModule.monitorTemplate;
+        let monitorTemplate = this._hwModule.monitorTemplate;
+        if (typeof this._hwModule.monitorTemplate === 'function') {
+            monitorTemplate = this._hwModule.monitorTemplate();
+        }
 
         const imgObj = {
             href: monitorTemplate.imgPath

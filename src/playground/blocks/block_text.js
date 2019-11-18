@@ -1,3 +1,5 @@
+const { type } = Lang || {};
+const filename = type === 'ko' ? 'text_icon_ko.svg' : 'text_icon.svg';
 module.exports = {
     getBlocks() {
         return {
@@ -59,8 +61,7 @@ module.exports = {
                                     menuName: 'textBoxWithSelf',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.colorSet.arrow.default.TEXT,
-                                    converter:
-                                        Entry.block.converters.returnStringKey,
+                                    converter: Entry.block.converters.returnStringKey,
                                     codeMap: 'Entry.CodeMap.Entry.text_read[0]',
                                 },
                             ],
@@ -80,7 +81,7 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/text_icon.svg',
+                        img: `block_icon/${filename}`,
                         size: 11,
                     },
                 ],
@@ -129,7 +130,7 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/text_icon.svg',
+                        img: `block_icon/${filename}`,
                         size: 11,
                     },
                 ],
@@ -161,7 +162,7 @@ module.exports = {
                 isNotFor: ['sprite'],
                 func(sprite, script) {
                     const text = script.getStringValue('VALUE', script);
-                    sprite.setText(`${sprite.getText()  }${  text}`);
+                    sprite.setText(`${sprite.getText()}${text}`);
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.append_text(%1)'] },
@@ -178,7 +179,7 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/text_icon.svg',
+                        img: `block_icon/${filename}`,
                         size: 11,
                     },
                 ],
@@ -210,7 +211,7 @@ module.exports = {
                 isNotFor: ['sprite'],
                 func(sprite, script) {
                     const text = script.getStringValue('VALUE', script);
-                    sprite.setText(`${text  }${  sprite.getText()}`);
+                    sprite.setText(`${text}${sprite.getText()}`);
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.prepend_text(%1)'] },
@@ -223,7 +224,7 @@ module.exports = {
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/text_icon.svg',
+                        img: `block_icon/${filename}`,
                         size: 11,
                     },
                 ],

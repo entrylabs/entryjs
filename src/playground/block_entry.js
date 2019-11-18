@@ -261,6 +261,25 @@ function getBlocks() {
             },
         },
         //region hardware 하드웨어 기본
+        arduino_noti_light: {
+            skeleton: 'basic_text_light',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_noti_text_light,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'arduino_noti_light',
+            },
+            class: 'arduino_default_noti',
+            isNotFor: ['arduinoDisconnected'],
+            events: {},
+        },
         arduino_noti: {
             skeleton: 'basic_text',
             color: EntryStatic.colorSet.common.TRANSPARENT,
@@ -7716,28 +7735,24 @@ function assignBlocks() {
     Entry.block.converters = getConverters();
     Entry.block = Object.assign(Entry.block, getBlocks(), blocks.getBlocks());
     if (EntryStatic.isPracticalCourse) {
-        Object.assign(Entry.block, require('../playground/block_entry_mini').practicalCourseBlock);
+        const practicalCourseBlockModule = require('../playground/block_entry_mini');
+        Object.assign(Entry.block, practicalCourseBlockModule.practicalCourseBlock);
+        applySetLanguage(practicalCourseBlockModule);
     }
 }
 
-function setHardwareLanguage() {
-    for (const id in Entry.HARDWARE_LIST) {
-        const hw = Entry.HARDWARE_LIST[id];
-        if (!hw) {
-            continue;
-        }
-        if ('setLanguage' in hw) {
-            const hwLang = hw.setLanguage();
-            const data = hwLang[Lang.type] || hwLang[Lang.fallbackType];
-            for (const key in data) {
-                Object.assign(Lang[key], data[key]);
-            }
+function applySetLanguage(hasSetLanguageObj) {
+    if ('setLanguage' in hasSetLanguageObj) {
+        const hwLang = hasSetLanguageObj.setLanguage();
+        const data = hwLang[Lang.type] || hwLang[Lang.fallbackType];
+        for (const key in data) {
+            Object.assign(Lang[key], data[key]);
         }
     }
 }
 
 Entry.reloadBlock = function() {
-    setHardwareLanguage();
+    Object.values(Entry.HARDWARE_LIST).forEach(applySetLanguage);
     assignBlocks();
     inheritBlockSchema();
 };
