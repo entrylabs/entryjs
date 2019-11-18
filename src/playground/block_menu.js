@@ -155,13 +155,10 @@ class BlockMenu {
 
         this.svgDom = Entry.Dom(
             $(
-                `<svg id="${
-                    this._svgId
-                }" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>`
+                `<svg id="${this._svgId}" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>`
             ),
             { parent: this.blockMenuWrapper }
         );
-
         this.svgDom.mouseenter(function() {
             that._scroller && that._scroller.setOpacity(0.8);
 
@@ -811,7 +808,9 @@ class BlockMenu {
      * @param blockName {string}
      */
     addCategoryData(categoryName, blockName) {
-        const selectedCategory = this._categoryData.find((element) => element.category === categoryName);
+        const selectedCategory = this._categoryData.find(
+            (element) => element.category === categoryName
+        );
         if (selectedCategory && selectedCategory.blocks.indexOf(blockName) === -1) {
             selectedCategory.blocks.push(blockName);
         }
@@ -857,6 +856,10 @@ class BlockMenu {
         if (Entry.isMobile()) {
             this._scroller.setOpacity(0);
         }
+        if (e.which == 2) {
+            console.log('mouse wheel click disabled');
+            return;
+        }
         $(document).unbind('.blockMenu');
         delete this.dragInstance;
     };
@@ -865,21 +868,25 @@ class BlockMenu {
         if (e.preventDefault) {
             e.preventDefault();
         }
+        if (e.which == 2) {
+            console.log('mouse wheel click disabled');
+            return;
+        } else {
+            if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
+                const mouseEvent = Entry.Utils.convertMouseEvent(e);
+                if (Entry.documentMousedown) {
+                    Entry.documentMousedown.notify(mouseEvent);
+                }
+                const doc = $(document);
 
-        if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
-            const mouseEvent = Entry.Utils.convertMouseEvent(e);
-            if (Entry.documentMousedown) {
-                Entry.documentMousedown.notify(mouseEvent);
+                doc.bind('mousemove.blockMenu touchmove.blockMenu', this.onMouseMove);
+                doc.bind('mouseup.blockMenu touchend.blockMenu', this.onMouseUp);
+
+                this.dragInstance = new Entry.DragInstance({
+                    startY: mouseEvent.pageY,
+                    offsetY: mouseEvent.pageY,
+                });
             }
-            const doc = $(document);
-
-            doc.bind('mousemove.blockMenu touchmove.blockMenu', this.onMouseMove);
-            doc.bind('mouseup.blockMenu touchend.blockMenu', this.onMouseUp);
-
-            this.dragInstance = new Entry.DragInstance({
-                startY: mouseEvent.pageY,
-                offsetY: mouseEvent.pageY,
-            });
         }
     }
 
@@ -1123,15 +1130,16 @@ class BlockMenu {
             return;
         }
 
-        this._buildCategoryCodes(blocks.filter((b) => !this.checkBanClass(Entry.block[b])), HW).forEach(
-            (t) => {
-                if (shouldHide) {
-                    t[0].x = -99999;
-                }
-                this._createThread(t);
-                delete t[0].x;
+        this._buildCategoryCodes(
+            blocks.filter((b) => !this.checkBanClass(Entry.block[b])),
+            HW
+        ).forEach((t) => {
+            if (shouldHide) {
+                t[0].x = -99999;
             }
-        );
+            this._createThread(t);
+            delete t[0].x;
+        });
 
         this.hwCodeOutdated = false;
         Entry.dispatchEvent('hwCodeGenerated');

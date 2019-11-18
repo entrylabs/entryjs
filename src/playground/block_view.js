@@ -492,81 +492,84 @@ Entry.BlockView = class BlockView {
         if (e.preventDefault) {
             e.preventDefault();
         }
-
-        if (Entry.disposeEvent) {
-            Entry.disposeEvent.notify();
-        }
-
-        this.longPressTimer = null;
-
-        const board = this.getBoard();
-        if (board.workingEvent) {
-            return;
-        }
-
-        if (this.readOnly || board.viewOnly) {
-            return;
-        }
-
-        board.workingEvent = true;
-        this.setSelectedBlock(board);
-
-        //left mousedown
-        if (
-            (e.button === 0 || (e.originalEvent && e.originalEvent.touches) || e.touches) &&
-            !this._board.readOnly
-        ) {
-            const eventType = e.type;
-            let mouseEvent;
-            if (e.originalEvent && e.originalEvent.touches) {
-                mouseEvent = e.originalEvent.touches[0];
-            } else if (e.touches) {
-                mouseEvent = e.touches[0];
-            } else {
-                mouseEvent = e;
+        if (e.which == 2) {
+            console.log('mouse wheel click disabled');
+        } else {
+            if (Entry.disposeEvent) {
+                Entry.disposeEvent.notify();
             }
 
-            this.mouseDownCoordinate = {
-                x: mouseEvent.pageX,
-                y: mouseEvent.pageY,
-            };
-            const $doc = $(document);
+            this.longPressTimer = null;
 
-            if (!this.disableMouseEvent) {
-                $doc.bind('mousemove.block', this.onMouseMove);
-                document.addEventListener('touchmove', this.onMouseMove, { passive: false });
+            const board = this.getBoard();
+            if (board.workingEvent) {
+                return;
             }
-            $doc.bind('mouseup.block', this.onMouseUp);
-            document.addEventListener('touchend', this.onMouseUp);
-            this.dragInstance = new Entry.DragInstance({
-                startX: mouseEvent.pageX,
-                startY: mouseEvent.pageY,
-                offsetX: mouseEvent.pageX,
-                offsetY: mouseEvent.pageY,
-                height: 0,
-                mode: true,
-            });
-            board.set({ dragBlock: this });
-            this.addDragging();
-            this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
 
-            if (eventType === 'touchstart' || Entry.isMobile()) {
-                this.longPressTimer = setTimeout(() => {
-                    if (this.longPressTimer) {
-                        this.longPressTimer = null;
-                        this.onMouseUp();
-                        this._rightClick(e, 'longPress');
-                    }
-                }, 700);
+            if (this.readOnly || board.viewOnly) {
+                return;
             }
-        } else if (Entry.Utils.isRightButton(e)) {
-            this._rightClick(e);
-        }
 
-        if (board.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && e) {
-            document
-                .getElementsByClassName('CodeMirror')[0]
-                .dispatchEvent(Entry.Utils.createMouseEvent('dragStart', e));
+            board.workingEvent = true;
+            this.setSelectedBlock(board);
+
+            //left mousedown
+            if (
+                (e.button === 0 || (e.originalEvent && e.originalEvent.touches) || e.touches) &&
+                !this._board.readOnly
+            ) {
+                const eventType = e.type;
+                let mouseEvent;
+                if (e.originalEvent && e.originalEvent.touches) {
+                    mouseEvent = e.originalEvent.touches[0];
+                } else if (e.touches) {
+                    mouseEvent = e.touches[0];
+                } else {
+                    mouseEvent = e;
+                }
+
+                this.mouseDownCoordinate = {
+                    x: mouseEvent.pageX,
+                    y: mouseEvent.pageY,
+                };
+                const $doc = $(document);
+
+                if (!this.disableMouseEvent) {
+                    $doc.bind('mousemove.block', this.onMouseMove);
+                    document.addEventListener('touchmove', this.onMouseMove, { passive: false });
+                }
+                $doc.bind('mouseup.block', this.onMouseUp);
+                document.addEventListener('touchend', this.onMouseUp);
+                this.dragInstance = new Entry.DragInstance({
+                    startX: mouseEvent.pageX,
+                    startY: mouseEvent.pageY,
+                    offsetX: mouseEvent.pageX,
+                    offsetY: mouseEvent.pageY,
+                    height: 0,
+                    mode: true,
+                });
+                board.set({ dragBlock: this });
+                this.addDragging();
+                this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
+
+                if (eventType === 'touchstart' || Entry.isMobile()) {
+                    this.longPressTimer = setTimeout(() => {
+                        if (this.longPressTimer) {
+                            this.longPressTimer = null;
+                            this.onMouseUp();
+                            this._rightClick(e, 'longPress');
+                        }
+                    }, 700);
+                }
+            } else if (Entry.Utils.isRightButton(e)) {
+                this._rightClick(e);
+            }
+
+            if (board.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && e) {
+                document
+                    .getElementsByClassName('CodeMirror')[0]
+                    .dispatchEvent(Entry.Utils.createMouseEvent('dragStart', e));
+            }
         }
     }
 
@@ -682,24 +685,28 @@ Entry.BlockView = class BlockView {
     }
 
     onMouseUp(e) {
-        if (this.longPressTimer) {
-            clearTimeout(this.longPressTimer);
-            this.longPressTimer = null;
-        }
-        this.terminateEvent();
-        this.terminateDrag(e);
-        const board = this.getBoard();
-        if (board) {
-            board.set({ dragBlock: null });
-            delete board.workingEvent;
-        }
-        this._setHoverBlockView({ that: this });
-        Entry.GlobalSvg.remove();
-        this.mouseUpEvent.notify();
+        if (e.which == 2) {
+            console.log('mouse wheel click disabled');
+        } else {
+            if (this.longPressTimer) {
+                clearTimeout(this.longPressTimer);
+                this.longPressTimer = null;
+            }
+            this.terminateEvent();
+            this.terminateDrag(e);
+            const board = this.getBoard();
+            if (board) {
+                board.set({ dragBlock: null });
+                delete board.workingEvent;
+            }
+            this._setHoverBlockView({ that: this });
+            Entry.GlobalSvg.remove();
+            this.mouseUpEvent.notify();
 
-        delete this.isVerticalMove;
-        delete this.mouseDownCoordinate;
-        delete this.dragInstance;
+            delete this.isVerticalMove;
+            delete this.mouseDownCoordinate;
+            delete this.dragInstance;
+        }
     }
 
     vimBoardEvent(event, type, block) {
