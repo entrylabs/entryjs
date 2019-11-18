@@ -80,10 +80,6 @@ class AudioUtils {
             // 음성 인식은 websocket 을 통해서 WAV로 전송하게 되어있음.
             // 첫번째 파라미터는 프로토콜을 제외한 hostname+port 조합
             // ex)'localhost:4001'
-            const socketClient = await voiceApiConnect(null, (data) => {
-                this.result = data;
-            });
-            this._socketClient = socketClient;
             return true;
         } catch (e) {
             console.error('error occurred while init audio input', e);
@@ -107,6 +103,11 @@ class AudioUtils {
             if (this._audioContext.state === 'suspended') {
                 await this.initUserMedia();
             }
+            const socketClient = await voiceApiConnect(null, (data) => {
+                this.result = data;
+            });
+            this._socketClient = socketClient;
+
             this._audioChunks = [];
             this.isRecording = true;
 
@@ -221,15 +222,17 @@ class AudioUtils {
             }
         }
         // console.log(this._currentVolume);
-        if (this._currentVolume > 60) {
-            console.log('No MIC input for certain amount of time.');
-            clearTimeout(this._noInputStopCall);
-        }
-        // websocket 으로 서버 전송
-        const client = this._socketClient;
+        if (this.isRecording) {
+            if (this._currentVolume > 60) {
+                console.log('No MIC input for certain amount of time.');
+                clearTimeout(this._noInputStopCall);
+            }
+            // websocket 으로 서버 전송
+            const client = this._socketClient;
 
-        if (client.readyState === client.OPEN) {
-            client.send(toWav(outputBuffer));
+            if (client.readyState === client.OPEN) {
+                client.send(toWav(outputBuffer));
+            }
         }
     };
 }
