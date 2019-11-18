@@ -158,9 +158,9 @@ Entry.Pingpong_G1.blockMenuBlocks = [
     'pingpong_g1_motor_rotate',
     'pingpong_g1_rotate_servo_mortor',
     //'pingpong_g1_set_led_color',
-    'pingpong_g1_set_led_pixel',
-    'pingpong_g1_set_led_string',
-    'pingpong_g1_set_led_show',
+    'pingpong_g1_set_dot_pixel',
+    'pingpong_g1_set_dot_string',
+    'pingpong_g1_set_dot_show',
 ];
 
 Entry.Pingpong_G1.getBlocks = function() {
@@ -681,7 +681,7 @@ Entry.Pingpong_G1.getBlocks = function() {
             },
         },
 
-        pingpong_g1_set_led_pixel: {
+        pingpong_g1_set_dot_pixel: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -692,8 +692,8 @@ Entry.Pingpong_G1.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.pingpong_led_on, 1],
-                        [Lang.Blocks.pingpong_led_off, 0],
+                        [Lang.Blocks.pingpong_dot_on, 1],
+                        [Lang.Blocks.pingpong_dot_off, 0],
                     ],
                     value: 1,
                     fontSize: 11,
@@ -709,7 +709,7 @@ Entry.Pingpong_G1.getBlocks = function() {
             //events: {},
             def: {
                 params: [null, null, null],
-                type: 'pingpong_g1_set_led_pixel',
+                type: 'pingpong_g1_set_dot_pixel',
             },
             paramsKeyMap: { X: 0, Y: 1, onoff: 2 },
             class: 'Pingpong_G1_peripheral_LED',
@@ -733,7 +733,7 @@ Entry.Pingpong_G1.getBlocks = function() {
                 return script.callReturn();
             },
         },
-        pingpong_g1_set_led_string: {
+        pingpong_g1_set_dot_string: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -747,7 +747,7 @@ Entry.Pingpong_G1.getBlocks = function() {
                 },
             ],
             //events: {},
-            def: { params: [null], type: 'pingpong_g1_set_led_string' },
+            def: { params: [null], type: 'pingpong_g1_set_dot_string' },
             paramsKeyMap: { STR: 0 },
             class: 'Pingpong_G1_peripheral_LED',
             isNotFor: ['Pingpong_G1'],
@@ -774,7 +774,7 @@ Entry.Pingpong_G1.getBlocks = function() {
             },
         },
 
-        pingpong_g1_set_led_show: {
+        pingpong_g1_set_dot_show: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -787,7 +787,7 @@ Entry.Pingpong_G1.getBlocks = function() {
                 },
             ],
             //events: {},
-            def: { params: [], type: 'pingpong_g1_set_led_show' },
+            def: { params: [], type: 'pingpong_g1_set_dot_show' },
             paramsKeyMap: {},
             class: 'Pingpong_G1_peripheral_LED',
             isNotFor: ['Pingpong_G1'],
@@ -804,7 +804,7 @@ Entry.Pingpong_G1.getBlocks = function() {
         },
 
         /*
-		pingpong_g1_set_led_test: {
+		pingpong_g1_set_dot_test: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -833,7 +833,7 @@ Entry.Pingpong_G1.getBlocks = function() {
                 },
 			],
             //events: {},
-            def: { params: [null], type: 'pingpong_g1_set_led_test' },
+            def: { params: [null], type: 'pingpong_g1_set_dot_test' },
             paramsKeyMap: { CMD: 0 },
             class: 'Pingpong_G1_peripheral_LED',
             isNotFor: ['Pingpong_G1'],
@@ -886,9 +886,9 @@ Entry.Pingpong_G1.setLanguage = function() {
                 pingpong_g1_rotate_servo_mortor: '서보모터를 %1도로 설정하기 %2',
                 pingpong_g1_is_top_shape: '큐브 윗면에 %1 모양이 있는가?',
                 //pingpong_g1_set_led_color: 'LED를 %1 색으로 변경 %2',
-                pingpong_g1_set_led_pixel: 'LED X:%1 Y:%2 %3 %4',
-                pingpong_g1_set_led_string: 'LED에 문자열 %1 출력 %2',
-                pingpong_g1_set_led_show: 'LED 화면 표시 %1',
+                pingpong_g1_set_dot_pixel: '도트 X:%1 Y:%2 %3 %4',
+                pingpong_g1_set_dot_string: '도트에 문자열 %1 출력 %2',
+                pingpong_g1_set_dot_show: '도트 화면 표시 %1',
             },
             Blocks: {
                 pingpong_right: '오른쪽',
@@ -903,8 +903,8 @@ Entry.Pingpong_G1.setLanguage = function() {
 
                 pingpong_sensor_proximity: '근접',
                 pingpong_sensor_ain: '아날로그',
-                pingpong_led_on: '켜기',
-                pingpong_led_off: '끄기',
+                pingpong_dot_on: '켜기',
+                pingpong_dot_off: '끄기',
             },
         },
         en: {
@@ -920,9 +920,9 @@ Entry.Pingpong_G1.setLanguage = function() {
                 pingpong_g1_rotate_servo_mortor: 'set servo mortor to %1 degrees %2',
                 pingpong_g1_is_top_shape: '%1 shown in top view?',
                 //pingpong_g1_set_led_color: 'set led color to %1 %2',
-                pingpong_g1_set_led_pixel: 'set %3 LED X:%1 Y:%2 %4',
-                pingpong_g1_set_led_string: 'print string %1 to LED %2',
-                pingpong_g1_set_led_show: 'turn on LED %1',
+                pingpong_g1_set_dot_pixel: 'set %3 DOT X:%1 Y:%2 %4',
+                pingpong_g1_set_dot_string: 'print string %1 to DOT %2',
+                pingpong_g1_set_dot_show: 'turn on DOT %1',
             },
             Blocks: {
                 pingpong_right: 'right',
@@ -937,8 +937,8 @@ Entry.Pingpong_G1.setLanguage = function() {
 
                 pingpong_sensor_proximity: 'proximity',
                 pingpong_sensor_ain: 'ain',
-                pingpong_led_on: 'ON',
-                pingpong_led_off: 'OFF',
+                pingpong_dot_on: 'ON',
+                pingpong_dot_off: 'OFF',
             },
         },
     };
