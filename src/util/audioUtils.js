@@ -64,7 +64,7 @@ class AudioUtils {
             const biquadFilter = audioContext.createBiquadFilter();
             biquadFilter.type = 'highpass';
             biquadFilter.frequency.value = 60;
-            const scriptNode = audioContext.createScriptProcessor(2048, 1, 1);
+            const scriptNode = audioContext.createScriptProcessor(4096, 1, 1);
             const streamDest = audioContext.createMediaStreamDestination();
             const mediaRecorder = new MediaRecorder(streamDest.stream);
             // 순서대로 노드 커넥션을 맺는다.
@@ -112,32 +112,31 @@ class AudioUtils {
             this.isRecording = true;
 
             this._mediaRecorder.start();
-
-            this._socketClient.onmessage = (e) => {
-                switch (e.data) {
+            this._socketClient.on('message', (e) => {
+                switch (e) {
                     case STATUS_CODE.CONNECTED:
                         console.log('Received String: ', e.data, ' ');
                         break;
                     case STATUS_CODE.NOT_RECOGNIZED:
-                        this._socketClient.close();
+                        this._socketClient.disconnect();
                         resolve('');
                         this.stopRecord();
                         break;
                     default:
-                        const parsed = JSON.parse(e.data);
+                        const parsed = JSON.parse(e);
                         const isArray = Array.isArray(parsed);
                         if (isArray) {
-                            this._socketClient.close();
+                            this._socketClient.disconnect();
                             resolve(parsed[0]);
                             this.stopRecord();
-                        } else if (typeof e.data === 'string') {
-                            console.log('Received String: ', e.data, ' ');
+                        } else if (typeof e === 'string') {
+                            console.log('Received String: ', e, ' ');
                         } else {
-                            console.log('Received : ', e.data, ' ');
+                            console.log('Received : ', e, ' ');
                         }
                         break;
                 }
-            };
+            });
             this._properStopCall = setTimeout(this.stopRecord, recordMilliSecond);
             this._noInputStopCall = setTimeout(() => {
                 this.stopRecord();
@@ -224,7 +223,6 @@ class AudioUtils {
         // console.log(this._currentVolume);
         if (this.isRecording) {
             if (this._currentVolume > 60) {
-                console.log('No MIC input for certain amount of time.');
                 clearTimeout(this._noInputStopCall);
             }
             // websocket 으로 서버 전송
