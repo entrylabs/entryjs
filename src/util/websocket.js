@@ -1,5 +1,4 @@
-var WebSocketClient = require('websocket').w3cwebsocket;
-
+const io = require('socket.io-client');
 const GATEWAY_CONNECT_TIMEOUT = 5000;
 
 const ADDR = {
@@ -17,23 +16,16 @@ export function voiceApiConnect(addr, cb) {
             port = Number(addrToken[1]);
         }
 
-        const client = new WebSocketClient(`ws://${host}:${port}`, 'echo-protocol');
+        const client = io.connect(`ws://${host}:${port}`);
         client.onerror = function(error) {
             console.log('Connect Error: ' + JSON.stringify(error));
         };
-        client.onopen = function() {
+        client.on('open', () => {
             console.log('NSASR Voice Server Connected');
             resolve(client);
-        };
-        client.onclose = function() {
+        });
+        client.on('disconnect', () => {
             console.log('closed');
-        };
-        client.onmessage = function(e) {
-            if (typeof e.data === 'string') {
-                console.log('Received String: ', e.data, ' ');
-            } else {
-                console.log('Received : ', e.data, ' ');
-            }
-        };
+        });
     });
 }
