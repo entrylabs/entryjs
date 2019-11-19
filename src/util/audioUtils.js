@@ -11,6 +11,11 @@ const STATUS_CODE = {
     NOT_RECOGNIZED: 'NOT_RECOGNIZED',
 };
 
+const VOICE_SERVER_ADDR = {
+    host: window.location.hostname,
+    port: 4001,
+};
+
 class AudioUtils {
     get currentVolume() {
         return this._currentVolume;
@@ -103,7 +108,7 @@ class AudioUtils {
             if (this._audioContext.state === 'suspended') {
                 await this.initUserMedia();
             }
-            const socketClient = await voiceApiConnect(null, (data) => {
+            const socketClient = await voiceApiConnect(VOICE_SERVER_ADDR, (data) => {
                 this.result = data;
             });
             this._socketClient = socketClient;

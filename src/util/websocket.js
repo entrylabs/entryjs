@@ -6,15 +6,10 @@ const ADDR = {
     port: 4001,
 };
 
-export function voiceApiConnect(addr, cb) {
+export function voiceApiConnect(addr = ADDR, cb) {
     return new Promise((resolve, reject) => {
         let returned = false;
         let { host, port } = ADDR;
-        if (addr) {
-            const addrToken = addr.split(':');
-            host = addrToken[0];
-            port = Number(addrToken[1]);
-        }
 
         const client = io.connect(`ws://${host}:${port}`);
         client.onerror = function(error) {
