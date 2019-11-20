@@ -73,7 +73,7 @@ Entry.HW = class {
         } catch (e) {
             Entry.toast.alert(
                 Lang.Hw.hw_module_load_fail_title,
-                `${moduleName} ${Lang.Hw.hw_module_load_fail_desc}`,
+                `${moduleName} ${Lang.Hw.hw_module_load_fail_desc}`
             );
         }
     }
@@ -319,7 +319,7 @@ Entry.HW = class {
             Entry.toast.alert(
                 Lang.Hw.hw_module_terminaltion_title,
                 Lang.Hw.hw_module_terminaltion_desc,
-                false,
+                false
             );
         }
     }
@@ -404,8 +404,8 @@ Entry.HW = class {
                 .concat(
                     this.sendQueue.readablePorts.slice(
                         target + 1,
-                        this.sendQueue.readablePorts.length,
-                    ),
+                        this.sendQueue.readablePorts.length
+                    )
                 );
         }
     }
@@ -542,9 +542,8 @@ Entry.HW = class {
         return new Promise((resolve) => {
             const dontShowChecked = localStorage.getItem('skipNoticeHWOldVersion');
             if (!dontShowChecked) {
-                const title = '업데이트 안내';
-                const content =
-                    '보안 업데이트로 엔트리 웹버전은\n하드웨어 1.9.0 버전 이상만 지원합니다.\n이하 버전일 경우 프로그램을 업데이트 하세요.';
+                const title = Lang.Msgs.hardware_need_update_title;
+                const content = Lang.Msgs.hardware_need_update_content;
                 entrylms
                     .alert(content, title, { withDontShowAgain: true })
                     .one('click', (event, { dontShowChecked }) => {
@@ -578,7 +577,7 @@ Entry.HW = class {
             },
             runViewer(sUrl, fpCallback) {
                 this._w.document.write(
-                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`,
+                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`
                 );
                 let nCounter = 0;
                 const bNotInstalled = false;
@@ -655,7 +654,7 @@ Entry.HW = class {
                 () => {},
                 () => {
                     hw.openHardwareDownloadPopup();
-                },
+                }
             );
         }
 
