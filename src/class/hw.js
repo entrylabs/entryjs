@@ -18,12 +18,12 @@ const hardwareStatement = {
 Entry.HW = class {
     // 하드웨어 프로그램 접속용 주소 (https)
     get httpsServerAddress() {
-        return 'https://hardware.playentry.org:23518';
+        return 'https://hw.playentry.org:23518';
     }
 
     // 하드웨어 프로그램 접속용 주소 (https)
     get httpsServerAddress2() {
-        return 'https://hardware.play-entry.org:23518';
+        return 'https://hardware.playentry.org:23518';
     }
 
     // 하드웨어 프로그램 접속용 주소 (http)
