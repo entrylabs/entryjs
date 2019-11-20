@@ -88,7 +88,7 @@ Entry.Krypton0 = {
     id: '30.1',
     name: 'ABILIX Krypton 0 for School',
     url: 'http://abilix.co.kr',
-    imageName: 'Abilix_Krypton0.png',
+    imageName: 'abilix_Krypton0.png',
     title: {
         ko: '크립톤 0',
         en: 'Krypton 0 for School',
