@@ -168,13 +168,15 @@ Entry.HW = class {
     }
 
     openHardwareProgram() {
-        this._executeHardware();
+        this._alertUnderVersionUsed().then(() => {
+            this._executeHardware();
 
-        if (!this.socket || !this.socket.connected) {
-            setTimeout(() => {
-                this._initSocket();
-            }, 1000);
-        }
+            if (!this.socket || !this.socket.connected) {
+                setTimeout(() => {
+                    this._initSocket();
+                }, 1000);
+            }
+        });
     }
 
     /**
@@ -527,6 +529,34 @@ Entry.HW = class {
         } else {
             this.hwMonitor.generateView();
         }
+    }
+
+    /**
+     * 버전 공지용 함수.
+     * 1.9.0 버전으로 올라가면서 SSL 인증서 문제로 과거버전은 소켓연결에 문제가 있음.
+     * 그에 따른 조치이기 때문에 추후 유저들이 1.9.0 버전의 사용비중이 높아진다면 삭제해도 무방하다.
+     * @returns {Promise<void>}
+     * @private
+     */
+    _alertUnderVersionUsed() {
+        return new Promise((resolve) => {
+            const dontShowChecked = localStorage.getItem('skipNoticeHWOldVersion');
+            if (!dontShowChecked) {
+                const title = '업데이트 안내';
+                const content =
+                    '보안 업데이트로 엔트리 웹버전은\n하드웨어 1.9.0 버전 이상만 지원합니다.\n이하 버전일 경우 프로그램을 업데이트 하세요.';
+                entrylms
+                    .alert(content, title, { withDontShowAgain: true })
+                    .one('click', (event, { dontShowChecked }) => {
+                        if (dontShowChecked) {
+                            localStorage.setItem('skipNoticeHWOldVersion', 'true');
+                        }
+                        resolve();
+                    });
+            } else {
+                resolve();
+            }
+        });
     }
 
     _executeHardware() {
