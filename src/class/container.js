@@ -280,10 +280,12 @@ Entry.Container = class Container {
      * @param {!Array.<object model>} objectModels
      */
     setObjects(objectModels) {
-        for (const i in objectModels) {
-            const object = new Entry.EntryObject(objectModels[i]);
-            this.objects_.push(object);
-        }
+        objectModels.forEach((model) => {
+            if (model) {
+                const object = new Entry.EntryObject(model);
+                this.objects_.push(object);
+            }
+        });
         this.updateObjectsOrder();
         this.updateListView();
         Entry.variableContainer.updateViews();
