@@ -4552,8 +4552,8 @@ Lang.Msgs = {
     "expansion_behaviorConductDisaster_description": "自然災害の発生時に国民が守らなければならない基本的な行動要領（国民安全処からの提供）",
     "expansion_behaviorConductLifeSafety_description": "生活安全のため、国民が守らなければならない基本的な行動要領（国民安全処からの提供）",
     "expansion_tts_description": "nVoiceを使って色んな音声で文章を読むことができるブロックのまとめです。",
-    "hardware_need_update_title": "Entry HW update",
-    "hardware_need_update_content": "For security reason,\nEntry WS only supported upper v1.9.0\nplease update if you are using below version"
+    "hardware_need_update_title": "ハードウエア接続ソフトアップデート",
+    "hardware_need_update_content": "セキュリティアップデートに伴い、\nバージョン1.76以上をサポートしています。\nバージョンが1.76以下の場合は、\n「接続ソフトをダウンロード」から\nアップデートしてください。"
 };
 Lang.Users = {
     "auth_failed": "認証に失敗しました。",

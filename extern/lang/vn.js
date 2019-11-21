@@ -4553,7 +4553,7 @@ Lang.Msgs = {
     "expansion_behaviorConductLifeSafety_description": "It is a collection of blocks about basic behavior-guidelines that the public should follow for safty in life. (Provided by MPSS)",
     "expansion_tts_description": "It is a collection of blocks that can read text in a variety of voice using the Clova.",
     "hardware_need_update_title": "Entry HW update",
-    "hardware_need_update_content": "For security reason,\nEntry WS only supported upper v1.9.0\nplease update if you are using below version"
+    "hardware_need_update_content": "Please update to the latest version.\nEntry website only supported v1.9.0 or later.\nPlease update if you are using below version."
 };
 Lang.Users = {
     "auth_failed": "Authentication failed",
