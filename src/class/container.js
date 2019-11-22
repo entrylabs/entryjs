@@ -1027,11 +1027,6 @@ Entry.Container = class Container {
      */
     setCurrentObjects() {
         this.currentObjects_ = this.getSceneObjects();
-        if (this.currentObjects_.length) {
-            Entry.playground.hidePictureCurtain();
-        } else {
-            Entry.playground.showPictureCurtain();
-        }
     }
 
     /**

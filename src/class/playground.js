@@ -80,12 +80,6 @@ Entry.Playground = class Playground {
             this.generatePictureView(pictureView);
             this.pictureView_ = pictureView;
 
-            const pictureCurtainView = Entry.createElement('div', 'entryPictureCurtain')
-                .addClass('entryPlaygroundPictureCurtainWorkspace entryRemove')
-                .appendTo(pictureView);
-            pictureCurtainView.innerHTML = Lang.Workspace.add_object_before_edit;
-            this.pictureCurtainView_ = pictureCurtainView;
-
             const textView = Entry.createElement('div', 'entryText')
                 .addClass('entryPlaygroundTextWorkspace entryRemove')
                 .appendTo(this.view_);
@@ -2202,14 +2196,6 @@ Entry.Playground = class Playground {
                 break;
         }
         this.object.entity.setTextAlign(fontAlign);
-    }
-
-    showPictureCurtain() {
-        this.pictureCurtainView_.removeClass('entryRemove');
-    }
-
-    hidePictureCurtain() {
-        this.pictureCurtainView_.addClass('entryRemove');
     }
 
     hideBlockMenu() {
