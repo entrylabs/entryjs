@@ -83,8 +83,12 @@ Entry.Playground = class Playground {
             const pictureCurtainView = Entry.createElement('div', 'entryPictureCurtain')
                 .addClass('entryPlaygroundPictureCurtainWorkspace entryRemove')
                 .appendTo(pictureView);
-            pictureCurtainView.innerHTML = Lang.Workspace.add_object_before_edit;
             this.pictureCurtainView_ = pictureCurtainView;
+
+            const pictureCurtainText = Entry.createElement('span', 'entryPictureCurtainText')
+                .addClass('entryPlaygroundPictureCurtainWorkspaceText')
+                .appendTo(pictureCurtainView);
+            pictureCurtainText.innerHTML = Lang.Workspace.add_object_before_edit;
 
             const textView = Entry.createElement('div', 'entryText')
                 .addClass('entryPlaygroundTextWorkspace entryRemove')
