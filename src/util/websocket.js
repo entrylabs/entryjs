@@ -8,8 +8,7 @@ const ADDR = {
 
 export function voiceApiConnect(addr = ADDR, cb) {
     return new Promise((resolve, reject) => {
-        let returned = false;
-        let { host, port } = ADDR;
+        const { host, port } = ADDR;
 
         const client = io.connect(`ws://${host}:${port}`);
         client.onerror = function(error) {

@@ -40,19 +40,7 @@ class AudioUtils {
             return false;
         }
     }
-    /**
-     * 웹 오디오 노드 스트림을 정의한다.
-     * 각 스트림은 아래와 같은 역할을 한다.
-     * 추가로, 한번 init 되면 스트림은 계속 흐르는 구조이다.
-     * 그러므로 currentVolume 값은 실시간으로 변경된다.
-     *
-     * - MediaStreamSource : 오디오 인풋 데이터를 컨트롤 가능한 컨텍스트에 넣기 위한 시점
-     * - GainNode : 전체 볼륨 세기 조정
-     * - AnalyserNode : 현재 버퍼에서 진폭등의 값을 읽어와 표현 가능한 수치로 제공
-     * - ScriptProcessorNode: (deprecated) input - output 사이에서 데이터를 가져와 다양한 로직 추가가능
-     *   여기서는 analyse 된 음세기의 평균값을 도출한 후 그대로 버퍼를 다음으로 전달
-     * @returns {Promise<boolean>}
-     */
+
     async initUserMedia() {
         if (!this.isAudioSupport) {
             console.error('this browser not support input media');
@@ -241,5 +229,4 @@ class AudioUtils {
 }
 
 // 해당 클래스는 프로젝트 내 싱글인스턴스로 존재한다. Entry 네임스페이스에는 존재하지 않으므로 외부에서 사용할 수 없다.
-window.audio = new AudioUtils();
-export default window.audio;
+export default new AudioUtils();
