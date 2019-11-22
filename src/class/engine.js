@@ -252,11 +252,24 @@ Entry.Engine = class Engine {
             this.view_.appendChild(this.mouseView);
 
             Entry.addEventListener('loadComplete', () => {
-                this.runButton = Entry.Dom('div', {
-                    class: 'entryRunButtonBigMinimize',
-                    parent: $('#entryCanvasWrapper'),
-                });
-                this.runButton.bindOnClick(() => Entry.engine.toggleRun());
+                this.isLoaded = true;
+                if (Entry.soundQueue.loadComplete) {
+                    this.runButton = Entry.Dom('div', {
+                        class: 'entryRunButtonBigMinimize',
+                        parent: $('#entryCanvasWrapper'),
+                    });
+                    this.runButton.bindOnClick(() => Entry.engine.toggleRun());
+                }
+            });
+            Entry.addEventListener('soundLoaded', () => {
+                const isVisible = this.isLoaded && Entry.soundQueue.loadComplete;
+                if (isVisible) {
+                    this.runButton = Entry.Dom('div', {
+                        class: 'entryRunButtonBigMinimize',
+                        parent: $('#entryCanvasWrapper'),
+                    });
+                    this.runButton.bindOnClick(() => Entry.engine.toggleRun());
+                }
             });
         } else if (option == 'phone') {
             this.view_ = controlView;
@@ -458,6 +471,11 @@ Entry.Engine = class Engine {
      * toggle this engine state run
      */
     toggleRun(disableAchieve) {
+        const isSupportWebAudio = window.AudioContext || window.webkitAudioContext;
+        if (isSupportWebAudio && !this.isSoundInitialized) {
+            createjs.WebAudioPlugin.playEmptySound();
+            this.isSoundInitialized = true;
+        }
         const variableContainer = Entry.variableContainer;
         const container = Entry.container;
         const WS = Entry.getMainWS();

@@ -68,6 +68,7 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
 
     c[COMMAND_TYPES.funcCreate] = {
         do() {
+            Entry.Func.isEdit = false;
             Entry.getMainWS().setMode(Entry.Workspace.MODE_BOARD, 'save');
         },
         state() {
