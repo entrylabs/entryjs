@@ -2209,11 +2209,11 @@ Entry.Playground = class Playground {
     }
 
     showPictureCurtain() {
-        this.pictureCurtainView_.removeClass('entryRemove');
+        this.pictureCurtainView_ && this.pictureCurtainView_.removeClass('entryRemove');
     }
 
     hidePictureCurtain() {
-        this.pictureCurtainView_.addClass('entryRemove');
+        this.pictureCurtainView_ && this.pictureCurtainView_.addClass('entryRemove');
     }
 
     hideBlockMenu() {
