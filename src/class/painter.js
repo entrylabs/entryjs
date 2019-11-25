@@ -259,6 +259,7 @@ Entry.Painter = class Painter {
         }
     }
 
+    _keyboardUpControl(e) {}
     _keyboardPressControl(e) {}
 
     toggleFullscreen(isFullscreen) {

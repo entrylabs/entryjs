@@ -2855,19 +2855,13 @@ Lang.Menus = {
     "creamo": "creamo",
     "playcode": "playcode",
     "funboard": "funboard",
-    "byrobot_dronefighter_controller": "BYROBOT Drone Fighter controller",
-    "byrobot_dronefighter_drive": "BYROBOT Drone Fighter drive",
-    "byrobot_dronefighter_flight": "BYROBOT Drone Fighter flight",
-    "byrobot_petrone_v2_controller": "BYROBOT Petrone V2 controller",
-    "byrobot_petrone_v2_drive": "BYROBOT Petrone V2 drive",
-    "byrobot_petrone_v2_flight": "BYROBOT Petrone V2 flight",
     "truerobot": "TrueTrue",
     "bingle": "BINGLE",
     "bingles": "BINGLE · S",
     "codeino": "CODEino",
     "epor": "EPOR",
     "petrone_v2": "Petrone V2",
-    "petrone_v2_dron": "flight",
+    "petrone_v2_drone": "flight",
     "petrone_v2_car": "drive",
     "e-sensor": "E-Sensorboard",
     "e-sensorUsb": "E-Sensor board",
@@ -4557,7 +4551,9 @@ Lang.Msgs = {
     "expansion_translate_description": "It is a collection of blocks that can translate into other languages using the Papago.",
     "expansion_behaviorConductDisaster_description": "It is a collection of blocks about behavior-guidelines that the public should follow when natural disasters occur. (Provided by MPSS)",
     "expansion_behaviorConductLifeSafety_description": "It is a collection of blocks about basic behavior-guidelines that the public should follow for safty in life. (Provided by MPSS)",
-    "expansion_tts_description": "It is a collection of blocks that can read text in a variety of voice using the Clova."
+    "expansion_tts_description": "It is a collection of blocks that can read text in a variety of voice using the Clova.",
+    "hardware_need_update_title": "Entry HW update",
+    "hardware_need_update_content": "Please update to the latest version.\nEntry website only supported v1.9.0 or later.\nPlease update if you are using below version."
 };
 Lang.Users = {
     "auth_failed": "Authentication failed",
@@ -4794,6 +4790,7 @@ Lang.Workspace = {
     "painter_file": "File ▼",
     "painter_file_save": "Save",
     "painter_file_saveas": "Save as a new picture",
+    "new_picture": "New Picture",
     "painter_edit": "Edit ▼",
     "get_file": "get",
     "copy_file": "copy",
@@ -5459,12 +5456,6 @@ Lang.Category = {
 };
 Lang.Device = {
     "arduino": "arduino",
-    "byrobot_dronefighter_controller": "BYROBOT Drone Fighter controller",
-    "byrobot_dronefighter_drive": "BYROBOT Drone Fighter drive",
-    "byrobot_dronefighter_flight": "BYROBOT Drone Fighter flight",
-    "byrobot_petrone_v2_controller": "BYROBOT Petrone V2 controller",
-    "byrobot_petrone_v2_drive": "BYROBOT Petrone V2 drive",
-    "byrobot_petrone_v2_flight": "BYROBOT Petrone V2 flight",
     "hamster": "hamster",
     "roboid": "roboid",
     "turtle": "turtle",
