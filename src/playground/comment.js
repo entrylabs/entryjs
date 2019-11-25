@@ -96,6 +96,22 @@ Entry.Comment = class Comment {
         return d;
     }
 
+    get titleAreaPath() {
+        let d = '';
+        d = `M0 4 C 0 2 2 0 4 0 H${this.width - 4}`;
+        d += ` C ${this.width - 2} 0 ${this.width} 2 ${this.width} 4 `;
+        if (this.isOpened) {
+            d += `V22 H0 V4`;
+        } else if (this.block) {
+            d = 'M0 11 C 0 5 5 0 11 0 C 17 0 22 5 22 11 ';
+            d += 'C 22 17 17 22 11 22 C 5 22 0 17 0 11';
+        } else {
+            d += `V18 C ${this.width} 20 ${this.width - 2} 22 ${this.width - 4} 22 H4`;
+            d += `C 2 22 0 20 0 18 V4`;
+        }
+        return d;
+    }
+
     get titleTextAreaPath() {
         return `M22,14 H${this.width - 22}`;
     }
@@ -156,7 +172,7 @@ Entry.Comment = class Comment {
         this._resizeArrow = this._contentGroup.elem('image');
         this._resizeArea = this._contentGroup.elem('rect');
 
-        this._title = this.svgGroup.elem('rect');
+        this._title = this.svgGroup.elem('path');
         this._titleGroup = this.svgGroup.elem('g');
         this._toggleArrow = this._titleGroup.elem('image');
         this._titlePath = this._titleGroup.elem('defs').elem('path');
@@ -205,7 +221,6 @@ Entry.Comment = class Comment {
         this._title.attr({
             stroke: '#EDA913',
             fill: '#FBB315',
-            rx: '4',
         });
 
         if (this.block) {
@@ -292,11 +307,8 @@ Entry.Comment = class Comment {
         }
 
         this._title.attr({
-            x,
-            y,
-            rx,
-            width,
-            height: this.titleHeight,
+            transform: `translate(${x}, ${y})`,
+            d: this.titleAreaPath,
         });
 
         this._comment.attr({

@@ -6,6 +6,7 @@
 import SimpleBar from 'simplebar';
 import fetch from 'isomorphic-fetch';
 import xssFilters from 'xss-filters';
+
 /**
  * Block variable constructor
  * @param {variable model} variable
@@ -2473,7 +2474,7 @@ Entry.VariableContainer = class VariableContainer {
     generateListCountView(element) {
         const that = this;
         const createElement = Entry.createElement;
-        
+
         const listCount = createElement('div')
             .addClass('list_cnt')
             .appendTo(element);
@@ -2503,12 +2504,13 @@ Entry.VariableContainer = class VariableContainer {
         //List limit setting. [default value:5000, length: 4]
         let limitValue = 5000;
         let maxlength = 4;
-        
-        if(that.selected.array_ && that.selected.array_.length > 0 ){
+
+        if (that.selected.array_ && that.selected.array_.length > 0) {
             const currentLeng = that.selected.array_.length.toString().length;
             // 리스트 카운트가 5000 일떄만 설정
             maxlength = currentLeng > maxlength ? currentLeng : maxlength;
-            limitValue = that.selected.array_.length > limitValue ? that.selected.array_.length : limitValue ;
+            limitValue =
+                that.selected.array_.length > limitValue ? that.selected.array_.length : limitValue;
         }
 
         const buttonPlus = createElement('a')
@@ -2517,13 +2519,12 @@ Entry.VariableContainer = class VariableContainer {
                 const {
                     selected: { id_ },
                 } = that;
-
                 const selectedLength = Entry.variableContainer.selected.array_.length;
-                
-                if( selectedLength >= limitValue ) {
-                    Entry.do('listChangeLength', id_, ''); 
-                }else{
-                    Entry.do('listChangeLength', id_, 'plus'); 
+
+                if (selectedLength >= limitValue) {
+                    Entry.do('listChangeLength', id_, '');
+                } else {
+                    Entry.do('listChangeLength', id_, 'plus');
                 }
             })
             .appendTo(countInputBox);
@@ -2534,14 +2535,14 @@ Entry.VariableContainer = class VariableContainer {
         const countInput = createElement('input').appendTo(countInputBox);
         countInput.setAttribute('type', 'text');
         countInput.setAttribute('maxlength', maxlength);
-        
+
         countInput.onblur = function() {
             const v = that.selected;
             let value = this.value;
             value = Entry.Utils.isNumber(value) ? value : v.array_.length;
 
-            if(value >= limitValue) { 
-               value = limitValue; 
+            if (value >= limitValue) {
+                value = limitValue;
             }
 
             Entry.do('listChangeLength', v.id_, Number(value));
@@ -2602,14 +2603,17 @@ Entry.VariableContainer = class VariableContainer {
                 .appendTo(fragment).textContent = Lang.Workspace.empty_of_list;
             listValues.appendChild(fragment);
         } else {
-            const data = arr.map(({ data: value }, i) =>
-                /* html */ `
+            const data = arr.map((data, i) => {
+                let value = String(data.data).replace(/\$/g, '&#36;');
+                return `
                     <li>
                         <span class='cnt'>${i + startIndex}</span>
-                        <input value='${xssFilters.inSingleQuotedAttr(value)}' type='text' data-index='${i}'/>
+                        <input value='${xssFilters.inSingleQuotedAttr(
+                            value
+                        )}' type='text' data-index='${i}'/>
                         <a class='del' data-index='${i}'></a>
-                    </li>`.trim()
-            );
+                    </li>`.trim();
+            });
             infinityScroll.assignData(data);
             infinityScroll.show();
             $listValues.on(
@@ -2617,7 +2621,8 @@ Entry.VariableContainer = class VariableContainer {
                 'input',
                 Entry.Utils.setBlurredTimer(function() {
                     const index = this.getAttribute('data-index');
-                    Entry.do('listSetDefaultValue', list.id_, index, this.value);
+                    list.array_[index] = { data: this.value };
+                    list.updateView();
                 })
             );
             $listValues.on('focus', 'input', Entry.Utils.setFocused);
@@ -3120,29 +3125,20 @@ Entry.VariableContainer = class VariableContainer {
         if (v.getType() === type) {
             return;
         }
-
-        let newVariable;
-
         const variables = this.variables_;
         const variableJSON = v.toJSON();
-
+        variableJSON.variableType = type;
+        let newVariable = Entry.Variable.create(variableJSON);
+        variables.splice(variables.indexOf(v), 0, newVariable);
+        if (value !== undefined) {
+            variableJSON.value = value;
+        }
         if (type === 'slide') {
-            variableJSON.variableType = type;
-            newVariable = Entry.Variable.create(variableJSON);
-            variables.splice(variables.indexOf(v), 0, newVariable);
-
             if (newVariable.getValue() < 0) {
                 newVariable.setValue(0);
             } else if (newVariable.getValue() > 100) {
                 newVariable.setValue(100);
             }
-        } else if (type === 'variable') {
-            variableJSON.variableType = type;
-            if (value !== undefined) {
-                variableJSON.value = value;
-            }
-            newVariable = Entry.Variable.create(variableJSON);
-            variables.splice(variables.indexOf(v), 0, newVariable);
         }
         this.createVariableView(newVariable);
         this.removeVariable(v);
