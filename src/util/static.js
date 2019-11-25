@@ -100,6 +100,9 @@ Entry.STATIC = {
 
         funcCreate: 1004,
         funcUpdate: 1005,
+        funcCreateStart: 1001,
+        funcEditStart: 1002,
+        funcEditCancel: 1003,
 
         createComment: 1201,
         removeComment: 1202,
@@ -160,10 +163,6 @@ Entry.STATIC = {
         variableContainerClickMessageAddButton: 830,
 
         dismissModal: 900,
-
-        funcCreateStart: 1001,
-        funcEditStart: 1002,
-        funcEditCancel: 1003,
 
         playgroundClickAddExpansionBlock: 1101,
         playgroundClickAddExpansionBlockCancel: 1102,
