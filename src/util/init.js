@@ -8,6 +8,7 @@ import { Destroyer } from './destroyer/Destroyer';
 import { GEHelper } from '../graphicEngine/GEHelper';
 import Expansion from '../class/Expansion';
 import Extension from '../extensions/extension';
+
 require('./utils');
 
 /**

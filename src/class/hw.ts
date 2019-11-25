@@ -16,10 +16,10 @@ enum HardwareStatement {
 
 class Hardware implements Entry.Hardware {
     get httpsServerAddress() {
-        return 'https://hardware.playentry.org:23518';
+        return 'https://hw.playentry.org:23518';
     } // 하드웨어 프로그램 접속용 주소
     get httpsServerAddress2() {
-        return 'https://hardware.play-entry.org:23518';
+        return 'https://hardware.playentry.org:23518';
     } // legacy
     get httpServerAddress() {
         return 'http://127.0.0.1:23518';
@@ -27,11 +27,8 @@ class Hardware implements Entry.Hardware {
 
     // socketIO 및 하드웨어 커넥션용
     private readonly sessionRoomId: string | null;
+    private readonly socketConnectionRetryCount: number;
     private programConnected: boolean;
-    private socketConnectionRetryCount: number;
-    private socketIo: SocketIOClient.Socket;
-    private tlsSocketIo1: SocketIOClient.Socket;
-    private tlsSocketIo2: SocketIOClient.Socket;
     private socket: SocketIOClient.Socket; // 실제 연결된 소켓
     private socketMode: number;
 
@@ -48,6 +45,7 @@ class Hardware implements Entry.Hardware {
     // 하드웨어 설치여부 확인용
     private ieLauncher: { set: () => void };
     private popupHelper?: UnknownAny;
+    private _w: any;
 
     constructor() {
         const prevRoomId = localStorage.getItem('entryhwRoomId');
@@ -87,58 +85,6 @@ class Hardware implements Entry.Hardware {
         });
     }
 
-    _connectWebSocket(url: string, option: SocketIOClient.ConnectOpts) {
-        const socket = io(url, option);
-        socket.io.reconnectionAttempts(this.socketConnectionRetryCount);
-        socket.io.reconnectionDelayMax(1000);
-        socket.io.timeout(1000);
-        socket.on('connect', () => {
-            this._initHardware(socket);
-        });
-
-        // NOTE 뭐하는 로직인지 잘 모르겠습니다.
-        socket.on('mode', (mode: number) => {
-            if (this.socketMode === 0 && mode === 1) {
-                this._disconnectHardware();
-            }
-            this.socketMode = mode;
-        });
-
-        const messageHandler = new HardwareSocketMessageHandler(socket);
-        messageHandler.addEventListener('init', this._loadExternalHardwareBlock.bind(this));
-        messageHandler.addEventListener('state', async (statement: string, name: string) => {
-            /*
-            statement 로는 before_connect, programConnected 등 하드웨어 프로그램의 상태 전부가 오지만
-            WS 에서는 programConnected 외에 전부 socketConnected 상태로 머무르게 된다.
-             */
-            switch (statement) {
-                case 'disconnectHardware':
-                    this._disconnectHardware();
-                    break;
-                case 'connected':
-                    // init action 과 동일동작
-                    await this._loadExternalHardwareBlock(name);
-                    break;
-                default:
-                    break;
-            }
-        });
-
-        // 1.7.0 버전 이전 하드웨어 프로그램 종료로직 대응으로 남겨두어야 한다.
-        messageHandler.addEventListener('disconnect', this._disconnectHardware.bind(this));
-        messageHandler.addEventListener('data', (portData) => {
-            this.checkDevice(portData);
-            this._updatePortData(portData);
-        });
-
-        socket.on('disconnect', () => {
-            // cloud PC 연결 클릭시 순간 disconnect 되고 재연결을 시도하기 위한 로직
-            this._initSocket();
-        });
-
-        return socket;
-    }
-
     async _loadExternalHardwareBlock(moduleName: string) {
         try {
             await Entry.moduleManager.loadExternalModule(moduleName);
@@ -150,45 +96,104 @@ class Hardware implements Entry.Hardware {
         }
     }
 
+    _trySocketConnect(url: string, option: SocketIOClient.ConnectOpts) {
+        return new Promise((resolve, reject) => {
+            const socket = io(url, option);
+            socket.io.reconnectionAttempts(this.socketConnectionRetryCount);
+            socket.io.reconnectionDelayMax(1000);
+            socket.io.timeout(1000);
+            socket.on('connect', () => {
+                this._initHardware(socket);
+                socket.on('mode', (mode: number) => {
+                    if (this.socketMode === 0 && mode === 1) {
+                        this._disconnectHardware();
+                    }
+                    this.socketMode = mode;
+                });
+
+                const messageHandler = new HardwareSocketMessageHandler(socket);
+                messageHandler.addEventListener('init', this._loadExternalHardwareBlock.bind(this));
+                messageHandler.addEventListener('state', async (statement, name) => {
+                    /*
+                    statement 로는 before_connect, connected 등 하드웨어 프로그램의 상태 전부가 오지만
+                    WS 에서는 connected 외에 전부 socketConnected 상태로 머무르게 된다.
+                     */
+                    switch (statement) {
+                        case 'disconnectHardware':
+                            this._disconnectHardware();
+                            break;
+                        case 'connected':
+                            // init action 과 동일동작
+                            await this._loadExternalHardwareBlock(name);
+                            break;
+                        default:
+                            break;
+                    }
+                });
+
+                // 1.7.0 버전 이전 하드웨어 프로그램 종료로직 대응으로 남겨두어야 한다.
+                messageHandler.addEventListener('disconnect', this._disconnectHardware.bind(this));
+                messageHandler.addEventListener('data', (portData) => {
+                    this.checkDevice(portData);
+                    this._updatePortData(portData);
+                });
+
+                socket.on('disconnect', () => {
+                    // cloud PC 연결 클릭시 순간 disconnect 되고 재연결을 시도하기 위한 로직
+                    this._initSocket();
+                });
+                resolve();
+            });
+            socket.on('reconnect_failed', () => {
+                reject();
+            });
+        });
+    }
+
     _initSocket() {
         this.programConnected = false;
 
-        this.tlsSocketIo1 && this.tlsSocketIo1.removeAllListeners();
-        this.tlsSocketIo2 && this.tlsSocketIo2.removeAllListeners();
-        this.socketIo && this.socketIo.removeAllListeners();
-
         const connectHttpsWebSocket = (url: string) =>
             // TODO ajax 로 entry-hw 살아있는지 확인 후 연결시도 (TRIAL_LIMIT = ajax 로)
-            this._connectWebSocket(url, {
+            this._trySocketConnect(url, {
                 query: {
                     client: true,
                     roomId: this.sessionRoomId,
                 },
             });
 
-        if (['http:', 'file:'].indexOf(location.protocol) > -1) {
-            this.socketIo = connectHttpsWebSocket(this.httpServerAddress);
+        if (this.socket) {
+            this.socket.connect();
+        } else {
+            connectHttpsWebSocket(this.httpsServerAddress)
+                .catch(() => connectHttpsWebSocket(this.httpsServerAddress2))
+                .catch(() => {
+                    if (['http:', 'file:'].indexOf(location.protocol) > -1) {
+                        return connectHttpsWebSocket(this.httpServerAddress);
+                    }
+                })
+                .catch(() => {
+                    console.warn('All hardware socket connection failed');
+                });
         }
-        this.tlsSocketIo1 = connectHttpsWebSocket(this.httpsServerAddress);
-        this.tlsSocketIo2 = connectHttpsWebSocket(this.httpsServerAddress2);
 
         Entry.dispatchEvent('hwChanged');
     }
 
     retryConnect() {
-        this.socketConnectionRetryCount = 5;
         this._initSocket();
     }
 
-    openHarwareProgram() {
-        this.socketConnectionRetryCount = 5;
-        this._executeHardware();
+    openHardwareProgram() {
+        this._alertUnderVersionUsed().then(() => {
+            this._executeHardware();
 
-        if (!this.socket || !this.socket.connected) {
-            setTimeout(() => {
-                this._initSocket();
-            }, 1000);
-        }
+            if (!this.socket || !this.socket.connected) {
+                setTimeout(() => {
+                    this._initSocket();
+                }, 1000);
+            }
+        });
     }
 
     /**
@@ -327,9 +332,7 @@ class Hardware implements Entry.Hardware {
                 this.hwModule = undefined;
             }
 
-            this.tlsSocketIo1 && this.tlsSocketIo1.close();
-            this.tlsSocketIo2 && this.tlsSocketIo2.close();
-            this.socketIo && this.socketIo.close();
+            this.socket && this.socket.close();
             this.socket = undefined;
 
             Entry.dispatchEvent('hwChanged');
@@ -545,6 +548,36 @@ class Hardware implements Entry.Hardware {
         } else {
             this.hwMonitor.generateView();
         }
+    }
+
+    /**
+     * 버전 공지용 함수.
+     * 1.9.0 버전으로 올라가면서 SSL 인증서 문제로 과거버전은 소켓연결에 문제가 있음.
+     * 그에 따른 조치이기 때문에 추후 유저들이 1.9.0 버전의 사용비중이 높아진다면 삭제해도 무방하다.
+     * @returns {Promise<void>}
+     * @private
+     */
+    _alertUnderVersionUsed() {
+        return new Promise((resolve) => {
+            const dontShowChecked = localStorage.getItem('skipNoticeHWOldVersion');
+            if (!dontShowChecked) {
+                const title = window.Lang.Msgs.hardware_need_update_title;
+                const content = window.Lang.Msgs.hardware_need_update_content;
+                window.entrylms
+                    .alert(content, title, { withDontShowAgain: true })
+                    .one(
+                        'click',
+                        (event: any, { dontShowChecked }: { dontShowChecked: boolean }) => {
+                            if (dontShowChecked) {
+                                localStorage.setItem('skipNoticeHWOldVersion', 'true');
+                            }
+                            resolve();
+                        }
+                    );
+            } else {
+                resolve();
+            }
+        });
     }
 
     _executeHardware() {
