@@ -2519,7 +2519,6 @@ Entry.VariableContainer = class VariableContainer {
                 const {
                     selected: { id_ },
                 } = that;
-
                 const selectedLength = Entry.variableContainer.selected.array_.length;
 
                 if (selectedLength >= limitValue) {
@@ -2604,16 +2603,17 @@ Entry.VariableContainer = class VariableContainer {
                 .appendTo(fragment).textContent = Lang.Workspace.empty_of_list;
             listValues.appendChild(fragment);
         } else {
-            const data = arr.map(({ data: value }, i) =>
-                /* html */ `
+            const data = arr.map((data, i) => {
+                let value = String(data.data).replace(/\$/g, '&#36;');
+                return `
                     <li>
                         <span class='cnt'>${i + startIndex}</span>
                         <input value='${xssFilters.inSingleQuotedAttr(
-                            value.toString()
+                            value
                         )}' type='text' data-index='${i}'/>
                         <a class='del' data-index='${i}'></a>
-                    </li>`.trim()
-            );
+                    </li>`.trim();
+            });
             infinityScroll.assignData(data);
             infinityScroll.show();
             $listValues.on(
