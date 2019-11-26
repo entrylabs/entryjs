@@ -100,6 +100,8 @@ Entry.STATIC = {
 
         funcEditStart: 1001,
         funcEditEnd: 1002,
+        funcRemove: 1003,
+        funcCreate: 1004,
 
         createComment: 1201,
         removeComment: 1202,

@@ -89,4 +89,39 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
         dom: ['variableContainer', 'functionAddButton'],
         undo: 'funcEditStart',
     };
+
+    c[COMMAND_TYPES.funcRemove] = {
+        do({ id }) {
+            Entry.variableContainer.removeFunction({ id });
+        },
+        state({ id }) {
+            const func = Entry.variableContainer.getFunction(id);
+            return [func];
+        },
+        log(func) {
+            return [['funcId', func.id]];
+        },
+        validate: false,
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        dom: ['variableContainer', 'functionAddButton'],
+        undo: 'funcCreate',
+    };
+
+    c[COMMAND_TYPES.funcCreate] = {
+        do(func) {
+            Entry.variableContainer.saveFunction(func);
+            Entry.Func.registerFunction(func);
+            Entry.Func.updateMenu();
+        },
+        state({ id }) {
+            return [{ id }];
+        },
+        log(func) {
+            return [['funcId', func.id]];
+        },
+        validate: false,
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        dom: ['variableContainer', 'functionAddButton'],
+        undo: 'funcRemove',
+    };
 })(Entry.Command);
