@@ -99,7 +99,7 @@ Entry.STATIC = {
         variableContainerRemoveMessage: 808,
 
         funcEditStart: 1001,
-        funcEditCancel: 1002,
+        funcEditEnd: 1002,
 
         createComment: 1201,
         removeComment: 1202,
