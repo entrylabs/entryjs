@@ -503,11 +503,11 @@ Entry.Board = class Board {
     }
 
     cancelEdit() {
-        Entry.do('funcEditCancel');
+        Entry.do('funcEditEnd', 'cancel');
     }
 
     save() {
-        Entry.do('funcCreate');
+        Entry.do('funcEditEnd', 'save');
     }
 
     generateCodeMagnetMap() {

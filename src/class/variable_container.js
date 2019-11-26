@@ -709,7 +709,7 @@ Entry.VariableContainer = class VariableContainer {
         } else {
             this.functionAddButton_
                 .unBindOnClick()
-                .bindOnClick(() => Entry.do('funcCreateStart', Entry.generateHash()))
+                .bindOnClick(() => Entry.do('funcEditStart', Entry.generateHash()))
                 .removeClass('disabled');
         }
         listView.appendChild(this.functionAddButton_);
@@ -1108,7 +1108,7 @@ Entry.VariableContainer = class VariableContainer {
             .bindOnClick((e) => {
                 e.stopPropagation();
                 if (!Entry.isTextMode) {
-                    Entry.Func.edit(func);
+                    Entry.do('funcEditStart', func.id);
                 }
                 return this.select(func);
             })

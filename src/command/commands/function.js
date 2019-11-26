@@ -20,7 +20,7 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
             Entry.variableContainer.createFunction({ id: funcId });
         },
         state(funcId) {
-            return [getExpectedData('funcId', funcId)];
+            return [getExpectedData('funcId', funcId), 'remove'];
         },
         log(funcId) {
             return [['funcId', getExpectedData('funcId') || funcId]];
@@ -41,53 +41,52 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
     };
 
     c[COMMAND_TYPES.funcEditStart] = {
-        do(funcId) {
-            Entry.Func.edit(funcId);
+        do(id, json) {
+            const func = Entry.variableContainer.getFunction(id);
+            if (func) {
+                Entry.Func.edit(id);
+            } else {
+                Entry.variableContainer.createFunction({ id });
+            }
+            if (json) {
+                Entry.Func.targetFunc.content.load(json);
+            }
         },
-        state: returnEmptyArr,
+        state(id, json, type = 'cancel', isExist) {
+            if (type === 'save' && id && !isExist) {
+                Entry.variableContainer.removeFunction({ id });
+            }
+            return [type];
+        },
         log(funcId) {
             return [['funcId', funcId]];
         },
         validate: false,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         dom: ['variableContainer', 'functionAddButton'],
-        undo: 'funcEditCancel',
+        undo: 'funcEditEnd',
     };
 
-    c[COMMAND_TYPES.funcEditCancel] = {
-        do() {
+    c[COMMAND_TYPES.funcEditEnd] = {
+        do(type) {
             Entry.Func.isEdit = false;
-            Entry.getMainWS().setMode(Entry.Workspace.MODE_BOARD, 'cancelEdit');
+            if (type === 'save') {
+                Entry.getMainWS().setMode(Entry.Workspace.MODE_BOARD, 'save');
+            } else {
+                Entry.getMainWS().setMode(Entry.Workspace.MODE_BOARD, 'cancelEdit');
+            }
         },
-        state: returnEmptyArr,
-        log: returnEmptyArr,
+        state(type) {
+            const json = Entry.Func.targetFunc.content.toJSON();
+            const func = Entry.variableContainer.getFunction(Entry.Func.targetFunc.id);
+            return [Entry.Func.targetFunc.id, json, type, !!func];
+        },
+        log(type) {
+            return [['funcId', Entry.Func.targetFunc.id]];
+        },
+        validate: false,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
-        dom: ['playground', 'overlayBoard', 'cancelEditButton'],
-        undo: 'funcCreateStart',
-    };
-
-    c[COMMAND_TYPES.funcCreate] = {
-        do() {
-            Entry.Func.isEdit = false;
-            Entry.getMainWS().setMode(Entry.Workspace.MODE_BOARD, 'save');
-        },
-        state() {
-            return [Entry.Func.targetFunc.id];
-        },
-        log: returnEmptyArr,
-        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
-        dom: ['playground', 'overlayBoard', 'saveButton'],
-        undo: 'funcEditStart',
-    };
-
-    c[COMMAND_TYPES.funcEdit] = {
-        do() {
-            Entry.getMainWS().setMode(Entry.Workspace.MODE_BOARD, 'save');
-        },
-        state: returnEmptyArr,
-        log: returnEmptyArr,
-        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
-        dom: ['playground', 'overlayBoard', 'saveButton'],
+        dom: ['variableContainer', 'functionAddButton'],
         undo: 'funcEditStart',
     };
 })(Entry.Command);

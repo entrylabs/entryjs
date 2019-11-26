@@ -1409,7 +1409,7 @@ function getBlocks() {
                         }
                         const block = blockView.block;
                         const id = block.getFuncId();
-                        Entry.Func.edit(Entry.variableContainer.functions_[id]);
+                        Entry.do('funcEditStart', id);
                     },
                 ],
             },
