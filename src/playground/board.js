@@ -503,10 +503,12 @@ Entry.Board = class Board {
     }
 
     cancelEdit() {
+        Entry.disposeEvent.notify();
         Entry.do('funcEditEnd', 'cancel');
     }
 
     save() {
+        Entry.disposeEvent.notify();
         Entry.do('funcEditEnd', 'save');
     }
 
