@@ -1126,11 +1126,22 @@ Entry.VariableContainer = class VariableContainer {
             .bindOnClick((e) => {
                 e.stopPropagation();
                 entrylms.confirm(Lang.Workspace.will_you_delete_function).then((result) => {
+                    // 1. destroy
                     if (result === true) {
                         if (Entry.Func.targetFunc) {
                             Entry.do('funcEditEnd', 'cancel');
                         }
-                        Entry.do('funcRemove', func);
+                        const currentObjectId = Entry.playground.object.id;
+                        Entry.do('selectObject', currentObjectId);
+                        const functionType = `func_${func.id}`;
+                        Entry.container.objects_.forEach(({ id, script }) => {
+                            Entry.do('selectObject', id).isPass(true);
+                            script.getBlockList(false, functionType).forEach((b, index) => {
+                                Entry.do('destroyBlock', b).isPass(true);
+                            });
+                        });
+                        Entry.do('funcRemove', func).isPass(true);
+                        Entry.do('selectObject', currentObjectId).isPass(true);
                         this.selected = null;
                     }
                 });
