@@ -1127,20 +1127,7 @@ Entry.VariableContainer = class VariableContainer {
                 e.stopPropagation();
                 entrylms.confirm(Lang.Workspace.will_you_delete_function).then((result) => {
                     if (result === true) {
-                        if (Entry.Func.targetFunc) {
-                            Entry.do('funcEditEnd', 'cancel');
-                        }
-                        const currentObjectId = Entry.playground.object.id;
-                        Entry.do('selectObject', currentObjectId);
-                        const functionType = `func_${func.id}`;
-                        Entry.container.objects_.forEach(({ id, script }) => {
-                            Entry.do('selectObject', id).isPass(true);
-                            script.getBlockList(false, functionType).forEach((b, index) => {
-                                Entry.do('destroyBlock', b).isPass(true);
-                            });
-                        });
-                        Entry.do('funcRemove', func).isPass(true);
-                        Entry.do('selectObject', currentObjectId).isPass(true);
+                        this.destroyFunction(func);
                         this.selected = null;
                     }
                 });
@@ -1149,6 +1136,24 @@ Entry.VariableContainer = class VariableContainer {
         delButton.href = '#';
         view.nameField = editBoxInput;
         func.listElement = view;
+    }
+
+    destroyFunction(func) {
+        if (Entry.Func.targetFunc) {
+            Entry.do('funcEditEnd', 'cancel');
+        }
+        const currentObjectId = Entry.playground.object.id;
+        Entry.do('selectObject', currentObjectId);
+        const functionType = `func_${func.id}`;
+        const objects = Entry.container.getAllObjects();
+        objects.forEach(({ id, script }) => {
+            Entry.do('selectObject', id).isPass(true);
+            script.getBlockList(false, functionType).forEach((b, index) => {
+                Entry.do('destroyBlock', b).isPass(true);
+            });
+        });
+        Entry.do('funcRemove', func).isPass(true);
+        Entry.do('selectObject', currentObjectId).isPass(true);
     }
 
     /**
