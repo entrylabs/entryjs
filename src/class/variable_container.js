@@ -1126,7 +1126,6 @@ Entry.VariableContainer = class VariableContainer {
             .bindOnClick((e) => {
                 e.stopPropagation();
                 entrylms.confirm(Lang.Workspace.will_you_delete_function).then((result) => {
-                    // 1. destroy
                     if (result === true) {
                         if (Entry.Func.targetFunc) {
                             Entry.do('funcEditEnd', 'cancel');
