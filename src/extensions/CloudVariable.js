@@ -6,6 +6,7 @@ class CloudVariableExtension {
     #cvSocket = null;
     #data = null;
     #defaultData = null;
+    #isOnline = true;
 
     get data() {
         return this.#data;
@@ -13,6 +14,22 @@ class CloudVariableExtension {
 
     setServerInfo(cvServer) {
         this.cvServer = cvServer;
+    }
+
+    setOffline() {
+        if (!this.#cvSocket) {
+            return;
+        }
+        this.#cvSocket.emit('changeMode', 'offline');
+        this.#isOnline = false;
+    }
+
+    setOnline() {
+        if (!this.#cvSocket) {
+            return;
+        }
+        this.#cvSocket.emit('changeMode', 'online');
+        this.#isOnline = true;
     }
 
     async connect(cvServer) {
@@ -50,9 +67,13 @@ class CloudVariableExtension {
                     resolve();
                 }
             });
-            socket.on('welcome', (variables) => {
-                console.log('welcome');
-                console.log(variables);
+            socket.on('welcome', (variables = []) => {
+                console.log('welcome', variables);
+                if (variables.length > 0) {
+                    console.log('status', variables[0].isOnline);
+                    this.#isOnline = variables[0].isOnline;
+                }
+
                 try {
                     this.#data = new dmet(variables);
                 } catch (e) {
@@ -61,8 +82,12 @@ class CloudVariableExtension {
                 resolve();
             });
             socket.on('disconnect', (reason) => {
-                console.log('disconnect');
+                console.log('disconnect', reason);
                 this.#data = new dmet(this.#defaultData);
+                resolve();
+            });
+            socket.on('changeMode', (mode) => {
+                this.#isOnline = mode === 'online';
                 resolve();
             });
         });
@@ -131,7 +156,7 @@ class CloudVariableExtension {
 
     #run(operation) {
         return new Promise((resolve) => {
-            if (this.#cvSocket.connected) {
+            if (this.#cvSocket.connected && this.#isOnline) {
                 this.#cvSocket.emit('action', operation, (isUpdate, operation) => {
                     if (isUpdate) {
                         this.#data.exec(operation);
