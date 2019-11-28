@@ -1,63 +1,84 @@
 ﻿'use strict';
 
 import HardwareSocketMessageHandler from './hardware/hardwareSocketMessageHandler';
+import '../playground/blocks';
 
-require('../playground/blocks');
+enum HardwareModuleType {
+    builtIn = 'builtin',
+    module = 'module',
+}
 
-const hardwareModuleType = {
-    builtIn: 'builtin',
-    module: 'module',
-};
+enum HardwareStatement {
+    disconnected = 'disconnected',
+    socketConnected = 'socketConnected',
+    hardwareConnected = 'hardwareConnected',
+}
 
-const hardwareStatement = {
-    disconnected: 'disconnected',
-    socketConnected: 'socketConnected',
-    hardwareConnected: 'hardwareConnected',
-};
-
-Entry.HW = class {
-    // 하드웨어 프로그램 접속용 주소 (https)
+class Hardware implements Entry.Hardware {
     get httpsServerAddress() {
-        return 'https://hardware.playentry.org:23518';
-    }
-
-    // 하드웨어 프로그램 접속용 주소 (https)
+        return 'https://hw.playentry.org:23518';
+    } // 하드웨어 프로그램 접속용 주소
     get httpsServerAddress2() {
-        return 'https://hardware.play-entry.org:23518';
-    }
-
-    // 하드웨어 프로그램 접속용 주소 (http)
+        return 'https://hardware.playentry.org:23518';
+    } // legacy
     get httpServerAddress() {
         return 'http://127.0.0.1:23518';
-    }
+    } // http 인 오프라인 접속용 주소
+
+    // socketIO 및 하드웨어 커넥션용
+    private readonly sessionRoomId: string | null;
+    private readonly socketConnectionRetryCount: number;
+    private programConnected: boolean;
+    private socket: SocketIOClient.Socket; // 실제 연결된 소켓
+    private socketMode: number;
+
+    // entryjs 내 하드웨어모듈 통신용
+    public portData: UnknownAny;
+    public sendQueue: UnknownAny;
+
+    // 현재 연결된 모듈 컨트롤용
+    public hwModule?: Entry.HardwareModule;
+    public communicationType: string; // 'manual' || 'auto'
+    private currentDeviceKey?: string;
+    private hwModuleType: HardwareModuleType;
+    private hwMonitor?: Entry.HardwareMonitor;
+    private pending: boolean;
+
+    // 하드웨어 설치여부 확인용
+    private ieLauncher: { set: () => void };
+    private popupHelper?: UnknownAny;
+    private _w: any;
 
     constructor() {
-        this.sessionRoomId = localStorage.getItem('entryhwRoomId');
-        if (!this.sessionRoomId) {
-            this.sessionRoomId = this._createRandomRoomId();
+        const prevRoomId = localStorage.getItem('entryhwRoomId');
+        this.sessionRoomId = prevRoomId || this._createRandomRoomId();
+        if (!prevRoomId) {
             localStorage.setItem('entryhwRoomId', this.sessionRoomId);
         }
 
-        this.TRIAL_LIMIT = 2;
-        this.connected = false;
+        this.socketConnectionRetryCount = 2;
+        this.programConnected = false;
+        this.communicationType = 'auto';
+        this.pending = false;
         this.portData = {};
         this.sendQueue = {};
-        this.currentDeviceKey = null;
-        this.hwModule = null;
-        this.hwModuleType = hardwareModuleType.builtIn; // builtin, module
-        this.socketType = null;
-        this._externalSocketMessageListener = [];
+        this.hwModuleType = HardwareModuleType.builtIn;
 
-        const { options = {} } = Entry;
+        this._initHardwareObject();
+        this._addEntryEventListener();
+    }
+
+    private _initHardwareObject() {
+        const { options } = Entry;
         const { disableHardware = false } = options;
-
         this._hwPopupCreate();
         !disableHardware && this._initSocket();
+    }
 
-        Entry.addEventListener('stop', this.setZero.bind(this));
-
+    private _addEntryEventListener() {
         // hwChanged 에 걸려있는 다른 이벤트 함수와 동일선상에 두기위함
         Entry.addEventListener('hwChanged', this.refreshHardwareBlockMenu.bind(this));
+        Entry.addEventListener('stop', this.setZero.bind(this));
     }
 
     _createRandomRoomId() {
@@ -68,61 +89,30 @@ Entry.HW = class {
         });
     }
 
-    async _loadExternalHardwareBlock(moduleName) {
+    async _loadExternalHardwareBlock(moduleName: string) {
         try {
             await Entry.moduleManager.loadExternalModule(moduleName);
         } catch (e) {
             Entry.toast.alert(
-                Lang.Hw.hw_module_load_fail_title,
-                `${moduleName} ${Lang.Hw.hw_module_load_fail_desc}`,
+                window.Lang.Hw.hw_module_load_fail_title,
+                `${moduleName} ${window.Lang.Hw.hw_module_load_fail_desc}`
             );
         }
     }
 
-    _initSocket() {
-        this.connected = false;
-
-        const connectHttpsWebSocket = (url) =>
-            // TODO ajax 로 entry-hw 살아있는지 확인 후 연결시도 (TRIAL_LIMIT = ajax 로)
-            this._trySocketConnect(url, {
-                query: {
-                    client: true,
-                    roomId: this.sessionRoomId,
-                },
-            });
-
-        if (this.socket) {
-            this.socket.connect();
-        } else {
-            connectHttpsWebSocket(this.httpsServerAddress)
-                .catch(() => connectHttpsWebSocket(this.httpsServerAddress2))
-                .catch(() => {
-                    if (['http:', 'file:'].indexOf(location.protocol) > -1) {
-                        return connectHttpsWebSocket(this.httpServerAddress);
-                    }
-                })
-                .catch(() => {
-                    console.warn('All hardware socket connection failed');
-                });
-        }
-
-        Entry.dispatchEvent('hwChanged');
-    }
-
-    _trySocketConnect(url, option) {
+    _trySocketConnect(url: string, option: SocketIOClient.ConnectOpts) {
         return new Promise((resolve, reject) => {
             const socket = io(url, option);
-            socket.io.reconnectionAttempts(this.TRIAL_LIMIT);
+            socket.io.reconnectionAttempts(this.socketConnectionRetryCount);
             socket.io.reconnectionDelayMax(1000);
             socket.io.timeout(1000);
             socket.on('connect', () => {
                 this._initHardware(socket);
-                socket.on('mode', (mode) => {
-                    if (socket.mode === 0 && mode === 1) {
+                socket.on('mode', (mode: number) => {
+                    if (this.socketMode === 0 && mode === 1) {
                         this._disconnectHardware();
                     }
                     this.socketMode = mode;
-                    socket.mode = mode;
                 });
 
                 const messageHandler = new HardwareSocketMessageHandler(socket);
@@ -172,18 +162,50 @@ Entry.HW = class {
         });
     }
 
+    _initSocket() {
+        this.programConnected = false;
+
+        const connectHttpsWebSocket = (url: string) =>
+            // TODO ajax 로 entry-hw 살아있는지 확인 후 연결시도 (TRIAL_LIMIT = ajax 로)
+            this._trySocketConnect(url, {
+                query: {
+                    client: true,
+                    roomId: this.sessionRoomId,
+                },
+            });
+
+        if (this.socket) {
+            this.socket.connect();
+        } else {
+            connectHttpsWebSocket(this.httpsServerAddress)
+                .catch(() => connectHttpsWebSocket(this.httpsServerAddress2))
+                .catch(() => {
+                    if (['http:', 'file:'].indexOf(location.protocol) > -1) {
+                        return connectHttpsWebSocket(this.httpServerAddress);
+                    }
+                })
+                .catch(() => {
+                    console.warn('All hardware socket connection failed');
+                });
+        }
+
+        Entry.dispatchEvent('hwChanged');
+    }
+
     retryConnect() {
         this._initSocket();
     }
 
     openHardwareProgram() {
-        this._executeHardware();
+        this._alertUnderVersionUsed().then(() => {
+            this._executeHardware();
 
-        if (!this.socket || !this.socket.connected) {
-            setTimeout(() => {
-                this._initSocket();
-            }, 1000);
-        }
+            if (!this.socket || !this.socket.connected) {
+                setTimeout(() => {
+                    this._initSocket();
+                }, 1000);
+            }
+        });
     }
 
     /**
@@ -193,10 +215,10 @@ Entry.HW = class {
      * @param socket
      * @private
      */
-    _initHardware(socket) {
+    _initHardware(socket: SocketIOClient.Socket) {
         this.socket = socket;
-        this.connected = true;
-        console.log('Hardware Program connected'); // 하드웨어 프로그램 연결 성공, 스테이터스 변화 필요
+        this.programConnected = true;
+        console.log('Hardware Program Connected'); // 하드웨어 프로그램 연결 성공, 스테이터스 변화 필요
         Entry.dispatchEvent('hwChanged');
         if (Entry.playground && Entry.playground.object) {
             Entry.playground.setMenu(Entry.playground.object.objectType);
@@ -209,9 +231,9 @@ Entry.HW = class {
      * 현재 보여지고 있는 하드웨어 블록들을 전부 숨김처리한다.
      * @param moduleObject
      */
-    setExternalModule(moduleObject) {
+    setExternalModule(moduleObject: Entry.HardwareModule) {
         this.hwModule = moduleObject;
-        this.hwModuleType = hardwareModuleType.module;
+        this.hwModuleType = HardwareModuleType.module;
         this._banClassAllHardware();
         Entry.dispatchEvent('hwChanged');
     }
@@ -222,7 +244,8 @@ Entry.HW = class {
      * 현재 하드웨어 로드가 외부 모듈에 의한 것인 경우는 연결이 해제되어도 블록숨김을 실행하지 않는다.
      */
     refreshHardwareBlockMenu() {
-        const blockMenu = Entry.getMainWS().blockMenu;
+        const workspace = Entry.getMainWS();
+        const blockMenu = workspace && workspace.blockMenu;
 
         if (!blockMenu) {
             return;
@@ -233,8 +256,8 @@ Entry.HW = class {
             this._banClassAllHardware();
         }
 
-        const { disconnected, socketConnected, hardwareConnected } = hardwareStatement;
-        if (this.connected) {
+        const { disconnected, socketConnected, hardwareConnected } = HardwareStatement;
+        if (this.programConnected) {
             if (this.hwModule) {
                 blockMenu.unbanClass(this.hwModule.name);
                 this._setHardwareDefaultMenu(hardwareConnected);
@@ -252,17 +275,18 @@ Entry.HW = class {
 
     /**
      * 하드웨어 버튼 노출상태를 변경한다.
-     * @param statement {hardwareStatement}
+     * @param statement {HardwareStatement}
      * @private
      */
-    _setHardwareDefaultMenu(statement) {
-        const blockMenu = Entry.getMainWS().blockMenu;
+    _setHardwareDefaultMenu(statement: HardwareStatement) {
+        const workspace = Entry.getMainWS();
+        const blockMenu = workspace && workspace.blockMenu;
 
         if (!blockMenu) {
             return;
         }
 
-        const { disconnected, socketConnected, hardwareConnected } = hardwareStatement;
+        const { disconnected, socketConnected, hardwareConnected } = HardwareStatement;
 
         switch (statement) {
             case disconnected:
@@ -288,7 +312,8 @@ Entry.HW = class {
      * @private
      */
     _banClassAllHardware() {
-        const blockMenu = Entry.getMainWS().blockMenu;
+        const workspace = Entry.getMainWS();
+        const blockMenu = workspace && workspace.blockMenu;
         if (!blockMenu) {
             return;
         }
@@ -302,21 +327,20 @@ Entry.HW = class {
         Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
         this.currentDeviceKey = undefined;
         this.hwModule = undefined;
-        this._externalSocketMessageListener = [];
         Entry.dispatchEvent('hwChanged');
     }
 
     disconnectSocket() {
-        if (this.connected) {
+        if (this.programConnected) {
             Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
-            this.connected = false;
+            this.programConnected = false;
             this.currentDeviceKey = undefined;
 
             /*
             entryjs 내에 존재하던 기존 하드웨어의 경우 원래 프로세스에 따라 연결 종료시 보여주지 않는다.
             만약 외부모듈인 경우, 하드웨어가 연결종료 되더라도 블록은 남는다.
              */
-            if (this.hwModuleType === hardwareModuleType.builtIn) {
+            if (this.hwModuleType === HardwareModuleType.builtIn) {
                 this.hwModule = undefined;
             }
 
@@ -325,9 +349,9 @@ Entry.HW = class {
 
             Entry.dispatchEvent('hwChanged');
             Entry.toast.alert(
-                Lang.Hw.hw_module_terminaltion_title,
-                Lang.Hw.hw_module_terminaltion_desc,
-                false,
+                window.Lang.Hw.hw_module_terminaltion_title,
+                window.Lang.Hw.hw_module_terminaltion_desc,
+                false
             );
         }
     }
@@ -335,7 +359,7 @@ Entry.HW = class {
     /**
      * @deprecated
      */
-    setDigitalPortValue(port, value) {
+    setDigitalPortValue(port: any, value: any) {
         console.warn('this function will be deprecated. please use Entry.hw.sendQueue directly.');
         this.sendQueue[port] = value;
         this.removePortReadable(port);
@@ -344,9 +368,9 @@ Entry.HW = class {
     /**
      * @deprecated
      */
-    getAnalogPortValue(port) {
+    getAnalogPortValue(port: any) {
         console.warn('this function will be deprecated. please use Entry.hw.portData directly.');
-        if (!this.connected) {
+        if (!this.programConnected || !this.hwModule) {
             return 0;
         }
         return this.portData[`a${port}`];
@@ -355,9 +379,9 @@ Entry.HW = class {
     /**
      * @deprecated
      */
-    getDigitalPortValue(port) {
+    getDigitalPortValue(port: any) {
         console.warn('this function will be deprecated. please use Entry.hw.portData directly.');
-        if (!this.connected) {
+        if (!this.programConnected || !this.hwModule) {
             return 0;
         }
         this.setPortReadable(port);
@@ -371,7 +395,7 @@ Entry.HW = class {
     /**
      * @deprecated
      */
-    setPortReadable(port) {
+    setPortReadable(port: any) {
         console.warn('this function will be deprecated. please control port state directly.');
         if (!this.sendQueue.readablePorts) {
             this.sendQueue.readablePorts = [];
@@ -393,7 +417,7 @@ Entry.HW = class {
     /**
      * @deprecated
      */
-    removePortReadable(port) {
+    removePortReadable(port: any) {
         console.warn('this function will be deprecated. please use Entry.hw.sendQueue directly.');
         if (!this.sendQueue.readablePorts && !Array.isArray(this.sendQueue.readablePorts)) {
             return;
@@ -412,8 +436,8 @@ Entry.HW = class {
                 .concat(
                     this.sendQueue.readablePorts.slice(
                         target + 1,
-                        this.sendQueue.readablePorts.length,
-                    ),
+                        this.sendQueue.readablePorts.length
+                    )
                 );
         }
     }
@@ -429,7 +453,7 @@ Entry.HW = class {
             this.pending = true;
             this._sendSocketMessage({
                 data: JSON.stringify(this.sendQueue),
-                mode: this.socket.mode,
+                mode: this.socketMode,
                 type: 'utf8',
             });
         }
@@ -437,13 +461,13 @@ Entry.HW = class {
         this.hwModule && this.hwModule.afterSend && this.hwModule.afterSend(this.sendQueue);
     }
 
-    _sendSocketMessage(message) {
-        if (this.connected && this.socket && !this.socket.disconnected) {
+    _sendSocketMessage(message: WebSocketMessage) {
+        if (this.programConnected && this.socket && !this.socket.disconnected) {
             this.socket.emit('message', message);
         }
     }
 
-    _updatePortData(data) {
+    _updatePortData(data: HardwareMessageData) {
         this.portData = data;
         if (this.hwMonitor && Entry.propertyPanel && Entry.propertyPanel.selected === 'hw') {
             this.hwMonitor.update(this.portData, this.sendQueue);
@@ -485,16 +509,15 @@ Entry.HW = class {
      * 새로운 하드웨어의 연결인 경우는 연결 하드웨어를 치환하고 엔트리에 상태변경을 요청한다.
      * @param data
      */
-    checkDevice(data) {
+    checkDevice(data: HardwareMessageData) {
         if (data.company === undefined) {
             return;
         }
-        const key = [
-            Entry.Utils.convertIntToHex(data.company),
-            '.',
-            Entry.Utils.convertIntToHex(data.model),
-        ].join('');
-        if (key === this.currentDeviceKey) {
+        const key = `${Entry.Utils.convertIntToHex(data.company)}.${Entry.Utils.convertIntToHex(
+            data.model
+        )}`;
+
+        if (this.currentDeviceKey && key === this.currentDeviceKey) {
             if (this.hwModule && this.hwModule.dataHandler) {
                 this.hwModule.dataHandler(data);
             }
@@ -512,19 +535,19 @@ Entry.HW = class {
 
         let descMsg = '';
         if (Entry.propertyPanel && this.hwModule.monitorTemplate) {
-            descMsg = Lang.Msgs.hw_connection_success_desc;
+            descMsg = window.Lang.Msgs.hw_connection_success_desc;
             this._setHardwareMonitorTemplate();
         } else {
-            descMsg = Lang.Msgs.hw_connection_success_desc2;
+            descMsg = window.Lang.Msgs.hw_connection_success_desc2;
         }
-        Entry.toast.success(Lang.Msgs.hw_connection_success, descMsg);
+        Entry.toast.success(window.Lang.Msgs.hw_connection_success, descMsg);
     }
 
     _setHardwareMonitorTemplate() {
         if (!this.hwMonitor) {
             this.hwMonitor = new Entry.HWMonitor(this.hwModule);
         } else {
-            this.hwMonitor._hwModule = this.hwModule;
+            this.hwMonitor.setHwModule(this.hwModule);
             this.hwMonitor.initView();
         }
         Entry.propertyPanel.addMode('hw', this.hwMonitor);
@@ -542,31 +565,61 @@ Entry.HW = class {
         }
     }
 
+    /**
+     * 버전 공지용 함수.
+     * 1.9.0 버전으로 올라가면서 SSL 인증서 문제로 과거버전은 소켓연결에 문제가 있음.
+     * 그에 따른 조치이기 때문에 추후 유저들이 1.9.0 버전의 사용비중이 높아진다면 삭제해도 무방하다.
+     * @returns {Promise<void>}
+     * @private
+     */
+    _alertUnderVersionUsed() {
+        return new Promise((resolve) => {
+            const dontShowChecked = localStorage.getItem('skipNoticeHWOldVersion');
+            if (!dontShowChecked) {
+                const title = window.Lang.Msgs.hardware_need_update_title;
+                const content = window.Lang.Msgs.hardware_need_update_content;
+                window.entrylms
+                    .alert(content, title, { withDontShowAgain: true })
+                    .one(
+                        'click',
+                        (event: any, { dontShowChecked }: { dontShowChecked: boolean }) => {
+                            if (dontShowChecked) {
+                                localStorage.setItem('skipNoticeHWOldVersion', 'true');
+                            }
+                            resolve();
+                        }
+                    );
+            } else {
+                resolve();
+            }
+        });
+    }
+
     _executeHardware() {
         const hw = this;
         const executeIeCustomLauncher = {
             _bNotInstalled: false,
-            init(sUrl, fpCallback) {
+            init(sUrl: string, fpCallback: (bInstalled: boolean) => void) {
                 const width = 220;
                 const height = 225;
                 const left = window.screenLeft;
                 const top = window.screenTop;
                 const settings = `width=${width}, height=${height},  top=${top}, left=${left}`;
                 this._w = window.open('/views/hwLoading.html', 'entry_hw_launcher', settings);
-                let fnInterval = null;
-                fnInterval = setTimeout(() => {
+                let fnInterval: number = undefined;
+                fnInterval = window.setTimeout(() => {
                     executeIeCustomLauncher.runViewer(sUrl, fpCallback);
                     clearInterval(fnInterval);
                 }, 1000);
             },
-            runViewer(sUrl, fpCallback) {
+            runViewer(sUrl: string, fpCallback: (bNotInstalled: boolean) => void) {
                 this._w.document.write(
-                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`,
+                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`
                 );
                 let nCounter = 0;
                 const bNotInstalled = false;
-                let nInterval = null;
-                nInterval = setInterval(() => {
+                let nInterval: number = undefined;
+                nInterval = window.setInterval(() => {
                     try {
                         this._w.location.href;
                     } catch (e) {
@@ -576,8 +629,8 @@ Entry.HW = class {
                     if (bNotInstalled || nCounter > 10) {
                         clearInterval(nInterval);
                         let nCloseCounter = 0;
-                        let nCloseInterval = null;
-                        nCloseInterval = setInterval(() => {
+                        let nCloseInterval: number = undefined;
+                        nCloseInterval = window.setInterval(() => {
                             nCloseCounter++;
                             if (this._w.closed || nCloseCounter > 2) {
                                 clearInterval(nCloseInterval);
@@ -597,7 +650,7 @@ Entry.HW = class {
             },
         };
 
-        hw.ieLauncher = executeIeCustomLauncher;
+        this.ieLauncher = executeIeCustomLauncher;
 
         const entryHardwareUrl = `entryhw://-roomId:${this.sessionRoomId}`;
         if (navigator.userAgent.indexOf('MSIE') > 0 || navigator.userAgent.indexOf('Trident') > 0) {
@@ -605,14 +658,16 @@ Entry.HW = class {
                 executeIe(entryHardwareUrl);
             } else {
                 let ieVersion;
+                // @ts-ignore IE 에 실제 있는 프로퍼티이다.
                 if (document.documentMode > 0) {
+                    // @ts-ignore IE 에 실제 있는 프로퍼티이다.
                     ieVersion = document.documentMode;
                 } else {
                     ieVersion = navigator.userAgent.match(/(?:MSIE) ([0-9.]+)/)[1];
                 }
 
                 if (ieVersion < 9) {
-                    alert(Lang.msgs.not_support_browser);
+                    alert(window.Lang.msgs.not_support_browser);
                 } else {
                     executeIeCustomLauncher.init(entryHardwareUrl, (bInstalled) => {
                         if (bInstalled === false) {
@@ -629,26 +684,26 @@ Entry.HW = class {
         ) {
             executeChrome(entryHardwareUrl);
         } else {
-            alert(Lang.msgs.not_support_browser);
+            alert(window.Lang.msgs.not_support_browser);
         }
 
-        function executeIe(customUrl) {
+        function executeIe(customUrl: string) {
             navigator.msLaunchUri(
                 customUrl,
                 () => {},
                 () => {
                     hw.openHardwareDownloadPopup();
-                },
+                }
             );
         }
 
-        function executeFirefox(customUrl) {
+        function executeFirefox(customUrl: string) {
             const iFrame = document.createElement('iframe');
             iFrame.src = 'about:blank';
-            iFrame.style = 'display:none';
+            iFrame.setAttribute('style', 'display:none');
             document.getElementsByTagName('body')[0].appendChild(iFrame);
-            let fnTimeout = null;
-            fnTimeout = setTimeout(() => {
+            let fnTimeout: number = undefined;
+            fnTimeout = window.setTimeout(() => {
                 let isInstalled = false;
                 try {
                     iFrame.contentWindow.location.href = customUrl;
@@ -668,7 +723,7 @@ Entry.HW = class {
             }, 500);
         }
 
-        function executeChrome(customUrl) {
+        function executeChrome(customUrl: string) {
             let isInstalled = false;
             window.focus();
             $(window).one('blur', () => {
@@ -692,7 +747,7 @@ Entry.HW = class {
         if (Entry.events_.openHardWareDownloadModal) {
             Entry.dispatchEvent('openHardWareDownloadModal');
         } else {
-            Entry.hw.popupHelper.show('hwDownload', true);
+            this.popupHelper.show('hwDownload', true);
         }
     }
 
@@ -708,8 +763,8 @@ Entry.HW = class {
 
         this.popupHelper.addPopup('hwDownload', {
             type: 'confirm',
-            title: Lang.Msgs.not_install_title,
-            setPopupLayout(popup) {
+            title: window.Lang.Msgs.not_install_title,
+            setPopupLayout(popup: any) {
                 const content = Entry.Dom('div', {
                     class: 'contentArea',
                 });
@@ -741,14 +796,14 @@ Entry.HW = class {
                     classes: ['popupOkBtn', 'popupDefaultBtn'],
                     parent: content,
                 });
-                text1.text(Lang.Msgs.hw_download_text1);
-                text2.html(Lang.Msgs.hw_download_text2);
-                text3.text(Lang.Msgs.hw_download_text3);
-                text4.text(Lang.Msgs.hw_download_text4);
-                cancel.text(Lang.Buttons.cancel);
-                ok.html(Lang.Msgs.hw_download_btn);
+                (text1 as any).text(window.Lang.Msgs.hw_download_text1);
+                (text2 as any).html(window.Lang.Msgs.hw_download_text2);
+                (text3 as any).text(window.Lang.Msgs.hw_download_text3);
+                (text4 as any).text(window.Lang.Msgs.hw_download_text4);
+                (cancel as any).text(window.Lang.Buttons.cancel);
+                (ok as any).html(window.Lang.Msgs.hw_download_btn);
 
-                content.bindOnClick('.popupDefaultBtn', function(e) {
+                (content as any).bindOnClick('.popupDefaultBtn', function() {
                     const $this = $(this);
                     if ($this.hasClass('popupOkBtn')) {
                         hw.downloadConnector();
@@ -761,4 +816,7 @@ Entry.HW = class {
             },
         });
     }
-};
+}
+
+// @ts-ignore
+Entry.HW = Hardware;
