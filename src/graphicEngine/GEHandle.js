@@ -292,13 +292,15 @@ export var GEHandle = function(canvas) {
             const knob = GEHelper.newGraphic();
             knob.mouseEnabled = true;
             GEDragHelper.handleDrag(knob);
+            knob.scaleX = 1.52;
+            knob.scaleY = 1.52;
             knob.graphics
                 .ss(0.2, 0, 0)
                 .s('#d8d8d8')
                 .beginFill('#ffffff')
-                .rr(-6 * 1.52, -6 * 1.52, 12 * 1.52, 12 * 1.52, 1 * 1.52)
+                .rr(-6, -6, 12, 12, 1)
                 .beginFill(this.knobColor)
-                .rr(-3.4 * 1.52, -3.4 * 1.52, 7 * 1.52, 7 * 1.52, 1 * 1.52);
+                .rr(-3.4, -3.4, 7, 7, 1);
             knob.knobIndex = i;
             //knob.cursor = "move";
 
