@@ -192,6 +192,8 @@ export var GEHandle = function(canvas) {
 
         //rotate knob
         const rotateKnob = GEHelper.newGraphic();
+        rotateKnob.scaleX = 1.52;
+        rotateKnob.scaleY = 1.52;
         rotateKnob.mouseEnabled = true;
         GEDragHelper.handleDrag(rotateKnob);
         rotateKnob.cursor = 'crosshair';
@@ -261,7 +263,8 @@ export var GEHandle = function(canvas) {
         const centerPoint = GEHelper.newGraphic();
         centerPoint.mouseEnabled = true;
         GEDragHelper.handleDrag(centerPoint);
-
+        centerPoint.scaleX = 1.52;
+        centerPoint.scaleY = 1.52;
         centerPoint.graphics
             .ss(3.5, 2, 0)
             .s('#FFFFFF')
@@ -293,9 +296,9 @@ export var GEHandle = function(canvas) {
                 .ss(0.2, 0, 0)
                 .s('#d8d8d8')
                 .beginFill('#ffffff')
-                .rr(-6, -6, 12, 12, 1)
+                .rr(-6 * 1.52, -6 * 1.52, 12 * 1.52, 12 * 1.52, 1 * 1.52)
                 .beginFill(this.knobColor)
-                .rr(-3.4, -3.4, 7, 7, 1);
+                .rr(-3.4 * 1.52, -3.4 * 1.52, 7 * 1.52, 7 * 1.52, 1 * 1.52);
             knob.knobIndex = i;
             //knob.cursor = "move";
 
@@ -403,12 +406,12 @@ export var GEHandle = function(canvas) {
             .s('#d8d8d8')
             .mt(0, -height / 2)
             .lt(0, -height / 2)
-            .lt(0, -height / 2 - 20)
+            .lt(0, -height / 2 + 20)
             .cp()
             .beginFill(this.rotateKnobColor)
-            .dc(0, -height / 2 - 20, 8)
+            .dc(0, -height / 2, 8)
             .beginFill('#ffffff')
-            .dc(0, -height / 2 - 20, 4);
+            .dc(0, -height / 2, 4);
     };
 
     p.renderBorder = function() {
