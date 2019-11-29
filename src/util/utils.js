@@ -1510,6 +1510,9 @@ Entry.setCloneBrush = function(sprite, parentBrush) {
     }
 
     const shape = GEHelper.brushHelper.newShape(brush);
+    if (isWebGL) {
+        brush.setCurrentPath(parentBrush.getCurrentPath());
+    }
     shape.entity = sprite;
     const selectedObjectContainer = Entry.stage.selectedObjectContainer;
     selectedObjectContainer.addChildAt(shape, selectedObjectContainer.getChildIndex(sprite.object));
