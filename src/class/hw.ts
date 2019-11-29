@@ -663,11 +663,10 @@ class Hardware implements Entry.Hardware {
             }
         } else if (navigator.userAgent.indexOf('Firefox') > 0) {
             executeFirefox(entryHardwareUrl);
-        } else if (
-            navigator.userAgent.indexOf('Chrome') > 0 ||
-            navigator.userAgent.indexOf('Safari') > 0
-        ) {
+        } else if (navigator.userAgent.indexOf('Chrome') > 0) {
             executeChrome(entryHardwareUrl);
+        } else if (navigator.userAgent.indexOf('Safari') > 0) {
+            executeSafari(entryHardwareUrl);
         } else {
             alert(window.Lang.msgs.not_support_browser);
         }
@@ -725,6 +724,45 @@ class Hardware implements Entry.Hardware {
                 }
                 window.onblur = null;
             }, 3000);
+        }
+        /**
+         * safari 브라우저에서 iframe link 체크가 안되서 팝업으로 변경
+         *
+         * @param customUrl
+         */
+        function executeSafari(customUrl: string) {
+            const iFrame = document.createElement('iframe');
+            iFrame.src = 'about:blank';
+            iFrame.setAttribute('style', 'display:none');
+            document.getElementsByTagName('body')[0].appendChild(iFrame);
+            let checkPopup = '';
+
+            const hardwareApp = () => {
+                try {
+                    const width = 420;
+                    const height = 150;
+                    var screenW = screen.availWidth;
+                    var screenH = screen.availHeight;
+
+                    const left = (screenW - width) / 2;
+                    const top = (screenH - height) / 2;
+                    const settings = `width=${width}, height=${height}, top=${top}, left=${left}`;
+
+                    checkPopup = window.open('', 'popup_safari_hw', `${settings}`);
+                    checkPopup.document.write(
+                        `<div id='safari_hw'><script>window.location.href = '${customUrl}'</script></div>`
+                    );
+
+                    return true;
+                } catch (err) {
+                    console.log('err', err);
+                    return false;
+                }
+            };
+            const isRunApp = hardwareApp();
+            if (!isRunApp) {
+                hw.openHardwareDownloadPopup();
+            }
         }
     }
 
