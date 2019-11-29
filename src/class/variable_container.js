@@ -709,7 +709,7 @@ Entry.VariableContainer = class VariableContainer {
         } else {
             this.functionAddButton_
                 .unBindOnClick()
-                .bindOnClick(() => Entry.do('funcCreateStart', Entry.generateHash()))
+                .bindOnClick(() => Entry.do('funcEditStart', Entry.generateHash()))
                 .removeClass('disabled');
         }
         listView.appendChild(this.functionAddButton_);
@@ -1108,7 +1108,7 @@ Entry.VariableContainer = class VariableContainer {
             .bindOnClick((e) => {
                 e.stopPropagation();
                 if (!Entry.isTextMode) {
-                    Entry.Func.edit(func);
+                    Entry.do('funcEditStart', func.id);
                 }
                 return this.select(func);
             })
@@ -1127,7 +1127,7 @@ Entry.VariableContainer = class VariableContainer {
                 e.stopPropagation();
                 entrylms.confirm(Lang.Workspace.will_you_delete_function).then((result) => {
                     if (result === true) {
-                        this.removeFunction(func);
+                        this.destroyFunction(func);
                         this.selected = null;
                     }
                 });
@@ -1136,6 +1136,24 @@ Entry.VariableContainer = class VariableContainer {
         delButton.href = '#';
         view.nameField = editBoxInput;
         func.listElement = view;
+    }
+
+    destroyFunction(func) {
+        if (Entry.Func.targetFunc) {
+            Entry.do('funcEditEnd', 'cancel');
+        }
+        const currentObjectId = Entry.playground.object.id;
+        Entry.do('selectObject', currentObjectId);
+        const functionType = `func_${func.id}`;
+        const objects = Entry.container.getAllObjects();
+        objects.forEach(({ id, script }) => {
+            Entry.do('selectObject', id).isPass(true);
+            script.getBlockList(false, functionType).forEach((b, index) => {
+                Entry.do('destroyBlock', b).isPass(true);
+            });
+        });
+        Entry.do('funcRemove', func).isPass(true);
+        Entry.do('selectObject', currentObjectId).isPass(true);
     }
 
     /**

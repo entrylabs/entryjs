@@ -1409,7 +1409,7 @@ function getBlocks() {
                         }
                         const block = blockView.block;
                         const id = block.getFuncId();
-                        Entry.Func.edit(Entry.variableContainer.functions_[id]);
+                        Entry.do('funcEditStart', id);
                     },
                 ],
             },
@@ -1744,6 +1744,7 @@ function getBlocks() {
                     type: 'DropdownDynamic',
                     value: null,
                     menuName: 'pictures',
+                    defaultValue: 'null',
                     fontSize: 10,
                     bgColor: EntryStatic.colorSet.block.darken.LOOKS,
                     arrowColor: EntryStatic.colorSet.arrow.default.LOOKS,
