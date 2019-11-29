@@ -6,7 +6,7 @@ class CloudVariableExtension {
     #cvSocket = null;
     #data = null;
     #defaultData = null;
-    #isOnline = true;
+    #statusMap = {};
 
     get data() {
         return this.#data;
@@ -16,20 +16,28 @@ class CloudVariableExtension {
         this.cvServer = cvServer;
     }
 
-    setOffline() {
+    disable(target) {
         if (!this.#cvSocket) {
             return;
         }
-        this.#cvSocket.emit('changeMode', 'offline');
-        this.#isOnline = false;
+        if(target) {
+            this.#statusMap[target] = true;
+        } else {
+            Object.keys(this.#statusMap).forEach(key => this.#statusMap[key] = true);
+        }
+        this.#cvSocket.emit('changeMode', 'offline', target);
     }
 
-    setOnline() {
+    enable(target) {
         if (!this.#cvSocket) {
             return;
         }
-        this.#cvSocket.emit('changeMode', 'online');
-        this.#isOnline = true;
+        if(target) {
+            this.#statusMap[target] = false;
+        } else {
+            Object.keys(this.#statusMap).forEach(key => this.#statusMap[key] = false);
+        }
+        this.#cvSocket.emit('changeMode', 'online', target);
     }
 
     async connect(cvServer) {
@@ -68,12 +76,8 @@ class CloudVariableExtension {
                 }
             });
             socket.on('welcome', (variables = []) => {
-                console.log('welcome', variables);
-                if (variables.length > 0) {
-                    console.log('status', variables[0].isOnline);
-                    this.#isOnline = variables[0].isOnline;
-                }
-
+                variables.forEach(item => this.#statusMap[item.id] = !!item.isOffline);
+                console.log('welcome', variables, this.#statusMap);
                 try {
                     this.#data = new dmet(variables);
                 } catch (e) {
@@ -86,8 +90,15 @@ class CloudVariableExtension {
                 this.#data = new dmet(this.#defaultData);
                 resolve();
             });
-            socket.on('changeMode', (mode) => {
-                this.#isOnline = mode === 'online';
+            socket.on('changeMode', (mode, target) => {
+                const isOffline = mode == 'offline';
+                if (target) {
+                    this.#statusMap[target] = isOffline;
+                } else {
+                    Object.keys(this.#statusMap).forEach(key => this.#statusMap[key] = isOffline);
+                }
+
+                console.log('set', target, mode, this.#statusMap);
                 resolve();
             });
         });
@@ -156,7 +167,7 @@ class CloudVariableExtension {
 
     #run(operation) {
         return new Promise((resolve) => {
-            if (this.#cvSocket.connected && this.#isOnline) {
+            if (this.#cvSocket.connected && !this.#statusMap[operation.id]) {
                 this.#cvSocket.emit('action', operation, (isUpdate, operation) => {
                     if (isUpdate) {
                         this.#data.exec(operation);
