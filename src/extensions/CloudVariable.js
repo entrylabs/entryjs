@@ -20,11 +20,7 @@ class CloudVariableExtension {
         if (!this.#cvSocket) {
             return;
         }
-        if(target) {
-            this.#disabled[target] = true;
-        } else {
-            Object.keys(this.#disabled).forEach(key => this.#disabled[key] = true);
-        }
+        this.setStatus('offline', target);
         this.#cvSocket.emit('changeMode', 'offline', target);
     }
 
@@ -32,12 +28,17 @@ class CloudVariableExtension {
         if (!this.#cvSocket) {
             return;
         }
-        if(target) {
-            this.#disabled[target] = false;
-        } else {
-            Object.keys(this.#disabled).forEach(key => this.#disabled[key] = false);
-        }
+        this.setStatus('online', target);
         this.#cvSocket.emit('changeMode', 'online', target);
+    }
+
+    setStatus(mode = 'offline', target) {
+        const isOffline = mode === 'offline';
+        if (target) {
+            this.#disabled[target] = isOffline;
+        } else {
+            Object.keys(this.#disabled).forEach(key => this.#disabled[key] = isOffline);
+        }
     }
 
     async connect(cvServer) {
