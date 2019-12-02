@@ -726,7 +726,8 @@ class Hardware implements Entry.Hardware {
             }, 3000);
         }
         /**
-         * safari 브라우저에서 iframe link 체크가 안되서 팝업으로 변경
+         * safari 브라우저에서 ${customUrl} 인식하여 페이지 이동 처리되서 분기처리(미설치 안내팝업)
+         *
          *
          * @param customUrl
          */
@@ -735,34 +736,22 @@ class Hardware implements Entry.Hardware {
             iFrame.src = 'about:blank';
             iFrame.setAttribute('style', 'display:none');
             document.getElementsByTagName('body')[0].appendChild(iFrame);
-            let checkPopup = '';
+            let isInstalled = false;
 
-            const hardwareApp = () => {
-                try {
-                    const width = 420;
-                    const height = 150;
-                    var screenW = screen.availWidth;
-                    var screenH = screen.availHeight;
+            try {
+                iFrame.contentWindow.location.href = customUrl;
 
-                    const left = (screenW - width) / 2;
-                    const top = (screenH - height) / 2;
-                    const settings = `width=${width}, height=${height}, top=${top}, left=${left}`;
+                isInstalled = true;
+            } catch (err) {
+                isInstalled = false;
+            }
 
-                    checkPopup = window.open('', 'popup_safari_hw', `${settings}`);
-                    checkPopup.document.write(
-                        `<div id='safari_hw'><script>window.location.href = '${customUrl}'</script></div>`
-                    );
-
-                    return true;
-                } catch (err) {
-                    console.log('err', err);
-                    return false;
-                }
-            };
-            const isRunApp = hardwareApp();
-            if (!isRunApp) {
+            if (!isInstalled) {
                 hw.openHardwareDownloadPopup();
             }
+            setTimeout(() => {
+                document.getElementsByTagName('body')[0].removeChild(iFrame);
+            }, 500);
         }
     }
 
