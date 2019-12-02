@@ -20,12 +20,27 @@ export default class Expansion {
         });
     }
 
-    banExpansionBlock(blockName) {
-        Entry.do('objectRemoveExpansionBlock', blockName);
+    banExpansionBlocks(blockNames = []) {
+        const expansions = Object.keys(Entry.EXPANSION_BLOCK_LIST);
+        const blockTypes = blockNames.filter((x) => expansions.includes(x));
+        if (blockTypes.length < 1) {
+            console.warn('not exist blockType', blockTypes);
+            return;
+        }
+        const currentObjectId = Entry.playground.object.id;
+        Entry.do('selectObject', currentObjectId);
+        blockTypes.forEach((blockType) => {
+            const blocks = Entry.EXPANSION_BLOCK_LIST[blockType].getBlocks();
+            Object.keys(blocks).forEach((blockType) => {
+                Entry.Utils.removeBlockByType(blockType);
+            });
+        });
+        Entry.do('selectObject', currentObjectId).isPass(true);
+        Entry.do('objectRemoveExpansionBlocks', blockNames).isPass(true);
     }
 
-    addExpansionBlock(blockName) {
-        Entry.do('objectAddExpansionBlock', blockName);
+    addExpansionBlocks(blockNames) {
+        Entry.do('objectAddExpansionBlocks', blockNames);
     }
 
     getExpansions(blockList) {

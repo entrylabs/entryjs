@@ -505,7 +505,7 @@ class TextCodingUtil {
         if (activatedExpansionBlocks.length > 0) {
             return {
                 message: Lang.TextCoding[Entry.TextCodingError.ALERT_API_NO_SUPPORT],
-                type: 'error',
+                type: 'warning',
             };
         }
     }

@@ -1856,9 +1856,7 @@ Entry.Utils.addNewBlock = function(item) {
             variable.object = _.get(Entry, ['container', 'selectedObject', 'id'], '');
         }
     });
-    expansionBlocks.forEach((blockName) => {
-        Entry.expansion.addExpansionBlock(blockName);
-    });
+    Entry.expansion.addExpansionBlocks(expansionBlocks);
     Entry.variableContainer.appendMessages(messages);
     Entry.variableContainer.appendVariables(variables);
     Entry.variableContainer.appendFunctions(functions);
@@ -1883,9 +1881,7 @@ Entry.Utils.addNewObject = function(sprite) {
             return entrylms.alert(Lang.Menus.object_import_syntax_error);
         }
         const objectIdMap = {};
-        expansionBlocks.forEach((blockName) => {
-            Entry.expansion.addExpansionBlock(blockName);
-        });
+        Entry.expansion.addExpansionBlocks(expansionBlocks);
         variables.forEach((variable) => {
             const { object } = variable;
             if (object) {
@@ -2743,4 +2739,19 @@ Entry.Utils.getMouseEvent = function(event) {
         mouseEvent = event;
     }
     return mouseEvent;
+};
+
+Entry.Utils.removeBlockByType = function(blockType, callback) {
+    const objects = Entry.container.getAllObjects();
+    objects.forEach(({ id, script }) => {
+        Entry.do('selectObject', id).isPass(true);
+        script.getBlockList(false, blockType).forEach((b, index) => {
+            Entry.do('destroyBlock', b).isPass(true);
+        });
+    });
+    Entry.variableContainer.removeBlocksInFunctionByType(blockType);
+
+    if (callback) {
+        callback();
+    }
 };

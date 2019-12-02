@@ -81,8 +81,8 @@ Entry.STATIC = {
         objectUpdateDirectionValue: 215,
         objectUpdateRotateMethod: 216,
         entitySetModel: 217,
-        objectAddExpansionBlock: 218,
-        objectRemoveExpansionBlock: 219,
+        objectAddExpansionBlocks: 218,
+        objectRemoveExpansionBlocks: 219,
         objectReorder: 220,
 
         do: 301,
