@@ -6,7 +6,7 @@ class CloudVariableExtension {
     #cvSocket = null;
     #data = null;
     #defaultData = null;
-    #statusMap = {};
+    #disabled = {};
 
     get data() {
         return this.#data;
@@ -21,9 +21,9 @@ class CloudVariableExtension {
             return;
         }
         if(target) {
-            this.#statusMap[target] = true;
+            this.#disabled[target] = true;
         } else {
-            Object.keys(this.#statusMap).forEach(key => this.#statusMap[key] = true);
+            Object.keys(this.#disabled).forEach(key => this.#disabled[key] = true);
         }
         this.#cvSocket.emit('changeMode', 'offline', target);
     }
@@ -33,9 +33,9 @@ class CloudVariableExtension {
             return;
         }
         if(target) {
-            this.#statusMap[target] = false;
+            this.#disabled[target] = false;
         } else {
-            Object.keys(this.#statusMap).forEach(key => this.#statusMap[key] = false);
+            Object.keys(this.#disabled).forEach(key => this.#disabled[key] = false);
         }
         this.#cvSocket.emit('changeMode', 'online', target);
     }
@@ -76,8 +76,8 @@ class CloudVariableExtension {
                 }
             });
             socket.on('welcome', (variables = []) => {
-                variables.forEach(item => this.#statusMap[item.id] = !!item.isOffline);
-                console.log('welcome', variables, this.#statusMap);
+                variables.forEach(item => this.#disabled[item.id] = !!item.isOffline);
+                console.log('welcome', variables, this.#disabled);
                 try {
                     this.#data = new dmet(variables);
                 } catch (e) {
@@ -93,9 +93,9 @@ class CloudVariableExtension {
             socket.on('changeMode', (mode, target) => {
                 const isOffline = mode == 'offline';
                 if (target) {
-                    this.#statusMap[target] = isOffline;
+                    this.#disabled[target] = isOffline;
                 } else {
-                    Object.keys(this.#statusMap).forEach(key => this.#statusMap[key] = isOffline);
+                    Object.keys(this.#disabled).forEach(key => this.#disabled[key] = isOffline);
                 }
                 resolve();
             });
@@ -165,7 +165,7 @@ class CloudVariableExtension {
 
     #run(operation) {
         return new Promise((resolve) => {
-            if (this.#cvSocket.connected && !this.#statusMap[operation.id]) {
+            if (this.#cvSocket.connected && !this.#disabled[operation.id]) {
                 this.#cvSocket.emit('action', operation, (isUpdate, operation) => {
                     if (isUpdate) {
                         this.#data.exec(operation);
@@ -186,7 +186,7 @@ class CloudVariableExtension {
     }
 
     #execDmet(operation) {
-        if (!this.#statusMap[operation.id]) {
+        if (!this.#disabled[operation.id]) {
             this.#data.exec(operation);
             this.#applyValue(operation);
         }
