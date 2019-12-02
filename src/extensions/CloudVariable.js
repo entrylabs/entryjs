@@ -180,8 +180,10 @@ class CloudVariableExtension {
     }
 
     #execDmet(operation) {
-        this.#data.exec(operation);
-        this.#applyValue(operation);
+        if (!this.#statusMap[operation.id]) {
+            this.#data.exec(operation);
+            this.#applyValue(operation);
+        }
     }
 
     #applyValue(operation) {
