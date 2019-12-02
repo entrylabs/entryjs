@@ -97,8 +97,6 @@ class CloudVariableExtension {
                 } else {
                     Object.keys(this.#statusMap).forEach(key => this.#statusMap[key] = isOffline);
                 }
-
-                console.log('set', target, mode, this.#statusMap);
                 resolve();
             });
         });
@@ -188,8 +186,10 @@ class CloudVariableExtension {
     }
 
     #execDmet(operation) {
-        this.#data.exec(operation);
-        this.#applyValue(operation);
+        if (!this.#statusMap[operation.id]) {
+            this.#data.exec(operation);
+            this.#applyValue(operation);
+        }
     }
 
     #applyValue(operation) {
