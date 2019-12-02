@@ -98,55 +98,78 @@ class Hardware implements Entry.Hardware {
 
     _trySocketConnect(url: string, option: SocketIOClient.ConnectOpts) {
         return new Promise((resolve, reject) => {
-            const socket = io(url, option);
+            const socket = io.connect(url, option);
             socket.io.reconnectionAttempts(this.socketConnectionRetryCount);
             socket.io.reconnectionDelayMax(1000);
             socket.io.timeout(1000);
             socket.on('connect', () => {
-                this._initHardware(socket);
-                socket.on('mode', (mode: number) => {
-                    if (this.socketMode === 0 && mode === 1) {
-                        this._disconnectHardware();
-                    }
-                    this.socketMode = mode;
-                });
-
-                const messageHandler = new HardwareSocketMessageHandler(socket);
-                messageHandler.addEventListener('init', this._loadExternalHardwareBlock.bind(this));
-                messageHandler.addEventListener('state', async (statement, name) => {
-                    /*
-                    statement 로는 before_connect, connected 등 하드웨어 프로그램의 상태 전부가 오지만
-                    WS 에서는 connected 외에 전부 socketConnected 상태로 머무르게 된다.
-                     */
-                    switch (statement) {
-                        case 'disconnectHardware':
-                            this._disconnectHardware();
-                            break;
-                        case 'connected':
-                            // init action 과 동일동작
-                            await this._loadExternalHardwareBlock(name);
-                            break;
-                        default:
-                            break;
-                    }
-                });
-
-                // 1.7.0 버전 이전 하드웨어 프로그램 종료로직 대응으로 남겨두어야 한다.
-                messageHandler.addEventListener('disconnect', this._disconnectHardware.bind(this));
-                messageHandler.addEventListener('data', (portData) => {
-                    this.checkDevice(portData);
-                    this._updatePortData(portData);
-                });
-
-                socket.on('disconnect', () => {
-                    // cloud PC 연결 클릭시 순간 disconnect 되고 재연결을 시도하기 위한 로직
-                    this._initSocket();
-                });
+                this._handleSocketConnected(socket);
                 resolve();
             });
             socket.on('reconnect_failed', () => {
                 reject();
             });
+        });
+    }
+
+    _handleSocketConnected(socket: SocketIOClient.Socket) {
+        socket.removeAllListeners();
+        // this._initHardware(socket);
+        this.socket = socket;
+        this.programConnected = true;
+        console.log('Hardware Program Connected'); // 하드웨어 프로그램 연결 성공, 스테이터스 변화 필요
+        Entry.dispatchEvent('hwChanged');
+        if (Entry.playground && Entry.playground.object) {
+            Entry.playground.setMenu(Entry.playground.object.objectType);
+        }
+
+        socket.on('mode', (mode: number) => {
+            if (this.socketMode === 0 && mode === 1) {
+                this._disconnectHardware();
+            }
+            this.socketMode = mode;
+        });
+
+        const messageHandler = new HardwareSocketMessageHandler(socket);
+        messageHandler.addEventListener('init', this._loadExternalHardwareBlock.bind(this));
+        messageHandler.addEventListener('state', async (statement, name) => {
+            /*
+            statement 로는 before_connect, connected 등 하드웨어 프로그램의 상태 전부가 오지만
+            WS 에서는 connected 외에 전부 socketConnected 상태로 머무르게 된다.
+             */
+            switch (statement) {
+                case 'disconnectHardware':
+                    this._disconnectHardware();
+                    break;
+                case 'connected':
+                    // init action 과 동일동작
+                    await this._loadExternalHardwareBlock(name);
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        // 1.7.0 버전 이전 하드웨어 프로그램 종료로직 대응으로 남겨두어야 한다.
+        messageHandler.addEventListener('disconnect', this._disconnectHardware.bind(this));
+        messageHandler.addEventListener('data', (portData) => {
+            this.checkDevice(portData);
+            this._updatePortData(portData);
+        });
+
+        socket.on('disconnect', () => {
+            // cloud PC 연결 클릭시 순간 disconnect 되고 재연결을 시도하기 위한 로직
+            this._initSocket();
+        });
+
+        socket.on('reconnect_failed', () => {
+            this.programConnected = false;
+            Entry.dispatchEvent('hwChanged');
+        });
+
+        socket.on('connect_error', () => {
+            this.programConnected = false;
+            Entry.dispatchEvent('hwChanged');
         });
     }
 
@@ -163,6 +186,7 @@ class Hardware implements Entry.Hardware {
             });
 
         if (this.socket) {
+            this._handleSocketConnected(this.socket);
             this.socket.connect();
         } else {
             connectHttpsWebSocket(this.httpsServerAddress)
@@ -174,6 +198,8 @@ class Hardware implements Entry.Hardware {
                 })
                 .catch(() => {
                     console.warn('All hardware socket connection failed');
+                    this.programConnected = false;
+                    Entry.dispatchEvent('hwChanged');
                 });
         }
 
