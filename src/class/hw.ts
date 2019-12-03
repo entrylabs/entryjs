@@ -497,6 +497,11 @@ class Hardware implements Entry.Hardware {
     }
 
     downloadConnector() {
+        const download = Entry.events_.hwDownload;
+        //hardware download link가 n개 생겼을경우 첫번째것으로 변경
+        if (download && download.length > 1) {
+            Entry.events_.hwDownload = download.slice(0, 1);
+        }
         Entry.dispatchEvent('hwDownload', 'hardware');
     }
 
@@ -823,6 +828,7 @@ class Hardware implements Entry.Hardware {
                     hw.popupHelper.hide('hwDownload');
                 });
 
+                console.log(content);
                 popup.append(content);
             },
         });
