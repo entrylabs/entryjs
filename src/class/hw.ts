@@ -828,7 +828,6 @@ class Hardware implements Entry.Hardware {
                     hw.popupHelper.hide('hwDownload');
                 });
 
-                console.log(content);
                 popup.append(content);
             },
         });
