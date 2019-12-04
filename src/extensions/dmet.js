@@ -140,7 +140,7 @@ class dmetList {
                 };
                 break;
             case 'delete':
-                attach = {};
+                attach = { index };
                 break;
             case 'replace':
                 attach = {
@@ -218,7 +218,7 @@ class dmetList {
         }
         const oldData = this.get(key);
         if (!oldData) {
-            throw 'not found data';
+            throw { message : 'not found data' };
         }
         const oldIndex = this.getIndex(key);
         delete this.#object[oldData.key];
@@ -229,7 +229,7 @@ class dmetList {
     #replace({ key, data, newKey = generateId() }) {
         const item = this.get(key);
         if (!item) {
-            throw 'not found data';
+            throw { message : 'not found data' };
         }
         delete this.#object[item.key];
         item.key = newKey;
