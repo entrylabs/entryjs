@@ -2743,54 +2743,6 @@ Entry.VariableContainer = class VariableContainer {
         });
     }
 
-    updateCloudVariables() {
-        const projectId = Entry.projectId;
-        if (!Entry.cloudSavable || !projectId) {
-            return;
-        }
-
-        const _filterFunc = _.partial(_.result, _, 'isCloud_');
-
-        const { variables_, lists_ } = Entry.variableContainer;
-
-        const variables = variables_.reduce((acc, v) => {
-            if (_filterFunc(v)) {
-                return [...acc, v.toJSON()];
-            }
-            return acc;
-        }, []);
-
-        const lists = lists_.reduce((acc, v) => {
-            if (_filterFunc(v)) {
-                return [...acc, v.toJSON()];
-            }
-            return acc;
-        }, []);
-
-        //no variable or list to save
-        if (!variables.length && !lists.length) {
-            return;
-        }
-
-        let csrfToken = '';
-        try {
-            csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        } catch (e) {}
-
-        fetch(`/api/project/variable/${projectId}`, {
-            method: 'PUT',
-            headers: {
-                'csrf-token': csrfToken,
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                variables,
-                lists,
-            }),
-        });
-    }
-
     addRef(type, blockData) {
         const wsMode = _.result(Entry.getMainWS(), 'getMode');
         if (!this.view_ || wsMode !== Entry.Workspace.MODE_BOARD) {

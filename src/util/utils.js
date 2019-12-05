@@ -172,7 +172,6 @@ Entry.setBlock = function(objectType, XML) {
  */
 Entry.beforeUnload = function(e) {
     Entry.hw.closeConnection();
-    Entry.variableContainer.updateCloudVariables();
     if (Entry.type === 'workspace') {
         if (localStorage && Entry.interfaceState) {
             localStorage.setItem(
