@@ -2324,6 +2324,10 @@ Entry.VariableContainer = class VariableContainer {
         attrInput.onfocus = _setFocused;
         attrInput.onblur = _setBlurredTimer(function() {
             const v = that.selected;
+            if (!v) {
+                console.error('error: not selected');
+                return;
+            }
             Entry.do('variableSetDefaultValue', v.id_, this.value);
         });
         element.initValueInput = attrInput;
