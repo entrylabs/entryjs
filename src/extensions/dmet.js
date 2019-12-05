@@ -250,6 +250,7 @@ class dmetVariable {
     #key = generateId();
     #info = {};
     #value = '';
+    valueType = 'variable';
 
     get value() {
         return this.#value;
@@ -264,7 +265,7 @@ class dmetVariable {
     }
 
     get variableType() {
-        return 'variable';
+        return this.valueType;
     }
 
     toJSON() {
@@ -275,7 +276,7 @@ class dmetVariable {
             key: this.#key,
             value: this.value,
             isDmet: true,
-            variableType: 'variable',
+            variableType: this.valueType,
         };
     }
 
@@ -316,7 +317,7 @@ class dmetVariable {
                 return {
                     _id: this._id,
                     id: this.#id,
-                    variableType: 'variable',
+                    variableType: this.valueType,
                     type,
                     value,
                 };
@@ -329,6 +330,13 @@ class dmetVariable {
             case 'set':
                 return this.#set(operation);
         }
+    }
+}
+
+class dmetSlideVariable extends dmetVariable {
+    constructor(variable, id) {
+        super(variable, id);
+        this.valueType = 'slide';
     }
 }
 
@@ -385,6 +393,9 @@ class dmet {
                 if (variableType === 'variable') {
                     const result = new dmetVariable(variable);
                     this.#variable[result.id] = result;
+                } else if (variableType === 'slide') {
+                    const result = new dmetSlideVariable(variable);
+                    this.#variable[result.id] = result;
                 } else if (variableType === 'list') {
                     const result = new dmetList(variable);
                     this.#list[result.id] = result;
@@ -405,6 +416,8 @@ class dmet {
         switch (variableType) {
             case 'variable':
                 return this.#variable[id];
+            case 'slide':
+                return this.#variable[id];
             case 'list':
                 return this.#list[id];
             case 'default':
@@ -419,6 +432,8 @@ class dmet {
         }
         if (variableType === 'variable') {
             this.#variable[id] = new dmetVariable(object);
+        } else if (variableType === 'slide') {
+            this.#variable[id] = new dmetSlideVariable(object);
         } else if (variableType === 'list') {
             this.#list[id] = new dmetList(object);
         }
@@ -444,6 +459,8 @@ class dmet {
         try {
             const { id, variableType } = operation;
             if (variableType === 'variable') {
+                return this.#variable[id].exec(operation);
+            } else if (variableType === 'slide') {
                 return this.#variable[id].exec(operation);
             } else if (variableType === 'list') {
                 return this.#list[id].exec(operation);

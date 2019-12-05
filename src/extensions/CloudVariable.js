@@ -195,7 +195,7 @@ class CloudVariableExtension {
 
     #applyValue(operation) {
         const { id, value, data, variableType } = operation;
-        if (variableType === 'variable') {
+        if (variableType === 'variable' || variableType === 'slide') {
             const variable = Entry.variableContainer.getVariable(id);
             if (variable) {
                 variable.value_ = value;
