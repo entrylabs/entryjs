@@ -2688,7 +2688,7 @@ Entry.VariableContainer = class VariableContainer {
         const times = value - arr.length;
         if (times && Entry.Utils.isNumber(value)) {
             if (times > 0) {
-                _.times(times, () => arr.push({ data: 0 }));
+                _.times(times, () => this.selected.appendValue(0));
             } else {
                 arr.length = value;
             }
