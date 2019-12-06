@@ -178,9 +178,7 @@ class ListVariable extends Variable {
                         variableType: this.type,
                         id: this.id_,
                     };
-                    await this.cloudVariable.append(target, array);
-                    const { array } = this.cloudVariable.get(target);
-                    this.array_ = array;
+                    await this.cloudVariable.setArray(target, array);
                     this.updateView();
                     resolve();
                 } catch (e) {
