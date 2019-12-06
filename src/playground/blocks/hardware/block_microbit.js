@@ -46,7 +46,7 @@ const microbitGestures = {
     SHAKE: 11,
 };
 
-Entry.Microbit = new class Microbit {
+Entry.Microbit = new (class Microbit {
     constructor() {
         this.id = 'FF.1';
         this.url = 'http://microbit.org/ko/';
@@ -178,7 +178,7 @@ Entry.Microbit = new class Microbit {
                     const value = script.getField('VALUE');
                     const x = _clamp(script.getNumberValue('X'), 0, 4);
                     const y = _clamp(script.getNumberValue('Y'), 0, 4);
-                    this.requestCommand(functionKeys.SET_LED, { x, y, value });
+                    this.requestCommandWithResponse(functionKeys.SET_LED, { x, y, value });
                 },
             },
             microbit_get_led: {
@@ -223,7 +223,7 @@ Entry.Microbit = new class Microbit {
                 func: (sprite, script) => {
                     const x = _clamp(script.getNumberValue('X'), 0, 4);
                     const y = _clamp(script.getNumberValue('Y'), 0, 4);
-                    this.requestCommandWithResponse(functionKeys.GET_LED, { x, y });
+                    // this.requestCommandWithResponse(functionKeys.GET_LED, { x, y });
                     return _get(Entry.hw.portData, ['payload', 'sensorData', 'led', x, y], 0);
                 },
             },
@@ -686,7 +686,6 @@ Entry.Microbit = new class Microbit {
                 },
                 func: (sprite, script) => {
                     const value = script.getField('VALUE');
-                    this.requestCommandWithResponse(functionKeys.GET_BUTTON);
                     const buttonState = _get(
                         Entry.hw.portData,
                         ['payload', 'sensorData', 'button'],
@@ -730,23 +729,10 @@ Entry.Microbit = new class Microbit {
                 },
                 func: (sprite, script) => {
                     const value = script.getField('VALUE');
-                    let commandType;
-                    switch (value) {
-                        case 'lightLevel':
-                            commandType = functionKeys.GET_LIGHT_LEVEL;
-                            break;
-                        case 'temperature':
-                            commandType = functionKeys.GET_TEMPERATURE;
-                            break;
-                        case 'compassHeading':
-                            commandType = functionKeys.GET_COMPASS_HEADING;
-                            break;
-                        default:
-                            // 입력값이 정상적이지 않은 경우 온도값을 표기
-                            commandType = functionKeys.GET_TEMPERATURE;
-                            break;
-                    }
-                    this.requestCommandWithResponse(commandType);
+                    // if (value == 'lightLevel') {
+                    //     commandType = functionKeys.GET_LIGHT_LEVEL;
+                    //     this.requestCommandWithResponse(commandType);
+                    // }
                     return _get(Entry.hw.portData, ['payload', 'sensorData', value], -1);
                 },
             },
@@ -797,7 +783,7 @@ Entry.Microbit = new class Microbit {
                         }
                     }
 
-                    this.requestCommandWithResponse(command);
+                    // this.requestCommandWithResponse(command);
                     const value = _get(Entry.hw.portData, sensorDataMap, -1);
                     // 기획팀 의도에 따라 30도 이내는 기울지 않았다고 판단
 
@@ -865,7 +851,7 @@ Entry.Microbit = new class Microbit {
                         }
                     }
 
-                    this.requestCommandWithResponse(command);
+                    // this.requestCommandWithResponse(command);
                     const value = _get(Entry.hw.portData, sensorDataMap, -1);
                     /*
                     좌우 = 우측으로 기울일수록 +
@@ -910,8 +896,28 @@ Entry.Microbit = new class Microbit {
                 },
                 func: (sprite, script) => {
                     const value = script.getField('VALUE');
-                    this.requestCommandWithResponse(functionKeys.GET_ACCELEROMETER, { value });
-                    return _get(Entry.hw.portData, 'payload.sensorData.accelerometer', -1);
+                    // this.requestCommandWithResponse(functionKeys.GET_ACCELEROMETER, { value });
+                    let whole = _get(Entry.hw.portData, 'payload.sensorData.accelerometer', -1);
+                    if (whole instanceof Object) {
+                        switch (value) {
+                            case 0:
+                                whole = whole.x;
+                                break;
+                            case 1:
+                                whole = whole.y;
+                                break;
+                            case 2:
+                                whole = whole.z;
+                                break;
+                            case 3:
+                                whole = whole.strength;
+                                break;
+                            default:
+                                whole = whole;
+                                break;
+                        }
+                    }
+                    return whole;
                 },
             },
             microbit_get_gesture: {
@@ -942,7 +948,7 @@ Entry.Microbit = new class Microbit {
                 },
                 func: (sprite, script) => {
                     const value = script.getField('VALUE');
-                    this.requestCommandWithResponse(functionKeys.GET_GESTURE);
+                    // this.requestCommandWithResponse(functionKeys.GET_GESTURE);
                     const gesture = _get(Entry.hw.portData, 'payload.sensorData.gesture', -1);
 
                     /**
@@ -1063,5 +1069,5 @@ Entry.Microbit = new class Microbit {
             },
         };
     }
-}();
+})();
 module.exports = Entry.Microbit;
