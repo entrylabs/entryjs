@@ -231,6 +231,15 @@ class CloudVariableExtension {
         return this.#data && this.#data.get(target);
     }
 
+    // 워크스페이스에서만 동작하는 함수이기 때문에 run 생략
+    setArray(target, array) {
+        const dmetList = this.#data && this.#data.get(target);
+        if (!dmetList) {
+            console.error('no target ', target);
+        }
+        dmetList.from(array.map(({data}) => data));
+    }
+
     append(target, data) {
         if (!this.#cvSocket) {
             return;
