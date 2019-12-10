@@ -106,7 +106,10 @@ Entry.init = function(container, options) {
     Entry.soundInstances = [];
     Entry.soundQueue.urls = new Set();
     Entry.soundQueue.total = 0;
-    const loadCallback = (src) => {
+    Entry.soundQueue.loadCallback = (src) => {
+        if (!Entry.soundQueue.urls.has(src)) {
+            return;
+        }
         Entry.soundQueue.total = Math.max(Entry.soundQueue.total, Entry.soundQueue.urls.size);
         Entry.soundQueue.urls.delete(src);
         const now = Entry.soundQueue.urls.size;
@@ -116,11 +119,13 @@ Entry.init = function(container, options) {
         }
     };
     Entry.soundQueue.on('fileload', (event) => {
-        loadCallback(event.item.src);
+        Entry.soundQueue.loadCallback(event.item.src);
     });
     Entry.soundQueue.on('error', (event) => {
-        loadCallback(event.data.src);
+        console.error('load sound, error', event);
+        Entry.soundQueue.loadCallback(event.data.src);
     });
+
     Entry.loadAudio_(
         [
             `${Entry.mediaFilePath}sounds/click.mp3`,
@@ -592,4 +597,7 @@ Entry.initSound = function(sound) {
         src: sound.path,
         type: createjs.LoadQueue.SOUND,
     });
+    setTimeout(() => {
+        Entry.soundQueue.loadCallback(sound.path);
+    }, 3000);
 };
