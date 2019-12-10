@@ -2593,6 +2593,17 @@ Entry.VariableContainer = class VariableContainer {
         );
     }
 
+    createListValieElement(index, value, startIndex = 0) {
+        return `
+        <li>
+            <span class='cnt'>${+index + startIndex}</span>
+            <input value='${xssFilters.inSingleQuotedAttr(
+                value
+            )}' type='text' data-index='${index}'/>
+            <a class='del' data-index='${index}'></a>
+        </li>`.trim();
+    }
+
     updateListSettingView(list) {
         const view = this.listSettingView;
         const that = this;
@@ -2622,24 +2633,19 @@ Entry.VariableContainer = class VariableContainer {
             listValues.appendChild(fragment);
         } else {
             const data = arr.map((data, i) => {
-                let value = String(data.data).replace(/\$/g, '&#36;');
-                return `
-                    <li>
-                        <span class='cnt'>${i + startIndex}</span>
-                        <input value='${xssFilters.inSingleQuotedAttr(
-                            value
-                        )}' type='text' data-index='${i}'/>
-                        <a class='del' data-index='${i}'></a>
-                    </li>`.trim();
+                const value = String(data.data).replace(/\$/g, '&#36;');
+                return this.createListValieElement(i, value, startIndex);
             });
             infinityScroll.assignData(data);
             infinityScroll.show();
             $listValues.on(
-                'blur',
+                'keyup',
                 'input',
-                Entry.Utils.setBlurredTimer(function() {
-                    const index = this.getAttribute('data-index');
-                    list.array_[index] = { data: this.value };
+                _.debounce((e) => {
+                    const { target } = e;
+                    const index = target.getAttribute('data-index');
+                    data[index] = this.createListValieElement(index, target.value, startIndex);
+                    list.array_[index] = { data: target.value };
                     list.updateView();
                 })
             );
