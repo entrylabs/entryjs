@@ -8,6 +8,8 @@
 
     c[COMMAND_TYPES.playgroundChangeViewMode] = {
         do(newType, oldType) {
+            Entry.variableContainer.selected = null;
+            Entry.variableContainer.updateList();
             Entry.playground.changeViewMode(newType);
             if (Entry.disposeEvent) {
                 Entry.disposeEvent.notify();
