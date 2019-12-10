@@ -114,6 +114,7 @@ Entry.HW = class {
 
         socket.on('disconnect', () => {
             // cloud PC 연결 클릭시 순간 disconnect 되고 재연결을 시도하기 위한 로직
+            this._disconnectHardware();
             this._initSocket();
         });
 
