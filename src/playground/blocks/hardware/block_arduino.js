@@ -441,7 +441,7 @@ Entry.Arduino.getBlocks = function() {
                     return Entry.block.arduino_ext_get_digital.func(sprite, script);
                 } else {
                     const signal = script.getNumberValue('PORT', script);
-                    return Entry.hw.portData.DIGITAL[signal];
+                    return Entry.hw.getDigitalPortValue(signal);
                 }
             },
             syntax: {

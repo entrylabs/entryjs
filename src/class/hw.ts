@@ -28,6 +28,7 @@ class Hardware implements Entry.Hardware {
     // socketIO 및 하드웨어 커넥션용
     private readonly sessionRoomId: string | null;
     private readonly socketConnectionRetryCount: number;
+    private reconnectionTimeout: number;
     private programConnected: boolean;
     private socket: SocketIOClient.Socket; // 실제 연결된 소켓
     private socketMode: number;
@@ -77,7 +78,7 @@ class Hardware implements Entry.Hardware {
         Entry.addEventListener('stop', this.setZero.bind(this));
     }
 
-    _createRandomRoomId() {
+    private _createRandomRoomId() {
         return 'xxxxxxxxyx'.replace(/[xy]/g, (c) => {
             const r = (Math.random() * 16) | 0;
             const v = c === 'x' ? r : (r & 0x3) | 0x8;
@@ -96,13 +97,14 @@ class Hardware implements Entry.Hardware {
         }
     }
 
-    _trySocketConnect(url: string, option: SocketIOClient.ConnectOpts) {
+    private _trySocketConnect(url: string, option: SocketIOClient.ConnectOpts) {
         return new Promise((resolve, reject) => {
             const socket = io.connect(url, option);
             socket.io.reconnectionAttempts(this.socketConnectionRetryCount);
             socket.io.reconnectionDelayMax(1000);
             socket.io.timeout(1000);
             socket.on('connect', () => {
+                socket.io.reconnection(false);
                 this._handleSocketConnected(socket);
                 resolve();
             });
@@ -112,16 +114,19 @@ class Hardware implements Entry.Hardware {
         });
     }
 
-    _handleSocketConnected(socket: SocketIOClient.Socket) {
-        socket.removeAllListeners();
+    private _handleSocketConnected(socket: SocketIOClient.Socket) {
+        socket.removeEventListener('reconnect_failed');
+        socket.removeEventListener('connect');
         // this._initHardware(socket);
         this.socket = socket;
-        this.programConnected = true;
-        console.log('Hardware Program Connected'); // 하드웨어 프로그램 연결 성공, 스테이터스 변화 필요
-        Entry.dispatchEvent('hwChanged');
+        this._setSocketConnected();
         if (Entry.playground && Entry.playground.object) {
             Entry.playground.setMenu(Entry.playground.object.objectType);
         }
+
+        socket.on('connect', () => {
+            this._setSocketConnected();
+        });
 
         socket.on('mode', (mode: number) => {
             if (this.socketMode === 0 && mode === 1) {
@@ -159,26 +164,34 @@ class Hardware implements Entry.Hardware {
 
         socket.on('disconnect', () => {
             // cloud PC 연결 클릭시 순간 disconnect 되고 재연결을 시도하기 위한 로직
-            this._initSocket();
+            this._setSocketClosed();
+            this.reconnectionTimeout = window.setTimeout(() => {
+                this._initSocket();
+            }, 1000);
         });
 
         socket.on('reconnect_failed', () => {
-            this.programConnected = false;
-            Entry.dispatchEvent('hwChanged');
-        });
-
-        socket.on('connect_error', () => {
-            this.programConnected = false;
-            Entry.dispatchEvent('hwChanged');
+            this._setSocketClosed();
         });
     }
 
-    _initSocket() {
-        this.programConnected = false;
+    private _setSocketConnected() {
+        this.programConnected = true;
+        console.log('Hardware Program Connected'); // 하드웨어 프로그램 연결 성공, 스테이터스 변화 필요
+        Entry.dispatchEvent('hwChanged');
+    }
 
+    private _setSocketClosed(needRedraw: boolean = true) {
+        this.programConnected = false;
+        this.hwModule = undefined;
+        needRedraw && Entry.dispatchEvent('hwChanged');
+    }
+
+    private _initSocket() {
         const connectHttpsWebSocket = (url: string) =>
             // TODO ajax 로 entry-hw 살아있는지 확인 후 연결시도 (TRIAL_LIMIT = ajax 로)
             this._trySocketConnect(url, {
+                transports: ['websocket'],
                 query: {
                     client: true,
                     roomId: this.sessionRoomId,
@@ -186,7 +199,10 @@ class Hardware implements Entry.Hardware {
             });
 
         if (this.socket) {
-            this._handleSocketConnected(this.socket);
+            if (this.reconnectionTimeout) {
+                clearTimeout(this.reconnectionTimeout);
+                this.reconnectionTimeout = undefined;
+            }
             this.socket.connect();
         } else {
             connectHttpsWebSocket(this.httpsServerAddress)
@@ -198,12 +214,9 @@ class Hardware implements Entry.Hardware {
                 })
                 .catch(() => {
                     console.warn('All hardware socket connection failed');
-                    this.programConnected = false;
-                    Entry.dispatchEvent('hwChanged');
+                    this._setSocketClosed();
                 });
         }
-
-        Entry.dispatchEvent('hwChanged');
     }
 
     retryConnect() {
@@ -220,23 +233,6 @@ class Hardware implements Entry.Hardware {
                 }, 1000);
             }
         });
-    }
-
-    /**
-     * 하드웨어 프로그램과의 연결을 시도한다.
-     * 만약 모듈이 로드되어있는 경우라면
-     * 동일한 하드웨어 모듈을 로드하도록 하드웨어에 요청한다.
-     * @param socket
-     * @private
-     */
-    _initHardware(socket: SocketIOClient.Socket) {
-        this.socket = socket;
-        this.programConnected = true;
-        console.log('Hardware Program Connected'); // 하드웨어 프로그램 연결 성공, 스테이터스 변화 필요
-        Entry.dispatchEvent('hwChanged');
-        if (Entry.playground && Entry.playground.object) {
-            Entry.playground.setMenu(Entry.playground.object.objectType);
-        }
     }
 
     /**
@@ -292,7 +288,7 @@ class Hardware implements Entry.Hardware {
      * @param statement {HardwareStatement}
      * @private
      */
-    _setHardwareDefaultMenu(statement: HardwareStatement) {
+    private _setHardwareDefaultMenu(statement: HardwareStatement) {
         const workspace = Entry.getMainWS();
         const blockMenu = workspace && workspace.blockMenu;
 
@@ -325,7 +321,7 @@ class Hardware implements Entry.Hardware {
      * 모든 하드웨어를 숨김처리한다. 현재 연결된 하드웨어도 예외는 없다.
      * @private
      */
-    _banClassAllHardware() {
+    private _banClassAllHardware() {
         const workspace = Entry.getMainWS();
         const blockMenu = workspace && workspace.blockMenu;
         if (!blockMenu) {
@@ -337,7 +333,7 @@ class Hardware implements Entry.Hardware {
         });
     }
 
-    _disconnectHardware() {
+    private _disconnectHardware() {
         Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
         this.currentDeviceKey = undefined;
         this.hwModule = undefined;
@@ -474,13 +470,13 @@ class Hardware implements Entry.Hardware {
         this.hwModule && this.hwModule.afterSend && this.hwModule.afterSend(this.sendQueue);
     }
 
-    _sendSocketMessage(message: WebSocketMessage) {
+    private _sendSocketMessage(message: WebSocketMessage) {
         if (this.programConnected && this.socket && !this.socket.disconnected) {
             this.socket.emit('message', message);
         }
     }
 
-    _updatePortData(data: HardwareMessageData) {
+    private _updatePortData(data: HardwareMessageData) {
         this.portData = data;
         if (this.hwMonitor && Entry.propertyPanel && Entry.propertyPanel.selected === 'hw') {
             this.hwMonitor.update(this.portData, this.sendQueue);
@@ -554,7 +550,7 @@ class Hardware implements Entry.Hardware {
         Entry.toast.success(window.Lang.Msgs.hw_connection_success, descMsg);
     }
 
-    _setHardwareMonitorTemplate() {
+    private _setHardwareMonitorTemplate() {
         if (!this.hwMonitor) {
             this.hwMonitor = new Entry.HWMonitor(this.hwModule);
         } else {
@@ -583,7 +579,7 @@ class Hardware implements Entry.Hardware {
      * @returns {Promise<void>}
      * @private
      */
-    _alertUnderVersionUsed() {
+    private _alertUnderVersionUsed() {
         return new Promise((resolve) => {
             const dontShowChecked = localStorage.getItem('skipNoticeHWOldVersion');
             if (!dontShowChecked) {
@@ -606,7 +602,7 @@ class Hardware implements Entry.Hardware {
         });
     }
 
-    _executeHardware() {
+    private _executeHardware() {
         const hw = this;
         const executeIeCustomLauncher = {
             _bNotInstalled: false,
@@ -789,7 +785,7 @@ class Hardware implements Entry.Hardware {
         }
     }
 
-    _hwPopupCreate() {
+    private _hwPopupCreate() {
         const hw = this;
         if (!this.popupHelper) {
             if (window.popupHelper) {

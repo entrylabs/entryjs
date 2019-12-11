@@ -9,6 +9,7 @@
         "moduleResolution": "node",
         "lib": ["es6", "dom"],
         "allowJs": true,
-        "typeRoots": ["./types", "./types/Entry", "./node_modules/@types"]
+        "baseUrl": "./",
+        "typeRoots": ["./types", "./node_modules/@types"]
     }
 }
