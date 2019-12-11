@@ -139,6 +139,7 @@ Entry.HW = class {
         const connectHttpsWebSocket = (url) =>
             // TODO ajax 로 entry-hw 살아있는지 확인 후 연결시도 (TRIAL_LIMIT = ajax 로)
             this._connectWebSocket(url, {
+                transports: ['websocket'],
                 query: {
                     client: true,
                     roomId: this.sessionRoomId,
@@ -286,6 +287,13 @@ Entry.HW = class {
         Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
         this.currentDeviceKey = undefined;
         this.hwModule = undefined;
+
+        this.tlsSocketIo1 && this.tlsSocketIo1.close();
+        this.tlsSocketIo2 && this.tlsSocketIo2.close();
+        this.socketIo && this.socketIo.close();
+        this.socket && this.socket.close();
+        this.socket = undefined;
+
         Entry.dispatchEvent('hwChanged');
     }
 
