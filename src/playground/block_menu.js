@@ -867,7 +867,7 @@ class BlockMenu {
             e.preventDefault();
         }
 
-        if (e.button != 1 && (e.button === 0 || (e.originalEvent && e.originalEvent.touches))) {
+        if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
             const mouseEvent = Entry.Utils.convertMouseEvent(e);
             if (Entry.documentMousedown) {
                 Entry.documentMousedown.notify(mouseEvent);
