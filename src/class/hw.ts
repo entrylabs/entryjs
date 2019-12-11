@@ -167,7 +167,7 @@ class Hardware implements Entry.Hardware {
             this._setSocketClosed();
             this.reconnectionTimeout = window.setTimeout(() => {
                 this._initSocket();
-            }, 1500);
+            }, 1000);
         });
 
         socket.on('reconnect_failed', () => {
@@ -191,6 +191,7 @@ class Hardware implements Entry.Hardware {
         const connectHttpsWebSocket = (url: string) =>
             // TODO ajax 로 entry-hw 살아있는지 확인 후 연결시도 (TRIAL_LIMIT = ajax 로)
             this._trySocketConnect(url, {
+                transports: ['websocket'],
                 query: {
                     client: true,
                     roomId: this.sessionRoomId,

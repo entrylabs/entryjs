@@ -53,6 +53,7 @@ declare module Entry {
     export var HW: Hardware; // hw.ts
     export var container: Container;
     export var stage: Stage;
+    export var Utils: UnknownAny;
 
     // 엔트리에서 네임스페이스에 할당되어있는 특정 객체들
     export var HARDWARE_LIST: { [hardwareName: string]: HardwareModule };
