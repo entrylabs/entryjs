@@ -21,12 +21,12 @@ export default class Expansion {
     }
 
     banExpansionBlocks(blockNames = []) {
-        if (blockNames.length < 1) {
+        if (!blockNames.length) {
             return;
         }
         const expansions = Object.keys(Entry.EXPANSION_BLOCK_LIST);
         const blockTypes = blockNames.filter((x) => expansions.includes(x));
-        if (blockTypes.length < 1) {
+        if (!blockTypes.length) {
             console.warn('not exist blockType', blockTypes);
             return;
         }
