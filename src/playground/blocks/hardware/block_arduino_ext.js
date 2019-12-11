@@ -479,7 +479,7 @@ Entry.ArduinoExt.getBlocks = function() {
             func(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
-                if (name === 'ArduinoExt') {
+                if (name === 'ArduinoExt' || name === 'ArduinoNano') {
                     const port = script.getNumberValue('PORT', script);
                     const DIGITAL = Entry.hw.portData.DIGITAL;
                     if (!Entry.hw.sendQueue.GET) {
