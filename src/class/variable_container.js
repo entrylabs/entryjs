@@ -2593,7 +2593,7 @@ Entry.VariableContainer = class VariableContainer {
         );
     }
 
-    createListValieElement(index, value, startIndex = 0) {
+    createListValueElement(index, value, startIndex = 0) {
         return `
         <li>
             <span class='cnt'>${+index + startIndex}</span>
