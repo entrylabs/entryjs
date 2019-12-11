@@ -346,8 +346,8 @@ class BlockMenu {
         const dy = e.pageY - y;
         if (board && (workspaceMode === MODE_BOARD || workspaceMode === MODE_OVERLAYBOARD)) {
             if (!board.code) {
-                if (Entry.toast) {
-                    Entry.toast.alert(
+                if (Entry.toast && !(this.objectAlert && Entry.toast.isOpen(this.objectAlert))) {
+                    this.objectAlert = Entry.toast.alert(
                         Lang.Workspace.add_object_alert,
                         Lang.Workspace.add_object_alert_msg
                     );
