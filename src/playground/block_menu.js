@@ -856,37 +856,31 @@ class BlockMenu {
         if (Entry.isMobile()) {
             this._scroller.setOpacity(0);
         }
-        if (e.which == 2) {
-            console.log('mouse wheel click disabled');
-            return;
+        if (e.button != 1) {
+            $(document).unbind('.blockMenu');
+            delete this.dragInstance;
         }
-        $(document).unbind('.blockMenu');
-        delete this.dragInstance;
     };
 
     onMouseDown(e) {
         if (e.preventDefault) {
             e.preventDefault();
         }
-        if (e.which == 2) {
-            console.log('mouse wheel click disabled');
-            return;
-        } else {
-            if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
-                const mouseEvent = Entry.Utils.convertMouseEvent(e);
-                if (Entry.documentMousedown) {
-                    Entry.documentMousedown.notify(mouseEvent);
-                }
-                const doc = $(document);
 
-                doc.bind('mousemove.blockMenu touchmove.blockMenu', this.onMouseMove);
-                doc.bind('mouseup.blockMenu touchend.blockMenu', this.onMouseUp);
-
-                this.dragInstance = new Entry.DragInstance({
-                    startY: mouseEvent.pageY,
-                    offsetY: mouseEvent.pageY,
-                });
+        if (e.button != 1 && (e.button === 0 || (e.originalEvent && e.originalEvent.touches))) {
+            const mouseEvent = Entry.Utils.convertMouseEvent(e);
+            if (Entry.documentMousedown) {
+                Entry.documentMousedown.notify(mouseEvent);
             }
+            const doc = $(document);
+
+            doc.bind('mousemove.blockMenu touchmove.blockMenu', this.onMouseMove);
+            doc.bind('mouseup.blockMenu touchend.blockMenu', this.onMouseUp);
+
+            this.dragInstance = new Entry.DragInstance({
+                startY: mouseEvent.pageY,
+                offsetY: mouseEvent.pageY,
+            });
         }
     }
 
