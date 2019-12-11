@@ -992,6 +992,12 @@ Entry.VariableContainer = class VariableContainer {
         });
     }
 
+    isUsedBlockTypeInFunction(blockType) {
+        return Object.values(this.functions_).some(
+            (func) => !!func.content.getBlockList(false, blockType).length
+        );
+    }
+
     /**
      * Remove variable
      * @param {Entry.Variable} variable

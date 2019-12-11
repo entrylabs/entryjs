@@ -20,26 +20,38 @@ export default class Expansion {
         });
     }
 
-    banExpansionBlocks(blockNames = []) {
-        if (!blockNames.length) {
+    banExpansionBlocks(expansionNames = []) {
+        if (!expansionNames.length) {
             return;
         }
         const expansions = Object.keys(Entry.EXPANSION_BLOCK_LIST);
-        const blockTypes = blockNames.filter((x) => expansions.includes(x));
-        if (!blockTypes.length) {
-            console.warn('not exist blockType', blockTypes);
+        const expansionTypes = expansionNames.filter((x) => expansions.includes(x));
+        if (!expansionTypes.length) {
+            console.warn('not exist expansion', expansionTypes);
             return;
         }
         const currentObjectId = Entry.playground.object.id;
         Entry.do('selectObject', currentObjectId);
-        blockTypes.forEach((blockType) => {
-            const blocks = Entry.EXPANSION_BLOCK_LIST[blockType].getBlocks();
-            Object.keys(blocks).forEach((blockType) => {
-                Entry.Utils.removeBlockByType(blockType);
-            });
+        expansionTypes.forEach((expansion) => {
+            if (this.isActive(expansion)) {
+                const blocks = Entry.EXPANSION_BLOCK_LIST[expansion].getBlocks();
+                Object.keys(blocks).forEach((blockType) => {
+                    Entry.Utils.removeBlockByType(blockType);
+                });
+            }
         });
         Entry.do('selectObject', currentObjectId).isPass(true);
-        Entry.do('objectRemoveExpansionBlocks', blockNames).isPass(true);
+        Entry.do('objectRemoveExpansionBlocks', expansionTypes).isPass(true);
+    }
+
+    isActive(expansionName) {
+        const expansion = Entry.EXPANSION_BLOCK_LIST[expansionName];
+        if (!expansion) {
+            console.warn('not exist expansion', expansion);
+            return;
+        }
+        const blocks = expansion.getBlocks();
+        return Object.keys(blocks).some((blockName) => Entry.Utils.isUsedBlockTYpe(blockName));
     }
 
     addExpansionBlocks(blockNames) {

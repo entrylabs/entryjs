@@ -2755,3 +2755,14 @@ Entry.Utils.removeBlockByType = function(blockType, callback) {
         callback();
     }
 };
+
+Entry.Utils.isUsedBlockTYpe = function(blockType) {
+    const objects = Entry.container.getAllObjects();
+    const usedInObject = objects.some(
+        ({ script }) => !!script.getBlockList(false, blockType).length
+    );
+    if (usedInObject) {
+        return true;
+    }
+    return Entry.variableContainer.isUsedBlockTypeInFunction(blockType);
+};
