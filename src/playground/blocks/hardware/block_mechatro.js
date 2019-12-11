@@ -265,7 +265,7 @@ Entry.mechatro.getBlocks = function() {
             class: 'MechatroGet',
             isNotFor: ['mechatro'],
             func(sprite, script) {
-                if (!Entry.hw.connected) {
+                if (!Entry.hw.programConnected) {
                     return 0;
                 }
 
@@ -464,7 +464,7 @@ Entry.mechatro.getBlocks = function() {
             class: 'MechatroGet',
             isNotFor: ['mechatro'],
             func(sprite, script) {
-                if (!Entry.hw.connected) {
+                if (!Entry.hw.programConnected) {
                     return 0;
                 }
 
