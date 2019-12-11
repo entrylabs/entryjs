@@ -63,6 +63,7 @@ Entry.Microbit = new (class Microbit {
             'microbit_get_led',
             'microbit_show_string',
             'microbit_show_image',
+            'microbit_set_led_image',
             'microbit_reset_screen',
             'microbit_set_analog',
             'microbit_set_analog_period',
@@ -178,7 +179,7 @@ Entry.Microbit = new (class Microbit {
                     const value = script.getField('VALUE');
                     const x = _clamp(script.getNumberValue('X'), 0, 4);
                     const y = _clamp(script.getNumberValue('Y'), 0, 4);
-                    this.requestCommandWithResponse(functionKeys.SET_LED, { x, y, value });
+                    this.requestCommand(functionKeys.SET_LED, { x, y, value });
                 },
             },
             microbit_get_led: {
@@ -223,8 +224,8 @@ Entry.Microbit = new (class Microbit {
                 func: (sprite, script) => {
                     const x = _clamp(script.getNumberValue('X'), 0, 4);
                     const y = _clamp(script.getNumberValue('Y'), 0, 4);
-                    // this.requestCommandWithResponse(functionKeys.GET_LED, { x, y });
-                    return _get(Entry.hw.portData, ['payload', 'sensorData', 'led', x, y], 0);
+                    this.requestCommandWithResponse(functionKeys.GET_LED, { x, y });
+                    return _get(Entry.hw.portData, ['payload', 'sensorData', 'led', x, y]);
                 },
             },
             microbit_show_string: {
@@ -279,10 +280,45 @@ Entry.Microbit = new (class Microbit {
                         type: 'Dropdown',
                         options: [
                             ['하트', 0],
+                            ['작은하트', 1],
                             ['행복함', 2],
+                            ['슬픔', 3],
+                            ['혼란', 4],
+                            ['화남', 5],
+                            ['졸림', 6],
+                            ['놀람', 7],
+                            ['바보', 8],
+                            ['환상적인', 9],
+                            ['별로', 10],
+                            ['예스', 11],
+                            ['노놉', 12],
                             ['삼각형', 13],
-                            ['사각형', 19],
+                            ['왼쪽 삼각형', 14],
+                            ['체스판', 15],
                             ['다이아몬드', 17],
+                            ['작은 다이아몬드', 18],
+                            ['사각형', 19],
+                            ['작은 사각형', 20],
+                            ['가위', 21],
+                            ['티셔츠', 22],
+                            ['롤러스케이트', 23],
+                            ['오리', 24],
+                            ['집', 25],
+                            ['거북이', 26],
+                            ['나비', 27],
+                            ['스틱맨', 28],
+                            ['유령', 29],
+                            ['칼', 30],
+                            ['기린', 31],
+                            ['해골', 32],
+                            ['우산', 33],
+                            ['뱀', 34],
+                            ['토끼', 35],
+                            ['소', 36],
+                            ['4분음표', 37],
+                            ['8분음표', 38],
+                            ['갈퀴', 39],
+                            ['표적', 40],
                         ],
                         value: 0,
                         fontSize: 11,
@@ -300,6 +336,82 @@ Entry.Microbit = new (class Microbit {
                 isNotFor: ['microbit'],
                 def: {
                     type: 'microbit_show_image',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                func: (sprite, script) => {
+                    const value = script.getField('VALUE');
+                    this.requestCommand(functionKeys.SET_IMAGE, { value });
+                },
+            },
+            microbit_set_led_image: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                template: 'LED %1 으로 출력하기 %2',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            ['하트', 0],
+                            ['작은하트', 1],
+                            ['행복함', 2],
+                            ['슬픔', 3],
+                            ['혼란', 4],
+                            ['화남', 5],
+                            ['졸림', 6],
+                            ['놀람', 7],
+                            ['바보', 8],
+                            ['환상적인', 9],
+                            ['별로', 10],
+                            ['예스', 11],
+                            ['노놉', 12],
+                            ['삼각형', 13],
+                            ['왼쪽 삼각형', 14],
+                            ['체스판', 15],
+                            ['다이아몬드', 17],
+                            ['작은 다이아몬드', 18],
+                            ['사각형', 19],
+                            ['작은 사각형', 20],
+                            ['가위', 21],
+                            ['티셔츠', 22],
+                            ['롤러스케이트', 23],
+                            ['오리', 24],
+                            ['집', 25],
+                            ['거북이', 26],
+                            ['나비', 27],
+                            ['스틱맨', 28],
+                            ['유령', 29],
+                            ['칼', 30],
+                            ['기린', 31],
+                            ['해골', 32],
+                            ['우산', 33],
+                            ['뱀', 34],
+                            ['토끼', 35],
+                            ['소', 36],
+                            ['4분음표', 37],
+                            ['8분음표', 38],
+                            ['갈퀴', 39],
+                            ['표적', 40],
+                        ],
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                class: 'microbitLed',
+                isNotFor: ['microbit'],
+                def: {
+                    type: 'microbit_set_led_image',
                 },
                 paramsKeyMap: {
                     VALUE: 0,
@@ -342,7 +454,14 @@ Entry.Microbit = new (class Microbit {
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [['P0', 0], ['P1', 1], ['P2', 2]],
+                        options: [
+                            ['P0', 0],
+                            ['P1', 1],
+                            ['P2', 2],
+                            ['P3', 3],
+                            ['P4', 4],
+                            ['P10', 10],
+                        ],
                         value: 0,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -391,7 +510,14 @@ Entry.Microbit = new (class Microbit {
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [['P0', 0], ['P1', 1], ['P2', 2]],
+                        options: [
+                            ['P0', 0],
+                            ['P1', 1],
+                            ['P2', 2],
+                            ['P3', 3],
+                            ['P4', 4],
+                            ['P10', 10],
+                        ],
                         value: 0,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -441,7 +567,14 @@ Entry.Microbit = new (class Microbit {
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [['P0', 0], ['P1', 1], ['P2', 2]],
+                        options: [
+                            ['P0', 0],
+                            ['P1', 1],
+                            ['P2', 2],
+                            ['P3', 3],
+                            ['P4', 4],
+                            ['P10', 10],
+                        ],
                         value: 0,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -473,7 +606,14 @@ Entry.Microbit = new (class Microbit {
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [['P0', 0], ['P1', 1], ['P2', 2]],
+                        options: [
+                            ['P0', 0],
+                            ['P1', 1],
+                            ['P2', 2],
+                            ['P3', 3],
+                            ['P4', 4],
+                            ['P10', 10],
+                        ],
                         value: 0,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -589,7 +729,27 @@ Entry.Microbit = new (class Microbit {
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [['P0', 0], ['P1', 1], ['P2', 2]],
+                        options: [
+                            ['P0', 0],
+                            ['P1', 1],
+                            ['P2', 2],
+                            ['P3', 3],
+                            ['P4', 4],
+                            ['P5', 5],
+                            ['P6', 6],
+                            ['P7', 7],
+                            ['P8', 8],
+                            ['P9', 9],
+                            ['P10', 10],
+                            ['P11', 11],
+                            ['P12', 12],
+                            ['P13', 13],
+                            ['P14', 14],
+                            ['P15', 15],
+                            ['P16', 16],
+                            ['P19', 19],
+                            ['P20', 20],
+                        ],
                         value: 0,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -623,7 +783,7 @@ Entry.Microbit = new (class Microbit {
                 func: (sprite, script) => {
                     const pinNumber = script.getField('PIN');
                     const value = script.getNumberField('VALUE');
-                    this.requestCommand(functionKeys.SET_DIGITAL, { pinNumber, value });
+                    this.requestCommandWithResponse(functionKeys.SET_DIGITAL, { pinNumber, value });
                 },
             },
             microbit_get_digital: {
@@ -636,7 +796,27 @@ Entry.Microbit = new (class Microbit {
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [['P0', 0], ['P1', 1], ['P2', 2]],
+                        options: [
+                            ['P0', 0],
+                            ['P1', 1],
+                            ['P2', 2],
+                            ['P3', 3],
+                            ['P4', 4],
+                            ['P5', 5],
+                            ['P6', 6],
+                            ['P7', 7],
+                            ['P8', 8],
+                            ['P9', 9],
+                            ['P10', 10],
+                            ['P11', 11],
+                            ['P12', 12],
+                            ['P13', 13],
+                            ['P14', 14],
+                            ['P15', 15],
+                            ['P16', 16],
+                            ['P19', 19],
+                            ['P20', 20],
+                        ],
                         value: 0,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -729,9 +909,24 @@ Entry.Microbit = new (class Microbit {
                 },
                 func: (sprite, script) => {
                     const value = script.getField('VALUE');
-                    if (value == 'lightLevel') {
-                        this.requestCommandWithResponse(functionKeys.GET_LIGHT_LEVEL);
+                    let commandType;
+                    switch (value) {
+                        case 'lightLevel':
+                            commandType = functionKeys.GET_LIGHT_LEVEL;
+                            // this.requestCommandWithResponse(commandType);
+                            break;
+                        case 'temperature':
+                            commandType = functionKeys.GET_TEMPERATURE;
+                            break;
+                        case 'compassHeading':
+                            commandType = functionKeys.GET_COMPASS_HEADING;
+                            break;
+                        default:
+                            // 입력값이 정상적이지 않은 경우 온도값을 표기
+                            commandType = functionKeys.GET_TEMPERATURE;
+                            break;
                     }
+                    // this.requestCommandWithResponse(commandType);
                     return _get(Entry.hw.portData, ['payload', 'sensorData', value], -1);
                 },
             },
