@@ -2634,7 +2634,7 @@ Entry.VariableContainer = class VariableContainer {
         } else {
             const data = arr.map((data, i) => {
                 const value = String(data.data).replace(/\$/g, '&#36;');
-                return this.createListValieElement(i, value, startIndex);
+                return this.createListValueElement(i, value, startIndex);
             });
             infinityScroll.assignData(data);
             infinityScroll.show();
@@ -2644,7 +2644,7 @@ Entry.VariableContainer = class VariableContainer {
                 _.debounce((e) => {
                     const { target } = e;
                     const index = target.getAttribute('data-index');
-                    data[index] = this.createListValieElement(index, target.value, startIndex);
+                    data[index] = this.createListValueElement(index, target.value, startIndex);
                     list.array_[index] = { data: target.value };
                     list.updateView();
                 })
