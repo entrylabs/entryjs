@@ -685,28 +685,27 @@ Entry.BlockView = class BlockView {
     }
 
     onMouseUp(e) {
-        if (e.which == 2) {
-            console.log('mouse wheel click disabled');
-        } else {
-            if (this.longPressTimer) {
-                clearTimeout(this.longPressTimer);
-                this.longPressTimer = null;
-            }
-            this.terminateEvent();
-            this.terminateDrag(e);
-            const board = this.getBoard();
-            if (board) {
-                board.set({ dragBlock: null });
-                delete board.workingEvent;
-            }
-            this._setHoverBlockView({ that: this });
-            Entry.GlobalSvg.remove();
-            this.mouseUpEvent.notify();
-
-            delete this.isVerticalMove;
-            delete this.mouseDownCoordinate;
-            delete this.dragInstance;
+        if (e.button == 1) {
+            return;
         }
+        if (this.longPressTimer) {
+            clearTimeout(this.longPressTimer);
+            this.longPressTimer = null;
+        }
+        this.terminateEvent();
+        this.terminateDrag(e);
+        const board = this.getBoard();
+        if (board) {
+            board.set({ dragBlock: null });
+            delete board.workingEvent;
+        }
+        this._setHoverBlockView({ that: this });
+        Entry.GlobalSvg.remove();
+        this.mouseUpEvent.notify();
+
+        delete this.isVerticalMove;
+        delete this.mouseDownCoordinate;
+        delete this.dragInstance;
     }
 
     vimBoardEvent(event, type, block) {
