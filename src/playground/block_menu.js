@@ -852,7 +852,7 @@ class BlockMenu {
         dragInstance.set({ offsetY: pageY });
     };
 
-    onMouseUp = () => {
+    onMouseUp = (e) => {
         if (Entry.isMobile()) {
             this._scroller.setOpacity(0);
         }
