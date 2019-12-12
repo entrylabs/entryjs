@@ -17,6 +17,7 @@ const functionKeys = {
     SET_SERVO: 0x11,
     SET_SERVO_PERIOD: 0x12,
     SET_TONE: 0x13,
+    SET_TEMPO: 0x14,
     GET_LED: 0x31,
     GET_ANALOG: 0x32,
     GET_DIGITAL: 0x33,
@@ -70,9 +71,10 @@ Entry.Microbit = new (class Microbit {
             'microbit_set_analog_period',
             'microbit_get_analog',
             'microbit_get_analog_map',
-            'microbit_set_tone',
             'microbit_set_digital',
             'microbit_get_digital',
+            'microbit_set_tone',
+            'microbit_set_tempo',
             'microbit_get_button',
             'microbit_is_tilt',
             'microbit_get_tilt',
@@ -181,7 +183,7 @@ Entry.Microbit = new (class Microbit {
                     const value = script.getField('VALUE');
                     const x = _clamp(script.getNumberValue('X'), 0, 4);
                     const y = _clamp(script.getNumberValue('Y'), 0, 4);
-                    this.requestCommand(functionKeys.SET_LED, { x, y, value });
+                    this.requestCommandWithResponse(functionKeys.SET_LED, { x, y, value });
                 },
             },
             microbit_get_led: {
@@ -355,53 +357,7 @@ Entry.Microbit = new (class Microbit {
                 template: 'LED %1 으로 출력하기 %2',
                 params: [
                     {
-                        type: 'Dropdown',
-                        options: [
-                            ['하트', 0],
-                            ['작은하트', 1],
-                            ['행복함', 2],
-                            ['슬픔', 3],
-                            ['혼란', 4],
-                            ['화남', 5],
-                            ['졸림', 6],
-                            ['놀람', 7],
-                            ['바보', 8],
-                            ['환상적인', 9],
-                            ['별로', 10],
-                            ['예스', 11],
-                            ['노놉', 12],
-                            ['삼각형', 13],
-                            ['왼쪽 삼각형', 14],
-                            ['체스판', 15],
-                            ['다이아몬드', 17],
-                            ['작은 다이아몬드', 18],
-                            ['사각형', 19],
-                            ['작은 사각형', 20],
-                            ['가위', 21],
-                            ['티셔츠', 22],
-                            ['롤러스케이트', 23],
-                            ['오리', 24],
-                            ['집', 25],
-                            ['거북이', 26],
-                            ['나비', 27],
-                            ['스틱맨', 28],
-                            ['유령', 29],
-                            ['칼', 30],
-                            ['기린', 31],
-                            ['해골', 32],
-                            ['우산', 33],
-                            ['뱀', 34],
-                            ['토끼', 35],
-                            ['소', 36],
-                            ['4분음표', 37],
-                            ['8분음표', 38],
-                            ['갈퀴', 39],
-                            ['표적', 40],
-                        ],
-                        value: 0,
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        type: 'Color',
                     },
                     {
                         type: 'Indicator',
@@ -500,9 +456,20 @@ Entry.Microbit = new (class Microbit {
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                     },
                     {
-                        type: 'Block',
-                        accept: 'string',
-                        defaultType: 'number',
+                        type: 'Dropdown',
+                        options: [
+                            ['온음표', 1],
+                            ['2분음표', 2],
+                            ['4분음표', 4],
+                            ['8분음표', 8],
+                            ['16분음표', 16],
+                            ['32분음표', 32],
+                            ['셋잇단음표', 3],
+                        ],
+                        value: 4,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                     },
                     {
                         type: 'Indicator',
@@ -511,7 +478,7 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitAnalog',
+                class: 'microbitSound',
                 isNotFor: ['microbit'],
                 def: {
                     params: [
@@ -536,6 +503,47 @@ Entry.Microbit = new (class Microbit {
                     });
                 },
             },
+            microbit_set_tempo: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                template: '소리 박자 %1 BPM 으로 설정 %2',
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                class: 'microbitSound',
+                isNotFor: ['microbit'],
+                def: {
+                    params: [
+                        null,
+                        {
+                            type: 'number',
+                            params: ['120'],
+                        },
+                    ],
+                    type: 'microbit_set_tempo',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                func: (sprite, script) => {
+                    const pinNumber = script.getField('PIN');
+                    const value = _clamp(script.getNumberValue('VALUE'), 0, 255);
+                    this.requestCommand(functionKeys.SET_TEMPO, { value });
+                },
+            },
+
             microbit_set_analog: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1000,24 +1008,6 @@ Entry.Microbit = new (class Microbit {
                 },
                 func: (sprite, script) => {
                     const value = script.getField('VALUE');
-                    let commandType;
-                    switch (value) {
-                        case 'lightLevel':
-                            commandType = functionKeys.GET_LIGHT_LEVEL;
-                            // this.requestCommandWithResponse(commandType);
-                            break;
-                        case 'temperature':
-                            commandType = functionKeys.GET_TEMPERATURE;
-                            break;
-                        case 'compassHeading':
-                            commandType = functionKeys.GET_COMPASS_HEADING;
-                            break;
-                        default:
-                            // 입력값이 정상적이지 않은 경우 온도값을 표기
-                            commandType = functionKeys.GET_TEMPERATURE;
-                            break;
-                    }
-                    // this.requestCommandWithResponse(commandType);
                     return _get(Entry.hw.portData, ['payload', 'sensorData', value], -1);
                 },
             },
@@ -1068,7 +1058,6 @@ Entry.Microbit = new (class Microbit {
                         }
                     }
 
-                    // this.requestCommandWithResponse(command);
                     const value = _get(Entry.hw.portData, sensorDataMap, -1);
                     // 기획팀 의도에 따라 30도 이내는 기울지 않았다고 판단
 
@@ -1136,7 +1125,6 @@ Entry.Microbit = new (class Microbit {
                         }
                     }
 
-                    // this.requestCommandWithResponse(command);
                     const value = _get(Entry.hw.portData, sensorDataMap, -1);
                     /*
                     좌우 = 우측으로 기울일수록 +
@@ -1181,7 +1169,6 @@ Entry.Microbit = new (class Microbit {
                 },
                 func: (sprite, script) => {
                     const value = script.getField('VALUE');
-                    // this.requestCommandWithResponse(functionKeys.GET_ACCELEROMETER, { value });
                     let whole = _get(Entry.hw.portData, 'payload.sensorData.accelerometer', -1);
                     if (whole instanceof Object) {
                         switch (value) {
@@ -1233,7 +1220,6 @@ Entry.Microbit = new (class Microbit {
                 },
                 func: (sprite, script) => {
                     const value = script.getField('VALUE');
-                    // this.requestCommandWithResponse(functionKeys.GET_GESTURE);
                     const gesture = _get(Entry.hw.portData, 'payload.sensorData.gesture', -1);
 
                     /**
