@@ -183,6 +183,7 @@ class Hardware implements Entry.Hardware {
     private _setSocketClosed(needRedraw: boolean = true) {
         this.programConnected = false;
         this.hwModule = undefined;
+        this.currentDeviceKey = undefined;
         needRedraw && Entry.dispatchEvent('hwChanged');
     }
 

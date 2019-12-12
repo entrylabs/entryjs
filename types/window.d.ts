@@ -3,3 +3,6 @@ declare interface Window {
     Lang: any;
     popupHelper?: any;
 }
+
+declare var Lang: any;
+declare var entrylms: any;
