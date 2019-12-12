@@ -55,7 +55,7 @@ class Hardware implements Entry.Hardware {
             localStorage.setItem('entryhwRoomId', this.sessionRoomId);
         }
 
-        this.socketConnectionRetryCount = 2;
+        this.socketConnectionRetryCount = 3;
         this.programConnected = false;
         this.portData = {};
         this.sendQueue = {};
@@ -104,7 +104,6 @@ class Hardware implements Entry.Hardware {
             socket.io.reconnectionDelayMax(1000);
             socket.io.timeout(1000);
             socket.on('connect', () => {
-                socket.io.reconnection(false);
                 this._handleSocketConnected(socket);
                 resolve();
             });
@@ -167,7 +166,7 @@ class Hardware implements Entry.Hardware {
             this._setSocketClosed();
             this.reconnectionTimeout = window.setTimeout(() => {
                 this._initSocket();
-            }, 1000);
+            }, 1500);
         });
 
         socket.on('reconnect_failed', () => {
