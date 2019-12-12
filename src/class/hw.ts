@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 import HardwareSocketMessageHandler from './hardware/hardwareSocketMessageHandler';
 import '../playground/blocks';
@@ -108,7 +108,6 @@ class Hardware implements Entry.Hardware {
                 resolve();
             });
             socket.on('reconnect_failed', () => {
-                socket.close();
                 reject();
             });
         });
@@ -207,13 +206,25 @@ class Hardware implements Entry.Hardware {
             this.socket.connect();
         } else {
             connectHttpsWebSocket(this.httpsServerAddress)
-                .catch(() => connectHttpsWebSocket(this.httpsServerAddress2))
                 .catch(() => {
+                    if (this.programConnected || this.socket) {
+                        return;
+                    }
+                    return connectHttpsWebSocket(this.httpsServerAddress2);
+                })
+                .catch(() => {
+                    if (this.programConnected || this.socket) {
+                        return;
+                    }
+
                     if (['http:', 'file:'].indexOf(location.protocol) > -1) {
                         return connectHttpsWebSocket(this.httpServerAddress);
                     }
                 })
                 .catch(() => {
+                    if (this.programConnected || this.socket) {
+                        return;
+                    }
                     console.warn('All hardware socket connection failed');
                     this._setSocketClosed();
                 });
