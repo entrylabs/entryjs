@@ -30,7 +30,7 @@ Entry.Kingcoding = {
         //10:d2값 요청 명령 변수
 
         Entry.hw.sendQueue.readablePorts = [];
-        for (var port = 0; port < 11 ; port++) {
+        for (var port = 0; port < 14 ; port++) {
             Entry.hw.sendQueue[port] = 0;
             Entry.hw.sendQueue.readablePorts.push(port);
             Entry.hw.setDigitalPortValue(port, 0);
@@ -47,6 +47,8 @@ Entry.Kingcoding.setLanguage = function() {
                 kingcoding_set_motor: '킹코딩 모터 제어 %1 %2',
                 kingcoding_set_led: '킹코딩 LED 제어 %1 %2',
                 kingcoding_set_buzzer: '킹코딩 버저 제어 %1 %2',
+                kingcoding_set_digital1: '디지털 1번 제어  %1 %2',
+                kingcoding_set_digital2: '디지털 2번 제어  %1 %2',
                 kingcoding_get_number_sensor_1_value: '아날로그 1번 센서값',
                 kingcoding_get_number_sensor_2_value: '아날로그 2번 센서값',
                 kingcoding_get_digital_1_value: '디지털 1번 감지',
@@ -58,6 +60,8 @@ Entry.Kingcoding.setLanguage = function() {
                 kingcoding_set_motor: 'Motor Control',
                 kingcoding_set_led: 'LED Control',
                 kingcoding_set_buzzer: 'Buzzer Control',
+                kingcoding_set_digital1: 'Digital no.1 Control %1 %2',
+                kingcoding_set_digital2: 'Digital no.2 Control  %1 %2',
                 kingcoding_get_number_sensor_1_value: 'Analog Port 1 Value',
                 kingcoding_get_number_sensor_2_value: 'Analog Port 2 Value',
                 kingcoding_get_digital_1_value: 'Digital Port 1 Value',
@@ -72,6 +76,8 @@ Entry.Kingcoding.blockMenuBlocks = [
     'kingcoding_set_motor',
     'kingcoding_set_led',
     'kingcoding_set_buzzer',
+    'kingcoding_set_digital1',
+    'kingcoding_set_digital2',
     'kingcoding_get_number_sensor_1_value',
     'kingcoding_get_number_sensor_2_value',
     'kingcoding_get_digital_1_value',
@@ -327,6 +333,136 @@ Entry.Kingcoding.getBlocks = function() {
               },
             syntax: { js: [], py: ['Kingcoding.set_buzzer(%1)'] },
         },
+        kingcoding_set_digital1: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [ 
+                {
+                    type: 'Dropdown',
+                    options: [['켜기', '1'], ['끄기', '0']],
+                    value: '1',
+                    
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator', 
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {}, 
+            def: { 
+                params: [null, null],
+                type: 'kingcoding_set_digital1',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'Kingcoding2', 
+            isNotFor: ['Kingcoding'],
+            func: function(sprite, script) {
+                
+                if (!script.isStart) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var timeValue = 25;//시간지연
+
+                    const blockId = script.block.id;
+                    Entry.TimeWaitManager.add(
+                        blockId,
+                        function() {
+                            script.timeFlag = 0;
+                        },
+                        timeValue
+                    );
+
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    var value = script.getNumberField('PORT', script);
+                    console.log("digital1 :"+value);
+                    Entry.hw.setDigitalPortValue(`11`, value); 
+                    Entry.hw.setDigitalPortValue(`13`, 1); //출력을 사용한다는 플래그 세움
+                    return script.callReturn();
+                }
+
+              },
+            syntax: { js: [], py: ['Kingcoding.set_digital1(%1)'] },
+        },
+
+        kingcoding_set_digital2: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [ 
+                {
+                    type: 'Dropdown',
+                    options: [['켜기', '1'], ['끄기', '0']],
+                    value: '1',
+                    
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator', 
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {}, 
+            def: { 
+                params: [null, null],
+                type: 'kingcoding_set_digital2',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'Kingcoding2', 
+            isNotFor: ['Kingcoding'],
+            func: function(sprite, script) {
+                
+                if (!script.isStart) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var timeValue = 25;//시간지연
+
+                    const blockId = script.block.id;
+                    Entry.TimeWaitManager.add(
+                        blockId,
+                        function() {
+                            script.timeFlag = 0;
+                        },
+                        timeValue
+                    );
+
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    var value = script.getNumberField('PORT', script);
+                    console.log("digital1 :"+value);
+                    Entry.hw.setDigitalPortValue(`12`, value); 
+                    Entry.hw.setDigitalPortValue(`13`, 1); //출력을 사용한다는 플래그 세움
+                    return script.callReturn();
+                }
+
+              },
+            syntax: { js: [], py: ['Kingcoding.set_digital2(%1)'] },
+        },
+
         kingcoding_get_number_sensor_1_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -349,7 +485,7 @@ Entry.Kingcoding.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'Kingcoding',
+            class: 'Kingcoding3',
             isNotFor: ['Kingcoding'],
             func: function(sprite, script) {
                 Entry.hw.setDigitalPortValue(7, 1); //1:요청
@@ -381,7 +517,7 @@ Entry.Kingcoding.getBlocks = function() {
                 type: 'kingcoding_get_number_sensor_2_value',
             },
 
-            class: 'Kingcoding',
+            class: 'Kingcoding3',
             isNotFor: ['Kingcoding'],
             func: function(sprite, script) {
                 
@@ -421,7 +557,7 @@ Entry.Kingcoding.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'Kingcoding',
+            class: 'Kingcoding3',
             isNotFor: ['Kingcoding'],
             func: function(sprite, script) {
                 
@@ -455,7 +591,7 @@ Entry.Kingcoding.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'Kingcoding',
+            class: 'Kingcoding3',
             isNotFor: ['Kingcoding'],
             func: function(sprite, script) {
                 
