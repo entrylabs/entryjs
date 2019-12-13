@@ -18,6 +18,8 @@ const functionKeys = {
     SET_SERVO_PERIOD: 0x12,
     SET_TONE: 0x13,
     SET_TEMPO: 0x14,
+    SET_CUSTOM_IMAGE: 0x15,
+
     GET_LED: 0x31,
     GET_ANALOG: 0x32,
     GET_DIGITAL: 0x33,
@@ -357,7 +359,7 @@ Entry.Microbit = new (class Microbit {
                 template: 'LED %1 으로 출력하기 %2',
                 params: [
                     {
-                        type: 'Color',
+                        type: 'Led',
                     },
                     {
                         type: 'Indicator',
@@ -376,7 +378,8 @@ Entry.Microbit = new (class Microbit {
                 },
                 func: (sprite, script) => {
                     const value = script.getField('VALUE');
-                    this.requestCommand(functionKeys.SET_IMAGE, { value });
+                    console.log(value);
+                    this.requestCommand(functionKeys.SET_CUSTOM_IMAGE, { value });
                 },
             },
             microbit_reset_screen: {
