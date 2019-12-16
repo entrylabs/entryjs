@@ -378,7 +378,6 @@ Entry.Microbit = new (class Microbit {
                 },
                 func: (sprite, script) => {
                     const value = script.getField('VALUE');
-                    console.log(value);
                     this.requestCommand(functionKeys.SET_CUSTOM_IMAGE, { value });
                 },
             },
@@ -484,13 +483,6 @@ Entry.Microbit = new (class Microbit {
                 class: 'microbitSound',
                 isNotFor: ['microbit'],
                 def: {
-                    params: [
-                        null,
-                        {
-                            type: 'number',
-                            params: ['1023'],
-                        },
-                    ],
                     type: 'microbit_set_tone',
                 },
                 paramsKeyMap: {

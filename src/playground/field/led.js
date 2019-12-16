@@ -205,6 +205,10 @@ Entry.FieldLed = class FieldLed extends Entry.Field {
                 },
             },
             container: this.optionGroup[0],
+        }).on('change', (value) => {
+            if (value) {
+                this.applyValue(value);
+            }
         });
 
         this.optionDomCreated();
