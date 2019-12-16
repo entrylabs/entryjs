@@ -491,6 +491,7 @@ Entry.Kingcoding.getBlocks = function() {
                 Entry.hw.setDigitalPortValue(7, 1); //1:요청
                 var ret = Entry.hw.getDigitalPortValue(0); //값을 받기
                 ret = ret & 63  // mask: 00111111
+                ret = ret * 100 / 63  //(0~100 으로 변환)
                 console.log("anal 1 :"+ret)
                 return ret;
                 
@@ -524,6 +525,7 @@ Entry.Kingcoding.getBlocks = function() {
                 Entry.hw.setDigitalPortValue(8,1); //a2 값을 요청
                 var ret = Entry.hw.getDigitalPortValue(1); //값을 받기
                 ret = ret & 63  // mask: 00111111
+                ret = ret * 100 / 63 //(0~100 으로 변환)
                 console.log("anal 2 :"+ret)
                 return ret;
             },
