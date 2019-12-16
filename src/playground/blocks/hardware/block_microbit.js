@@ -19,6 +19,7 @@ const functionKeys = {
     SET_TONE: 0x13,
     SET_TEMPO: 0x14,
     SET_CUSTOM_IMAGE: 0x15,
+    SET_RELATIVE_TEMPO: 0x16,
 
     GET_LED: 0x31,
     GET_ANALOG: 0x32,
@@ -77,6 +78,7 @@ Entry.Microbit = new (class Microbit {
             'microbit_get_digital',
             'microbit_set_tone',
             'microbit_set_tempo',
+            'microbit_set_relative_tempo',
             'microbit_get_button',
             'microbit_is_tilt',
             'microbit_get_tilt',
@@ -503,7 +505,7 @@ Entry.Microbit = new (class Microbit {
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
                 statements: [],
-                template: '소리 박자 %1 BPM 으로 설정 %2',
+                template: '연주 속도를 %1으로 정하기 %2',
                 params: [
                     {
                         type: 'Block',
@@ -536,6 +538,46 @@ Entry.Microbit = new (class Microbit {
                     const pinNumber = script.getField('PIN');
                     const value = _clamp(script.getNumberValue('VALUE'), 0, 255);
                     this.requestCommand(functionKeys.SET_TEMPO, { value });
+                },
+            },
+            microbit_set_relative_tempo: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                template: '연주 속도를  %1 BPM 만큼 바꾸기 %2',
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                class: 'microbitSound',
+                isNotFor: ['microbit'],
+                def: {
+                    params: [
+                        null,
+                        {
+                            type: 'number',
+                            params: ['20'],
+                        },
+                    ],
+                    type: 'microbit_set_relative_tempo',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                func: (sprite, script) => {
+                    const pinNumber = script.getField('PIN');
+                    const value = _clamp(script.getNumberValue('VALUE'), -127, 127) + 128; // offset for uint8_t payload
+                    this.requestCommand(functionKeys.SET_RELATIVE_TEMPO, { value });
                 },
             },
 
@@ -1056,7 +1098,6 @@ Entry.Microbit = new (class Microbit {
                     const value = _get(Entry.hw.portData, sensorDataMap, -1);
                     // 기획팀 의도에 따라 30도 이내는 기울지 않았다고 판단
 
-                    console.log(command, value);
                     /*
                     좌우 = 우측으로 기울일수록 +
                     앞뒤 = 뒤로 기울일수록 +
