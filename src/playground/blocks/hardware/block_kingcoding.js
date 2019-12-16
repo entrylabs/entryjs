@@ -49,8 +49,8 @@ Entry.Kingcoding.setLanguage = function() {
                 kingcoding_set_buzzer: '킹코딩 버저 제어 %1 %2',
                 kingcoding_set_digital1: '디지털 1번 제어  %1 %2',
                 kingcoding_set_digital2: '디지털 2번 제어  %1 %2',
-                kingcoding_get_number_sensor_1_value: '아날로그 1번 센서값',
-                kingcoding_get_number_sensor_2_value: '아날로그 2번 센서값',
+                kingcoding_get_number_sensor_1_value: '아날로그 1번 센서값(0~100)',
+                kingcoding_get_number_sensor_2_value: '아날로그 2번 센서값(0~100)',
                 kingcoding_get_digital_1_value: '디지털 1번 감지',
                 kingcoding_get_digital_2_value: '디지털 2번 감지',
             },
@@ -333,135 +333,135 @@ Entry.Kingcoding.getBlocks = function() {
               },
             syntax: { js: [], py: ['Kingcoding.set_buzzer(%1)'] },
         },
-        kingcoding_set_digital1: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [ 
-                {
-                    type: 'Dropdown',
-                    options: [['켜기', '1'], ['끄기', '0']],
-                    value: '1',
+        // kingcoding_set_digital1: {
+        //     color: EntryStatic.colorSet.block.default.HARDWARE,
+        //     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+        //     skeleton: 'basic',
+        //     statements: [],
+        //     params: [ 
+        //         {
+        //             type: 'Dropdown',
+        //             options: [['켜기', '1'], ['끄기', '0']],
+        //             value: '1',
                     
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator', 
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {}, 
-            def: { 
-                params: [null, null],
-                type: 'kingcoding_set_digital1',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            class: 'Kingcoding2', 
-            isNotFor: ['Kingcoding'],
-            func: function(sprite, script) {
+        //             fontSize: 11,
+        //             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+        //             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+        //         },
+        //         {
+        //             type: 'Indicator', 
+        //             img: 'block_icon/hardware_icon.svg',
+        //             size: 12,
+        //         },
+        //     ],
+        //     events: {}, 
+        //     def: { 
+        //         params: [null, null],
+        //         type: 'kingcoding_set_digital1',
+        //     },
+        //     paramsKeyMap: {
+        //         PORT: 0,
+        //     },
+        //     class: 'Kingcoding2', 
+        //     isNotFor: ['Kingcoding'],
+        //     func: function(sprite, script) {
                 
-                if (!script.isStart) {
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    var timeValue = 25;//시간지연
+        //         if (!script.isStart) {
+        //             script.isStart = true;
+        //             script.timeFlag = 1;
+        //             var timeValue = 25;//시간지연
 
-                    const blockId = script.block.id;
-                    Entry.TimeWaitManager.add(
-                        blockId,
-                        function() {
-                            script.timeFlag = 0;
-                        },
-                        timeValue
-                    );
+        //             const blockId = script.block.id;
+        //             Entry.TimeWaitManager.add(
+        //                 blockId,
+        //                 function() {
+        //                     script.timeFlag = 0;
+        //                 },
+        //                 timeValue
+        //             );
 
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {
-                    delete script.timeFlag;
-                    delete script.isStart;
-                    Entry.engine.isContinue = false;
-                    var value = script.getNumberField('PORT', script);
-                    console.log("digital1 :"+value);
-                    Entry.hw.setDigitalPortValue(`11`, value); 
-                    Entry.hw.setDigitalPortValue(`13`, 1); //출력을 사용한다는 플래그 세움
-                    return script.callReturn();
-                }
+        //             return script;
+        //         } else if (script.timeFlag == 1) {
+        //             return script;
+        //         } else {
+        //             delete script.timeFlag;
+        //             delete script.isStart;
+        //             Entry.engine.isContinue = false;
+        //             var value = script.getNumberField('PORT', script);
+        //             console.log("digital1 :"+value);
+        //             Entry.hw.setDigitalPortValue(`11`, value); 
+        //             Entry.hw.setDigitalPortValue(`13`, 1); //출력을 사용한다는 플래그 세움
+        //             return script.callReturn();
+        //         }
 
-              },
-            syntax: { js: [], py: ['Kingcoding.set_digital1(%1)'] },
-        },
+        //       },
+        //     syntax: { js: [], py: ['Kingcoding.set_digital1(%1)'] },
+        // },
 
-        kingcoding_set_digital2: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [ 
-                {
-                    type: 'Dropdown',
-                    options: [['켜기', '1'], ['끄기', '0']],
-                    value: '1',
+        // kingcoding_set_digital2: {
+        //     color: EntryStatic.colorSet.block.default.HARDWARE,
+        //     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+        //     skeleton: 'basic',
+        //     statements: [],
+        //     params: [ 
+        //         {
+        //             type: 'Dropdown',
+        //             options: [['켜기', '1'], ['끄기', '0']],
+        //             value: '1',
                     
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator', 
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {}, 
-            def: { 
-                params: [null, null],
-                type: 'kingcoding_set_digital2',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            class: 'Kingcoding2', 
-            isNotFor: ['Kingcoding'],
-            func: function(sprite, script) {
+        //             fontSize: 11,
+        //             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+        //             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+        //         },
+        //         {
+        //             type: 'Indicator', 
+        //             img: 'block_icon/hardware_icon.svg',
+        //             size: 12,
+        //         },
+        //     ],
+        //     events: {}, 
+        //     def: { 
+        //         params: [null, null],
+        //         type: 'kingcoding_set_digital2',
+        //     },
+        //     paramsKeyMap: {
+        //         PORT: 0,
+        //     },
+        //     class: 'Kingcoding2', 
+        //     isNotFor: ['Kingcoding'],
+        //     func: function(sprite, script) {
                 
-                if (!script.isStart) {
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    var timeValue = 25;//시간지연
+        //         if (!script.isStart) {
+        //             script.isStart = true;
+        //             script.timeFlag = 1;
+        //             var timeValue = 25;//시간지연
 
-                    const blockId = script.block.id;
-                    Entry.TimeWaitManager.add(
-                        blockId,
-                        function() {
-                            script.timeFlag = 0;
-                        },
-                        timeValue
-                    );
+        //             const blockId = script.block.id;
+        //             Entry.TimeWaitManager.add(
+        //                 blockId,
+        //                 function() {
+        //                     script.timeFlag = 0;
+        //                 },
+        //                 timeValue
+        //             );
 
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {
-                    delete script.timeFlag;
-                    delete script.isStart;
-                    Entry.engine.isContinue = false;
-                    var value = script.getNumberField('PORT', script);
-                    console.log("digital1 :"+value);
-                    Entry.hw.setDigitalPortValue(`12`, value); 
-                    Entry.hw.setDigitalPortValue(`13`, 1); //출력을 사용한다는 플래그 세움
-                    return script.callReturn();
-                }
+        //             return script;
+        //         } else if (script.timeFlag == 1) {
+        //             return script;
+        //         } else {
+        //             delete script.timeFlag;
+        //             delete script.isStart;
+        //             Entry.engine.isContinue = false;
+        //             var value = script.getNumberField('PORT', script);
+        //             console.log("digital1 :"+value);
+        //             Entry.hw.setDigitalPortValue(`12`, value); 
+        //             Entry.hw.setDigitalPortValue(`13`, 1); //출력을 사용한다는 플래그 세움
+        //             return script.callReturn();
+        //         }
 
-              },
-            syntax: { js: [], py: ['Kingcoding.set_digital2(%1)'] },
-        },
+        //       },
+        //     syntax: { js: [], py: ['Kingcoding.set_digital2(%1)'] },
+        // },
 
         kingcoding_get_number_sensor_1_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -535,74 +535,74 @@ Entry.Kingcoding.getBlocks = function() {
             ] },
         },
         
-        kingcoding_get_digital_1_value: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_boolean_field',
-            statements: [],
-            params: [
-                {
-                    type: 'Text',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-                type: 'kingcoding_get_digital_1_value',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            class: 'Kingcoding3',
-            isNotFor: ['Kingcoding'],
-            func: function(sprite, script) {
+        // kingcoding_get_digital_1_value: {
+        //     color: EntryStatic.colorSet.block.default.HARDWARE,
+        //     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+        //     fontColor: '#fff',
+        //     skeleton: 'basic_boolean_field',
+        //     statements: [],
+        //     params: [
+        //         {
+        //             type: 'Text',
+        //             fontSize: 11,
+        //             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+        //             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+        //         },
+        //     ],
+        //     events: {},
+        //     def: {
+        //         params: [null],
+        //         type: 'kingcoding_get_digital_1_value',
+        //     },
+        //     paramsKeyMap: {
+        //         PORT: 0,
+        //     },
+        //     class: 'Kingcoding3',
+        //     isNotFor: ['Kingcoding'],
+        //     func: function(sprite, script) {
                 
-                Entry.hw.setDigitalPortValue(9, 1); //값 요청 
-                var ret = Entry.hw.getDigitalPortValue(2);
-                ret = ret & 1  // mask: 0000 0001
-                console.log("digi 1 :"+ret)
-                return ret;
-             },
-            syntax: { js: [], py: ['Kingcoding.is_button_1_pressed()'] },
-        },
-        kingcoding_get_digital_2_value: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_boolean_field',
-            statements: [],
-            params: [
-                {
-                    type: 'Text',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-                type: 'kingcoding_get_digital_2_value',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            class: 'Kingcoding3',
-            isNotFor: ['Kingcoding'],
-            func: function(sprite, script) {
+        //         Entry.hw.setDigitalPortValue(9, 1); //값 요청 
+        //         var ret = Entry.hw.getDigitalPortValue(2);
+        //         ret = ret & 1  // mask: 0000 0001
+        //         console.log("digi 1 :"+ret)
+        //         return ret;
+        //      },
+        //     syntax: { js: [], py: ['Kingcoding.is_button_1_pressed()'] },
+        // },
+        // kingcoding_get_digital_2_value: {
+        //     color: EntryStatic.colorSet.block.default.HARDWARE,
+        //     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+        //     fontColor: '#fff',
+        //     skeleton: 'basic_boolean_field',
+        //     statements: [],
+        //     params: [
+        //         {
+        //             type: 'Text',
+        //             fontSize: 11,
+        //             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+        //             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+        //         },
+        //     ],
+        //     events: {},
+        //     def: {
+        //         params: [null],
+        //         type: 'kingcoding_get_digital_2_value',
+        //     },
+        //     paramsKeyMap: {
+        //         PORT: 0,
+        //     },
+        //     class: 'Kingcoding3',
+        //     isNotFor: ['Kingcoding'],
+        //     func: function(sprite, script) {
                 
-                Entry.hw.setDigitalPortValue(10, 1); //값 요청 
-                var ret = Entry.hw.getDigitalPortValue(2);
-                ret = ret & 2  // mask: 0000 0010
-                console.log("digi 2 :"+ret)
-                return ret;
-            },
-            syntax: { js: [], py: ['Kingcoding.is_button_2_pressed()'] },
-        },
+        //         Entry.hw.setDigitalPortValue(10, 1); //값 요청 
+        //         var ret = Entry.hw.getDigitalPortValue(2);
+        //         ret = ret & 2  // mask: 0000 0010
+        //         console.log("digi 2 :"+ret)
+        //         return ret;
+        //     },
+        //     syntax: { js: [], py: ['Kingcoding.is_button_2_pressed()'] },
+        // },
         
     };
 };
