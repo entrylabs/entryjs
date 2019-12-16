@@ -1,8 +1,5 @@
 ﻿'use strict';
 
-
-
-
 Entry.CloverSEntry1 = {
     id: '38.1',
     name: 'CloverSEntry1',
