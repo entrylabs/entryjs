@@ -2756,7 +2756,7 @@ Entry.Utils.removeBlockByType = function(blockType, callback) {
     }
 };
 
-Entry.Utils.isUsedBlockTYpe = function(blockType) {
+Entry.Utils.isUsedBlockType = function(blockType) {
     const objects = Entry.container.getAllObjects();
     const usedInObject = objects.some(
         ({ script }) => !!script.getBlockList(false, blockType).length
