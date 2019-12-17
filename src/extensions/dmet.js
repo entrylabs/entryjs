@@ -2,9 +2,254 @@ import cuid from 'cuid';
 import uid from 'uid';
 import isPlainObject from 'lodash/isPlainObject';
 import mapValues from 'lodash/mapValues';
+import _flattenDeep from 'lodash/flattenDeep';
 
 function generateId() {
     return uid(8) + cuid();
+}
+
+class dmetMatrix {
+    constructor(array = [], id) {
+        this.#id = id;
+        this.from(array);
+    }
+
+    _id = undefined;
+    __isUpdate = false;
+    #id = '';
+    #key = generateId();
+    #object = {};
+    #array = [];
+    #info = {};
+    #maxRow = 100;
+    #maxCol = 100;
+    #variableType = 'matrix';
+
+    get value() {
+        return this.#object;
+    }
+
+    get array() {
+        return this.#array;
+    }
+
+    get isDmet() {
+        return true;
+    }
+
+    get variableType() {
+        return this.#variableType;
+    }
+
+    from(data) {
+        const { list = [], array, value, _id, id = this.#id, ...info } = data;
+        if (Array.isArray(array)) {
+            //this.#array = _flattenDeep(array);
+            this.#array = array;
+            this.#array.forEach((row = []) => {
+                row.forEach((value) => {
+                    const { key } = value;
+                    this.#object[key] = value;
+                });
+            });
+        }
+        this._id = _id;
+        this.#id = id;
+        this.#info = info;
+
+    }
+
+    toJSON() {
+        return {
+            _id: this._id || undefined,
+            id: this.#id,
+            key: this.#key,
+            array: this.#array,
+            isDmet: true,
+            variableType: this.variableType,
+        };
+    }
+
+
+    #findLastArray(indexArray) {
+        let result = this.#array;
+        const lastIndex = indexArray.pop();
+        for (let i in indexArray) {
+            if (result[indexArray[i]]) {
+                result = result[indexArray[i]];
+            }
+        }
+        return {
+            array: result,
+            lastIndex,
+            value: result[lastIndex],
+            parentIndex: indexArray,
+        };
+    }
+
+    get(key) {
+        if (typeof key === 'number') {
+            return this.#array[key];
+        } else if (Array.isArray(key)) {
+            let result = this.#array;
+            for (var i in key) {
+                if (result[key[i]]) {
+                    result = result[key[i]];
+                }
+            }
+            return result == this.#array ? null : result;
+        } else if (typeof key === 'string') {
+            return this.#object[key];
+        }
+    }
+
+    getIndex(key) {
+        if (Array.isArray(key)) {
+            return key;
+        } else if (typeof key === 'string') {
+            const oldData = this.#object[key];
+
+            //_.findIndex(users, ['active', false]);
+            function findIndex(arr, index = []) {
+                for (var i = 0; i < arr.length; i++) {
+                    const result = [...index, i];
+                    if (Array.isArray(arr[i])) {
+                        const newIndex = findIndex(arr[i], result);
+                        if (newIndex) {
+                            return newIndex;
+                        }
+                    } else if (arr[i] == oldData) {
+                        return result;
+                    }
+                }
+                return false;
+            }
+
+            return findIndex(this.#array);
+        } else {
+            return [0, 0];
+        }
+    }
+
+    #skipOperation = ['append', 'insert'];
+
+    getOperation({ type, key, index, data, newKey } = {}) {
+        if (this.#skipOperation.indexOf(type) === -1 && typeof index === 'number') {
+            const data = this.get(index);
+            key = data.key;
+        }
+        let attach = {};
+        switch (type) {
+            case 'append':
+                attach = {
+                    index,
+                    data,
+                };
+                break;
+            case 'insert':
+                attach = {
+                    index,
+                    data,
+                };
+                break;
+            case 'delete':
+                attach = { index };
+                break;
+            case 'replace':
+                attach = {
+                    data,
+                    newKey,
+                };
+                break;
+        }
+
+        return {
+            _id: this._id || undefined,
+            id: this.#id,
+            variableType: this.variableType,
+            key,
+            type,
+            ...attach,
+        };
+    }
+
+    exec(operation) {
+        const { type } = operation;
+        this.__isUpdate = true;
+        switch (type) {
+            case 'append':
+                return this.#append(operation);
+            case 'insert':
+                return this.#insert(operation);
+            case 'delete':
+                return this.#delete(operation);
+            case 'replace':
+                return this.#replace(operation);
+        }
+    }
+
+    #append({ key, index, data } = {}) {
+        if (!key) {
+            key = generateId();
+        }
+        const newData = { key, data };
+        let subArr = this.get(index);
+        if (!subArr) {
+            const x = Array.isArray(index) ? index[0] : index;
+            subArr = this.#array[x] = [];
+        }
+        if (Array.isArray(subArr)) {
+            this.#object[key] = newData;
+            subArr.push(newData);
+        }
+        return this.getOperation({ type: 'append', key, index: -1, data });
+    }
+
+    #insert({ key, index, data } = {}) {
+        if (!key) {
+            key = generateId();
+        }
+        const newData = { key, data };
+        let { array, lastIndex, value } = this.#findLastArray(index);
+        this.#object[key] = newData;
+        if (!array) {
+            array = this.#array[x] = [];
+        }
+        array.splice(lastIndex, 0, newData);
+        return this.getOperation({ type: 'insert', key, index, data });
+    }
+
+    #delete({ key, index }) {
+        if (!key) {
+            key = index;
+        }
+        const oldData = this.get(key);
+        if (!oldData) {
+            throw { message: 'not found data' };
+        }
+        const indexArray = this.getIndex(key);
+        let { array, lastIndex, value, parentIndex } = this.#findLastArray(indexArray);
+        delete this.#object[oldData.key];
+        array.splice(lastIndex, 1);
+
+        if (!array.length) {
+            const currentIndex = parentIndex.pop();
+            this.get(parentIndex).splice(currentIndex, 1);
+        }
+        return this.getOperation({ type: 'delete', key });
+    }
+
+    #replace({ key, data, newKey = generateId() }) {
+        const item = this.get(key);
+        if (!item) {
+            throw { message: 'not found data' };
+        }
+        delete this.#object[item.key];
+        item.key = newKey;
+        item.data = data;
+        this.#object[newKey] = item;
+        return this.getOperation({ type: 'replace', key, data, newKey });
+    }
 }
 
 class dmetList {
@@ -20,6 +265,7 @@ class dmetList {
     #object = {};
     #array = [];
     #info = {};
+    #variableType = 'list';
 
     get value() {
         return this.#array;
@@ -42,7 +288,7 @@ class dmetList {
     }
 
     get variableType() {
-        return 'list';
+        return this.#variableType;
     }
 
     set #data(array) {
@@ -153,7 +399,7 @@ class dmetList {
         return {
             _id: this._id || undefined,
             id: this.#id,
-            variableType: 'list',
+            variableType: this.variableType,
             key,
             type,
             ...attach,
@@ -182,7 +428,7 @@ class dmetList {
             key: this.#key,
             array: this.#array,
             isDmet: true,
-            variableType: 'list',
+            variableType: this.variableType,
         };
     }
 
@@ -218,7 +464,7 @@ class dmetList {
         }
         const oldData = this.get(key);
         if (!oldData) {
-            throw { message : 'not found data' };
+            throw { message: 'not found data' };
         }
         const oldIndex = this.getIndex(key);
         delete this.#object[oldData.key];
@@ -229,7 +475,7 @@ class dmetList {
     #replace({ key, data, newKey = generateId() }) {
         const item = this.get(key);
         if (!item) {
-            throw { message : 'not found data' };
+            throw { message: 'not found data' };
         }
         delete this.#object[item.key];
         item.key = newKey;
@@ -250,7 +496,7 @@ class dmetVariable {
     #key = generateId();
     #info = {};
     #value = '';
-    valueType = 'variable';
+    #variableType = 'variable';
 
     get value() {
         return this.#value;
@@ -265,7 +511,7 @@ class dmetVariable {
     }
 
     get variableType() {
-        return this.valueType;
+        return this.#variableType;
     }
 
     toJSON() {
@@ -276,7 +522,7 @@ class dmetVariable {
             key: this.#key,
             value: this.value,
             isDmet: true,
-            variableType: this.valueType,
+            variableType: this.variableType,
         };
     }
 
@@ -317,7 +563,7 @@ class dmetVariable {
                 return {
                     _id: this._id,
                     id: this.#id,
-                    variableType: this.valueType,
+                    variableType: this.variableType,
                     type,
                     value,
                 };
@@ -336,7 +582,7 @@ class dmetVariable {
 class dmetSlideVariable extends dmetVariable {
     constructor(variable, id) {
         super(variable, id);
-        this.valueType = 'slide';
+        this.variableType = 'slide';
     }
 }
 
@@ -349,6 +595,7 @@ class dmet {
     #id = generateId();
     #list = {};
     #variable = {};
+    #matrix = {};
 
     get list() {
         return this.#list;
@@ -356,6 +603,10 @@ class dmet {
 
     get variable() {
         return this.#variable;
+    }
+
+    get matrix() {
+        return this.#matrix;
     }
 
     get id() {
@@ -381,6 +632,7 @@ class dmet {
         return {
             id: this.#id,
             list: this.list,
+            matrix: this.matrix,
             variable: this.variable,
             isDmet: true,
         };
@@ -399,6 +651,9 @@ class dmet {
                 } else if (variableType === 'list') {
                     const result = new dmetList(variable);
                     this.#list[result.id] = result;
+                } else if (variableType === 'matrix') {
+                    const result = new dmetMatrix(variable);
+                    this.#matrix[result.id] = result;
                 }
             });
         } else if (isPlainObject(variables) && variables.isDmet) {
@@ -407,6 +662,9 @@ class dmet {
             });
             this.#variable = mapValues(variables.variable, (variable) => {
                 return new dmetVariable(variable);
+            });
+            this.#matrix = mapValues(variables.matrix, (list) => {
+                return new dmetMatrix(list);
             });
             this.#id = variables.id;
         }
@@ -420,6 +678,8 @@ class dmet {
                 return this.#variable[id];
             case 'list':
                 return this.#list[id];
+            case 'matrix':
+                return this.#matrix[id];
             case 'default':
                 return undefined;
         }
@@ -436,6 +696,8 @@ class dmet {
             this.#variable[id] = new dmetSlideVariable(object);
         } else if (variableType === 'list') {
             this.#list[id] = new dmetList(object);
+        } else if (variableType === 'matrix') {
+            this.#matrix[id] = new dmetMatrix(object);
         }
     }
 
@@ -464,6 +726,8 @@ class dmet {
                 return this.#variable[id].exec(operation);
             } else if (variableType === 'list') {
                 return this.#list[id].exec(operation);
+            } else if (variableType === 'matrix') {
+                return this.#matrix[id].exec(operation);
             }
         } finally {
             this.notify();
@@ -471,4 +735,4 @@ class dmet {
     }
 }
 
-export { dmetList, dmetVariable, dmet };
+export { dmetList, dmetVariable, dmet, dmetMatrix };
