@@ -156,11 +156,13 @@ Entry.Pingpong_G1.blockMenuBlocks = [
     //'pingpong_g1_is_top_shape',
     'pingpong_g1_get_sensor_value',
     'pingpong_g1_motor_rotate',
+    'pingpong_g1_start_motor_rotate',
+    'pingpong_g1_stop_motor_rotate',
     'pingpong_g1_rotate_servo_mortor',
     //'pingpong_g1_set_led_color',
     'pingpong_g1_set_dot_pixel',
     'pingpong_g1_set_dot_string',
-    'pingpong_g1_set_dot_show',
+    'pingpong_g1_set_dot_clear',
 ];
 
 Entry.Pingpong_G1.getBlocks = function() {
@@ -625,6 +627,102 @@ Entry.Pingpong_G1.getBlocks = function() {
                 return script;
             },
         },
+
+        pingpong_g1_start_motor_rotate: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: ['100'],
+                    },
+                ],
+                type: 'pingpong_g1_start_motor_rotate',
+            },
+            paramsKeyMap: { SPEED: 0, },
+            class: 'Pingpong_G1_motor',
+            isNotFor: ['Pingpong_G1'],
+            func: function(sprite, script) {
+
+                var speed = script.getNumberValue('SPEED');
+                speed = Math.min(Math.max(speed, 100), 1000);
+
+                var step = Math.round(degree * 5.5);
+                if (step > 32768) step = 32768;
+
+                if (!script.is_start) {
+                    script.is_start = true;
+                    script.step_flag = 1;
+
+                    var packet = makePacketHeader(0xcc, 0x0004, [2, 0, 0, 2,  0, 0]); // CONTINUOUS STEP_MOTOR
+                    packet.writeInt16BE(speed, 13);
+
+                    //FIXME
+                    Entry.hw.sendQueue.COMMAND = {
+                        id: ++Entry.Pingpong_G1.send_cmd_id,
+                        data: packet,
+                    };
+
+                    var delay_ms = Math.round(((1100 - Math.abs(speed)) / 99) * step) + 400;
+                    var myTimer = setTimeout(function() {
+                        script.step_flag = 2;
+                    }, delay_ms);
+                    return script;
+                } else if (script.step_flag == 2) {
+                    delete script.is_start;
+                    delete script.step_flag;
+                    //Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+        },
+        pingpong_g1_stop_motor_rotate: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            def: {
+                params: [],
+                type: 'pingpong_g1_stop_motor_rotate',
+            },
+            paramsKeyMap: { },
+            class: 'Pingpong_G1_motor',
+            isNotFor: ['Pingpong_G1'],
+            func: function(sprite, script) {
+				var packet = makePacketHeader(0xcc, 0x0004, [2, 0, 0, 1,  0, 0]); // CONTINUOUS STEP_MOTOR
+
+				//FIXME
+				Entry.hw.sendQueue.COMMAND = {
+					id: ++Entry.Pingpong_G1.send_cmd_id,
+					data: packet,
+				};
+
+				return script.callReturn();
+            },
+        },
+
         pingpong_g1_rotate_servo_mortor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -722,7 +820,7 @@ Entry.Pingpong_G1.getBlocks = function() {
                 dot_x = Math.min(Math.max(dot_x, 1), 8);
                 dot_y = Math.min(Math.max(dot_y, 1), 8);
 
-                var packet = makePacketHeader(0xa2, 1, [0x70, dot_x, dot_y, onoff]); // turn on
+                var packet = makePacketHeader(0xa2, 0xe1, [0x70, dot_x, dot_y, onoff]); // turn on
 
                 //FIXME
                 Entry.hw.sendQueue.COMMAND = {
@@ -754,13 +852,13 @@ Entry.Pingpong_G1.getBlocks = function() {
             func: function(sprite, script) {
                 var str = script.getStringValue('STR', script);
 
-                var speed = 100;
+                var speed = 0xC8;
                 var opt = Buffer.concat([
-                    Buffer.from([0x70, speed]),
+                    Buffer.from([0x70, speed, 0]),
                     Buffer.from(str.substring(0, 20)),
                 ]);
 
-                var packet = makePacketHeader(0xa2, 3, opt);
+                var packet = makePacketHeader(0xa2, 0xe3, opt);
 
                 console.log(packet);
 
@@ -774,7 +872,7 @@ Entry.Pingpong_G1.getBlocks = function() {
             },
         },
 
-        pingpong_g1_set_dot_show: {
+        pingpong_g1_set_dot_clear: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -787,12 +885,12 @@ Entry.Pingpong_G1.getBlocks = function() {
                 },
             ],
             //events: {},
-            def: { params: [], type: 'pingpong_g1_set_dot_show' },
+            def: { params: [], type: 'pingpong_g1_set_dot_clear' },
             paramsKeyMap: {},
             class: 'Pingpong_G1_peripheral_LED',
             isNotFor: ['Pingpong_G1'],
             func: function(sprite, script) {
-                var packet = makePacketHeader(0xa2, 4, [0x70, 1]);
+                var packet = makePacketHeader(0xa2, 0xe4, [0x70, 2]);
 
                 //FIXME
                 Entry.hw.sendQueue.COMMAND = {
@@ -883,12 +981,14 @@ Entry.Pingpong_G1.setLanguage = function() {
                 pingpong_g1_get_tilt_value: '%1 방향 큐브 기울기',
                 pingpong_g1_get_sensor_value: '%1 센서값',
                 pingpong_g1_motor_rotate: '모터를 %1 방향으로 %2 도 회전하기 %3',
+				pingpong_g1_start_motor_rotate: '모터의 속도를 %1 로 정하기 %2',
+				pingpong_g1_stop_motor_rotate: '모터 멈추기 %1',
                 pingpong_g1_rotate_servo_mortor: '서보모터를 %1도로 설정하기 %2',
                 pingpong_g1_is_top_shape: '큐브 윗면에 %1 모양이 있는가?',
                 //pingpong_g1_set_led_color: 'LED를 %1 색으로 변경 %2',
                 pingpong_g1_set_dot_pixel: '도트 X:%1 Y:%2 %3 %4',
                 pingpong_g1_set_dot_string: '도트에 문자열 %1 출력 %2',
-                pingpong_g1_set_dot_show: '도트 화면 표시 %1',
+                pingpong_g1_set_dot_clear: '도트 화면 삭제 %1',
             },
             Blocks: {
                 pingpong_right: '오른쪽',
@@ -917,12 +1017,14 @@ Entry.Pingpong_G1.setLanguage = function() {
                 pingpong_g1_get_tilt_value: 'tilt angle to %1',
                 pingpong_g1_get_sensor_value: 'read sensor %1',
                 pingpong_g1_motor_rotate: 'rotate %2 degrees %1 %3',
+				pingpong_g1_start_motor_rotate: 'set motor speed to %1 %2',
+				pingpong_g1_stop_motor_rotate: 'stop motor rotate %1',
                 pingpong_g1_rotate_servo_mortor: 'set servo mortor to %1 degrees %2',
                 pingpong_g1_is_top_shape: '%1 shown in top view?',
                 //pingpong_g1_set_led_color: 'set led color to %1 %2',
                 pingpong_g1_set_dot_pixel: 'set %3 DOT X:%1 Y:%2 %4',
                 pingpong_g1_set_dot_string: 'print string %1 to DOT %2',
-                pingpong_g1_set_dot_show: 'turn on DOT %1',
+                pingpong_g1_set_dot_clear: 'clear DOT %1',
             },
             Blocks: {
                 pingpong_right: 'right',
