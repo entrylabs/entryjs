@@ -51,7 +51,7 @@ export default class Expansion {
             return;
         }
         const blocks = expansion.getBlocks();
-        return Object.keys(blocks).some((blockName) => Entry.Utils.isUsedBlockTYpe(blockName));
+        return Object.keys(blocks).some((blockName) => Entry.Utils.isUsedBlockType(blockName));
     }
 
     addExpansionBlocks(blockNames) {
