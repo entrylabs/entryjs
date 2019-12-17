@@ -982,6 +982,22 @@ Entry.VariableContainer = class VariableContainer {
         Entry.Func.edit(new Entry.Func(data));
     }
 
+    removeBlocksInFunctionByType(blockType) {
+        Object.values(this.functions_).forEach((func) => {
+            Entry.do('funcEditStart', func.id).isPass(true);
+            func.content.getBlockList(false, blockType).forEach((b, index) => {
+                Entry.do('destroyBlock', b).isPass(true);
+            });
+            Entry.do('funcEditEnd', 'save').isPass(true);
+        });
+    }
+
+    isUsedBlockTypeInFunction(blockType) {
+        return Object.values(this.functions_).some(
+            (func) => func.content.getBlockList(false, blockType).length
+        );
+    }
+
     /**
      * Remove variable
      * @param {Entry.Variable} variable
@@ -1145,14 +1161,9 @@ Entry.VariableContainer = class VariableContainer {
         const currentObjectId = Entry.playground.object.id;
         Entry.do('selectObject', currentObjectId);
         const functionType = `func_${func.id}`;
-        const objects = Entry.container.getAllObjects();
-        objects.forEach(({ id, script }) => {
-            Entry.do('selectObject', id).isPass(true);
-            script.getBlockList(false, functionType).forEach((b, index) => {
-                Entry.do('destroyBlock', b).isPass(true);
-            });
+        Entry.Utils.removeBlockByType(functionType, () => {
+            Entry.do('funcRemove', func).isPass(true);
         });
-        Entry.do('funcRemove', func).isPass(true);
         Entry.do('selectObject', currentObjectId).isPass(true);
     }
 
