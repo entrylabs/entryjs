@@ -17,6 +17,7 @@ const basicBlockList = [
     require('./block_calc'),
     require('./block_variable'),
     require('./block_func'),
+    require('./block_analyze'),
 ];
 
 Entry.EXPANSION_BLOCK = {};

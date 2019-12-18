@@ -71,18 +71,20 @@ class dmetMatrix {
     }
 
 
-    #findLastArray(indexArray) {
+    #findLastArray(array) {
+        const indexArray = [...array];
         let result = this.#array;
         const lastIndex = indexArray.pop();
         for (let i in indexArray) {
-            if (result[indexArray[i]]) {
-                result = result[indexArray[i]];
+            const key = indexArray[i] -1;
+            if (result[key]) {
+                result = result[key];
             }
         }
         return {
             array: result,
-            lastIndex,
-            value: result[lastIndex],
+            lastIndex: lastIndex - 1,
+            value: result[lastIndex - 1],
             parentIndex: indexArray,
         };
     }
@@ -93,8 +95,8 @@ class dmetMatrix {
         } else if (Array.isArray(key)) {
             let result = this.#array;
             for (var i in key) {
-                if (result[key[i]]) {
-                    result = result[key[i]];
+                if (result[key[i] - 1]) {
+                    result = result[key[i] - 1];
                 }
             }
             return result == this.#array ? null : result;
@@ -158,6 +160,7 @@ class dmetMatrix {
             case 'replace':
                 attach = {
                     data,
+                    index,
                     newKey,
                 };
                 break;
@@ -192,11 +195,11 @@ class dmetMatrix {
         if (!key) {
             key = generateId();
         }
-        const newData = { key, data };
+        const newData = { key, value: data };
         let subArr = this.get(index);
         if (!subArr) {
             const x = Array.isArray(index) ? index[0] : index;
-            subArr = this.#array[x] = [];
+            subArr = this.#array[x -1] = [];
         }
         if (Array.isArray(subArr)) {
             this.#object[key] = newData;
@@ -209,13 +212,19 @@ class dmetMatrix {
         if (!key) {
             key = generateId();
         }
-        const newData = { key, data };
-        let { array, lastIndex, value } = this.#findLastArray(index);
-        this.#object[key] = newData;
-        if (!array) {
-            array = this.#array[x] = [];
+        const newData = { key, value: data };
+        let { array, lastIndex, value, parentIndex } = this.#findLastArray(index);
+        if(!data) {
+            this.#array.splice(lastIndex, 0, []);
+            return this.getOperation({ type: 'insert', key, index, data });
         }
-        array.splice(lastIndex, 0, newData);
+        this.#object[key] = newData;
+        if (array == this.#array) {
+            this.#array[parentIndex[0] -1] = [newData];
+        } else {
+            array.splice(lastIndex, 0, newData);
+        }
+
         return this.getOperation({ type: 'insert', key, index, data });
     }
 
@@ -229,7 +238,14 @@ class dmetMatrix {
         }
         const indexArray = this.getIndex(key);
         let { array, lastIndex, value, parentIndex } = this.#findLastArray(indexArray);
-        delete this.#object[oldData.key];
+        if (Array.isArray(array[lastIndex])) {
+            array[lastIndex].forEach(({ key, value }) => {
+                delete this.#object[key];
+            });
+        } else {
+            delete this.#object[oldData.key];
+        }
+
         array.splice(lastIndex, 1);
 
         if (!array.length) {
@@ -239,16 +255,19 @@ class dmetMatrix {
         return this.getOperation({ type: 'delete', key });
     }
 
-    #replace({ key, data, newKey = generateId() }) {
+    #replace({ key, index, data, newKey = generateId() }) {
+        if (!key) {
+            key = index;
+        }
         const item = this.get(key);
         if (!item) {
             throw { message: 'not found data' };
         }
         delete this.#object[item.key];
         item.key = newKey;
-        item.data = data;
+        item.value = data;
         this.#object[newKey] = item;
-        return this.getOperation({ type: 'replace', key, data, newKey });
+        return this.getOperation({ type: 'replace', key, index, data, newKey });
     }
 }
 

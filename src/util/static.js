@@ -160,6 +160,8 @@ Entry.STATIC = {
         variableSetName: 828,
         listSetName: 829,
         variableContainerClickMessageAddButton: 830,
+        variableContainerAddMatrix: 831,
+        variableContainerRemoveMatrix: 832,
 
         dismissModal: 900,
 
