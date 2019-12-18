@@ -39,6 +39,8 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
         variableSetName,
         listSetName,
         variableContainerClickMessageAddButton,
+        variableContainerAddMatrix,
+        variableContainerRemoveMatrix,
     } = COMMAND_TYPES;
 
     c[variableContainerSelectFilter] = {
@@ -406,6 +408,51 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
             return 'variableContainerClickListAddButton';
         },
         dom: ['variableContainer', 'listAddButton'],
+    };
+
+    c[variableContainerAddMatrix] = {
+        do(matrix) {
+            const id = _.result(getExpectedData('matrix'), 'id');
+            if (id) {
+                if (matrix.setId) {
+                    matrix.setId(id);
+                } else {
+                    matrix.id = id;
+                }
+            }
+            getVC().addMatrix(matrix);
+        },
+        state(matrix) {
+            matrix = _toJSON(matrix);
+            matrix.id = _.result(getExpectedData('matrix'), 'id') || matrix.id;
+            return [matrix];
+        },
+        log(matrix) {
+            matrix = _toJSON(matrix);
+            matrix.id = _.result(getExpectedData('matrix'), 'id') || matrix.id;
+            return [['matrix', matrix]];
+        },
+        recordable: RECORDABLE.SUPPORT,
+        validate: false,
+        undo: 'variableContainerRemoveMatrix',
+        dom: ['variableContainer', 'listAddConfirmButton'],
+    };
+
+
+    c[variableContainerRemoveMatrix] = {
+        do(matrix) {
+            getVC().removeMatrix(matrix);
+        },
+        state(matrix) {
+            return [_toJSON(matrix)];
+        },
+        log(matrix) {
+            return [['matrix', _toJSON(matrix)]];
+        },
+        recordable: RECORDABLE.SUPPORT,
+        validate: false,
+        undo: 'variableContainerAddMatrix',
+        dom: ['variableContainer', 'listAddConfirmButton'],
     };
 
     c[variableContainerAddList] = {

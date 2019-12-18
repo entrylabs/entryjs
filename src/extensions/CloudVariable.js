@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import { dmet, dmetList, dmetVariable } from './dmet';
+import { dmet, dmetList, dmetVariable, dmetMatrix } from './dmet';
 import singleInstance from '../core/singleInstance';
 
 class CloudVariableExtension {
@@ -96,6 +96,10 @@ class CloudVariableExtension {
         });
     }
 
+    offline() {
+        this.#data = new dmet(this.#defaultData);
+    }
+
     setDefaultData(defaultData) {
         this.#defaultData = defaultData;
     }
@@ -113,6 +117,8 @@ class CloudVariableExtension {
             await this.#createVariable(name, id_);
         } else if (type === 'list') {
             await this.#createList(name, id_);
+        } else if (type === 'matrix') {
+            await this.#createMatrix(name, id_);
         }
         // Entry.dispatchEvent('saveVariable');
     }
@@ -151,6 +157,27 @@ class CloudVariableExtension {
             this.#cvSocket.emit('create', list, (isCreate, list) => {
                 if (isCreate) {
                     this.createDmet(list);
+                }
+                resolve();
+            });
+        });
+    }
+
+
+    #createMatrix(name, id) {
+        if (!this.#cvSocket) {
+            return;
+        }
+        const matrix = new dmetMatrix(
+            {
+                name,
+            },
+            id
+        );
+        return new Promise((resolve) => {
+            this.#cvSocket.emit('create', matrix, (isCreate, matrix) => {
+                if (isCreate) {
+                    this.createDmet(matrix);
                 }
                 resolve();
             });
@@ -229,8 +256,9 @@ class CloudVariableExtension {
         const dmetList = this.#data && this.#data.get(target);
         if (!dmetList) {
             console.error('no target ', target);
+        } else {
+            dmetList.from(array.map(({ data }) => data));
         }
-        dmetList.from(array.map(({data}) => data));
     }
 
     append(target, data) {

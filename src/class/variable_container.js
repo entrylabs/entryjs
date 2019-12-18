@@ -18,6 +18,7 @@ Entry.VariableContainer = class VariableContainer {
         this.variables_ = [];
         this.messages_ = [];
         this.lists_ = [];
+        this.matrices_ = [];
         this.functions_ = {};
         this.viewMode_ = 'all';
         this.selected = null;
@@ -779,6 +780,9 @@ Entry.VariableContainer = class VariableContainer {
                     variable.generateView(this.lists_.length);
                     this.lists_.push(variable);
                     break;
+                case 'matrix':
+                    this.matrices_.push(variable);
+                    break;
                 case 'timer':
                     this.generateTimer(variable);
                     break;
@@ -834,6 +838,12 @@ Entry.VariableContainer = class VariableContainer {
                 }
                 this.generateVariable(variable, this.lists_, 'lists_');
                 this.lists_.push(variable);
+            } else if (type === 'matrix') {
+                if (this.matrices_.some((item) => item.id_ === variable.id_)) {
+                    continue;
+                }
+                this.generateVariable(variable, this.matrices_, 'matrices_');
+                this.matrices_.push(variable);
             }
         }
         if (Entry.isEmpty(Entry.engine.projectTimer)) {
@@ -981,6 +991,20 @@ Entry.VariableContainer = class VariableContainer {
 
         return list;
     }
+
+    /**
+     * get variable on canvas
+     * @return {Entry.List}
+     */
+    getMatrix(id, { isClone, lists } = {}) {
+        const criteria = { id_: id };
+        let matrix = _.find(this.matrices_, criteria);
+        if (isClone && matrix.object_) {
+            matrix = _.find(lists, criteria);
+        }
+        return matrix;
+    }
+
 
     /**
      * Create function
@@ -1348,6 +1372,16 @@ Entry.VariableContainer = class VariableContainer {
         this.updateList();
     }
 
+    removeMatrix(matrix) {
+        if (!(matrix instanceof Entry.Variable)) {
+            matrix = this.getMatrix(matrix.id);
+        }
+
+        matrix.remove();
+        const lists = this.matrices_;
+        lists.splice(lists.indexOf(matrix), 1);
+    }
+
     /**
      * @param {Entry.Variable} variable
      */
@@ -1606,6 +1640,21 @@ Entry.VariableContainer = class VariableContainer {
      */
     addList(list) {
         this._addVariableOrList.call(this, 'list', list);
+    }
+
+    addMatrix(matrix) {
+        let data = matrix || {
+            isCloud: false,
+            name: '데이터 테이블',
+            object: null,
+            variableType: 'matrix',
+        };
+
+        if (!(data instanceof Entry.Variable)) {
+            data = Entry.Variable.create(data);
+        }
+        this.matrices_.unshift(data);
+        this.updateList();
     }
 
     /**
@@ -2982,6 +3031,7 @@ Entry.VariableContainer = class VariableContainer {
         this.viewMode_ = 'all';
         this.variables_ = [];
         this.lists_ = [];
+        this.matrices_ = [];
         this.messages_ = [];
         this.functions_ = {};
 
