@@ -661,9 +661,6 @@ Entry.Pingpong_G1.getBlocks = function() {
                 var speed = script.getNumberValue('SPEED');
                 speed = Math.min(Math.max(speed, 100), 1000);
 
-                var step = Math.round(degree * 5.5);
-                if (step > 32768) step = 32768;
-
                 if (!script.is_start) {
                     script.is_start = true;
                     script.step_flag = 1;
@@ -677,7 +674,7 @@ Entry.Pingpong_G1.getBlocks = function() {
                         data: packet,
                     };
 
-                    var delay_ms = Math.round(((1100 - Math.abs(speed)) / 99) * step) + 400;
+                    var delay_ms = Math.round(((1100 - Math.abs(speed)) / 99) * 10) + 400;
                     var myTimer = setTimeout(function() {
                         script.step_flag = 2;
                     }, delay_ms);
@@ -785,8 +782,8 @@ Entry.Pingpong_G1.getBlocks = function() {
             skeleton: 'basic',
             //statements: [],
             params: [
-                { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
-                { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
+                { type: 'Block', accept: 'string', defaultType: 'number', value: '0' },
+                { type: 'Block', accept: 'string', defaultType: 'number', value: '0' },
                 {
                     type: 'Dropdown',
                     options: [
@@ -817,10 +814,10 @@ Entry.Pingpong_G1.getBlocks = function() {
                 var dot_y = script.getNumberValue('Y', script);
                 var onoff = script.getNumberField('onoff', script);
 
-                dot_x = Math.min(Math.max(dot_x, 1), 8);
-                dot_y = Math.min(Math.max(dot_y, 1), 8);
+                dot_x = Math.min(Math.max(dot_x, 0), 7);
+                dot_y = Math.min(Math.max(dot_y, 0), 7);
 
-                var packet = makePacketHeader(0xa2, 0xe1, [0x70, dot_x, dot_y, onoff]); // turn on
+                var packet = makePacketHeader(0xa2, 0xe1, [0x70, dot_y, dot_x, onoff]); // turn on
 
                 //FIXME
                 Entry.hw.sendQueue.COMMAND = {
@@ -838,6 +835,7 @@ Entry.Pingpong_G1.getBlocks = function() {
             //statements: [],
             params: [
                 { type: 'Block', accept: 'string', value: 'Hello!' },
+                { type: 'Block', accept: 'string', defaultType: 'number', value: '2.0' },
                 {
                     type: 'Indicator',
                     img: 'block_icon/hardware_icon.svg',
@@ -845,33 +843,49 @@ Entry.Pingpong_G1.getBlocks = function() {
                 },
             ],
             //events: {},
-            def: { params: [null], type: 'pingpong_g1_set_dot_string' },
-            paramsKeyMap: { STR: 0 },
+            def: { params: [null, null], type: 'pingpong_g1_set_dot_string' },
+            paramsKeyMap: { STR: 0, DURATION: 1, },
             class: 'Pingpong_G1_peripheral_LED',
             isNotFor: ['Pingpong_G1'],
             func: function(sprite, script) {
                 var str = script.getStringValue('STR', script);
+                var duration = script.getNumberValue('DURATION', script);	// 0xC8;
 
-                var speed = 0xC8;
-                var opt = Buffer.concat([
-                    Buffer.from([0x70, speed, 0]),
-                    Buffer.from(str.substring(0, 20)),
-                ]);
+				var speed = Math.round((duration * 100)/(str.length*8));
+				speed = Math.min(Math.max(speed,1), 200);
 
-                var packet = makePacketHeader(0xa2, 0xe3, opt);
+				if (!script.is_start) {
+					script.is_start = true;
+					script.step_flag = 1;
 
-                console.log(packet);
+					var opt = Buffer.concat([
+						Buffer.from([0x70, speed, 0]),
+						Buffer.from(str.substring(0, 20)),
+					]);
 
-                //FIXME
-                Entry.hw.sendQueue.COMMAND = {
-                    id: ++Entry.Pingpong_G1.send_cmd_id,
-                    data: packet,
-                };
+					var packet = makePacketHeader(0xa2, 0xe3, opt);
 
-                return script.callReturn();
+					//FIXME
+					Entry.hw.sendQueue.COMMAND = {
+						id: ++Entry.Pingpong_G1.send_cmd_id,
+						data: packet,
+					};
+
+                    var delay_ms = duration * 1000;
+					console.log(speed, delay_ms);
+                    var myTimer = setTimeout(function() {
+                        script.step_flag = 2;
+                    }, delay_ms);
+                    return script;
+
+				} else if (script.step_flag == 2) {
+                    delete script.is_start;
+                    delete script.step_flag;
+					return script.callReturn();
+				}
+				return script;
             },
         },
-
         pingpong_g1_set_dot_clear: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -900,72 +914,6 @@ Entry.Pingpong_G1.getBlocks = function() {
                 return script.callReturn();
             },
         },
-
-        /*
-		pingpong_g1_set_dot_test: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            //statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-						['CLEAR', 'CLEAR'],
-						['TURN ON', 'TURN_ON'],
-						['TURN OFF', 'TURN_OFF'],
-						['CLEAR', 'CLEAR'],
-						['TEST', 'TEST'],
-						['PORT_Q', 'PORT_QUERY'],
-						['BLINK', 'BLINK'],
-                    ],
-					value: 'TURN_ON',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-			],
-            //events: {},
-            def: { params: [null], type: 'pingpong_g1_set_dot_test' },
-            paramsKeyMap: { CMD: 0 },
-            class: 'Pingpong_G1_peripheral_LED',
-            isNotFor: ['Pingpong_G1'],
-            func: function(sprite, script) {
-				const cmd = script.getStringField('CMD', script);
-				var packet = null;
-
-				if (cmd == 'CLEAR') {
-					packet = makePacketHeader(0xA2, 4, [0x70, 2]);	// ClearPixels
-				} else if (cmd == 'TURN_ON') {
-					packet = makePacketHeader(0xA2, 4, [0x70, 1]);	// turn on
-				} else if (cmd == 'TURN_OFF') {
-					packet = makePacketHeader(0xA2, 4, [0x70, 0]);	// turn on
-
-				} else if (cmd == 'TEST') {
-					packet = makePacketHeader(0xA2, 1, [0x70, 1, 1, 1]);	// board on
-				} else if (cmd == 'PORT_QUERY') {
-					packet = makePacketHeader(0xA2, 0, [0x80]);
-				} else if (cmd == 'BLINK') {
-					packet = makePacketHeader(0xA2, 5, [0x70, 15]);
-				}
-
-				console.log(packet);
-
-				//FIXME
-				Entry.hw.sendQueue.COMMAND = {
-					id: ++Entry.Pingpong_G1.send_cmd_id,
-					data: packet,
-				};
-
-				return script.callReturn();
-            },
-		},
-		*/
     };
 };
 
@@ -981,13 +929,13 @@ Entry.Pingpong_G1.setLanguage = function() {
                 pingpong_g1_get_tilt_value: '%1 방향 큐브 기울기',
                 pingpong_g1_get_sensor_value: '%1 센서값',
                 pingpong_g1_motor_rotate: '모터를 %1 방향으로 %2 도 회전하기 %3',
-				pingpong_g1_start_motor_rotate: '모터의 속도를 %1 로 정하기 %2',
+				pingpong_g1_start_motor_rotate: '모터의 속도를 %1 으로 정하기 %2',
 				pingpong_g1_stop_motor_rotate: '모터 멈추기 %1',
                 pingpong_g1_rotate_servo_mortor: '서보모터를 %1도로 설정하기 %2',
                 pingpong_g1_is_top_shape: '큐브 윗면에 %1 모양이 있는가?',
                 //pingpong_g1_set_led_color: 'LED를 %1 색으로 변경 %2',
                 pingpong_g1_set_dot_pixel: '도트 X:%1 Y:%2 %3 %4',
-                pingpong_g1_set_dot_string: '도트에 문자열 %1 출력 %2',
+                pingpong_g1_set_dot_string: '도트에 문자열 %1  %2초동안 출력 %3',
                 pingpong_g1_set_dot_clear: '도트 화면 삭제 %1',
             },
             Blocks: {
@@ -1023,7 +971,7 @@ Entry.Pingpong_G1.setLanguage = function() {
                 pingpong_g1_is_top_shape: '%1 shown in top view?',
                 //pingpong_g1_set_led_color: 'set led color to %1 %2',
                 pingpong_g1_set_dot_pixel: 'set %3 DOT X:%1 Y:%2 %4',
-                pingpong_g1_set_dot_string: 'print string %1 to DOT %2',
+                pingpong_g1_set_dot_string: 'print string %1 during %2 seconds to DOT %3',
                 pingpong_g1_set_dot_clear: 'clear DOT %1',
             },
             Blocks: {
