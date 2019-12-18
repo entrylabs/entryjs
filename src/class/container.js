@@ -746,6 +746,13 @@ Entry.Container = class Container {
                 }
                 break;
             }
+            case 'matrices': {
+                const matrices = Entry.variableContainer.matrices_;
+                if (matrices) {
+                    result = matrices.map((matrix) => [matrix.getName(), matrix.getId()]);
+                }
+                break;
+            }
             case 'scenes':
                 result = Entry.scene.getScenes().map(({ name, id }) => [name, id]);
                 break;
