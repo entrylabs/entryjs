@@ -12,6 +12,9 @@ class MatrixVariable extends Variable {
             this.scrollPosition = 0;
         }
         this.data = new dmetMatrix(variable);
+        this.originData = new dmetMatrix(variable);
+
+        // 정지시 data 초기화.
     }
 
     getArray() {
@@ -48,7 +51,6 @@ class MatrixVariable extends Variable {
             try {
                 const deleteOp = this.data.getOperation({ type: 'delete', index });
                 this.data.exec(deleteOp);
-                console.log('deleteValue', deleteOp, index);
             } catch (e) {
                 reject(e);
             }
@@ -60,7 +62,6 @@ class MatrixVariable extends Variable {
             try {
                 const insertOp = this.data.getOperation({ type: 'insert', index, data });
                 this.data.exec(insertOp);
-                console.log('insertValue', insertOp, index);
             } catch (e) {
                 reject(e);
             }
@@ -72,7 +73,6 @@ class MatrixVariable extends Variable {
             try {
                 const replaceOp = this.data.getOperation({ type: 'replace', index, data });
                 this.data.exec(replaceOp);
-                console.log('replaceValue', replaceOp, index);
             } catch (e) {
                 reject(e);
             }
