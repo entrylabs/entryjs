@@ -642,7 +642,7 @@ Entry.Blacksmith.getBlocks = function() {
                     time: new Date().getTime(),
                 };
 
-                return getString.slice(0,getString.length-1);
+                return getString ? getString.slice(0,getString.length-1) : ' ';
             },
             syntax: { js: [], py: ['blacksmith.get_digital_bluetooth()'] },
         },
