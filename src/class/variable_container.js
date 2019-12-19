@@ -1646,6 +1646,7 @@ Entry.VariableContainer = class VariableContainer {
             data = Entry.Variable.create(data);
         }
         this.matrices_.unshift(data);
+        Entry.playground.reloadPlayground();
         this.updateList();
     }
 
