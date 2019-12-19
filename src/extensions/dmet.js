@@ -43,9 +43,10 @@ class dmetMatrix {
     }
 
     from(data) {
-        const { list = [], array, value, _id, id = this.#id, ...info } = data;
+        const { list = [], array = [], value, _id, id = this.#id, ...info } = data;
+        this.#object = {};
+        this.#array = array;
         if (Array.isArray(array)) {
-            this.#array = array;
             this.#array.forEach((row = []) => {
                 row.forEach((value) => {
                     const { key } = value;

@@ -12,9 +12,12 @@ class MatrixVariable extends Variable {
             this.scrollPosition = 0;
         }
         this.data = new dmetMatrix(variable);
-        this.originData = new dmetMatrix(variable);
-
+        this.originData = this.data.toJSON();
         // 정지시 data 초기화.
+        Entry.addEventListener('stop', () => {
+            console.log('init matrixVariable');
+            this.data.from(variable);
+        });
     }
 
     getArray() {
