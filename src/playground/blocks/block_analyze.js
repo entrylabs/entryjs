@@ -19,13 +19,11 @@ module.exports = {
                     mousedown: [
                         function() {
                             console.log('analizyDataAddButton');
-                            Entry.do(
-                                'variableContainerAddMatrix',
-                                Entry.Variable.create({
-                                    name: Entry.generateHash(),
-                                    variableType: 'matrix',
-                                })
-                            );
+                            const matrix = Entry.Variable.create({
+                                name: Entry.generateHash(),
+                                variableType: 'matrix',
+                            });
+                            Entry.do('variableContainerAddMatrix', matrix);
                         },
                     ],
                 },
@@ -54,23 +52,15 @@ module.exports = {
                 ],
                 events: {},
                 def: {
-                    params: [
-                        {
-                            type: 'text',
-                            params: ['10'],
-                        },
-                        null,
-                        null,
-                    ],
+                    params: [null, null],
                     type: 'add_row_to_matrix',
                 },
                 pyHelpDef: {
                     params: [
                         {
                             type: 'text',
-                            params: ['B&value'],
+                            params: ['A&value'],
                         },
-                        'A&value',
                         null,
                     ],
                     type: 'add_row_to_matrix',
@@ -85,7 +75,6 @@ module.exports = {
                     const matrix = Entry.variableContainer.getMatrix(matrixId, sprite);
                     const length = matrix.getArray().length;
                     matrix.insertValue([length + 1]);
-                    console.log(matrix.getArray());
                     return script.callReturn();
                 },
                 syntax: {
@@ -111,6 +100,7 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        isListIndex: true,
                         defaultType: 'number',
                     },
                     {
@@ -122,15 +112,11 @@ module.exports = {
                 events: {},
                 def: {
                     params: [
-                        {
-                            type: 'text',
-                            params: ['10'],
-                        },
-                        {
-                            type: 'text',
-                            params: ['10'],
-                        },
                         null,
+                        {
+                            type: 'text',
+                            params: ['1'],
+                        },
                         null,
                     ],
                     type: 'insert_row_to_matrix',
@@ -139,30 +125,27 @@ module.exports = {
                     params: [
                         {
                             type: 'text',
-                            params: ['C&value'],
+                            params: ['B&value'],
                         },
                         {
                             type: 'text',
-                            params: ['B&value'],
+                            params: ['A&value'],
                         },
-                        'A&value',
                         null,
                     ],
                     type: 'insert_row_to_matrix',
                 },
                 paramsKeyMap: {
                     MATRIX: 0,
-                    AT: 1,
+                    ROW: 1,
                 },
                 class: 'matrix',
                 isNotFor: ['matrix'],
                 func(sprite, script) {
                     const matrixId = script.getField('MATRIX', script);
-                    const at = script.getNumberValue('AT', script);
+                    const row = script.getNumberValue('ROW', script);
                     const matrix = Entry.variableContainer.getMatrix(matrixId, sprite);
-                    const length = matrix.getArray().length;
-                    matrix.insertValue([at]);
-                    console.log(matrix.getArray());
+                    matrix.insertValue([row]);
                     return script.callReturn();
                 },
                 syntax: {
@@ -188,6 +171,7 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        isListIndex: true,
                         defaultType: 'number',
                     },
                     {
@@ -199,15 +183,11 @@ module.exports = {
                 events: {},
                 def: {
                     params: [
-                        {
-                            type: 'text',
-                            params: ['10'],
-                        },
-                        {
-                            type: 'text',
-                            params: ['10'],
-                        },
                         null,
+                        {
+                            type: 'text',
+                            params: ['1'],
+                        },
                         null,
                     ],
                     type: 'delete_row_from_matrix',
@@ -216,13 +196,12 @@ module.exports = {
                     params: [
                         {
                             type: 'text',
-                            params: ['C&value'],
+                            params: ['B&value'],
                         },
                         {
                             type: 'text',
-                            params: ['B&value'],
+                            params: ['A&value'],
                         },
-                        'A&value',
                         null,
                     ],
                     type: 'delete_row_from_matrix',
@@ -237,9 +216,7 @@ module.exports = {
                     const matrixId = script.getField('MATRIX', script);
                     const row = script.getNumberValue('ROW', script);
                     const matrix = Entry.variableContainer.getMatrix(matrixId, sprite);
-                    const length = matrix.getArray().length;
                     matrix.deleteValue([row]);
-                    console.log(matrix.getArray());
                     return script.callReturn();
                 },
                 syntax: {
@@ -265,11 +242,13 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        isListIndex: true,
                         defaultType: 'number',
                     },
                     {
                         type: 'Block',
                         accept: 'string',
+                        isListIndex: true,
                         defaultType: 'number',
                     },
                     {
@@ -286,33 +265,25 @@ module.exports = {
                 events: {},
                 def: {
                     params: [
-                        {
-                            type: 'text',
-                            params: ['10'],
-                        },
-                        {
-                            type: 'text',
-                            params: ['10'],
-                        },
-                        {
-                            type: 'text',
-                            params: ['10'],
-                        },
-                        {
-                            type: 'text',
-                            params: ['10'],
-                        },
                         null,
+                        {
+                            type: 'text',
+                            params: ['1'],
+                        },
+                        {
+                            type: 'text',
+                            params: ['1'],
+                        },
+                        {
+                            type: 'text',
+                            params: ['10'],
+                        },
                         null,
                     ],
                     type: 'set_col_from_matrix',
                 },
                 pyHelpDef: {
                     params: [
-                        {
-                            type: 'text',
-                            params: ['E&value'],
-                        },
                         {
                             type: 'text',
                             params: ['D&value'],
@@ -325,7 +296,10 @@ module.exports = {
                             type: 'text',
                             params: ['B&value'],
                         },
-                        'A&value',
+                        {
+                            type: 'text',
+                            params: ['A&value'],
+                        },
                         null,
                     ],
                     type: 'set_col_from_matrix',
@@ -432,17 +406,29 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        isListIndex: true,
                         defaultType: 'number',
                     },
                     {
                         type: 'Block',
                         accept: 'string',
+                        isListIndex: true,
                         defaultType: 'number',
                     },
                 ],
                 events: {},
                 def: {
-                    params: [null, null],
+                    params: [
+                        null,
+                        {
+                            type: 'text',
+                            params: ['1'],
+                        },
+                        {
+                            type: 'text',
+                            params: ['1'],
+                        },
+                    ],
                     type: 'get_value_from_table',
                 },
                 paramsKeyMap: {
@@ -487,6 +473,7 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        isListIndex: true,
                         defaultType: 'number',
                     },
                     {
@@ -506,7 +493,14 @@ module.exports = {
                 ],
                 events: {},
                 def: {
-                    params: [null, null, null],
+                    params: [
+                        null,
+                        {
+                            type: 'text',
+                            params: ['1'],
+                        },
+                        null,
+                    ],
                     type: 'calc_values_from_matrix',
                 },
                 paramsKeyMap: {
@@ -527,6 +521,9 @@ module.exports = {
                     const total = array.length;
                     const sum = (x, y) => x + y;
                     const square = (x) => x * x;
+                    if (!total) {
+                        return 0;
+                    }
                     switch (calc) {
                         case 'SUM':
                             return array.reduce(sum);

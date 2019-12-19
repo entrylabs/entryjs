@@ -2,6 +2,7 @@ import cuid from 'cuid';
 import uid from 'uid';
 import isPlainObject from 'lodash/isPlainObject';
 import mapValues from 'lodash/mapValues';
+import get from 'lodash/get';
 import _flattenDeep from 'lodash/flattenDeep';
 
 function generateId() {
@@ -44,7 +45,6 @@ class dmetMatrix {
     from(data) {
         const { list = [], array, value, _id, id = this.#id, ...info } = data;
         if (Array.isArray(array)) {
-            //this.#array = _flattenDeep(array);
             this.#array = array;
             this.#array.forEach((row = []) => {
                 row.forEach((value) => {
@@ -73,36 +73,38 @@ class dmetMatrix {
 
     #findLastArray(array) {
         const indexArray = [...array];
-        let result = this.#array;
         const lastIndex = indexArray.pop();
-        for (let i in indexArray) {
-            const key = indexArray[i] -1;
-            if (result[key]) {
-                result = result[key];
-            }
-        }
         return {
-            array: result,
+            array: this.get(indexArray),
+            value: this.get(array),
             lastIndex: lastIndex - 1,
-            value: result[lastIndex - 1],
             parentIndex: indexArray,
         };
     }
 
     get(key) {
         if (typeof key === 'number') {
-            return this.#array[key];
+            return this.#array[key - 1];
         } else if (Array.isArray(key)) {
-            let result = this.#array;
-            for (var i in key) {
-                if (result[key[i] - 1]) {
-                    result = result[key[i] - 1];
-                }
-            }
-            return result == this.#array ? null : result;
+            return get(this.#array, `[${key.map(x => x - 1).join('][')}]`);
         } else if (typeof key === 'string') {
             return this.#object[key];
         }
+    }
+
+    #findIndex(arr, findData, index = []) {
+        for (let i = 0; i < arr.length; i++) {
+            const result = [...index, i];
+            if (Array.isArray(arr[i])) {
+                const newIndex = this.#findIndex(arr[i], findData, result);
+                if (newIndex) {
+                    return newIndex;
+                }
+            } else if (arr[i] === findData) {
+                return result;
+            }
+        }
+        return false;
     }
 
     getIndex(key) {
@@ -110,26 +112,9 @@ class dmetMatrix {
             return key;
         } else if (typeof key === 'string') {
             const oldData = this.#object[key];
-
-            //_.findIndex(users, ['active', false]);
-            function findIndex(arr, index = []) {
-                for (var i = 0; i < arr.length; i++) {
-                    const result = [...index, i];
-                    if (Array.isArray(arr[i])) {
-                        const newIndex = findIndex(arr[i], result);
-                        if (newIndex) {
-                            return newIndex;
-                        }
-                    } else if (arr[i] == oldData) {
-                        return result;
-                    }
-                }
-                return false;
-            }
-
-            return findIndex(this.#array);
+            return this.#findIndex(this.#array, oldData);
         } else {
-            return [0, 0];
+            return [];
         }
     }
 
@@ -196,16 +181,16 @@ class dmetMatrix {
             key = generateId();
         }
         const newData = { key, value: data };
-        let subArr = this.get(index);
+        const x = Array.isArray(index) ? index[0] : index;
+        let subArr = this.get(x);
         if (!subArr) {
-            const x = Array.isArray(index) ? index[0] : index;
-            subArr = this.#array[x -1] = [];
+            subArr = this.#array[x - 1] = [];
         }
         if (Array.isArray(subArr)) {
             this.#object[key] = newData;
             subArr.push(newData);
         }
-        return this.getOperation({ type: 'append', key, index: -1, data });
+        return this.getOperation({ type: 'append', key, index: x, data });
     }
 
     #insert({ key, index, data } = {}) {
@@ -213,18 +198,14 @@ class dmetMatrix {
             key = generateId();
         }
         const newData = { key, value: data };
-        let { array, lastIndex, value, parentIndex } = this.#findLastArray(index);
-        if(!data) {
-            this.#array.splice(lastIndex, 0, []);
+        let { array, lastIndex, parentIndex } = this.#findLastArray(index);
+        this.#object[key] = newData;
+        if (!array) {
+            const currentIndex = parentIndex.pop();
+            this.#array.splice(currentIndex - 1, 0, [newData]);
             return this.getOperation({ type: 'insert', key, index, data });
         }
-        this.#object[key] = newData;
-        if (array == this.#array) {
-            this.#array[parentIndex[0] -1] = [newData];
-        } else {
-            array.splice(lastIndex, 0, newData);
-        }
-
+        array.splice(lastIndex, 0, newData);
         return this.getOperation({ type: 'insert', key, index, data });
     }
 
@@ -238,20 +219,25 @@ class dmetMatrix {
         }
         const indexArray = this.getIndex(key);
         let { array, lastIndex, value, parentIndex } = this.#findLastArray(indexArray);
-        if (Array.isArray(array[lastIndex])) {
-            array[lastIndex].forEach(({ key, value }) => {
+        if (Array.isArray(value)) {
+            value.forEach(({ key }) => {
                 delete this.#object[key];
             });
         } else {
             delete this.#object[oldData.key];
         }
 
-        array.splice(lastIndex, 1);
-
-        if (!array.length) {
-            const currentIndex = parentIndex.pop();
-            this.get(parentIndex).splice(currentIndex, 1);
+        if (array) {
+            array.splice(lastIndex, 1);
+            if (this.#array.length && !array.length) {
+                const currentIndex = parentIndex.pop();
+                const parent = this.get(parentIndex) || this.#array;
+                parent.splice(currentIndex - 1, 1);
+            }
+        } else {
+            this.#array.splice(lastIndex, 1);
         }
+
         return this.getOperation({ type: 'delete', key });
     }
 
