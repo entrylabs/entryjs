@@ -1952,7 +1952,7 @@ Entry.Playground = class Playground {
                 thumbnailView.removeClass('entryPlaygroundSoundPlay');
                 thumbnailView.addClass('entryPlaygroundSoundStop');
                 soundInstance = Entry.Utils.playSound(sound.id);
-                Entry.soundInstances.push(soundInstance);
+                Entry.Utils.addSoundInstances(soundInstance);
             }
 
             soundInstance.addEventListener('complete', () => {
