@@ -700,11 +700,10 @@ class Hardware implements Entry.Hardware {
             }
         } else if (navigator.userAgent.indexOf('Firefox') > 0) {
             executeFirefox(entryHardwareUrl);
-        } else if (
-            navigator.userAgent.indexOf('Chrome') > 0 ||
-            navigator.userAgent.indexOf('Safari') > 0
-        ) {
+        } else if (navigator.userAgent.indexOf('Chrome') > 0) {
             executeChrome(entryHardwareUrl);
+        } else if (navigator.userAgent.indexOf('Safari') > 0) {
+            executeSafari(entryHardwareUrl);
         } else {
             alert(window.Lang.msgs.not_support_browser);
         }
@@ -763,6 +762,34 @@ class Hardware implements Entry.Hardware {
                 }
                 window.onblur = null;
             }, 3000);
+        }
+        /**
+         * safari 브라우저에서 ${customUrl} 인식하여 페이지 이동 처리되서 분기처리(미설치 안내팝업)
+         *
+         *
+         * @param customUrl
+         */
+        function executeSafari(customUrl: string) {
+            const iFrame = document.createElement('iframe');
+            iFrame.src = 'about:blank';
+            iFrame.setAttribute('style', 'display:none');
+            document.getElementsByTagName('body')[0].appendChild(iFrame);
+            let isInstalled = false;
+
+            try {
+                iFrame.contentWindow.location.href = customUrl;
+
+                isInstalled = true;
+            } catch (err) {
+                isInstalled = false;
+            }
+
+            if (!isInstalled) {
+                hw.openHardwareDownloadPopup();
+            }
+            setTimeout(() => {
+                document.getElementsByTagName('body')[0].removeChild(iFrame);
+            }, 500);
         }
     }
 

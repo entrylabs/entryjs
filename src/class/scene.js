@@ -413,7 +413,8 @@ Entry.Scene = class {
 
             stage.selectObject(null);
             playground.flushPlayground();
-            // Entry.variableContainer.updateList();
+            Entry.variableContainer.selected = null;
+            Entry.variableContainer.updateList();
         }
         !container.listView_ && stage.sortZorder();
 

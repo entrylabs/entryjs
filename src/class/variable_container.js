@@ -709,7 +709,7 @@ Entry.VariableContainer = class VariableContainer {
         } else {
             this.functionAddButton_
                 .unBindOnClick()
-                .bindOnClick(() => Entry.do('funcCreateStart', Entry.generateHash()))
+                .bindOnClick(() => Entry.do('funcEditStart', Entry.generateHash()))
                 .removeClass('disabled');
         }
         listView.appendChild(this.functionAddButton_);
@@ -982,6 +982,22 @@ Entry.VariableContainer = class VariableContainer {
         Entry.Func.edit(new Entry.Func(data));
     }
 
+    removeBlocksInFunctionByType(blockType) {
+        Object.values(this.functions_).forEach((func) => {
+            Entry.do('funcEditStart', func.id).isPass(true);
+            func.content.getBlockList(false, blockType).forEach((b, index) => {
+                Entry.do('destroyBlock', b).isPass(true);
+            });
+            Entry.do('funcEditEnd', 'save').isPass(true);
+        });
+    }
+
+    isUsedBlockTypeInFunction(blockType) {
+        return Object.values(this.functions_).some(
+            (func) => func.content.getBlockList(false, blockType).length
+        );
+    }
+
     /**
      * Remove variable
      * @param {Entry.Variable} variable
@@ -1108,7 +1124,7 @@ Entry.VariableContainer = class VariableContainer {
             .bindOnClick((e) => {
                 e.stopPropagation();
                 if (!Entry.isTextMode) {
-                    Entry.Func.edit(func);
+                    Entry.do('funcEditStart', func.id);
                 }
                 return this.select(func);
             })
@@ -1127,7 +1143,7 @@ Entry.VariableContainer = class VariableContainer {
                 e.stopPropagation();
                 entrylms.confirm(Lang.Workspace.will_you_delete_function).then((result) => {
                     if (result === true) {
-                        this.removeFunction(func);
+                        this.destroyFunction(func);
                         this.selected = null;
                     }
                 });
@@ -1136,6 +1152,19 @@ Entry.VariableContainer = class VariableContainer {
         delButton.href = '#';
         view.nameField = editBoxInput;
         func.listElement = view;
+    }
+
+    destroyFunction(func) {
+        if (Entry.Func.targetFunc) {
+            Entry.do('funcEditEnd', 'cancel');
+        }
+        const currentObjectId = Entry.playground.object.id;
+        Entry.do('selectObject', currentObjectId);
+        const functionType = `func_${func.id}`;
+        Entry.Utils.removeBlockByType(functionType, () => {
+            Entry.do('funcRemove', func).isPass(true);
+        });
+        Entry.do('selectObject', currentObjectId).isPass(true);
     }
 
     /**
@@ -2575,6 +2604,17 @@ Entry.VariableContainer = class VariableContainer {
         );
     }
 
+    createListValueElement(index, value, startIndex = 0) {
+        return `
+        <li>
+            <span class='cnt'>${+index + startIndex}</span>
+            <input value='${xssFilters.inSingleQuotedAttr(
+                value
+            )}' type='text' data-index='${index}'/>
+            <a class='del' data-index='${index}'></a>
+        </li>`.trim();
+    }
+
     updateListSettingView(list) {
         const view = this.listSettingView;
         const that = this;
@@ -2604,24 +2644,19 @@ Entry.VariableContainer = class VariableContainer {
             listValues.appendChild(fragment);
         } else {
             const data = arr.map((data, i) => {
-                let value = String(data.data).replace(/\$/g, '&#36;');
-                return `
-                    <li>
-                        <span class='cnt'>${i + startIndex}</span>
-                        <input value='${xssFilters.inSingleQuotedAttr(
-                            value
-                        )}' type='text' data-index='${i}'/>
-                        <a class='del' data-index='${i}'></a>
-                    </li>`.trim();
+                const value = String(data.data).replace(/\$/g, '&#36;');
+                return this.createListValueElement(i, value, startIndex);
             });
             infinityScroll.assignData(data);
             infinityScroll.show();
             $listValues.on(
-                'blur',
+                'keyup',
                 'input',
-                Entry.Utils.setBlurredTimer(function() {
-                    const index = this.getAttribute('data-index');
-                    list.array_[index] = { data: this.value };
+                _.debounce((e) => {
+                    const { target } = e;
+                    const index = target.getAttribute('data-index');
+                    data[index] = this.createListValueElement(index, target.value, startIndex);
+                    list.array_[index] = { data: target.value };
                     list.updateView();
                 })
             );
