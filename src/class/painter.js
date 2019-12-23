@@ -135,8 +135,6 @@ Entry.Painter = class Painter {
         Entry.stage.updateObject();
         this.file.isUpdate = true;
     }
-    // https://www.ebssw.kr/blk/static/assets/entry-js/dist/entry.js
-    // https://www.ebssw.kr/blk/static/assets/entry-js/images/media/entrybot1.png
 
     updatePicture(picture = {}, wasRun = true, result = true) {
         this.isConfirm = false;
