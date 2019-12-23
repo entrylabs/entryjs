@@ -50,7 +50,7 @@ const microbitGestures = {
 
 Entry.Microbit = new (class Microbit {
     constructor() {
-        this.id = 'FF.1';
+        this.id = '22.1';
         this.url = 'http://microbit.org/ko/';
         this.imageName = 'microbit.png';
         this.title = {
