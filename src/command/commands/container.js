@@ -45,6 +45,7 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
 
     c[COMMAND_TYPES.removeObject] = {
         do(objectId) {
+            Entry.Utils.forceStopSounds();
             const { name } = Entry.container.getObject(objectId);
             Entry.container.removeObject(objectId);
 
@@ -91,7 +92,9 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
         dom: ['.btn_confirm_modal'],
         restrict(data, domQuery, callback) {
             Entry.dispatchEvent('dismissModal');
-            const { tooltip: { title, content } } = data;
+            const {
+                tooltip: { title, content },
+            } = data;
 
             const tooltip = createTooltip(title, content, '.btn_confirm_modal', callback, {
                 render: false,
