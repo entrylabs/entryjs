@@ -155,7 +155,8 @@ class BlockMenu {
 
         this.svgDom = Entry.Dom(
             $(
-                `<svg id="${this._svgId}" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>`
+                `<svg id="${this._svgId}" class="blockMenu" version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"></svg>`
             ),
             { parent: this.blockMenuWrapper }
         );

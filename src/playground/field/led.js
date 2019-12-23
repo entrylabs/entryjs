@@ -45,37 +45,6 @@ Entry.FieldLed = class FieldLed extends Entry.Field {
     }
 
     renderLed() {
-        // if (this.svgGroup) {
-        //     $(this.svgGroup).remove();
-        // }
-        // const { contentSvgGroup, renderMode } = this._blockView;
-        // this.svgGroup = contentSvgGroup.elem('g', {
-        //     class: 'entry-field-microbit-led',
-        // });
-        // let x, y, WIDTH, HEIGHT;
-        //
-        // HEIGHT = this._CONTENT_HEIGHT;
-        // WIDTH = this._CONTENT_WIDTH + 10;
-        //
-        // const position = this._position;
-        // if (position) {
-        //     x = position.x || 0;
-        //     y = position.y || 0;
-        // } else {
-        //     x = 0;
-        //     y = -HEIGHT / 2;
-        // }
-        // this._header = this.svgGroup.elem('rect', {
-        //     x,
-        //     y,
-        //     width: 35, //WIDTH,
-        //     height: 20, //HEIGHT,
-        //
-        //     rx: 2,
-        //     ry: 2,
-        //
-        //     fill: '#008380',
-        // });
         let ledStatus = this.getValue();
         const ledDist = 3;
         const ledOffset = 0.5;

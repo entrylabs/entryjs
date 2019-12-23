@@ -32,9 +32,6 @@ const functionKeys = {
     GET_PITCH: 0x39,
     GET_ROLL: 0x40,
     GET_GESTURE: 0x41,
-    // PLAY_NOTE: 0x04,
-    // CHANGE_BPM: 0x05,
-    // SET_BPM: 0x06,
 };
 
 const microbitGestures = {

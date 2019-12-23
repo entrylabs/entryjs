@@ -24,10 +24,10 @@ Entry.Engine = class Engine {
         _addEventListener('canvasClick', () => this.fireEvent('mouse_clicked'));
         _addEventListener('canvasClickCanceled', () => this.fireEvent('mouse_click_cancled'));
         _addEventListener('entityClick', (entity) =>
-            this.fireEventOnEntity('when_object_click', entity),
+            this.fireEventOnEntity('when_object_click', entity)
         );
         _addEventListener('entityClickCanceled', (entity) =>
-            this.fireEventOnEntity('when_object_click_canceled', entity),
+            this.fireEventOnEntity('when_object_click_canceled', entity)
         );
 
         if (Entry.type !== 'phone') {
@@ -35,7 +35,7 @@ Entry.Engine = class Engine {
                 'stageMouseMove',
                 _.throttle(this.updateMouseView.bind(this), 100, {
                     leading: false,
-                }),
+                })
             );
             _addEventListener('stageMouseOut', this.hideMouseView.bind(this));
         }
@@ -76,7 +76,7 @@ Entry.Engine = class Engine {
                 .addClass(
                     'entrySpeedButtonWorkspace',
                     'entryEngineTopWorkspace',
-                    'entryEngineButtonWorkspace_w',
+                    'entryEngineButtonWorkspace_w'
                 )
                 .appendTo(this.view_)
                 .bindOnClick(function(e) {
@@ -88,7 +88,7 @@ Entry.Engine = class Engine {
                 .addClass(
                     'entryEngineButtonWorkspace_w',
                     'entryEngineTopWorkspace',
-                    'entryMaximizeButtonWorkspace_w',
+                    'entryMaximizeButtonWorkspace_w'
                 )
                 .appendTo(this.view_)
                 .bindOnClick(function(e) {
@@ -100,7 +100,7 @@ Entry.Engine = class Engine {
                 .addClass(
                     'entryEngineButtonWorkspace_w',
                     'entryEngineTopWorkspace',
-                    'entryCoordinateButtonWorkspace_w',
+                    'entryCoordinateButtonWorkspace_w'
                 )
                 .appendTo(this.view_)
                 .bindOnClick(function(e) {
@@ -246,7 +246,7 @@ Entry.Engine = class Engine {
             $(this.mouseViewInput).attr('readonly', 'readonly');
             $(this.mouseViewInput).attr(
                 'style',
-                'border: none;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;line-height: normal',
+                'border: none;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;line-height: normal'
             );
 
             this.view_.appendChild(this.mouseView);
@@ -317,7 +317,7 @@ Entry.Engine = class Engine {
             this.stopButton.addClass(
                 'entryEngineButtonPhone',
                 'entryStopButtonPhone',
-                'entryRemove',
+                'entryRemove'
             );
             if (Entry.objectAddable) {
                 this.stopButton.addClass('small');
@@ -1005,7 +1005,7 @@ Entry.Engine = class Engine {
         if (typeof value == 'undefined') {
             if (!timer.isPaused && !engine.isState('pause')) {
                 timer.setValue(
-                    Math.max((current - (timer.start || current) - timer.pausedTime) / 1000, 0),
+                    Math.max((current - (timer.start || current) - timer.pausedTime) / 1000, 0)
                 );
             }
         } else {
