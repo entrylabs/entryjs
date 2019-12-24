@@ -1042,6 +1042,10 @@ Entry.Microbit = new (class Microbit {
                 },
                 func: (sprite, script) => {
                     const value = script.getField('VALUE');
+                    if (value === 'lightLevel') {
+                        let commandType = functionKeys.GET_LIGHT_LEVEL;
+                        this.requestCommandWithResponse(commandType);
+                    }
                     return _get(Entry.hw.portData, ['payload', 'sensorData', value], -1);
                 },
             },
