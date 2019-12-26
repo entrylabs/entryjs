@@ -1,4 +1,4 @@
-Entry.moduleManager = new class {
+Entry.moduleManager = new (class {
     /**
      * 해당 url 을 동적으로 로드한다.
      * 해당 함수는 굉장히 위험하므로 추가적인 방어로직이 필요하다.
@@ -28,7 +28,8 @@ Entry.moduleManager = new class {
             };
 
             // TODO baseUrl 관련해서 정리가 필요함
-            scriptElement.src = `/rest/hardware/${moduleName}/block`;
+            // scriptElement.src = `/rest/hardware/${moduleName}/block`;
+            scriptElement.src = `https://hw.playentry.org:23518/modules/${moduleName}`;
 
             // noinspection JSCheckFunctionSignatures
             document.body.appendChild(scriptElement);
@@ -49,7 +50,14 @@ Entry.moduleManager = new class {
             return;
         }
 
-        Entry.HARDWARE_LIST[moduleObject.id] = moduleObject;
+        if (typeof moduleObject.id === 'string') {
+            Entry.HARDWARE_LIST[moduleObject.id] = moduleObject;
+        } else if (moduleObject.id instanceof Array) {
+            moduleObject.id.forEach((id) => {
+                Entry.HARDWARE_LIST[id] = moduleObject;
+            });
+        }
+
         this._setLanguageTemplates(moduleObject);
         const blockObjects = moduleObject.getBlocks();
         const blockMenuBlocks = moduleObject.blockMenuBlocks;
@@ -78,4 +86,4 @@ Entry.moduleManager = new class {
             }
         }
     }
-}();
+})();
