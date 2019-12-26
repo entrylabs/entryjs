@@ -253,14 +253,15 @@ Entry.Engine = class Engine {
 
             Entry.addEventListener('loadComplete', () => {
                 this.isLoaded = true;
-                if (Entry.soundQueue.loadComplete) {
-                    this.runButton = Entry.Dom('div', {
-                        class: 'entryRunButtonBigMinimize',
-                        parent: $('#entryCanvasWrapper'),
-                    });
-                    this.runButton.bindOnClick(() => Entry.engine.toggleRun());
-                }
+                // if (Entry.soundQueue.loadComplete) {
+                this.runButton = Entry.Dom('div', {
+                    class: 'entryRunButtonBigMinimize',
+                    parent: $('#entryCanvasWrapper'),
+                });
+                this.runButton.bindOnClick(() => Entry.engine.toggleRun());
+                // }
             });
+            /*
             Entry.addEventListener('soundLoaded', () => {
                 const isVisible = this.isLoaded && Entry.soundQueue.loadComplete;
                 if (isVisible) {
@@ -271,6 +272,7 @@ Entry.Engine = class Engine {
                     this.runButton.bindOnClick(() => Entry.engine.toggleRun());
                 }
             });
+            */
         } else if (option == 'phone') {
             this.view_ = controlView;
             this.view_.addClass('entryEngine', 'entryEnginePhone');
