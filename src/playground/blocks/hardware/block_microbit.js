@@ -85,10 +85,12 @@ Entry.Microbit = new (class Microbit {
             'microbit_set_servo',
             'microbit_set_servo_period',
         ];
+        this.commandStatus = {};
     }
 
     setZero() {
         this.requestCommand(functionKeys.RESET);
+        this.commandStatus = {};
         this.lastGesture = -1;
         delete Entry.hw.portData.sensorData;
     }
@@ -106,23 +108,24 @@ Entry.Microbit = new (class Microbit {
      * @param type
      * @param payload
      */
-    requestCommandWithResponse(type, payload) {
-        if (!Entry.hw.pending && !this.isCommandRequested) {
+    requestCommandWithResponse(entityId, type, payload) {
+        let codeId = `${entityId}-${type}`;
+        if (this.commandStatus[codeId] == null) {
+            this.commandStatus[codeId] = 'pending';
             // 첫 진입시 무조건 AsyncError
-            this.isCommandRequested = true;
             Entry.hw.sendQueue = {
                 type,
                 payload,
             };
             Entry.hw.update();
             throw new Entry.Utils.AsyncError();
-        } else if (Entry.hw.pending && this.isCommandRequested) {
+        } else if (Entry.hw.pending && this.commandStatus[codeId] === 'pending') {
             // 두 번째 이상의 진입시도이며 작업이 아직 끝나지 않은 경우
             throw new Entry.Utils.AsyncError();
         } else {
             // 두 번째 이상의 진입시도이며 pending 도 아닌 경우
             // 블록 func 로직에서 다음 데이터를 처리한다.
-            delete this.isCommandRequested;
+            this.commandStatus[codeId] = null;
         }
     }
 
@@ -184,7 +187,11 @@ Entry.Microbit = new (class Microbit {
                     const value = script.getField('VALUE');
                     const x = _clamp(script.getNumberValue('X'), 0, 4);
                     const y = _clamp(script.getNumberValue('Y'), 0, 4);
-                    this.requestCommandWithResponse(functionKeys.SET_LED, { x, y, value });
+                    this.requestCommandWithResponse(script.entity.id, functionKeys.SET_LED, {
+                        x,
+                        y,
+                        value,
+                    });
                 },
             },
             microbit_get_led: {
@@ -229,7 +236,10 @@ Entry.Microbit = new (class Microbit {
                 func: (sprite, script) => {
                     const x = _clamp(script.getNumberValue('X'), 0, 4);
                     const y = _clamp(script.getNumberValue('Y'), 0, 4);
-                    this.requestCommandWithResponse(functionKeys.GET_LED, { x, y });
+                    this.requestCommandWithResponse(script.entity.id, functionKeys.GET_LED, {
+                        x,
+                        y,
+                    });
                     return _get(Entry.hw.portData, ['payload', 'sensorData', 'led', x, y]);
                 },
             },
@@ -491,7 +501,7 @@ Entry.Microbit = new (class Microbit {
                 func: (sprite, script) => {
                     const noteValue = script.getField('NOTE_VALUE');
                     const beatValue = script.getField('BEAT_VALUE');
-                    this.requestCommandWithResponse(functionKeys.SET_TONE, {
+                    this.requestCommandWithResponse(script.entity.id, functionKeys.SET_TONE, {
                         noteValue,
                         beatValue,
                     });
@@ -725,7 +735,9 @@ Entry.Microbit = new (class Microbit {
                 },
                 func: (sprite, script) => {
                     const value = script.getField('VALUE');
-                    this.requestCommandWithResponse(functionKeys.GET_ANALOG, [value]);
+                    this.requestCommandWithResponse(script.entity.id, functionKeys.GET_ANALOG, [
+                        value,
+                    ]);
                     return _get(Entry.hw.portData, ['payload', 'sensorData', 'analog', value], 0);
                 },
             },
@@ -807,7 +819,9 @@ Entry.Microbit = new (class Microbit {
                 },
                 func: (sprite, script) => {
                     const value = script.getField('VALUE');
-                    this.requestCommandWithResponse(functionKeys.GET_ANALOG, [value]);
+                    this.requestCommandWithResponse(script.entity.id, functionKeys.GET_ANALOG, [
+                        value,
+                    ]);
                     let returnData = _get(
                         Entry.hw.portData,
                         ['payload', 'sensorData', 'analog', value],
@@ -916,7 +930,10 @@ Entry.Microbit = new (class Microbit {
                 func: (sprite, script) => {
                     const pinNumber = script.getField('PIN');
                     const value = script.getNumberField('VALUE');
-                    this.requestCommandWithResponse(functionKeys.SET_DIGITAL, { pinNumber, value });
+                    this.requestCommandWithResponse(script.entity.id, functionKeys.SET_DIGITAL, {
+                        pinNumber,
+                        value,
+                    });
                 },
             },
             microbit_get_digital: {
@@ -967,7 +984,9 @@ Entry.Microbit = new (class Microbit {
                 },
                 func: (sprite, script) => {
                     const value = script.getField('VALUE');
-                    this.requestCommandWithResponse(functionKeys.GET_DIGITAL, [value]);
+                    this.requestCommandWithResponse(script.entity.id, functionKeys.GET_DIGITAL, [
+                        value,
+                    ]);
                     return _get(Entry.hw.portData, ['payload', 'sensorData', 'digital', value], 0);
                 },
             },
@@ -1044,7 +1063,7 @@ Entry.Microbit = new (class Microbit {
                     const value = script.getField('VALUE');
                     if (value === 'lightLevel') {
                         let commandType = functionKeys.GET_LIGHT_LEVEL;
-                        this.requestCommandWithResponse(commandType);
+                        this.requestCommandWithResponse(script.entity.id, commandType);
                     }
                     return _get(Entry.hw.portData, ['payload', 'sensorData', value], -1);
                 },
