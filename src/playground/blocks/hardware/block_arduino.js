@@ -1,4 +1,4 @@
-'use strict'; 
+'use strict';
 
 Entry.Arduino = {
     id: ['1.1', '4.2', '8.1'],
