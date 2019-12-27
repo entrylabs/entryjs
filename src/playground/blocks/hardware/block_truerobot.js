@@ -3,12 +3,12 @@
 Entry.trueRobot = {
     id: '19.1',
     name: 'trueRobot',
-    url: 'http://www.sigongmedia.co.kr',
+    url: 'http://www.i-screammedia.co.kr',
     imageName: 'truetrue.png',
     delayTime: 30,
     title: {
+		ko: '뚜루뚜루',
         en: 'TrueTrueRobot',
-        ko: '뚜루뚜루',
     },
     PORT_MAP: {
         singlemotor: 0x0a,
@@ -28,36 +28,172 @@ Entry.trueRobot = {
         linePort: 0xf0,
     },
     setZero: function() {
-        var portMap = Entry.trueRobot.PORT_MAP;
-        var portMap2 = Entry.trueRobot.PORT_MAP;
-        if (!Entry.hw.sendQueue['SET']) {
-            Entry.hw.sendQueue['SET'] = {};
-        }
-        var sq = Entry.hw.sendQueue;
+		
+		
+        Entry.hw.sendQueue['SET'] = {};
+        
+		Entry.hw.sendQueue.leftValue = 0;
+		Entry.hw.sendQueue.rightValue = 0;	
+		Entry.hw.sendQueue['SET'][Entry.trueRobot.PORT_MAP.dualmotor] = {
+                        port: Entry.trueRobot.PORT_MAP.dualPort,
+                        dataA: 0,
+                        dataB: 0,
+                        dataC: 1,
+	    };
 
-        var intoDevice;
-        var intoPort;
+		Entry.hw.update();
 
-        for (var port in portMap) {
-            sq[port] = portMap[port];
-            intoPort = portMap[port];
-            for (var device in portMap2) {
-                intoDevice = portMap2[port];
-                if (intoPort == 8) {
-                    var ckeckDataC = 255;
-                } else {
-                    var ckeckDataC = 0;
-                }
-                Entry.hw.sendQueue['SET'][intoDevice] = {
-                    port: intoPort,
-                    dataA: 0,
-                    dataB: 0,
-                    dataC: ckeckDataC,
-                };
-                Entry.hw.update();
-            }
-        }
+
+		Entry.hw.sendQueue['SET'][Entry.trueRobot.PORT_MAP.colorled] = {
+				port: Entry.trueRobot.PORT_MAP.colorled,
+				dataA: 0,
+				dataB: 0,
+				dataC: 255,
+		};
+		
+		Entry.hw.update();
+			
+
+		Entry.hw.sendQueue['SET'] = {};
+		Entry.hw.sendQueue['SET'][Entry.trueRobot.PORT_MAP.linetracer] = {
+                        port: Entry.trueRobot.PORT_MAP.led_line,
+                        dataA: 0,
+                        dataB: 0x07,
+                        dataC: 0x07,
+                    };
+
+		Entry.hw.update();
+
+		var portArray = new Array(4,9,10);
+
+		Entry.hw.sendQueue['SET'] = {};
+
+		var settimer = 100
+			for( var port in  portArray ){
+				var tempport = 0;
+			
+				setTimeout(function() {
+					Entry.hw.sendQueue['SET'][Entry.trueRobot.PORT_MAP.leds] = {
+                        port: portArray[tempport],
+                        dataA: 1,
+                        dataB: 0x07,
+                        dataC: 0x07,
+                    };
+					
+						Entry.hw.update();
+						tempport++;	
+						settimer = settimer + 30;
+						}, settimer);
+		
+			}
+
+
     },
+	monitorTemplate: {
+		imgPath: 'hw/truebot.png',
+		width: 254,
+        height: 377,
+        listPorts: {
+			AccX: {
+                name: 'acc X',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+			AccY: {
+                name: 'acc Y',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+			AccZ: {
+                name: 'acc Z',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+			AccStatus: {
+                name: 'acc Tilt',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+			BColorRed: {
+                name: 'bottom R Value',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+			BColorGreen: {
+                name: 'bottom G Value',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+			BColorBlue: {
+                name: 'bottom B Value',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+			BColorKey: {
+                name: 'bottom Color Key',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+			leftValue: {
+                name: 'leftValue',
+                type: 'output',
+                pos: { x: 0, y: 0 },
+            },
+			rightValue: {
+                name: 'rightValue',
+                type: 'output',
+                pos: { x: 0, y: 0 },
+            },
+			
+		},
+		ports: {
+			FColorLeftKey: {
+                name: 'frontcolor Left',
+                type: 'input',
+                pos: { x: 135, y: 170 },
+            },
+			FColorRightKey: {
+                name: 'frontcolor Right',
+                type: 'input',
+                pos: { x: 115, y: 170 },
+            },
+			ProxiRight: {
+                name: 'proxi right',
+                type: 'input',
+                pos: { x: 102, y: 260 },
+            },
+			ProxiLeft: {
+                name: 'proxi left',
+                type: 'input',
+                pos: { x: 155, y: 260 },
+            },
+
+			L2: {
+                name: 'line Left Out',
+                type: 'input',
+                pos: { x: 50, y: 360 },
+            },
+			L1: {
+                name: 'line Left In',
+                type: 'input',
+                pos: { x: 80, y: 360 },
+            },
+			R1: {
+                name: 'line Right In',
+                type: 'input',
+                pos: { x: 170, y: 360 },
+            },
+			R2: {
+                name: 'line Right Out',
+                type: 'input',
+                pos: { x: 200, y: 360 },
+            },
+            
+		},
+        mode: 'both',
+    },
+
+
 };
 
 Entry.trueRobot.blockMenuBlocks = [
@@ -96,10 +232,10 @@ Entry.trueRobot.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['Left_Out', 'L2'],
-                        ['Left_In', 'L1'],
-                        ['Right_In', 'R1'],
-                        ['Right_Out', 'R2'],
+                        [Lang.Blocks.truetruebot_left+' 2', 'L2'],
+                        [Lang.Blocks.truetruebot_left+' 1', 'L1'],
+                        [Lang.Blocks.truetruebot_right+' 1', 'R1'],
+                        [Lang.Blocks.truetruebot_right+' 2', 'R2'],
                     ],
                     value: 'Left_Out',
                     fontSize: 11,
@@ -120,10 +256,32 @@ Entry.trueRobot.getBlocks = function() {
             func: function(sprite, script) {
                 var pd = Entry.hw.portData;
                 var dev = script.getField('position');
-
                 return pd[dev];
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.get_linesensor(%1)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+								[Lang.Blocks.truetruebot_left+' 2', 'L2'],
+								[Lang.Blocks.truetruebot_left+' 1', 'L1'],
+								[Lang.Blocks.truetruebot_right+' 1', 'R1'],
+								[Lang.Blocks.truetruebot_right+' 2', 'R2'],
+								],
+								value: 'Left_Out',
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringValue,
+							},
+						],						
+					},
+				],
+			},
         },
         truetrue_get_proxisensor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -134,7 +292,7 @@ Entry.trueRobot.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['Left', 'ProxiLeft'], ['Right', 'ProxiRight']],
+                    options: [[Lang.Blocks.truetruebot_left, 'ProxiLeft'], [Lang.Blocks.truetruebot_right, 'ProxiRight']],
                     value: 'Left',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -154,10 +312,30 @@ Entry.trueRobot.getBlocks = function() {
             func: function(sprite, script) {
                 var pd = Entry.hw.portData;
                 var dev = script.getField('position');
-
+				
+				Entry.trueRobot.monitorTemplate.listPorts.temperature = pd[dev];
+					
                 return pd[dev];
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.get_proxisensor(%1)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [[Lang.Blocks.truetruebot_left, 'ProxiLeft'], [Lang.Blocks.truetruebot_right, 'ProxiRight']],
+								value: 'Left',
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringValue,
+							},
+						],						
+					},
+				],
+			},
         },
         truetrue_get_accsensor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -169,10 +347,10 @@ Entry.trueRobot.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['X-axis', 'AccX'],
-                        ['Y-axis', 'AccY'],
-                        ['Z-axis', 'AccZ'],
-                        ['Tilt', 'AccStatus'],
+                        [Lang.Blocks.truetruebot_Xaxis, 'AccX'],
+                        [Lang.Blocks.truetruebot_Yaxis, 'AccY'],
+                        [Lang.Blocks.truetruebot_Zaxis, 'AccZ'],
+                        [Lang.Blocks.truetruebot_Tilt, 'AccStatus'],
                     ],
                     value: 'X-axis',
                     fontSize: 11,
@@ -196,7 +374,30 @@ Entry.trueRobot.getBlocks = function() {
 
                 return pd[dev];
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.get_accsensor(%1)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_Xaxis, 'AccX'],
+									[Lang.Blocks.truetruebot_Yaxis, 'AccY'],
+									[Lang.Blocks.truetruebot_Zaxis, 'AccZ'],
+									[Lang.Blocks.truetruebot_Tilt, 'AccStatus'],
+								],
+								value: 'X-axis',
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringValue,
+							},
+						],						
+					},
+				],
+			},
         },
         truetrue_get_bottomcolorsensor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -208,10 +409,10 @@ Entry.trueRobot.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['Red', 'BColorRed'],
-                        ['Green', 'BColorGreen'],
-                        ['Blue', 'BColorBlue'],
-                        ['ColorKey', 'BColorKey'],
+                        [Lang.Blocks.truetruebot_head_color_red, 'BColorRed'],
+                        [Lang.Blocks.truetruebot_head_color_green, 'BColorGreen'],
+                        [Lang.Blocks.truetruebot_head_color_blue, 'BColorBlue'],
+                        [Lang.Blocks.truetruebot_ColorKey, 'BColorKey'],
                     ],
                     value: 'Red',
                     fontSize: 11,
@@ -235,7 +436,30 @@ Entry.trueRobot.getBlocks = function() {
 
                 return pd[dev];
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.get_bottomcolorsensor(%1)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_head_color_red, 'BColorRed'],
+									[Lang.Blocks.truetruebot_head_color_green, 'BColorGreen'],
+									[Lang.Blocks.truetruebot_head_color_blue, 'BColorBlue'],
+									[Lang.Blocks.truetruebot_ColorKey, 'BColorKey'],
+								],
+								value: 'Red',
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringValue,
+							},
+						],						
+					},
+				],
+			},
         },
         truetrue_get_frontcolorsensor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -246,7 +470,7 @@ Entry.trueRobot.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['Left', 'FColorLeftKey'], ['Right', 'FColorRightKey']],
+                    options: [[Lang.Blocks.truetruebot_left, 'FColorLeftKey'], [Lang.Blocks.truetruebot_right, 'FColorRightKey']],
                     value: 'Left',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -269,7 +493,25 @@ Entry.trueRobot.getBlocks = function() {
 
                 return pd[dev];
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.get_frontcolorsensor(%1)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [[Lang.Blocks.truetruebot_left, 'FColorLeftKey'], [Lang.Blocks.truetruebot_right, 'FColorRightKey']],
+								value: 'Left',
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringValue,
+							},
+						],						
+					},
+				],
+			},
         },
         truetrue_set_singlemotor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -279,7 +521,7 @@ Entry.trueRobot.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['Left', '9'], ['Right', '10'], ['All', '11']],
+                    options: [[Lang.Blocks.truetruebot_left, '9'], [Lang.Blocks.truetruebot_right, '10'], ['All', '11']],
                     value: 'Left',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -361,7 +603,29 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_singlemotor(%1, %2)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [[Lang.Blocks.truetruebot_left, '9'], [Lang.Blocks.truetruebot_right, '10'], ['All', '11']],
+								value: 'Left',
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringOrNumberByValue,
+							},
+							{
+								type: 'Block',
+								accept: 'string',
+							},
+						],
+					},
+				],
+			},
         },
         truetrue_set_dualmotor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -389,7 +653,7 @@ Entry.trueRobot.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: ['0', '0', '0', null],
+                params: ['0', '0', '1', null],
                 type: 'truetrue_set_dualmotor',
             },
             paramsKeyMap: {
@@ -425,6 +689,8 @@ Entry.trueRobot.getBlocks = function() {
                     delayValue = Math.max(delayValue, -100);
                     delayValue = Math.min(delayValue, 100);
 
+					Entry.hw.sendQueue.leftValue = leftValue;
+					Entry.hw.sendQueue.rightValue = rightValue;
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: leftValue,
@@ -460,7 +726,8 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 } else {
                     Entry.engine.isContinue = false;
-
+					Entry.hw.sendQueue.leftValue = 0;
+					Entry.hw.sendQueue.rightValue = 0;
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: 0,
@@ -473,7 +740,28 @@ Entry.trueRobot.getBlocks = function() {
                     return script;
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_dualmotor(%1, %2 , %3)',
+						textParams: [
+							{
+								type: 'Block',
+								accept: 'string',
+							},
+							{
+								type: 'Block',
+								accept: 'string',
+							},
+							{
+								type: 'Block',
+								accept: 'string',
+							},						
+						],
+					},
+				],
+			},
         },
         truetrue_set_colorled: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -558,7 +846,28 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_colorled(%1, %2 , %3)',
+						textParams: [
+							{
+								type: 'Block',
+								accept: 'string',
+							},
+							{
+								type: 'Block',
+								accept: 'string',
+							},
+							{
+								type: 'Block',
+								accept: 'string',
+							},						
+						],
+					},
+				],
+			},
         },
         truetrue_set_led_proxi: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -639,8 +948,41 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: [] },
-        },
+			syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_led_proxi(%1, %2)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_front_near_left, 9],
+									[Lang.Blocks.truetruebot_front_near_right, 10],
+								],
+								value: 9,
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringOrNumberByValue,
+							},
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_on, 'on'],
+									[Lang.Blocks.truetruebot_off, 'off'],
+								],
+								value: 'on',
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringValue,
+							},
+						],
+					},
+				],
+			},
+		},
         truetrue_set_led_colorsensor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -721,7 +1063,40 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_led_colorsensor(%1, %2)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_front_color, 3],
+									[Lang.Blocks.truetruebot_bottom_color, 4],
+								],
+								value: 3,
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringOrNumberByValue,
+							},
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_on, 'on'],
+									[Lang.Blocks.truetruebot_off, 'off'],
+								],
+								value: 'on',
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringValue,
+							},
+						],
+					},
+				],
+			},
         },
         truetrue_set_led_linesensor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -790,7 +1165,28 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_led_linesensor(%1)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_on, 'on'],
+									[Lang.Blocks.truetruebot_off, 'off'],
+								],
+								value: 'on',
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringValue,
+							},
+						],
+					},
+				],
+			},
         },
         truetrue_set_linetracer: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -860,7 +1256,28 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_linetracer(%1)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_on, 'on'],
+									[Lang.Blocks.truetruebot_off, 'off'],
+								],
+								value: 'on',
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringValue,
+							},
+						],
+					},
+				],
+			},
         },
         truetrue_set_head_colorled: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -973,7 +1390,34 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_head_colorled(%1)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_head_color_white, 101],
+									[Lang.Blocks.truetruebot_head_color_red, 102],
+									[Lang.Blocks.truetruebot_head_color_green, 103],
+									[Lang.Blocks.truetruebot_head_color_blue, 104],
+									[Lang.Blocks.truetruebot_head_color_cyan, 105],
+									[Lang.Blocks.truetruebot_head_color_magenta, 106],
+									[Lang.Blocks.truetruebot_head_color_yellow, 107],
+									[Lang.Blocks.truetruebot_head_color_off, 100],
+								],
+								value: 101,
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringOrNumberByValue,
+							},
+						],
+					},
+				],
+			},
         },
         truetrue_set_move: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1033,7 +1477,9 @@ Entry.trueRobot.getBlocks = function() {
                         rightValue = -100;
                         delayValue = 0;
                     }
-
+										
+					Entry.hw.sendQueue.leftValue = leftValue;
+					Entry.hw.sendQueue.rightValue = rightValue;
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: leftValue,
@@ -1055,7 +1501,28 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_move(%1)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_move_forward, 101],
+									[Lang.Blocks.truetruebot_move_backward, 102],
+								],
+								value: 101,
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringOrNumberByValue,
+							},
+						],
+					},
+				],
+			},
         },
         truetrue_set_sec_move: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1086,7 +1553,7 @@ Entry.trueRobot.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [101, '0', null],
+                params: [101, '1', null],
                 type: 'truetrue_set_sec_move',
             },
             paramsKeyMap: {
@@ -1104,6 +1571,11 @@ Entry.trueRobot.getBlocks = function() {
 
                 var timeValue = script.getNumberValue('delayValue');
                 var delayValue = script.getNumberValue('delayValue');
+
+				if( delayValue == 0 ){
+					script.isStart = true;
+				}
+
                 delayValue = Math.round(delayValue);
                 delayValue = Math.max(delayValue, -100);
                 delayValue = Math.min(delayValue, 100);
@@ -1123,7 +1595,8 @@ Entry.trueRobot.getBlocks = function() {
                         leftValue = -100;
                         rightValue = -100;
                     }
-
+					Entry.hw.sendQueue.leftValue = leftValue;
+					Entry.hw.sendQueue.rightValue = rightValue;
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: leftValue,
@@ -1157,7 +1630,8 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 } else {
                     Entry.engine.isContinue = false;
-
+					Entry.hw.sendQueue.leftValue = 0;
+					Entry.hw.sendQueue.rightValue = 0;
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: 0,
@@ -1170,7 +1644,28 @@ Entry.trueRobot.getBlocks = function() {
                     return script;
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_sec_move(%1)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_move_forward, 101],
+									[Lang.Blocks.truetruebot_move_backward, 102],
+								],
+								value: 101,
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringOrNumberByValue,
+							},
+						],
+					},
+				],
+			},
         },
         truetrue_set_rotate: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1230,7 +1725,8 @@ Entry.trueRobot.getBlocks = function() {
                         rightValue = 100;
                         delayValue = 0;
                     }
-
+					Entry.hw.sendQueue.leftValue = leftValue;
+					Entry.hw.sendQueue.rightValue = rightValue;
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: leftValue,
@@ -1252,7 +1748,28 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_rotate(%1)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_move_right, 101],
+									[Lang.Blocks.truetruebot_move_left, 102],
+								],
+								value: 101,
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringOrNumberByValue,
+							},
+						],
+					},
+				],
+			},
         },
         truetrue_set_sec_rotate: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1283,7 +1800,7 @@ Entry.trueRobot.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [101, '0', null],
+                params: [101, '1', null],
                 type: 'truetrue_set_sec_rotate',
             },
             paramsKeyMap: {
@@ -1301,9 +1818,15 @@ Entry.trueRobot.getBlocks = function() {
 
                 var timeValue = script.getNumberValue('delayValue');
                 var delayValue = script.getNumberValue('delayValue');
-                delayValue = Math.round(delayValue);
+
+				if( delayValue == 0 ){
+					script.isStart = true;
+				}
+				
+				delayValue = Math.round(delayValue);
                 delayValue = Math.max(delayValue, -100);
                 delayValue = Math.min(delayValue, 100);
+
 
                 if (!script.isStart) {
                     script.isStart = true;
@@ -1314,13 +1837,14 @@ Entry.trueRobot.getBlocks = function() {
                     var rightValue;
 
                     if (moveValue == 101) {
-                        leftValue = 100;
-                        rightValue = -100;
+                        leftValue = 50;
+                        rightValue = -30;
                     } else if (moveValue == 102) {
-                        leftValue = -100;
-                        rightValue = 100;
+                        leftValue = -30;
+                        rightValue = 50;
                     }
-
+					Entry.hw.sendQueue.leftValue = leftValue;
+					Entry.hw.sendQueue.rightValue = rightValue;
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: leftValue,
@@ -1354,7 +1878,8 @@ Entry.trueRobot.getBlocks = function() {
                     return script.callReturn();
                 } else {
                     Entry.engine.isContinue = false;
-
+					Entry.hw.sendQueue.leftValue = 0;
+					Entry.hw.sendQueue.rightValue = 0;
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: 0,
@@ -1367,7 +1892,28 @@ Entry.trueRobot.getBlocks = function() {
                     return script;
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_sec_rotate(%1)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_move_right, 101],
+									[Lang.Blocks.truetruebot_move_left, 102],
+								],
+								value: 101,
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringOrNumberByValue,
+							},
+						],
+					},
+				],
+			},
         },
 
         truetrue_set_grid_block: {
@@ -1388,7 +1934,7 @@ Entry.trueRobot.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: ['0', null],
+                params: ['1', null],
                 type: 'truetrue_set_grid_block',
             },
             paramsKeyMap: {
@@ -1412,6 +1958,10 @@ Entry.trueRobot.getBlocks = function() {
                     script.bufferFlag = 2;
                 }
 
+				if( gridValue == 0 ) {
+					script.timeFlag = 3;
+				}
+
                 if (script.timeFlag == 0) {
                     script.timeFlag = 1;
 
@@ -1419,44 +1969,68 @@ Entry.trueRobot.getBlocks = function() {
                         leftValue = 100;
                         rightValue = 100;
                     } else if (pd['L1'] >= 0 || pd['R1'] >= 0) {
-                        if (pd['L1'] > pd['R1'] - 20) {
+                        if (pd['L1'] > pd['R1']-20) {
                             leftValue = 100;
                             rightValue = pd['L1'] - pd['R1'];
 
-                            var maxright = rightValue;
-
+                            // var maxright = rightValue;
+							
                             rightValue = Math.max(
-                                Math.min(Math.round(100 - 100 * rightValue / 230), 70),
-                                0
+                                Math.min(Math.round(100 - 100 * rightValue / 230), 100),
+                                30
                             );
-                        } else if (pd['L1'] < pd['R1'] - 20) {
+                        } else if (pd['R1'] > pd['L1']-20) {
                             leftValue = pd['R1'] - pd['L1'];
+
+
                             leftValue = Math.max(
-                                Math.min(Math.round(100 - 100 * leftValue / 230), 70),
-                                0
+                                Math.min(Math.round(100 - 100 * leftValue / 230), 100),
+                                30
                             );
 
                             rightValue = 100;
                         } else {
+
                             leftValue = 100;
                             rightValue = 100;
                         }
                     } else {
                         leftValue = 100;
                         rightValue = 100;
-                    }
-
+					}
+					//console.log( script.tempcheck +"//"+ pd['L2'] +" :: "+ pd['L1'] +" :: "+ pd['R1'] +" :: "+ pd['R2'] );
                     if (
-                        pd['L1'] > 0 &&
-                        pd['R1'] > 0 &&
+                        pd['L1'] >= 0 &&
+                        pd['R1'] >= 0 &&
                         pd['L2'] > 0 &&
                         pd['R2'] > 0 &&
-                        pd['L2'] > 130 &&
-                        pd['R2'] > 130
+                        pd['L2'] + pd['L1'] >= 130 &&
+                        pd['R2'] + pd['R1'] >= 130
                     ) {
                         if (script.flag == 1) {
                             script.checkCount++;
                             script.flag = 0;
+
+							if (script.checkCount < gridValue) {
+								Entry.hw.sendQueue.leftValue = 0;
+								Entry.hw.sendQueue.rightValue = 0;
+								Entry.hw.sendQueue['SET'][device] = {
+									port: Entry.trueRobot.PORT_MAP.dualPort,
+									dataA: 0,
+									dataB: 0,
+									dataC: 1,
+								};
+
+								script.timeFlag = 1;
+								
+								var myTimer = setTimeout(function() {
+									script.timeFlag = 0;
+								 }, 200);
+
+								return script;
+							}
+
+
                         }
                         if (script.checkCount >= gridValue) {
                             if (
@@ -1487,7 +2061,8 @@ Entry.trueRobot.getBlocks = function() {
                     if (!Entry.hw.sendQueue['SET']) {
                         Entry.hw.sendQueue['SET'] = {};
                     }
-
+					Entry.hw.sendQueue.leftValue = leftValue;
+					Entry.hw.sendQueue.rightValue = rightValue;
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: leftValue,
@@ -1507,7 +2082,8 @@ Entry.trueRobot.getBlocks = function() {
                     return script;
                 } else if (script.timeFlag == 3) {
                     clearTimeout(myTimer);
-
+					Entry.hw.sendQueue.leftValue = 0;
+					Entry.hw.sendQueue.rightValue = 0;
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: 0,
@@ -1520,7 +2096,20 @@ Entry.trueRobot.getBlocks = function() {
 
                 return script;
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_grid_block(%1)',
+						textParams: [
+							{
+								type: 'Block',
+								accept: 'string',								
+							},
+						],
+					},
+				],
+			},
         },
 
         truetrue_set_grid_rotate: {
@@ -1552,7 +2141,7 @@ Entry.trueRobot.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [101, '0', null],
+                params: [101, '1', null],
                 type: 'truetrue_set_grid_rotate',
             },
             paramsKeyMap: {
@@ -1585,6 +2174,10 @@ Entry.trueRobot.getBlocks = function() {
                     script.tempcheck = 0;
                 }
 
+				if( rotateValue == 0 ) {
+					script.timeFlag = 3;
+				}
+
                 if (script.timeFlag == 0) {
                     script.timeFlag = 1;
 
@@ -1599,41 +2192,90 @@ Entry.trueRobot.getBlocks = function() {
                     }
 
                     if (moveValue == 101) {
-                        if (pd['L1'] > 0 && pd['L2'] == 0 && pd['R2'] == 0 && pd['R1'] == 0) {
+
+                        if ( ( pd['L1'] > 170 ||  ( pd['L1'] + pd['L2'] > 170 & pd['L1'] > pd['L2'] ) ) && pd['L2'] >= 0 && pd['R2'] < 10 && pd['R1'] < 10) {
+
                             if (script.flag == 1) {
                                 script.tempcheck = 1;
                             }
-                        } else if (pd['L2'] > 0 && pd['L1'] == 0) {
+                        } else if (pd['L2'] > 0 && pd['L1'] < 10) {
                             script.flag = 1;
                         }
                     } else if (moveValue == 102) {
-                        if (pd['R1'] > 0 && pd['R2'] == 0 && pd['L2'] == 0 && pd['L1'] == 0) {
+
+                        if ( ( pd['R1'] > 170 ||  ( pd['R1'] + pd['R2'] > 170 & pd['R1'] > pd['R2'] ) ) && pd['R2'] >= 0 && pd['L2'] < 10 && pd['L1'] < 10) {
+
                             if (script.flag == 1) {
-                                script.tempcheck = 2;
+                                script.tempcheck = 1;
                             }
-                        } else if (pd['R2'] > 0 && pd['R1'] == 0) {
+                        } else if (pd['R2'] > 0 && pd['R1'] < 10) {
                             script.flag = 1;
                         }
                     }
+					//console.log( script.tempcheck +"//"+ pd['L2'] +" :: "+ pd['L1'] +" :: "+ pd['R1'] +" :: "+ pd['R2'] + " script.tempcheck : " + script.tempcheck + " script.flag : "+script.flag );
 
-                    if (script.tempcheck == 1 && pd['L1'] < 100) {
+
+
+                    if (script.tempcheck == 1 && pd['L1'] < 230) {
                         script.tempcheck = 0;
                         script.checkCount++;
                         script.flag = 0;
+
+						if (script.flag == 0 && script.checkCount < rotateValue) {
+								Entry.hw.sendQueue.leftValue = 0;
+								Entry.hw.sendQueue.rightValue = 0;
+								Entry.hw.sendQueue['SET'][device] = {
+									port: Entry.trueRobot.PORT_MAP.dualPort,
+									dataA: 0,
+									dataB: 0,
+									dataC: 1,
+								};
+
+								script.timeFlag = 1;
+								//console.log( "!!!!!!!!!!!" );
+								var myTimer = setTimeout(function() {
+									script.timeFlag = 0;
+								 }, 200);
+
+								return script;
+							}
                     }
-                    if (script.tempcheck == 2 && pd['R1'] < 100) {
+
+                    if (script.tempcheck == 1 && pd['R1'] < 230) {
+
                         script.tempcheck = 0;
                         script.checkCount++;
                         script.flag = 0;
+
+						if (script.flag == 0 && script.checkCount < rotateValue) {
+								Entry.hw.sendQueue.leftValue = 0;
+								Entry.hw.sendQueue.rightValue = 0;	
+								Entry.hw.sendQueue['SET'][device] = {
+									port: Entry.trueRobot.PORT_MAP.dualPort,
+									dataA: 0,
+									dataB: 0,
+									dataC: 1,
+								};
+
+								script.timeFlag = 1;
+								//console.log( "!!!!!!!!!!!" );
+								var myTimer = setTimeout(function() {
+									script.timeFlag = 0;
+								 }, 200);
+
+								return script;
+						}
                     }
 
+				
                     if (script.checkCount >= rotateValue) {
                         leftValue = 0;
                         rightValue = 0;
                         script.timeFlag = 1;
                         script.bufferFlag = 3;
                     }
-
+					Entry.hw.sendQueue.leftValue = leftValue;
+					Entry.hw.sendQueue.rightValue = rightValue;
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: leftValue,
@@ -1653,7 +2295,8 @@ Entry.trueRobot.getBlocks = function() {
                     return script;
                 } else if (script.timeFlag == 3) {
                     clearTimeout(myTimer);
-
+					Entry.hw.sendQueue.leftValue = 0;
+					Entry.hw.sendQueue.rightValue = 0;
                     Entry.hw.sendQueue['SET'][device] = {
                         port: Entry.trueRobot.PORT_MAP.dualPort,
                         dataA: 0,
@@ -1666,7 +2309,32 @@ Entry.trueRobot.getBlocks = function() {
 
                 return script;
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+				js: [],
+				py: [
+					{
+						syntax: 'trueRobot.set_grid_rotate(%1, %2)',
+						textParams: [
+							{
+								type: 'Dropdown',
+								options: [
+									[Lang.Blocks.truetruebot_move_right, 101],
+									[Lang.Blocks.truetruebot_move_left, 102],
+								],
+								value: 101,
+								fontSize: 11,
+								bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+								arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+								converter: Entry.block.converters.returnStringOrNumberByValue,
+							},
+							{
+								type: 'Block',
+								accept: 'string',								
+							},
+						],
+					},
+				],
+			},
         },
     };
 };
@@ -1716,6 +2384,13 @@ Entry.trueRobot.setLanguage = function() {
                 truetruebot_move_backward: '뒤로',
                 truetruebot_move_right: '오른쪽으로',
                 truetruebot_move_left: '왼쪽으로',
+				truetruebot_right: '오른쪽',
+				truetruebot_left: '왼쪽',
+				truetruebot_Xaxis: 'X축',
+				truetruebot_Yaxis: 'Y축',
+				truetruebot_Zaxis: 'Z축',
+				truetruebot_Tilt: '기울기',
+				truetruebot_ColorKey: '컬러키',
             },
         },
         code: {
@@ -1759,6 +2434,13 @@ Entry.trueRobot.setLanguage = function() {
                 truetruebot_move_backward: '뒤로',
                 truetruebot_move_right: '오른쪽으로',
                 truetruebot_move_left: '왼쪽으로',
+				truetruebot_right: '오른쪽',
+				truetruebot_left: '왼쪽',
+				truetruebot_Xaxis: 'X축',
+				truetruebot_Yaxis: 'Y축',
+				truetruebot_Zaxis: 'Z축',
+				truetruebot_Tilt: '기울기',
+				truetruebot_ColorKey: '컬러키',
             },
         },
         ebs: {
@@ -1802,22 +2484,29 @@ Entry.trueRobot.setLanguage = function() {
                 truetruebot_move_backward: '뒤로',
                 truetruebot_move_right: '오른쪽으로',
                 truetruebot_move_left: '왼쪽으로',
+				truetruebot_right: '오른쪽',
+				truetruebot_left: '왼쪽',
+				truetruebot_Xaxis: 'X축',
+				truetruebot_Yaxis: 'Y축',
+				truetruebot_Zaxis: 'Z축',
+				truetruebot_Tilt: '기울기',
+				truetruebot_ColorKey: '컬러키',
             },
         },
         jp: {
             template: {
-                truetrue_get_accsensor: '加速度センサー%1の値',
-                truetrue_get_bottomcolorsensor: '床面カラーセンサー%1の値',
-                truetrue_get_frontcolorsensor: '全面カラーセンサー%1の値',
-                truetrue_get_linesensor: 'ラインセンサー%1の値',
-                truetrue_get_proxisensor: '近接センサー%1の値',
-                truetrue_set_colorled: 'カラーLED Red %1  Green %2 Blue %3 に設定 %4',
-                truetrue_set_dualmotor: 'DCモーター左 %1  右 %2速度で%3秒駆動%4',
-                truetrue_set_led_colorsensor: '%1照明用LED %2 %3',
-                truetrue_set_led_linesensor: 'ラインセンサー照明用LED %1 %2',
-                truetrue_set_led_proxi: '%1照明用LED %2 %3',
-                truetrue_set_linetracer: 'ライントレーシングモード%1 %2',
-                truetrue_set_singlemotor: 'DCモーター %1 速度 %2 に設定 %3',
+                truetrue_get_accsensor: '3-AXIS Accelerometer %1 Sensor value',
+                truetrue_get_bottomcolorsensor: 'Bottom Color %1 Sensor value',
+                truetrue_get_frontcolorsensor: 'Front Color %1 Sensor value',
+                truetrue_get_linesensor: 'Line %1 Sensor value',
+                truetrue_get_proxisensor: 'Proximity %1 Sensor value',
+                truetrue_set_colorled: 'Set Color LED Red %1  Green %2 Blue %3 %4',
+                truetrue_set_dualmotor: 'Set DC motor left %1  right %2 during %3 seconds %4',
+                truetrue_set_led_colorsensor: 'LED for %1 color sensor %2 %3',
+                truetrue_set_led_linesensor: 'LED for line sensor %1 %2',
+                truetrue_set_led_proxi: 'LED for %1 proximity sensor %2 %3',
+                truetrue_set_linetracer: 'Line tracing mode %1 %2',
+                truetrue_set_singlemotor: 'Set DC motor %1  speed %2 %3',
                 truetrue_set_head_colorled: 'Change LED color to %1 %2',
                 truetrue_set_move: 'Move TRUETRUE %1 forever %2',
                 truetrue_set_sec_move: 'Move TRUETRUE %1 for %2 second(s) %3',
@@ -1845,6 +2534,13 @@ Entry.trueRobot.setLanguage = function() {
                 truetruebot_move_backward: 'backward',
                 truetruebot_move_right: 'right',
                 truetruebot_move_left: 'left',
+				truetruebot_right: 'right',
+				truetruebot_left: 'left',
+				truetruebot_Xaxis: 'X-axis',
+				truetruebot_Yaxis: 'Y-axis',
+				truetruebot_Zaxis: 'Z-axis',
+				truetruebot_Tilt: 'Tilt',
+				truetruebot_ColorKey: 'ColorKey',
             },
         },
         vn: {
@@ -1888,6 +2584,13 @@ Entry.trueRobot.setLanguage = function() {
                 truetruebot_move_backward: 'backward',
                 truetruebot_move_right: 'right',
                 truetruebot_move_left: 'left',
+				truetruebot_right: 'right',
+				truetruebot_left: 'left',
+				truetruebot_Xaxis: 'X-axis',
+				truetruebot_Yaxis: 'Y-axis',
+				truetruebot_Zaxis: 'Z-axis',
+				truetruebot_Tilt: 'Tilt',
+				truetruebot_ColorKey: 'ColorKey',
             },
         },
         en: {
@@ -1931,6 +2634,13 @@ Entry.trueRobot.setLanguage = function() {
                 truetruebot_move_backward: 'backward',
                 truetruebot_move_right: 'right',
                 truetruebot_move_left: 'left',
+				truetruebot_right: 'right',
+				truetruebot_left: 'left',
+				truetruebot_Xaxis: 'X-axis',
+				truetruebot_Yaxis: 'Y-axis',
+				truetruebot_Zaxis: 'Z-axis',
+				truetruebot_Tilt: 'Tilt',
+				truetruebot_ColorKey: 'ColorKey',
             },
         },
     };

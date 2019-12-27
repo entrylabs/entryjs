@@ -48,15 +48,23 @@ class GlobalSvg {
         }
         this._view = view;
         this._mode = mode;
-        if (mode !== Entry.Workspace.MODE_VIMBOARD) {
-            view.set({ visible: false });
-        }
-
+        this.isFromBlockMenu = view.dragInstance && view.dragInstance.isNew;
+        view.set({ visible: false });
         this.draw();
         this.show();
         this.align();
         this.position();
         return true;
+    }
+
+    getView() {
+        return this._view;
+    }
+
+    get canAddStorageBlock() {
+        const { block = {} } = this._view || {};
+        const { copyable } = block;
+        return !this.isFromBlockMenu && copyable;
     }
 
     setComment(view, mode) {
@@ -102,8 +110,8 @@ class GlobalSvg {
             width: `${Math.round(bBox.width + 4)}px`,
             height: `${Math.round(bBox.height + 4)}px`,
         });
-        this.xScaleDiff = width * (this.scale - 1) / (this.scale * 2);
-        this.yscaleDiff = height * (this.scale - 1) / (this.scale * 2);
+        this.xScaleDiff = (width * (this.scale - 1)) / (this.scale * 2);
+        this.yscaleDiff = (height * (this.scale - 1)) / (this.scale * 2);
 
         this.svgGroup = Entry.SVG.createElement(blockView.svgGroup.cloneNode(true), { opacity: 1 });
         this.svg.appendChild(this.svgGroup);
@@ -199,22 +207,29 @@ class GlobalSvg {
     }
 
     show() {
+        this.isShow = true;
         this._container.removeClass('entryRemove');
     }
 
     hide() {
+        this.isShow = false;
         this._container.addClass('entryRemove');
     }
 
-    position() {
+    position(value) {
         const blockView = this._view;
         if (!blockView) {
             return;
         }
         const pos = blockView.getAbsoluteCoordinate();
         const offset = blockView.getBoard().offset();
-        this.left = pos.scaleX + (offset.left / this.scale - this._offsetX);
-        this.top = pos.scaleY + (offset.top / this.scale - this._offsetY);
+        if (value) {
+            this.left += value.left / this.scale;
+            this.top += value.top / this.scale;
+        } else {
+            this.left = pos.scaleX + (offset.left / this.scale - this._offsetX);
+            this.top = pos.scaleY + (offset.top / this.scale - this._offsetY);
+        }
         this._applyDomPos(this.left, this.top);
     }
 
@@ -260,10 +275,26 @@ class GlobalSvg {
         const blockMenu = board.workspace.blockMenu;
         const bLeft = blockMenu.offset().left;
         const bTop = blockMenu.offset().top;
-        const bWidth = blockMenu.visible ? blockMenu.blockMenuWrapper.width() : 0;
-        if (mousePos.y > board.offset().top - 20 && mousePos.x > bLeft + bWidth) {
+        const bWidth = blockMenu.visible ? blockMenu.blockMenuContainer.width() : 0;
+
+        let backPackWidth = 0;
+        const windowWidth = window.innerWidth;
+        const backPackMode = Entry.playground.backPack.isShow;
+        if (backPackMode) {
+            backPackWidth = 135;
+        }
+
+        if (
+            mousePos.y > board.offset().top - 20 &&
+            (mousePos.x > bLeft + bWidth && mousePos.x < windowWidth - backPackWidth)
+        ) {
             return this.DONE;
-        } else if (mousePos.y > bTop && mousePos.x > bLeft && blockMenu.visible) {
+        } else if (
+            mousePos.y > bTop &&
+            mousePos.x > bLeft &&
+            mousePos.x <= bLeft + bWidth &&
+            blockMenu.visible
+        ) {
             if (blockView.block && !blockView.block.isDeletable()) {
                 return this.RETURN;
             } else {
@@ -274,8 +305,8 @@ class GlobalSvg {
         }
     }
 
-    addControl(e) {
-        this.onMouseDown.apply(this, arguments);
+    addControl(...args) {
+        this.onMouseDown(...args);
     }
 
     onMouseDown(e) {

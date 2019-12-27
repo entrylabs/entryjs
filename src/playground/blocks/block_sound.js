@@ -47,7 +47,7 @@ module.exports = {
                     const sound = sprite.parent.getSound(soundId);
 
                     if (sound) {
-                        Entry.Utils.addSoundInstances(createjs.Sound.play(sound.id));
+                        Entry.Utils.addSoundInstances(Entry.Utils.playSound(sound.id));
                     }
 
                     return script.callReturn();
@@ -126,7 +126,7 @@ module.exports = {
                     const sound = sprite.parent.getSound(soundId);
                     if (sound) {
                         Entry.Utils.addSoundInstances(
-                            createjs.Sound.play(sound.id, {
+                            Entry.Utils.playSound(sound.id, {
                                 startTime: 0,
                                 duration: timeValue * 1000,
                             })
@@ -221,11 +221,12 @@ module.exports = {
                         let [start, end] = script.getValues(['START', 'END'], script);
                         start = Number(start) * 1000;
                         end = Number(end) * 1000;
-
-                        createjs.Sound.play(sound.id, {
+                        const instance = Entry.Utils.playSound(sound.id, {
                             startTime: Math.min(start, end),
                             duration: Math.max(start, end) - Math.min(start, end),
                         });
+                        Entry.Utils.addSoundInstances(instance);
+
                     }
                     return script.callReturn();
                 },
@@ -287,7 +288,7 @@ module.exports = {
                         const sound = sprite.parent.getSound(soundId);
                         if (sound) {
                             script.playState = 1;
-                            const instance = createjs.Sound.play(sound.id);
+                            const instance = Entry.Utils.playSound(sound.id);
                             Entry.Utils.addSoundInstances(instance);
                             setTimeout(function() {
                                 script.playState = 0;
@@ -374,7 +375,8 @@ module.exports = {
                         const sound = sprite.parent.getSound(soundId);
                         if (sound) {
                             script.playState = 1;
-                            const instance = createjs.Sound.play(sound.id);
+                            const instance = Entry.Utils.playSound(sound.id);
+                            Entry.Utils.addSoundInstances(instance);
                             const timeValue = script.getNumberValue('SECOND', script);
                             setTimeout(function() {
                                 instance.stop();
@@ -484,11 +486,12 @@ module.exports = {
                             const startValue = Math.min(start, end);
                             const endValue = Math.max(start, end);
                             const duration = endValue - startValue;
-
-                            createjs.Sound.play(sound.id, {
+                            const instance = Entry.Utils.playSound(sound.id, {
                                 startTime: startValue,
                                 duration,
                             });
+                            Entry.Utils.addSoundInstances(instance);
+
 
                             setTimeout(function() {
                                 script.playState = 0;
@@ -553,14 +556,14 @@ module.exports = {
                 isNotFor: [],
                 func(sprite, script) {
                     let value = script.getNumberValue('VALUE', script) / 100;
-                    value = value + createjs.Sound.getVolume();
+                    value = value + Entry.Utils.getVolume();
                     if (value > 1) {
                         value = 1;
                     }
                     if (value < 0) {
                         value = 0;
                     }
-                    createjs.Sound.setVolume(value);
+                    Entry.Utils.setVolume(value);
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.add_sound_volume(%1)'] },
@@ -616,7 +619,7 @@ module.exports = {
                     if (value < 0) {
                         value = 0;
                     }
-                    createjs.Sound.setVolume(value);
+                    Entry.Utils.setVolume(value);
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.set_sound_volume(%1)'] },

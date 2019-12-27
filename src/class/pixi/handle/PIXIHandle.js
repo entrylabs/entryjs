@@ -2,9 +2,7 @@
  * Resize handle on PIXI.js
  */
 
-
 'use strict';
-
 
 import { PIXIHandleEdge } from './PIXIHandleEdge';
 import { PIXIDragHelper } from '../helper/PIXIDragHelper';
@@ -45,12 +43,9 @@ export var PIXIHandle = function(canvas) {
     this.createHandle();
     this.render();
     this.selectedObject = null;
-
 };
 
-
 (function(p) {
-
     p.setChangeListener = function(object, func) {
         this.onChangeFunction = func;
         this.callerObject = object;
@@ -134,7 +129,7 @@ export var PIXIHandle = function(canvas) {
     p.setRotation = function(rotation) {
         rotation = (rotation + 360) % 360;
         this.rotation = rotation;
-        var rad = rotation * Math.PI / 180;
+        var rad = (rotation * Math.PI) / 180;
         this.container.rotation = rad;
         this.background.rotation = rad;
         this.updateKnobCursor();
@@ -143,7 +138,7 @@ export var PIXIHandle = function(canvas) {
     p.setDirection = function(direction) {
         direction = (direction + 360) % 360;
         this.direction = direction;
-        this.directionArrow.rotation = direction * Math.PI / 180;
+        this.directionArrow.rotation = (direction * Math.PI) / 180;
     };
 
     p.setVisible = function(visible) {
@@ -196,7 +191,7 @@ export var PIXIHandle = function(canvas) {
         this.edge = edge;
 
         //rotate knob
-        var rotateKnob = BASE_ASSET.newSprite("handle/rotateKnob");
+        var rotateKnob = BASE_ASSET.newSprite('handle/rotateKnob');
         rotateKnob.anchor.set(0.5, 1);
         rotateKnob.interactive = true;
         rotateKnob.cursor = 'crosshair';
@@ -208,7 +203,7 @@ export var PIXIHandle = function(canvas) {
             var pos = handle.getEventCoordinate(e);
             pos.x -= handle.x;
             pos.y -= handle.y;
-            var rotation = -Math.atan2(pos.x, pos.y) / Math.PI * 180 - 180;
+            var rotation = (-Math.atan2(pos.x, pos.y) / Math.PI) * 180 - 180;
             handle.setRotation(rotation);
             handle.dispatchOnChangeEvent();
         });
@@ -219,7 +214,7 @@ export var PIXIHandle = function(canvas) {
         container.setChildIndex(rotateKnob, 1);
         this.rotateKnob = rotateKnob;
 
-        var directionArrow = BASE_ASSET.newSprite("handle/arrow");
+        var directionArrow = BASE_ASSET.newSprite('handle/arrow');
         directionArrow.interactive = true;
         directionArrow.pivot.set(9, 42);
 
@@ -229,7 +224,7 @@ export var PIXIHandle = function(canvas) {
         });
         directionArrow.on(PIXIDragHelper.MOVE, function(e) {
             var pos = handle.getLocalCoordinate(handle.getEventCoordinate(e));
-            var rotation = -Math.atan2(pos.x, pos.y) / Math.PI * 180 - 180;
+            var rotation = (-Math.atan2(pos.x, pos.y) / Math.PI) * 180 - 180;
             handle.setDirection(rotation);
             handle.dispatchOnChangeEvent();
         });
@@ -240,7 +235,7 @@ export var PIXIHandle = function(canvas) {
         container.setChildIndex(directionArrow, 0);
         this.directionArrow = directionArrow;
 
-        var centerPoint = BASE_ASSET.newSprite("handle/centerPoint");
+        var centerPoint = BASE_ASSET.newSprite('handle/centerPoint');
         centerPoint.interactive = true;
         centerPoint.anchor.set(0.5, 0.5);
 
@@ -264,7 +259,7 @@ export var PIXIHandle = function(canvas) {
         //resize knobs
         this.knobs = [];
         for (var i = 0; i < 8; i++) {
-            var knob = BASE_ASSET.newSprite("handle/knob");
+            var knob = BASE_ASSET.newSprite('handle/knob');
             knob.pivot.set(4, 4);
             knob.interactive = true;
             knob.knobIndex = i;
@@ -272,9 +267,7 @@ export var PIXIHandle = function(canvas) {
                 var targetKnob = e.currentTarget;
                 PIXIDragHelper.handleDrag(targetKnob);
                 var otherKnobIndex =
-                    this.knobIndex + 4 > 7
-                        ? this.knobIndex + 4 - 8
-                        : this.knobIndex + 4;
+                    this.knobIndex + 4 > 7 ? this.knobIndex + 4 - 8 : this.knobIndex + 4;
                 var otherKnob = handle.knobs[otherKnobIndex];
                 var otherKnobPos = handle.getGlobalCoordinate(otherKnob);
                 this.otherKnobPos = otherKnobPos;
@@ -296,7 +289,7 @@ export var PIXIHandle = function(canvas) {
             this.knobs.push(knob);
         }
 
-        var background = BASE_ASSET.newSprite("handle/bg");
+        var background = BASE_ASSET.newSprite('handle/bg');
         background.interactive = true;
         background.anchor.set(0.5, 0.5);
 
@@ -333,8 +326,8 @@ export var PIXIHandle = function(canvas) {
         var res = Math.sqrt(x * x + y * y);
         if (res > standard && Entry.engine.isState('stop')) {
             Entry.toast.warning(
-                '이런! 조심하세요!',
-                '오브젝트의 중심이 이미지에서 크게 벗어나서 원위치로 되돌렸습니다.'
+                Lang.Workspace.toast_error_title_object_center,
+                Lang.Workspace.toast_error_contents_object_center
             );
             return true;
         }
@@ -362,15 +355,14 @@ export var PIXIHandle = function(canvas) {
      * 그래서 보더가 필요 없음.
      * 함수가 public naming 이라서 삭제를 못하겠음.
      */
-    p.renderBorder = function() {
-    };
+    p.renderBorder = function() {};
 
     p.renderKnobs = function() {
-        var width = this.width/2;
-        var height = this.height/2;
+        var width = this.width / 2;
+        var height = this.height / 2;
         this.knobs.forEach(function(knob, i) {
-            knob.x = Math.round(Math.sin(i / 4 * Math.PI)) * width;
-            knob.y = Math.round(Math.cos(i / 4 * Math.PI)) * height;
+            knob.x = Math.round(Math.sin((i / 4) * Math.PI)) * width;
+            knob.y = Math.round(Math.cos((i / 4) * Math.PI)) * height;
         });
     };
 
@@ -387,14 +379,8 @@ export var PIXIHandle = function(canvas) {
         var cos = Math.cos(rotation);
         var sin = Math.sin(rotation);
         return {
-            x:
-            this.x +
-            childObject.x * cos +
-            childObject.y * sin,
-            y:
-            this.y +
-            childObject.y * cos -
-            childObject.x * sin,
+            x: this.x + childObject.x * cos + childObject.y * sin,
+            y: this.y + childObject.y * cos - childObject.x * sin,
         };
     };
 
@@ -411,18 +397,13 @@ export var PIXIHandle = function(canvas) {
     };
 
     p.adjust = function(knobIndex, otherKnobPos, pos) {
-        var newPoint = this.calcPos(
-            { x: this.x, y: this.y },
-            otherKnobPos,
-            pos
-        );
+        var newPoint = this.calcPos({ x: this.x, y: this.y }, otherKnobPos, pos);
         var newCenter = {
             x: (otherKnobPos.x + newPoint.x) / 2,
             y: (otherKnobPos.y + newPoint.y) / 2,
         };
         var newLength = Math.sqrt(
-            Math.pow(newPoint.x - otherKnobPos.x, 2) +
-            Math.pow(newPoint.y - otherKnobPos.y, 2)
+            Math.pow(newPoint.x - otherKnobPos.x, 2) + Math.pow(newPoint.y - otherKnobPos.y, 2)
         );
         if (knobIndex % 4 == 0) {
             var ratio = newLength / this.height;
@@ -436,16 +417,15 @@ export var PIXIHandle = function(canvas) {
             var oldLength =
                 2 *
                 Math.sqrt(
-                    Math.pow(this.x - otherKnobPos.x, 2) +
-                    Math.pow(this.y - otherKnobPos.y, 2)
+                    Math.pow(this.x - otherKnobPos.x, 2) + Math.pow(this.y - otherKnobPos.y, 2)
                 );
-            var newWidth = this.width * newLength / oldLength;
+            var newWidth = (this.width * newLength) / oldLength;
             var ratio = newWidth / this.width;
             this.setWidth(newWidth);
             this.setRegX(this.regX * ratio);
-            var newHeight = this.height * newLength / oldLength;
+            var newHeight = (this.height * newLength) / oldLength;
             ratio = newHeight / this.height;
-            this.setHeight(this.height * newLength / oldLength);
+            this.setHeight((this.height * newLength) / oldLength);
             this.setRegY(this.regY * ratio);
         }
         this.setX(newCenter.x);
@@ -457,12 +437,7 @@ export var PIXIHandle = function(canvas) {
 
     p.updateKnobCursor = function() {
         var rotation = this.rotation;
-        var cursorList = [
-            'ns-resize',
-            'nwse-resize',
-            'ew-resize',
-            'nesw-resize',
-        ];
+        var cursorList = ['ns-resize', 'nwse-resize', 'ew-resize', 'nesw-resize'];
         var iter = Math.round(rotation / 45);
         for (var i = 0; i < iter; i++) {
             cursorList.unshift(cursorList.pop());
@@ -496,8 +471,7 @@ export var PIXIHandle = function(canvas) {
     };
 
     p.dispatchOnChangeEvent = function() {
-        if (this.onChangeFunction)
-            this.onChangeFunction.call(this.callerObject, this);
+        if (this.onChangeFunction) this.onChangeFunction.call(this.callerObject, this);
     };
 
     p.dispatchEditStartEvent = function() {
@@ -506,8 +480,7 @@ export var PIXIHandle = function(canvas) {
     };
 
     p.dispatchEditEndEvent = function() {
-        if (this.onEditEndFunction)
-            this.onEditEndFunction.call(this.editEndCallerObject, this);
+        if (this.onEditEndFunction) this.onEditEndFunction.call(this.editEndCallerObject, this);
     };
 
     p.setDraggable = function(bool) {
@@ -525,7 +498,5 @@ export var PIXIHandle = function(canvas) {
         this.editStartCallerObject = null;
         this.onEditEndFunction = null;
         this.editEndCallerObject = null;
-    }
-
+    };
 })(PIXIHandle.prototype);
-

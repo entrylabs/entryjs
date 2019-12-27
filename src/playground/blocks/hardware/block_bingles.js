@@ -1,7 +1,7 @@
 'use strict';
 
 Entry.BINGLES = {
-    id: '1D.1',
+    id: '1.D',
     name: 'BINGLES',
     url: 'http://www.xbot.co.kr/',
     imageName: 'bingles.png',
@@ -121,6 +121,21 @@ Entry.BINGLES.setLanguage = function() {
         },
     };
 };
+
+Entry.BINGLES.blockMenuBlocks = [
+    'bingles_analogValue',
+    'bingles_digitalOutput',
+    'bingles_rgb',
+    'bingles_rgb_picker',
+    'bingles_buzzer',
+    'bingles_servo',
+    'bingles_twoWheel',
+    'bingles_lcd',
+    'bingles_remotecontrol',
+    'bingles_oled',
+    'bingles_motorgo',
+];
+
 Entry.BINGLES.getBlocks = function() {
     return {
         //region xbot 엑스봇

@@ -1,8 +1,14 @@
 'use strict';
 
-var EntryStatic = {};
-
-EntryStatic.objectTypes = ['sprite', 'textBox'];
+/* eslint-disable */
+var EntryStatic = {
+    fontFamily: 'NanumGothic',
+    exportBlockFontFamily:
+        "NanumGothic, 'NanumGothic', '나눔고딕','NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum",
+    fontOffsetY: -2.5,
+    heightLetter: 'M',
+    objectTypes: ['sprite', 'textBox'],
+};
 
 EntryStatic.usageList = [
     'usage_sequence',
@@ -392,18 +398,22 @@ EntryStatic.getAllBlocks = function() {
                 'behaviorConductLifeSafety_title',
                 'count_lifeSafety_behavior',
                 'get_lifeSafety_behavior',
+                'tts_title',
+                'read_text',
+                'read_text_wait_with_block',
+                'set_tts_property',
             ],
         },
         {
             category: 'arduino',
             blocks: [
-                'arduino_download_connector',
-                'download_guide',
-                'arduino_download_source',
-                'arduino_connect',
                 'arduino_reconnect',
                 'arduino_open',
                 'arduino_cloud_pc_open',
+                'arduino_connect',
+                'arduino_download_connector',
+                'download_guide',
+                'arduino_download_source',
                 'arduino_noti',
             ].concat(EntryStatic.DynamicHardwareBlocks),
         },
@@ -589,7 +599,7 @@ EntryStatic.objectSubCategories = {
     environment: ['environment_nature', 'environment_space', 'environment_others'],
     stuff: ['stuff_living', 'stuff_hobby', 'stuff_others'],
     fantasy: [],
-    interface: [],
+    interface: ['interface_website', 'interface_game', 'interface_others'],
     background: [
         'background_outdoor',
         'background_indoor',
@@ -598,6 +608,7 @@ EntryStatic.objectSubCategories = {
     ],
 };
 
+/* eslint-disable */
 Object.defineProperty(EntryStatic, 'fonts', {
     get: function() {
         return [
@@ -605,31 +616,116 @@ Object.defineProperty(EntryStatic, 'fonts', {
                 name: Lang.Fonts.batang,
                 family: 'KoPub Batang',
                 url: '/css/kopubbatang.css',
-            },
-            {
-                name: Lang.Fonts.myeongjo,
-                family: 'Nanum Myeongjo',
-                url: '/css/nanummyeongjo.css',
-            },
-            {
-                name: Lang.Fonts.gothic,
-                family: 'Nanum Gothic',
-                url: '/css/nanumgothic.css',
-            },
-            {
-                name: Lang.Fonts.pen_script,
-                family: 'Nanum Pen Script',
-                url: '/css/nanumpenscript.css',
+                visible: false,
             },
             {
                 name: Lang.Fonts.jeju_hallasan,
                 family: 'Jeju Hallasan',
                 url: '/css/jejuhallasan.css',
+                visible: false,
+            },
+            {
+                name: Lang.Fonts.gothic,
+                family: 'Nanum Gothic',
+                url: '/css/nanumgothic.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.myeongjo,
+                family: 'Nanum Myeongjo',
+                url: '/css/nanummyeongjo.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.pen_script,
+                family: 'Nanum Pen Script',
+                url: '/css/nanumpenscript.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.square_round,
+                family: 'NanumSquareRound',
+                url: '/css/square_round.css',
+                visible: true,
             },
             {
                 name: Lang.Fonts.gothic_coding,
                 family: 'Nanum Gothic Coding',
                 url: '/css/nanumgothiccoding.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.jalnan,
+                family: 'yg-jalnan',
+                url: '/css/jalnan.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.designhouse,
+                family: 'designhouseOTFLight00',
+                url: '/css/designhouse.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.dunggeunmo,
+                family: 'DungGeunMo',
+                url: '/css/dunggeunmo.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.uhbeemysen,
+                family: 'UhBeemysen',
+                url: '/css/uhbeemysen.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.sd_comic_stencil,
+                family: 'SDComicStencil',
+                style: { backgroundColor: '#f7fcff', padding: '17px 22px 14px 16px', margin:'0px', borderTop: 'solid 1px #d6e9f4' },
+                url: '/css/SDComicStencil.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.sd_childfundkorea,
+                family: 'SDChildfundkorea',
+                style: { backgroundColor: '#f7fcff', padding: '17px 22px 14px 16px', margin:'0px', borderTop: 'solid 1px #d6e9f4' },
+                url: '/css/SDChildfundkorea.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.sd_cinema_theater,
+                family: 'SDCinemaTheater',
+                style: { backgroundColor: '#f7fcff', padding: '17px 22px 14px 16px', margin:'0px', borderTop: 'solid 1px #d6e9f4' },
+                url: '/css/SDCinemaTheater.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.sd_mapssi,
+                family: 'SDMapssi',
+                style: { backgroundColor: '#f7fcff', padding: '17px 22px 14px 16px', margin:'0px', borderTop: 'solid 1px #d6e9f4' },
+                url: '/css/SDMapssi.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.sd_shabang,
+                family: 'SDShabang',
+                style: { backgroundColor: '#f7fcff', padding: '17px 22px 14px 16px', margin:'0px', borderTop: 'solid 1px #d6e9f4' },
+                url: '/css/SDShabang.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.sd_woodcarving,
+                family: 'SDWoodcarving',
+                style: { backgroundColor: '#f7fcff', padding: '17px 22px 14px 16px', margin:'0px', borderTop: 'solid 1px #d6e9f4' },
+                url: '/css/SDWoodcarving.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.sd_yongbi,
+                family: 'SDYongbi',
+                style: { backgroundColor: '#f7fcff', padding: '17px 22px 14px 16px', margin:'0px', borderTop: 'solid 1px #d6e9f4' },
+                url: '/css/SDYongbi.css',
+                visible: true,
             },
         ];
     },
@@ -650,6 +746,7 @@ EntryStatic.colorSet = {
             VARIABLE: '#CE38CE',
             HARDWARE: '#FFFFFF',
             EXPANSION: '#FF8888',
+            HIDDEN: '#FFFFFF',
         },
     },
     block: {
@@ -667,6 +764,7 @@ EntryStatic.colorSet = {
             FUNC: '#de5c04',
             HARDWARE: '#00b6b1',
             EXPANSION: '#ef6d6d',
+            HIDDEN: '#8aa3b2',
         },
         lighten: {
             START: '#3bce3b',
@@ -682,6 +780,7 @@ EntryStatic.colorSet = {
             FUNC: '#ff7b22',
             HARDWARE: '#78d5d3',
             EXPANSION: '#ffaeae',
+            HIDDEN: '#ffaeae',
         },
         darken: {
             START: '#009400',
@@ -697,6 +796,7 @@ EntryStatic.colorSet = {
             FUNC: '#a14100',
             HARDWARE: '#008380',
             EXPANSION: '#c63f3f',
+            HIDDEN: '#728997',
         },
         emphasize: {
             '#00b400': '#5BC982', //START
@@ -717,6 +817,10 @@ EntryStatic.colorSet = {
     common: {
         WHITE: '#FFFFFF',
         DARK: '#000000',
+        TRANSPARENT: 'transparent',
+        BUTTON: '#4f80ff',
+        BUTTON_BACKGROUND: '#eee',
+        TEXT: '#333',
     },
 };
 
@@ -752,6 +856,17 @@ EntryStatic.getQuestionCategoryData = function() {
             'hidden_boolean',
         ],
     };
+};
+
+EntryStatic.getDefaultFontFamily = function() {
+    const localLang = Lang || {};
+    const type = localLang.type;
+    const fallbackType = localLang.fallbackType;
+    const langType = type || fallbackType || 'en';
+    switch (langType) {
+        default:
+            return "EntryNG, NanumGothic, 나눔고딕, NanumGothicWeb, '맑은 고딕', 'Malgun Gothic', Dotum";
+    }
 };
 
 // for server node js code

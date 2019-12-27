@@ -23,8 +23,15 @@ class FilterData {
     filters:any[];
     invalidate:boolean;
 
-    constructor(orgTex:EntryTextureBase) {
+    constructor() {
+    }
+
+    setOrgTex(orgTex:EntryTextureBase) {
         this._orgTex = orgTex;
+    }
+
+    isSameRenderTex(tex:any):boolean {
+        return tex == this._renderTex;
     }
 
 
@@ -82,7 +89,10 @@ export class PIXISprite extends Sprite {
             }
         } else {
             if(!this._filterData) {
-                this._filterData = new FilterData(this.texture as EntryTextureBase);
+                this._filterData = new FilterData();
+                this._filterData.setOrgTex(this.texture as EntryTextureBase);
+            } else if(!this._filterData.isSameRenderTex(this.texture)) {
+                this._filterData.setOrgTex(this.texture as EntryTextureBase);
             }
             this._filterData.filters = filters;
             this._filterData.invalidate = true;

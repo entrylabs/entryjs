@@ -1,6 +1,9 @@
 'use strict';
 
 import { GEHelper } from '../graphicEngine/GEHelper';
+import _uniq from 'lodash/uniq';
+import FontFaceOnload from 'fontfaceonload';
+
 Entry.Utils = {};
 
 Entry.TEXT_ALIGN_CENTER = 0;
@@ -17,20 +20,20 @@ Entry.clipboard = null;
  * Load project
  * @param {?Project} project
  */
+
 Entry.loadProject = function(project) {
     if (!project) {
         project = Entry.getStartProject(Entry.mediaFilePath);
     }
-
     if (this.type === 'workspace') {
         Entry.stateManager.startIgnore();
     }
     Entry.projectId = project._id;
     Entry.variableContainer.setVariables(project.variables);
     Entry.variableContainer.setMessages(project.messages);
+    Entry.variableContainer.setFunctions(project.functions);
     Entry.scene.addScenes(project.scenes);
     Entry.stage.initObjectContainers();
-    Entry.variableContainer.setFunctions(project.functions);
     Entry.container.setObjects(project.objects);
     Entry.FPS = project.speed ? project.speed : 60;
     GEHelper.Ticker.setFPS(Entry.FPS);
@@ -103,6 +106,7 @@ Entry.clearProject = function() {
     Entry.variableContainer.clear();
     Entry.container.clear();
     Entry.scene.clear();
+    Entry.stateManager.clear();
     GEHelper.resManager.clearProject();
     if (Entry.Loader) {
         Entry.Loader.loaded = false;
@@ -130,6 +134,7 @@ Entry.exportProject = function(project) {
     project.speed = Entry.FPS;
     project.interface = Entry.captureInterfaceState();
     project.expansionBlocks = Entry.expansionBlocks;
+    project.externalModules = Entry.EXTERNAL_MODULE_LIST;
 
     if (!objects || !objects.length) {
         return false;
@@ -146,10 +151,6 @@ Entry.exportProject = function(project) {
  */
 Entry.setBlock = function(objectType, XML) {
     Entry.playground.setMenuBlock(objectType, XML);
-};
-
-Entry.enableArduino = function() {
-    return;
 };
 
 /**
@@ -372,7 +373,7 @@ Entry.resizeElement = function(interfaceModel) {
 Entry.overridePrototype = function() {
     /** modulo include negative number */
     Number.prototype.mod = function(n) {
-        return (this % n + n) % n;
+        return ((this % n) + n) % n;
     };
 
     //polyfill
@@ -644,14 +645,13 @@ Entry.Utils.setSVGDom = function(SVGDom) {
 Entry.Utils.bindIOSDeviceWatch = function() {
     const Agent = Entry.Utils.mobileAgentParser();
     if (Agent.apple.device) {
-        console.log('APPLE! MOBILE DEVICE');
         let lastHeight = window.innerHeight || document.documentElement.clientHeight;
         let lastSVGDomHeight = 0;
         if (Entry.Utils.SVGDom) {
             lastSVGDomHeight = Entry.Utils.SVGDom.height();
         }
 
-        setInterval(function() {
+        setInterval(() => {
             const nowHeight = window.innerHeight || document.documentElement.clientHeight;
             let SVGDomCheck = false;
             if (Entry.Utils.SVGDom) {
@@ -665,9 +665,11 @@ Entry.Utils.bindIOSDeviceWatch = function() {
             lastHeight = nowHeight;
         }, 1000);
 
-        $(window).on('orientationchange', function() {
+        $(window).on('orientationchange', () => {
             Entry.windowResized.notify();
         });
+
+        window.addEventListener('pagehide', Entry.beforeUnload);
     }
 };
 
@@ -683,7 +685,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
             Entry.windowReszied.clear();
         }
         Entry.windowResized = new Entry.Event(window);
-        $(window).on('resize', function(e) {
+        $(window).on('resize', (e) => {
             Entry.windowResized.notify(e);
         });
         Entry.Utils.bindIOSDeviceWatch();
@@ -708,7 +710,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
 
         Entry.mouseCoordinate = {};
         Entry.documentMousemove = new Entry.Event(window);
-        doc.on('touchmove mousemove', function(e) {
+        doc.on('touchmove mousemove', (e) => {
             if (e.originalEvent && e.originalEvent.touches) {
                 e = e.originalEvent.touches[0];
             }
@@ -725,7 +727,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
-        doc.on('keydown', function(e) {
+        doc.on('keydown', (e) => {
             const keyCode = e.keyCode;
 
             if (Entry.pressedKeys.indexOf(keyCode) < 0) {
@@ -741,7 +743,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
             Entry.keyUpped.clear();
         }
         Entry.keyUpped = new Entry.Event(window);
-        doc.on('keyup', function(e) {
+        doc.on('keyup', (e) => {
             const keyCode = e.keyCode;
             const index = Entry.pressedKeys.indexOf(keyCode);
             if (index > -1) {
@@ -757,7 +759,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }
         Entry.disposeEvent = new Entry.Event(window);
         if (Entry.documentMousedown) {
-            Entry.documentMousedown.attach(this, function(e) {
+            Entry.documentMousedown.attach(this, (e) => {
                 Entry.disposeEvent.notify(e);
             });
         }
@@ -870,7 +872,7 @@ Entry.addEventListener = function(eventName, fn) {
 /**
  * Dispatch event
  * @param {!string} eventName
- * @param {?} params
+ * @param {*} args
  */
 Entry.dispatchEvent = function(eventName, ...args) {
     if (!this.events_) {
@@ -883,9 +885,7 @@ Entry.dispatchEvent = function(eventName, ...args) {
         return;
     }
 
-    events.forEach((func) => {
-        return func.apply(window, args);
-    });
+    events.forEach((func) => func.apply(window, args));
 };
 
 /**
@@ -897,9 +897,7 @@ Entry.removeEventListener = function(eventName, fn) {
     if (_.isEmpty(events)) {
         return;
     }
-    this.events_[eventName] = events.filter((a) => {
-        return fn !== a;
-    });
+    this.events_[eventName] = events.filter((a) => fn !== a);
 };
 
 /**
@@ -1357,7 +1355,7 @@ Entry.findObjsByKey = function(arr, keyName, key) {
     return result;
 };
 
-Entry.factorial = _.memoize(function(n) {
+Entry.factorial = _.memoize((n) => {
     if (n === 0 || n == 1) {
         return 1;
     }
@@ -1382,11 +1380,11 @@ Entry.getListRealIndex = function(index, list) {
 };
 
 Entry.toRadian = function(angle) {
-    return angle * Math.PI / 180;
+    return (angle * Math.PI) / 180;
 };
 
 Entry.toDegrees = function(radians) {
-    return radians * 180 / Math.PI;
+    return (radians * 180) / Math.PI;
 };
 
 Entry.getPicturesJSON = function(pictures = [], isClone) {
@@ -1399,6 +1397,7 @@ Entry.getPicturesJSON = function(pictures = [], isClone) {
         o.fileurl = p.fileurl;
         o.name = p.name;
         o.scale = p.scale;
+        o.imageType = p.imageType || 'png';
         acc.push(o);
         return acc;
     }, []);
@@ -1462,10 +1461,10 @@ Entry.setBasicBrush = function(sprite) {
         brush.opacity = parentBrush.opacity;
         brush.setStrokeStyle(brush.thickness);
 
-        let rgb = brush.rgb;
-        let opacity = 1 - brush.opacity / 100;
+        const rgb = brush.rgb;
+        const opacity = 1 - brush.opacity / 100;
 
-        if(isWebGL) {
+        if (isWebGL) {
             brush.beginStrokeFast(Entry.rgb2Number(rgb.r, rgb.g, rgb.b), opacity);
         } else {
             brush.beginStroke(`rgba(${rgb.r},${rgb.g},${rgb.b},${opacity})`);
@@ -1475,7 +1474,7 @@ Entry.setBasicBrush = function(sprite) {
         brush.rgb = Entry.hex2rgb('#ff0000');
         brush.opacity = 0;
         brush.setStrokeStyle(1);
-        if(isWebGL) {
+        if (isWebGL) {
             brush.beginStrokeFast(0xff0000, 1);
         } else {
             brush.beginStroke('rgba(255,0,0,1)');
@@ -1496,21 +1495,24 @@ Entry.setBasicBrush = function(sprite) {
 
 Entry.setCloneBrush = function(sprite, parentBrush) {
     const isWebGL = GEHelper.isWebGL;
-    const brush =  GEHelper.brushHelper.newBrush();
+    const brush = GEHelper.brushHelper.newBrush();
     brush.thickness = parentBrush.thickness;
     brush.rgb = parentBrush.rgb;
     brush.opacity = parentBrush.opacity;
     brush.setStrokeStyle(brush.thickness);
 
-    let rgb = brush.rgb;
-    let opacity = 1 - brush.opacity / 100;
-    if(isWebGL) {
+    const rgb = brush.rgb;
+    const opacity = 1 - brush.opacity / 100;
+    if (isWebGL) {
         brush.beginStrokeFast(Entry.rgb2Number(rgb.r, rgb.g, rgb.b), opacity);
     } else {
         brush.beginStroke(`rgba(${rgb.r},${rgb.g},${rgb.b},${opacity})`);
     }
 
     const shape = GEHelper.brushHelper.newShape(brush);
+    if (isWebGL) {
+        brush.setCurrentPath(parentBrush.getCurrentPath());
+    }
     shape.entity = sprite;
     const selectedObjectContainer = Entry.stage.selectedObjectContainer;
     selectedObjectContainer.addChildAt(shape, selectedObjectContainer.getChildIndex(sprite.object));
@@ -1625,7 +1627,7 @@ Entry.convertToRoundedDecimals = function(value, decimals) {
 };
 
 Entry.attachEventListener = function(elem, eventType, func) {
-    setTimeout(function() {
+    setTimeout(() => {
         elem.addEventListener(eventType, func);
     }, 0);
 };
@@ -1767,14 +1769,12 @@ Entry.Utils.addFilters = function(boardSvgDom, suffix, isOnlyBlock) {
         values: '1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0',
     });
 
-    defs
-        .elem('filter', {
-            id: `entryBlockDarkenFilter_${suffix}`,
-        })
-        .elem('feColorMatrix', {
-            type: 'matrix',
-            values: '.45 0 0 0 0 0 .45 0 0 0 0 0 .45 0 0 0 0 0 1 0',
-        });
+    defs.elem('filter', {
+        id: `entryBlockDarkenFilter_${suffix}`,
+    }).elem('feColorMatrix', {
+        type: 'matrix',
+        values: '.45 0 0 0 0 0 .45 0 0 0 0 0 .45 0 0 0 0 0 1 0',
+    });
 
     if (!isOnlyBlock) {
         const buttonShadow = defs.elem('filter', {
@@ -1834,6 +1834,99 @@ Entry.Utils.addBlockPattern = function(boardSvgDom, suffix) {
     return { pattern };
 };
 
+Entry.Utils.addNewBlock = function(item) {
+    const { script, functions, messages, variables, expansionBlocks = [] } = item;
+    const parseScript = JSON.parse(script);
+    if (!parseScript) {
+        return;
+    }
+
+    if (
+        Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD &&
+        (!Entry.TextCodingUtil.canUsePythonVariables(variables) ||
+            !Entry.TextCodingUtil.canUsePythonFunctions(functions))
+    ) {
+        return entrylms.alert(Lang.Menus.object_import_syntax_error);
+    }
+
+    const objectIdMap = {};
+    variables.forEach((variable) => {
+        const { object } = variable;
+        if (object) {
+            variable.object = _.get(Entry, ['container', 'selectedObject', 'id'], '');
+        }
+    });
+    Entry.expansion.addExpansionBlocks(expansionBlocks);
+    Entry.variableContainer.appendMessages(messages);
+    Entry.variableContainer.appendVariables(variables);
+    Entry.variableContainer.appendFunctions(functions);
+    Entry.do(
+        'addThread',
+        parseScript.map((block) => {
+            block.id = Entry.generateHash();
+            return block;
+        })
+    );
+};
+
+Entry.Utils.addNewObject = function(sprite) {
+    if (sprite) {
+        const { objects, functions, messages, variables, expansionBlocks = [] } = sprite;
+
+        if (
+            Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD &&
+            (!Entry.TextCodingUtil.canUsePythonVariables(variables) ||
+                !Entry.TextCodingUtil.canUsePythonFunctions(functions))
+        ) {
+            return entrylms.alert(Lang.Menus.object_import_syntax_error);
+        }
+        const objectIdMap = {};
+        Entry.expansion.addExpansionBlocks(expansionBlocks);
+        variables.forEach((variable) => {
+            const { object } = variable;
+            if (object) {
+                const id = variable.id;
+                const idMap = objectIdMap[object];
+                variable.id = Entry.generateHash();
+                if (!idMap) {
+                    variable.object = Entry.generateHash();
+                    objectIdMap[object] = {
+                        objectId: variable.object,
+                        variableOriginId: [id],
+                        variableId: [variable.id],
+                    };
+                } else {
+                    variable.object = idMap.objectId;
+                    idMap.variableOriginId.push(id);
+                    idMap.variableId.push(variable.id);
+                }
+            }
+        });
+        Entry.variableContainer.appendMessages(messages);
+        Entry.variableContainer.appendVariables(variables);
+        Entry.variableContainer.appendFunctions(functions);
+
+        objects.forEach((object) => {
+            const idMap = objectIdMap[object.id];
+            if (idMap) {
+                let script = object.script;
+                idMap.variableOriginId.forEach((id, idx) => {
+                    const regex = new RegExp(id, 'gi');
+                    script = script.replace(regex, idMap.variableId[idx]);
+                });
+                object.script = script;
+                object.id = idMap.objectId;
+            } else if (Entry.container.getObject(object.id)) {
+                object.id = Entry.generateHash();
+            }
+            if (!object.objectType) {
+                object.objectType = 'sprite';
+            }
+            Entry.container.addObject(object, 0);
+        });
+    }
+};
+
 Entry.Utils.COLLISION = {
     NONE: 0,
     UP: 1,
@@ -1866,7 +1959,7 @@ Entry.Utils.createMouseEvent = function(type, event) {
 
 Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     let block = scope.block;
-    message = message || '런타임 에러 발생';
+    message = message || 'Runtime Error';
 
     const engine = Entry.engine;
 
@@ -1904,7 +1997,7 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
 
 Entry.Utils.AsyncError = function(message) {
     this.name = 'AsyncError';
-    this.message = message || '비동기 호출 대기';
+    this.message = message || 'Waiting for callback';
 };
 
 Entry.Utils.AsyncError.prototype = new Error();
@@ -1914,61 +2007,39 @@ Entry.Utils.isChrome = function() {
     return /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
 };
 
-Entry.Utils.waitForWebfonts = function(fonts, callback) {
-    let loadedFonts = 0;
-    if (fonts && fonts.length) {
-        for (let i = 0, l = fonts.length; i < l; ++i) {
-            let node = document.createElement('span');
-            // Characters that vary significantly among different fonts
-            node.innerHTML = 'giItT1WQy@!-/#';
-            // Visible - so we can measure it - but not on the screen
-            node.style.position = 'absolute';
-            node.style.left = '-10000px';
-            node.style.top = '-10000px';
-            // Large font size makes even subtle changes obvious
-            node.style.fontSize = '300px';
-            // Reset any font properties
-            node.style.fontFamily = 'sans-serif';
-            node.style.fontVariant = 'normal';
-            node.style.fontStyle = 'normal';
-            node.style.fontWeight = 'normal';
-            node.style.letterSpacing = '0';
-            document.body.appendChild(node);
-
-            // Remember width with no applied web font
-            const width = node.offsetWidth;
-
-            node.style.fontFamily = fonts[i];
-
-            let interval;
-            function checkFont() {
-                // Compare current width with original width
-                if (node && node.offsetWidth != width) {
-                    ++loadedFonts;
-                    node.parentNode.removeChild(node);
-                    node = null;
-                }
-
-                // If all fonts have been loaded
-                if (loadedFonts >= fonts.length) {
-                    if (interval) {
-                        clearInterval(interval);
-                    }
-                    if (loadedFonts == fonts.length) {
-                        callback();
-                        return true;
-                    }
-                }
-            }
-
-            if (!checkFont()) {
-                interval = setInterval(checkFont, 50);
-            }
-        }
-    } else {
-        callback && callback();
-        return true;
+Entry.Utils.getUsedFonts = function(project) {
+    if (!project) {
+        return;
     }
+    const getFamily = (x) =>
+        x.entity.font
+            .split(' ')
+            .filter((t) => t.indexOf('bold') < 0 && t.indexOf('italic') < 0 && t.indexOf('px') < 0)
+            .join(' ');
+    return _uniq(project.objects.filter((x) => x.objectType === 'textBox').map(getFamily));
+};
+
+Entry.Utils.waitForWebfonts = function(fonts, callback) {
+    return Promise.all(
+        fonts.map(
+            (font) =>
+                new Promise((resolve) => {
+                    FontFaceOnload(font, {
+                        success: function() {
+                            resolve();
+                        },
+                        error: function() {
+                            console.log('fail', font);
+                            resolve();
+                        },
+                        timeout: 5000,
+                    });
+                })
+        )
+    ).then(() => {
+        console.log('font loaded');
+        callback && callback();
+    });
 };
 
 window.requestAnimFrame = (function() {
@@ -2218,53 +2289,6 @@ Entry.Utils.getObjectsBlocks = function(objects) {
         .value();
 };
 
-Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
-    if (!blockArr) {
-        return;
-    }
-    const that = this;
-
-    const data = EntryStatic.getAllBlocks();
-    const categoryIndexMap = {};
-    for (let i = 0; i < data.length; i++) {
-        const datum = data[i];
-        datum.blocks = [];
-        categoryIndexMap[datum.category] = i;
-    }
-
-    blockArr.forEach(function(b) {
-        const category = that.getBlockCategory(b);
-        const index = categoryIndexMap[category];
-        if (index === undefined) {
-            return;
-        }
-        data[index].blocks.push(b);
-    });
-
-    const allBlocksInfo = EntryStatic.getAllBlocks();
-    for (let i = 0; i < allBlocksInfo.length; i++) {
-        const info = allBlocksInfo[i];
-        const category = info.category;
-        const blocks = info.blocks;
-        if (category === 'func') {
-            allBlocksInfo.splice(i, 1);
-            continue;
-        }
-        const selectedBlocks = data[i].blocks;
-        const sorted = [];
-
-        blocks.forEach(function(b) {
-            if (selectedBlocks.indexOf(b) > -1) {
-                sorted.push(b);
-            }
-        });
-
-        data[i].blocks = sorted;
-    }
-
-    return data;
-};
-
 Entry.Utils.blur = function() {
     const elem = document.activeElement;
     elem && elem.blur && elem.blur();
@@ -2372,7 +2396,7 @@ Entry.Utils.glideBlock = function(svgGroup, x, y, callback) {
         {
             duration: 1200,
             complete() {
-                setTimeout(function() {
+                setTimeout(() => {
                     svgDom.remove();
                     callback();
                 }, 500);
@@ -2389,15 +2413,53 @@ Entry.Utils.getScrollPos = function() {
     };
 };
 
+Entry.Utils.isPointInRect = ({ x, y }, { top, bottom, left, right }) =>
+    _.inRange(x, left, right) && _.inRange(y, top, bottom);
+
+Entry.Utils.getBoundingClientRectMemo = _.memoize((target, offset = {}) => {
+    const rect = target.getBoundingClientRect();
+    const result = {
+        top: rect.top,
+        bottom: rect.bottom,
+        left: rect.left,
+        right: rect.right,
+    };
+    Object.keys(offset).forEach((key) => {
+        result[key] += offset[key];
+    });
+    return result;
+});
+
+Entry.Utils.clearClientRectMemo = () => {
+    Entry.Utils.getBoundingClientRectMemo.cache = new _.memoize.Cache();
+};
+
+Entry.Utils.getPosition = (event) => {
+    const position = {
+        x: 0,
+        y: 0,
+    };
+    if (event.touches && event.touches[0]) {
+        const touch = event.touches[0];
+        position.x = touch.pageX;
+        position.y = touch.pageY;
+    } else {
+        position.x = event.pageX;
+        position.y = event.pageY;
+    }
+    return position;
+};
+
 Entry.Utils.copy = function(target) {
     return JSON.parse(JSON.stringify(target));
 };
 
 //helper function for development and debug
 Entry.Utils.getAllObjectsBlockList = function() {
-    return Entry.container.objects_.reduce(function(prev, { script }) {
-        return prev.concat(script.getBlockList());
-    }, []);
+    return Entry.container.objects_.reduce(
+        (prev, { script }) => prev.concat(script.getBlockList()),
+        []
+    );
 };
 
 Entry.Utils.toFixed = function(value, len) {
@@ -2417,9 +2479,31 @@ Entry.Utils.toFixed = function(value, len) {
     }
 };
 
+Entry.Utils.setVolume = function(volume) {
+    this._volume = _.clamp(volume, 0, 1);
+
+    Entry.soundInstances
+        .filter(({ soundType }) => !soundType)
+        .forEach((instance) => {
+            instance.volume = this._volume;
+        });
+};
+
+Entry.Utils.getVolume = function() {
+    if (this._volume || this._volume === 0) {
+        return this._volume;
+    }
+    return 1;
+};
+
+Entry.Utils.playSound = function(id, option = {}) {
+    return createjs.Sound.play(id, Object.assign({ volume: this._volume }, option));
+};
+
 Entry.Utils.addSoundInstances = function(instance) {
+    console.log('add sound instance');
     Entry.soundInstances.push(instance);
-    instance.on('complete', function() {
+    instance.on('complete', () => {
         const index = Entry.soundInstances.indexOf(instance);
         if (index > -1) {
             Entry.soundInstances.splice(index, 1);
@@ -2428,13 +2512,13 @@ Entry.Utils.addSoundInstances = function(instance) {
 };
 
 Entry.Utils.pauseSoundInstances = function() {
-    Entry.soundInstances.map(function(instance) {
+    Entry.soundInstances.map((instance) => {
         instance.paused = true;
     });
 };
 
 Entry.Utils.recoverSoundInstances = function() {
-    Entry.soundInstances.map(function(instance) {
+    Entry.soundInstances.map((instance) => {
         instance.paused = false;
     });
 };
@@ -2483,9 +2567,7 @@ Entry.Utils.recoverSoundInstances = function() {
     };
 })(HTMLElement.prototype);
 
-Entry.Utils.hasClass = (elem, name) => {
-    return ` ${elem.getAttribute('class')} `.indexOf(` ${name} `) >= 0;
-};
+Entry.Utils.hasClass = (elem, name) => ` ${elem.getAttribute('class')} `.indexOf(` ${name} `) >= 0;
 
 Entry.Utils.addClass = (elem, name) => {
     if (!Entry.Utils.hasClass(elem, name)) {
@@ -2595,9 +2677,7 @@ Entry.Utils.when = function(predicate, fn) {
 };
 
 Entry.Utils.whenEnter = function(fn) {
-    return Entry.Utils.when(({ keyCode } = {}) => {
-        return keyCode === 13;
-    }, fn);
+    return Entry.Utils.when(({ keyCode, repeat }) => keyCode === 13 && !repeat, fn);
 };
 
 Entry.Utils.blurWhenEnter = Entry.Utils.whenEnter(function() {
@@ -2659,4 +2739,30 @@ Entry.Utils.getMouseEvent = function(event) {
         mouseEvent = event;
     }
     return mouseEvent;
+};
+
+Entry.Utils.removeBlockByType = function(blockType, callback) {
+    const objects = Entry.container.getAllObjects();
+    objects.forEach(({ id, script }) => {
+        Entry.do('selectObject', id).isPass(true);
+        script.getBlockList(false, blockType).forEach((b, index) => {
+            Entry.do('destroyBlock', b).isPass(true);
+        });
+    });
+    Entry.variableContainer.removeBlocksInFunctionByType(blockType);
+
+    if (callback) {
+        callback();
+    }
+};
+
+Entry.Utils.isUsedBlockType = function(blockType) {
+    const objects = Entry.container.getAllObjects();
+    const usedInObject = objects.some(
+        ({ script }) => !!script.getBlockList(false, blockType).length
+    );
+    if (usedInObject) {
+        return true;
+    }
+    return Entry.variableContainer.isUsedBlockTypeInFunction(blockType);
 };

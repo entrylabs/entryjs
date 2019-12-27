@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "outDir": "./dist/",
+//        "outDir": "./dist/",
         "sourceMap": true,
         "noImplicitAny": true,
         "module": "esnext",
@@ -8,9 +8,8 @@
         "downlevelIteration": true,
         "moduleResolution": "node",
         "lib": ["es6", "dom"],
-        "allowJs": true
-    },
-    "include": [
-        "./src/**/*"
-    ]
+        "allowJs": true,
+        "baseUrl": "./",
+        "typeRoots": ["./types", "./node_modules/@types"]
+    }
 }

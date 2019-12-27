@@ -45,6 +45,7 @@ class BlockMenuScroller {
     createScrollBar() {
         const r = this.RADIUS;
         const width = this.SCROLL_WIDTH;
+        const { common = {} } = EntryStatic.colorSet || {};
 
         this.svgGroup = this.board.svgGroup.elem('g', {
             class: 'boardScrollbar',
@@ -54,7 +55,7 @@ class BlockMenuScroller {
             width,
             rx: r,
             ry: r,
-            fill: '#aac5d5',
+            fill: common.SCROLL_BAR || '#aac5d5',
             class: 'scrollbar',
         });
     }

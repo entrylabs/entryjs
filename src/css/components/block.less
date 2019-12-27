@@ -26,6 +26,9 @@
     stroke-width: 1;
 }
 
+.block.clickableText {
+    cursor: pointer;
+}
 
 .block.basicText {
     cursor: default;
@@ -33,6 +36,14 @@
 
 .block.basicText:hover > g > path {
     fill: none;
+}
+
+.block.basicTextLight {
+    cursor: default;
+}
+
+.block.basicTextLight > g > text > tspan {
+    font-weight: lighter;
 }
 
 .block {
@@ -90,13 +101,13 @@ svg .svgBlockGroup text {
 
 .entry-widget-input-field {
     position: fixed;
-    font-family: NanumGothic;
+    font-family: EntryFont, NanumGothic;
     font-weight: bold;
     border: none;
     border-radius: 5px;
     outline: none;
     line-height: normal;
-    z-index: 301;
+    z-index: 254;
     color: #000000;
 }
 

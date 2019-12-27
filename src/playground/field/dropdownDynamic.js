@@ -1,7 +1,7 @@
 /*
  */
 'use strict';
-import EntryTool from 'entry-tool';
+import { Dropdown } from '@entrylabs/tool';
 import _cloneDeep from 'lodash/cloneDeep';
 /*
  *
@@ -55,7 +55,9 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
             blockView.getBoard().workspace &&
             blockView.getBoard().workspace.changeEvent
         ) {
-            blockView.getBoard().workspace.changeEvent.attach(this, this._updateValue);
+            blockView.getBoard().workspace.changeEvent.attach(this, () => {
+                this._updateValue(true);
+            });
         }
         this.optionChangeTriggeredEvent();
     }
@@ -67,7 +69,20 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         return null;
     }
 
-    _updateValue() {
+    _isBlockInBoardWhenFunctionEdit() {
+        const view = this._block.getView() || { _board: {} };
+        return view._board.suffix === 'board' && Entry.Func.isEdit;
+    }
+
+    getTextByValue(value) {
+        if (this._isBlockInBoardWhenFunctionEdit()) {
+            return this.textElement.textContent;
+        }
+
+        return super.getTextByValue(value);
+    }
+
+    _updateValue(reDraw) {
         const object = this._block.getCode().object;
         let options = [];
         if (Entry.container) {
@@ -79,13 +94,29 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         }
 
         this._contents.options = options;
+        this._updateOptions();
+
+        if (reDraw && this._menuName === 'variables' && !this._isBlockInBoardWhenFunctionEdit()) {
+            this.value = undefined;
+        }
+        this.setValue(this.getOptionCheckedValue(), reDraw);
+    }
+
+    getOptionCheckedValue() {
+        const { options, defaultValue } = this._contents;
         let value = this.getValue();
+
         if (this._blockView.isInBlockMenu || !value || value == 'null') {
             value = options.length !== 0 ? options[0][1] : null;
         }
-
-        this._updateOptions();
-        this.setValue(value);
+        const matched = _.find(options, ([, cValue]) => cValue === value);
+        if (!matched && defaultValue) {
+            if (_.isFunction(defaultValue)) {
+                return defaultValue(value, options);
+            }
+            return defaultValue;
+        }
+        return value;
     }
 
     renderOptions() {
@@ -94,11 +125,8 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
             parent: $('body'),
         });
         const { options = [] } = this._contents;
-        const convertedOptions = options.map(([key, value]) => {
-           return [this._convert(key, value), value];
-        });
-        this.dropdownWidget = new EntryTool({
-            type: 'dropdownWidget',
+        const convertedOptions = options.map(([key, value]) => [this._convert(key, value), value]);
+        this.dropdownWidget = new Dropdown({
             data: {
                 eventTypes: ['mousedown', 'touchstart', 'wheel'],
                 items: convertedOptions,
@@ -131,7 +159,10 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
             if (this._block == data.block && targetIndex == data.index) {
                 const options = this._menuGenerator(data.value);
                 this._contents.options = options;
-                this.applyValue(options[0][1]);
+                const value = this.getValue();
+                this.applyValue(
+                    !options.find((x) => x[1] && x[1] === value) ? options[0][1] : value
+                );
             }
         });
     }

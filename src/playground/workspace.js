@@ -2,6 +2,7 @@
  *
  */
 'use strict';
+import { Destroyer } from '../util/destroyer/Destroyer';
 
 Entry.Workspace = class Workspace {
     schema = {
@@ -11,6 +12,8 @@ Entry.Workspace = class Workspace {
 
     constructor(options) {
         Entry.Model(this, false);
+        this._destroyer = this._destroyer || new Destroyer();
+        this._destroyer.destroy();
         this.scale = 1;
         this.dSetMode = Entry.Utils.debounce(this.setMode, 200);
         this.dReDraw = Entry.Utils.debounce(this.reDraw, 150);
@@ -37,6 +40,7 @@ Entry.Workspace = class Workspace {
                 option.scroll,
                 this.readOnly
             );
+            this._destroyer.add(this.blockMenu);
             this.blockMenu.workspace = this;
             this.blockMenu.observe(this, '_setSelectedBlockView', ['selectedBlockView'], false);
         }
@@ -175,7 +179,7 @@ Entry.Workspace = class Workspace {
         switch (this.mode) {
             case WORKSPACE.MODE_VIMBOARD: {
                 const alertMessage =
-                    Util.validateVariableToPython() ||
+                    Util.validateVariableAndListToPython() ||
                     Util.validateFunctionToPython() ||
                     Util.hasExpansionBlocks();
 
@@ -191,6 +195,7 @@ Entry.Workspace = class Workspace {
                     if (alertMessage.type === 'warning') {
                         entrylms.confirm(alertMessage.message).then((result) => {
                             if (result) {
+                                //Entry.expansion.banExpansionBlocks(Entry.expansionBlocks);
                                 changeToPythonMode();
                                 dispatchChangeBoardEvent();
                             } else {
@@ -416,8 +421,12 @@ Entry.Workspace = class Workspace {
                     return;
                 }
             }
-            
-            const isBlockCodeView = Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD && (Entry.playground.getViewMode() === 'code' || Entry.playground.getViewMode() === 'variable');
+            const mainWorksapceMode = Entry.playground.mainWorkspace.getMode();
+            const playgroundMode = Entry.playground.getViewMode();
+            const isBlockCodeView =
+                (mainWorksapceMode === Entry.Workspace.MODE_OVERLAYBOARD ||
+                    mainWorksapceMode === Entry.Workspace.MODE_BOARD) &&
+                (playgroundMode === 'code' || playgroundMode === 'variable');
             switch (keyCode) {
                 case 86: //paste
                     if (
@@ -562,7 +571,7 @@ Entry.Workspace = class Workspace {
                         blockView.block.isDeletable() &&
                         !blockView.isFieldEditing()
                     ) {
-                        if(Entry.engine.isState('stop')){
+                        if (Entry.engine.isState('stop')) {
                             Entry.do('destroyBlock', blockView.block);
                             this.board.set({ selectedBlockView: null });
                             e.preventDefault();
@@ -579,8 +588,7 @@ Entry.Workspace = class Workspace {
 
         function checkObjectAndAlert(object, message) {
             if (!object) {
-                message =
-                    message || '오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.';
+                message = message || Lang.Workspace.object_not_exist_error;
                 entrylms.alert(message);
                 return false;
             }
@@ -721,6 +729,10 @@ Entry.Workspace = class Workspace {
         if (this.overlayBoard) {
             this.overlayBoard.setScale(scale);
         }
+    }
+
+    destroy() {
+        this._destroyer.destroy();
     }
 };
 

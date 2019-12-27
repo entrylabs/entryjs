@@ -1038,7 +1038,7 @@ Entry.Dash.getBlocks = function() {
             isNotFor: ['Dash'],
             func: function(sprite, script) {
                 var var1 = script.getNumberField('ROTATION', script);
-                var var2 = script.getNumberField('VALUE', script);
+                var var2 = script.getNumberValue('VALUE', script);
                 var sq = Entry.hw.sendQueue;
                 var pd = Entry.hw.portData;
                 if (!Entry.Dash.isStarted) {

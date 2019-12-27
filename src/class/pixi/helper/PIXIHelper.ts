@@ -1,44 +1,15 @@
 
 import DestroyOptions = PIXI.DestroyOptions;
-import { PIXISprite } from '../plugins/PIXISprite';
 import Texture = PIXI.Texture;
-import { PIXIDebug } from '../debugs/Debugs';
-
-class PIXISpriteDebug extends PIXISprite {
-    public __debugName:string;
-    constructor(texture?:Texture) {
-        super(texture);
-    }
-    destroy(options?: DestroyOptions | boolean) {
-        if(PIXIDebug.console.destroy) {
-            console.log(`[PIXISprite] destroy(${this.__debugName})`);
-        }
-        super.destroy(options);
-    }
-}
+import { PIXISprite } from '../plugins/PIXISprite';
 
 
 export class PIXIGraphics extends PIXI.Graphics {
     
-    destroyied:boolean = false;
+    destroyed:boolean = false;
     
     destroy(options?: DestroyOptions | boolean) {
-        this.destroyied = true;
-        super.destroy(options);
-    }
-}
-
-
-/** for memory profiling */
-class PIXIContainer extends PIXI.Container {
-    public __debugName:string;
-    constructor() {
-        super();
-    }
-    destroy(options?: DestroyOptions | boolean) {
-        if(PIXIDebug.console.destroy) {
-            console.log(`[PIXIContainer] destroy(${this.__debugName})`);
-        }
+        this.destroyed = true;
         super.destroy(options);
     }
 }
@@ -51,17 +22,11 @@ let PIXIText:any = require('../text/PIXIText').PIXIText;
 export default class PIXIHelper {
 
     static sprite(debugName?:string, texture?:Texture):PIXI.Sprite {
-        //return new PIXI.Sprite(texture);
-        var c = new PIXISpriteDebug(texture);
-        c.__debugName = debugName;
-        return c;
+        return new PIXISprite(texture);
     }
 
     static container(debugName?:string):PIXI.Container {
-        // return new PIXI.Container();
-        var c = new PIXIContainer();
-        c.__debugName = debugName;
-        return c;
+        return new PIXI.Container();
     }
 
     static text(str:string, font:string, color:string, textBaseline:string, textAlign:string) {
@@ -71,11 +36,6 @@ export default class PIXIHelper {
         var fontName = (result[4]) || "NanumGothic";
         var size = (result[1]) || "10pt";
 
-        // console.log({
-        //     input: font,
-        //     fontName: fontName,
-        //     size: size
-        // });
         const nColor = parseInt(color.replace("#", "0x")) || 0;
         // var t = new PIXI.Text(str, {
         var t = new PIXIText(str, {
@@ -100,20 +60,6 @@ export default class PIXIHelper {
             return document.createElement('canvas');
         }
     }
-
-    /**
-     * createjs.Text.getMeasuredWidth() 의 pollyfill
-     * @param pixiText
-     */
-    // static textWidth(pixiText:any) {
-    //     return pixiText.measuredWidth;
-    // }
-    // static textHeight(pixiText:any) {
-    //     return pixiText.measuredHeight;
-    // }
-    // static getMeasuredLineHeight(pixiText:any) {
-    //     return pixiText.measuredLineHeight;
-    // }
 
     /**
      * #ff00ff --> 0xff00ff

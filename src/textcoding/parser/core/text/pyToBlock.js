@@ -150,8 +150,9 @@ Entry.PyToBlockParser = class {
         }
 
         if (obj.type === 'is_press_some_key') {
+            const value = component.arguments[0].value;
             obj.params = [
-                Entry.KeyboardCode.map[component.arguments[0].value] + '',
+                Entry.KeyboardCode.map[typeof value === 'string' ? value.toLowerCase() : value] + '',
             ];
         }
 
@@ -794,14 +795,15 @@ Entry.PyToBlockParser = class {
     }
 
     getValue(component) {
-        var value;
+        let value;
         if (component.type === 'Literal') {
             value = component.raw;
-
             if (value === 'None') {
                 return;
-            } else if (!component.value) {
+            } else if (component.value === undefined) {
                 value = 0;
+            } else if (!component.value) {
+                value = component.value;
             } else if (component.value.constructor === String) {
                 if (component.raw.includes('"') || component.raw.includes('\''))
                     value = component.raw.substr(1, component.raw.length - 2);

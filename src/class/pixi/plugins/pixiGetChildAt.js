@@ -6,5 +6,21 @@ export function pixiGetChildAt() {
     const p = PIXI.Container.prototype;
     p.getChildAt = function(index) {
         return this.children[index];
-    }
+    };
+
+
+    p.getChildIndex = function(child) {
+        return this.children.indexOf(child);
+    };
+
+    p.___addChildAt = p.addChildAt;
+    p.addChildAt = function(child, index) {
+        try {
+            return this.___addChildAt(child, index);
+        } catch(e) {
+            return child;
+        }
+    };
+
+
 }

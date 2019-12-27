@@ -1,13 +1,23 @@
-/**
- * @fileoverview Extension object for ws.
- */
-'use strict';
+import Dropper from './dropper';
+export default class Extension {
+    #view = null;
+    constructor() {
+        this.renderView();
+    }
 
-/**
- * @constructor
- */
-Entry.Extension = function() {};
+    renderView() {
+        if (!this.#view) {
+            this.#view = Entry.Dom('div', {
+                class: 'entryExtension',
+                parent: $('body'),
+            });
+        }
+    }
 
-(function(p) {
-    p.renderView = function() {};
-})(Entry.Extension.prototype);
+    static getExtension(key) {
+        switch (key) {
+            case 'Dropper':
+                return Dropper.getInstance();
+        }
+    }
+}

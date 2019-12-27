@@ -9,7 +9,7 @@ import { PIXIScaleAdaptor } from '../class/pixi/atlas/PIXIScaleAdaptor';
 
 
 
-
+declare let $:any;
 declare let createjs:any;
 
 interface IGraphicsEngineApplication {
@@ -123,7 +123,8 @@ class _GEHelper extends GEHelperBase {
     cloneStamp(entity:any):any {
         if(this._isWebGL) {
             let orgObj = entity.object;
-            let object = PIXIHelper.sprite('StampEntity', orgObj.texture);
+            const orgTex = orgObj.internal_getOriginalTex && orgObj.internal_getOriginalTex();
+            let object = PIXIHelper.sprite('StampEntity', orgTex || orgObj.texture);
             object.visible = orgObj.visible;
             object.interactive = false;
             object.interactiveChildren = false;
@@ -213,7 +214,7 @@ class _GEHelper extends GEHelperBase {
 
     newEmptySprite() {
         if(this._isWebGL) {
-            return new PIXISprite();
+            return PIXIHelper.sprite();
         } else {
             return new createjs.Bitmap();
         }
@@ -221,9 +222,14 @@ class _GEHelper extends GEHelperBase {
 
     newSpriteWithCallback(url:string, callback?:()=>void) {
         let img = new Image();
-        img.onload = ()=>{
-            callback && callback();
-        };
+        if(callback) {
+            const $img = $(img);
+            const handle = ()=>{
+                $img.off('load', handle);
+                callback();
+            };
+            $img.on('load', handle);
+        }
         img.src = url;
         if(this._isWebGL) {
             return PIXI.Sprite.from(img);

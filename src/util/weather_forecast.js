@@ -389,27 +389,33 @@ function resolveData(weatherData, type, dateStr) {
 
 Entry.EXPANSION_BLOCK.weather.getData = function(type, location, dateStr) {
     let cityCode = null;
-    if(typeof location === "string") {
+    if (typeof location === 'string') {
         cityCode = this.locationMap[location].code;
-    }else {
-        if(location.sub == locationData.initialData[1]) {
+    } else {
+        if (location.sub == locationData.initialData[1]) {
             cityCode = this.locationMap[location.parent].code;
-        }else {
+        } else {
             cityCode = this.locationMap[location.parent].sub[location.sub];
         }
     }
+
     const url = this.api + type;
     return new PromiseManager().Promise(function(resolve) {
-        callApi(url, { url }).then((response) => {
-            resolve(resolveData(response.data[cityCode], type, dateStr));
-        }).catch((e) => {
-            Entry.EXPANSION_BLOCK.weather.apiFail[type] = true;
-            resolve(Entry.EXPANSION_BLOCK.weather.defaultData);
-        });
-    }).catch(() => Entry.EXPANSION_BLOCK.weather.defaultData);
+            callApi(url, { url })
+                .then((response) => {
+                    Entry.EXPANSION_BLOCK.weather.apiFail[type] = false;
+                    resolve(resolveData(response.data[cityCode], type, dateStr));
+                })
+                .catch((error) => {
+                    Entry.EXPANSION_BLOCK.weather.apiFail[type] = { error };
+                    resolve(Entry.EXPANSION_BLOCK.weather.defaultData);
+                });
+        })
+        .catch(() => Entry.EXPANSION_BLOCK.weather.defaultData);
 };
 
 Entry.EXPANSION_BLOCK.weather.getDate = function(key) {
+    Entry.EXPANSION_BLOCK.weather.date = Entry.EXPANSION_BLOCK.weather.date || new Date();
     const date = new Date(Entry.EXPANSION_BLOCK.weather.date);
     switch (key) {
         case 'yesterday':

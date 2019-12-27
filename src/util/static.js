@@ -38,6 +38,7 @@ Entry.STATIC = {
         sceneRemove: 2,
         sceneRename: 3,
         sceneSort: 4,
+        sceneSelect: 5,
 
         addThread: 101,
         destroyThread: 102,
@@ -80,8 +81,9 @@ Entry.STATIC = {
         objectUpdateDirectionValue: 215,
         objectUpdateRotateMethod: 216,
         entitySetModel: 217,
-        objectAddExpansionBlock: 218,
-        objectRemoveExpansionBlock: 219,
+        objectAddExpansionBlocks: 218,
+        objectRemoveExpansionBlocks: 219,
+        objectReorder: 220,
 
         do: 301,
         undo: 302,
@@ -96,8 +98,10 @@ Entry.STATIC = {
         variableContainerAddMessage: 807,
         variableContainerRemoveMessage: 808,
 
+        funcEditStart: 1001,
+        funcEditEnd: 1002,
+        funcRemove: 1003,
         funcCreate: 1004,
-        funcUpdate: 1005,
 
         createComment: 1201,
         removeComment: 1202,
@@ -114,7 +118,6 @@ Entry.STATIC = {
     },
 
     COMMAND_TYPES_NOT_ALWAYS: {
-        sceneSelect: 5,
 
         addObjectButtonClick: 210,
 
@@ -159,10 +162,6 @@ Entry.STATIC = {
         variableContainerClickMessageAddButton: 830,
 
         dismissModal: 900,
-
-        funcCreateStart: 1001,
-        funcEditStart: 1002,
-        funcEditCancel: 1003,
 
         playgroundClickAddExpansionBlock: 1101,
         playgroundClickAddExpansionBlockCancel: 1102,

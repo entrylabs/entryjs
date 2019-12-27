@@ -78,7 +78,6 @@
     display: inline-block;
     width: 65px;
     height: 15px;
-    font-family: notoSansMedium;
     font-size: 14px;
     font-weight: bold;
     font-style: normal;
@@ -130,7 +129,7 @@
     overflow: hidden;
     height: @introHeight;
     top: 50px;
-    z-index:1;
+    z-index: 1;
 }
 
 .entryPlaygroundWorkspace {
@@ -182,6 +181,59 @@
     background-color: #f1f1f1;
 }
 
+.entryPlaygroundBackPackView {
+    height: calc(100% - 47px);
+    display: block;
+    right: 0;
+    top: 38px;
+    z-index: 299;
+    position: absolute;
+
+    .widget {
+        height: 100%;
+    }
+
+    .blockBackPackDrop,
+    .objectBackPackDrop {
+        position: fixed;
+        display: none;
+        top: 0;
+        left: 0;
+        z-index: 400;
+        background-color: rgba(248, 241, 204, 0.9);
+        border: 2px dashed #ffc800;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+
+        .blockBackPackIcon {
+            pointer-events: none;
+            width: 32px;
+            height: 32px;
+            margin-bottom: 11px;
+            .backgroundImage('img_backpack_plus.svg');
+        }
+        .objectBackPackDesc,
+        .blockBackPackDesc {
+            pointer-events: none;
+            font-family: EntryFont, NanumGothic;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: -0.1px;
+            white-space: pre;
+            text-align: center;
+            color: #2c313d;
+        }
+    }
+}
+
 .entryPlaygroundButtonTabWorkspace {
     position: absolute;
     right: 0;
@@ -190,6 +242,7 @@
     background-color: #fff;
 
     .entryPlaygroundCommentButtonWorkspace {
+        float: left;
         .backgroundImage('btn-toggle-comment-off.png');
         background-repeat: no-repeat;
         background-size: 32px auto;
@@ -206,6 +259,26 @@
             border: 0;
             background-color: inherit;
         }
+    }
+
+    .entryPlaygroundBackPackButtonWorkspace {
+        &::before {
+            content: '';
+            display: inline-block;
+            width: 1px;
+            height: 16px;
+            background: #bfd8e6;
+            margin: 8px 0 0 -9px;
+        }
+        float: left;
+        .backgroundImage('back_pack_button.svg');
+        background-repeat: no-repeat;
+        background-size: 32px auto;
+        background-position: 50% 50%;
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        margin: 0 9px;
     }
 
     &.entryRemove.entryCode {
@@ -281,33 +354,6 @@
     }
 }
 
-@-o-keyframes hideTab {
-    from {
-    }
-    to {
-        margin-top: 44px;
-        opacity: 0;
-    }
-}
-
-@-ms-keyframes hideTab {
-    from {
-    }
-    to {
-        margin-top: 44px;
-        opacity: 0;
-    }
-}
-
-@-moz-keyframes hideTab {
-    from {
-    }
-    to {
-        margin-top: 44px;
-        opacity: 0;
-    }
-}
-
 @-webkit-keyframes hideTab {
     from {
     }
@@ -325,36 +371,6 @@
 }
 
 @keyframes showTab {
-    from {
-        margin-top: 44px;
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@-o-keyframes showTab {
-    from {
-        margin-top: 44px;
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@-ms-keyframes showTab {
-    from {
-        margin-top: 44px;
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@-moz-keyframes showTab {
     from {
         margin-top: 44px;
         opacity: 0;
@@ -404,8 +420,40 @@
     cursor: pointer;
 }
 
+.entryPlaygroundPictureCurtainWorkspace {
+    position: absolute;
+    background-color: black;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.6;
+    z-index: 255;
+    border-radius: 0 0 0 6px;
+}
+
+.entryPlaygroundPictureCurtainWorkspace .entryPlaygroundPictureCurtainWorkspaceText {
+    text-align: center;
+    height: 100%;
+    color: white;
+    font-family: NanumGothicOTF;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 1.33;
+    letter-spacing: -0.6px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center; /* align horizontal */
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center; /* align vertical */
+}
+
 .entryPlaygroundCodeWorkspace {
-    overflow: hidden;
+    overflow: unset;
     position: absolute;
     left: 0;
     right: 0;
@@ -566,7 +614,7 @@
     border: 1px solid #e2e2e2;
     background-color: #fff;
     border-radius: 4px;
-    background-size: auto 90%;
+    background-size: contain;
     background-repeat: no-repeat;
     background-position: 50% 50%;
 }
@@ -585,6 +633,7 @@
     cursor: text;
     border: 1px solid #e2e2e2;
     border-radius: 4px;
+    -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
 .entryPlaygroundPictureName:focus,
@@ -656,6 +705,7 @@
     }
 }
 .pop_selectbox * {
+    -webkit-box-sizing: content-box;
     box-sizing: content-box;
 }
 .pop_selectbox .tooltip_box {
@@ -712,8 +762,8 @@
 .entryPlaygroundTextWorkspace .write_box .write_set .font_style_box .style_link {
     display: inline-block;
     overflow: hidden;
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
     margin-left: 10px;
     border: 1px solid #e2e2e2;
     background-color: #fff;
@@ -859,17 +909,67 @@
     }
 }
 .imbtn_pop_font_color {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    width: 66px;
+    height: 40px;
+    margin-left: 10px;
     .backgroundImage('btn_pop_font_color.png');
-    background-size: 38px auto;
+    background-size: 66px auto;
+    cursor: pointer;
+    em {
+        position: absolute;
+        left: 5px;
+        right: 5px;
+        top: 5px;
+        bottom: 5px;
+        background-color: #f9f9f9;
+        z-index: -1;
+    }
     &.on {
         .backgroundImage('btn_pop_font_color_on.png');
     }
 }
+.imbtn_pop_font_paint,
 .imbtn_pop_font_backgroundcolor {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    width: 66px;
+    height: 40px;
+    margin-left: 10px;
     .backgroundImage('btn_pop_font_paint.png');
-    background-size: 38px auto;
+    background-size: 66px auto;
+    cursor: pointer;
+    em {
+        position: absolute;
+        left: 5px;
+        right: 5px;
+        top: 5px;
+        bottom: 5px;
+        z-index: -1;
+    }
     &.on {
         .backgroundImage('btn_pop_font_paint_on.png');
+        &.clear {
+            .backgroundImage('btn_pop_font_paint_clear_on.png');
+            em {
+                display: none;
+            }
+        }
+    }
+    &.clear {
+        .backgroundImage('btn_pop_font_paint_clear.png');
+        em {
+            display: none;
+        }
+    }
+    &.clear_on {
+        .backgroundImage('btn_pop_font_paint_clear_on.png');
+        em {
+            display: none;
+        }
     }
 }
 
@@ -944,8 +1044,14 @@
     overflow: hidden;
     border-left: 1px solid #e2e2e2;
     background-color: #f2f2f2;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
     justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
 
     .entryPlaygroundSoundEditWrapper {
@@ -956,6 +1062,7 @@
         .backgroundImage('sound_edit.gif');
         width: 160px;
         height: 160px;
+        -o-object-fit: contain;
         object-fit: contain;
         margin: 0 auto 24px;
         background-size: 160px auto;
@@ -971,6 +1078,9 @@
         letter-spacing: -0.3px;
         text-align: center;
         color: #555555;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
         user-select: none;
     }
 }
@@ -1086,6 +1196,7 @@
 .entryPlaygroundSoundName {
     width: 100%;
     height: 24px;
+    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     margin-top: 10px;
     padding: 0 4px;
@@ -1162,6 +1273,7 @@
     width: 136px;
     height: 8px;
     border-radius: 3px;
+    -webkit-box-shadow: inset 1px 1px 1px 0 rgba(0, 0, 0, 0.03);
     box-shadow: inset 1px 1px 1px 0 rgba(0, 0, 0, 0.03);
     background-color: #d8d8d8;
 }
@@ -1176,6 +1288,7 @@
 .entryPlaygroundFontSizeKnob {
     width: 19px;
     height: 30px;
+    -o-object-fit: contain;
     object-fit: contain;
     position: relative;
     margin-top: -19px;
@@ -1270,7 +1383,7 @@
     }
 }
 
-.sortableWidget {
+.sortable {
     height: 100%;
 
     .rcs-custom-scrollbar {

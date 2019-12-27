@@ -42,8 +42,33 @@
     .backgroundImage('layers_icon_lock.png');
 }
 
+.entryDisabled {
+    .objectInfo_visible {
+        .backgroundImage('layers_icon_visible_disabled.png');
+        cursor: default;
+    }
+    .objectInfo_unlock {
+        .backgroundImage('layers_icon_lock_disabled.png');
+        cursor: default;
+    }
+    .entryObjectDeleteWorkspace {
+        .backgroundImage('layers_icon_close_nor_new_disabled.png');
+        background-size: 26px auto;
+        cursor: default;
+    }
+    input {
+        color: #cbcbcb;
+    }
+    &.selectedObject {
+        .entryObjectWrapperWorkspace .entryObjectNameWorkspace {
+            color: #cbcbcb;
+        }
+    }
+}
+
 .entryObjectThumbnailWorkspace {
     overflow: hidden;
+    cursor: move;
     position: absolute;
     top: 8px;
     left: 34px;
@@ -55,13 +80,17 @@
     background-size: 70%;
     background-repeat: no-repeat;
     background-position: center;
+
+    &.entryObjectTextBox {
+        .backgroundImage('text_icon.svg');
+        background-size: cover;
+    }
 }
 
 .entryObjectWrapperWorkspace {
     overflow: hidden;
     position: relative;
     margin: 16px 78px 0 82px;
-    padding-right: 16px;
 }
 
 .entryObjectNameWorkspace {
@@ -69,7 +98,8 @@
     float: left;
     box-sizing: border-box;
     max-width: 283px;
-    width: 100%;
+    width: calc(100% - 28px);
+    margin-right: 4px;
     padding: 7px 4px 6px;
     border: 1px solid #e2e2e2;
     border-radius: 4px;
@@ -110,7 +140,7 @@
 
 .selectedObject > .entryObjectWrapperWorkspace > .entryObjectNameWorkspace {
     color: #2c313d;
-    font-family: NanumGothic !important;
+    font-family: EntryFont, NanumGothic !important;
 }
 
 .entryObjectNameWorkspace:disabled {
@@ -204,18 +234,25 @@
 }
 
 .entryObjectInformationWorkspace {
-    position: absolute;
+    display: inline-block;
     right: 0;
     top: 9px;
-    width: 8px;
-    height: 6px;
+    width: 24px;
+    height: 24px;
+    margin-top: 2px;
     background-size: 8px auto;
+    background-repeat: no-repeat;
+    background-position: center;
     cursor: pointer;
     .backgroundImage('layers_arrow_down_nor.png');
 }
 
 .selectedObject .entryObjectInformationWorkspace {
     .backgroundImage('layers_arrow_up_nor.png');
+}
+
+.fold .entryObjectInformationWorkspace {
+    .backgroundImage('layers_arrow_down_nor.png');
 }
 
 .informationToggle > .entryObjectWrapperWorkspace > .entryObjectInformationWorkspace {
@@ -296,6 +333,10 @@
 
 .selectedObject .entryObjectRotationWrapperWorkspace {
     display: inline-block;
+}
+
+.fold .entryObjectRotationWrapperWorkspace {
+    display: none;
 }
 
 .informationToggle > .entryObjectRotationWrapperWorkspace {
@@ -432,7 +473,6 @@
 .entryObjectCoordinateInputWorkspace:active {
     border-color: #4f80ff;
 }
-
 
 .entryObjectCoordinateInputWorkspace_size {
     float: none;

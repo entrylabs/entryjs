@@ -189,7 +189,7 @@ var EaselHandle = function(canvas) {
             var pos = handle.getEventCoordinate(e);
             pos.x -= handle.x;
             pos.y -= handle.y;
-            var rotation = -Math.atan2(pos.x, pos.y) / Math.PI * 180 - 180;
+            var rotation = (-Math.atan2(pos.x, pos.y) / Math.PI) * 180 - 180;
             handle.setRotation(rotation);
             handle.dispatchOnChangeEvent();
         });
@@ -218,7 +218,7 @@ var EaselHandle = function(canvas) {
         });
         directionArrow.on('pressmove', function(e) {
             var pos = handle.getLocalCoordinate(handle.getEventCoordinate(e));
-            var rotation = -Math.atan2(pos.x, pos.y) / Math.PI * 180 - 180;
+            var rotation = (-Math.atan2(pos.x, pos.y) / Math.PI) * 180 - 180;
             handle.setDirection(rotation);
             handle.dispatchOnChangeEvent();
         });
@@ -265,9 +265,7 @@ var EaselHandle = function(canvas) {
             //knob.cursor = "move";
             knob.on('mousedown', function(e) {
                 var otherKnobIndex =
-                    this.knobIndex + 4 > 7
-                        ? this.knobIndex + 4 - 8
-                        : this.knobIndex + 4;
+                    this.knobIndex + 4 > 7 ? this.knobIndex + 4 - 8 : this.knobIndex + 4;
                 var otherKnob = handle.knobs[otherKnobIndex];
                 var otherKnobPos = handle.getGlobalCoordinate(otherKnob);
                 this.otherKnobPos = otherKnobPos;
@@ -327,8 +325,8 @@ var EaselHandle = function(canvas) {
         var res = Math.sqrt(x * x + y * y);
         if (res > standard && Entry.engine.isState('stop')) {
             Entry.toast.warning(
-                '이런! 조심하세요!',
-                '오브젝트의 중심이 이미지에서 크게 벗어나서 원위치로 되돌렸습니다.'
+                Lang.Workspace.toast_error_title_object_center,
+                Lang.Workspace.toast_error_contents_object_center
             );
             return true;
         }
@@ -390,11 +388,11 @@ var EaselHandle = function(canvas) {
     };
 
     p.renderKnobs = function() {
-        var width = this.width/2;
-        var height = this.height/2;
+        var width = this.width / 2;
+        var height = this.height / 2;
         this.knobs.forEach(function(knob, i) {
-            knob.x = Math.round(Math.sin(i / 4 * Math.PI)) * width;
-            knob.y = Math.round(Math.cos(i / 4 * Math.PI)) * height;
+            knob.x = Math.round(Math.sin((i / 4) * Math.PI)) * width;
+            knob.y = Math.round(Math.cos((i / 4) * Math.PI)) * height;
         });
     };
 
@@ -407,22 +405,16 @@ var EaselHandle = function(canvas) {
 
     p.getGlobalCoordinate = function(childObject) {
         var container = this.container;
-        var rotation = -(this.container.rotation * Math.PI / 180);
+        var rotation = -((this.container.rotation * Math.PI) / 180);
         return {
-            x:
-                this.x +
-                childObject.x * Math.cos(rotation) +
-                childObject.y * Math.sin(rotation),
-            y:
-                this.y +
-                childObject.y * Math.cos(rotation) -
-                childObject.x * Math.sin(rotation),
+            x: this.x + childObject.x * Math.cos(rotation) + childObject.y * Math.sin(rotation),
+            y: this.y + childObject.y * Math.cos(rotation) - childObject.x * Math.sin(rotation),
         };
     };
 
     p.getLocalCoordinate = function(pos) {
         var container = this.container;
-        var rotation = this.container.rotation * Math.PI / 180;
+        var rotation = (this.container.rotation * Math.PI) / 180;
         pos.x -= this.x;
         pos.y -= this.y;
         return {
@@ -432,18 +424,13 @@ var EaselHandle = function(canvas) {
     };
 
     p.adjust = function(knobIndex, otherKnobPos, pos) {
-        var newPoint = this.calcPos(
-            { x: this.x, y: this.y },
-            otherKnobPos,
-            pos
-        );
+        var newPoint = this.calcPos({ x: this.x, y: this.y }, otherKnobPos, pos);
         var newCenter = {
             x: (otherKnobPos.x + newPoint.x) / 2,
             y: (otherKnobPos.y + newPoint.y) / 2,
         };
         var newLength = Math.sqrt(
-            Math.pow(newPoint.x - otherKnobPos.x, 2) +
-                Math.pow(newPoint.y - otherKnobPos.y, 2)
+            Math.pow(newPoint.x - otherKnobPos.x, 2) + Math.pow(newPoint.y - otherKnobPos.y, 2)
         );
         if (knobIndex % 4 == 0) {
             var ratio = newLength / this.height;
@@ -457,16 +444,15 @@ var EaselHandle = function(canvas) {
             var oldLength =
                 2 *
                 Math.sqrt(
-                    Math.pow(this.x - otherKnobPos.x, 2) +
-                        Math.pow(this.y - otherKnobPos.y, 2)
+                    Math.pow(this.x - otherKnobPos.x, 2) + Math.pow(this.y - otherKnobPos.y, 2)
                 );
-            var newWidth = this.width * newLength / oldLength;
+            var newWidth = (this.width * newLength) / oldLength;
             var ratio = newWidth / this.width;
             this.setWidth(newWidth);
             this.setRegX(this.regX * ratio);
-            var newHeight = this.height * newLength / oldLength;
+            var newHeight = (this.height * newLength) / oldLength;
             ratio = newHeight / this.height;
-            this.setHeight(this.height * newLength / oldLength);
+            this.setHeight((this.height * newLength) / oldLength);
             this.setRegY(this.regY * ratio);
         }
         this.setX(newCenter.x);
@@ -478,12 +464,7 @@ var EaselHandle = function(canvas) {
 
     p.updateKnobCursor = function() {
         var rotation = this.rotation;
-        var cursorList = [
-            'ns-resize',
-            'nwse-resize',
-            'ew-resize',
-            'nesw-resize',
-        ];
+        var cursorList = ['ns-resize', 'nwse-resize', 'ew-resize', 'nesw-resize'];
         var iter = Math.round(rotation / 45);
         for (var i = 0; i < iter; i++) {
             cursorList.unshift(cursorList.pop());
@@ -517,8 +498,7 @@ var EaselHandle = function(canvas) {
     };
 
     p.dispatchOnChangeEvent = function() {
-        if (this.onChangeFunction)
-            this.onChangeFunction.call(this.callerObject, this);
+        if (this.onChangeFunction) this.onChangeFunction.call(this.callerObject, this);
     };
 
     p.dispatchEditStartEvent = function() {
@@ -527,8 +507,7 @@ var EaselHandle = function(canvas) {
     };
 
     p.dispatchEditEndEvent = function() {
-        if (this.onEditEndFunction)
-            this.onEditEndFunction.call(this.editEndCallerObject, this);
+        if (this.onEditEndFunction) this.onEditEndFunction.call(this.editEndCallerObject, this);
     };
 
     p.setDraggable = function(bool) {

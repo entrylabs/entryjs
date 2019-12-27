@@ -69,9 +69,7 @@ Entry.Thread = class Thread {
 
     destroyView() {
         this.view = null;
-        this._data.map((b) => {
-            return b.destroyView();
-        });
+        this._data.map((b) => b.destroyView());
     }
 
     separate(block, count, index) {
@@ -107,9 +105,7 @@ Entry.Thread = class Thread {
     clone(code, mode) {
         const newThread = new Entry.Thread([], code || this._code);
         return newThread.load(
-            this.getBlocks().reduce((acc, block) => {
-                return [...acc, block.clone(newThread)];
-            }, []),
+            this.getBlocks().reduce((acc, block) => [...acc, block.clone(newThread)], []),
             mode
         );
     }
@@ -139,9 +135,7 @@ Entry.Thread = class Thread {
 
         this.getBlocks()
             .reverse()
-            .forEach((block) => {
-                return block.destroy(animate, null, isNotForce);
-            });
+            .forEach((block) => block.destroy(animate, null, isNotForce));
 
         if (!this._data.length) {
             this._code.destroyThread(this, false);
@@ -164,9 +158,10 @@ Entry.Thread = class Thread {
 
             count++;
 
-            return (block.statements || []).reduce((count, statement) => {
-                return (count += statement.countBlock());
-            }, count);
+            return (block.statements || []).reduce(
+                (count, statement) => (count += statement.countBlock()),
+                count
+            );
         }, 0);
     }
 
@@ -274,7 +269,11 @@ Entry.Thread = class Thread {
         return parent.pointer(pointer);
     }
 
-    getBlockList(excludePrimitive, type) {
+    getBlockIndex(block) {
+        return this.getBlocks().indexOf(block);
+    }
+
+    getBlockList(excludePrimitive, type, index) {
         return _.chain(this._data)
             .map((block) => {
                 if (block.constructor !== Entry.Block) {
@@ -287,8 +286,8 @@ Entry.Thread = class Thread {
             .value();
     }
 
-    stringify(excludeData) {
-        return JSON.stringify(this.toJSON(undefined, undefined, excludeData));
+    stringify(excludeData, isNew, index) {
+        return JSON.stringify(this.toJSON(isNew, index, excludeData));
     }
 
     isInOrigin() {

@@ -6,30 +6,32 @@
 const { returnEmptyArr, createTooltip } = require('../command_util');
 
 (function(c) {
-    var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
+    const COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
 
     c[COMMAND_TYPES.selectObject] = {
-        do: function(objectId) {
+        do(objectId) {
             return Entry.container.selectObject(objectId);
         },
-        state: function(objectId) {
-            var playground = Entry.playground;
-            if (playground && playground.object) return [playground.object.id];
+        state(objectId) {
+            const playground = Entry.playground;
+            if (playground && playground.object) {
+                return [playground.object.id];
+            }
         },
-        log: function(objectId) {
+        log(objectId) {
             return [objectId];
         },
         undo: 'selectObject',
     };
 
     c[COMMAND_TYPES.objectEditButtonClick] = {
-        do: function(objectId) {
+        do(objectId) {
             Entry.container.getObject(objectId).toggleEditObject();
         },
-        state: function(objectId) {
+        state(objectId) {
             return [];
         },
-        log: function(objectId) {
+        log(objectId) {
             return [
                 ['objectId', objectId],
                 ['objectIndex', Entry.container.getObjectIndex(objectId)],
@@ -42,22 +44,22 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
     };
 
     c[COMMAND_TYPES.objectAddPicture] = {
-        do: function(objectId, picture) {
-            var hashId = c[COMMAND_TYPES.objectAddPicture].hashId;
+        do(objectId, picture, isSelect = true) {
+            const hashId = c[COMMAND_TYPES.objectAddPicture].hashId;
             if (hashId) {
                 picture.id = hashId;
                 delete c[COMMAND_TYPES.objectAddPicture].hashId;
             }
             Entry.container.getObject(objectId).addPicture(picture);
-            Entry.playground.injectPicture();
-            Entry.playground.selectPicture(picture);
+            Entry.playground.injectPicture(isSelect);
+            isSelect && Entry.playground.selectPicture(picture);
             Entry.dispatchEvent('dismissModal');
         },
-        state: function(objectId, picture) {
+        state(objectId, picture) {
             return [objectId, picture];
         },
-        log: function(objectId, picture) {
-            var o = {};
+        log(objectId, picture) {
+            const o = {};
             o._id = picture._id;
             o.id = picture.id;
             o.dimension = picture.dimension;
@@ -68,10 +70,10 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
             return [['objectId', objectId], ['picture', o]];
         },
         dom: ['.btn_confirm_modal'],
-        restrict: function(data, domQuery, callback) {
+        restrict(data, domQuery, callback) {
             this.hashId = data.content[2][1].id;
 
-            var tooltip = new Entry.Tooltip(
+            const tooltip = new Entry.Tooltip(
                 [
                     {
                         title: data.tooltip.title,
@@ -87,7 +89,7 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
                 }
             );
 
-            var event = Entry.getMainWS().widgetUpdateEvent;
+            const event = Entry.getMainWS().widgetUpdateEvent;
 
             if (!data.skip) {
                 Entry.dispatchEvent(
@@ -105,13 +107,13 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
     };
 
     c[COMMAND_TYPES.objectRemovePicture] = {
-        do: function(objectId, picture) {
+        do(objectId, picture) {
             Entry.container.getObject(objectId).removePicture(picture.id);
         },
-        state: function(objectId, picture) {
+        state(objectId, picture) {
             return [objectId, picture];
         },
-        log: function(objectId, picture) {
+        log(objectId, picture) {
             return [['objectId', objectId], ['pictureId', picture._id]];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
@@ -120,8 +122,8 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
     };
 
     c[COMMAND_TYPES.objectAddSound] = {
-        do: function(objectId, sound) {
-            var hashId = c[COMMAND_TYPES.objectAddSound].hashId;
+        do(objectId, sound) {
+            const hashId = c[COMMAND_TYPES.objectAddSound].hashId;
             if (hashId) {
                 sound.id = hashId;
                 delete c[COMMAND_TYPES.objectAddSound].hashId;
@@ -129,11 +131,11 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
             Entry.container.getObject(objectId).addSound(sound);
             Entry.dispatchEvent('dismissModal');
         },
-        state: function(objectId, sound) {
+        state(objectId, sound) {
             return [objectId, sound];
         },
-        log: function(objectId, sound) {
-            var o = {};
+        log(objectId, sound) {
+            const o = {};
             o._id = sound._id;
             o.duration = sound.duration;
             o.ext = sound.ext;
@@ -144,10 +146,10 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
             return [['objectId', objectId], ['sound', o]];
         },
         dom: ['.btn_confirm_modal'],
-        restrict: function(data, domQuery, callback) {
+        restrict(data, domQuery, callback) {
             this.hashId = data.content[2][1].id;
 
-            var tooltip = new Entry.Tooltip(
+            const tooltip = new Entry.Tooltip(
                 [
                     {
                         title: data.tooltip.title,
@@ -163,7 +165,7 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
                 }
             );
 
-            var event = Entry.getMainWS().widgetUpdateEvent;
+            const event = Entry.getMainWS().widgetUpdateEvent;
 
             if (!data.skip) {
                 Entry.dispatchEvent(
@@ -180,13 +182,13 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
     };
 
     c[COMMAND_TYPES.objectRemoveSound] = {
-        do: function(objectId, sound) {
+        do(objectId, sound) {
             return Entry.container.getObject(objectId).removeSound(sound.id);
         },
-        state: function(objectId, sound) {
+        state(objectId, sound) {
             return [objectId, sound];
         },
-        log: function(objectId, sound) {
+        log(objectId, sound) {
             return [['objectId', objectId], ['soundId', sound._id]];
         },
         dom: ['.btn_confirm_modal'],
@@ -195,102 +197,68 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
         undo: 'objectAddSound',
     };
 
-    c[COMMAND_TYPES.objectAddExpansionBlock] = {
-        do: function(block) {
-            var hashId = c[COMMAND_TYPES.objectAddExpansionBlock].hashId;
-            if (hashId) {
-                block.id = hashId;
-                delete c[COMMAND_TYPES.objectAddExpansionBlock].hashId;
-            }
-
-            if( typeof Entry.EXPANSION_BLOCK !== "undefined" && typeof Entry.EXPANSION_BLOCK[block.name] !== "undefined") {
-                Entry.EXPANSION_BLOCK[block.name].init();
-                if(typeof Entry.expansionBlocks == "undefined") {
-                    Entry.expansionBlocks = [];
+    c[COMMAND_TYPES.objectAddExpansionBlocks] = {
+        do(blockNames) {
+            blockNames.forEach((blockName) => {
+                if (
+                    typeof Entry.EXPANSION_BLOCK !== 'undefined' &&
+                    typeof Entry.EXPANSION_BLOCK[blockName] !== 'undefined'
+                ) {
+                    Entry.EXPANSION_BLOCK[blockName].init();
+                    if (typeof Entry.expansionBlocks == 'undefined') {
+                        Entry.expansionBlocks = [];
+                    }
+                    Entry.expansionBlocks = _.union(Entry.expansionBlocks, [blockName]);
                 }
-                Entry.expansionBlocks.push(block.name);
-            }
-
-            Entry.playground.blockMenu.unbanClass(block.name);
-            Entry.dispatchEvent('dismissModal');
+                Entry.playground.blockMenu.unbanClass(blockName);
+            });
+            // Entry.dispatchEvent('dismissModal');
         },
-        state: function(block) {
-            return [block];
+        state(blockNames) {
+            return [blockNames];
         },
-        log: function(block) {
-            var o = {};
-            o._id = block._id;
-            o.id = block.id;
-            o.filename = block.filename;
-            o.fileurl = block.fileurl;
-            o.name = block.name;
-            return [['block', o]];
+        log(blockNames) {
+            return [['blockName', blockNames]];
         },
         dom: ['.btn_confirm_modal'],
-        restrict: function(data, domQuery, callback) {
-            this.hashId = data.content[2][1].id;
-
-            var tooltip = new Entry.Tooltip(
-                [
-                    {
-                        title: data.tooltip.title,
-                        content: data.tooltip.content,
-                        target: '.btn_confirm_modal',
-                    },
-                ],
-                {
-                    callBack: callback,
-                    dimmed: true,
-                    restrict: true,
-                    render: false,
-                }
-            );
-
-            var event = Entry.getMainWS().widgetUpdateEvent;
-
-            if (!data.skip) {
-                Entry.dispatchEvent(
-                    'openSoundManager',
-                    data.content[2][1]._id,
-                    event.notify.bind(event)
-                );
-            }
-            return tooltip;
-        },
-        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
         validate: false,
-        undo: 'objectRemoveExpansionBlock',
+        undo: 'objectRemoveExpansionBlocks',
     };
 
-    c[COMMAND_TYPES.objectRemoveExpansionBlock] = {
-        do: function(block) {
-            Entry.playground.blockMenu.banClass(block.name);
+    c[COMMAND_TYPES.objectRemoveExpansionBlocks] = {
+        do(blockNames) {
+            // 사용된 블록 전체에서 검색가능해질때 사용가능.
+            blockNames.forEach((blockName) => {
+                Entry.playground.blockMenu.banClass(blockName);
+            });
+            Entry.expansionBlocks = _.pullAll(Entry.expansionBlocks, blockNames);
         },
-        state: function(block) {
-            return [block];
+        state(blockNames) {
+            return [blockNames];
         },
-        log: function(block) {
-            return [['blockId', block._id]];
+        log(blockNames) {
+            return [['blockName', blockNames]];
         },
         dom: ['.btn_confirm_modal'],
-        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
         validate: false,
-        undo: 'objectAddExpansionBlock',
+        undo: 'objectAddExpansionBlocks',
     };
 
     c[COMMAND_TYPES.objectNameEdit] = {
-        do: function(objectId, newName) {
-            var object = Entry.container.getObject(objectId);
+        do(objectId, newName) {
+            const object = Entry.container.getObject(objectId);
             object.setName(newName);
             object.setInputBlurred('nameInput');
             Entry.playground.reloadPlayground();
         },
-        state: function(objectId, newName) {
-            var object = Entry.container.getObject(objectId);
+        state(objectId, newName) {
+            const object = Entry.container.getObject(objectId);
             return [objectId, object.getName()];
         },
-        log: function(objectId, newName) {
-            var object = Entry.container.getObject(objectId);
+        log(objectId, newName) {
+            const object = Entry.container.getObject(objectId);
             return [['objectId', objectId], ['newName', newName]];
         },
         dom: ['container', 'objectId', '&0', 'nameInput'],
@@ -299,20 +267,34 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
         undo: 'objectNameEdit',
     };
 
+    c[COMMAND_TYPES.objectReorder] = {
+        do(newIndex, oldIndex) {
+            Entry.container.moveElement(newIndex, oldIndex);
+        },
+        state(newIndex, oldIndex) {
+            return [oldIndex, newIndex];
+        },
+        log(newIndex, oldIndex) {
+            return [['newIndex', newIndex], ['oldIndex', oldIndex]];
+        },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        undo: 'objectReorder',
+    };
+
     c[COMMAND_TYPES.objectUpdatePosX] = {
-        do: function(objectId, newX = 0) {
-            var object = Entry.container.getObject(objectId);
+        do(objectId, newX = 0) {
+            const object = Entry.container.getObject(objectId);
             object.entity.setX(Number(newX));
             object.updateCoordinateView();
             object.setInputBlurred('xInput');
             Entry.stage.updateObject();
         },
-        state: function(objectId, newX) {
-            var { entity } = Entry.container.getObject(objectId);
+        state(objectId, newX) {
+            const { entity } = Entry.container.getObject(objectId);
             return [objectId, entity.getX()];
         },
-        log: function(objectId, newX) {
-            var { entity } = Entry.container.getObject(objectId);
+        log(objectId, newX) {
+            const { entity } = Entry.container.getObject(objectId);
             return [['objectId', objectId], ['newX', newX]];
         },
         dom: ['container', 'objectId', '&0', 'xInput'],
@@ -322,19 +304,19 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
     };
 
     c[COMMAND_TYPES.objectUpdatePosY] = {
-        do: function(objectId, newY = 0) {
-            var object = Entry.container.getObject(objectId);
+        do(objectId, newY = 0) {
+            const object = Entry.container.getObject(objectId);
             object.entity.setY(Number(newY));
             object.updateCoordinateView();
             object.setInputBlurred('yInput');
             Entry.stage.updateObject();
         },
-        state: function(objectId, newY) {
-            var { entity } = Entry.container.getObject(objectId);
+        state(objectId, newY) {
+            const { entity } = Entry.container.getObject(objectId);
             return [objectId, entity.getY()];
         },
-        log: function(objectId, newY) {
-            var { entity } = Entry.container.getObject(objectId);
+        log(objectId, newY) {
+            const { entity } = Entry.container.getObject(objectId);
             return [['objectId', objectId], ['newY', newY]];
         },
         dom: ['container', 'objectId', '&0', 'yInput'],
@@ -344,19 +326,19 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
     };
 
     c[COMMAND_TYPES.objectUpdateSize] = {
-        do: function(objectId, newSize = 0) {
-            var object = Entry.container.getObject(objectId);
+        do(objectId, newSize = 0) {
+            const object = Entry.container.getObject(objectId);
             object.entity.setSize(Number(newSize));
             object.updateCoordinateView();
             object.setInputBlurred('sizeInput');
             Entry.stage.updateObject();
         },
-        state: function(objectId, newSize) {
-            var { entity } = Entry.container.getObject(objectId);
+        state(objectId, newSize) {
+            const { entity } = Entry.container.getObject(objectId);
             return [objectId, entity.getSize()];
         },
-        log: function(objectId, newSize) {
-            var { entity } = Entry.container.getObject(objectId);
+        log(objectId, newSize) {
+            const { entity } = Entry.container.getObject(objectId);
             return [['objectId', objectId], ['newSize', newSize]];
         },
         dom: ['container', 'objectId', '&0', 'sizeInput'],
@@ -366,19 +348,19 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
     };
 
     c[COMMAND_TYPES.objectUpdateRotationValue] = {
-        do: function(objectId, newValue = 0) {
-            var object = Entry.container.getObject(objectId);
+        do(objectId, newValue = 0) {
+            const object = Entry.container.getObject(objectId);
             object.entity.setRotation(Number(newValue));
             object.updateCoordinateView();
             object.setInputBlurred('rotationInput');
             Entry.stage.updateObject();
         },
-        state: function(objectId, newValue) {
-            var { entity } = Entry.container.getObject(objectId);
+        state(objectId, newValue) {
+            const { entity } = Entry.container.getObject(objectId);
             return [objectId, entity.getRotation()];
         },
-        log: function(objectId, newValue) {
-            var { entity } = Entry.container.getObject(objectId);
+        log(objectId, newValue) {
+            const { entity } = Entry.container.getObject(objectId);
             return [['objectId', objectId], ['newRotationValue', newValue]];
         },
         dom: ['container', 'objectId', '&0', 'rotationInput'],
@@ -388,19 +370,19 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
     };
 
     c[COMMAND_TYPES.objectUpdateDirectionValue] = {
-        do: function(objectId, newValue = 0) {
-            var object = Entry.container.getObject(objectId);
+        do(objectId, newValue = 0) {
+            const object = Entry.container.getObject(objectId);
             object.entity.setDirection(Number(newValue));
             object.updateCoordinateView();
             object.setInputBlurred('directionInput');
             Entry.stage.updateObject();
         },
-        state: function(objectId, newValue) {
-            var { entity } = Entry.container.getObject(objectId);
+        state(objectId, newValue) {
+            const { entity } = Entry.container.getObject(objectId);
             return [objectId, entity.getDirection()];
         },
-        log: function(objectId, newValue) {
-            var { entity } = Entry.container.getObject(objectId);
+        log(objectId, newValue) {
+            const { entity } = Entry.container.getObject(objectId);
             return [['objectId', objectId], ['newDirectionValue', newValue]];
         },
         dom: ['container', 'objectId', '&0', 'directionInput'],
@@ -410,8 +392,8 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
     };
 
     c[COMMAND_TYPES.objectUpdateRotateMethod] = {
-        do: function(objectId, newMethod, rotation) {
-            var object = Entry.container.getObject(objectId);
+        do(objectId, newMethod, rotation) {
+            const object = Entry.container.getObject(objectId);
             object.initRotateValue(newMethod);
             object.setRotateMethod(newMethod);
             if (rotation !== undefined) {
@@ -419,12 +401,12 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
             }
             Entry.stage.updateObject();
         },
-        state: function(objectId, newMethod) {
-            var { entity, rotateMethod } = Entry.container.getObject(objectId);
+        state(objectId, newMethod) {
+            const { entity, rotateMethod } = Entry.container.getObject(objectId);
             return [objectId, rotateMethod, entity.getRotation()];
         },
-        log: function(objectId, newValue) {
-            var { entity } = Entry.container.getObject(objectId);
+        log(objectId, newValue) {
+            const { entity } = Entry.container.getObject(objectId);
             return [['objectId', objectId], ['newDirectionValue', newValue]];
         },
         dom: ['container', 'objectId', '&0', 'rotationMethod', '&1'],
@@ -434,7 +416,7 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
 
     c[COMMAND_TYPES.entitySetModel] = {
         do(objectId, newModel, oldModel) {
-            var { entity } = Entry.container.getObject(objectId);
+            const { entity } = Entry.container.getObject(objectId);
             entity.setModel(newModel);
         },
         state(objectId, newModel, oldModel) {
@@ -448,13 +430,13 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
     };
 
     function _inputRestrictor({ tooltip, content }, domQuery, callback) {
-        var { title: tooltipTitle, content: tooltipContent } = tooltip;
+        const { title: tooltipTitle, content: tooltipContent } = tooltip;
         _activateEdit(content[1][1], domQuery, callback);
         return createTooltip(tooltipTitle, tooltipContent, domQuery, callback);
     }
 
     function _activateEdit(objectId, domQuery, callback) {
-        var object = Entry.container.getObject(objectId);
+        const object = Entry.container.getObject(objectId);
 
         if (!object.isEditing) {
             object.editObjectValues(true);

@@ -5,6 +5,7 @@
 
 import DomUtils from '../../src/util/domUtils';
 import { GEHelper } from '../graphicEngine/GEHelper';
+const _findIndex = require('lodash/findIndex');
 
 /**
  * Class for entry object.
@@ -28,7 +29,7 @@ Entry.EntryObject = class {
                 this.editObjectValues(false);
             });
 
-            this.sounds.forEach(function(s) {
+            this.sounds.forEach((s) => {
                 if (!s.id) {
                     s.id = Entry.generateHash();
                 }
@@ -73,6 +74,8 @@ Entry.EntryObject = class {
         }
 
         this._isContextMenuEnabled = true;
+
+        this.isFolded = false;
     }
 
     /**
@@ -216,22 +219,23 @@ Entry.EntryObject = class {
         const thumb = this.thumbnailView_;
         const picture = this.entity.picture;
         const objectType = this.objectType;
-
+        this.thumbUrl = '';
         if (objectType === 'sprite') {
             if (picture.fileurl) {
-                thumb.style.backgroundImage = `url("${picture.fileurl}")`;
+                this.thumbUrl = picture.fileurl;
             } else {
                 const fileName = picture.filename;
-                thumb.style.backgroundImage = `url("${
-                    Entry.defaultPath
-                }/uploads/${fileName.substring(0, 2)}/${fileName.substring(
-                    2,
-                    4
-                )}/thumb/${fileName}.png")`;
+                this.thumbUrl = `${Entry.defaultPath}/uploads/${fileName.substring(
+                    0,
+                    2
+                )}/${fileName.substring(2, 4)}/thumb/${fileName}.png`;
             }
+            thumb.style.backgroundImage = `url(${encodeURI(this.thumbUrl)})`;
         } else if (objectType === 'textBox') {
-            const textIconPath = `${Entry.mediaFilePath}text_icon.png`;
-            thumb.style.backgroundImage = `url(${textIconPath})`;
+            const { type } = Lang || {};
+            const filename = type === 'ko' ? 'text_icon_ko.svg' : 'text_icon.svg';
+            this.thumbUrl = `${Entry.mediaFilePath}${filename}`;
+            $(thumb).addClass('entryObjectTextBox');
         }
     }
 
@@ -313,7 +317,7 @@ Entry.EntryObject = class {
     removePicture(pictureId) {
         const pictures = this.pictures;
         if (pictures.length < 2) {
-            return false;
+            return;
         }
 
         const playground = Entry.playground;
@@ -321,12 +325,11 @@ Entry.EntryObject = class {
 
         pictures.splice(pictures.indexOf(picture), 1);
         if (picture === this.selectedPicture) {
-            playground.selectPicture(pictures[0]);
+            playground.selectPicture(pictures[0], true);
         }
         GEHelper.resManager.imageRemoved('EntityObject::removePicture');
         playground.injectPicture(this);
         playground.reloadPlayground();
-        return true;
     }
 
     /**
@@ -433,7 +436,7 @@ Entry.EntryObject = class {
      * @param {string} soundId
      */
     removeSound(soundId) {
-        const index = this.sounds.findIndex((sound) => sound.id === soundId);
+        const index = _findIndex(this.sounds, (sound) => sound.id === soundId);
         this.sounds.splice(index, 1);
         Entry.playground.reloadPlayground();
         Entry.playground.injectSound();
@@ -658,11 +661,11 @@ Entry.EntryObject = class {
         ];
 
         if (isLocked) {
-            inputs.forEach(function(input) {
+            inputs.forEach((input) => {
                 input.setAttribute('disabled', 'disabled');
             });
         } else {
-            inputs.forEach(function(input) {
+            inputs.forEach((input) => {
                 input.removeAttribute('disabled');
             });
         }
@@ -683,7 +686,7 @@ Entry.EntryObject = class {
         if (activate && !this.isEditing) {
             this.isEditing = true;
         } else {
-            inputs.forEach(function(input) {
+            inputs.forEach((input) => {
                 input.blur(true);
             });
 
@@ -715,9 +718,11 @@ Entry.EntryObject = class {
         }
         e.stopPropagation();
 
+        const { options = {} } = Entry;
+        const { backpackDisable } = options;
         const object = this;
         const container = Entry.container;
-        const options = [
+        const contextMenus = [
             {
                 text: Lang.Workspace.context_duplicate,
                 enable: !Entry.engine.isState('run'),
@@ -727,7 +732,11 @@ Entry.EntryObject = class {
             },
             {
                 text: Lang.Workspace.context_remove,
-                callback() {
+                enable: !Entry.engine.isState('run') && !this.getLock(),
+                callback: () => {
+                    if (this.getLock()) {
+                        return true;
+                    }
                     Entry.dispatchEvent('removeObject', object);
                     const { id } = object;
                     Entry.do('removeObject', id);
@@ -754,16 +763,34 @@ Entry.EntryObject = class {
                     }
                 },
             },
-            {
-                text: Lang.Blocks.export_object,
-                callback() {
-                    Entry.dispatchEvent('exportObject', object);
-                },
-            },
         ];
 
+        if (!backpackDisable) {
+            contextMenus.push({
+                text: Lang.Blocks.add_my_storage,
+                enable: !Entry.engine.isState('run') && !!window.user,
+                callback: () => {
+                    this.addStorage();
+                },
+            });
+        }
+
+        contextMenus.push({
+            text: Lang.Blocks.export_object,
+            callback() {
+                Entry.dispatchEvent('exportObject', object);
+            },
+        });
+
         const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
-        Entry.ContextMenu.show(options, 'workspace-contextmenu', { x, y });
+        Entry.ContextMenu.show(contextMenus, 'workspace-contextmenu', { x, y });
+    }
+
+    addStorage() {
+        Entry.dispatchEvent('addStorage', {
+            type: 'object',
+            data: this,
+        });
     }
 
     enableContextMenu() {
@@ -831,6 +858,9 @@ Entry.EntryObject = class {
         const objectId = this.id;
 
         this.view_ = this.createObjectView(objectId, exceptionsForMouseDown); // container
+        if (!Entry.objectEditable) {
+            this.view_.addClass('entryDisabled');
+        }
         this.view_.appendChild(this.createObjectInfoView()); // visible, lock
 
         const thumbnailView = this.createThumbnailView(objectId); // thumbnail
@@ -839,11 +869,9 @@ Entry.EntryObject = class {
 
         this.view_.appendChild(this.createWrapperView()); // name space
 
-        if (Entry.objectEditable && Entry.objectDeletable) {
-            const deleteView = this.createDeleteView(exceptionsForMouseDown, that); // delete
-            this.deleteView_ = deleteView;
-            this.view_.appendChild(deleteView);
-        }
+        const deleteView = this.createDeleteView(exceptionsForMouseDown, that); // delete
+        this.deleteView_ = deleteView;
+        this.view_.appendChild(deleteView);
 
         const rotationWrapperView = this.createRotationWrapperView();
         this.view_.appendChild(rotationWrapperView);
@@ -1077,23 +1105,47 @@ Entry.EntryObject = class {
         return rotationWrapperView;
     }
 
+    setObjectFold(isFold, isPass) {
+        const $view = $(this.view_);
+        if (isFold) {
+            $view.addClass('fold');
+        } else {
+            $view.removeClass('fold');
+        }
+        if (!isPass) {
+            this.isFolded = isFold;
+        }
+    }
+
+    resetObjectFold() {
+        this.setObjectFold(this.isFolded);
+    }
+
     createInformationView() {
         const informationView = Entry.createElement('div').addClass(
             'entryObjectInformationWorkspace'
         );
+        informationView.bindOnClick(() => {
+            const $view = $(this.view_);
+            if ($view.hasClass('selectedObject')) {
+                this.setObjectFold(!this.isFolded);
+            }
+        });
         return informationView;
     }
 
     createDeleteView(exceptionsForMouseDown) {
         const deleteView = Entry.createElement('div').addClass('entryObjectDeleteWorkspace');
         exceptionsForMouseDown.push(deleteView);
-        deleteView.bindOnClick((e) => {
-            e.stopPropagation();
-            if (Entry.engine.isState('run')) {
-                return;
-            }
-            Entry.do('removeObject', this.id);
-        });
+        if (Entry.objectEditable && Entry.objectDeletable) {
+            deleteView.bindOnClick((e) => {
+                e.stopPropagation();
+                if (this.getLock() || Entry.engine.isState('run')) {
+                    return;
+                }
+                Entry.do('removeObject', this.id);
+            });
+        }
         return deleteView;
     }
 
@@ -1105,20 +1157,27 @@ Entry.EntryObject = class {
             }
         });
 
-        nameView.onkeypress = Entry.Utils.whenEnter(() => {
+        const onKeyPressed = Entry.Utils.whenEnter(() => {
             this.editObjectValues(false);
         });
 
+        nameView.onkeypress = onKeyPressed;
+
         nameView.onfocus = Entry.Utils.setFocused;
-        nameView.onblur = Entry.Utils.setBlurredTimer(() => {
+
+        const nameViewBlur = this._setBlurredTimer(() => {
             const object = Entry.container.getObject(this.id);
             if (!object) {
                 return;
+            } else if (nameView.value.trim() === '') {
+                return entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
+                    nameView.focus();
+                });
             }
-
             Entry.do('objectNameEdit', this.id, nameView.value);
         });
 
+        Entry.attachEventListener(nameView, 'blur', nameViewBlur);
         nameView.value = this.name;
         return nameView;
     }
@@ -1153,47 +1212,46 @@ Entry.EntryObject = class {
 
     createObjectInfoView() {
         const objectInfoView = Entry.createElement('ul').addClass('objectInfoView');
-        if (!Entry.objectEditable) {
-            objectInfoView.addClass('entryHide');
-        }
-
         const objectInfoVisible = Entry.createElement('li').addClass('objectInfo_visible');
         if (!this.entity.getVisible()) {
             objectInfoVisible.addClass('objectInfo_unvisible');
         }
-
-        objectInfoVisible.bindOnClick(() => {
-            if (Entry.engine.isState('run')) {
-                return;
-            }
-
-            const entity = this.entity;
-            const visible = entity.setVisible(!entity.getVisible());
-            if (visible) {
-                objectInfoVisible.removeClass('objectInfo_unvisible');
-            } else {
-                objectInfoVisible.addClass('objectInfo_unvisible');
-            }
-        });
 
         const objectInfoLock = Entry.createElement('li').addClass('objectInfo_unlock');
         if (this.getLock()) {
             objectInfoLock.addClass('objectInfo_lock');
         }
 
-        objectInfoLock.bindOnClick(() => {
-            if (Entry.engine.isState('run')) {
-                return;
-            }
+        if (Entry.objectEditable) {
+            objectInfoVisible.bindOnClick(() => {
+                if (Entry.engine.isState('run')) {
+                    return;
+                }
 
-            if (this.setLock(!this.getLock())) {
-                objectInfoLock.addClass('objectInfo_lock');
-            } else {
-                objectInfoLock.removeClass('objectInfo_lock');
-            }
+                const entity = this.entity;
+                const visible = entity.setVisible(!entity.getVisible());
+                if (visible) {
+                    objectInfoVisible.removeClass('objectInfo_unvisible');
+                } else {
+                    objectInfoVisible.addClass('objectInfo_unvisible');
+                }
+            });
 
-            this.updateInputViews(this.getLock());
-        });
+            objectInfoLock.bindOnClick(() => {
+                if (Entry.engine.isState('run')) {
+                    return;
+                }
+
+                if (this.setLock(!this.getLock())) {
+                    objectInfoLock.addClass('objectInfo_lock');
+                } else {
+                    objectInfoLock.removeClass('objectInfo_lock');
+                }
+
+                this.updateInputViews(this.getLock());
+            });
+        }
+
         objectInfoView.appendChild(objectInfoVisible);
         objectInfoView.appendChild(objectInfoLock);
         return objectInfoView;
@@ -1203,6 +1261,11 @@ Entry.EntryObject = class {
         const objectView = Entry.createElement('li', objectId).addClass(
             'entryContainerListElementWorkspace'
         );
+
+        $(objectView).on('dragstart', (e) => {
+            // e.originalEvent.dataTransfer.setDragImage(canvas, 25, 25);
+            e.originalEvent.dataTransfer.setData('text', objectId);
+        });
         const fragment = document.createDocumentFragment();
         fragment.appendChild(objectView);
         // generate context menu
@@ -1219,7 +1282,7 @@ Entry.EntryObject = class {
                 Entry.container.getObject(objectId) &&
                 !_.includes(exceptionsForMouseDown, e.target)
             ) {
-                Entry.do('containerSelectObject', objectId);
+                Entry.do('selectObject', objectId);
             }
         });
 
@@ -1295,8 +1358,6 @@ Entry.EntryObject = class {
     }
 
     _whenRotateEditable(func, obj) {
-        return Entry.Utils.when(function() {
-            return !(Entry.engine.isState('run') || obj.getLock());
-        }, func);
+        return Entry.Utils.when(() => !(Entry.engine.isState('run') || obj.getLock()), func);
     }
 };

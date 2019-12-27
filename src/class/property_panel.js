@@ -34,7 +34,7 @@ Entry.PropertyPanel = function() {
             parent: this._view,
         });
 
-        var splitter = Entry.Dom('div', {
+        const splitter = Entry.Dom('div', {
             class: 'entryObjectSelectedImgWorkspace',
             parent: container,
         });
@@ -42,24 +42,28 @@ Entry.PropertyPanel = function() {
     };
 
     p.addMode = function(mode, contentObj) {
-        if (this.modes[mode]) this.removeMode(mode);
+        if (this.modes[mode]) {
+            this.removeMode(mode);
+        }
 
-        var contentDom = contentObj.getView();
+        let contentDom = contentObj.getView();
         // will be removed after apply new Dom class
         contentDom = Entry.Dom(contentDom, {
             parent: this._contentView,
         });
 
-        var tabDom = Entry.Dom('<div>' + Lang.Menus[mode] + '</div>', {
-            classes: ['propertyTabElement', 'propertyTab' + mode],
+        const tabDom = Entry.Dom(`<div>${Lang.Menus[mode]}</div>`, {
+            classes: ['propertyTabElement', `propertyTab${mode}`],
             parent: this._tabView,
         });
-        var that = this;
-        tabDom.bind('click', function() {
+        const that = this;
+        tabDom.bind('click', () => {
             that.select(mode);
         });
 
-        if (mode == 'console') contentObj.codeMirror.refresh();
+        if (mode == 'console') {
+            contentObj.codeMirror.refresh();
+        }
 
         if (this.modes[mode]) {
             this.modes[mode].tabDom.remove();
@@ -72,12 +76,12 @@ Entry.PropertyPanel = function() {
 
         this.modes[mode] = {
             obj: contentObj,
-            tabDom: tabDom,
-            contentDom: contentDom,
+            tabDom,
+            contentDom,
         };
 
         if (mode == 'hw') {
-            $('.propertyTabhw').bind('dblclick', function() {
+            $('.propertyTabhw').bind('dblclick', () => {
                 Entry.dispatchEvent('hwModeChange');
             });
         }
@@ -93,64 +97,75 @@ Entry.PropertyPanel = function() {
             }
         }
 
-        var keys = Object.keys(this.modes);
+        const keys = Object.keys(this.modes);
         if (keys && keys.length > 0) {
             this.select(keys[0]);
         }
     };
 
     p.resize = function(canvasSize) {
-        var selected = this.selected;
-        if (!selected) return;
-        var canvasHeight = canvasSize * 9 / 16;
+        const selected = this.selected;
+        if (!selected) {
+            return;
+        }
+        const canvasHeight = (canvasSize * 9) / 16;
         this._view.css({
-            width: canvasSize + 'px',
-            top: canvasHeight + 35 + 40 + 48 - 22 + 'px',
+            width: `${canvasSize}px`,
+            top: `${canvasHeight + 35 + 40 + 48 - 22}px`,
         });
-        if (canvasSize >= 430) this._view.removeClass('collapsed');
-        else this._view.addClass('collapsed');
+        if (canvasSize >= 430) {
+            this._view.removeClass('collapsed');
+        } else {
+            this._view.addClass('collapsed');
+        }
 
         Entry.dispatchEvent('windowResized');
 
-        var obj = this.modes[selected].obj;
+        const obj = this.modes[selected].obj;
         if (selected == 'hw') {
-            if (this.modes.hw.obj.listPorts) obj.resizeList();
-            else obj.resize && obj.resize();
+            if (this.modes.hw.obj.listPorts) {
+                obj.resizeList();
+            } else {
+                obj.resize && obj.resize();
+            }
         } else {
             obj.resize && obj.resize();
         }
     };
 
     p.select = function(modeName) {
-        for (var key in this.modes) {
-            var mode = this.modes[key];
+        for (const key in this.modes) {
+            const mode = this.modes[key];
             mode.tabDom.removeClass('selected');
             mode.contentDom.addClass('entryRemove');
             $(mode.contentDom).detach();
             mode.obj.visible = false;
         }
 
-        var selected = this.modes[modeName];
+        const selected = this.modes[modeName];
         $(this._contentView).append(selected.contentDom);
         selected.tabDom.addClass('selected');
         selected.contentDom.removeClass('entryRemove');
-        if (selected.obj.resize) selected.obj.resize();
+        if (selected.obj.resize) {
+            selected.obj.resize();
+        }
         selected.obj.visible = true;
         this.selected = modeName;
     };
 
     p.initializeSplitter = function(splitter) {
-        var that = this;
+        const that = this;
         splitter.bind('mousedown touchstart', function(e) {
             e.preventDefault();
-            if (Entry.disposeEvent)
+            if (Entry.disposeEvent) {
                 Entry.disposeEvent.notify();
-            var container = Entry.container;
+            }
+            const container = Entry.container;
             that._cover.removeClass('entryRemove');
             that._cover._isVisible = true;
             container.splitterEnable = true;
             if (Entry.documentMousemove) {
-                container.resizeEvent = Entry.documentMousemove.attach(this, function(e) {
+                container.resizeEvent = Entry.documentMousemove.attach(this, (e) => {
                     if (container.splitterEnable) {
                         Entry.resizeElement({
                             canvasWidth: e.clientX || e.x,
@@ -161,9 +176,9 @@ Entry.PropertyPanel = function() {
             $(document).bind('mouseup.container:splitter touchend.container:splitter', func);
         });
 
-        var func = function(e) {
-            var container = Entry.container;
-            var listener = container.resizeEvent;
+        const func = function(e) {
+            const container = Entry.container;
+            const listener = container.resizeEvent;
             if (listener) {
                 container.splitterEnable = false;
                 listener.destroy();

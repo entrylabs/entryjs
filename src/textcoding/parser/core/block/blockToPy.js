@@ -58,11 +58,7 @@ Entry.BlockToPyParser = class {
         if (blocks[0] instanceof Entry.Comment) {
             this.Comment(blocks[0]);
         } else if (this._parseMode === Entry.Parser.PARSE_SYNTAX) {
-            return blocks
-                .map((block) => {
-                    return `${this.Block(block)}\n`;
-                })
-                .trim();
+            return blocks.map((block) => `${this.Block(block)}\n`).trim();
         } else if (this._parseMode === Entry.Parser.PARSE_GENERAL) {
             let rootResult = '';
             let contentResult = '';
@@ -141,9 +137,10 @@ Entry.BlockToPyParser = class {
                     }
                 });
 
-                resultTextCode += token.replace(/%(\d)/gim, (_, groupMatch) => {
-                    return paramsValue[groupMatch];
-                });
+                resultTextCode += token.replace(
+                    /%(\d)/gim,
+                    (_, groupMatch) => paramsValue[groupMatch]
+                );
             }
 
             // $1 과 같이 statement 를 포함하는 경우
@@ -288,9 +285,16 @@ Entry.BlockToPyParser = class {
                             textParam
                         );
                     }
-
+                    const isTypeNumber = typeof param === 'number';
                     // 필드 블록이 아닌 블록에 내재된 파라미터 처리
-                    if (!Entry.Utils.isNumber(param) && block.type === 'when_some_key_pressed') {
+                    if (
+                        (!Entry.Utils.isNumber(param) &&
+                            (block.type === 'when_some_key_pressed' ||
+                                block.type === 'is_press_some_key')) ||
+                        (!isTypeNumber &&
+                            Entry.Utils.isNumber(param) &&
+                            (block.type === 'number' || block.type === 'string'))
+                    ) {
                         result += `"${param}"`;
                     } else {
                         result += param;
@@ -525,67 +529,32 @@ Entry.BlockToPyParser = class {
         return prefix === 'stringParam' || prefix === 'booleanParam';
     }
 
+    /**
+     * functionTemplate 에서 파이선에서 표기될 함수를 만들어낸다.
+     * ex) 함수 %1 %2 %3 + %3 이 Indicator 인 경우 => 함수(%1, %2)
+     * @param funcBlock{Block} 함수 블록
+     * @return {string} 파이선 함수 호출 syntax
+     */
     makeFuncSyntax(funcBlock) {
-        let syntax = '';
-        let schemaTemplate;
-        let schemaParams;
-        if (funcBlock && funcBlock._schema) {
-            if (funcBlock._schema.template) {
-                schemaTemplate = funcBlock._schema.template.trim();
-            } else if (funcBlock._schema.params) {
-                schemaParams = funcBlock._schema.params;
-            } else if (funcBlock && !funcBlock._schema) {
-                if (this._hasRootFunc) {
-                    const rootFunc = Entry.block[this._rootFuncId];
-                    schemaParams = rootFunc.block.params;
-                    schemaTemplate = rootFunc.block.template;
+        let schemaTemplate = '';
+
+        if (funcBlock) {
+            if (funcBlock._schema) {
+                if (funcBlock._schema.template) {
+                    schemaTemplate = funcBlock._schema.template.trim();
                 }
+            } else if (this._hasRootFunc) {
+                const rootFunc = Entry.block[this._rootFuncId];
+                schemaTemplate = rootFunc.block.template;
             }
         }
 
-        const paramReg = /(%.)/im;
-        if (schemaTemplate) {
-            var funcTokens = schemaTemplate.trim().split(paramReg);
-        }
+        const templateParams = schemaTemplate.trim().match(/%\d/gim);
+        templateParams.pop(); // pop() 이유는 맨 마지막 템플릿은 Indicator 로 판단할 것이기 때문이다.
 
-        let funcName = '';
-        let funcParams = '';
-
-        for (const f in funcTokens) {
-            const funcToken = funcTokens[f].trim();
-            if (paramReg.test(funcToken)) {
-                let num = funcToken.split('%')[1];
-                if (num == 1) {
-                    continue;
-                } else {
-                    num -= 1;
-                }
-                const index = num - 1;
-                if (
-                    schemaParams &&
-                    schemaParams[index] &&
-                    schemaParams[index].type === 'Indicator'
-                ) {
-                    continue;
-                }
-
-                funcParams += '%'.concat(num).concat(', ');
-            } else {
-                const funcTokenArr = funcToken.split(' ');
-                funcName += funcTokenArr.join('__');
-            }
-        }
-
-        const index = funcParams.lastIndexOf(',');
-        funcParams = funcParams.substring(0, index);
-
-        syntax = funcName
+        return Entry.TextCodingUtil.getFunctionNameFromTemplate(schemaTemplate)
             .trim()
-            .concat('(')
-            .concat(funcParams.trim())
-            .concat(')');
-
-        return syntax;
+            .concat(`(${templateParams.join(',')})`);
     }
 
     makeFuncDef(funcBlock, isExpression) {
@@ -656,11 +625,7 @@ Entry.BlockToPyParser = class {
             return null;
         }
 
-        const funcName = func.block.template
-            .split(/%\d/)[0]
-            .trim()
-            .split(' ')
-            .join('__');
+        const funcName = Entry.TextCodingUtil.getFunctionNameFromTemplate(func.block.template);
 
         Entry.TextCodingUtil.initQueue();
 
@@ -684,7 +649,7 @@ Entry.BlockToPyParser = class {
                 funcDefParams.push(param);
             }
 
-            funcDefParams.forEach(function(value, index) {
+            funcDefParams.forEach((value, index) => {
                 if (/(string|boolean)Param/.test(value)) {
                     index += 1;
                     const name = `param${index}`;
@@ -694,10 +659,8 @@ Entry.BlockToPyParser = class {
             });
         } else {
             funcBlock.params
-                .filter(function(p) {
-                    return p instanceof Entry.Block;
-                })
-                .forEach(function(p) {
+                .filter((p) => p instanceof Entry.Block)
+                .forEach((p) => {
                     let paramText = that.Block(p);
                     if (!paramText) {
                         return;

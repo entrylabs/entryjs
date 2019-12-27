@@ -2,11 +2,12 @@
 
 const PromiseManager = require('../../core/promiseManager');
 const { callApi } = require('../../util/common');
+
 function getInitialCategoryMap() {
     return {
         '01001': {
             lang: Lang.Blocks.behaviorConduct01001,
-            sub: ['01001002', '01001003', '01001004', '01001005'],
+            sub: ['01001001', '01001002', '01001003'],
         },
         '01002': {
             lang: Lang.Blocks.behaviorConduct01002,
@@ -18,27 +19,27 @@ function getInitialCategoryMap() {
         },
         '01004': {
             lang: Lang.Blocks.behaviorConduct01004,
-            sub: ['01004002', '01004003', '01004004'],
+            sub: ['01004001', '01004002'],
         },
         '01005': {
             lang: Lang.Blocks.behaviorConduct01005,
-            sub: ['01005002'],
+            sub: ['01005002', '01005003', '01005004'],
         },
         '01006': {
             lang: Lang.Blocks.behaviorConduct01006,
-            sub: ['01006002'],
+            sub: ['01006001', '01006002'],
         },
         '01007': {
             lang: Lang.Blocks.behaviorConduct01007,
-            sub: ['01007002', '01007003'],
+            sub: ['01007001'],
         },
         '01008': {
             lang: Lang.Blocks.behaviorConduct01008,
-            sub: ['01008002', '01008003', '01008004'],
+            sub: ['01008001', '01008002', '01008003'],
         },
         '01009': {
             lang: Lang.Blocks.behaviorConduct01009,
-            sub: ['01009001', '01009002', '01009003'],
+            sub: ['01009001', '01009002'],
         },
         '01010': {
             lang: Lang.Blocks.behaviorConduct01010,
@@ -54,10 +55,11 @@ function getInitialCategoryMap() {
         },
         '01014': {
             lang: Lang.Blocks.behaviorConduct01014,
-            sub: ['01014001', '01014002'],
+            sub: ['01014001'],
         },
     };
 }
+
 Entry.EXPANSION_BLOCK.behaviorConductDisaster = {
     name: 'behaviorConductDisaster',
     imageName: 'disaster.png',
@@ -66,9 +68,9 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster = {
         en: 'Disaster',
         jp: '自然災害',
     },
-    titleKey: "template.behaviorConductDisaster_title_text",
+    titleKey: 'template.behaviorConductDisaster_title_text',
     description: Lang.Msgs.expansion_behaviorConductDisaster_description,
-    descriptionKey: "Msgs.expansion_behaviorConductDisaster_description",
+    descriptionKey: 'Msgs.expansion_behaviorConductDisaster_description',
     isInitialized: false,
     init() {
         if (this.isInitialized) {
@@ -77,15 +79,13 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster = {
         Entry.EXPANSION_BLOCK.behaviorConductDisaster.isInitialized = true;
     },
     api: '/api/expansionBlock/behaviorConduct',
-    apiType: '01'
+    apiType: '01',
 };
 
 Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function() {
     const categoryMap = getInitialCategoryMap();
     const getCategory = function() {
-        return Object.keys(categoryMap).map((category) => {
-            return [categoryMap[category].lang, category];
-        });
+        return Object.keys(categoryMap).map((category) => [categoryMap[category].lang, category]);
     };
     const defaultCategory = Object.keys(categoryMap)[0];
     const params = {
@@ -109,17 +109,19 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function() {
                 value: null,
                 menuName(value) {
                     if (value) {
-                        return categoryMap[value].sub.map((category) => {
-                            return [Lang.Blocks[`behaviorConduct${category}`], category];
-                        });
+                        return categoryMap[value].sub.map((category) => [
+                            Lang.Blocks[`behaviorConduct${category}`],
+                            category,
+                        ]);
                     }
 
                     if (this._contents.options) {
                         return this._contents.options;
                     } else {
-                        return categoryMap[defaultCategory].sub.map((category) => {
-                            return [Lang.Blocks[`behaviorConduct${category}`], category];
-                        });
+                        return categoryMap[defaultCategory].sub.map((category) => [
+                            Lang.Blocks[`behaviorConduct${category}`],
+                            category,
+                        ]);
                     }
                 },
                 targetIndex,
@@ -127,6 +129,7 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function() {
                 fontSize: 11,
                 bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
+                defaultValue: (value, options) => options[0][1],
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -138,20 +141,19 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function() {
     const getBehavior = (params, defaultValue, index = null) => {
         const key = `behaviorConduct-${params.category}/${params.subCategory}`;
         return new PromiseManager()
-            .Promise(function(resolve) {
+            .Promise((resolve) => {
                 callApi(key, {
                     url: `${Entry.EXPANSION_BLOCK.behaviorConductDisaster.api}/${params.category}/${
                         params.subCategory
-                    }`,
+                        }`,
                 })
                     .then((result) => {
                         if (result) {
-                            const items = result.data.response.body.items.item.filter((i) => {
-                                return (
+                            const items = result.data.response.body.items.item.filter(
+                                (i) =>
                                     i.hasOwnProperty('actRmks') &&
-                                    i.safetyCate3 == params.subCategory2
-                                );
-                            });
+                                    i.safetyCate3 == params.subCategory2,
+                            );
                             if (index) {
                                 return resolve(items[index - 1].actRmks);
                             }
@@ -159,24 +161,20 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function() {
                         }
                         return resolve(defaultValue);
                     })
-                    .catch(() => {
-                        return resolve(defaultValue);
-                    });
+                    .catch(() => resolve(defaultValue));
             })
-            .catch(() => {
-                return defaultValue;
-            });
+            .catch(() => defaultValue);
     };
 
     return {
         behaviorConductDisaster_title: {
             skeleton: 'basic_text',
-            color: '#ecf8ff',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
             params: [
                 {
                     type: 'Text',
                     text: Lang.template.behaviorConductDisaster_title_text,
-                    color: '#333',
+                    color: EntryStatic.colorSet.common.TEXT,
                     align: 'center',
                 },
             ],

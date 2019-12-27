@@ -139,10 +139,6 @@ Entry.BlockView = class BlockView {
 
         const svgGroup = this.svgGroup;
 
-        if (this._schema.css) {
-            attr.style = this._schema.css;
-        }
-
         svgGroup.attr(attr);
 
         (skeleton.classes || []).forEach((c) => svgGroup.addClass(c));
@@ -274,9 +270,7 @@ Entry.BlockView = class BlockView {
 
     _startExtension(mode) {
         this._extensions = this.block.extensions.map(
-            function(e) {
-                return new Entry[`Ext${e.type}`](e, this, mode);
-            }.bind(this)
+            (e) => new Entry[`Ext${e.type}`](e, this, mode)
         );
     }
 
@@ -397,7 +391,7 @@ Entry.BlockView = class BlockView {
 
         if (false && Entry.ANIMATION_DURATION !== 0) {
             const that = this;
-            setTimeout(function() {
+            setTimeout(() => {
                 that._path.animate({ d: newPath }, Entry.ANIMATION_DURATION, mina.easeinout);
             }, 0);
         } else {
@@ -499,6 +493,9 @@ Entry.BlockView = class BlockView {
             e.preventDefault();
         }
 
+        if (e.button == 1) {
+            return;
+        }
         if (Entry.disposeEvent) {
             Entry.disposeEvent.notify();
         }
@@ -629,12 +626,14 @@ Entry.BlockView = class BlockView {
 
             if (!this.isInBlockMenu) {
                 let isFirst = false;
+
                 if (this.dragMode != Entry.DRAG_MODE_DRAG) {
                     this._toGlobalCoordinate(undefined, true);
                     this.dragMode = Entry.DRAG_MODE_DRAG;
                     this.block.getThread().changeEvent.notify();
                     Entry.GlobalSvg.setView(this, workspaceMode);
                     isFirst = true;
+                    this.fromBlockMenu = this.dragInstance && this.dragInstance.isNew;
                 }
 
                 if (this.animating) {
@@ -653,12 +652,13 @@ Entry.BlockView = class BlockView {
                     false,
                     true
                 );
+                Entry.GlobalSvg.position();
+
                 dragInstance.set({
                     offsetX: mouseEvent.pageX,
                     offsetY: mouseEvent.pageY,
                 });
 
-                Entry.GlobalSvg.position();
                 if (!this.originPos) {
                     this.originPos = {
                         x: this.x,
@@ -685,6 +685,9 @@ Entry.BlockView = class BlockView {
     }
 
     onMouseUp(e) {
+        if (e.button == 1) {
+            return;
+        }
         if (this.longPressTimer) {
             clearTimeout(this.longPressTimer);
             this.longPressTimer = null;
@@ -786,7 +789,7 @@ Entry.BlockView = class BlockView {
                                     );
                                     ripple = true;
                                 }
-                                createjs.Sound.play('entryMagneting');
+                                Entry.Utils.playSound('entryMagneting');
                             } else {
                                 Entry.do(`moveBlock${suffix}`, block).isPass(fromBlockMenu);
                                 this.dominate();
@@ -801,14 +804,14 @@ Entry.BlockView = class BlockView {
                         } else {
                             if (prevBlock) {
                                 this.set({ animating: false });
-                                createjs.Sound.play('entryMagneting');
+                                Entry.Utils.playSound('entryMagneting');
                                 this.bindPrev(prevBlock);
                                 block.insert(prevBlock);
                             } else {
                                 const parent = block.getThread().view.getParent();
 
                                 if (!(parent instanceof Entry.Board)) {
-                                    createjs.Sound.play('entryMagneting');
+                                    Entry.Utils.playSound('entryMagneting');
                                     Entry.do('insertBlock', block, parent);
                                 } else {
                                     const originPos = this.originPos;
@@ -820,7 +823,7 @@ Entry.BlockView = class BlockView {
                         break;
                     }
                     case gs.REMOVE:
-                        createjs.Sound.play('entryDelete');
+                        Entry.Utils.playSound('entryDelete');
                         Entry.do('destroyBlockBelow', this.block).isPass(fromBlockMenu);
                         break;
                 }
@@ -1039,10 +1042,12 @@ Entry.BlockView = class BlockView {
 
     addDragging() {
         this.svgGroup.addClass('dragging');
+        Entry.playground.setBackpackPointEvent(true);
     }
 
     removeDragging() {
         this.svgGroup.removeClass('dragging');
+        Entry.playground.setBackpackPointEvent(false);
     }
 
     addSelected() {
@@ -1106,30 +1111,33 @@ Entry.BlockView = class BlockView {
     }
 
     _setMovable() {
-        this.movable =
-            this.block.isMovable() !== null
-                ? this.block.isMovable()
-                : this._skeleton.movable !== undefined
-                ? this._skeleton.movable
-                : true;
+        if (this.block.isMovable() !== null) {
+            this.movable = this.block.isMovable();
+        } else if (this._skeleton.movable !== undefined) {
+            this.movable = this._skeleton.movable;
+        } else {
+            this.movable = true;
+        }
     }
 
     _setReadOnly() {
-        this.readOnly =
-            this.block.isReadOnly() !== null
-                ? this.block.isReadOnly()
-                : this._skeleton.readOnly !== undefined
-                ? this._skeleton.readOnly
-                : false;
+        if (this.block.isReadOnly() !== null) {
+            this.readOnly = this.block.isReadOnly();
+        } else if (this._skeleton.readOnly !== undefined) {
+            this.readOnly = this._skeleton.readOnly;
+        } else {
+            this.readOnly = false;
+        }
     }
 
     _setCopyable() {
-        this.copyable =
-            this.block.isCopyable() !== null
-                ? this.block.isCopyable()
-                : this._skeleton.copyable !== undefined
-                ? this._skeleton.copyable
-                : true;
+        if (this.block.isCopyable() !== null) {
+            this.copyable = this.block.isCopyable();
+        } else if (this._skeleton.copyable !== undefined) {
+            this.copyable = this._skeleton.copyable;
+        } else {
+            this.copyable = true;
+        }
     }
 
     bumpAway(distance = 15, delay) {
@@ -1137,7 +1145,7 @@ Entry.BlockView = class BlockView {
         if (delay) {
             const oldX = this.x;
             const oldY = this.y;
-            window.setTimeout(function() {
+            window.setTimeout(() => {
                 //only when position not changed
                 if (oldX === that.x && oldY === that.y) {
                     that.moveBy(distance, distance, false);
@@ -1283,175 +1291,123 @@ Entry.BlockView = class BlockView {
     }
 
     getDataUrl(notClone, notPng) {
-        const $deferred = $.Deferred();
-        let svgData =
-            '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %W %H">(svgGroup)(defs)</svg>';
-        const bBox = this.svgGroup.getBoundingClientRect();
-        let svgGroup = notClone ? this.svgGroup : this.svgGroup.cloneNode(true);
-        const svgCommentGroup = notClone
-            ? this.svgCommentGroup
-            : this.svgCommentGroup && this.svgCommentGroup.cloneNode(true);
-        const box = this._skeleton.box(this);
-        const scale = notPng ? 1 : 1.5;
-        let fontWeight = isWindow7() ? 0.9 : 0.95;
-        if (this.type.indexOf('func_') > -1) {
-            fontWeight *= 0.99;
-        }
-        svgGroup.setAttribute(
-            'transform',
-            'scale(%SCALE) translate(%X,%Y)'
-                .replace('%X', -box.offsetX)
-                .replace('%Y', -box.offsetY)
-                .replace('%SCALE', scale)
-        );
-        this.svgCommentGroup &&
-            svgCommentGroup.setAttribute(
+        return new Promise((resolve, reject) => {
+            const svgGroup = notClone ? this.svgGroup : this.svgGroup.cloneNode(true);
+            const svgCommentGroup = notClone
+                ? this.svgCommentGroup
+                : this.svgCommentGroup && this.svgCommentGroup.cloneNode(true);
+
+            if (!notClone) {
+                svgGroup.removeAttribute('opacity');
+                svgGroup.setAttribute('class', 'block selected');
+            }
+            const box = this._skeleton.box(this);
+            const scale = notPng ? 1 : 1.5;
+            let fontWeight = this.isWindow7() ? 0.9 : 0.95;
+            if (this.type.indexOf('func_') > -1) {
+                fontWeight *= 0.99;
+            }
+            svgGroup.setAttribute(
                 'transform',
                 'scale(%SCALE) translate(%X,%Y)'
                     .replace('%X', -box.offsetX)
                     .replace('%Y', -box.offsetY)
                     .replace('%SCALE', scale)
             );
-
-        const defs = this.getBoard().svgDom.find('defs');
-
-        const images = svgGroup.getElementsByTagName('image');
-        const texts = svgGroup.getElementsByTagName('text');
-
-        const fontFamily =
-            "'NanumGothic', 'NanumGothic', '나눔고딕','NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum";
-        const boldTypes = ['≥', '≤'];
-        const notResizeTypes = ['≥', '≤', '-', '>', '<', '=', '+', '-', 'x', '/'];
-
-        _.toArray(texts).forEach((text) => {
-            text.setAttribute('font-family', fontFamily);
-            const size = parseInt(text.getAttribute('font-size'));
-            const content = $(text).text();
-            if (_.includes(boldTypes, content)) {
-                text.setAttribute('font-weight', '500');
-            }
-
-            if (content == 'q') {
-                const y = parseInt(text.getAttribute('y'));
-                text.setAttribute('y', y - 1);
-            }
-
-            if (_.includes(notResizeTypes, content)) {
-                text.setAttribute('font-size', `${size}px`);
-            } else {
-                text.setAttribute('font-size', `${size * fontWeight}px`);
-            }
-            text.setAttribute('alignment-baseline', 'middle');
-        });
-
-        let counts = 0;
-        if (!images.length) {
-            processSvg();
-        } else {
-            _.toArray(images).forEach((img) => {
-                const href = img.getAttribute('href');
-                loadImage(href, img.getAttribute('width'), img.getAttribute('height')).then(
-                    function(src) {
-                        img.setAttribute('href', src);
-                        if (++counts == images.length) {
-                            return processSvg();
-                        }
-                    }
+            this.svgCommentGroup &&
+                svgCommentGroup.setAttribute(
+                    'transform',
+                    'scale(%SCALE) translate(%X,%Y)'
+                        .replace('%X', -box.offsetX)
+                        .replace('%Y', -box.offsetY)
+                        .replace('%SCALE', scale)
                 );
-            });
-        }
 
-        return $deferred.promise();
+            const defs = this.getBoard().svgDom.find('defs');
 
-        function processSvg() {
-            svgData = svgData
-                .replace('(svgGroup)', new XMLSerializer().serializeToString(svgGroup))
-                .replace('%W', bBox.width * scale + 20)
-                .replace('%H', bBox.height * scale + 5)
-                .replace('(defs)', new XMLSerializer().serializeToString(defs[0]))
-                .replace(/>\s+/g, '>')
-                .replace(/\s+</g, '<');
-            let src = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgData)))}`;
-            svgData = null;
-            if (notPng) {
-                $deferred.resolve({
-                    src,
-                    width: bBox.width,
-                    height: bBox.height,
-                });
-                svgGroup = null;
-            } else {
-                loadImage(src, bBox.width, bBox.height, 1.5).then(
-                    function(src) {
-                        svgGroup = null;
-                        $deferred.resolve({
-                            src,
-                            width: bBox.width,
-                            height: bBox.height,
-                        });
-                    },
-                    function(err) {
-                        $deferred.reject('error occured');
-                    }
-                );
-            }
-            src = null;
-        }
+            const style = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+            style.setAttribute('type', 'text/css');
+            style.textContent = `
+                @font-face {
+                    font-family: EntryNG;
+                    src: local(NanumGothic),
+                        local(나눔고딕),
+                        local(나눔고딕 Regular),
+                        local(Noto Sans JP Regular),
+                        local(Noto Sans JP);
+                    font-weight: normal;
+                    font-style: normal;
+                }`;
 
-        function loadImage(src, width, height, multiplier = 1) {
-            return new Promise((resolve, reject) => {
-                if (Entry.BlockView.pngMap[src] !== undefined) {
-                    return resolve(Entry.BlockView.pngMap[src]);
+            defs.append(style);
+            const images = svgGroup.getElementsByTagName('image');
+            const texts = svgGroup.getElementsByTagName('text');
+
+            const fontFamily = EntryStatic.getDefaultFontFamily();
+            const boldTypes = ['≥', '≤'];
+            const notResizeTypes = ['≥', '≤', '-', '>', '<', '=', '+', '-', 'x', '/'];
+
+            _.toArray(texts).forEach((text) => {
+                text.setAttribute('font-family', fontFamily);
+                const size = parseInt(text.getAttribute('font-size'), 10);
+                const content = $(text).text();
+                if (_.includes(boldTypes, content)) {
+                    text.setAttribute('font-weight', '500');
                 }
 
-                width *= multiplier;
-                height *= multiplier;
-                //float point cropped
-                width = Math.ceil(width);
-                height = Math.ceil(height);
+                // if (content == 'q') {
+                //     const y = parseInt(text.getAttribute('y'), 10);
+                //     text.setAttribute('y', y - 1);
+                // }
 
-                const img = document.createElement('img');
-                img.crossOrigin = 'Anonymous';
-                const canvas = document.createElement('canvas');
-
-                canvas.width = width;
-                canvas.height = height;
-                const ctx = canvas.getContext('2d');
-
-                img.onload = function() {
-                    ctx.drawImage(img, 0, 0, width, height);
-                    const data = canvas.toDataURL('image/png');
-                    if (/\.png$/.test(src)) {
-                        Entry.BlockView.pngMap[src] = data;
-                    }
-                    return resolve(data);
-                };
-
-                img.onerror = function() {
-                    return reject('error occured');
-                };
-                img.src = src;
+                if (_.includes(notResizeTypes, content)) {
+                    text.setAttribute('font-size', `${size}px`);
+                }
+                // else {
+                //     text.setAttribute('font-size', `${size * fontWeight}px`);
+                // }
+                text.setAttribute('alignment-baseline', 'auto');
             });
-        }
 
-        function isWindow7() {
-            const platform = window.platform;
-            if (
-                platform &&
-                platform.name.toLowerCase() === 'windows' &&
-                platform.version[0] === '7'
-            ) {
-                return true;
+            let counts = 0;
+            if (!images.length) {
+                this.processSvg(svgGroup, scale, defs, notPng)
+                    .then((data) => {
+                        resolve(data);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            } else {
+                _.toArray(images).forEach((img) => {
+                    const href = img.getAttribute('href');
+                    this.loadImage(
+                        href,
+                        img.getAttribute('width'),
+                        img.getAttribute('height'),
+                        notPng
+                    ).then((src) => {
+                        img.setAttribute('href', src);
+                        if (++counts == images.length) {
+                            this.processSvg(svgGroup, scale, defs, notPng)
+                                .then((data) => {
+                                    resolve(data);
+                                })
+                                .catch((err) => {
+                                    reject(err);
+                                });
+                        }
+                    });
+                });
             }
-            return false;
-        }
+        });
     }
 
     downloadAsImage(i) {
         this.getDataUrl().then((data) => {
             const download = document.createElement('a');
             download.href = data.src;
-            let name = '엔트리 블록';
+            let name = Lang.Workspace.download_image_name;
             if (i) {
                 name += i;
             }
@@ -1483,6 +1439,7 @@ Entry.BlockView = class BlockView {
         function _getOptions(blockView) {
             const isBoardReadOnly = blockView._board.readOnly;
             const { block, isInBlockMenu, copyable } = blockView;
+            const { options: EntryOptions = {} } = Entry;
             const {
                 Blocks: { Duplication_option, CONTEXT_COPY_option, Delete_Blocks },
                 Menus: { save_as_image },
@@ -1512,6 +1469,17 @@ Entry.BlockView = class BlockView {
                 },
             };
 
+            const addStorage = !EntryOptions.backpackDisable && {
+                text: Lang.Blocks.add_my_storage,
+                enable: copyable && !isBoardReadOnly && !!window.user,
+                callback() {
+                    Entry.dispatchEvent('addStorage', {
+                        type: 'block',
+                        data: block,
+                    });
+                },
+            };
+
             const download = {
                 text: save_as_image,
                 callback() {
@@ -1520,7 +1488,7 @@ Entry.BlockView = class BlockView {
             };
 
             const hasComment = !!block._comment;
-            const comment = {
+            const comment = !EntryOptions.commentDisable && {
                 text: hasComment ? Lang.Blocks.delete_comment : Lang.Blocks.add_comment,
                 enable: block.isCommentable(),
                 callback() {
@@ -1536,7 +1504,9 @@ Entry.BlockView = class BlockView {
             }
 
             if (!isInBlockMenu) {
-                options = [copyAndPaste, copy, remove, ...options, comment];
+                options = [copyAndPaste, copy, remove, addStorage, ...options, comment].filter(
+                    (x) => x
+                );
             }
 
             return options;
@@ -1544,6 +1514,15 @@ Entry.BlockView = class BlockView {
             function _isDownloadable() {
                 return Entry.Utils.isChrome() && Entry.type === 'workspace' && !Entry.isMobile();
             }
+        }
+    }
+
+    addStorage() {
+        if (this.block.view) {
+            Entry.dispatchEvent('addStorage', {
+                type: 'block',
+                data: this.block,
+            });
         }
     }
 
@@ -1687,7 +1666,7 @@ Entry.BlockView = class BlockView {
         const FIELD_OUTPUT = Entry.FieldOutput;
 
         return (this._statements || []).reduce(
-            function(fields, statement) {
+            (fields, statement) => {
                 statement = statement && statement._thread;
                 if (!(statement instanceof THREAD)) {
                     return fields;
@@ -1695,7 +1674,7 @@ Entry.BlockView = class BlockView {
 
                 return fields.concat(statement.view.getFields());
             },
-            (this._contents || []).reduce(function(fields, c) {
+            (this._contents || []).reduce((fields, c) => {
                 if (!c) {
                     return fields;
                 }
@@ -1714,6 +1693,104 @@ Entry.BlockView = class BlockView {
                 return fields;
             }, [])
         );
+    }
+
+    processSvg(svgGroup, scale = 1, defs, notPng) {
+        return new Promise((resolve, reject) => {
+            let svgData =
+                '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %W %H">(svgGroup)(defs)</svg>';
+            const bBox = this.svgGroup.getBoundingClientRect();
+            const board = this.getBoard();
+            const { scale: blockScale = scale } = board;
+            // console.log(this);
+            const boxWidth = bBox.width / blockScale;
+            const boxHeight = bBox.height / blockScale;
+            svgData = svgData
+                .replace('(svgGroup)', new XMLSerializer().serializeToString(svgGroup))
+                .replace('%W', boxWidth * scale + 20)
+                .replace('%H', boxHeight * scale + 5)
+                .replace('(defs)', new XMLSerializer().serializeToString(defs[0]))
+                .replace(/>\s+/g, '>')
+                .replace(/\s+</g, '<');
+            svgData = svgData.replace(/NS\d+:href/gi, 'href');
+            let src = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgData)))}`;
+            svgData = null;
+            if (notPng) {
+                resolve({
+                    src,
+                    width: boxWidth,
+                    height: boxHeight,
+                });
+                svgGroup = null;
+            } else {
+                this.loadImage(src, boxWidth, boxHeight, notPng, 1.5).then(
+                    (src) => {
+                        svgGroup = null;
+                        resolve({
+                            src,
+                            width: boxWidth,
+                            height: boxHeight,
+                        });
+                    },
+                    (err) => {
+                        reject('error occured');
+                    }
+                );
+            }
+            src = null;
+        });
+    }
+
+    loadImage(src, width, height, notPng, multiplier = 1) {
+        return new Promise((resolve, reject) => {
+            if (Entry.BlockView.pngMap[src] !== undefined) {
+                return resolve(Entry.BlockView.pngMap[src]);
+            }
+
+            if (notPng) {
+                return resolve(`${location.origin}${src}`);
+            }
+
+            width *= multiplier;
+            height *= multiplier;
+            //float point cropped
+            width = Math.ceil(width);
+            height = Math.ceil(height);
+
+            const img = document.createElement('img');
+            img.crossOrigin = 'Anonymous';
+            const canvas = document.createElement('canvas');
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+
+            img.onload = function() {
+                try {
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const data = canvas.toDataURL('image/png');
+                    if (/\.png$/.test(src)) {
+                        Entry.BlockView.pngMap[src] = data;
+                    }
+                    return resolve(data);
+                } catch (e) {
+                    return reject('error occured');
+                }
+            };
+
+            img.onerror = function() {
+                return reject('error occured');
+            };
+            img.src = src;
+        });
+    }
+
+    isWindow7() {
+        const platform = window.platform;
+        if (platform && platform.name.toLowerCase() === 'windows' && platform.version[0] === '7') {
+            return true;
+        }
+        return false;
     }
 };
 

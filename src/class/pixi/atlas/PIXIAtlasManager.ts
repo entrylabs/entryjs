@@ -3,8 +3,6 @@ import { AtlasCanvasViewer } from './AtlasCanvasViewer';
 import { AtlasImageLoader, ImageLoaderHandler } from './loader/AtlasImageLoader';
 import { AtlasImageLoadingInfo } from './loader/AtlasImageLoadingInfo';
 import { IRawPicture } from './model/IRawPicture';
-import Texture = PIXI.Texture;
-import { PIXIDebugHelper } from '../helper/PIXIDebugHelper';
 import { PIXIAtlasHelper } from './PIXIAtlasHelper';
 import { EntryTextureOption } from './EntryTextureOption';
 import { ISceneTextures } from './ISceneTextures';
@@ -106,12 +104,3 @@ export class PIXIAtlasManager implements IGEResManager {
         this._activatedScene = null;
     }
 }
-
-// export let PIXIAtlasManager:_PIXIAtlasManager = new _PIXIAtlasManager();
-//
-//
-// var w:any = window;
-// w.PIXIAtlasManager = PIXIAtlasManager;
-// w.PIXIDebugHelper = PIXIDebugHelper;
-
-
