@@ -147,6 +147,9 @@ class Hardware implements Entry.Hardware {
                         if (portData.payload.codeId) {
                             this.commandStatus[portData.payload.codeId] = 'completed';
                         }
+                        if (portData.payload.codeIdMiss) {
+                            this.commandStatus[portData.payload.codeIdMiss] = 'completed';
+                        }
                     }
 
                     if (
