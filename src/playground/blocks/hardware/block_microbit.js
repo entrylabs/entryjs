@@ -126,6 +126,18 @@ Entry.Microbit = new (class Microbit {
         }
     }
 
+    afterReceivingData(portData, commandStatus) {
+        if (portData.payload.isSensorMap) {
+            return;
+        }
+        if (portData.payload.codeId) {
+            commandStatus[portData.payload.codeId] = 'completed';
+        }
+        if (portData.payload.codeIdMiss) {
+            commandStatus[portData.payload.codeIdMiss] = 'completed';
+        }
+    }
+
     getBlocks() {
         return {
             microbit_led_toggle: {
