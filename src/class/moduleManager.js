@@ -14,7 +14,7 @@ Entry.moduleManager = new (class {
             const scriptElement = document.createElement('script');
             scriptElement.id = scriptElementId;
 
-            scriptElement.onload = function() {
+            scriptElement.onload = () => {
                 if (!Entry.EXTERNAL_MODULE_LIST) {
                     Entry.EXTERNAL_MODULE_LIST = [];
                 }
@@ -22,7 +22,7 @@ Entry.moduleManager = new (class {
                 scriptElement.remove();
                 resolve();
             };
-            scriptElement.onerror = function(e) {
+            scriptElement.onerror = (e) => {
                 scriptElement.remove();
                 reject(e);
             };

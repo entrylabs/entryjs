@@ -26,13 +26,16 @@ export default class {
     }
 
     _onAction(message: EntryHardwareSocketMessage) {
-        const { action, data } = message;
+        // 객체 구조가 이모양인건 기존 호환성때문.
+        // 정리해서 이쁘게 만들도록 하자 (entry-hw-server 수정필요)
+        const { data } = message;
+        const { action, data: payload } = data;
         switch (action) {
             case 'state':
-                this._onStateAction(data);
+                this._onStateAction(payload);
                 break;
             case 'init':
-                this._onInitAction(data);
+                this._onInitAction(payload);
                 break;
             default:
                 this._onDefaultAction(data);
