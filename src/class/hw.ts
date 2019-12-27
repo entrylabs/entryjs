@@ -42,7 +42,7 @@ class Hardware implements Entry.Hardware {
     private currentDeviceKey?: string;
     private hwModuleType: HardwareModuleType;
     private hwMonitor?: Entry.HardwareMonitor;
-    private pending: boolean;
+    private commandStatus: Object;
 
     // 하드웨어 설치여부 확인용
     private ieLauncher: { set: () => void };
@@ -59,7 +59,7 @@ class Hardware implements Entry.Hardware {
         this.socketConnectionRetryCount = 2;
         this.programConnected = false;
         this.communicationType = 'auto';
-        this.pending = false;
+        this.commandStatus = {};
         this.portData = {};
         this.sendQueue = {};
         this.hwModuleType = HardwareModuleType.builtIn;
@@ -140,7 +140,15 @@ class Hardware implements Entry.Hardware {
                 messageHandler.addEventListener('data', (portData) => {
                     this.checkDevice(portData);
                     this._updatePortData(portData);
-                    this.pending = false;
+                    if (portData.payload) {
+                        if (portData.payload.isSensorMap) {
+                            return;
+                        }
+                        if (portData.payload.codeId) {
+                            this.commandStatus[portData.payload.codeId] = 'completed';
+                        }
+                    }
+
                     if (
                         this.communicationType === 'manual' &&
                         this.hwModule &&
@@ -442,7 +450,7 @@ class Hardware implements Entry.Hardware {
         }
     }
 
-    update() {
+    update(codeId) {
         if (!this.socket || this.socket.disconnected) {
             return;
         }
@@ -450,7 +458,10 @@ class Hardware implements Entry.Hardware {
         if (this.hwModule && this.hwModule.sendMessage) {
             this.hwModule.sendMessage(this);
         } else {
-            this.pending = true;
+            if (codeId) {
+                this.commandStatus[codeId] = 'pending';
+                this.sendQueue.codeId = codeId;
+            }
             this._sendSocketMessage({
                 data: JSON.stringify(this.sendQueue),
                 mode: this.socketMode,
@@ -496,7 +507,8 @@ class Hardware implements Entry.Hardware {
     }
 
     setZero() {
-        this.pending = false;
+        this.commandStatus = {};
+
         if (!this.hwModule) {
             return;
         }

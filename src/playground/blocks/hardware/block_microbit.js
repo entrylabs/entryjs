@@ -85,12 +85,10 @@ Entry.Microbit = new (class Microbit {
             'microbit_set_servo',
             'microbit_set_servo_period',
         ];
-        this.commandStatus = {};
     }
 
     setZero() {
         this.requestCommand(functionKeys.RESET);
-        this.commandStatus = {};
         this.lastGesture = -1;
         delete Entry.hw.portData.sensorData;
     }
@@ -110,22 +108,21 @@ Entry.Microbit = new (class Microbit {
      */
     requestCommandWithResponse(entityId, type, payload) {
         let codeId = `${entityId}-${type}`;
-        if (this.commandStatus[codeId] == null) {
-            this.commandStatus[codeId] = 'pending';
+        if (Entry.hw.commandStatus[codeId] == null) {
             // 첫 진입시 무조건 AsyncError
             Entry.hw.sendQueue = {
                 type,
                 payload,
             };
-            Entry.hw.update();
+            Entry.hw.update(codeId);
             throw new Entry.Utils.AsyncError();
-        } else if (Entry.hw.pending && this.commandStatus[codeId] === 'pending') {
+        } else if (Entry.hw.commandStatus[codeId] === 'pending') {
             // 두 번째 이상의 진입시도이며 작업이 아직 끝나지 않은 경우
             throw new Entry.Utils.AsyncError();
-        } else {
+        } else if (Entry.hw.commandStatus[codeId] === 'completed') {
             // 두 번째 이상의 진입시도이며 pending 도 아닌 경우
             // 블록 func 로직에서 다음 데이터를 처리한다.
-            this.commandStatus[codeId] = null;
+            Entry.hw.commandStatus[codeId] = null;
         }
     }
 
