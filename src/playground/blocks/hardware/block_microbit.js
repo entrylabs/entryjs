@@ -61,6 +61,7 @@ Entry.Microbit = new (class Microbit {
         this.communicationType = 'manual';
         this.lastGesture = -1;
         this.blockMenuBlocks = [
+            'microbit_when_button_click',
             'microbit_led_toggle',
             'microbit_get_led',
             'microbit_show_string',
@@ -128,6 +129,55 @@ Entry.Microbit = new (class Microbit {
 
     getBlocks() {
         return {
+            microbit_when_button_click: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic_event',
+                template: '%1 %2 버튼을 눌렀는가?',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/start_icon_play.svg',
+                        size: 14,
+                        position: {
+                            x: 0,
+                            y: -2,
+                        },
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [['A', 1], ['B', 2], ['A+B', 3]],
+                        value: 1,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                paramsKeyMap: {
+                    VALUE: 1,
+                },
+                class: 'microbitEvent',
+                event: 'microbitButtonPress',
+                def: {
+                    params: [null],
+                    type: 'microbit_when_button_click',
+                },
+                func(sprite, script) {
+                    const value = script.getField('VALUE');
+                    console.log(value);
+                    return script.callReturn();
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'def microbit_when_button_click():',
+                            blockType: 'event',
+                        },
+                    ],
+                },
+            },
             microbit_led_toggle: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
