@@ -354,7 +354,9 @@ Entry.Microbit = new (class Microbit {
                 },
                 func: (sprite, script) => {
                     const value = script.getField('VALUE');
-                    this.requestCommand(functionKeys.SET_IMAGE, { value });
+                    this.requestCommandWithResponse(script.entity.id, functionKeys.SET_IMAGE, {
+                        value,
+                    });
                 },
             },
             microbit_set_led_image: {
