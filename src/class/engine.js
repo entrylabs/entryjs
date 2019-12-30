@@ -261,6 +261,7 @@ Entry.Engine = class Engine {
                     this.runButton.bindOnClick(() => Entry.engine.toggleRun());
                 }
             });
+
             Entry.addEventListener('soundLoaded', () => {
                 const isVisible = this.isLoaded && Entry.soundQueue.loadComplete;
                 if (isVisible) {

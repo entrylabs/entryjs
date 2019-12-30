@@ -325,6 +325,30 @@ Entry.Robotis_openCM70EDU = {
         Entry.hw.sendQueue['temp'] = null;*/
         //Entry.Robotis_carCont.update();
     },
+    monitorTemplate: {
+        imgPath: 'hw/robotis_opencm70.png',
+        width: 800,
+        height: 800,
+        listPorts: {
+            DETECTEDSOUNDE: { name: '최종소리', type: 'input', pos: { x: 0, y: 0 } },
+            DETECTINGSOUNDE1: { name: '실시간소리', type: 'input', pos: { x: 0, y: 0 } },
+            //SND: { name: Lang.Hw.buzzer, type: 'output', pos: { x: 0, y: 0 } },
+            //FND: { name: '전원', type: 'output', pos: { x: 0, y: 0 } },
+        },
+        ports: {
+            'USERBUTTONSTATE': { name: 'USERBUTTON', type: 'input', pos: { x: 565, y: 335 } },
+            //'LEDR': { name: 'R', type: 'input', pos: { x: 140, y: 300 } },
+            //'LEDG': { name: 'G', type: 'input', pos: { x: 170, y: 300 } },
+            //'LEDB': { name: 'B', type: 'input', pos: { x: 200, y: 300 } },
+            //'GM1': { name: 'GEARD1', type: 'input', pos: { x: 450, y: 300 } },
+            //'GM2': { name: 'GEARD2', type: 'input', pos: { x: 450, y: 480 } },
+            'MONITORPORT0': { name: 'PORT3', type: 'input', pos: { x: 320, y: 320 } },
+            'MONITORPORT1': { name: 'PORT4', type: 'input', pos: { x: 330, y: 330 } },
+            'MONITORPORT2': { name: 'PORT5', type: 'input', pos: { x: 320, y: 440 } },
+            'MONITORPORT3': { name: 'PORT6', type: 'input', pos: { x: 330, y: 460 } }
+        },
+        mode: 'both'
+    },
     id: '7.3',
     name: 'robotis_openCM70EDU',
     url: 'http://www.robotis.com/index/product.php?cate_code=111310',

@@ -1283,7 +1283,7 @@ Entry.EntryObject = class {
                 Entry.container.getObject(objectId) &&
                 !_.includes(exceptionsForMouseDown, e.target)
             ) {
-                Entry.do('containerSelectObject', objectId);
+                Entry.do('selectObject', objectId);
             }
         });
 

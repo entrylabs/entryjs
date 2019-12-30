@@ -19,7 +19,7 @@ module.exports = {
                 events: {
                     mousedown: [
                         function() {
-                            Entry.variableContainer.createFunction();
+                            Entry.do('funcEditStart', Entry.generateHash());
                         },
                     ],
                 },

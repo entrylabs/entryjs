@@ -155,12 +155,10 @@ class BlockMenu {
 
         this.svgDom = Entry.Dom(
             $(
-                `<svg id="${this._svgId}" class="blockMenu" version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"></svg>`
+                `<svg id="${this._svgId}" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>`
             ),
             { parent: this.blockMenuWrapper }
         );
-
         this.svgDom.mouseenter(function() {
             that._scroller && that._scroller.setOpacity(0.8);
 
@@ -345,8 +343,8 @@ class BlockMenu {
         const dy = e.pageY - y;
         if (board && (workspaceMode === MODE_BOARD || workspaceMode === MODE_OVERLAYBOARD)) {
             if (!board.code) {
-                if (Entry.toast) {
-                    Entry.toast.alert(
+                if (Entry.toast && !(this.objectAlert && Entry.toast.isOpen(this.objectAlert))) {
+                    this.objectAlert = Entry.toast.alert(
                         Lang.Workspace.add_object_alert,
                         Lang.Workspace.add_object_alert_msg
                     );
@@ -854,12 +852,14 @@ class BlockMenu {
         dragInstance.set({ offsetY: pageY });
     };
 
-    onMouseUp = () => {
+    onMouseUp = (e) => {
         if (Entry.isMobile()) {
             this._scroller.setOpacity(0);
         }
-        $(document).unbind('.blockMenu');
-        delete this.dragInstance;
+        if (e.button != 1) {
+            $(document).unbind('.blockMenu');
+            delete this.dragInstance;
+        }
     };
 
     onMouseDown(e) {

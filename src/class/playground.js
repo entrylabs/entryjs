@@ -1414,9 +1414,12 @@ Entry.Playground = class Playground {
         }
     }
 
-    addExpansionBlock(item) {
-        const { name } = item;
-        Entry.expansion.addExpansionBlock(name);
+    addExpansionBlocks(items) {
+        Entry.expansion.addExpansionBlocks(items.map(({ name }) => name));
+    }
+
+    removeExpansionBlocks(items) {
+        Entry.expansion.banExpansionBlocks(items.map(({ name }) => name));
     }
     /**
      * Add sound

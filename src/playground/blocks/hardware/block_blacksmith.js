@@ -12,7 +12,6 @@ Entry.Blacksmith = {
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
-                GET: {},
                 SET: {},
             };
         } else {
@@ -27,6 +26,7 @@ Entry.Blacksmith = {
                 }
             });
         }
+        Entry.hw.sendQueue.GET={};
         Entry.hw.update();
     },
     sensorTypes: {
@@ -95,7 +95,7 @@ Entry.Blacksmith.setLanguage = function() {
                 blacksmith_get_analog_value: '아날로그 %1 번 핀 센서 값',
                 blacksmith_get_analog_mapping:
                     '아날로그 %1 번 핀 센서 값의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼 값',
-                blacksmith_get_digital_bluetooth: '블루투스 RX 2 핀 %1 데이터 값',
+                blacksmith_get_digital_bluetooth: '블루투스 RX 2 핀 데이터 값',
                 blacksmith_get_digital_ultrasonic: '초음파 Trig %1 핀 Echo %2 핀 센서 값',
                 blacksmith_get_digital: '디지털 %1 번 핀 센서 값',
                 blacksmith_get_digital_toggle: '디지털 %1 번 핀 센서 값',
@@ -127,7 +127,7 @@ Entry.Blacksmith.setLanguage = function() {
                 blacksmith_get_analog_value: 'Read analog %1 pin sensor value',
                 blacksmith_get_analog_mapping:
                     'Map analog %1 pin sensor value from %2 ~ %3 to %4 ~ %5',
-                blacksmith_get_digital_bluetooth: 'Bluetooth RX 2 %1 value',
+                blacksmith_get_digital_bluetooth: 'Bluetooth RX 2 value',
                 blacksmith_get_digital_ultrasonic: 'Read ultrasonic Trig %1 Echo %2 sensor value',
                 blacksmith_get_digital: 'Digital %1 pin sensor value',
                 blacksmith_get_digital_toggle: 'Digital %1 pin sensor value',
@@ -616,33 +616,20 @@ Entry.Blacksmith.getBlocks = function() {
             template: Lang.template.blacksmith_get_digital_bluetooth,
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'blacksmith_list_digital_btData_select',
-                    },
                 ],
                 type: 'blacksmith_get_digital_bluetooth',
             },
             paramsKeyMap: {
-                VALUE: 0,
             },
             class: 'blacksmithGet',
             isNotFor: ['blacksmith'],
             func: function(sprite, script) {
                 var port = 2;
-                var lengthCount = 0;
-                var result = '';
-                var makeString = '';
-                var returnType = script.getValue('VALUE', script);
                 var getString = Entry.hw.portData.READ_BLUETOOTH;
-
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                 }
@@ -655,40 +642,7 @@ Entry.Blacksmith.getBlocks = function() {
                     time: new Date().getTime(),
                 };
 
-                for (var i = 0; i < getString.length; i++) {
-                    if (i == getString.length - 1) {
-                        if (lengthCount == 2) {
-                            makeString = getString[i - 1] + makeString[i];
-                        } else if (lengthCount == 3) {
-                            makeString = getString[i - 2] + getString[i - 1] + getString[i];
-                        }
-                        makeString = Number(makeString);
-                        if (returnType == 1) {
-                            makeString = String.fromCharCode(makeString);
-                        }
-                        result = result + makeString;
-                        lengthCount = 0;
-                        makeString = '';
-                    }
-                    if (getString[i] == ',') {
-                        if (lengthCount == 2) {
-                            makeString = getString[i - 2] + getString[i - 1];
-                        } else if (lengthCount == 3) {
-                            makeString = getString[i - 3] + getString[i - 2] + getString[i - 1];
-                        }
-                        makeString = Number(makeString);
-                        if (returnType == 1) {
-                            makeString = String.fromCharCode(makeString);
-                        }
-                        result = result + makeString;
-                        lengthCount = 0;
-                        makeString = '';
-                    } else {
-                        lengthCount += 1;
-                    }
-                }
-
-                return result.slice(0, result.length - 1);
+                return getString ? getString.slice(0,getString.length-1) : ' ';
             },
             syntax: { js: [], py: ['blacksmith.get_digital_bluetooth()'] },
         },

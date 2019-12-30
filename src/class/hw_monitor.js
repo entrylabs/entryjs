@@ -141,7 +141,7 @@ Entry.HWMonitor = class HardwareMonitor {
         }
     }
 
-    setHwmonitor(hwModule) {
+    setHwModule(hwModule) {
         this._hwmodule = hwModule;
     }
 

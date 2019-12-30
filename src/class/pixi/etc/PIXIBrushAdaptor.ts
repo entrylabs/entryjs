@@ -37,6 +37,16 @@ export class PIXIBrushAdaptor {
         // this._shape.closePath();
     }
 
+    setCurrentPath(path: any) {
+        if (this._shape) {
+            this._shape.currentPath = path;
+        }
+    }
+
+    getCurrentPath() {
+        return this._shape && this._shape.currentPath;
+    }
+
     /**
      * createjs 스타일. 문자열 파싱을 하기 때문에 느림. 블럭 몇몇곳에서 이 스타일을 사용하기 떄문에 남겨둠.
      * @param color - "#FF0000", "rgba(255,0,0,0.5)"

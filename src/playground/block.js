@@ -603,6 +603,10 @@ Entry.Block = class Block {
     }
 
     replace(targetBlock) {
+        if (!targetBlock) {
+            console.error('replace error: target not exist');
+            return;
+        }
         this.thread.cut(this);
         targetBlock.getThread().replace(this);
         this.getCode().changeEvent.notify();

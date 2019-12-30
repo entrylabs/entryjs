@@ -28,6 +28,7 @@ class Hardware implements Entry.Hardware {
     // socketIO 및 하드웨어 커넥션용
     private readonly sessionRoomId: string | null;
     private readonly socketConnectionRetryCount: number;
+    private reconnectionTimeout: number;
     private programConnected: boolean;
     private socket: SocketIOClient.Socket; // 실제 연결된 소켓
     private socketMode: number;
@@ -56,7 +57,7 @@ class Hardware implements Entry.Hardware {
             localStorage.setItem('entryhwRoomId', this.sessionRoomId);
         }
 
-        this.socketConnectionRetryCount = 2;
+        this.socketConnectionRetryCount = 3;
         this.programConnected = false;
         this.communicationType = 'auto';
         this.commandStatus = {};
@@ -81,7 +82,7 @@ class Hardware implements Entry.Hardware {
         Entry.addEventListener('stop', this.setZero.bind(this));
     }
 
-    _createRandomRoomId() {
+    private _createRandomRoomId() {
         return 'xxxxxxxxyx'.replace(/[xy]/g, (c) => {
             const r = (Math.random() * 16) | 0;
             const v = c === 'x' ? r : (r & 0x3) | 0x8;
@@ -100,62 +101,14 @@ class Hardware implements Entry.Hardware {
         }
     }
 
-    _trySocketConnect(url: string, option: SocketIOClient.ConnectOpts) {
+    private _trySocketConnect(url: string, option: SocketIOClient.ConnectOpts) {
         return new Promise((resolve, reject) => {
-            const socket = io(url, option);
+            const socket = io.connect(url, option);
             socket.io.reconnectionAttempts(this.socketConnectionRetryCount);
             socket.io.reconnectionDelayMax(1000);
             socket.io.timeout(1000);
             socket.on('connect', () => {
-                this._initHardware(socket);
-                socket.on('mode', (mode: number) => {
-                    if (this.socketMode === 0 && mode === 1) {
-                        this._disconnectHardware();
-                    }
-                    this.socketMode = mode;
-                });
-
-                const messageHandler = new HardwareSocketMessageHandler(socket);
-                messageHandler.addEventListener('init', this._loadExternalHardwareBlock.bind(this));
-                messageHandler.addEventListener('state', async (statement, name) => {
-                    /*
-                    statement 로는 before_connect, connected 등 하드웨어 프로그램의 상태 전부가 오지만
-                    WS 에서는 connected 외에 전부 socketConnected 상태로 머무르게 된다.
-                     */
-                    switch (statement) {
-                        case 'disconnectHardware':
-                            this._disconnectHardware();
-                            break;
-                        case 'connected':
-                            // init action 과 동일동작
-                            await this._loadExternalHardwareBlock(name);
-                            break;
-                        default:
-                            break;
-                    }
-                });
-
-                // 1.7.0 버전 이전 하드웨어 프로그램 종료로직 대응으로 남겨두어야 한다.
-                messageHandler.addEventListener('disconnect', this._disconnectHardware.bind(this));
-                messageHandler.addEventListener('data', (portData) => {
-                    this.checkDevice(portData);
-                    this._updatePortData(portData);
-                    if (portData.payload && this.hwModule.afterReceivingData) {
-                        this.hwModule.afterReceivingData(portData, this.commandStatus);
-                    }
-                    if (
-                        this.communicationType === 'manual' &&
-                        this.hwModule &&
-                        this.hwModule.onReceiveData
-                    ) {
-                        this.hwModule.onReceiveData(portData);
-                    }
-                });
-
-                socket.on('disconnect', () => {
-                    // cloud PC 연결 클릭시 순간 disconnect 되고 재연결을 시도하기 위한 로직
-                    this._initSocket();
-                });
+                this._handleSocketConnected(socket);
                 resolve();
             });
             socket.on('reconnect_failed', () => {
@@ -164,12 +117,95 @@ class Hardware implements Entry.Hardware {
         });
     }
 
-    _initSocket() {
-        this.programConnected = false;
+    private _handleSocketConnected(socket: SocketIOClient.Socket) {
+        socket.removeEventListener('reconnect_failed');
+        socket.removeEventListener('connect');
+        // this._initHardware(socket);
+        this.socket = socket;
+        this._setSocketConnected();
+        if (Entry.playground && Entry.playground.object) {
+            Entry.playground.setMenu(Entry.playground.object.objectType);
+        }
 
+        socket.on('connect', () => {
+            this._setSocketConnected();
+        });
+
+        socket.on('mode', (mode: number) => {
+            if (this.socketMode === 0 && mode === 1) {
+                this._disconnectHardware();
+            }
+            this.socketMode = mode;
+        });
+
+        const messageHandler = new HardwareSocketMessageHandler(socket);
+        messageHandler.addEventListener('init', this._loadExternalHardwareBlock.bind(this));
+        messageHandler.addEventListener('state', async (statement, name) => {
+            /*
+            statement 로는 before_connect, connected 등 하드웨어 프로그램의 상태 전부가 오지만
+            WS 에서는 connected 외에 전부 socketConnected 상태로 머무르게 된다.
+             */
+            switch (statement) {
+                case 'disconnectHardware':
+                    this._disconnectHardware();
+                    break;
+                case 'connected':
+                    // init action 과 동일동작
+                    await this._loadExternalHardwareBlock(name);
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        // 1.7.0 버전 이전 하드웨어 프로그램 종료로직 대응으로 남겨두어야 한다.
+        messageHandler.addEventListener('disconnect', this._disconnectHardware.bind(this));
+        messageHandler.addEventListener('data', (portData) => {
+            this.checkDevice(portData);
+            this._updatePortData(portData);
+            if (portData.payload && this.hwModule.afterReceivingData) {
+                this.hwModule.afterReceivingData(portData, this.commandStatus);
+            }
+            if (
+                this.communicationType === 'manual' &&
+                this.hwModule &&
+                this.hwModule.onReceiveData
+            ) {
+                this.hwModule.onReceiveData(portData);
+            }
+        });
+
+        socket.on('disconnect', () => {
+            // cloud PC 연결 클릭시 순간 disconnect 되고 재연결을 시도하기 위한 로직
+            this._setSocketClosed();
+            this.reconnectionTimeout = window.setTimeout(() => {
+                this._initSocket();
+            }, 1500);
+        });
+
+        socket.on('reconnect_failed', () => {
+            this._setSocketClosed();
+        });
+    }
+
+    private _setSocketConnected() {
+        this.programConnected = true;
+        console.log('Hardware Program Connected'); // 하드웨어 프로그램 연결 성공, 스테이터스 변화 필요
+        Entry.dispatchEvent('hwChanged');
+    }
+
+    private _setSocketClosed(needRedraw: boolean = true) {
+        this.programConnected = false;
+        this.hwModule = undefined;
+        this.currentDeviceKey = undefined;
+        needRedraw && Entry.dispatchEvent('hwChanged');
+    }
+
+    private _initSocket() {
         const connectHttpsWebSocket = (url: string) =>
             // TODO ajax 로 entry-hw 살아있는지 확인 후 연결시도 (TRIAL_LIMIT = ajax 로)
             this._trySocketConnect(url, {
+                transports: ['websocket', 'polling'],
                 query: {
                     client: true,
                     roomId: this.sessionRoomId,
@@ -177,21 +213,37 @@ class Hardware implements Entry.Hardware {
             });
 
         if (this.socket) {
+            if (this.reconnectionTimeout) {
+                clearTimeout(this.reconnectionTimeout);
+                this.reconnectionTimeout = undefined;
+            }
+            this.socket.io.reconnection(true);
             this.socket.connect();
         } else {
             connectHttpsWebSocket(this.httpsServerAddress)
-                .catch(() => connectHttpsWebSocket(this.httpsServerAddress2))
                 .catch(() => {
+                    if (this.programConnected || this.socket) {
+                        return;
+                    }
+                    return connectHttpsWebSocket(this.httpsServerAddress2);
+                })
+                .catch(() => {
+                    if (this.programConnected || this.socket) {
+                        return;
+                    }
+
                     if (['http:', 'file:'].indexOf(location.protocol) > -1) {
                         return connectHttpsWebSocket(this.httpServerAddress);
                     }
                 })
                 .catch(() => {
+                    if (this.programConnected || this.socket) {
+                        return;
+                    }
                     console.warn('All hardware socket connection failed');
+                    this._setSocketClosed();
                 });
         }
-
-        Entry.dispatchEvent('hwChanged');
     }
 
     retryConnect() {
@@ -208,23 +260,6 @@ class Hardware implements Entry.Hardware {
                 }, 1000);
             }
         });
-    }
-
-    /**
-     * 하드웨어 프로그램과의 연결을 시도한다.
-     * 만약 모듈이 로드되어있는 경우라면
-     * 동일한 하드웨어 모듈을 로드하도록 하드웨어에 요청한다.
-     * @param socket
-     * @private
-     */
-    _initHardware(socket: SocketIOClient.Socket) {
-        this.socket = socket;
-        this.programConnected = true;
-        console.log('Hardware Program Connected'); // 하드웨어 프로그램 연결 성공, 스테이터스 변화 필요
-        Entry.dispatchEvent('hwChanged');
-        if (Entry.playground && Entry.playground.object) {
-            Entry.playground.setMenu(Entry.playground.object.objectType);
-        }
     }
 
     /**
@@ -280,7 +315,7 @@ class Hardware implements Entry.Hardware {
      * @param statement {HardwareStatement}
      * @private
      */
-    _setHardwareDefaultMenu(statement: HardwareStatement) {
+    private _setHardwareDefaultMenu(statement: HardwareStatement) {
         const workspace = Entry.getMainWS();
         const blockMenu = workspace && workspace.blockMenu;
 
@@ -313,7 +348,7 @@ class Hardware implements Entry.Hardware {
      * 모든 하드웨어를 숨김처리한다. 현재 연결된 하드웨어도 예외는 없다.
      * @private
      */
-    _banClassAllHardware() {
+    private _banClassAllHardware() {
         const workspace = Entry.getMainWS();
         const blockMenu = workspace && workspace.blockMenu;
         if (!blockMenu) {
@@ -325,11 +360,13 @@ class Hardware implements Entry.Hardware {
         });
     }
 
-    _disconnectHardware() {
-        Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
-        this.currentDeviceKey = undefined;
-        this.hwModule = undefined;
-        Entry.dispatchEvent('hwChanged');
+    private _disconnectHardware() {
+        if (this.hwModule) {
+            Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
+            this.currentDeviceKey = undefined;
+            this.hwModule = undefined;
+            Entry.dispatchEvent('hwChanged');
+        }
     }
 
     disconnectSocket() {
@@ -466,13 +503,13 @@ class Hardware implements Entry.Hardware {
         this.hwModule && this.hwModule.afterSend && this.hwModule.afterSend(this.sendQueue);
     }
 
-    _sendSocketMessage(message: WebSocketMessage) {
+    private _sendSocketMessage(message: WebSocketMessage) {
         if (this.programConnected && this.socket && !this.socket.disconnected) {
             this.socket.emit('message', message);
         }
     }
 
-    _updatePortData(data: HardwareMessageData) {
+    private _updatePortData(data: HardwareMessageData) {
         this.portData = data;
         if (this.hwMonitor && Entry.propertyPanel && Entry.propertyPanel.selected === 'hw') {
             this.hwMonitor.update(this.portData, this.sendQueue);
@@ -549,7 +586,7 @@ class Hardware implements Entry.Hardware {
         Entry.toast.success(window.Lang.Msgs.hw_connection_success, descMsg);
     }
 
-    _setHardwareMonitorTemplate() {
+    private _setHardwareMonitorTemplate() {
         if (!this.hwMonitor) {
             this.hwMonitor = new Entry.HWMonitor(this.hwModule);
         } else {
@@ -578,7 +615,7 @@ class Hardware implements Entry.Hardware {
      * @returns {Promise<void>}
      * @private
      */
-    _alertUnderVersionUsed() {
+    private _alertUnderVersionUsed() {
         return new Promise((resolve) => {
             const dontShowChecked = localStorage.getItem('skipNoticeHWOldVersion');
             if (!dontShowChecked) {
@@ -601,7 +638,7 @@ class Hardware implements Entry.Hardware {
         });
     }
 
-    _executeHardware() {
+    private _executeHardware() {
         const hw = this;
         const executeIeCustomLauncher = {
             _bNotInstalled: false,
@@ -684,11 +721,10 @@ class Hardware implements Entry.Hardware {
             }
         } else if (navigator.userAgent.indexOf('Firefox') > 0) {
             executeFirefox(entryHardwareUrl);
-        } else if (
-            navigator.userAgent.indexOf('Chrome') > 0 ||
-            navigator.userAgent.indexOf('Safari') > 0
-        ) {
+        } else if (navigator.userAgent.indexOf('Chrome') > 0) {
             executeChrome(entryHardwareUrl);
+        } else if (navigator.userAgent.indexOf('Safari') > 0) {
+            executeSafari(entryHardwareUrl);
         } else {
             alert(window.Lang.msgs.not_support_browser);
         }
@@ -747,6 +783,34 @@ class Hardware implements Entry.Hardware {
                 window.onblur = null;
             }, 3000);
         }
+        /**
+         * safari 브라우저에서 ${customUrl} 인식하여 페이지 이동 처리되서 분기처리(미설치 안내팝업)
+         *
+         *
+         * @param customUrl
+         */
+        function executeSafari(customUrl: string) {
+            const iFrame = document.createElement('iframe');
+            iFrame.src = 'about:blank';
+            iFrame.setAttribute('style', 'display:none');
+            document.getElementsByTagName('body')[0].appendChild(iFrame);
+            let isInstalled = false;
+
+            try {
+                iFrame.contentWindow.location.href = customUrl;
+
+                isInstalled = true;
+            } catch (err) {
+                isInstalled = false;
+            }
+
+            if (!isInstalled) {
+                hw.openHardwareDownloadPopup();
+            }
+            setTimeout(() => {
+                document.getElementsByTagName('body')[0].removeChild(iFrame);
+            }, 500);
+        }
     }
 
     openHardwareDownloadPopup() {
@@ -757,7 +821,7 @@ class Hardware implements Entry.Hardware {
         }
     }
 
-    _hwPopupCreate() {
+    private _hwPopupCreate() {
         const hw = this;
         if (!this.popupHelper) {
             if (window.popupHelper) {
