@@ -1,7 +1,7 @@
 'use strict';
 
 Entry.MechanicblockController = {
-    id: 'FF.FF',
+    id: '39.1',
     name: 'MechanicblockController',
     url: 'http://www.mechanicblock.com/',
     imageName: 'MechanicblockController.png',
