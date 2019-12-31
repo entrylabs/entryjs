@@ -110,7 +110,7 @@ Entry.NeobotGameTheme.setLanguage = function() {
                 // class neobot_value
                 neobot_gyro_value: '자이로 %1 값', 
                 neobot_joystick_value: '조이스틱 %1 값',
-                neobot_crash_value: '충격량',
+                neobot_crash_value: '가속값',
                 neobot_random_value: '%1 랜덤값',
                 // class neobot_judgement
                 neobot_judge_joystick_move: '조이스틱 컨트롤? %1',
@@ -118,7 +118,7 @@ Entry.NeobotGameTheme.setLanguage = function() {
                 neobot_judge_button: '%1 버튼 클릭?',
                 neobot_judge_gyro_direction_angle: '%1으로 기울었는가?',
                 neobot_judge_coord: '%1위치 %2 %3',
-                neobot_judge_crash: '충격량 %1 %2',
+                neobot_judge_crash: '가속값 %1 %2',
                 // class neobot_movement
                 neobot_locate: '%1위치로 %2이동하기%3',
                 neobot_look: '%1쪽 바라보기%2',
@@ -192,6 +192,8 @@ Entry.NeobotGameTheme.setLanguage = function() {
                 
                 neobot_joystick_x: '조이스틱 X',
                 neobot_joystick_y: '조이스틱 Y',
+                neobot_gyro_x: '자이로센서 X',
+                neobot_gyro_y: '자이로센서 Y',
 
                 neobot_compare_left_bigger: '>',
                 neobot_compare_equal: '=',
@@ -294,6 +296,8 @@ Entry.NeobotGameTheme.setLanguage = function() {
                 
                 neobot_joystick_x: 'joystick X',
                 neobot_joystick_y: 'joystick Y',
+                neobot_gyro_x: 'gyro sensor X',
+                neobot_gyro_y: 'gyro sensor Y',
                 
                 neobot_compare_left_bigger: '>',
                 neobot_compare_equal: '=',
@@ -927,11 +931,11 @@ Entry.NeobotGameTheme.getBlocks = function() {
                         else ret = false;
                         break;
                     case '=':
-                        if (joystickX == targetValue) ret = true;
+                        if (portValue == targetValue) ret = true;
                         else ret = false;
                         break;
                     case '<':
-                        if (joystickX < targetValue) ret = true;
+                        if (portValue < targetValue) ret = true;
                         else ret = false;
                         break;
                 }
@@ -980,8 +984,12 @@ Entry.NeobotGameTheme.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.neobot_joystick, 'Joystick'],
-                        [Lang.Blocks.neobot_gyro, 'Gyro'],
+                        [Lang.Blocks.neobot_joystick,   'Joystick'],
+                        [Lang.Blocks.neobot_gyro,       'Gyro'],
+                        [Lang.Blocks.neobot_joystick_x, 'JX'],
+                        [Lang.Blocks.neobot_joystick_y, 'JY'],
+                        [Lang.Blocks.neobot_gyro_x,     'GX'],
+                        [Lang.Blocks.neobot_gyro_y,     'GY'],
                     ],
                     value: 'Joystick',
                     fontSize: 11,
@@ -1020,11 +1028,41 @@ Entry.NeobotGameTheme.getBlocks = function() {
                 const targetDevice = script.getField('DEVICE', script);
                 const targetMethod = script.getStringValue('METHOD', script);
                 
-                var targetX = (targetDevice == 'Joystick' ?
+                var targetX;
+                var targetY;
+
+                switch (targetDevice) {
+                    case 'Joystick':
+                        targetX = Entry.hw.portData['JoystickX'];
+                        targetY = Entry.hw.portData['JoystickY'];
+                        break;
+                    case 'Gyro':
+                        targetX = Entry.hw.portData['GyroX'];
+                        targetY = Entry.hw.portData['GyroY'];
+                        break;
+                    case 'JX':
+                        targetX = Entry.hw.portData['JoystickX'];
+                        targetY = sprite.getY();
+                        break;
+                    case 'JY':
+                        targetX = sprite.getX();
+                        targetY = Entry.hw.portData['JoystickY'];
+                        break;
+                    case 'GX':
+                        targetX = Entry.hw.portData['GyroX'];
+                        targetY = sprite.getY();
+                        break;
+                    case 'GY':
+                        targetX = sprite.getX();
+                        targetY = Entry.hw.portData['GyroY'];
+                        break;
+                }
+
+                /* var targetX = (targetDevice == 'Joystick' ?
                  Entry.hw.portData['JoystickX'] : Entry.hw.portData['GyroX'] );
                 var targetY = (targetDevice == 'Joystick' 
                 ? Entry.hw.portData['JoystickY'] : Entry.hw.portData['GyroY']
-                );
+                ); */
                 
                 var distX = targetX - sprite.getX();
                 var distY = targetY - sprite.getY();
