@@ -45,12 +45,11 @@ export default class {
     /**
      * 현재 하드웨어 연결 상태를 표기한다.
      * connected 의 경우 어떤 하드웨어와 연결되었는지 표기된다.
-     * @param statement {string} 하드웨어 연결상태
-     * @param args
+     * @param payload {*} payload
      * @private
      */
-    _onStateAction({ statement, args }: any) {
-        const [name] = args;
+    _onStateAction(payload: any) {
+        const { statement, name } = payload;
         this.dispatchEvent('state', statement, name);
     }
 
