@@ -253,7 +253,8 @@ Entry.Engine = class Engine {
 
             Entry.addEventListener('loadComplete', () => {
                 this.isLoaded = true;
-                if (Entry.soundQueue.loadComplete) {
+                const isSoundEmpty = Entry.soundQueue.urls.size < 1;
+                if (isSoundEmpty || Entry.soundQueue.loadComplete) {
                     this.runButton = Entry.Dom('div', {
                         class: 'entryRunButtonBigMinimize',
                         parent: $('#entryCanvasWrapper'),
