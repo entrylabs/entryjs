@@ -146,16 +146,16 @@ Entry.kaduino.setLanguage = function() {    // 블록 이름  번역
                 "kaduino_set_pwm": "PWM %1 핀에 %2 보내기 %3",	
 
                 "kaduino_set_ultrasonic": "초음파센서 설정 트리거 %1 핀, 에코 %2 핀 으로 연결하기 %3",	
-                "kaduino_get_usonic_value": "초음파센서 값 읽기 %1",	
+                "kaduino_get_usonic_value": "초음파센서 값 읽기",	
                 "kaduino_set_temp": "온도센서 %1 핀에 연결하기 %2",	
-                "kaduino_get_temp_value": "온도센서 값 읽기 %1",	
+                "kaduino_get_temp_value": "온도센서 값 읽기",	
                 "kaduino_set_i2c": "I2C포트  %1 연결하기 %2",	
                 "kaduino_get_color_value": "컬러센서 %1 값 읽기",
                 "kaduino_get_gyro_value": "자이로센서 %1 값 읽기",
 
                 "kaduino_set_lcd_string": "lcd 세로%1줄,  가로%2줄 에  %3 표시하기 %4",
                 "kaduino_set_lcd_init": "lcd 설정 : I2C 주소 0x%1 , 가로줄 수 %2 , 세로줄 수 %3 으로 정하기%4",
-                "kaduino_set_lcd_clear": "lcd 지우기%1",
+                "kaduino_set_lcd_clear": "lcd 지우기 %1",
 
 
 				"kaduino_get_analog_mapping": " %1 값 %2 ~ %3 에서 %4 ~ %5 으로 변환값", 
@@ -195,16 +195,16 @@ Entry.kaduino.setLanguage = function() {    // 블록 이름  번역
                 "kaduino_set_pwm": "Send %2 to pin %1 %3",		
 
                 "kaduino_set_ultrasonic": "Connecting to the ultrasonic sensor setting trigger %1 pin, echo %2 pin %3",		
-                "kaduino_get_usonic_value": "Reading ultrasonic sensor values %1",		
+                "kaduino_get_usonic_value": "Reading ultrasonic sensor values",		
                 "kaduino_set_temp": "Connecting to the temperature sensor %1 pin %2",		
-                "kaduino_get_temp_value": "Reading temperature sensor values %1",		
+                "kaduino_get_temp_value": "Reading temperature sensor values",		
                 "kaduino_set_i2c": "Connect I2Cport %1 %2",		
                 "kaduino_get_color_value": "Reading the color sensor %1 value",
 				"kaduino_get_gyro_value": "Read gyro sensor %1 value",
                 
                 "kaduino_set_lcd_string": "lcd Display %3 on line %1 and line %2 %4",		
                 "kaduino_set_lcd_init": "setting lcd : I2C address 0x%1 , horizontal line number %2 , vertical line number %3 %4",	
-                "kaduino_set_lcd_clear": "Clear lcd %1 ",		
+                "kaduino_set_lcd_clear": "Clear lcd %1",		
 
 				
                 "kaduino_get_analog_mapping": "%1 value %2 to %3 ; to %4 to %5 conversion value ",	
