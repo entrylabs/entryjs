@@ -28,6 +28,7 @@ require('./block_expansion_translate');
 require('./block_expansion_behaviorconduct_disaster');
 require('./block_expansion_behaviorconduct_lifesafety');
 require('./block_expansion_tts');
+require('./block_expansion_audio');
 
 Entry.EXPANSION_BLOCK_LIST = {
     weather: Entry.Expansion_Weather,
@@ -36,6 +37,7 @@ Entry.EXPANSION_BLOCK_LIST = {
     behaviorConductDisaster: Entry.EXPANSION_BLOCK.behaviorConductDisaster,
     behaviorConductLifeSafety: Entry.EXPANSION_BLOCK.behaviorConductLifeSafety,
     tts: Entry.EXPANSION_BLOCK.tts,
+    audio: Entry.EXPANSION_BLOCK.audio,
 };
 
 function getBlockObject(items) {
