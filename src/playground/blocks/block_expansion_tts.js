@@ -42,8 +42,9 @@ Entry.EXPANSION_BLOCK.tts = {
         tts.isInitialized = true;
     },
     api: '/api/expansionBlock/tts/read',
-    sponsor: 'naver',
-	sponsorLink: 'https://www.ncloud.com/product/aiService/css',
+    sponsor: 'clovaNaver',
+    sponsorLink: 'https://www.ncloud.com/product/aiService/css',
+    sponsorText: 'Powered by NAVER Clova',
     loadQueue: [],
 };
 
