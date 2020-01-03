@@ -2,7 +2,7 @@ import audioUtils from '../../util/audioUtils';
 
 Entry.EXPANSION_BLOCK.audio = {
     name: 'audio',
-    imageName: 'festival.png',
+    imageName: 'audio.svg',
     title: {
         ko: '오디오 감지',
         en: 'Audio Detection',
@@ -18,11 +18,28 @@ Entry.EXPANSION_BLOCK.audio = {
         }
         Entry.EXPANSION_BLOCK.audio.isInitialized = true;
     },
-
 };
 
 Entry.EXPANSION_BLOCK.audio.getBlocks = function() {
     return {
+        audio_title: {
+            skeleton: 'basic_text',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.audio_title_text,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'audio_title',
+            },
+            class: 'audio',
+            isNotFor: ['audio'],
+            events: {},
+        },
         check_microphone: {
             color: EntryStatic.colorSet.block.default.CALC,
             outerLine: EntryStatic.colorSet.block.darken.CALC,
@@ -37,11 +54,10 @@ Entry.EXPANSION_BLOCK.audio.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
-            class: 'test',
-            isNotFor: [],
+            class: 'audio',
+            isNotFor: ['audio'],
             async func(sprite, script) {
                 const result = await audioUtils.checkUserMicAvailable();
-                console.log(result);
                 return result.toString();
             },
             syntax: {
@@ -63,8 +79,8 @@ Entry.EXPANSION_BLOCK.audio.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
-            class: 'test',
-            isNotFor: [],
+            class: 'audio',
+            isNotFor: ['audio'],
             async func(sprite, script) {
                 if (!audioUtils.isAudioInitComplete) {
                     await audioUtils.initUserMedia();
@@ -91,8 +107,8 @@ Entry.EXPANSION_BLOCK.audio.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
-            class: 'test',
-            isNotFor: [],
+            class: 'audio',
+            isNotFor: ['audio'],
             async func(sprite, script) {
                 if (!audioUtils.isAudioInitComplete) {
                     await audioUtils.initUserMedia();

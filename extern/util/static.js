@@ -410,6 +410,10 @@ EntryStatic.getAllBlocks = function() {
                 'read_text',
                 'read_text_wait_with_block',
                 'set_tts_property',
+                'audio_title',
+                'check_microphone',
+                'toggle_microphone',
+                'get_microphone_volume',
             ],
         },
         {

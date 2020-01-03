@@ -5847,7 +5847,6 @@ Lang.template = {
     "weather_title_text": "날씨",
     "translate_title_text": "번역",
     "festival_title_text": "행사",
-    "audio_title_text": "오디오 감지",
     "behaviorConductDisaster_title_text": "자연재난 국민행동요령",
     "behaviorConductLifeSafety_title_text": "생활안전 국민행동요령",
     "tts_title_text": "읽어주기",

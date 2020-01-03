@@ -29,7 +29,6 @@ require('./block_expansion_behaviorconduct_disaster');
 require('./block_expansion_behaviorconduct_lifesafety');
 require('./block_expansion_tts');
 require('./block_expansion_audio');
-
 Entry.EXPANSION_BLOCK_LIST = {
     weather: Entry.Expansion_Weather,
     festival: Entry.EXPANSION_BLOCK.festival,
@@ -70,7 +69,6 @@ module.exports = {
     getBlocks() {
         const hardwareModules = hardware.getHardwareModuleList();
         registerHardwareBlockToStatic(hardwareModules);
-
         const basicAndExpansionBlockObjectList = getBlockObject(
             basicBlockList.concat(Object.values(Entry.EXPANSION_BLOCK_LIST))
         );
