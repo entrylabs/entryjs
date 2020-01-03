@@ -12,6 +12,12 @@ Entry.moduleManager = new (class {
      * @return Promise
      */
     loadExternalModule(moduleName) {
+        if (!Entry.EXTERNAL_MODULE_LIST) {
+            Entry.EXTERNAL_MODULE_LIST = [];
+        } else if (Entry.EXTERNAL_MODULE_LIST.includes(moduleName)) {
+            return Promise.resolve();
+        }
+
         return new Promise((resolve, reject) => {
             const scriptElementId = `entryModuleScript${Date.now()}`;
 
