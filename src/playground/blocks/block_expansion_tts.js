@@ -43,8 +43,9 @@ Entry.EXPANSION_BLOCK.tts = {
         tts.isInitialized = true;
     },
     api: '/api/expansionBlock/tts/read',
-    sponsor: 'naver',
+    sponsor: 'clovaNaver',
     sponsorLink: 'https://www.ncloud.com/product/aiService/css',
+    sponsorText: 'Powered by NAVER Clova',
     loadQueue: [],
 };
 
@@ -114,11 +115,10 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
         },
     };
 
-    const hashCode = (s) =>
-        s.split('').reduce(function(a, b) {
-            a = (a << 5) - a + b.charCodeAt(0);
-            return a & a;
-        }, 0);
+    const hashCode = s => s.split('').reduce(function(a, b) {
+        a = ((a << 5) - a) + b.charCodeAt(0);
+        return a & a;
+    }, 0);
 
     const checkText = function(text) {
         const result = {
@@ -156,10 +156,7 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
                 setTimeout(callback, instance.duration);
             }
         } else {
-            const src = `${Entry.EXPANSION_BLOCK.tts.api}.mp3?${toQueryString({
-                text: message,
-                ...prop,
-            })}`;
+            const src = `${Entry.EXPANSION_BLOCK.tts.api}.mp3?${toQueryString({ text: message, ...prop })}`;
             const type = createjs.LoadQueue.SOUND;
             tts.soundQueue.loadFile({ id, src, type, prop, callback, duration: message.length });
             tts.loadQueue.push(id);
