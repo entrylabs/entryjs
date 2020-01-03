@@ -183,9 +183,6 @@ EntryStatic.getAllBlocks = function() {
         {
             category: 'start',
             blocks: [
-                'check_microphone',
-                'get_microphone_volume',
-                'toggle_microphone',
                 'when_run_button_click',
                 'when_some_key_pressed',
                 'mouse_clicked',
