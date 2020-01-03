@@ -31,8 +31,7 @@ Entry.EXPANSION_BLOCK.tts = {
                     instance.soundType = 'tts';
                     Entry.Utils.addSoundInstances(instance);
                     if (filtered.callback) {
-                        const duration =
-                            instance.duration > 0 ? instance.duration : filtered.duration * 300;
+                        const duration = instance.duration > 0 ? instance.duration : filtered.duration * 300;
                         setTimeout(filtered.callback, duration);
                     }
                     return false;
