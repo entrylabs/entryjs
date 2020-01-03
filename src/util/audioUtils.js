@@ -105,6 +105,7 @@ class AudioUtils {
             this.isRecording = true;
 
             this._mediaRecorder.start();
+            Entry.dispatchEvent('audioRecording');
             this._socketClient.on('message', (e) => {
                 switch (e) {
                     case STATUS_CODE.CONNECTED:
