@@ -1510,9 +1510,6 @@ Entry.setCloneBrush = function(sprite, parentBrush) {
     }
 
     const shape = GEHelper.brushHelper.newShape(brush);
-    if (isWebGL) {
-        brush.setCurrentPath(parentBrush.getCurrentPath());
-    }
     shape.entity = sprite;
     const selectedObjectContainer = Entry.stage.selectedObjectContainer;
     selectedObjectContainer.addChildAt(shape, selectedObjectContainer.getChildIndex(sprite.object));
@@ -1856,7 +1853,9 @@ Entry.Utils.addNewBlock = function(item) {
             variable.object = _.get(Entry, ['container', 'selectedObject', 'id'], '');
         }
     });
-    Entry.expansion.addExpansionBlocks(expansionBlocks);
+    expansionBlocks.forEach((blockName) => {
+        Entry.expansion.addExpansionBlock(blockName);
+    });
     Entry.variableContainer.appendMessages(messages);
     Entry.variableContainer.appendVariables(variables);
     Entry.variableContainer.appendFunctions(functions);
@@ -1881,7 +1880,9 @@ Entry.Utils.addNewObject = function(sprite) {
             return entrylms.alert(Lang.Menus.object_import_syntax_error);
         }
         const objectIdMap = {};
-        Entry.expansion.addExpansionBlocks(expansionBlocks);
+        expansionBlocks.forEach((blockName) => {
+            Entry.expansion.addExpansionBlock(blockName);
+        });
         variables.forEach((variable) => {
             const { object } = variable;
             if (object) {
@@ -2739,30 +2740,4 @@ Entry.Utils.getMouseEvent = function(event) {
         mouseEvent = event;
     }
     return mouseEvent;
-};
-
-Entry.Utils.removeBlockByType = function(blockType, callback) {
-    const objects = Entry.container.getAllObjects();
-    objects.forEach(({ id, script }) => {
-        Entry.do('selectObject', id).isPass(true);
-        script.getBlockList(false, blockType).forEach((b, index) => {
-            Entry.do('destroyBlock', b).isPass(true);
-        });
-    });
-    Entry.variableContainer.removeBlocksInFunctionByType(blockType);
-
-    if (callback) {
-        callback();
-    }
-};
-
-Entry.Utils.isUsedBlockType = function(blockType) {
-    const objects = Entry.container.getAllObjects();
-    const usedInObject = objects.some(
-        ({ script }) => !!script.getBlockList(false, blockType).length
-    );
-    if (usedInObject) {
-        return true;
-    }
-    return Entry.variableContainer.isUsedBlockTypeInFunction(blockType);
 };

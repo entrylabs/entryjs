@@ -80,16 +80,6 @@ Entry.Playground = class Playground {
             this.generatePictureView(pictureView);
             this.pictureView_ = pictureView;
 
-            const pictureCurtainView = Entry.createElement('div', 'entryPictureCurtain')
-                .addClass('entryPlaygroundPictureCurtainWorkspace entryRemove')
-                .appendTo(pictureView);
-            this.pictureCurtainView_ = pictureCurtainView;
-
-            const pictureCurtainText = Entry.createElement('span', 'entryPictureCurtainText')
-                .addClass('entryPlaygroundPictureCurtainWorkspaceText')
-                .appendTo(pictureCurtainView);
-            pictureCurtainText.innerHTML = Lang.Workspace.add_object_before_edit;
-
             const textView = Entry.createElement('div', 'entryText')
                 .addClass('entryPlaygroundTextWorkspace entryRemove')
                 .appendTo(this.view_);
@@ -706,8 +696,6 @@ Entry.Playground = class Playground {
                         }
                     }
                     fontLink.innerText = font.name;
-                    this.textEditArea.style.fontFamily = font.family;
-                    this.textEditInput.style.fontFamily = font.family;
                     $('#entryTextBoxAttrFontName').data('font', font);
                     this.object.entity.setFontType(font.family);
                 },
@@ -1164,7 +1152,7 @@ Entry.Playground = class Playground {
     /**
      * Inject picture
      */
-    injectPicture(isSelect = true) {
+    injectPicture() {
         const view = this.pictureListView_;
         if (!view) {
             return;
@@ -1181,7 +1169,7 @@ Entry.Playground = class Playground {
                 element.orderHolder.innerHTML = i + 1;
             });
 
-            isSelect && this.selectPicture(this.object.selectedPicture);
+            this.selectPicture(this.object.selectedPicture);
         }
 
         this.updatePictureView();
@@ -1191,7 +1179,7 @@ Entry.Playground = class Playground {
      * Add picture
      * @param {picture model} picture
      */
-    addPicture(picture, isNew, isSelect = true) {
+    addPicture(picture, isNew) {
         const tempPicture = _.clone(picture);
 
         if (isNew === true) {
@@ -1208,7 +1196,9 @@ Entry.Playground = class Playground {
 
         this.generatePictureElement(picture);
 
-        Entry.do('objectAddPicture', picture.objectId || this.object.id, picture, isSelect);
+        Entry.do('objectAddPicture', picture.objectId || this.object.id, picture);
+        this.injectPicture();
+        this.selectPicture(picture);
     }
 
     /**
@@ -1284,7 +1274,7 @@ Entry.Playground = class Playground {
      * Select picture
      * @param {picture}
      */
-    selectPicture(picture, removed) {
+    selectPicture(picture) {
         const pictures = this.object.pictures;
         for (let i = 0, len = pictures.length; i < len; i++) {
             const target = pictures[i];
@@ -1305,7 +1295,7 @@ Entry.Playground = class Playground {
             if (!picture.objectId) {
                 picture.objectId = this.object.id;
             }
-            Entry.dispatchEvent('pictureSelected', picture, removed);
+            Entry.dispatchEvent('pictureSelected', picture);
         }
     }
 
@@ -1414,12 +1404,9 @@ Entry.Playground = class Playground {
         }
     }
 
-    addExpansionBlocks(items) {
-        Entry.expansion.addExpansionBlocks(items.map(({ name }) => name));
-    }
-
-    removeExpansionBlocks(items) {
-        Entry.expansion.banExpansionBlocks(items.map(({ name }) => name));
+    addExpansionBlock(item) {
+        const { name } = item;
+        Entry.expansion.addExpansionBlock(name);
     }
     /**
      * Add sound
@@ -1702,54 +1689,6 @@ Entry.Playground = class Playground {
         }
     }
 
-    nameViewBlur() {
-        if (!Entry.playground.nameViewFocus) {
-            return;
-        }
-        if (this.nameView.value.trim() === '') {
-            entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
-                this.nameView.focus();
-            });
-            return true;
-        }
-
-        let nameViewArray = $('.entryPlaygroundPictureName');
-        if (nameViewArray.length !== Entry.playground.object.pictures.length) {
-            nameViewArray = nameViewArray.slice(0, -1); // pop last element (드래그 시 발생하는 임시 엘리먼트임)
-        }
-
-        for (let i = 0; i < nameViewArray.length; i++) {
-            if (
-                nameViewArray.eq(i).val() == this.nameView.value &&
-                nameViewArray[i] != this.nameView
-            ) {
-                entrylms.alert(Lang.Workspace.name_already_exists).on('hide', () => {
-                    this.nameView.focus();
-                });
-                return true;
-            }
-        }
-        const newValue = this.nameView.value;
-        this.nameView.picture.name = newValue;
-        const playground = Entry.playground;
-        if (playground) {
-            if (playground.object) {
-                const pic = playground.object.getPicture(this.nameView.picture.id);
-                if (pic) {
-                    pic.name = newValue;
-                }
-            }
-            const painter = playground.painter;
-            if (painter && painter.file) {
-                painter.file.name = newValue;
-            }
-
-            playground.reloadPlayground();
-        }
-        Entry.dispatchEvent('pictureNameChanged', this.nameView.picture);
-        Entry.playground.nameViewFocus = false;
-    }
-
     generatePictureElement(picture) {
         const element = Entry.createElement('li', picture.id)
             .addClass('entryPlaygroundPictureElement')
@@ -1777,7 +1716,19 @@ Entry.Playground = class Playground {
                 {
                     text: Lang.Workspace.context_remove,
                     callback() {
-                        Entry.playground._removePicture(picture, element);
+                        if (Entry.playground.object.removePicture(picture.id)) {
+                            Entry.removeElement(element);
+                            Entry.dispatchEvent('removePicture', picture);
+                            Entry.toast.success(
+                                Lang.Workspace.shape_remove_ok,
+                                `${picture.name} ${Lang.Workspace.shape_remove_ok_msg}`
+                            );
+                        } else {
+                            Entry.toast.alert(
+                                Lang.Workspace.shape_remove_fail,
+                                Lang.Workspace.shape_remove_fail_msg
+                            );
+                        }
                     },
                 },
                 {
@@ -1820,11 +1771,46 @@ Entry.Playground = class Playground {
             .addClass('entryEllipsis');
         nameView.picture = picture;
         nameView.value = picture.name;
-        Entry.attachEventListener(nameView, 'blur', this.nameViewBlur.bind(this));
-        Entry.attachEventListener(nameView, 'focus', (e) => {
-            this.nameView = e.target;
-            this.nameViewFocus = true;
-        });
+        Entry.attachEventListener(nameView, 'blur', nameViewBlur);
+
+        function nameViewBlur() {
+            if (this.value.trim() === '') {
+                return entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
+                    nameView.focus();
+                });
+            }
+
+            let nameViewArray = $('.entryPlaygroundPictureName');
+            if (nameViewArray.length !== Entry.playground.object.pictures.length) {
+                nameViewArray = nameViewArray.slice(0, -1); // pop last element (드래그 시 발생하는 임시 엘리먼트임)
+            }
+
+            for (let i = 0; i < nameViewArray.length; i++) {
+                if (nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
+                    return entrylms.alert(Lang.Workspace.name_already_exists).on('hide', () => {
+                        nameView.focus();
+                    });
+                }
+            }
+            const newValue = this.value;
+            this.picture.name = newValue;
+            const playground = Entry.playground;
+            if (playground) {
+                if (playground.object) {
+                    const pic = playground.object.getPicture(this.picture.id);
+                    if (pic) {
+                        pic.name = newValue;
+                    }
+                }
+                const painter = playground.painter;
+                if (painter && painter.file) {
+                    painter.file.name = newValue;
+                }
+
+                playground.reloadPlayground();
+            }
+            Entry.dispatchEvent('pictureNameChanged', this.picture);
+        }
 
         nameView.onkeypress = Entry.Utils.blurWhenEnter;
         element.appendChild(nameView);
@@ -1840,8 +1826,20 @@ Entry.Playground = class Playground {
         removeButton.appendTo(element).innerText = delText;
         removeButton.bindOnClick((e) => {
             try {
-                e.stopPropagation();
-                this._removePicture(picture, element);
+                if (Entry.playground.object.removePicture(picture.id)) {
+                    e.stopPropagation();
+                    Entry.removeElement(element);
+                    Entry.dispatchEvent('removePicture', picture);
+                    Entry.toast.success(
+                        Lang.Workspace.shape_remove_ok,
+                        `${picture.name} ${Lang.Workspace.shape_remove_ok_msg}`
+                    );
+                } else {
+                    Entry.toast.alert(
+                        Lang.Workspace.shape_remove_fail,
+                        Lang.Workspace.shape_remove_fail_msg
+                    );
+                }
             } catch (e) {
                 Entry.toast.alert(
                     Lang.Workspace.shape_remove_fail,
@@ -1849,22 +1847,6 @@ Entry.Playground = class Playground {
                 );
             }
         });
-    }
-
-    _removePicture(picture, element) {
-        if (Entry.playground.object.pictures.length > 1) {
-            Entry.do('objectRemovePicture', picture.objectId, picture);
-            Entry.removeElement(element);
-            Entry.toast.success(
-                Lang.Workspace.shape_remove_ok,
-                `${picture.name} ${Lang.Workspace.shape_remove_ok_msg}`
-            );
-        } else {
-            Entry.toast.alert(
-                Lang.Workspace.shape_remove_fail,
-                Lang.Workspace.shape_remove_fail_msg
-            );
-        }
     }
 
     generateSoundElement(sound) {
@@ -2209,14 +2191,6 @@ Entry.Playground = class Playground {
                 break;
         }
         this.object.entity.setTextAlign(fontAlign);
-    }
-
-    showPictureCurtain() {
-        this.pictureCurtainView_ && this.pictureCurtainView_.removeClass('entryRemove');
-    }
-
-    hidePictureCurtain() {
-        this.pictureCurtainView_ && this.pictureCurtainView_.addClass('entryRemove');
     }
 
     hideBlockMenu() {

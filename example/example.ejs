@@ -12,7 +12,6 @@
         <link href="<%= htmlWebpackPlugin.files.css[css] %>" rel="stylesheet" />
         <% } %>
         <link href="https://playentry.org/lib/entry-tool/dist/entry-tool.css" rel="stylesheet"/>
-        <link href="https://playentry.org/lib/entry-lms/dist/assets/app.css" rel="stylesheet"/>
     </head>
 
     <body>
@@ -20,7 +19,9 @@
             <button style="border: 1px solid black" onclick="changeWorkspaceMode('block')">Block Mode</button>
             <button style="border: 1px solid black" onclick="changeWorkspaceMode('python')">Python Mode</button>
         </section>
-        <div id="workspace"></div>
+        <section class="wrapper">
+            <div id="workspace"></div>
+        </section>
 
         <!--language-->
         <script src="../extern/lang/ko.js"></script>

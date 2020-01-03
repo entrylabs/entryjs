@@ -81,8 +81,8 @@ Entry.STATIC = {
         objectUpdateDirectionValue: 215,
         objectUpdateRotateMethod: 216,
         entitySetModel: 217,
-        objectAddExpansionBlocks: 218,
-        objectRemoveExpansionBlocks: 219,
+        objectAddExpansionBlock: 218,
+        objectRemoveExpansionBlock: 219,
         objectReorder: 220,
 
         do: 301,
@@ -98,10 +98,8 @@ Entry.STATIC = {
         variableContainerAddMessage: 807,
         variableContainerRemoveMessage: 808,
 
-        funcEditStart: 1001,
-        funcEditEnd: 1002,
-        funcRemove: 1003,
         funcCreate: 1004,
+        funcUpdate: 1005,
 
         createComment: 1201,
         removeComment: 1202,
@@ -162,6 +160,10 @@ Entry.STATIC = {
         variableContainerClickMessageAddButton: 830,
 
         dismissModal: 900,
+
+        funcCreateStart: 1001,
+        funcEditStart: 1002,
+        funcEditCancel: 1003,
 
         playgroundClickAddExpansionBlock: 1101,
         playgroundClickAddExpansionBlockCancel: 1102,

@@ -94,13 +94,14 @@ Entry.Func.prototype.destroy = function() {
 };
 
 Entry.Func.edit = function(func) {
+    if (!func) {
+        return;
+    }
+
     if (typeof func === 'string') {
         func = Entry.variableContainer.getFunction(/(func_)?(.*)/.exec(func)[2]);
     }
-    if (!func) {
-        console.error('no function');
-        return;
-    }
+
     this.unbindFuncChangeEvent();
     this.unbindWorkspaceStateChangeEvent();
 

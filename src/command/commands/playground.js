@@ -4,21 +4,19 @@
 'use strict';
 
 (function(c) {
-    const COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
+    var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
 
     c[COMMAND_TYPES.playgroundChangeViewMode] = {
-        do(newType, oldType) {
-            Entry.variableContainer.selected = null;
-            Entry.variableContainer.updateList();
+        do: function(newType, oldType) {
             Entry.playground.changeViewMode(newType);
-            if (Entry.disposeEvent) {
+            if (Entry.disposeEvent){
                 Entry.disposeEvent.notify();
             }
         },
-        state(newType, oldType) {
+        state: function(newType, oldType) {
             return [oldType, newType];
         },
-        log(newType, oldType) {
+        log: function(newType, oldType) {
             oldType = oldType || 'code';
             return [['newType', newType], ['oldType', oldType]];
         },
@@ -28,21 +26,21 @@
     };
 
     c[COMMAND_TYPES.playgroundClickAddPicture] = {
-        do() {
+        do: function() {
             Entry.dispatchEvent('openPictureManager');
         },
-        state() {
+        state: function() {
             return [];
         },
-        log() {
+        log: function() {
             return [];
         },
         validate: false,
         //skipUndoStack: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
-        restrict(data, domQuery, callback, restrictor) {
+        restrict: function(data, domQuery, callback, restrictor) {
             Entry.dispatchEvent('dismissModal');
-            const tooltip = new Entry.Tooltip(
+            var tooltip = new Entry.Tooltip(
                 [
                     {
                         title: data.tooltip.title,
@@ -63,13 +61,13 @@
     };
 
     c[COMMAND_TYPES.playgroundClickAddPictureCancel] = {
-        do() {
+        do: function() {
             Entry.dispatchEvent('dismissModal');
         },
-        state() {
+        state: function() {
             return [];
         },
-        log() {
+        log: function() {
             return [];
         },
         validate: false,
@@ -80,20 +78,20 @@
     };
 
     c[COMMAND_TYPES.playgroundClickAddSound] = {
-        do() {
+        do: function() {
             Entry.dispatchEvent('openSoundManager');
         },
-        state() {
+        state: function() {
             return [];
         },
-        log() {
+        log: function() {
             return [];
         },
         validate: false,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
-        restrict(data, domQuery, callback, restrictor) {
+        restrict: function(data, domQuery, callback, restrictor) {
             Entry.dispatchEvent('dismissModal');
-            const tooltip = new Entry.Tooltip(
+            var tooltip = new Entry.Tooltip(
                 [
                     {
                         title: data.tooltip.title,
@@ -114,13 +112,13 @@
     };
 
     c[COMMAND_TYPES.playgroundClickAddSoundCancel] = {
-        do() {
+        do: function() {
             Entry.dispatchEvent('dismissModal');
         },
-        state() {
+        state: function() {
             return [];
         },
-        log() {
+        log: function() {
             return [];
         },
         validate: false,
@@ -130,20 +128,20 @@
     };
 
     c[COMMAND_TYPES.playgroundClickAddExpansionBlock] = {
-        do() {
+        do: function() {
             Entry.dispatchEvent('openExpansionBlockManager');
         },
-        state() {
+        state: function() {
             return [];
         },
-        log() {
+        log: function() {
             return [];
         },
         validate: false,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
-        restrict(data, domQuery, callback, restrictor) {
+        restrict: function(data, domQuery, callback, restrictor) {
             Entry.dispatchEvent('dismissModal');
-            const tooltip = new Entry.Tooltip(
+            var tooltip = new Entry.Tooltip(
                 [
                     {
                         title: data.tooltip.title,
@@ -164,13 +162,13 @@
     };
 
     c[COMMAND_TYPES.playgroundClickAddExpansionBlockCancel] = {
-        do() {
+        do: function() {
             Entry.dispatchEvent('dismissModal');
         },
-        state() {
+        state: function() {
             return [];
         },
-        log() {
+        log: function() {
             return [];
         },
         validate: false,

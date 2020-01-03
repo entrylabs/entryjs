@@ -1,5 +1,3 @@
-import * as _ from 'lodash';
-
 /**
  * 엔트리 하드웨어 -> 엔트리 워크스페이스간 통신을 정리한 클래스
  * action, data(payload) 를 메세지로 받는다.
@@ -9,23 +7,14 @@ import * as _ from 'lodash';
  * - default { anyObject for data handle }: 이전의 hw.js 에 있는 로직을 그대로 복사. 과거 코드 대응
  *   - disconnect : 이전 disconnectHardware 와 동일
  */
-
-type EntryHardwareSocketMessage = {
-    action: string;
-    data: any;
-};
-
 export default class {
-    private socket: SocketIOClient.Socket;
-    private readonly listeners: { [type: string]: any };
-
-    constructor(socket: SocketIOClient.Socket) {
+    constructor(socket) {
         this.socket = socket;
         this.listeners = [];
         socket.on('message', this._onAction.bind(this));
     }
 
-    _onAction(message: EntryHardwareSocketMessage) {
+    _onAction(message) {
         const { action, data } = message;
         switch (action) {
             case 'state':
@@ -46,12 +35,12 @@ export default class {
      * @param args
      * @private
      */
-    _onStateAction({ statement, args }: any) {
+    _onStateAction({ statement, args }) {
         const [name] = args;
         this.dispatchEvent('state', statement, name);
     }
 
-    _onInitAction({ name }: any) {
+    _onInitAction({ name }) {
         this.dispatchEvent('init', name);
     }
 
@@ -60,7 +49,7 @@ export default class {
      * @param data
      * @private
      */
-    _onDefaultAction(data: any) {
+    _onDefaultAction(data) {
         if (data) {
             let portData = {};
             if (typeof data === 'string') {
@@ -81,14 +70,14 @@ export default class {
         }
     }
 
-    addEventListener(type: string, callback: (...args: any[]) => void) {
+    addEventListener(type, callback) {
         if (!(type in this.listeners)) {
             this.listeners[type] = [];
         }
         this.listeners[type].push(callback);
     }
 
-    removeEventListener(type: string, callback: () => void) {
+    removeEventListener(type, callback) {
         if (!(type in this.listeners)) {
             return;
         }
@@ -101,7 +90,7 @@ export default class {
         }
     }
 
-    dispatchEvent(eventName: string, ...args: any[]) {
+    dispatchEvent(eventName, ...args) {
         if (!(eventName in this.listeners)) {
             return true;
         }

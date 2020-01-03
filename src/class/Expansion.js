@@ -20,42 +20,12 @@ export default class Expansion {
         });
     }
 
-    banExpansionBlocks(expansionNames = []) {
-        if (!expansionNames.length) {
-            return;
-        }
-        const expansions = Object.keys(Entry.EXPANSION_BLOCK_LIST);
-        const expansionTypes = expansionNames.filter((x) => expansions.includes(x));
-        if (!expansionTypes.length) {
-            console.warn('not exist expansion', expansionTypes);
-            return;
-        }
-        const currentObjectId = Entry.playground.object.id;
-        Entry.do('selectObject', currentObjectId);
-        expansionTypes.forEach((expansion) => {
-            if (this.isActive(expansion)) {
-                const blocks = Entry.EXPANSION_BLOCK_LIST[expansion].getBlocks();
-                Object.keys(blocks).forEach((blockType) => {
-                    Entry.Utils.removeBlockByType(blockType);
-                });
-            }
-        });
-        Entry.do('selectObject', currentObjectId).isPass(true);
-        Entry.do('objectRemoveExpansionBlocks', expansionTypes).isPass(true);
+    banExpansionBlock(blockName) {
+        Entry.do('objectRemoveExpansionBlock', blockName);
     }
 
-    isActive(expansionName) {
-        const expansion = Entry.EXPANSION_BLOCK_LIST[expansionName];
-        if (!expansion) {
-            console.warn('not exist expansion', expansion);
-            return;
-        }
-        const blocks = expansion.getBlocks();
-        return Object.keys(blocks).some((blockName) => Entry.Utils.isUsedBlockType(blockName));
-    }
-
-    addExpansionBlocks(blockNames) {
-        Entry.do('objectAddExpansionBlocks', blockNames);
+    addExpansionBlock(blockName) {
+        Entry.do('objectAddExpansionBlock', blockName);
     }
 
     getExpansions(blockList) {

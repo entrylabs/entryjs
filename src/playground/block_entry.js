@@ -1409,7 +1409,7 @@ function getBlocks() {
                         }
                         const block = blockView.block;
                         const id = block.getFuncId();
-                        Entry.do('funcEditStart', id);
+                        Entry.Func.edit(Entry.variableContainer.functions_[id]);
                     },
                 ],
             },
@@ -1744,7 +1744,6 @@ function getBlocks() {
                     type: 'DropdownDynamic',
                     value: null,
                     menuName: 'pictures',
-                    defaultValue: 'null',
                     fontSize: 10,
                     bgColor: EntryStatic.colorSet.block.darken.LOOKS,
                     arrowColor: EntryStatic.colorSet.arrow.default.LOOKS,
@@ -7736,24 +7735,28 @@ function assignBlocks() {
     Entry.block.converters = getConverters();
     Entry.block = Object.assign(Entry.block, getBlocks(), blocks.getBlocks());
     if (EntryStatic.isPracticalCourse) {
-        const practicalCourseBlockModule = require('../playground/block_entry_mini');
-        Object.assign(Entry.block, practicalCourseBlockModule.practicalCourseBlock);
-        applySetLanguage(practicalCourseBlockModule);
+        Object.assign(Entry.block, require('../playground/block_entry_mini').practicalCourseBlock);
     }
 }
 
-function applySetLanguage(hasSetLanguageObj) {
-    if ('setLanguage' in hasSetLanguageObj) {
-        const hwLang = hasSetLanguageObj.setLanguage();
-        const data = hwLang[Lang.type] || hwLang[Lang.fallbackType];
-        for (const key in data) {
-            Object.assign(Lang[key], data[key]);
+function setHardwareLanguage() {
+    for (const id in Entry.HARDWARE_LIST) {
+        const hw = Entry.HARDWARE_LIST[id];
+        if (!hw) {
+            continue;
+        }
+        if ('setLanguage' in hw) {
+            const hwLang = hw.setLanguage();
+            const data = hwLang[Lang.type] || hwLang[Lang.fallbackType];
+            for (const key in data) {
+                Object.assign(Lang[key], data[key]);
+            }
         }
     }
 }
 
 Entry.reloadBlock = function() {
-    Object.values(Entry.HARDWARE_LIST).forEach(applySetLanguage);
+    setHardwareLanguage();
     assignBlocks();
     inheritBlockSchema();
 };

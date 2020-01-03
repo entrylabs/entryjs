@@ -1644,7 +1644,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
                     {type: 'text', params: ['255']},
                     {type: 'text', params: ['255']},
                     null,
-                    {type: 'text', params: ['500']},
+                    {type: 'text', params: ['200']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_controller_controller_light_color_input',
@@ -1712,7 +1712,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function()
                 params: [
                     null,
                     null,
-                    {type: 'text', params: ['500']},
+                    {type: 'text', params: ['255']},
                     null
                 ],
                 type: 'byrobot_petrone_v2_controller_controller_light_color_select',

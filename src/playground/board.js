@@ -503,13 +503,11 @@ Entry.Board = class Board {
     }
 
     cancelEdit() {
-        Entry.disposeEvent.notify();
-        Entry.do('funcEditEnd', 'cancel');
+        Entry.do('funcEditCancel');
     }
 
     save() {
-        Entry.disposeEvent.notify();
-        Entry.do('funcEditEnd', 'save');
+        Entry.do('funcCreate');
     }
 
     generateCodeMagnetMap() {

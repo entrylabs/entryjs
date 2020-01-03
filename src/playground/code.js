@@ -332,10 +332,6 @@ Entry.Code = class Code {
         let block = thread.getBlock(pointer.shift());
         while (pointer.length) {
             if (!(block instanceof Entry.Block)) {
-                if (!block || !block.getValueBlock) {
-                    console.error("can't get valueBlock", block);
-                    return block;
-                }
                 block = block.getValueBlock();
             }
             const type = pointer.shift();

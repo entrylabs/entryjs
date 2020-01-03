@@ -959,9 +959,8 @@ Entry.EntityObject = class EntityObject {
                   if (this.removed) {
                       return;
                   }
-                  const isResizedImage = info.source() !== this.object.image;
-                  if (isResizedImage) {
-                      this.object.image = info.source();
+                  if (info.source() !== this.object.image) {
+                      return;
                   }
                   const hasFilter = !_.isEmpty(that.object.filters);
                   GEHelper.colorFilter.setCache(this, hasFilter);

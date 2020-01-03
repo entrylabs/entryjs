@@ -317,7 +317,7 @@ Entry.EntryObject = class {
     removePicture(pictureId) {
         const pictures = this.pictures;
         if (pictures.length < 2) {
-            return;
+            return false;
         }
 
         const playground = Entry.playground;
@@ -325,11 +325,12 @@ Entry.EntryObject = class {
 
         pictures.splice(pictures.indexOf(picture), 1);
         if (picture === this.selectedPicture) {
-            playground.selectPicture(pictures[0], true);
+            playground.selectPicture(pictures[0]);
         }
         GEHelper.resManager.imageRemoved('EntityObject::removePicture');
         playground.injectPicture(this);
         playground.reloadPlayground();
+        return true;
     }
 
     /**
@@ -1282,7 +1283,7 @@ Entry.EntryObject = class {
                 Entry.container.getObject(objectId) &&
                 !_.includes(exceptionsForMouseDown, e.target)
             ) {
-                Entry.do('selectObject', objectId);
+                Entry.do('containerSelectObject', objectId);
             }
         });
 

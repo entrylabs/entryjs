@@ -1,6 +1,6 @@
 'use strict';
 
-import { Angle, Number } from '@entrylabs/tool';
+import { Number, Angle } from '@entrylabs/tool';
 
 Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
     constructor(content, blockView, index) {
@@ -242,10 +242,8 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         });
 
         inputField.on('blur', (e) => {
-            const isOptionGroupVisible = !!this.optionGroup.get(0).style.display;
-            if (!isOptionGroupVisible) {
-                this.destroyOption(undefined, true);
-            }
+            console.log('blur');
+            this.destroyOption(undefined, true);
         });
 
         const { scale = 1 } = this.board;
