@@ -44,15 +44,15 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
     };
 
     c[COMMAND_TYPES.objectAddPicture] = {
-        do(objectId, picture) {
+        do(objectId, picture, isSelect = true) {
             const hashId = c[COMMAND_TYPES.objectAddPicture].hashId;
             if (hashId) {
                 picture.id = hashId;
                 delete c[COMMAND_TYPES.objectAddPicture].hashId;
             }
             Entry.container.getObject(objectId).addPicture(picture);
-            Entry.playground.injectPicture();
-            Entry.playground.selectPicture(picture);
+            Entry.playground.injectPicture(isSelect);
+            isSelect && Entry.playground.selectPicture(picture);
             Entry.dispatchEvent('dismissModal');
         },
         state(objectId, picture) {
@@ -197,50 +197,53 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
         undo: 'objectAddSound',
     };
 
-    c[COMMAND_TYPES.objectAddExpansionBlock] = {
-        do(blockName) {
-            if (
-                typeof Entry.EXPANSION_BLOCK !== 'undefined' &&
-                typeof Entry.EXPANSION_BLOCK[blockName] !== 'undefined'
-            ) {
-                Entry.EXPANSION_BLOCK[blockName].init();
-                if (typeof Entry.expansionBlocks == 'undefined') {
-                    Entry.expansionBlocks = [];
+    c[COMMAND_TYPES.objectAddExpansionBlocks] = {
+        do(blockNames) {
+            blockNames.forEach((blockName) => {
+                if (
+                    typeof Entry.EXPANSION_BLOCK !== 'undefined' &&
+                    typeof Entry.EXPANSION_BLOCK[blockName] !== 'undefined'
+                ) {
+                    Entry.EXPANSION_BLOCK[blockName].init();
+                    if (typeof Entry.expansionBlocks == 'undefined') {
+                        Entry.expansionBlocks = [];
+                    }
+                    Entry.expansionBlocks = _.union(Entry.expansionBlocks, [blockName]);
                 }
-                Entry.expansionBlocks = _.union(Entry.expansionBlocks, [blockName]);
-            }
-
-            Entry.playground.blockMenu.unbanClass(blockName);
+                Entry.playground.blockMenu.unbanClass(blockName);
+            });
             // Entry.dispatchEvent('dismissModal');
         },
-        state(blockName) {
-            return [blockName];
+        state(blockNames) {
+            return [blockNames];
         },
-        log(blockName) {
-            return [['blockName', blockName]];
+        log(blockNames) {
+            return [['blockName', blockNames]];
         },
         dom: ['.btn_confirm_modal'],
         recordable: Entry.STATIC.RECORDABLE.SKIP,
         validate: false,
-        undo: 'objectRemoveExpansionBlock',
+        undo: 'objectRemoveExpansionBlocks',
     };
 
-    c[COMMAND_TYPES.objectRemoveExpansionBlock] = {
-        do(blockName) {
+    c[COMMAND_TYPES.objectRemoveExpansionBlocks] = {
+        do(blockNames) {
             // 사용된 블록 전체에서 검색가능해질때 사용가능.
-            // Entry.expansionBlocks = _.pull(Entry.expansionBlocks, blockName);
-            Entry.playground.blockMenu.banClass(blockName);
+            blockNames.forEach((blockName) => {
+                Entry.playground.blockMenu.banClass(blockName);
+            });
+            Entry.expansionBlocks = _.pullAll(Entry.expansionBlocks, blockNames);
         },
-        state(blockName) {
-            return [blockName];
+        state(blockNames) {
+            return [blockNames];
         },
-        log(blockName) {
-            return [['blockName', blockName]];
+        log(blockNames) {
+            return [['blockName', blockNames]];
         },
         dom: ['.btn_confirm_modal'],
         recordable: Entry.STATIC.RECORDABLE.SKIP,
         validate: false,
-        undo: 'objectAddExpansionBlock',
+        undo: 'objectAddExpansionBlocks',
     };
 
     c[COMMAND_TYPES.objectNameEdit] = {

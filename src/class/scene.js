@@ -170,6 +170,11 @@ Entry.Scene = class {
             .addClass('entrySceneRemoveButtonWorkspace')
             .bindOnClick((e) => {
                 if (Entry.engine.isState('run')) {
+                    return ;
+                }
+                const isDeletable = Entry.scene.getScenes().length > 1;
+                if (!isDeletable) {
+                    Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.Scene_delete_error, false);
                     return;
                 }
                 Entry.do('sceneRemove', scene.id);
@@ -357,6 +362,9 @@ Entry.Scene = class {
         if (this.selectedScene && this.selectedScene.id == scene.id) {
             return;
         }
+        if (Entry.playground.nameViewFocus && Entry.playground.nameViewBlur()) {
+            return;
+        }
 
         const prevSelected = this.selectedScene;
         if (prevSelected) {
@@ -405,6 +413,7 @@ Entry.Scene = class {
 
             stage.selectObject(null);
             playground.flushPlayground();
+            Entry.variableContainer.selected = null;
             Entry.variableContainer.updateList();
         }
         !container.listView_ && stage.sortZorder();

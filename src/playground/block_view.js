@@ -493,6 +493,9 @@ Entry.BlockView = class BlockView {
             e.preventDefault();
         }
 
+        if (e.button == 1) {
+            return;
+        }
         if (Entry.disposeEvent) {
             Entry.disposeEvent.notify();
         }
@@ -682,6 +685,9 @@ Entry.BlockView = class BlockView {
     }
 
     onMouseUp(e) {
+        if (e.button == 1) {
+            return;
+        }
         if (this.longPressTimer) {
             clearTimeout(this.longPressTimer);
             this.longPressTimer = null;
@@ -1324,13 +1330,13 @@ Entry.BlockView = class BlockView {
             style.textContent = `
                 @font-face {
                     font-family: EntryNG;
-                    src: local(NanumGothic), 
-                        local(나눔고딕), 
-                        local(나눔고딕 Regular), 
-                        local(Noto Sans JP Regular), 
-                        local(Noto Sans JP); 
-                    font-weight: normal; 
-                    font-style: normal; 
+                    src: local(NanumGothic),
+                        local(나눔고딕),
+                        local(나눔고딕 Regular),
+                        local(Noto Sans JP Regular),
+                        local(Noto Sans JP);
+                    font-weight: normal;
+                    font-style: normal;
                 }`;
 
             defs.append(style);

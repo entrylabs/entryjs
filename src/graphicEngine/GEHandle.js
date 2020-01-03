@@ -192,6 +192,8 @@ export var GEHandle = function(canvas) {
 
         //rotate knob
         const rotateKnob = GEHelper.newGraphic();
+        rotateKnob.scaleX = 1.52;
+        rotateKnob.scaleY = 1.52;
         rotateKnob.mouseEnabled = true;
         GEDragHelper.handleDrag(rotateKnob);
         rotateKnob.cursor = 'crosshair';
@@ -261,7 +263,8 @@ export var GEHandle = function(canvas) {
         const centerPoint = GEHelper.newGraphic();
         centerPoint.mouseEnabled = true;
         GEDragHelper.handleDrag(centerPoint);
-
+        centerPoint.scaleX = 1.52;
+        centerPoint.scaleY = 1.52;
         centerPoint.graphics
             .ss(3.5, 2, 0)
             .s('#FFFFFF')
@@ -289,6 +292,8 @@ export var GEHandle = function(canvas) {
             const knob = GEHelper.newGraphic();
             knob.mouseEnabled = true;
             GEDragHelper.handleDrag(knob);
+            knob.scaleX = 1.52;
+            knob.scaleY = 1.52;
             knob.graphics
                 .ss(0.2, 0, 0)
                 .s('#d8d8d8')
@@ -364,7 +369,7 @@ export var GEHandle = function(canvas) {
         if (res > standard && Entry.engine.isState('stop')) {
             Entry.toast.warning(
                 Lang.Workspace.toast_error_title_object_center,
-                Lang.Workspace.toast_error_contents_object_center,
+                Lang.Workspace.toast_error_contents_object_center
             );
             return true;
         }
@@ -403,12 +408,12 @@ export var GEHandle = function(canvas) {
             .s('#d8d8d8')
             .mt(0, -height / 2)
             .lt(0, -height / 2)
-            .lt(0, -height / 2 - 20)
+            .lt(0, -height / 2 + 20)
             .cp()
             .beginFill(this.rotateKnobColor)
-            .dc(0, -height / 2 - 20, 8)
+            .dc(0, -height / 2, 8)
             .beginFill('#ffffff')
-            .dc(0, -height / 2 - 20, 4);
+            .dc(0, -height / 2, 4);
     };
 
     p.renderBorder = function() {

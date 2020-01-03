@@ -2263,7 +2263,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     {type: 'text', params: ['255']},
                     {type: 'text', params: ['255']},
                     null,
-                    {type: 'text', params: ['200']},
+                    {type: 'text', params: ['500']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_controller_light_color_input',
@@ -2331,7 +2331,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                 params: [
                     null,
                     null,
-                    {type: 'text', params: ['255']},
+                    {type: 'text', params: ['500']},
                     null
                 ],
                 type: 'byrobot_petrone_v2_drive_controller_light_color_select',
@@ -2506,10 +2506,10 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_eye, '0x12'], // EyeHold = 0x12
-                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_arm, '0x42'], // ArmHold = 0x42
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_eye, '18'], // EyeHold = 0x12
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_arm, '66'], // ArmHold = 0x42
                     ],
-                    value: '0x12',
+                    value: '18',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2541,7 +2541,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     {type: 'text', params: ['255']},
                     {type: 'text', params: ['255']},
                     null,
-                    {type: 'text', params: ['255']},
+                    {type: 'text', params: ['500']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_drone_light_color_input',
@@ -2622,7 +2622,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     null,
                     null,
                     null,
-                    {type: 'text', params: ['255']},
+                    {type: 'text', params: ['500']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_drone_light_color_select',

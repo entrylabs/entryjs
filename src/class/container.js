@@ -280,10 +280,12 @@ Entry.Container = class Container {
      * @param {!Array.<object model>} objectModels
      */
     setObjects(objectModels) {
-        for (const i in objectModels) {
-            const object = new Entry.EntryObject(objectModels[i]);
-            this.objects_.push(object);
-        }
+        objectModels.forEach((model) => {
+            if (model) {
+                const object = new Entry.EntryObject(model);
+                this.objects_.push(object);
+            }
+        });
         this.updateObjectsOrder();
         this.updateListView();
         Entry.variableContainer.updateViews();
@@ -334,6 +336,9 @@ Entry.Container = class Container {
             object.selectedPicture = picture_;
             object.entity.setImage(picture_);
             object.updateThumbnailView();
+            this.sortableListViewWidget.setData({
+                items: this._getSortableObjectList(),
+            });
             return object.id;
         }
         throw new Error('No picture found');
@@ -1022,6 +1027,11 @@ Entry.Container = class Container {
      */
     setCurrentObjects() {
         this.currentObjects_ = this.getSceneObjects();
+        if (this.currentObjects_.length) {
+            Entry.playground.hidePictureCurtain();
+        } else {
+            Entry.playground.showPictureCurtain();
+        }
     }
 
     /**

@@ -6,6 +6,7 @@
 import SimpleBar from 'simplebar';
 import fetch from 'isomorphic-fetch';
 import xssFilters from 'xss-filters';
+
 /**
  * Block variable constructor
  * @param {variable model} variable
@@ -708,7 +709,7 @@ Entry.VariableContainer = class VariableContainer {
         } else {
             this.functionAddButton_
                 .unBindOnClick()
-                .bindOnClick(() => Entry.do('funcCreateStart', Entry.generateHash()))
+                .bindOnClick(() => Entry.do('funcEditStart', Entry.generateHash()))
                 .removeClass('disabled');
         }
         listView.appendChild(this.functionAddButton_);
@@ -981,6 +982,22 @@ Entry.VariableContainer = class VariableContainer {
         Entry.Func.edit(new Entry.Func(data));
     }
 
+    removeBlocksInFunctionByType(blockType) {
+        Object.values(this.functions_).forEach((func) => {
+            Entry.do('funcEditStart', func.id).isPass(true);
+            func.content.getBlockList(false, blockType).forEach((b, index) => {
+                Entry.do('destroyBlock', b).isPass(true);
+            });
+            Entry.do('funcEditEnd', 'save').isPass(true);
+        });
+    }
+
+    isUsedBlockTypeInFunction(blockType) {
+        return Object.values(this.functions_).some(
+            (func) => func.content.getBlockList(false, blockType).length
+        );
+    }
+
     /**
      * Remove variable
      * @param {Entry.Variable} variable
@@ -1107,7 +1124,7 @@ Entry.VariableContainer = class VariableContainer {
             .bindOnClick((e) => {
                 e.stopPropagation();
                 if (!Entry.isTextMode) {
-                    Entry.Func.edit(func);
+                    Entry.do('funcEditStart', func.id);
                 }
                 return this.select(func);
             })
@@ -1126,7 +1143,7 @@ Entry.VariableContainer = class VariableContainer {
                 e.stopPropagation();
                 entrylms.confirm(Lang.Workspace.will_you_delete_function).then((result) => {
                     if (result === true) {
-                        this.removeFunction(func);
+                        this.destroyFunction(func);
                         this.selected = null;
                     }
                 });
@@ -1135,6 +1152,19 @@ Entry.VariableContainer = class VariableContainer {
         delButton.href = '#';
         view.nameField = editBoxInput;
         func.listElement = view;
+    }
+
+    destroyFunction(func) {
+        if (Entry.Func.targetFunc) {
+            Entry.do('funcEditEnd', 'cancel');
+        }
+        const currentObjectId = Entry.playground.object.id;
+        Entry.do('selectObject', currentObjectId);
+        const functionType = `func_${func.id}`;
+        Entry.Utils.removeBlockByType(functionType, () => {
+            Entry.do('funcRemove', func).isPass(true);
+        });
+        Entry.do('selectObject', currentObjectId).isPass(true);
     }
 
     /**
@@ -2473,7 +2503,7 @@ Entry.VariableContainer = class VariableContainer {
     generateListCountView(element) {
         const that = this;
         const createElement = Entry.createElement;
-        
+
         const listCount = createElement('div')
             .addClass('list_cnt')
             .appendTo(element);
@@ -2503,12 +2533,13 @@ Entry.VariableContainer = class VariableContainer {
         //List limit setting. [default value:5000, length: 4]
         let limitValue = 5000;
         let maxlength = 4;
-        
-        if(that.selected.array_ && that.selected.array_.length > 0 ){
+
+        if (that.selected.array_ && that.selected.array_.length > 0) {
             const currentLeng = that.selected.array_.length.toString().length;
             // 리스트 카운트가 5000 일떄만 설정
             maxlength = currentLeng > maxlength ? currentLeng : maxlength;
-            limitValue = that.selected.array_.length > limitValue ? that.selected.array_.length : limitValue ;
+            limitValue =
+                that.selected.array_.length > limitValue ? that.selected.array_.length : limitValue;
         }
 
         const buttonPlus = createElement('a')
@@ -2517,13 +2548,12 @@ Entry.VariableContainer = class VariableContainer {
                 const {
                     selected: { id_ },
                 } = that;
-
                 const selectedLength = Entry.variableContainer.selected.array_.length;
-                
-                if( selectedLength >= limitValue ) {
-                    Entry.do('listChangeLength', id_, ''); 
-                }else{
-                    Entry.do('listChangeLength', id_, 'plus'); 
+
+                if (selectedLength >= limitValue) {
+                    Entry.do('listChangeLength', id_, '');
+                } else {
+                    Entry.do('listChangeLength', id_, 'plus');
                 }
             })
             .appendTo(countInputBox);
@@ -2534,14 +2564,14 @@ Entry.VariableContainer = class VariableContainer {
         const countInput = createElement('input').appendTo(countInputBox);
         countInput.setAttribute('type', 'text');
         countInput.setAttribute('maxlength', maxlength);
-        
+
         countInput.onblur = function() {
             const v = that.selected;
             let value = this.value;
             value = Entry.Utils.isNumber(value) ? value : v.array_.length;
 
-            if(value >= limitValue) { 
-               value = limitValue; 
+            if (value >= limitValue) {
+                value = limitValue;
             }
 
             Entry.do('listChangeLength', v.id_, Number(value));
@@ -2574,6 +2604,17 @@ Entry.VariableContainer = class VariableContainer {
         );
     }
 
+    createListValueElement(index, value, startIndex = 0) {
+        return `
+        <li>
+            <span class='cnt'>${+index + startIndex}</span>
+            <input value='${xssFilters.inSingleQuotedAttr(
+                value
+            )}' type='text' data-index='${index}'/>
+            <a class='del' data-index='${index}'></a>
+        </li>`.trim();
+    }
+
     updateListSettingView(list) {
         const view = this.listSettingView;
         const that = this;
@@ -2602,22 +2643,21 @@ Entry.VariableContainer = class VariableContainer {
                 .appendTo(fragment).textContent = Lang.Workspace.empty_of_list;
             listValues.appendChild(fragment);
         } else {
-            const data = arr.map(({ data: value }, i) =>
-                /* html */ `
-                    <li>
-                        <span class='cnt'>${i + startIndex}</span>
-                        <input value='${xssFilters.inSingleQuotedAttr(value)}' type='text' data-index='${i}'/>
-                        <a class='del' data-index='${i}'></a>
-                    </li>`.trim()
-            );
+            const data = arr.map((data, i) => {
+                const value = String(data.data).replace(/\$/g, '&#36;');
+                return this.createListValueElement(i, value, startIndex);
+            });
             infinityScroll.assignData(data);
             infinityScroll.show();
             $listValues.on(
-                'blur',
+                'keyup',
                 'input',
-                Entry.Utils.setBlurredTimer(function() {
-                    const index = this.getAttribute('data-index');
-                    Entry.do('listSetDefaultValue', list.id_, index, this.value);
+                _.debounce((e) => {
+                    const { target } = e;
+                    const index = target.getAttribute('data-index');
+                    data[index] = this.createListValueElement(index, target.value, startIndex);
+                    list.array_[index] = { data: target.value };
+                    list.updateView();
                 })
             );
             $listValues.on('focus', 'input', Entry.Utils.setFocused);
@@ -2945,6 +2985,7 @@ Entry.VariableContainer = class VariableContainer {
     _maxNameLength = 10;
 
     clear() {
+        this.select(null);
         const _removeFunc = _.partial(_.result, _, 'remove');
         const { engine = {}, container = {}, playground } = Entry;
 
@@ -2958,6 +2999,10 @@ Entry.VariableContainer = class VariableContainer {
         this.lists_ = [];
         this.messages_ = [];
         this.functions_ = {};
+
+        this._variableRefs = [];
+        this._messageRefs = [];
+        this._functionRefs = [];
 
         playground.reloadPlayground();
         this.updateList();
@@ -3115,29 +3160,20 @@ Entry.VariableContainer = class VariableContainer {
         if (v.getType() === type) {
             return;
         }
-
-        let newVariable;
-
         const variables = this.variables_;
         const variableJSON = v.toJSON();
-
+        variableJSON.variableType = type;
+        let newVariable = Entry.Variable.create(variableJSON);
+        variables.splice(variables.indexOf(v), 0, newVariable);
+        if (value !== undefined) {
+            variableJSON.value = value;
+        }
         if (type === 'slide') {
-            variableJSON.variableType = type;
-            newVariable = Entry.Variable.create(variableJSON);
-            variables.splice(variables.indexOf(v), 0, newVariable);
-
             if (newVariable.getValue() < 0) {
                 newVariable.setValue(0);
             } else if (newVariable.getValue() > 100) {
                 newVariable.setValue(100);
             }
-        } else if (type === 'variable') {
-            variableJSON.variableType = type;
-            if (value !== undefined) {
-                variableJSON.value = value;
-            }
-            newVariable = Entry.Variable.create(variableJSON);
-            variables.splice(variables.indexOf(v), 0, newVariable);
         }
         this.createVariableView(newVariable);
         this.removeVariable(v);
