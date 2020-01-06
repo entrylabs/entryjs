@@ -102,6 +102,12 @@ Entry.Playground = class Playground {
             this.generateSoundView(soundView);
             this.soundView_ = soundView;
 
+            const tableView = Entry.createElement('div', 'entryTable')
+                .addClass('entryPlaygroundTableWorkspace entryRemove')
+                .appendTo(this.view_);
+            this.generateTableView(tableView);
+            this.tableView_ = tableView;
+
             const defaultView = Entry.createElement('div', 'entryDefault')
                 .addClass('entryPlaygroundDefaultWorkspace')
                 .appendTo(this.view_);
@@ -211,6 +217,16 @@ Entry.Playground = class Playground {
         variableTab.innerHTML = Lang.Workspace.tab_attribute;
         this.tabViewElements.variable = variableTab;
         this.variableTab = variableTab;
+
+        const tableTab = Entry.createElement('li', 'entryTableTab')
+            .addClass('entryTabListItemWorkspace entryTableTabWorkspace')
+            .appendTo(tabList)
+            .bindOnClick(() => {
+                Entry.do('playgroundChangeViewMode', 'table', this.selectedViewMode);
+            });
+        tableTab.innerHTML = Lang.Workspace.tab_table;
+        this.tabViewElements.table = tableTab;
+        this.tableTab = tableTab;
     }
 
     createButtonTabView(tabButtonView) {
@@ -622,6 +638,33 @@ Entry.Playground = class Playground {
                     break;
             }
         }
+    }
+
+    /**
+     * Generate picture view.
+     * @param {!Element} pictureView
+     * @return {Element}
+     */
+    generateTableView(tableView) {
+        if (Entry.type !== 'workspace') {
+            return;
+        }
+        const tableAdd = Entry.createElement('div', 'entryAddTable')
+            .addClass('entryPlaygroundAddTable')
+            .appendTo(tableView);
+
+        const innerTableAdd = Entry.createElement('div', 'entryAddTableInner')
+            .addClass('entryPlaygroundAddTableInner')
+            .bindOnClick(() => {
+                Entry.do('playgroundClickAddTable');
+            })
+            .appendTo(tableAdd);
+        innerTableAdd.innerHTML = Lang.Workspace.table_add;
+        this._tableAddButton = innerTableAdd;
+
+        this.tableListView_ = Entry.createElement('ul', 'entryTableList')
+            .addClass('entryPlaygroundTableList')
+            .appendTo(tableView);
     }
 
     initSortablePictureWidget() {
@@ -1124,6 +1167,8 @@ Entry.Playground = class Playground {
             this.changeViewMode('picture');
         } else if (viewMode === 'sound') {
             this.changeViewMode('sound');
+        } else if (viewMode === 'table') {
+            this.changeViewMode('table');
         }
 
         _.result(this.blockMenu, 'clearRendered');
@@ -1613,7 +1658,7 @@ Entry.Playground = class Playground {
     }
 
     hideTabs() {
-        ['picture', 'text', 'sound', 'variable'].forEach(this.hideTab.bind(this));
+        ['picture', 'text', 'sound', 'variable', 'table'].forEach(this.hideTab.bind(this));
     }
 
     hideTab(item) {
@@ -1624,7 +1669,7 @@ Entry.Playground = class Playground {
     }
 
     showTabs() {
-        ['picture', 'text', 'sound', 'variable'].forEach(this.showTab.bind(this));
+        ['picture', 'text', 'sound', 'variable', 'table'].forEach(this.showTab.bind(this));
     }
 
     showTab(item) {
@@ -2265,6 +2310,8 @@ Entry.Playground = class Playground {
                     return this._pictureAddButton;
                 case 'soundAddButton':
                     return this._soundAddButton;
+                case 'tableAddButton':
+                    return this._tableAddButton;
             }
         } else {
         }
