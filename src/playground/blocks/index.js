@@ -17,7 +17,7 @@ const basicBlockList = [
     require('./block_calc'),
     require('./block_variable'),
     require('./block_func'),
-    require('./block_analyze'),
+    require('./block_analysis'),
 ];
 
 Entry.EXPANSION_BLOCK = {};
@@ -59,7 +59,7 @@ function getBlockObject(items) {
 function registerHardwareBlockToStatic(hardwareModules) {
     EntryStatic.DynamicHardwareBlocks = _union(
         _flatten(hardwareModules.map((hardware) => hardware.blockMenuBlocks || [])),
-        EntryStatic.DynamicHardwareBlocks,
+        EntryStatic.DynamicHardwareBlocks
     );
 }
 
