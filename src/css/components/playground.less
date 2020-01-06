@@ -1398,3 +1398,195 @@
         opacity: 0.8;
     }
 }
+
+.entryPlaygroundTableWorkspace {
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 8px;
+    background-color: #f9f9f9;
+    border-radius: 0 0 0 6px;
+    top: 80px;
+    margin-left: 0;
+}
+
+.entryPlaygroundTableEdit {
+    position: absolute;
+    left: 253px;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    overflow: hidden;
+    border-left: 1px solid #e2e2e2;
+    background-color: #f2f2f2;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+
+    .entryPlaygroundTableEditWrapper {
+        text-align: center;
+    }
+
+    .entryPlaygroundTableEditImage {
+        .backgroundImage('sound_edit.gif');
+        width: 160px;
+        height: 160px;
+        -o-object-fit: contain;
+        object-fit: contain;
+        margin: 0 auto 24px;
+        background-size: 160px auto;
+    }
+
+    .entryPlaygroundTableEditText {
+        margin: 0 auto;
+        font-size: 14px;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: -0.3px;
+        text-align: center;
+        color: #555555;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+}
+
+.entryPlaygroundAddTable {
+    width: 254px;
+    padding: 8px 0;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
+}
+
+.entryPlaygroundAddTablePhone {
+    position: relative;
+    height: 50px;
+    cursor: pointer;
+    border-bottom: 1pt solid #ebeff1;
+}
+
+.entryPlaygroundAddTableInner {
+    display: block;
+    width: 146px;
+    height: 40px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #4f80ff;
+    border-radius: 4px;
+    color: #4f80ff;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 38px;
+    cursor: pointer;
+}
+
+.entryPlaygroundAddTableInnerPhone {
+    display: block;
+    height: 40px;
+    background-color: #cdcfc9;
+    color: #656565;
+    text-align: center;
+    font-size: 10.5pt;
+    line-height: 36px;
+    margin: 10px;
+    border: 2px dashed #737373;
+    width: 220px;
+}
+
+.entryPlaygroundTableList {
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    width: 254px;
+    top: 57px;
+    bottom: 0;
+    overflow-y: hidden;
+    list-style: none;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
+}
+
+.entryPlaygroundTableListPhone {
+    position: absolute;
+    padding: 0px;
+    margin: 0px;
+    width: 254px;
+    top: 57px;
+    bottom: 0px;
+    overflow: hidden;
+    overflow-y: auto;
+    list-style: none;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
+    border-radius: 0 0 0 6px;
+}
+
+.entryPlaygroundTableElement {
+    display: block;
+    position: relative;
+    background-color: #ecf8ff;
+    border-bottom: 1px solid #d6e9f4;
+    padding: 0 56px 0 64px;
+    height: 61px;
+    color: #2c313d;
+    cursor: pointer;
+
+    &.entryTableSelected {
+        background-color: #fff;
+    }
+}
+
+.entryPlaygroundTableThumbnail {
+    position: absolute;
+    height: 44px;
+    width: 40px;
+    top: 8px;
+    left: 16px;
+    border: 1px solid #e2e2e2;
+    background-color: #fff;
+    border-radius: 4px;
+    background-size: 28px auto;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+
+    &.entryPlaygroundTablePlay {
+        .backgroundImage('workspace_sound_play.png');
+    }
+
+    &.entryPlaygroundTableStop {
+        .backgroundImage('workspace_sound_stop.png');
+    }
+}
+
+.entryPlaygroundTableName {
+    width: 100%;
+    height: 24px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    margin-top: 10px;
+    padding: 0 4px;
+    background-color: #fff;
+    outline: 0;
+    font-size: 12px;
+    text-overflow: ellipsis;
+    color: #2c313d;
+    font-weight: 600;
+    cursor: text;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+}
+.entryPlaygroundTableName:focus,
+.entryPlaygroundTableName:active {
+    border-color: #4f80ff;
+}

@@ -129,6 +129,37 @@
         dom: ['playground', 'soundAddButton'],
     };
 
+    c[COMMAND_TYPES.playgroundClickAddTable] = {
+        do() {
+            Entry.dispatchEvent('openTableManager');
+        },
+        state() {
+            return [];
+        },
+        log() {
+            return [];
+        },
+        validate: false,
+        undo: 'playgroundClickAddTableCancel',
+        dom: ['playground', 'tableAddButton'],
+    };
+
+    c[COMMAND_TYPES.playgroundClickAddTableCancel] = {
+        do() {
+            Entry.dispatchEvent('dismissModal');
+        },
+        state() {
+            return [];
+        },
+        log() {
+            return [];
+        },
+        validate: false,
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        undo: '',
+        dom: ['playground', 'tableAddButton'],
+    };
+
     c[COMMAND_TYPES.playgroundClickAddExpansionBlock] = {
         do() {
             Entry.dispatchEvent('openExpansionBlockManager');

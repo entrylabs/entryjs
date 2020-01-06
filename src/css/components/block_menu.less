@@ -30,7 +30,8 @@
         }
         &.append {
             bottom: 0;
-            transform: rotate(180deg);
+            -webkit-transform: rotate(180deg);
+                    transform: rotate(180deg);
         }
         .active {
             display: block;
@@ -91,7 +92,7 @@
 .blockMenuContainer {
     display: inline-block;
     vertical-align: top;
-    width: 194px;
+    width: 254px;
     margin-left:2px;
     height: 100%;
     background-color: #ecf8ff;
@@ -101,6 +102,7 @@
     .blockMenuWrapper {
         overflow: hidden;
         height: 100%;
+        -webkit-transition: width ease 0.2s;
         transition: width ease 0.2s;
     }
 
@@ -441,16 +443,6 @@
     to {left: 64px;}
 }
 
-@-ms-keyframes foldBlockly {
-    from {}
-    to {left: 64px;}
-}
-
-@-moz-keyframes foldBlockly {
-    from {}
-    to {left: 64px;}
-}
-
 @-webkit-keyframes foldBlockly {
     from {}
     to {left: 64px;}
@@ -464,21 +456,6 @@
 }
 
 @keyframes foldOutBlockly {
-    from {left: 64px;}
-    to {}
-}
-
-@-o-keyframes foldOutBlockly {
-    from {left: 64px;}
-    to {}
-}
-
-@-ms-keyframes foldOutBlockly {
-    from {left: 64px;}
-    to {}
-}
-
-@-moz-keyframes foldOutBlockly {
     from {left: 64px;}
     to {}
 }
