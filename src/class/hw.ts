@@ -55,7 +55,7 @@ class Hardware implements Entry.Hardware {
             localStorage.setItem('entryhwRoomId', this.sessionRoomId);
         }
 
-        this.socketConnectionRetryCount = 2;
+        this.socketConnectionRetryCount = 3;
         this.programConnected = false;
         this.portData = {};
         this.sendQueue = {};
@@ -92,7 +92,7 @@ class Hardware implements Entry.Hardware {
         } catch (e) {
             Entry.toast.alert(
                 window.Lang.Hw.hw_module_load_fail_title,
-                `${moduleName} ${window.Lang.Hw.hw_module_load_fail_desc}`
+                `${moduleName} ${window.Lang.Hw.hw_module_load_fail_desc}`,
             );
         }
     }
@@ -104,7 +104,6 @@ class Hardware implements Entry.Hardware {
             socket.io.reconnectionDelayMax(1000);
             socket.io.timeout(1000);
             socket.on('connect', () => {
-                socket.io.reconnection(false);
                 this._handleSocketConnected(socket);
                 resolve();
             });
@@ -167,7 +166,7 @@ class Hardware implements Entry.Hardware {
             this._setSocketClosed();
             this.reconnectionTimeout = window.setTimeout(() => {
                 this._initSocket();
-            }, 1000);
+            }, 1500);
         });
 
         socket.on('reconnect_failed', () => {
@@ -184,6 +183,7 @@ class Hardware implements Entry.Hardware {
     private _setSocketClosed(needRedraw: boolean = true) {
         this.programConnected = false;
         this.hwModule = undefined;
+        this.currentDeviceKey = undefined;
         needRedraw && Entry.dispatchEvent('hwChanged');
     }
 
@@ -191,7 +191,7 @@ class Hardware implements Entry.Hardware {
         const connectHttpsWebSocket = (url: string) =>
             // TODO ajax 로 entry-hw 살아있는지 확인 후 연결시도 (TRIAL_LIMIT = ajax 로)
             this._trySocketConnect(url, {
-                transports: ['websocket'],
+                transports: ['websocket', 'polling'],
                 query: {
                     client: true,
                     roomId: this.sessionRoomId,
@@ -203,16 +203,29 @@ class Hardware implements Entry.Hardware {
                 clearTimeout(this.reconnectionTimeout);
                 this.reconnectionTimeout = undefined;
             }
+            this.socket.io.reconnection(true);
             this.socket.connect();
         } else {
             connectHttpsWebSocket(this.httpsServerAddress)
-                .catch(() => connectHttpsWebSocket(this.httpsServerAddress2))
                 .catch(() => {
+                    if (this.programConnected || this.socket) {
+                        return;
+                    }
+                    return connectHttpsWebSocket(this.httpsServerAddress2);
+                })
+                .catch(() => {
+                    if (this.programConnected || this.socket) {
+                        return;
+                    }
+
                     if (['http:', 'file:'].indexOf(location.protocol) > -1) {
                         return connectHttpsWebSocket(this.httpServerAddress);
                     }
                 })
                 .catch(() => {
+                    if (this.programConnected || this.socket) {
+                        return;
+                    }
                     console.warn('All hardware socket connection failed');
                     this._setSocketClosed();
                 });
@@ -334,10 +347,12 @@ class Hardware implements Entry.Hardware {
     }
 
     private _disconnectHardware() {
-        Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
-        this.currentDeviceKey = undefined;
-        this.hwModule = undefined;
-        Entry.dispatchEvent('hwChanged');
+        if (this.hwModule) {
+            Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
+            this.currentDeviceKey = undefined;
+            this.hwModule = undefined;
+            Entry.dispatchEvent('hwChanged');
+        }
     }
 
     disconnectSocket() {
@@ -361,7 +376,7 @@ class Hardware implements Entry.Hardware {
             Entry.toast.alert(
                 window.Lang.Hw.hw_module_terminaltion_title,
                 window.Lang.Hw.hw_module_terminaltion_desc,
-                false
+                false,
             );
         }
     }
@@ -446,8 +461,8 @@ class Hardware implements Entry.Hardware {
                 .concat(
                     this.sendQueue.readablePorts.slice(
                         target + 1,
-                        this.sendQueue.readablePorts.length
-                    )
+                        this.sendQueue.readablePorts.length,
+                    ),
                 );
         }
     }
@@ -522,7 +537,7 @@ class Hardware implements Entry.Hardware {
             return;
         }
         const key = `${Entry.Utils.convertIntToHex(data.company)}.${Entry.Utils.convertIntToHex(
-            data.model
+            data.model,
         )}`;
 
         if (this.currentDeviceKey && key === this.currentDeviceKey) {
@@ -594,7 +609,7 @@ class Hardware implements Entry.Hardware {
                                 localStorage.setItem('skipNoticeHWOldVersion', 'true');
                             }
                             resolve();
-                        }
+                        },
                     );
             } else {
                 resolve();
@@ -621,7 +636,7 @@ class Hardware implements Entry.Hardware {
             },
             runViewer(sUrl: string, fpCallback: (bNotInstalled: boolean) => void) {
                 this._w.document.write(
-                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`
+                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`,
                 );
                 let nCounter = 0;
                 const bNotInstalled = false;
@@ -696,10 +711,11 @@ class Hardware implements Entry.Hardware {
         function executeIe(customUrl: string) {
             navigator.msLaunchUri(
                 customUrl,
-                () => {},
+                () => {
+                },
                 () => {
                     hw.openHardwareDownloadPopup();
-                }
+                },
             );
         }
 

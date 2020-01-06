@@ -57,7 +57,6 @@ class dmetMatrix {
         this._id = _id;
         this.#id = id;
         this.#info = info;
-
     }
 
     toJSON() {
@@ -70,7 +69,6 @@ class dmetMatrix {
             variableType: this.variableType,
         };
     }
-
 
     #findLastArray(array) {
         const indexArray = [...array];
@@ -87,7 +85,7 @@ class dmetMatrix {
         if (typeof key === 'number') {
             return this.#array[key - 1];
         } else if (Array.isArray(key)) {
-            return get(this.#array, `[${key.map(x => x - 1).join('][')}]`);
+            return get(this.#array, `[${key.map((x) => x - 1).join('][')}]`);
         } else if (typeof key === 'string') {
             return this.#object[key];
         }
@@ -314,7 +312,7 @@ class dmetList {
         if (Array.isArray(data)) {
             this.#data = data;
         } else if (data.isDmet || isPlainObject(data)) {
-            const { list = [], array, value, _id, id = this.#id, ...info } = data;
+            const { list = [], array = [], value, _id, id = this.#id, ...info } = data;
             if (Array.isArray(array)) {
                 this.#array = array;
                 this.#array.map((value) => {

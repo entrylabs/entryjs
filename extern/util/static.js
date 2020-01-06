@@ -372,7 +372,7 @@ EntryStatic.getAllBlocks = function() {
             blocks: ['functionAddButton'],
         },
         {
-            category: 'analyze',
+            category: 'analysis',
             blocks: [
                 'analizyDataAddButton',
                 'add_row_to_matrix',
