@@ -51,8 +51,8 @@ Entry.Kingcoding.setLanguage = function() {
                 kingcoding_set_digital2: '디지털 2번 제어  %1 %2',
                 kingcoding_get_number_sensor_1_value: '아날로그 1번 센서값(0~100)',
                 kingcoding_get_number_sensor_2_value: '아날로그 2번 센서값(0~100)',
-                kingcoding_get_digital_1_value: '디지털 1번 감지',
-                kingcoding_get_digital_2_value: '디지털 2번 감지',
+                kingcoding_get_digital_1_value: '디지털 1번 센서 참 ',
+                kingcoding_get_digital_2_value: '디지털 2번 센서 참',
             },
         },
         en: {
@@ -537,74 +537,74 @@ Entry.Kingcoding.getBlocks = function() {
             ] },
         },
         
-        // kingcoding_get_digital_1_value: {
-        //     color: EntryStatic.colorSet.block.default.HARDWARE,
-        //     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-        //     fontColor: '#fff',
-        //     skeleton: 'basic_boolean_field',
-        //     statements: [],
-        //     params: [
-        //         {
-        //             type: 'Text',
-        //             fontSize: 11,
-        //             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-        //             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-        //         },
-        //     ],
-        //     events: {},
-        //     def: {
-        //         params: [null],
-        //         type: 'kingcoding_get_digital_1_value',
-        //     },
-        //     paramsKeyMap: {
-        //         PORT: 0,
-        //     },
-        //     class: 'Kingcoding3',
-        //     isNotFor: ['Kingcoding'],
-        //     func: function(sprite, script) {
+        kingcoding_get_digital_1_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Text',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'kingcoding_get_digital_1_value',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'Kingcoding3',
+            isNotFor: ['Kingcoding'],
+            func: function(sprite, script) {
                 
-        //         Entry.hw.setDigitalPortValue(9, 1); //값 요청 
-        //         var ret = Entry.hw.getDigitalPortValue(2);
-        //         ret = ret & 1  // mask: 0000 0001
-        //         console.log("digi 1 :"+ret)
-        //         return ret;
-        //      },
-        //     syntax: { js: [], py: ['Kingcoding.is_button_1_pressed()'] },
-        // },
-        // kingcoding_get_digital_2_value: {
-        //     color: EntryStatic.colorSet.block.default.HARDWARE,
-        //     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-        //     fontColor: '#fff',
-        //     skeleton: 'basic_boolean_field',
-        //     statements: [],
-        //     params: [
-        //         {
-        //             type: 'Text',
-        //             fontSize: 11,
-        //             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-        //             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-        //         },
-        //     ],
-        //     events: {},
-        //     def: {
-        //         params: [null],
-        //         type: 'kingcoding_get_digital_2_value',
-        //     },
-        //     paramsKeyMap: {
-        //         PORT: 0,
-        //     },
-        //     class: 'Kingcoding3',
-        //     isNotFor: ['Kingcoding'],
-        //     func: function(sprite, script) {
+                Entry.hw.setDigitalPortValue(9, 1); //값 요청 
+                var ret = Entry.hw.getDigitalPortValue(2);
+                ret = ret & 1  // mask: 0000 0001
+                console.log("digi 1 :"+ret)
+                return ret;
+             },
+            syntax: { js: [], py: ['Kingcoding.is_button_1_pressed()'] },
+        },
+        kingcoding_get_digital_2_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Text',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'kingcoding_get_digital_2_value',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'Kingcoding3',
+            isNotFor: ['Kingcoding'],
+            func: function(sprite, script) {
                 
-        //         Entry.hw.setDigitalPortValue(10, 1); //값 요청 
-        //         var ret = Entry.hw.getDigitalPortValue(2);
-        //         ret = ret & 2  // mask: 0000 0010
-        //         console.log("digi 2 :"+ret)
-        //         return ret;
-        //     },
-        //     syntax: { js: [], py: ['Kingcoding.is_button_2_pressed()'] },
-        // },
+                Entry.hw.setDigitalPortValue(10, 1); //값 요청 
+                var ret = Entry.hw.getDigitalPortValue(2);
+                ret = ret & 2  // mask: 0000 0010
+                console.log("digi 2 :"+ret)
+                return ret;
+            },
+            syntax: { js: [], py: ['Kingcoding.is_button_2_pressed()'] },
+        },
         
     };
 };
