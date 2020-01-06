@@ -385,10 +385,6 @@ EntryStatic.getAllBlocks = function() {
             ],
         },
         {
-            category: 'ai',
-            blocks: [],
-        },
-        {
             category: 'expansion',
             blocks: [
                 'expansionBlockAddButton',
