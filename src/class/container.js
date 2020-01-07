@@ -33,7 +33,7 @@ Entry.Container = class Container {
          * @type {String}
          */
         this.inputValue = {};
-
+        this.sttValue = {};
         /**
          * object model store copied object by context menu
          * @type {object model}
@@ -958,6 +958,9 @@ Entry.Container = class Container {
     getInputValue() {
         return this.inputValue.getValue();
     }
+    getSttValue() {
+        return this.sttValue.getValue();
+    }
 
     /**
      * set canvas inputValue
@@ -978,6 +981,20 @@ Entry.Container = class Container {
             Entry.console.stopInput(inputValue);
         }
         this.inputValue.complete = true;
+    }
+    setSttValue(inputValue) {
+        console.log('setStt', inputValue);
+        if (this.sttValue.complete) {
+            return;
+        }
+        if (!inputValue) {
+            this.sttValue.setValue('');
+        } else {
+            this.sttValue.setValue(inputValue);
+        }
+        Entry.dispatchEvent('sttSubmitted');
+
+        this.sttValue.complete = true;
     }
 
     resetSceneDuringRun() {
@@ -1057,6 +1074,15 @@ Entry.Container = class Container {
 
     showProjectAnswer() {
         const answer = this.inputValue;
+        console.log(answer);
+        if (!answer) {
+            return;
+        }
+        answer.setVisible(true);
+    }
+
+    showSttAnswer() {
+        const answer = this.sttValue;
         if (!answer) {
             return;
         }
@@ -1065,6 +1091,35 @@ Entry.Container = class Container {
 
     hideProjectAnswer(removeBlock, notIncludeSelf) {
         const answer = this.inputValue;
+        if (!answer || !answer.isVisible() || Entry.engine.isState('run')) {
+            return;
+        }
+
+        const objects = this.getAllObjects();
+        const answerTypes = ['ask_and_wait', 'get_canvas_input_value', 'set_visible_answer'];
+
+        for (let i = 0, len = objects.length; i < len; i++) {
+            const code = objects[i].script;
+            for (let j = 0; j < answerTypes.length; j++) {
+                const blocks = code.getBlockList(false, answerTypes[j]);
+                if (notIncludeSelf) {
+                    const index = blocks.indexOf(removeBlock);
+                    if (~index) {
+                        blocks.splice(index, 1);
+                    }
+                }
+                if (blocks.length) {
+                    return;
+                }
+            }
+        }
+
+        //answer related blocks not found
+        //hide canvas answer view
+        answer.setVisible(false);
+    }
+    hideSttAnswer(removeBlock, notIncludeSelf) {
+        const answer = this.sttValue;
         if (!answer || !answer.isVisible() || Entry.engine.isState('run')) {
             return;
         }

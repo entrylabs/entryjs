@@ -81,14 +81,15 @@ class AudioUtils {
         }
     }
 
-    async startRecord(recordMilliSecond) {
-        return await new Promise(async (resolve, reject) => {
+    startRecord(recordMilliSecond) {
+        return new Promise(async (resolve, reject) => {
             if (!this.isAudioInitComplete) {
                 console.log('audio not initialized');
                 resolve();
                 return;
             }
-
+            this.isRecording = true;
+            console.log('start record');
             // this.isRecording = true;
             if (this._audioContext.state === 'suspended') {
                 await this.initUserMedia();
@@ -110,6 +111,7 @@ class AudioUtils {
                     case STATUS_CODE.NOT_RECOGNIZED:
                         this._socketClient.disconnect();
                         this.stopRecord();
+                        Entry.container.setSttValue();
                         resolve('');
                         break;
                     default:
@@ -118,6 +120,7 @@ class AudioUtils {
                         if (isArray) {
                             this._socketClient.disconnect();
                             this.stopRecord();
+                            Entry.container.setSttValue(parsed[0]);
                             resolve(parsed[0]);
                         } else if (typeof e === 'string') {
                             console.log('Received String: ', e, ' ');
@@ -129,7 +132,6 @@ class AudioUtils {
             });
             this._properStopCall = setTimeout(this.stopRecord, recordMilliSecond);
             this._noInputStopCall = setTimeout(() => {
-                Entry.dispatchEvent('audioRecordingDone');
                 this.stopRecord();
                 clearTimeout(this._properStopCall);
             }, 3000);
@@ -150,8 +152,8 @@ class AudioUtils {
         if (!this.isAudioInitComplete || !this.isRecording) {
             return;
         }
-        Entry.dispatchEvent('audioRecordProcessing');
-
+        Entry.dispatchEvent('audioRecordingDone');
+        console.log('stopCalled');
         this.isRecording = false;
 
         if (option.silent) {

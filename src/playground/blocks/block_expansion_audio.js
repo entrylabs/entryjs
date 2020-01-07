@@ -66,37 +66,71 @@ Entry.EXPANSION_BLOCK.audio.getBlocks = function() {
                 py: [],
             },
         },
-        toggle_microphone: {
+        stt_microphone: {
             color: EntryStatic.colorSet.block.default.CALC,
             outerLine: EntryStatic.colorSet.block.darken.CALC,
-            skeleton: 'basic_string_field',
+            skeleton: 'basic',
             statements: [],
-            template: '음성을 문자로 바꾼 값',
-            events: {},
+
+            events: {
+                viewAdd: [
+                    function() {
+                        if (Entry.container) {
+                            Entry.container.showSttAnswer();
+                        }
+                    },
+                ],
+                viewDestroy: [
+                    function(block, notIncludeSelf) {
+                        if (Entry.container) {
+                            Entry.container.hideSttAnswer(block, notIncludeSelf);
+                        }
+                    },
+                ],
+            },
+            template: '음성을 문자로 바꾸기 ',
             def: {
                 params: [3],
-                type: 'toggle_microphone',
+                type: 'stt_microphone',
             },
             paramsKeyMap: {
                 VALUE: 0,
             },
             class: 'audio',
             isNotFor: ['audio'],
-            async func(sprite, script) {
-                try {
-                    if (audioUtils.isRecording) {
-                        throw new Entry.Utils.AsyncError();
-                    }
+            func(sprite, script) {
+                const inputModel = Entry.container.sttValue;
+                if (!audioUtils.isAudioInitComplete) {
+                    audioUtils.initUserMedia();
+                    return script;
+                } else if (audioUtils.isRecording) {
+                    return script;
+                } else if (inputModel.complete && inputModel.sprite == sprite && script.isInit) {
+                    delete inputModel.complete;
+                    delete script.isInit;
+                    delete inputModel.sprite;
+                    return script.callReturn();
+                } else {
                     audioUtils.isRecording = true;
-                    if (!audioUtils.isAudioInitComplete) {
-                        await audioUtils.initUserMedia();
-                    }
-                    const result = await audioUtils.startRecord(10 * 1000);
-                    Entry.dispatchEvent('audioRecordingDone');
-                    return result;
-                } catch (err) {
-                    throw err;
+                    script.isInit = true;
+                    inputModel.script = script;
+                    inputModel.sprite = sprite;
+                    inputModel.complete = false;
+                    audioUtils.startRecord(10 * 1000);
+                    return script;
                 }
+                // if (audioUtils.isRecording) {
+                //     return script;
+                // }
+                // audioUtils.isRecording = true;
+                // if (!audioUtils.isAudioInitComplete) {
+                //     audioUtils.initUserMedia();
+                //     return script;
+                // }
+                // let result = audioUtils.startRecord(10 * 1000);
+                // if (result instanceof String) {
+                //     return script.callReturn();
+                // }
             },
             syntax: {
                 js: [],

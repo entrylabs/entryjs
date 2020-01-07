@@ -550,7 +550,6 @@ Entry.Stage.prototype.showAudioRec = function() {
     if (!this.audioRecShade) {
         this.audioRecShade = _createAudioRecShade();
     }
-    console.log('called');
     this.canvas.addChild(this.audioRecShade);
     this.updateForce();
     function _createAudioRecShade() {

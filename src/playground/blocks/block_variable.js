@@ -107,7 +107,6 @@ module.exports = {
                     const inputModel = Entry.container.inputValue;
                     const inputView = Entry.stage.inputField;
                     const message = script.getValue('VALUE', script);
-
                     if (_.isUndefined(message) || message === '') {
                         throw new Error('message can not be empty');
                     }

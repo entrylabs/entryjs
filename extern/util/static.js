@@ -404,7 +404,7 @@ EntryStatic.getAllBlocks = function() {
                 'set_tts_property',
                 'audio_title',
                 'check_microphone',
-                'toggle_microphone',
+                'stt_microphone',
                 'get_microphone_volume',
             ],
         },
