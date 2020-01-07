@@ -533,8 +533,6 @@ class Hardware implements Entry.Hardware {
     }
 
     setZero() {
-        this.hwModule.commandStatus = {};
-
         if (!this.hwModule) {
             return;
         }
