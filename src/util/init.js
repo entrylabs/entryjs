@@ -107,9 +107,9 @@ Entry.init = function(container, options) {
     Entry.soundQueue.urls = new Set();
     Entry.soundQueue.total = 0;
     Entry.soundQueue.loadCallback = (src) => {
-        if (!Entry.soundQueue.urls.has(src)) {
-            return;
-        }
+        // if (!Entry.soundQueue.urls.has(src)) {
+        //     return;
+        // }
         Entry.soundQueue.total = Math.max(Entry.soundQueue.total, Entry.soundQueue.urls.size);
         Entry.soundQueue.urls.delete(src);
         const now = Entry.soundQueue.urls.size;
