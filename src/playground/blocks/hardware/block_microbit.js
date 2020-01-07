@@ -126,7 +126,10 @@ Entry.Microbit = new (class Microbit {
         }
     }
 
-    afterReceivingData(portData, commandStatus) {
+    onReceiveData(portData, commandStatus) {
+        if (!portData.payload) {
+            return;
+        }
         if (portData.payload.isSensorMap) {
             return;
         }

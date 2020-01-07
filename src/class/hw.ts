@@ -163,9 +163,6 @@ class Hardware implements Entry.Hardware {
         messageHandler.addEventListener('data', (portData) => {
             this.checkDevice(portData);
             this._updatePortData(portData);
-            if (portData.payload && this.hwModule.afterReceivingData) {
-                this.hwModule.afterReceivingData(portData, this.commandStatus);
-            }
             if (
                 this.communicationType === 'manual' &&
                 this.hwModule &&
