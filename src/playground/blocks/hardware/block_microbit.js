@@ -85,11 +85,13 @@ Entry.Microbit = new (class Microbit {
             'microbit_set_servo',
             'microbit_set_servo_period',
         ];
+        this.commandStatus = {};
     }
 
     setZero() {
         this.requestCommand(functionKeys.RESET);
         this.lastGesture = -1;
+        this.commandStatus = {};
         delete Entry.hw.portData.sensorData;
     }
 
@@ -108,7 +110,7 @@ Entry.Microbit = new (class Microbit {
      */
     requestCommandWithResponse(entityId, type, payload) {
         let codeId = `${entityId}-${type}`;
-        if (Entry.hw.commandStatus[codeId] == null) {
+        if (this.commandStatus[codeId] == null) {
             // 첫 진입시 무조건 AsyncError
             Entry.hw.sendQueue = {
                 type,
@@ -116,17 +118,17 @@ Entry.Microbit = new (class Microbit {
             };
             Entry.hw.update(codeId);
             throw new Entry.Utils.AsyncError();
-        } else if (Entry.hw.commandStatus[codeId] === 'pending') {
+        } else if (this.commandStatus[codeId] === 'pending') {
             // 두 번째 이상의 진입시도이며 작업이 아직 끝나지 않은 경우
             throw new Entry.Utils.AsyncError();
-        } else if (Entry.hw.commandStatus[codeId] === 'completed') {
+        } else if (this.commandStatus[codeId] === 'completed') {
             // 두 번째 이상의 진입시도이며 pending 도 아닌 경우
             // 블록 func 로직에서 다음 데이터를 처리한다.
-            Entry.hw.commandStatus[codeId] = null;
+            this.commandStatus[codeId] = null;
         }
     }
 
-    onReceiveData(portData, commandStatus) {
+    onReceiveData(portData) {
         if (!portData.payload) {
             return;
         }
@@ -134,10 +136,10 @@ Entry.Microbit = new (class Microbit {
             return;
         }
         if (portData.payload.codeId) {
-            commandStatus[portData.payload.codeId] = 'completed';
+            this.commandStatus[portData.payload.codeId] = 'completed';
         }
         if (portData.payload.codeIdMiss) {
-            commandStatus[portData.payload.codeIdMiss] = 'completed';
+            this.commandStatus[portData.payload.codeIdMiss] = 'completed';
         }
     }
 
