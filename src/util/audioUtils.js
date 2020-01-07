@@ -81,18 +81,15 @@ class AudioUtils {
         }
     }
 
-    startRecord(recordMilliSecond) {
-        return new Promise(async (resolve) => {
+    async startRecord(recordMilliSecond) {
+        return await new Promise(async (resolve, reject) => {
             if (!this.isAudioInitComplete) {
-                console.error('audio not initialized');
+                console.log('audio not initialized');
                 resolve();
                 return;
             }
-            if (this.isRecording) {
-                console.error('audio is already recording');
-                resolve();
-                return;
-            }
+
+            // this.isRecording = true;
             if (this._audioContext.state === 'suspended') {
                 await this.initUserMedia();
             }
@@ -102,7 +99,6 @@ class AudioUtils {
             this._socketClient = socketClient;
 
             this._audioChunks = [];
-            this.isRecording = true;
 
             this._mediaRecorder.start();
             Entry.dispatchEvent('audioRecording');
@@ -113,16 +109,16 @@ class AudioUtils {
                         break;
                     case STATUS_CODE.NOT_RECOGNIZED:
                         this._socketClient.disconnect();
-                        resolve('');
                         this.stopRecord();
+                        resolve('');
                         break;
                     default:
                         const parsed = JSON.parse(e);
                         const isArray = Array.isArray(parsed);
                         if (isArray) {
                             this._socketClient.disconnect();
-                            resolve(parsed[0]);
                             this.stopRecord();
+                            resolve(parsed[0]);
                         } else if (typeof e === 'string') {
                             console.log('Received String: ', e, ' ');
                         } else {
@@ -133,6 +129,7 @@ class AudioUtils {
             });
             this._properStopCall = setTimeout(this.stopRecord, recordMilliSecond);
             this._noInputStopCall = setTimeout(() => {
+                Entry.dispatchEvent('audioRecordingDone');
                 this.stopRecord();
                 clearTimeout(this._properStopCall);
             }, 3000);
@@ -153,6 +150,7 @@ class AudioUtils {
         if (!this.isAudioInitComplete || !this.isRecording) {
             return;
         }
+        Entry.dispatchEvent('audioRecordProcessing');
 
         this.isRecording = false;
 
@@ -171,7 +169,6 @@ class AudioUtils {
         this._userMediaStream.getTracks().forEach((track) => {
             track.stop();
         });
-
         clearTimeout(this._properStopCall);
         clearTimeout(this._noInputStopCall);
     }

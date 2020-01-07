@@ -1,4 +1,5 @@
 import audioUtils from '../../util/audioUtils';
+import PromiseManager from '../../core/promiseManager';
 
 Entry.EXPANSION_BLOCK.audio = {
     name: 'audio',
@@ -82,11 +83,20 @@ Entry.EXPANSION_BLOCK.audio.getBlocks = function() {
             class: 'audio',
             isNotFor: ['audio'],
             async func(sprite, script) {
-                if (!audioUtils.isAudioInitComplete) {
-                    await audioUtils.initUserMedia();
+                try {
+                    if (audioUtils.isRecording) {
+                        throw new Entry.Utils.AsyncError();
+                    }
+                    audioUtils.isRecording = true;
+                    if (!audioUtils.isAudioInitComplete) {
+                        await audioUtils.initUserMedia();
+                    }
+                    const result = await audioUtils.startRecord(10 * 1000);
+                    Entry.dispatchEvent('audioRecordingDone');
+                    return result;
+                } catch (err) {
+                    throw err;
                 }
-                let result = await audioUtils.startRecord(10 * 1000);
-                return result;
             },
             syntax: {
                 js: [],
