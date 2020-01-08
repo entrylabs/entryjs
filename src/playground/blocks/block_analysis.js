@@ -49,7 +49,7 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_icon.svg',
+                        img: 'block_icon/block_analysis.svg',
                         size: 11,
                     },
                 ],
@@ -106,7 +106,7 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_icon.svg',
+                        img: 'block_icon/block_analysis.svg',
                         size: 11,
                     },
                 ],
@@ -176,7 +176,7 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_icon.svg',
+                        img: 'block_icon/block_analysis.svg',
                         size: 11,
                     },
                 ],
@@ -267,7 +267,7 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_icon.svg',
+                        img: 'block_icon/block_analysis.svg',
                         size: 11,
                     },
                 ],
