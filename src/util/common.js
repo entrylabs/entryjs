@@ -1,4 +1,6 @@
 import fetch from 'isomorphic-fetch';
+import _parseInt from 'lodash/parseInt';
+import _isNaN from 'lodash/isNaN';
 
 const _memoize = require('lodash/memoize');
 const _assign = require('lodash/assign');
@@ -36,6 +38,16 @@ const Common = {
         const data = await response.json();
         return { data };
     }),
+    parseInt: (str) => {
+        if (typeof str === 'number') {
+            return str;
+        }
+        const result = _parseInt(str);
+        if (_isNaN(result)) {
+            return str;
+        }
+        return result;
+    },
 };
 
 module.exports = Common;
