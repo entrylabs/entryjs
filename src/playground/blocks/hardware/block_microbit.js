@@ -92,10 +92,12 @@ Entry.Microbit = new (class Microbit {
         this.requestCommand(functionKeys.RESET);
         this.lastGesture = -1;
         this.commandStatus = {};
+        this.isEngineStop = true;
         delete Entry.hw.portData.sensorData;
     }
 
     requestCommand(type, payload) {
+        this.isEngineStop = false;
         Entry.hw.sendQueue = {
             type,
             payload,
@@ -109,8 +111,9 @@ Entry.Microbit = new (class Microbit {
      * @param payload
      */
     requestCommandWithResponse(entityId, type, payload) {
-        let codeId = `${entityId}-${type}`;
-        if (this.commandStatus[codeId] == null) {
+        this.isEngineStop = false;
+        const codeId = `${entityId}-${type}`;
+        if (!this.commandStatus[codeId]) {
             // 첫 진입시 무조건 AsyncError
             Entry.hw.sendQueue = {
                 type,
@@ -129,6 +132,9 @@ Entry.Microbit = new (class Microbit {
     }
 
     onReceiveData(portData) {
+        if (this.isEngineStop) {
+            return;
+        }
         if (!portData.payload) {
             return;
         }
@@ -1228,7 +1234,7 @@ Entry.Microbit = new (class Microbit {
                     {
                         type: 'Dropdown',
                         options: [['x축', 0], ['y축', 1], ['z축', 2], ['크기', 3]],
-                        value: 'x',
+                        value: 0,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
