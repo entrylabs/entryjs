@@ -9,6 +9,7 @@ import Toast from '../playground/toast';
 import EntryEvent from '@entrylabs/event';
 import { Destroyer } from '../util/destroyer/Destroyer';
 import { saveAs } from 'file-saver';
+import EntryTable from './EntryTable';
 
 const Entry = require('../entry');
 
@@ -639,33 +640,6 @@ Entry.Playground = class Playground {
         }
     }
 
-    /**
-     * Generate picture view.
-     * @param {!Element} pictureView
-     * @return {Element}
-     */
-    generateTableView(tableView) {
-        if (Entry.type !== 'workspace') {
-            return;
-        }
-        const tableAdd = Entry.createElement('div', 'entryAddTable')
-            .addClass('entryPlaygroundAddTable')
-            .appendTo(tableView);
-
-        const innerTableAdd = Entry.createElement('div', 'entryAddTableInner')
-            .addClass('entryPlaygroundAddTableInner')
-            .bindOnClick(() => {
-                Entry.do('playgroundClickAddTable');
-            })
-            .appendTo(tableAdd);
-        innerTableAdd.innerHTML = Lang.Workspace.table_add;
-        this._tableAddButton = innerTableAdd;
-
-        this.tableListView_ = Entry.createElement('ul', 'entryTableList')
-            .addClass('entryPlaygroundTableList')
-            .appendTo(tableView);
-    }
-
     initSortablePictureWidget() {
         if (this.pictureSortableListWidget) {
             return;
@@ -701,6 +675,54 @@ Entry.Playground = class Playground {
             key: `${id}-${value.id}`,
             item: value.view,
         }));
+    }
+
+    generateTableView(tableView) {
+        if (Entry.type !== 'workspace') {
+            return;
+        }
+        const tableAdd = Entry.createElement('div', 'entryAddTable')
+            .addClass('entryPlaygroundAddTable')
+            .appendTo(tableView);
+
+        const innerTableAdd = Entry.createElement('div', 'entryAddTableInner')
+            .addClass('entryPlaygroundAddTableInner')
+            .bindOnClick(() => {
+                Entry.do('playgroundClickAddTable');
+            })
+            .appendTo(tableAdd);
+        innerTableAdd.innerHTML = Lang.Workspace.table_add;
+        this._tableAddButton = innerTableAdd;
+
+        this.tableListView_ = Entry.createElement('ul', 'entryTableList')
+            .addClass('entryPlaygroundTableList')
+            .appendTo(tableView);
+
+        const tableDom = Entry.createElement('div', 'entryTable')
+            .addClass('entryPlaygroundTable')
+            .appendTo(tableView);
+
+        this.entryTable = new EntryTable(tableDom);
+    }
+
+    initSortableTableWidget() {
+        if (this.tableSortableListWidget) {
+            return;
+        }
+
+        console.log('?#!@', this._getSortablePictureList());
+        this.tableSortableListWidget = new Sortable({
+            container: this.tableListView_,
+            data: {
+                height: '100%',
+                sortableTarget: ['entryPlaygroundPictureThumbnail'],
+                lockAxis: 'y',
+                items: this._getSortablePictureList(),
+            },
+        });
+        this.tableSortableListWidget.on('change', ([newIndex, oldIndex]) => {
+            Entry.playground.movePicture(newIndex, oldIndex);
+        });
     }
 
     /**
@@ -1572,6 +1594,10 @@ Entry.Playground = class Playground {
                     this.injectSound();
                 }
             }
+        }
+
+        if (viewType === 'table') {
+            this.initSortableTableWidget();
         }
 
         if (
