@@ -18,7 +18,7 @@ Entry.VariableContainer = class VariableContainer {
         this.variables_ = [];
         this.messages_ = [];
         this.lists_ = [];
-        this.matrices_ = [];
+        this.tables_ = [];
         this.functions_ = {};
         this.viewMode_ = 'all';
         this.selected = null;
@@ -780,8 +780,8 @@ Entry.VariableContainer = class VariableContainer {
                     variable.generateView(this.lists_.length);
                     this.lists_.push(variable);
                     break;
-                case 'matrix':
-                    this.matrices_.push(variable);
+                case 'table':
+                    this.tables_.push(variable);
                     break;
                 case 'timer':
                     this.generateTimer(variable);
@@ -838,12 +838,12 @@ Entry.VariableContainer = class VariableContainer {
                 }
                 this.generateVariable(variable, this.lists_, 'lists_');
                 this.lists_.push(variable);
-            } else if (type === 'matrix') {
-                if (this.matrices_.some((item) => item.id_ === variable.id_)) {
+            } else if (type === 'table') {
+                if (this.tables_.some((item) => item.id_ === variable.id_)) {
                     continue;
                 }
-                this.generateVariable(variable, this.matrices_, 'matrices_');
-                this.matrices_.push(variable);
+                this.generateVariable(variable, this.tables_, 'tables_');
+                this.tables_.push(variable);
             }
         }
         if (Entry.isEmpty(Entry.engine.projectTimer)) {
@@ -996,13 +996,13 @@ Entry.VariableContainer = class VariableContainer {
      * get variable on canvas
      * @return {Entry.List}
      */
-    getMatrix(id, { isClone, lists } = {}) {
+    getTable(id, { isClone, lists } = {}) {
         const criteria = { id_: id };
-        let matrix = _.find(this.matrices_, criteria);
-        if (isClone && matrix.object_) {
-            matrix = _.find(lists, criteria);
+        let table = _.find(this.tables_, criteria);
+        if (isClone && table.object_) {
+            table = _.find(lists, criteria);
         }
-        return matrix;
+        return table;
     }
 
 
@@ -1372,14 +1372,14 @@ Entry.VariableContainer = class VariableContainer {
         this.updateList();
     }
 
-    removeMatrix(matrix) {
-        if (!(matrix instanceof Entry.Variable)) {
-            matrix = this.getMatrix(matrix.id);
+    removeTable(table) {
+        if (!(table instanceof Entry.Variable)) {
+            table = this.getTable(table.id);
         }
 
-        matrix.remove();
-        const lists = this.matrices_;
-        lists.splice(lists.indexOf(matrix), 1);
+        table.remove();
+        const lists = this.tables_;
+        lists.splice(lists.indexOf(table), 1);
     }
 
     /**
@@ -1642,18 +1642,18 @@ Entry.VariableContainer = class VariableContainer {
         this._addVariableOrList.call(this, 'list', list);
     }
 
-    addMatrix(matrix) {
-        let data = matrix || {
+    addTable(table) {
+        let data = table || {
             isCloud: false,
             name: '데이터 테이블',
             object: null,
-            variableType: 'matrix',
+            variableType: 'table',
         };
 
         if (!(data instanceof Entry.Variable)) {
             data = Entry.Variable.create(data);
         }
-        this.matrices_.unshift(data);
+        this.tables_.unshift(data);
         Entry.playground.reloadPlayground();
         this.updateList();
     }
@@ -3032,7 +3032,7 @@ Entry.VariableContainer = class VariableContainer {
         this.viewMode_ = 'all';
         this.variables_ = [];
         this.lists_ = [];
-        this.matrices_ = [];
+        this.tables_ = [];
         this.messages_ = [];
         this.functions_ = {};
 

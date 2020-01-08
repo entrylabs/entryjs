@@ -746,10 +746,10 @@ Entry.Container = class Container {
                 }
                 break;
             }
-            case 'matrices': {
-                const matrices = Entry.variableContainer.matrices_;
-                if (matrices) {
-                    result = matrices.map((matrix) => [matrix.getName(), matrix.getId()]);
+            case 'tables': {
+                const tables = Entry.variableContainer.tables_;
+                if (tables) {
+                    result = tables.map((table) => [table.getName(), table.getId()]);
                 }
                 break;
             }

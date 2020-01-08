@@ -1,23 +1,27 @@
 import Variable from './variable';
-import { dmetMatrix } from '../../extensions/dmet';
+import { dmetTable } from '../../extensions/dmet';
 
-class MatrixVariable extends Variable {
+class TableVariable extends Variable {
     constructor(variable) {
-        Entry.assert(variable.variableType === 'matrix', 'Invalid variable type given');
+        Entry.assert(variable.variableType === 'table', 'Invalid variable type given');
         super(variable);
-        this.type = 'matrix';
+        this.type = 'table';
         if (!variable.isClone) {
             this.width_ = variable.width ? variable.width : 100;
             this.height_ = variable.height ? variable.height : 120;
             this.scrollPosition = 0;
         }
-        this.data = new dmetMatrix(variable);
+        this.data = new dmetTable(variable);
         this.originData = this.data.toJSON();
         // 정지시 data 초기화.
         Entry.addEventListener('stop', () => {
-            console.log('init matrixVariable');
+            console.log('init tableVariable');
             this.data.from(variable);
         });
+    }
+
+    getLabels() {
+        return this.data.labels;
     }
 
     getArray() {
@@ -26,11 +30,7 @@ class MatrixVariable extends Variable {
     }
 
     getValue(index) {
-        const result = this.data.get(index);
-        if (index.length > 1 && Array.isArray(result)) {
-            return null;
-        }
-        return result;
+        return this.data.getValue(index);
     }
 
     setArray(array) {
@@ -93,4 +93,4 @@ class MatrixVariable extends Variable {
 
 }
 
-export default MatrixVariable;
+export default TableVariable;

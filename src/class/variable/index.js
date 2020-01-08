@@ -4,7 +4,7 @@ import ListVariable from './listVariable';
 import SlideVariable from './slideVariable';
 import TimerVariable from './timerVariable';
 import Variable from './variable';
-import MatrixVariable from './matrixVariable';
+import TableVariable from './tableVariable';
 
 Entry.Variable = Variable;
 Entry.Variable.create = (variableMetadata) => {
@@ -16,8 +16,8 @@ Entry.Variable.create = (variableMetadata) => {
             return new AnswerVariable(variableMetadata);
         case 'list':
             return new ListVariable(variableMetadata);
-        case 'matrix':
-            return new MatrixVariable(variableMetadata);
+        case 'table':
+            return new TableVariable(variableMetadata);
         case 'slide':
             return new SlideVariable(variableMetadata);
         case 'timer':
