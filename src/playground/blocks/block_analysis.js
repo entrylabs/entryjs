@@ -34,8 +34,8 @@ module.exports = {
                 syntax: { js: [], py: [''] },
             },
             append_row_to_table: {
-                color: EntryStatic.colorSet.block.default.ANALIZE,
-                outerLine: EntryStatic.colorSet.block.darken.ANALIZE,
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -44,7 +44,7 @@ module.exports = {
                         value: null,
                         menuName: 'tables',
                         fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.ANALIZE,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
@@ -85,8 +85,8 @@ module.exports = {
                 },
             },
             insert_row_to_table: {
-                color: EntryStatic.colorSet.block.default.ANALIZE,
-                outerLine: EntryStatic.colorSet.block.darken.ANALIZE,
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -95,7 +95,7 @@ module.exports = {
                         value: null,
                         menuName: 'tables',
                         fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.ANALIZE,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
@@ -155,8 +155,8 @@ module.exports = {
                 },
             },
             delete_row_from_table: {
-                color: EntryStatic.colorSet.block.default.ANALIZE,
-                outerLine: EntryStatic.colorSet.block.darken.ANALIZE,
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -165,7 +165,7 @@ module.exports = {
                         value: null,
                         menuName: 'tables',
                         fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.ANALIZE,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
@@ -225,8 +225,8 @@ module.exports = {
                 },
             },
             set_value_from_table: {
-                color: EntryStatic.colorSet.block.default.ANALIZE,
-                outerLine: EntryStatic.colorSet.block.darken.ANALIZE,
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -235,7 +235,7 @@ module.exports = {
                         value: null,
                         menuName: 'tables',
                         fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.ANALIZE,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
@@ -257,7 +257,7 @@ module.exports = {
                         targetIndex: 0,
                         needDeepCopy: true,
                         fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.common.WHITE,
                     },
                     {
@@ -342,8 +342,8 @@ module.exports = {
             },
             // 테이블 %1 %2 개수
             get_table_count: {
-                color: EntryStatic.colorSet.block.default.ANALIZE,
-                outerLine: EntryStatic.colorSet.block.darken.ANALIZE,
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -352,7 +352,7 @@ module.exports = {
                         value: null,
                         menuName: 'tables',
                         fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.ANALIZE,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
@@ -363,7 +363,7 @@ module.exports = {
                         ],
                         value: 'ROW',
                         fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.ANALIZE,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                 ],
@@ -398,8 +398,8 @@ module.exports = {
             },
             // 테이블 %1 행 %2 속성 %3 의 값
             get_value_from_table: {
-                color: EntryStatic.colorSet.block.default.ANALIZE,
-                outerLine: EntryStatic.colorSet.block.darken.ANALIZE,
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -408,7 +408,7 @@ module.exports = {
                         value: null,
                         menuName: 'tables',
                         fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.ANALIZE,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
@@ -430,7 +430,7 @@ module.exports = {
                         targetIndex: 0,
                         needDeepCopy: true,
                         fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.common.WHITE,
                     },
                 ],
@@ -474,8 +474,8 @@ module.exports = {
             },
             // 테이블 %1 속성 %1의 합
             calc_values_from_table: {
-                color: EntryStatic.colorSet.block.default.ANALIZE,
-                outerLine: EntryStatic.colorSet.block.darken.ANALIZE,
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -484,7 +484,7 @@ module.exports = {
                         value: null,
                         menuName: 'tables',
                         fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.ANALIZE,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
@@ -500,7 +500,7 @@ module.exports = {
                         targetIndex: 0,
                         needDeepCopy: true,
                         fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.common.WHITE,
                     },
                     {
@@ -514,7 +514,7 @@ module.exports = {
                         ],
                         value: 'SUM',
                         fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.ANALIZE,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                 ],
