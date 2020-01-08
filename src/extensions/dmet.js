@@ -3,13 +3,15 @@ import uid from 'uid';
 import isPlainObject from 'lodash/isPlainObject';
 import mapValues from 'lodash/mapValues';
 import get from 'lodash/get';
-import _flattenDeep from 'lodash/flattenDeep';
+import set from 'lodash/set';
+import clone from 'lodash/clone';
+import { parseInt } from '../util/common';
 
 function generateId() {
     return uid(8) + cuid();
 }
 
-class dmetMatrix {
+class dmetTable {
     constructor(array = [], id) {
         this.#id = id;
         this.from(array);
@@ -21,10 +23,17 @@ class dmetMatrix {
     #key = generateId();
     #object = {};
     #array = [];
+    #origin = [];
+    #labels = [];
     #info = {};
     #maxRow = 100;
     #maxCol = 100;
-    #variableType = 'matrix';
+    #variableType = 'table';
+    #keyDelimter = '_';
+
+    get labels() {
+        return this.#labels;
+    }
 
     get value() {
         return this.#object;
@@ -42,20 +51,32 @@ class dmetMatrix {
         return this.#variableType;
     }
 
+    setLabel(index, name) {
+        this.#labels[index] = name;
+    }
+
     from(data) {
-        const { list = [], array = [], value, _id, id = this.#id, ...info } = data;
+        const { list = [], array = [], value, _id, id = this.#id, labels, ...info } = data;
         this.#object = {};
-        this.#array = array;
+        this.#array = [];
+        this.#origin = [];
         if (Array.isArray(array)) {
-            this.#array.forEach((row = []) => {
-                row.forEach((value) => {
-                    const { key } = value;
-                    this.#object[key] = value;
-                });
+            array.forEach((row = []) => {
+                if (Array.isArray(row)) {
+                    const key = generateId();
+                    this.#array.push({ key, data: row });
+                    this.#object[key] = row;
+                    this.#origin.push(clone(row));
+                } else if (typeof row === 'object' && row.key) {
+                    this.#array.push(row);
+                    this.#object[row.key] = row.data;
+                    this.#origin.push(clone(row.data));
+                }
             });
         }
         this._id = _id;
         this.#id = id;
+        this.#labels = labels;
         this.#info = info;
     }
 
@@ -65,63 +86,73 @@ class dmetMatrix {
             id: this.#id,
             key: this.#key,
             array: this.#array,
+            origin: this.#origin,
+            labels: this.#labels,
             isDmet: true,
             variableType: this.variableType,
         };
     }
 
-    #findLastArray(array) {
-        const indexArray = [...array];
-        const lastIndex = indexArray.pop();
-        return {
-            array: this.get(indexArray),
-            value: this.get(array),
-            lastIndex: lastIndex - 1,
-            parentIndex: indexArray,
-        };
-    }
-
-    get(key) {
-        if (typeof key === 'number') {
-            return this.#array[key - 1];
-        } else if (Array.isArray(key)) {
-            return get(this.#array, `[${key.map((x) => x - 1).join('][')}]`);
+    getRow(key) {
+        if (Array.isArray(key)) {
+            const [row, col = 0] = key;
+            const result = this.#array[row - 1] || {};
+            return { ...result, x: row - 1, y: col - 1 };
+        } else if (typeof key === 'number') {
+            const result = this.#array[key - 1] || {};
+            return { ...result, x: key - 1 };
         } else if (typeof key === 'string') {
-            return this.#object[key];
+            const [rowKey, col = 0] = key.split(this.#keyDelimter);
+            return {
+                key: rowKey,
+                data: this.#object[rowKey],
+                x: this.getIndex(rowKey),
+                y: col - 1,
+            };
         }
+        throw { message: `not found tableData ${key} id: ${this.#id}` };
     }
 
-    #findIndex(arr, findData, index = []) {
-        for (let i = 0; i < arr.length; i++) {
-            const result = [...index, i];
-            if (Array.isArray(arr[i])) {
-                const newIndex = this.#findIndex(arr[i], findData, result);
-                if (newIndex) {
-                    return newIndex;
-                }
-            } else if (arr[i] === findData) {
-                return result;
+    getValue(key) {
+        if (typeof key === 'number') {
+            return this.#array[key - 1].data;
+        } else if (Array.isArray(key)) {
+            const [rowKey, ...keys] = key;
+            const { data: row } = this.#array[rowKey - 1] || {};
+            if (keys.length && row) {
+                return get(row, `[${keys.map(x => x - 1).join('][')}]`);
+            } else {
+                return row;
             }
+        } else if (typeof key === 'string') {
+            // key = `{row key}_{index}`
+            const [rowKey, ...keys] = key.split(this.#keyDelimter);
+            if (keys.length) {
+                return get(this.#object[rowKey], `[${keys.map(x => x - 1).join('][')}]`);
+            }
+            return this.#object[rowKey];
         }
-        return false;
+        throw { message: `not found tableData ${key} id: ${this.#id}` };
     }
 
     getIndex(key) {
         if (Array.isArray(key)) {
             return key;
         } else if (typeof key === 'string') {
-            const oldData = this.#object[key];
-            return this.#findIndex(this.#array, oldData);
-        } else {
-            return [];
+            const [rowKey, ...keys] = key.split(this.#keyDelimter);
+            const rowIndex = this.#array.findIndex((x) => x.key === rowKey);
+            if (rowIndex >= 0) {
+                return [rowIndex, ...keys];
+            }
         }
+        return [];
     }
 
     #skipOperation = ['append', 'insert'];
 
     getOperation({ type, key, index, data, newKey } = {}) {
         if (this.#skipOperation.indexOf(type) === -1 && typeof index === 'number') {
-            const data = this.get(index);
+            const data = this.getRow(index);
             key = data.key;
         }
         let attach = {};
@@ -175,68 +206,43 @@ class dmetMatrix {
         }
     }
 
-    #append({ key, index, data } = {}) {
-        if (!key) {
-            key = generateId();
+    #append({ key = generateId(), index = this.#array.length + 1, data = 0 } = {}) {
+        const value = parseInt(data);
+        let { data: row, x } = this.getRow(index);
+        if (!row) {
+            row = this.#object[key] = [];
+            this.#array[x] = { key, data: row };
         }
-        const newData = { key, value: data };
-        const x = Array.isArray(index) ? index[0] : index;
-        let subArr = this.get(x);
-        if (!subArr) {
-            subArr = this.#array[x - 1] = [];
-        }
-        if (Array.isArray(subArr)) {
-            this.#object[key] = newData;
-            subArr.push(newData);
-        }
-        return this.getOperation({ type: 'append', key, index: x, data });
+        row.push(value);
+        return this.getOperation({ type: 'append', key, index, data: value });
     }
 
-    #insert({ key, index, data } = {}) {
-        if (!key) {
-            key = generateId();
+    #insert({ key = generateId(), index, data = 0 } = {}) {
+        const value = parseInt(data);
+        let { data: row, x, y } = this.getRow(index);
+        if (row && y > -1) {
+            row.splice(y, 0, value);
+        } else {
+            this.#object[key] = [value];
+            this.#array.splice(x, 0, { key, data: this.#object[key] });
         }
-        const newData = { key, value: data };
-        let { array, lastIndex, parentIndex } = this.#findLastArray(index);
-        this.#object[key] = newData;
-        if (!array) {
-            const currentIndex = parentIndex.pop();
-            this.#array.splice(currentIndex - 1, 0, [newData]);
-            return this.getOperation({ type: 'insert', key, index, data });
-        }
-        array.splice(lastIndex, 0, newData);
-        return this.getOperation({ type: 'insert', key, index, data });
+        return this.getOperation({ type: 'insert', key, index, data: value });
     }
 
     #delete({ key, index }) {
         if (!key) {
             key = index;
         }
-        const oldData = this.get(key);
-        if (!oldData) {
+        let { data: row, key: objKey, x, y } = this.getRow(key);
+        if (!row || (y > -1 && !row[y])) {
             throw { message: 'not found data' };
         }
-        const indexArray = this.getIndex(key);
-        let { array, lastIndex, value, parentIndex } = this.#findLastArray(indexArray);
-        if (Array.isArray(value)) {
-            value.forEach(({ key }) => {
-                delete this.#object[key];
-            });
+        if (y > -1) {
+            row.splice(y, 1);
         } else {
-            delete this.#object[oldData.key];
+            delete this.#object[objKey];
+            this.#array.splice(x, 1);
         }
-
-        if (array) {
-            array.splice(lastIndex, 1);
-            if (this.#array.length && !array.length) {
-                const currentIndex = parentIndex.pop();
-                const parent = this.get(parentIndex) || this.#array;
-                parent.splice(currentIndex - 1, 1);
-            }
-        } else {
-            this.#array.splice(lastIndex, 1);
-        }
-
         return this.getOperation({ type: 'delete', key });
     }
 
@@ -244,14 +250,11 @@ class dmetMatrix {
         if (!key) {
             key = index;
         }
-        const item = this.get(key);
-        if (!item) {
-            throw { message: 'not found data' };
+        let { data: row, key: objKey, x, y } = this.getRow(key);
+        if (!row) {
+            throw { message: 'not found row' };
         }
-        delete this.#object[item.key];
-        item.key = newKey;
-        item.value = data;
-        this.#object[newKey] = item;
+        row[y] = data;
         return this.getOperation({ type: 'replace', key, index, data, newKey });
     }
 }
@@ -599,7 +602,7 @@ class dmet {
     #id = generateId();
     #list = {};
     #variable = {};
-    #matrix = {};
+    #table = {};
 
     get list() {
         return this.#list;
@@ -609,8 +612,8 @@ class dmet {
         return this.#variable;
     }
 
-    get matrix() {
-        return this.#matrix;
+    get table() {
+        return this.#table;
     }
 
     get id() {
@@ -636,7 +639,7 @@ class dmet {
         return {
             id: this.#id,
             list: this.list,
-            matrix: this.matrix,
+            table: this.table,
             variable: this.variable,
             isDmet: true,
         };
@@ -655,9 +658,9 @@ class dmet {
                 } else if (variableType === 'list') {
                     const result = new dmetList(variable);
                     this.#list[result.id] = result;
-                } else if (variableType === 'matrix') {
-                    const result = new dmetMatrix(variable);
-                    this.#matrix[result.id] = result;
+                } else if (variableType === 'table') {
+                    const result = new dmetTable(variable);
+                    this.#table[result.id] = result;
                 }
             });
         } else if (isPlainObject(variables) && variables.isDmet) {
@@ -667,8 +670,8 @@ class dmet {
             this.#variable = mapValues(variables.variable, (variable) => {
                 return new dmetVariable(variable);
             });
-            this.#matrix = mapValues(variables.matrix, (list) => {
-                return new dmetMatrix(list);
+            this.#table = mapValues(variables.table, (list) => {
+                return new dmetTable(list);
             });
             this.#id = variables.id;
         }
@@ -682,8 +685,8 @@ class dmet {
                 return this.#variable[id];
             case 'list':
                 return this.#list[id];
-            case 'matrix':
-                return this.#matrix[id];
+            case 'table':
+                return this.#table[id];
             case 'default':
                 return undefined;
         }
@@ -700,8 +703,8 @@ class dmet {
             this.#variable[id] = new dmetSlideVariable(object);
         } else if (variableType === 'list') {
             this.#list[id] = new dmetList(object);
-        } else if (variableType === 'matrix') {
-            this.#matrix[id] = new dmetMatrix(object);
+        } else if (variableType === 'table') {
+            this.#table[id] = new dmetTable(object);
         }
     }
 
@@ -730,8 +733,8 @@ class dmet {
                 return this.#variable[id].exec(operation);
             } else if (variableType === 'list') {
                 return this.#list[id].exec(operation);
-            } else if (variableType === 'matrix') {
-                return this.#matrix[id].exec(operation);
+            } else if (variableType === 'table') {
+                return this.#table[id].exec(operation);
             }
         } finally {
             this.notify();
@@ -739,4 +742,4 @@ class dmet {
     }
 }
 
-export { dmetList, dmetVariable, dmet, dmetMatrix };
+export { dmetList, dmetVariable, dmet, dmetTable };

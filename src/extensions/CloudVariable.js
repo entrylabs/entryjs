@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 import _uniq from 'lodash/uniq';
 import _uniqBy from 'lodash/uniqBy';
-import { dmet, dmetVariable, dmetList, dmetMatrix } from './dmet';
+import { dmet, dmetVariable, dmetList, dmetTable } from './dmet';
 import singleInstance from '../core/singleInstance';
 
 class CloudVariableExtension {
@@ -129,8 +129,8 @@ class CloudVariableExtension {
             await this.#createVariable(name, id_);
         } else if (type === 'list') {
             await this.#createList(name, id_);
-        } else if (type === 'matrix') {
-            await this.#createMatrix(name, id_);
+        } else if (type === 'table') {
+            await this.#createTable(name, id_);
         }
         // Entry.dispatchEvent('saveVariable');
     }
@@ -188,20 +188,20 @@ class CloudVariableExtension {
     }
 
 
-    #createMatrix(name, id) {
+    #createTable(name, id) {
         if (!this.#cvSocket) {
             return;
         }
-        const matrix = new dmetMatrix(
+        const table = new dmetTable(
             {
                 name,
             },
             id
         );
         return new Promise((resolve) => {
-            this.#cvSocket.emit('create', matrix, (isCreate, matrix) => {
+            this.#cvSocket.emit('create', table, (isCreate, table) => {
                 if (isCreate) {
-                    this.createDmet(matrix);
+                    this.createDmet(table);
                 }
                 resolve();
             });

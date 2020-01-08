@@ -18,42 +18,45 @@ module.exports = {
                 events: {
                     mousedown: [
                         function() {
-                            console.log('analizyDataAddButton');
-                            const matrix = Entry.Variable.create({
-                                name: Entry.generateHash(),
-                                variableType: 'matrix',
+                            const table = Entry.Variable.create({
+                                name: `test_table_${Entry.generateHash()}`,
+                                variableType: 'table',
+                                labels: [
+                                    `attr_${Entry.generateHash()}`,
+                                    `attr_${Entry.generateHash()}`,
+                                ],
                             });
-                            Entry.do('variableContainerAddMatrix', matrix);
+                            console.log('analizyDataAddButton', table);
+                            Entry.do('variableContainerAddTable', table);
                         },
                     ],
                 },
                 syntax: { js: [], py: [''] },
             },
-            // 테이블 A에 행 추가하기
-            add_row_to_matrix: {
-                color: EntryStatic.colorSet.block.default.ANALIZE,
-                outerLine: EntryStatic.colorSet.block.darken.ANALIZE,
+            append_row_to_table: {
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'DropdownDynamic',
                         value: null,
-                        menuName: 'matrices',
+                        menuName: 'tables',
                         fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.ANALIZE,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_icon.svg',
+                        img: 'block_icon/block_analysis.svg',
                         size: 11,
                     },
                 ],
                 events: {},
                 def: {
                     params: [null, null],
-                    type: 'add_row_to_matrix',
+                    type: 'append_row_to_table',
                 },
                 pyHelpDef: {
                     params: [
@@ -63,7 +66,7 @@ module.exports = {
                         },
                         null,
                     ],
-                    type: 'add_row_to_matrix',
+                    type: 'append_row_to_table',
                 },
                 paramsKeyMap: {
                     MATRIX: 0,
@@ -71,10 +74,9 @@ module.exports = {
                 class: 'analysis',
                 isNotFor: ['analysis'],
                 func(sprite, script) {
-                    const matrixId = script.getField('MATRIX', script);
-                    const matrix = Entry.variableContainer.getMatrix(matrixId, sprite);
-                    const length = matrix.getArray().length;
-                    matrix.insertValue([length + 1]);
+                    const tableId = script.getField('MATRIX', script);
+                    const table = Entry.variableContainer.getTable(tableId, sprite);
+                    table.appendValue();
                     return script.callReturn();
                 },
                 syntax: {
@@ -82,19 +84,18 @@ module.exports = {
                     py: [],
                 },
             },
-            // 테이블 A의 1번째 행에 넣기
-            insert_row_to_matrix: {
-                color: EntryStatic.colorSet.block.default.ANALIZE,
-                outerLine: EntryStatic.colorSet.block.darken.ANALIZE,
+            insert_row_to_table: {
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'DropdownDynamic',
                         value: null,
-                        menuName: 'matrices',
+                        menuName: 'tables',
                         fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.ANALIZE,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
@@ -105,7 +106,7 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_icon.svg',
+                        img: 'block_icon/block_analysis.svg',
                         size: 11,
                     },
                 ],
@@ -119,7 +120,7 @@ module.exports = {
                         },
                         null,
                     ],
-                    type: 'insert_row_to_matrix',
+                    type: 'insert_row_to_table',
                 },
                 pyHelpDef: {
                     params: [
@@ -133,7 +134,7 @@ module.exports = {
                         },
                         null,
                     ],
-                    type: 'insert_row_to_matrix',
+                    type: 'insert_row_to_table',
                 },
                 paramsKeyMap: {
                     MATRIX: 0,
@@ -142,10 +143,10 @@ module.exports = {
                 class: 'analysis',
                 isNotFor: ['analysis'],
                 func(sprite, script) {
-                    const matrixId = script.getField('MATRIX', script);
+                    const tableId = script.getField('MATRIX', script);
                     const row = script.getNumberValue('ROW', script);
-                    const matrix = Entry.variableContainer.getMatrix(matrixId, sprite);
-                    matrix.insertValue([row]);
+                    const table = Entry.variableContainer.getTable(tableId, sprite);
+                    table.insertValue(row);
                     return script.callReturn();
                 },
                 syntax: {
@@ -153,19 +154,18 @@ module.exports = {
                     py: [],
                 },
             },
-            // 테이블 A의 행 x 삭제하기
-            delete_row_from_matrix: {
-                color: EntryStatic.colorSet.block.default.ANALIZE,
-                outerLine: EntryStatic.colorSet.block.darken.ANALIZE,
+            delete_row_from_table: {
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'DropdownDynamic',
                         value: null,
-                        menuName: 'matrices',
+                        menuName: 'tables',
                         fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.ANALIZE,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
@@ -176,7 +176,7 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_icon.svg',
+                        img: 'block_icon/block_analysis.svg',
                         size: 11,
                     },
                 ],
@@ -190,7 +190,7 @@ module.exports = {
                         },
                         null,
                     ],
-                    type: 'delete_row_from_matrix',
+                    type: 'delete_row_from_table',
                 },
                 pyHelpDef: {
                     params: [
@@ -204,7 +204,7 @@ module.exports = {
                         },
                         null,
                     ],
-                    type: 'delete_row_from_matrix',
+                    type: 'delete_row_from_table',
                 },
                 paramsKeyMap: {
                     MATRIX: 0,
@@ -213,10 +213,10 @@ module.exports = {
                 class: 'analysis',
                 isNotFor: ['analysis'],
                 func(sprite, script) {
-                    const matrixId = script.getField('MATRIX', script);
+                    const tableId = script.getField('MATRIX', script);
                     const row = script.getNumberValue('ROW', script);
-                    const matrix = Entry.variableContainer.getMatrix(matrixId, sprite);
-                    matrix.deleteValue([row]);
+                    const table = Entry.variableContainer.getTable(tableId, sprite);
+                    table.deleteValue(row);
                     return script.callReturn();
                 },
                 syntax: {
@@ -224,19 +224,18 @@ module.exports = {
                     py: [],
                 },
             },
-            // 테이블 A의 행 x 속성 y 을 0으로 바꾸기.
-            set_col_from_matrix: {
-                color: EntryStatic.colorSet.block.default.ANALIZE,
-                outerLine: EntryStatic.colorSet.block.darken.ANALIZE,
+            set_value_from_table: {
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'DropdownDynamic',
                         value: null,
-                        menuName: 'matrices',
+                        menuName: 'tables',
                         fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.ANALIZE,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
@@ -246,10 +245,20 @@ module.exports = {
                         defaultType: 'number',
                     },
                     {
-                        type: 'Block',
-                        accept: 'string',
-                        isListIndex: true,
-                        defaultType: 'number',
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName(value) {
+                            const table = Entry.variableContainer.getTable(value);
+                            if (!table) {
+                                return [];
+                            }
+                            return table.getLabels().map((label, index) => [label, index + 1]);
+                        },
+                        targetIndex: 0,
+                        needDeepCopy: true,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
+                        arrowColor: EntryStatic.colorSet.common.WHITE,
                     },
                     {
                         type: 'Block',
@@ -258,7 +267,7 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_icon.svg',
+                        img: 'block_icon/block_analysis.svg',
                         size: 11,
                     },
                 ],
@@ -280,7 +289,7 @@ module.exports = {
                         },
                         null,
                     ],
-                    type: 'set_col_from_matrix',
+                    type: 'set_value_from_table',
                 },
                 pyHelpDef: {
                     params: [
@@ -302,7 +311,7 @@ module.exports = {
                         },
                         null,
                     ],
-                    type: 'set_col_from_matrix',
+                    type: 'set_value_from_table',
                 },
                 paramsKeyMap: {
                     MATRIX: 0,
@@ -313,16 +322,16 @@ module.exports = {
                 class: 'analysis',
                 isNotFor: ['analysis'],
                 func(sprite, script) {
-                    const matrixId = script.getField('MATRIX', script);
+                    const tableId = script.getField('MATRIX', script);
                     const row = script.getNumberValue('ROW', script);
                     const col = script.getNumberValue('COL', script);
                     const value = script.getValue('VALUE', script);
-                    const matrix = Entry.variableContainer.getMatrix(matrixId, sprite);
-                    const isExist = matrix.getValue([row, col]);
-                    if (isExist) {
-                        matrix.replaceValue([row, col], value);
+                    const table = Entry.variableContainer.getTable(tableId, sprite);
+                    const isExist = table.getValue([row, col]);
+                    if (isExist === 0 || isExist) {
+                        table.replaceValue([row, col], value);
                     } else {
-                        matrix.insertValue([row, col], value);
+                        table.insertValue([row, col], value);
                     }
                     return script.callReturn();
                 },
@@ -332,36 +341,36 @@ module.exports = {
                 },
             },
             // 테이블 %1 %2 개수
-            get_count_from_matrix: {
-                color: EntryStatic.colorSet.block.default.ANALIZE,
-                outerLine: EntryStatic.colorSet.block.darken.ANALIZE,
+            get_table_count: {
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
                     {
                         type: 'DropdownDynamic',
                         value: null,
-                        menuName: 'matrices',
+                        menuName: 'tables',
                         fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.ANALIZE,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Dropdown',
                         options: [
-                            [Lang.Blocks.matrix_row, 'ROW'],
-                            [Lang.Blocks.matrix_col, 'COL'],
+                            [Lang.Blocks.table_row, 'ROW'],
+                            [Lang.Blocks.table_col, 'COL'],
                         ],
                         value: 'ROW',
                         fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.ANALIZE,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                 ],
                 events: {},
                 def: {
                     params: [null, null],
-                    type: 'get_count_from_matrix',
+                    type: 'get_table_count',
                 },
                 paramsKeyMap: {
                     MATRIX: 0,
@@ -370,16 +379,15 @@ module.exports = {
                 class: 'analysis',
                 isNotFor: [],
                 func(sprite, script) {
-                    const matrixId = script.getField('MATRIX', script);
+                    const tableId = script.getField('MATRIX', script);
                     const property = script.getField('PROPERTY', script);
-                    const matrix = Entry.variableContainer.getMatrix(matrixId, sprite);
-                    const array = matrix.getArray();
+                    const table = Entry.variableContainer.getTable(tableId, sprite);
                     if (property === 'ROW') {
+                        const array = table.getArray();
                         return array.length;
                     } else if (property === 'COL') {
-                        return array
-                            .map((subArr) => subArr.length)
-                            .reduce((x, y) => Math.max(x, y));
+                        const labels = table.getLabels();
+                        return labels.length;
                     }
                     return 0;
                 },
@@ -390,17 +398,17 @@ module.exports = {
             },
             // 테이블 %1 행 %2 속성 %3 의 값
             get_value_from_table: {
-                color: EntryStatic.colorSet.block.default.ANALIZE,
-                outerLine: EntryStatic.colorSet.block.darken.ANALIZE,
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
                     {
                         type: 'DropdownDynamic',
                         value: null,
-                        menuName: 'matrices',
+                        menuName: 'tables',
                         fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.ANALIZE,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
@@ -410,10 +418,20 @@ module.exports = {
                         defaultType: 'number',
                     },
                     {
-                        type: 'Block',
-                        accept: 'string',
-                        isListIndex: true,
-                        defaultType: 'number',
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName(value) {
+                            const table = Entry.variableContainer.getTable(value);
+                            if (!table) {
+                                return [];
+                            }
+                            return table.getLabels().map((label, index) => [label, index + 1]);
+                        },
+                        targetIndex: 0,
+                        needDeepCopy: true,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
+                        arrowColor: EntryStatic.colorSet.common.WHITE,
                     },
                 ],
                 events: {},
@@ -439,13 +457,12 @@ module.exports = {
                 class: 'analysis',
                 isNotFor: [],
                 func(sprite, script) {
-                    const matrixId = script.getField('MATRIX', script);
+                    const tableId = script.getField('MATRIX', script);
                     const row = script.getNumberValue('ROW', script);
                     const col = script.getNumberValue('COL', script);
                     try {
-                        const matrix = Entry.variableContainer.getMatrix(matrixId, sprite);
-                        const result = matrix.getValue([row, col]);
-                        return result.value;
+                        const table = Entry.variableContainer.getTable(tableId, sprite);
+                        return table.getValue([row, col]);
                     } catch (e) {
                         return 0;
                     }
@@ -456,38 +473,48 @@ module.exports = {
                 },
             },
             // 테이블 %1 속성 %1의 합
-            calc_values_from_matrix: {
-                color: EntryStatic.colorSet.block.default.ANALIZE,
-                outerLine: EntryStatic.colorSet.block.darken.ANALIZE,
+            calc_values_from_table: {
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
                     {
                         type: 'DropdownDynamic',
                         value: null,
-                        menuName: 'matrices',
+                        menuName: 'tables',
                         fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.ANALIZE,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
-                        type: 'Block',
-                        accept: 'string',
-                        isListIndex: true,
-                        defaultType: 'number',
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName(value) {
+                            const table = Entry.variableContainer.getTable(value);
+                            if (!table) {
+                                return [];
+                            }
+                            return table.getLabels().map((label, index) => [label, index + 1]);
+                        },
+                        targetIndex: 0,
+                        needDeepCopy: true,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
+                        arrowColor: EntryStatic.colorSet.common.WHITE,
                     },
                     {
                         type: 'Dropdown',
                         options: [
-                            [Lang.Blocks.matrix_sum, 'SUM'],
-                            [Lang.Blocks.matrix_max, 'MAX'],
-                            [Lang.Blocks.matrix_min, 'MIN'],
-                            [Lang.Blocks.matrix_avg, 'AVG'],
-                            [Lang.Blocks.matrix_stdev, 'STDEV'],
+                            [Lang.Blocks.table_sum, 'SUM'],
+                            [Lang.Blocks.table_max, 'MAX'],
+                            [Lang.Blocks.table_min, 'MIN'],
+                            [Lang.Blocks.table_avg, 'AVG'],
+                            [Lang.Blocks.table_stdev, 'STDEV'],
                         ],
                         value: 'SUM',
                         fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.ANALIZE,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                 ],
@@ -501,7 +528,7 @@ module.exports = {
                         },
                         null,
                     ],
-                    type: 'calc_values_from_matrix',
+                    type: 'calc_values_from_table',
                 },
                 paramsKeyMap: {
                     MATRIX: 0,
@@ -511,13 +538,11 @@ module.exports = {
                 class: 'analysis',
                 isNotFor: [],
                 func(sprite, script) {
-                    const matrixId = script.getField('MATRIX', script);
+                    const tableId = script.getField('MATRIX', script);
                     const calc = script.getField('CALC', script);
                     const col = script.getNumberValue('COL', script);
-                    const matrix = Entry.variableContainer.getMatrix(matrixId, sprite);
-                    const array = matrix
-                        .getArray()
-                        .map((subArr) => (subArr[col] && subArr[col].value) || 0);
+                    const table = Entry.variableContainer.getTable(tableId, sprite);
+                    const array = table.getArray().map(({ data }) => data[col - 1] || 0);
                     const total = array.length;
                     const sum = (x, y) => x + y;
                     const square = (x) => x * x;
