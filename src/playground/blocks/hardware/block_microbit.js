@@ -295,7 +295,11 @@ Entry.Microbit = new (class Microbit {
                         /[^A-Za-z0-9_\`\~\!\@\#\$\%\^\&\*\(\)\-\=\+\\\{\}\[\]\'\"\;\:\<\,\>\.\?\/\s]/gim,
                         ''
                     );
-                    this.requestCommand(functionKeys.SET_STRING, value);
+                    this.requestCommandWithResponse(
+                        script.entity.id,
+                        functionKeys.SET_STRING,
+                        value
+                    );
                 },
             },
             microbit_show_image: {
