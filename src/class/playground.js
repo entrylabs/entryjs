@@ -716,14 +716,32 @@ Entry.Playground = class Playground {
             container: this.tableListView_,
             data: {
                 height: '100%',
-                sortableTarget: ['entryPlaygroundPictureThumbnail'],
+                sortableTarget: ['popup_sortableItem__2foG9'],
                 lockAxis: 'y',
-                items: this._getSortablePictureList(),
+                items: this._getSortableTableList(),
             },
         });
         this.tableSortableListWidget.on('change', ([newIndex, oldIndex]) => {
             Entry.playground.movePicture(newIndex, oldIndex);
         });
+    }
+
+    _getSortableTableList() {
+        return [
+            {
+                key: '31232',
+                item: '123',
+            },
+            {
+                key: '32132',
+                item: '412',
+            },
+        ];
+        // const id = this.object.id;
+        // return this.object.pictures.map((value) => ({
+        //     key: `${id}-${value.id}`,
+        //     item: value.view,
+        // }));
     }
 
     /**
