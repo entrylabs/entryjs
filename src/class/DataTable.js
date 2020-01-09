@@ -24,7 +24,7 @@ class DataTable {
     }
 
     addSource(table) {
-        let data = table || { name: '데이터 테이블' };
+        let data = table || { name: Lang.Workspace.data_table };
         data.name = Entry.getOrderedName(data.name, this.#tables, 'name');
         if (!(data instanceof DataTableSource)) {
             data = new DataTableSource(data);
