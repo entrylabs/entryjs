@@ -865,11 +865,11 @@ Entry.NeobotGameTheme.getBlocks = function() {
                         else ret = false;
                         break;
                     case '=':
-                        if (joystickX == targetValue) ret = true;
+                        if (portValue == targetValue) ret = true;
                         else ret = false;
                         break;
                     case '<':
-                        if (joystickX < targetValue) ret = true;
+                        if (portValue < targetValue) ret = true;
                         else ret = false;
                         break;
                 }
