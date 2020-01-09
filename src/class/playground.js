@@ -9,7 +9,7 @@ import Toast from '../playground/toast';
 import EntryEvent from '@entrylabs/event';
 import { Destroyer } from '../util/destroyer/Destroyer';
 import { saveAs } from 'file-saver';
-import EntryTable from './EntryTable';
+import DataTable from './DataTable';
 
 const Entry = require('../entry');
 
@@ -103,7 +103,7 @@ Entry.Playground = class Playground {
             this.generateSoundView(soundView);
             this.soundView_ = soundView;
 
-            const tableView = Entry.createElement('div', 'entryTable')
+            const tableView = Entry.createElement('div', 'dataTable')
                 .addClass('entryPlaygroundTableWorkspace entryRemove')
                 .appendTo(this.view_);
             this.generateTableView(tableView);
@@ -219,8 +219,8 @@ Entry.Playground = class Playground {
         this.tabViewElements.variable = variableTab;
         this.variableTab = variableTab;
 
-        const tableTab = Entry.createElement('li', 'entryTableTab')
-            .addClass('entryTabListItemWorkspace entryTableTabWorkspace')
+        const tableTab = Entry.createElement('li', 'dataTableTab')
+            .addClass('entryTabListItemWorkspace dataTableTabWorkspace')
             .appendTo(tabList)
             .bindOnClick(() => {
                 Entry.do('playgroundChangeViewMode', 'table', this.selectedViewMode);
@@ -695,15 +695,15 @@ Entry.Playground = class Playground {
         innerTableAdd.innerHTML = Lang.Workspace.table_add;
         this._tableAddButton = innerTableAdd;
 
-        this.tableListView_ = Entry.createElement('ul', 'entryTableList')
+        this.tableListView_ = Entry.createElement('ul', 'dataTableList')
             .addClass('entryPlaygroundTableList')
             .appendTo(tableView);
 
-        const tableDom = Entry.createElement('div', 'entryTable')
+        const tableDom = Entry.createElement('div', 'dataTable')
             .addClass('entryPlaygroundTable')
             .appendTo(tableView);
 
-        this.entryTable = new EntryTable(tableDom);
+        this.dataTable = new DataTable(tableDom);
     }
 
     initSortableTableWidget() {

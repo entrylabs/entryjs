@@ -18,7 +18,6 @@ Entry.VariableContainer = class VariableContainer {
         this.variables_ = [];
         this.messages_ = [];
         this.lists_ = [];
-        this.tables_ = [];
         this.functions_ = {};
         this.viewMode_ = 'all';
         this.selected = null;
@@ -780,9 +779,6 @@ Entry.VariableContainer = class VariableContainer {
                     variable.generateView(this.lists_.length);
                     this.lists_.push(variable);
                     break;
-                case 'table':
-                    this.tables_.push(variable);
-                    break;
                 case 'timer':
                     this.generateTimer(variable);
                     break;
@@ -838,12 +834,6 @@ Entry.VariableContainer = class VariableContainer {
                 }
                 this.generateVariable(variable, this.lists_, 'lists_');
                 this.lists_.push(variable);
-            } else if (type === 'table') {
-                if (this.tables_.some((item) => item.id_ === variable.id_)) {
-                    continue;
-                }
-                this.generateVariable(variable, this.tables_, 'tables_');
-                this.tables_.push(variable);
             }
         }
         if (Entry.isEmpty(Entry.engine.projectTimer)) {
@@ -991,20 +981,6 @@ Entry.VariableContainer = class VariableContainer {
 
         return list;
     }
-
-    /**
-     * get variable on canvas
-     * @return {Entry.List}
-     */
-    getTable(id, { isClone, lists } = {}) {
-        const criteria = { id_: id };
-        let table = _.find(this.tables_, criteria);
-        if (isClone && table.object_) {
-            table = _.find(lists, criteria);
-        }
-        return table;
-    }
-
 
     /**
      * Create function
@@ -1372,16 +1348,6 @@ Entry.VariableContainer = class VariableContainer {
         this.updateList();
     }
 
-    removeTable(table) {
-        if (!(table instanceof Entry.Variable)) {
-            table = this.getTable(table.id);
-        }
-
-        table.remove();
-        const lists = this.tables_;
-        lists.splice(lists.indexOf(table), 1);
-    }
-
     /**
      * @param {Entry.Variable} variable
      */
@@ -1640,22 +1606,6 @@ Entry.VariableContainer = class VariableContainer {
      */
     addList(list) {
         this._addVariableOrList.call(this, 'list', list);
-    }
-
-    addTable(table) {
-        let data = table || {
-            isCloud: false,
-            name: '데이터 테이블',
-            object: null,
-            variableType: 'table',
-        };
-
-        if (!(data instanceof Entry.Variable)) {
-            data = Entry.Variable.create(data);
-        }
-        this.tables_.unshift(data);
-        Entry.playground.reloadPlayground();
-        this.updateList();
     }
 
     /**
@@ -3032,7 +2982,6 @@ Entry.VariableContainer = class VariableContainer {
         this.viewMode_ = 'all';
         this.variables_ = [];
         this.lists_ = [];
-        this.tables_ = [];
         this.messages_ = [];
         this.functions_ = {};
 

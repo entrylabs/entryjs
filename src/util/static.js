@@ -164,8 +164,6 @@ Entry.STATIC = {
         variableSetName: 828,
         listSetName: 829,
         variableContainerClickMessageAddButton: 830,
-        variableContainerAddTable: 831,
-        variableContainerRemoveTable: 832,
 
         dismissModal: 900,
 
@@ -174,6 +172,9 @@ Entry.STATIC = {
 
         playgroundClickAddAIUtilizeBlock: 1103,
         playgroundClickAddAIUtilizeBlockCancel: 1104,
+
+        dataTableAddSource: 1301,
+        dataTableRemoveSource: 1302,
     },
 
     RECORDABLE: {
