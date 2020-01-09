@@ -19,7 +19,7 @@ module.exports = {
                     mousedown: [
                         function() {
                             //open popup .. 새로 추가될 때만 데이터 탭으로.
-
+                            Entry.do('playgroundClickAddTable');
                             // const table = new DataTableSource({
                             //     name: `test_table_${Entry.generateHash()}`,
                             //     fields: [
