@@ -18,16 +18,16 @@ module.exports = {
                 events: {
                     mousedown: [
                         function() {
-                            const table = Entry.Variable.create({
-                                name: `test_table_${Entry.generateHash()}`,
-                                variableType: 'table',
-                                labels: [
-                                    `attr_${Entry.generateHash()}`,
-                                    `attr_${Entry.generateHash()}`,
-                                ],
-                            });
-                            console.log('analizyDataAddButton', table);
-                            Entry.do('variableContainerAddTable', table);
+                            //open popup .. 새로 추가될 때만 데이터 탭으로.
+
+                            // const table = new DataTableSource({
+                            //     name: `test_table_${Entry.generateHash()}`,
+                            //     fields: [
+                            //         `attr_${Entry.generateHash()}`,
+                            //         `attr_${Entry.generateHash()}`,
+                            //     ],
+                            // });
+                            // Entry.do('dataTableAddSource', table);
                         },
                     ],
                 },
@@ -75,7 +75,8 @@ module.exports = {
                 isNotFor: ['analysis'],
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
-                    const table = Entry.variableContainer.getTable(tableId, sprite);
+                    const { dataTable } = Entry.playground;
+                    const table = dataTable.getSource(tableId, sprite);
                     table.appendValue();
                     return script.callReturn();
                 },
@@ -145,7 +146,8 @@ module.exports = {
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
                     const row = script.getNumberValue('ROW', script);
-                    const table = Entry.variableContainer.getTable(tableId, sprite);
+                    const { dataTable } = Entry.playground;
+                    const table = dataTable.getSource(tableId, sprite);
                     table.insertValue(row);
                     return script.callReturn();
                 },
@@ -215,7 +217,8 @@ module.exports = {
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
                     const row = script.getNumberValue('ROW', script);
-                    const table = Entry.variableContainer.getTable(tableId, sprite);
+                    const { dataTable } = Entry.playground;
+                    const table = dataTable.getSource(tableId, sprite);
                     table.deleteValue(row);
                     return script.callReturn();
                 },
@@ -248,11 +251,12 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName(value) {
-                            const table = Entry.variableContainer.getTable(value);
+                            const { dataTable } = Entry.playground;
+                            const table = dataTable.getSource(value);
                             if (!table) {
                                 return [];
                             }
-                            return table.getLabels().map((label, index) => [label, index + 1]);
+                            return table.fields.map((label, index) => [label, index + 1]);
                         },
                         targetIndex: 0,
                         needDeepCopy: true,
@@ -326,7 +330,8 @@ module.exports = {
                     const row = script.getNumberValue('ROW', script);
                     const col = script.getNumberValue('COL', script);
                     const value = script.getValue('VALUE', script);
-                    const table = Entry.variableContainer.getTable(tableId, sprite);
+                    const { dataTable } = Entry.playground;
+                    const table = dataTable.getSource(tableId, sprite);
                     const isExist = table.getValue([row, col]);
                     if (isExist === 0 || isExist) {
                         table.replaceValue([row, col], value);
@@ -381,12 +386,13 @@ module.exports = {
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
                     const property = script.getField('PROPERTY', script);
-                    const table = Entry.variableContainer.getTable(tableId, sprite);
+                    const { dataTable } = Entry.playground;
+                    const table = dataTable.getSource(tableId, sprite);
                     if (property === 'ROW') {
-                        const array = table.getArray();
+                        const { array } = table;
                         return array.length;
                     } else if (property === 'COL') {
-                        const labels = table.getLabels();
+                        const labels = table.fields;
                         return labels.length;
                     }
                     return 0;
@@ -421,11 +427,12 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName(value) {
-                            const table = Entry.variableContainer.getTable(value);
+                            const { dataTable } = Entry.playground;
+                            const table = dataTable.getSource(value);
                             if (!table) {
                                 return [];
                             }
-                            return table.getLabels().map((label, index) => [label, index + 1]);
+                            return table.fields.map((label, index) => [label, index + 1]);
                         },
                         targetIndex: 0,
                         needDeepCopy: true,
@@ -461,7 +468,8 @@ module.exports = {
                     const row = script.getNumberValue('ROW', script);
                     const col = script.getNumberValue('COL', script);
                     try {
-                        const table = Entry.variableContainer.getTable(tableId, sprite);
+                        const { dataTable } = Entry.playground;
+                        const table = dataTable.getSource(tableId, sprite);
                         return table.getValue([row, col]);
                     } catch (e) {
                         return 0;
@@ -491,11 +499,12 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName(value) {
-                            const table = Entry.variableContainer.getTable(value);
+                            const { dataTable } = Entry.playground;
+                            const table = dataTable.getSource(value);
                             if (!table) {
                                 return [];
                             }
-                            return table.getLabels().map((label, index) => [label, index + 1]);
+                            return table.fields.map((label, index) => [label, index + 1]);
                         },
                         targetIndex: 0,
                         needDeepCopy: true,
@@ -541,8 +550,9 @@ module.exports = {
                     const tableId = script.getField('MATRIX', script);
                     const calc = script.getField('CALC', script);
                     const col = script.getNumberValue('COL', script);
-                    const table = Entry.variableContainer.getTable(tableId, sprite);
-                    const array = table.getArray().map(({ data }) => data[col - 1] || 0);
+                    const { dataTable } = Entry.playground;
+                    const table = dataTable.getSource(tableId, sprite);
+                    const array = table.array.map(({ data }) => data[col - 1] || 0);
                     const total = array.length;
                     const sum = (x, y) => x + y;
                     const square = (x) => x * x;

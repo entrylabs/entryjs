@@ -39,8 +39,6 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
         variableSetName,
         listSetName,
         variableContainerClickMessageAddButton,
-        variableContainerAddTable,
-        variableContainerRemoveTable,
     } = COMMAND_TYPES;
 
     c[variableContainerSelectFilter] = {
@@ -408,51 +406,6 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
             return 'variableContainerClickListAddButton';
         },
         dom: ['variableContainer', 'listAddButton'],
-    };
-
-    c[variableContainerAddTable] = {
-        do(table) {
-            const id = _.result(getExpectedData('table'), 'id');
-            if (id) {
-                if (table.setId) {
-                    table.setId(id);
-                } else {
-                    table.id = id;
-                }
-            }
-            getVC().addTable(table);
-        },
-        state(table) {
-            table = _toJSON(table);
-            table.id = _.result(getExpectedData('table'), 'id') || table.id;
-            return [table];
-        },
-        log(table) {
-            table = _toJSON(table);
-            table.id = _.result(getExpectedData('table'), 'id') || table.id;
-            return [['table', table]];
-        },
-        recordable: RECORDABLE.SUPPORT,
-        validate: false,
-        undo: 'variableContainerRemoveTable',
-        dom: ['variableContainer', 'listAddConfirmButton'],
-    };
-
-
-    c[variableContainerRemoveTable] = {
-        do(table) {
-            getVC().removeTable(table);
-        },
-        state(table) {
-            return [_toJSON(table)];
-        },
-        log(table) {
-            return [['table', _toJSON(table)]];
-        },
-        recordable: RECORDABLE.SUPPORT,
-        validate: false,
-        undo: 'variableContainerAddTable',
-        dom: ['variableContainer', 'listAddConfirmButton'],
     };
 
     c[variableContainerAddList] = {

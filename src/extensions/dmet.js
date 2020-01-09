@@ -24,15 +24,15 @@ class dmetTable {
     #object = {};
     #array = [];
     #origin = [];
-    #labels = [];
+    #fields = [];
     #info = {};
     #maxRow = 100;
     #maxCol = 100;
     #variableType = 'table';
     #keyDelimter = '_';
 
-    get labels() {
-        return this.#labels;
+    get fields() {
+        return this.#fields;
     }
 
     get value() {
@@ -52,11 +52,11 @@ class dmetTable {
     }
 
     setLabel(index, name) {
-        this.#labels[index] = name;
+        this.#fields[index] = name;
     }
 
     from(data) {
-        const { list = [], array = [], value, _id, id = this.#id, labels, ...info } = data;
+        const { list = [], array = [], value, _id, id = this.#id, fields, ...info } = data;
         this.#object = {};
         this.#array = [];
         this.#origin = [];
@@ -76,7 +76,7 @@ class dmetTable {
         }
         this._id = _id;
         this.#id = id;
-        this.#labels = labels;
+        this.#fields = fields;
         this.#info = info;
     }
 
@@ -87,7 +87,7 @@ class dmetTable {
             key: this.#key,
             array: this.#array,
             origin: this.#origin,
-            labels: this.#labels,
+            fields: this.#fields,
             isDmet: true,
             variableType: this.variableType,
         };
@@ -247,6 +247,7 @@ class dmetTable {
     }
 
     #replace({ key, index, data, newKey = generateId() }) {
+        const value = parseInt(data);
         if (!key) {
             key = index;
         }
@@ -254,8 +255,8 @@ class dmetTable {
         if (!row) {
             throw { message: 'not found row' };
         }
-        row[y] = data;
-        return this.getOperation({ type: 'replace', key, index, data, newKey });
+        row[y] = value;
+        return this.getOperation({ type: 'replace', key, index, data: value, newKey });
     }
 }
 

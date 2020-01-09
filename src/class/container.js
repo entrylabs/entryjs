@@ -747,9 +747,10 @@ Entry.Container = class Container {
                 break;
             }
             case 'tables': {
-                const tables = Entry.variableContainer.tables_;
+                const { dataTable = {} } = Entry.playground;
+                const { tables } = dataTable;
                 if (tables) {
-                    result = tables.map((table) => [table.getName(), table.getId()]);
+                    result = tables.map((table) => [table.name, table.id]);
                 }
                 break;
             }
