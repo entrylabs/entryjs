@@ -1,5 +1,8 @@
 ﻿'use strict';
 
+
+
+
 Entry.CloverSEntry1 = {
     id: '38.1',
     name: 'CloverSEntry1',
@@ -137,6 +140,7 @@ Entry.CloverSEntry1 = {
         CLOVER_SW :      12,              
         CLOVER_LED :     13,              
         CLOVER_RGB :     14,              
+        CLOVER_TEMP :    15,              
 	},
     
     
@@ -242,6 +246,7 @@ Entry.CloverSEntry1.blockMenuBlocks = [
     'CloverSEntry1_get_analog_value_map',
     'CloverSEntry1_get_ultrasonic_value',
     'CloverSEntry1_get_cds_value',
+    'CloverSEntry1_get_temp_value',
     'CloverSEntry1_clover_get_sw',
 ];
 
@@ -263,6 +268,7 @@ Entry.CloverSEntry1.setLanguage = () => {
                 CloverSEntry1_get_analog_value_map : '아날로그 %1 번 값의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
                 CloverSEntry1_get_ultrasonic_value : '초음파센서 센서값',
                 CloverSEntry1_get_cds_value :        '조도센서 센서값',
+                CloverSEntry1_get_temp_value :       '온도센서 센서값',
                 CloverSEntry1_clover_get_sw :        '클로버 버튼 %1 번 값',
                 CloverSEntry1_set_rgb :              '컬러LED를 빨강%1 초록%2 파랑%3 밝기%4로 켜기 %5',
 			}
@@ -1362,6 +1368,41 @@ Entry.CloverSEntry1.getBlocks = function() {
                 var ANALOG = Entry.hw.portData.ANALOG;
                 
                 return ANALOG[port];
+            },
+            syntax: { js: [], py: [] },
+        },
+        
+        
+        
+        
+        CloverSEntry1_get_temp_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+            ],
+            events: {},
+            def: {
+                params: [
+                ],
+                type: 'CloverSEntry1_get_temp_value',
+            },
+            paramsKeyMap: {
+            },
+            class: 'getBlock',
+            isNotFor: ['CloverSEntry1'],
+            func: function(sprite, script) {
+                
+                
+                
+                var self = Entry.CloverSEntry1;
+                
+                var port = self.pinMaps.CDS;
+                var temp = Entry.hw.portData.TEMP;
+                
+                return temp;
             },
             syntax: { js: [], py: [] },
         },
