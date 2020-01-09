@@ -4,13 +4,13 @@
     "description": "JavaScript library for visual programming",
     "version": "0.1.1",
     "main": "dist/entry.js",
-    "homepage": "http://play-entry.com",
+    "homepage": "https://playentry.org/",
     "author": {
         "name": "Entry Korea corp and other contributors"
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/boolgom/entryjs.git"
+        "url": "https://github.com/entrylabs/entryjs.git"
     },
     "keywords": [
         "entry",
@@ -18,7 +18,7 @@
         "javascript"
     ],
     "bugs": {
-        "url": "https://github.com/boolgom/entryjs/issues"
+        "url": "https://github.com/entrylabs/entryjs/issues"
     },
     "scripts": {
         "lint": "cross-env NODE_ENV=lint webpack -w",
