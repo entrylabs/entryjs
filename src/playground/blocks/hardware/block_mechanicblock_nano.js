@@ -4,7 +4,7 @@ Entry.MechanicblockNano = {
     id: '39.2',
     name: 'MechanicblockNano',
     url: 'http://www.mechanicblock.com/',
-    imageName: 'MechanicblockNano.png',
+    imageName: 'mechanicblock_nano.png',
     title: {
         ko: '메카닉블럭 Nano',
         en: 'Mechanicblock Nano',

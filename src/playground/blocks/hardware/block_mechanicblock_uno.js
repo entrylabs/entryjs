@@ -4,7 +4,7 @@ Entry.MechanicblockUno = {
     id: '39.3',
     name: 'MechanicblockUno',
     url: 'http://www.mechanicblock.com/',
-    imageName: 'MechanicblockUno.png',
+    imageName: 'mechanicblock_uno.png',
     title: {
         ko: '메카닉블럭 Uno',
         en: 'Mechanicblock Uno',
@@ -73,46 +73,46 @@ Entry.MechanicblockUno.setLanguage = function() {
     return {
         ko: {
             template: {
-                arduino_ext_get_analog_value: '아날로그 %1 번 센서값',
-                arduino_ext_get_analog_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
-                arduino_ext_get_ultrasonic_value: '울트라소닉 Trig %1 Echo %2 센서값',
-                arduino_ext_toggle_led: '디지털 %1 번 핀 %2 %3',
-                arduino_ext_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
-                arduino_ext_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
-                arduino_ext_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
-                arduino_ext_get_digital: '디지털 %1 번 센서값',
+                mechanicblock_controller_get_analog_value: '아날로그 %1 번 센서값',
+                mechanicblock_controller_get_analog_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
+                mechanicblock_controller_get_ultrasonic_value: '울트라소닉 Trig %1 Echo %2 센서값',
+                mechanicblock_controller_toggle_led: '디지털 %1 번 핀 %2 %3',
+                mechanicblock_controller_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                mechanicblock_controller_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
+                mechanicblock_controller_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
+                mechanicblock_controller_get_digital: '디지털 %1 번 센서값',
             },
         },
         en: {
             template: {
-                arduino_ext_get_analog_value: 'Analog %1 Sensor value',
-                arduino_ext_get_analog_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
-                arduino_ext_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
-                arduino_ext_toggle_led: 'Digital %1 Pin %2 %3',
-                arduino_ext_digital_pwm: 'Digital %1 Pin %2 %3',
-                arduino_ext_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
-                arduino_ext_set_servo: 'Set servo pin %1 angle as %2 %3',
-                arduino_ext_get_digital: 'Digital %1 Sensor value',
+                mechanicblock_controller_get_analog_value: 'Analog %1 Sensor value',
+                mechanicblock_controller_get_analog_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
+                mechanicblock_controller_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
+                mechanicblock_controller_toggle_led: 'Digital %1 Pin %2 %3',
+                mechanicblock_controller_digital_pwm: 'Digital %1 Pin %2 %3',
+                mechanicblock_controller_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
+                mechanicblock_controller_set_servo: 'Set servo pin %1 angle as %2 %3',
+                mechanicblock_controller_get_digital: 'Digital %1 Sensor value',
             },
         },
     };
 };
 
 Entry.MechanicblockUno.blockMenuBlocks = [
-    'arduino_ext_get_analog_value',
-    'arduino_ext_get_analog_value_map',
-    'arduino_ext_get_ultrasonic_value',
-    'arduino_ext_get_digital',
-    'arduino_ext_toggle_led',
-    'arduino_ext_digital_pwm',
-    'arduino_ext_set_servo',
-    'arduino_ext_set_tone',
+    'mechanicblock_controller_get_analog_value',
+    'mechanicblock_controller_get_analog_value_map',
+    'mechanicblock_controller_get_ultrasonic_value',
+    'mechanicblock_controller_get_digital',
+    'mechanicblock_controller_toggle_led',
+    'mechanicblock_controller_digital_pwm',
+    'mechanicblock_controller_set_servo',
+    'mechanicblock_controller_set_tone',
 ];
 
 //region MechanicblockUno 아두이노 확장모드
 Entry.MechanicblockUno.getBlocks = function() {
     return {
-        arduino_ext_analog_list: {
+        mechanicblock_controller_analog_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -165,17 +165,17 @@ Entry.MechanicblockUno.getBlocks = function() {
                                 value: '0',
                                 fontSize: 11,
                                 converter: Entry.block.converters.returnStringKey,
-                                codeMap: 'Entry.CodeMap.Arduino.arduino_ext_analog_list[0]',
+                                codeMap: 'Entry.CodeMap.Arduino.mechanicblock_controller_analog_list[0]',
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
-                        keyOption: 'arduino_ext_analog_list',
+                        keyOption: 'mechanicblock_controller_analog_list',
                     },
                 ],
             },
         },
-        arduino_ext_get_analog_value: {
+        mechanicblock_controller_get_analog_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -192,10 +192,10 @@ Entry.MechanicblockUno.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'arduino_ext_analog_list',
+                        type: 'mechanicblock_controller_analog_list',
                     },
                 ],
-                type: 'arduino_ext_get_analog_value',
+                type: 'mechanicblock_controller_get_analog_value',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -226,7 +226,7 @@ Entry.MechanicblockUno.getBlocks = function() {
                 ],
             },
         },
-        arduino_ext_get_analog_value_map: {
+        mechanicblock_controller_get_analog_value_map: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -263,10 +263,10 @@ Entry.MechanicblockUno.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'arduino_ext_get_analog_value',
+                        type: 'mechanicblock_controller_get_analog_value',
                         params: [
                             {
-                                type: 'arduino_ext_analog_list',
+                                type: 'mechanicblock_controller_analog_list',
                             },
                         ],
                     },
@@ -287,7 +287,7 @@ Entry.MechanicblockUno.getBlocks = function() {
                         params: ['100'],
                     },
                 ],
-                type: 'arduino_ext_get_analog_value_map',
+                type: 'mechanicblock_controller_get_analog_value_map',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -372,7 +372,7 @@ Entry.MechanicblockUno.getBlocks = function() {
                 ],
             },
         },
-        arduino_ext_get_ultrasonic_value: {
+        mechanicblock_controller_get_ultrasonic_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -402,7 +402,7 @@ Entry.MechanicblockUno.getBlocks = function() {
                         params: ['4'],
                     },
                 ],
-                type: 'arduino_ext_get_ultrasonic_value',
+                type: 'mechanicblock_controller_get_ultrasonic_value',
             },
             paramsKeyMap: {
                 PORT1: 0,
@@ -449,7 +449,7 @@ Entry.MechanicblockUno.getBlocks = function() {
                 ],
             },
         },
-        arduino_ext_get_digital: {
+        mechanicblock_controller_get_digital: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -469,7 +469,7 @@ Entry.MechanicblockUno.getBlocks = function() {
                         params: [2],
                     },
                 ],
-                type: 'arduino_ext_get_digital',
+                type: 'mechanicblock_controller_get_digital',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -479,7 +479,7 @@ Entry.MechanicblockUno.getBlocks = function() {
             func(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
-                if (name === 'MechanicblockUno' || name === 'ArduinoNano') {
+                if (name === 'MechanicblockUno') {
                     const port = script.getNumberValue('PORT', script);
                     const DIGITAL = Entry.hw.portData.DIGITAL;
                     if (!Entry.hw.sendQueue.GET) {
@@ -560,7 +560,7 @@ Entry.MechanicblockUno.getBlocks = function() {
                 ],
             },
         },
-        arduino_ext_toggle_led: {
+        mechanicblock_controller_toggle_led: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -594,7 +594,7 @@ Entry.MechanicblockUno.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'arduino_ext_toggle_led',
+                type: 'mechanicblock_controller_toggle_led',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -645,7 +645,7 @@ Entry.MechanicblockUno.getBlocks = function() {
                 ],
             },
         },
-        arduino_ext_digital_pwm: {
+        mechanicblock_controller_digital_pwm: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -679,7 +679,7 @@ Entry.MechanicblockUno.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'arduino_ext_digital_pwm',
+                type: 'mechanicblock_controller_digital_pwm',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -722,7 +722,7 @@ Entry.MechanicblockUno.getBlocks = function() {
                 ],
             },
         },
-        arduino_ext_tone_list: {
+        mechanicblock_controller_tone_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -792,12 +792,12 @@ Entry.MechanicblockUno.getBlocks = function() {
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
-                        keyOption: 'arduino_ext_tone_list',
+                        keyOption: 'mechanicblock_controller_tone_list',
                     },
                 ],
             },
         },
-        arduino_ext_tone_value: {
+        mechanicblock_controller_tone_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -813,10 +813,10 @@ Entry.MechanicblockUno.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'arduino_ext_tone_list',
+                        type: 'mechanicblock_controller_tone_list',
                     },
                 ],
-                type: 'arduino_ext_tone_value',
+                type: 'mechanicblock_controller_tone_value',
             },
             paramsKeyMap: {
                 NOTE: 0,
@@ -829,12 +829,12 @@ Entry.MechanicblockUno.getBlocks = function() {
                 py: [
                     {
                         syntax: '%1',
-                        keyOption: 'arduino_ext_tone_value',
+                        keyOption: 'mechanicblock_controller_tone_value',
                     },
                 ],
             },
         },
-        arduino_ext_octave_list: {
+        mechanicblock_controller_octave_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -872,12 +872,12 @@ Entry.MechanicblockUno.getBlocks = function() {
                 py: [
                     {
                         syntax: '%1',
-                        keyOption: 'arduino_ext_octave_list',
+                        keyOption: 'mechanicblock_controller_octave_list',
                     },
                 ],
             },
         },
-        arduino_ext_set_tone: {
+        mechanicblock_controller_set_tone: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -916,10 +916,10 @@ Entry.MechanicblockUno.getBlocks = function() {
                         params: [3],
                     },
                     {
-                        type: 'arduino_ext_tone_list',
+                        type: 'mechanicblock_controller_tone_list',
                     },
                     {
-                        type: 'arduino_ext_octave_list',
+                        type: 'mechanicblock_controller_octave_list',
                     },
                     {
                         type: 'text',
@@ -927,7 +927,7 @@ Entry.MechanicblockUno.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'arduino_ext_set_tone',
+                type: 'mechanicblock_controller_set_tone',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -1043,7 +1043,7 @@ Entry.MechanicblockUno.getBlocks = function() {
                 ],
             },
         },
-        arduino_ext_set_servo: {
+        mechanicblock_controller_set_servo: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1074,13 +1074,13 @@ Entry.MechanicblockUno.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'arduino_ext_set_servo',
+                type: 'mechanicblock_controller_set_servo',
             },
             paramsKeyMap: {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'MechanicblockUno',
+            class: 'ArduMechanicblockUnoinoExt',
             isNotFor: ['MechanicblockUno'],
             func(sprite, script) {
                 const sq = Entry.hw.sendQueue;
