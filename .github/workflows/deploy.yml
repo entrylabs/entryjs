@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [10.x, 12.x]
+        node-version: 10.x
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
@@ -18,10 +18,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - uses: bahmutov/npm-install@v1
-      - name: npm install, build, and test
+      - name: entry build
         run: |
-          npm install
-          npm prod
+          npm run prod
   execute-script:
     needs: install-and-build
     runs-on: ubuntu-latest
