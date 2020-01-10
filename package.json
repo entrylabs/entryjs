@@ -4,7 +4,7 @@
     "description": "JavaScript library for visual programming",
     "version": "0.1.1",
     "main": "dist/entry.js",
-    "homepage": "https://playentry.org/",
+    "homepage": "https://playentry.org",
     "author": {
         "name": "Entry Korea corp and other contributors"
     },
