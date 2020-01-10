@@ -1,0 +1,34 @@
+name: Entry Build and Deploy
+
+on:
+  push:
+    branches:
+      - 'deploy2/**'
+
+jobs:
+  install-and-build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: bahmutov/npm-install@v1
+      - name: npm install, build, and test
+        run: |
+          npm install
+          npm prod
+  execute-script:
+    needs: install-and-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute build.sh
+        run: |
+          sh ./scripts/build.sh
+      - name: Execute deploy.sh
+        run: |
+          sh ./scripts/deploy.sh
