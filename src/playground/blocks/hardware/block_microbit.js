@@ -132,7 +132,7 @@ Entry.Microbit = new (class Microbit {
         }
     }
 
-    onReceiveData(portData) {
+    afterReceive(portData) {
         if (this.isEngineStop) {
             return;
         }
