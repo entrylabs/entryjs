@@ -89,15 +89,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
 
     _addEventListener('canvasClick', () => (Entry.stage.isObjectClick = false));
     _addEventListener('loadComplete', this.sortZorder.bind(this));
-    _addEventListener('audioRecording', () => {
-        this.showAudioRec();
-    });
-    _addEventListener('audioRecordProcessing', () => {
-        this.showAudioProgress();
-    });
-    _addEventListener('audioRecordingDone', () => {
-        this.hideAllAudioShade();
-    });
+
     Entry.windowResized.attach(this, this.updateBoundRect.bind(this));
 
     const razyScroll = _.debounce(() => {
@@ -544,59 +536,6 @@ Entry.Stage.prototype.initWall = function() {
 
     this.canvas.addChild(wall);
     this.wall = wall;
-};
-
-Entry.Stage.prototype.showAudioRec = function() {
-    if (!this.audioRecShade) {
-        this.audioRecShade = _createAudioRecShade();
-    }
-    console.log('called');
-    this.canvas.addChild(this.audioRecShade);
-    this.updateForce();
-    function _createAudioRecShade() {
-        const audioRecShade = GEHelper.newContainer();
-        const background = GEHelper.newGraphic();
-        const circle1 = GEHelper.newGraphic();
-
-        background.graphics.beginFill('rgba(255,255,255,0.5)').drawRect(-480, -240, 960, 480);
-        circle1.graphics.beginFill('#32d27d').drawCircle(0, 0, 41);
-        audioRecShade.addChild(background);
-        audioRecShade.addChild(circle1);
-        return audioRecShade;
-    }
-};
-
-Entry.Stage.prototype.showAudioProgress = function() {
-    if (this.audioRecShade) {
-        this.canvas.removeChild(this.audioRecShade);
-    }
-    if (!this.audioProgressShade) {
-        this.audioProgressShade = _createAudioProgressShade();
-    }
-
-    this.canvas.addChild(this.audioProgressShade);
-    this.updateForce();
-    function _createAudioProgressShade() {
-        const audioProgressShade = GEHelper.newContainer();
-        const background = GEHelper.newGraphic();
-
-        background.graphics.beginFill('rgba(255,255,255,1)').drawRect(-480, -240, 960, 480);
-        audioProgressShade.addChild(background);
-        return audioProgressShade;
-    }
-};
-Entry.Stage.prototype.hideAllAudioShade = function() {
-    if (!this.audioRecShade) {
-        return;
-    } else {
-        this.canvas.removeChild(this.audioRecShade);
-    }
-    if (!this.audioProgressShade) {
-        return;
-    } else {
-        this.canvas.removeChild(this.audioProgressShade);
-    }
-    this.updateForce();
 };
 
 /**

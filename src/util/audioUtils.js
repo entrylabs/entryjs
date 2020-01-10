@@ -100,7 +100,13 @@ class AudioUtils {
 
             this._audioChunks = [];
 
-            this._mediaRecorder.start();
+            try {
+                this._mediaRecorder.start();
+            } catch (err) {
+                console.log(err);
+                this._stopMediaRecorder();
+                this._mediaRecorder.start();
+            }
             Entry.dispatchEvent('audioRecording');
             this._socketClient.on('message', (e) => {
                 switch (e) {
@@ -152,8 +158,6 @@ class AudioUtils {
         }
         Entry.dispatchEvent('audioRecordProcessing');
 
-        this.isRecording = false;
-
         if (option.silent) {
             this._mediaRecorder.onstop = () => {
                 console.log('silent stop');
@@ -171,6 +175,7 @@ class AudioUtils {
         });
         clearTimeout(this._properStopCall);
         clearTimeout(this._noInputStopCall);
+        // this.isRecording = false;
     }
 
     isAudioConnected() {
