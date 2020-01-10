@@ -484,10 +484,6 @@ class Hardware implements Entry.Hardware {
         if (this.hwModule && this.hwModule.sendMessage) {
             this.hwModule.sendMessage(this);
         } else {
-            if (codeId && this.hwModule.commandStatus) {
-                this.hwModule.commandStatus[codeId] = 'pending';
-                this.sendQueue.codeId = codeId;
-            }
             this._sendSocketMessage({
                 data: JSON.stringify(this.sendQueue),
                 mode: this.socketMode,
