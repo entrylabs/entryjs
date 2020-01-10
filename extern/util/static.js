@@ -372,6 +372,14 @@ EntryStatic.getAllBlocks = function() {
             blocks: ['functionAddButton'],
         },
         {
+            category: 'analysis',
+            blocks: ['analysis_noti_img','analysis_noti_text'],
+        },
+        {
+            category: 'ai',
+            blocks: ['ai_noti_img','ai_noti_text'],
+        },
+        {
             category: 'expansion',
             blocks: [
                 'expansionBlockAddButton',
