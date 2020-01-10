@@ -238,7 +238,7 @@ class dmetTable {
             throw { message: 'not found data' };
         }
         if (y > -1) {
-            row.splice(y, 1);
+            delete row[y];
         } else {
             delete this.#object[objKey];
             this.#array.splice(x, 1);

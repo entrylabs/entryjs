@@ -26,11 +26,8 @@ class DataTable {
     addSource(table) {
         let data = table || { name: Lang.Workspace.data_table };
         data.name = Entry.getOrderedName(data.name, this.#tables, 'name');
-        if (!(data instanceof DataTableSource)) {
-            data = new DataTableSource(data);
-        }
-
-        this.#tables.unshift(data);
+        const isDataTableSource = data instanceof DataTableSource;
+        this.#tables.unshift(isDataTableSource ? data : new DataTableSource(data));
         Entry.playground.reloadPlayground();
     }
 
