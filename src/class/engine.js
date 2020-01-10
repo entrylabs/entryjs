@@ -429,9 +429,7 @@ Entry.Engine = class Engine {
     update() {
         if (Entry.engine.isState('run')) {
             Entry.engine.computeObjects();
-            if (Entry.hw.communicationType !== 'manual') {
-                Entry.hw.update();
-            }
+            Entry.hw.update();
         }
     }
 

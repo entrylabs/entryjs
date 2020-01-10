@@ -58,7 +58,6 @@ Entry.Microbit = new (class Microbit {
             ko: '마이크로빗',
         };
         this.name = 'microbit';
-        this.communicationType = 'manual';
         this.lastGesture = -1;
         this.blockMenuBlocks = [
             'microbit_led_toggle',
@@ -119,7 +118,9 @@ Entry.Microbit = new (class Microbit {
                 type,
                 payload,
             };
-            Entry.hw.update(codeId);
+            this.commandStatus[codeId] = 'pending';
+            Entry.hw.sendQueue.codeId = codeId;
+            Entry.hw.update();
             throw new Entry.Utils.AsyncError();
         } else if (this.commandStatus[codeId] === 'pending') {
             // 두 번째 이상의 진입시도이며 작업이 아직 끝나지 않은 경우
