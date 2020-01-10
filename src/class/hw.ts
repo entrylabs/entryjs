@@ -39,6 +39,7 @@ class Hardware implements Entry.Hardware {
 
     // 현재 연결된 모듈 컨트롤용
     public hwModule?: Entry.HardwareModule;
+    public communicationType: string; // 'manual' || 'auto'
     private currentDeviceKey?: string;
     private hwModuleType: HardwareModuleType;
     private hwMonitor?: Entry.HardwareMonitor;
@@ -57,6 +58,7 @@ class Hardware implements Entry.Hardware {
 
         this.socketConnectionRetryCount = 3;
         this.programConnected = false;
+        this.communicationType = 'auto';
         this.portData = {};
         this.sendQueue = {};
         this.hwModuleType = HardwareModuleType.builtIn;
@@ -160,8 +162,12 @@ class Hardware implements Entry.Hardware {
             this.portData = portData;
             this.checkDevice(portData);
             this._updatePortData(portData);
-            if (this.hwModule && this.hwModule.afterReceive) {
-                this.hwModule.afterReceive(portData);
+            if (
+                this.communicationType === 'manual' &&
+                this.hwModule &&
+                this.hwModule.onReceiveData
+            ) {
+                this.hwModule.onReceiveData(portData);
             }
         });
 
@@ -471,7 +477,7 @@ class Hardware implements Entry.Hardware {
         }
     }
 
-    update() {
+    update(codeId) {
         if (!this.socket || this.socket.disconnected) {
             return;
         }
@@ -552,6 +558,7 @@ class Hardware implements Entry.Hardware {
         if (!this.hwModule) {
             return;
         }
+        this.communicationType = this.hwModule.communicationType || 'auto';
         this._banClassAllHardware();
         Entry.dispatchEvent('hwChanged');
 

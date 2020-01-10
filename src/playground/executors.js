@@ -28,13 +28,20 @@ class Executor {
         const entity = this.entity;
 
         while (true) {
+            if (Entry.hw.communicationType === 'manual' && Entry.hw.pending) {
+                break;
+            }
+
             let returnVal = null;
             executedBlocks.push(this.scope.block);
 
             try {
                 const schema = this.scope.block.getSchema();
                 if (schema && Entry.skeleton[schema.skeleton].executable) {
-                    Entry.dispatchEvent('blockExecute', this.scope.block && this.scope.block.view);
+                    Entry.dispatchEvent(
+                        'blockExecute',
+                        this.scope.block && this.scope.block.view,
+                    );
                     returnVal = schema.func.call(this.scope, entity, this.scope);
                     this.scope.key = Entry.generateHash();
                 }

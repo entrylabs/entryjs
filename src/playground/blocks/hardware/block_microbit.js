@@ -58,6 +58,7 @@ Entry.Microbit = new (class Microbit {
             ko: '마이크로빗',
         };
         this.name = 'microbit';
+        this.communicationType = 'manual';
         this.lastGesture = -1;
         this.blockMenuBlocks = [
             'microbit_led_toggle',
