@@ -1838,9 +1838,9 @@ Entry.trueRobot.getBlocks = function() {
 
                     if (moveValue == 101) {
                         leftValue = 50;
-                        rightValue = -30;
+                        rightValue = -20;
                     } else if (moveValue == 102) {
-                        leftValue = -30;
+                        leftValue = -20;
                         rightValue = 50;
                     }
 					Entry.hw.sendQueue.leftValue = leftValue;
@@ -2183,10 +2183,10 @@ Entry.trueRobot.getBlocks = function() {
 
                     if (moveValue == 101) {
                         leftValue = 50;
-                        rightValue = -30;
+                        rightValue = -20;
                         delayValue = 0;
                     } else if (moveValue == 102) {
-                        leftValue = -30;
+                        leftValue = -20;
                         rightValue = 50;
                         delayValue = 0;
                     }

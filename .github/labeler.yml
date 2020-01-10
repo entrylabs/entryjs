@@ -1,3 +1,4 @@
-enhancement: "feature/**/*"
-issue: "issue/**/*"
-hardware: "*:develop-*"
+feature: feature/*
+security: security/*
+issue: issue/*
+hotfix: hotfix/*
