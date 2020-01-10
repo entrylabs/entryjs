@@ -36,6 +36,7 @@ declare module Entry {
         setZero: () => void;
         checkDevice: (data: HardwareMessageData) => void;
         openHardwareDownloadPopup: () => void;
+        onReceiveData?: (portData: any) => void;
     }
 
     /**

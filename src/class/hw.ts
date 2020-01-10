@@ -159,6 +159,9 @@ class Hardware implements Entry.Hardware {
         messageHandler.addEventListener('data', (portData) => {
             this.checkDevice(portData);
             this._updatePortData(portData);
+            if (this.hwModule && this.hwModule.onReceiveData) {
+                this.hwModule.onReceiveData(portData);
+            }
         });
 
         socket.on('disconnect', () => {

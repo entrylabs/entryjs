@@ -15,7 +15,7 @@ class Executor {
         this.id = Entry.Utils.generateId();
     }
 
-    execute(isFromOrigin) { 
+    execute(isFromOrigin) {
         if (this.isEnd()) {
             return;
         }
@@ -53,7 +53,6 @@ class Executor {
             if (this.isEnd()) {
                 return executedBlocks;
             }
-
 
             if (returnVal === undefined || returnVal === null || returnVal === Entry.STATIC.PASS) {
                 this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
