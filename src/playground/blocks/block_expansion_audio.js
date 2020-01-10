@@ -82,21 +82,23 @@ Entry.EXPANSION_BLOCK.audio.getBlocks = function() {
             },
             class: 'audio',
             isNotFor: ['audio'],
-            async func(sprite, script) {
-                try {
-                    if (audioUtils.isRecording) {
-                        throw new Entry.Utils.AsyncError();
-                    }
-                    audioUtils.isRecording = true;
-                    if (!audioUtils.isAudioInitComplete) {
-                        await audioUtils.initUserMedia();
-                    }
-                    const result = await audioUtils.startRecord(10 * 1000);
-                    Entry.dispatchEvent('audioRecordingDone');
-                    return result;
-                } catch (err) {
-                    throw err;
+            func(sprite, script) {
+                if (audioUtils.isRecording) {
+                    throw new Entry.Utils.AsyncError();
                 }
+                audioUtils.isRecording = true;
+                return new PromiseManager().Promise(async (resolve) => {
+                    try {
+                        if (!audioUtils.isAudioInitComplete) {
+                            await audioUtils.initUserMedia();
+                        }
+                        const result = await audioUtils.startRecord(10 * 1000);
+                        Entry.dispatchEvent('audioRecordingDone');
+                        resolve(result);
+                    } catch (e) {
+                        resolve('default');
+                    }
+                });
             },
             syntax: {
                 js: [],

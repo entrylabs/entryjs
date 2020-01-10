@@ -1,3 +1,4 @@
+import audioUtils from './audioUtils';
 const io = require('socket.io-client');
 const GATEWAY_CONNECT_TIMEOUT = 5000;
 
@@ -20,6 +21,7 @@ export function voiceApiConnect(addr = ADDR, cb) {
         });
         client.on('disconnect', () => {
             console.log('closed');
+            audioUtils.isRecording = false;
         });
     });
 }
