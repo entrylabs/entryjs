@@ -4,7 +4,7 @@
  */
 
 const { voiceApiConnect } = require('./websocket');
-var toWav = require('audiobuffer-to-wav');
+const toWav = require('audiobuffer-to-wav');
 
 const STATUS_CODE = {
     CONNECTED: 'CONNECTED',
@@ -100,14 +100,10 @@ class AudioUtils {
 
             this._audioChunks = [];
 
-            try {
-                this._mediaRecorder.start();
-            } catch (err) {
-                console.log(err);
-                this._stopMediaRecorder();
-                this._mediaRecorder.start();
-            }
-            Entry.dispatchEvent('audioRecording');
+            this._stopMediaRecorder();
+            this._mediaRecorder.start();
+
+            Entry.engine.toggleAudioShadePanel();
             this._socketClient.on('message', (e) => {
                 switch (e) {
                     case STATUS_CODE.CONNECTED:
@@ -135,7 +131,6 @@ class AudioUtils {
             });
             this._properStopCall = setTimeout(this.stopRecord, recordMilliSecond);
             this._noInputStopCall = setTimeout(() => {
-                Entry.dispatchEvent('audioRecordingDone');
                 this.stopRecord();
                 clearTimeout(this._properStopCall);
             }, 3000);
@@ -157,7 +152,7 @@ class AudioUtils {
             return;
         }
         Entry.dispatchEvent('audioRecordProcessing');
-
+        Entry.engine.toggleAudioProgressPanel();
         if (option.silent) {
             this._mediaRecorder.onstop = () => {
                 console.log('silent stop');

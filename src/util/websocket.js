@@ -20,6 +20,7 @@ export function voiceApiConnect(addr = ADDR, cb) {
             resolve(client);
         });
         client.on('disconnect', () => {
+            Entry.engine.hideAllAudioPanel();
             console.log('closed');
             audioUtils.isRecording = false;
         });
