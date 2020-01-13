@@ -4,7 +4,7 @@ Entry.MechanicblockNano = {
     id: '39.2',
     name: 'MechanicblockNano',
     url: 'http://www.mechanicblock.com/',
-    imageName: 'mechanicblock_nano.png',
+    imageName: 'mechanicblock_nano_.png',
     title: {
         ko: '메카닉블럭 Nano',
         en: 'Mechanicblock Nano',
@@ -73,46 +73,46 @@ Entry.MechanicblockNano.setLanguage = function() {
     return {
         ko: {
             template: {
-                arduino_nano_get_analog_value: '아날로그 %1 번 센서값',
-                arduino_nano_get_analog_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
-                arduino_nano_get_ultrasonic_value: '울트라소닉 Trig %1 Echo %2 센서값',
-                arduino_nano_toggle_led: '디지털 %1 번 핀 %2 %3',
-                arduino_nano_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
-                arduino_nano_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
-                arduino_nano_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
-                arduino_nano_get_digital: '디지털 %1 번 센서값',
+                mechanicblock_nano_get_analog_value: '아날로그 %1 번 센서값',
+                mechanicblock_nano_get_analog_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
+                mechanicblock_nano_get_ultrasonic_value: '울트라소닉 Trig %1 Echo %2 센서값',
+                mechanicblock_nano_toggle_led: '디지털 %1 번 핀 %2 %3',
+                mechanicblock_nano_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                mechanicblock_nano_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
+                mechanicblock_nano_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
+                mechanicblock_nano_get_digital: '디지털 %1 번 센서값',
             },
         },
         en: {
             template: {
-                arduino_nano_get_analog_value: 'Analog %1 Sensor value',
-                arduino_nano_get_analog_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
-                arduino_nano_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
-                arduino_nano_toggle_led: 'Digital %1 Pin %2 %3',
-                arduino_nano_digital_pwm: 'Digital %1 Pin %2 %3',
-                arduino_nano_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
-                arduino_nano_set_servo: 'Set servo pin %1 angle as %2 %3',
-                arduino_nano_get_digital: 'Digital %1 Sensor value',
+                mechanicblock_nano_get_analog_value: 'Analog %1 Sensor value',
+                mechanicblock_nano_get_analog_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
+                mechanicblock_nano_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
+                mechanicblock_nano_toggle_led: 'Digital %1 Pin %2 %3',
+                mechanicblock_nano_digital_pwm: 'Digital %1 Pin %2 %3',
+                mechanicblock_nano_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
+                mechanicblock_nano_set_servo: 'Set servo pin %1 angle as %2 %3',
+                mechanicblock_nano_get_digital: 'Digital %1 Sensor value',
             },
         },
     };
 };
 
 Entry.MechanicblockNano.blockMenuBlocks = [
-    'arduino_nano_get_analog_value',
-    'arduino_nano_get_analog_value_map',
-    'arduino_nano_get_ultrasonic_value',
-    'arduino_nano_get_digital',
-    'arduino_nano_toggle_led',
-    'arduino_nano_digital_pwm',
-    'arduino_nano_set_servo',
-    'arduino_nano_set_tone',
+    'mechanicblock_nano_get_analog_value',
+    'mechanicblock_nano_get_analog_value_map',
+    'mechanicblock_nano_get_ultrasonic_value',
+    'mechanicblock_nano_get_digital',
+    'mechanicblock_nano_toggle_led',
+    'mechanicblock_nano_digital_pwm',
+    'mechanicblock_nano_set_servo',
+    'mechanicblock_nano_set_tone',
 ];
 
 Entry.MechanicblockNano.getBlocks = function() {
     return {
         //region MechanicblockNano 아두이노 나노
-        arduino_nano_analog_list: {
+        mechanicblock_nano_analog_list: {
             parent: 'arduino_ext_analog_list',
             params: [
                 {
@@ -135,30 +135,30 @@ Entry.MechanicblockNano.getBlocks = function() {
             ],
             syntax: undefined,
         },
-        arduino_nano_get_analog_value: {
+        mechanicblock_nano_get_analog_value: {
             parent: 'arduino_ext_get_analog_value',
             template: Lang.template.arduino_ext_get_analog_value,
             def: {
                 params: [
                     {
-                        type: 'arduino_nano_analog_list',
+                        type: 'mechanicblock_nano_analog_list',
                     },
                 ],
-                type: 'arduino_nano_get_analog_value',
+                type: 'mechanicblock_nano_get_analog_value',
             },
             isNotFor: ['MechanicblockNano'],
             syntax: undefined,
         },
-        arduino_nano_get_analog_value_map: {
+        mechanicblock_nano_get_analog_value_map: {
             parent: 'arduino_ext_get_analog_value_map',
             template: Lang.template.arduino_ext_get_analog_value_map,
             def: {
                 params: [
                     {
-                        type: 'arduino_nano_get_analog_value',
+                        type: 'mechanicblock_nano_get_analog_value',
                         params: [
                             {
-                                type: 'arduino_nano_analog_list',
+                                type: 'mechanicblock_nano_analog_list',
                             },
                         ],
                     },
@@ -179,12 +179,12 @@ Entry.MechanicblockNano.getBlocks = function() {
                         params: ['100'],
                     },
                 ],
-                type: 'arduino_nano_get_analog_value_map',
+                type: 'mechanicblock_nano_get_analog_value_map',
             },
             isNotFor: ['MechanicblockNano'],
             syntax: undefined,
         },
-        arduino_nano_get_ultrasonic_value: {
+        mechanicblock_nano_get_ultrasonic_value: {
             template: Lang.template.arduino_ext_get_ultrasonic_value,
             parent: 'arduino_ext_get_ultrasonic_value',
             def: {
@@ -198,12 +198,12 @@ Entry.MechanicblockNano.getBlocks = function() {
                         params: ['4'],
                     },
                 ],
-                type: 'arduino_nano_get_ultrasonic_value',
+                type: 'mechanicblock_nano_get_ultrasonic_value',
             },
             isNotFor: ['MechanicblockNano'],
             syntax: undefined,
         },
-        arduino_nano_get_digital: {
+        mechanicblock_nano_get_digital: {
             template: Lang.template.arduino_ext_get_digital,
             parent: 'arduino_ext_get_digital',
             def: {
@@ -212,12 +212,12 @@ Entry.MechanicblockNano.getBlocks = function() {
                         type: 'arduino_get_port_number',
                     },
                 ],
-                type: 'arduino_nano_get_digital',
+                type: 'mechanicblock_nano_get_digital',
             },
             isNotFor: ['MechanicblockNano'],
             syntax: undefined,
         },
-        arduino_nano_toggle_led: {
+        mechanicblock_nano_toggle_led: {
             template: Lang.template.arduino_ext_toggle_led,
             parent: 'arduino_ext_toggle_led',
             def: {
@@ -231,12 +231,12 @@ Entry.MechanicblockNano.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'arduino_nano_toggle_led',
+                type: 'mechanicblock_nano_toggle_led',
             },
             isNotFor: ['MechanicblockNano'],
             syntax: undefined,
         },
-        arduino_nano_digital_pwm: {
+        mechanicblock_nano_digital_pwm: {
             template: Lang.template.arduino_ext_digital_pwm,
             parent: 'arduino_ext_digital_pwm',
             def: {
@@ -250,12 +250,12 @@ Entry.MechanicblockNano.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'arduino_nano_digital_pwm',
+                type: 'mechanicblock_nano_digital_pwm',
             },
             isNotFor: ['MechanicblockNano'],
             syntax: undefined,
         },
-        arduino_nano_set_tone: {
+        mechanicblock_nano_set_tone: {
             template: Lang.template.arduino_ext_set_tone,
             parent: 'arduino_ext_set_tone',
             def: {
@@ -276,12 +276,12 @@ Entry.MechanicblockNano.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'arduino_nano_set_tone',
+                type: 'mechanicblock_nano_set_tone',
             },
             isNotFor: ['MechanicblockNano'],
             syntax: undefined,
         },
-        arduino_nano_set_servo: {
+        mechanicblock_nano_set_servo: {
             template: Lang.template.arduino_ext_set_servo,
             parent: 'arduino_ext_set_servo',
             def: {
@@ -291,7 +291,7 @@ Entry.MechanicblockNano.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'arduino_nano_set_servo',
+                type: 'mechanicblock_nano_set_servo',
             },
             isNotFor: ['MechanicblockNano'],
             syntax: undefined,
