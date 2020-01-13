@@ -1,6 +1,5 @@
 {
     "compilerOptions": {
-//        "outDir": "./dist/",
         "sourceMap": true,
         "noImplicitAny": true,
         "module": "esnext",
@@ -11,5 +10,8 @@
         "allowJs": true,
         "baseUrl": "./",
         "typeRoots": ["./types", "./node_modules/@types"]
-    }
+    },
+    "include": [
+        "src/**/*.ts"
+    ]
 }

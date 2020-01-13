@@ -869,8 +869,6 @@ EntryStatic.getDefaultFontFamily = function() {
     }
 };
 
-EntryStatic.moduleBaseUrl = (location.origin || 'https://playentry.org') + '/modules/';
-
 // for server node js code
 if (typeof exports === 'object') {
     exports.blockInfo = EntryStatic.blockInfo;

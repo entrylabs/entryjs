@@ -40,7 +40,7 @@ Entry.moduleManager = new (class {
                 reject(e);
             };
 
-            scriptElement.src = `${EntryStatic.moduleBaseUrl}${moduleName}/files/block`;
+            scriptElement.src = `${Entry.moduleBaseUrl}${moduleName}/files/block`;
 
             // noinspection JSCheckFunctionSignatures
             document.body.appendChild(scriptElement);
