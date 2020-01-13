@@ -165,9 +165,9 @@ class Hardware implements Entry.Hardware {
             if (
                 this.communicationType === 'manual' &&
                 this.hwModule &&
-                this.hwModule.onReceiveData
+                this.hwModule.afterReceive
             ) {
-                this.hwModule.onReceiveData(portData);
+                this.hwModule.afterReceive(portData);
             }
         });
 
@@ -477,7 +477,7 @@ class Hardware implements Entry.Hardware {
         }
     }
 
-    update(codeId) {
+    update() {
         if (!this.socket || this.socket.disconnected) {
             return;
         }
