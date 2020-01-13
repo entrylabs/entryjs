@@ -226,5 +226,5 @@ class AudioUtils {
     };
 }
 
-// 해당 클래스는 프로젝트 내 싱글인스턴스로 존재한다. Entry 네임스페이스에는 존재하지 않으므로 외부에서 사용할 수 없다.
+//Entry 네임스페이스에는 존재하지 않으므로 외부에서 사용할 수 없다.
 export default new AudioUtils();
