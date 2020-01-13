@@ -1,11 +1,9 @@
 'use strict';
 
-const merge = require('webpack-merge');
-const common = require('./common.js');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
-module.exports = merge(common, {
+module.exports = {
     entry: {
         'entry.min': './src/entry.js',
     },
@@ -30,9 +28,9 @@ module.exports = merge(common, {
                 include: /\.min\.js$/,
                 parallel: true,
                 terserOptions: {
-                    ecma: 8
-                }
-            })
+                    ecma: 8,
+                },
+            }),
         ],
-    }
-});
+    },
+};
