@@ -40,9 +40,7 @@ Entry.moduleManager = new (class {
                 reject(e);
             };
 
-            // TODO baseUrl 관련해서 정리가 필요함
-            // scriptElement.src = `/rest/hardware/${moduleName}/block`;
-            scriptElement.src = `https://hw.playentry.org:23518/modules/${moduleName}`;
+            scriptElement.src = `${EntryStatic.moduleBaseUrl}${moduleName}/files/block`;
 
             // noinspection JSCheckFunctionSignatures
             document.body.appendChild(scriptElement);
