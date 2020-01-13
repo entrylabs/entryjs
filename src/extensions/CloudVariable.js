@@ -52,6 +52,7 @@ class CloudVariableExtension {
             query: {
                 q: query,
             },
+            transports: ['websocket'],
             reconnectionAttempts: 2,
             timeout: 5000,
         });
