@@ -39,6 +39,7 @@ class Hardware implements Entry.Hardware {
 
     // 현재 연결된 모듈 컨트롤용
     public hwModule?: Entry.HardwareModule;
+    public communicationType: string; // 'manual' || 'auto'
     private currentDeviceKey?: string;
     private hwModuleType: HardwareModuleType;
     private hwMonitor?: Entry.HardwareMonitor;
@@ -57,6 +58,7 @@ class Hardware implements Entry.Hardware {
 
         this.socketConnectionRetryCount = 3;
         this.programConnected = false;
+        this.communicationType = 'auto';
         this.portData = {};
         this.sendQueue = {};
         this.hwModuleType = HardwareModuleType.builtIn;
@@ -156,9 +158,17 @@ class Hardware implements Entry.Hardware {
 
         // 1.7.0 버전 이전 하드웨어 프로그램 종료로직 대응으로 남겨두어야 한다.
         messageHandler.addEventListener('disconnect', this._disconnectHardware.bind(this));
-        messageHandler.addEventListener('data', (portData) => {
+        messageHandler.addEventListener('data', (portData: HardwareMessageData) => {
+            this.portData = portData;
             this.checkDevice(portData);
             this._updatePortData(portData);
+            if (
+                this.communicationType === 'manual' &&
+                this.hwModule &&
+                this.hwModule.afterReceive
+            ) {
+                this.hwModule.afterReceive(portData);
+            }
         });
 
         socket.on('disconnect', () => {
@@ -492,12 +502,8 @@ class Hardware implements Entry.Hardware {
     }
 
     private _updatePortData(data: HardwareMessageData) {
-        this.portData = data;
         if (this.hwMonitor && Entry.propertyPanel && Entry.propertyPanel.selected === 'hw') {
-            this.hwMonitor.update(this.portData, this.sendQueue);
-        }
-        if (this.hwModule && this.hwModule.afterReceive) {
-            this.hwModule.afterReceive(this.portData);
+            this.hwMonitor.update(data, this.sendQueue);
         }
     }
 
@@ -552,6 +558,7 @@ class Hardware implements Entry.Hardware {
         if (!this.hwModule) {
             return;
         }
+        this.communicationType = this.hwModule.communicationType || 'auto';
         this._banClassAllHardware();
         Entry.dispatchEvent('hwChanged');
 

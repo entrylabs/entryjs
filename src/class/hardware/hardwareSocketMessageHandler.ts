@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import { isObject } from 'lodash';
 
 /**
  * 엔트리 하드웨어 -> 엔트리 워크스페이스간 통신을 정리한 클래스
@@ -76,7 +76,7 @@ export default class {
                         break;
                     }
                 }
-            } else if (_.isObject(data)) {
+            } else if (isObject(data)) {
                 portData = data;
             }
             this.dispatchEvent('data', portData);
