@@ -58,12 +58,11 @@ class dmetList {
     }
 
     from(data) {
-        let array = [];
         if (Array.isArray(data)) {
             this.#data = data;
         } else if (data.isDmet || isPlainObject(data)) {
             const { list = [], array = [], value, _id, id = this.#id, ...info } = data;
-            if (Array.isArray(array)) {
+            if (data.array && Array.isArray(array)) {
                 this.#array = array;
                 this.#array.map((value) => {
                     const { key } = value;
