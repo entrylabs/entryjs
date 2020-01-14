@@ -7,11 +7,11 @@ const ADDR = {
     port: 4001,
 };
 
-export function voiceApiConnect(addr = ADDR, cb) {
+export function voiceApiConnect(addr = ADDR, language = 'Kor', cb) {
     return new Promise((resolve, reject) => {
         const { host, port } = ADDR;
 
-        const client = io.connect(`ws://${host}:${port}`);
+        const client = io.connect(`ws://${host}:${port}`, { query: `language=${language}` });
         client.onerror = function(error) {
             console.log('Connect Error: ' + JSON.stringify(error));
         };

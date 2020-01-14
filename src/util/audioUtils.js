@@ -42,6 +42,9 @@ class AudioUtils {
     }
 
     async initUserMedia() {
+        if (this.isAudioInitComplete) {
+            return;
+        }
         if (!this.isAudioSupport) {
             console.error('this browser not support input media');
             return false;
@@ -81,7 +84,7 @@ class AudioUtils {
         }
     }
 
-    async startRecord(recordMilliSecond) {
+    async startRecord(recordMilliSecond, language) {
         return await new Promise(async (resolve, reject) => {
             if (!this.isAudioInitComplete) {
                 console.log('audio not initialized');
@@ -93,7 +96,7 @@ class AudioUtils {
             if (this._audioContext.state === 'suspended') {
                 await this.initUserMedia();
             }
-            const socketClient = await voiceApiConnect(VOICE_SERVER_ADDR, (data) => {
+            const socketClient = await voiceApiConnect(VOICE_SERVER_ADDR, language, (data) => {
                 this.result = data;
             });
             this._socketClient = socketClient;
