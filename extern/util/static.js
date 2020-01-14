@@ -373,11 +373,15 @@ EntryStatic.getAllBlocks = function() {
         },
         {
             category: 'analysis',
-            blocks: ['analysis_noti_img','analysis_noti_text'],
+            blocks: ['analysis_noti_img', 'analysis_noti_text'],
         },
         {
             category: 'ai',
-            blocks: ['ai_noti_img','ai_noti_text'],
+            blocks: ['ai_noti_img', 'ai_noti_text'],
+        },
+        {
+            category: 'artificial_intelligence',
+            blocks: ['audio_title', 'check_microphone', 'speech_to_text', 'get_microphone_volume'],
         },
         {
             category: 'expansion',
@@ -410,10 +414,6 @@ EntryStatic.getAllBlocks = function() {
                 'read_text',
                 'read_text_wait_with_block',
                 'set_tts_property',
-                'audio_title',
-                'check_microphone',
-                'speech_to_text',
-                'get_microphone_volume',
             ],
         },
         {
@@ -793,6 +793,7 @@ EntryStatic.colorSet = {
             VARIABLE: '#CE38CE',
             HARDWARE: '#FFFFFF',
             EXPANSION: '#FF8888',
+            ARTIFICIAL_INTELLIGENCE: '#FF8888',
             HIDDEN: '#FFFFFF',
         },
     },
@@ -811,6 +812,7 @@ EntryStatic.colorSet = {
             FUNC: '#de5c04',
             HARDWARE: '#00b6b1',
             EXPANSION: '#ef6d6d',
+            ARTIFICIAL_INTELLIGENCE: '#8222ff',
             HIDDEN: '#8aa3b2',
         },
         lighten: {
@@ -827,6 +829,7 @@ EntryStatic.colorSet = {
             FUNC: '#ff7b22',
             HARDWARE: '#78d5d3',
             EXPANSION: '#ffaeae',
+            ARTIFICIAL_INTELLIGENCE: '#ffaeae',
             HIDDEN: '#ffaeae',
         },
         darken: {
@@ -843,6 +846,7 @@ EntryStatic.colorSet = {
             FUNC: '#a14100',
             HARDWARE: '#008380',
             EXPANSION: '#c63f3f',
+            ARTIFICIAL_INTELLIGENCE: '#670bdd',
             HIDDEN: '#728997',
         },
         emphasize: {

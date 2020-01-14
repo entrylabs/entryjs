@@ -527,7 +527,6 @@ class BlockMenu {
         }
 
         const sorted = [[], []];
-
         this._categoryData.forEach(({ category, blocks: threads }) => {
             if (category === 'func') {
                 const funcThreads = this.code
@@ -535,7 +534,7 @@ class BlockMenu {
                     .map((t) => t.getFirstBlock().type);
                 threads = funcThreads.length ? funcThreads : threads;
             }
-
+            debugger;
             const inVisible =
                 threads.reduce(
                     (count, type) => (this.checkBanClass(Entry.block[type]) ? count - 1 : count),
