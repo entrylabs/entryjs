@@ -46,7 +46,6 @@ Entry.EXPANSION_BLOCK.audio.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
-            template: '마이크가 연결되었는가?',
             params: [],
             events: {},
             def: {
@@ -71,7 +70,6 @@ Entry.EXPANSION_BLOCK.audio.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
-            template: '음성을 문자로 바꾼 값',
             events: {},
             def: {
                 params: [3],
@@ -111,7 +109,6 @@ Entry.EXPANSION_BLOCK.audio.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
-            template: '마이크 소릿값',
             params: [],
             events: {},
             def: {
