@@ -155,9 +155,7 @@ class BlockMenu {
 
         this.svgDom = Entry.Dom(
             $(
-                `<svg id="${
-                    this._svgId
-                }" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>`
+                `<svg id="${this._svgId}" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>`
             ),
             { parent: this.blockMenuWrapper }
         );
@@ -530,7 +528,6 @@ class BlockMenu {
         }
 
         const sorted = [[], []];
-
         this._categoryData.forEach(({ category, blocks: threads }) => {
             if (category === 'func') {
                 const funcThreads = this.code
@@ -538,7 +535,7 @@ class BlockMenu {
                     .map((t) => t.getFirstBlock().type);
                 threads = funcThreads.length ? funcThreads : threads;
             }
-
+            debugger;
             const inVisible =
                 threads.reduce(
                     (count, type) => (this.checkBanClass(Entry.block[type]) ? count - 1 : count),
@@ -811,7 +808,9 @@ class BlockMenu {
      * @param blockName {string}
      */
     addCategoryData(categoryName, blockName) {
-        const selectedCategory = this._categoryData.find((element) => element.category === categoryName);
+        const selectedCategory = this._categoryData.find(
+            (element) => element.category === categoryName
+        );
         if (selectedCategory && selectedCategory.blocks.indexOf(blockName) === -1) {
             selectedCategory.blocks.push(blockName);
         }
@@ -1123,15 +1122,16 @@ class BlockMenu {
             return;
         }
 
-        this._buildCategoryCodes(blocks.filter((b) => !this.checkBanClass(Entry.block[b])), HW).forEach(
-            (t) => {
-                if (shouldHide) {
-                    t[0].x = -99999;
-                }
-                this._createThread(t);
-                delete t[0].x;
+        this._buildCategoryCodes(
+            blocks.filter((b) => !this.checkBanClass(Entry.block[b])),
+            HW
+        ).forEach((t) => {
+            if (shouldHide) {
+                t[0].x = -99999;
             }
-        );
+            this._createThread(t);
+            delete t[0].x;
+        });
 
         this.hwCodeOutdated = false;
         Entry.dispatchEvent('hwCodeGenerated');

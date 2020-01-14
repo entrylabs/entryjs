@@ -54,7 +54,7 @@
         overflow: hidden;
         overflow-y: scroll;
         font-weight: bold;
-        &::-webkit-scrollbar { 
+        &::-webkit-scrollbar {
             display: none;  // Safari and Chrome
         }
 
@@ -65,7 +65,7 @@
 }
 .entryCategoryListWorkspace:before {
   position: absolute;
-  left: 0; 
+  left: 0;
   right: 0;
   top: 0;
   bottom: 0;
@@ -332,6 +332,18 @@
     color: #fff;
 }
 
+#entryCategoryartificial_intelligence {
+    .backgroundImage("artificial_intelligence.svg");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategoryartificial_intelligence {
+    .backgroundImage("artificial_intelligence_on.svg");
+    background-color: #8222ff;
+    border-color: #670bdd;
+    color: #fff;
+}
+
 #entryCategoryscene {
     .backgroundImage("scene.png");
     background-repeat: no-repeat;
@@ -499,5 +511,3 @@
     border-left: 0;
     .backgroundImage("entry_bg_1.png");
 }
-
-
