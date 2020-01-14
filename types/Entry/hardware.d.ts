@@ -49,6 +49,7 @@ declare module Entry {
         id: HardwareModuleId;
         name: string;
         monitorTemplate?: UnknownAny;
+        communicationType?: string;
         sendMessage?: (hw: Hardware) => void;
         setZero: () => void;
 
