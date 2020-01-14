@@ -57,8 +57,10 @@ Entry.EXPANSION_BLOCK.audio.getBlocks = function() {
             class: 'audio',
             isNotFor: ['audio'],
             async func(sprite, script) {
-                const result = await audioUtils.checkUserMicAvailable();
-                return result.toString();
+                return new PromiseManager().Promise(async (resolve) => {
+                    const result = await audioUtils.checkUserMicAvailable();
+                    resolve(result.toString());
+                });
             },
             syntax: {
                 js: [],
@@ -119,11 +121,18 @@ Entry.EXPANSION_BLOCK.audio.getBlocks = function() {
             },
             class: 'audio',
             isNotFor: ['audio'],
-            async func(sprite, script) {
-                if (!audioUtils.isAudioInitComplete) {
-                    await audioUtils.initUserMedia();
-                }
-                return audioUtils.currentVolume;
+            func(sprite, script) {
+                return new PromiseManager().Promise(async (resolve) => {
+                    try {
+                        if (!audioUtils.isAudioInitComplete) {
+                            await audioUtils.initUserMedia();
+                        }
+                        resolve(audioUtils.currentVolume);
+                    } catch (e) {
+                        console.log(e);
+                        resolve('error');
+                    }
+                });
             },
             syntax: {
                 js: [],
