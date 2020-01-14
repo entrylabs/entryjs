@@ -1092,6 +1092,9 @@ Entry.Microbit = new (class Microbit {
                     if (value === 'lightLevel') {
                         let commandType = functionKeys.GET_LIGHT_LEVEL;
                         this.requestCommandWithResponse(script.entity.id, commandType);
+                    } else if (value === 'compassHeading') {
+                        let commandType = functionKeys.GET_COMPASS_HEADING;
+                        this.requestCommandWithResponse(script.entity.id, commandType);
                     }
                     return _get(Entry.hw.portData, ['payload', 'sensorData', value], -1);
                 },

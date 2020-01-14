@@ -165,6 +165,13 @@ class Hardware implements Entry.Hardware {
             if (
                 this.communicationType === 'manual' &&
                 this.hwModule &&
+                this.hwModule.afterReceive
+            ) {
+                this.hwModule.afterReceive(portData);
+            }
+            if (
+                this.communicationType === 'manual' &&
+                this.hwModule &&
                 this.hwModule.onReceiveData
             ) {
                 this.hwModule.onReceiveData(portData);
