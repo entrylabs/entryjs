@@ -2,8 +2,8 @@
  * Playground is block construct area.
  * @fileoverview This manage playground.
  */
-'use strict';
 
+import { map } from 'fxjs2';
 import { Backpack, ColorPicker, Dropdown, Sortable } from '@entrylabs/tool';
 import Toast from '../playground/toast';
 import EntryEvent from '@entrylabs/event';
@@ -659,6 +659,14 @@ Entry.Playground = class Playground {
         });
     }
 
+    updateTableView() {
+        if (this.tableSortableListWidget) {
+            this.tableSortableListWidget.setData({
+                items: this._getSortableTableList(),
+            });
+        }
+    }
+
     updatePictureView() {
         if (this.pictureSortableListWidget) {
             this.pictureSortableListWidget.setData({
@@ -704,6 +712,108 @@ Entry.Playground = class Playground {
             .appendTo(tableView);
 
         this.dataTable = new DataTable(tableDom);
+        this.dataTable.addSource({
+            _id: '534578cf19e9dc00001a3ac2',
+            name: '',
+            fields: ['요리명', '재료', '조리법'],
+            array: [
+                {
+                    key: '12df',
+                    value: ['된장찌개', '된장', '끓인다'],
+                },
+                {
+                    key: '532h',
+                    value: ['파전', '파', '굽는다'],
+                },
+            ],
+            chart: [
+                {
+                    title: '',
+                    type: 'bar',
+                    xIndex: 0,
+                    yIndex: [0, 1],
+                },
+            ],
+            type: '_system_',
+            // for admin
+            category: {
+                main: 'public',
+            },
+            info: {
+                rows: 2,
+                modifyDate: '2019-12-27',
+                label: {
+                    ko: '',
+                    en: '',
+                },
+                provider: {
+                    ko: '한국 국제 교류재단 문화예술사업부',
+                    en: '',
+                },
+
+                summary: {
+                    ko:
+                        '800여 가지의 한식을 재료별(곡물, 콩, 채소, 고기 등), 조리법별(밥, 국, 찌개, 구이 등)로 분류한 데이터입니다.',
+                    en: '',
+                },
+                description: {
+                    ko:
+                        '한국국제교류재단은 한국인의 매일 먹는 밥, 반찬, 찌개, 국부터 전통음힉에 이르기까지 800여 가지가 넘는 한식의 보다 정확한 정보를 스마트폰으로 쉽게 찾고, 듣고, 공유할 수 있도록 ‘Korean Food Guide 800’ 앱으로 출시하였다. 이에 800여가지의 한식을 재료별(곡물, 콩, 채소, 고기 등) 조리법별(밥, 국, 찌개, 구이 등)로 분류한 엑셀데이터를 공공데이터로 공개한다. 분류한 엑셀데이터를 공공데이터로 공개한다. 한국국제교류재단은 한국인의 매일 먹는 밥, 반찬, 찌개, 국부터 전통음힉에 이르기까지 800여 가지가 넘는 한식의 보다 정확한 정보를 스마트폰으로 쉽게 찾고, 듣고, 공유할 수 있도록 ‘Korean Food Guide 800’ 앱으로 출시하였다. 이에 800여가지의 한식을 재료별(곡물, 콩, 채소, 고기 등) 조리법별(밥, 국, 찌개, 구이 등)로 분류한 엑셀데이터를 공공데이터로 공개한다. 분류한 엑셀데이터를 공공데이터로 공개한다.',
+                    en: '',
+                },
+            },
+        });
+        this.dataTable.addSource({
+            _id: '534578cf19e9dc00001a3ac2',
+            name: '',
+            fields: ['요리명', '재료', '조리법'],
+            array: [
+                {
+                    key: '12df',
+                    value: ['된장찌개', '된장', '끓인다'],
+                },
+                {
+                    key: '532h',
+                    value: ['파전', '파', '굽는다'],
+                },
+            ],
+            chart: [
+                {
+                    title: '',
+                    type: 'bar',
+                    xIndex: 0,
+                    yIndex: [0, 1],
+                },
+            ],
+            type: '_system_',
+            // for admin
+            category: {
+                main: 'public',
+            },
+            info: {
+                rows: 2,
+                modifyDate: '2019-12-27',
+                label: {
+                    ko: '',
+                    en: '',
+                },
+                provider: {
+                    ko: '한국 국제 교류재단 문화예술사업부',
+                    en: '',
+                },
+
+                summary: {
+                    ko:
+                        '800여 가지의 한식을 재료별(곡물, 콩, 채소, 고기 등), 조리법별(밥, 국, 찌개, 구이 등)로 분류한 데이터입니다.',
+                    en: '',
+                },
+                description: {
+                    ko:
+                        '한국국제교류재단은 한국인의 매일 먹는 밥, 반찬, 찌개, 국부터 전통음힉에 이르기까지 800여 가지가 넘는 한식의 보다 정확한 정보를 스마트폰으로 쉽게 찾고, 듣고, 공유할 수 있도록 ‘Korean Food Guide 800’ 앱으로 출시하였다. 이에 800여가지의 한식을 재료별(곡물, 콩, 채소, 고기 등) 조리법별(밥, 국, 찌개, 구이 등)로 분류한 엑셀데이터를 공공데이터로 공개한다. 분류한 엑셀데이터를 공공데이터로 공개한다. 한국국제교류재단은 한국인의 매일 먹는 밥, 반찬, 찌개, 국부터 전통음힉에 이르기까지 800여 가지가 넘는 한식의 보다 정확한 정보를 스마트폰으로 쉽게 찾고, 듣고, 공유할 수 있도록 ‘Korean Food Guide 800’ 앱으로 출시하였다. 이에 800여가지의 한식을 재료별(곡물, 콩, 채소, 고기 등) 조리법별(밥, 국, 찌개, 구이 등)로 분류한 엑셀데이터를 공공데이터로 공개한다. 분류한 엑셀데이터를 공공데이터로 공개한다.',
+                    en: '',
+                },
+            },
+        });
     }
 
     initSortableTableWidget() {
@@ -711,12 +821,11 @@ Entry.Playground = class Playground {
             return;
         }
 
-        console.log('?#!@', this._getSortablePictureList());
         this.tableSortableListWidget = new Sortable({
             container: this.tableListView_,
             data: {
                 height: '100%',
-                sortableTarget: ['popup_sortableItem__2foG9'],
+                sortableTarget: ['entryPlaygroundTableThumbnail'],
                 lockAxis: 'y',
                 items: this._getSortableTableList(),
             },
@@ -727,21 +836,14 @@ Entry.Playground = class Playground {
     }
 
     _getSortableTableList() {
-        return [
-            {
-                key: '31232',
-                item: '123',
-            },
-            {
-                key: '32132',
-                item: '412',
-            },
-        ];
-        // const id = this.object.id;
-        // return this.object.pictures.map((value) => ({
-        //     key: `${id}-${value.id}`,
-        //     item: value.view,
-        // }));
+        const { tables } = this.dataTable;
+        return map((table) => {
+            const { id, view } = table;
+            return {
+                key: id,
+                item: view,
+            };
+        }, tables);
     }
 
     /**
@@ -1247,6 +1349,18 @@ Entry.Playground = class Playground {
         );
     }
 
+    injectTable() {
+        const view = this.tableListView_;
+        if (!view) {
+            return;
+        }
+        const { tables } = this.dataTable;
+        tables.forEach((table) => {
+            table.view || this.generateTableElement(table);
+        });
+        this.updateTableView();
+    }
+
     /**
      * Inject picture
      */
@@ -1366,6 +1480,17 @@ Entry.Playground = class Playground {
         this.addPicture(sourcePicture, true);
     }
 
+    selectTable(table) {
+        const {tables} = this.dataTable;
+        map(({view, id}) => {
+            if(id === table.id) {
+                view.addClass('entryTableSelected');
+            } else {
+                view.removeClass('entryTableSelected');
+            }
+        }, tables);
+        Entry.dispatchEvent('tableSelected', table);
+    }
     /**
      * Select picture
      * @param {picture}
@@ -1626,6 +1751,7 @@ Entry.Playground = class Playground {
 
         if (viewType === 'table') {
             this.initSortableTableWidget();
+            this.injectTable();
         }
 
         if (
@@ -1847,6 +1973,52 @@ Entry.Playground = class Playground {
         }
         Entry.dispatchEvent('pictureNameChanged', this.nameView.picture);
         Entry.playground.nameViewFocus = false;
+    }
+
+    generateTableElement(table) {
+        const element = Entry.createElement('li', table.id)
+            .addClass('entryPlaygroundTableElement')
+            .bindOnClick(() => {
+                this.selectTable(table);
+            });
+        table.view = element;
+        element.orderHolder = Entry.createElement('div')
+            .addClass('entryPlaygroundTableOrder')
+            .appendTo(element);
+        const thumbnailView = Entry.createElement('div', `t_${table.id}`).addClass(
+            'entryPlaygroundTableThumbnail'
+        );
+        thumbnailView.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+        });
+        thumbnailView.style.backgroundImage = '';
+        element.appendChild(thumbnailView);
+        const nameView = Entry.createElement('input')
+            .addClass('entryPlaygroundTableName')
+            .addClass('entryEllipsis');
+        nameView.value = table.name;
+        // Entry.attachEventListener(nameView, 'blur', this.nameViewBlur.bind(this));
+        Entry.attachEventListener(nameView, 'focus', (e) => {
+            this.nameView = e.target;
+            this.nameViewFocus = true;
+        });
+        nameView.onkeypress = Entry.Utils.blurWhenEnter;
+        element.appendChild(nameView);
+        const removeButton = Entry.createElement('div').addClass('entryPlaygroundTableRemove');
+        const { Buttons = {} } = Lang || {};
+        const { delete: delText = '삭제' } = Buttons;
+        removeButton.appendTo(element).innerText = delText;
+        removeButton.bindOnClick((e) => {
+            try {
+                e.stopPropagation();
+                this._removeTable(table, element);
+            } catch (e) {
+                Entry.toast.alert(
+                    Lang.Workspace.shape_remove_fail,
+                    Lang.Workspace.shape_remove_fail_msg
+                );
+            }
+        });
     }
 
     generatePictureElement(picture) {
