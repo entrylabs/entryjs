@@ -158,7 +158,6 @@ Entry.Microbit = new (class Microbit {
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
                 statements: [],
-                template: 'LED의 X:%1 Y:%2 %3 %4',
                 params: [
                     {
                         type: 'Block',
@@ -172,7 +171,11 @@ Entry.Microbit = new (class Microbit {
                     },
                     {
                         type: 'Dropdown',
-                        options: [['켜기', 'on'], ['끄기', 'off'], ['반전', 'toggle']],
+                        options: [
+                            [Lang.Blocks.microbit_led_toggle_on, 'on'],
+                            [Lang.Blocks.microbit_led_toggle_off, 'off'],
+                            [Lang.Blocks.microbit_led_toggle_toggle, 'toggle'],
+                        ],
                         value: 'on',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -222,7 +225,6 @@ Entry.Microbit = new (class Microbit {
                 fontColor: '#ffffff',
                 skeleton: 'basic_string_field',
                 statements: [],
-                template: 'LED의 X:%1 Y:%2 상태값',
                 params: [
                     {
                         type: 'Block',
@@ -270,7 +272,6 @@ Entry.Microbit = new (class Microbit {
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
                 statements: [],
-                template: '%1 출력하기 %2',
                 params: [
                     {
                         type: 'Block',
@@ -315,7 +316,6 @@ Entry.Microbit = new (class Microbit {
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
                 statements: [],
-                template: '%1 아이콘 출력하기 %2',
                 params: [
                     {
                         type: 'Dropdown',
@@ -1285,11 +1285,21 @@ Entry.Microbit = new (class Microbit {
                 fontColor: '#ffffff',
                 skeleton: 'basic_boolean_field',
                 statements: [],
-                template: '%1 이 있는가?',
+                template: '%1 움직임이 감지되는가?',
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [['흔들림', 0], ['움직임', 1]],
+                        options: [
+                            ['흔들림', 11],
+                            ['세워서 위쪽 방향', 1],
+                            ['세워서 아래쪽 방향', 2],
+                            ['세워서 오른쪽 방향', 4],
+                            ['세워서 왼쪽 방향', 3],
+                            ['눕혀서 위쪽 방향', 5],
+                            ['눕혀서 아래쪽 방향', 6],
+                            ['눕혀서 오른쪽 방향', 14],
+                            ['눕혀서 왼쪽 방향', 13],
+                        ],
                         value: 1,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1306,9 +1316,12 @@ Entry.Microbit = new (class Microbit {
                     VALUE: 0,
                 },
                 func: (sprite, script) => {
-                    const value = script.getField('VALUE');
+                    let value = script.getField('VALUE');
                     const gesture = _get(Entry.hw.portData, 'payload.sensorData.gesture', -1);
-
+                    // 밸류 중복으로 인해서 생기는 문제로 인해 +10을 오프셋으로 사용
+                    if (value > 11) {
+                        value = value - 10;
+                    }
                     /**
                      * 제스쳐는 단 한번만 검사하기 위해 제스쳐가 이전과 다르게 변경된 경우만 검사한다.
                      * 달라진 경우,
@@ -1321,9 +1334,14 @@ Entry.Microbit = new (class Microbit {
                         this.lastGesture = gesture;
                         if (value === 0) {
                             return this.lastGesture === microbitGestures.SHAKE;
-                        } else if (value === 1) {
+                        } else if (value == gesture) {
                             return true;
                         }
+                        //
+
+                        // } else if (value === 1) {
+                        //     return true;
+                        // }
                     }
                 },
             },
