@@ -3,7 +3,7 @@
 Entry.MechanicblockUnoMini = {
     id: '39.4',
     name: 'MechanicblockUnoMini',
-    url: 'http://www.mechanicblock.com/',
+    url: 'http://www.mechanicblock.co.kr/',
     imageName: 'mechanicblock_uno_mini.png',
     title: {
         ko: '메카닉블럭 Uno Mini',

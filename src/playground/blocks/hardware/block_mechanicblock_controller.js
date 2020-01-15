@@ -3,7 +3,7 @@
 Entry.MechanicblockController = {
     id: '39.1',
     name: 'MechanicblockController',
-    url: 'http://www.mechanicblock.com/',
+    url: 'http://www.mechanicblock.co.kr/',
     imageName: 'mechanicblock_controller.png',
     title: {
         ko: '메카닉블럭 조종기',
