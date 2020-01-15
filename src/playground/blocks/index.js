@@ -17,8 +17,13 @@ const basicBlockList = [
     require('./block_calc'),
     require('./block_variable'),
     require('./block_func'),
-    require('./block_artificial_intelligence'),
 ];
+
+Entry.AI_UTILIZE_BLOCK = {};
+require('./block_ai_utilize_audio');
+Entry.AI_UTILIZE_BLOCK_LIST = {
+    audio: Entry.AI_UTILIZE_BLOCK.audio,
+};
 
 Entry.EXPANSION_BLOCK = {};
 require('./block_expansion_weather');
@@ -66,9 +71,9 @@ module.exports = {
     getBlocks() {
         const hardwareModules = hardware.getHardwareModuleList();
         registerHardwareBlockToStatic(hardwareModules);
-        const basicAndExpansionBlockObjectList = getBlockObject(
-            basicBlockList.concat(Object.values(Entry.EXPANSION_BLOCK_LIST))
-        );
+        basicBlockList.concat(Object.values(Entry.EXPANSION_BLOCK_LIST)),
+            basicBlockList.concat(Object.values(Entry.AI_UTILIZE_BLOCK_LIST));
+        const basicAndExpansionBlockObjectList = getBlockObject(basicBlockList);
         const hardwareBlockObjectList = getBlockObject(hardwareModules);
         return Object.assign({}, basicAndExpansionBlockObjectList, hardwareBlockObjectList);
     },
