@@ -5,19 +5,19 @@ class DataTableSource {
     #id;
     #name;
     #data;
-    #originData;
     #object;
     #isCloud = false;
     #cloudDate = null;
+    #chart = [];
     #cloudVariable = CloudVariable.getInstance();
 
     constructor(source = {}) {
-        const { name, id = Entry.generateHash(), object = null } = source;
+        const { name, id = Entry.generateHash(), object = null, chart, data } = source;
         this.#name = name;
         this.#id = id;
         this.#object = object;
         this.#data = new dmetTable(source);
-        this.#originData = this.#data.toJSON();
+        this.#chart = chart;
         // 정지시 data 초기화.
         Entry.addEventListener('stop', () => {
             console.log('init tableVariable');
@@ -98,11 +98,15 @@ class DataTableSource {
     toJSON() {
         return {
             id: this.#id,
+            project: Entry.projectId,
+            fields: this.fields,
             name: this.#name,
+            object: this.#object,
+            data: this.array,
+            origin: this.#data.origin,
+            chart: this.#chart,
             isCloud: this.#isCloud,
             cloudDate: this.#cloudDate,
-            object: this.#object,
-            data: this.#originData,
         };
     }
 }

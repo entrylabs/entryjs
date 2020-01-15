@@ -51,12 +51,16 @@ class dmetTable {
         return this.#variableType;
     }
 
+    get origin() {
+        return this.#origin;
+    }
+
     setLabel(index, name) {
         this.#fields[index] = name;
     }
 
     from(data) {
-        const { list = [], array = [], value, _id, id = this.#id, fields, ...info } = data;
+        const { list = [], data: array = [], value, _id, id = this.#id, fields, ...info } = data;
         this.#object = {};
         this.#array = [];
         this.#origin = [];
@@ -64,13 +68,13 @@ class dmetTable {
             array.forEach((row = []) => {
                 if (Array.isArray(row)) {
                     const key = generateId();
-                    this.#array.push({ key, data: row });
+                    this.#array.push({ key, value: row });
                     this.#object[key] = row;
                     this.#origin.push(clone(row));
                 } else if (typeof row === 'object' && row.key) {
                     this.#array.push(row);
-                    this.#object[row.key] = row.data;
-                    this.#origin.push(clone(row.data));
+                    this.#object[row.key] = row.value;
+                    this.#origin.push(clone(row.value));
                 }
             });
         }
@@ -85,7 +89,7 @@ class dmetTable {
             _id: this._id || undefined,
             id: this.#id,
             key: this.#key,
-            array: this.#array,
+            data: this.#array,
             origin: this.#origin,
             fields: this.#fields,
             isDmet: true,
@@ -105,7 +109,7 @@ class dmetTable {
             const [rowKey, col = 0] = key.split(this.#keyDelimter);
             return {
                 key: rowKey,
-                data: this.#object[rowKey],
+                value: this.#object[rowKey],
                 x: this.getIndex(rowKey),
                 y: col - 1,
             };
@@ -115,10 +119,10 @@ class dmetTable {
 
     getValue(key) {
         if (typeof key === 'number') {
-            return this.#array[key - 1].data;
+            return this.#array[key - 1].value;
         } else if (Array.isArray(key)) {
             const [rowKey, ...keys] = key;
-            const { data: row } = this.#array[rowKey - 1] || {};
+            const { value: row } = this.#array[rowKey - 1] || {};
             if (keys.length && row) {
                 return get(row, `[${keys.map(x => x - 1).join('][')}]`);
             } else {
@@ -208,10 +212,10 @@ class dmetTable {
 
     #append({ key = generateId(), index = this.#array.length + 1, data = 0 } = {}) {
         const value = parseInt(data);
-        let { data: row, x } = this.getRow(index);
+        let { value: row, x } = this.getRow(index);
         if (!row) {
             row = this.#object[key] = [];
-            this.#array[x] = { key, data: row };
+            this.#array[x] = { key, value: row };
         }
         row.push(value);
         return this.getOperation({ type: 'append', key, index, data: value });
@@ -219,12 +223,12 @@ class dmetTable {
 
     #insert({ key = generateId(), index, data = 0 } = {}) {
         const value = parseInt(data);
-        let { data: row, x, y } = this.getRow(index);
+        let { value: row, x, y } = this.getRow(index);
         if (row && y > -1) {
             row.splice(y, 0, value);
         } else {
             this.#object[key] = [value];
-            this.#array.splice(x, 0, { key, data: this.#object[key] });
+            this.#array.splice(x, 0, { key, value: this.#object[key] });
         }
         return this.getOperation({ type: 'insert', key, index, data: value });
     }
@@ -233,7 +237,7 @@ class dmetTable {
         if (!key) {
             key = index;
         }
-        let { data: row, key: objKey, x, y } = this.getRow(key);
+        let { value: row, key: objKey, x, y } = this.getRow(key);
         if (!row || (y > -1 && !row[y])) {
             throw { message: 'not found data' };
         }
@@ -251,7 +255,7 @@ class dmetTable {
         if (!key) {
             key = index;
         }
-        let { data: row, key: objKey, x, y } = this.getRow(key);
+        let { value: row, key: objKey, x, y } = this.getRow(key);
         if (!row) {
             throw { message: 'not found row' };
         }
