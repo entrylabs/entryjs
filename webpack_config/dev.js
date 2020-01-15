@@ -20,5 +20,5 @@ module.exports = {
                 test: /mini-css-extract-plugin[\\/]dist[\\/]loader/,
             },
         ]),
-    ]
+    ],
 };
