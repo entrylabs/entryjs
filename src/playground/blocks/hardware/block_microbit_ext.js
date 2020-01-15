@@ -48,42 +48,42 @@ const microbitGestures = {
     SHAKE: 11,
 };
 
-Entry.Microbit = new (class Microbit {
+Entry.MicrobitExt = new (class MicrobitExt {
     constructor() {
-        this.id = '22.1';
+        this.id = '22.2';
         this.url = 'http://microbit.org/ko/';
-        this.imageName = 'microbit.png';
+        this.imageName = 'microbit_ext.png';
         this.title = {
-            en: 'Microbit',
-            ko: '마이크로빗',
+            en: 'MicrobitExt',
+            ko: '마이크로빗 확장',
         };
-        this.name = 'microbit';
+        this.name = 'microbitExt';
         this.communicationType = 'manual';
         this.lastGesture = -1;
         this.blockMenuBlocks = [
-            'microbit_led_toggle',
-            'microbit_get_led',
-            'microbit_show_string',
-            'microbit_show_image',
-            'microbit_set_led_image',
-            'microbit_reset_screen',
-            'microbit_set_analog',
-            'microbit_set_analog_period',
-            'microbit_get_analog',
-            'microbit_get_analog_map',
-            'microbit_set_digital',
-            'microbit_get_digital',
-            'microbit_set_tone',
-            'microbit_set_tempo',
-            'microbit_set_relative_tempo',
-            'microbit_get_button',
-            'microbit_is_tilt',
-            'microbit_get_tilt',
-            'microbit_get_gesture',
-            'microbit_get_sensor',
-            'microbit_get_accelerometer',
-            'microbit_set_servo',
-            'microbit_set_servo_period',
+            'microbit_ext_led_toggle',
+            'microbit_ext_get_led',
+            'microbit_ext_show_string',
+            'microbit_ext_show_image',
+            'microbit_ext_set_led_image',
+            'microbit_ext_reset_screen',
+            'microbit_ext_set_analog',
+            'microbit_ext_set_analog_period',
+            'microbit_ext_get_analog',
+            'microbit_ext_get_analog_map',
+            'microbit_ext_set_digital',
+            'microbit_ext_get_digital',
+            'microbit_ext_set_tone',
+            'microbit_ext_set_tempo',
+            'microbit_ext_set_relative_tempo',
+            'microbit_ext_get_button',
+            'microbit_ext_is_tilt',
+            'microbit_ext_get_tilt',
+            'microbit_ext_get_gesture',
+            'microbit_ext_get_sensor',
+            'microbit_ext_get_accelerometer',
+            'microbit_ext_set_servo',
+            'microbit_ext_set_servo_period',
         ];
         this.commandStatus = {};
     }
@@ -153,7 +153,7 @@ Entry.Microbit = new (class Microbit {
 
     getBlocks() {
         return {
-            microbit_led_toggle: {
+            microbit_ext_led_toggle: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
@@ -188,8 +188,8 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitLed',
-                isNotFor: ['microbit'],
+                class: 'microbitExtLed',
+                isNotFor: ['microbitExt'],
                 def: {
                     params: [
                         {
@@ -201,7 +201,7 @@ Entry.Microbit = new (class Microbit {
                             params: ['0'],
                         },
                     ],
-                    type: 'microbit_led_toggle',
+                    type: 'microbit_ext_led_toggle',
                 },
                 paramsKeyMap: {
                     X: 0,
@@ -219,7 +219,7 @@ Entry.Microbit = new (class Microbit {
                     });
                 },
             },
-            microbit_get_led: {
+            microbit_ext_get_led: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 fontColor: '#ffffff',
@@ -238,8 +238,8 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitLed',
-                isNotFor: ['microbit'],
+                class: 'microbitExtLed',
+                isNotFor: ['microbitExt'],
                 def: {
                     params: [
                         {
@@ -251,7 +251,7 @@ Entry.Microbit = new (class Microbit {
                             params: ['0'],
                         },
                     ],
-                    type: 'microbit_get_led',
+                    type: 'microbit_ext_get_led',
                 },
                 paramsKeyMap: {
                     X: 0,
@@ -267,7 +267,7 @@ Entry.Microbit = new (class Microbit {
                     return _get(Entry.hw.portData, ['payload', 'sensorData', 'led', x, y]);
                 },
             },
-            microbit_show_string: {
+            microbit_ext_show_string: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
@@ -284,8 +284,8 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitLed',
-                isNotFor: ['microbit'],
+                class: 'microbitExtLed',
+                isNotFor: ['microbitExt'],
                 def: {
                     params: [
                         {
@@ -293,7 +293,7 @@ Entry.Microbit = new (class Microbit {
                             params: ['Hello!'],
                         },
                     ],
-                    type: 'microbit_show_string',
+                    type: 'microbit_ext_show_string',
                 },
                 paramsKeyMap: {
                     VALUE: 0,
@@ -311,7 +311,7 @@ Entry.Microbit = new (class Microbit {
                     );
                 },
             },
-            microbit_show_image: {
+            microbit_ext_show_image: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
@@ -373,10 +373,10 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitLed',
-                isNotFor: ['microbit'],
+                class: 'microbitExtLed',
+                isNotFor: ['microbitExt'],
                 def: {
-                    type: 'microbit_show_image',
+                    type: 'microbit_ext_show_image',
                 },
                 paramsKeyMap: {
                     VALUE: 0,
@@ -388,7 +388,7 @@ Entry.Microbit = new (class Microbit {
                     });
                 },
             },
-            microbit_set_led_image: {
+            microbit_ext_set_led_image: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
@@ -404,10 +404,10 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitLed',
-                isNotFor: ['microbit'],
+                class: 'microbitExtLed',
+                isNotFor: ['microbitExt'],
                 def: {
-                    type: 'microbit_set_led_image',
+                    type: 'microbit_ext_set_led_image',
                 },
                 paramsKeyMap: {
                     VALUE: 0,
@@ -417,7 +417,7 @@ Entry.Microbit = new (class Microbit {
                     this.requestCommand(functionKeys.SET_CUSTOM_IMAGE, { value });
                 },
             },
-            microbit_reset_screen: {
+            microbit_ext_reset_screen: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
@@ -430,17 +430,17 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitLed',
-                isNotFor: ['microbit'],
+                class: 'microbitExtLed',
+                isNotFor: ['microbitExt'],
                 def: {
-                    type: 'microbit_reset_screen',
+                    type: 'microbit_ext_reset_screen',
                 },
                 paramsKeyMap: {},
                 func: (sprite, script) => {
                     this.requestCommand(functionKeys.RESET_SCREEN);
                 },
             },
-            microbit_set_tone: {
+            microbit_ext_set_tone: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
@@ -513,10 +513,10 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitSound',
-                isNotFor: ['microbit'],
+                class: 'microbitExtSound',
+                isNotFor: ['microbitExt'],
                 def: {
-                    type: 'microbit_set_tone',
+                    type: 'microbit_ext_set_tone',
                 },
                 paramsKeyMap: {
                     NOTE_VALUE: 0,
@@ -531,7 +531,7 @@ Entry.Microbit = new (class Microbit {
                     });
                 },
             },
-            microbit_set_tempo: {
+            microbit_ext_set_tempo: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
@@ -549,8 +549,8 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitSound',
-                isNotFor: ['microbit'],
+                class: 'microbitExtSound',
+                isNotFor: ['microbitExt'],
                 def: {
                     params: [
                         null,
@@ -559,7 +559,7 @@ Entry.Microbit = new (class Microbit {
                             params: ['120'],
                         },
                     ],
-                    type: 'microbit_set_tempo',
+                    type: 'microbit_ext_set_tempo',
                 },
                 paramsKeyMap: {
                     VALUE: 0,
@@ -570,7 +570,7 @@ Entry.Microbit = new (class Microbit {
                     this.requestCommand(functionKeys.SET_TEMPO, { value });
                 },
             },
-            microbit_set_relative_tempo: {
+            microbit_ext_set_relative_tempo: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
@@ -588,8 +588,8 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitSound',
-                isNotFor: ['microbit'],
+                class: 'microbitExtSound',
+                isNotFor: ['microbitExt'],
                 def: {
                     params: [
                         null,
@@ -598,7 +598,7 @@ Entry.Microbit = new (class Microbit {
                             params: ['20'],
                         },
                     ],
-                    type: 'microbit_set_relative_tempo',
+                    type: 'microbit_ext_set_relative_tempo',
                 },
                 paramsKeyMap: {
                     VALUE: 0,
@@ -610,7 +610,7 @@ Entry.Microbit = new (class Microbit {
                 },
             },
 
-            microbit_set_analog: {
+            microbit_ext_set_analog: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
@@ -643,8 +643,8 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitAnalog',
-                isNotFor: ['microbit'],
+                class: 'microbitExtAnalog',
+                isNotFor: ['microbitExt'],
                 def: {
                     params: [
                         null,
@@ -653,7 +653,7 @@ Entry.Microbit = new (class Microbit {
                             params: ['1023'],
                         },
                     ],
-                    type: 'microbit_set_analog',
+                    type: 'microbit_ext_set_analog',
                 },
                 paramsKeyMap: {
                     PIN: 0,
@@ -665,7 +665,7 @@ Entry.Microbit = new (class Microbit {
                     this.requestCommand(functionKeys.SET_ANALOG, { pinNumber, value });
                 },
             },
-            microbit_set_analog_period: {
+            microbit_ext_set_analog_period: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
@@ -698,8 +698,8 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitAnalog',
-                isNotFor: ['microbit'],
+                class: 'microbitExtAnalog',
+                isNotFor: ['microbitExt'],
                 def: {
                     params: [
                         null,
@@ -708,7 +708,7 @@ Entry.Microbit = new (class Microbit {
                             params: ['20000'],
                         },
                     ],
-                    type: 'microbit_set_analog_period',
+                    type: 'microbit_ext_set_analog_period',
                 },
                 paramsKeyMap: {
                     PIN: 0,
@@ -720,7 +720,7 @@ Entry.Microbit = new (class Microbit {
                     this.requestCommand(functionKeys.SET_ANALOG_PERIOD, { pinNumber, value });
                 },
             },
-            microbit_get_analog: {
+            microbit_ext_get_analog: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 fontColor: '#ffffff',
@@ -744,10 +744,10 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitAnalog',
-                isNotFor: ['microbit'],
+                class: 'microbitExtAnalog',
+                isNotFor: ['microbitExt'],
                 def: {
-                    type: 'microbit_get_analog',
+                    type: 'microbit_ext_get_analog',
                 },
                 paramsKeyMap: {
                     VALUE: 0,
@@ -760,7 +760,7 @@ Entry.Microbit = new (class Microbit {
                     return _get(Entry.hw.portData, ['payload', 'sensorData', 'analog', value], 0);
                 },
             },
-            microbit_get_analog_map: {
+            microbit_ext_get_analog_map: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 fontColor: '#ffffff',
@@ -804,8 +804,8 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitAnalog',
-                isNotFor: ['microbit'],
+                class: 'microbitExtAnalog',
+                isNotFor: ['microbitExt'],
                 def: {
                     params: [
                         null,
@@ -826,7 +826,7 @@ Entry.Microbit = new (class Microbit {
                             params: ['100'],
                         },
                     ],
-                    type: 'microbit_get_analog_map',
+                    type: 'microbit_ext_get_analog_map',
                 },
                 paramsKeyMap: {
                     PORT: 0,
@@ -885,7 +885,7 @@ Entry.Microbit = new (class Microbit {
                     return returnData;
                 },
             },
-            microbit_set_digital: {
+            microbit_ext_set_digital: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
@@ -934,11 +934,11 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitDigital',
-                isNotFor: ['microbit'],
+                class: 'microbitExtDigital',
+                isNotFor: ['microbitExt'],
                 def: {
                     params: [],
-                    type: 'microbit_set_digital',
+                    type: 'microbit_ext_set_digital',
                 },
                 paramsKeyMap: {
                     PIN: 0,
@@ -953,7 +953,7 @@ Entry.Microbit = new (class Microbit {
                     });
                 },
             },
-            microbit_get_digital: {
+            microbit_ext_get_digital: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 fontColor: '#ffffff',
@@ -990,10 +990,10 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitDigital',
-                isNotFor: ['microbit'],
+                class: 'microbitExtDigital',
+                isNotFor: ['microbitExt'],
                 def: {
-                    type: 'microbit_get_digital',
+                    type: 'microbit_ext_get_digital',
                 },
                 paramsKeyMap: {
                     VALUE: 0,
@@ -1006,7 +1006,7 @@ Entry.Microbit = new (class Microbit {
                     return _get(Entry.hw.portData, ['payload', 'sensorData', 'digital', value], 0);
                 },
             },
-            microbit_get_button: {
+            microbit_ext_get_button: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 fontColor: '#ffffff',
@@ -1023,10 +1023,10 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitButton',
-                isNotFor: ['microbit'],
+                class: 'microbitExtButton',
+                isNotFor: ['microbitExt'],
                 def: {
-                    type: 'microbit_get_button',
+                    type: 'microbit_ext_get_button',
                 },
                 paramsKeyMap: {
                     VALUE: 0,
@@ -1044,7 +1044,7 @@ Entry.Microbit = new (class Microbit {
                     return buttonState == value;
                 },
             },
-            microbit_get_sensor: {
+            microbit_ext_get_sensor: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 fontColor: '#ffffff',
@@ -1065,10 +1065,10 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitSensor',
-                isNotFor: ['microbit'],
+                class: 'microbitExtSensor',
+                isNotFor: ['microbitExt'],
                 def: {
-                    type: 'microbit_get_sensor',
+                    type: 'microbit_ext_get_sensor',
                 },
                 paramsKeyMap: {
                     VALUE: 0,
@@ -1085,7 +1085,7 @@ Entry.Microbit = new (class Microbit {
                     return _get(Entry.hw.portData, ['payload', 'sensorData', value], -1);
                 },
             },
-            microbit_is_tilt: {
+            microbit_ext_is_tilt: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 fontColor: '#ffffff',
@@ -1107,10 +1107,10 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitMove',
-                isNotFor: ['microbit'],
+                class: 'microbitExtMove',
+                isNotFor: ['microbitExt'],
                 def: {
-                    type: 'microbit_is_tilt',
+                    type: 'microbit_ext_is_tilt',
                 },
                 paramsKeyMap: {
                     DIRECTION: 0,
@@ -1155,7 +1155,7 @@ Entry.Microbit = new (class Microbit {
                     }
                 },
             },
-            microbit_get_tilt: {
+            microbit_ext_get_tilt: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 fontColor: '#ffffff',
@@ -1177,10 +1177,10 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitMove',
-                isNotFor: ['microbit'],
+                class: 'microbitExtMove',
+                isNotFor: ['microbitExt'],
                 def: {
-                    type: 'microbit_get_tilt',
+                    type: 'microbit_ext_get_tilt',
                 },
                 paramsKeyMap: {
                     DIRECTION: 0,
@@ -1222,7 +1222,7 @@ Entry.Microbit = new (class Microbit {
                     }
                 },
             },
-            microbit_get_accelerometer: {
+            microbit_ext_get_accelerometer: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 fontColor: '#ffffff',
@@ -1244,10 +1244,10 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitSensor',
-                isNotFor: ['microbit'],
+                class: 'microbitExtSensor',
+                isNotFor: ['microbitExt'],
                 def: {
-                    type: 'microbit_get_accelerometer',
+                    type: 'microbit_ext_get_accelerometer',
                 },
                 paramsKeyMap: {
                     VALUE: 0,
@@ -1277,7 +1277,7 @@ Entry.Microbit = new (class Microbit {
                     return whole;
                 },
             },
-            microbit_get_gesture: {
+            microbit_ext_get_gesture: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 fontColor: '#ffffff',
@@ -1305,10 +1305,10 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitMove',
-                isNotFor: ['microbit'],
+                class: 'microbitExtMove',
+                isNotFor: ['microbitExt'],
                 def: {
-                    type: 'microbit_get_gesture',
+                    type: 'microbit_ext_get_gesture',
                 },
                 paramsKeyMap: {
                     VALUE: 0,
@@ -1343,7 +1343,7 @@ Entry.Microbit = new (class Microbit {
                     }
                 },
             },
-            microbit_set_servo: {
+            microbit_ext_set_servo: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
@@ -1369,8 +1369,8 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitServo',
-                isNotFor: ['microbit'],
+                class: 'microbitExtServo',
+                isNotFor: ['microbitExt'],
                 def: {
                     params: [
                         null,
@@ -1379,7 +1379,7 @@ Entry.Microbit = new (class Microbit {
                             params: ['180'],
                         },
                     ],
-                    type: 'microbit_set_servo',
+                    type: 'microbit_ext_set_servo',
                 },
                 paramsKeyMap: {
                     PIN: 0,
@@ -1391,7 +1391,7 @@ Entry.Microbit = new (class Microbit {
                     this.requestCommand(functionKeys.SET_SERVO, { pinNumber, value });
                 },
             },
-            microbit_set_servo_period: {
+            microbit_ext_set_servo_period: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
@@ -1417,8 +1417,8 @@ Entry.Microbit = new (class Microbit {
                     },
                 ],
                 events: {},
-                class: 'microbitServo',
-                isNotFor: ['microbit'],
+                class: 'microbitExtServo',
+                isNotFor: ['microbitExt'],
                 def: {
                     params: [
                         null,
@@ -1427,7 +1427,7 @@ Entry.Microbit = new (class Microbit {
                             params: ['1500'],
                         },
                     ],
-                    type: 'microbit_set_servo_period',
+                    type: 'microbit_ext_set_servo_period',
                 },
                 paramsKeyMap: {
                     PIN: 0,
@@ -1442,4 +1442,4 @@ Entry.Microbit = new (class Microbit {
         };
     }
 })();
-module.exports = Entry.Microbit;
+module.exports = Entry.MicrobitExt;
