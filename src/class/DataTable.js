@@ -8,7 +8,6 @@ class DataTable {
     constructor(view) {
         this.#view = view;
         this.#generateView();
-        console.log('c');
     }
 
     get tables() {
@@ -43,9 +42,8 @@ class DataTable {
     }
 
     selectTable(table) {
-        const { origin } = table.toJSON();
         this.dataAnalytics.setData({
-            table: origin,
+            table: table.toJSON(),
         });
     }
 
