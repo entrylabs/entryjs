@@ -46,7 +46,8 @@ class AudioUtils {
             return;
         }
         if (!this.isAudioSupport) {
-            console.error('this browser not support input media');
+            console.error('this browser does not support input media');
+            throw new Error('this browser does not support input media');
             return false;
         }
 
