@@ -4,13 +4,13 @@
     "description": "JavaScript library for visual programming",
     "version": "0.1.1",
     "main": "dist/entry.js",
-    "homepage": "http://play-entry.com",
+    "homepage": "https://playentry.org",
     "author": {
         "name": "Entry Korea corp and other contributors"
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/boolgom/entryjs.git"
+        "url": "https://github.com/entrylabs/entryjs.git"
     },
     "keywords": [
         "entry",
@@ -18,7 +18,7 @@
         "javascript"
     ],
     "bugs": {
-        "url": "https://github.com/boolgom/entryjs/issues"
+        "url": "https://github.com/entrylabs/entryjs/issues"
     },
     "scripts": {
         "lint": "cross-env NODE_ENV=lint webpack -w",
@@ -47,8 +47,7 @@
         "lodash": "^4.17.15",
         "postcss-flexbugs-fixes": "^4.1.0",
         "simplebar": "^3.1.1",
-        "uglifyjs-webpack-plugin": "^2.1.2",
-        "webpack": "^4.28.3",
+        "webpack": "^4.41.4",
         "xss-filters": "^1.2.7"
     },
     "devDependencies": {
@@ -68,7 +67,6 @@
         "@types/pixi.js": "^4.8.6",
         "@types/webpack-env": "^1.14.0",
         "@typescript-eslint/parser": "^2.2.0",
-        "awesome-typescript-loader": "^5.2.1",
         "babel-eslint": "^10.0.3",
         "babel-loader": "^8.0.0-beta",
         "babel-plugin-dynamic-import-node": "^2.0.0",
@@ -97,12 +95,14 @@
         "prettier": "^1.18.2",
         "prettier-eslint": "^9.0.0",
         "style-loader": "^0.20.2",
+        "terser-webpack-plugin": "^2.3.1",
+        "ts-loader": "^6.2.1",
         "typescript": "^3.2.2",
         "url-loader": "^1.0.1",
         "webpack-cli": "^3.2.1",
         "webpack-dev-server": "^3.2.1",
         "webpack-manifest-plugin": "^2.0.4",
-        "webpack-merge": "^4.1.2",
+        "webpack-merge": "^4.2.2",
         "webpack-strip-block": "^0.2.0"
     },
     "jest": {

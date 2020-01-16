@@ -12,6 +12,7 @@
             if (Entry.disposeEvent) {
                 Entry.disposeEvent.notify();
             }
+            Entry.Utils.forceStopSounds();
         },
         state: function(newType, oldType) {
             return [oldType, newType];

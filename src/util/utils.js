@@ -2510,6 +2510,14 @@ Entry.Utils.getVolume = function() {
     return 1;
 };
 
+Entry.Utils.forceStopSounds = function() {
+    _.each(Entry.soundInstances, (instance) => {
+        instance.dispatchEvent('complete');
+        instance.stop();
+    });
+    Entry.soundInstances = [];
+};
+
 Entry.Utils.playSound = function(id, option = {}) {
     return createjs.Sound.play(id, Object.assign({ volume: this._volume }, option));
 };

@@ -1939,6 +1939,7 @@ Entry.Playground = class Playground {
                 thumbnailView.removeClass('entryPlaygroundSoundPlay');
                 thumbnailView.addClass('entryPlaygroundSoundStop');
                 soundInstance = Entry.Utils.playSound(sound.id);
+                Entry.Utils.addSoundInstances(soundInstance);
             }
 
             soundInstance.addEventListener('complete', () => {
@@ -1990,6 +1991,7 @@ Entry.Playground = class Playground {
         removeButton.appendTo(element).innerText = delText;
         removeButton.bindOnClick(() => {
             try {
+                Entry.Utils.forceStopSounds();
                 const result = Entry.do('objectRemoveSound', Entry.playground.object.id, sound);
                 if (result) {
                     Entry.dispatchEvent('removeSound', sound);

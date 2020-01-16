@@ -1063,6 +1063,8 @@ Lang.Blocks = {
     "FLOW_wait_until_true_2": "",
     "FLOW_when_clone_start": "When clone is created",
     "FUNC": "Function",
+    "ANALYSIS": "Data analysis",
+    "AI": "A.I",
     "JUDGEMENT": "Decision",
     "JUDGEMENT_boolean_and": "AND",
     "JUDGEMENT_boolean_not_1": "Is Not",
