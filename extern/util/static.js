@@ -380,6 +380,20 @@ EntryStatic.getAllBlocks = function() {
             blocks: ['ai_noti_img', 'ai_noti_text'],
         },
         {
+            category: 'ai_utilize',
+            blocks: [
+                'aiUtilizeBlockAddButton',
+                'audio_title',
+                'check_microphone',
+                'speech_to_text',
+                'get_microphone_volume',
+                'tts_title',
+                'read_text',
+                'read_text_wait_with_block',
+                'set_tts_property',
+            ],
+        },
+        {
             category: 'expansion',
             blocks: [
                 'expansionBlockAddButton',
@@ -406,10 +420,6 @@ EntryStatic.getAllBlocks = function() {
                 'behaviorConductLifeSafety_title',
                 'count_lifeSafety_behavior',
                 'get_lifeSafety_behavior',
-                'tts_title',
-                'read_text',
-                'read_text_wait_with_block',
-                'set_tts_property',
             ],
         },
         {

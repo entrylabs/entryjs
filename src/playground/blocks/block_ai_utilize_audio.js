@@ -10,14 +10,14 @@ Entry.AI_UTILIZE_BLOCK.audio = {
         jp: 'オーディオ検出',
     },
     titleKey: 'template.audio_title_text',
-    description: Lang.Msgs.expansion_audio_description,
-    descriptionKey: 'Msgs.expansion_audio_description',
+    description: Lang.Msgs.ai_utilize_audio_description,
+    descriptionKey: 'Msgs.ai_utilize_audio_description',
     isInitialized: false,
     init() {
         if (this.isInitialized) {
             return;
         }
-        Entry.EXPANSION_BLOCK.audio.isInitialized = true;
+        Entry.AI_UTILIZE_BLOCK.audio.isInitialized = true;
     },
 };
 
