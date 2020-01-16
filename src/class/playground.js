@@ -557,6 +557,7 @@ Entry.Playground = class Playground {
         this.blockMenu.banClass('checker');
         // this.banExpansionBlock();
         Entry.expansion.banAllExpansionBlock();
+        Entry.aiUtilize.banAllAIUtilizeBlock();
         this.vimBoard = this.mainWorkspace.vimBoard;
 
         this._destroyer.add(this.mainWorkspace);
@@ -1408,6 +1409,10 @@ Entry.Playground = class Playground {
         const { name } = item;
         Entry.expansion.addExpansionBlock(name);
     }
+    addAIUtilizeBlock(item) {
+        const { name } = item;
+        Entry.aiUtilize.addAIUtilizeBlock(name);
+    }
     /**
      * Add sound
      * @param {sound model} sound
@@ -2140,6 +2145,18 @@ Entry.Playground = class Playground {
         }
 
         Object.values(Entry.EXPANSION_BLOCK_LIST).forEach((block) => {
+            blockMenu.banClass(block.name, true);
+            blockMenu.banClass(`${block.name}_legacy`, true);
+        });
+    }
+
+    banAIUtilizeBlock() {
+        const blockMenu = _.result(this.mainWorkspace, 'blockMenu');
+        if (!blockMenu) {
+            return;
+        }
+
+        Object.values(Entry.AI_UTILIZE_BLOCK_LIST).forEach((block) => {
             blockMenu.banClass(block.name, true);
             blockMenu.banClass(`${block.name}_legacy`, true);
         });

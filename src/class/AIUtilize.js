@@ -1,9 +1,9 @@
-export default class Expansion {
+export default class AIUtilize {
     constructor(playground) {
         this.playground = playground;
     }
 
-    banAllExpansionBlock() {
+    banAllAIUtilizeBlock() {
         const { mainWorkspace } = this.playground;
         if (!mainWorkspace) {
             return;
@@ -14,33 +14,33 @@ export default class Expansion {
             return;
         }
 
-        Object.values(Entry.EXPANSION_BLOCK_LIST).forEach((block) => {
+        Object.values(Entry.AI_UTILIZE_BLOCK_LIST).forEach((block) => {
             blockMenu.banClass(block.name, true);
             blockMenu.banClass(`${block.name}_legacy`, true);
         });
     }
 
-    banExpansionBlock(blockName) {
-        Entry.do('objectRemoveExpansionBlock', blockName);
+    banAIUtilizeBlock(blockName) {
+        Entry.do('objectRemoveAIUtilizeBlock', blockName);
     }
 
-    addExpansionBlock(blockName) {
-        Entry.do('objectAddExpansionBlock', blockName);
+    addAIUtilizeBlock(blockName) {
+        Entry.do('objectAddAIUtilizeBlock', blockName);
     }
 
-    getExpansions(blockList) {
-        let expansionList = [];
-        const expansionBlockList = Object.keys(Entry.EXPANSION_BLOCK_LIST);
+    getAIUtilizes(blockList) {
+        let aiUtilizeList = [];
+        const aiUtilizeBlockList = Object.keys(Entry.AI_UTILIZE_BLOCK_LIST);
         blockList.forEach((block) => {
             const { _schema = {} } = block || {};
             const { isFor, isNotFor = [] } = _schema;
-            const [expansionKey] = isNotFor;
+            const [aiUtilizeKey] = isNotFor;
             debugger;
-            if (expansionKey && isFor && isFor.indexOf('category_expansion') >= 0) {
-                expansionList = _.union(expansionList, [expansionKey]);
+            if (aiUtilizeKey && isFor && isFor.indexOf('category_aiUtilize') >= 0) {
+                aiUtilizeList = _.union(aiUtilizeList, [aiUtilizeKey]);
             }
         });
-        return expansionList;
+        return aiUtilizeList;
     }
 
     destroy() {

@@ -256,7 +256,7 @@ function getBlocks() {
                 mousedown: [
                     function() {
                         console.log('should be implemented');
-                        // Entry.do('playgroundClickAddExpansionBlock');
+                        Entry.do('playgroundClickAddAIUtilizeBlock');
                     },
                 ],
             },

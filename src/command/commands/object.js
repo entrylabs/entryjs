@@ -242,6 +242,51 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
         validate: false,
         undo: 'objectAddExpansionBlock',
     };
+    c[COMMAND_TYPES.objectAddAIUtilizeBlock] = {
+        do(blockName) {
+            if (
+                typeof Entry.AI_UTILIZE_BLOCK !== 'undefined' &&
+                typeof Entry.AI_UTILIZE_BLOCK[blockName] !== 'undefined'
+            ) {
+                Entry.AI_UTILIZE_BLOCK[blockName].init();
+                if (typeof Entry.aiUtilizeBlocks == 'undefined') {
+                    Entry.aiUtilizeBlocks = [];
+                }
+                Entry.aiUtilizeBlocks = _.union(Entry.aiUtilizeBlocks, [blockName]);
+            }
+
+            Entry.playground.blockMenu.unbanClass(blockName);
+            // Entry.dispatchEvent('dismissModal');
+        },
+        state(blockName) {
+            return [blockName];
+        },
+        log(blockName) {
+            return [['blockName', blockName]];
+        },
+        dom: ['.btn_confirm_modal'],
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
+        validate: false,
+        undo: 'objectRemoveAIUtilizeBlock',
+    };
+
+    c[COMMAND_TYPES.objectRemoveAIUtilizeBlock] = {
+        do(blockName) {
+            // 사용된 블록 전체에서 검색가능해질때 사용가능.
+            // Entry.expansionBlocks = _.pull(Entry.expansionBlocks, blockName);
+            Entry.playground.blockMenu.banClass(blockName);
+        },
+        state(blockName) {
+            return [blockName];
+        },
+        log(blockName) {
+            return [['blockName', blockName]];
+        },
+        dom: ['.btn_confirm_modal'],
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
+        validate: false,
+        undo: 'objectAddAIUtilizeBlock',
+    };
 
     c[COMMAND_TYPES.objectNameEdit] = {
         do(objectId, newName) {

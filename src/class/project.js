@@ -59,6 +59,7 @@ Entry.isDefaultProject = function(project) {
             'objects.0.sprite.pictures.0.id',
             'objects.0.sprite.pictures.1.id',
             'expansionBlocks',
+            'aiUtilizeBlocks',
             'speed',
         ]);
         return isMatch(Entry.getStartProject(), pickData);
@@ -182,6 +183,7 @@ Entry.getStartProject = function(mediaFilePath) {
             },
         ],
         expansionBlocks: [],
+        aiUtilizeBlocks: [],
         speed: 60,
     };
 };

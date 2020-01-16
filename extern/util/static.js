@@ -379,6 +379,10 @@ EntryStatic.getAllBlocks = function() {
                 'check_microphone',
                 'speech_to_text',
                 'get_microphone_volume',
+                'tts_title',
+                'read_text',
+                'read_text_wait_with_block',
+                'set_tts_property',
             ],
         },
         {
@@ -408,10 +412,6 @@ EntryStatic.getAllBlocks = function() {
                 'behaviorConductLifeSafety_title',
                 'count_lifeSafety_behavior',
                 'get_lifeSafety_behavior',
-                'tts_title',
-                'read_text',
-                'read_text_wait_with_block',
-                'set_tts_property',
             ],
         },
         {

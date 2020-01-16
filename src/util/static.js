@@ -85,6 +85,9 @@ Entry.STATIC = {
         objectRemoveExpansionBlock: 219,
         objectReorder: 220,
 
+        objectAddAIUtilizeBlock: 221,
+        objectRemoveAIUtilizeBlock: 222,
+
         do: 301,
         undo: 302,
         redo: 303,
@@ -116,7 +119,6 @@ Entry.STATIC = {
     },
 
     COMMAND_TYPES_NOT_ALWAYS: {
-
         addObjectButtonClick: 210,
 
         toggleRun: 501,
@@ -167,6 +169,9 @@ Entry.STATIC = {
 
         playgroundClickAddExpansionBlock: 1101,
         playgroundClickAddExpansionBlockCancel: 1102,
+
+        playgroundClickAddAIUtilizeBlock: 1103,
+        playgroundClickAddAIUtilizeBlockCancel: 1104,
     },
 
     RECORDABLE: {

@@ -3,7 +3,7 @@
 const { toQueryString } = require('../../util/common');
 const _trim = require('lodash/trim');
 
-Entry.EXPANSION_BLOCK.tts = {
+Entry.AI_UTILIZE_BLOCK.tts = {
     name: 'tts',
     imageName: 'tts.png',
     title: {
@@ -12,11 +12,11 @@ Entry.EXPANSION_BLOCK.tts = {
         jp: 'を読み上げる',
     },
     titleKey: 'template.tts_title_text',
-    description: Lang.Msgs.expansion_tts_description,
-    descriptionKey: 'Msgs.expansion_tts_description',
+    description: Lang.Msgs.ai_utilize_tts_description,
+    descriptionKey: 'Msgs.ai_utilize_tts_description',
     isInitialized: false,
     init() {
-        const tts = Entry.EXPANSION_BLOCK.tts;
+        const tts = Entry.AI_UTILIZE_BLOCK.tts;
         if (tts.isInitialized) {
             return;
         }
@@ -31,7 +31,8 @@ Entry.EXPANSION_BLOCK.tts = {
                     instance.soundType = 'tts';
                     Entry.Utils.addSoundInstances(instance);
                     if (filtered.callback) {
-                        const duration = instance.duration > 0 ? instance.duration : filtered.duration * 300;
+                        const duration =
+                            instance.duration > 0 ? instance.duration : filtered.duration * 300;
                         setTimeout(filtered.callback, duration);
                     }
                     return false;
@@ -45,7 +46,7 @@ Entry.EXPANSION_BLOCK.tts = {
     loadQueue: [],
 };
 
-Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
+Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
     const params = {
         getSpeaker(isPython = false) {
             const param = {
@@ -111,10 +112,11 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
         },
     };
 
-    const hashCode = s => s.split('').reduce(function(a, b) {
-        a = ((a << 5) - a) + b.charCodeAt(0);
-        return a & a;
-    }, 0);
+    const hashCode = (s) =>
+        s.split('').reduce(function(a, b) {
+            a = (a << 5) - a + b.charCodeAt(0);
+            return a & a;
+        }, 0);
 
     const checkText = function(text) {
         const result = {
@@ -152,7 +154,10 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
                 setTimeout(callback, instance.duration);
             }
         } else {
-            const src = `${Entry.EXPANSION_BLOCK.tts.api}.mp3?${toQueryString({ text: message, ...prop })}`;
+            const src = `${Entry.EXPANSION_BLOCK.tts.api}.mp3?${toQueryString({
+                text: message,
+                ...prop,
+            })}`;
             const type = createjs.LoadQueue.SOUND;
             tts.soundQueue.loadFile({ id, src, type, prop, callback, duration: message.length });
             tts.loadQueue.push(id);
@@ -192,8 +197,8 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
             events: {},
         },
         read_text: {
-            color: EntryStatic.colorSet.block.default.EXPANSION,
-            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -256,8 +261,8 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
             },
         },
         read_text_wait_with_block: {
-            color: EntryStatic.colorSet.block.default.EXPANSION,
-            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -327,8 +332,8 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
             },
         },
         set_tts_property: {
-            color: EntryStatic.colorSet.block.default.EXPANSION,
-            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -384,6 +389,6 @@ Entry.EXPANSION_BLOCK.tts.getBlocks = function() {
                     },
                 ],
             },
-        }
+        },
     };
 };
