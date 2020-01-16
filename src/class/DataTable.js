@@ -36,6 +36,12 @@ class DataTable {
         // Entry.playground.reloadPlayground();
     }
 
+    changePosition(start, end) {
+        if (this.#tables.length) {
+            this.#tables.splice(end, 0, this.#tables.splice(start, 1)[0]);
+        }
+    }
+
     #generateView() {
         this.dataAnalytics = new DataAnalytics({ container: this.#view });
     }

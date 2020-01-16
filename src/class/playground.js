@@ -713,7 +713,7 @@ Entry.Playground = class Playground {
         this.dataTable = new DataTable(tableDom);
         this.dataTable.addSource({
             _id: '534578cf19e9dc00001a3ac2',
-            name: '',
+            name: 'test1',
             fields: ['요리명', '재료', '조리법'],
             array: [
                 {
@@ -764,7 +764,7 @@ Entry.Playground = class Playground {
         });
         this.dataTable.addSource({
             _id: '534578cf19e9dc00001a3ac2',
-            name: '',
+            name: 'test2',
             fields: ['요리명', '재료', '조리법'],
             array: [
                 {
@@ -830,7 +830,7 @@ Entry.Playground = class Playground {
             },
         });
         this.tableSortableListWidget.on('change', ([newIndex, oldIndex]) => {
-            Entry.playground.movePicture(newIndex, oldIndex);
+            Entry.playground.moveTable(newIndex, oldIndex);
         });
     }
 
@@ -1519,6 +1519,10 @@ Entry.Playground = class Playground {
         }
     }
 
+    moveTable(start, end) {
+        this.dataTable.changePosition(start, end);
+        this.injectTable();
+    }
     /**
      * Move picture in this.object.pictures
      * this method is for sortable
