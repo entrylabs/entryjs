@@ -1422,10 +1422,15 @@ Entry.Playground = class Playground {
     removeExpansionBlocks(items) {
         Entry.expansion.banExpansionBlocks(items.map(({ name }) => name));
     }
-    addAIUtilizeBlock(item) {
-        const { name } = item;
-        Entry.aiUtilize.addAIUtilizeBlock(name);
+
+    addAIUtilizeBlocks(items) {
+        Entry.aiUtilize.addAIUtilizeBlocks(items.map(({ name }) => name));
     }
+
+    removeAIUtilizeBlocks(items) {
+        Entry.aiUtilize.banAIUtilizeBlocks(items.map(({ name }) => name));
+    }
+
     /**
      * Add sound
      * @param {sound model} sound

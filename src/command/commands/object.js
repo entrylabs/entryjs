@@ -245,20 +245,21 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
         validate: false,
         undo: 'objectAddExpansionBlocks',
     };
-    c[COMMAND_TYPES.objectAddAIUtilizeBlock] = {
-        do(blockName) {
-            if (
-                typeof Entry.AI_UTILIZE_BLOCK !== 'undefined' &&
-                typeof Entry.AI_UTILIZE_BLOCK[blockName] !== 'undefined'
-            ) {
-                Entry.AI_UTILIZE_BLOCK[blockName].init();
-                if (typeof Entry.aiUtilizeBlocks == 'undefined') {
-                    Entry.aiUtilizeBlocks = [];
+    c[COMMAND_TYPES.objectAddAIUtilizeBlocks] = {
+        do(blockNames) {
+            blockNames.forEach((blockName) => {
+                if (
+                    typeof Entry.AI_UTILIZE_BLOCK !== 'undefined' &&
+                    typeof Entry.AI_UTILIZE_BLOCK[blockName] !== 'undefined'
+                ) {
+                    Entry.AI_UTILIZE_BLOCK[blockName].init();
+                    if (typeof Entry.aiUtilizeBlocks == 'undefined') {
+                        Entry.aiUtilizeBlocks = [];
+                    }
+                    Entry.aiUtilizeBlocks = _.union(Entry.aiUtilizeBlocks, [blockName]);
                 }
-                Entry.aiUtilizeBlocks = _.union(Entry.aiUtilizeBlocks, [blockName]);
-            }
-
-            Entry.playground.blockMenu.unbanClass(blockName);
+                Entry.playground.blockMenu.unbanClass(blockName);
+            });
             // Entry.dispatchEvent('dismissModal');
         },
         state(blockName) {
@@ -270,14 +271,18 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
         dom: ['.btn_confirm_modal'],
         recordable: Entry.STATIC.RECORDABLE.SKIP,
         validate: false,
-        undo: 'objectRemoveAIUtilizeBlock',
+        undo: 'objectRemoveAIUtilizeBlocks',
     };
 
-    c[COMMAND_TYPES.objectRemoveAIUtilizeBlock] = {
-        do(blockName) {
+    c[COMMAND_TYPES.objectRemoveAIUtilizeBlocks] = {
+        do(blockNames) {
             // 사용된 블록 전체에서 검색가능해질때 사용가능.
             // Entry.expansionBlocks = _.pull(Entry.expansionBlocks, blockName);
-            Entry.playground.blockMenu.banClass(blockName);
+            // 사용된 블록 전체에서 검색가능해질때 사용가능.
+            blockNames.forEach((blockName) => {
+                Entry.playground.blockMenu.banClass(blockName);
+            });
+            Entry.aiUtilizeBlocks = _.pullAll(Entry.aiUtilizeBlocks, blockNames);
         },
         state(blockName) {
             return [blockName];
@@ -288,7 +293,7 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
         dom: ['.btn_confirm_modal'],
         recordable: Entry.STATIC.RECORDABLE.SKIP,
         validate: false,
-        undo: 'objectAddAIUtilizeBlock',
+        undo: 'objectAddAIUtilizeBlocks',
     };
 
     c[COMMAND_TYPES.objectNameEdit] = {
