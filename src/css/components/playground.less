@@ -1532,61 +1532,82 @@
     border-radius: 0 0 0 6px;
 }
 
+.entryPlaygroundTableList {
+    position: absolute;
+    padding: 0px;
+    margin: 0px;
+    width: 254px;
+    top: 56px;
+    bottom: 0px;
+    overflow-y: hidden;
+    list-style: none;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
+    border-radius: 0 0 0 6px;
+}
+
 .entryPlaygroundTableElement {
     display: block;
     position: relative;
     background-color: #ecf8ff;
     border-bottom: 1px solid #d6e9f4;
-    padding: 0 56px 0 64px;
-    height: 61px;
+    padding: 0 56px 0 36px;
+    height: 48px;
     color: #2c313d;
     cursor: pointer;
 
-    &.dataTableSelected {
+    &.entryTableSelected {
         background-color: #fff;
     }
-}
 
-.entryPlaygroundTableThumbnail {
-    position: absolute;
-    height: 44px;
-    width: 40px;
-    top: 8px;
-    left: 16px;
-    border: 1px solid #e2e2e2;
-    background-color: #fff;
-    border-radius: 4px;
-    background-size: 28px auto;
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
-
-    &.entryPlaygroundTablePlay {
-        .backgroundImage('workspace_sound_play.png');
+    .entryPlaygroundTableThumbnail {
+        position: absolute;
+        height: 22px;
+        width: 22px;
+        top: 13px;
+        left: 8px;
+        .backgroundImage('workspace_table_icon.svg');
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
     }
 
-    &.entryPlaygroundTableStop {
-        .backgroundImage('workspace_sound_stop.png');
+    .entryPlaygroundTableName {
+        width: 100%;
+        height: 24px;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        margin-top: 12px;
+        padding: 0 4px;
+        background-color: #fff;
+        outline: 0;
+        font-size: 12px;
+        text-overflow: ellipsis;
+        color: #2c313d;
+        font-weight: 600;
+        cursor: text;
+        border: 1px solid #e2e2e2;
+        border-radius: 4px;
     }
-}
+    .entryPlaygroundTableName:focus,
+    .entryPlaygroundTableName:active {
+        border-color: #4f80ff;
+    }
 
-.entryPlaygroundTableName {
-    width: 100%;
-    height: 24px;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    margin-top: 10px;
-    padding: 0 4px;
-    background-color: #fff;
-    outline: 0;
-    font-size: 12px;
-    text-overflow: ellipsis;
-    color: #2c313d;
-    font-weight: 600;
-    cursor: text;
-    border: 1px solid #e2e2e2;
-    border-radius: 4px;
-}
-.entryPlaygroundTableName:focus,
-.entryPlaygroundTableName:active {
-    border-color: #4f80ff;
+    .entryPlaygroundTableRemove {
+        position: absolute;
+        right: 26px;
+        top: 12px;
+        width: 24px;
+        height: 24px;
+        border: 1px solid #e2e2e2;
+        border-radius: 4px;
+        background-color: #fff;
+        background-size: 10px;
+        font-size: 0;
+        cursor: pointer;
+        background-size: 10px auto;
+        background-position: 50% 50%;
+        background-repeat: no-repeat;
+        .backgroundImage('layers_icon_close_nor_new.png');
+    }
 }

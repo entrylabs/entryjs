@@ -1972,9 +1972,6 @@ Entry.Playground = class Playground {
                 this.selectTable(table);
             });
         table.view = element;
-        element.orderHolder = Entry.createElement('div')
-            .addClass('entryPlaygroundTableOrder')
-            .appendTo(element);
         const thumbnailView = Entry.createElement('div', `t_${table.id}`).addClass(
             'entryPlaygroundTableThumbnail'
         );
