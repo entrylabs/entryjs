@@ -1996,7 +1996,13 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
         }
     }
 
-    if (Entry.toast) {
+    if (message === 'IncompatibleError' && Entry.toast) {
+        Entry.toast.alert(
+            Lang.Msgs.warn,
+            [Lang.Workspace.check_runtime_error, 'IE 에서는 지원하지 않는 블록입니다.'],
+            true
+        );
+    } else if (Entry.toast) {
         Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, true);
     }
 
@@ -2015,6 +2021,13 @@ Entry.Utils.AsyncError = function(message) {
 
 Entry.Utils.AsyncError.prototype = new Error();
 Entry.Utils.AsyncError.prototype.constructor = Entry.Utils.AsyncError;
+
+Entry.Utils.IncompatibleError = function(message) {
+    this.name = 'IncompatibleError';
+    this.message = message || 'IncompatibleError';
+};
+Entry.Utils.IncompatibleError.prototype = new Error();
+Entry.Utils.IncompatibleError.prototype.constructor = Entry.Utils.IncompatibleError;
 
 Entry.Utils.isChrome = function() {
     return /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
