@@ -375,6 +375,7 @@ EntryStatic.getAllBlocks = function() {
             category: 'ai_utilize',
             blocks: [
                 'aiUtilizeBlockAddButton',
+                'aiUtilizeModelTrainButton',
                 'audio_title',
                 'check_microphone',
                 'speech_to_text',
@@ -870,6 +871,8 @@ EntryStatic.colorSet = {
         BUTTON: '#4f80ff',
         BUTTON_BACKGROUND: '#eee',
         TEXT: '#333',
+        BUTTON_BACKGROUND_DISABLED: '#f9f9f9',
+        BUTTON_DISABLED: '#cbcbcb',
     },
 };
 
