@@ -778,6 +778,8 @@ Lang.Blocks = {
     "FLOW_wait_until_true_2": "",
     "FLOW_when_clone_start": "khi bản sao được tạo",
     "FUNC": "Tính năng",
+    "ANALYSIS": "Phân tích dữ liệu",
+    "AI": "Trí tuệ nhân tạo",
     "JUDGEMENT": "Phán quyết",
     "JUDGEMENT_boolean_and": "và",
     "JUDGEMENT_boolean_not_1": "không phải là",
