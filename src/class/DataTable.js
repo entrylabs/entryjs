@@ -43,7 +43,6 @@ class DataTable {
     }
 
     selectTable(table) {
-        console.log(table);
         const { origin } = table.toJSON();
         this.dataAnalytics.setData({
             table: origin,
