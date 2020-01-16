@@ -62,7 +62,7 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
                 ],
                 value: 'kyuri',
                 fontSize: 11,
-                bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
             };
             if (isPython) {
@@ -82,7 +82,7 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
                 ],
                 value: '0',
                 fontSize: 11,
-                bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
             };
             if (isPython) {
@@ -102,7 +102,7 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
                 ],
                 value: '0',
                 fontSize: 11,
-                bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
             };
             if (isPython) {
@@ -143,7 +143,7 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
 
     const read = function({ message, hash, prop, callback }) {
         checkError();
-        const tts = Entry.EXPANSION_BLOCK.tts;
+        const tts = Entry.AI_UTILIZE_BLOCK.tts;
         const id = `tts-${hash}-${JSON.stringify(prop)}`;
         const sound = tts.soundQueue.getItem(id);
         if (sound) {
@@ -154,7 +154,7 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
                 setTimeout(callback, instance.duration);
             }
         } else {
-            const src = `${Entry.EXPANSION_BLOCK.tts.api}.mp3?${toQueryString({
+            const src = `${Entry.AI_UTILIZE_BLOCK.tts.api}.mp3?${toQueryString({
                 text: message,
                 ...prop,
             })}`;
@@ -166,7 +166,7 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
     };
 
     const checkError = function() {
-        const tts = Entry.EXPANSION_BLOCK.tts;
+        const tts = Entry.AI_UTILIZE_BLOCK.tts;
         if (tts.isInitialized) {
             const hasError = tts.soundQueue.getItems().find((item) => !item.result);
             if (hasError) {
@@ -208,7 +208,7 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/expansion_icon.png',
+                    img: 'block_icon/ai_utilize_icon.svg',
                     size: 11,
                 },
             ],
@@ -272,7 +272,7 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/expansion_icon.png',
+                    img: 'block_icon/ai_utilize_icon.svg',
                     size: 11,
                 },
             ],
@@ -342,7 +342,7 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
                 params.getPitch(),
                 {
                     type: 'Indicator',
-                    img: 'block_icon/expansion_icon.png',
+                    img: 'block_icon/ai_utilize_icon.svg',
                     size: 11,
                 },
             ],
