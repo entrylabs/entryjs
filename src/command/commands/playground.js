@@ -14,6 +14,7 @@
             if (Entry.disposeEvent) {
                 Entry.disposeEvent.notify();
             }
+            Entry.Utils.forceStopSounds();
         },
         state(newType, oldType) {
             return [oldType, newType];

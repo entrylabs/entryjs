@@ -654,6 +654,10 @@ Entry.EntityObject = class EntityObject {
                 lineHeight = this.fontSize;
                 break;
             }
+            case 'DungGeunMo': {
+                lineHeight = this.fontSize;
+                break;
+            }
             default: {
                 lineHeight = 0;
                 break;

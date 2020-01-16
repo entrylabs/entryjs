@@ -170,11 +170,15 @@ Entry.Scene = class {
             .addClass('entrySceneRemoveButtonWorkspace')
             .bindOnClick((e) => {
                 if (Entry.engine.isState('run')) {
-                    return ;
+                    return;
                 }
                 const isDeletable = Entry.scene.getScenes().length > 1;
                 if (!isDeletable) {
-                    Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.Scene_delete_error, false);
+                    Entry.toast.alert(
+                        Lang.Msgs.runtime_error,
+                        Lang.Workspace.Scene_delete_error,
+                        false
+                    );
                     return;
                 }
                 Entry.do('sceneRemove', scene.id);
@@ -336,7 +340,7 @@ Entry.Scene = class {
             Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.Scene_delete_error, false);
             return;
         }
-
+        Entry.Utils.forceStopSounds();
         scene = this.getSceneById(typeof scene === 'string' ? scene : scene.id);
 
         this.getScenes().splice(this.getScenes().indexOf(scene), 1);

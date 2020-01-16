@@ -174,6 +174,9 @@ Entry.EXPANSION_BLOCK.translate = {
         Entry.EXPANSION_BLOCK.translate.isInitialized = true;
     },
     api: '/api/expansionBlock/papago/',
+    sponsor: 'papagoNaver',
+    sponsorLink: 'https://www.ncloud.com/product/aiService/papagoNmt',
+    sponsorText: 'Powered by NAVER',
     typeMap: {
         dictionary: 'nsmt',
         artificial_intelligence: 'n2mt',
