@@ -1,3 +1,5 @@
+/// <reference path="../index.d.ts" />
+
 /**
  * 엔트리 하드웨어 관련 타입 선언이 포함된 목록
  */
@@ -47,6 +49,7 @@ declare module Entry {
         id: HardwareModuleId;
         name: string;
         monitorTemplate?: UnknownAny;
+        communicationType?: string;
         sendMessage?: (hw: Hardware) => void;
         setZero: () => void;
         communicationType: string;
