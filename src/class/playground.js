@@ -715,14 +715,18 @@ Entry.Playground = class Playground {
             _id: '534578cf19e9dc00001a3ac2',
             name: 'test1',
             fields: ['요리명', '재료', '조리법'],
-            array: [
+            data: [
                 {
                     key: '12df',
                     value: ['된장찌개', '된장', '끓인다'],
                 },
                 {
                     key: '532h',
-                    value: ['파전', '파', '굽는다'],
+                    value: ['파전', '23', '굽는다'],
+                },
+                {
+                    key: '232h',
+                    value: ['파전', '55', '굽는다'],
                 },
             ],
             chart: [
@@ -766,14 +770,18 @@ Entry.Playground = class Playground {
             _id: '534578cf19e9dc00001a3ac2',
             name: 'test2',
             fields: ['요리명', '재료', '조리법'],
-            array: [
+            data: [
                 {
                     key: '12df',
                     value: ['된장찌개', '된장', '끓인다'],
                 },
                 {
                     key: '532h',
-                    value: ['파전', '파', '굽는다'],
+                    value: ['파전', '23', '굽는다'],
+                },
+                {
+                    key: '232h',
+                    value: ['파전', '55', '굽는다'],
                 },
             ],
             chart: [
@@ -1488,6 +1496,7 @@ Entry.Playground = class Playground {
                 view.removeClass('entryTableSelected');
             }
         }, tables);
+        this.dataTable.selectTable(table);
         Entry.dispatchEvent('tableSelected', table);
     }
     /**
@@ -1520,7 +1529,7 @@ Entry.Playground = class Playground {
     }
 
     moveTable(start, end) {
-        this.dataTable.changePosition(start, end);
+        this.dataTable.changeItemPosition(start, end);
         this.injectTable();
     }
     /**
