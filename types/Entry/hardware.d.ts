@@ -49,6 +49,7 @@ declare module Entry {
         monitorTemplate?: UnknownAny;
         sendMessage?: (hw: Hardware) => void;
         setZero: () => void;
+        communicationType: string;
 
         //TODO afterSend, dataHandler 의 목적이 모호하므로 추후 개선 필요
         afterReceive?: (portData: HardwareMessageData) => void; // 데이터 수신 이후
