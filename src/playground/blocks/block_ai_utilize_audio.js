@@ -56,7 +56,7 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             },
             class: 'audio',
             isNotFor: ['audio'],
-            async func(sprite, script) {
+            func(sprite, script) {
                 return new PromiseManager().Promise(async (resolve) => {
                     const result = await audioUtils.checkUserMicAvailable();
                     resolve(result.toString());
@@ -96,8 +96,7 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
                         Entry.dispatchEvent('audioRecordingDone');
                         resolve(result);
                     } catch (e) {
-                        console.log(e);
-                        resolve('error');
+                        resolve(e);
                     }
                 });
             },

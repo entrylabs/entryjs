@@ -102,7 +102,17 @@ Entry.Toast.prototype.alert = function(title, message, isNotAutoDispose) {
     toast.appendChild(toastTitle);
     const toastMessage = Entry.createElement('p', 'entryToast');
     toastMessage.addClass('entryToastMessage');
-    toastMessage.textContent = message;
+
+    if (message instanceof Array) {
+        let messageConcat = '';
+        for (let mes in message) {
+            messageConcat += message[mes] + '<br />';
+        }
+        toastMessage.innerHTML = messageConcat;
+    } else {
+        toastMessage.textContent = message;
+    }
+
     toast.appendChild(toastMessage);
     this.toasts_.push(toast);
     this.body_.appendChild(toast);

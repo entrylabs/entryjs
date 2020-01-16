@@ -1974,7 +1974,6 @@ Entry.Utils.createMouseEvent = function(type, event) {
 Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     let block = scope.block;
     message = message || 'Runtime Error';
-
     const engine = Entry.engine;
 
     engine && engine.toggleStop();
@@ -1996,8 +1995,13 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
             view && view.getBoard().activateBlock(block);
         }
     }
-
-    if (Entry.toast) {
+    if (message === 'IncompatibleError' && Entry.toast) {
+        Entry.toast.alert(
+            Lang.Msgs.warn,
+            [Lang.Workspace.check_runtime_error, 'IE 에서는 지원하지 않는 블록입니다.'],
+            true
+        );
+    } else if (Entry.toast) {
         Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, true);
     }
 
@@ -2009,6 +2013,13 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     throw new Error(message);
 };
 
+Entry.Utils.IncompatibleError = function(message) {
+    this.name = 'IncompatibleError';
+    this.message = message || 'IncompatibleError';
+};
+Entry.Utils.IncompatibleError.prototype = new Error();
+Entry.Utils.IncompatibleError.prototype.constructor = Entry.Utils.IncompatibleError;
+
 Entry.Utils.AsyncError = function(message) {
     this.name = 'AsyncError';
     this.message = message || 'Waiting for callback';
@@ -2016,6 +2027,14 @@ Entry.Utils.AsyncError = function(message) {
 
 Entry.Utils.AsyncError.prototype = new Error();
 Entry.Utils.AsyncError.prototype.constructor = Entry.Utils.AsyncError;
+
+Entry.Utils.IncomaptibleError = function(message) {
+    this.name = 'IncomaptibleError';
+    this.message = message || 'IncomaptibleError';
+};
+
+Entry.Utils.IncomaptibleError.prototype = new Error();
+Entry.Utils.IncomaptibleError.prototype.constructor = Entry.Utils.IncomaptibleError;
 
 Entry.Utils.isChrome = function() {
     return /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
@@ -2508,14 +2527,6 @@ Entry.Utils.getVolume = function() {
         return this._volume;
     }
     return 1;
-};
-
-Entry.Utils.forceStopSounds = function() {
-    _.each(Entry.soundInstances, (instance) => {
-        instance.dispatchEvent('complete');
-        instance.stop();
-    });
-    Entry.soundInstances = [];
 };
 
 Entry.Utils.playSound = function(id, option = {}) {

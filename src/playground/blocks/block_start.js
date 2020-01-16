@@ -404,6 +404,7 @@ module.exports = {
                 class: 'message',
                 isNotFor: ['message'],
                 func(sprite, script) {
+                    debugger;
                     return script.callReturn();
                 },
                 event: 'when_message_cast',
