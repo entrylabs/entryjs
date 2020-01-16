@@ -150,6 +150,307 @@ Entry.MicrobitExt = new (class MicrobitExt {
             this.commandStatus[portData.payload.codeIdMiss] = 'completed';
         }
     }
+    setLanguage() {
+        return {
+            ko: {
+                template: {
+                    microbit_ext_led_toggle: 'LED의 X:%1 Y:%2 %3 %4',
+                    microbit_ext_get_led: 'LED의 X:%1 Y:%2 상태값',
+                    microbit_ext_show_string: '%1 출력하기 %2',
+                    microbit_ext_show_image: '%1 아이콘 출력하기 %2',
+                    microbit_ext_set_led_image: 'LED %1 으로 출력하기 %2',
+                    microbit_ext_reset_screen: '화면 지우기 %1',
+                    microbit_ext_set_tone: '%1 음을 %2 박자 연주하기 %3',
+                    microbit_ext_set_tempo: '연주 속도를 %1 BPM 으로 정하기 %2',
+                    microbit_ext_set_relative_tempo: '연주 속도를 %1 BPM 만큼 바꾸기 %2',
+                    microbit_ext_set_analog: '%1 에 아날로그 값 %2 출력 %3',
+                    microbit_ext_set_analog_period:
+                        '%1 에 아날로그 PWM 출력 주기를 %2 마이크로초 로 설정 %3',
+                    microbit_ext_get_analog: '아날로그 핀 %1번 센서값',
+                    microbit_ext_get_analog_map:
+                        '아날로그 핀 %1번 센서값의 범위를 %2~%3 에서 %4~%5 (으)로 바꾼값',
+                    microbit_ext_set_digital: '%1 에 디지털 값 %2 출력 %3',
+                    microbit_ext_get_digital: '디지털 핀 %1번 센서값',
+                    microbit_ext_get_button: '%1 버튼을 눌렀는가?',
+                    microbit_ext_get_sensor: '%1 센서값',
+                    microbit_ext_is_tilt: '%1 방향으로 기울었는가?',
+                    microbit_ext_get_tilt: '%1 방향으로 기울어진 각도값',
+                    microbit_ext_get_accelerometer: '가속도 센서 %1의 값',
+                    microbit_ext_set_servo: '%1 에 서보 값 %2 출력 %3',
+                    microbit_ext_set_servo_period: '%1 에 서보 펄스 폭을 %2 마이크로초로 설정 %3',
+                },
+                Blocks: {
+                    microbit_ext_acc_xaxis: 'x축',
+                    microbit_ext_acc_yaxis: 'y축',
+                    microbit_ext_acc_zaxis: 'z축',
+                    microbit_ext_acc_strength: '크기',
+                    microbit_ext_tilt_right: '오른쪽',
+                    microbit_ext_tilt_left: '왼쪽',
+                    microbit_ext_tilt_rear: '뒤쪽',
+                    microbit_ext_tilt_front: '앞쪽',
+                    microbit_ext_sensor_temperature: '온도',
+                    microbit_ext_sensor_compass: '자기',
+                    microbit_ext_sensor_light: '빛',
+                    microbit_ext_tone_b: '시',
+                    microbit_ext_tone_a_sharp: '라#',
+                    microbit_ext_tone_a: '라',
+                    microbit_ext_tone_g_sharp: '솔#',
+                    microbit_ext_tone_g: '솔',
+                    microbit_ext_tone_f_sharp: '파#',
+                    microbit_ext_tone_f: '파',
+                    microbit_ext_tone_e: '미',
+                    microbit_ext_tone_d_sharp: '레#',
+                    microbit_ext_tone_d: '레',
+                    microbit_ext_tone_c_sharp: '도#',
+                    microbit_ext_tone_c: '도',
+                    microbit_ext_tone_high: '높은',
+                    microbit_ext_tone_middle: '',
+                    microbit_ext_tone_low: '낮은',
+                    microbit_ext_image_target: '표적',
+                    microbit_ext_image_rake: '갈퀴',
+                    microbit_ext_image_eighth_note: '8분 음표',
+                    microbit_ext_image_quarter_note: '4분 음표',
+                    microbit_ext_image_ox: '소',
+                    microbit_ext_image_rabbit: '토끼',
+                    microbit_ext_image_snake: '뱀',
+                    microbit_ext_image_umbrella: '우산',
+                    microbit_ext_image_skull: '해골',
+                    microbit_ext_image_giraffe: '기린',
+                    microbit_ext_image_sword: '칼',
+                    microbit_ext_image_ghost: '유령',
+                    microbit_ext_image_stickman: '스틱맨',
+                    microbit_ext_image_butterfly: '나비',
+                    microbit_ext_image_turtle: '거북이',
+                    microbit_ext_image_house: '집',
+                    microbit_ext_image_duck: '오리',
+                    microbit_ext_image_rollerskate: '롤러스케이트',
+                    microbit_ext_image_tshirt: '티셔츠',
+                    microbit_ext_image_scissors: '가위',
+                    microbit_ext_image_small_square: '작은 사각형',
+                    microbit_ext_image_square: '사각형',
+                    microbit_ext_image_small_diamond: '작은 다이아몬드',
+                    microbit_ext_image_diamond: '다이아몬드',
+                    microbit_ext_image_chessboard: '체스판',
+                    microbit_ext_image_left_triangle: '왼쪽 삼각형',
+                    microbit_ext_image_triangle: '삼각형',
+                    microbit_ext_image_no: '노놉',
+                    microbit_ext_image_yes: '예스',
+                    microbit_ext_image_not_good: '별로',
+                    microbit_ext_image_fantastic: '환상적인',
+                    microbit_ext_image_fool: '바보',
+                    microbit_ext_image_surprised: '놀람',
+                    microbit_ext_image_sleepy: '졸림',
+                    microbit_ext_image_angry: '화남',
+                    microbit_ext_image_confused: '혼란',
+                    microbit_ext_image_sadness: '슬픔',
+                    microbit_ext_image_happiness: '행복함',
+                    microbit_ext_image_small_heart: '작은 하트',
+                    microbit_ext_image_heart: '하트',
+                    microbit_ext_led_toggle_on: '켜기',
+                    microbit_ext_led_toggle_off: '끄기',
+                    microbit_ext_led_toggle_toggle: '반전',
+                },
+            },
+            en: {
+                template: {
+                    microbit_ext_led_toggle: 'LED X:%1 Y:%2 %3 %4',
+                    microbit_ext_get_led: 'LED X:%1 Y:%2 Value',
+                    microbit_ext_show_string: '%1 icon appear %2',
+                    microbit_ext_show_image: '%1 アイコンを表示 %2',
+                    microbit_ext_set_led_image: 'Show %1 leds %2',
+                    microbit_ext_reset_screen: 'Clear screen %1',
+                    microbit_ext_set_tone: 'Play %1 for %2 beat %3',
+                    microbit_ext_set_tempo: 'Set tempo to %1 BPM %2',
+                    microbit_ext_set_relative_tempo: 'Change tempo by %1 BPM %2',
+                    microbit_ext_set_analog: 'Analog writen pin %1 to %2 %3',
+                    microbit_ext_set_analog_period: 'Analog set period pin %1 to microsecond %2 %3',
+                    microbit_ext_get_analog: 'Analog %1 Sensor Value',
+                    microbit_ext_get_analog_map:
+                        'Change analog %1 Sensor Value from %2 ~ %3 to %4 ~ %5',
+                    microbit_ext_set_digital: 'Analog writen pin %1 to %2 %3',
+                    microbit_ext_get_digital: 'Digital %1 Sensor Value',
+                    microbit_ext_get_button: 'Button %1 is pressed?',
+                    microbit_ext_get_sensor: 'value of %1 sensor',
+                    microbit_ext_is_tilt: 'Tilted to the %1?',
+                    microbit_ext_get_tilt: 'Angle value tilted to the %1',
+                    microbit_ext_get_accelerometer: 'Acceleration %1',
+                    microbit_ext_set_servo: 'Servo write pin %1 to %2 %3',
+                    microbit_ext_set_servo_period: 'Set servo %1 pulse to %2 microsecond %3',
+                },
+                Blocks: {
+                    microbit_ext_acc_xaxis: 'x',
+                    microbit_ext_acc_yaxis: 'y',
+                    microbit_ext_acc_zaxis: 'z',
+                    microbit_ext_acc_strength: 'Strength',
+                    microbit_ext_tilt_right: 'Right',
+                    microbit_ext_tilt_left: 'Left',
+                    microbit_ext_tilt_rear: 'Rear',
+                    microbit_ext_tilt_front: 'Front',
+                    microbit_ext_sensor_temperature: 'Temperature',
+                    microbit_ext_sensor_compass: 'Compass',
+                    microbit_ext_sensor_light: 'Light',
+                    microbit_ext_tone_high: 'HIGH',
+                    microbit_ext_tone_middle: 'MIDDLE',
+                    microbit_ext_tone_low: 'Low',
+                    microbit_ext_tone_b: 'B',
+                    microbit_ext_tone_a_sharp: 'A#',
+                    microbit_ext_tone_a: 'A',
+                    microbit_ext_tone_g_sharp: 'G#',
+                    microbit_ext_tone_g: 'G',
+                    microbit_ext_tone_f_sharp: 'F#',
+                    microbit_ext_tone_f: 'F',
+                    microbit_ext_tone_e: 'E',
+                    microbit_ext_tone_d_sharp: 'D#',
+                    microbit_ext_tone_d: 'D',
+                    microbit_ext_tone_c_sharp: 'C#',
+                    microbit_ext_tone_c: 'C',
+                    microbit_ext_image_target: 'Target',
+                    microbit_ext_image_rake: 'Rake',
+                    microbit_ext_image_eighth_note: 'Eighth note',
+                    microbit_ext_image_quarter_note: 'Quarter note',
+                    microbit_ext_image_ox: 'Ox',
+                    microbit_ext_image_rabbit: 'Rabbit',
+                    microbit_ext_image_snake: 'Snake',
+                    microbit_ext_image_umbrella: 'Umbrella',
+                    microbit_ext_image_skull: 'Skull',
+                    microbit_ext_image_giraffe: 'Giraffe',
+                    microbit_ext_image_sword: 'Sword',
+                    microbit_ext_image_ghost: 'Ghost',
+                    microbit_ext_image_stickman: 'Stickfigure',
+                    microbit_ext_image_butterfly: 'Butterfly',
+                    microbit_ext_image_turtle: 'Turtle',
+                    microbit_ext_image_house: 'House',
+                    microbit_ext_image_duck: 'Duck',
+                    microbit_ext_image_rollerskate: 'Rollerskate',
+                    microbit_ext_image_tshirt: 'T-shirt',
+                    microbit_ext_image_scissors: 'Scissors',
+                    microbit_ext_image_small_square: 'Small Square',
+                    microbit_ext_image_square: 'Square',
+                    microbit_ext_image_small_diamond: 'Small Diamond',
+                    microbit_ext_image_diamond: 'Diamond',
+                    microbit_ext_image_chessboard: 'Chessboard',
+                    microbit_ext_image_left_triangle: 'Left Triangle',
+                    microbit_ext_image_triangle: 'Triangle',
+                    microbit_ext_image_no: 'Nope',
+                    microbit_ext_image_yes: 'Yes',
+                    microbit_ext_image_not_good: 'Not Good',
+                    microbit_ext_image_fantastic: 'fantastic',
+                    microbit_ext_image_fool: 'Fool',
+                    microbit_ext_image_surprised: 'Surpriesd',
+                    microbit_ext_image_sleepy: 'Sleepy',
+                    microbit_ext_image_angry: 'Angry',
+                    microbit_ext_image_confused: 'Confused',
+                    microbit_ext_image_sadness: 'Sadness',
+                    microbit_ext_image_happiness: 'Happiness',
+                    microbit_ext_image_small_heart: 'Small Heart',
+                    microbit_ext_image_heart: 'Heart',
+                    microbit_ext_led_toggle_on: 'On',
+                    microbit_ext_led_toggle_off: 'Off',
+                    microbit_ext_led_toggle_toggle: 'Reverse',
+                },
+            },
+            jp: {
+                template: {
+                    microbit_ext_led_toggle: 'LED X:%1 Y:%2 %3 %4',
+                    microbit_ext_get_led: 'LED X:%1 Y:%2 が点灯している',
+                    microbit_ext_show_string: '%1 文字列を表示 %2',
+                    microbit_ext_show_image: '%1 アイコンを表示 %2',
+                    microbit_ext_set_led_image: '%1 LED画面に表示 %2',
+                    microbit_ext_reset_screen: '表示のクリア %1',
+                    microbit_ext_set_tone: '%1 音を %2 拍子演奏する %3',
+                    microbit_ext_set_tempo: '演奏スピードを %1 BPM に決める %2',
+                    microbit_ext_set_relative_tempo: '演奏スピードを %1 BPM変更する %2',
+                    microbit_ext_set_analog: 'アナログで出力する 端子 %1 値 %2 %3',
+                    microbit_ext_set_analog_period:
+                        'アナログ出力 パルス周期を設定する 端子 %1 周期（マイクロ秒）%2 %3',
+                    microbit_ext_get_analog: 'アナログピン %1 番のセンサー値',
+                    microbit_ext_get_analog_map:
+                        'アナログピン %1 番のセンサー値の範囲を %2 ～ %3 から %4 ～ %5 に変更した値',
+                    microbit_ext_set_digital: 'アナログで出力する 端子 %1 値 %2 %3',
+                    microbit_ext_get_digital: 'デジタルピン %1 番のセンサー値',
+                    microbit_ext_get_button: '%1 ボタンを押したか？',
+                    microbit_ext_get_sensor: '%1 センサー値',
+                    microbit_ext_is_tilt: '%1 に傾いているか？',
+                    microbit_ext_get_tilt: '%1 に傾いた角度',
+                    microbit_ext_get_accelerometer: '加速度センサー %1 の値',
+                    microbit_ext_set_servo: 'サーボ 出力する 端子 %1 角度 %2 %3',
+                    microbit_ext_set_servo_period: 'Servo %1 パルス幅の設定（マイクロ秒） %2 %3',
+                },
+                Blocks: {
+                    microbit_ext_acc_xaxis: 'x軸',
+                    microbit_ext_acc_yaxis: 'y軸',
+                    microbit_ext_acc_zaxis: 'z軸',
+                    microbit_ext_acc_strength: '大きさ',
+                    microbit_ext_tilt_right: '右',
+                    microbit_ext_tilt_left: '左',
+                    microbit_ext_tilt_rear: '後ろ',
+                    microbit_ext_tilt_front: '前方',
+                    microbit_ext_sensor_temperature: '温度',
+                    microbit_ext_sensor_compass: '磁気',
+                    microbit_ext_sensor_light: '光',
+                    microbit_ext_tone_high: '高い',
+                    microbit_ext_tone_middle: '',
+                    microbit_ext_tone_low: '低い',
+
+                    microbit_ext_tone_b: 'シ',
+                    microbit_ext_tone_a_sharp: 'ラ#',
+                    microbit_ext_tone_a: 'ラ',
+                    microbit_ext_tone_g_sharp: 'ソ#',
+                    microbit_ext_tone_g: 'ソ',
+                    microbit_ext_tone_f_sharp: 'ファ#',
+                    microbit_ext_tone_f: 'ファ',
+                    microbit_ext_tone_e: 'ミ',
+                    microbit_ext_tone_d_sharp: 'レ#',
+                    microbit_ext_tone_d: 'レ',
+                    microbit_ext_tone_c_sharp: 'ド#',
+                    microbit_ext_tone_c: 'ド',
+                    microbit_ext_image_target: '目標',
+                    microbit_ext_image_rake: 'レーキ',
+                    microbit_ext_image_eighth_note: '8分音符',
+                    microbit_ext_image_quarter_note: '4分音符',
+                    microbit_ext_image_ox: '牛',
+                    microbit_ext_image_rabbit: 'ウサギ',
+                    microbit_ext_image_snake: 'ヘビ',
+                    microbit_ext_image_umbrella: '傘',
+                    microbit_ext_image_skull: '頭蓋骨',
+                    microbit_ext_image_giraffe: 'キリン',
+                    microbit_ext_image_sword: '剣',
+                    microbit_ext_image_ghost: '幽霊',
+                    microbit_ext_image_stickman: '棒人間',
+                    microbit_ext_image_butterfly: 'バタフライ',
+                    microbit_ext_image_turtle: 'カメ',
+                    microbit_ext_image_house: '家',
+                    microbit_ext_image_duck: 'アヒル',
+                    microbit_ext_image_rollerskate: 'ローラースケート',
+                    microbit_ext_image_tshirt: 'Tシャツ',
+                    microbit_ext_image_scissors: 'はさみ',
+                    microbit_ext_image_small_square: '小さな四角形',
+                    microbit_ext_image_square: '四角形',
+                    microbit_ext_image_small_diamond: '小さなダイヤモンド',
+                    microbit_ext_image_diamond: 'ダイヤモンド',
+                    microbit_ext_image_chessboard: 'チェス盤',
+                    microbit_ext_image_left_triangle: '左の三角形',
+                    microbit_ext_image_triangle: '三角形',
+                    microbit_ext_image_no: 'いや',
+                    microbit_ext_image_yes: '良かった',
+                    microbit_ext_image_not_good: '良くない',
+                    microbit_ext_image_fantastic: '素晴らしい',
+                    microbit_ext_image_fool: 'バカ',
+                    microbit_ext_image_surprised: 'びっくり',
+                    microbit_ext_image_sleepy: '眠いです',
+                    microbit_ext_image_angry: '怒り',
+                    microbit_ext_image_confused: '混乱した',
+                    microbit_ext_image_sadness: '悲しみ',
+                    microbit_ext_image_happiness: '幸せ',
+                    microbit_ext_image_small_heart: '小さな心',
+                    microbit_ext_image_heart: 'ハート',
+                    microbit_ext_led_toggle_on: '点灯',
+                    microbit_ext_led_toggle_off: '消灯',
+                    microbit_ext_led_toggle_toggle: '反転',
+                },
+            },
+        };
+    }
 
     getBlocks() {
         return {
@@ -158,7 +459,6 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
                 statements: [],
-                template: 'LED의 X:%1 Y:%2 %3 %4',
                 params: [
                     {
                         type: 'Block',
@@ -172,7 +472,11 @@ Entry.MicrobitExt = new (class MicrobitExt {
                     },
                     {
                         type: 'Dropdown',
-                        options: [['켜기', 'on'], ['끄기', 'off'], ['반전', 'toggle']],
+                        options: [
+                            [Lang.Blocks.microbit_ext_led_toggle_on, 'on'],
+                            [Lang.Blocks.microbit_ext_led_toggle_off, 'off'],
+                            [Lang.Blocks.microbit_ext_led_toggle_toggle, 'toggle'],
+                        ],
                         value: 'on',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -222,7 +526,6 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 fontColor: '#ffffff',
                 skeleton: 'basic_string_field',
                 statements: [],
-                template: 'LED의 X:%1 Y:%2 상태값',
                 params: [
                     {
                         type: 'Block',
@@ -270,7 +573,6 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
                 statements: [],
-                template: '%1 출력하기 %2',
                 params: [
                     {
                         type: 'Block',
@@ -315,51 +617,50 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
                 statements: [],
-                template: '%1 아이콘 출력하기 %2',
                 params: [
                     {
                         type: 'Dropdown',
                         options: [
-                            ['하트', 0],
-                            ['작은하트', 1],
-                            ['행복함', 2],
-                            ['슬픔', 3],
-                            ['혼란', 4],
-                            ['화남', 5],
-                            ['졸림', 6],
-                            ['놀람', 7],
-                            ['바보', 8],
-                            ['환상적인', 9],
-                            ['별로', 10],
-                            ['예스', 11],
-                            ['노놉', 12],
-                            ['삼각형', 13],
-                            ['왼쪽 삼각형', 14],
-                            ['체스판', 15],
-                            ['다이아몬드', 17],
-                            ['작은 다이아몬드', 18],
-                            ['사각형', 19],
-                            ['작은 사각형', 20],
-                            ['가위', 21],
-                            ['티셔츠', 22],
-                            ['롤러스케이트', 23],
-                            ['오리', 24],
-                            ['집', 25],
-                            ['거북이', 26],
-                            ['나비', 27],
-                            ['스틱맨', 28],
-                            ['유령', 29],
-                            ['칼', 30],
-                            ['기린', 31],
-                            ['해골', 32],
-                            ['우산', 33],
-                            ['뱀', 34],
-                            ['토끼', 35],
-                            ['소', 36],
-                            ['4분음표', 37],
-                            ['8분음표', 38],
-                            ['갈퀴', 39],
-                            ['표적', 40],
+                            [Lang.Blocks.microbit_ext_image_heart, 0],
+                            [Lang.Blocks.microbit_ext_image_small_heart, 1],
+                            [Lang.Blocks.microbit_ext_image_happiness, 2],
+                            [Lang.Blocks.microbit_ext_image_sadness, 3],
+                            [Lang.Blocks.microbit_ext_image_confused, 4],
+                            [Lang.Blocks.microbit_ext_image_angry, 5],
+                            [Lang.Blocks.microbit_ext_image_sleepy, 6],
+                            [Lang.Blocks.microbit_ext_image_surprised, 7],
+                            [Lang.Blocks.microbit_ext_image_fool, 8],
+                            [Lang.Blocks.microbit_ext_image_fantastic, 9],
+                            [Lang.Blocks.microbit_ext_image_not_good, 10],
+                            [Lang.Blocks.microbit_ext_image_yes, 11],
+                            [Lang.Blocks.microbit_ext_image_no, 12],
+                            [Lang.Blocks.microbit_ext_image_triangle, 13],
+                            [Lang.Blocks.microbit_ext_image_left_triangle, 14],
+                            [Lang.Blocks.microbit_ext_image_chessboard, 15],
+                            [Lang.Blocks.microbit_ext_image_diamond, 17],
+                            [Lang.Blocks.microbit_ext_image_small_diamond, 18],
+                            [Lang.Blocks.microbit_ext_image_square, 19],
+                            [Lang.Blocks.microbit_ext_image_small_square, 20],
+                            [Lang.Blocks.microbit_ext_image_scissors, 21],
+                            [Lang.Blocks.microbit_ext_image_tshirt, 22],
+                            [Lang.Blocks.microbit_ext_image_rollerskate, 23],
+                            [Lang.Blocks.microbit_ext_image_duck, 24],
+                            [Lang.Blocks.microbit_ext_image_house, 25],
+                            [Lang.Blocks.microbit_ext_image_turtle, 26],
+                            [Lang.Blocks.microbit_ext_image_butterfly, 27],
+                            [Lang.Blocks.microbit_ext_image_stickman, 28],
+                            [Lang.Blocks.microbit_ext_image_ghost, 29],
+                            [Lang.Blocks.microbit_ext_image_sword, 30],
+                            [Lang.Blocks.microbit_ext_image_giraffe, 31],
+                            [Lang.Blocks.microbit_ext_image_skull, 32],
+                            [Lang.Blocks.microbit_ext_image_umbrella, 33],
+                            [Lang.Blocks.microbit_ext_image_snake, 34],
+                            [Lang.Blocks.microbit_ext_image_rabbit, 35],
+                            [Lang.Blocks.microbit_ext_image_ox, 36],
+                            [Lang.Blocks.microbit_ext_image_quarter_note, 37],
+                            [Lang.Blocks.microbit_ext_image_eighth_note, 38],
+                            [Lang.Blocks.microbit_ext_image_rake, 39],
+                            [Lang.Blocks.microbit_ext_image_target, 40],
                         ],
                         value: 0,
                         fontSize: 11,
@@ -393,7 +694,6 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
                 statements: [],
-                template: 'LED %1 으로 출력하기 %2',
                 params: [
                     {
                         type: 'Led',
@@ -423,7 +723,6 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
                 statements: [],
-                template: '화면 지우기 %1',
                 params: [
                     {
                         type: 'Indicator',
@@ -447,47 +746,135 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
                 statements: [],
-                template: '%1 를 %2 동안 출력 %3',
                 params: [
                     {
                         type: 'Dropdown',
                         options: [
-                            ['낮은 도', 131],
-                            ['낮은 도#', 139],
-                            ['낮은 레', 147],
-                            ['낮은 레#', 156],
-                            ['낮은 미', 165],
-                            ['낮은 파', 175],
-                            ['낮은 파#', 185],
-                            ['낮은 솔', 196],
-                            ['낮은 솔#', 208],
-                            ['낮은 라', 220],
-                            ['낮은 라#', 233],
-                            ['낮은 시', 247],
-                            ['도', 262],
-                            ['도#', 277],
-                            ['레', 294],
-                            ['레#', 311],
-                            ['미', 330],
-                            ['파', 349],
-                            ['파#', 370],
-                            ['솔', 392],
-                            ['솔#', 415],
-                            ['라', 440],
-                            ['라#', 466],
-                            ['시', 494],
-                            ['높은 도', 523],
-                            ['높은 도#', 554],
-                            ['높은 레', 587],
-                            ['높은 레#', 622],
-                            ['높은 미', 659],
-                            ['높은 파', 698],
-                            ['높은 파#', 740],
-                            ['높은 솔', 784],
-                            ['높은 솔#', 831],
-                            ['높은 라', 880],
-                            ['높은 라#', 932],
-                            ['높은 시', 988],
+                            [
+                                Lang.Blocks.microbit_ext_tone_low + Lang.Blocks.microbit_ext_tone_c,
+                                131,
+                            ],
+                            [
+                                Lang.Blocks.microbit_ext_tone_low +
+                                    Lang.Blocks.microbit_ext_tone_c_sharp,
+                                139,
+                            ],
+                            [
+                                Lang.Blocks.microbit_ext_tone_low + Lang.Blocks.microbit_ext_tone_d,
+                                147,
+                            ],
+                            [
+                                Lang.Blocks.microbit_ext_tone_low +
+                                    Lang.Blocks.microbit_ext_tone_d_sharp,
+                                156,
+                            ],
+                            [
+                                Lang.Blocks.microbit_ext_tone_low + Lang.Blocks.microbit_ext_tone_e,
+                                165,
+                            ],
+                            [
+                                Lang.Blocks.microbit_ext_tone_low + Lang.Blocks.microbit_ext_tone_f,
+                                175,
+                            ],
+                            [
+                                Lang.Blocks.microbit_ext_tone_low +
+                                    Lang.Blocks.microbit_ext_tone_f_sharp,
+                                185,
+                            ],
+                            [
+                                Lang.Blocks.microbit_ext_tone_low + Lang.Blocks.microbit_ext_tone_g,
+                                196,
+                            ],
+                            [
+                                Lang.Blocks.microbit_ext_tone_low +
+                                    Lang.Blocks.microbit_ext_tone_g_sharp,
+                                208,
+                            ],
+                            [
+                                Lang.Blocks.microbit_ext_tone_low + Lang.Blocks.microbit_ext_tone_a,
+                                220,
+                            ],
+                            [
+                                Lang.Blocks.microbit_ext_tone_low +
+                                    Lang.Blocks.microbit_ext_tone_a_sharp,
+                                233,
+                            ],
+                            [
+                                Lang.Blocks.microbit_ext_tone_low + Lang.Blocks.microbit_ext_tone_b,
+                                247,
+                            ],
+                            [Lang.Blocks.microbit_ext_tone_c, 262],
+                            [Lang.Blocks.microbit_ext_tone_c_sharp, 277],
+                            [Lang.Blocks.microbit_ext_tone_d, 294],
+                            [Lang.Blocks.microbit_ext_tone_d_sharp, 311],
+                            [Lang.Blocks.microbit_ext_tone_e, 330],
+                            [Lang.Blocks.microbit_ext_tone_f, 349],
+                            [Lang.Blocks.microbit_ext_tone_f_sharp, 370],
+                            [Lang.Blocks.microbit_ext_tone_g, 392],
+                            [Lang.Blocks.microbit_ext_tone_g_sharp, 415],
+                            [Lang.Blocks.microbit_ext_tone_a, 440],
+                            [Lang.Blocks.microbit_ext_tone_a_sharp, 466],
+                            [Lang.Blocks.microbit_ext_tone_b, 494],
+                            [
+                                Lang.Blocks.microbit_ext_tone_high +
+                                    Lang.Blocks.microbit_ext_tone_c,
+                                523,
+                            ],
+                            [
+                                Lang.Blocks.microbit_ext_tone_high +
+                                    Lang.Blocks.microbit_ext_tone_c_sharp,
+                                554,
+                            ],
+                            [
+                                Lang.Blocks.microbit_ext_tone_high +
+                                    Lang.Blocks.microbit_ext_tone_d,
+                                587,
+                            ],
+                            [
+                                Lang.Blocks.microbit_ext_tone_high +
+                                    Lang.Blocks.microbit_ext_tone_d_sharp,
+                                622,
+                            ],
+                            [
+                                Lang.Blocks.microbit_ext_tone_high +
+                                    Lang.Blocks.microbit_ext_tone_e,
+                                659,
+                            ],
+                            [
+                                Lang.Blocks.microbit_ext_tone_high +
+                                    Lang.Blocks.microbit_ext_tone_f,
+                                698,
+                            ],
+                            [
+                                Lang.Blocks.microbit_ext_tone_high +
+                                    Lang.Blocks.microbit_ext_tone_f_sharp,
+                                740,
+                            ],
+                            [
+                                Lang.Blocks.microbit_ext_tone_high +
+                                    Lang.Blocks.microbit_ext_tone_g,
+                                784,
+                            ],
+                            [
+                                Lang.Blocks.microbit_ext_tone_high +
+                                    Lang.Blocks.microbit_ext_tone_g_sharp,
+                                831,
+                            ],
+                            [
+                                Lang.Blocks.microbit_ext_tone_high +
+                                    Lang.Blocks.microbit_ext_tone_a,
+                                880,
+                            ],
+                            [
+                                Lang.Blocks.microbit_ext_tone_high +
+                                    Lang.Blocks.microbit_ext_tone_a_sharp,
+                                932,
+                            ],
+                            [
+                                Lang.Blocks.microbit_ext_tone_high +
+                                    Lang.Blocks.microbit_ext_tone_b,
+                                988,
+                            ],
                         ],
                         value: 131,
                         fontSize: 11,
@@ -497,13 +884,12 @@ Entry.MicrobitExt = new (class MicrobitExt {
                     {
                         type: 'Dropdown',
                         options: [
-                            ['온음표', 1],
-                            ['2분음표', 2],
-                            ['4분음표', 4],
-                            ['8분음표', 8],
-                            ['16분음표', 16],
-                            ['32분음표', 32],
-                            ['셋잇단음표', 3],
+                            ['4', 1],
+                            ['2', 2],
+                            ['1', 4],
+                            ['1/2', 8],
+                            ['1/4', 16],
+                            ['1/8', 32],
                         ],
                         value: 4,
                         fontSize: 11,
@@ -540,7 +926,6 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
                 statements: [],
-                template: '연주 속도를 %1으로 정하기 %2',
                 params: [
                     {
                         type: 'Block',
@@ -580,7 +965,6 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
                 statements: [],
-                template: '연주 속도를  %1 BPM 만큼 바꾸기 %2',
                 params: [
                     {
                         type: 'Block',
@@ -621,7 +1005,6 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
                 statements: [],
-                template: '%1 에 아날로그 값 %2 출력 %3',
                 params: [
                     {
                         type: 'Dropdown',
@@ -677,7 +1060,6 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
                 statements: [],
-                template: '%1 에 아날로그 PWM 출력 주기를 %2 (µs) 로 설정 %3',
                 params: [
                     {
                         type: 'Dropdown',
@@ -734,7 +1116,6 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 fontColor: '#ffffff',
                 skeleton: 'basic_string_field',
                 statements: [],
-                template: '아날로그 핀 %1번 센서값',
                 params: [
                     {
                         type: 'Dropdown',
@@ -775,7 +1156,6 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 fontColor: '#ffffff',
                 skeleton: 'basic_string_field',
                 statements: [],
-                template: '아날로그 핀 %1번 센서값의 범위를 %2~%3 에서 %4~%5 (으)로 바꾼값',
                 params: [
                     {
                         type: 'Dropdown',
@@ -900,7 +1280,6 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
                 statements: [],
-                template: '%1 에 디지털 값 %2 출력 %3',
                 params: [
                     {
                         type: 'Dropdown',
@@ -970,7 +1349,6 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 fontColor: '#ffffff',
                 skeleton: 'basic_boolean_field',
                 statements: [],
-                template: '디지털 핀 %1번 센서값',
                 params: [
                     {
                         type: 'Dropdown',
@@ -1024,7 +1402,6 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 fontColor: '#ffffff',
                 skeleton: 'basic_boolean_field',
                 statements: [],
-                template: '%1버튼을 눌렀는가?',
                 params: [
                     {
                         type: 'Dropdown',
@@ -1063,14 +1440,13 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 fontColor: '#ffffff',
                 skeleton: 'basic_string_field',
                 statements: [],
-                template: '%1 센서값',
                 params: [
                     {
                         type: 'Dropdown',
                         options: [
-                            ['빛', 'lightLevel'],
-                            ['온도', 'temperature'],
-                            ['자기', 'compassHeading'],
+                            [Lang.Blocks.microbit_ext_sensor_light, 'lightLevel'],
+                            [Lang.Blocks.microbit_ext_sensor_temperature, 'temperature'],
+                            [Lang.Blocks.microbit_ext_sensor_compass, 'compassHeading'],
                         ],
                         value: 'temperature',
                         fontSize: 11,
@@ -1092,6 +1468,9 @@ Entry.MicrobitExt = new (class MicrobitExt {
                     if (value === 'lightLevel') {
                         let commandType = functionKeys.GET_LIGHT_LEVEL;
                         this.requestCommandWithResponse(script.entity.id, commandType);
+                    } else if (value === 'compassHeading') {
+                        let commandType = functionKeys.GET_COMPASS_HEADING;
+                        this.requestCommandWithResponse(script.entity.id, commandType);
                     }
                     return _get(Entry.hw.portData, ['payload', 'sensorData', value], -1);
                 },
@@ -1102,11 +1481,15 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 fontColor: '#ffffff',
                 skeleton: 'basic_boolean_field',
                 statements: [],
-                template: '%1 방향으로 기울었는가?',
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [['왼쪽', 0], ['오른쪽', 1], ['앞쪽', 2], ['뒤쪽', 3]],
+                        options: [
+                            [Lang.Blocks.microbit_ext_tilt_left, 0],
+                            [Lang.Blocks.microbit_ext_tilt_right, 1],
+                            [Lang.Blocks.microbit_ext_tilt_front, 2],
+                            [Lang.Blocks.microbit_ext_tilt_rear, 3],
+                        ],
                         value: 0,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1168,11 +1551,15 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 fontColor: '#ffffff',
                 skeleton: 'basic_string_field',
                 statements: [],
-                template: '%1 방향으로 기울어진 각도값',
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [['왼쪽', 0], ['오른쪽', 1], ['앞쪽', 2], ['뒤쪽', 3]],
+                        options: [
+                            [Lang.Blocks.microbit_ext_tilt_left, 0],
+                            [Lang.Blocks.microbit_ext_tilt_right, 1],
+                            [Lang.Blocks.microbit_ext_tilt_front, 2],
+                            [Lang.Blocks.microbit_ext_tilt_rear, 3],
+                        ],
                         value: 0,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1231,11 +1618,15 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 fontColor: '#ffffff',
                 skeleton: 'basic_string_field',
                 statements: [],
-                template: '가속도 센서 %1의 값',
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [['x축', 0], ['y축', 1], ['z축', 2], ['크기', 3]],
+                        options: [
+                            [Lang.Blocks.microbit_ext_acc_xaxis, 0],
+                            [Lang.Blocks.microbit_ext_acc_yaxis, 1],
+                            [Lang.Blocks.microbit_ext_acc_zaxis, 2],
+                            [Lang.Blocks.microbit_ext_acc_strength, 3],
+                        ],
                         value: 0,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1282,11 +1673,21 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 fontColor: '#ffffff',
                 skeleton: 'basic_boolean_field',
                 statements: [],
-                template: '%1 이 있는가?',
+                template: '%1 움직임이 감지되는가?',
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [['흔들림', 0], ['움직임', 1]],
+                        options: [
+                            ['흔들림', 11],
+                            ['세워서 위쪽 방향', 1],
+                            ['세워서 아래쪽 방향', 2],
+                            ['세워서 오른쪽 방향', 4],
+                            ['세워서 왼쪽 방향', 3],
+                            ['눕혀서 위쪽 방향', 5],
+                            ['눕혀서 아래쪽 방향', 6],
+                            ['눕혀서 오른쪽 방향', 14],
+                            ['눕혀서 왼쪽 방향', 13],
+                        ],
                         value: 1,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1303,9 +1704,12 @@ Entry.MicrobitExt = new (class MicrobitExt {
                     VALUE: 0,
                 },
                 func: (sprite, script) => {
-                    const value = script.getField('VALUE');
+                    let value = script.getField('VALUE');
                     const gesture = _get(Entry.hw.portData, 'payload.sensorData.gesture', -1);
-
+                    // 밸류 중복으로 인해서 생기는 문제로 인해 +10을 오프셋으로 사용
+                    if (value > 11) {
+                        value = value - 10;
+                    }
                     /**
                      * 제스쳐는 단 한번만 검사하기 위해 제스쳐가 이전과 다르게 변경된 경우만 검사한다.
                      * 달라진 경우,
@@ -1318,9 +1722,14 @@ Entry.MicrobitExt = new (class MicrobitExt {
                         this.lastGesture = gesture;
                         if (value === 0) {
                             return this.lastGesture === microbitGestures.SHAKE;
-                        } else if (value === 1) {
+                        } else if (value == gesture) {
                             return true;
                         }
+                        //
+
+                        // } else if (value === 1) {
+                        //     return true;
+                        // }
                     }
                 },
             },
@@ -1329,7 +1738,6 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
                 statements: [],
-                template: '%1 에 서보 값 %2 출력 %3',
                 params: [
                     {
                         type: 'Dropdown',
@@ -1378,7 +1786,6 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
                 statements: [],
-                template: '%1 에 서보 펄스 폭을 %2 마이크로초로 설정 %3',
                 params: [
                     {
                         type: 'Dropdown',
@@ -1425,4 +1832,5 @@ Entry.MicrobitExt = new (class MicrobitExt {
         };
     }
 })();
+
 module.exports = Entry.MicrobitExt;
