@@ -603,6 +603,10 @@ Entry.Block = class Block {
     }
 
     replace(targetBlock) {
+        if (!targetBlock) {
+            console.error('replace error: target not exist');
+            return;
+        }
         this.thread.cut(this);
         targetBlock.getThread().replace(this);
         this.getCode().changeEvent.notify();
@@ -776,7 +780,7 @@ Entry.Block = class Block {
                 let l = this.params[i];
                 let r = target.params[i];
                 //entry-js로 변경되며서 null로 오던 것이 undefined로 와서 맞춰 줌.
-                if(l === undefined) l = null;
+                if (l === undefined) l = null;
                 l = typeof l === 'number' ? `${l}` : l;
                 r = typeof r === 'number' ? `${r}` : r;
                 if (l === 'positive') {

@@ -17,10 +17,19 @@ Entry.TEXT_ALIGNS = ['center', 'left', 'right'];
 Entry.clipboard = null;
 
 /**
- * Load project
- * @param {?Project} project
+ * 프로젝트 가 외부 모듈이 사용되었는지 확인하고, 로드한다
+ * @param {*} project 엔트리 프로젝트
+ * @return Promise
  */
+Entry.loadExternalModules = async (project) => {
+    const { externalModules = [] } = project;
+    await Promise.all(externalModules.map(Entry.moduleManager.loadExternalModule));
+};
 
+/**
+ * Load project
+ * @param {*} project
+ */
 Entry.loadProject = function(project) {
     if (!project) {
         project = Entry.getStartProject(Entry.mediaFilePath);
@@ -1510,6 +1519,9 @@ Entry.setCloneBrush = function(sprite, parentBrush) {
     }
 
     const shape = GEHelper.brushHelper.newShape(brush);
+    if (isWebGL) {
+        brush.setCurrentPath(parentBrush.getCurrentPath());
+    }
     shape.entity = sprite;
     const selectedObjectContainer = Entry.stage.selectedObjectContainer;
     selectedObjectContainer.addChildAt(shape, selectedObjectContainer.getChildIndex(sprite.object));
@@ -1667,6 +1679,7 @@ Entry.Utils.isTouchEvent = function({ type }) {
 
 Entry.Utils.inherit = function(parent, child) {
     function F() {}
+
     F.prototype = parent.prototype;
     child.prototype = new F();
     return child;
@@ -1853,9 +1866,7 @@ Entry.Utils.addNewBlock = function(item) {
             variable.object = _.get(Entry, ['container', 'selectedObject', 'id'], '');
         }
     });
-    expansionBlocks.forEach((blockName) => {
-        Entry.expansion.addExpansionBlock(blockName);
-    });
+    Entry.expansion.addExpansionBlocks(expansionBlocks);
     Entry.variableContainer.appendMessages(messages);
     Entry.variableContainer.appendVariables(variables);
     Entry.variableContainer.appendFunctions(functions);
@@ -1880,9 +1891,7 @@ Entry.Utils.addNewObject = function(sprite) {
             return entrylms.alert(Lang.Menus.object_import_syntax_error);
         }
         const objectIdMap = {};
-        expansionBlocks.forEach((blockName) => {
-            Entry.expansion.addExpansionBlock(blockName);
-        });
+        Entry.expansion.addExpansionBlocks(expansionBlocks);
         variables.forEach((variable) => {
             const { object } = variable;
             if (object) {
@@ -2026,10 +2035,10 @@ Entry.Utils.waitForWebfonts = function(fonts, callback) {
             (font) =>
                 new Promise((resolve) => {
                     FontFaceOnload(font, {
-                        success: function() {
+                        success() {
                             resolve();
                         },
-                        error: function() {
+                        error() {
                             console.log('fail', font);
                             resolve();
                         },
@@ -2497,6 +2506,14 @@ Entry.Utils.getVolume = function() {
     return 1;
 };
 
+Entry.Utils.forceStopSounds = function() {
+    _.each(Entry.soundInstances, (instance) => {
+        instance.dispatchEvent('complete');
+        instance.stop();
+    });
+    Entry.soundInstances = [];
+};
+
 Entry.Utils.playSound = function(id, option = {}) {
     return createjs.Sound.play(id, Object.assign({ volume: this._volume }, option));
 };
@@ -2740,4 +2757,30 @@ Entry.Utils.getMouseEvent = function(event) {
         mouseEvent = event;
     }
     return mouseEvent;
+};
+
+Entry.Utils.removeBlockByType = function(blockType, callback) {
+    const objects = Entry.container.getAllObjects();
+    objects.forEach(({ id, script }) => {
+        Entry.do('selectObject', id).isPass(true);
+        script.getBlockList(false, blockType).forEach((b, index) => {
+            Entry.do('destroyBlock', b).isPass(true);
+        });
+    });
+    Entry.variableContainer.removeBlocksInFunctionByType(blockType);
+
+    if (callback) {
+        callback();
+    }
+};
+
+Entry.Utils.isUsedBlockType = function(blockType) {
+    const objects = Entry.container.getAllObjects();
+    const usedInObject = objects.some(
+        ({ script }) => !!script.getBlockList(false, blockType).length
+    );
+    if (usedInObject) {
+        return true;
+    }
+    return Entry.variableContainer.isUsedBlockTypeInFunction(blockType);
 };

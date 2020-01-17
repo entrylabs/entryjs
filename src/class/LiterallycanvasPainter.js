@@ -158,6 +158,19 @@ Entry.LiterallycanvasPainter = class LiterallycanvasPainter {
         Entry.stateManager.removeAllPictureCommand();
     }
 
+    getImageSrc(picture) {
+        const { fileurl } = picture || {};
+        if (fileurl) {
+            return fileurl;
+        }
+
+        const { imageType = 'png', filename } = picture || {};
+        return `${Entry.defaultPath}/uploads/${filename.substring(0, 2)}/${filename.substring(
+            2,
+            4
+        )}/image/${filename}.${imageType}`;
+    }
+
     addPicture(picture, isOriginal) {
         const image = new Image();
 
@@ -257,7 +270,7 @@ Entry.LiterallycanvasPainter = class LiterallycanvasPainter {
             },
             //filename: "_1x1",
             fileurl: `${Entry.mediaFilePath}_1x1.png`,
-            name: Lang.Workspace.new_picture,
+            name: Lang.Painter.new_picture,
         };
 
         newPicture.id = Entry.generateHash();
@@ -354,12 +367,12 @@ Entry.LiterallycanvasPainter = class LiterallycanvasPainter {
         const painterTopMenuFileNew = ce('div', 'entryPainterTopMenuFileNew');
         painterTopMenuFileNew.bindOnClick(painter.newPicture.bind(this));
         painterTopMenuFileNew.addClass('entryPlaygroundPainterTopMenuFileNew');
-        painterTopMenuFileNew.innerHTML = Lang.Workspace.new_picture;
+        painterTopMenuFileNew.innerHTML = Lang.Painter.new_picture;
         painterTopMenu.appendChild(painterTopMenuFileNew);
 
         const painterTopMenuFile = ce('div', 'entryPainterTopMenuFile');
         painterTopMenuFile.addClass('entryPlaygroundPainterTopMenuFile painterTopHeader');
-        painterTopMenuFile.innerHTML = Lang.Menus.offline_file;
+        painterTopMenuFile.innerHTML = Lang.Painter.file;
         const painterTopMenuFileDropdown = ce('div');
 
         painterTopMenuFileDropdown.addClass('entryPlaygroundPainterTopMenuFileDropdown');
@@ -368,7 +381,7 @@ Entry.LiterallycanvasPainter = class LiterallycanvasPainter {
 
         const painterTopMenuEdit = ce('div', 'entryPainterTopMenuEdit');
         painterTopMenuEdit.addClass('entryPlaygroundPainterTopMenuEdit painterTopHeader');
-        painterTopMenuEdit.innerHTML = Lang.Menus.offline_edit;
+        painterTopMenuEdit.innerHTML = Lang.Painter.edit;
         painterTopMenu.appendChild(painterTopMenuEdit);
 
         const painterTopMenuFileSave = ce('div', 'entryPainterTopMenuFileSave');
@@ -376,7 +389,7 @@ Entry.LiterallycanvasPainter = class LiterallycanvasPainter {
             painter.fileSave(false);
         });
         painterTopMenuFileSave.addClass('entryPainterTopMenuFileSave');
-        painterTopMenuFileSave.innerHTML = Lang.Workspace.painter_file_save;
+        painterTopMenuFileSave.innerHTML = Lang.Painter.painter_file_save;
         painterTopMenuFileDropdown.appendChild(painterTopMenuFileSave);
 
         const painterTopMenuFileSaveAsLink = ce('div', 'entryPainterTopMenuFileSaveAs');
@@ -385,7 +398,7 @@ Entry.LiterallycanvasPainter = class LiterallycanvasPainter {
             painter.fileSave(false);
         });
         painterTopMenuFileSaveAsLink.addClass('entryPlaygroundPainterTopMenuFileSaveAs');
-        painterTopMenuFileSaveAsLink.innerHTML = Lang.Workspace.painter_file_saveas;
+        painterTopMenuFileSaveAsLink.innerHTML = Lang.Painter.painter_file_saveas;
         painterTopMenuFileDropdown.appendChild(painterTopMenuFileSaveAsLink);
 
         const painterTopMenuEditDropdown = ce('div');
@@ -397,7 +410,7 @@ Entry.LiterallycanvasPainter = class LiterallycanvasPainter {
             Entry.dispatchEvent('openPictureImport');
         });
         painterTopMenuEditImport.addClass('entryPainterTopMenuEditImport');
-        painterTopMenuEditImport.innerHTML = Lang.Workspace.get_file;
+        painterTopMenuEditImport.innerHTML = Lang.Painter.get_file;
         painterTopMenuEditDropdown.appendChild(painterTopMenuEditImport);
 
         const painterTopMenuEditCopy = ce('div', 'entryPainterTopMenuEditCopy');
@@ -405,7 +418,7 @@ Entry.LiterallycanvasPainter = class LiterallycanvasPainter {
             painter.copy();
         });
         painterTopMenuEditCopy.addClass('entryPlaygroundPainterTopMenuEditCopy');
-        painterTopMenuEditCopy.innerHTML = Lang.Workspace.copy_file;
+        painterTopMenuEditCopy.innerHTML = Lang.Painter.copy_file;
         painterTopMenuEditDropdown.appendChild(painterTopMenuEditCopy);
 
         const painterTopMenuEditCut = ce('div', 'entryPainterTopMenuEditCut');
@@ -413,7 +426,7 @@ Entry.LiterallycanvasPainter = class LiterallycanvasPainter {
             painter.cut();
         });
         painterTopMenuEditCut.addClass('entryPlaygroundPainterTopMenuEditCut');
-        painterTopMenuEditCut.innerHTML = Lang.Workspace.cut_picture;
+        painterTopMenuEditCut.innerHTML = Lang.Painter.cut_picture;
         painterTopMenuEditDropdown.appendChild(painterTopMenuEditCut);
 
         const painterTopMenuEditPaste = ce('div', 'entryPainterTopMenuEditPaste');
@@ -421,12 +434,12 @@ Entry.LiterallycanvasPainter = class LiterallycanvasPainter {
             painter.paste();
         });
         painterTopMenuEditPaste.addClass('entryPlaygroundPainterTopMenuEditPaste');
-        painterTopMenuEditPaste.innerHTML = Lang.Workspace.paste_picture;
+        painterTopMenuEditPaste.innerHTML = Lang.Painter.paste_picture;
         painterTopMenuEditDropdown.appendChild(painterTopMenuEditPaste);
 
         const painterTopMenuEditEraseAll = ce('div', 'entryPainterTopMenuEditEraseAll');
         painterTopMenuEditEraseAll.addClass('entryPlaygroundPainterTopMenuEditEraseAll');
-        painterTopMenuEditEraseAll.innerHTML = Lang.Workspace.remove_all;
+        painterTopMenuEditEraseAll.innerHTML = Lang.Painter.remove_all;
         painterTopMenuEditEraseAll.bindOnClick(() => {
             painter.lc.clear();
         });

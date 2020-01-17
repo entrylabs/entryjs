@@ -271,6 +271,14 @@ Entry.AsomeBot.getBlocks = function() {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
+
+                    // 어썸보드 built-in LED가 반대로 연결되어 있음
+                    if (value == "on") {
+                        value = "off";
+                    } else {
+                        value = "on";
+                    }
+
                     sq.msg = format_str("OutputPin(4).{0}()", value);
                     return script;
                 } 

@@ -141,7 +141,7 @@ Entry.HWMonitor = class HardwareMonitor {
         }
     }
 
-    setHwmonitor(hwModule) {
+    setHwModule(hwModule) {
         this._hwmodule = hwModule;
     }
 
@@ -420,14 +420,14 @@ Entry.HWMonitor = class HardwareMonitor {
     }
 
     _alignNS(ports, yCursor, gap) {
-        let length = ports.length,
-            mid = (length - 1) / 2,
-            lP = -this._rect.width / 2,
-            rP = this._rect.width / 2,
-            width = this._rect.width,
-            wholeWidth = 0,
-            listLine = 0,
-            mode = this._hwModule.monitorTemplate.mode;
+        const length = ports.length;
+        const mid = (length - 1) / 2;
+        let lP = -this._rect.width / 2;
+        let rP = this._rect.width / 2;
+        const width = this._rect.width;
+        let wholeWidth = 0;
+        const listLine = 0;
+        const mode = this._hwModule.monitorTemplate.mode;
 
         for (let i = 0; i < ports.length; i++) {
             wholeWidth += ports[i].width + 5;
@@ -439,11 +439,11 @@ Entry.HWMonitor = class HardwareMonitor {
         }
 
         while (ports.length > 1) {
-            let lPort = ports.shift(),
-                rPort = ports.pop(),
-                prevLP = lP,
-                prevRP = rP,
-                gapTemp = gap;
+            const lPort = ports.shift();
+            const rPort = ports.pop();
+            const prevLP = lP;
+            const prevRP = rP;
+            let gapTemp = gap;
             if (wholeWidth <= rP - lP) {
                 lP += lPort.width + 5;
                 rP -= rPort.width + 5;
@@ -514,8 +514,8 @@ Entry.HWMonitor = class HardwareMonitor {
     _movePort(port, x, y, prevPointer) {
         let groupX = x;
         let path;
-        let portX = port.box.x * this.scale,
-            portY = port.box.y * this.scale;
+        const portX = port.box.x * this.scale;
+        const portY = port.box.y * this.scale;
 
         if (x > prevPointer) {
             // left side
@@ -539,4 +539,4 @@ Entry.HWMonitor = class HardwareMonitor {
         port.group.attr({ transform: `translate(${groupX},${y})` });
         port.path.attr({ d: path });
     }
-}
+};

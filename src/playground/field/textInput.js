@@ -1,6 +1,6 @@
 'use strict';
 
-import { Number, Angle } from '@entrylabs/tool';
+import { Angle, Number } from '@entrylabs/tool';
 
 Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
     constructor(content, blockView, index) {
@@ -240,6 +240,14 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
                 this._focusNeighbor(e.shiftKey ? 'prev' : 'next');
             }
         });
+
+        inputField.on('blur', (e) => {
+            const isOptionGroupVisible = !!this.optionGroup.get(0).style.display;
+            if (!isOptionGroupVisible) {
+                this.destroyOption(undefined, true);
+            }
+        });
+
         const { scale = 1 } = this.board;
         this._font_size = 10 * scale;
         const { x, y } = this.getAbsolutePosFromDocument();

@@ -195,6 +195,7 @@ Entry.Workspace = class Workspace {
                     if (alertMessage.type === 'warning') {
                         entrylms.confirm(alertMessage.message).then((result) => {
                             if (result) {
+                                //Entry.expansion.banExpansionBlocks(Entry.expansionBlocks);
                                 changeToPythonMode();
                                 dispatchChangeBoardEvent();
                             } else {

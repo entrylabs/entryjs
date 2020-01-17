@@ -654,6 +654,10 @@ Entry.EntityObject = class EntityObject {
                 lineHeight = this.fontSize;
                 break;
             }
+            case 'DungGeunMo': {
+                lineHeight = this.fontSize;
+                break;
+            }
             default: {
                 lineHeight = 0;
                 break;
@@ -959,8 +963,9 @@ Entry.EntityObject = class EntityObject {
                   if (this.removed) {
                       return;
                   }
-                  if (info.source() !== this.object.image) {
-                      return;
+                  const isResizedImage = info.source() !== this.object.image;
+                  if (isResizedImage) {
+                      this.object.image = info.source();
                   }
                   const hasFilter = !_.isEmpty(that.object.filters);
                   GEHelper.colorFilter.setCache(this, hasFilter);

@@ -579,6 +579,10 @@
         validate: false,
         log(block, x, y) {
             block = this.editor.board.findBlock(block);
+            if (!block || !block.view) {
+                console.error('moveBlock: target not exist ', block);
+                return [];
+            }
             return [['block', block.pointer()], ['x', block.view.x], ['y', block.view.y]];
         },
         undo: 'moveBlock',

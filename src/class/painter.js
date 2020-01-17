@@ -25,7 +25,6 @@ Entry.Painter = class Painter {
 
     async importEntryPaint() {
         EntryPaint = window.EntryPaint.default;
-        // EntryPaint = (await import('entry-paint')).default;
         if (this.requestShow) {
             this.initialize();
         }
@@ -84,6 +83,7 @@ Entry.Painter = class Painter {
     }
 
     hide() {
+        this.alertSaveModifiedPicture();
         this.entryPaint && Entry.windowResized.detach(this.realign);
     }
 
@@ -95,7 +95,7 @@ Entry.Painter = class Painter {
             },
             fileurl: `${Entry.mediaFilePath}_1x1.png`,
             name: Lang.Painter.new_picture,
-            imageType: this._getImageType(),
+            imageType: 'png',
         };
 
         newPicture.id = Entry.generateHash();
@@ -105,7 +105,7 @@ Entry.Painter = class Painter {
         Entry.playground.addPicture(newPicture, true);
     }
 
-    changePicture(picture = {}) {
+    changePicture(picture = {}, removed) {
         if (this.file && this.file.id === picture.id) {
             if (!this.file.isUpdate) {
                 Entry.stage.updateObject();
@@ -126,21 +126,37 @@ Entry.Painter = class Painter {
                 wasRun = true;
             }
 
-            entrylms.confirm(Lang.Menus.save_modified_shape).then((result) => {
-                this.isConfirm = false;
-                result ? this.fileSave(true) : (this.file.modified = false);
-                wasRun ? Entry.playground.injectPicture() : this.afterModified(picture);
-            });
+            if (removed) {
+                this.updatePicture(picture);
+            } else {
+                this.alertSaveModifiedPicture(picture, wasRun);
+            }
         }
         Entry.stage.updateObject();
         this.file.isUpdate = true;
+    }
+
+    updatePicture(picture = {}, wasRun = true, result = true) {
+        this.isConfirm = false;
+        result ? this.fileSave(true) : (this.file.modified = false);
+        wasRun ? Entry.playground.injectPicture() : this.afterModified(picture);
+        Entry.stage.updateObject();
+    }
+
+    alertSaveModifiedPicture(picture, wasRun) {
+        if (!this.file.modified) {
+            return;
+        }
+
+        entrylms.confirm(Lang.Menus.save_modified_shape).then((result) => {
+            this.updatePicture(picture, wasRun, result);
+        });
     }
 
     afterModified(picture) {
         const file = this.file;
         file.modified = false;
         this.isImport = true;
-        this.entryPaint.reset();
 
         if (picture.id) {
             file.id = picture.id || Entry.generateHash();
@@ -151,6 +167,7 @@ Entry.Painter = class Painter {
             this.addPicture(picture, true);
         } else {
             file.id = Entry.generateHash();
+            this.entryPaint.reset();
         }
 
         Entry.stateManager.removeAllPictureCommand();
@@ -178,7 +195,6 @@ Entry.Painter = class Painter {
         switch (imageType) {
             case 'png':
                 this.entryPaint.addBitmap(imageSrc, {
-                    isChangedLayer: this.isImport,
                     graphicsMode: this.isImport ? this.graphicsMode.BITMAP : '',
                 });
                 break;
@@ -243,6 +259,7 @@ Entry.Painter = class Painter {
         }
     }
 
+    _keyboardUpControl(e) {}
     _keyboardPressControl(e) {}
 
     toggleFullscreen(isFullscreen) {
