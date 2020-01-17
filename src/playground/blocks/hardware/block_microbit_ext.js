@@ -256,7 +256,7 @@ Entry.MicrobitExt = new (class MicrobitExt {
                     microbit_ext_led_toggle: 'LED X:%1 Y:%2 %3 %4',
                     microbit_ext_get_led: 'LED X:%1 Y:%2 Value',
                     microbit_ext_show_string: '%1 icon appear %2',
-                    microbit_ext_show_image: '%1 アイコンを表示 %2',
+                    microbit_ext_show_image: '%1 show leds %2',
                     microbit_ext_set_led_image: 'Show %1 leds %2',
                     microbit_ext_reset_screen: 'Clear screen %1',
                     microbit_ext_set_tone: 'Play %1 for %2 beat %3',
