@@ -1,5 +1,6 @@
 import audioUtils from './audioUtils';
-const io = require('socket.io-client');
+import io from 'socket.io-client';
+
 const GATEWAY_CONNECT_TIMEOUT = 5000;
 
 const ADDR = {
@@ -10,8 +11,12 @@ const ADDR = {
 export function voiceApiConnect(addr = ADDR, language = 'Kor', cb) {
     return new Promise((resolve, reject) => {
         const { host, port } = ADDR;
-
-        const client = io.connect(`ws://${host}:${port}`, { query: `language=${language}` });
+        const client = io.connect(`https://${host}:${port}`, {
+            query: `language=${language}`,
+            secure: true,
+            reconnect: true,
+            rejectUnauthorized: false,
+        });
         client.onerror = function(error) {
             console.log('Connect Error: ' + JSON.stringify(error));
         };
