@@ -15,7 +15,7 @@ class Executor {
         this.id = Entry.Utils.generateId();
     }
 
-    execute(isFromOrigin) { 
+    execute(isFromOrigin) {
         if (this.isEnd()) {
             return;
         }
@@ -41,6 +41,8 @@ class Executor {
             } catch (e) {
                 if (e.name === 'AsyncError') {
                     returnVal = Entry.STATIC.BREAK;
+                } else if (e.name === 'IncompatibleError') {
+                    Entry.Utils.stopProjectWithToast(this.scope, e.message, e);
                 } else if (this.isFuncExecutor) {
                     //function executor
                     throw e;
@@ -53,7 +55,6 @@ class Executor {
             if (this.isEnd()) {
                 return executedBlocks;
             }
-
 
             if (returnVal === undefined || returnVal === null || returnVal === Entry.STATIC.PASS) {
                 this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);

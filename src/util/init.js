@@ -7,6 +7,7 @@
 import { Destroyer } from './destroyer/Destroyer';
 import { GEHelper } from '../graphicEngine/GEHelper';
 import Expansion from '../class/Expansion';
+import AIUtilize from '../class/AIUtilize';
 import Extension from '../extensions/extension';
 
 require('./utils');
@@ -250,6 +251,10 @@ Entry.initialize_ = function() {
 
     this.expansion = new Expansion(this.playground);
     this._destroyer.add(this.expansion);
+
+    this.aiUtilize = new AIUtilize(this.playground);
+    this._destroyer.add(this.aiUtilize);
+
     this.intro = new Entry.Intro();
     /**
      * Initialize toast. Toast don't need generate view.

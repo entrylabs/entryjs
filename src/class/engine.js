@@ -4,6 +4,7 @@
 'use strict';
 
 import { GEHelper } from '../graphicEngine/GEHelper';
+import audioUtils from '../util/audioUtils';
 
 /**
  * Class for a engine.
@@ -332,6 +333,125 @@ Entry.Engine = class Engine {
         }
     }
 
+    toggleAudioShadePanel() {
+        if (this.audioShadePanelOn) {
+            this.audioShadePanelOn = false;
+            $(this.audioShadePanel_).remove();
+            delete this.audioShadePanel_;
+        } else {
+            this.audioShadePanelOn = true;
+            this.audioShadePanel_ = Entry.createElement('div', 'audioShadeCirclebox');
+            this.audioShadePanel_.addClass('audioShadeCirclebox');
+            const audioShadeMainCircle = Entry.createElement('div', 'audioShadeCircle').addClass(
+                'audioShadeCircle'
+            );
+            audioShadeMainCircle.appendChild(
+                Entry.createElement('div', 'audioShadeInner').addClass('audioShadeInner')
+            );
+            audioShadeMainCircle.appendChild(
+                Entry.createElement('div', 'audioShadeInner').addClass('audioShadeInner')
+            );
+            audioShadeMainCircle.appendChild(
+                Entry.createElement('div', 'audioShadeInner').addClass('audioShadeInner')
+            );
+            this.audioShadePanel_.appendChild(audioShadeMainCircle);
+            const micImage = Entry.createElement('img', 'audioShadeImg').addClass('audioShadeImg');
+            micImage.src = 'lib/entry-js/images/ic-audio-sensing-mic.svg';
+            audioShadeMainCircle.appendChild(micImage);
+
+            const audioShadeText = Entry.createElement('div', 'audioShadeText').addClass(
+                'audioShadeText'
+            );
+            audioShadeText.innerHTML = Lang.Msgs.ai_utilize_audio_listening;
+            this.audioShadePanel_.appendChild(audioShadeText);
+
+            this.view_.insertBefore(this.audioShadePanel_, Entry.stage.canvas.canvas);
+        }
+    }
+
+    toggleAudioProgressPanel() {
+        if (this.audioShadePanelOn) {
+            Entry.engine.toggleAudioShadePanel();
+        }
+        if (this.audioProgressPanelOn) {
+            this.audioProgressPanelOn = false;
+            $(this.audioProgressPanel_).remove();
+            delete this.audioProgressPanel_;
+        } else {
+            this.audioProgressPanelOn = true;
+            this.audioProgressPanel_ = Entry.createElement('div', 'audioShadeCirclebox');
+            this.audioProgressPanel_.addClass('audioShadeCirclebox');
+            const audioShadeMainCircle = Entry.createElement('div', 'audioShadeCircle').addClass(
+                'audioShadeCircle'
+            );
+
+            const audioProgressSpinner = Entry.createElement(
+                'canvas',
+                'audioProgressCanvas'
+            ).addClass('audioProgress');
+
+            const ctx = audioProgressSpinner.getContext('2d');
+            const circlesRotate = [0, 15, 30, 45, 60];
+            audioProgressSpinner.width = 100;
+            audioProgressSpinner.height = 100;
+            function fnDraw() {
+                audioProgressSpinner.width = audioProgressSpinner.width;
+                fnCircle();
+                window.requestAnimationFrame(fnDraw);
+            }
+            fnDraw();
+
+            function fnReturnDeg(deg) {
+                return (deg * Math.PI) / 180;
+            }
+
+            function fnCircle() {
+                ctx.fillStyle = 'white';
+                for (let i = 0; i < circlesRotate.length; i++) {
+                    ctx.beginPath();
+                    ctx.save();
+                    ctx.translate(audioProgressSpinner.width / 2, audioProgressSpinner.height / 2);
+                    ctx.rotate(fnReturnDeg(circlesRotate[i]));
+                    ctx.arc(0, -audioProgressSpinner.height / 3, 7, Math.PI, 10);
+                    ctx.fill();
+                    ctx.restore();
+                    if (circlesRotate[i] < 60 || circlesRotate[i] > 300) {
+                        circlesRotate[i] += 3;
+                    } else {
+                        circlesRotate[i] += 7;
+                    }
+                    if (circlesRotate[i] > 360) {
+                        circlesRotate[i] -= 360;
+                    }
+                }
+            }
+            audioShadeMainCircle.appendChild(audioProgressSpinner);
+
+            this.audioProgressPanel_.appendChild(audioShadeMainCircle);
+
+            // const audioShadeText = Entry.createElement('div', 'audioShadeText').addClass(
+            //     'audioShadeText'
+            // );
+            // audioShadeText.innerHTML = '진행중이에요';
+            // this.audioProgressPanel_.appendChild(audioShadeText);
+
+            this.view_.insertBefore(this.audioProgressPanel_, Entry.stage.canvas.canvas);
+        }
+    }
+
+    hideAllAudioPanel() {
+        if (this.audioShadePanelOn) {
+            this.audioShadePanelOn = false;
+            $(this.audioShadePanel_).remove();
+            delete this.audioShadePanel_;
+        }
+        if (this.audioProgressPanelOn) {
+            this.audioProgressPanelOn = false;
+            $(this.audioProgressPanel_).remove();
+            delete this.audioProgressPanel_;
+        }
+    }
+
     toggleSpeedPanel() {
         if (this.speedPanelOn) {
             this.speedPanelOn = false;
@@ -419,6 +539,7 @@ Entry.Engine = class Engine {
      */
     stop() {
         GEHelper.Ticker.reset();
+        audioUtils.stopRecord();
         clearInterval(this.ticker);
         this.ticker = null;
     }
@@ -561,7 +682,7 @@ Entry.Engine = class Engine {
         const variableContainer = Entry.variableContainer;
 
         Entry.Utils.blur();
-
+        audioUtils.stopRecord();
         Entry.addActivity('stop');
 
         container.mapEntity((entity) => {
