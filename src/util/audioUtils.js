@@ -109,7 +109,6 @@ class AudioUtils {
             this._socketClient.on('message', (e) => {
                 switch (e) {
                     case STATUS_CODE.CONNECTED:
-                        console.log('Received String: ', e.data, ' ');
                         break;
                     case STATUS_CODE.NOT_RECOGNIZED:
                         this._socketClient.disconnect();
@@ -123,10 +122,6 @@ class AudioUtils {
                             this._socketClient.disconnect();
                             this.stopRecord();
                             resolve(parsed[0]);
-                        } else if (typeof e === 'string') {
-                            console.log('Received String: ', e, ' ');
-                        } else {
-                            console.log('Received : ', e, ' ');
                         }
                         break;
                 }

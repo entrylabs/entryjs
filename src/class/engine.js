@@ -362,7 +362,7 @@ Entry.Engine = class Engine {
             const audioShadeText = Entry.createElement('div', 'audioShadeText').addClass(
                 'audioShadeText'
             );
-            audioShadeText.innerHTML = '듣고 있어요';
+            audioShadeText.innerHTML = Lang.Msgs.ai_utilize_audio_listening;
             this.audioShadePanel_.appendChild(audioShadeText);
 
             this.view_.insertBefore(this.audioShadePanel_, Entry.stage.canvas.canvas);
