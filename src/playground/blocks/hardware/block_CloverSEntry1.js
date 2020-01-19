@@ -1,4 +1,51 @@
-﻿'use strict';
+﻿
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'use strict';
 
 
 
@@ -36,12 +83,14 @@ Entry.CloverSEntry1 = {
                     {
                         case self.pinMaps.Digital_Port0 :                                  
                         case self.pinMaps.Digital_Port1 :                                  
+                            Entry.hw.sendQueue.SET[key].data = 1;
+                            break;
                         case self.pinMaps.Digital_Port2 :                                  
                         case self.pinMaps.Digital_Port3 :                                  
                         case self.pinMaps.Digital_Port4 :                                  
                         case self.pinMaps.Digital_Port5 :                                  
                         case self.pinMaps.Digital_Port6 :                                  
-                            Entry.hw.sendQueue.SET[key].data = 1;
+                            Entry.hw.sendQueue.SET[key].data = 0;
                             break;
                         
                         default :
@@ -111,6 +160,42 @@ Entry.CloverSEntry1 = {
            
         Entry.hw.update();
     },
+    
+    
+    
+    
+	monitorTemplate: { 
+        imgPath: 'hw/CloverSEntry1.png',                        
+        width: 420,
+        height: 420,
+        listPorts: {  
+            M_SW1: { name: '스위치1', type: 'input', pos: { x: 0, y: 0 }},
+            M_SW2: { name: '스위치2', type: 'input', pos: { x: 0, y: 0 }},
+            M_ANALOG1: { name: '아날로그1', type: 'input', pos: { x: 0, y: 0 }},
+            M_ANALOG2: { name: '아날로그2', type: 'input', pos: { x: 0, y: 0 }},
+            M_ULTRASONIC: { name: '초음파센서', type: 'input', pos: { x: 0, y: 0 }},
+            M_CDS: { name: '조도센서', type: 'input', pos: { x: 0, y: 0 }},
+            M_TEMP: { name: '온도센서', type: 'input', pos: { x: 0, y: 0 }},
+            M_C_SW1: { name: '클로버 스위치1', type: 'input', pos: { x: 0, y: 0 }},
+            M_C_SW2: { name: '클로버 스위치2', type: 'input', pos: { x: 0, y: 0 }},
+            M_C_SW3: { name: '클로버 스위치3', type: 'input', pos: { x: 0, y: 0 }},
+            M_C_SW4: { name: '클로버 스위치4', type: 'input', pos: { x: 0, y: 0 }},
+            M_C_SW5: { name: '클로버 스위치5', type: 'input', pos: { x: 0, y: 0 }},
+            M_C_SW6: { name: '클로버 스위치6', type: 'input', pos: { x: 0, y: 0 }},
+            M_C_SW7: { name: '클로버 스위치7', type: 'input', pos: { x: 0, y: 0 }},
+            M_C_SW8: { name: '클로버 스위치8', type: 'input', pos: { x: 0, y: 0 }},
+        },
+        
+        ports : {
+            
+        },
+			
+		
+		
+		
+        mode: 'both',
+    },
+    
    
 	
     
@@ -242,6 +327,7 @@ Entry.CloverSEntry1.blockMenuBlocks = [
     'CloverSEntry1_set_fnd',
     'CloverSEntry1_clover_set_led',
     'CloverSEntry1_get_digital',
+    'CloverSEntry1_get_digital_servo',
     'CloverSEntry1_get_analog_value',
     'CloverSEntry1_get_analog_value_map',
     'CloverSEntry1_get_ultrasonic_value',
@@ -256,14 +342,15 @@ Entry.CloverSEntry1.setLanguage = () => {
 		ko: {
 			template: 
             {
-				CloverSEntry1_set_digital :          '%1 을 %2 %3',
+				CloverSEntry1_set_digital :          '%1 을 %2 %3',  
                 CloverSEntry1_set_digital1 :         '%1 을 %2 %3',
                 CloverSEntry1_set_tone :             '부저를  %1 %2 음으로 %3초 연주하기 %4',
                 CloverSEntry1_set_servo :            '%1 번 서보모터를 %2 의 각도로 정하기 %3',
                 CloverSEntry1_set_motor :            '%1 모터를 %2 으로 %3 회전 속도로 정하기 %4',
-                CloverSEntry1_set_fnd :              '클로버 FND에 %1 출력하기 %2',
+                CloverSEntry1_set_fnd :              '클로버 숫자표시기(FND)에 %1 출력하기 %2',
                 CloverSEntry1_clover_set_led :       '클로버 LED %1 을 %2 %3',
-                CloverSEntry1_get_digital :          '버튼 %1 번 값',
+                CloverSEntry1_get_digital :          '스위치 %1 번 값',
+                CloverSEntry1_get_digital_servo :    '디지털 %1 번 값',
                 CloverSEntry1_get_analog_value :     '아날로그 %1 번 센서값',
                 CloverSEntry1_get_analog_value_map : '아날로그 %1 번 값의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
                 CloverSEntry1_get_ultrasonic_value : '초음파센서 센서값',
@@ -401,8 +488,8 @@ Entry.CloverSEntry1.getBlocks = function() {
                     type: 'Dropdown',
                     options :
                     [
-                        ["HIGH",0],
-                        ["LOW",1]
+                        ["HIGH",1],
+                        ["LOW",0]
 					],
                     fontSize: 12,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1021,7 +1108,7 @@ Entry.CloverSEntry1.getBlocks = function() {
                 100,
                 100,
                 100,
-                100,
+                10,
                 null,
                 ],
                 type: 'CloverSEntry1_set_rgb',
@@ -1124,7 +1211,63 @@ Entry.CloverSEntry1.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-            
+        
+        
+        
+        
+        
+        CloverSEntry1_get_digital_servo: 
+        {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options : 
+                    [
+                        ["3", 3],
+                        ["5", 5],
+                        ["6", 6],
+                        ["9", 9],
+                        ["10", 10],
+					],
+                    fontSize: 12,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    3,
+                ],
+                type: 'CloverSEntry1_get_digital_servo',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'getBlock',
+            isNotFor: ['CloverSEntry1'],
+            func: function(sprite, script) {
+                var port = script.getField('PORT', script);
+                var DIGITAL = Entry.hw.portData.DIGITAL;
+                if (!Entry.hw.sendQueue['GET']) {
+                    Entry.hw.sendQueue['GET'] = {};
+                }
+                
+                Entry.hw.sendQueue['GET'][Entry.CloverSEntry1.sensorTypes.DIGITAL] = {
+                    port: port,
+                    time: new Date().getTime(),
+                };
+                
+                if( DIGITAL[port] != 0) { return true; }
+                else { return false;}
+            },
+            syntax: { js: [], py: [] },
+        },
+        
         
         
         
@@ -1226,7 +1369,7 @@ Entry.CloverSEntry1.getBlocks = function() {
                     },
                     {
                         type: 'number',
-                        params: ['1024'],
+                        params: ['100'],
                     },
                 ],
                 type: 'CloverSEntry1_get_analog_value_map',
