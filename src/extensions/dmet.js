@@ -3,7 +3,7 @@ import mapValues from 'lodash/mapValues';
 import get from 'lodash/get';
 import set from 'lodash/set';
 import cloneDeep from 'lodash/cloneDeep';
-import { parseInt } from '../util/common';
+import { toNumber } from '../util/common';
 import CommonUtils from '../util/common';
 
 class dmetTable {
@@ -63,13 +63,18 @@ class dmetTable {
             array.forEach((row = []) => {
                 if (Array.isArray(row)) {
                     const key = CommonUtils.generateId();
+                    const value = row.map(toNumber);
                     this.#array.push({ key, value: row });
                     this.#object[key] = row;
-                    this.#origin.push(cloneDeep(row));
+                    this.#origin.push(cloneDeep(value));
                 } else if (typeof row === 'object' && row.key) {
-                    this.#array.push(row);
-                    this.#object[row.key] = row.value;
-                    this.#origin.push(cloneDeep(row.value));
+                    const newRow = {
+                        key: row.key,
+                        value: row.value.map(toNumber)
+                    };
+                    this.#array.push(newRow);
+                    this.#object[row.key] = newRow.value;
+                    this.#origin.push(cloneDeep(newRow.value));
                 }
             });
         }
@@ -216,7 +221,7 @@ class dmetTable {
     }
 
     #insert({ key = CommonUtils.generateId(), index, data = 0 } = {}) {
-        const value = parseInt(data);
+        const value = toNumber(data);
         let { value: row, x, y } = this.getRow(index);
         if (row && y > -1) {
             row.splice(y, 0, value);
@@ -245,7 +250,7 @@ class dmetTable {
     }
 
     #replace({ key, index, data, newKey = CommonUtils.generateId() }) {
-        const value = parseInt(data);
+        const value = toNumber(data);
         if (!key) {
             key = index;
         }
