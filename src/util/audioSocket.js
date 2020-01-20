@@ -7,8 +7,7 @@ const DEFAULT_ADDR = `${window.location.hostname}/webaudio`;
 
 export function voiceApiConnect(addr = DEFAULT_ADDR, language = 'Kor', cb) {
     return new Promise((resolve, reject) => {
-        const { host, port } = addr;
-        const client = io.connect(`https://${host}`, {
+        const client = io.connect(`https://${addr}`, {
             query: `language=${language}`,
             secure: true,
             reconnect: true,
