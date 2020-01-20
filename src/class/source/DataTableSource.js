@@ -108,6 +108,7 @@ class DataTableSource {
 
     toJSON() {
         return {
+            _id: this.#data._id,
             id: this.#id,
             project: Entry.projectId,
             fields: this.fields,
