@@ -10,12 +10,13 @@ class DataTableSource {
     #cloudDate = null;
     #chart = [];
     #cloudVariable = CloudVariable.getInstance();
-
+    #source;
     constructor(source = {}) {
         const { name, id = Entry.generateHash(), object = null, chart, data } = source;
         this.#name = name;
         this.#id = id;
         this.#object = object;
+        this.#source = source;
         this.#data = new dmetTable(source);
         this.#chart = chart;
         // 정지시 data 초기화.
@@ -43,6 +44,13 @@ class DataTableSource {
     get array() {
         const { array } = this.#data;
         return array;
+    }
+
+    setArray({ chart, ...data }) {
+        this.#chart = chart;
+        this.#source = { ...this.#source, ...data };
+        this.#data.from(this.#source);
+        Entry.dispatchEvent('saveProjectTable', this.toJSON());
     }
 
     getValue(index) {

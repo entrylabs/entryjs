@@ -64,8 +64,8 @@ class dmetTable {
                 if (Array.isArray(row)) {
                     const key = CommonUtils.generateId();
                     const value = row.map(toNumber);
-                    this.#array.push({ key, value: row });
-                    this.#object[key] = row;
+                    this.#array.push({ key, value });
+                    this.#object[key] = value;
                     this.#origin.push(cloneDeep(value));
                 } else if (typeof row === 'object' && row.key) {
                     const newRow = {
