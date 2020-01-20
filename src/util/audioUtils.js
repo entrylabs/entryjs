@@ -3,7 +3,7 @@
  * @author extracold1209, wodnjs6512
  */
 
-const { voiceApiConnect } = require('./websocket');
+const { voiceApiConnect } = require('./audioSocket');
 const toWav = require('audiobuffer-to-wav');
 
 const STATUS_CODE = {
@@ -11,10 +11,7 @@ const STATUS_CODE = {
     NOT_RECOGNIZED: 'NOT_RECOGNIZED',
 };
 
-const VOICE_SERVER_ADDR = {
-    host: window.location.hostname,
-    port: 4001,
-};
+const VOICE_SERVER_ADDR = `${window.location.hostname}/webaudio`;
 
 class AudioUtils {
     get currentVolume() {
