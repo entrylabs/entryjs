@@ -108,7 +108,6 @@ class AudioUtils {
                     case STATUS_CODE.CONNECTED:
                         break;
                     case STATUS_CODE.NOT_RECOGNIZED:
-                        this._socketClient.disconnect();
                         this.stopRecord();
                         resolve('');
                         break;
@@ -116,7 +115,6 @@ class AudioUtils {
                         const parsed = JSON.parse(e);
                         const isArray = Array.isArray(parsed);
                         if (isArray) {
-                            this._socketClient.disconnect();
                             this.stopRecord();
                             resolve(parsed[0]);
                         }
@@ -142,6 +140,7 @@ class AudioUtils {
      * @param {boolean} [option.silent=false]
      */
     async stopRecord(option = { silent: false }) {
+        this._socketClient.disconnect();
         if (!this.isAudioInitComplete || !this.isRecording) {
             return;
         }

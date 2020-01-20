@@ -13,6 +13,7 @@ export function voiceApiConnect(addr = DEFAULT_ADDR, language = 'Kor', cb) {
             reconnect: true,
             rejectUnauthorized: false,
             timeout: GATEWAY_CONNECT_TIMEOUT,
+            transports: ['websocket'],
         });
         // client.onerror = function(error) {
         //     console.log('Connect Error: ' + JSON.stringify(error));
