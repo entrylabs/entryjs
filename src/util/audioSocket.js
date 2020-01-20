@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 
 const GATEWAY_CONNECT_TIMEOUT = 5000;
 
-const DEFAULT_ADDR = `${window.location.hostname}/webaudio`;
+const DEFAULT_ADDR = `${window.location.hostname}`;
 
 export function voiceApiConnect(addr = DEFAULT_ADDR, language = 'Kor', cb) {
     return new Promise((resolve, reject) => {

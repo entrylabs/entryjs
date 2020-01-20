@@ -11,7 +11,7 @@ const STATUS_CODE = {
     NOT_RECOGNIZED: 'NOT_RECOGNIZED',
 };
 
-const VOICE_SERVER_ADDR = `${window.location.hostname}/webaudio`;
+const VOICE_SERVER_ADDR = `${window.location.hostname}`;
 
 class AudioUtils {
     get currentVolume() {
