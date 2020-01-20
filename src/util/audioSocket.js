@@ -3,15 +3,12 @@ import io from 'socket.io-client';
 
 const GATEWAY_CONNECT_TIMEOUT = 5000;
 
-const ADDR = {
-    host: window.location.hostname,
-    port: 4001,
-};
+const DEFAULT_ADDR = `${window.location.hostname}/webaudio`;
 
-export function voiceApiConnect(addr = ADDR, language = 'Kor', cb) {
+export function voiceApiConnect(addr = DEFAULT_ADDR, language = 'Kor', cb) {
     return new Promise((resolve, reject) => {
-        const { host, port } = ADDR;
-        const client = io.connect(`https://${host}:${port}`, {
+        const { host, port } = addr;
+        const client = io.connect(`https://${host}`, {
             query: `language=${language}`,
             secure: true,
             reconnect: true,
