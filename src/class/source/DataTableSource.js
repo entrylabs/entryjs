@@ -49,6 +49,11 @@ class DataTableSource {
         return this.#data.getValue(index);
     }
 
+    isExist(index) {
+        const isExist = this.getValue(index);
+        return !!(isExist === 0 || isExist === null || isExist);
+    }
+
     appendValue(index, data) {
         return new Promise(async (resolve, reject) => {
             try {

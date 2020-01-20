@@ -147,7 +147,11 @@ module.exports = {
                     const row = script.getNumberValue('ROW', script);
                     const { dataTable } = Entry.playground;
                     const table = dataTable.getSource(tableId, sprite);
-                    table.insertValue(row);
+                    if (table.isExist([row])) {
+                        table.insertValue(row);
+                    } else {
+                        throw new Error('data not exist');
+                    }
                     return script.callReturn();
                 },
                 syntax: {
@@ -218,7 +222,11 @@ module.exports = {
                     const row = script.getNumberValue('ROW', script);
                     const { dataTable } = Entry.playground;
                     const table = dataTable.getSource(tableId, sprite);
-                    table.deleteValue(row);
+                    if (table.isExist([row])) {
+                        table.deleteValue(row);
+                    } else {
+                        throw new Error('data not exist');
+                    }
                     return script.callReturn();
                 },
                 syntax: {
@@ -324,11 +332,10 @@ module.exports = {
                     const value = script.getValue('VALUE', script);
                     const { dataTable } = Entry.playground;
                     const table = dataTable.getSource(tableId, sprite);
-                    const isExist = table.getValue([row, col]);
-                    if (isExist === 0 || isExist === null || isExist) {
+                    if (table.isExist([row])) {
                         table.replaceValue([row, col], value);
                     } else {
-                        table.insertValue([row, col], value);
+                        throw new Error('data not exist');
                     }
                     return script.callReturn();
                 },
@@ -452,13 +459,12 @@ module.exports = {
                     const tableId = script.getField('MATRIX', script);
                     const row = script.getNumberValue('ROW', script);
                     const col = script.getNumberValue('COL', script);
-                    try {
-                        const { dataTable } = Entry.playground;
-                        const table = dataTable.getSource(tableId, sprite);
+                    const { dataTable } = Entry.playground;
+                    const table = dataTable.getSource(tableId, sprite);
+                    if (table.isExist([row, col])) {
                         return table.getValue([row, col]);
-                    } catch (e) {
-                        return 0;
                     }
+                    throw new Error('data not exist');
                 },
                 syntax: {
                     js: [],
@@ -555,6 +561,88 @@ module.exports = {
                         default:
                             return 0;
                     }
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
+            open_table_chart: {
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'tables',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/block_analysis.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null, null],
+                    type: 'open_table_chart',
+                },
+                pyHelpDef: {
+                    params: [
+                        {
+                            type: 'text',
+                            params: ['A&value'],
+                        },
+                        null,
+                    ],
+                    type: 'open_table_chart',
+                },
+                paramsKeyMap: {
+                    MATRIX: 0,
+                },
+                class: 'analysis',
+                isNotFor: ['analysis'],
+                func(sprite, script) {
+                    console.log('open_table_chart');
+                    return script.callReturn();
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
+            close_table_chart: {
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/block_analysis.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null, null],
+                    type: 'close_table_chart',
+                },
+                pyHelpDef: {
+                    params: [null],
+                    type: 'close_table_chart',
+                },
+                paramsKeyMap: {},
+                class: 'analysis',
+                isNotFor: ['analysis'],
+                func(sprite, script) {
+                    console.log('close_table_chart');
+                    return script.callReturn();
                 },
                 syntax: {
                     js: [],
