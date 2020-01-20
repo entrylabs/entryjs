@@ -48,6 +48,7 @@ Entry.init = function(container, options) {
         this.type = 'phone';
     }
     this.initialize_();
+    this.initSoundQueue_();
     /** @type {!Element} */
     this.view_ = container;
     $(this.view_).addClass('entry');
@@ -101,31 +102,6 @@ Entry.init = function(container, options) {
     } else {
         createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin]);
     }
-
-    Entry.soundQueue = new createjs.LoadQueue();
-    Entry.soundQueue.installPlugin(createjs.Sound);
-    Entry.soundInstances = [];
-    Entry.soundQueue.urls = new Set();
-    Entry.soundQueue.total = 0;
-    Entry.soundQueue.loadCallback = (src) => {
-        // if (!Entry.soundQueue.urls.has(src)) {
-        //     return;
-        // }
-        Entry.soundQueue.total = Math.max(Entry.soundQueue.total, Entry.soundQueue.urls.size);
-        Entry.soundQueue.urls.delete(src);
-        const now = Entry.soundQueue.urls.size;
-        if (!Entry.soundQueue.loadComplete && now < 1) {
-            Entry.soundQueue.loadComplete = true;
-            Entry.dispatchEvent('soundLoaded');
-        }
-    };
-    Entry.soundQueue.on('fileload', (event) => {
-        Entry.soundQueue.loadCallback(event.item.src);
-    });
-    Entry.soundQueue.on('error', (event) => {
-        console.error('load sound, error', event);
-        Entry.soundQueue.loadCallback(event.data.src);
-    });
 
     Entry.loadAudio_(
         [
@@ -287,6 +263,32 @@ Entry.disposeContainer = function() {
     }
 };
 
+Entry.initSoundQueue_ = function() {
+    Entry.soundQueue = new createjs.LoadQueue();
+    Entry.soundQueue.installPlugin(createjs.Sound);
+    Entry.soundInstances = [];
+    Entry.soundQueue.urls = new Set();
+    Entry.soundQueue.total = 0;
+    Entry.soundQueue.loadCallback = (src) => {
+        if (!Entry.soundQueue.urls.has(src)) {
+            return;
+        }
+        Entry.soundQueue.total = Math.max(Entry.soundQueue.total, Entry.soundQueue.urls.size);
+        Entry.soundQueue.urls.delete(src);
+        const now = Entry.soundQueue.urls.size;
+        if (!Entry.soundQueue.loadComplete && now < 1) {
+            Entry.soundQueue.loadComplete = true;
+            Entry.dispatchEvent('soundLoaded');
+        }
+    };
+    Entry.soundQueue.on('fileload', (event) => {
+        Entry.soundQueue.loadCallback(event.item.src);
+    });
+    Entry.soundQueue.on('error', (event) => {
+        console.error('load sound, error', event);
+        Entry.soundQueue.loadCallback(event.data.src);
+    });
+};
 /**
  * Initialize html DOM view for entry.
  * This work differently with initialize option.
