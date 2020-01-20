@@ -50,7 +50,6 @@ class DataTableSource {
         this.#chart = chart;
         this.#source = { ...this.#source, ...data };
         this.#data.from(this.#source);
-        Entry.dispatchEvent('saveProjectTable', this.toJSON());
     }
 
     getValue(index) {
