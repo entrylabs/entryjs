@@ -210,7 +210,7 @@ class dmetTable {
         }
     }
 
-    #append({ key = CommonUtils.generateId(), index = this.#array.length + 1, data = [] } = {}) {
+    #append({ key = CommonUtils.generateId(), index = this.#array.length + 1, data = [0] } = {}) {
         if (Array.isArray(data)) {
             this.#object[key] = data;
             this.#array.splice(index, 0, { key, value: data });
