@@ -3,7 +3,7 @@
  * @author extracold1209, wodnjs6512
  */
 
-const { voiceApiConnect } = require('./websocket');
+const { voiceApiConnect } = require('./audioSocket');
 const toWav = require('audiobuffer-to-wav');
 
 const STATUS_CODE = {
