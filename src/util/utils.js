@@ -29,7 +29,7 @@ Entry.loadProject = function(project) {
         Entry.stateManager.startIgnore();
     }
     Entry.projectId = project._id;
-    Entry.variableContainer.setVariables(project.variables);
+    Entry.variableContainer.setVariables(Entry.Utils.combineCloudVariable(project));
     Entry.variableContainer.setMessages(project.messages);
     Entry.variableContainer.setFunctions(project.functions);
     Entry.scene.addScenes(project.scenes);
@@ -172,7 +172,6 @@ Entry.setBlock = function(objectType, XML) {
  */
 Entry.beforeUnload = function(e) {
     Entry.hw.closeConnection();
-    Entry.variableContainer.updateCloudVariables();
     if (Entry.type === 'workspace') {
         if (localStorage && Entry.interfaceState) {
             localStorage.setItem(
@@ -2799,4 +2798,17 @@ Entry.Utils.isUsedBlockType = function(blockType) {
         return true;
     }
     return Entry.variableContainer.isUsedBlockTypeInFunction(blockType);
+};
+
+Entry.Utils.combineCloudVariable = ({ variables, cloudVariable }) => {
+    if (!Array.isArray(cloudVariable)) {
+        return variables;
+    }
+    return variables.map((item) => {
+        const cloud = cloudVariable.find(({ id }) => id === item.id);
+        if (cloud) {
+            return { ...item, ...cloud };
+        }
+        return item;
+    });
 };

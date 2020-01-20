@@ -5,6 +5,7 @@
 
 import { GEHelper } from '../graphicEngine/GEHelper';
 import audioUtils from '../util/audioUtils';
+import ExecuteEntity from './ExecuteEntity';
 
 /**
  * Class for a engine.
@@ -13,6 +14,7 @@ import audioUtils from '../util/audioUtils';
  */
 Entry.Engine = class Engine {
     constructor() {
+        this.executeEntity = new ExecuteEntity();
         this.state = 'stop';
         this.popup = null;
         this.isUpdating = true;
@@ -512,7 +514,8 @@ Entry.Engine = class Engine {
             return;
         }
         clearInterval(this.ticker);
-        this.ticker = setInterval(this.update, Math.floor(1000 / FPS));
+        Entry.tickTime = Math.floor(1000 / FPS);
+        this.ticker = setInterval(this.update, Entry.tickTime);
         Entry.FPS = FPS;
     }
 
@@ -525,7 +528,8 @@ Entry.Engine = class Engine {
         GEHelper.Ticker.setFPS(Entry.FPS);
 
         if (!this.ticker) {
-            this.ticker = setInterval(this.update, Math.floor(1000 / Entry.FPS));
+            Entry.tickTime = Math.floor(1000 / Entry.FPS);
+            this.ticker = setInterval(this.update, Entry.tickTime);
         }
     }
 
@@ -681,6 +685,7 @@ Entry.Engine = class Engine {
         Entry.addActivity('stop');
 
         container.mapEntity((entity) => {
+            this.executeEntity.stop(entity);
             entity.loadSnapshot();
             entity.object.filters = [];
             entity.resetFilter();
@@ -871,9 +876,9 @@ Entry.Engine = class Engine {
      * @param {Entry.EntryObject} object
      * @param {string} eventName
      */
-    raiseEvent(entity, eventName) {
-        entity.parent.script.raiseEvent(eventName, entity);
-    }
+    raiseEvent = (entity, eventName) => {
+        entity.parent.script.raiseEvent(eventName, this.executeEntity.get(entity));
+    };
 
     /**
      * @param {string} eventName
