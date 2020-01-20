@@ -1,6 +1,8 @@
 import fetch from 'isomorphic-fetch';
 import _parseInt from 'lodash/parseInt';
 import _isNaN from 'lodash/isNaN';
+import cuid from 'cuid';
+import uid from 'uid';
 
 const _memoize = require('lodash/memoize');
 const _assign = require('lodash/assign');
@@ -47,6 +49,9 @@ const Common = {
             return str;
         }
         return result;
+    },
+    generateId() {
+        return uid(8) + cuid();
     },
 };
 

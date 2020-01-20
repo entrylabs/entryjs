@@ -1930,6 +1930,9 @@ Entry.Playground = class Playground {
             if (this.getViewMode() === 'sound') {
                 this.injectSound();
             }
+            if (this.getViewMode() === 'table') {
+                this.injectTable();
+            }
         }
     }
 
@@ -2029,6 +2032,10 @@ Entry.Playground = class Playground {
                 );
             }
         });
+    }
+
+    _removeTable(table, element) {
+        Entry.playground.dataTable.removeSource(table);
     }
 
     generatePictureElement(picture) {
