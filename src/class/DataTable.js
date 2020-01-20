@@ -58,6 +58,16 @@ class DataTable {
     #generateView() {
         this.dataAnalytics = new DataAnalytics({ container: this.#view, data: {} });
     }
+
+    getTableJSON() {
+        return this.tables.filter(_.identity).map((v) => (v.toJSON ? v.toJSON() : v));
+    }
+
+    setTables(tables = []) {
+        tables.forEach((table) => {
+            this.addSource(table);
+        });
+    }
 }
 
 export default DataTable;
