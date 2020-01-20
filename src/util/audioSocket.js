@@ -30,15 +30,15 @@ export function voiceApiConnect(addr = DEFAULT_ADDR, language = 'Kor', cb) {
             audioUtils.isRecording = false;
         });
 
-        socket.on('connect_error', (error) => {
+        client.on('connect_error', (error) => {
             console.error('connect_error', error);
             reject(error);
         });
-        socket.on('connect_timeout', (timeout) => {
+        client.on('connect_timeout', (timeout) => {
             console.error('connect_timeout', timeout);
             reject(timeout);
         });
-        socket.on('error', (error) => {
+        client.on('error', (error) => {
             console.error('error', error);
             reject(error);
         });
