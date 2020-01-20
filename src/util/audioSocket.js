@@ -16,13 +16,12 @@ export function voiceApiConnect(addr = DEFAULT_ADDR, language = 'Kor', cb) {
         // client.onerror = function(error) {
         //     console.log('Connect Error: ' + JSON.stringify(error));
         // };
-        // client.on('open', () => {
-        //     console.log('NSASR Voice Server Connected');
-        //     resolve(client);
-        // });
-        client.on('connect', () => {
+        client.on('open', () => {
             console.log('NSASR Voice Server Connected');
             resolve(client);
+        });
+        client.on('connect', () => {
+            console.log('socket connected');
         });
         client.on('disconnect', () => {
             Entry.engine.hideAllAudioPanel();
