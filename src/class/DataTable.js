@@ -2,13 +2,6 @@ import { DataAnalytics } from '@entrylabs/tool';
 import _find from 'lodash/find';
 import _findIndex from 'lodash/findIndex';
 import DataTableSource from './source/DataTableSource';
-import CommonUtils from '../util/common';
-
-const defalutValue = {
-    name: Lang.Workspace.data_table,
-    fields: [1],
-    data: [{ key: CommonUtils.generateId(), value: [0] }],
-};
 
 class DataTable {
     #tables = [];
@@ -40,7 +33,7 @@ class DataTable {
     }
 
     addSource(table) {
-        let data = table || defalutValue;
+        let data = table || { name: Lang.Workspace.data_table };
         data.name = Entry.getOrderedName(data.name, this.#tables, 'name');
         const isDataTableSource = data instanceof DataTableSource;
         Entry.do('dataTableAddSource', isDataTableSource ? data : new DataTableSource(data));

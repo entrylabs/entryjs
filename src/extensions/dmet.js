@@ -205,15 +205,14 @@ class dmetTable {
         }
     }
 
-    #append({ key = CommonUtils.generateId(), index = this.#array.length + 1, data = 0 } = {}) {
-        const value = parseInt(data);
-        let { value: row, x } = this.getRow(index);
-        if (!row) {
-            row = this.#object[key] = [];
-            this.#array[x] = { key, value: row };
+    #append({ key = CommonUtils.generateId(), index = this.#array.length + 1, data = [] } = {}) {
+        if (Array.isArray(data)) {
+            this.#object[key] = data;
+            this.#array.splice(index, 0, { key, value: data });
+        } else {
+            console.warn('data is not array', key, data);
         }
-        row.push(value);
-        return this.getOperation({ type: 'append', key, index, data: value });
+        return this.getOperation({ type: 'append', key, index, data });
     }
 
     #insert({ key = CommonUtils.generateId(), index, data = 0 } = {}) {
