@@ -1,5 +1,11 @@
 module.exports = {
     getBlocks() {
+        const getSubMenus = (value) => {
+            const { dataTable } = Entry.playground;
+            const { fields = [] } = dataTable.getSource(value) || {};
+            return fields.map((label, index) => [label, index + 1]);
+        };
+
         return {
             analizyDataAddButton: {
                 skeleton: 'basic_button',
@@ -18,16 +24,7 @@ module.exports = {
                 events: {
                     mousedown: [
                         function() {
-                            //open popup .. 새로 추가될 때만 데이터 탭으로.
                             Entry.do('playgroundClickAddTable');
-                            // const table = new DataTableSource({
-                            //     name: `test_table_${Entry.generateHash()}`,
-                            //     fields: [
-                            //         `attr_${Entry.generateHash()}`,
-                            //         `attr_${Entry.generateHash()}`,
-                            //     ],
-                            // });
-                            // Entry.do('dataTableAddSource', table);
                         },
                     ],
                 },
@@ -250,14 +247,7 @@ module.exports = {
                     {
                         type: 'DropdownDynamic',
                         value: null,
-                        menuName(value) {
-                            const { dataTable } = Entry.playground;
-                            const table = dataTable.getSource(value);
-                            if (!table) {
-                                return [];
-                            }
-                            return table.fields.map((label, index) => [label, index + 1]);
-                        },
+                        menuName: getSubMenus,
                         targetIndex: 0,
                         needDeepCopy: true,
                         fontSize: 11,
@@ -426,14 +416,7 @@ module.exports = {
                     {
                         type: 'DropdownDynamic',
                         value: null,
-                        menuName(value) {
-                            const { dataTable } = Entry.playground;
-                            const table = dataTable.getSource(value);
-                            if (!table) {
-                                return [];
-                            }
-                            return table.fields.map((label, index) => [label, index + 1]);
-                        },
+                        menuName: getSubMenus,
                         targetIndex: 0,
                         needDeepCopy: true,
                         fontSize: 11,
@@ -498,14 +481,7 @@ module.exports = {
                     {
                         type: 'DropdownDynamic',
                         value: null,
-                        menuName(value) {
-                            const { dataTable } = Entry.playground;
-                            const table = dataTable.getSource(value);
-                            if (!table) {
-                                return [];
-                            }
-                            return table.fields.map((label, index) => [label, index + 1]);
-                        },
+                        menuName: getSubMenus,
                         targetIndex: 0,
                         needDeepCopy: true,
                         fontSize: 11,

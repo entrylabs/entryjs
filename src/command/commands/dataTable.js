@@ -10,14 +10,15 @@
         do(table) {
             const { dataTable } = Entry.playground;
             if (dataTable) {
-                dataTable.addSource(table);
+                dataTable.tables.unshift(table);
+                Entry.playground.reloadPlayground();
             }
         },
         state(table) {
-            return [table.toJSON()];
+            return [table && table.toJSON()];
         },
         log(table) {
-            return [['table', table.toJSON()]];
+            return [['table', table && table.toJSON()]];
         },
         recordable: RECORDABLE.SUPPORT,
         validate: false,
@@ -26,15 +27,21 @@
     };
 
     c[COMMAND_TYPES.dataTableRemoveSource] = {
-        do(table) {
+        do(table = {}) {
             const { dataTable } = Entry.playground;
-            dataTable.removeSource(table);
+            const index = dataTable.getIndex(table);
+            if (index < 0) {
+                console.warn('not found table', table);
+                return;
+            }
+            dataTable.tables.splice(index, 1);
+            Entry.playground.reloadPlayground();
         },
         state(table) {
-            return [table.toJSON()];
+            return [table && table.toJSON()];
         },
         log(table) {
-            return [['table', table.toJSON()]];
+            return [['table', table && table.toJSON()]];
         },
         recordable: RECORDABLE.SUPPORT,
         validate: false,

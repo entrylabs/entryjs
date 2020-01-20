@@ -711,116 +711,6 @@ Entry.Playground = class Playground {
             .appendTo(tableView);
 
         this.dataTable = new DataTable(tableDom);
-        this.dataTable.addSource({
-            _id: '534578cf19e9dc00001a3ac2',
-            name: 'test1',
-            fields: ['요리명', '재료', '조리법'],
-            data: [
-                {
-                    key: '12df',
-                    value: ['된장찌개', '된장', '끓인다'],
-                },
-                {
-                    key: '532h',
-                    value: ['파전', '23', '굽는다'],
-                },
-                {
-                    key: '232h',
-                    value: ['파전', '55', '굽는다'],
-                },
-            ],
-            chart: [
-                {
-                    title: '',
-                    type: 'bar',
-                    xIndex: 0,
-                    yIndex: [0, 1],
-                },
-            ],
-            type: '_system_',
-            // for admin
-            category: {
-                main: 'public',
-            },
-            info: {
-                rows: 2,
-                modifyDate: '2019-12-27',
-                label: {
-                    ko: '',
-                    en: '',
-                },
-                provider: {
-                    ko: '한국 국제 교류재단 문화예술사업부',
-                    en: '',
-                },
-
-                summary: {
-                    ko:
-                        '800여 가지의 한식을 재료별(곡물, 콩, 채소, 고기 등), 조리법별(밥, 국, 찌개, 구이 등)로 분류한 데이터입니다.',
-                    en: '',
-                },
-                description: {
-                    ko:
-                        '한국국제교류재단은 한국인의 매일 먹는 밥, 반찬, 찌개, 국부터 전통음힉에 이르기까지 800여 가지가 넘는 한식의 보다 정확한 정보를 스마트폰으로 쉽게 찾고, 듣고, 공유할 수 있도록 ‘Korean Food Guide 800’ 앱으로 출시하였다. 이에 800여가지의 한식을 재료별(곡물, 콩, 채소, 고기 등) 조리법별(밥, 국, 찌개, 구이 등)로 분류한 엑셀데이터를 공공데이터로 공개한다. 분류한 엑셀데이터를 공공데이터로 공개한다. 한국국제교류재단은 한국인의 매일 먹는 밥, 반찬, 찌개, 국부터 전통음힉에 이르기까지 800여 가지가 넘는 한식의 보다 정확한 정보를 스마트폰으로 쉽게 찾고, 듣고, 공유할 수 있도록 ‘Korean Food Guide 800’ 앱으로 출시하였다. 이에 800여가지의 한식을 재료별(곡물, 콩, 채소, 고기 등) 조리법별(밥, 국, 찌개, 구이 등)로 분류한 엑셀데이터를 공공데이터로 공개한다. 분류한 엑셀데이터를 공공데이터로 공개한다.',
-                    en: '',
-                },
-            },
-        });
-        this.dataTable.addSource({
-            _id: '534578cf19e9dc00001a3ac2',
-            name: 'test2',
-            fields: ['요리명', '재료', '조리법'],
-            data: [
-                {
-                    key: '12df',
-                    value: ['된장찌개', '된장', '끓인다'],
-                },
-                {
-                    key: '532h',
-                    value: ['파전', '23', '굽는다'],
-                },
-                {
-                    key: '232h',
-                    value: ['파전', '55', '굽는다'],
-                },
-            ],
-            chart: [
-                {
-                    title: '',
-                    type: 'bar',
-                    xIndex: 0,
-                    yIndex: [0, 1],
-                },
-            ],
-            type: '_system_',
-            // for admin
-            category: {
-                main: 'public',
-            },
-            info: {
-                rows: 2,
-                modifyDate: '2019-12-27',
-                label: {
-                    ko: '',
-                    en: '',
-                },
-                provider: {
-                    ko: '한국 국제 교류재단 문화예술사업부',
-                    en: '',
-                },
-
-                summary: {
-                    ko:
-                        '800여 가지의 한식을 재료별(곡물, 콩, 채소, 고기 등), 조리법별(밥, 국, 찌개, 구이 등)로 분류한 데이터입니다.',
-                    en: '',
-                },
-                description: {
-                    ko:
-                        '한국국제교류재단은 한국인의 매일 먹는 밥, 반찬, 찌개, 국부터 전통음힉에 이르기까지 800여 가지가 넘는 한식의 보다 정확한 정보를 스마트폰으로 쉽게 찾고, 듣고, 공유할 수 있도록 ‘Korean Food Guide 800’ 앱으로 출시하였다. 이에 800여가지의 한식을 재료별(곡물, 콩, 채소, 고기 등) 조리법별(밥, 국, 찌개, 구이 등)로 분류한 엑셀데이터를 공공데이터로 공개한다. 분류한 엑셀데이터를 공공데이터로 공개한다. 한국국제교류재단은 한국인의 매일 먹는 밥, 반찬, 찌개, 국부터 전통음힉에 이르기까지 800여 가지가 넘는 한식의 보다 정확한 정보를 스마트폰으로 쉽게 찾고, 듣고, 공유할 수 있도록 ‘Korean Food Guide 800’ 앱으로 출시하였다. 이에 800여가지의 한식을 재료별(곡물, 콩, 채소, 고기 등) 조리법별(밥, 국, 찌개, 구이 등)로 분류한 엑셀데이터를 공공데이터로 공개한다. 분류한 엑셀데이터를 공공데이터로 공개한다.',
-                    en: '',
-                },
-            },
-        });
     }
 
     initSortableTableWidget() {
@@ -1644,6 +1534,8 @@ Entry.Playground = class Playground {
     removeExpansionBlocks(items) {
         Entry.expansion.banExpansionBlocks(items.map(({ name }) => name));
     }
+
+
     /**
      * Add sound
      * @param {sound model} sound
