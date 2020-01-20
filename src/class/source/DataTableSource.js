@@ -20,8 +20,7 @@ class DataTableSource {
         this.#chart = chart;
         // 정지시 data 초기화.
         Entry.addEventListener('stop', () => {
-            console.log('init tableVariable');
-            this.#data.from(source);
+            this.#data.from({ ...source, data: this.#data.origin });
         });
     }
 

@@ -1,3 +1,5 @@
+import _isNumber from 'lodash/isNumber';
+
 module.exports = {
     getBlocks() {
         const getSubMenus = (value) => {
@@ -323,7 +325,7 @@ module.exports = {
                     const { dataTable } = Entry.playground;
                     const table = dataTable.getSource(tableId, sprite);
                     const isExist = table.getValue([row, col]);
-                    if (isExist === 0 || isExist) {
+                    if (isExist === 0 || isExist === null || isExist) {
                         table.replaceValue([row, col], value);
                     } else {
                         table.insertValue([row, col], value);
@@ -528,7 +530,9 @@ module.exports = {
                     const col = script.getNumberValue('COL', script);
                     const { dataTable } = Entry.playground;
                     const table = dataTable.getSource(tableId, sprite);
-                    const array = table.array.map(({ data }) => data[col - 1] || 0);
+                    const array = table.array.map(({ value = [] }) =>
+                        _isNumber(value[col - 1]) ? value[col - 1] : 0
+                    );
                     const total = array.length;
                     const sum = (x, y) => x + y;
                     const square = (x) => x * x;

@@ -1,8 +1,9 @@
 import fetch from 'isomorphic-fetch';
 import _parseInt from 'lodash/parseInt';
 import _isNaN from 'lodash/isNaN';
-import cuid from 'cuid';
-import uid from 'uid';
+import _toNumber from 'lodash/toNumber';
+import _cuid from 'cuid';
+import _uid from 'uid';
 
 const _memoize = require('lodash/memoize');
 const _assign = require('lodash/assign');
@@ -44,14 +45,14 @@ const Common = {
         if (typeof str === 'number') {
             return str;
         }
-        const result = _parseInt(str);
+        const result = _toNumber(str);
         if (_isNaN(result)) {
             return str;
         }
         return result;
     },
     generateId() {
-        return uid(8) + cuid();
+        return _uid(8) + _cuid();
     },
 };
 

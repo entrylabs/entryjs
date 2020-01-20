@@ -2,7 +2,7 @@ import isPlainObject from 'lodash/isPlainObject';
 import mapValues from 'lodash/mapValues';
 import get from 'lodash/get';
 import set from 'lodash/set';
-import clone from 'lodash/clone';
+import cloneDeep from 'lodash/cloneDeep';
 import { parseInt } from '../util/common';
 import CommonUtils from '../util/common';
 
@@ -65,11 +65,11 @@ class dmetTable {
                     const key = CommonUtils.generateId();
                     this.#array.push({ key, value: row });
                     this.#object[key] = row;
-                    this.#origin.push(clone(row));
+                    this.#origin.push(cloneDeep(row));
                 } else if (typeof row === 'object' && row.key) {
                     this.#array.push(row);
                     this.#object[row.key] = row.value;
-                    this.#origin.push(clone(row.value));
+                    this.#origin.push(cloneDeep(row.value));
                 }
             });
         }
