@@ -1,15 +1,10 @@
-import cuid from 'cuid';
-import uid from 'uid';
 import isPlainObject from 'lodash/isPlainObject';
 import mapValues from 'lodash/mapValues';
 import get from 'lodash/get';
 import set from 'lodash/set';
 import clone from 'lodash/clone';
 import { parseInt } from '../util/common';
-
-function generateId() {
-    return uid(8) + cuid();
-}
+import CommonUtils from '../util/common';
 
 class dmetTable {
     constructor(array = [], id) {
@@ -20,7 +15,7 @@ class dmetTable {
     _id = undefined;
     __isUpdate = false;
     #id = '';
-    #key = generateId();
+    #key = CommonUtils.generateId();
     #object = {};
     #array = [];
     #origin = [];
@@ -67,7 +62,7 @@ class dmetTable {
         if (Array.isArray(array)) {
             array.forEach((row = []) => {
                 if (Array.isArray(row)) {
-                    const key = generateId();
+                    const key = CommonUtils.generateId();
                     this.#array.push({ key, value: row });
                     this.#object[key] = row;
                     this.#origin.push(clone(row));
@@ -210,7 +205,7 @@ class dmetTable {
         }
     }
 
-    #append({ key = generateId(), index = this.#array.length + 1, data = 0 } = {}) {
+    #append({ key = CommonUtils.generateId(), index = this.#array.length + 1, data = 0 } = {}) {
         const value = parseInt(data);
         let { value: row, x } = this.getRow(index);
         if (!row) {
@@ -221,7 +216,7 @@ class dmetTable {
         return this.getOperation({ type: 'append', key, index, data: value });
     }
 
-    #insert({ key = generateId(), index, data = 0 } = {}) {
+    #insert({ key = CommonUtils.generateId(), index, data = 0 } = {}) {
         const value = parseInt(data);
         let { value: row, x, y } = this.getRow(index);
         if (row && y > -1) {
@@ -250,7 +245,7 @@ class dmetTable {
         return this.getOperation({ type: 'delete', key });
     }
 
-    #replace({ key, index, data, newKey = generateId() }) {
+    #replace({ key, index, data, newKey = CommonUtils.generateId() }) {
         const value = parseInt(data);
         if (!key) {
             key = index;
@@ -273,7 +268,7 @@ class dmetList {
     _id = undefined;
     __isUpdate = false;
     #id = '';
-    #key = generateId();
+    #key = CommonUtils.generateId();
     #object = {};
     #array = [];
     #info = {};
@@ -305,7 +300,7 @@ class dmetList {
 
     set #data(array) {
         this.#array = array.map((data) => {
-            const key = generateId();
+            const key = CommonUtils.generateId();
             const item = {
                 key,
                 data,
@@ -446,7 +441,7 @@ class dmetList {
 
     #append({ key, data } = {}) {
         if (!key) {
-            key = generateId();
+            key = CommonUtils.generateId();
         }
         const newData = {
             key,
@@ -459,7 +454,7 @@ class dmetList {
 
     #insert({ key, index, data } = {}) {
         if (!key) {
-            key = generateId();
+            key = CommonUtils.generateId();
         }
         const newData = {
             key,
@@ -484,7 +479,7 @@ class dmetList {
         return this.getOperation({ type: 'delete', key });
     }
 
-    #replace({ key, data, newKey = generateId() }) {
+    #replace({ key, data, newKey = CommonUtils.generateId() }) {
         const item = this.get(key);
         if (!item) {
             throw { message: 'not found data' };
@@ -505,7 +500,7 @@ class dmetVariable {
 
     _id = undefined;
     #id = '';
-    #key = generateId();
+    #key = CommonUtils.generateId();
     #info = {};
     #value = '';
     #variableType = 'variable';
@@ -604,7 +599,7 @@ class dmet {
     }
 
     #original = { list: {}, variable: {} };
-    #id = generateId();
+    #id = CommonUtils.generateId();
     #list = {};
     #variable = {};
     #table = {};

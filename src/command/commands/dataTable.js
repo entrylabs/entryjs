@@ -12,13 +12,14 @@
             if (dataTable) {
                 dataTable.tables.unshift(table);
                 Entry.playground.reloadPlayground();
+                Entry.playground.refreshPlayground();
             }
         },
         state(table) {
-            return [table && table.toJSON()];
+            return [table];
         },
         log(table) {
-            return [['table', table && table.toJSON()]];
+            return [['table', table]];
         },
         recordable: RECORDABLE.SUPPORT,
         validate: false,
@@ -36,12 +37,13 @@
             }
             dataTable.tables.splice(index, 1);
             Entry.playground.reloadPlayground();
+            Entry.playground.refreshPlayground();
         },
         state(table) {
-            return [table && table.toJSON()];
+            return [table];
         },
         log(table) {
-            return [['table', table && table.toJSON()]];
+            return [['table', table]];
         },
         recordable: RECORDABLE.SUPPORT,
         validate: false,
