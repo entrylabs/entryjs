@@ -70,7 +70,6 @@ class AudioUtils {
             // 순서대로 노드 커넥션을 맺는다.
             this._connectNodes(streamSrc, analyserNode, biquadFilter, scriptNode, streamDest);
             scriptNode.onaudioprocess = this._handleScriptProcess(analyserNode);
-            console.log(scriptNode);
 
             this._audioContext = audioContext;
             this._userMediaStream = mediaStream;
