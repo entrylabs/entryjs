@@ -157,6 +157,7 @@ function getInitialCodeMap() {
 Entry.AI_UTILIZE_BLOCK.translate = {
     name: 'translate',
     imageName: 'papago.png',
+    sponserText: 'Powered by Naver',
     title: {
         ko: '번역',
         en: 'translate',
