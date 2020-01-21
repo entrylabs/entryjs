@@ -49,6 +49,7 @@ class CloudVariableExtension {
         }
         const { url, query } = this.cvServer;
         const socket = io(url, {
+            path: '/cv',
             query: {
                 q: query,
             },
