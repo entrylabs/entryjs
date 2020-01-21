@@ -56,11 +56,8 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             },
             class: 'audio',
             isNotFor: ['audio'],
-            func(sprite, script) {
-                return new PromiseManager().Promise(async (resolve) => {
-                    const result = await audioUtils.checkUserMicAvailable();
-                    resolve(result);
-                });
+            async func(sprite, script) {
+                return await audioUtils.checkUserMicAvailable();
             },
             syntax: {
                 js: [],

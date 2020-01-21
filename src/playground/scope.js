@@ -174,11 +174,15 @@ class Scope {
     }
 
     run(entity, isValue) {
+        const schema = this.block.getSchema();
+        if (this.isCondition) {
+            return schema.func.call(this, entity, this);
+        }
         const values = this.getParams();
         const isPromise = values.some((value) => {
             return value instanceof Promise;
         });
-        const schema = this.block.getSchema();
+        // const schema = this.block.getSchema();
         if (!schema.func) {
             return;
         }

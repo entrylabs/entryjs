@@ -50,18 +50,24 @@ class AudioUtils {
             const mediaStream = await navigator.mediaDevices.getUserMedia({
                 audio: true,
             });
-            const audioContext = new AudioContext({ sampleRate: 16000 });
+            if (!window.AudioContext) {
+                if (window.webkitAudioContext) {
+                    window.AudioContext = window.webkitAudioContext;
+                }
+            }
+            const audioContext = new window.AudioContext({ sampleRate: 16000 });
             const streamSrc = audioContext.createMediaStreamSource(mediaStream);
             const analyserNode = audioContext.createAnalyser();
             const biquadFilter = audioContext.createBiquadFilter();
             biquadFilter.type = 'highpass';
-            biquadFilter.frequency.value = 30;
+            biquadFilter.frequency.value = 20;
             const scriptNode = audioContext.createScriptProcessor(4096, 1, 1);
             const streamDest = audioContext.createMediaStreamDestination();
             const mediaRecorder = new MediaRecorder(streamDest.stream);
             // 순서대로 노드 커넥션을 맺는다.
             this._connectNodes(streamSrc, analyserNode, biquadFilter, scriptNode, streamDest);
             scriptNode.onaudioprocess = this._handleScriptProcess(analyserNode);
+            console.log(scriptNode);
 
             this._audioContext = audioContext;
             this._userMediaStream = mediaStream;
@@ -134,7 +140,7 @@ class AudioUtils {
     }
 
     _stopMediaRecorder() {
-        if (this._mediaRecorder.state == 'recording') {
+        if (this._mediaRecorder.state == 'recording' || this._mediaRecorder.state === 'paused') {
             this._mediaRecorder.stop();
         }
     }
@@ -192,10 +198,15 @@ class AudioUtils {
     }
 
     _isBrowserSupportAudio() {
+        console.log(
+            'supported?? : ',
+            navigator.mediaDevices && navigator.mediaDevices.getUserMedia && MediaRecorder
+        );
         return navigator.mediaDevices && navigator.mediaDevices.getUserMedia && MediaRecorder;
     }
 
     _handleScriptProcess = (analyserNode) => (audioProcessingEvent) => {
+        console.log('_handleScriptProcess');
         const array = new Uint8Array(analyserNode.frequencyBinCount);
         analyserNode.getByteFrequencyData(array);
 
