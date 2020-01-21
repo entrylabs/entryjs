@@ -19,7 +19,6 @@ class AudioUtils {
     }
 
     constructor() {
-        this.isAudioSupport = this._isBrowserSupportAudio(); // 브라우저 지원 확인
         this.isAudioInitComplete = false; // 유저 인풋 연결 확인
         this.isRecording = false;
         this._userMediaStream = undefined;
@@ -39,6 +38,10 @@ class AudioUtils {
     }
 
     async initUserMedia() {
+        if (!this.isAudioSupport) {
+            this.isAudioSupport = this._isBrowserSupportAudio(); // 브라우저 지원 확인
+        }
+
         if (this.isAudioInitComplete) {
             return;
         }
@@ -50,18 +53,24 @@ class AudioUtils {
             const mediaStream = await navigator.mediaDevices.getUserMedia({
                 audio: true,
             });
-            const audioContext = new AudioContext({ sampleRate: 16000 });
+            if (!window.AudioContext) {
+                if (window.webkitAudioContext) {
+                    window.AudioContext = window.webkitAudioContext;
+                }
+            }
+            const audioContext = new window.AudioContext({ sampleRate: 16000 });
             const streamSrc = audioContext.createMediaStreamSource(mediaStream);
             const analyserNode = audioContext.createAnalyser();
             const biquadFilter = audioContext.createBiquadFilter();
             biquadFilter.type = 'highpass';
-            biquadFilter.frequency.value = 60;
+            biquadFilter.frequency.value = 20;
             const scriptNode = audioContext.createScriptProcessor(4096, 1, 1);
             const streamDest = audioContext.createMediaStreamDestination();
             const mediaRecorder = new MediaRecorder(streamDest.stream);
             // 순서대로 노드 커넥션을 맺는다.
             this._connectNodes(streamSrc, analyserNode, biquadFilter, scriptNode, streamDest);
             scriptNode.onaudioprocess = this._handleScriptProcess(analyserNode);
+            console.log(scriptNode);
 
             this._audioContext = audioContext;
             this._userMediaStream = mediaStream;
@@ -92,10 +101,15 @@ class AudioUtils {
             if (this._audioContext.state === 'suspended') {
                 await this.initUserMedia();
             }
-            const socketClient = await voiceApiConnect(VOICE_SERVER_ADDR, language, (data) => {
-                this.result = data;
-            });
-            this._socketClient = socketClient;
+
+            try {
+                const socketClient = await voiceApiConnect(VOICE_SERVER_ADDR, language, (data) => {
+                    this.result = data;
+                });
+                this._socketClient = socketClient;
+            } catch (err) {
+                console.log(err);
+            }
 
             this._audioChunks = [];
 
@@ -130,7 +144,7 @@ class AudioUtils {
     }
 
     _stopMediaRecorder() {
-        if (this._mediaRecorder.state == 'recording') {
+        if (this._mediaRecorder.state == 'recording' || this._mediaRecorder.state === 'paused') {
             this._mediaRecorder.stop();
         }
     }
@@ -140,7 +154,10 @@ class AudioUtils {
      * @param {boolean} [option.silent=false]
      */
     async stopRecord(option = { silent: false }) {
-        this._socketClient.disconnect();
+        if (this._socketClient) {
+            this._socketClient.disconnect();
+        }
+
         if (!this.isAudioInitComplete || !this.isRecording) {
             return;
         }
@@ -185,7 +202,14 @@ class AudioUtils {
     }
 
     _isBrowserSupportAudio() {
-        return navigator.mediaDevices && navigator.mediaDevices.getUserMedia && MediaRecorder;
+        if (
+            !navigator.mediaDevices ||
+            !navigator.mediaDevices.getUserMedia ||
+            !window.MediaRecorder
+        ) {
+            return false;
+        }
+        return true;
     }
 
     _handleScriptProcess = (analyserNode) => (audioProcessingEvent) => {
@@ -210,10 +234,8 @@ class AudioUtils {
                 clearTimeout(this._noInputStopCall);
             }
             // websocket 으로 서버 전송
-            const client = this._socketClient;
-
-            if (client.readyState === client.OPEN) {
-                client.send(toWav(outputBuffer));
+            if (this._socketClient && this._socketClient.readyState === this._socketClient.OPEN) {
+                this._socketClient.send(toWav(outputBuffer));
             }
         }
     };

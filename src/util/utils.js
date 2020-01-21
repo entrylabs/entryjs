@@ -1998,7 +1998,7 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     if (message === 'IncompatibleError' && Entry.toast) {
         Entry.toast.alert(
             Lang.Msgs.warn,
-            [Lang.Workspace.check_runtime_error, 'IE 에서는 지원하지 않는 블록입니다.'],
+            [Lang.Workspace.check_runtime_error, 'IE/Safari 에서는 지원하지 않는 블록입니다.'],
             true
         );
     } else if (Entry.toast) {

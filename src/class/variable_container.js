@@ -786,6 +786,9 @@ Entry.VariableContainer = class VariableContainer {
                 case 'answer':
                     this.generateAnswer(variable);
                     break;
+                case 'stt':
+                    this.generateStt(variable);
+                    break;
             }
         });
 
@@ -794,6 +797,9 @@ Entry.VariableContainer = class VariableContainer {
         }
         if (_.isEmpty(Entry.container.inputValue)) {
             this.generateAnswer();
+        }
+        if (_.isEmpty(Entry.container.sttValue)) {
+            this.generateStt();
         }
 
         Entry.playground.reloadPlayground();
@@ -836,6 +842,9 @@ Entry.VariableContainer = class VariableContainer {
         }
         if (Entry.isEmpty(Entry.container.inputValue)) {
             Entry.variableContainer.generateAnswer();
+        }
+        if (Entry.isEmpty(Entry.container.sttValue)) {
+            Entry.variableContainer.generateStt();
         }
         Entry.playground.reloadPlayground();
     }
@@ -2277,6 +2286,22 @@ Entry.VariableContainer = class VariableContainer {
         Entry.container.inputValue = answer;
         Entry.container.inputValue.setName(Lang.Blocks.VARIABLE_get_canvas_input_value);
     }
+    generateStt(answer) {
+        answer =
+            answer ||
+            Entry.Variable.create({
+                id: Entry.generateHash(),
+                name: 'stt',
+                value: 0,
+                variableType: 'stt',
+                visible: false,
+                x: 150,
+                y: -100,
+            });
+        answer.generateView();
+        Entry.container.sttValue = answer;
+        Entry.container.sttValue.setName('STT');
+    }
 
     generateVariableSettingView(variable) {
         const that = this;
@@ -2557,7 +2582,6 @@ Entry.VariableContainer = class VariableContainer {
 
                 const array_ = Entry.variableContainer.selected.getArray();
                 const selectedLength = array_.length;
-
 
                 if (selectedLength >= limitValue) {
                     Entry.do('listChangeLength', id_, '');
