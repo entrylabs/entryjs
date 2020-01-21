@@ -7,8 +7,9 @@
 import { Destroyer } from './destroyer/Destroyer';
 import { GEHelper } from '../graphicEngine/GEHelper';
 import Expansion from '../class/Expansion';
+import AIUtilize from '../class/AIUtilize';
 import Extension from '../extensions/extension';
-
+import CloudVariable from '../extensions/CloudVariable';
 require('./utils');
 
 /**
@@ -42,11 +43,13 @@ Entry.init = function(container, options) {
     this.defaultPath = options.defaultDir || '';
     this.soundPath = options.soundDir || '';
     this.blockInjectPath = options.blockInjectDir || '';
+    this.cloudVariable = CloudVariable.getInstance();
 
     if (this.type === 'workspace' && this.isPhone()) {
         this.type = 'phone';
     }
     this.initialize_();
+    this.initSoundQueue_();
     /** @type {!Element} */
     this.view_ = container;
     $(this.view_).addClass('entry');
@@ -100,31 +103,6 @@ Entry.init = function(container, options) {
     } else {
         createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin]);
     }
-
-    Entry.soundQueue = new createjs.LoadQueue();
-    Entry.soundQueue.installPlugin(createjs.Sound);
-    Entry.soundInstances = [];
-    Entry.soundQueue.urls = new Set();
-    Entry.soundQueue.total = 0;
-    Entry.soundQueue.loadCallback = (src) => {
-        // if (!Entry.soundQueue.urls.has(src)) {
-        //     return;
-        // }
-        Entry.soundQueue.total = Math.max(Entry.soundQueue.total, Entry.soundQueue.urls.size);
-        Entry.soundQueue.urls.delete(src);
-        const now = Entry.soundQueue.urls.size;
-        if (!Entry.soundQueue.loadComplete && now < 1) {
-            Entry.soundQueue.loadComplete = true;
-            Entry.dispatchEvent('soundLoaded');
-        }
-    };
-    Entry.soundQueue.on('fileload', (event) => {
-        Entry.soundQueue.loadCallback(event.item.src);
-    });
-    Entry.soundQueue.on('error', (event) => {
-        console.error('load sound, error', event);
-        Entry.soundQueue.loadCallback(event.data.src);
-    });
 
     Entry.loadAudio_(
         [
@@ -250,6 +228,10 @@ Entry.initialize_ = function() {
 
     this.expansion = new Expansion(this.playground);
     this._destroyer.add(this.expansion);
+
+    this.aiUtilize = new AIUtilize(this.playground);
+    this._destroyer.add(this.aiUtilize);
+
     this.intro = new Entry.Intro();
     /**
      * Initialize toast. Toast don't need generate view.
@@ -282,6 +264,32 @@ Entry.disposeContainer = function() {
     }
 };
 
+Entry.initSoundQueue_ = function() {
+    Entry.soundQueue = new createjs.LoadQueue();
+    Entry.soundQueue.installPlugin(createjs.Sound);
+    Entry.soundInstances = [];
+    Entry.soundQueue.urls = new Set();
+    Entry.soundQueue.total = 0;
+    Entry.soundQueue.loadCallback = (src) => {
+        if (!Entry.soundQueue.urls.has(src)) {
+            return;
+        }
+        Entry.soundQueue.total = Math.max(Entry.soundQueue.total, Entry.soundQueue.urls.size);
+        Entry.soundQueue.urls.delete(src);
+        const now = Entry.soundQueue.urls.size;
+        if (!Entry.soundQueue.loadComplete && now < 1) {
+            Entry.soundQueue.loadComplete = true;
+            Entry.dispatchEvent('soundLoaded');
+        }
+    };
+    Entry.soundQueue.on('fileload', (event) => {
+        Entry.soundQueue.loadCallback(event.item.src);
+    });
+    Entry.soundQueue.on('error', (event) => {
+        console.error('load sound, error', event);
+        Entry.soundQueue.loadCallback(event.data.src);
+    });
+};
 /**
  * Initialize html DOM view for entry.
  * This work differently with initialize option.

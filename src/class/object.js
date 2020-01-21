@@ -740,6 +740,7 @@ Entry.EntryObject = class {
                     Entry.dispatchEvent('removeObject', object);
                     const { id } = object;
                     Entry.do('removeObject', id);
+                    Entry.Utils.forceStopSounds();
                 },
             },
             {

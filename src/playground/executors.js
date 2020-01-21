@@ -2,20 +2,25 @@
  *
  */
 'use strict';
-
 class Executor {
-    constructor(block, entity) {
+    constructor(block, entity, code) {
         this.scope = new Entry.Scope(block, this);
+        this.isUpdateTime = 0;
         this.entity = entity;
+        this.code = code;
         this._callStack = [];
         this.register = {};
+        this.paused = false;
         this.parentExecutor = null;
         this.valueMap = {};
         this.valueState = {};
         this.id = Entry.Utils.generateId();
     }
 
-    execute(isFromOrigin) { 
+    execute(isFromOrigin) {
+        if (Entry.isTurbo && !this.isUpdateTime) {
+            this.isUpdateTime = performance.now();
+        }
         if (this.isEnd()) {
             return;
         }
@@ -35,7 +40,7 @@ class Executor {
                 const schema = this.scope.block.getSchema();
                 if (schema && Entry.skeleton[schema.skeleton].executable) {
                     Entry.dispatchEvent('blockExecute', this.scope.block && this.scope.block.view);
-                    returnVal = schema.func.call(this.scope, entity, this.scope);
+                    returnVal = this.scope.run(entity);
                     this.scope.key = Entry.generateHash();
                 }
             } catch (e) {
@@ -54,8 +59,40 @@ class Executor {
                 return executedBlocks;
             }
 
-
-            if (returnVal === undefined || returnVal === null || returnVal === Entry.STATIC.PASS) {
+            if (returnVal instanceof Promise) {
+                this.paused = true;
+                returnVal
+                    .then(() => {
+                        if (this.scope.block && Entry.engine.isState('run')) {
+                            this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
+                        }
+                        if (this.scope.block === null && this._callStack.length) {
+                            const oldScope = this.scope;
+                            this.scope = this._callStack.pop();
+                            if (this.scope.isLooped !== oldScope.isLooped) {
+                                this.isLooped = true;
+                            }
+                        }
+                        this.valueMap = {};
+                        this.valueState = {};
+                        this.paused = false;
+                    })
+                    .catch((e) => {
+                        this.paused = false;
+                        if (e.name === 'AsyncError') {
+                            returnVal = Entry.STATIC.BREAK;
+                        } else if (this.isFuncExecutor) {
+                            throw e;
+                        } else {
+                            Entry.Utils.stopProjectWithToast(this.scope, undefined, e);
+                        }
+                    });
+                break;
+            } else if (
+                returnVal === undefined ||
+                returnVal === null ||
+                returnVal === Entry.STATIC.PASS
+            ) {
                 this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
                 this.valueMap = {};
                 this.valueState = {};
@@ -64,6 +101,7 @@ class Executor {
                         const oldScope = this.scope;
                         this.scope = this._callStack.pop();
                         if (this.scope.isLooped !== oldScope.isLooped) {
+                            this.isLooped = true;
                             break;
                         }
                     } else {
@@ -82,6 +120,45 @@ class Executor {
             }
         }
         return executedBlocks;
+    }
+
+    checkExecutorError(error) {
+        if (error.name === 'AsyncError') {
+            return Entry.STATIC.BREAK;
+        } else if (this.isFuncExecutor) {
+            throw error;
+        } else {
+            Entry.Utils.stopProjectWithToast(this.scope, undefined, error);
+        }
+    }
+
+    checkExecutorResult(returnVal) {
+        if (returnVal === undefined || returnVal === null || returnVal === Entry.STATIC.PASS) {
+            this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
+            this.valueMap = {};
+            this.valueState = {};
+            if (this.scope.block === null) {
+                if (this._callStack.length) {
+                    const oldScope = this.scope;
+                    this.scope = this._callStack.pop();
+                    if (this.scope.isLooped !== oldScope.isLooped) {
+                        this.isLooped = true;
+                        return true;
+                    }
+                } else {
+                    return true;
+                }
+            }
+        } else if (returnVal === Entry.STATIC.CONTINUE) {
+            this.valueMap = {};
+            this.valueState = {};
+        } else if (returnVal === this.scope) {
+            this.valueMap = {};
+            this.valueState = {};
+            return true;
+        } else if (returnVal === Entry.STATIC.BREAK) {
+            return true;
+        }
     }
 
     stepInto(thread) {
@@ -124,6 +201,10 @@ class Executor {
     end() {
         Entry.dispatchEvent('blockExecuteEnd', this.scope.block && this.scope.block.view);
         this.scope.block = null;
+    }
+
+    isPause() {
+        return this.paused;
     }
 
     isEnd() {

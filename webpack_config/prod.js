@@ -1,11 +1,9 @@
 'use strict';
 
-const merge = require('webpack-merge');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const common = require('./common.js');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
-module.exports = merge(common, {
+module.exports = {
     entry: {
         'entry.min': './src/entry.js',
     },
@@ -18,15 +16,21 @@ module.exports = merge(common, {
         rules: [],
     },
     plugins: [
-        new UglifyJSPlugin({
-            // uglifyOptions: {
-            //     keep_fnames: true,
-            // },
-            include: /\.min\.js$/,
-        }),
         new MiniCssExtractPlugin({
             filename: '[name].css',
             chunkFilename: '[name][contenthash].css',
         }),
     ],
-});
+    optimization: {
+        minimize: true,
+        minimizer: [
+            new TerserPlugin({
+                include: /\.min\.js$/,
+                parallel: true,
+                terserOptions: {
+                    ecma: 8,
+                },
+            }),
+        ],
+    },
+};

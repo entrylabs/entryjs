@@ -620,6 +620,10 @@ Entry.Block = class Block {
         return this.thread.getNextBlock(this) || null;
     }
 
+    getFirstBlock() {
+        return this.thread.getFirstBlock();
+    }
+
     getLastBlock() {
         return this.thread.getLastBlock();
     }

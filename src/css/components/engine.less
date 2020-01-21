@@ -111,8 +111,14 @@
 
 .entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryRunButtonWorkspace_w,
 .entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryStopButtonWorkspace_w,
-.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryPauseButtonWorkspace_full,
-.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryRestartButtonWorkspace_full {
+.entryPopupWindow
+    > .entryEngineWorkspace_w
+    > .entryEngineButtonWrapper
+    .entryPauseButtonWorkspace_full,
+.entryPopupWindow
+    > .entryEngineWorkspace_w
+    > .entryEngineButtonWrapper
+    .entryRestartButtonWorkspace_full {
     display: inline-block;
     overflow: hidden;
     flex: none;
@@ -798,5 +804,102 @@
     .entryStopButtonWorkspace_w {
         .backgroundImage('layers_icon_button_stop_nor_2_practical_course_mode.png');
         border-color: @basePurple;
+    }
+}
+
+//audioShade
+.audioShadeCirclebox {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.5);
+    text-align: center;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    -moz-flex-direction: column;
+    width: 100%;
+    height: calc(100%-64px);
+}
+.audioShadeCircle {
+    margin: auto;
+    padding: 0;
+    position: relative;
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #32d27d;
+    vertical-align: top;
+}
+.audioShadeInner {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 60px;
+    height: 60px;
+    margin: auto;
+    background-color: #32d27d;
+    border-radius: 50%;
+    transform: scale(0.5);
+    transform-origin: center center;
+    animation: ani 3s linear infinite;
+    content: '';
+}
+.audioShadeInner:nth-of-type(2) {
+    animation-delay: 1s;
+}
+.audioShadeInner:nth-of-type(3) {
+    animation-delay: 2s;
+}
+.audioShadeInner:nth-of-type(4) {
+    animation-delay: 3s;
+}
+.audioShadeImg {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 18px;
+    height: 26px;
+    margin: -13px 0 0 -9px;
+    z-index: 10;
+}
+.audioShadeText {
+    width: 100%;
+    height: 20%;
+    font-family: NanumGothicOTF;
+    font-size: 14px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: center;
+}
+.audioProgress {
+    width: 100%;
+    height: 100%;
+}
+
+@keyframes ani {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        opacity: 0.1;
+    }
+    70% {
+        opacity: 0.09;
+    }
+    100% {
+        transform: scale(3);
+        opacity: 0;
     }
 }
