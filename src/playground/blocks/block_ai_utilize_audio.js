@@ -44,7 +44,7 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
         check_microphone: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-            skeleton: 'basic_string_field',
+            skeleton: 'basic_boolean_field',
             statements: [],
             params: [],
             events: {},
@@ -56,26 +56,103 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             },
             class: 'audio',
             isNotFor: ['audio'],
-            func(sprite, script) {
-                return new PromiseManager().Promise(async (resolve) => {
-                    const result = await audioUtils.checkUserMicAvailable();
-                    resolve(result.toString());
-                });
+            async func(sprite, script) {
+                return await audioUtils.checkUserMicAvailable();
             },
             syntax: {
                 js: [],
                 py: [],
             },
         },
-        speech_to_text: {
+
+        speech_to_text_convert: {
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/ai_utilize_icon.svg',
+                    size: 11,
+                },
+            ],
+            events: {
+                viewAdd: [
+                    function() {
+                        if (Entry.container) {
+                            Entry.container.showSttAnswer();
+                        }
+                    },
+                ],
+                viewDestroy: [
+                    function(block, notIncludeSelf) {
+                        if (Entry.container) {
+                            Entry.container.hideSttAnswer(block, notIncludeSelf);
+                        }
+                    },
+                ],
+            },
+            def: {
+                params: [3],
+                type: 'speech_to_text_convert',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'audio',
+            isNotFor: ['audio'],
+            async func(sprite, script) {
+                try {
+                    if (!audioUtils.isAudioInitComplete) {
+                        await audioUtils.initUserMedia();
+                    }
+                    Entry.container.ableSttValue();
+                    const result = await audioUtils.startRecord(10 * 1000);
+                    Entry.dispatchEvent('audioRecordingDone');
+                    Entry.container.setSttValue(result);
+                } catch (e) {
+                    Entry.container.setSttValue('');
+                    throw e;
+                }
+                // if (audioUtils.isRecording) {
+                //     throw new Entry.Utils.AsyncError();
+                // }
+                // audioUtils.isRecording = true;
+                // return new PromiseManager().Promise(async (resolve) => {
+                //
+                // });
+            },
+            syntax: {
+                js: [],
+                py: [],
+            },
+        },
+        speech_to_text_get_value: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
             statements: [],
-            events: {},
+            params: [],
+            events: {
+                viewAdd: [
+                    function() {
+                        if (Entry.container) {
+                            Entry.container.showSttAnswer();
+                        }
+                    },
+                ],
+                viewDestroy: [
+                    function(block, notIncludeSelf) {
+                        if (Entry.container) {
+                            Entry.container.hideSttAnswer(block, notIncludeSelf);
+                        }
+                    },
+                ],
+            },
             def: {
                 params: [3],
-                type: 'speech_to_text',
+                type: 'speech_to_text_get_value',
             },
             paramsKeyMap: {
                 VALUE: 0,
@@ -83,28 +160,14 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             class: 'audio',
             isNotFor: ['audio'],
             func(sprite, script) {
-                if (audioUtils.isRecording) {
-                    throw new Entry.Utils.AsyncError();
-                }
-                audioUtils.isRecording = true;
-                return new PromiseManager().Promise(async (resolve) => {
-                    try {
-                        if (!audioUtils.isAudioInitComplete) {
-                            await audioUtils.initUserMedia();
-                        }
-                        const result = await audioUtils.startRecord(10 * 1000);
-                        Entry.dispatchEvent('audioRecordingDone');
-                        resolve(result);
-                    } catch (e) {
-                        resolve(e);
-                    }
-                });
+                return Entry.container.getSttValue();
             },
             syntax: {
                 js: [],
                 py: [],
             },
         },
+
         get_microphone_volume: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,

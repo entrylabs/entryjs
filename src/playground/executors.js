@@ -46,6 +46,8 @@ class Executor {
             } catch (e) {
                 if (e.name === 'AsyncError') {
                     returnVal = Entry.STATIC.BREAK;
+                } else if (e.name === 'IncompatibleError') {
+                    Entry.Utils.stopProjectWithToast(this.scope, 'IncompatibleError', e);
                 } else if (this.isFuncExecutor) {
                     //function executor
                     throw e;
@@ -62,7 +64,13 @@ class Executor {
             if (returnVal instanceof Promise) {
                 this.paused = true;
                 returnVal
-                    .then(() => {
+                    .then((returnVal) => {
+                        this.valueMap = {};
+                        this.valueState = {};
+                        this.paused = false;
+                        if (returnVal === Entry.STATIC.CONTINUE) {
+                            return;
+                        }
                         if (this.scope.block && Entry.engine.isState('run')) {
                             this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
                         }
@@ -73,14 +81,13 @@ class Executor {
                                 this.isLooped = true;
                             }
                         }
-                        this.valueMap = {};
-                        this.valueState = {};
-                        this.paused = false;
                     })
                     .catch((e) => {
                         this.paused = false;
                         if (e.name === 'AsyncError') {
                             returnVal = Entry.STATIC.BREAK;
+                        } else if (e.name === 'IncompatibleError') {
+                            Entry.Utils.stopProjectWithToast(this.scope, 'IncompatibleError', e);
                         } else if (this.isFuncExecutor) {
                             throw e;
                         } else {
