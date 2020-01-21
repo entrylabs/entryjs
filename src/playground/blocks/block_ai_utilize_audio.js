@@ -102,28 +102,26 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             },
             class: 'audio',
             isNotFor: ['audio'],
-            func(sprite, script) {
-                if (audioUtils.isRecording) {
-                    throw new Entry.Utils.AsyncError();
-                }
-                audioUtils.isRecording = true;
-                return new PromiseManager().Promise(async (resolve) => {
-                    try {
-                        if (!audioUtils.isAudioInitComplete) {
-                            await audioUtils.initUserMedia();
-                        }
-                        Entry.container.ableSttValue();
-                        const result = await audioUtils.startRecord(10 * 1000);
-                        Entry.dispatchEvent('audioRecordingDone');
-                        console.log(result);
-                        Entry.container.setSttValue(result);
-                        resolve(result);
-                    } catch (e) {
-                        Entry.container.setSttValue('');
-                        resolve(e);
+            async func(sprite, script) {
+                try {
+                    if (!audioUtils.isAudioInitComplete) {
+                        await audioUtils.initUserMedia();
                     }
-                    return script.callReturn();
-                });
+                    Entry.container.ableSttValue();
+                    const result = await audioUtils.startRecord(10 * 1000);
+                    Entry.dispatchEvent('audioRecordingDone');
+                    Entry.container.setSttValue(result);
+                } catch (e) {
+                    Entry.container.setSttValue('');
+                    throw e;
+                }
+                // if (audioUtils.isRecording) {
+                //     throw new Entry.Utils.AsyncError();
+                // }
+                // audioUtils.isRecording = true;
+                // return new PromiseManager().Promise(async (resolve) => {
+                //
+                // });
             },
             syntax: {
                 js: [],

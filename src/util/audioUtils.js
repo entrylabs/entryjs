@@ -19,7 +19,6 @@ class AudioUtils {
     }
 
     constructor() {
-        this.isAudioSupport = this._isBrowserSupportAudio(); // 브라우저 지원 확인
         this.isAudioInitComplete = false; // 유저 인풋 연결 확인
         this.isRecording = false;
         this._userMediaStream = undefined;
@@ -39,6 +38,10 @@ class AudioUtils {
     }
 
     async initUserMedia() {
+        if (!this.isAudioSupport) {
+            this.isAudioSupport = this._isBrowserSupportAudio(); // 브라우저 지원 확인
+        }
+
         if (this.isAudioInitComplete) {
             return;
         }
@@ -98,6 +101,7 @@ class AudioUtils {
             if (this._audioContext.state === 'suspended') {
                 await this.initUserMedia();
             }
+
             try {
                 const socketClient = await voiceApiConnect(VOICE_SERVER_ADDR, language, (data) => {
                     this.result = data;
@@ -198,15 +202,17 @@ class AudioUtils {
     }
 
     _isBrowserSupportAudio() {
-        console.log(
-            'supported?? : ',
-            navigator.mediaDevices && navigator.mediaDevices.getUserMedia && MediaRecorder
-        );
-        return navigator.mediaDevices && navigator.mediaDevices.getUserMedia && MediaRecorder;
+        if (
+            !navigator.mediaDevices ||
+            !navigator.mediaDevices.getUserMedia ||
+            !window.MediaRecorder
+        ) {
+            return false;
+        }
+        return true;
     }
 
     _handleScriptProcess = (analyserNode) => (audioProcessingEvent) => {
-        console.log('_handleScriptProcess');
         const array = new Uint8Array(analyserNode.frequencyBinCount);
         analyserNode.getByteFrequencyData(array);
 

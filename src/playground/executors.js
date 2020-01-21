@@ -46,6 +46,8 @@ class Executor {
             } catch (e) {
                 if (e.name === 'AsyncError') {
                     returnVal = Entry.STATIC.BREAK;
+                } else if (e.name === 'IncompatibleError') {
+                    Entry.Utils.stopProjectWithToast(this.scope, 'IncompatibleError', e);
                 } else if (this.isFuncExecutor) {
                     //function executor
                     throw e;
@@ -84,6 +86,8 @@ class Executor {
                         this.paused = false;
                         if (e.name === 'AsyncError') {
                             returnVal = Entry.STATIC.BREAK;
+                        } else if (e.name === 'IncompatibleError') {
+                            Entry.Utils.stopProjectWithToast(this.scope, 'IncompatibleError', e);
                         } else if (this.isFuncExecutor) {
                             throw e;
                         } else {
