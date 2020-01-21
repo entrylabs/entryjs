@@ -24,22 +24,22 @@ const basicBlockList = [
 Entry.AI_UTILIZE_BLOCK = {};
 require('./block_ai_utilize_audio');
 require('./block_ai_utilize_tts');
+require('./block_ai_utilize_translate');
 Entry.AI_UTILIZE_BLOCK_LIST = {
     audio: Entry.AI_UTILIZE_BLOCK.audio,
     tts: Entry.AI_UTILIZE_BLOCK.tts,
+    translate: Entry.AI_UTILIZE_BLOCK.translate,
 };
 
 Entry.EXPANSION_BLOCK = {};
 require('./block_expansion_weather');
 require('./block_expansion_festival');
-require('./block_expansion_translate');
 require('./block_expansion_behaviorconduct_disaster');
 require('./block_expansion_behaviorconduct_lifesafety');
 
 Entry.EXPANSION_BLOCK_LIST = {
     weather: Entry.Expansion_Weather,
     festival: Entry.EXPANSION_BLOCK.festival,
-    translate: Entry.EXPANSION_BLOCK.translate,
     behaviorConductDisaster: Entry.EXPANSION_BLOCK.behaviorConductDisaster,
     behaviorConductLifeSafety: Entry.EXPANSION_BLOCK.behaviorConductLifeSafety,
 };
