@@ -70,7 +70,6 @@ class AudioUtils {
             // 순서대로 노드 커넥션을 맺는다.
             this._connectNodes(streamSrc, analyserNode, biquadFilter, scriptNode, streamDest);
             scriptNode.onaudioprocess = this._handleScriptProcess(analyserNode);
-            console.log(scriptNode);
 
             this._audioContext = audioContext;
             this._userMediaStream = mediaStream;
@@ -233,6 +232,7 @@ class AudioUtils {
             if (this._currentVolume > 60) {
                 clearTimeout(this._noInputStopCall);
             }
+
             // websocket 으로 서버 전송
             if (this._socketClient && this._socketClient.readyState === this._socketClient.OPEN) {
                 this._socketClient.send(toWav(outputBuffer));
