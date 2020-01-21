@@ -55,7 +55,7 @@ class AudioUtils {
             const analyserNode = audioContext.createAnalyser();
             const biquadFilter = audioContext.createBiquadFilter();
             biquadFilter.type = 'highpass';
-            biquadFilter.frequency.value = 60;
+            biquadFilter.frequency.value = 30;
             const scriptNode = audioContext.createScriptProcessor(4096, 1, 1);
             const streamDest = audioContext.createMediaStreamDestination();
             const mediaRecorder = new MediaRecorder(streamDest.stream);
@@ -92,10 +92,14 @@ class AudioUtils {
             if (this._audioContext.state === 'suspended') {
                 await this.initUserMedia();
             }
-            const socketClient = await voiceApiConnect(VOICE_SERVER_ADDR, language, (data) => {
-                this.result = data;
-            });
-            this._socketClient = socketClient;
+            try {
+                const socketClient = await voiceApiConnect(VOICE_SERVER_ADDR, language, (data) => {
+                    this.result = data;
+                });
+                this._socketClient = socketClient;
+            } catch (err) {
+                console.log(err);
+            }
 
             this._audioChunks = [];
 
@@ -140,7 +144,10 @@ class AudioUtils {
      * @param {boolean} [option.silent=false]
      */
     async stopRecord(option = { silent: false }) {
-        this._socketClient.disconnect();
+        if (this._socketClient) {
+            this._socketClient.disconnect();
+        }
+
         if (!this.isAudioInitComplete || !this.isRecording) {
             return;
         }
@@ -210,10 +217,8 @@ class AudioUtils {
                 clearTimeout(this._noInputStopCall);
             }
             // websocket 으로 서버 전송
-            const client = this._socketClient;
-
-            if (client.readyState === client.OPEN) {
-                client.send(toWav(outputBuffer));
+            if (this._socketClient && this._socketClient.readyState === this._socketClient.OPEN) {
+                this._socketClient.send(toWav(outputBuffer));
             }
         }
     };

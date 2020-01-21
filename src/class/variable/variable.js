@@ -77,7 +77,7 @@ class Variable {
      */
     generateView(variableIndex) {
         const type = this.type;
-        if (type === 'variable' || type === 'timer' || type === 'answer') {
+        if (type === 'variable' || type === 'timer' || type === 'answer' || type === 'stt') {
             this.view_ = GEHelper.newContainer();
             this.rect_ = GEHelper.newGraphic();
             this.view_.addChild(this.rect_);
