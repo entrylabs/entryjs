@@ -1003,6 +1003,10 @@ Entry.Container = class Container {
         this.sttValue.complete = true;
     }
 
+    ableSttValue() {
+        this.sttValue.complete = false;
+    }
+
     resetSceneDuringRun() {
         if (!Entry.engine.isState('run')) {
             return;

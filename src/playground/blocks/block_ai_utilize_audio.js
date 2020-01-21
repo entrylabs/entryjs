@@ -67,50 +67,11 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
                 py: [],
             },
         },
-        speech_to_text: {
-            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
-            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-            skeleton: 'basic_string_field',
-            statements: [],
-            events: {},
-            def: {
-                params: [3],
-                type: 'speech_to_text',
-            },
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            class: 'audio',
-            isNotFor: ['audio'],
-            func(sprite, script) {
-                if (audioUtils.isRecording) {
-                    throw new Entry.Utils.AsyncError();
-                }
-                audioUtils.isRecording = true;
-                return new PromiseManager().Promise(async (resolve) => {
-                    try {
-                        if (!audioUtils.isAudioInitComplete) {
-                            await audioUtils.initUserMedia();
-                        }
-                        const result = await audioUtils.startRecord(10 * 1000);
-                        Entry.dispatchEvent('audioRecordingDone');
-                        resolve(result);
-                    } catch (e) {
-                        resolve(e);
-                    }
-                });
-            },
-            syntax: {
-                js: [],
-                py: [],
-            },
-        },
 
         speech_to_text_convert: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
-            template: '음성을 문자로 바꾸기 %1',
             statements: [],
             params: [
                 {
@@ -154,8 +115,10 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
                         if (!audioUtils.isAudioInitComplete) {
                             await audioUtils.initUserMedia();
                         }
+                        Entry.container.ableSttValue();
                         const result = await audioUtils.startRecord(10 * 1000);
                         Entry.dispatchEvent('audioRecordingDone');
+                        console.log(result);
                         Entry.container.setSttValue(result);
                         resolve(result);
                     } catch (e) {
@@ -174,7 +137,6 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
-            template: '저장된 음성을 문자로 바꾼 값',
             statements: [],
             params: [],
             events: {
