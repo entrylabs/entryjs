@@ -105,6 +105,7 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             isNotFor: ['audio'],
             async func(sprite, script) {
                 try {
+                    audioUtils.isRecording = true;
                     if (!audioUtils.isAudioInitComplete) {
                         await audioUtils.initUserMedia();
                     }
@@ -116,13 +117,6 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
                     Entry.container.setSttValue('');
                     throw e;
                 }
-                // if (audioUtils.isRecording) {
-                //     throw new Entry.Utils.AsyncError();
-                // }
-                // audioUtils.isRecording = true;
-                // return new PromiseManager().Promise(async (resolve) => {
-                //
-                // });
             },
             syntax: {
                 js: [],
