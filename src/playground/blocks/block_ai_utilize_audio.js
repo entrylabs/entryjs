@@ -104,6 +104,9 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             class: 'audio',
             isNotFor: ['audio'],
             async func(sprite, script) {
+                if (audioUtils.isRecording) {
+                    throw new Entry.Utils.AsyncError();
+                }
                 try {
                     audioUtils.isRecording = true;
                     if (!audioUtils.isAudioInitComplete) {
