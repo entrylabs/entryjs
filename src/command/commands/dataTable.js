@@ -50,4 +50,35 @@
         undo: 'dataTableAddSource',
         dom: ['playground', 'tableAddButton'],
     };
+
+    c[COMMAND_TYPES.dataTableAddRow] = {
+        do(table, rowNum, rowInfo, setTable) {
+            setTable(table.splice(rowNum, 0, rowInfo));
+            setTable(table);
+        },
+        state(table, rowNum, rowInfo, setTable) {
+            return [table, rowNum, rowInfo, setTable];
+        },
+        log(table, rowNum, rowInfo, setTable) {
+            return [['row', [table, rowNum, rowInfo, setTable]]];
+        },
+        recordable: RECORDABLE.SUPPORT,
+        validate: false,
+        undo: 'dataTableRemoveRow',
+    };
+    c[COMMAND_TYPES.dataTableRemoveRow] = {
+        do(table, rowNum, rowInfo, setTable) {
+            setTable(table.splice(rowNum, 1));
+            setTable(table);
+        },
+        state(table, rowNum, rowInfo, setTable) {
+            return [table, rowNum, rowInfo, setTable];
+        },
+        log(table, rowNum, rowInfo, setTable) {
+            return [['row', [table, rowNum, rowInfo, setTable]]];
+        },
+        recordable: RECORDABLE.SUPPORT,
+        validate: false,
+        undo: 'dataTableAddRow',
+    };
 })(Entry.Command);
