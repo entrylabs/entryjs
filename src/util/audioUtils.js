@@ -135,10 +135,6 @@ class AudioUtils {
                 }
             });
             this._properStopCall = setTimeout(this.stopRecord, recordMilliSecond);
-            this._noInputStopCall = setTimeout(() => {
-                this.stopRecord();
-                clearTimeout(this._properStopCall);
-            }, 3000);
         });
     }
 
@@ -156,7 +152,6 @@ class AudioUtils {
         if (this._socketClient) {
             this._socketClient.disconnect();
         }
-
         if (!this.isAudioInitComplete || !this.isRecording) {
             return;
         }
@@ -178,7 +173,6 @@ class AudioUtils {
             track.stop();
         });
         clearTimeout(this._properStopCall);
-        clearTimeout(this._noInputStopCall);
         // this.isRecording = false;
     }
 
@@ -229,10 +223,6 @@ class AudioUtils {
         }
         // console.log(this._currentVolume);
         if (this.isRecording) {
-            if (this._currentVolume > 60) {
-                clearTimeout(this._noInputStopCall);
-            }
-
             // websocket 으로 서버 전송
             if (this._socketClient && this._socketClient.readyState === this._socketClient.OPEN) {
                 this._socketClient.send(toWav(outputBuffer));
