@@ -73,6 +73,14 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             statements: [],
             params: [
                 {
+                    type: 'Dropdown',
+                    options: [['한국어', 'Kor'], ['English', 'Eng'], ['日本語', 'Jpn']],
+                    value: 'Kor',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
                     type: 'Indicator',
                     img: 'block_icon/ai_utilize_icon.svg',
                     size: 11,
@@ -95,22 +103,22 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
                 ],
             },
             def: {
-                params: [3],
                 type: 'speech_to_text_convert',
             },
             paramsKeyMap: {
-                VALUE: 0,
+                LANGUAGE: 0,
             },
             class: 'audio',
             isNotFor: ['audio'],
             async func(sprite, script) {
+                const language = script.getField('LANGUAGE');
                 try {
                     audioUtils.isRecording = true;
                     if (!audioUtils.isAudioInitComplete) {
                         await audioUtils.initUserMedia();
                     }
                     Entry.container.ableSttValue();
-                    const result = await audioUtils.startRecord(10 * 1000);
+                    const result = await audioUtils.startRecord(10 * 1000, language);
                     Entry.dispatchEvent('audioRecordingDone');
                     Entry.container.setSttValue(result);
                 } catch (e) {
