@@ -17,7 +17,7 @@
 
 Entry.byrobot_controller_4 =
 {
-    id: 'F.9',
+    id: 'F.8',
     name: 'byrobot_controller_4',
     url: 'http://www.byrobot.co.kr/',
     imageName: 'byrobot_controller_4.png',
