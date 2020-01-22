@@ -237,6 +237,53 @@ const blocks = require('./blocks');
 
 function getBlocks() {
     return {
+        aiUtilizeModelTrainButton: {
+            skeleton: 'basic_button_disabled',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND_DISABLED,
+            outerLine: EntryStatic.colorSet.common.BUTTON_DISABLED,
+            isNotFor: ['functionInit'],
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.load_ai_utilize_train_block,
+                    color: EntryStatic.colorSet.common.BUTTON_DISABLED,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'aiUtilizeModelTrainButton',
+            },
+            events: {
+                mousedown: [
+                    function() {
+                        console.log('NOT IMPLEMENTED');
+                    },
+                ],
+            },
+        },
+        aiUtilizeBlockAddButton: {
+            skeleton: 'basic_button',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
+            isNotFor: ['functionInit'],
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.load_ai_utilize_block,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'aiUtilizeBlockAddButton',
+            },
+            events: {
+                mousedown: [
+                    function() {
+                        Entry.do('playgroundClickAddAIUtilizeBlock');
+                    },
+                ],
+            },
+        },
         expansionBlockAddButton: {
             skeleton: 'basic_button',
             color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,

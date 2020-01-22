@@ -38,7 +38,7 @@ Entry.loadProject = function(project) {
         Entry.stateManager.startIgnore();
     }
     Entry.projectId = project._id;
-    Entry.variableContainer.setVariables(project.variables);
+    Entry.variableContainer.setVariables(Entry.Utils.combineCloudVariable(project));
     Entry.variableContainer.setMessages(project.messages);
     Entry.variableContainer.setFunctions(project.functions);
     Entry.scene.addScenes(project.scenes);
@@ -46,6 +46,18 @@ Entry.loadProject = function(project) {
     Entry.container.setObjects(project.objects);
     Entry.FPS = project.speed ? project.speed : 60;
     GEHelper.Ticker.setFPS(Entry.FPS);
+
+    Entry.aiUtilizeBlocks = project.aiUtilizeBlocks || [];
+    if (Entry.aiUtilizeBlocks.length > 0) {
+        for (const type in Entry.AI_UTILIZE_BLOCK_LIST) {
+            if (Entry.aiUtilizeBlocks.indexOf(type) > -1) {
+                Entry.AI_UTILIZE_BLOCK[type].init();
+                if (Entry.type === 'workspace') {
+                    Entry.playground.blockMenu.unbanClass(type);
+                }
+            }
+        }
+    }
 
     Entry.expansionBlocks = project.expansionBlocks || [];
     if (Entry.expansionBlocks.length > 0) {
@@ -143,6 +155,7 @@ Entry.exportProject = function(project) {
     project.speed = Entry.FPS;
     project.interface = Entry.captureInterfaceState();
     project.expansionBlocks = Entry.expansionBlocks;
+    project.aiUtilizeBlocks = Entry.aiUtilizeBlocks;
     project.externalModules = Entry.EXTERNAL_MODULE_LIST;
 
     if (!objects || !objects.length) {
@@ -168,7 +181,6 @@ Entry.setBlock = function(objectType, XML) {
  */
 Entry.beforeUnload = function(e) {
     Entry.hw.closeConnection();
-    Entry.variableContainer.updateCloudVariables();
     if (Entry.type === 'workspace') {
         if (localStorage && Entry.interfaceState) {
             localStorage.setItem(
@@ -1993,7 +2005,13 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
         }
     }
 
-    if (Entry.toast) {
+    if (message === 'IncompatibleError' && Entry.toast) {
+        Entry.toast.alert(
+            Lang.Msgs.warn,
+            [Lang.Workspace.check_runtime_error, 'IE/Safari 에서는 지원하지 않는 블록입니다.'],
+            true
+        );
+    } else if (Entry.toast) {
         Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, true);
     }
 
@@ -2012,6 +2030,13 @@ Entry.Utils.AsyncError = function(message) {
 
 Entry.Utils.AsyncError.prototype = new Error();
 Entry.Utils.AsyncError.prototype.constructor = Entry.Utils.AsyncError;
+
+Entry.Utils.IncompatibleError = function(message) {
+    this.name = 'IncompatibleError';
+    this.message = message || 'IncompatibleError';
+};
+Entry.Utils.IncompatibleError.prototype = new Error();
+Entry.Utils.IncompatibleError.prototype.constructor = Entry.Utils.IncompatibleError;
 
 Entry.Utils.isChrome = function() {
     return /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
@@ -2783,4 +2808,17 @@ Entry.Utils.isUsedBlockType = function(blockType) {
         return true;
     }
     return Entry.variableContainer.isUsedBlockTypeInFunction(blockType);
+};
+
+Entry.Utils.combineCloudVariable = ({ variables, cloudVariable }) => {
+    if (!Array.isArray(cloudVariable)) {
+        return variables;
+    }
+    return variables.map((item) => {
+        const cloud = cloudVariable.find(({ id }) => id === item.id);
+        if (cloud) {
+            return { ...item, ...cloud };
+        }
+        return item;
+    });
 };
