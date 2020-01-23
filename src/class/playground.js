@@ -3,7 +3,6 @@
  * @fileoverview This manage playground.
  */
 
-import { map } from 'fxjs2';
 import { Backpack, ColorPicker, Dropdown, Sortable } from '@entrylabs/tool';
 import Toast from '../playground/toast';
 import EntryEvent from '@entrylabs/event';
@@ -733,14 +732,14 @@ Entry.Playground = class Playground {
     }
 
     _getSortableTableList() {
-        const { tables } = this.dataTable;
-        return map((table) => {
+        const { tables = [] } = this.dataTable;
+        return tables.map((table) => {
             const { id, view } = table;
             return {
                 key: id,
                 item: view,
             };
-        }, tables);
+        });
     }
 
     /**
@@ -1379,13 +1378,13 @@ Entry.Playground = class Playground {
 
     selectTable(table) {
         const {tables} = this.dataTable;
-        map(({view, id}) => {
+        tables.forEach(({view, id}) => {
             if(id === table.id) {
                 view.addClass('entryTableSelected');
             } else {
                 view.removeClass('entryTableSelected');
             }
-        }, tables);
+        });
         this.dataTable.selectTable(table);
         Entry.dispatchEvent('tableSelected', table);
     }
