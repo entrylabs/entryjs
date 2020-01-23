@@ -153,6 +153,156 @@ class ListVariable extends Variable {
         Entry.stage.loadVariable(this);
     }
 
+    getArray() {
+        if (!this.isCloud_) {
+            return this.array_;
+        } else {
+            const { array } =
+                this.cloudVariable.get({
+                    variableType: this.type,
+                    id: this.id_,
+                }) || {};
+            return array || this.array_;
+        }
+    }
+
+    setArray(array) {
+        if (!this.isCloud_) {
+            this.array_ = array;
+            this.updateView();
+            Entry.requestUpdateTwice = true;
+        } else {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const target = {
+                        variableType: this.type,
+                        id: this.id_,
+                    };
+                    await this.cloudVariable.setArray(target, array);
+                    this.updateView();
+                    resolve();
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        }
+    }
+
+    appendValue(value) {
+        if (!this.isCloud_) {
+            if (!this.array_) {
+                this.array_ = [];
+            }
+            this.array_.push({
+                data: value,
+            });
+            this.updateView();
+        } else {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const target = {
+                        variableType: this.type,
+                        id: this.id_,
+                    };
+                    await this.cloudVariable.append(target, value);
+                    const list = this.cloudVariable.get(target);
+                    if (list) {
+                        this.array_ = list.array;
+                    } else {
+                        this.array_.push({
+                            data: value,
+                        });
+                    }
+                    this.updateView();
+                    resolve();
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        }
+    }
+
+    deleteValue(index) {
+        if (!this.isCloud_) {
+            this.array_.splice(index - 1, 1);
+            this.updateView();
+        } else {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const target = {
+                        variableType: this.type,
+                        id: this.id_,
+                    };
+                    await this.cloudVariable.delete(target, index);
+                    const list = this.cloudVariable.get(target);
+                    if (list) {
+                        this.array_ = list.array;
+                    } else {
+                        this.array_.splice(index - 1, 1);
+                    }
+                    this.updateView();
+                    resolve();
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        }
+    }
+
+    insertValue(index, data) {
+        if (!this.isCloud_) {
+            this.array_.splice(index - 1, 0, { data });
+            this.updateView();
+        } else {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const target = {
+                        variableType: this.type,
+                        id: this.id_,
+                    };
+                    await this.cloudVariable.insert(target, index - 1, data);
+                    const list = this.cloudVariable.get(target);
+                    if (list) {
+                        this.array_ = list.array;
+                    } else {
+                        this.array_.splice(index - 1, 0, { data });
+                    }
+                    this.updateView();
+                    resolve();
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        }
+    }
+
+    replaceValue(index, data) {
+        if (!this.isCloud_) {
+            this.array_[index - 1].data = data;
+            this.updateView();
+        } else {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const target = {
+                        variableType: this.type,
+                        id: this.id_,
+                    };
+                    await this.cloudVariable.replace(target, index - 1, data);
+                    const list = this.cloudVariable.get(target);
+                    if (list) {
+                        this.array_ = list.array;
+                    } else {
+                        this.array_[index - 1].data = data;
+                    }
+                    this.updateView();
+                    resolve();
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        }
+    }
+
     updateView() {
         if (!this.view_) {
             return;
@@ -162,7 +312,7 @@ class ListVariable extends Variable {
             this._adjustSingleViewPosition();
             this.resizeHandle_.x = this.width_ - 10;
             this.resizeHandle_.y = this.height_ + 16 - 10;
-            const arr = this.array_;
+            const arr = this.getArray();
 
             let name = this.getName();
             if (this.object_) {
@@ -341,7 +491,7 @@ class ListVariable extends Variable {
         const json = super.toJSON();
         json.width = this.getWidth();
         json.height = this.getHeight();
-        json.array = JSON.parse(JSON.stringify(this.array_));
+        json.array = JSON.parse(JSON.stringify(this.getArray()));
 
         return json;
     }

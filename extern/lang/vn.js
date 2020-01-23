@@ -5847,6 +5847,7 @@ Lang.template = {
     "weather_title_text": "weather",
     "translate_title_text": "translate",
     "festival_title_text": "festival",
+    "audio_title_text": "Audio Detection",
     "behaviorConductDisaster_title_text": "desaster",
     "behaviorConductLifeSafety_title_text": "lifeSafety",
     "tts_title_text": "read",

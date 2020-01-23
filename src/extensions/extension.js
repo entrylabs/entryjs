@@ -1,4 +1,5 @@
 import Dropper from './dropper';
+
 export default class Extension {
     #view = null;
     constructor() {
