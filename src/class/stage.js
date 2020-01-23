@@ -89,6 +89,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
 
     _addEventListener('canvasClick', () => (Entry.stage.isObjectClick = false));
     _addEventListener('loadComplete', this.sortZorder.bind(this));
+
     Entry.windowResized.attach(this, this.updateBoundRect.bind(this));
 
     const razyScroll = _.debounce(() => {

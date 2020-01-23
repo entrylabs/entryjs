@@ -39,6 +39,7 @@ class Hardware implements Entry.Hardware {
 
     // 현재 연결된 모듈 컨트롤용
     public hwModule?: Entry.HardwareModule;
+    public communicationType: string; // 'manual' || 'auto'
     private currentDeviceKey?: string;
     private hwModuleType: HardwareModuleType;
     private hwMonitor?: Entry.HardwareMonitor;
@@ -57,6 +58,7 @@ class Hardware implements Entry.Hardware {
 
         this.socketConnectionRetryCount = 3;
         this.programConnected = false;
+        this.communicationType = 'auto';
         this.portData = {};
         this.sendQueue = {};
         this.hwModuleType = HardwareModuleType.builtIn;
@@ -92,7 +94,7 @@ class Hardware implements Entry.Hardware {
         } catch (e) {
             Entry.toast.alert(
                 window.Lang.Hw.hw_module_load_fail_title,
-                `${moduleName} ${window.Lang.Hw.hw_module_load_fail_desc}`,
+                `${moduleName} ${window.Lang.Hw.hw_module_load_fail_desc}`
             );
         }
     }
@@ -156,9 +158,13 @@ class Hardware implements Entry.Hardware {
 
         // 1.7.0 버전 이전 하드웨어 프로그램 종료로직 대응으로 남겨두어야 한다.
         messageHandler.addEventListener('disconnect', this._disconnectHardware.bind(this));
-        messageHandler.addEventListener('data', (portData) => {
+        messageHandler.addEventListener('data', (portData: HardwareMessageData) => {
+            this.portData = portData;
             this.checkDevice(portData);
             this._updatePortData(portData);
+            if (this.hwModule && this.hwModule.afterReceive) {
+                this.hwModule.afterReceive(portData);
+            }
         });
 
         socket.on('disconnect', () => {
@@ -376,7 +382,7 @@ class Hardware implements Entry.Hardware {
             Entry.toast.alert(
                 window.Lang.Hw.hw_module_terminaltion_title,
                 window.Lang.Hw.hw_module_terminaltion_desc,
-                false,
+                false
             );
         }
     }
@@ -461,8 +467,8 @@ class Hardware implements Entry.Hardware {
                 .concat(
                     this.sendQueue.readablePorts.slice(
                         target + 1,
-                        this.sendQueue.readablePorts.length,
-                    ),
+                        this.sendQueue.readablePorts.length
+                    )
                 );
         }
     }
@@ -492,12 +498,8 @@ class Hardware implements Entry.Hardware {
     }
 
     private _updatePortData(data: HardwareMessageData) {
-        this.portData = data;
         if (this.hwMonitor && Entry.propertyPanel && Entry.propertyPanel.selected === 'hw') {
-            this.hwMonitor.update(this.portData, this.sendQueue);
-        }
-        if (this.hwModule && this.hwModule.afterReceive) {
-            this.hwModule.afterReceive(this.portData);
+            this.hwMonitor.update(data, this.sendQueue);
         }
     }
 
@@ -537,7 +539,7 @@ class Hardware implements Entry.Hardware {
             return;
         }
         const key = `${Entry.Utils.convertIntToHex(data.company)}.${Entry.Utils.convertIntToHex(
-            data.model,
+            data.model
         )}`;
 
         if (this.currentDeviceKey && key === this.currentDeviceKey) {
@@ -552,6 +554,7 @@ class Hardware implements Entry.Hardware {
         if (!this.hwModule) {
             return;
         }
+        this.communicationType = this.hwModule.communicationType || 'auto';
         this._banClassAllHardware();
         Entry.dispatchEvent('hwChanged');
 
@@ -609,7 +612,7 @@ class Hardware implements Entry.Hardware {
                                 localStorage.setItem('skipNoticeHWOldVersion', 'true');
                             }
                             resolve();
-                        },
+                        }
                     );
             } else {
                 resolve();
@@ -636,7 +639,7 @@ class Hardware implements Entry.Hardware {
             },
             runViewer(sUrl: string, fpCallback: (bNotInstalled: boolean) => void) {
                 this._w.document.write(
-                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`,
+                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`
                 );
                 let nCounter = 0;
                 const bNotInstalled = false;
@@ -711,11 +714,10 @@ class Hardware implements Entry.Hardware {
         function executeIe(customUrl: string) {
             navigator.msLaunchUri(
                 customUrl,
-                () => {
-                },
+                () => {},
                 () => {
                     hw.openHardwareDownloadPopup();
-                },
+                }
             );
         }
 

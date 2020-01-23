@@ -4,7 +4,7 @@ const _set = require('lodash/set');
 const _get = require('lodash/get');
 const _merge = require('lodash/merge');
 
-Entry.Microbit = new class Microbit {
+Entry.Microbit = new (class Microbit {
     constructor() {
         this.id = '22.1';
         this.url = 'http://microbit.org/ko/';
@@ -127,7 +127,7 @@ Entry.Microbit = new class Microbit {
             Entry.engine.fireEvent('MicrobitRadioReceive');
         }
     }
-}();
+})();
 Entry.Microbit.blockMenuBlocks = [
     //region microbit
     'microbit_led_toggle',
@@ -200,7 +200,7 @@ Entry.Microbit.getBlocks = function() {
                 Y: 1,
                 VALUE: 2,
             },
-            func: function(sprite, script) {
+            func(sprite, script) {
                 const value = script.getField('VALUE');
                 let x = script.getNumberValue('X');
                 let y = script.getNumberValue('Y');
@@ -261,7 +261,7 @@ Entry.Microbit.getBlocks = function() {
                 X: 0,
                 Y: 1,
             },
-            func: function(sprite, script) {
+            func(sprite, script) {
                 let x = script.getNumberValue('X');
                 let y = script.getNumberValue('Y');
                 x = Math.max(0, x);
@@ -324,7 +324,7 @@ Entry.Microbit.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
-            func: function(sprite, script) {
+            func(sprite, script) {
                 let value = script.getStringValue('VALUE');
                 value = value.replace(
                     /[^A-Za-z0-9_\`\~\!\@\#\$\%\^\&\*\(\)\-\=\+\\\{\}\[\]\'\"\;\:\<\,\>\.\?\/\s]/gim,
@@ -378,7 +378,7 @@ Entry.Microbit.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
-            func: function(sprite, script) {
+            func(sprite, script) {
                 const value = script.getField('VALUE');
                 const data = {
                     type: 'SET_IMAGE',
@@ -418,7 +418,7 @@ Entry.Microbit.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
-            func: function(sprite, script) {
+            func(sprite, script) {
                 const value = script.getField('VALUE');
                 const data = {
                     type: 'GET_ANALOG',
@@ -512,7 +512,7 @@ Entry.Microbit.getBlocks = function() {
                 VALUE4: 3,
                 VALUE5: 4,
             },
-            func: function(sprite, script) {
+            func(sprite, script) {
                 const value = script.getField('PORT');
                 const data = {
                     type: 'GET_ANALOG',
@@ -535,13 +535,13 @@ Entry.Microbit.getBlocks = function() {
                     _set(scope.cacheValue, `GET_ANALOG.${value}`, returnData);
                 }
 
-                var value2 = script.getNumberValue('VALUE2', script);
-                var value3 = script.getNumberValue('VALUE3', script);
-                var value4 = script.getNumberValue('VALUE4', script);
-                var value5 = script.getNumberValue('VALUE5', script);
-                var stringValue4 = script.getValue('VALUE4', script);
-                var stringValue5 = script.getValue('VALUE5', script);
-                var isFloat = false;
+                let value2 = script.getNumberValue('VALUE2', script);
+                let value3 = script.getNumberValue('VALUE3', script);
+                let value4 = script.getNumberValue('VALUE4', script);
+                let value5 = script.getNumberValue('VALUE5', script);
+                const stringValue4 = script.getValue('VALUE4', script);
+                const stringValue5 = script.getValue('VALUE5', script);
+                let isFloat = false;
 
                 if (
                     (Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) ||
@@ -600,8 +600,8 @@ Entry.Microbit.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
-            func: function(sprite, script) {
-                let value = script.getField('VALUE');
+            func(sprite, script) {
+                const value = script.getField('VALUE');
                 const data = {
                     type: 'GET_DIGITAL',
                     data: {
@@ -651,8 +651,8 @@ Entry.Microbit.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
-            func: function(sprite, script) {
-                let value = script.getField('VALUE');
+            func(sprite, script) {
+                const value = script.getField('VALUE');
                 const data = {
                     type: 'GET_BUTTON',
                     data: {
@@ -706,8 +706,8 @@ Entry.Microbit.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
-            func: function(sprite, script) {
-                let value = script.getField('VALUE');
+            func(sprite, script) {
+                const value = script.getField('VALUE');
                 const data = {
                     type: 'GET_SENSOR',
                     data: {
@@ -757,8 +757,8 @@ Entry.Microbit.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
-            func: function(sprite, script) {
-                let value = script.getField('VALUE');
+            func(sprite, script) {
+                const value = script.getField('VALUE');
                 const data = {
                     type: 'GET_ACCELEROMETER',
                     data: {
@@ -867,7 +867,7 @@ Entry.Microbit.getBlocks = function() {
                 NOTE: 0,
                 BEAT: 1,
             },
-            func: function(sprite, script) {
+            func(sprite, script) {
                 const note = script.getField('NOTE');
                 const beat = script.getField('BEAT');
                 const data = {
@@ -917,7 +917,7 @@ Entry.Microbit.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
-            func: function(sprite, script) {
+            func(sprite, script) {
                 const value = script.getNumberValue('VALUE');
                 const data = {
                     type: 'CHANGE_BPM',
@@ -965,7 +965,7 @@ Entry.Microbit.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
-            func: function(sprite, script) {
+            func(sprite, script) {
                 const value = script.getNumberValue('VALUE');
                 const data = {
                     type: 'SET_BPM',
@@ -999,7 +999,7 @@ Entry.Microbit.getBlocks = function() {
             class: 'MicrobitRadio',
             isNotFor: ['microbit'],
             event: 'MicrobitRadioReceive',
-            func: function(sprite, script) {
+            func(sprite, script) {
                 return script.callReturn();
             },
             syntax: { js: [], py: [] },

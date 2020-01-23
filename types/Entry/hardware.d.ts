@@ -1,3 +1,5 @@
+/// <reference path="../index.d.ts" />
+
 /**
  * 엔트리 하드웨어 관련 타입 선언이 포함된 목록
  */
@@ -36,6 +38,7 @@ declare module Entry {
         setZero: () => void;
         checkDevice: (data: HardwareMessageData) => void;
         openHardwareDownloadPopup: () => void;
+        onReceiveData?: (portData: any) => void;
     }
 
     /**
@@ -46,13 +49,14 @@ declare module Entry {
         id: HardwareModuleId;
         name: string;
         monitorTemplate?: UnknownAny;
+        communicationType?: string;
         sendMessage?: (hw: Hardware) => void;
         setZero: () => void;
+        communicationType: string;
 
-        // 웹소켓에서 온 데이터를 직접 핸들링 하고 싶을 때 사용하는 함수. 매 메세지 수신시 발생
-        // 둘다 로직상으로 보면 사실상 같은 일을 한다. 왜 두개가 있는지도 의문
-        afterReceive?: (portData: HardwareMessageData) => void;
-        afterSend?: (sendQueue: HardwareMessageData) => void;
+        //TODO afterSend, dataHandler 의 목적이 모호하므로 추후 개선 필요
+        afterReceive?: (portData: HardwareMessageData) => void; // 데이터 수신 이후
+        afterSend?: (sendQueue: HardwareMessageData) => void; // 데이서 송신 이후
         dataHandler?: (data: HardwareMessageData) => void;
     }
 

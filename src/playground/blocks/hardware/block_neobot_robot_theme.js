@@ -4,8 +4,8 @@ Entry.NeobotRobotTheme = {
     url: 'http://www.neobot.co.kr',
     imageName: 'neobot_robot_theme.png',
     title: {
-        ko: '네오봇 로봇 테마',
-        en: 'Neobot Robot Theme',
+        ko: '네오코딩 로봇테마',
+        en: 'NEOCODING RobotTheme',
     },
     LOCAL_MAP: ['IN1', 'IN2', 'IN3', 'IR', 'IN4'],
     REMOTE_MAP: ['OUT1', 'OUT2', 'OUT3', 'DCL', 'DCR', 'SND', 'LED', 'OPT'],

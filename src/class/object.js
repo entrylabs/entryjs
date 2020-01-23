@@ -5,6 +5,7 @@
 
 import DomUtils from '../../src/util/domUtils';
 import { GEHelper } from '../graphicEngine/GEHelper';
+
 const _findIndex = require('lodash/findIndex');
 
 /**
@@ -740,6 +741,7 @@ Entry.EntryObject = class {
                     Entry.dispatchEvent('removeObject', object);
                     const { id } = object;
                     Entry.do('removeObject', id);
+                    Entry.Utils.forceStopSounds();
                 },
             },
             {

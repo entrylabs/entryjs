@@ -778,6 +778,8 @@ Lang.Blocks = {
     "FLOW_wait_until_true_2": "になるまで待つ",
     "FLOW_when_clone_start": "コピーが最初に作成された時",
     "FUNC": "関数",
+    "ANALYSIS": "データ分析",
+    "AI": "人工知能",
     "JUDGEMENT": "判断",
     "JUDGEMENT_boolean_and": "そして",
     "JUDGEMENT_boolean_not_1": " ",

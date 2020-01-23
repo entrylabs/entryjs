@@ -493,7 +493,7 @@ module.exports = {
                         throw new Error('value can not be null or undefined');
                     }
 
-                    setTimeout(function() {
+                    setTimeout(() => {
                         Entry.engine.raiseMessage(value);
                     });
                 },

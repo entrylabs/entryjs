@@ -362,6 +362,8 @@ Entry.Field = class Field {
             return 'dropdownDynamic';
         } else if (this instanceof Entry.FieldKeyboard) {
             return 'keyboard';
+        } else if (this instanceof Entry.FieldLed) {
+            return 'led';
         }
     }
 
