@@ -8,7 +8,6 @@ class DataTable {
     #tables = [];
     #view;
     modal;
-    container;
 
     set view(view) {
         this.#view = view;
@@ -105,6 +104,11 @@ class DataTable {
             },
             container,
         });
+    }
+
+    clear() {
+        this.#tables = [];
+        this.modal = null;
     }
 }
 
