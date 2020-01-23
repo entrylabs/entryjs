@@ -708,8 +708,8 @@ Entry.Playground = class Playground {
         const tableDom = Entry.createElement('div', 'dataTable')
             .addClass('entryPlaygroundTable')
             .appendTo(tableView);
-
-        this.dataTable = new DataTable(tableDom);
+        DataTable.view = tableDom;
+        this.dataTable = DataTable;
     }
 
     initSortableTableWidget() {

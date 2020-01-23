@@ -1,10 +1,10 @@
 import _isNumber from 'lodash/isNumber';
+import DataTable from '../../class/DataTable';
 
 module.exports = {
     getBlocks() {
         const getSubMenus = (value) => {
-            const { dataTable } = Entry.playground;
-            const { fields = [] } = dataTable.getSource(value) || {};
+            const { fields = [] } = DataTable.getSource(value) || {};
             return fields.map((label, index) => [label, index + 1]);
         };
 
@@ -74,8 +74,7 @@ module.exports = {
                 isNotFor: ['analysis'],
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
-                    const { dataTable } = Entry.playground;
-                    const table = dataTable.getSource(tableId, sprite);
+                    const table = DataTable.getSource(tableId, sprite);
                     table.appendValue();
                     return script.callReturn();
                 },
@@ -145,8 +144,7 @@ module.exports = {
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
                     const row = script.getNumberValue('ROW', script);
-                    const { dataTable } = Entry.playground;
-                    const table = dataTable.getSource(tableId, sprite);
+                    const table = DataTable.getSource(tableId, sprite);
                     if (table.isExist([row])) {
                         table.insertValue(row);
                     } else {
@@ -220,8 +218,7 @@ module.exports = {
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
                     const row = script.getNumberValue('ROW', script);
-                    const { dataTable } = Entry.playground;
-                    const table = dataTable.getSource(tableId, sprite);
+                    const table = DataTable.getSource(tableId, sprite);
                     if (table.isExist([row])) {
                         table.deleteValue(row);
                     } else {
@@ -330,8 +327,7 @@ module.exports = {
                     const row = script.getNumberValue('ROW', script);
                     const col = script.getNumberValue('COL', script);
                     const value = script.getValue('VALUE', script);
-                    const { dataTable } = Entry.playground;
-                    const table = dataTable.getSource(tableId, sprite);
+                    const table = DataTable.getSource(tableId, sprite);
                     if (table.isExist([row])) {
                         table.replaceValue([row, col], value);
                     } else {
@@ -385,8 +381,7 @@ module.exports = {
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
                     const property = script.getField('PROPERTY', script);
-                    const { dataTable } = Entry.playground;
-                    const table = dataTable.getSource(tableId, sprite);
+                    const table = DataTable.getSource(tableId, sprite);
                     if (property === 'ROW') {
                         const { array } = table;
                         return array.length;
@@ -459,8 +454,7 @@ module.exports = {
                     const tableId = script.getField('MATRIX', script);
                     const row = script.getNumberValue('ROW', script);
                     const col = script.getNumberValue('COL', script);
-                    const { dataTable } = Entry.playground;
-                    const table = dataTable.getSource(tableId, sprite);
+                    const table = DataTable.getSource(tableId, sprite);
                     if (table.isExist([row, col])) {
                         return table.getValue([row, col]);
                     }
@@ -534,8 +528,7 @@ module.exports = {
                     const tableId = script.getField('MATRIX', script);
                     const calc = script.getField('CALC', script);
                     const col = script.getNumberValue('COL', script);
-                    const { dataTable } = Entry.playground;
-                    const table = dataTable.getSource(tableId, sprite);
+                    const table = DataTable.getSource(tableId, sprite);
                     const array = table.array.map(({ value = [] }) =>
                         _isNumber(value[col - 1]) ? value[col - 1] : 0
                     );
@@ -609,8 +602,7 @@ module.exports = {
                 isNotFor: ['analysis'],
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
-                    const { dataTable } = Entry.playground;
-                    dataTable.showChart(tableId);
+                    DataTable.showChart(tableId);
                     return script.callReturn();
                 },
                 syntax: {
@@ -643,8 +635,7 @@ module.exports = {
                 class: 'analysis',
                 isNotFor: ['analysis'],
                 func(sprite, script) {
-                    const { dataTable } = Entry.playground;
-                    dataTable.closeChart();
+                    DataTable.closeChart();
                     return script.callReturn();
                 },
                 syntax: {

@@ -10,7 +10,7 @@ class DataTable {
     modal;
     container;
 
-    constructor(view) {
+    set view(view) {
         this.#view = view;
         this.#generateView();
     }
@@ -108,4 +108,4 @@ class DataTable {
     }
 }
 
-export default DataTable;
+export default new DataTable();
