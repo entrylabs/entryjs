@@ -608,7 +608,9 @@ module.exports = {
                 class: 'analysis',
                 isNotFor: ['analysis'],
                 func(sprite, script) {
-                    console.log('open_table_chart');
+                    const tableId = script.getField('MATRIX', script);
+                    const { dataTable } = Entry.playground;
+                    dataTable.showChart(tableId);
                     return script.callReturn();
                 },
                 syntax: {
@@ -641,7 +643,8 @@ module.exports = {
                 class: 'analysis',
                 isNotFor: ['analysis'],
                 func(sprite, script) {
-                    console.log('close_table_chart');
+                    const { dataTable } = Entry.playground;
+                    dataTable.closeChart();
                     return script.callReturn();
                 },
                 syntax: {
