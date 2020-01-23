@@ -1,7 +1,6 @@
 import { dmetTable } from '../../extensions/dmet';
 import CloudVariable from '../../extensions/CloudVariable';
 import _throttle from 'lodash/throttle';
-import { ModalChart } from '@entrylabs/tool';
 
 class DataTableSource {
     #id;
