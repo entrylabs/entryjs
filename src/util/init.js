@@ -1,7 +1,3 @@
-/**
- * @fileoverview Initialize code fore Entry
- */
-
 'use strict';
 
 import { Destroyer } from './destroyer/Destroyer';
@@ -10,12 +6,13 @@ import Expansion from '../class/Expansion';
 import AIUtilize from '../class/AIUtilize';
 import Extension from '../extensions/extension';
 import CloudVariable from '../extensions/CloudVariable';
+
 require('./utils');
 
 /**
  * Initialize method with options.
- * @param {!Element} container for entry workspace or others.
- * @param {!object} options for initialize.
+ * @param {HTMLDivElement} container for entry workspace or others.
+ * @param {Object} options for initialize.
  */
 Entry.init = function(container, options) {
     Entry.assert(typeof options === 'object', 'Init option is not object');
@@ -33,16 +30,9 @@ Entry.init = function(container, options) {
         'dispose',
     ]);
 
-    /** @type {object} */
     this.options = options;
     this.parseOptions(options);
-    this.mediaFilePath = `${options.libDir ? options.libDir : '/lib'}/entry-js/images/`;
-    this.painterBaseUrl = `${
-        options.libDir ? options.libDir : '/lib'
-    }/literallycanvas-mobile/lib/img`;
-    this.defaultPath = options.defaultDir || '';
-    this.soundPath = options.soundDir || '';
-    this.blockInjectPath = options.blockInjectDir || '';
+    setDefaultPathsFromOptions(options);
     this.cloudVariable = CloudVariable.getInstance();
 
     if (this.type === 'workspace' && this.isPhone()) {
@@ -59,15 +49,7 @@ Entry.init = function(container, options) {
     // if (this.device === 'tablet') $(this.view_).addClass('tablet');
 
     Entry.initFonts(options.fonts);
-    const { theme = 'default' } = options;
-    if (theme !== 'default') {
-        try {
-            EntryStatic.colorSet = require(`../theme/${theme}`);
-            require('../playground/block_entry').assignBlocks();
-        } catch (e) {
-            console.log('not exist theme!', e);
-        }
-    }
+    setDefaultTheme(options);
 
     Entry.paintMode = options.paintMode || 'literallycanvas';
     this.createDom(container, this.type);
@@ -125,6 +107,35 @@ Entry.init = function(container, options) {
     BigNumber.config({ ERRORS: false });
 };
 
+const setDefaultPathsFromOptions = function(options) {
+    const {
+        libDir = '/lib',
+        defaultDir = '',
+        soundDir = '',
+        blockInjectDir = '',
+        moduleBaseUrl = location.origin || 'https://playentry.org',
+    } = options;
+
+    Entry.mediaFilePath = `${libDir}/entry-js/images/`;
+    Entry.painterBaseUrl = `${libDir}/literallycanvas-mobile/lib/img`;
+    Entry.defaultPath = defaultDir;
+    Entry.soundPath = soundDir;
+    Entry.blockInjectPath = blockInjectDir;
+    Entry.moduleBaseUrl = `${moduleBaseUrl}/modules/`;
+};
+
+const setDefaultTheme = function(options) {
+    const { theme = 'default' } = options;
+    if (theme !== 'default') {
+        try {
+            EntryStatic.colorSet = require(`../theme/${theme}`);
+            require('../playground/block_entry').assignBlocks();
+        } catch (e) {
+            console.log('not exist theme!', e);
+        }
+    }
+};
+
 Entry.changeContainer = function(container) {
     container.appendChild(this.view_);
 };
@@ -137,8 +148,6 @@ Entry.loadAudio_ = function(filenames, name) {
 
     for (let i = 0; i < filenames.length; i++) {
         const filename = filenames[i];
-        //var path = Blockly.pathToBlockly + filename;
-        //createjs.Sound.registerSound(path, id, 4);
         Entry.soundQueue.loadFile({
             id: name,
             src: filename,
@@ -157,72 +166,35 @@ Entry.initialize_ = function() {
     this._destroyer = this._destroyer || new Destroyer();
     this._destroyer.destroy();
 
-    /**
-     * Initialize stage
-     * @type {!Entry.Stage}
-     * @type {!object}
-     */
     this.stage = new Entry.Stage();
     this._destroyer.add(this.stage);
 
     if (Entry.engine && Entry.engine.projectTimer) {
         Entry.engine.clearTimer();
     }
-    /**
-     * Initialize engine for run.
-     * @type {!Entry.Engine}
-     * @type {!object}
-     */
+
     this.engine = new Entry.Engine();
     this._destroyer.add(this.engine);
-
-    /**
-     * Initialize PropertyPanel.
-     * @type {!object}
-     */
 
     if (this.type !== 'minimize') {
         this.propertyPanel = new Entry.PropertyPanel();
     }
 
-    /**
-     * Initialize container for objects.
-     * @type {!Entry.Container}π
-     * @type {!object}
-     */
     this.container = new Entry.Container();
     this._destroyer.add(this.container);
 
-    /**
-     * Initialize helper.
-     * @type {!Entry.Helper}
-     * @type {!object}
-     */
     this.helper = new Entry.Helper();
     this.youtube = new Entry.Youtube();
     // this.tvCast = new Entry.TvCast();
     // this.doneProject = new Entry.DoneProject();
-    /**
-     * Initialize container for objects.
-     * @type {!Entry.VariableContainer}
-     * @type {!object}
-     */
+
     this.variableContainer = new Entry.VariableContainer();
 
     this.commander = new Entry.Commander(this.type, this.doNotSkipAny);
 
-    /**
-     * Initialize scenes.
-     * @type {!Entry.Scene}
-     * @type {!object}
-     */
     this.scene = new Entry.Scene();
     this._destroyer.add(this.scene);
 
-    /**
-     * Initialize playground.
-     * @type {!Entry.Playground}
-     */
     this.playground = new Entry.Playground();
     this._destroyer.add(this.playground);
 
@@ -233,19 +205,12 @@ Entry.initialize_ = function() {
     this._destroyer.add(this.aiUtilize);
 
     this.intro = new Entry.Intro();
-    /**
-     * Initialize toast. Toast don't need generate view.
-     * @type {!Entry.Toast}
-     */
+
     this.toast = new Entry.Toast();
 
     if (this.hw) {
         this.hw.closeConnection();
     }
-    /**
-     * Initialize hardware manager.
-     * @type {!Entry.Toast}
-     */
     this.hw = new Entry.HW();
 
     if (Entry.enableActivityLogging) {
@@ -255,7 +220,6 @@ Entry.initialize_ = function() {
     }
 
     GEHelper.INIT(this.options.useWebGL);
-    // GEHelper.INIT(0);
 };
 
 Entry.disposeContainer = function() {
@@ -587,7 +551,7 @@ Entry.Utils.initEntryEvent_ = function() {
 
 /**
  * initialize sound
- * @param {sound object} sound
+ * @param {object} sound
  */
 Entry.initSound = function(sound) {
     if (!sound || !sound.duration || sound.duration == 0) {

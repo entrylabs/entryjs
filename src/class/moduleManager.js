@@ -1,10 +1,23 @@
-Entry.moduleManager = new class {
+/*
+ * TODO 하드웨어가 아닌 기타 타입의 모듈도 수용할 수 있도록 정의
+ *  현재, 하드웨어만 로드할거기 때문에 하드웨어 로컬서버에 블록을 요청을 하고 있다.
+ *  만약 확장블록이나 카테고리 전체를 가지는 친구라면 타입 프로퍼티로 분기하여
+ *  엔트리 서버에 다이렉트로 모듈 요청을 해야할 것이다.
+ */
+Entry.moduleManager = new (class {
     /**
      * 해당 url 을 동적으로 로드한다.
      * 해당 함수는 굉장히 위험하므로 추가적인 방어로직이 필요하다.
      * @param moduleName {string} 로드할 모듈명
+     * @return Promise
      */
     loadExternalModule(moduleName) {
+        if (!Entry.EXTERNAL_MODULE_LIST) {
+            Entry.EXTERNAL_MODULE_LIST = [];
+        } else if (Entry.EXTERNAL_MODULE_LIST.includes(moduleName)) {
+            return Promise.resolve();
+        }
+
         return new Promise((resolve, reject) => {
             const scriptElementId = `entryModuleScript${Date.now()}`;
 
@@ -14,7 +27,7 @@ Entry.moduleManager = new class {
             const scriptElement = document.createElement('script');
             scriptElement.id = scriptElementId;
 
-            scriptElement.onload = function() {
+            scriptElement.onload = () => {
                 if (!Entry.EXTERNAL_MODULE_LIST) {
                     Entry.EXTERNAL_MODULE_LIST = [];
                 }
@@ -22,13 +35,12 @@ Entry.moduleManager = new class {
                 scriptElement.remove();
                 resolve();
             };
-            scriptElement.onerror = function(e) {
+            scriptElement.onerror = (e) => {
                 scriptElement.remove();
                 reject(e);
             };
 
-            // TODO baseUrl 관련해서 정리가 필요함
-            scriptElement.src = `/rest/hardware/${moduleName}/block`;
+            scriptElement.src = `${Entry.moduleBaseUrl}${moduleName}/files/block`;
 
             // noinspection JSCheckFunctionSignatures
             document.body.appendChild(scriptElement);
@@ -36,6 +48,7 @@ Entry.moduleManager = new class {
     }
 
     /**
+     * [!] 외부에서 사용하는 함수입니다. 모듈화된 블록이 엔트리 등록을 위해 사용하는 함수임
      * 각 블록정보가 존재해야할 위치에 모든 데이터를 뿌려준다. 위치는 아래와 같다
      * - Entry.HARDWARE_LIST
      * - Entry.block : 실제 블록 정보를 담는다.
@@ -49,7 +62,14 @@ Entry.moduleManager = new class {
             return;
         }
 
-        Entry.HARDWARE_LIST[moduleObject.id] = moduleObject;
+        if (typeof moduleObject.id === 'string') {
+            Entry.HARDWARE_LIST[moduleObject.id] = moduleObject;
+        } else if (moduleObject.id instanceof Array) {
+            moduleObject.id.forEach((id) => {
+                Entry.HARDWARE_LIST[id] = moduleObject;
+            });
+        }
+
         this._setLanguageTemplates(moduleObject);
         const blockObjects = moduleObject.getBlocks();
         const blockMenuBlocks = moduleObject.blockMenuBlocks;
@@ -78,4 +98,4 @@ Entry.moduleManager = new class {
             }
         }
     }
-}();
+})();
