@@ -48,34 +48,42 @@ import DataTable from '../../class/DataTable';
         dom: ['playground', 'tableAddButton'],
     };
 
-    c[COMMAND_TYPES.dataTableAddRow] = {
-        do(table, rowNum, rowInfo, setTable) {
-            setTable(table.splice(rowNum, 0, rowInfo));
-            setTable(table);
+    c[COMMAND_TYPES.editDataTable] = {
+        do() {
+            // setTable(table.splice(rowNum, 0, rowInfo));
+            // setTable(table);
+            Entry.playground.dataTable.redo();
+            return;
         },
-        state(table, rowNum, rowInfo, setTable) {
-            return [table, rowNum, rowInfo, setTable];
+        state() {
+            // return [table, rowNum, rowInfo, setTable];
+            return;
         },
-        log(table, rowNum, rowInfo, setTable) {
-            return [['row', [table, rowNum, rowInfo, setTable]]];
+        log(objectId) {
+            // return [['row', [table, rowNum, rowInfo, setTable]]];
+            return [objectId];
         },
         recordable: RECORDABLE.SUPPORT,
         validate: false,
-        undo: 'dataTableRemoveRow',
+        undo: 'uneditDataTable',
     };
-    c[COMMAND_TYPES.dataTableRemoveRow] = {
-        do(table, rowNum, rowInfo, setTable) {
-            setTable(table.splice(rowNum, 1));
-            setTable(table);
+    c[COMMAND_TYPES.uneditDataTable] = {
+        do() {
+            Entry.playground.dataTable.undo();
+            // setTable(table.splice(rowNum, 1));
+            // setTable(table);
+            return;
         },
-        state(table, rowNum, rowInfo, setTable) {
-            return [table, rowNum, rowInfo, setTable];
+        state() {
+            // return [table, rowNum, rowInfo, setTable];
+            return;
         },
-        log(table, rowNum, rowInfo, setTable) {
-            return [['row', [table, rowNum, rowInfo, setTable]]];
+        log(objectId) {
+            // return [['row', [table, rowNum, rowInfo, setTable]]];
+            return [objectId];
         },
         recordable: RECORDABLE.SUPPORT,
         validate: false,
-        undo: 'dataTableAddRow',
+        undo: 'editDataTable',
     };
 })(Entry.Command);

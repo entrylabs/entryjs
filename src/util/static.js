@@ -117,8 +117,8 @@ Entry.STATIC = {
 
         dataTableAddSource: 1301,
         dataTableRemoveSource: 1302,
-        dataTableAddRow: 1303,
-        dataTableRemoveRow: 1304,
+        editDataTable: 1303,
+        uneditDataTable: 1304,
         //TODO commands development
     },
 

@@ -59,6 +59,18 @@ class DataTable {
 
     #generateView() {
         this.dataAnalytics = new DataAnalytics({ container: this.#view, data: {} });
+        this.dataAnalytics.addListener('modified', () => {
+            console.log('MODI RECEPTED');
+            Entry.do('editDataTable');
+        });
+    }
+
+    undo() {
+        this.dataAnalytics.undo();
+    }
+
+    redo() {
+        this.dataAnalytics.redo();
     }
 
     getTableJSON() {
