@@ -130,6 +130,7 @@ Entry.clearProject = function() {
     Entry.container.clear();
     Entry.scene.clear();
     Entry.stateManager.clear();
+    DataTable.clear();
     GEHelper.resManager.clearProject();
     if (Entry.Loader) {
         Entry.Loader.loaded = false;
