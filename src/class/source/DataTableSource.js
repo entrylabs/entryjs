@@ -28,7 +28,6 @@ class DataTableSource {
 
         const apply = () => {
             if (this.modal && this.modal.isShow) {
-                console.log('set data');
                 this.modal.setData({
                     source: {
                         chart: this.chart,
