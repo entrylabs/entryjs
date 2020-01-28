@@ -63,7 +63,7 @@ class AudioUtils {
             const analyserNode = audioContext.createAnalyser();
             const biquadFilter = audioContext.createBiquadFilter();
             biquadFilter.type = 'highpass';
-            biquadFilter.frequency.value = 20;
+            biquadFilter.frequency.value = 30;
             const scriptNode = audioContext.createScriptProcessor(4096, 1, 1);
             const streamDest = audioContext.createMediaStreamDestination();
             const mediaRecorder = new MediaRecorder(streamDest.stream);
