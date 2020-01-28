@@ -78,22 +78,7 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
                     size: 11,
                 },
             ],
-            events: {
-                viewAdd: [
-                    function() {
-                        if (Entry.container) {
-                            Entry.container.showSttAnswer();
-                        }
-                    },
-                ],
-                viewDestroy: [
-                    function(block, notIncludeSelf) {
-                        if (Entry.container) {
-                            Entry.container.hideSttAnswer(block, notIncludeSelf);
-                        }
-                    },
-                ],
-            },
+            events: {},
             def: {
                 params: [3],
                 type: 'speech_to_text_convert',
@@ -132,22 +117,7 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             skeleton: 'basic_string_field',
             statements: [],
             params: [],
-            events: {
-                viewAdd: [
-                    function() {
-                        if (Entry.container) {
-                            Entry.container.showSttAnswer();
-                        }
-                    },
-                ],
-                viewDestroy: [
-                    function(block, notIncludeSelf) {
-                        if (Entry.container) {
-                            Entry.container.hideSttAnswer(block, notIncludeSelf);
-                        }
-                    },
-                ],
-            },
+            events: {},
             def: {
                 params: [3],
                 type: 'speech_to_text_get_value',
