@@ -59,8 +59,7 @@ class DataTable {
 
     #generateView() {
         this.dataAnalytics = new DataAnalytics({ container: this.#view, data: {} });
-        this.dataAnalytics.addListener('modified', () => {
-            console.log('MODI RECEPTED');
+        this.dataAnalytics.addListener('MODIFIED', () => {
             Entry.do('editDataTable');
         });
     }
@@ -100,7 +99,7 @@ class DataTable {
     }
 
     createChart(source) {
-        const tables = this.#tables.map(({ id, name }) => ([name, id]));
+        const tables = this.#tables.map(({ id, name }) => [name, id]);
         const container = Entry.Dom('div', {
             class: 'entry-table-chart',
             parent: $('body'),
