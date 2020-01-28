@@ -28,7 +28,7 @@ module.exports = {
                 include: /\.min\.js$/,
                 parallel: true,
                 terserOptions: {
-                    ecma: 8,
+                    ecma: 5,
                 },
             }),
         ],
