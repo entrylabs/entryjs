@@ -86,7 +86,6 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [3],
                 type: 'speech_to_text_convert',
             },
             paramsKeyMap: {
@@ -102,11 +101,11 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
                 try {
                     audioUtils.isRecording = true;
                     Entry.container.ableSttValue();
-                    const result = await audioUtils.startRecord(10 * 1000);
+                    const result = await audioUtils.startRecord(60 * 1000);
                     Entry.dispatchEvent('audioRecordingDone');
-                    Entry.container.setSttValue(result);
+                    Entry.container.setSttValue(result || 0);
                 } catch (e) {
-                    Entry.container.setSttValue('');
+                    Entry.container.setSttValue(0);
                     throw e;
                 }
             },
@@ -115,6 +114,7 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
                 py: [],
             },
         },
+
         speech_to_text_get_value: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
@@ -123,7 +123,6 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             params: [],
             events: {},
             def: {
-                params: [3],
                 type: 'speech_to_text_get_value',
             },
             paramsKeyMap: {
