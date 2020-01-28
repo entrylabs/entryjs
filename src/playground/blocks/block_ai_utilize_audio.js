@@ -23,6 +23,11 @@ Entry.AI_UTILIZE_BLOCK.audio = {
 };
 
 Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
+    async function initUserMedia() {
+        if (!audioUtils.isAudioInitComplete) {
+            await audioUtils.initUserMedia();
+        }
+    }
     return {
         audio_title: {
             skeleton: 'basic_text',
@@ -58,6 +63,7 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             class: 'audio',
             isNotFor: ['audio'],
             async func(sprite, script) {
+                await initUserMedia();
                 return await audioUtils.checkUserMicAvailable();
             },
             syntax: {
@@ -89,14 +95,12 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             class: 'audio',
             isNotFor: ['audio'],
             async func(sprite, script) {
+                await initUserMedia();
                 if (audioUtils.isRecording) {
                     throw new Entry.Utils.AsyncError();
                 }
                 try {
                     audioUtils.isRecording = true;
-                    if (!audioUtils.isAudioInitComplete) {
-                        await audioUtils.initUserMedia();
-                    }
                     Entry.container.ableSttValue();
                     const result = await audioUtils.startRecord(10 * 1000);
                     Entry.dispatchEvent('audioRecordingDone');
@@ -127,7 +131,8 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             },
             class: 'audio',
             isNotFor: ['audio'],
-            func(sprite, script) {
+            async func(sprite, script) {
+                await initUserMedia();
                 return Entry.container.getSttValue();
             },
             syntax: {
@@ -151,18 +156,9 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             },
             class: 'audio',
             isNotFor: ['audio'],
-            func(sprite, script) {
-                return new PromiseManager().Promise(async (resolve) => {
-                    try {
-                        if (!audioUtils.isAudioInitComplete) {
-                            await audioUtils.initUserMedia();
-                        }
-                        resolve(audioUtils.currentVolume);
-                    } catch (e) {
-                        console.log(e);
-                        resolve('error');
-                    }
-                });
+            async func(sprite, script) {
+                await initUserMedia();
+                return audioUtils.currentVolume;
             },
             syntax: {
                 js: [],
