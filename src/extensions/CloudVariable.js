@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 import _uniq from 'lodash/uniq';
 import _uniqBy from 'lodash/uniqBy';
-import { dmet, dmetVariable, dmetList } from './dmet';
+import { dmet, dmetList, dmetVariable } from './dmet';
 import singleInstance from '../core/singleInstance';
 
 class CloudVariableExtension {

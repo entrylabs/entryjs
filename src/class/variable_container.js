@@ -4,7 +4,6 @@
 'use strict';
 
 import SimpleBar from 'simplebar';
-import fetch from 'isomorphic-fetch';
 import xssFilters from 'xss-filters';
 import CloudVariable from '../extensions/CloudVariable';
 
