@@ -566,7 +566,7 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
         do(id, value) {
             const VC = getVC();
             const list = VC.getList(id);
-            const length = list.array_.length;
+            const length = list.getArray().length;
 
             if (value === 'minus') {
                 value = Math.max(0, length - 1);
@@ -606,7 +606,7 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
         do(id, idx = 0, data = '0') {
             const VC = getVC();
             const list = VC.getList(id);
-            list.array_[idx] = { data };
+            list.getArray()[idx] = { data };
             VC.updateListSettingView();
             //list.updateView();
         },

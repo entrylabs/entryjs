@@ -1390,10 +1390,10 @@ Entry.getListRealIndex = function(index, list) {
                 index = 1;
                 break;
             case 'LAST':
-                index = list.array_.length;
+                index = list.getArray().length;
                 break;
             case 'RANDOM':
-                index = Math.floor(Math.random() * list.array_.length) + 1;
+                index = Math.floor(Math.random() * list.getArray().length) + 1;
                 break;
         }
     }
