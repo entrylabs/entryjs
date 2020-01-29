@@ -353,7 +353,7 @@ Entry.Engine = class Engine {
             );
             this.audioShadePanel_.appendChild(audioShadeMainCircle);
             const micImage = Entry.createElement('img', 'audioShadeImg').addClass('audioShadeImg');
-            micImage.src = 'lib/entry-js/images/ic-audio-sensing-mic.svg';
+            micImage.src = '/lib/entry-js/images/ic-audio-sensing-mic.svg';
             audioShadeMainCircle.appendChild(micImage);
 
             const audioShadeText = Entry.createElement('div', 'audioShadeText').addClass(
@@ -361,8 +361,12 @@ Entry.Engine = class Engine {
             );
             audioShadeText.innerHTML = Lang.Msgs.ai_utilize_audio_listening;
             this.audioShadePanel_.appendChild(audioShadeText);
-
-            this.view_.insertBefore(this.audioShadePanel_, Entry.stage.canvas.canvas);
+            this.minimizedView_ = document.querySelector('#entryCanvasWrapper');
+            if (this.view_.classList[0] === 'entryEngine') {
+                this.minimizedView_.insertBefore(this.audioShadePanel_, Entry.stage.canvas.canvas);
+            } else {
+                this.view_.insertBefore(this.audioShadePanel_, Entry.stage.canvas.canvas);
+            }
         }
     }
 
@@ -431,8 +435,12 @@ Entry.Engine = class Engine {
             // );
             // audioShadeText.innerHTML = '진행중이에요';
             // this.audioProgressPanel_.appendChild(audioShadeText);
-
-            this.view_.insertBefore(this.audioProgressPanel_, Entry.stage.canvas.canvas);
+            this.minimizedView_ = document.querySelector('#entryCanvasWrapper');
+            if (this.view_.classList[0] === 'entryEngine') {
+                this.minimizedView_.insertBefore(this.audioShadePanel_, Entry.stage.canvas.canvas);
+            } else {
+                this.view_.insertBefore(this.audioProgressPanel_, Entry.stage.canvas.canvas);
+            }
         }
     }
 
@@ -549,7 +557,9 @@ Entry.Engine = class Engine {
     update() {
         if (Entry.engine.isState('run')) {
             Entry.engine.computeObjects();
-            Entry.hw.update();
+            if (Entry.hw.communicationType !== 'manual') {
+                Entry.hw.update();
+            }
         }
     }
 
@@ -939,7 +949,7 @@ Entry.Engine = class Engine {
         }
 
         if (Entry.engine.isState('stop')) {
-            if (isWorkspace && (keyCode >= 37 && keyCode <= 40)) {
+            if (isWorkspace && keyCode >= 37 && keyCode <= 40) {
                 Entry.stage.moveSprite(e);
             }
         }

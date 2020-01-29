@@ -608,7 +608,7 @@ Entry.Container = class Container {
                 true
             );
         }
-        return object.entity;
+        return Entry.engine.executeEntity.get(object.entity);
     }
 
     /**

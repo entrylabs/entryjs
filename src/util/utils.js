@@ -17,10 +17,19 @@ Entry.TEXT_ALIGNS = ['center', 'left', 'right'];
 Entry.clipboard = null;
 
 /**
- * Load project
- * @param {?Project} project
+ * 프로젝트 가 외부 모듈이 사용되었는지 확인하고, 로드한다
+ * @param {*} project 엔트리 프로젝트
+ * @return Promise
  */
+Entry.loadExternalModules = async (project) => {
+    const { externalModules = [] } = project;
+    await Promise.all(externalModules.map(Entry.moduleManager.loadExternalModule));
+};
 
+/**
+ * Load project
+ * @param {*} project
+ */
 Entry.loadProject = function(project) {
     if (!project) {
         project = Entry.getStartProject(Entry.mediaFilePath);
@@ -1381,10 +1390,10 @@ Entry.getListRealIndex = function(index, list) {
                 index = 1;
                 break;
             case 'LAST':
-                index = list.array_.length;
+                index = list.getArray().length;
                 break;
             case 'RANDOM':
-                index = Math.floor(Math.random() * list.array_.length) + 1;
+                index = Math.floor(Math.random() * list.getArray().length) + 1;
                 break;
         }
     }
@@ -1682,6 +1691,7 @@ Entry.Utils.isTouchEvent = function({ type }) {
 
 Entry.Utils.inherit = function(parent, child) {
     function F() {}
+
     F.prototype = parent.prototype;
     child.prototype = new F();
     return child;
@@ -1846,8 +1856,25 @@ Entry.Utils.addBlockPattern = function(boardSvgDom, suffix) {
     return { pattern };
 };
 
+function handleOptionalBlocksActive(item) {
+    const { expansionBlocks = [], aiUtilizeBlocks = [] } = item;
+    if (expansionBlocks.length > 0) {
+        Entry.expansion.addExpansionBlocks(expansionBlocks);
+    }
+    if (aiUtilizeBlocks.length > 0) {
+        Entry.aiUtilize.addAIUtilizeBlocks(aiUtilizeBlocks);
+    }
+}
+
 Entry.Utils.addNewBlock = function(item) {
-    const { script, functions, messages, variables, expansionBlocks = [] } = item;
+    const {
+        script,
+        functions,
+        messages,
+        variables,
+        expansionBlocks = [],
+        aiUtilizeBlocks = [],
+    } = item;
     const parseScript = JSON.parse(script);
     if (!parseScript) {
         return;
@@ -1868,7 +1895,8 @@ Entry.Utils.addNewBlock = function(item) {
             variable.object = _.get(Entry, ['container', 'selectedObject', 'id'], '');
         }
     });
-    Entry.expansion.addExpansionBlocks(expansionBlocks);
+    handleOptionalBlocksActive(item);
+
     Entry.variableContainer.appendMessages(messages);
     Entry.variableContainer.appendVariables(variables);
     Entry.variableContainer.appendFunctions(functions);
@@ -1883,7 +1911,14 @@ Entry.Utils.addNewBlock = function(item) {
 
 Entry.Utils.addNewObject = function(sprite) {
     if (sprite) {
-        const { objects, functions, messages, variables, expansionBlocks = [] } = sprite;
+        const {
+            objects,
+            functions,
+            messages,
+            variables,
+            expansionBlocks = [],
+            aiUtilizeBlocks = [],
+        } = sprite;
 
         if (
             Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD &&
@@ -1893,7 +1928,7 @@ Entry.Utils.addNewObject = function(sprite) {
             return entrylms.alert(Lang.Menus.object_import_syntax_error);
         }
         const objectIdMap = {};
-        Entry.expansion.addExpansionBlocks(expansionBlocks);
+        handleOptionalBlocksActive(sprite);
         variables.forEach((variable) => {
             const { object } = variable;
             if (object) {
@@ -1972,7 +2007,7 @@ Entry.Utils.createMouseEvent = function(type, event) {
 Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     let block = scope.block;
     message = message || 'Runtime Error';
-
+    let toast = error.toast;
     const engine = Entry.engine;
 
     engine && engine.toggleStop();
@@ -1998,7 +2033,7 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     if (message === 'IncompatibleError' && Entry.toast) {
         Entry.toast.alert(
             Lang.Msgs.warn,
-            [Lang.Workspace.check_runtime_error, 'IE/Safari 에서는 지원하지 않는 블록입니다.'],
+            toast || [Lang.Workspace.check_runtime_error, Lang.Workspace.check_browser_error],
             true
         );
     } else if (Entry.toast) {
@@ -2021,9 +2056,10 @@ Entry.Utils.AsyncError = function(message) {
 Entry.Utils.AsyncError.prototype = new Error();
 Entry.Utils.AsyncError.prototype.constructor = Entry.Utils.AsyncError;
 
-Entry.Utils.IncompatibleError = function(message) {
+Entry.Utils.IncompatibleError = function({ message, toast }) {
     this.name = 'IncompatibleError';
     this.message = message || 'IncompatibleError';
+    this.toast = toast || null;
 };
 Entry.Utils.IncompatibleError.prototype = new Error();
 Entry.Utils.IncompatibleError.prototype.constructor = Entry.Utils.IncompatibleError;
@@ -2050,10 +2086,10 @@ Entry.Utils.waitForWebfonts = function(fonts, callback) {
             (font) =>
                 new Promise((resolve) => {
                     FontFaceOnload(font, {
-                        success: function() {
+                        success() {
                             resolve();
                         },
-                        error: function() {
+                        error() {
                             console.log('fail', font);
                             resolve();
                         },

@@ -48,11 +48,17 @@ class AudioUtils {
         if (!this.isAudioSupport) {
             throw new Entry.Utils.IncompatibleError();
         }
-
+        let mediaStream;
         try {
-            const mediaStream = await navigator.mediaDevices.getUserMedia({
+            mediaStream = await navigator.mediaDevices.getUserMedia({
                 audio: true,
             });
+        } catch (err) {
+            throw new Entry.Utils.IncompatibleError({
+                toast: [Lang.Workspace.check_microphone_error],
+            });
+        }
+        try {
             if (!window.AudioContext) {
                 if (window.webkitAudioContext) {
                     window.AudioContext = window.webkitAudioContext;
@@ -63,7 +69,7 @@ class AudioUtils {
             const analyserNode = audioContext.createAnalyser();
             const biquadFilter = audioContext.createBiquadFilter();
             biquadFilter.type = 'highpass';
-            biquadFilter.frequency.value = 20;
+            biquadFilter.frequency.value = 30;
             const scriptNode = audioContext.createScriptProcessor(4096, 1, 1);
             const streamDest = audioContext.createMediaStreamDestination();
             const mediaRecorder = new MediaRecorder(streamDest.stream);
@@ -92,7 +98,7 @@ class AudioUtils {
         return await new Promise(async (resolve, reject) => {
             if (!this.isAudioInitComplete) {
                 console.log('audio not initialized');
-                resolve();
+                resolve(0);
                 return;
             }
 
