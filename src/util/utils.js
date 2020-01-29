@@ -1982,7 +1982,7 @@ Entry.Utils.createMouseEvent = function(type, event) {
 Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     let block = scope.block;
     message = message || 'Runtime Error';
-
+    let toast = error.toast;
     const engine = Entry.engine;
 
     engine && engine.toggleStop();
@@ -2008,7 +2008,7 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     if (message === 'IncompatibleError' && Entry.toast) {
         Entry.toast.alert(
             Lang.Msgs.warn,
-            [Lang.Workspace.check_runtime_error, 'IE/Safari 에서는 지원하지 않는 블록입니다.'],
+            toast || [Lang.Workspace.check_runtime_error, Lang.Workspace.check_browser_error],
             true
         );
     } else if (Entry.toast) {
@@ -2031,9 +2031,10 @@ Entry.Utils.AsyncError = function(message) {
 Entry.Utils.AsyncError.prototype = new Error();
 Entry.Utils.AsyncError.prototype.constructor = Entry.Utils.AsyncError;
 
-Entry.Utils.IncompatibleError = function(message) {
+Entry.Utils.IncompatibleError = function({ message, toast }) {
     this.name = 'IncompatibleError';
     this.message = message || 'IncompatibleError';
+    this.toast = toast || null;
 };
 Entry.Utils.IncompatibleError.prototype = new Error();
 Entry.Utils.IncompatibleError.prototype.constructor = Entry.Utils.IncompatibleError;
