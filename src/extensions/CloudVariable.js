@@ -221,7 +221,7 @@ class CloudVariableExtension {
         if (!this.#cvSocket) {
             return;
         }
-        const variable = this.#data.get(target);
+        const variable = this.#data && this.#data.get(target);
         if (!variable) {
             return;
         }
