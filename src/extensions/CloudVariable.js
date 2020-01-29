@@ -45,10 +45,11 @@ class CloudVariableExtension {
         if (this.#cvSocket || !this.cvServer) {
             return;
         }
-        const { url, query } = this.cvServer;
+        const { url, query, type } = this.cvServer;
         const socket = io(url, {
             path: '/cv',
             query: {
+                type,
                 q: query,
             },
             transports: ['websocket'],
