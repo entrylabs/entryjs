@@ -1856,8 +1856,25 @@ Entry.Utils.addBlockPattern = function(boardSvgDom, suffix) {
     return { pattern };
 };
 
+function handleOptionalBlocksActive(item) {
+    const { expansionBlocks = [], aiUtilizeBlocks = [] } = item;
+    if (expansionBlocks.length > 0) {
+        Entry.expansion.addExpansionBlocks(expansionBlocks);
+    }
+    if (aiUtilizeBlocks.length > 0) {
+        Entry.aiUtilize.addAIUtilizeBlocks(aiUtilizeBlocks);
+    }
+}
+
 Entry.Utils.addNewBlock = function(item) {
-    const { script, functions, messages, variables, expansionBlocks = [] } = item;
+    const {
+        script,
+        functions,
+        messages,
+        variables,
+        expansionBlocks = [],
+        aiUtilizeBlocks = [],
+    } = item;
     const parseScript = JSON.parse(script);
     if (!parseScript) {
         return;
@@ -1878,7 +1895,8 @@ Entry.Utils.addNewBlock = function(item) {
             variable.object = _.get(Entry, ['container', 'selectedObject', 'id'], '');
         }
     });
-    Entry.expansion.addExpansionBlocks(expansionBlocks);
+    handleOptionalBlocksActive(item);
+
     Entry.variableContainer.appendMessages(messages);
     Entry.variableContainer.appendVariables(variables);
     Entry.variableContainer.appendFunctions(functions);
@@ -1893,7 +1911,14 @@ Entry.Utils.addNewBlock = function(item) {
 
 Entry.Utils.addNewObject = function(sprite) {
     if (sprite) {
-        const { objects, functions, messages, variables, expansionBlocks = [] } = sprite;
+        const {
+            objects,
+            functions,
+            messages,
+            variables,
+            expansionBlocks = [],
+            aiUtilizeBlocks = [],
+        } = sprite;
 
         if (
             Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD &&
@@ -1903,7 +1928,7 @@ Entry.Utils.addNewObject = function(sprite) {
             return entrylms.alert(Lang.Menus.object_import_syntax_error);
         }
         const objectIdMap = {};
-        Entry.expansion.addExpansionBlocks(expansionBlocks);
+        handleOptionalBlocksActive(sprite);
         variables.forEach((variable) => {
             const { object } = variable;
             if (object) {
