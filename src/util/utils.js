@@ -2011,7 +2011,6 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     const engine = Entry.engine;
 
     engine && engine.toggleStop();
-    console.log(error);
     if (Entry.type === 'workspace') {
         if (scope.block && 'funcBlock' in scope.block) {
             block = scope.block.funcBlock;
