@@ -1390,10 +1390,10 @@ Entry.getListRealIndex = function(index, list) {
                 index = 1;
                 break;
             case 'LAST':
-                index = list.array_.length;
+                index = list.getArray().length;
                 break;
             case 'RANDOM':
-                index = Math.floor(Math.random() * list.array_.length) + 1;
+                index = Math.floor(Math.random() * list.getArray().length) + 1;
                 break;
         }
     }
@@ -2011,6 +2011,7 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     const engine = Entry.engine;
 
     engine && engine.toggleStop();
+    console.log(error);
     if (Entry.type === 'workspace') {
         if (scope.block && 'funcBlock' in scope.block) {
             block = scope.block.funcBlock;
@@ -2030,15 +2031,13 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     }
 
     if (message === 'IncompatibleError' && Entry.toast) {
-        if (toast) {
-            Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_microphone_error, true);
-        } else {
-            Entry.toast.alert(
-                Lang.Msgs.warn,
-                toast || [Lang.Workspace.check_runtime_error, Lang.Workspace.check_browser_error],
-                true
-            );
-        }
+        Entry.toast.alert(
+            Lang.Msgs.warn,
+            toast || [Lang.Workspace.check_runtime_error, Lang.Workspace.check_browser_error],
+            true
+        );
+    } else if (Entry.toast) {
+        Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, true);
     }
 
     if (error) {
