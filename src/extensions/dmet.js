@@ -77,8 +77,9 @@ class dmetList {
                     this.#object[key] = data;
                     return data;
                 });
-            } else {
-                throw 'data is wrong.';
+            } else {                
+                this.#array = [];
+                this.#object = {};
             }
             this._id = _id;
             this.#id = id;
