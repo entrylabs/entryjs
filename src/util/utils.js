@@ -2007,11 +2007,10 @@ Entry.Utils.createMouseEvent = function(type, event) {
 Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     let block = scope.block;
     message = message || 'Runtime Error';
-    let toast = error.toast;
+    const toast = error.toast;
     const engine = Entry.engine;
 
     engine && engine.toggleStop();
-
     if (Entry.type === 'workspace') {
         if (scope.block && 'funcBlock' in scope.block) {
             block = scope.block.funcBlock;
@@ -2031,13 +2030,15 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     }
 
     if (message === 'IncompatibleError' && Entry.toast) {
-        Entry.toast.alert(
-            Lang.Msgs.warn,
-            toast || [Lang.Workspace.check_runtime_error, Lang.Workspace.check_browser_error],
-            true
-        );
-    } else if (Entry.toast) {
-        Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, true);
+        if (toast) {
+            Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_microphone_error, true);
+        } else {
+            Entry.toast.alert(
+                Lang.Msgs.warn,
+                toast || [Lang.Workspace.check_runtime_error, Lang.Workspace.check_browser_error],
+                true
+            );
+        }
     }
 
     if (error) {
@@ -2056,7 +2057,7 @@ Entry.Utils.AsyncError = function(message) {
 Entry.Utils.AsyncError.prototype = new Error();
 Entry.Utils.AsyncError.prototype.constructor = Entry.Utils.AsyncError;
 
-Entry.Utils.IncompatibleError = function({ message, toast }) {
+Entry.Utils.IncompatibleError = function(message, toast) {
     this.name = 'IncompatibleError';
     this.message = message || 'IncompatibleError';
     this.toast = toast || null;

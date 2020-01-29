@@ -54,9 +54,9 @@ class AudioUtils {
                 audio: true,
             });
         } catch (err) {
-            throw new Entry.Utils.IncompatibleError({
-                toast: [Lang.Workspace.check_microphone_error],
-            });
+            throw new Entry.Utils.IncompatibleError('IncompatibleError', [
+                Lang.Workspace.check_microphone_error,
+            ]);
         }
         try {
             if (!window.AudioContext) {
