@@ -2689,7 +2689,7 @@ Entry.VariableContainer = class VariableContainer {
                     const { target } = e;
                     const index = target.getAttribute('data-index');
                     data[index] = this.createListValueElement(index, target.value, startIndex);
-                    list.array_[index] = { data: target.value };
+                    list.getArray()[index] = { data: target.value };
                     list.updateView();
                 })
             );

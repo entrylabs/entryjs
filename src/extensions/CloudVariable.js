@@ -1,6 +1,4 @@
 import io from 'socket.io-client';
-import _uniq from 'lodash/uniq';
-import _uniqBy from 'lodash/uniqBy';
 import { dmet, dmetList, dmetVariable } from './dmet';
 import singleInstance from '../core/singleInstance';
 
@@ -81,7 +79,7 @@ class CloudVariableExtension {
                 }
             });
             socket.on('welcome', (variables = []) => {
-                this.#convertToUniqList(variables).forEach((item) => {
+                variables.forEach((item) => {
                     this.#disabled[item.id] = !!item.isOffline;
                 });
                 console.log('welcome', variables, this.#disabled);
@@ -110,7 +108,7 @@ class CloudVariableExtension {
     }
 
     setDefaultData(defaultData) {
-        this.#defaultData = this.#convertToUniqList(defaultData);
+        this.#defaultData = defaultData;
         console.log(this.#defaultData);
     }
 
@@ -129,18 +127,6 @@ class CloudVariableExtension {
             await this.#createList(name, id_);
         }
         // Entry.dispatchEvent('saveVariable');
-    }
-
-    #convertToUniqList(data) {
-        return data.map((item) => {
-            if (item.list) {
-                item.list = _uniq(item.list);
-            }
-            if (item.array) {
-                item.array = _uniqBy(item.array, 'key');
-            }
-            return item;
-        });
     }
 
     #createVariable(name, id) {
@@ -235,7 +221,7 @@ class CloudVariableExtension {
         if (!this.#cvSocket) {
             return;
         }
-        const variable = this.#data.get(target);
+        const variable = this.#data && this.#data.get(target);
         if (!variable) {
             return;
         }

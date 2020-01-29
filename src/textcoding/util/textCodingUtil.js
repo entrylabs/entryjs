@@ -543,11 +543,11 @@ class TextCodingUtil {
 
             errorMessage = this.validateName(list.name_, errorSuffix);
             // 객체별 내부값 검사 후 문제가 없으면 리스트명에 대한 검사
-            for (let j = 0; j < list.array_.length; j++) {
+            for (let j = 0; j < list.getArray().length; j++) {
                 if (errorMessage) {
                     break;
                 }
-                const elem = list.array_[j];
+                const elem = list.getArray()[j];
                 errorMessage = this.validateTargetNotExceedMaxNumber(elem.data);
             }
 
