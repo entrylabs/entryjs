@@ -370,7 +370,7 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
     }
 
     spliceBlock() {
-        this.updateValueBlock();
+        // this.updateValueBlock();
     }
 
     _updateBG() {
