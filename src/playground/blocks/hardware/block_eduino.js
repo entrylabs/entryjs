@@ -1,6 +1,6 @@
 'use strict';
 
-Entry.ArduinoExt = {
+Entry.eduino = {
     id: '3B.1',
     name: 'eduino',
     url: 'http://www.eduino.kr/',
@@ -69,50 +69,50 @@ Entry.ArduinoExt = {
     BlockState: {},
 };
 
-Entry.ArduinoExt.setLanguage = function() {
+Entry.eduino.setLanguage = function() {
     return {
         ko: {
             template: {
-                arduino_ext_get_analog_value: '아날로그 %1 번 센서값',
-                arduino_ext_get_analog_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
-                arduino_ext_get_ultrasonic_value: '울트라소닉 Trig %1 Echo %2 센서값',
-                arduino_ext_toggle_led: '디지털 %1 번 핀 %2 %3',
-                arduino_ext_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
-                arduino_ext_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
-                arduino_ext_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
-                arduino_ext_get_digital: '디지털 %1 번 센서값',
+                eduino_get_analog_value: '아날로그 %1 번 센서값',
+                eduino_get_analog_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
+                eduino_get_ultrasonic_value: '초음파센서 Trig핀 %1 Echo핀 %2 ',
+                eduino_toggle_led: '디지털 %1 번 핀 %2 %3',
+                eduino_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                eduino_set_tone: '디지털 %1 번 핀의 부저를 %2 %3 음으로 %4 초 연주하기 %5',
+                eduino_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
+                eduino_get_digital: '디지털 %1 번 센서값',
             },
         },
         en: {
             template: {
-                arduino_ext_get_analog_value: 'Analog %1 Sensor value',
-                arduino_ext_get_analog_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
-                arduino_ext_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
-                arduino_ext_toggle_led: 'Digital %1 Pin %2 %3',
-                arduino_ext_digital_pwm: 'Digital %1 Pin %2 %3',
-                arduino_ext_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
-                arduino_ext_set_servo: 'Set servo pin %1 angle as %2 %3',
-                arduino_ext_get_digital: 'Digital %1 Sensor value',
+                eduino_get_analog_value: 'Analog %1 Sensor value',
+                eduino_get_analog_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
+                eduino_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
+                eduino_toggle_led: 'Digital %1 Pin %2 %3',
+                eduino_digital_pwm: 'Digital %1 Pin %2 %3',
+                eduino_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
+                eduino_set_servo: 'Set servo pin %1 angle as %2 %3',
+                eduino_get_digital: 'Digital %1 Sensor value',
             },
         },
     };
 };
 
-Entry.ArduinoExt.blockMenuBlocks = [
-    'arduino_ext_get_analog_value',
-    'arduino_ext_get_analog_value_map',
-    'arduino_ext_get_ultrasonic_value',
-    'arduino_ext_get_digital',
-    'arduino_ext_toggle_led',
-    'arduino_ext_digital_pwm',
-    'arduino_ext_set_servo',
-    'arduino_ext_set_tone',
+Entry.eduino.blockMenuBlocks = [
+    'eduino_get_analog_value',
+    'eduino_get_analog_value_map',
+    'eduino_get_ultrasonic_value',
+    'eduino_get_digital',
+    'eduino_toggle_led',
+    'eduino_digital_pwm',
+    'eduino_set_servo',
+    'eduino_set_tone',
 ];
 
-//region arduinoExt 아두이노 확장모드
-Entry.ArduinoExt.getBlocks = function() {
+//region eduino 아두이노 확장모드
+Entry.eduino.getBlocks = function() {
     return {
-        arduino_ext_analog_list: {
+        eduino_analog_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -165,17 +165,17 @@ Entry.ArduinoExt.getBlocks = function() {
                                 value: '0',
                                 fontSize: 11,
                                 converter: Entry.block.converters.returnStringKey,
-                                codeMap: 'Entry.CodeMap.Arduino.arduino_ext_analog_list[0]',
+                                codeMap: 'Entry.CodeMap.Arduino.eduino_analog_list[0]',
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
-                        keyOption: 'arduino_ext_analog_list',
+                        keyOption: 'eduino_analog_list',
                     },
                 ],
             },
         },
-        arduino_ext_get_analog_value: {
+        eduino_get_analog_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -192,16 +192,16 @@ Entry.ArduinoExt.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'arduino_ext_analog_list',
+                        type: 'eduino_analog_list',
                     },
                 ],
-                type: 'arduino_ext_get_analog_value',
+                type: 'eduino_get_analog_value',
             },
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'ArduinoExtGet',
-            isNotFor: ['ArduinoExt'],
+            class: 'eduinoGet',
+            isNotFor: ['eduino'],
             func(sprite, script) {
                 let port = script.getValue('PORT', script);
                 const ANALOG = Entry.hw.portData.ANALOG;
@@ -226,7 +226,7 @@ Entry.ArduinoExt.getBlocks = function() {
                 ],
             },
         },
-        arduino_ext_get_analog_value_map: {
+        eduino_get_analog_value_map: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -263,10 +263,10 @@ Entry.ArduinoExt.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'arduino_ext_get_analog_value',
+                        type: 'eduino_get_analog_value',
                         params: [
                             {
-                                type: 'arduino_ext_analog_list',
+                                type: 'eduino_analog_list',
                             },
                         ],
                     },
@@ -287,7 +287,7 @@ Entry.ArduinoExt.getBlocks = function() {
                         params: ['100'],
                     },
                 ],
-                type: 'arduino_ext_get_analog_value_map',
+                type: 'eduino_get_analog_value_map',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -296,8 +296,8 @@ Entry.ArduinoExt.getBlocks = function() {
                 VALUE4: 3,
                 VALUE5: 4,
             },
-            class: 'ArduinoExtGet',
-            isNotFor: ['ArduinoExt'],
+            class: 'eduinoGet',
+            isNotFor: ['eduino'],
             func(sprite, script) {
                 let result = script.getValue('PORT', script);
                 const ANALOG = Entry.hw.portData.ANALOG;
@@ -372,7 +372,7 @@ Entry.ArduinoExt.getBlocks = function() {
                 ],
             },
         },
-        arduino_ext_get_ultrasonic_value: {
+        eduino_get_ultrasonic_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -402,14 +402,14 @@ Entry.ArduinoExt.getBlocks = function() {
                         params: ['4'],
                     },
                 ],
-                type: 'arduino_ext_get_ultrasonic_value',
+                type: 'eduino_get_ultrasonic_value',
             },
             paramsKeyMap: {
                 PORT1: 0,
                 PORT2: 1,
             },
-            class: 'ArduinoExtGet',
-            isNotFor: ['ArduinoExt'],
+            class: 'eduinoGet',
+            isNotFor: ['eduino'],
             func(sprite, script) {
                 const port1 = script.getNumberValue('PORT1', script);
                 const port2 = script.getNumberValue('PORT2', script);
@@ -423,7 +423,7 @@ Entry.ArduinoExt.getBlocks = function() {
                 if (!Entry.hw.sendQueue.GET) {
                     Entry.hw.sendQueue.GET = {};
                 }
-                Entry.hw.sendQueue.GET[Entry.ArduinoExt.sensorTypes.ULTRASONIC] = {
+                Entry.hw.sendQueue.GET[Entry.eduino.sensorTypes.ULTRASONIC] = {
                     port: [port1, port2],
                     time: new Date().getTime(),
                 };
@@ -449,7 +449,7 @@ Entry.ArduinoExt.getBlocks = function() {
                 ],
             },
         },
-        arduino_ext_get_digital: {
+        eduino_get_digital: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -469,23 +469,23 @@ Entry.ArduinoExt.getBlocks = function() {
                         params: [2],
                     },
                 ],
-                type: 'arduino_ext_get_digital',
+                type: 'eduino_get_digital',
             },
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'ArduinoExtGet',
-            isNotFor: ['ArduinoExt'],
+            class: 'eduinoGet',
+            isNotFor: ['eduino'],
             func(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
-                if (name === 'ArduinoExt' || name === 'ArduinoNano') {
+                if (name === 'eduino' || name === 'ArduinoNano') {
                     const port = script.getNumberValue('PORT', script);
                     const DIGITAL = Entry.hw.portData.DIGITAL;
                     if (!Entry.hw.sendQueue.GET) {
                         Entry.hw.sendQueue.GET = {};
                     }
-                    Entry.hw.sendQueue.GET[Entry.ArduinoExt.sensorTypes.DIGITAL] = {
+                    Entry.hw.sendQueue.GET[Entry.eduino.sensorTypes.DIGITAL] = {
                         port,
                         time: new Date().getTime(),
                     };
@@ -560,7 +560,7 @@ Entry.ArduinoExt.getBlocks = function() {
                 ],
             },
         },
-        arduino_ext_toggle_led: {
+        eduino_toggle_led: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -594,14 +594,14 @@ Entry.ArduinoExt.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'arduino_ext_toggle_led',
+                type: 'eduino_toggle_led',
             },
             paramsKeyMap: {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'ArduinoExt',
-            isNotFor: ['ArduinoExt'],
+            class: 'eduino',
+            isNotFor: ['eduino'],
             func(sprite, script) {
                 const port = script.getNumberValue('PORT');
                 let value = script.getValue('VALUE');
@@ -609,9 +609,9 @@ Entry.ArduinoExt.getBlocks = function() {
                 if (typeof value === 'string') {
                     value = value.toLowerCase();
                 }
-                if (Entry.ArduinoExt.highList.indexOf(value) > -1) {
+                if (Entry.eduino.highList.indexOf(value) > -1) {
                     value = 255;
-                } else if (Entry.ArduinoExt.lowList.indexOf(value) > -1) {
+                } else if (Entry.eduino.lowList.indexOf(value) > -1) {
                     value = 0;
                 } else {
                     throw new Error();
@@ -620,7 +620,7 @@ Entry.ArduinoExt.getBlocks = function() {
                     Entry.hw.sendQueue.SET = {};
                 }
                 Entry.hw.sendQueue.SET[port] = {
-                    type: Entry.ArduinoExt.sensorTypes.DIGITAL,
+                    type: Entry.eduino.sensorTypes.DIGITAL,
                     data: value,
                     time: new Date().getTime(),
                 };
@@ -645,7 +645,7 @@ Entry.ArduinoExt.getBlocks = function() {
                 ],
             },
         },
-        arduino_ext_digital_pwm: {
+        eduino_digital_pwm: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -679,14 +679,14 @@ Entry.ArduinoExt.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'arduino_ext_digital_pwm',
+                type: 'eduino_digital_pwm',
             },
             paramsKeyMap: {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'ArduinoExt',
-            isNotFor: ['ArduinoExt'],
+            class: 'eduino',
+            isNotFor: ['eduino'],
             func(sprite, script) {
                 const port = script.getNumberValue('PORT');
                 let value = script.getNumberValue('VALUE');
@@ -697,7 +697,7 @@ Entry.ArduinoExt.getBlocks = function() {
                     Entry.hw.sendQueue.SET = {};
                 }
                 Entry.hw.sendQueue.SET[port] = {
-                    type: Entry.ArduinoExt.sensorTypes.PWM,
+                    type: Entry.eduino.sensorTypes.PWM,
                     data: value,
                     time: new Date().getTime(),
                 };
@@ -722,7 +722,7 @@ Entry.ArduinoExt.getBlocks = function() {
                 ],
             },
         },
-        arduino_ext_tone_list: {
+        eduino_tone_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -792,12 +792,12 @@ Entry.ArduinoExt.getBlocks = function() {
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
-                        keyOption: 'arduino_ext_tone_list',
+                        keyOption: 'eduino_tone_list',
                     },
                 ],
             },
         },
-        arduino_ext_tone_value: {
+        eduino_tone_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -813,10 +813,10 @@ Entry.ArduinoExt.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'arduino_ext_tone_list',
+                        type: 'eduino_tone_list',
                     },
                 ],
-                type: 'arduino_ext_tone_value',
+                type: 'eduino_tone_value',
             },
             paramsKeyMap: {
                 NOTE: 0,
@@ -829,12 +829,12 @@ Entry.ArduinoExt.getBlocks = function() {
                 py: [
                     {
                         syntax: '%1',
-                        keyOption: 'arduino_ext_tone_value',
+                        keyOption: 'eduino_tone_value',
                     },
                 ],
             },
         },
-        arduino_ext_octave_list: {
+        eduino_octave_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -872,12 +872,12 @@ Entry.ArduinoExt.getBlocks = function() {
                 py: [
                     {
                         syntax: '%1',
-                        keyOption: 'arduino_ext_octave_list',
+                        keyOption: 'eduino_octave_list',
                     },
                 ],
             },
         },
-        arduino_ext_set_tone: {
+        eduino_set_tone: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -916,10 +916,10 @@ Entry.ArduinoExt.getBlocks = function() {
                         params: [3],
                     },
                     {
-                        type: 'arduino_ext_tone_list',
+                        type: 'eduino_tone_list',
                     },
                     {
-                        type: 'arduino_ext_octave_list',
+                        type: 'eduino_octave_list',
                     },
                     {
                         type: 'text',
@@ -927,7 +927,7 @@ Entry.ArduinoExt.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'arduino_ext_set_tone',
+                type: 'eduino_set_tone',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -935,8 +935,8 @@ Entry.ArduinoExt.getBlocks = function() {
                 OCTAVE: 2,
                 DURATION: 3,
             },
-            class: 'ArduinoExt',
-            isNotFor: ['ArduinoExt'],
+            class: 'eduino',
+            isNotFor: ['eduino'],
             func(sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const port = script.getNumberValue('PORT', script);
@@ -944,7 +944,7 @@ Entry.ArduinoExt.getBlocks = function() {
                 if (!script.isStart) {
                     let note = script.getValue('NOTE', script);
                     if (!Entry.Utils.isNumber(note)) {
-                        note = Entry.ArduinoExt.toneTable[note];
+                        note = Entry.eduino.toneTable[note];
                     }
 
                     if (note < 0) {
@@ -965,7 +965,7 @@ Entry.ArduinoExt.getBlocks = function() {
 
                     if (duration === 0) {
                         sq.SET[port] = {
-                            type: Entry.ArduinoExt.sensorTypes.TONE,
+                            type: Entry.eduino.sensorTypes.TONE,
                             data: 0,
                             time: new Date().getTime(),
                         };
@@ -982,7 +982,7 @@ Entry.ArduinoExt.getBlocks = function() {
                     let value = 0;
 
                     if (note != 0) {
-                        value = Entry.ArduinoExt.toneMap[note][octave];
+                        value = Entry.eduino.toneMap[note][octave];
                     }
 
                     duration = duration * 1000;
@@ -990,7 +990,7 @@ Entry.ArduinoExt.getBlocks = function() {
                     script.timeFlag = 1;
 
                     sq.SET[port] = {
-                        type: Entry.ArduinoExt.sensorTypes.TONE,
+                        type: Entry.eduino.sensorTypes.TONE,
                         data: {
                             value,
                             duration,
@@ -1008,7 +1008,7 @@ Entry.ArduinoExt.getBlocks = function() {
                     delete script.timeFlag;
                     delete script.isStart;
                     sq.SET[port] = {
-                        type: Entry.ArduinoExt.sensorTypes.TONE,
+                        type: Entry.eduino.sensorTypes.TONE,
                         data: 0,
                         time: new Date().getTime(),
                     };
@@ -1043,7 +1043,7 @@ Entry.ArduinoExt.getBlocks = function() {
                 ],
             },
         },
-        arduino_ext_set_servo: {
+        eduino_set_servo: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1074,14 +1074,14 @@ Entry.ArduinoExt.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'arduino_ext_set_servo',
+                type: 'eduino_set_servo',
             },
             paramsKeyMap: {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'ArduinoExt',
-            isNotFor: ['ArduinoExt'],
+            class: 'eduino',
+            isNotFor: ['eduino'],
             func(sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const port = script.getNumberValue('PORT', script);
@@ -1093,7 +1093,7 @@ Entry.ArduinoExt.getBlocks = function() {
                     sq.SET = {};
                 }
                 sq.SET[port] = {
-                    type: Entry.ArduinoExt.sensorTypes.SERVO_PIN,
+                    type: Entry.eduino.sensorTypes.SERVO_PIN,
                     data: value,
                     time: new Date().getTime(),
                 };
@@ -1121,6 +1121,6 @@ Entry.ArduinoExt.getBlocks = function() {
         },
     };
 };
-//endregion arduinoExt 아두이노 확장모드
+//endregion eduino 아두이노 확장모드
 
-module.exports = Entry.ArduinoExt;
+module.exports = Entry.eduino;
