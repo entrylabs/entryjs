@@ -4,7 +4,7 @@ import PromiseManager from '../../core/promiseManager';
 Entry.AI_UTILIZE_BLOCK.audio = {
     name: 'audio',
     imageName: 'audio.svg',
-    sponserText: 'Sponsered by NAVER Clova',
+    sponserText: 'Powered by NAVER Clova',
     title: {
         ko: '오디오 감지',
         en: 'Audio Detection',

@@ -6,7 +6,7 @@ const _trim = require('lodash/trim');
 Entry.AI_UTILIZE_BLOCK.tts = {
     name: 'tts',
     imageName: 'tts.png',
-    sponserText: 'Sponsered by NAVER Clova',
+    sponserText: 'Powered by NAVER Clova',
     title: {
         ko: '읽어주기',
         en: 'read',
