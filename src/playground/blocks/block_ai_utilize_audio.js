@@ -23,11 +23,6 @@ Entry.AI_UTILIZE_BLOCK.audio = {
 };
 
 Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
-    async function initUserMedia() {
-        if (!audioUtils.isAudioInitComplete) {
-            await audioUtils.initUserMedia();
-        }
-    }
     return {
         audio_title: {
             skeleton: 'basic_text',
@@ -63,7 +58,7 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             class: 'audio',
             isNotFor: ['audio'],
             async func(sprite, script) {
-                await initUserMedia();
+                audioUtils.incompatBrowserChecker();
                 return await audioUtils.checkUserMicAvailable();
             },
             syntax: {
@@ -94,7 +89,7 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             class: 'audio',
             isNotFor: ['audio'],
             async func(sprite, script) {
-                await initUserMedia();
+                await audioUtils.initUserMedia();
                 if (audioUtils.isRecording) {
                     throw new Entry.Utils.AsyncError();
                 }
@@ -131,7 +126,7 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             class: 'audio',
             isNotFor: ['audio'],
             async func(sprite, script) {
-                await initUserMedia();
+                await audioUtils.initUserMedia();
                 return Entry.container.getSttValue();
             },
             syntax: {
@@ -156,7 +151,7 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             class: 'audio',
             isNotFor: ['audio'],
             async func(sprite, script) {
-                await initUserMedia();
+                await audioUtils.initUserMedia();
                 return audioUtils.currentVolume;
             },
             syntax: {
