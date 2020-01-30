@@ -62,9 +62,10 @@ class DataTable {
     }
 
     selectTable(table) {
+        const json = table ?  table.toJSON() : [];
         this.selected = table;
         this.dataAnalytics.setData({
-            table: table.toJSON(),
+            table: json,
         });
     }
 

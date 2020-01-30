@@ -37,9 +37,8 @@ import DataTable from '../../class/DataTable';
             DataTable.tables.splice(index, 1);
             Entry.playground.reloadPlayground();
             Entry.playground.refreshPlayground();
-            const firstTable = DataTable.tables[0];
-            if (table === DataTable.selected && firstTable) {
-                Entry.playground.selectTable(firstTable);
+            if (table === DataTable.selected) {
+                Entry.playground.selectTable(DataTable.tables[0]);
             }
         },
         state(table) {
