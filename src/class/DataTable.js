@@ -8,6 +8,15 @@ class DataTable {
     #tables = [];
     #view;
     modal;
+    selected;
+
+    banAllBlock() {
+        Entry.playground.blockMenu.banClass('analysis')
+    }
+
+    unbanBlock() {
+        Entry.playground.blockMenu.unbanClass('analysis');
+    }
 
     set view(view) {
         this.#view = view;
@@ -35,6 +44,7 @@ class DataTable {
     }
 
     addSource(table) {
+        Entry.do('playgroundChangeViewMode', 'table');
         let data = table || { name: Lang.Workspace.data_table };
         data.name = Entry.getOrderedName(data.name, this.#tables, 'name');
         const isDataTableSource = data instanceof DataTableSource;
@@ -52,6 +62,7 @@ class DataTable {
     }
 
     selectTable(table) {
+        this.selected = table;
         this.dataAnalytics.setData({
             table: table.toJSON(),
         });

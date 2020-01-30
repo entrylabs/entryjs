@@ -860,7 +860,7 @@ EntryStatic.colorSet = {
             JUDGE: '#1b3ad8',
             CALC: '#ff7f00',
             VARIABLE: '#b819b3',
-            ANALYSIS: '#4f80ff',
+            ANALYSIS: '#1592ff',
             FUNC: '#a14100',
             HARDWARE: '#008380',
             EXPANSION: '#c63f3f',

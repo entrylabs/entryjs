@@ -9,9 +9,11 @@ import DataTable from '../../class/DataTable';
 
     c[COMMAND_TYPES.dataTableAddSource] = {
         do(table) {
-            DataTable.tables.unshift(table);
+            DataTable.unbanBlock();
+            DataTable.tables.push(table);
             Entry.playground.reloadPlayground();
             Entry.playground.refreshPlayground();
+            Entry.playground.selectTable(table);
         },
         state(table) {
             return [table];
@@ -35,6 +37,10 @@ import DataTable from '../../class/DataTable';
             DataTable.tables.splice(index, 1);
             Entry.playground.reloadPlayground();
             Entry.playground.refreshPlayground();
+            const firstTable = DataTable.tables[0];
+            if (table === DataTable.selected && firstTable) {
+                Entry.playground.selectTable(firstTable);
+            }
         },
         state(table) {
             return [table];

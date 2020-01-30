@@ -584,6 +584,7 @@ Entry.Playground = class Playground {
         // this.banExpansionBlock();
         Entry.expansion.banAllExpansionBlock();
         Entry.aiUtilize.banAllAIUtilizeBlock();
+        DataTable.banAllBlock();
         this.vimBoard = this.mainWorkspace.vimBoard;
 
         this._destroyer.add(this.mainWorkspace);
