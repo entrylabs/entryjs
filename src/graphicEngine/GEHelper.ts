@@ -7,111 +7,108 @@ import { PIXISprite } from '../class/pixi/plugins/PIXISprite';
 import { PIXIBrushAdaptor } from '../class/pixi/etc/PIXIBrushAdaptor';
 import { PIXIScaleAdaptor } from '../class/pixi/atlas/PIXIScaleAdaptor';
 
-
-
-declare let $:any;
-declare let createjs:any;
+declare let $: any;
+declare let createjs: any;
 
 interface IGraphicsEngineApplication {
-    render():void;
-    stage:PIXI.Container|any;
-    destroy(destroyOption:any):void;
+    render(): void;
+    stage: PIXI.Container | any;
+    destroy(destroyOption: any): void;
 }
 
 interface ITicker {
-    reset():void;
-    setFPS(n:number):void;
+    reset(): void;
+    setFPS(n: number): void;
 }
 
 class CreateJsApplication implements IGraphicsEngineApplication {
+    stage: any;
 
-    stage:any;
-
-    constructor(canvas:HTMLCanvasElement) {
+    constructor(canvas: HTMLCanvasElement) {
         let stage = new createjs.Stage(canvas.id);
         createjs.Touch.enable(stage);
         stage.enableMouseOver(10);
         stage.mouseMoveOutside = true;
         this.stage = stage;
     }
-    render():void {
+    render(): void {
         this.stage.update();
     }
-    destroy(destroyOption:any) {
+    destroy(destroyOption: any) {
         this.stage = null;
     }
 }
 
-
 export class GEHelperBase {
-
-    protected _isWebGL:boolean = false;
-    INIT(isWebGL:boolean) {
+    protected _isWebGL: boolean = false;
+    INIT(isWebGL: boolean) {
         this._isWebGL = isWebGL;
     }
 }
 
-const emptyFn = (...arg:any[])=>{};
+const emptyFn = (...arg: any[]) => {};
 
 class _GEHelper extends GEHelperBase {
-
-
-    get isWebGL():boolean { return this._isWebGL; }
-    public resManager:IGEResManager;
-    public textHelper:_TextHelper;
-    public colorFilter:_ColorFilterHelper;
-    public brushHelper:_BrushHelper;
+    get isWebGL(): boolean {
+        return this._isWebGL;
+    }
+    public resManager: IGEResManager;
+    public textHelper: _TextHelper;
+    public colorFilter: _ColorFilterHelper;
+    public brushHelper: _BrushHelper;
 
     /**  pixi 객체로부터 rotate를 읽을 때 사용할 값 */
-    public rotateRead:number = 1;
+    public rotateRead: number = 1;
 
     /**  pixi 객체에 rotate를 할당 할 때 사용할 값 */
-    public rotateWrite:number = 1;
+    public rotateWrite: number = 1;
 
-    public Ticker:ITicker;
-    private _isInitialized:boolean;
-
+    public Ticker: ITicker;
+    private _isInitialized: boolean;
 
     /**
      * issues/9422#issuecomment-2678582
      * 최종 좌표 결정 단계에서 약간의 오차를 주어 이 현상을 막음.
      */
-    public rndPosition:()=>number;
+    public rndPosition: () => number;
 
-    INIT(isWebGL:boolean) {
+    INIT(isWebGL: boolean) {
         super.INIT(isWebGL);
-        if(this._isInitialized) return;
+        if (this._isInitialized) return;
         this._isInitialized = true;
         GEDragHelper.INIT(isWebGL);
         (this.colorFilter = new _ColorFilterHelper()).INIT(isWebGL);
         (this.textHelper = new _TextHelper()).INIT(isWebGL);
         (this.brushHelper = new _BrushHelper()).INIT(isWebGL);
-        if(this._isWebGL) {
+        if (this._isWebGL) {
             // this.rndPosition = ()=>{ return Math.random() * 0.8 - 0.4; };
-            this.rndPosition = ()=>{ return 0; };
+            this.rndPosition = () => {
+                return 0;
+            };
             this.rotateRead = 180 / Math.PI;
             this.rotateWrite = Math.PI / 180;
             PIXIGlobal.initOnce();
             this.resManager = PIXIGlobal.atlasManager;
             this.Ticker = {
                 reset: emptyFn,
-                setFPS:emptyFn
+                setFPS: emptyFn,
             };
         } else {
-            this.rndPosition = ()=>{return 0;};
+            this.rndPosition = () => {
+                return 0;
+            };
             this.resManager = new EaselResManager();
             this.Ticker = {
                 reset: createjs.Ticker.reset,
-                setFPS: createjs.Ticker.setFPS
-            }
+                setFPS: createjs.Ticker.setFPS,
+            };
         }
         this.resManager.INIT();
     }
 
-
-    newApp(canvas:HTMLCanvasElement):IGraphicsEngineApplication {
-        let app:IGraphicsEngineApplication;
-        if(this._isWebGL) {
+    newApp(canvas: HTMLCanvasElement): IGraphicsEngineApplication {
+        let app: IGraphicsEngineApplication;
+        if (this._isWebGL) {
             app = PIXIGlobal.getNewApp(canvas);
         } else {
             app = new CreateJsApplication(canvas);
@@ -119,9 +116,8 @@ class _GEHelper extends GEHelperBase {
         return app;
     }
 
-
-    cloneStamp(entity:any):any {
-        if(this._isWebGL) {
+    cloneStamp(entity: any): any {
+        if (this._isWebGL) {
             let orgObj = entity.object;
             const orgTex = orgObj.internal_getOriginalTex && orgObj.internal_getOriginalTex();
             let object = PIXIHelper.sprite('StampEntity', orgTex || orgObj.texture);
@@ -149,9 +145,9 @@ class _GEHelper extends GEHelperBase {
         }
     }
 
-    hitTestMouse(object:any):boolean {
-        if(this._isWebGL) {
-            let pixiApp:PIXI.Application = Entry.stage._app;
+    hitTestMouse(object: any): boolean {
+        if (this._isWebGL) {
+            let pixiApp: PIXI.Application = Entry.stage._app;
             let im = pixiApp.renderer.plugins.interaction;
             let hitObject = im.hitTest(im.mouse.global, object);
             return !!hitObject;
@@ -161,25 +157,97 @@ class _GEHelper extends GEHelperBase {
             return object.hitTest(pt.x, pt.y);
         }
     }
+    getVideoElement(object: any): any {
+        let videoElement;
+        if (this._isWebGL) {
+            const videoElement = this.newContainer('video');
 
-    getTransformedBounds(sprite:PIXI.Sprite|any):PIXI.Rectangle|any {
-        if(this._isWebGL) {
+            const videoObject = PIXI.Texture.fromVideo(object);
+
+            const spriteObject = new PIXI.Sprite(videoObject);
+
+            videoElement.addChild(spriteObject);
+
+            Entry.stage.canvas.addChildAt(videoElement);
+
+            // videoElement.orig.x = -240;
+            // videoElement.orig.y = -135;
+            // videoElement.orig.width = 480;
+            // videoElement.orig.height = 270;
+            // Entry.stage.canvas.addChildAt(videoElement, 10);
+        } else {
+            videoElement = new createjs.Bitmap(object);
+            videoElement.x = -240;
+            videoElement.y = -135;
+            videoElement.width = 480;
+            videoElement.height = 270;
+            videoElement.scaleX = 0.75;
+            videoElement.scaleY = 0.75;
+            videoElement.alpha = 0.5;
+            Entry.stage.canvas.addChildAt(videoElement, 2);
+            createjs.Ticker.on('tick', Entry.stage.canvas);
+        }
+        return videoElement;
+    }
+
+    hFlipVideoElement(canvasVideo: any): any {
+        if (this._isWebGL) {
+            console.log(canvasVideo);
+            debugger;
+        } else {
+            const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = this.canvasVideo;
+            canvasVideo.setTransform(-x, y, -scaleX, scaleY, rotation, skewX, skewY, regX, regY);
+            createjs.Ticker.on('tick', Entry.stage.canvas);
+        }
+    }
+
+    vFlipVideoElement(canvasVideo: any): any {
+        if (this._isWebGL) {
+        } else {
+            const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = this.canvasVideo;
+            canvasVideo.setTransform(x, -y, scaleX, -scaleY, rotation, skewX, skewY, regX, regY);
+            createjs.Ticker.on('tick', Entry.stage.canvas);
+        }
+    }
+
+    setVideoBrightness(object: any, value: number): any {
+        const target = object;
+
+        if (this._isWebGL) {
+            const recalculated = (value + 100) / 100;
+            const colorMatrix = new PIXI.filters.ColorMatrixFilter();
+            target.filters = [colorMatrix];
+            colorMatrix.brightness(recalculated);
+            return object;
+        } else {
+            const recalculated = (value * 255) / 100;
+            const matrix = new createjs.ColorMatrix().adjustBrightness(recalculated);
+            target.filters = [new createjs.ColorMatrixFilter(matrix)];
+            target.cache(0, 0, target.image.videoWidth, target.image.videoHeight);
+            target.updateCache();
+
+            return target;
+        }
+    }
+
+    getTransformedBounds(sprite: PIXI.Sprite | any): PIXI.Rectangle | any {
+        if (this._isWebGL) {
             return sprite.getBounds(false);
         } else {
             return sprite.getTransformedBounds();
         }
     }
 
-    calcParentBound(obj:any):any {
-        if(this._isWebGL) {
+    calcParentBound(obj: any): any {
+        if (this._isWebGL) {
             return PIXIHelper.getTransformBound(obj);
         } else {
             return obj.getTransformedBounds();
         }
     }
-    
-    newContainer(debugName?:string):PIXI.Container|any {
-        if(this._isWebGL) {
+
+    newContainer(debugName?: string): PIXI.Container | any {
+        if (this._isWebGL) {
             return PIXIHelper.container(debugName);
         } else {
             return new createjs.Container();
@@ -190,11 +258,11 @@ class _GEHelper extends GEHelperBase {
      * stage wall 생성만을 위한 함수
      * @param path
      */
-    newWallTexture(path:string):PIXI.Texture|HTMLImageElement {
-        if(this._isWebGL) {
+    newWallTexture(path: string): PIXI.Texture | HTMLImageElement {
+        if (this._isWebGL) {
             return PIXI.Texture.fromImage(path);
         } else {
-            let img:HTMLImageElement = new Image();
+            let img: HTMLImageElement = new Image();
             img.src = path;
             return img;
         }
@@ -204,8 +272,8 @@ class _GEHelper extends GEHelperBase {
      * stage wall 생성만을 위한 함수
      * @param tex
      */
-    newWallSprite(tex:any) {
-        if(this._isWebGL) {
+    newWallSprite(tex: any) {
+        if (this._isWebGL) {
             return new PIXI.Sprite(tex);
         } else {
             return new createjs.Bitmap(tex);
@@ -213,25 +281,25 @@ class _GEHelper extends GEHelperBase {
     }
 
     newEmptySprite() {
-        if(this._isWebGL) {
+        if (this._isWebGL) {
             return PIXIHelper.sprite();
         } else {
             return new createjs.Bitmap();
         }
     }
 
-    newSpriteWithCallback(url:string, callback?:()=>void) {
+    newSpriteWithCallback(url: string, callback?: () => void) {
         let img = new Image();
-        if(callback) {
+        if (callback) {
             const $img = $(img);
-            const handle = ()=>{
+            const handle = () => {
                 $img.off('load', handle);
                 callback();
             };
             $img.on('load', handle);
         }
         img.src = url;
-        if(this._isWebGL) {
+        if (this._isWebGL) {
             return PIXI.Sprite.from(img);
         } else {
             return new createjs.Bitmap(img);
@@ -239,15 +307,15 @@ class _GEHelper extends GEHelperBase {
     }
 
     newGraphic() {
-        if(this._isWebGL) {
+        if (this._isWebGL) {
             return new PIXI.Graphics();
         } else {
             return new createjs.Shape();
         }
     }
 
-    newAScaleAdaptor(target:any):any {
-        if(this._isWebGL) {
+    newAScaleAdaptor(target: any): any {
+        if (this._isWebGL) {
             return PIXIScaleAdaptor.factory(target);
         }
         //createjs 는 사용하는 코드측에서 분기 처리.
@@ -257,12 +325,9 @@ class _GEHelper extends GEHelperBase {
 
 export const GEHelper = new _GEHelper();
 
-
 class _ColorFilterHelper extends GEHelperBase {
-
-
-    hue(value:number) {
-        if(this._isWebGL) {
+    hue(value: number) {
+        if (this._isWebGL) {
             const cmHue = new PIXI.filters.ColorMatrixFilter();
             return cmHue.hue(value);
         } else {
@@ -273,17 +338,37 @@ class _ColorFilterHelper extends GEHelperBase {
         }
     }
 
-    brightness(value:number) {
-        if(this._isWebGL) {
+    brightness(value: number) {
+        if (this._isWebGL) {
             value /= 255;
         }
         // pixi 필터에 brightness 가 있지만, createjs 와 matrix 값이 달라 결과가 다르게 보임. 그래서 동일하게 구현함.
         const matrix = [
-            1, 0, 0, 0, value,
-            0, 1, 0, 0, value,
-            0, 0, 1, 0, value,
-            0, 0, 0, 1, 0,
-            0, 0, 0, 0, 1,
+            1,
+            0,
+            0,
+            0,
+            value,
+            0,
+            1,
+            0,
+            0,
+            value,
+            0,
+            0,
+            1,
+            0,
+            value,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
         ];
         return this.newColorMatrixFilter(matrix);
     }
@@ -291,8 +376,8 @@ class _ColorFilterHelper extends GEHelperBase {
     /**
      * @param matrixValue
      */
-    newColorMatrixFilter(matrixValue:number[]) {
-        if(this._isWebGL) {
+    newColorMatrixFilter(matrixValue: number[]) {
+        if (this._isWebGL) {
             matrixValue.length = 20; // pixi matrix 는 5 * 4
             let m = new PIXI.filters.ColorMatrixFilter();
             m.matrix = matrixValue;
@@ -310,20 +395,18 @@ class _ColorFilterHelper extends GEHelperBase {
      * @param entity - EntityObject
      * @param cache
      */
-    setCache(entity:any, cache:boolean) {
-        if(this._isWebGL) {
+    setCache(entity: any, cache: boolean) {
+        if (this._isWebGL) {
             //do nothing
         } else {
             cache ? entity.cache() : entity.object.uncache();
         }
     }
-
 }
 
 class _TextHelper extends GEHelperBase {
-
-    setColor(target:PIXI.Text|any, color:string) {
-        if(this._isWebGL) {
+    setColor(target: PIXI.Text | any, color: string) {
+        if (this._isWebGL) {
             target.style.fill = color;
         } else {
             target.color = color;
@@ -338,31 +421,35 @@ class _TextHelper extends GEHelperBase {
      * @param textAlign
      * @
      */
-    newText(str:string, font:string, color:string, textBaseline?:string, textAlign?:string):PIXI.Text|any {
-        if(this._isWebGL) {
+    newText(
+        str: string,
+        font: string,
+        color: string,
+        textBaseline?: string,
+        textAlign?: string
+    ): PIXI.Text | any {
+        if (this._isWebGL) {
             return PIXIHelper.text(str, font, color, textBaseline, textAlign);
         } else {
             let t = new createjs.Text(str, font, color);
-            textBaseline ? t.textBaseline = textBaseline : 0;
-            textAlign ? t.textAlign = textAlign : 0;
+            textBaseline ? (t.textBaseline = textBaseline) : 0;
+            textAlign ? (t.textAlign = textAlign) : 0;
             return t;
         }
     }
-
 }
 
 class _BrushHelper extends GEHelperBase {
-
     newBrush() {
-        if(this._isWebGL) {
+        if (this._isWebGL) {
             return new PIXIBrushAdaptor();
         } else {
             return new createjs.Graphics();
         }
     }
 
-    newShape(brush:PIXIBrushAdaptor|any) {
-        if(this._isWebGL) {
+    newShape(brush: PIXIBrushAdaptor | any) {
+        if (this._isWebGL) {
             let shape = PIXIHelper.newPIXIGraphics();
             brush.internal_setShape(shape);
             return shape;
@@ -371,4 +458,3 @@ class _BrushHelper extends GEHelperBase {
         }
     }
 }
-

@@ -393,6 +393,11 @@ EntryStatic.getAllBlocks = function() {
                 'translate_title',
                 'get_translated_string',
                 'check_language',
+                'video_title',
+                'check_webcam',
+                'draw_webcam',
+                'set_camera_option',
+                'flip_camera',
             ],
         },
         {
