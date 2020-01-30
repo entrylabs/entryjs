@@ -36,28 +36,39 @@ class AudioUtils {
             return false;
         }
     }
-
-    async initUserMedia() {
-        if (!this.isAudioSupport) {
-            this.isAudioSupport = this._isBrowserSupportAudio(); // 브라우저 지원 확인
-        }
-
-        if (this.isAudioInitComplete) {
-            return;
-        }
-        if (!this.isAudioSupport) {
-            throw new Entry.Utils.IncompatibleError();
-        }
-        let mediaStream;
+    async getMediaStream() {
         try {
-            mediaStream = await navigator.mediaDevices.getUserMedia({
-                audio: true,
-            });
+            return await navigator.mediaDevices.getUserMedia({ audio: true });
         } catch (err) {
+            // is MIC present in browser
+            this.isRecording = false;
+            this.stopRecord();
             throw new Entry.Utils.IncompatibleError('IncompatibleError', [
                 Lang.Workspace.check_microphone_error,
             ]);
         }
+    }
+
+    incompatBrowserChecker() {
+        // IE/safari CHECKER
+        if (!this.isAudioSupport) {
+            this.isAudioSupport = this._isBrowserSupportAudio(); // 브라우저 지원 확인
+        }
+        if (!this.isAudioSupport) {
+            this.isRecording = false;
+            this.stopRecord();
+            throw new Entry.Utils.IncompatibleError();
+        }
+    }
+
+    async initUserMedia() {
+        this.incompatBrowserChecker();
+        let mediaStream = await this.getMediaStream();
+
+        if (this.isAudioInitComplete) {
+            return;
+        }
+
         try {
             if (!window.AudioContext) {
                 if (window.webkitAudioContext) {
@@ -95,6 +106,8 @@ class AudioUtils {
     }
 
     async startRecord(recordMilliSecond, language) {
+        //getMediaStream 은 만약 stream 이 없는 경우
+        await this.getMediaStream();
         return await new Promise(async (resolve, reject) => {
             if (!this.isAudioInitComplete) {
                 console.log('audio not initialized');
