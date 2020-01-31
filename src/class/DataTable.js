@@ -1,8 +1,7 @@
-import { DataAnalytics } from '@entrylabs/tool';
 import _find from 'lodash/find';
 import _findIndex from 'lodash/findIndex';
 import DataTableSource from './source/DataTableSource';
-import { ModalChart } from '@entrylabs/tool';
+import { ModalChart, DataAnalytics } from '@entrylabs/tool';
 
 class DataTable {
     #tables = [];
@@ -70,7 +69,24 @@ class DataTable {
     }
 
     #generateView() {
-        this.dataAnalytics = new DataAnalytics({ container: this.#view, data: {} });
+        this.dataAnalytics = new DataAnalytics({ container: this.#view, data: {} })
+            .on('summit', (dataAnalytics) => {
+                const { id, table = [[]], charts = [], title } = dataAnalytics;
+                if (Entry.playground.dataTable.getSource(id)) {
+                    Entry.playground.dataTable.getSource(id).setArray({
+                        chart: charts,
+                        fields: table[0],
+                        chart: charts,
+                        data: table.slice(1),
+                        name: title,
+                    });
+                }
+            })
+            .on('toast', (message) => {
+                console.log(message);
+                const { title, content } = message;
+                Entry.toast.alert(title, content);
+            });
     }
 
     getTableJSON() {
@@ -100,7 +116,7 @@ class DataTable {
     }
 
     createChart(source) {
-        const tables = this.#tables.map(({ id, name }) => ([name, id]));
+        const tables = this.#tables.map(({ id, name }) => [name, id]);
         const container = Entry.Dom('div', {
             class: 'entry-table-chart',
             parent: $('body'),

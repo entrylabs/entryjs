@@ -41,9 +41,7 @@ class DataTableSource {
     }
 
     get rows() {
-        return this.array.map(({ value }) => {
-            return value;
-        });
+        return this.array.map(({ value }) => value);
     }
 
     get id() {
@@ -75,9 +73,10 @@ class DataTableSource {
         return this.#data.origin;
     }
 
-    setArray({ chart, ...data }) {
+    setArray({ chart, data, fields, name }) {
         this.#chart = chart;
-        this.#source = { ...this.#source, ...data };
+        this.#name = name;
+        this.#source = { ...this.#source, fields, data, name };
         this.#data.from(this.#source);
     }
 
