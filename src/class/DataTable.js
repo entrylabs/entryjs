@@ -80,6 +80,7 @@ class DataTable {
                         data: table.slice(1),
                         name: title,
                     });
+                    Entry.playground.injectTable();
                 }
             })
             .on('toast', (message) => {
@@ -97,6 +98,20 @@ class DataTable {
         tables.forEach((table) => {
             this.addSource(table);
         });
+    }
+
+    setTableName(id, name) {
+        if (!name) {
+            return;
+        }
+
+        const source = this.getSource(id);
+        if (!source) {
+            return;
+        }
+
+        const { chart, array, fields } = source;
+        source.setArray({ chart, data: array, fields, name });
     }
 
     showChart(tableId) {

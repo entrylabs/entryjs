@@ -1273,7 +1273,11 @@ Entry.Playground = class Playground {
         }
         const { tables } = this.dataTable;
         tables.forEach((table) => {
-            table.view || this.generateTableElement(table);
+            if (!table.view) {
+                this.generateTableElement(table);
+            } else {
+                table.view.name.value = table.name;
+            }
         });
         this.updateTableView();
     }
@@ -1919,7 +1923,30 @@ Entry.Playground = class Playground {
             .addClass('entryPlaygroundTableName')
             .addClass('entryEllipsis');
         nameView.value = table.name;
-        // Entry.attachEventListener(nameView, 'blur', this.nameViewBlur.bind(this));
+        nameView.id = table.id;
+        table.view.name = nameView;
+        Entry.attachEventListener(nameView, 'blur', function nameViewBlur() {
+            if (this.value.trim() === '') {
+                return entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
+                    nameView.focus();
+                });
+            }
+
+            let nameViewArray = $('.entryPlaygroundTableName');
+            if (nameViewArray.length !== Entry.playground.object.sounds.length) {
+                nameViewArray = nameViewArray.slice(0, -1);
+            }
+
+            for (let i = 0; i < nameViewArray.length; i++) {
+                if (nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
+                    return entrylms.alert(Lang.Workspace.name_already_exists).on('hide', () => {
+                        nameView.focus();
+                    });
+                }
+            }
+            DataTable.setTableName(nameView.id, this.value);
+            Entry.playground.reloadPlayground();
+        });
         Entry.attachEventListener(nameView, 'focus', (e) => {
             this.nameView = e.target;
             this.nameViewFocus = true;
