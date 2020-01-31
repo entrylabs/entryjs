@@ -40,6 +40,7 @@ import DataTable from '../../class/DataTable';
             if (table === DataTable.selected) {
                 Entry.playground.selectTable(DataTable.tables[0]);
             }
+            !DataTable.tables.length && DataTable.banAllBlock();
         },
         state(table) {
             return [table];
