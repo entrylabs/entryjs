@@ -208,6 +208,9 @@ Entry.Code = class Code {
 
         this.isUpdateTime = 0;
         shouldNotifyWatch && watchEvent.notify(executedBlocks);
+        if (result && result.promises) {
+            Entry.engine.addPromiseExecutor(result.promises);
+        }
     }
 
     removeExecutor(executor) {
