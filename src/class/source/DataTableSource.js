@@ -13,14 +13,23 @@ class DataTableSource {
     #cloudVariable = CloudVariable.getInstance();
     #source;
     modal;
+    tab = 'summary';
     constructor(source = {}) {
-        const { name, id = Entry.generateHash(), object = null, chart, data } = source;
+        const {
+            name,
+            id = Entry.generateHash(),
+            object = null,
+            chart,
+            data,
+            tab = 'summary',
+        } = source;
         this.#name = name;
         this.#id = id;
         this.#object = object;
         this.#source = source;
         this.#data = new dmetTable(source);
         this.#chart = chart || [];
+        this.tab = tab;
         // 정지시 data 초기화.
         Entry.addEventListener('stop', () => {
             this.#data.from({ ...source, data: this.#data.origin });
@@ -33,6 +42,7 @@ class DataTableSource {
                         chart: this.chart,
                         fields: this.fields,
                         origin: this.rows,
+                        tab: this.tab,
                     },
                 });
             }

@@ -10,7 +10,7 @@ class DataTable {
     selected;
 
     banAllBlock() {
-        Entry.playground.blockMenu.banClass('analysis')
+        Entry.playground.blockMenu.banClass('analysis');
     }
 
     unbanBlock() {
@@ -61,10 +61,10 @@ class DataTable {
     }
 
     selectTable(table) {
-        const json = table ?  table.toJSON() : [];
+        const json = table ? table.toJSON() : [];
         this.selected = table;
         this.dataAnalytics.setData({
-            table: json,
+            table: { ...json, tab: table.tab },
         });
     }
 
