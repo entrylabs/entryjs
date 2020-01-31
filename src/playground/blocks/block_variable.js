@@ -431,7 +431,7 @@ module.exports = {
                 },
                 class: 'variable',
                 isNotFor: ['variableNotExist'],
-                async func(sprite, script) {
+                func(sprite, script) {
                     const variableId = script.getField('VARIABLE', script);
                     let value = script.getValue('VALUE', script);
                     let fixed = 0;

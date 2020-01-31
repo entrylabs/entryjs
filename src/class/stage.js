@@ -280,15 +280,15 @@ Entry.Stage.prototype.sortZorder = function() {
         container = this.selectedObjectContainer,
         index = 0;
 
-    if (container) {
-        container.children.length = length;
-    }
-
     for (let i = length - 1; i >= 0; i--) {
         const {
             entity: { object },
         } = objects[i];
         container.setChildIndex(object, index++);
+    }
+
+    if (container) {
+        container.children.length = length;
     }
 
     Entry.requestUpdate = true;
