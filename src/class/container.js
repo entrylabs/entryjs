@@ -608,7 +608,7 @@ Entry.Container = class Container {
                 true
             );
         }
-        return Entry.engine.executeEntity.get(object.entity);
+        return object.entity;
     }
 
     /**
@@ -1013,8 +1013,7 @@ Entry.Container = class Container {
         }
 
         this.mapEntityOnScene((entity) => {
-            const cloneEntity = Entry.engine.executeEntity.get(entity);
-            cloneEntity.reset();
+            entity.reset();
         });
         this.clearRunningStateOnScene();
         Entry.stage.hideInputField();
