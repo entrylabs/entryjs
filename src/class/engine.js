@@ -5,7 +5,6 @@
 
 import { GEHelper } from '../graphicEngine/GEHelper';
 import audioUtils from '../util/audioUtils';
-import ExecuteEntity from './ExecuteEntity';
 
 /**
  * Class for a engine.
@@ -14,7 +13,6 @@ import ExecuteEntity from './ExecuteEntity';
  */
 Entry.Engine = class Engine {
     constructor() {
-        this.executeEntity = new ExecuteEntity();
         this.execPromises = [];
         this.state = 'stop';
         this.popup = null;
@@ -697,7 +695,6 @@ Entry.Engine = class Engine {
         Entry.addActivity('stop');
 
         container.mapEntity((entity) => {
-            // this.executeEntity.stop(entity);
             entity.loadSnapshot();
             entity.object.filters = [];
             entity.resetFilter();
