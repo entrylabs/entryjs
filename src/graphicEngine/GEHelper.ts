@@ -35,7 +35,12 @@ class CreateJsApplication implements IGraphicsEngineApplication {
         this.stage = stage;
     }
     render():void {
-        this.stage.update();
+        try {
+            this.stage.update();
+        } catch(e) {
+            console.error(this.stage, e);
+            throw e;
+        }
     }
     destroy(destroyOption:any) {
         this.stage = null;

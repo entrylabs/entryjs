@@ -62,6 +62,7 @@ class Executor {
             }
 
             if (returnVal instanceof Promise) {
+                console.log('promise');
                 this.paused = true;
                 returnVal
                     .then((returnVal) => {

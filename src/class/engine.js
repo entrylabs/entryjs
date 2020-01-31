@@ -887,7 +887,7 @@ Entry.Engine = class Engine {
      * @param {string} eventName
      */
     raiseEvent = (entity, eventName) => {
-        entity.parent.script.raiseEvent(eventName, this.executeEntity.get(entity));
+        entity.parent.script.raiseEvent(eventName, this.executeEntity.get(entity, true));
     };
 
     /**

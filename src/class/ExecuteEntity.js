@@ -7,14 +7,15 @@ export default class ExecuteEntity {
         this.entityMap = new WeakMap();
     }
 
-    get(entity) {
+    get(entity, isClone) {
         if (this.entityMap.has(entity)) {
             return this.entityMap.get(entity);
-        } else {
+        } else if (isClone) {
             const cloneEntity = getCloneEntity(entity);
-            // const cloneEntity = entit);
             this.entityMap.set(entity, cloneEntity);
             return cloneEntity;
+        } else {
+            return entity;
         }
     }
 
