@@ -63,7 +63,6 @@ class Executor {
             }
 
             if (returnVal instanceof Promise) {
-                console.log('promise');
                 promises.push(returnVal);
                 this.paused = true;
                 returnVal
