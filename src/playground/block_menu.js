@@ -9,7 +9,7 @@ import debounce from 'lodash/debounce';
 const VARIABLE = 'variable';
 const HW = 'arduino';
 const practicalCourseCategoryList = ['hw_motor', 'hw_melody', 'hw_sensor', 'hw_led', 'hw_robot'];
-const splitterHPadding = 20;
+const splitterHPadding = EntryStatic.splitterHPadding || 20;
 
 class BlockMenu {
     constructor(dom, align, categoryData, scroll, readOnly) {
@@ -32,6 +32,7 @@ class BlockMenu {
         this._setDynamicTimer = null;
         this._renderedCategories = {};
         this.readOnly = readOnly === undefined ? true : readOnly;
+        this.scale = 1;
 
         this._threadsMap = {};
         let $dom;
@@ -154,13 +155,10 @@ class BlockMenu {
 
         this.svgDom = Entry.Dom(
             $(
-                `<svg id="${
-                    this._svgId
-                }" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>`
+                `<svg id="${this._svgId}" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>`
             ),
             { parent: this.blockMenuWrapper }
         );
-
         this.svgDom.mouseenter(function() {
             that._scroller && that._scroller.setOpacity(0.8);
 
@@ -345,8 +343,8 @@ class BlockMenu {
         const dy = e.pageY - y;
         if (board && (workspaceMode === MODE_BOARD || workspaceMode === MODE_OVERLAYBOARD)) {
             if (!board.code) {
-                if (Entry.toast) {
-                    Entry.toast.alert(
+                if (Entry.toast && !(this.objectAlert && Entry.toast.isOpen(this.objectAlert))) {
+                    this.objectAlert = Entry.toast.alert(
                         Lang.Workspace.add_object_alert,
                         Lang.Workspace.add_object_alert_msg
                     );
@@ -486,13 +484,14 @@ class BlockMenu {
     }
 
     _createSplitter(topPos) {
+        const { common = {} } = EntryStatic.colorSet || {};
         this._splitters.push(
             this.svgBlockGroup.elem('line', {
                 x1: splitterHPadding,
                 y1: topPos,
                 x2: this._svgWidth - splitterHPadding,
                 y2: topPos,
-                stroke: '#AAC5D5',
+                stroke: common.SPLITTER || '#AAC5D5',
             })
         );
     }
@@ -528,7 +527,6 @@ class BlockMenu {
         }
 
         const sorted = [[], []];
-
         this._categoryData.forEach(({ category, blocks: threads }) => {
             if (category === 'func') {
                 const funcThreads = this.code
@@ -536,7 +534,6 @@ class BlockMenu {
                     .map((t) => t.getFirstBlock().type);
                 threads = funcThreads.length ? funcThreads : threads;
             }
-
             const inVisible =
                 threads.reduce(
                     (count, type) => (this.checkBanClass(Entry.block[type]) ? count - 1 : count),
@@ -809,7 +806,9 @@ class BlockMenu {
      * @param blockName {string}
      */
     addCategoryData(categoryName, blockName) {
-        const selectedCategory = this._categoryData.find((element) => element.category === categoryName);
+        const selectedCategory = this._categoryData.find(
+            (element) => element.category === categoryName
+        );
         if (selectedCategory && selectedCategory.blocks.indexOf(blockName) === -1) {
             selectedCategory.blocks.push(blockName);
         }
@@ -851,12 +850,14 @@ class BlockMenu {
         dragInstance.set({ offsetY: pageY });
     };
 
-    onMouseUp = () => {
+    onMouseUp = (e) => {
         if (Entry.isMobile()) {
             this._scroller.setOpacity(0);
         }
-        $(document).unbind('.blockMenu');
-        delete this.dragInstance;
+        if (e.button != 1) {
+            $(document).unbind('.blockMenu');
+            delete this.dragInstance;
+        }
     };
 
     onMouseDown(e) {
@@ -1121,15 +1122,16 @@ class BlockMenu {
             return;
         }
 
-        this._buildCategoryCodes(blocks.filter((b) => !this.checkBanClass(Entry.block[b])), HW).forEach(
-            (t) => {
-                if (shouldHide) {
-                    t[0].x = -99999;
-                }
-                this._createThread(t);
-                delete t[0].x;
+        this._buildCategoryCodes(
+            blocks.filter((b) => !this.checkBanClass(Entry.block[b])),
+            HW
+        ).forEach((t) => {
+            if (shouldHide) {
+                t[0].x = -99999;
             }
-        );
+            this._createThread(t);
+            delete t[0].x;
+        });
 
         this.hwCodeOutdated = false;
         Entry.dispatchEvent('hwCodeGenerated');

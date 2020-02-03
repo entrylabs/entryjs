@@ -1,3 +1,4 @@
+import SttVariable from './sttVariable';
 import AnswerVariable from './answerVariable';
 import ListVariable from './listVariable';
 import SlideVariable from './slideVariable';
@@ -8,6 +9,8 @@ Entry.Variable = Variable;
 Entry.Variable.create = (variableMetadata) => {
     const { variableType } = variableMetadata;
     switch (variableType) {
+        case 'stt':
+            return new SttVariable(variableMetadata);
         case 'answer':
             return new AnswerVariable(variableMetadata);
         case 'list':

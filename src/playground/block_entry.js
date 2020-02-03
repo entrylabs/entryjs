@@ -19,7 +19,7 @@ if (!Entry.block) {
 }
 
 function getConverters() {
-    const c =  {};
+    const c = {};
     c.keyboardCode = function(key, value) {
         let code;
 
@@ -230,13 +230,60 @@ function getConverters() {
             return value.toUpperCase();
         }
     };
-    return c;;
+    return c;
 }
 
 const blocks = require('./blocks');
 
 function getBlocks() {
     return {
+        aiUtilizeModelTrainButton: {
+            skeleton: 'basic_button_disabled',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND_DISABLED,
+            outerLine: EntryStatic.colorSet.common.BUTTON_DISABLED,
+            isNotFor: ['functionInit'],
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.load_ai_utilize_train_block,
+                    color: EntryStatic.colorSet.common.BUTTON_DISABLED,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'aiUtilizeModelTrainButton',
+            },
+            events: {
+                mousedown: [
+                    function() {
+                        console.log('NOT IMPLEMENTED');
+                    },
+                ],
+            },
+        },
+        aiUtilizeBlockAddButton: {
+            skeleton: 'basic_button',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
+            isNotFor: ['functionInit'],
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.load_ai_utilize_block,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'aiUtilizeBlockAddButton',
+            },
+            events: {
+                mousedown: [
+                    function() {
+                        Entry.do('playgroundClickAddAIUtilizeBlock');
+                    },
+                ],
+            },
+        },
         expansionBlockAddButton: {
             skeleton: 'basic_button',
             color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
@@ -261,6 +308,25 @@ function getBlocks() {
             },
         },
         //region hardware 하드웨어 기본
+        arduino_noti_light: {
+            skeleton: 'basic_text_light',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_noti_text_light,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'arduino_noti_light',
+            },
+            class: 'arduino_default_noti',
+            isNotFor: ['arduinoDisconnected'],
+            events: {},
+        },
         arduino_noti: {
             skeleton: 'basic_text',
             color: EntryStatic.colorSet.common.TRANSPARENT,
@@ -1390,7 +1456,7 @@ function getBlocks() {
                         }
                         const block = blockView.block;
                         const id = block.getFuncId();
-                        Entry.Func.edit(Entry.variableContainer.functions_[id]);
+                        Entry.do('funcEditStart', id);
                     },
                 ],
             },
@@ -1725,6 +1791,7 @@ function getBlocks() {
                     type: 'DropdownDynamic',
                     value: null,
                     menuName: 'pictures',
+                    // defaultValue: 'null',
                     fontSize: 10,
                     bgColor: EntryStatic.colorSet.block.darken.LOOKS,
                     arrowColor: EntryStatic.colorSet.arrow.default.LOOKS,
@@ -4775,13 +4842,9 @@ function getBlocks() {
                         }
                     }
                     if (isFoundMushroom) {
-                        Ntry.dispatchEvent(
-                            'unitAction',
-                            Ntry.STATIC.WRONG_ATTACK_OBSTACLE,
-                            () => {
-                                script.isAction = false;
-                            }
-                        );
+                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.WRONG_ATTACK_OBSTACLE, () => {
+                            script.isAction = false;
+                        });
                         return Entry.STATIC.BREAK;
                     }
                     const unitGrid = $.extend(
@@ -5650,7 +5713,7 @@ function getBlocks() {
                 if (!this.isContinue) {
                     const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
-                    let unitId;;
+                    let unitId;
                     let components;
                     $.each(entities, (id, entity) => {
                         unitId = id;
@@ -7716,28 +7779,24 @@ function assignBlocks() {
     Entry.block.converters = getConverters();
     Entry.block = Object.assign(Entry.block, getBlocks(), blocks.getBlocks());
     if (EntryStatic.isPracticalCourse) {
-        Object.assign(Entry.block, require('../playground/block_entry_mini').practicalCourseBlock);
+        const practicalCourseBlockModule = require('../playground/block_entry_mini');
+        Object.assign(Entry.block, practicalCourseBlockModule.practicalCourseBlock);
+        applySetLanguage(practicalCourseBlockModule);
     }
 }
 
-function setHardwareLanguage() {
-    for (const id in Entry.HARDWARE_LIST) {
-        const hw = Entry.HARDWARE_LIST[id];
-        if (!hw) {
-            continue;
-        }
-        if ('setLanguage' in hw) {
-            const hwLang = hw.setLanguage();
-            const data = hwLang[Lang.type] || hwLang[Lang.fallbackType];
-            for (const key in data) {
-                Object.assign(Lang[key], data[key]);
-            }
+function applySetLanguage(hasSetLanguageObj) {
+    if ('setLanguage' in hasSetLanguageObj) {
+        const hwLang = hasSetLanguageObj.setLanguage();
+        const data = hwLang[Lang.type] || hwLang[Lang.fallbackType];
+        for (const key in data) {
+            Object.assign(Lang[key], data[key]);
         }
     }
 }
 
 Entry.reloadBlock = function() {
-    setHardwareLanguage();
+    Object.values(Entry.HARDWARE_LIST).forEach(applySetLanguage);
     assignBlocks();
     inheritBlockSchema();
 };

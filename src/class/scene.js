@@ -172,6 +172,15 @@ Entry.Scene = class {
                 if (Entry.engine.isState('run')) {
                     return;
                 }
+                const isDeletable = Entry.scene.getScenes().length > 1;
+                if (!isDeletable) {
+                    Entry.toast.alert(
+                        Lang.Msgs.runtime_error,
+                        Lang.Workspace.Scene_delete_error,
+                        false
+                    );
+                    return;
+                }
                 Entry.do('sceneRemove', scene.id);
             })
             .appendTo(removeButtonCover);
@@ -314,6 +323,11 @@ Entry.Scene = class {
         if (Entry.creationChangedEvent) {
             Entry.creationChangedEvent.notify();
         }
+        const { playground = {} } = Entry || {};
+        const { mainWorkspace } = playground;
+        if (mainWorkspace) {
+            mainWorkspace.reDraw();
+        }
         return scene;
     }
 
@@ -326,7 +340,7 @@ Entry.Scene = class {
             Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.Scene_delete_error, false);
             return;
         }
-
+        Entry.Utils.forceStopSounds();
         scene = this.getSceneById(typeof scene === 'string' ? scene : scene.id);
 
         this.getScenes().splice(this.getScenes().indexOf(scene), 1);
@@ -350,6 +364,9 @@ Entry.Scene = class {
         container.resetSceneDuringRun();
 
         if (this.selectedScene && this.selectedScene.id == scene.id) {
+            return;
+        }
+        if (Entry.playground.nameViewFocus && Entry.playground.nameViewBlur()) {
             return;
         }
 
@@ -400,6 +417,7 @@ Entry.Scene = class {
 
             stage.selectObject(null);
             playground.flushPlayground();
+            Entry.variableContainer.selected = null;
             Entry.variableContainer.updateList();
         }
         !container.listView_ && stage.sortZorder();

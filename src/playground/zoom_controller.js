@@ -48,39 +48,46 @@ Entry.ZoomController = class ZoomController {
     }
 
     renderStart(zoomGroup) {
-        const { btn_zoom_bg, btn_zoom_out, btn_zoom_reset } = EntryStatic.images || {};
+        const {
+            btn_zoom_bg = `${Entry.mediaFilePath}btn_zoom_bg.svg`,
+            btn_zoom_out = `${Entry.mediaFilePath}btn_zoom_out.svg`,
+            btn_zoom_reset = `${Entry.mediaFilePath}btn_zoom_reset.svg`,
+            btn_zoom_in = `${Entry.mediaFilePath}btn_zoom_in.svg`,
+        } = EntryStatic.images || {};
+        const isSafari = Entry.getBrowserType().indexOf('Safari') >= 0;
+        const shadowFilter = isSafari ? 'none' : 'url(#entryButtonShadowFilter)';
         zoomGroup.svgZoom.elem('image', {
-            href: btn_zoom_bg || `${Entry.mediaFilePath}btn_zoom_bg.svg`,
+            href: btn_zoom_bg,
             width: this.CONTROLLER_WIDTH,
             height: this.CONTROLLER_HEIGHT,
         });
         zoomGroup.zoomOut = zoomGroup.svgZoom.elem('image', {
-            href: btn_zoom_out || `${Entry.mediaFilePath}btn_zoom_out.svg`,
+            href: btn_zoom_out,
             x: 4,
             y: 3,
             width: 32,
             height: 32,
-            filter: 'url(#entryButtonShadowFilter)',
-            style: 'cursor: zoom-out;',
+            filter: shadowFilter,
+            style: 'cursor: default; cursor: -moz-zoom-out; cursor: -webkit-zoom-out; cursor: -ms-zoom-out; cursor: -o-zoom-out;',
         });
         zoomGroup.zoomReset = zoomGroup.svgZoom.elem('image', {
             id: 'zoom_reset',
-            href: btn_zoom_reset || `${Entry.mediaFilePath}btn_zoom_reset.svg`,
+            href: btn_zoom_reset,
             x: 44,
             y: 3,
             width: 40,
             height: 32,
-            filter: 'url(#entryButtonShadowFilter)',
+            filter: shadowFilter,
             style: 'cursor: pointer;',
         });
         zoomGroup.zoomIn = zoomGroup.svgZoom.elem('image', {
-            href: `${Entry.mediaFilePath}btn_zoom_in.svg`,
+            href: btn_zoom_in,
             x: 92,
             y: 3,
             width: 32,
             height: 32,
-            filter: 'url(#entryButtonShadowFilter)',
-            style: 'cursor: zoom-in;',
+            filter: shadowFilter,
+            style: 'cursor: default; cursor: -moz-zoom-in; cursor: -webkit-zoom-in; cursor: -ms-zoom-in; cursor: -o-zoom-in;',
         });
     }
 

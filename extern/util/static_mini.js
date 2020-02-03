@@ -355,13 +355,13 @@ EntryStatic.getAllBlocks = function() {
         {
             category: 'hw_robot',
             blocks: [
-                'arduino_download_connector',
-                'download_guide',
-                'arduino_connected',
-                'arduino_connect',
                 'robot_reconnect',
                 'arduino_open',
                 'arduino_cloud_pc_open',
+                'arduino_connect',
+                'arduino_download_connector',
+                'download_guide',
+                'arduino_connected',
             ],
         },
         {
@@ -551,7 +551,7 @@ EntryStatic.objectSubCategories = {
     environment: ['environment_nature', 'environment_space', 'environment_others'],
     stuff: ['stuff_living', 'stuff_hobby', 'stuff_others'],
     fantasy: [],
-    interface: [],
+    interface: ['interface_website', 'interface_game', 'interface_others'],
     background: [
         'background_outdoor',
         'background_indoor',
@@ -627,6 +627,48 @@ EntryStatic.fonts = [
         url: '/css/uhbeemysen.css',
         visible: true,
     },
+    {
+        name: Lang.Fonts.sd_comic_stencil,
+        family: 'SDComicStencil',
+        url: '/css/SDComicStencil.css',
+        visible: true,
+    },
+    {
+        name: Lang.Fonts.sd_childfundkorea,
+        family: 'SDChildfundkorea',
+        url: '/css/SDChildfundkorea.css',
+        visible: true,
+    },
+    {
+        name: Lang.Fonts.sd_cinema_theater,
+        family: 'SDCinemaTheater',
+        url: '/css/SDCinemaTheater.css',
+        visible: true,
+    },
+    {
+        name: Lang.Fonts.sd_mapssi,
+        family: 'SDMapssi',
+        url: '/css/SDMapssi.css',
+        visible: true,
+    },
+    {
+        name: Lang.Fonts.sd_shabang,
+        family: 'SDShabang',
+        url: '/css/SDShabang.css',
+        visible: true,
+    },
+    {
+        name: Lang.Fonts.sd_woodcarving,
+        family: 'SDWoodcarving',
+        url: '/css/SDWoodcarving.css',
+        visible: true,
+    },
+    {
+        name: Lang.Fonts.sd_yongbi,
+        family: 'SDYongbi',
+        url: '/css/SDYongbi.css',
+        visible: true,
+    },
 ];
 
 EntryStatic.colorSet = {
@@ -644,6 +686,7 @@ EntryStatic.colorSet = {
             VARIABLE: '#CE38CE',
             HARDWARE: '#FFFFFF',
             EXPANSION: '#FF8888',
+            AI_UTILIZE: '#FF8888',
         },
     },
     block: {
@@ -661,6 +704,7 @@ EntryStatic.colorSet = {
             FUNC: '#de5c04',
             HARDWARE: '#00b6b1',
             EXPANSION: '#ef6d6d',
+            AI_UTILIZE: '#8222ff',
         },
         lighten: {
             START: '#3bce3b',
@@ -676,6 +720,7 @@ EntryStatic.colorSet = {
             FUNC: '#ff7b22',
             HARDWARE: '#78d5d3',
             EXPANSION: '#ffaeae',
+            AI_UTILIZE: '#ffaeae',
         },
         darken: {
             START: '#009400',
@@ -690,6 +735,7 @@ EntryStatic.colorSet = {
             VARIABLE: '#b819b3',
             FUNC: '#a14100',
             HARDWARE: '#008380',
+            AI_UTILIZE: '#670bdd',
             EXPANSION: '#c63f3f',
         },
         emphasize: {

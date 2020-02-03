@@ -1,61 +1,24 @@
 'use strict';
 
-const merge = require('webpack-merge');
-const common = require('./common.js');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const autoprefixer = require('autoprefixer');
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
-module.exports = merge(common, {
+module.exports = {
     mode: 'development',
     module: {
-        rules: [
-            {
-                test: /\.(css|less)$/,
-                use: [
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            // you can specify a publicPath here
-                            // by default it use publicPath in webpackOptions.output
-                            publicPath: '../',
-                        },
-                    },
-                    {
-                        loader: 'css-loader',
-                        options: {
-                            url: false,
-                            minimize: true,
-                            sourceMap: false,
-                        },
-                    },
-                    {
-                        loader: require.resolve('postcss-loader'),
-                        options: {
-                            ident: 'postcss',
-                            plugins: () => [
-                                require('postcss-flexbugs-fixes'),
-                                autoprefixer({
-                                    browsers: [
-                                        '>1%',
-                                        'last 4 versions',
-                                        'Firefox ESR',
-                                        'not ie < 9', // React doesn't support IE8 anyway
-                                    ],
-                                    flexbox: 'no-2009',
-                                    remove: false,
-                                }),
-                            ],
-                        },
-                    },
-                    {
-                        loader: 'less-loader',
-                        options: {
-                            sourceMap: false,
-                        },
-                    },
-                ],
-            },
-        ],
+        rules: [],
     },
     devtool: 'cheap-source-map',
-});
+    plugins: [
+        new HardSourceWebpackPlugin(),
+        new HardSourceWebpackPlugin.ExcludeModulePlugin([
+            {
+                // HardSource works with mini-css-extract-plugin but due to how
+                // mini-css emits assets, assets are not emitted on repeated builds with
+                // mini-css and hard-source together. Ignoring the mini-css loader
+                // modules, but not the other css loader modules, excludes the modules
+                // that mini-css needs rebuilt to output assets every time.
+                test: /mini-css-extract-plugin[\\/]dist[\\/]loader/,
+            },
+        ]),
+    ],
+};

@@ -9,15 +9,15 @@ Entry.ArduinoExt = {
         ko: '아두이노 Uno 확장모드',
         en: 'ArduinoExt Uno',
     },
-    setZero: function() {
+    setZero() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
                 GET: {},
                 SET: {},
             };
         } else {
-            var keySet = Object.keys(Entry.hw.sendQueue.SET);
-            keySet.forEach(function(key) {
+            const keySet = Object.keys(Entry.hw.sendQueue.SET);
+            keySet.forEach((key) => {
                 Entry.hw.sendQueue.SET[key].data = 0;
                 Entry.hw.sendQueue.SET[key].time = new Date().getTime();
             });
@@ -142,7 +142,7 @@ Entry.ArduinoExt.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            func: function(sprite, script) {
+            func(sprite, script) {
                 return script.getField('PORT');
             },
             syntax: {
@@ -202,10 +202,12 @@ Entry.ArduinoExt.getBlocks = function() {
             },
             class: 'ArduinoExtGet',
             isNotFor: ['ArduinoExt'],
-            func: function(sprite, script) {
-                var port = script.getValue('PORT', script);
-                var ANALOG = Entry.hw.portData.ANALOG;
-                if (port[0] === 'A') port = port.substring(1);
+            func(sprite, script) {
+                let port = script.getValue('PORT', script);
+                const ANALOG = Entry.hw.portData.ANALOG;
+                if (port[0] === 'A') {
+                    port = port.substring(1);
+                }
                 return ANALOG ? ANALOG[port] || 0 : 0;
             },
             syntax: {
@@ -296,16 +298,16 @@ Entry.ArduinoExt.getBlocks = function() {
             },
             class: 'ArduinoExtGet',
             isNotFor: ['ArduinoExt'],
-            func: function(sprite, script) {
-                var result = script.getValue('PORT', script);
-                var ANALOG = Entry.hw.portData.ANALOG;
-                var value2 = script.getNumberValue('VALUE2', script);
-                var value3 = script.getNumberValue('VALUE3', script);
-                var value4 = script.getNumberValue('VALUE4', script);
-                var value5 = script.getNumberValue('VALUE5', script);
-                var stringValue4 = script.getValue('VALUE4', script);
-                var stringValue5 = script.getValue('VALUE5', script);
-                var isFloat = false;
+            func(sprite, script) {
+                let result = script.getValue('PORT', script);
+                const ANALOG = Entry.hw.portData.ANALOG;
+                let value2 = script.getNumberValue('VALUE2', script);
+                let value3 = script.getNumberValue('VALUE3', script);
+                let value4 = script.getNumberValue('VALUE4', script);
+                let value5 = script.getNumberValue('VALUE5', script);
+                const stringValue4 = script.getValue('VALUE4', script);
+                const stringValue5 = script.getValue('VALUE5', script);
+                let isFloat = false;
 
                 if (
                     (Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) ||
@@ -408,20 +410,20 @@ Entry.ArduinoExt.getBlocks = function() {
             },
             class: 'ArduinoExtGet',
             isNotFor: ['ArduinoExt'],
-            func: function(sprite, script) {
-                var port1 = script.getNumberValue('PORT1', script);
-                var port2 = script.getNumberValue('PORT2', script);
+            func(sprite, script) {
+                const port1 = script.getNumberValue('PORT1', script);
+                const port2 = script.getNumberValue('PORT2', script);
 
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
                 }
-                delete Entry.hw.sendQueue['SET'][port1];
-                delete Entry.hw.sendQueue['SET'][port2];
+                delete Entry.hw.sendQueue.SET[port1];
+                delete Entry.hw.sendQueue.SET[port2];
 
-                if (!Entry.hw.sendQueue['GET']) {
-                    Entry.hw.sendQueue['GET'] = {};
+                if (!Entry.hw.sendQueue.GET) {
+                    Entry.hw.sendQueue.GET = {};
                 }
-                Entry.hw.sendQueue['GET'][Entry.ArduinoExt.sensorTypes.ULTRASONIC] = {
+                Entry.hw.sendQueue.GET[Entry.ArduinoExt.sensorTypes.ULTRASONIC] = {
                     port: [port1, port2],
                     time: new Date().getTime(),
                 };
@@ -474,17 +476,17 @@ Entry.ArduinoExt.getBlocks = function() {
             },
             class: 'ArduinoExtGet',
             isNotFor: ['ArduinoExt'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
-                if (name === 'ArduinoExt') {
-                    var port = script.getNumberValue('PORT', script);
-                    var DIGITAL = Entry.hw.portData.DIGITAL;
-                    if (!Entry.hw.sendQueue['GET']) {
-                        Entry.hw.sendQueue['GET'] = {};
+                if (name === 'ArduinoExt' || name === 'ArduinoNano') {
+                    const port = script.getNumberValue('PORT', script);
+                    const DIGITAL = Entry.hw.portData.DIGITAL;
+                    if (!Entry.hw.sendQueue.GET) {
+                        Entry.hw.sendQueue.GET = {};
                     }
-                    Entry.hw.sendQueue['GET'][Entry.ArduinoExt.sensorTypes.DIGITAL] = {
-                        port: port,
+                    Entry.hw.sendQueue.GET[Entry.ArduinoExt.sensorTypes.DIGITAL] = {
+                        port,
                         time: new Date().getTime(),
                     };
                     return DIGITAL ? DIGITAL[port] || 0 : 0;
@@ -530,7 +532,7 @@ Entry.ArduinoExt.getBlocks = function() {
             paramsKeyMap: {
                 OPERATOR: 0,
             },
-            func: function(sprite, script) {
+            func(sprite, script) {
                 return script.getStringField('OPERATOR');
             },
             syntax: {
@@ -551,7 +553,6 @@ Entry.ArduinoExt.getBlocks = function() {
                                 converter: Entry.block.converters.returnStringValueUpperCase,
                                 codeMap: 'Entry.CodeMap.Arduino.arduino_get_digital_toggle[0]',
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
                         keyOption: 'arduino_get_digital_toggle',
@@ -601,9 +602,9 @@ Entry.ArduinoExt.getBlocks = function() {
             },
             class: 'ArduinoExt',
             isNotFor: ['ArduinoExt'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = script.getValue('VALUE');
+            func(sprite, script) {
+                const port = script.getNumberValue('PORT');
+                let value = script.getValue('VALUE');
 
                 if (typeof value === 'string') {
                     value = value.toLowerCase();
@@ -615,10 +616,10 @@ Entry.ArduinoExt.getBlocks = function() {
                 } else {
                     throw new Error();
                 }
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
                 }
-                Entry.hw.sendQueue['SET'][port] = {
+                Entry.hw.sendQueue.SET[port] = {
                     type: Entry.ArduinoExt.sensorTypes.DIGITAL,
                     data: value,
                     time: new Date().getTime(),
@@ -686,16 +687,16 @@ Entry.ArduinoExt.getBlocks = function() {
             },
             class: 'ArduinoExt',
             isNotFor: ['ArduinoExt'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = script.getNumberValue('VALUE');
+            func(sprite, script) {
+                const port = script.getNumberValue('PORT');
+                let value = script.getNumberValue('VALUE');
                 value = Math.round(value);
                 value = Math.max(value, 0);
                 value = Math.min(value, 255);
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
                 }
-                Entry.hw.sendQueue['SET'][port] = {
+                Entry.hw.sendQueue.SET[port] = {
                     type: Entry.ArduinoExt.sensorTypes.PWM,
                     data: value,
                     time: new Date().getTime(),
@@ -758,7 +759,7 @@ Entry.ArduinoExt.getBlocks = function() {
             paramsKeyMap: {
                 NOTE: 0,
             },
-            func: function(sprite, script) {
+            func(sprite, script) {
                 return script.getField('NOTE');
             },
             syntax: {
@@ -820,7 +821,7 @@ Entry.ArduinoExt.getBlocks = function() {
             paramsKeyMap: {
                 NOTE: 0,
             },
-            func: function(sprite, script) {
+            func(sprite, script) {
                 return script.getNumberValue('NOTE');
             },
             syntax: {
@@ -863,7 +864,7 @@ Entry.ArduinoExt.getBlocks = function() {
             paramsKeyMap: {
                 OCTAVE: 0,
             },
-            func: function(sprite, script) {
+            func(sprite, script) {
                 return script.getField('OCTAVE');
             },
             syntax: {
@@ -936,13 +937,15 @@ Entry.ArduinoExt.getBlocks = function() {
             },
             class: 'ArduinoExt',
             isNotFor: ['ArduinoExt'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var port = script.getNumberValue('PORT', script);
+            func(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const port = script.getNumberValue('PORT', script);
 
                 if (!script.isStart) {
-                    var note = script.getValue('NOTE', script);
-                    if (!Entry.Utils.isNumber(note)) note = Entry.ArduinoExt.toneTable[note];
+                    let note = script.getValue('NOTE', script);
+                    if (!Entry.Utils.isNumber(note)) {
+                        note = Entry.ArduinoExt.toneTable[note];
+                    }
 
                     if (note < 0) {
                         note = 0;
@@ -950,18 +953,18 @@ Entry.ArduinoExt.getBlocks = function() {
                         note = 12;
                     }
 
-                    var duration = script.getNumberValue('DURATION', script);
+                    let duration = script.getNumberValue('DURATION', script);
 
                     if (duration < 0) {
                         duration = 0;
                     }
 
-                    if (!sq['SET']) {
-                        sq['SET'] = {};
+                    if (!sq.SET) {
+                        sq.SET = {};
                     }
 
                     if (duration === 0) {
-                        sq['SET'][port] = {
+                        sq.SET[port] = {
                             type: Entry.ArduinoExt.sensorTypes.TONE,
                             data: 0,
                             time: new Date().getTime(),
@@ -969,14 +972,14 @@ Entry.ArduinoExt.getBlocks = function() {
                         return script.callReturn();
                     }
 
-                    var octave = script.getNumberValue('OCTAVE', script) - 1;
+                    let octave = script.getNumberValue('OCTAVE', script) - 1;
                     if (octave < 0) {
                         octave = 0;
                     } else if (octave > 5) {
                         octave = 5;
                     }
 
-                    var value = 0;
+                    let value = 0;
 
                     if (note != 0) {
                         value = Entry.ArduinoExt.toneMap[note][octave];
@@ -986,16 +989,16 @@ Entry.ArduinoExt.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
 
-                    sq['SET'][port] = {
+                    sq.SET[port] = {
                         type: Entry.ArduinoExt.sensorTypes.TONE,
                         data: {
-                            value: value,
-                            duration: duration,
+                            value,
+                            duration,
                         },
                         time: new Date().getTime(),
                     };
 
-                    setTimeout(function() {
+                    setTimeout(() => {
                         script.timeFlag = 0;
                     }, duration + 32);
                     return script;
@@ -1004,7 +1007,7 @@ Entry.ArduinoExt.getBlocks = function() {
                 } else {
                     delete script.timeFlag;
                     delete script.isStart;
-                    sq['SET'][port] = {
+                    sq.SET[port] = {
                         type: Entry.ArduinoExt.sensorTypes.TONE,
                         data: 0,
                         time: new Date().getTime(),
@@ -1079,17 +1082,17 @@ Entry.ArduinoExt.getBlocks = function() {
             },
             class: 'ArduinoExt',
             isNotFor: ['ArduinoExt'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var port = script.getNumberValue('PORT', script);
-                var value = script.getNumberValue('VALUE', script);
+            func(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const port = script.getNumberValue('PORT', script);
+                let value = script.getNumberValue('VALUE', script);
                 value = Math.min(180, value);
                 value = Math.max(0, value);
 
-                if (!sq['SET']) {
-                    sq['SET'] = {};
+                if (!sq.SET) {
+                    sq.SET = {};
                 }
-                sq['SET'][port] = {
+                sq.SET[port] = {
                     type: Entry.ArduinoExt.sensorTypes.SERVO_PIN,
                     data: value,
                     time: new Date().getTime(),

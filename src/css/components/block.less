@@ -25,6 +25,14 @@
     stroke: #4f80ff;
     stroke-width: 1;
 }
+.block.basicButtonDisabledView {
+    cursor: auto;
+}
+.block.basicButtonDisabledView > g > path {
+    fill: #f9f9f9;
+    stroke: #e2e2e2;
+    stroke-width: 1;
+}
 
 .block.clickableText {
     cursor: pointer;
@@ -36,6 +44,14 @@
 
 .block.basicText:hover > g > path {
     fill: none;
+}
+
+.block.basicTextLight {
+    cursor: default;
+}
+
+.block.basicTextLight > g > text > tspan {
+    font-weight: lighter;
 }
 
 .block {

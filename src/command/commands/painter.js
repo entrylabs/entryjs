@@ -1,67 +1,59 @@
 /*
  *
  */
-"use strict";
+'use strict';
 
 (function(c) {
-    var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
+    const COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
 
     c[COMMAND_TYPES.editPicture] = {
-        do: function(action, lc) {
-            if (Entry.playground.painter.lc.canRedo())
-                Entry.playground.painter.lc.redo()
+        do() {
+            Entry.playground.painter.redo();
         },
-        state: function(objectId) {
-        },
-        log: function(objectId) {
+        state() {},
+        log(objectId) {
             return [objectId];
         },
         recordable: Entry.STATIC.RECORDABLE.SKIP,
-        undo: "uneditPicture"
+        undo: 'uneditPicture',
     };
 
     c[COMMAND_TYPES.uneditPicture] = {
         type: Entry.STATIC.COMMAND_TYPES.uneditPicture,
-        do: function(action, lc) {
-            Entry.playground.painter.lc.undo()
+        do() {
+            Entry.playground.painter.undo();
         },
-        state: function(objectId) {
-        },
-        log: function(objectId) {
+        state() {},
+        log(objectId) {
             return [objectId];
         },
         recordable: Entry.STATIC.RECORDABLE.SKIP,
-        undo: "editPicture"
+        undo: 'editPicture',
     };
 
     c[COMMAND_TYPES.processPicture] = {
-        do: function(action, lc) {
-            if (Entry.playground.painter.lc.canRedo()) {
-                Entry.playground.painter.lc.redo()
-            }
+        do() {
+            Entry.playground.painter.redo();
         },
-        state: function(objectId) {
-        },
-        log: function(objectId) {
+        state() {},
+        log(objectId) {
             return [objectId];
         },
         recordable: Entry.STATIC.RECORDABLE.SKIP,
-        undo: "unprocessPicture",
-        isPass: true
+        undo: 'unprocessPicture',
+        isPass: true,
     };
 
     c[COMMAND_TYPES.unprocessPicture] = {
-        do: function(action, lc) {
-            Entry.playground.painter.lc.undo()
+        do() {
+            Entry.playground.painter.undo();
         },
-        state: function(objectId) {
-        },
-        log: function(objectId) {
+        state() {},
+        log(objectId) {
             return [objectId];
         },
         recordable: Entry.STATIC.RECORDABLE.SKIP,
-        undo: "processPicture",
-        isPass: true
+        undo: 'processPicture',
+        isPass: true,
     };
 })(Entry.Command);
-

@@ -269,7 +269,11 @@ Entry.Thread = class Thread {
         return parent.pointer(pointer);
     }
 
-    getBlockList(excludePrimitive, type) {
+    getBlockIndex(block) {
+        return this.getBlocks().indexOf(block);
+    }
+
+    getBlockList(excludePrimitive, type, index) {
         return _.chain(this._data)
             .map((block) => {
                 if (block.constructor !== Entry.Block) {
@@ -282,8 +286,8 @@ Entry.Thread = class Thread {
             .value();
     }
 
-    stringify(excludeData, isNew) {
-        return JSON.stringify(this.toJSON(isNew, undefined, excludeData));
+    stringify(excludeData, isNew, index) {
+        return JSON.stringify(this.toJSON(isNew, index, excludeData));
     }
 
     isInOrigin() {

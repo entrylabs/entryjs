@@ -372,6 +372,30 @@ EntryStatic.getAllBlocks = function() {
             blocks: ['functionAddButton'],
         },
         {
+            category: 'analysis',
+            blocks: ['analysis_noti_img', 'analysis_noti_text'],
+        },
+        {
+            category: 'ai_utilize',
+            blocks: [
+                'aiUtilizeBlockAddButton',
+                'aiUtilizeModelTrainButton',
+                'audio_title',
+                'check_microphone',
+                'speech_to_text',
+                'speech_to_text_convert',
+                'speech_to_text_get_value',
+                'get_microphone_volume',
+                'tts_title',
+                'read_text',
+                'read_text_wait_with_block',
+                'set_tts_property',
+                'translate_title',
+                'get_translated_string',
+                'check_language',
+            ],
+        },
+        {
             category: 'expansion',
             blocks: [
                 'expansionBlockAddButton',
@@ -386,9 +410,6 @@ EntryStatic.getAllBlocks = function() {
                 'get_city_weather_data',
                 'get_current_city_weather_data',
                 'get_today_city_temperature',
-                'translate_title',
-                'get_translated_string',
-                'check_language',
                 'festival_title',
                 'count_festival',
                 'get_festival_info',
@@ -398,10 +419,6 @@ EntryStatic.getAllBlocks = function() {
                 'behaviorConductLifeSafety_title',
                 'count_lifeSafety_behavior',
                 'get_lifeSafety_behavior',
-                'tts_title',
-                'read_text',
-                'read_text_wait_with_block',
-                'set_tts_property',
             ],
         },
         {
@@ -599,7 +616,7 @@ EntryStatic.objectSubCategories = {
     environment: ['environment_nature', 'environment_space', 'environment_others'],
     stuff: ['stuff_living', 'stuff_hobby', 'stuff_others'],
     fantasy: [],
-    interface: [],
+    interface: ['interface_website', 'interface_game', 'interface_others'],
     background: [
         'background_outdoor',
         'background_indoor',
@@ -678,6 +695,90 @@ Object.defineProperty(EntryStatic, 'fonts', {
                 url: '/css/uhbeemysen.css',
                 visible: true,
             },
+            {
+                name: Lang.Fonts.sd_comic_stencil,
+                family: 'SDComicStencil',
+                style: {
+                    backgroundColor: '#f7fcff',
+                    padding: '17px 22px 14px 16px',
+                    margin: '0px',
+                    borderTop: 'solid 1px #d6e9f4',
+                },
+                url: '/css/SDComicStencil.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.sd_childfundkorea,
+                family: 'SDChildfundkorea',
+                style: {
+                    backgroundColor: '#f7fcff',
+                    padding: '17px 22px 14px 16px',
+                    margin: '0px',
+                    borderTop: 'solid 1px #d6e9f4',
+                },
+                url: '/css/SDChildfundkorea.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.sd_cinema_theater,
+                family: 'SDCinemaTheater',
+                style: {
+                    backgroundColor: '#f7fcff',
+                    padding: '17px 22px 14px 16px',
+                    margin: '0px',
+                    borderTop: 'solid 1px #d6e9f4',
+                },
+                url: '/css/SDCinemaTheater.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.sd_mapssi,
+                family: 'SDMapssi',
+                style: {
+                    backgroundColor: '#f7fcff',
+                    padding: '17px 22px 14px 16px',
+                    margin: '0px',
+                    borderTop: 'solid 1px #d6e9f4',
+                },
+                url: '/css/SDMapssi.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.sd_shabang,
+                family: 'SDShabang',
+                style: {
+                    backgroundColor: '#f7fcff',
+                    padding: '17px 22px 14px 16px',
+                    margin: '0px',
+                    borderTop: 'solid 1px #d6e9f4',
+                },
+                url: '/css/SDShabang.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.sd_woodcarving,
+                family: 'SDWoodcarving',
+                style: {
+                    backgroundColor: '#f7fcff',
+                    padding: '17px 22px 14px 16px',
+                    margin: '0px',
+                    borderTop: 'solid 1px #d6e9f4',
+                },
+                url: '/css/SDWoodcarving.css',
+                visible: true,
+            },
+            {
+                name: Lang.Fonts.sd_yongbi,
+                family: 'SDYongbi',
+                style: {
+                    backgroundColor: '#f7fcff',
+                    padding: '17px 22px 14px 16px',
+                    margin: '0px',
+                    borderTop: 'solid 1px #d6e9f4',
+                },
+                url: '/css/SDYongbi.css',
+                visible: true,
+            },
         ];
     },
 });
@@ -697,6 +798,7 @@ EntryStatic.colorSet = {
             VARIABLE: '#CE38CE',
             HARDWARE: '#FFFFFF',
             EXPANSION: '#FF8888',
+            AI_UTILIZE: '#FF8888',
             HIDDEN: '#FFFFFF',
         },
     },
@@ -715,6 +817,7 @@ EntryStatic.colorSet = {
             FUNC: '#de5c04',
             HARDWARE: '#00b6b1',
             EXPANSION: '#ef6d6d',
+            AI_UTILIZE: '#8222ff',
             HIDDEN: '#8aa3b2',
         },
         lighten: {
@@ -731,6 +834,7 @@ EntryStatic.colorSet = {
             FUNC: '#ff7b22',
             HARDWARE: '#78d5d3',
             EXPANSION: '#ffaeae',
+            AI_UTILIZE: '#ffaeae',
             HIDDEN: '#ffaeae',
         },
         darken: {
@@ -747,6 +851,7 @@ EntryStatic.colorSet = {
             FUNC: '#a14100',
             HARDWARE: '#008380',
             EXPANSION: '#c63f3f',
+            AI_UTILIZE: '#670bdd',
             HIDDEN: '#728997',
         },
         emphasize: {
@@ -772,6 +877,8 @@ EntryStatic.colorSet = {
         BUTTON: '#4f80ff',
         BUTTON_BACKGROUND: '#eee',
         TEXT: '#333',
+        BUTTON_BACKGROUND_DISABLED: '#f9f9f9',
+        BUTTON_DISABLED: '#cbcbcb',
     },
 };
 
