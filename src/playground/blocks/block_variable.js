@@ -441,7 +441,6 @@ module.exports = {
                     }
 
                     const variable = Entry.variableContainer.getVariable(variableId, sprite);
-                    const { isCloud_ } = variable;
                     let variableValue = variable.getValue();
                     let sumValue;
                     if (Entry.Utils.isNumber(value) && variable.isNumber()) {
@@ -457,19 +456,6 @@ module.exports = {
                     }
                     variable.setValue(sumValue);
                     return script.callReturn();
-                    if (!isCloud_) {
-                        variable.setValue(sumValue);
-                        return script.callReturn();
-                    } else {
-                        return new Promise(async (resolve, reject) => {
-                            try {
-                                await variable.setValue(sumValue);
-                                resolve();
-                            } catch (e) {
-                                reject(e);
-                            }
-                        });
-                    }
                 },
                 syntax: {
                     js: [],
@@ -586,23 +572,9 @@ module.exports = {
                     const variableId = script.getField('VARIABLE', script);
                     const value = script.getValue('VALUE', script);
                     const variable = Entry.variableContainer.getVariable(variableId, sprite);
-                    const { isCloud_ } = variable;
 
                     variable.setValue(value);
                     return script.callReturn();
-                    if (!isCloud_) {
-                        variable.setValue(value);
-                        return script.callReturn();
-                    } else {
-                        return new Promise(async (resolve, reject) => {
-                            try {
-                                await variable.setValue(value);
-                                resolve();
-                            } catch (e) {
-                                reject(e);
-                            }
-                        });
-                    }
                 },
                 syntax: {
                     js: [],
@@ -984,19 +956,6 @@ module.exports = {
 
                     list.appendValue(value);
                     return script.callReturn();
-                    if (!list.isCloud_) {
-                        list.appendValue(value);
-                        return script.callReturn();
-                    } else {
-                        return new Promise(async (resolve, reject) => {
-                            try {
-                                await list.appendValue(value);
-                                resolve();
-                            } catch (e) {
-                                reject(e);
-                            }
-                        });
-                    }
                 },
                 syntax: {
                     js: [],
@@ -1103,22 +1062,8 @@ module.exports = {
                         throw new Error('can not remove value from array');
                     }
 
-                    const { isCloud_ } = list;
                     list.deleteValue(value - 1);
                     return script.callReturn();
-                    if (!isCloud_) {
-                        list.deleteValue(value - 1);
-                        return script.callReturn();
-                    } else {
-                        return new Promise(async (resolve, reject) => {
-                            try {
-                                await list.deleteValue(value - 1);
-                                resolve();
-                            } catch (e) {
-                                reject(e);
-                            }
-                        });
-                    }
                 },
                 syntax: {
                     js: [],
@@ -1243,22 +1188,8 @@ module.exports = {
                     ) {
                         throw new Error('can not insert value to array');
                     }
-                    const { isCloud_ } = list;
                     list.insertValue(index, data);
                     return script.callReturn();
-                    if (!isCloud_) {
-                        list.insertValue(index, data);
-                        return script.callReturn();
-                    } else {
-                        return new Promise(async (resolve, reject) => {
-                            try {
-                                await list.insertValue(index, data);
-                                resolve();
-                            } catch (e) {
-                                reject(e);
-                            }
-                        });
-                    }
                 },
                 syntax: {
                     js: [],
@@ -1383,22 +1314,8 @@ module.exports = {
                         throw new Error('can not insert value to array');
                     }
 
-                    const { isCloud_ } = list;
                     list.replaceValue(index, data);
                     return script.callReturn();
-                    if (!isCloud_) {
-                        list.replaceValue(index, data);
-                        return script.callReturn();
-                    } else {
-                        return new Promise(async (resolve, reject) => {
-                            try {
-                                await list.replaceValue(index, data);
-                                resolve();
-                            } catch (e) {
-                                reject(e);
-                            }
-                        });
-                    }
                 },
                 syntax: {
                     js: [],
