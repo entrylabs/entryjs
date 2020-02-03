@@ -108,14 +108,14 @@ class AudioUtils {
     improperStop(resolveFunc) {
         this.stopRecord();
         resolveFunc('');
-        Entry.removeEventListener('toggleStop', this.improperStop);
+        Entry.removeEventListener('beforeStop', this.improperStop);
     }
 
     async startRecord(recordMilliSecond, language) {
         //getMediaStream 은 만약 stream 이 없는 경우
         await this.getMediaStream();
         return await new Promise(async (resolve, reject) => {
-            Entry.addEventListener('toggleStop', () => this.improperStop(resolve));
+            Entry.addEventListener('beforeStop', () => this.improperStop(resolve));
             if (!this.isAudioInitComplete) {
                 console.log('audio not initialized');
                 resolve(0);
