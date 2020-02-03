@@ -279,6 +279,7 @@ class Variable {
      * @return {number}
      */
     getValue() {
+        return this.value_;
         if (!this.isCloud_) {
             return this.value_;
         } else {
@@ -304,6 +305,11 @@ class Variable {
      * @param {!string} variableValue
      */
     setValue(value) {
+        this.value_ = value;
+        this._valueWidth = null;
+        this.updateView();
+        Entry.requestUpdateTwice = true;
+        return;
         if (!this.isCloud_) {
             this.value_ = value;
             this._valueWidth = null;
@@ -449,7 +455,7 @@ class Variable {
         if (!this.isCloud_) {
             this.setValue(variableModel.value);
         }
-
+        
         this.setName(variableModel.name);
         this.setX(variableModel.x);
         this.setY(variableModel.y);

@@ -455,6 +455,8 @@ module.exports = {
                     } else {
                         sumValue = `${variableValue}${value}`;
                     }
+                    variable.setValue(sumValue);
+                    return script.callReturn();
                     if (!isCloud_) {
                         variable.setValue(sumValue);
                         return script.callReturn();
@@ -586,6 +588,8 @@ module.exports = {
                     const variable = Entry.variableContainer.getVariable(variableId, sprite);
                     const { isCloud_ } = variable;
 
+                    variable.setValue(value);
+                    return script.callReturn();
                     if (!isCloud_) {
                         variable.setValue(value);
                         return script.callReturn();
@@ -978,6 +982,8 @@ module.exports = {
                     const value = script.getValue('VALUE', script);
                     const list = Entry.variableContainer.getList(listId, sprite);
 
+                    list.appendValue(value);
+                    return script.callReturn();
                     if (!list.isCloud_) {
                         list.appendValue(value);
                         return script.callReturn();
@@ -1098,6 +1104,8 @@ module.exports = {
                     }
 
                     const { isCloud_ } = list;
+                    list.deleteValue(value - 1);
+                    return script.callReturn();
                     if (!isCloud_) {
                         list.deleteValue(value - 1);
                         return script.callReturn();
@@ -1236,6 +1244,8 @@ module.exports = {
                         throw new Error('can not insert value to array');
                     }
                     const { isCloud_ } = list;
+                    list.insertValue(index, data);
+                    return script.callReturn();
                     if (!isCloud_) {
                         list.insertValue(index, data);
                         return script.callReturn();
@@ -1374,6 +1384,8 @@ module.exports = {
                     }
 
                     const { isCloud_ } = list;
+                    list.replaceValue(index, data);
+                    return script.callReturn();
                     if (!isCloud_) {
                         list.replaceValue(index, data);
                         return script.callReturn();

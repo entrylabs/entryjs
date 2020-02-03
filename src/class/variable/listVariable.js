@@ -154,6 +154,7 @@ class ListVariable extends Variable {
     }
 
     getArray() {
+        return this.array_;
         if (!this.isCloud_) {
             return this.array_;
         } else {
@@ -167,6 +168,10 @@ class ListVariable extends Variable {
     }
 
     setArray(array) {
+        this.array_ = array;
+        this.updateView();
+        Entry.requestUpdateTwice = true;
+        return;
         if (!this.isCloud_) {
             this.array_ = array;
             this.updateView();
@@ -189,6 +194,14 @@ class ListVariable extends Variable {
     }
 
     appendValue(value) {
+        if (!this.array_) {
+            this.array_ = [];
+        }
+        this.array_.push({
+            data: value,
+        });
+        this.updateView();
+        return;
         if (!this.isCloud_) {
             if (!this.array_) {
                 this.array_ = [];
@@ -223,6 +236,9 @@ class ListVariable extends Variable {
     }
 
     deleteValue(index) {
+        this.array_.splice(index - 1, 1);
+        this.updateView();
+        return;
         if (!this.isCloud_) {
             this.array_.splice(index - 1, 1);
             this.updateView();
@@ -250,6 +266,9 @@ class ListVariable extends Variable {
     }
 
     insertValue(index, data) {
+        this.array_.splice(index - 1, 0, { data });
+        this.updateView();
+        return;
         if (!this.isCloud_) {
             this.array_.splice(index - 1, 0, { data });
             this.updateView();
@@ -277,6 +296,9 @@ class ListVariable extends Variable {
     }
 
     replaceValue(index, data) {
+        this.array_[index - 1].data = data;
+        this.updateView();
+        return;
         if (!this.isCloud_) {
             this.array_[index - 1].data = data;
             this.updateView();
