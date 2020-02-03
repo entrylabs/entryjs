@@ -26,6 +26,7 @@ class Executor {
         }
 
         const executedBlocks = [];
+        const promises = [];
         if (isFromOrigin) {
             Entry.callStackLength = 0;
         }
@@ -62,6 +63,7 @@ class Executor {
             }
 
             if (returnVal instanceof Promise) {
+                promises.push(returnVal);
                 this.paused = true;
                 returnVal
                     .then((returnVal) => {
@@ -126,7 +128,7 @@ class Executor {
                 break;
             }
         }
-        return executedBlocks;
+        return { promises, blocks: executedBlocks };
     }
 
     checkExecutorError(error) {

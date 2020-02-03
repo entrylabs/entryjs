@@ -5,7 +5,6 @@
 
 import { GEHelper } from '../graphicEngine/GEHelper';
 import audioUtils from '../util/audioUtils';
-import ExecuteEntity from './ExecuteEntity';
 
 /**
  * Class for a engine.
@@ -14,7 +13,7 @@ import ExecuteEntity from './ExecuteEntity';
  */
 Entry.Engine = class Engine {
     constructor() {
-        this.executeEntity = new ExecuteEntity();
+        this.execPromises = [];
         this.state = 'stop';
         this.popup = null;
         this.isUpdating = true;
@@ -697,7 +696,6 @@ Entry.Engine = class Engine {
         Entry.addActivity('stop');
 
         container.mapEntity((entity) => {
-            this.executeEntity.stop(entity);
             entity.loadSnapshot();
             entity.object.filters = [];
             entity.resetFilter();
@@ -889,7 +887,7 @@ Entry.Engine = class Engine {
      * @param {string} eventName
      */
     raiseEvent = (entity, eventName) => {
-        entity.parent.script.raiseEvent(eventName, this.executeEntity.get(entity));
+        entity.parent.script.raiseEvent(eventName, entity);
     };
 
     /**
@@ -1199,6 +1197,25 @@ Entry.Engine = class Engine {
 
     destroy() {
         // 우선 interface 만 정의함.
+    }
+
+    trimPromiseExecutor() {
+        return this.execPromises.filter((promise) => {
+            return promise instanceof Promise;
+        });
+    }
+
+    addPromiseExecutor(promises) {
+        this.execPromises = this.trimPromiseExecutor();
+        const index = this.execPromises.length;
+        promises.forEach((promise, i) => {
+            const execPromise = (async function() {
+                const result = await promise;
+                const j = Entry.engine.execPromises.indexOf(execPromise);
+                Entry.engine.execPromises[j] = result;
+            })();
+            this.execPromises[index + i] = execPromise;
+        });
     }
 };
 
