@@ -68,7 +68,9 @@ class AudioUtils {
         if (this.isAudioInitComplete) {
             return;
         }
-
+        Entry.addEventListener('beforeStop', () => {
+            this.improperStop();
+        });
         try {
             if (!window.AudioContext) {
                 if (window.webkitAudioContext) {
@@ -105,17 +107,18 @@ class AudioUtils {
         }
     }
 
-    improperStop(resolveFunc) {
+    improperStop() {
         this.stopRecord();
-        resolveFunc('');
-        Entry.removeEventListener('beforeStop', this.improperStop);
+        if (this.resolveFunc) {
+            this.resolveFunc('');
+        }
     }
 
     async startRecord(recordMilliSecond, language) {
         //getMediaStream 은 만약 stream 이 없는 경우
         await this.getMediaStream();
         return await new Promise(async (resolve, reject) => {
-            Entry.addEventListener('beforeStop', () => this.improperStop(resolve));
+            this.resolveFunc = resolve;
             if (!this.isAudioInitComplete) {
                 console.log('audio not initialized');
                 resolve(0);
