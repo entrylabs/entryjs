@@ -28,6 +28,11 @@ Entry.Stage = function() {
 
     /** @type {PIXI.Application | CreateJsApplication} */
     this._app = null;
+
+    this.background = GEHelper.newGraphic();
+    this.background.graphics.beginFill('#ffffff').drawRect(-480, -240, 960, 480);
+    this.variableContainer = GEHelper.newContainer('variableContainer');
+    this.dialogContainer = GEHelper.newContainer('dialogContainer');
 };
 
 /**
@@ -41,10 +46,10 @@ Entry.Stage.prototype.initStage = function(canvas) {
     this.canvas.y = 540 / 1.5 / 2;
     this.canvas.scaleX = this.canvas.scaleY = 2 / 1.5;
 
-    this.background = GEHelper.newGraphic();
-    this.background.graphics.beginFill('#ffffff').drawRect(-480, -240, 960, 480);
-    this.variableContainer = GEHelper.newContainer('variableContainer');
-    this.dialogContainer = GEHelper.newContainer('dialogContainer');
+    // this.background = GEHelper.newGraphic();
+    // this.background.graphics.beginFill('#ffffff').drawRect(-480, -240, 960, 480);
+    // this.variableContainer = GEHelper.newContainer('variableContainer');
+    // this.dialogContainer = GEHelper.newContainer('dialogContainer');
 
     this.canvas.addChild(this.background);
     this.canvas.addChild(this.variableContainer);

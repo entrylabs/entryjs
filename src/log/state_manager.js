@@ -1,10 +1,7 @@
-/**
- * @fileoverview State Manager class for undo and redo.
- */
 'use strict';
 
 /**
- * @constructor
+ * Initialize stateManager for redo and undo.
  */
 Entry.StateManager = function() {
     this.undoStack_ = [];

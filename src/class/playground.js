@@ -1005,7 +1005,7 @@ Entry.Playground = class Playground {
      * @param soundView
      */
     generateSoundView(soundView) {
-        if (Entry.type == 'workspace') {
+        if (Entry.type === 'workspace') {
             const soundAdd = Entry.createElement('div', 'entryAddSound');
             soundAdd.addClass('entryPlaygroundAddSound');
             const innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner').addClass(

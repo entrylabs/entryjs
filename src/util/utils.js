@@ -123,14 +123,16 @@ Entry.loadProject = function(project) {
 Entry.clearProject = function() {
     Entry.stop();
     Entry.projectId = null;
-    Entry.type !== 'invisible' && Entry.playground && Entry.playground.changeViewMode('code');
     Entry.variableContainer.clear();
     Entry.container.clear();
     Entry.scene.clear();
-    Entry.stateManager.clear();
     GEHelper.resManager.clearProject();
-    if (Entry.Loader) {
-        Entry.Loader.loaded = false;
+    Entry.Loader && (Entry.Loader.loaded = false);
+
+    if (Entry.type !== 'invisible') {
+        Entry.playground && Entry.playground.changeViewMode('code');
+    } else {
+        Entry.stateManager && Entry.stateManager.clear();
     }
 };
 

@@ -6,12 +6,7 @@
 const UTIL = require('./command_util');
 
 Entry.Commander = function(injectType) {
-    if (injectType == 'workspace' || injectType == 'phone') {
-        /**
-         * Initialize stateManager for redo and undo.
-         * @type {!Entry.StateManager}
-         * @type {!object}
-         */
+    if (injectType === 'workspace' || injectType === 'phone') {
         Entry.stateManager = new Entry.StateManager();
     }
     Entry.do = this.do.bind(this);

@@ -257,8 +257,8 @@ Entry.initSoundQueue_ = function() {
 /**
  * Initialize html DOM view for entry.
  * This work differently with initialize option.
- * @param {!Element} container for entry workspace or others.
- * @param {!string} option for create dom by type.
+ * @param {!HTMLElement} container for entry workspace or others.
+ * @param {*} option for create dom by type.
  */
 Entry.createDom = function(container, option) {
     const that = this;
@@ -292,11 +292,7 @@ Entry.createDom = function(container, option) {
         this.engineView = engineView;
         this.engine.generateView(this.engineView, option);
 
-        const canvas = Entry.createElement('canvas');
-        canvas.addClass('entryCanvasWorkspace');
-        canvas.id = 'entryCanvas';
-        canvas.width = 640;
-        canvas.height = 360;
+        const canvas = _createCanvasElement('entryCanvasWorkspace');
         engineView.insertBefore(canvas, this.engine.buttonWrapper);
 
         canvas.addEventListener('mousewheel', (evt) => {
@@ -342,51 +338,36 @@ Entry.createDom = function(container, option) {
 
         const playgroundView = Entry.createElement('div');
         container.appendChild(playgroundView);
-        /** @type {!Element} */
         this.playgroundView = playgroundView;
         this.playground.generateView(this.playgroundView, option);
 
         this.propertyPanel.select('object');
         this.helper.bindWorkspace(this.playground.mainWorkspace);
     } else if (option === 'minimize') {
-        const canvas = Entry.createElement('canvas');
-        canvas.className = 'entryCanvasWorkspace minimize';
-        canvas.id = 'entryCanvas';
-        canvas.width = 640;
-        canvas.height = 360;
+        const canvas = _createCanvasElement(['entryCanvasWorkspace', 'minimize']);
         const canvasWrapper = Entry.createElement('div', 'entryCanvasWrapper');
         canvasWrapper.appendChild(canvas);
         container.appendChild(canvasWrapper);
 
-        /** @type {!Element} */
         this.canvas_ = canvas;
         this.stage.initStage(this.canvas_);
 
         const engineView = Entry.createElement('div');
         container.appendChild(engineView);
-        /** @type {!Element} */
         this.engineView = engineView;
-        this.engine.generateView(this.engineView, option);
+        this.engine.generateViewz(this.engineView, option);
     } else if (option === 'phone') {
-        const stateManagerView = Entry.createElement('div');
-        /** @type {!Element} */
-        this.stateManagerView = stateManagerView;
+        this.stateManagerView = Entry.createElement('div');
         this.stateManager.generateView(this.stateManagerView, option);
 
         const engineView = Entry.createElement('div');
         container.appendChild(engineView);
-        /** @type {!Element} */
         this.engineView = engineView;
         this.engine.generateView(this.engineView, option);
 
-        const canvas = Entry.createElement('canvas');
-        canvas.addClass('entryCanvasPhone');
-        canvas.id = 'entryCanvas';
-        canvas.width = 640;
-        canvas.height = 360;
+        const canvas = _createCanvasElement('entryCanvasPhone');
 
         engineView.insertBefore(canvas, this.engine.footerView_);
-        /** @type {!Element} */
         this.canvas_ = canvas;
         this.stage.initStage(this.canvas_);
 
@@ -394,7 +375,7 @@ Entry.createDom = function(container, option) {
         container.appendChild(containerView);
         /** @type {!Element} */
         this.containerView = containerView;
-        this.container.generateView(this.containerView, option);
+        this.container.generateView(this.containerView);
 
         const playgroundView = Entry.createElement('div');
         container.appendChild(playgroundView);
@@ -405,9 +386,24 @@ Entry.createDom = function(container, option) {
 };
 
 /**
- * start running
- * @param {?number} FPS
+ * @param className {string|string[]}
+ * @private
  */
+const _createCanvasElement = (className) => {
+    const canvas = Entry.createElement('canvas');
+    canvas.id = 'entryCanvas';
+    canvas.width = 640;
+    canvas.height = 360;
+
+    if (Array.isArray(className)) {
+        canvas.className = className.join(' ');
+    } else {
+        canvas.addClass(className);
+    }
+
+    return canvas;
+};
+
 Entry.start = function() {
     if (Entry.type === 'invisible') {
         return;
