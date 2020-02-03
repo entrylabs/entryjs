@@ -1925,28 +1925,7 @@ Entry.Playground = class Playground {
         nameView.value = table.name;
         nameView.id = table.id;
         table.view.name = nameView;
-        Entry.attachEventListener(nameView, 'blur', function nameViewBlur() {
-            if (this.value.trim() === '') {
-                return entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
-                    nameView.focus();
-                });
-            }
-
-            let nameViewArray = $('.entryPlaygroundTableName');
-            if (nameViewArray.length !== Entry.playground.object.sounds.length) {
-                nameViewArray = nameViewArray.slice(0, -1);
-            }
-
-            for (let i = 0; i < nameViewArray.length; i++) {
-                if (nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
-                    return entrylms.alert(Lang.Workspace.name_already_exists).on('hide', () => {
-                        nameView.focus();
-                    });
-                }
-            }
-            DataTable.setTableName(nameView.id, this.value);
-            Entry.playground.reloadPlayground();
-        });
+        Entry.attachEventListener(nameView, 'blur', this.tableNameViewBlur);
         Entry.attachEventListener(nameView, 'focus', (e) => {
             this.nameView = e.target;
             this.nameViewFocus = true;
@@ -1969,6 +1948,44 @@ Entry.Playground = class Playground {
             }
         });
     }
+
+    isDuplicatedTableName(name, selectedIndex = -1) {
+        let nameViewArray = $('.entryPlaygroundTableName');
+        if (nameViewArray.length !== Entry.playground.dataTable.tables.length) {
+            nameViewArray = nameViewArray.slice(0, -1);
+        }
+
+        for (let i = 0; i < nameViewArray.length; i++) {
+            if (nameViewArray.eq(i).val() == name && i != selectedIndex) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    tableNameViewBlur = (event) => {
+        const { target = {} } = event;
+        const { value = '' } = target;
+        const selectedIndex = _.findIndex(
+            this.dataTable.tables,
+            (table) => table.id === this.dataTable.dataAnalytics.data.table.id
+        );
+        if (value.trim() === '') {
+            return entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
+                target.focus();
+            });
+        }
+
+        if (this.isDuplicatedTableName(value, selectedIndex)) {
+            return entrylms.alert(Lang.Workspace.name_already_exists).on('hide', () => {
+                target.focus();
+            });
+        }
+        DataTable.setTableName(target.id, value);
+        Entry.playground.reloadPlayground();
+        this.dataTable.selectTable(DataTable.tables[selectedIndex]);
+    };
 
     _removeTable(table, element) {
         Entry.playground.dataTable.removeSource(table);

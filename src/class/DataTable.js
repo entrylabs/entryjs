@@ -72,6 +72,17 @@ class DataTable {
         this.dataAnalytics = new DataAnalytics({ container: this.#view, data: {} })
             .on('submit', (dataAnalytics) => {
                 const { id, table = [[]], charts = [], title } = dataAnalytics;
+                if (
+                    Entry.playground.isDuplicatedTableName(
+                        title,
+                        _.findIndex(this.tables, (table) => table.id === id)
+                    )
+                ) {
+                    return Entry.toast.alert(
+                        Lang.DataAnalytics.duplicate_table_name_title,
+                        Lang.DataAnalytics.duplicate_table_name_content
+                    );
+                }
                 if (Entry.playground.dataTable.getSource(id)) {
                     Entry.playground.dataTable.getSource(id).setArray({
                         chart: charts,
@@ -84,7 +95,6 @@ class DataTable {
                 }
             })
             .on('toast', (message) => {
-                console.log(message);
                 const { title, content } = message;
                 Entry.toast.alert(title, content);
             });
