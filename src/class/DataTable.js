@@ -66,6 +66,7 @@ class DataTable {
         this.dataAnalytics.setData({
             table: { ...json, tab: table.tab },
         });
+        delete table.tab;
     }
 
     #generateView() {
