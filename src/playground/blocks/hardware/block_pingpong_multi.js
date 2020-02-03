@@ -56,9 +56,13 @@ class PingpongBase {
 
         //console.log('ar: ', pd);
 
-        if (this.prev_sensor_data.BUTTON != pd.c0_BUTTON) {
-            this.prev_sensor_data.BUTTON = pd.c0_BUTTON;
-            Entry.engine.fireEvent('pp_when_button_pressed');
+        if (pd.c0_BUTTON == 1 || pd.c1_BUTTON == 1) {
+            if (this.prev_sensor_data.BUTTON == 0) {
+                Entry.engine.fireEvent('pp_when_button_pressed');
+                this.prev_sensor_data.BUTTON = 1;
+            }
+        } else {
+            this.prev_sensor_data.BUTTON = 0;
         }
 
         if (
@@ -86,6 +90,7 @@ class PingpongBase {
                 id: ++this.send_cmd_id,
                 data: packet,
             };
+            Entry.hw.update();
 
             return script.callReturn();
         }
@@ -99,6 +104,7 @@ class PingpongBase {
                 id: ++this.send_cmd_id,
                 data: packet,
             };
+            Entry.hw.update();
 
             setTimeout(function() {
                 script.step_flag = 0;
