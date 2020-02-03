@@ -686,7 +686,9 @@ Entry.Engine = class Engine {
     /**
      * toggle this engine state stop
      */
-    toggleStop() {
+    async toggleStop() {
+        Entry.dispatchEvent('toggleStop');
+        await Promise.all(this.execPromises);
         const container = Entry.container;
         const variableContainer = Entry.variableContainer;
 

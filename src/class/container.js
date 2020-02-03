@@ -1003,7 +1003,7 @@ Entry.Container = class Container {
         this.sttValue.complete = true;
     }
 
-    ableSttValue() {
+    enableSttValue() {
         this.sttValue.complete = false;
     }
 
