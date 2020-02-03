@@ -11,7 +11,10 @@ const STATUS_CODE = {
     NOT_RECOGNIZED: 'NOT_RECOGNIZED',
 };
 
-const VOICE_SERVER_ADDR = `${window.location.hostname}`;
+const VOICE_SERVER_ADDR = {
+    hostname: window.location.hostname,
+    path: '/vc',
+};
 
 class AudioUtils {
     get currentVolume() {
