@@ -11,7 +11,10 @@ const STATUS_CODE = {
     NOT_RECOGNIZED: 'NOT_RECOGNIZED',
 };
 
-const VOICE_SERVER_ADDR = `${window.location.hostname}`;
+const VOICE_SERVER_ADDR = {
+    hostname: window.location.hostname,
+    path: '/vc',
+};
 
 class AudioUtils {
     get currentVolume() {
@@ -68,7 +71,9 @@ class AudioUtils {
         if (this.isAudioInitComplete) {
             return;
         }
-
+        Entry.addEventListener('beforeStop', () => {
+            this.improperStop();
+        });
         try {
             if (!window.AudioContext) {
                 if (window.webkitAudioContext) {
@@ -105,26 +110,32 @@ class AudioUtils {
         }
     }
 
+    improperStop() {
+        this.stopRecord();
+        if (this.resolveFunc) {
+            this.resolveFunc('');
+        }
+    }
+
     async startRecord(recordMilliSecond, language) {
         //getMediaStream 은 만약 stream 이 없는 경우
         await this.getMediaStream();
         return await new Promise(async (resolve, reject) => {
+            this.resolveFunc = resolve;
             if (!this.isAudioInitComplete) {
                 console.log('audio not initialized');
                 resolve(0);
                 return;
             }
-
             // this.isRecording = true;
             if (this._audioContext.state === 'suspended') {
                 await this.initUserMedia();
             }
 
             try {
-                const socketClient = await voiceApiConnect(VOICE_SERVER_ADDR, language, (data) => {
+                this._socketClient = await voiceApiConnect(VOICE_SERVER_ADDR, language, (data) => {
                     this.result = data;
                 });
-                this._socketClient = socketClient;
             } catch (err) {
                 console.log(err);
             }
