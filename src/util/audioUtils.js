@@ -115,6 +115,7 @@ class AudioUtils {
         //getMediaStream 은 만약 stream 이 없는 경우
         await this.getMediaStream();
         return await new Promise(async (resolve, reject) => {
+            Entry.addEventListener('toggleStop', () => this.improperStop(resolve));
             if (!this.isAudioInitComplete) {
                 console.log('audio not initialized');
                 resolve(0);
@@ -124,7 +125,6 @@ class AudioUtils {
             if (this._audioContext.state === 'suspended') {
                 await this.initUserMedia();
             }
-            Entry.addEventListener('toggleStop', () => this.improperStop(resolve));
 
             try {
                 this._socketClient = await voiceApiConnect(VOICE_SERVER_ADDR, language, (data) => {
