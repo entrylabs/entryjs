@@ -154,9 +154,10 @@ function getInitialCodeMap() {
     };
 }
 
-Entry.EXPANSION_BLOCK.translate = {
+Entry.AI_UTILIZE_BLOCK.translate = {
     name: 'translate',
     imageName: 'papago.png',
+    sponserText: 'Powered by Naver',
     title: {
         ko: '번역',
         en: 'translate',
@@ -170,10 +171,13 @@ Entry.EXPANSION_BLOCK.translate = {
         if (this.isInitialized) {
             return;
         }
-        Entry.EXPANSION_BLOCK.translate.delayKey = Entry.projectId;
-        Entry.EXPANSION_BLOCK.translate.isInitialized = true;
+        Entry.AI_UTILIZE_BLOCK.translate.delayKey = Entry.projectId;
+        Entry.AI_UTILIZE_BLOCK.translate.isInitialized = true;
     },
     api: '/api/expansionBlock/papago/',
+    sponsor: 'papagoNaver',
+    sponsorLink: 'https://www.ncloud.com/product/aiService/papagoNmt',
+    sponsorText: 'Powered by NAVER',
     typeMap: {
         dictionary: 'nsmt',
         artificial_intelligence: 'n2mt',
@@ -181,7 +185,7 @@ Entry.EXPANSION_BLOCK.translate = {
     apiType: 'nsmt',
 };
 
-Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
+Entry.AI_UTILIZE_BLOCK.translate.getBlocks = function() {
     const params = {
         getType(isPython) {
             const param = {
@@ -192,7 +196,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                 ],
                 value: 'dictionary',
                 fontSize: 11,
-                bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
             };
             if (isPython) {
@@ -229,7 +233,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                 options,
                 value,
                 fontSize: 11,
-                bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
             };
             if (isPython) {
@@ -260,7 +264,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                 targetIndex,
                 needDeepCopy: true,
                 fontSize: 11,
-                bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
             };
             if (isPython) {
@@ -271,15 +275,15 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
     };
     const getProjectId = function() {
         if (Entry.projectId) {
-            Entry.EXPANSION_BLOCK.translate.delayKey = Entry.projectId;
+            Entry.AI_UTILIZE_BLOCK.translate.delayKey = Entry.projectId;
         }
 
-        if (Entry.EXPANSION_BLOCK.translate.delayKey) {
-            return Entry.EXPANSION_BLOCK.translate.delayKey;
+        if (Entry.AI_UTILIZE_BLOCK.translate.delayKey) {
+            return Entry.AI_UTILIZE_BLOCK.translate.delayKey;
         }
 
-        Entry.EXPANSION_BLOCK.translate.delayKey = _.uniqueId(Entry.generateHash());
-        return Entry.EXPANSION_BLOCK.translate.delayKey;
+        Entry.AI_UTILIZE_BLOCK.translate.delayKey = _.uniqueId(Entry.generateHash());
+        return Entry.AI_UTILIZE_BLOCK.translate.delayKey;
     };
 
     const translate = (params, type, defaultValue) => {
@@ -288,7 +292,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
         return new PromiseManager()
             .Promise((resolve) => {
                 callApi(key, {
-                    url: `${Entry.EXPANSION_BLOCK.translate.api}translate/${type}`,
+                    url: `${Entry.AI_UTILIZE_BLOCK.translate.api}translate/${type}`,
                     params,
                 })
                     .then((result) => {
@@ -307,7 +311,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
         return new PromiseManager()
             .Promise((resolve) => {
                 callApi(`translate-detect-${query}`, {
-                    url: `${Entry.EXPANSION_BLOCK.translate.api}dect/langs`,
+                    url: `${Entry.AI_UTILIZE_BLOCK.translate.api}dect/langs`,
                     params: { query, projectId: getProjectId() },
                 })
                     .then((result) => {
@@ -366,8 +370,8 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             events: {},
         },
         get_translated_string: {
-            color: EntryStatic.colorSet.block.default.EXPANSION,
-            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -407,7 +411,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                     return textObj.message;
                 }
 
-                const type = Entry.EXPANSION_BLOCK.translate.apiType;
+                const type = Entry.AI_UTILIZE_BLOCK.translate.apiType;
                 const params = {
                     text: textObj.message,
                     target: script.getField('TARGET', script),
@@ -439,8 +443,8 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             },
         },
         check_language: {
-            color: EntryStatic.colorSet.block.default.EXPANSION,
-            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [

@@ -19,7 +19,7 @@ if (!Entry.block) {
 }
 
 function getConverters() {
-    const c =  {};
+    const c = {};
     c.keyboardCode = function(key, value) {
         let code;
 
@@ -230,13 +230,60 @@ function getConverters() {
             return value.toUpperCase();
         }
     };
-    return c;;
+    return c;
 }
 
 const blocks = require('./blocks');
 
 function getBlocks() {
     return {
+        aiUtilizeModelTrainButton: {
+            skeleton: 'basic_button_disabled',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND_DISABLED,
+            outerLine: EntryStatic.colorSet.common.BUTTON_DISABLED,
+            isNotFor: ['functionInit'],
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.load_ai_utilize_train_block,
+                    color: EntryStatic.colorSet.common.BUTTON_DISABLED,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'aiUtilizeModelTrainButton',
+            },
+            events: {
+                mousedown: [
+                    function() {
+                        console.log('NOT IMPLEMENTED');
+                    },
+                ],
+            },
+        },
+        aiUtilizeBlockAddButton: {
+            skeleton: 'basic_button',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
+            isNotFor: ['functionInit'],
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.load_ai_utilize_block,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'aiUtilizeBlockAddButton',
+            },
+            events: {
+                mousedown: [
+                    function() {
+                        Entry.do('playgroundClickAddAIUtilizeBlock');
+                    },
+                ],
+            },
+        },
         expansionBlockAddButton: {
             skeleton: 'basic_button',
             color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
@@ -1744,7 +1791,7 @@ function getBlocks() {
                     type: 'DropdownDynamic',
                     value: null,
                     menuName: 'pictures',
-                    defaultValue: 'null',
+                    // defaultValue: 'null',
                     fontSize: 10,
                     bgColor: EntryStatic.colorSet.block.darken.LOOKS,
                     arrowColor: EntryStatic.colorSet.arrow.default.LOOKS,
@@ -4795,13 +4842,9 @@ function getBlocks() {
                         }
                     }
                     if (isFoundMushroom) {
-                        Ntry.dispatchEvent(
-                            'unitAction',
-                            Ntry.STATIC.WRONG_ATTACK_OBSTACLE,
-                            () => {
-                                script.isAction = false;
-                            }
-                        );
+                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.WRONG_ATTACK_OBSTACLE, () => {
+                            script.isAction = false;
+                        });
                         return Entry.STATIC.BREAK;
                     }
                     const unitGrid = $.extend(
@@ -5670,7 +5713,7 @@ function getBlocks() {
                 if (!this.isContinue) {
                     const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
-                    let unitId;;
+                    let unitId;
                     let components;
                     $.each(entities, (id, entity) => {
                         unitId = id;

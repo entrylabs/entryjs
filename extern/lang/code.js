@@ -778,6 +778,8 @@ Lang.Blocks = {
     "FLOW_wait_until_true_2": "!= true) { }",
     "FLOW_when_clone_start": "Entry.addEventListener('clone_created')",
     "FUNC": "함수",
+    "ANALYSIS": "데이터분석",
+    "AI": "인공지능",
     "JUDGEMENT": "판단",
     "JUDGEMENT_boolean_and": "&&",
     "JUDGEMENT_boolean_not_1": "if (!",

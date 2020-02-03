@@ -1,3 +1,5 @@
+/// <reference path="../index.d.ts" />
+
 /**
  * 엔트리 하드웨어 관련 타입 선언이 포함된 목록
  */
@@ -47,8 +49,10 @@ declare module Entry {
         id: HardwareModuleId;
         name: string;
         monitorTemplate?: UnknownAny;
+        communicationType?: string;
         sendMessage?: (hw: Hardware) => void;
         setZero: () => void;
+        communicationType: string;
 
         //TODO afterSend, dataHandler 의 목적이 모호하므로 추후 개선 필요
         afterReceive?: (portData: HardwareMessageData) => void; // 데이터 수신 이후
