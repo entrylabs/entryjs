@@ -70,7 +70,7 @@ class DataTable {
 
     #generateView() {
         this.dataAnalytics = new DataAnalytics({ container: this.#view, data: {} })
-            .on('summit', (dataAnalytics) => {
+            .on('submit', (dataAnalytics) => {
                 const { id, table = [[]], charts = [], title } = dataAnalytics;
                 if (Entry.playground.dataTable.getSource(id)) {
                     Entry.playground.dataTable.getSource(id).setArray({
