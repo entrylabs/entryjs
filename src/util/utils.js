@@ -2350,6 +2350,53 @@ Entry.Utils.getObjectsBlocks = function(objects) {
         .value();
 };
 
+Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
+    if (!blockArr) {
+        return;
+    }
+    const that = this;
+
+    const data = EntryStatic.getAllBlocks();
+    const categoryIndexMap = {};
+    for (let i = 0; i < data.length; i++) {
+        const datum = data[i];
+        datum.blocks = [];
+        categoryIndexMap[datum.category] = i;
+    }
+
+    blockArr.forEach((b) => {
+        const category = that.getBlockCategory(b);
+        const index = categoryIndexMap[category];
+        if (index === undefined) {
+            return;
+        }
+        data[index].blocks.push(b);
+    });
+
+    const allBlocksInfo = EntryStatic.getAllBlocks();
+    for (let i = 0; i < allBlocksInfo.length; i++) {
+        const info = allBlocksInfo[i];
+        const category = info.category;
+        const blocks = info.blocks;
+        if (category === 'func') {
+            allBlocksInfo.splice(i, 1);
+            continue;
+        }
+        const selectedBlocks = data[i].blocks;
+        const sorted = [];
+
+        blocks.forEach((b) => {
+            if (selectedBlocks.indexOf(b) > -1) {
+                sorted.push(b);
+            }
+        });
+
+        data[i].blocks = sorted;
+    }
+
+    return data;
+};
+
 Entry.Utils.blur = function() {
     const elem = document.activeElement;
     elem && elem.blur && elem.blur();
