@@ -355,7 +355,7 @@ Entry.createDom = function(container, option) {
         const engineView = Entry.createElement('div');
         container.appendChild(engineView);
         this.engineView = engineView;
-        this.engine.generateViewz(this.engineView, option);
+        this.engine.generateView(this.engineView, option);
     } else if (option === 'phone') {
         this.stateManagerView = Entry.createElement('div');
         this.stateManager.generateView(this.stateManagerView, option);
