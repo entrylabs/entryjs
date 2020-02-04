@@ -724,7 +724,7 @@ Entry.byrobot_controller_3.setLanguage = function ()
                 "byrobot_controller_3_controller_light_color_input":           "<br>빛의 삼원색인 Red, Green, Blue 값을 지정하여 조종기 LED의 색상을 원하는대로 만들 수 있습니다.<br>10진수(0 ~ 255) 값을 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_controller_3_controller_light_color_select":          "<br>RGB 색지정 블록을 이용해서 만들 수 있는<br> 조종기 LED 예시입니다.<br>RGB 색지정 블록을 이용해서 멋진 색깔을<br> 다양하게 만들어보세요.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_controller_3_controller_light_color_preset":         "<br>조종기 LED를 조작하는데 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
-                "byrobot_controller_3_controller_light_manual_single_input":   "<br>조종기 LED를 조작하는데 사용합니다.<br>2진수(0b00100000 ~ 0b11100000), 10진수(32 ~ 224), 16진수(0x20 ~ 0xE0) 값을 사용할 수 있습니다.  2진수로 표현한 값에서 각각의 비트는 LED의 Red, Green, Blue 색을 선택하는 스위치 역할을 합니다.  밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다. 값이 커질수록 더 밝아집니다. <br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
+                "byrobot_controller_3_controller_light_manual_single_input":   "<br>조종기 LED를 조작하는데 사용합니다.<br>2진수(0b00000001 ~ 0b00000111), 10진수(32 ~ 224), 16진수(0x20 ~ 0xE0) 값을 사용할 수 있습니다.  2진수로 표현한 값에서 각각의 비트는 LED의 Red, Green, Blue 색을 선택하는 스위치 역할을 합니다.  밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다. 값이 커질수록 더 밝아집니다. <br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_controller_3_controller_light_manual_single_off":     "<br>조종기의 모든 LED를 끕니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED끄기</font>",
                 "byrobot_controller_3_controller_value_button":                "<br>조종기에서 눌러진 버튼과 관련된 이벤트를 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
                 "byrobot_controller_3_controller_value_joystick":              "<br>조종기의 조이스틱과 관련된 입력 값을 반환합니다. 각 축의 범위는 -100 ~ 100 입니다.<br><br>조이스틱 방향은 가로x세로 = 3x3 = 총9방향입니다.<br>위(왼쪽=17, 가운데=18, 오른쪽=20)<br>중간(왼쪽=33, 센터=34, 오른쪽=36)<br>아래(왼쪽=65, 가운데=66, 오른쪽=68)<br>기본값은 센터=34입니다.<br><br>조이스틱 이벤트는 값이 있을때 2, 없으면 0, 진입 1, 벗어남 3입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
@@ -854,15 +854,6 @@ Entry.byrobot_controller_3.blockMenuBlocks = [
     'byrobot_controller_3_controller_light_color_preset',
     'byrobot_controller_3_controller_light_color_input',
     'byrobot_controller_3_controller_light_color_select',
-    'byrobot_controller_3_controller_display_clear_all',
-    'byrobot_controller_3_controller_display_clear',
-    'byrobot_controller_3_controller_display_invert',
-    'byrobot_controller_3_controller_display_draw_point',
-    'byrobot_controller_3_controller_display_draw_line',
-    'byrobot_controller_3_controller_display_draw_rect',
-    'byrobot_controller_3_controller_display_draw_circle',
-    'byrobot_controller_3_controller_display_draw_string',
-    'byrobot_controller_3_controller_display_draw_string_align',
     'byrobot_controller_3_controller_buzzer_off',
     'byrobot_controller_3_controller_buzzer_scale',
     'byrobot_controller_3_controller_buzzer_scale_delay',
@@ -870,11 +861,6 @@ Entry.byrobot_controller_3.blockMenuBlocks = [
     'byrobot_controller_3_controller_buzzer_hz',
     'byrobot_controller_3_controller_buzzer_hz_delay',
     'byrobot_controller_3_controller_buzzer_hz_reserve',
-    'byrobot_controller_3_controller_vibrator_off',
-    'byrobot_controller_3_controller_vibrator_on_delay',
-    'byrobot_controller_3_controller_vibrator_on_reserve',
-    'byrobot_controller_3_controller_vibrator_delay',
-    'byrobot_controller_3_controller_vibrator_reserve',
 ];
 
 
@@ -1092,7 +1078,7 @@ Entry.byrobot_controller_3.getBlocks = function()
             class: 'byrobot_controller_3_controller_light',
             isNotFor: ['byrobot_controller_3'],
             func: function(sprite, script) {
-                return Entry.byrobot_controller_3.setLightManual(script, 0x31, 0xff, 0);
+                return Entry.byrobot_controller_3.setLightManual(script, 0x20, 0xff, 0);
             },
         },
 
@@ -1167,7 +1153,7 @@ Entry.byrobot_controller_3.getBlocks = function()
                     case 'white':   red = 255;  green = 255;  blue = 255;   break;
                 }
 
-                return Entry.byrobot_controller_3.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
+                return Entry.byrobot_controller_3.setLightModeColor(script, 0x20, mode, interval, red, green, blue);
             },
         },
 
@@ -1186,7 +1172,7 @@ Entry.byrobot_controller_3.getBlocks = function()
             events: {},
             def: {
                 params: [
-                    {type: 'text', params: ['0b11100000']},
+                    {type: 'text', params: ['0b00000111']},
                     {type: 'text', params: ['255']},
                     null,
                 ],
@@ -1201,7 +1187,7 @@ Entry.byrobot_controller_3.getBlocks = function()
             func: function(sprite, script) {
                 var flags = script.getNumberValue('FLAGS');
                 var brightness = script.getNumberValue('BRIGHTNESS');
-                return Entry.byrobot_controller_3.setLightManual(script, 0x31, flags, brightness);
+                return Entry.byrobot_controller_3.setLightManual(script, 0x20, flags, brightness);
             },
         },
 
@@ -1260,7 +1246,7 @@ Entry.byrobot_controller_3.getBlocks = function()
                 var red = script.getNumberValue('RED');
                 var green = script.getNumberValue('GREEN');
                 var blue = script.getNumberValue('BLUE');
-                return Entry.byrobot_controller_3.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
+                return Entry.byrobot_controller_3.setLightModeColor(script, 0x20, mode, interval, red, green, blue);
             },
         },
 
@@ -1338,7 +1324,7 @@ Entry.byrobot_controller_3.getBlocks = function()
                     case 'lavender':        red = 80;   green = 0;      blue = 200; break;
                 }
 
-                return Entry.byrobot_controller_3.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
+                return Entry.byrobot_controller_3.setLightModeColor(script, 0x20, mode, interval, red, green, blue);
             },
         },
 

@@ -1535,7 +1535,7 @@ Entry.byrobot_drone_8.setLanguage = function ()
                 "byrobot_drone_8_controller_light_color_input":           "<br>빛의 삼원색인 Red, Green, Blue 값을 지정하여 조종기 LED의 색상을 원하는대로 만들 수 있습니다.<br>10진수(0 ~ 255) 값을 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_drone_8_controller_light_color_select":          "<br>RGB 색지정 블록을 이용해서 만들 수 있는<br> 조종기 LED 예시입니다.<br>RGB 색지정 블록을 이용해서 멋진 색깔을<br> 다양하게 만들어보세요.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_drone_8_controller_light_color_preset":         "<br>조종기 LED를 조작하는데 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
-                "byrobot_drone_8_controller_light_manual_single_input":   "<br>조종기 LED를 조작하는데 사용합니다.<br>2진수(0b00100000 ~ 0b11100000), 10진수(32 ~ 224), 16진수(0x20 ~ 0xE0) 값을 사용할 수 있습니다.  2진수로 표현한 값에서 각각의 비트는 LED의 Red, Green, Blue 색을 선택하는 스위치 역할을 합니다.  밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다. 값이 커질수록 더 밝아집니다. <br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
+                "byrobot_drone_8_controller_light_manual_single_input":   "<br>조종기 LED를 조작하는데 사용합니다.<br>2진수(0b00000001 ~ 0b00000111), 10진수(32 ~ 224), 16진수(0x20 ~ 0xE0) 값을 사용할 수 있습니다.  2진수로 표현한 값에서 각각의 비트는 LED의 Red, Green, Blue 색을 선택하는 스위치 역할을 합니다.  밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다. 값이 커질수록 더 밝아집니다. <br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_drone_8_controller_light_manual_single_off":     "<br>조종기의 모든 LED를 끕니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED끄기</font>",
                 "byrobot_drone_8_controller_value_button":                "<br>조종기에서 눌러진 버튼과 관련된 이벤트를 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
                 "byrobot_drone_8_controller_value_joystick":              "<br>조종기의 조이스틱과 관련된 입력 값을 반환합니다. 각 축의 범위는 -100 ~ 100 입니다.<br><br>조이스틱 방향은 가로x세로 = 3x3 = 총9방향입니다.<br>위(왼쪽=17, 가운데=18, 오른쪽=20)<br>중간(왼쪽=33, 센터=34, 오른쪽=36)<br>아래(왼쪽=65, 가운데=66, 오른쪽=68)<br>기본값은 센터=34입니다.<br><br>조이스틱 이벤트는 값이 있을때 2, 없으면 0, 진입 1, 벗어남 3입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
@@ -1556,7 +1556,7 @@ Entry.byrobot_drone_8.setLanguage = function ()
                 "byrobot_drone_8_drone_light_color_input":                "<br>빛의 삼원색인 Red, Green, Blue 값을 지정하여 드론의 눈 또는 팔 LED의 색상을 원하는대로 만들 수 있습니다.<br>10진수(0 ~ 255) 값을 사용합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_drone_8_drone_light_color_select":               "<br>RGB 색지정 블록을 이용해서 만들 수 있는<br> 드론 LED 예시입니다.<br>RGB 색지정 블록을 이용해서 멋진 색깔을<br> 다양하게 만들어보세요.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_drone_8_drone_light_color_preset":              "<br>드론의 LED를 조작하는데 사용합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
-                "byrobot_drone_8_drone_light_manual_single_input":        "<br>드론 LED를 조작하는데 사용합니다.<br>2진수(0b00000100 ~ 0b11111100), 10진수(4 ~ 252), 16진수(0x04 ~ 0xFC) 값을 사용할 수 있습니다.  2진수로 표현한 값에서 각각의 비트는 눈과 팔 LED의 Red, Green, Blue 색을 선택하는 스위치 역할을 합니다.  밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다. 값이 커질수록 더 밝아집니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
+                "byrobot_drone_8_drone_light_manual_single_input":        "<br>드론 LED를 조작하는데 사용합니다.<br>2진수(0b00000001 ~ 0b00111111), 10진수(4 ~ 252), 16진수(0x04 ~ 0xFC) 값을 사용할 수 있습니다.  2진수로 표현한 값에서 각각의 비트는 눈과 팔 LED의 Red, Green, Blue 색을 선택하는 스위치 역할을 합니다.  밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다. 값이 커질수록 더 밝아집니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_drone_8_drone_light_manual_single_off":          "<br>드론의 모든 LED를 끕니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED끄기</font>",
                 "byrobot_drone_8_drone_motor_stop":                       "<br>모든 모터의 작동을 정지합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터정지</font>",
                 "byrobot_drone_8_drone_motorsingle":                      "<br>지정한 모터를 원하는 빠르기로 회전할 때 사용합니다. 사용 가능한 값의 범위는 0 ~ 4000입니다. 모터의 순서는 '왼쪽 앞', '오른쪽 앞', '오른쪽 뒤', '왼쪽 뒤' 입니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터제어</font>",
@@ -2212,7 +2212,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             class: 'byrobot_drone_8_controller_light',
             isNotFor: ['byrobot_drone_8'],
             func: function(sprite, script) {
-                return Entry.byrobot_drone_8.setLightManual(script, 0x31, 0xff, 0);
+                return Entry.byrobot_drone_8.setLightManual(script, 0x20, 0xff, 0);
             },
         },
 
@@ -2287,7 +2287,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                     case 'white':   red = 255;  green = 255;  blue = 255;   break;
                 }
 
-                return Entry.byrobot_drone_8.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
+                return Entry.byrobot_drone_8.setLightModeColor(script, 0x20, mode, interval, red, green, blue);
             },
         },
 
@@ -2306,7 +2306,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             events: {},
             def: {
                 params: [
-                    {type: 'text', params: ['0b11100000']},
+                    {type: 'text', params: ['0b00000111']},
                     {type: 'text', params: ['255']},
                     null,
                 ],
@@ -2321,7 +2321,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             func: function(sprite, script) {
                 var flags = script.getNumberValue('FLAGS');
                 var brightness = script.getNumberValue('BRIGHTNESS');
-                return Entry.byrobot_drone_8.setLightManual(script, 0x31, flags, brightness);
+                return Entry.byrobot_drone_8.setLightManual(script, 0x20, flags, brightness);
             },
         },
 
@@ -2380,7 +2380,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                 var red = script.getNumberValue('RED');
                 var green = script.getNumberValue('GREEN');
                 var blue = script.getNumberValue('BLUE');
-                return Entry.byrobot_drone_8.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
+                return Entry.byrobot_drone_8.setLightModeColor(script, 0x20, mode, interval, red, green, blue);
             },
         },
 
@@ -2458,7 +2458,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                     case 'lavender':        red = 80;   green = 0;      blue = 200; break;
                 }
 
-                return Entry.byrobot_drone_8.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
+                return Entry.byrobot_drone_8.setLightModeColor(script, 0x20, mode, interval, red, green, blue);
             },
         },
 
@@ -2481,7 +2481,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             class: 'byrobot_drone_8_drone_light',
             isNotFor: ['byrobot_drone_8'],
             func: function(sprite, script) {
-                return Entry.byrobot_drone_8.setLightManual(script, 0x30, 0xff, 0);
+                return Entry.byrobot_drone_8.setLightManual(script, 0x10, 0xff, 0);
             },
         },
 
@@ -2554,7 +2554,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                     case 'arm_blue':    mode = 0x42;    red = 0;    green = 0;    blue = 255;   break;
                 }
 
-                return Entry.byrobot_drone_8.setLightModeColor(script, 0x30, mode, interval, red, green, blue);
+                return Entry.byrobot_drone_8.setLightModeColor(script, 0x10, mode, interval, red, green, blue);
             },
         },
 
@@ -2573,7 +2573,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             events: {},
             def: {
                 params: [
-                    {type: 'text', params: ['0b11111100']},
+                    {type: 'text', params: ['0b00111111']},
                     {type: 'text', params: ['255']},
                     null,
                 ],
@@ -2589,7 +2589,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             func: function(sprite, script) {
                 var flags = script.getNumberValue('FLAGS');
                 var brightness = script.getNumberValue('BRIGHTNESS');
-                return Entry.byrobot_drone_8.setLightManual(script, 0x30, flags, brightness);
+                return Entry.byrobot_drone_8.setLightManual(script, 0x10, flags, brightness);
             },
         },
 
@@ -2660,7 +2660,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                 var green = script.getNumberValue('GREEN');
                 var blue = script.getNumberValue('BLUE');
                 var interval = script.getNumberValue('INTERVAL');
-                return Entry.byrobot_drone_8.setLightModeColor(script, 0x30, mode, interval, red, green, blue);
+                return Entry.byrobot_drone_8.setLightModeColor(script, 0x10, mode, interval, red, green, blue);
             },
         },
 
@@ -2751,7 +2751,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                     case 'lavender':        red = 80;   green = 0;      blue = 200; break;
                 }
 
-                return Entry.byrobot_drone_8.setLightModeColor(script, 0x30, mode, interval, red, green, blue);
+                return Entry.byrobot_drone_8.setLightModeColor(script, 0x10, mode, interval, red, green, blue);
             },
         },
 
@@ -2788,7 +2788,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             isNotFor: ['byrobot_drone_8'],
             func: function(sprite, script) {
                 var pixel = parseInt(script.getField('PIXEL'));
-                return Entry.byrobot_drone_8.setDisplayClear(script, 0x31, pixel, true, 0, 0, 0, 0);
+                return Entry.byrobot_drone_8.setDisplayClear(script, 0x20, pixel, true, 0, 0, 0, 0);
             },
         },
 
@@ -2844,7 +2844,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                 var width = script.getNumberValue('WIDTH');
                 var height = script.getNumberValue('HEIGHT');
                 var pixel = parseInt(script.getField('PIXEL'));
-                return Entry.byrobot_drone_8.setDisplayClear(script, 0x31, pixel, false, x, y, width, height);
+                return Entry.byrobot_drone_8.setDisplayClear(script, 0x20, pixel, false, x, y, width, height);
             },
         },
 
@@ -2887,7 +2887,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                 var y = script.getNumberValue('Y');
                 var width = script.getNumberValue('WIDTH');
                 var height = script.getNumberValue('HEIGHT');
-                return Entry.byrobot_drone_8.setDisplayInvert(script, 0x31, x, y, width, height);
+                return Entry.byrobot_drone_8.setDisplayInvert(script, 0x20, x, y, width, height);
             },
         },
 
@@ -2935,7 +2935,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                 var x = script.getNumberValue('X');
                 var y = script.getNumberValue('Y');
                 var pixel = parseInt(script.getField('PIXEL'));
-                return Entry.byrobot_drone_8.setDisplayDrawPoint(script, 0x31, x, y, pixel);
+                return Entry.byrobot_drone_8.setDisplayDrawPoint(script, 0x20, x, y, pixel);
             },
         },
 
@@ -3006,7 +3006,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                 var y2 = script.getNumberValue('Y2');
                 var pixel = parseInt(script.getField('PIXEL'));
                 var line = parseInt(script.getField('LINE'));
-                return Entry.byrobot_drone_8.setDisplayDrawLine(script, 0x31, x1, y1, x2, y2, pixel, line);
+                return Entry.byrobot_drone_8.setDisplayDrawLine(script, 0x20, x1, y1, x2, y2, pixel, line);
             },
         },
 
@@ -3091,7 +3091,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                 var pixel = parseInt(script.getField('PIXEL'));
                 var flagFill = parseInt(script.getField('FLAGFILL'));
                 var line = parseInt(script.getField('LINE'));
-                return Entry.byrobot_drone_8.setDisplayDrawRect(script, 0x31, x, y, width, height, pixel, flagFill, line);
+                return Entry.byrobot_drone_8.setDisplayDrawRect(script, 0x20, x, y, width, height, pixel, flagFill, line);
             },
         },
 
@@ -3157,7 +3157,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                 var radius = script.getNumberValue('RADIUS');
                 var pixel = parseInt(script.getField('PIXEL'));
                 var flagFill = parseInt(script.getField('FLAGFILL'));
-                return Entry.byrobot_drone_8.setDisplayDrawCircle(script, 0x31, x, y, radius, pixel, flagFill);
+                return Entry.byrobot_drone_8.setDisplayDrawCircle(script, 0x20, x, y, radius, pixel, flagFill);
             },
         },
 
@@ -3199,11 +3199,11 @@ Entry.byrobot_drone_8.getBlocks = function()
             events: {},
             def: {
                 params: [
-                    {type: 'text', params: ['4']},
-                    {type: 'text', params: ['24']},
+                    {type: 'text', params: ['39']},
+                    {type: 'text', params: ['8']},
                     null,
                     null,
-                    {type: 'text', params: ['{Petrone V2}']},
+                    {type: 'text', params: ['HELLO']},
                     null,
                 ],
                 type: 'byrobot_drone_8_controller_display_draw_string',
@@ -3223,7 +3223,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                 var font = parseInt(script.getField('FONT'));
                 var pixel = parseInt(script.getField('PIXEL'));
                 var string = script.getStringValue('STRING');
-                return Entry.byrobot_drone_8.setDisplayDrawString(script, 0x31, x, y, font, pixel, string);
+                return Entry.byrobot_drone_8.setDisplayDrawString(script, 0x20, x, y, font, pixel, string);
             },
         },
 
@@ -3280,11 +3280,11 @@ Entry.byrobot_drone_8.getBlocks = function()
                 params: [
                     {type: 'text', params: ['0']},
                     {type: 'text', params: ['128']},
-                    {type: 'text', params: ['24']},
+                    {type: 'text', params: ['40']},
                     null,
                     null,
                     null,
-                    {type: 'text', params: ['BYROBOT & U']},
+                    {type: 'text', params: ['DRONE']},
                     null,
                 ],
                 type: 'byrobot_drone_8_controller_display_draw_string_align',
@@ -3308,7 +3308,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                 var font = parseInt(script.getField('FONT'));
                 var pixel = parseInt(script.getField('PIXEL'));
                 var string = script.getStringValue('STRING');
-                return Entry.byrobot_drone_8.setDisplayDrawStringAlign(script, 0x31, xStart, xEnd, y, align, font, pixel, string);
+                return Entry.byrobot_drone_8.setDisplayDrawStringAlign(script, 0x20, xStart, xEnd, y, align, font, pixel, string);
             },
         },
 
@@ -4148,7 +4148,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             isNotFor: ['byrobot_drone_8'],
             func: function(sprite, script) {
                 var coordinate = script.getField('COORDINATE');
-                return Entry.byrobot_drone_8.sendCommand(script, 0x30, 0x20, coordinate);
+                return Entry.byrobot_drone_8.sendCommand(script, 0x10, 0x20, coordinate);
             },
         },
 
@@ -4171,7 +4171,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             class: 'byrobot_drone_8_control_flight',
             isNotFor: ['byrobot_drone_8'],
             func: function(sprite, script) {
-                return Entry.byrobot_drone_8.sendCommand(script, 0x30, 0x22, 0xa0); // 0x22 : CommandType::FlightEvent  // 0xA0 : FlightEvent::ResetHeading
+                return Entry.byrobot_drone_8.sendCommand(script, 0x10, 0x22, 0xa0); // 0x22 : CommandType::FlightEvent  // 0xA0 : FlightEvent::ResetHeading
             },
         },
 

@@ -264,44 +264,43 @@ Entry.byrobot_controller_4 =
     },
 
 
-    transferDisplayClear: function(target, pixel, clearAll, x, y, width, height)
+    transferDisplayClearAll: function(target, pixel)
     {
-        if (clearAll)
-        {
-            // 전송
-            Entry.hw.setDigitalPortValue('target', target);
-            Entry.hw.setDigitalPortValue('display_clearall_pixel', pixel);
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('display_clear_all_pixel', pixel);
 
-            Entry.hw.update();
+        Entry.hw.update();
 
-            delete Entry.hw.sendQueue['target'];
-            delete Entry.hw.sendQueue['display_clearall_pixel'];
-        }
-        else
-        {
-            // 범위 조정
-            x      = this.fit(-1024, x, 1024);
-            y      = this.fit(-1024, y, 1024);
-            width  = this.fit(0, width, 128);
-            height = this.fit(0, height, 64);
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['display_clear_all_pixel'];
+    },
 
-            // 전송
-            Entry.hw.setDigitalPortValue('target', target);
-            Entry.hw.setDigitalPortValue('display_clear_x', x);
-            Entry.hw.setDigitalPortValue('display_clear_y', y);
-            Entry.hw.setDigitalPortValue('display_clear_width', width);
-            Entry.hw.setDigitalPortValue('display_clear_height', height);
-            Entry.hw.setDigitalPortValue('display_clear_pixel', pixel);
 
-            Entry.hw.update();
+    transferDisplayClear: function(target, pixel, x, y, width, height)
+    {
+        // 범위 조정
+        x      = this.fit(-1024, x, 1024);
+        y      = this.fit(-1024, y, 1024);
+        width  = this.fit(0, width, 128);
+        height = this.fit(0, height, 64);
 
-            delete Entry.hw.sendQueue['target'];
-            delete Entry.hw.sendQueue['display_clear_x'];
-            delete Entry.hw.sendQueue['display_clear_y'];
-            delete Entry.hw.sendQueue['display_clear_width'];
-            delete Entry.hw.sendQueue['display_clear_height'];
-            delete Entry.hw.sendQueue['display_clear_pixel'];
-        }
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('display_clear_x', x);
+        Entry.hw.setDigitalPortValue('display_clear_y', y);
+        Entry.hw.setDigitalPortValue('display_clear_width', width);
+        Entry.hw.setDigitalPortValue('display_clear_height', height);
+        Entry.hw.setDigitalPortValue('display_clear_pixel', pixel);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['display_clear_x'];
+        delete Entry.hw.sendQueue['display_clear_y'];
+        delete Entry.hw.sendQueue['display_clear_width'];
+        delete Entry.hw.sendQueue['display_clear_height'];
+        delete Entry.hw.sendQueue['display_clear_pixel'];
     },
 
 
@@ -659,13 +658,36 @@ Entry.byrobot_controller_4 =
 
 
     // 화면 전체 지우기, 선택 영역 지우기
-    setDisplayClear: function(script, target, pixel, clearAll, x, y, width, height)
+    setDisplayClearAll: function(script, target, pixel)
     {
         switch (this.checkFinish(script, 40))
         {
             case 'Start':
                 {
-                    this.transferDisplayClear(target, pixel, clearAll, x, y, width, height);
+                    this.transferDisplayClearAll(target, pixel);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // 화면 전체 지우기, 선택 영역 지우기
+    setDisplayClear: function(script, target, pixel, x, y, width, height)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferDisplayClear(target, pixel, x, y, width, height);
                 }
                 return script;
 
@@ -1134,6 +1156,7 @@ Entry.byrobot_controller_4.setLanguage = function ()
                 "byrobot_controller_4_controller_display_line_solid":     "실선",
                 "byrobot_controller_4_controller_display_pixel_black":    "검은색",
                 "byrobot_controller_4_controller_display_pixel_white":    "흰색",
+                "byrobot_controller_4_controller_display_pixel_inverse":  "반전",
                 "byrobot_controller_4_controller_joystick_direction_left_up":     "왼쪽 위",
                 "byrobot_controller_4_controller_joystick_direction_up":          "위",
                 "byrobot_controller_4_controller_joystick_direction_right_up":    "오른쪽 위",
@@ -1210,7 +1233,7 @@ Entry.byrobot_controller_4.setLanguage = function ()
                 "byrobot_controller_4_controller_light_color_input":           "<br>빛의 삼원색인 Red, Green, Blue 값을 지정하여 조종기 LED의 색상을 원하는대로 만들 수 있습니다.<br>10진수(0 ~ 255) 값을 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_controller_4_controller_light_color_select":          "<br>RGB 색지정 블록을 이용해서 만들 수 있는<br> 조종기 LED 예시입니다.<br>RGB 색지정 블록을 이용해서 멋진 색깔을<br> 다양하게 만들어보세요.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_controller_4_controller_light_color_preset":         "<br>조종기 LED를 조작하는데 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
-                "byrobot_controller_4_controller_light_manual_single_input":   "<br>조종기 LED를 조작하는데 사용합니다.<br>2진수(0b00100000 ~ 0b11100000), 10진수(32 ~ 224), 16진수(0x20 ~ 0xE0) 값을 사용할 수 있습니다.  2진수로 표현한 값에서 각각의 비트는 LED의 Red, Green, Blue 색을 선택하는 스위치 역할을 합니다.  밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다. 값이 커질수록 더 밝아집니다. <br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
+                "byrobot_controller_4_controller_light_manual_single_input":   "<br>조종기 LED를 조작하는데 사용합니다.<br>2진수(0b00000001 ~ 0b00000111), 10진수(32 ~ 224), 16진수(0x20 ~ 0xE0) 값을 사용할 수 있습니다.  2진수로 표현한 값에서 각각의 비트는 LED의 Red, Green, Blue 색을 선택하는 스위치 역할을 합니다.  밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다. 값이 커질수록 더 밝아집니다. <br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_controller_4_controller_light_manual_single_off":     "<br>조종기의 모든 LED를 끕니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED끄기</font>",
                 "byrobot_controller_4_controller_value_button":                "<br>조종기에서 눌러진 버튼과 관련된 이벤트를 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
                 "byrobot_controller_4_controller_value_joystick":              "<br>조종기의 조이스틱과 관련된 입력 값을 반환합니다. 각 축의 범위는 -100 ~ 100 입니다.<br><br>조이스틱 방향은 가로x세로 = 3x3 = 총9방향입니다.<br>위(왼쪽=17, 가운데=18, 오른쪽=20)<br>중간(왼쪽=33, 센터=34, 오른쪽=36)<br>아래(왼쪽=65, 가운데=66, 오른쪽=68)<br>기본값은 센터=34입니다.<br><br>조이스틱 이벤트는 값이 있을때 2, 없으면 0, 진입 1, 벗어남 3입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
@@ -1609,7 +1632,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             class: 'byrobot_controller_4_controller_light',
             isNotFor: ['byrobot_controller_4'],
             func: function(sprite, script) {
-                return Entry.byrobot_controller_4.setLightManual(script, 0x31, 0xff, 0);
+                return Entry.byrobot_controller_4.setLightManual(script, 0x20, 0xff, 0);
             },
         },
 
@@ -1684,7 +1707,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                     case 'white':   red = 255;  green = 255;  blue = 255;   break;
                 }
 
-                return Entry.byrobot_controller_4.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
+                return Entry.byrobot_controller_4.setLightModeColor(script, 0x20, mode, interval, red, green, blue);
             },
         },
 
@@ -1703,7 +1726,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [
-                    {type: 'text', params: ['0b11100000']},
+                    {type: 'text', params: ['0b00000111']},
                     {type: 'text', params: ['255']},
                     null,
                 ],
@@ -1718,7 +1741,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             func: function(sprite, script) {
                 var flags = script.getNumberValue('FLAGS');
                 var brightness = script.getNumberValue('BRIGHTNESS');
-                return Entry.byrobot_controller_4.setLightManual(script, 0x31, flags, brightness);
+                return Entry.byrobot_controller_4.setLightManual(script, 0x20, flags, brightness);
             },
         },
 
@@ -1777,7 +1800,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                 var red = script.getNumberValue('RED');
                 var green = script.getNumberValue('GREEN');
                 var blue = script.getNumberValue('BLUE');
-                return Entry.byrobot_controller_4.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
+                return Entry.byrobot_controller_4.setLightModeColor(script, 0x20, mode, interval, red, green, blue);
             },
         },
 
@@ -1855,7 +1878,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                     case 'lavender':        red = 80;   green = 0;      blue = 200; break;
                 }
 
-                return Entry.byrobot_controller_4.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
+                return Entry.byrobot_controller_4.setLightModeColor(script, 0x20, mode, interval, red, green, blue);
             },
         },
 
@@ -1873,7 +1896,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                         [Lang.Blocks.byrobot_controller_4_controller_display_pixel_black, '0'],
                         [Lang.Blocks.byrobot_controller_4_controller_display_pixel_white, '1'],
                     ],
-                    value: '0',
+                    value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1892,7 +1915,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             isNotFor: ['byrobot_controller_4'],
             func: function(sprite, script) {
                 var pixel = parseInt(script.getField('PIXEL'));
-                return Entry.byrobot_controller_4.setDisplayClear(script, 0x31, pixel, true, 0, 0, 0, 0);
+                return Entry.byrobot_controller_4.setDisplayClearAll(script, 0x20, pixel);
             },
         },
 
@@ -1948,7 +1971,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                 var width = script.getNumberValue('WIDTH');
                 var height = script.getNumberValue('HEIGHT');
                 var pixel = parseInt(script.getField('PIXEL'));
-                return Entry.byrobot_controller_4.setDisplayClear(script, 0x31, pixel, false, x, y, width, height);
+                return Entry.byrobot_controller_4.setDisplayClear(script, 0x20, pixel, x, y, width, height);
             },
         },
 
@@ -1991,7 +2014,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                 var y = script.getNumberValue('Y');
                 var width = script.getNumberValue('WIDTH');
                 var height = script.getNumberValue('HEIGHT');
-                return Entry.byrobot_controller_4.setDisplayInvert(script, 0x31, x, y, width, height);
+                return Entry.byrobot_controller_4.setDisplayInvert(script, 0x20, x, y, width, height);
             },
         },
 
@@ -2039,7 +2062,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                 var x = script.getNumberValue('X');
                 var y = script.getNumberValue('Y');
                 var pixel = parseInt(script.getField('PIXEL'));
-                return Entry.byrobot_controller_4.setDisplayDrawPoint(script, 0x31, x, y, pixel);
+                return Entry.byrobot_controller_4.setDisplayDrawPoint(script, 0x20, x, y, pixel);
             },
         },
 
@@ -2110,7 +2133,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                 var y2 = script.getNumberValue('Y2');
                 var pixel = parseInt(script.getField('PIXEL'));
                 var line = parseInt(script.getField('LINE'));
-                return Entry.byrobot_controller_4.setDisplayDrawLine(script, 0x31, x1, y1, x2, y2, pixel, line);
+                return Entry.byrobot_controller_4.setDisplayDrawLine(script, 0x20, x1, y1, x2, y2, pixel, line);
             },
         },
 
@@ -2195,7 +2218,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                 var pixel = parseInt(script.getField('PIXEL'));
                 var flagFill = parseInt(script.getField('FLAGFILL'));
                 var line = parseInt(script.getField('LINE'));
-                return Entry.byrobot_controller_4.setDisplayDrawRect(script, 0x31, x, y, width, height, pixel, flagFill, line);
+                return Entry.byrobot_controller_4.setDisplayDrawRect(script, 0x20, x, y, width, height, pixel, flagFill, line);
             },
         },
 
@@ -2261,7 +2284,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                 var radius = script.getNumberValue('RADIUS');
                 var pixel = parseInt(script.getField('PIXEL'));
                 var flagFill = parseInt(script.getField('FLAGFILL'));
-                return Entry.byrobot_controller_4.setDisplayDrawCircle(script, 0x31, x, y, radius, pixel, flagFill);
+                return Entry.byrobot_controller_4.setDisplayDrawCircle(script, 0x20, x, y, radius, pixel, flagFill);
             },
         },
 
@@ -2303,11 +2326,11 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [
-                    {type: 'text', params: ['4']},
-                    {type: 'text', params: ['24']},
+                    {type: 'text', params: ['39']},
+                    {type: 'text', params: ['16']},
                     null,
                     null,
-                    {type: 'text', params: ['{Petrone V2}']},
+                    {type: 'text', params: ['HELLO']},
                     null,
                 ],
                 type: 'byrobot_controller_4_controller_display_draw_string',
@@ -2327,7 +2350,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                 var font = parseInt(script.getField('FONT'));
                 var pixel = parseInt(script.getField('PIXEL'));
                 var string = script.getStringValue('STRING');
-                return Entry.byrobot_controller_4.setDisplayDrawString(script, 0x31, x, y, font, pixel, string);
+                return Entry.byrobot_controller_4.setDisplayDrawString(script, 0x20, x, y, font, pixel, string);
             },
         },
 
@@ -2349,7 +2372,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                         [Lang.Blocks.byrobot_controller_4_controller_display_align_center,    '1'],
                         [Lang.Blocks.byrobot_controller_4_controller_display_align_right,     '2'],
                     ],
-                    value: '0',
+                    value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2384,11 +2407,11 @@ Entry.byrobot_controller_4.getBlocks = function()
                 params: [
                     {type: 'text', params: ['0']},
                     {type: 'text', params: ['128']},
-                    {type: 'text', params: ['24']},
+                    {type: 'text', params: ['42']},
                     null,
                     null,
                     null,
-                    {type: 'text', params: ['BYROBOT & U']},
+                    {type: 'text', params: ['DRONE']},
                     null,
                 ],
                 type: 'byrobot_controller_4_controller_display_draw_string_align',
@@ -2412,7 +2435,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                 var font = parseInt(script.getField('FONT'));
                 var pixel = parseInt(script.getField('PIXEL'));
                 var string = script.getStringValue('STRING');
-                return Entry.byrobot_controller_4.setDisplayDrawStringAlign(script, 0x31, xStart, xEnd, y, align, font, pixel, string);
+                return Entry.byrobot_controller_4.setDisplayDrawStringAlign(script, 0x20, xStart, xEnd, y, align, font, pixel, string);
             },
         },
 
