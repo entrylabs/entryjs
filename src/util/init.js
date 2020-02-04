@@ -3,6 +3,7 @@
 import { Destroyer } from './destroyer/Destroyer';
 import { GEHelper } from '../graphicEngine/GEHelper';
 import Expansion from '../class/Expansion';
+import EntryBlockHelper from '../class/helper';
 import AIUtilize from '../class/AIUtilize';
 import Extension from '../extensions/extension';
 import CloudVariable from '../extensions/CloudVariable';
@@ -183,7 +184,7 @@ Entry.initialize_ = function() {
     this.container = new Entry.Container();
     this._destroyer.add(this.container);
 
-    this.helper = new Entry.Helper();
+    this.helper = new EntryBlockHelper();
     this.youtube = new Entry.Youtube();
     // this.tvCast = new Entry.TvCast();
     // this.doneProject = new Entry.DoneProject();

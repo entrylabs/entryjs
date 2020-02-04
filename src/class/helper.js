@@ -1,6 +1,6 @@
 import { debounce } from 'lodash';
 
-class Helper {
+class EntryBlockHelper {
     constructor() {
         this.visible = false;
         Entry.addEventListener('workspaceChangeMode', () => {
@@ -221,4 +221,4 @@ class Helper {
     }
 }
 
-Entry.Helper = Helper;
+export default EntryBlockHelper;
