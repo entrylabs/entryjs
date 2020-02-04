@@ -1,5 +1,15 @@
 'use strict';
 
+const OPCODE = {
+    SINGLE_STEPS: 0xc1,
+    SCHEDULED_STEPS: 0xca,
+    SCHEDULED_POINTS: 0xcb,
+    CONTINUOUS_STEPS: 0xcc,
+    AGGREGATE_STEPS: 0xcd,
+    LEDMATRIX: 0xa2,
+    SERVO: 0xe1,
+};
+
 class PingpongBase {
     constructor(cubecnt) {
         this.TILT_THRESHOLD = 20;
@@ -10,32 +20,22 @@ class PingpongBase {
 
         this.communicationType = 'manual';
 
-        //this.sensor_data = new Array();
-        this.sensor_data = {
-            MOVE_X: 0,
-            MOVE_Y: 0,
-            MOVE_Z: 0,
-            TILT_X: 0,
-            TILT_Y: 0,
-            TILT_Z: 0,
-            BUTTON: 0,
-            PROXIMITY: 0,
-            AIN: 0,
-        };
-
         this.prev_sensor_data = {
-            MOVE_X: 0,
-            MOVE_Y: 0,
-            MOVE_Z: 0,
-            TILT_X: 0,
-            TILT_Y: 0,
-            TILT_Z: 0,
-            BUTTON: 0,
-            PROXIMITY: 0,
-            AIN: 0,
+            c0_TILT_X: false,
+            c0_TILT_Y: false,
+            c0_BUTTON: 0,
+            c1_TILT_X: false,
+            c1_TILT_Y: false,
+            c1_BUTTON: 0,
+            c2_TILT_X: false,
+            c2_TILT_Y: false,
+            c2_BUTTON: 0,
+            c3_TILT_X: false,
+            c3_TILT_Y: false,
+            c3_BUTTON: 0,
         };
 
-        console.log('pingpong base constructor');
+        //console.log('pingpong base constructor', cubecnt);
     }
 
     setZero() {
@@ -48,38 +48,37 @@ class PingpongBase {
     }
 
     afterReceive(pd) {
-        //this.sensor_data = pd.SENSOR;
-
         if (!Entry.engine.isState('run')) {
             return;
         }
 
-        //console.log('ar: ', pd);
-
-        if (pd.c0_BUTTON == 1 || pd.c1_BUTTON == 1) {
-            if (this.prev_sensor_data.BUTTON == 0) {
-                Entry.engine.fireEvent('pp_when_button_pressed');
-                this.prev_sensor_data.BUTTON = 1;
-            }
-        } else {
-            this.prev_sensor_data.BUTTON = 0;
+        if (this.prev_sensor_data.c0_BUTTON != pd.c0_BUTTON) {
+            this.prev_sensor_data.c0_BUTTON == pd.c0_BUTTON;
+            Entry.engine.fireEvent('pp_when_button_pressed');
         }
 
-        if (
-            Math.abs(pd.c0_MOVE_Z) >= this.MOVE_THRESHOLD ||
-            Math.abs(pd.c1_MOVE_Z) >= this.MOVE_THRESHOLD
-        ) {
-            //this.prev_sensor_data.MOVE_Z = MOVE_Z;
-            Entry.engine.fireEvent('pp_when_moved');
+        if (this.prev_sensor_data.c1_BUTTON != pd.c1_BUTTON) {
+            this.prev_sensor_data.c1_BUTTON == pd.c1_BUTTON;
+            Entry.engine.fireEvent('pp_when_button_pressed');
         }
+
+        var c0_tilt_x = Math.abs(pd.c0_TILT_X) >= this.TILT_THRESHOLD;
+        var c0_tilt_y = Math.abs(pd.c0_TILT_Y) >= this.TILT_THRESHOLD;
+        var c1_tilt_x = Math.abs(pd.c1_TILT_X) >= this.TILT_THRESHOLD;
+        var c1_tilt_y = Math.abs(pd.c1_TILT_Y) >= this.TILT_THRESHOLD;
+
         if (
-            Math.abs(pd.c0_TILT_X) >= this.TILT_THRESHOLD ||
-            Math.abs(pd.c0_TILT_Y) >= this.TILT_THRESHOLD ||
-            Math.abs(pd.c1_TILT_X) >= this.TILT_THRESHOLD ||
-            Math.abs(pd.c1_TILT_Y) >= this.TILT_THRESHOLD
+            c0_tilt_x != this.prev_sensor_data.c0_TILT_X ||
+            c0_tilt_y != this.prev_sensor_data.c0_TILT_Y ||
+            c1_tilt_x != this.prev_sensor_data.c1_TILT_X ||
+            c1_tilt_y != this.prev_sensor_data.c1_TILT_Y
         ) {
             Entry.engine.fireEvent('pp_when_tilted');
         }
+        this.prev_sensor_data.c0_TILT_X = c0_tilt_x;
+        this.prev_sensor_data.c0_TILT_Y = c0_tilt_y;
+        this.prev_sensor_data.c1_TILT_X = c1_tilt_x;
+        this.prev_sensor_data.c1_TILT_Y = c1_tilt_y;
     }
 
     postCallReturn(script, packet, delay_ms = 0) {
@@ -129,10 +128,7 @@ class PingpongBase {
         //header.writeUInt16BE(0xFFFF, 0);
         //header.writeUInt16BE(0xFFFF, 2);	// cubdid
 
-        if (cube_no <= -1)
-            // all cubes
-            header[3] = 0xff;
-        else if (cube_no >= this.cube_cnt) header[3] = 0;
+        if (cube_no <= -1) header[3] = 0xff;
         else header[3] = cube_no;
 
         header.writeUInt16BE(task_id, 4);
@@ -145,22 +141,22 @@ class PingpongBase {
         var pd = Entry.hw.portData;
         var tilt_value = 0;
 
-        if (cube_no == 1) {
+        if (cube_no == 0) {
             if (tilt_dir == 'FRONT') tilt_value = pd.c0_TILT_X * -1;
             else if (tilt_dir == 'BACK') tilt_value = pd.c0_TILT_X;
             else if (tilt_dir == 'LEFT') tilt_value = pd.c0_TILT_Y * -1;
             else if (tilt_dir == 'RIGHT') tilt_value = pd.c0_TILT_Y;
-        } else if (cube_no == 2) {
+        } else if (cube_no == 1) {
             if (tilt_dir == 'FRONT') tilt_value = pd.c1_TILT_X * -1;
             else if (tilt_dir == 'BACK') tilt_value = pd.c1_TILT_X;
             else if (tilt_dir == 'LEFT') tilt_value = pd.c1_TILT_Y * -1;
             else if (tilt_dir == 'RIGHT') tilt_value = pd.c1_TILT_Y;
-        } else if (cube_no == 3) {
+        } else if (cube_no == 2) {
             if (tilt_dir == 'FRONT') tilt_value = pd.c2_TILT_X * -1;
             else if (tilt_dir == 'BACK') tilt_value = pd.c2_TILT_X;
             else if (tilt_dir == 'LEFT') tilt_value = pd.c2_TILT_Y * -1;
             else if (tilt_dir == 'RIGHT') tilt_value = pd.c2_TILT_Y;
-        } else if (cube_no == 4) {
+        } else if (cube_no == 3) {
             if (tilt_dir == 'FRONT') tilt_value = pd.c3_TILT_X * -1;
             else if (tilt_dir == 'BACK') tilt_value = pd.c3_TILT_X;
             else if (tilt_dir == 'LEFT') tilt_value = pd.c3_TILT_Y * -1;
@@ -179,7 +175,6 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
         this.name = 'Pingpong_G2';
         this.url = 'https://www.roborisen.com';
         this.imageName = 'pingpong_g2.png';
-        //this.delayTime: 30,
         this.title = {
             ko: '핑퐁 G2',
             en: 'Pingpong G2',
@@ -299,10 +294,10 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 func: function(sprite, script) {
                     const cube_id = script.getNumberField('CUBEID');
                     const tilt_dir = script.getStringField('TILT_DIR');
-                    //var pd = Entry.hw.portData;
 
                     var tilt_value = Entry.Pingpong_G2._getTiltValue(cube_id, tilt_dir);
 
+					console.log('tilt_va = ', tilt_value);
                     if (tilt_value >= Entry.Pingpong_G2.TILT_THRESHOLD) return script.callReturn();
 
                     return this.die();
@@ -475,8 +470,6 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 },
             },
             //pingpong_g2_is_top_shape: '큐브 %1 의 윗면에 %2 모양이 있는가?',
-
-            //TODO: pingpong_g2_multi_motor_rotate: '모터1을 %1 방향으로 %2 도 회전하고 모터2를 %3 방향으로 %4 도 회전하기 %5',
             pingpong_g2_multi_motor_rotate: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -550,14 +543,38 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                     if (step1 > 32768) step1 = 32768;
                     if (step2 > 32768) step2 = 32768;
 
-                    //TODO: aggregate steps
-                    var opt = [2, 1, 0, 2, 0, 0, 0, 0, 0, 0];
-                    var packet = Entry.Pingpong_G2.makePacket(0xcd, 0x0004, -1, opt); // SETP_MOTOR
-                    packet.writeInt16BE(speed1, 13);
-                    packet.writeUInt16BE(step1, 17);
+                    var opt1 = [2, 1, 0, 2, 0, 0, 0, 0, 0, 0];
+                    var packet1 = Entry.Pingpong_G2.makePacket(
+                        OPCODE.SINGLE_STEPS,
+                        0x0004,
+                        0,
+                        opt1
+                    );
+                    packet1.writeInt16BE(speed1, 13);
+                    packet1.writeUInt16BE(step1, 17);
+
+                    var opt2 = [2, 1, 0, 2, 0, 0, 0, 0, 0, 0];
+                    var packet2 = Entry.Pingpong_G2.makePacket(
+                        OPCODE.SINGLE_STEPS,
+                        0x0004,
+                        1,
+                        opt2
+                    );
+                    packet2.writeInt16BE(speed2, 13);
+                    packet2.writeUInt16BE(step2, 17);
+
+                    var opt = [2, 0, 0, 2];
+                    var cmd = Entry.Pingpong_G2.makePacket(
+                        OPCODE.AGGREGATE_STEPS,
+                        0x2004,
+                        0xaa,
+                        opt
+                    );
+                    cmd.writeUInt16BE(cmd.length + packet1.length + packet2.length, 7);
+
+                    var packet = Buffer.concat([cmd, packet1, packet2]);
 
                     /*
-					packet[6] = 0xc1; // opcode  SINGLE_STEP
 					packet[9] = 2; // mode?? MULTIROLE=2, CRCHECK=3
 					packet[10] = 1; // method, CONTINOUS=0, RELATIVE_SINGLE=1, ABSOLUTE_SINGLE=2, sched_steps=3, sched_point=4
 					packet[11] = 0;	//step_type; full=0, servo=4
@@ -629,7 +646,12 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                     if (step > 32768) step = 32768;
 
                     var opt = [2, 1, 0, 2, 0, 0, 0, 0, 0, 0];
-                    var packet = Entry.Pingpong_G2.makePacket(0xc1, 0x0004, cube_id, opt); // SETP_MOTOR
+                    var packet = Entry.Pingpong_G2.makePacket(
+                        OPCODE.SINGLE_STEPS,
+                        0x0004,
+                        cube_id,
+                        opt
+                    );
 
                     packet.writeInt16BE(speed, 13);
                     packet.writeUInt16BE(step, 17);
@@ -639,8 +661,6 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                     return Entry.Pingpong_G2.postCallReturn(script, packet, delay_ms);
                 },
             },
-
-            //TODO: pingpong_g2_start_multi_motor_rotate: '모터1 속도를 %1 모터2 속도를 %2 (으)로 정하기 %3',
             pingpong_g2_start_multi_motor_rotate: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -662,17 +682,44 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 class: 'Pingpong_G2_motor',
                 isNotFor: ['Pingpong_G2'],
                 func: function(sprite, script) {
-                    var speed = script.getNumberValue('SPEED');
-                    speed = Math.min(Math.max(speed, 100), 1000);
+                    var speed1 = script.getNumberValue('SPEED_1');
+                    var speed2 = script.getNumberValue('SPEED_2');
+                    speed1 = Math.min(Math.max(speed1, 100), 1000);
+                    speed2 = Math.min(Math.max(speed2, 100), 1000);
 
-                    var packet = Entry.Pingpong_G2.makePacket(0xcc, 0x0004, 0, [2, 0, 0, 2, 0, 0]); // CONTINUOUS STEP_MOTOR
-                    packet.writeInt16BE(speed, 13);
+                    var opt1 = [2, 0, 0, 2, 0, 0];
+                    var packet1 = Entry.Pingpong_G2.makePacket(
+                        OPCODE.CONTINUOUS_STEPS,
+                        0x0004,
+                        0,
+                        opt1
+                    );
+                    packet1.writeInt16BE(speed1, 13);
 
-                    var delay_ms = Math.round(((1100 - Math.abs(speed)) / 99) * 10) + 400;
+                    var opt2 = [2, 0, 0, 2, 0, 0];
+                    var packet2 = Entry.Pingpong_G2.makePacket(
+                        OPCODE.CONTINUOUS_STEPS,
+                        0x0004,
+                        1,
+                        opt2
+                    );
+                    packet2.writeInt16BE(speed2, 13);
+
+                    var opt = [2, 1, 0, 2];
+                    var cmd = Entry.Pingpong_G2.makePacket(
+                        OPCODE.AGGREGATE_STEPS,
+                        0x2004,
+                        0xaa,
+                        opt
+                    );
+                    cmd.writeUInt16BE(cmd.length + packet1.length + packet2.length, 7);
+
+                    var packet = Buffer.concat([cmd, packet1, packet2]);
+
+                    var delay_ms = Math.round(((1100 - Math.abs(speed1)) / 99) * 10) + 400;
                     return Entry.Pingpong_G2.postCallReturn(script, packet, delay_ms);
                 },
             },
-            //TODO: pingpong_g2_start_motor_rotate: '%1 모터의 속도를 %2 으로 정하기 %3',
             pingpong_g2_start_motor_rotate: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -710,21 +757,19 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                     var speed = script.getNumberValue('SPEED');
                     speed = Math.min(Math.max(speed, 100), 1000);
 
-                    var packet = Entry.Pingpong_G2.makePacket(0xcc, 0x0004, cube_id, [
-                        2,
-                        0,
-                        0,
-                        2,
-                        0,
-                        0,
-                    ]); // CONTINUOUS STEP_MOTOR
+                    var opt = [2, 0, 0, 2, 0, 0];
+                    var packet = Entry.Pingpong_G2.makePacket(
+                        OPCODE.CONTINUOUS_STEPS,
+                        0x0004,
+                        cube_id,
+                        opt
+                    );
                     packet.writeInt16BE(speed, 13);
 
                     var delay_ms = Math.round(((1100 - Math.abs(speed)) / 99) * 10) + 400;
                     return Entry.Pingpong_G2.postCallReturn(script, packet, delay_ms);
                 },
             },
-            //TODO: pingpong_g2_stop_motor_rotate: '%1 모터 멈추기 %2',
             pingpong_g2_stop_motor_rotate: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -753,19 +798,17 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 isNotFor: ['Pingpong_G2'],
                 func: function(sprite, script) {
                     const cube_id = script.getNumberField('CUBEID');
-                    var packet = Entry.Pingpong_G2.makePacket(0xcc, 0x0004, cube_id, [
-                        2,
-                        0,
-                        0,
-                        1,
-                        0,
-                        0,
-                    ]); // CONTINUOUS STEP_MOTOR
+
+                    var opt = [2, 0, 0, 1, 0, 0];
+                    var packet = Entry.Pingpong_G2.makePacket(
+                        OPCODE.CONTINUOUS_STEPS,
+                        0x0004,
+                        cube_id,
+                        opt
+                    );
                     return Entry.Pingpong_G2.postCallReturn(script, packet);
                 },
             },
-
-            //TODO: pingpong_g2_rotate_servo_mortor: '%1 번째 큐브의 서보모터 %2도로 설정하기 %3',
             pingpong_g2_rotate_servo_mortor: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -795,17 +838,11 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
 
                     angle = Math.min(Math.max(angle, 0), 180);
 
-                    var packet = Entry.Pingpong_G2.makePacket(0xe1, 0x00, cube_id, [
-                        2,
-                        0,
-                        angle,
-                        1,
-                    ]); // SERVO_MOTOR
+                    var opt = [2, 0, angle, 1];
+                    var packet = Entry.Pingpong_G2.makePacket(OPCODE.SERVO, 0x00, cube_id, opt);
                     return Entry.Pingpong_G2.postCallReturn(script, packet, 400);
                 },
             },
-
-            //TODO: pingpong_g2_set_dot_pixel: '%1 번째 큐브의 LED %2 X:%3 Y:%4 %5',
             pingpong_g2_set_dot_pixel: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -849,16 +886,12 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                     dot_x = Math.min(Math.max(dot_x, 0), 7);
                     dot_y = Math.min(Math.max(dot_y, 0), 7);
 
-                    var packet = Entry.Pingpong_G2.makePacket(0xa2, 0xe1, cube_id, [
-                        0x70,
-                        dot_y,
-                        dot_x,
-                        onoff,
-                    ]); // turn on
+                    var opt = [0x70, dot_y, dot_x, onoff];
+                    var packet = Entry.Pingpong_G2.makePacket(OPCODE.LEDMATRIX, 0xe1, cube_id, opt);
+
                     return Entry.Pingpong_G2.postCallReturn(script, packet);
                 },
             },
-            //TODO: pingpong_g2_set_dot_string: '%1 번째 큐브의 글자 %2 보여주기 %3',
             pingpong_g2_set_dot_string: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -891,12 +924,11 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                         Buffer.from(str.substring(0, 20)),
                     ]);
 
-                    var packet = Entry.Pingpong_G2.makePacket(0xa2, 0xe3, cube_id, opt);
+                    var packet = Entry.Pingpong_G2.makePacket(OPCODE.LEDMATRIX, 0xe3, cube_id, opt);
                     var delay_ms = period * str.length * 8 * 10 + 400; // add wait for 400ms
                     return Entry.Pingpong_G2.postCallReturn(script, packet, delay_ms);
                 },
             },
-            //TODO: pingpong_g2_set_dot_clear: '%1 번째 큐브의 화면 지우기 %2',
             pingpong_g2_set_dot_clear: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -917,7 +949,10 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 isNotFor: ['Pingpong_G2'],
                 func: function(sprite, script) {
                     const cube_id = script.getNumberValue('cubeno');
-                    var packet = Entry.Pingpong_G2.makePacket(0xa2, 0xe4, cube_id, [0x70, 2]);
+                    var packet = Entry.Pingpong_G2.makePacket(OPCODE.LEDMATRIX, 0xe4, cube_id, [
+                        0x70,
+                        2,
+                    ]);
                     return Entry.Pingpong_G2.postCallReturn(script, packet);
                 },
             },
