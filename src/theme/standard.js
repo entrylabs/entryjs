@@ -12,7 +12,7 @@ module.exports = {
             START: '#FFFFFF',
             FLOW: '#3A71BC',
             MOVING: '#8641B6',
-            LOOKS: '#D8234E',
+            LOOKS: '#FFFFFF',
             TEXT: '#DC9C32',
             SOUND: '#83A617',
             JUDGE: '#89A1F7',
