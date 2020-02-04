@@ -687,7 +687,9 @@ Entry.Engine = class Engine {
      */
     async toggleStop() {
         Entry.dispatchEvent('beforeStop');
-        await Promise.all(this.execPromises);
+        try {
+            await Promise.all(this.execPromises);
+        } catch (e) {}
         const container = Entry.container;
         const variableContainer = Entry.variableContainer;
 
