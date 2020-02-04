@@ -367,9 +367,8 @@ Entry.Workspace = class Workspace {
         }
 
         this.setHoverBlockView();
-        const that = this;
         this._blockViewMouseUpEvent = blockView.mouseUpEvent.attach(this, () => {
-            that.blockViewMouseUpEvent.notify(blockView);
+            this.blockViewMouseUpEvent.notify(blockView);
         });
     }
 
