@@ -104,6 +104,10 @@ class AudioUtils {
             // ex)'localhost:4001'
             return true;
         } catch (e) {
+            if (e.message === 'Operation is not supported') {
+                throw new Entry.Utils.IncompatibleError();
+            }
+
             console.error('error occurred while init audio input', e);
             this.isAudioInitComplete = false;
             return false;
