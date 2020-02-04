@@ -2180,8 +2180,6 @@ Entry.Utils.hasSpecialCharacter = function(str) {
     return reg.test(str);
 };
 
-Entry.Utils.debounce = _.debounce;
-
 Entry.Utils.getBlockCategory = (function() {
     const map = {};
     let allBlocks;

@@ -1,8 +1,5 @@
-/*
- *
- */
-'use strict';
 import { Destroyer } from '../util/destroyer/Destroyer';
+import { debounce } from 'lodash';
 
 Entry.Workspace = class Workspace {
     schema = {
@@ -15,8 +12,8 @@ Entry.Workspace = class Workspace {
         this._destroyer = this._destroyer || new Destroyer();
         this._destroyer.destroy();
         this.scale = 1;
-        this.dSetMode = Entry.Utils.debounce(this.setMode, 200);
-        this.dReDraw = Entry.Utils.debounce(this.reDraw, 150);
+        this.dSetMode = debounce(this.setMode, 200);
+        this.dReDraw = debounce(this.reDraw, 150);
 
         this.observe(this, '_handleChangeBoard', ['selectedBoard'], false);
         this.trashcan = new Entry.FieldTrashcan();
@@ -323,15 +320,12 @@ Entry.Workspace = class Workspace {
 
         code.load(changedCode);
         this.changeBoardCode(code);
-        setTimeout(
-            function() {
-                if (code.view) {
-                    code.view.reDraw();
-                    this.board.alignThreads();
-                }
-            }.bind(this),
-            0
-        );
+        setTimeout(() => {
+            if (code.view) {
+                code.view.reDraw();
+                this.board.alignThreads();
+            }
+        }, 0);
     }
 
     codeToText(code, mode) {
@@ -374,7 +368,7 @@ Entry.Workspace = class Workspace {
 
         this.setHoverBlockView();
         const that = this;
-        this._blockViewMouseUpEvent = blockView.mouseUpEvent.attach(this, function() {
+        this._blockViewMouseUpEvent = blockView.mouseUpEvent.attach(this, () => {
             that.blockViewMouseUpEvent.notify(blockView);
         });
     }
@@ -582,7 +576,7 @@ Entry.Workspace = class Workspace {
         }
 
         //delay for fields value applied
-        setTimeout(function() {
+        setTimeout(() => {
             Entry.disposeEvent && Entry.disposeEvent.notify(e);
         }, 0);
 

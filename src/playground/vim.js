@@ -1,24 +1,30 @@
-'use strict';
+import { debounce } from 'lodash';
 
 Entry.Vim = function(dom, textType) {
     //Definition For Textmode
-    if (typeof dom === 'string') dom = $('#' + dom);
-    else dom = $(dom);
+    if (typeof dom === 'string') {
+        dom = $(`#${dom}`);
+    } else {
+        dom = $(dom);
+    }
 
-    if (dom.prop('tagName') !== 'DIV')
+    if (dom.prop('tagName') !== 'DIV') {
         return console.error('Dom is not div element');
+    }
 
     this._parentView = dom;
     this.createDom(dom);
 
     this._parser = new Entry.Parser(null, null, this.codeMirror);
 
-    Entry.addEventListener('hwChanged', function(e) {
+    Entry.addEventListener('hwChanged', (e) => {
         if (Entry.hw.hwModule) {
-            var name = Entry.hw.hwModule.name;
+            let name = Entry.hw.hwModule.name;
             name = name[0].toUpperCase() + name.slice(1);
-            if (name == 'ArduinoExt') name = 'Arduino';
-            Entry.Vim.PYTHON_IMPORT_HW = '\nimport ' + name + '\n';
+            if (name == 'ArduinoExt') {
+                name = 'Arduino';
+            }
+            Entry.Vim.PYTHON_IMPORT_HW = `\nimport ${name}\n`;
             Entry.Vim.INEDITABLE_LINE_PY = 4;
         } else {
             Entry.Vim.PYTHON_IMPORT_HW = '';
@@ -45,14 +51,16 @@ Entry.Vim.PYTHON_IMPORT_HW = '';
 
 (function(p) {
     p.createDom = function(dom) {
-        var parent, _self, target;
+        let parent;
+        let _self;
+        let target;
         parent = dom;
         this.view = Entry.Dom('div', {
-            parent: parent,
+            parent,
             class: 'entryVimBoard',
         });
 
-        var that = this;
+        const that = this;
 
         this.codeMirror = CodeMirror(this.view[0], {
             lineNumbers: true,
@@ -64,10 +72,8 @@ Entry.Vim.PYTHON_IMPORT_HW = '';
             styleActiveLine: true,
             extraKeys: {
                 'Ctrl-Space': 'autocomplete',
-                Tab: function(cm) {
-                    var spaces = Array(cm.getOption('indentUnit') + 1).join(
-                        ' '
-                    );
+                Tab(cm) {
+                    const spaces = Array(cm.getOption('indentUnit') + 1).join(' ');
                     cm.replaceSelection(spaces);
                 },
             },
@@ -76,54 +82,44 @@ Entry.Vim.PYTHON_IMPORT_HW = '';
             viewportMargin: 10,
         });
 
-        var dShowHint = Entry.Utils.debounce(
-            function() {
-                if (Entry.isTextMode) {
-                    this.codeMirror.showHint({
-                        completeSingle: false,
-                        globalScope: this._getAssistScope(),
-                    });
-                }
-            }.bind(this),
-            250
-        );
+        const dShowHint = debounce(() => {
+            if (Entry.isTextMode) {
+                this.codeMirror.showHint({
+                    completeSingle: false,
+                    globalScope: this._getAssistScope(),
+                });
+            }
+        }, 250);
 
-        this.codeMirror.on(
-            'keydown',
-            function(cm, event) {
-                if (Entry && Entry.keyPressed) {
-                    Entry.keyPressed.notify(event, true);
-                }
-                if (event.key.length === 1) {
-                    dShowHint();
-                }
-            }.bind(this)
-        );
+        this.codeMirror.on('keydown', (cm, event) => {
+            if (Entry && Entry.keyPressed) {
+                Entry.keyPressed.notify(event, true);
+            }
+            if (event.key.length === 1) {
+                dShowHint();
+            }
+        });
 
-        var dClear = Entry.Utils.debounce(
-            function() {
-                var input =
-                    this.codeMirror.display && this.codeMirror.display.input
-                        ? this.codeMirror.display.input
-                        : undefined;
-                if (input && input.composing) {
-                    input.poll();
-                    input.composing.range.clear();
-                    input.composing = null;
-                }
-            }.bind(this),
-            250
-        );
+        const dClear = debounce(() => {
+            const input =
+                this.codeMirror.display && this.codeMirror.display.input
+                    ? this.codeMirror.display.input
+                    : undefined;
+            if (input && input.composing) {
+                input.poll();
+                input.composing.range.clear();
+                input.composing = null;
+            }
+        }, 250);
 
-        this.codeMirror.on(
-            'keyup',
-            function(cm, event) {
-                //i.e composition bug
-                dClear();
+        this.codeMirror.on('keyup', (cm, event) => {
+            //i.e composition bug
+            dClear();
 
-                if (event.key === 'Backspace') dShowHint();
-            }.bind(this)
-        );
+            if (event.key === 'Backspace') {
+                dShowHint();
+            }
+        });
 
         this.doc = this.codeMirror.getDoc();
 
@@ -131,23 +127,25 @@ Entry.Vim.PYTHON_IMPORT_HW = '';
         target = this.view[0];
 
         function eventDragEnd(e) {
-            var block = e.block;
+            const block = e.block;
 
-            if (!block) return;
+            if (!block) {
+                return;
+            }
 
-            var codeMirror = _self.codeMirror;
-            var textCode = _self.getCodeToText(block, Entry.Parser.PARSE_BLOCK);
+            const codeMirror = _self.codeMirror;
+            const textCode = _self.getCodeToText(block, Entry.Parser.PARSE_BLOCK);
 
             codeMirror.display.dragFunctions.leave(e);
-            codeMirror.display.scroller.dispatchEvent(
-                Entry.Utils.createMouseEvent('mousedown', e)
-            );
+            codeMirror.display.scroller.dispatchEvent(Entry.Utils.createMouseEvent('mousedown', e));
 
-            var testArr = textCode.split('\n');
-            var max = testArr.length - 1;
-            var statementCursorLine = _self.doc.getCursor().line;
-            testArr.forEach(function(text, i) {
-                if (i != max) text += '\n';
+            const testArr = textCode.split('\n');
+            const max = testArr.length - 1;
+            let statementCursorLine = _self.doc.getCursor().line;
+            testArr.forEach((text, i) => {
+                if (i != max) {
+                    text += '\n';
+                }
                 codeMirror.replaceSelection(text);
             });
 
@@ -162,9 +160,7 @@ Entry.Vim.PYTHON_IMPORT_HW = '';
                 CodeMirror.commands.indentAuto(codeMirror);
             }
 
-            codeMirror.display.scroller.dispatchEvent(
-                Entry.Utils.createMouseEvent('mouseup', e)
-            );
+            codeMirror.display.scroller.dispatchEvent(Entry.Utils.createMouseEvent('mouseup', e));
         }
 
         function eventDragOver(e) {
@@ -192,73 +188,57 @@ Entry.Vim.PYTHON_IMPORT_HW = '';
     };
 
     p.textToCode = function(textType) {
-        var type = textType;
+        const type = textType;
         if (type === Entry.Vim.TEXT_TYPE_JS) {
             this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
-            this._parser.setParser(
-                this._mode,
-                this._parserType,
-                this.codeMirror
-            );
+            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
         } else if (type === Entry.Vim.TEXT_TYPE_PY) {
             this._parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
-            this._parser.setParser(
-                this._mode,
-                this._parserType,
-                this.codeMirror
-            );
+            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
         }
 
-        var textCode = this.codeMirror.getValue();
-        var cursor = this.doc.getCursor();
+        let textCode = this.codeMirror.getValue();
+        const cursor = this.doc.getCursor();
         textCode = textCode.replace(/\t/gm, '    ');
         this.codeMirror.setValue(textCode);
         this.doc.setCursor(cursor);
-        var code = this._parser.parse(textCode);
+        const code = this._parser.parse(textCode);
         return code;
     };
 
     p.codeToText = function(code, mode) {
-        var codeDescription;
-        if (mode) this._mode = mode.runType;
+        let codeDescription;
+        if (mode) {
+            this._mode = mode.runType;
+        }
 
-        var textType = mode.textType;
+        const textType = mode.textType;
         this._oldParserType = mode.textType;
 
         if (textType === Entry.Vim.TEXT_TYPE_JS) {
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
-            if (this._oldParserType != this._parserType)
-                this._parser.setParser(
-                    this._mode,
-                    this._parserType,
-                    this.codeMirror
-                );
+            if (this._oldParserType != this._parserType) {
+                this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+            }
             this._oldParserType = this._parserType;
         } else if (textType === Entry.Vim.TEXT_TYPE_PY) {
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
-            if (this._oldParserType != this._parserType)
-                this._parser.setParser(
-                    this._mode,
-                    this._parserType,
-                    this.codeMirror
-                );
+            if (this._oldParserType != this._parserType) {
+                this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+            }
             this._oldParserType = this._parserType;
         }
 
-        if (Entry.playground) this._currentObject = Entry.playground.object;
+        if (Entry.playground) {
+            this._currentObject = Entry.playground.object;
+        }
 
         this._parser._hasDeclaration = false;
 
         if (textType == Entry.Vim.TEXT_TYPE_PY) {
             if (this._currentObject) {
-                codeDescription =
-                    '# ' +
-                    this._currentObject.name +
-                    Lang.TextCoding.python_code;
-                var textCode = this._parser.parse(
-                    code,
-                    Entry.Parser.PARSE_GENERAL
-                );
+                codeDescription = `# ${this._currentObject.name}${Lang.TextCoding.python_code}`;
+                var textCode = this._parser.parse(code, Entry.Parser.PARSE_GENERAL);
 
                 if (textType === Entry.Vim.TEXT_TYPE_PY) {
                     textCode = codeDescription
@@ -269,7 +249,7 @@ Entry.Vim.PYTHON_IMPORT_HW = '';
                         .concat(textCode);
                 }
                 this.codeMirror.setValue(textCode);
-                if (textType == Entry.Vim.TEXT_TYPE_PY)
+                if (textType == Entry.Vim.TEXT_TYPE_PY) {
                     this.codeMirror
                         .getDoc()
                         .markText(
@@ -277,6 +257,7 @@ Entry.Vim.PYTHON_IMPORT_HW = '';
                             { line: Entry.Vim.INEDITABLE_LINE_PY, ch: 0 },
                             { readOnly: true, inclusiveLeft: true }
                         );
+                }
 
                 var doc = this.codeMirror.getDoc();
                 doc.setCursor({ line: doc.lastLine() - 1 });
@@ -290,26 +271,20 @@ Entry.Vim.PYTHON_IMPORT_HW = '';
             doc.setCursor({ line: doc.lastLine() - 1 });
         }
 
-        if (Entry.isTextMode) this._parser._onRunError = false;
+        if (Entry.isTextMode) {
+            this._parser._onRunError = false;
+        }
     };
 
     p.getCodeToText = function(code, parseType) {
-        var textType = this.workspace.oldTextType;
+        const textType = this.workspace.oldTextType;
 
         if (textType === Entry.Vim.TEXT_TYPE_JS) {
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
-            this._parser.setParser(
-                this._mode,
-                this._parserType,
-                this.codeMirror
-            );
+            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
         } else if (textType === Entry.Vim.TEXT_TYPE_PY) {
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
-            this._parser.setParser(
-                this._mode,
-                this._parserType,
-                this.codeMirror
-            );
+            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
         }
 
         return parseType
@@ -322,33 +297,27 @@ Entry.Vim.PYTHON_IMPORT_HW = '';
     };
 
     p.getBlockSyntax = function(datum) {
-        var syntax = null;
-        var textType = this.workspace.oldTextType;
+        let syntax = null;
+        const textType = this.workspace.oldTextType;
         if (textType === Entry.Vim.TEXT_TYPE_JS) {
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
-            this._parser.setParser(
-                this._mode,
-                this._parserType,
-                this.codeMirror
-            );
+            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
         } else if (textType === Entry.Vim.TEXT_TYPE_PY) {
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
-            this._parser.setParser(
-                this._mode,
-                this._parserType,
-                this.codeMirror
-            );
+            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
         }
 
-        if (this._parser._execParser)
+        if (this._parser._execParser) {
             syntax = this._parser._execParser.searchSyntax(datum);
+        }
 
         return syntax;
     };
 
     p._getAssistScope = function() {
-        var execParser = this._parser._execParser;
-        if (execParser && execParser.getAssistScope)
+        const execParser = this._parser._execParser;
+        if (execParser && execParser.getAssistScope) {
             return execParser.getAssistScope();
+        }
     };
 })(Entry.Vim.prototype);

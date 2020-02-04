@@ -1,8 +1,3 @@
-'use strict';
-/*
- *
- * @param {object} dom which to inject playground
- */
 import Visible from '@egjs/visible';
 import debounce from 'lodash/debounce';
 
@@ -18,10 +13,10 @@ class BlockMenu {
         const { options = {} } = Entry;
         const { disableHardware = false } = options;
 
-        this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
+        this.reDraw = debounce(this.reDraw, 100);
         this._dAlign = this.align;
-        this._setDynamic = Entry.Utils.debounce(this._setDynamic, 150);
-        this._dSelectMenu = Entry.Utils.debounce(this.selectMenu, 0);
+        this._setDynamic = debounce(this._setDynamic, 150);
+        this._dSelectMenu = debounce(this.selectMenu, 0);
 
         this._align = align || 'CENTER';
         this.setAlign(this._align);
@@ -103,7 +98,7 @@ class BlockMenu {
             Entry.keyPressed.attach(this, this._captureKeyEvent);
         }
         if (Entry.windowResized) {
-            Entry.windowResized.attach(this, Entry.Utils.debounce(this.updateOffset, 200));
+            Entry.windowResized.attach(this, debounce(this.updateOffset, 200));
         }
 
         Entry.addEventListener(
