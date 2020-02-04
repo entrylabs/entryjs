@@ -47,6 +47,7 @@
         "jest": "^24.1.0",
         "lodash": "^4.17.15",
         "postcss-flexbugs-fixes": "^4.1.0",
+        "prettier-eslint": "^9.0.1",
         "simplebar": "^3.1.1",
         "uid": "^0.0.2",
         "webpack": "^4.41.4",

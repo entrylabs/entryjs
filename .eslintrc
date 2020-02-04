@@ -1,6 +1,5 @@
 {
     "plugins": ["prettier"],
-    "parser": "babel-eslint",
     "extends": ["plugin:prettier/recommended"],
     "overrides": [
         {
