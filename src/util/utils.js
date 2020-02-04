@@ -2171,10 +2171,6 @@ Entry.Utils.convertMouseEvent = function(e) {
     }
 };
 
-Entry.Utils.convertIntToHex = function(num) {
-    return num.toString(16).toUpperCase();
-};
-
 Entry.Utils.hasSpecialCharacter = function(str) {
     const reg = /!|@|#|\$|%|\^|&|\*|\(|\)|\+|=|-|\[|\]|\\|\'|;|,|\.|\/|{|}|\||\"|:|<|>|\?/g;
     return reg.test(str);
