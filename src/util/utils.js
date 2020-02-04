@@ -798,12 +798,6 @@ Entry.Utils.makeActivityReporter = function() {
 };
 
 /**
- * Sample color code for user select
- * @type {!Array<string>}
- */
-Entry.sampleColours = [];
-
-/**
  * Raise error when assert condition fail.
  * @param {!boolean} condition assert condition.
  * @param {?string} message assert message will be shown when assert fail.
@@ -847,21 +841,6 @@ Entry.createElement = function(type, elementId) {
     return element;
 };
 
-Entry.makeAutolink = function(html) {
-    if (html) {
-        const regURL = new RegExp(
-            '(http|https|ftp|telnet|news|irc)://([-/.a-zA-Z0-9_~#%$?&=:200-377()][^)\\]}]+)',
-            'gi'
-        );
-        const regEmail = new RegExp('([xA1-xFEa-z0-9_-]+@[xA1-xFEa-z0-9-]+.[a-z0-9-]+)', 'gi');
-        return html
-            .replace(regURL, "<a href='$1://$2' target='_blank'>$1://$2</a>")
-            .replace(regEmail, "<a href='mailto:$1'>$1</a>");
-    } else {
-        return '';
-    }
-};
-
 /**
  * Generate random hash
  * @return {string}
@@ -870,68 +849,6 @@ Entry.generateHash = function(length = 4) {
     return Math.random()
         .toString(36)
         .substr(2, length);
-};
-
-/**
- * Add event listener
- * @param {!string} eventName
- * @param {function} fn
- */
-Entry.addEventListener = function(eventName, fn) {
-    if (!this.events_) {
-        this.events_ = {};
-    }
-
-    if (!this.events_[eventName]) {
-        this.events_[eventName] = [];
-    }
-    if (fn instanceof Function) {
-        this.events_[eventName].push(fn);
-    }
-
-    return true;
-};
-
-/**
- * Dispatch event
- * @param {!string} eventName
- * @param {*} args
- */
-Entry.dispatchEvent = function(eventName, ...args) {
-    if (!this.events_) {
-        this.events_ = {};
-        return;
-    }
-
-    const events = this.events_[eventName];
-    if (_.isEmpty(events)) {
-        return;
-    }
-
-    events.forEach((func) => func.apply(window, args));
-};
-
-/**
- * Remove event listener
- * @param {!string} eventName
- */
-Entry.removeEventListener = function(eventName, fn) {
-    const events = this.events_[eventName];
-    if (_.isEmpty(events)) {
-        return;
-    }
-    this.events_[eventName] = events.filter((a) => fn !== a);
-};
-
-/**
- * Remove event listener
- * @param {!string} eventName
- */
-Entry.removeAllEventListener = function(eventName) {
-    if (!this.events_ || !this.events_[eventName]) {
-        return;
-    }
-    delete this.events_[eventName];
 };
 
 /**
