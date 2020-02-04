@@ -2182,37 +2182,6 @@ Entry.Utils.hasSpecialCharacter = function(str) {
 
 Entry.Utils.debounce = _.debounce;
 
-Entry.Utils.isNewVersion = function(old_version = '', new_version = '') {
-    try {
-        if (old_version === '') {
-            return false;
-        }
-        old_version = old_version.replace('v', '');
-        new_version = new_version.replace('v', '');
-        const arrOld = old_version.split('.');
-        const arrNew = new_version.split('.');
-        const count = arrOld.length < arrNew.length ? arrOld.length : arrNew.length;
-        let isNew = false;
-        let isSame = true;
-        for (let i = 0; i < count; i++) {
-            if (Number(arrOld[i]) < Number(arrNew[i])) {
-                isNew = true;
-                isSame = false;
-            } else if (Number(arrOld[i]) > Number(arrNew[i])) {
-                isSame = false;
-            }
-        }
-
-        if (isSame && arrOld.length < arrNew.length) {
-            isNew = true;
-        }
-
-        return isNew;
-    } catch (e) {
-        return false;
-    }
-};
-
 Entry.Utils.getBlockCategory = (function() {
     const map = {};
     let allBlocks;
