@@ -17,16 +17,6 @@ Entry.TEXT_ALIGNS = ['center', 'left', 'right'];
 Entry.clipboard = null;
 
 /**
- * 프로젝트 가 외부 모듈이 사용되었는지 확인하고, 로드한다
- * @param {*} project 엔트리 프로젝트
- * @return Promise
- */
-Entry.loadExternalModules = async (project) => {
-    const { externalModules = [] } = project;
-    await Promise.all(externalModules.map(Entry.moduleManager.loadExternalModule));
-};
-
-/**
  * Load project
  * @param {*} project
  */
