@@ -304,31 +304,6 @@ Entry.byrobot_controller_4 =
     },
 
 
-    transferDisplayInvert: function(target, x, y, width, height)
-    {
-        // 범위 조정
-        x      = this.fit(-1024, x, 1024);
-        y      = this.fit(-1024, y, 1024);
-        width  = this.fit(0, width, 128);
-        height = this.fit(0, height, 64);
-
-        // 전송
-        Entry.hw.setDigitalPortValue('target', target);
-        Entry.hw.setDigitalPortValue('display_invert_x', x);
-        Entry.hw.setDigitalPortValue('display_invert_y', y);
-        Entry.hw.setDigitalPortValue('display_invert_width', width);
-        Entry.hw.setDigitalPortValue('display_invert_height', height);
-
-        Entry.hw.update();
-
-        delete Entry.hw.sendQueue['target'];
-        delete Entry.hw.sendQueue['display_invert_x'];
-        delete Entry.hw.sendQueue['display_invert_y'];
-        delete Entry.hw.sendQueue['display_invert_width'];
-        delete Entry.hw.sendQueue['display_invert_height'];
-    },
-
-
     transferDisplayDrawPoint: function(target, x, y, pixel)
     {
         // 범위 조정
@@ -688,29 +663,6 @@ Entry.byrobot_controller_4 =
             case 'Start':
                 {
                     this.transferDisplayClear(target, pixel, x, y, width, height);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-
-    // 선택 영역 반전
-    setDisplayInvert: function(script, target, x, y, width, height)
-    {
-        switch (this.checkFinish(script, 40))
-        {
-            case 'Start':
-                {
-                    this.transferDisplayInvert(target, x, y, width, height);
                 }
                 return script;
 
@@ -1124,12 +1076,12 @@ Entry.byrobot_controller_4.setLanguage = function ()
                 "byrobot_controller_4_controller_button_front_right_down":   "전면 오른쪽 하단 버튼",
                 "byrobot_controller_4_controller_button_top_left":           "상단 왼쪽 버튼",
                 "byrobot_controller_4_controller_button_top_right":          "상단 오른쪽 버튼",
-                "byrobot_controller_4_controller_button_bottom_left":        "하단 왼쪽 버튼",
-                "byrobot_controller_4_controller_button_bottom_right":       "하단 오른쪽 버튼",
                 "byrobot_controller_4_controller_button_center_top":         "중앙 위 버튼",
                 "byrobot_controller_4_controller_button_center_left":        "중앙 왼쪽 버튼",
                 "byrobot_controller_4_controller_button_center_right":       "중앙 오른쪽 버튼",
                 "byrobot_controller_4_controller_button_center_bottom":      "중앙 아래쪽 버튼",
+                "byrobot_controller_4_controller_button_bottom_left":        "하단 왼쪽 버튼",
+                "byrobot_controller_4_controller_button_bottom_right":       "하단 오른쪽 버튼",
                 "byrobot_controller_4_controller_buzzer":         "버저",
                 "byrobot_controller_4_controller_buzzer_a":       "라",
                 "byrobot_controller_4_controller_buzzer_as":      "라#",
@@ -1194,7 +1146,6 @@ Entry.byrobot_controller_4.setLanguage = function ()
                 "byrobot_controller_4_controller_display_draw_rect":           "사각형 x %1, y %2, 너비 %3, 높이 %4 %5 %6 %7 %8",
                 "byrobot_controller_4_controller_display_draw_string":         "문자열 x %1, y %2 %3 %4 입력 %5 %6",
                 "byrobot_controller_4_controller_display_draw_string_align":   "문자열 정렬 x1 %1, x2 %2, y %3 %4 %5 %6 입력 %7 %8",
-                "byrobot_controller_4_controller_display_invert":              "색반전 x %1, y %2, 너비 %3, 높이 %4 %5",
                 "byrobot_controller_4_controller_if_button_press":             "조종기 %1 눌렀을 때",
                 "byrobot_controller_4_controller_if_joystick_direction":       "조종기 %1 조이스틱 %2 움직였을 때",
                 "byrobot_controller_4_controller_light_color_input":           "조종기 LED 색지정 R %1, G %2, B %3 %4 %5 %6",
@@ -1227,7 +1178,6 @@ Entry.byrobot_controller_4.setLanguage = function ()
                 "byrobot_controller_4_controller_display_draw_rect":           "<br>조종기 OLED 화면에서 지정한 위치에 사각형을 그립니다.<br><br>☆★ (x, y)좌표에 관한 설명은 [조종기 화면 점 찍기]블럭을 참조해주세요. ★☆<br><br>x, y 좌표값과 너비, 높이를 지정합니다. 시작점 = (x, y), 사용 가능한 값의 범위는 x값과 너비는 (0~128), y값과 높이는 (0~64)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
                 "byrobot_controller_4_controller_display_draw_string":         "<br>조종기 OLED 화면에서 지정한 위치에 문자열을 씁니다.<br><br>☆★ (x, y)좌표에 관한 설명은 [조종기 화면 점 찍기]블럭을 참조해주세요. ★☆<br><br>글자 입력은 영문자 알파벳 대문자, 소문자와 숫자, 공백(space), 특수문자만 가능합니다.(한글은 아직 지원되지 않습니다.)<br>x, y 좌표값과 글자 크기, 색을 지정합니다. 시작점 = (x, y), 사용 가능한 값의 범위는 x값은 (0~120), y값과 높이는 (0~60)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
                 "byrobot_controller_4_controller_display_draw_string_align":   "<br>조종기 OLED 화면에서 지정한 위치에 문자열을 정렬하여 그립니다.<br><br>☆★ (x, y)좌표에 관한 설명은 [조종기 화면 점 찍기]블럭을 참조해주세요. ★☆<br><br>글자 입력은 영문자 알파벳 대문자, 소문자와 숫자, 공백(space), 특수문자만 가능합니다.(한글은 아직 지원되지 않습니다.)<br>x, y 좌표값과 정렬 방향, 글자 크기, 색을 지정합니다. 시작점 = (x1, y), 끝나는점 = (x2, y), 사용 가능한 값의 범위는 x값은 (0~128), y값은 (0~60)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
-                "byrobot_controller_4_controller_display_invert":              "<br>조종기 OLED 화면에서 선택한 영역의 색을 반전시킵니다. x, y 좌표값과 너비, 높이를 지정합니다. 좌표(x, y) = (가로, 세로) 화면상의 위치입니다. 사용 가능한 값의 범위는 x값과 너비는 (0~128), y값과 높이는 (0~64)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
                 "byrobot_controller_4_controller_if_button_press":             "<br>지정한 조종기의 버튼이 눌러졌을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
                 "byrobot_controller_4_controller_if_joystick_direction":       "<br>조종기의 조이스틱을 지정한 방향으로 움직였을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
                 "byrobot_controller_4_controller_light_color_input":           "<br>빛의 삼원색인 Red, Green, Blue 값을 지정하여 조종기 LED의 색상을 원하는대로 만들 수 있습니다.<br>10진수(0 ~ 255) 값을 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
@@ -1355,7 +1305,6 @@ Entry.byrobot_controller_4.setLanguage = function ()
                 "byrobot_controller_4_controller_display_draw_rect": "draw a rectangle in controller display x:%1, y:%2, width:%3, height:%4, %5, %6, %7 %8",
                 "byrobot_controller_4_controller_display_draw_string": "draw a string in controller display x:%1, y:%2, font size:%3, %4, input:%5, %6",
                 "byrobot_controller_4_controller_display_draw_string_align": "draw aligned string in controller display x1:%1, x2:%2, y:%3, align:%4, font size:%5, %6, input:%7, %8",
-                "byrobot_controller_4_controller_display_invert": "invert controller display x:%1, y:%2, width:%3, height:%4 %5",
                 "byrobot_controller_4_controller_if_button_press": "when press %1",
                 "byrobot_controller_4_controller_if_joystick_direction": "when %1 stick move to %2",
                 "byrobot_controller_4_controller_light_color_input": "decide the color values of controller LED R %1, G %2, B %3 %4 %5",
@@ -1396,7 +1345,6 @@ Entry.byrobot_controller_4.blockMenuBlocks = [
     'byrobot_controller_4_controller_light_color_select',
     'byrobot_controller_4_controller_display_clear_all',
     'byrobot_controller_4_controller_display_clear',
-    'byrobot_controller_4_controller_display_invert',
     'byrobot_controller_4_controller_display_draw_point',
     'byrobot_controller_4_controller_display_draw_line',
     'byrobot_controller_4_controller_display_draw_rect',
@@ -1509,18 +1457,18 @@ Entry.byrobot_controller_4.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.byrobot_controller_4_controller_button_front_left,        '1'],
-                        [Lang.Blocks.byrobot_controller_4_controller_button_front_right,       '2'],
-                        [Lang.Blocks.byrobot_controller_4_controller_button_front_left_right,  '3'],
-                        [Lang.Blocks.byrobot_controller_4_controller_button_center_up_left,    '4'],
-                        [Lang.Blocks.byrobot_controller_4_controller_button_center_up_right,   '8'],
-                        [Lang.Blocks.byrobot_controller_4_controller_button_center_up,         '16'],
-                        [Lang.Blocks.byrobot_controller_4_controller_button_center_left,       '32'],
-                        [Lang.Blocks.byrobot_controller_4_controller_button_center_right,      '64'],
-                        [Lang.Blocks.byrobot_controller_4_controller_button_center_down,       '128'],
-                        [Lang.Blocks.byrobot_controller_4_controller_button_bottom_left,       '256'],
-                        [Lang.Blocks.byrobot_controller_4_controller_button_bottom_right,      '512'],
-                        [Lang.Blocks.byrobot_controller_4_controller_button_bottom_left_right, '768'],
+                        [Lang.Blocks.byrobot_controller_4_controller_button_front_left_up,      '1'],
+                        [Lang.Blocks.byrobot_controller_4_controller_button_front_left_down,    '2'],
+                        [Lang.Blocks.byrobot_controller_4_controller_button_front_right_up,     '3'],
+                        [Lang.Blocks.byrobot_controller_4_controller_button_front_right_down,   '4'],
+                        [Lang.Blocks.byrobot_controller_4_controller_button_top_left,           '8'],
+                        [Lang.Blocks.byrobot_controller_4_controller_button_top_right,          '16'],
+                        [Lang.Blocks.byrobot_controller_4_controller_button_center_top,         '32'],
+                        [Lang.Blocks.byrobot_controller_4_controller_button_center_left,        '64'],
+                        [Lang.Blocks.byrobot_controller_4_controller_button_center_right,       '128'],
+                        [Lang.Blocks.byrobot_controller_4_controller_button_center_bottom,      '256'],
+                        [Lang.Blocks.byrobot_controller_4_controller_button_bottom_left,        '512'],
+                        [Lang.Blocks.byrobot_controller_4_controller_button_bottom_right,       '768'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1972,49 +1920,6 @@ Entry.byrobot_controller_4.getBlocks = function()
                 var height = script.getNumberValue('HEIGHT');
                 var pixel = parseInt(script.getField('PIXEL'));
                 return Entry.byrobot_controller_4.setDisplayClear(script, 0x20, pixel, x, y, width, height);
-            },
-        },
-
-
-        byrobot_controller_4_controller_display_invert:
-        {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {type: 'Block', accept: 'string'},
-                {type: 'Block', accept: 'string'},
-                {type: 'Block', accept: 'string'},
-                {type: 'Block', accept: 'string'},
-                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
-            ],
-            events: {},
-            def: {
-                params: [
-                    {type: 'text', params: ['32']},
-                    {type: 'text', params: ['16']},
-                    {type: 'text', params: ['64']},
-                    {type: 'text', params: ['32']},
-                    null,
-                    null,
-                ],
-                type: 'byrobot_controller_4_controller_display_invert',
-            },
-            paramsKeyMap: {
-                X: 0,
-                Y: 1,
-                WIDTH: 2,
-                HEIGHT: 3,
-            },
-            class: 'byrobot_controller_4_controller_display',
-            isNotFor: ['byrobot_controller_4'],
-            func: function(sprite, script) {
-                var x = script.getNumberValue('X');
-                var y = script.getNumberValue('Y');
-                var width = script.getNumberValue('WIDTH');
-                var height = script.getNumberValue('HEIGHT');
-                return Entry.byrobot_controller_4.setDisplayInvert(script, 0x20, x, y, width, height);
             },
         },
 
