@@ -123,7 +123,7 @@ Entry.Playground = class Playground {
 
             const resizeHandle = Entry.createElement('div')
                 .addClass('entryPlaygroundResizeWorkspace', 'entryRemove')
-                .appendTo(this.view_);
+                .appendTo(codeView);
             this.resizeHandle_ = resizeHandle;
             this.initializeResizeHandle(resizeHandle);
 
