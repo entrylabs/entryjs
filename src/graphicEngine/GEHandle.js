@@ -188,6 +188,7 @@ export const GEHandle = function(canvas) {
             handle.dispatchEditEndEvent();
         });
         container.addChild(edge);
+        container.setChildIndex(edge, 2);
         this.edge = edge;
 
         //rotate knob
@@ -258,7 +259,6 @@ export const GEHandle = function(canvas) {
             handle.dispatchEditEndEvent();
         });
         container.addChild(directionArrow);
-        container.setChildIndex(directionArrow, 0);
         this.directionArrow = directionArrow;
 
         // center
@@ -327,6 +327,7 @@ export const GEHandle = function(canvas) {
                 handle.dispatchEditEndEvent();
             });
             container.addChild(knob);
+            container.setChildIndex(knob, 3);
             this.knobs.push(knob);
         }
 
