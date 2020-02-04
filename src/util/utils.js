@@ -180,6 +180,7 @@ Entry.setBlock = function(objectType, XML) {
  * @param {event} e
  */
 Entry.beforeUnload = function(e) {
+    Entry.dispatchEvent('EntryBeforeUnload');
     Entry.hw.closeConnection();
     if (Entry.type === 'workspace') {
         if (localStorage && Entry.interfaceState) {
