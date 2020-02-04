@@ -1727,7 +1727,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                     {type: 'text', params: ['255']},
                     {type: 'text', params: ['255']},
                     null,
-                    {type: 'text', params: ['500']},
+                    {type: 'text', params: ['250']},
                     null,
                 ],
                 type:
@@ -1796,7 +1796,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                 params: [
                     null,
                     null,
-                    {type: 'text', params: ['500']},
+                    {type: 'text', params: ['250']},
                     null
                 ],
                 type: 'byrobot_controller_4_controller_light_color_select',
