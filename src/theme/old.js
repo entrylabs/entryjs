@@ -61,7 +61,7 @@ module.exports = {
             CALC: '#FF9C00',
             VARIABLE: '#EC52E7',
             FUNC: '#C85404',
-            JUDGE: '#6173F5',
+            JUDGE: '#1B3AD8',
             TEXT: '#E43500',
             EXPANSION: '#EF6D6D',
         },
