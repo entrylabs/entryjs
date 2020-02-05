@@ -6,6 +6,8 @@ const VIDEO_HEIGHT = 360;
 
 class VideoUtils {
     constructor() {
+        this.CANVAS_WIDTH = 480;
+        this.CANVAS_HEIGHT = 270;
         // 기본적으로 hFlip을 한번 해야 거울과 같이 동작하므로 horizontal flip 인지 아닌지를 확인한다.
         this.isInitialized = false;
         this.video = null;
@@ -71,7 +73,7 @@ class VideoUtils {
                     this.isMobileNetInit = true;
                     this.video.play();
                     console.log('done initializing');
-                    this.getPose();
+                    this.estimatePoseOnImage();
                 };
             } catch (err) {
                 console.log(err);
@@ -82,37 +84,28 @@ class VideoUtils {
         }
     }
 
-    getPose() {
-        if (!this.canvasVideo) {
-            return;
-        }
-        if (this.isMobileNetInit) {
-            this.estimatePoseOnImage(this.video);
-        }
-        requestAnimationFrame(() => {
-            this.getPose();
-        });
-    }
-
-    estimatePoseOnImage(imageElement) {
+    estimatePoseOnImage() {
         // load the posenet model from a checkpoint
         if (!this.mobileNet) {
             return;
         }
-        try {
-            this.mobileNet
-                .estimateMultiplePoses(imageElement, {
-                    flipHorizontal: true,
-                    maxDetections: 4,
-                    scoreThreshold: 0.5,
-                    nmsRadius: 20,
-                })
-                .then((poses) => {
-                    this.poses = poses;
-                });
-        } catch (err) {
-            console.error('error in detection');
-        }
+        return new Promise((resolve, reject) => {
+            try {
+                this.mobileNet
+                    .estimateMultiplePoses(this.video, {
+                        flipHorizontal: true,
+                        maxDetections: 4,
+                        scoreThreshold: 0.5,
+                        nmsRadius: 20,
+                    })
+                    .then((poses) => {
+                        this.poses = poses;
+                        resolve(poses);
+                    });
+            } catch (err) {
+                console.error('error in detection');
+            }
+        });
     }
 
     async checkUserCamAvailable() {

@@ -246,14 +246,18 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 if (!VideoUtils.isInitialized) {
                     await VideoUtils.initialize();
                 }
-                return VideoUtils.poses ? VideoUtils.poses.length : 0;
+                if (!VideoUtils.isMobileNetInit) {
+                    return 0;
+                }
+                const poses = await VideoUtils.estimatePoseOnImage();
+                return poses.length || 0;
             },
             syntax: {
                 js: [],
                 py: [],
             },
         },
-        video_face_part_coord: {
+        video_body_part_coord: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
@@ -331,7 +335,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             ],
             events: {},
             def: {
-                type: 'video_face_part_coord',
+                type: 'video_body_part_coord',
             },
             paramsKeyMap: {
                 INDEX: 0,
@@ -344,19 +348,26 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 if (!VideoUtils.isInitialized) {
                     await VideoUtils.initialize();
                 }
-                let index = script.getField('INDEX');
+                if (!VideoUtils.isMobileNetInit) {
+                    return 0;
+                }
+                const index = script.getField('INDEX');
                 const part = script.getField('PART');
                 const coord = script.getField('COORD');
-                if (
-                    !VideoUtils.isMobileNetInit ||
-                    !VideoUtils.poses ||
-                    VideoUtils.poses.length < index
-                ) {
+
+                const poses = await VideoUtils.estimatePoseOnImage();
+                if (poses.length < index) {
                     return 0;
                 }
                 // offset since value shown starts from 1;
-                index = index - 1;
-                return VideoUtils.poses[index].keypoints[part].position[coord] || 0;
+                const rawValue = poses[index - 1].keypoints[part].position[coord];
+                if (!rawValue) {
+                    return 0;
+                }
+                if (coord === 'x') {
+                    return rawValue - VideoUtils.CANVAS_WIDTH / 2;
+                }
+                return VideoUtils.CANVAS_HEIGHT / 2 - rawValue;
             },
             syntax: {
                 js: [],

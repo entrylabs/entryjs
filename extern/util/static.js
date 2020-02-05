@@ -399,7 +399,7 @@ EntryStatic.getAllBlocks = function() {
                 'video_set_camera_option',
                 'video_flip_camera',
                 'video_number_of_faces',
-                'video_face_part_coord',
+                'video_body_part_coord',
             ],
         },
         {
