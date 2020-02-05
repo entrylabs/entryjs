@@ -63,6 +63,17 @@ class EntryStateManager {
         return this.undoStack_[this.undoStack_.length - 1];
     }
 
+    getLastCommandById(id) {
+        const undoStack = this.undoStack_;
+        const len = undoStack.length - 1;
+        for (let i = len; i >= 0; i--) {
+            const state = undoStack[i];
+            if (state.id === id) {
+                return state;
+            }
+        }
+    }
+
     getLastRedoCommand() {
         return this.redoStack_[this.redoStack_.length - 1];
     }
