@@ -34,6 +34,9 @@
     "license": "MIT",
     "dependencies": {
         "@entrylabs/event": "^1.0.3",
+        "@tensorflow-models/posenet": "^2.2.1",
+        "@tensorflow/tfjs-converter": "^1.5.2",
+        "@tensorflow/tfjs-core": "^1.5.2",
         "audiobuffer-to-wav": "^1.0.0",
         "autoprefixer": "^9.4.3",
         "cuid": "^2.1.6",

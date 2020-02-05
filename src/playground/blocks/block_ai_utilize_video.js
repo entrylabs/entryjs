@@ -4,7 +4,8 @@ const _clamp = require('lodash/clamp');
 
 Entry.AI_UTILIZE_BLOCK.video = {
     name: 'video',
-    imageName: 'audio.svg',
+    imageName: 'video.svg',
+    sponserText: 'Powered by Naver',
     title: {
         ko: '비디오 감지',
         en: 'Video Detection',

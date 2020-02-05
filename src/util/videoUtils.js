@@ -1,6 +1,9 @@
+import { GEHelper } from '../graphicEngine/GEHelper';
+import * as posenet from '@tensorflow-models/posenet';
+
 const VIDEO_WIDTH = 640;
 const VIDEO_HEIGHT = 360;
-import { GEHelper } from '../graphicEngine/GEHelper';
+
 class VideoUtils {
     constructor() {
         // 기본적으로 hFlip을 한번 해야 거울과 같이 동작하므로 horizontal flip 인지 아닌지를 확인한다.
@@ -11,6 +14,9 @@ class VideoUtils {
             horizontal: false,
             vertical: false,
         };
+        this.isMobileNetInit = false;
+        this.mobileNet = null;
+        this.poses = null;
     }
 
     reset() {
@@ -26,6 +32,7 @@ class VideoUtils {
         if (this.isInitialized) {
             return;
         }
+        Entry.addEventListener('dispatchEventDidToggleStop', this.reset.bind(this));
         navigator.getUserMedia =
             navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
@@ -43,22 +50,50 @@ class VideoUtils {
             this.video.width = 480;
             this.video.height = 270;
             this.video.onloadedmetadata = async (e) => {
-                // const mobilenet = await posenet.load({
-                //     architecture: 'MobileNetV1',
-                //     outputStride: 16,
-                //     inputResolution: { width: VIDEO_WIDTH, height: VIDEO_HEIGHT },
-                //     multiplier: 1,
-                // });
-                // setNet(mobilenet);
-                // const posenetInstance = await posenet.load();
-                // setNet(posenetInstance);
-                this.initialized = true;
+                const mobilenet = await posenet.load({
+                    architecture: 'MobileNetV1',
+                    outputStride: 16,
+                    inputResolution: { width: VIDEO_WIDTH, height: VIDEO_HEIGHT },
+                    multiplier: 1,
+                });
+                this.mobileNet = mobilenet;
+                this.isMobileNetInit = true;
                 this.video.play();
                 console.log('done initializing');
-                // getPose();
+                this.getPose();
             };
         } else {
             console.log('getUserMedia not supported');
+        }
+    }
+
+    async getPose() {
+        if (this.isMobileNetInit) {
+            await this.estimatePoseOnImage(this.video);
+        }
+        requestAnimationFrame(() => {
+            this.getPose();
+        });
+    }
+    async estimatePoseOnImage(imageElement) {
+        // load the posenet model from a checkpoint
+        if (!this.mobileNet) {
+            return;
+        }
+        try {
+            this.mobileNet
+                .estimateMultiplePoses(imageElement, {
+                    flipHorizontal: true,
+                    maxDetections: 3,
+                    scoreThreshold: 0.5,
+                    nmsRadius: 20,
+                })
+                .then((poses) => {
+                    this.poses = poses;
+                    console.log(poses);
+                });
+        } catch (err) {
+            console.error('error in detection');
         }
     }
 
@@ -75,7 +110,6 @@ class VideoUtils {
         switch (value) {
             case 'on':
                 this.turnOnWebcam();
-                this.setOptions('hflip');
                 break;
             default:
                 this.turnOffWebcam();
@@ -84,26 +118,26 @@ class VideoUtils {
     }
 
     turnOffWebcam() {
-        Entry.stage.canvas.removeChild(this.canvasVideo);
-        createjs.Ticker.on('tick', Entry.stage.canvas);
+        GEHelper.turnOffWebcam(this.canvasVideo);
     }
 
     turnOnWebcam() {
         if (this.canvasVideo) {
             return;
         }
-        this.canvasVideo = GEHelper.getVideoElement(this.video);
-        Entry.addEventListener('dispatchEventDidToggleStop', this.reset.bind(this));
+        this.canvasVideo = GEHelper.getAndDrawVideo(this.video);
+        if (!this.flipStatus.horizontal) {
+            this.setOptions('hflip');
+        }
     }
     // option change
     setOptions(target, value) {
         switch (target) {
             case 'brightness':
-                this.setBrightness(value);
-                createjs.Ticker.on('tick', Entry.stage.canvas);
+                GEHelper.setVideoBrightness(this.canvasVideo, value);
                 break;
             case 'opacity':
-                this.setAlpha(value);
+                GEHelper.setVideoAlpha(this.canvasVideo, value);
                 break;
             case 'hflip':
                 this.flipStatus.horizontal = !this.flipStatus.horizontal;
@@ -114,14 +148,6 @@ class VideoUtils {
                 GEHelper.vFlipVideoElement(this.canvasVideo);
                 break;
         }
-    }
-    setBrightness(brightVal) {
-        GEHelper.setVideoBrightness(this.canvasVideo, brightVal);
-        createjs.Ticker.on('tick', Entry.stage.canvas);
-    }
-    setAlpha(alphaVal) {
-        this.canvasVideo.alpha = (100 - alphaVal) / 100;
-        createjs.Ticker.on('tick', Entry.stage.canvas);
     }
 }
 
