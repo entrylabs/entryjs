@@ -180,6 +180,7 @@ Entry.setBlock = function(objectType, XML) {
  * @param {event} e
  */
 Entry.beforeUnload = function(e) {
+    Entry.dispatchEvent('EntryBeforeUnload');
     Entry.hw.closeConnection();
     if (Entry.type === 'workspace') {
         if (localStorage && Entry.interfaceState) {
@@ -2035,6 +2036,7 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
             toast || [Lang.Workspace.check_runtime_error, Lang.Workspace.check_browser_error],
             true
         );
+        Entry.engine.hideAllAudioPanel();
     } else if (Entry.toast) {
         Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, true);
     }
