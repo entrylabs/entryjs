@@ -571,34 +571,6 @@ Entry.byrobot_controller_3 =
                 return script.callReturn();
         }
     },
-
-
-    sendStop: function(script)
-    {
-        return this.sendCommand(script, 0x10, 0x01, 0);
-    },
-
-
-    setMotorSingle: function(script, motorIndex, motorRotation, motorSpeed)
-    {
-        switch (this.checkFinish(script, 40))
-        {
-            case 'Start':
-                {
-                    this.transferMotorSingle(motorIndex, motorRotation, motorSpeed);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
 };
 
 
@@ -651,12 +623,12 @@ Entry.byrobot_controller_3.setLanguage = function ()
                 "byrobot_controller_3_controller_button_front_right_down":   "전면 오른쪽 하단 버튼",
                 "byrobot_controller_3_controller_button_top_left":           "상단 왼쪽 버튼",
                 "byrobot_controller_3_controller_button_top_right":          "상단 오른쪽 버튼",
-                "byrobot_controller_3_controller_button_bottom_left":        "하단 왼쪽 버튼",
-                "byrobot_controller_3_controller_button_bottom_right":       "하단 오른쪽 버튼",
                 "byrobot_controller_3_controller_button_center_top":         "중앙 위 버튼",
                 "byrobot_controller_3_controller_button_center_left":        "중앙 왼쪽 버튼",
                 "byrobot_controller_3_controller_button_center_right":       "중앙 오른쪽 버튼",
                 "byrobot_controller_3_controller_button_center_bottom":      "중앙 아래쪽 버튼",
+                "byrobot_controller_3_controller_button_bottom_left":        "하단 왼쪽 버튼",
+                "byrobot_controller_3_controller_button_bottom_right":       "하단 오른쪽 버튼",
                 "byrobot_controller_3_controller_buzzer":         "버저",
                 "byrobot_controller_3_controller_buzzer_a":       "라",
                 "byrobot_controller_3_controller_buzzer_as":      "라#",

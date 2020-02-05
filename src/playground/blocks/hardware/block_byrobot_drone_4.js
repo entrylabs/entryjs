@@ -288,44 +288,43 @@ Entry.byrobot_drone_4 =
     },
 
 
-    transferDisplayClear: function(target, pixel, clearAll, x, y, width, height)
+    transferDisplayClearAll: function(target, pixel)
     {
-        if (clearAll)
-        {
-            // 전송
-            Entry.hw.setDigitalPortValue('target', target);
-            Entry.hw.setDigitalPortValue('display_clearall_pixel', pixel);
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('display_clear_all_pixel', pixel);
 
-            Entry.hw.update();
+        Entry.hw.update();
 
-            delete Entry.hw.sendQueue['target'];
-            delete Entry.hw.sendQueue['display_clearall_pixel'];
-        }
-        else
-        {
-            // 범위 조정
-            x      = this.fit(-1024, x, 1024);
-            y      = this.fit(-1024, y, 1024);
-            width  = this.fit(0, width, 128);
-            height = this.fit(0, height, 64);
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['display_clear_all_pixel'];
+    },
 
-            // 전송
-            Entry.hw.setDigitalPortValue('target', target);
-            Entry.hw.setDigitalPortValue('display_clear_x', x);
-            Entry.hw.setDigitalPortValue('display_clear_y', y);
-            Entry.hw.setDigitalPortValue('display_clear_width', width);
-            Entry.hw.setDigitalPortValue('display_clear_height', height);
-            Entry.hw.setDigitalPortValue('display_clear_pixel', pixel);
 
-            Entry.hw.update();
+    transferDisplayClear: function(target, pixel, x, y, width, height)
+    {
+        // 범위 조정
+        x      = this.fit(-1024, x, 1024);
+        y      = this.fit(-1024, y, 1024);
+        width  = this.fit(0, width, 128);
+        height = this.fit(0, height, 64);
 
-            delete Entry.hw.sendQueue['target'];
-            delete Entry.hw.sendQueue['display_clear_x'];
-            delete Entry.hw.sendQueue['display_clear_y'];
-            delete Entry.hw.sendQueue['display_clear_width'];
-            delete Entry.hw.sendQueue['display_clear_height'];
-            delete Entry.hw.sendQueue['display_clear_pixel'];
-        }
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('display_clear_x', x);
+        Entry.hw.setDigitalPortValue('display_clear_y', y);
+        Entry.hw.setDigitalPortValue('display_clear_width', width);
+        Entry.hw.setDigitalPortValue('display_clear_height', height);
+        Entry.hw.setDigitalPortValue('display_clear_pixel', pixel);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['display_clear_x'];
+        delete Entry.hw.sendQueue['display_clear_y'];
+        delete Entry.hw.sendQueue['display_clear_width'];
+        delete Entry.hw.sendQueue['display_clear_height'];
+        delete Entry.hw.sendQueue['display_clear_pixel'];
     },
 
 
@@ -774,13 +773,36 @@ Entry.byrobot_drone_4 =
 
 
     // 화면 전체 지우기, 선택 영역 지우기
-    setDisplayClear: function(script, target, pixel, clearAll, x, y, width, height)
+    setDisplayClearAll: function(script, target, pixel)
     {
         switch (this.checkFinish(script, 40))
         {
             case 'Start':
                 {
-                    this.transferDisplayClear(target, pixel, clearAll, x, y, width, height);
+                    this.transferDisplayClearAll(target, pixel);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // 화면 전체 지우기, 선택 영역 지우기
+    setDisplayClear: function(script, target, pixel, x, y, width, height)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferDisplayClear(target, pixel, x, y, width, height);
                 }
                 return script;
 
@@ -1370,12 +1392,12 @@ Entry.byrobot_drone_4.setLanguage = function ()
                 "byrobot_drone_4_controller_button_front_right_down":   "전면 오른쪽 하단 버튼",
                 "byrobot_drone_4_controller_button_top_left":           "상단 왼쪽 버튼",
                 "byrobot_drone_4_controller_button_top_right":          "상단 오른쪽 버튼",
-                "byrobot_drone_4_controller_button_bottom_left":        "하단 왼쪽 버튼",
-                "byrobot_drone_4_controller_button_bottom_right":       "하단 오른쪽 버튼",
                 "byrobot_drone_4_controller_button_center_top":         "중앙 위 버튼",
                 "byrobot_drone_4_controller_button_center_left":        "중앙 왼쪽 버튼",
                 "byrobot_drone_4_controller_button_center_right":       "중앙 오른쪽 버튼",
                 "byrobot_drone_4_controller_button_center_bottom":      "중앙 아래쪽 버튼",
+                "byrobot_drone_4_controller_button_bottom_left":        "하단 왼쪽 버튼",
+                "byrobot_drone_4_controller_button_bottom_right":       "하단 오른쪽 버튼",
                 "byrobot_drone_4_controller_buzzer":         "버저",
                 "byrobot_drone_4_controller_buzzer_a":       "라",
                 "byrobot_drone_4_controller_buzzer_as":      "라#",
@@ -1402,6 +1424,7 @@ Entry.byrobot_drone_4.setLanguage = function ()
                 "byrobot_drone_4_controller_display_line_solid":     "실선",
                 "byrobot_drone_4_controller_display_pixel_black":    "검은색",
                 "byrobot_drone_4_controller_display_pixel_white":    "흰색",
+                "byrobot_drone_4_controller_display_pixel_inverse":  "반전",
                 "byrobot_drone_4_controller_joystick_direction_left_up":     "왼쪽 위",
                 "byrobot_drone_4_controller_joystick_direction_up":          "위",
                 "byrobot_drone_4_controller_joystick_direction_right_up":    "오른쪽 위",
@@ -2359,7 +2382,7 @@ Entry.byrobot_drone_4.getBlocks = function()
                     {type: 'text', params: ['255']},
                     {type: 'text', params: ['255']},
                     null,
-                    {type: 'text', params: ['500']},
+                    {type: 'text', params: ['250']},
                     null,
                 ],
                 type:
@@ -2428,7 +2451,7 @@ Entry.byrobot_drone_4.getBlocks = function()
                 params: [
                     null,
                     null,
-                    {type: 'text', params: ['500']},
+                    {type: 'text', params: ['250']},
                     null
                 ],
                 type: 'byrobot_drone_4_controller_light_color_select',
@@ -2639,7 +2662,7 @@ Entry.byrobot_drone_4.getBlocks = function()
                     {type: 'text', params: ['255']},
                     {type: 'text', params: ['255']},
                     null,
-                    {type: 'text', params: ['500']},
+                    {type: 'text', params: ['250']},
                     null,
                 ],
                 type: 'byrobot_drone_4_drone_light_color_input',
@@ -2720,7 +2743,7 @@ Entry.byrobot_drone_4.getBlocks = function()
                     null,
                     null,
                     null,
-                    {type: 'text', params: ['500']},
+                    {type: 'text', params: ['250']},
                     null,
                 ],
                 type: 'byrobot_drone_4_drone_light_color_select',
@@ -2788,7 +2811,7 @@ Entry.byrobot_drone_4.getBlocks = function()
             isNotFor: ['byrobot_drone_4'],
             func: function(sprite, script) {
                 var pixel = parseInt(script.getField('PIXEL'));
-                return Entry.byrobot_drone_4.setDisplayClear(script, 0x20, pixel, true, 0, 0, 0, 0);
+                return Entry.byrobot_drone_4.setDisplayClearAll(script, 0x20, pixel);
             },
         },
 
@@ -2844,7 +2867,7 @@ Entry.byrobot_drone_4.getBlocks = function()
                 var width = script.getNumberValue('WIDTH');
                 var height = script.getNumberValue('HEIGHT');
                 var pixel = parseInt(script.getField('PIXEL'));
-                return Entry.byrobot_drone_4.setDisplayClear(script, 0x20, pixel, false, x, y, width, height);
+                return Entry.byrobot_drone_4.setDisplayClear(script, 0x20, pixel, x, y, width, height);
             },
         },
 
@@ -3199,8 +3222,8 @@ Entry.byrobot_drone_4.getBlocks = function()
             events: {},
             def: {
                 params: [
-                    {type: 'text', params: ['4']},
-                    {type: 'text', params: ['24']},
+                    {type: 'text', params: ['39']},
+                    {type: 'text', params: ['16']},
                     null,
                     null,
                     {type: 'text', params: ['HELLO']},
@@ -3280,7 +3303,7 @@ Entry.byrobot_drone_4.getBlocks = function()
                 params: [
                     {type: 'text', params: ['0']},
                     {type: 'text', params: ['128']},
-                    {type: 'text', params: ['24']},
+                    {type: 'text', params: ['42']},
                     null,
                     null,
                     null,

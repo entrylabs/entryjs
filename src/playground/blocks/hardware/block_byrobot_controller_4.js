@@ -506,6 +506,21 @@ Entry.byrobot_controller_4 =
     },
 
 
+    transferCommand: function(target, command, option)
+    {
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('command_command', command);
+        Entry.hw.setDigitalPortValue('command_option', option);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['command_command'];
+        delete Entry.hw.sendQueue['command_option'];
+    },
+
+
     /***************************************************************************************
      *  블럭 연동 함수
      ***************************************************************************************/
@@ -1126,7 +1141,7 @@ Entry.byrobot_controller_4.setLanguage = function ()
                 "byrobot_controller_4_controller_joystick_right_event":           "오른쪽 조이스틱 이벤트",
                 "byrobot_controller_4_controller_joystick_right_x":               "오른쪽 조이스틱 가로축",
                 "byrobot_controller_4_controller_joystick_right_y":               "오른쪽 조이스틱 세로축",
-                "byrobot_controller_4_entryhw_count_transfer_reserved":   "전송 예약된 데이터 수",
+                "byrobot_controller_4_entryhw_count_transfer_reserved":           "전송 예약된 데이터 수",
             },
 
             // ko.js에 작성하던 내용
