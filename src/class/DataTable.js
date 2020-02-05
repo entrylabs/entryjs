@@ -60,11 +60,12 @@ class DataTable {
         }
     }
 
-    selectTable(table) {
-        const json = table ? table.toJSON() : [];
+    selectTable(table = {}) {
+        const json = table.toJSON && table.toJSON();
+        const { tab } = table;
         this.selected = table;
         this.dataAnalytics.setData({
-            table: { ...json, tab: table.tab },
+            table: { ...json, tab },
         });
         delete table.tab;
     }
