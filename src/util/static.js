@@ -117,6 +117,9 @@ Entry.STATIC = {
         separateComment: 1209,
         connectComment: 1210,
         writeComment: 1211,
+
+        dataTableAddSource: 1301,
+        dataTableRemoveSource: 1302,
         //TODO commands development
     },
 
@@ -172,9 +175,6 @@ Entry.STATIC = {
 
         playgroundClickAddAIUtilizeBlock: 1103,
         playgroundClickAddAIUtilizeBlockCancel: 1104,
-
-        dataTableAddSource: 1301,
-        dataTableRemoveSource: 1302,
     },
 
     RECORDABLE: {

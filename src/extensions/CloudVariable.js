@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import { dmet, dmetList, dmetVariable, dmetMatrix } from './dmet';
+import { dmet, dmetList, dmetVariable, dmetTable } from './dmet';
 import singleInstance from '../core/singleInstance';
 
 class CloudVariableExtension {
@@ -96,10 +96,6 @@ class CloudVariableExtension {
         });
     }
 
-    offline() {
-        this.#data = new dmet(this.#defaultData);
-    }
-
     setDefaultData(defaultData) {
         this.#defaultData = defaultData;
     }
@@ -117,8 +113,8 @@ class CloudVariableExtension {
             await this.#createVariable(name, id_);
         } else if (type === 'list') {
             await this.#createList(name, id_);
-        } else if (type === 'matrix') {
-            await this.#createMatrix(name, id_);
+        } else if (type === 'table') {
+            await this.#createTable(name, id_);
         }
         // Entry.dispatchEvent('saveVariable');
     }
@@ -163,21 +159,20 @@ class CloudVariableExtension {
         });
     }
 
-
-    #createMatrix(name, id) {
+    #createTable(name, id) {
         if (!this.#cvSocket) {
             return;
         }
-        const matrix = new dmetMatrix(
+        const table = new dmetTable(
             {
                 name,
             },
             id
         );
         return new Promise((resolve) => {
-            this.#cvSocket.emit('create', matrix, (isCreate, matrix) => {
+            this.#cvSocket.emit('create', table, (isCreate, table) => {
                 if (isCreate) {
-                    this.createDmet(matrix);
+                    this.createDmet(table);
                 }
                 resolve();
             });
@@ -207,10 +202,8 @@ class CloudVariableExtension {
     }
 
     #execDmet(operation) {
-        if (!this.#statusMap[operation.id]) {
-            this.#data.exec(operation);
-            this.#applyValue(operation);
-        }
+        this.#data.exec(operation);
+        this.#applyValue(operation);
     }
 
     #applyValue(operation) {
@@ -256,9 +249,8 @@ class CloudVariableExtension {
         const dmetList = this.#data && this.#data.get(target);
         if (!dmetList) {
             console.error('no target ', target);
-        } else {
-            dmetList.from(array.map(({ data }) => data));
         }
+        dmetList.from(array.map(({data}) => data));
     }
 
     append(target, data) {

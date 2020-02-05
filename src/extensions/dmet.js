@@ -1,15 +1,12 @@
-import cuid from 'cuid';
-import uid from 'uid';
 import isPlainObject from 'lodash/isPlainObject';
 import mapValues from 'lodash/mapValues';
 import get from 'lodash/get';
-import _flattenDeep from 'lodash/flattenDeep';
+import set from 'lodash/set';
+import cloneDeep from 'lodash/cloneDeep';
+import { toNumber } from '../util/common';
+import CommonUtils from '../util/common';
 
-function generateId() {
-    return uid(8) + cuid();
-}
-
-class dmetMatrix {
+class dmetTable {
     constructor(array = [], id) {
         this.#id = id;
         this.from(array);
@@ -18,13 +15,20 @@ class dmetMatrix {
     _id = undefined;
     __isUpdate = false;
     #id = '';
-    #key = generateId();
+    #key = CommonUtils.generateId();
     #object = {};
     #array = [];
+    #origin = [];
+    #fields = [];
     #info = {};
     #maxRow = 100;
     #maxCol = 100;
-    #variableType = 'matrix';
+    #variableType = 'table';
+    #keyDelimter = '_';
+
+    get fields() {
+        return this.#fields;
+    }
 
     get value() {
         return this.#object;
@@ -42,22 +46,42 @@ class dmetMatrix {
         return this.#variableType;
     }
 
+    get origin() {
+        return this.#origin;
+    }
+
+    setLabel(index, name) {
+        this.#fields[index] = name;
+    }
+
     from(data) {
-        const { list = [], array = [], value, _id, id = this.#id, ...info } = data;
+        const { list = [], data: array = [], value, _id, id = this.#id, fields, ...info } = data;
         this.#object = {};
-        this.#array = array;
+        this.#array = [];
+        this.#origin = [];
         if (Array.isArray(array)) {
-            this.#array.forEach((row = []) => {
-                row.forEach((value) => {
-                    const { key } = value;
+            array.forEach((row = []) => {
+                if (Array.isArray(row)) {
+                    const key = CommonUtils.generateId();
+                    const value = row.map(toNumber);
+                    this.#array.push({ key, value });
                     this.#object[key] = value;
-                });
+                    this.#origin.push(cloneDeep(value));
+                } else if (typeof row === 'object' && row.key) {
+                    const newRow = {
+                        key: row.key,
+                        value: row.value.map(toNumber)
+                    };
+                    this.#array.push(newRow);
+                    this.#object[row.key] = newRow.value;
+                    this.#origin.push(cloneDeep(newRow.value));
+                }
             });
         }
         this._id = _id;
         this.#id = id;
+        this.#fields = fields;
         this.#info = info;
-
     }
 
     toJSON() {
@@ -65,65 +89,74 @@ class dmetMatrix {
             _id: this._id || undefined,
             id: this.#id,
             key: this.#key,
-            array: this.#array,
+            data: this.#array,
+            origin: this.#origin,
+            fields: this.#fields,
             isDmet: true,
             variableType: this.variableType,
         };
     }
 
-
-    #findLastArray(array) {
-        const indexArray = [...array];
-        const lastIndex = indexArray.pop();
-        return {
-            array: this.get(indexArray),
-            value: this.get(array),
-            lastIndex: lastIndex - 1,
-            parentIndex: indexArray,
-        };
-    }
-
-    get(key) {
-        if (typeof key === 'number') {
-            return this.#array[key - 1];
-        } else if (Array.isArray(key)) {
-            return get(this.#array, `[${key.map(x => x - 1).join('][')}]`);
+    getRow(key) {
+        if (Array.isArray(key)) {
+            const [row, col = 0] = key;
+            const result = this.#array[row - 1] || {};
+            return { ...result, x: row - 1, y: col - 1 };
+        } else if (typeof key === 'number') {
+            const result = this.#array[key - 1] || {};
+            return { ...result, x: key - 1 };
         } else if (typeof key === 'string') {
-            return this.#object[key];
+            const [rowKey, col = 0] = key.split(this.#keyDelimter);
+            return {
+                key: rowKey,
+                value: this.#object[rowKey],
+                x: this.getIndex(rowKey),
+                y: col - 1,
+            };
         }
+        throw { message: `not found tableData ${key} id: ${this.#id}` };
     }
 
-    #findIndex(arr, findData, index = []) {
-        for (let i = 0; i < arr.length; i++) {
-            const result = [...index, i];
-            if (Array.isArray(arr[i])) {
-                const newIndex = this.#findIndex(arr[i], findData, result);
-                if (newIndex) {
-                    return newIndex;
-                }
-            } else if (arr[i] === findData) {
-                return result;
+    getValue(key) {
+        if (typeof key === 'number') {
+            return this.#array[key - 1].value;
+        } else if (Array.isArray(key)) {
+            const [rowKey, ...keys] = key;
+            const { value: row } = this.#array[rowKey - 1] || {};
+            if (keys.length && row) {
+                return get(row, `[${keys.map(x => x - 1).join('][')}]`);
+            } else {
+                return row;
             }
+        } else if (typeof key === 'string') {
+            // key = `{row key}_{index}`
+            const [rowKey, ...keys] = key.split(this.#keyDelimter);
+            if (keys.length) {
+                return get(this.#object[rowKey], `[${keys.map(x => x - 1).join('][')}]`);
+            }
+            return this.#object[rowKey];
         }
-        return false;
+        throw { message: `not found tableData ${key} id: ${this.#id}` };
     }
 
     getIndex(key) {
         if (Array.isArray(key)) {
             return key;
         } else if (typeof key === 'string') {
-            const oldData = this.#object[key];
-            return this.#findIndex(this.#array, oldData);
-        } else {
-            return [];
+            const [rowKey, ...keys] = key.split(this.#keyDelimter);
+            const rowIndex = this.#array.findIndex((x) => x.key === rowKey);
+            if (rowIndex >= 0) {
+                return [rowIndex, ...keys];
+            }
         }
+        return [];
     }
 
     #skipOperation = ['append', 'insert'];
 
     getOperation({ type, key, index, data, newKey } = {}) {
         if (this.#skipOperation.indexOf(type) === -1 && typeof index === 'number') {
-            const data = this.get(index);
+            const data = this.getRow(index);
             key = data.key;
         }
         let attach = {};
@@ -177,84 +210,56 @@ class dmetMatrix {
         }
     }
 
-    #append({ key, index, data } = {}) {
-        if (!key) {
-            key = generateId();
+    #append({ key = CommonUtils.generateId(), index = this.#array.length + 1, data = [0] } = {}) {
+        if (Array.isArray(data)) {
+            this.#object[key] = data;
+            this.#array.splice(index, 0, { key, value: data });
+        } else {
+            console.warn('data is not array', key, data);
         }
-        const newData = { key, value: data };
-        const x = Array.isArray(index) ? index[0] : index;
-        let subArr = this.get(x);
-        if (!subArr) {
-            subArr = this.#array[x - 1] = [];
-        }
-        if (Array.isArray(subArr)) {
-            this.#object[key] = newData;
-            subArr.push(newData);
-        }
-        return this.getOperation({ type: 'append', key, index: x, data });
+        return this.getOperation({ type: 'append', key, index, data });
     }
 
-    #insert({ key, index, data } = {}) {
-        if (!key) {
-            key = generateId();
+    #insert({ key = CommonUtils.generateId(), index, data = 0 } = {}) {
+        const value = toNumber(data);
+        let { value: row, x, y } = this.getRow(index);
+        if (row && y > -1) {
+            row.splice(y, 0, value);
+        } else {
+            this.#object[key] = [value];
+            this.#array.splice(x, 0, { key, value: this.#object[key] });
         }
-        const newData = { key, value: data };
-        let { array, lastIndex, parentIndex } = this.#findLastArray(index);
-        this.#object[key] = newData;
-        if (!array) {
-            const currentIndex = parentIndex.pop();
-            this.#array.splice(currentIndex - 1, 0, [newData]);
-            return this.getOperation({ type: 'insert', key, index, data });
-        }
-        array.splice(lastIndex, 0, newData);
-        return this.getOperation({ type: 'insert', key, index, data });
+        return this.getOperation({ type: 'insert', key, index, data: value });
     }
 
     #delete({ key, index }) {
         if (!key) {
             key = index;
         }
-        const oldData = this.get(key);
-        if (!oldData) {
+        let { value: row, key: objKey, x, y } = this.getRow(key);
+        if (!row || (y > -1 && !row[y])) {
             throw { message: 'not found data' };
         }
-        const indexArray = this.getIndex(key);
-        let { array, lastIndex, value, parentIndex } = this.#findLastArray(indexArray);
-        if (Array.isArray(value)) {
-            value.forEach(({ key }) => {
-                delete this.#object[key];
-            });
+        if (y > -1) {
+            delete row[y];
         } else {
-            delete this.#object[oldData.key];
+            delete this.#object[objKey];
+            this.#array.splice(x, 1);
         }
-
-        if (array) {
-            array.splice(lastIndex, 1);
-            if (this.#array.length && !array.length) {
-                const currentIndex = parentIndex.pop();
-                const parent = this.get(parentIndex) || this.#array;
-                parent.splice(currentIndex - 1, 1);
-            }
-        } else {
-            this.#array.splice(lastIndex, 1);
-        }
-
         return this.getOperation({ type: 'delete', key });
     }
 
-    #replace({ key, index, data, newKey = generateId() }) {
+    #replace({ key, index, data, newKey = CommonUtils.generateId() }) {
+        const value = toNumber(data);
         if (!key) {
             key = index;
         }
-        const item = this.get(key);
-        if (!item) {
-            throw { message: 'not found data' };
+        let { value: row, key: objKey, x, y } = this.getRow(key);
+        if (!row) {
+            throw { message: 'not found row' };
         }
-        delete this.#object[item.key];
-        item.key = newKey;
-        item.value = data;
-        this.#object[newKey] = item;
-        return this.getOperation({ type: 'replace', key, index, data, newKey });
+        row[y] = value;
+        return this.getOperation({ type: 'replace', key, index, data: value, newKey });
     }
 }
 
@@ -267,7 +272,7 @@ class dmetList {
     _id = undefined;
     __isUpdate = false;
     #id = '';
-    #key = generateId();
+    #key = CommonUtils.generateId();
     #object = {};
     #array = [];
     #info = {};
@@ -299,7 +304,7 @@ class dmetList {
 
     set #data(array) {
         this.#array = array.map((data) => {
-            const key = generateId();
+            const key = CommonUtils.generateId();
             const item = {
                 key,
                 data,
@@ -329,7 +334,7 @@ class dmetList {
                     this.#object[key] = data;
                     return data;
                 });
-            } else {                
+            } else {
                 this.#array = [];
                 this.#object = {};
             }
@@ -440,7 +445,7 @@ class dmetList {
 
     #append({ key, data } = {}) {
         if (!key) {
-            key = generateId();
+            key = CommonUtils.generateId();
         }
         const newData = {
             key,
@@ -453,7 +458,7 @@ class dmetList {
 
     #insert({ key, index, data } = {}) {
         if (!key) {
-            key = generateId();
+            key = CommonUtils.generateId();
         }
         const newData = {
             key,
@@ -480,7 +485,7 @@ class dmetList {
         } catch (e) {}
     }
 
-    #replace({ key, data, newKey = generateId() }) {
+    #replace({ key, data, newKey = CommonUtils.generateId() }) {
         try {
             const item = this.get(key);
             if (!item) {
@@ -503,7 +508,7 @@ class dmetVariable {
 
     _id = undefined;
     #id = '';
-    #key = generateId();
+    #key = CommonUtils.generateId();
     #info = {};
     #value = '';
     #variableType = 'variable';
@@ -602,7 +607,7 @@ class dmet {
     }
 
     #original = { list: {}, variable: {} };
-    #id = generateId();
+    #id = CommonUtils.generateId();
     #list = {};
     #variable = {};
     #matrix = {};
@@ -745,4 +750,4 @@ class dmet {
     }
 }
 
-export { dmetList, dmetVariable, dmet, dmetMatrix };
+export { dmetList, dmetVariable, dmet, dmetTable };

@@ -41,7 +41,7 @@ const Common = {
         const data = await response.json();
         return { data };
     }),
-    parseInt: (str) => {
+    toNumber: (str) => {
         if (typeof str === 'number') {
             return str;
         }

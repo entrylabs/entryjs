@@ -389,9 +389,10 @@ EntryStatic.getAllBlocks = function() {
                 'translate_title',
                 'get_translated_string',
                 'check_language',
+            ],
         },
         {
-            category: 'analyze',
+            category: 'analysis',
             blocks: [
                 'analizyDataAddButton',
                 'append_row_to_table',
@@ -403,7 +404,7 @@ EntryStatic.getAllBlocks = function() {
                 'calc_values_from_table',
                 'open_table_chart',
                 'close_table_chart',
-            ],
+            ]
         },
         {
             category: 'expansion',
