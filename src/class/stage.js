@@ -546,9 +546,9 @@ Entry.Stage.prototype.showInputField = function() {
     const THIS = this;
     const isWebGL = GEHelper.isWebGL;
 
-    this.inputSubmitButton = _createSubmitButton();
     if (!this.inputField) {
         this.inputField = _createInputField();
+        this.inputSubmitButton = _createSubmitButton();
     }
 
     this.inputField.value('');
