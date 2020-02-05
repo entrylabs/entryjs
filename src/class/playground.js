@@ -2,6 +2,7 @@
  * Playground is block construct area.
  * @fileoverview This manage playground.
  */
+'use strict';
 
 import { Backpack, ColorPicker, Dropdown, Sortable } from '@entrylabs/tool';
 import Toast from '../playground/toast';
