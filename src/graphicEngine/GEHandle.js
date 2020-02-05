@@ -188,11 +188,11 @@ export const GEHandle = function(canvas) {
             handle.dispatchEditEndEvent();
         });
         container.addChild(edge);
-        container.setChildIndex(edge, 2);
+        container.setChildIndex(edge, 1);
         this.edge = edge;
 
         //rotate knob
-        const rotateKnob = GEHelper.newWallSprite(`${Entry.mediaFilePath}stage/rotate.svg`);
+        const rotateKnob = GEHelper.newSpriteWithCallback(`${Entry.mediaFilePath}stage/rotate.svg`);
         rotateKnob.scaleX = 1.52;
         rotateKnob.scaleY = 1.52;
         rotateKnob.regX = 8;
