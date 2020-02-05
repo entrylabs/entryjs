@@ -610,7 +610,7 @@ class dmet {
     #id = CommonUtils.generateId();
     #list = {};
     #variable = {};
-    #matrix = {};
+    #table = {};
 
     get list() {
         return this.#list;
@@ -620,8 +620,8 @@ class dmet {
         return this.#variable;
     }
 
-    get matrix() {
-        return this.#matrix;
+    get table() {
+        return this.#table;
     }
 
     get id() {
@@ -647,7 +647,7 @@ class dmet {
         return {
             id: this.#id,
             list: this.list,
-            matrix: this.matrix,
+            table: this.table,
             variable: this.variable,
             isDmet: true,
         };
@@ -666,9 +666,9 @@ class dmet {
                 } else if (variableType === 'list') {
                     const result = new dmetList(variable);
                     this.#list[result.id] = result;
-                } else if (variableType === 'matrix') {
-                    const result = new dmetMatrix(variable);
-                    this.#matrix[result.id] = result;
+                } else if (variableType === 'table') {
+                    const result = new dmetTable(variable);
+                    this.#table[result.id] = result;
                 }
             });
         } else if (isPlainObject(variables) && variables.isDmet) {
@@ -678,8 +678,8 @@ class dmet {
             this.#variable = mapValues(variables.variable, (variable) => {
                 return new dmetVariable(variable);
             });
-            this.#matrix = mapValues(variables.matrix, (list) => {
-                return new dmetMatrix(list);
+            this.#table = mapValues(variables.table, (list) => {
+                return new dmetTable(list);
             });
             this.#id = variables.id;
         }
@@ -693,8 +693,8 @@ class dmet {
                 return this.#variable[id];
             case 'list':
                 return this.#list[id];
-            case 'matrix':
-                return this.#matrix[id];
+            case 'table':
+                return this.#table[id];
             case 'default':
                 return undefined;
         }
@@ -711,8 +711,8 @@ class dmet {
             this.#variable[id] = new dmetSlideVariable(object);
         } else if (variableType === 'list') {
             this.#list[id] = new dmetList(object);
-        } else if (variableType === 'matrix') {
-            this.#matrix[id] = new dmetMatrix(object);
+        } else if (variableType === 'table') {
+            this.#table[id] = new dmetTable(object);
         }
     }
 
@@ -741,8 +741,8 @@ class dmet {
                 return this.#variable[id].exec(operation);
             } else if (variableType === 'list') {
                 return this.#list[id].exec(operation);
-            } else if (variableType === 'matrix') {
-                return this.#matrix[id].exec(operation);
+            } else if (variableType === 'table') {
+                return this.#table[id].exec(operation);
             }
         } finally {
             this.notify();

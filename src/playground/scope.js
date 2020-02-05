@@ -83,16 +83,6 @@ class Scope {
         return this.values[this._getParamIndex(key, scope)];
     }
 
-    async getAsyncValue(key, scope) {
-        if (this.block) {
-            const fieldBlock = this.block.params[this._getParamIndex(key, scope)];
-            const newScope = new Entry.Scope(fieldBlock, this.executor);
-            return await Entry.block[fieldBlock.type].func.call(newScope, this.entity, newScope);
-        } else {
-            throw new Entry.Utils.AsyncError('no block');
-        }
-    }
-
     /**
      * 일반 getValue 값을 가져오기 전,
      * 현 Scope 상태에서의 executor.valueMap 을 세팅한다.
