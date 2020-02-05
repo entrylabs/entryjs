@@ -1,5 +1,4 @@
 import audioUtils from '../../util/audioUtils';
-import PromiseManager from '../../core/promiseManager';
 
 Entry.AI_UTILIZE_BLOCK.audio = {
     name: 'audio',
@@ -95,7 +94,7 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
                 }
                 try {
                     audioUtils.isRecording = true;
-                    Entry.container.ableSttValue();
+                    Entry.container.enableSttValue();
                     const result = await audioUtils.startRecord(60 * 1000);
                     Entry.dispatchEvent('audioRecordingDone');
                     Entry.container.setSttValue(result || 0);

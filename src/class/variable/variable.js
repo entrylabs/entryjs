@@ -279,16 +279,7 @@ class Variable {
      * @return {number}
      */
     getValue() {
-        if (!this.isCloud_) {
-            return this.value_;
-        } else {
-            const { value } =
-                this.cloudVariable.get({
-                    variableType: this.type,
-                    id: this.id_,
-                }) || {};
-            return value || this.value_;
-        }
+        return this.value_;
     }
 
     /**
@@ -304,31 +295,10 @@ class Variable {
      * @param {!string} variableValue
      */
     setValue(value) {
-        if (!this.isCloud_) {
-            this.value_ = value;
-            this._valueWidth = null;
-            this.updateView();
-            Entry.requestUpdateTwice = true;
-        } else {
-            return new Promise(async (resolve, reject) => {
-                try {
-                    await this.cloudVariable.set(
-                        {
-                            variableType: this.type,
-                            id: this.id_,
-                        },
-                        value
-                    );
-                    this.value_ = value;
-                    this._valueWidth = null;
-                    this.updateView();
-                    Entry.requestUpdateTwice = true;
-                    resolve();
-                } catch (e) {
-                    reject(e);
-                }
-            });
-        }
+        this.value_ = value;
+        this._valueWidth = null;
+        this.updateView();
+        Entry.requestUpdateTwice = true;
     }
 
     /**
@@ -449,7 +419,7 @@ class Variable {
         if (!this.isCloud_) {
             this.setValue(variableModel.value);
         }
-
+        
         this.setName(variableModel.name);
         this.setX(variableModel.x);
         this.setY(variableModel.y);
