@@ -1465,7 +1465,7 @@ Entry.EntityObject = class EntityObject {
             this._scaleAdaptor = null;
         }
 
-        if (this.stamps) {
+        if (this.stamps && this.stamps.length) {
             this.removeStamps();
         }
 

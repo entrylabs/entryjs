@@ -65,7 +65,7 @@ export default class AIUtilize {
             const { _schema = {} } = block || {};
             const { isFor, isNotFor = [] } = _schema;
             const [aiUtilizeKey] = isNotFor;
-            if (aiUtilizeKey && isFor && isFor.indexOf('category_aiUtilize') >= 0) {
+            if (aiUtilizeKey && isFor && isFor.indexOf('category_ai_utilize') >= 0) {
                 aiUtilizeList = _.union(aiUtilizeList, [aiUtilizeKey]);
             }
         });

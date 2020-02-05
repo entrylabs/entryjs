@@ -4,7 +4,7 @@ import PromiseManager from '../../core/promiseManager';
 Entry.AI_UTILIZE_BLOCK.audio = {
     name: 'audio',
     imageName: 'audio.svg',
-    sponserText: 'Sponsered by NAVER Clova',
+    sponserText: 'Powered by NAVER Clova',
     title: {
         ko: '오디오 감지',
         en: 'Audio Detection',
@@ -58,6 +58,7 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             class: 'audio',
             isNotFor: ['audio'],
             async func(sprite, script) {
+                audioUtils.incompatBrowserChecker();
                 return await audioUtils.checkUserMicAvailable();
             },
             syntax: {
@@ -78,24 +79,8 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
                     size: 11,
                 },
             ],
-            events: {
-                viewAdd: [
-                    function() {
-                        if (Entry.container) {
-                            Entry.container.showSttAnswer();
-                        }
-                    },
-                ],
-                viewDestroy: [
-                    function(block, notIncludeSelf) {
-                        if (Entry.container) {
-                            Entry.container.hideSttAnswer(block, notIncludeSelf);
-                        }
-                    },
-                ],
-            },
+            events: {},
             def: {
-                params: [3],
                 type: 'speech_to_text_convert',
             },
             paramsKeyMap: {
@@ -104,20 +89,18 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             class: 'audio',
             isNotFor: ['audio'],
             async func(sprite, script) {
+                await audioUtils.initUserMedia();
                 if (audioUtils.isRecording) {
                     throw new Entry.Utils.AsyncError();
                 }
                 try {
                     audioUtils.isRecording = true;
-                    if (!audioUtils.isAudioInitComplete) {
-                        await audioUtils.initUserMedia();
-                    }
-                    Entry.container.ableSttValue();
-                    const result = await audioUtils.startRecord(10 * 1000);
+                    Entry.container.enableSttValue();
+                    const result = await audioUtils.startRecord(60 * 1000);
                     Entry.dispatchEvent('audioRecordingDone');
-                    Entry.container.setSttValue(result);
+                    Entry.container.setSttValue(result || 0);
                 } catch (e) {
-                    Entry.container.setSttValue('');
+                    Entry.container.setSttValue(0);
                     throw e;
                 }
             },
@@ -126,30 +109,15 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
                 py: [],
             },
         },
+
         speech_to_text_get_value: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [],
-            events: {
-                viewAdd: [
-                    function() {
-                        if (Entry.container) {
-                            Entry.container.showSttAnswer();
-                        }
-                    },
-                ],
-                viewDestroy: [
-                    function(block, notIncludeSelf) {
-                        if (Entry.container) {
-                            Entry.container.hideSttAnswer(block, notIncludeSelf);
-                        }
-                    },
-                ],
-            },
+            events: {},
             def: {
-                params: [3],
                 type: 'speech_to_text_get_value',
             },
             paramsKeyMap: {
@@ -157,7 +125,8 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             },
             class: 'audio',
             isNotFor: ['audio'],
-            func(sprite, script) {
+            async func(sprite, script) {
+                await audioUtils.initUserMedia();
                 return Entry.container.getSttValue();
             },
             syntax: {
@@ -181,18 +150,9 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             },
             class: 'audio',
             isNotFor: ['audio'],
-            func(sprite, script) {
-                return new PromiseManager().Promise(async (resolve) => {
-                    try {
-                        if (!audioUtils.isAudioInitComplete) {
-                            await audioUtils.initUserMedia();
-                        }
-                        resolve(audioUtils.currentVolume);
-                    } catch (e) {
-                        console.log(e);
-                        resolve('error');
-                    }
-                });
+            async func(sprite, script) {
+                await audioUtils.initUserMedia();
+                return audioUtils.currentVolume;
             },
             syntax: {
                 js: [],

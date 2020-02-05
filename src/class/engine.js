@@ -5,7 +5,6 @@
 
 import { GEHelper } from '../graphicEngine/GEHelper';
 import audioUtils from '../util/audioUtils';
-import ExecuteEntity from './ExecuteEntity';
 
 /**
  * Class for a engine.
@@ -14,7 +13,7 @@ import ExecuteEntity from './ExecuteEntity';
  */
 Entry.Engine = class Engine {
     constructor() {
-        this.executeEntity = new ExecuteEntity();
+        this.execPromises = [];
         this.state = 'stop';
         this.popup = null;
         this.isUpdating = true;
@@ -353,7 +352,7 @@ Entry.Engine = class Engine {
             );
             this.audioShadePanel_.appendChild(audioShadeMainCircle);
             const micImage = Entry.createElement('img', 'audioShadeImg').addClass('audioShadeImg');
-            micImage.src = 'lib/entry-js/images/ic-audio-sensing-mic.svg';
+            micImage.src = '/lib/entry-js/images/ic-audio-sensing-mic.svg';
             audioShadeMainCircle.appendChild(micImage);
 
             const audioShadeText = Entry.createElement('div', 'audioShadeText').addClass(
@@ -361,8 +360,12 @@ Entry.Engine = class Engine {
             );
             audioShadeText.innerHTML = Lang.Msgs.ai_utilize_audio_listening;
             this.audioShadePanel_.appendChild(audioShadeText);
-
-            this.view_.insertBefore(this.audioShadePanel_, Entry.stage.canvas.canvas);
+            this.minimizedView_ = document.querySelector('#entryCanvasWrapper');
+            if (this.view_.classList[0] === 'entryEngine') {
+                this.minimizedView_.insertBefore(this.audioShadePanel_, Entry.stage.canvas.canvas);
+            } else {
+                this.view_.insertBefore(this.audioShadePanel_, Entry.stage.canvas.canvas);
+            }
         }
     }
 
@@ -431,8 +434,12 @@ Entry.Engine = class Engine {
             // );
             // audioShadeText.innerHTML = '진행중이에요';
             // this.audioProgressPanel_.appendChild(audioShadeText);
-
-            this.view_.insertBefore(this.audioProgressPanel_, Entry.stage.canvas.canvas);
+            this.minimizedView_ = document.querySelector('#entryCanvasWrapper');
+            if (this.view_.classList[0] === 'entryEngine') {
+                this.minimizedView_.insertBefore(this.audioShadePanel_, Entry.stage.canvas.canvas);
+            } else {
+                this.view_.insertBefore(this.audioProgressPanel_, Entry.stage.canvas.canvas);
+            }
         }
     }
 
@@ -678,7 +685,11 @@ Entry.Engine = class Engine {
     /**
      * toggle this engine state stop
      */
-    toggleStop() {
+    async toggleStop() {
+        Entry.dispatchEvent('beforeStop');
+        try {
+            await Promise.all(this.execPromises);
+        } catch (e) {}
         const container = Entry.container;
         const variableContainer = Entry.variableContainer;
 
@@ -687,7 +698,6 @@ Entry.Engine = class Engine {
         Entry.addActivity('stop');
 
         container.mapEntity((entity) => {
-            this.executeEntity.stop(entity);
             entity.loadSnapshot();
             entity.object.filters = [];
             entity.resetFilter();
@@ -879,7 +889,7 @@ Entry.Engine = class Engine {
      * @param {string} eventName
      */
     raiseEvent = (entity, eventName) => {
-        entity.parent.script.raiseEvent(eventName, this.executeEntity.get(entity));
+        entity.parent.script.raiseEvent(eventName, entity);
     };
 
     /**
@@ -941,7 +951,7 @@ Entry.Engine = class Engine {
         }
 
         if (Entry.engine.isState('stop')) {
-            if (isWorkspace && (keyCode >= 37 && keyCode <= 40)) {
+            if (isWorkspace && keyCode >= 37 && keyCode <= 40) {
                 Entry.stage.moveSprite(e);
             }
         }
@@ -1189,6 +1199,25 @@ Entry.Engine = class Engine {
 
     destroy() {
         // 우선 interface 만 정의함.
+    }
+
+    trimPromiseExecutor() {
+        return this.execPromises.filter((promise) => {
+            return promise instanceof Promise;
+        });
+    }
+
+    addPromiseExecutor(promises) {
+        this.execPromises = this.trimPromiseExecutor();
+        const index = this.execPromises.length;
+        promises.forEach((promise, i) => {
+            const execPromise = (async function() {
+                const result = await promise;
+                const j = Entry.engine.execPromises.indexOf(execPromise);
+                Entry.engine.execPromises[j] = result;
+            })();
+            this.execPromises[index + i] = execPromise;
+        });
     }
 };
 
