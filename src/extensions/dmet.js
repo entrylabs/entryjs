@@ -210,7 +210,11 @@ class dmetTable {
         }
     }
 
-    #append({ key = CommonUtils.generateId(), index = this.#array.length + 1, data = [0] } = {}) {
+    #getDefaultData() {
+        return new Array(this.fields.length).fill(0);
+    }
+
+    #append({ key = CommonUtils.generateId(), index = this.#array.length + 1, data = this.#getDefaultData() } = {}) {
         if (Array.isArray(data)) {
             this.#object[key] = data;
             this.#array.splice(index, 0, { key, value: data });
@@ -220,13 +224,13 @@ class dmetTable {
         return this.getOperation({ type: 'append', key, index, data });
     }
 
-    #insert({ key = CommonUtils.generateId(), index, data = 0 } = {}) {
-        const value = toNumber(data);
+    #insert({ key = CommonUtils.generateId(), index, data = this.#getDefaultData() } = {}) {
+        let value = toNumber(data);
         let { value: row, x, y } = this.getRow(index);
         if (row && y > -1) {
             row.splice(y, 0, value);
         } else {
-            this.#object[key] = [value];
+            this.#object[key] = Array.isArray(data) ? data : [value];
             this.#array.splice(x, 0, { key, value: this.#object[key] });
         }
         return this.getOperation({ type: 'insert', key, index, data: value });
