@@ -77,8 +77,9 @@ class dmetList {
                     this.#object[key] = data;
                     return data;
                 });
-            } else {
-                throw 'data is wrong.';
+            } else {                
+                this.#array = [];
+                this.#object = {};
             }
             this._id = _id;
             this.#id = id;
@@ -212,29 +213,33 @@ class dmetList {
     }
 
     #delete({ key, index }) {
-        if (!key) {
-            key = index;
-        }
-        const oldData = this.get(key);
-        if (!oldData) {
-            throw { message : 'not found data' };
-        }
-        const oldIndex = this.getIndex(key);
-        delete this.#object[oldData.key];
-        this.#array.splice(oldIndex, 1);
-        return this.getOperation({ type: 'delete', key });
+        try {
+            if (!key) {
+                key = index;
+            }
+            const oldData = this.get(key);
+            if (!oldData) {
+                return;
+            }
+            const oldIndex = this.getIndex(key);
+            delete this.#object[oldData.key];
+            this.#array.splice(oldIndex, 1);
+            return this.getOperation({ type: 'delete', key });
+        } catch (e) {}
     }
 
     #replace({ key, data, newKey = generateId() }) {
-        const item = this.get(key);
-        if (!item) {
-            throw { message : 'not found data' };
-        }
-        delete this.#object[item.key];
-        item.key = newKey;
-        item.data = data;
-        this.#object[newKey] = item;
-        return this.getOperation({ type: 'replace', key, data, newKey });
+        try {
+            const item = this.get(key);
+            if (!item) {
+                throw { message: 'not found data' };
+            }
+            delete this.#object[item.key];
+            item.key = newKey;
+            item.data = data;
+            this.#object[newKey] = item;
+            return this.getOperation({ type: 'replace', key, data, newKey });
+        } catch (e) {}
     }
 }
 

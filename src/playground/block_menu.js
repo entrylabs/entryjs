@@ -10,6 +10,7 @@ const VARIABLE = 'variable';
 const HW = 'arduino';
 const practicalCourseCategoryList = ['hw_motor', 'hw_melody', 'hw_sensor', 'hw_led', 'hw_robot'];
 const splitterHPadding = EntryStatic.splitterHPadding || 20;
+const BETA_LIST = ['ai_utilize', 'analysis'];
 
 class BlockMenu {
     constructor(dom, align, categoryData, scroll, readOnly) {
@@ -1075,7 +1076,7 @@ class BlockMenu {
     }
 
     _generateCategoryElement(name, visible) {
-        return (this._categoryElems[name] = Entry.Dom('li', {
+        this._categoryElems[name] = Entry.Dom('li', {
             id: `entryCategory${name}`,
             classes: [
                 'entryCategoryElementWorkspace',
@@ -1089,7 +1090,17 @@ class BlockMenu {
                     this.align();
                 });
             })
-            .text(Lang.Blocks[name.toUpperCase()]));
+            .text(Lang.Blocks[name.toUpperCase()]);
+        if (BETA_LIST.includes(name)) {
+            this._categoryElems[name][0].appendChild(
+                Entry.Dom('div', {
+                    id: `entryCategory${name}BetaTag`,
+                    classes: ['entryCategoryBetaTag'],
+                })[0]
+            );
+        }
+
+        return this._categoryElems[name];
     }
 
     updateOffset() {

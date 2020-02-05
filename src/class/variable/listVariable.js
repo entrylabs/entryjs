@@ -154,153 +154,38 @@ class ListVariable extends Variable {
     }
 
     getArray() {
-        if (!this.isCloud_) {
-            return this.array_;
-        } else {
-            const { array } =
-                this.cloudVariable.get({
-                    variableType: this.type,
-                    id: this.id_,
-                }) || {};
-            return array || this.array_;
-        }
+        return this.array_;
     }
 
     setArray(array) {
-        if (!this.isCloud_) {
-            this.array_ = array;
-            this.updateView();
-            Entry.requestUpdateTwice = true;
-        } else {
-            return new Promise(async (resolve, reject) => {
-                try {
-                    const target = {
-                        variableType: this.type,
-                        id: this.id_,
-                    };
-                    await this.cloudVariable.setArray(target, array);
-                    this.updateView();
-                    resolve();
-                } catch (e) {
-                    reject(e);
-                }
-            });
-        }
+        this.array_ = array;
+        this.updateView();
+        Entry.requestUpdateTwice = true;
     }
 
     appendValue(value) {
-        if (!this.isCloud_) {
-            if (!this.array_) {
-                this.array_ = [];
-            }
-            this.array_.push({
-                data: value,
-            });
-            this.updateView();
-        } else {
-            return new Promise(async (resolve, reject) => {
-                try {
-                    const target = {
-                        variableType: this.type,
-                        id: this.id_,
-                    };
-                    await this.cloudVariable.append(target, value);
-                    const list = this.cloudVariable.get(target);
-                    if (list) {
-                        this.array_ = list.array;
-                    } else {
-                        this.array_.push({
-                            data: value,
-                        });
-                    }
-                    this.updateView();
-                    resolve();
-                } catch (e) {
-                    reject(e);
-                }
-            });
+        if (!this.array_) {
+            this.array_ = [];
         }
+        this.array_.push({
+            data: value,
+        });
+        this.updateView();
     }
 
     deleteValue(index) {
-        if (!this.isCloud_) {
-            this.array_.splice(index - 1, 1);
-            this.updateView();
-        } else {
-            return new Promise(async (resolve, reject) => {
-                try {
-                    const target = {
-                        variableType: this.type,
-                        id: this.id_,
-                    };
-                    await this.cloudVariable.delete(target, index);
-                    const list = this.cloudVariable.get(target);
-                    if (list) {
-                        this.array_ = list.array;
-                    } else {
-                        this.array_.splice(index - 1, 1);
-                    }
-                    this.updateView();
-                    resolve();
-                } catch (e) {
-                    reject(e);
-                }
-            });
-        }
+        this.array_.splice(index - 1, 1);
+        this.updateView();
     }
 
     insertValue(index, data) {
-        if (!this.isCloud_) {
-            this.array_.splice(index - 1, 0, { data });
-            this.updateView();
-        } else {
-            return new Promise(async (resolve, reject) => {
-                try {
-                    const target = {
-                        variableType: this.type,
-                        id: this.id_,
-                    };
-                    await this.cloudVariable.insert(target, index - 1, data);
-                    const list = this.cloudVariable.get(target);
-                    if (list) {
-                        this.array_ = list.array;
-                    } else {
-                        this.array_.splice(index - 1, 0, { data });
-                    }
-                    this.updateView();
-                    resolve();
-                } catch (e) {
-                    reject(e);
-                }
-            });
-        }
+        this.array_.splice(index - 1, 0, { data });
+        this.updateView();
     }
 
     replaceValue(index, data) {
-        if (!this.isCloud_) {
-            this.array_[index - 1].data = data;
-            this.updateView();
-        } else {
-            return new Promise(async (resolve, reject) => {
-                try {
-                    const target = {
-                        variableType: this.type,
-                        id: this.id_,
-                    };
-                    await this.cloudVariable.replace(target, index - 1, data);
-                    const list = this.cloudVariable.get(target);
-                    if (list) {
-                        this.array_ = list.array;
-                    } else {
-                        this.array_[index - 1].data = data;
-                    }
-                    this.updateView();
-                    resolve();
-                } catch (e) {
-                    reject(e);
-                }
-            });
-        }
+        this.array_[index - 1].data = data;
+        this.updateView();
     }
 
     updateView() {
