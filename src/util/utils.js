@@ -267,7 +267,7 @@ Entry.cancelObjectEdit = function({ target, type }) {
     const objectView = object.view_;
     const isCurrent = $(objectView).find(target).length !== 0;
     const tagName = target.tagName.toUpperCase();
-    if (!object.isEditing || ((tagName === 'INPUT' && isCurrent) || type === 'touchstart')) {
+    if (!object.isEditing || (tagName === 'INPUT' && isCurrent) || type === 'touchstart') {
         return;
     }
     object.editObjectValues(false);

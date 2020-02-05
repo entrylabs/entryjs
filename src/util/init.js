@@ -262,24 +262,20 @@ Entry.initSoundQueue_ = function() {
  * @param {*} option for create dom by type.
  */
 Entry.createDom = function(container, option) {
-    const that = this;
-
     const textCanvasContainer = Entry.createElement('div', 'textCanvasContainer');
     textCanvasContainer.style.display = 'none';
     container.appendChild(textCanvasContainer);
 
     if (!option || option === 'workspace') {
-        Entry.documentMousedown.attach(that, that.cancelObjectEdit);
+        Entry.documentMousedown.attach(this, this.cancelObjectEdit);
 
         const sceneView = Entry.createElement('div');
         container.appendChild(sceneView);
-        /** @type {!Element} */
         this.sceneView = sceneView;
         this.scene.generateView(this.sceneView, option);
 
         const stateManagerView = Entry.createElement('div');
         this.sceneView.appendChild(stateManagerView);
-        /** @type {!Element} */
         this.stateManagerView = stateManagerView;
         this.stateManager.generateView(this.stateManagerView, option);
 
@@ -289,7 +285,6 @@ Entry.createDom = function(container, option) {
         const engineView = Entry.createElement('div');
         engineContainer.appendChild(engineView);
         this.engineContainer = engineContainer;
-        /** @type {!Element} */
         this.engineView = engineView;
         this.engine.generateView(this.engineView, option);
 
@@ -316,17 +311,14 @@ Entry.createDom = function(container, option) {
             }
         });
 
-        /** @type {!Element} */
         this.canvas_ = canvas;
         this.extension = new Extension();
         this.stage.initStage(this.canvas_);
 
         const containerView = Entry.createElement('div');
-        //container.appendChild(containerView);
         this.propertyPanel.generateView(engineContainer, option);
-        /** @type {!Element} */
         this.containerView = containerView;
-        this.container.generateView(this.containerView, option);
+        this.container.generateView(this.containerView);
         this.propertyPanel.addMode('object', this.container);
 
         this.helper.generateView(this.containerView, option);
@@ -374,13 +366,11 @@ Entry.createDom = function(container, option) {
 
         const containerView = Entry.createElement('div');
         container.appendChild(containerView);
-        /** @type {!Element} */
         this.containerView = containerView;
         this.container.generateView(this.containerView);
 
         const playgroundView = Entry.createElement('div');
         container.appendChild(playgroundView);
-        /** @type {!Element} */
         this.playgroundView = playgroundView;
         this.playground.generateView(this.playgroundView, option);
     }

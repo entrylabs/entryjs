@@ -63,7 +63,6 @@ Entry.Container = class Container {
     /**
      * Control bar view generator.
      * @param {!Element} containerView containerView from Entry.
-     * @param {?string} option for choose type of view.
      */
     generateView(containerView) {
         this._view = containerView;
