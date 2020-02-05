@@ -4,8 +4,8 @@
 'use strict';
 
 import SimpleBar from 'simplebar';
-import fetch from 'isomorphic-fetch';
 import xssFilters from 'xss-filters';
+import CloudVariable from '../extensions/CloudVariable';
 
 /**
  * Block variable constructor
@@ -14,6 +14,7 @@ import xssFilters from 'xss-filters';
  */
 Entry.VariableContainer = class VariableContainer {
     constructor() {
+        this.cloudVariable = CloudVariable.getInstance();
         this.variables_ = [];
         this.messages_ = [];
         this.lists_ = [];
@@ -784,6 +785,9 @@ Entry.VariableContainer = class VariableContainer {
                 case 'answer':
                     this.generateAnswer(variable);
                     break;
+                case 'stt':
+                    this.generateStt(variable);
+                    break;
             }
         });
 
@@ -792,6 +796,9 @@ Entry.VariableContainer = class VariableContainer {
         }
         if (_.isEmpty(Entry.container.inputValue)) {
             this.generateAnswer();
+        }
+        if (_.isEmpty(Entry.container.sttValue)) {
+            this.generateStt();
         }
 
         Entry.playground.reloadPlayground();
@@ -834,6 +841,9 @@ Entry.VariableContainer = class VariableContainer {
         }
         if (Entry.isEmpty(Entry.container.inputValue)) {
             Entry.variableContainer.generateAnswer();
+        }
+        if (Entry.isEmpty(Entry.container.sttValue)) {
+            Entry.variableContainer.generateStt();
         }
         Entry.playground.reloadPlayground();
     }
@@ -2275,6 +2285,22 @@ Entry.VariableContainer = class VariableContainer {
         Entry.container.inputValue = answer;
         Entry.container.inputValue.setName(Lang.Blocks.VARIABLE_get_canvas_input_value);
     }
+    generateStt(answer) {
+        answer =
+            answer ||
+            Entry.Variable.create({
+                id: Entry.generateHash(),
+                name: 'stt',
+                value: 0,
+                variableType: 'stt',
+                visible: false,
+                x: 150,
+                y: -100,
+            });
+        answer.generateView();
+        Entry.container.sttValue = answer;
+        Entry.container.sttValue.setName('STT');
+    }
 
     generateVariableSettingView(variable) {
         const that = this;
@@ -2322,6 +2348,10 @@ Entry.VariableContainer = class VariableContainer {
         attrInput.onfocus = _setFocused;
         attrInput.onblur = _setBlurredTimer(function() {
             const v = that.selected;
+            if (!v) {
+                console.error('error: not selected');
+                return;
+            }
             Entry.do('variableSetDefaultValue', v.id_, this.value);
         });
         element.initValueInput = attrInput;
@@ -2479,8 +2509,8 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('btn_list')
             .bindOnClick((e) => {
                 e.stopPropagation();
-                const { array_, name_ } = that.selected;
-
+                const { name_ } = that.selected;
+                const array_ = that.selected.getArray();
                 if (array_.length === 0) {
                     entrylms.alert(Lang.Menus.nothing_to_export);
                 } else {
@@ -2534,12 +2564,12 @@ Entry.VariableContainer = class VariableContainer {
         let limitValue = 5000;
         let maxlength = 4;
 
-        if (that.selected.array_ && that.selected.array_.length > 0) {
-            const currentLeng = that.selected.array_.length.toString().length;
+        const array_ = that.selected.getArray();
+        if (array_ && array_.length > 0) {
+            const currentLeng = array_.length.toString().length;
             // 리스트 카운트가 5000 일떄만 설정
             maxlength = currentLeng > maxlength ? currentLeng : maxlength;
-            limitValue =
-                that.selected.array_.length > limitValue ? that.selected.array_.length : limitValue;
+            limitValue = array_.length > limitValue ? array_.length : limitValue;
         }
 
         const buttonPlus = createElement('a')
@@ -2548,7 +2578,9 @@ Entry.VariableContainer = class VariableContainer {
                 const {
                     selected: { id_ },
                 } = that;
-                const selectedLength = Entry.variableContainer.selected.array_.length;
+
+                const array_ = Entry.variableContainer.selected.getArray();
+                const selectedLength = array_.length;
 
                 if (selectedLength >= limitValue) {
                     Entry.do('listChangeLength', id_, '');
@@ -2568,7 +2600,8 @@ Entry.VariableContainer = class VariableContainer {
         countInput.onblur = function() {
             const v = that.selected;
             let value = this.value;
-            value = Entry.Utils.isNumber(value) ? value : v.array_.length;
+            const array_ = v.getArray();
+            value = Entry.Utils.isNumber(value) ? value : array_.length;
 
             if (value >= limitValue) {
                 value = limitValue;
@@ -2623,7 +2656,7 @@ Entry.VariableContainer = class VariableContainer {
         }
         list = list || this.selected;
         const { infinityScroll, listValues, lengthInput, simpleBar, scrollBox } = view;
-        const arr = list.array_ || [];
+        const arr = list.getArray() || [];
         lengthInput.value = arr.length;
         if (arr.length > 4) {
             scrollBox.addClass('on');
@@ -2656,7 +2689,7 @@ Entry.VariableContainer = class VariableContainer {
                     const { target } = e;
                     const index = target.getAttribute('data-index');
                     data[index] = this.createListValueElement(index, target.value, startIndex);
-                    list.array_[index] = { data: target.value };
+                    list.getArray()[index] = { data: target.value };
                     list.updateView();
                 })
             );
@@ -2674,11 +2707,11 @@ Entry.VariableContainer = class VariableContainer {
 
     setListLength(list, value) {
         value = Number(value);
-        const arr = this.selected.array_;
+        const arr = this.selected.getArray();
         const times = value - arr.length;
         if (times && Entry.Utils.isNumber(value)) {
             if (times > 0) {
-                _.times(times, () => arr.push({ data: 0 }));
+                _.times(times, () => this.selected.appendValue(0));
             } else {
                 arr.length = value;
             }
@@ -2730,54 +2763,6 @@ Entry.VariableContainer = class VariableContainer {
             if (v.object_ == objectId) {
                 this.removeVariable(v);
             }
-        });
-    }
-
-    updateCloudVariables() {
-        const projectId = Entry.projectId;
-        if (!Entry.cloudSavable || !projectId) {
-            return;
-        }
-
-        const _filterFunc = _.partial(_.result, _, 'isCloud_');
-
-        const { variables_, lists_ } = Entry.variableContainer;
-
-        const variables = variables_.reduce((acc, v) => {
-            if (_filterFunc(v)) {
-                return [...acc, v.toJSON()];
-            }
-            return acc;
-        }, []);
-
-        const lists = lists_.reduce((acc, v) => {
-            if (_filterFunc(v)) {
-                return [...acc, v.toJSON()];
-            }
-            return acc;
-        }, []);
-
-        //no variable or list to save
-        if (!variables.length && !lists.length) {
-            return;
-        }
-
-        let csrfToken = '';
-        try {
-            csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        } catch (e) {}
-
-        fetch(`/api/project/variable/${projectId}`, {
-            method: 'PUT',
-            headers: {
-                'csrf-token': csrfToken,
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                variables,
-                lists,
-            }),
         });
     }
 

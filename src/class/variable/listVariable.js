@@ -153,6 +153,41 @@ class ListVariable extends Variable {
         Entry.stage.loadVariable(this);
     }
 
+    getArray() {
+        return this.array_;
+    }
+
+    setArray(array) {
+        this.array_ = array;
+        this.updateView();
+        Entry.requestUpdateTwice = true;
+    }
+
+    appendValue(value) {
+        if (!this.array_) {
+            this.array_ = [];
+        }
+        this.array_.push({
+            data: value,
+        });
+        this.updateView();
+    }
+
+    deleteValue(index) {
+        this.array_.splice(index - 1, 1);
+        this.updateView();
+    }
+
+    insertValue(index, data) {
+        this.array_.splice(index - 1, 0, { data });
+        this.updateView();
+    }
+
+    replaceValue(index, data) {
+        this.array_[index - 1].data = data;
+        this.updateView();
+    }
+
     updateView() {
         if (!this.view_) {
             return;
@@ -162,7 +197,7 @@ class ListVariable extends Variable {
             this._adjustSingleViewPosition();
             this.resizeHandle_.x = this.width_ - 10;
             this.resizeHandle_.y = this.height_ + 16 - 10;
-            const arr = this.array_;
+            const arr = this.getArray();
 
             let name = this.getName();
             if (this.object_) {
@@ -341,7 +376,7 @@ class ListVariable extends Variable {
         const json = super.toJSON();
         json.width = this.getWidth();
         json.height = this.getHeight();
-        json.array = JSON.parse(JSON.stringify(this.array_));
+        json.array = JSON.parse(JSON.stringify(this.getArray()));
 
         return json;
     }

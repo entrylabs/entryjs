@@ -1,6 +1,6 @@
 'use strict';
 
-import { get, pick, isMatch } from 'lodash';
+import { get, isMatch, pick } from 'lodash';
 
 function scriptCheck(script) {
     if (script.length !== 1 || script[0].length !== 2) {
@@ -59,6 +59,7 @@ Entry.isDefaultProject = function(project) {
             'objects.0.sprite.pictures.0.id',
             'objects.0.sprite.pictures.1.id',
             'expansionBlocks',
+            'aiUtilizeBlocks',
             'speed',
         ]);
         return isMatch(Entry.getStartProject(), pickData);
@@ -182,6 +183,7 @@ Entry.getStartProject = function(mediaFilePath) {
             },
         ],
         expansionBlocks: [],
+        aiUtilizeBlocks: [],
         speed: 60,
     };
 };

@@ -26,7 +26,6 @@ class Executor {
         }
 
         const executedBlocks = [];
-        const promises = [];
         if (isFromOrigin) {
             Entry.callStackLength = 0;
         }
@@ -45,16 +44,7 @@ class Executor {
                     this.scope.key = Entry.generateHash();
                 }
             } catch (e) {
-                if (e.name === 'AsyncError') {
-                    returnVal = Entry.STATIC.BREAK;
-                } else if (e.name === 'IncompatibleError') {
-                    Entry.Utils.stopProjectWithToast(this.scope, 'IncompatibleError', e);
-                } else if (this.isFuncExecutor) {
-                    //function executor
-                    throw e;
-                } else {
-                    Entry.Utils.stopProjectWithToast(this.scope, undefined, e);
-                }
+                returnVal = this.checkExecutorError(e);
             }
 
             //executor can be ended after block function call
@@ -63,72 +53,24 @@ class Executor {
             }
 
             if (returnVal instanceof Promise) {
-                promises.push(returnVal);
                 this.paused = true;
                 returnVal
-                    .then((returnVal) => {
-                        this.valueMap = {};
-                        this.valueState = {};
+                    .then((result) => {
+                        this.checkExecutorResult(result);
                         this.paused = false;
-                        if (returnVal === Entry.STATIC.CONTINUE) {
-                            return;
-                        }
-                        if (this.scope.block && Entry.engine.isState('run')) {
-                            this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
-                        }
-                        if (this.scope.block === null && this._callStack.length) {
-                            const oldScope = this.scope;
-                            this.scope = this._callStack.pop();
-                            if (this.scope.isLooped !== oldScope.isLooped) {
-                                this.isLooped = true;
-                            }
-                        }
                     })
                     .catch((e) => {
                         this.paused = false;
-                        if (e.name === 'AsyncError') {
-                            returnVal = Entry.STATIC.BREAK;
-                        } else if (e.name === 'IncompatibleError') {
-                            Entry.Utils.stopProjectWithToast(this.scope, 'IncompatibleError', e);
-                        } else if (this.isFuncExecutor) {
-                            throw e;
-                        } else {
-                            Entry.Utils.stopProjectWithToast(this.scope, undefined, e);
-                        }
+                        this.checkExecutorError(e);
                     });
                 break;
-            } else if (
-                returnVal === undefined ||
-                returnVal === null ||
-                returnVal === Entry.STATIC.PASS
-            ) {
-                this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
-                this.valueMap = {};
-                this.valueState = {};
-                if (this.scope.block === null) {
-                    if (this._callStack.length) {
-                        const oldScope = this.scope;
-                        this.scope = this._callStack.pop();
-                        if (this.scope.isLooped !== oldScope.isLooped) {
-                            this.isLooped = true;
-                            break;
-                        }
-                    } else {
-                        break;
-                    }
-                }
-            } else if (returnVal === Entry.STATIC.CONTINUE) {
-                this.valueMap = {};
-                this.valueState = {};
-            } else if (returnVal === this.scope) {
-                this.valueMap = {};
-                this.valueState = {};
-                break;
-            } else if (returnVal === Entry.STATIC.BREAK) {
+            }
+            const isBreak = this.checkExecutorResult(returnVal);
+            if (isBreak) {
                 break;
             }
         }
-        return { promises, blocks: executedBlocks };
+        return executedBlocks;
     }
 
     checkExecutorError(error) {

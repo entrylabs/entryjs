@@ -54,7 +54,7 @@
         overflow: hidden;
         overflow-y: scroll;
         font-weight: bold;
-        &::-webkit-scrollbar { 
+        &::-webkit-scrollbar {
             display: none;  // Safari and Chrome
         }
 
@@ -65,7 +65,7 @@
 }
 .entryCategoryListWorkspace:before {
   position: absolute;
-  left: 0; 
+  left: 0;
   right: 0;
   top: 0;
   bottom: 0;
@@ -142,6 +142,15 @@
     line-height: 14px;
     background-size: 32px auto;
     background-position: 50% 4px;
+    position:relative;
+}
+.entryCategoryBetaTag{
+    .backgroundImage("beta_tag.svg");
+    position:absolute;
+    bottom:18px;
+    right:3px;
+    width:26px;
+    height:14px;
 }
 
 .entryCategoryElementPhone {
@@ -360,6 +369,18 @@
     color: #fff;
 }
 
+#entryCategoryai_utilize {
+    .backgroundImage("ai_utilize.svg");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategoryai_utilize {
+    .backgroundImage("ai_utilize_on.svg");
+    background-color: #8222ff;
+    border-color: #670bdd;
+    color: #fff;
+}
+
 #entryCategoryscene {
     .backgroundImage("scene.png");
     background-repeat: no-repeat;
@@ -527,5 +548,3 @@
     border-left: 0;
     .backgroundImage("entry_bg_1.png");
 }
-
-
