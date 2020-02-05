@@ -21,61 +21,80 @@ class VideoUtils {
 
     reset() {
         this.turnOffWebcam();
+        this.isInitialized = false;
+        this.video = null;
         this.canvasVideo = null;
         this.flipStatus = {
             horizontal: false,
             vertical: false,
         };
+        this.isMobileNetInit = false;
+        this.mobileNet = null;
+        this.poses = null;
     }
 
     async initialize() {
         if (this.isInitialized) {
             return;
         }
+        this.isInitialized = true;
         Entry.addEventListener('dispatchEventDidToggleStop', this.reset.bind(this));
         navigator.getUserMedia =
             navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
         if (navigator.getUserMedia) {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                audio: false,
-                video: {
-                    facingMode: 'user',
-                    width: VIDEO_WIDTH,
-                    height: VIDEO_HEIGHT,
-                },
-            });
-            this.video = document.createElement('video');
-            this.video.srcObject = stream;
-            this.video.width = 480;
-            this.video.height = 270;
-            this.video.onloadedmetadata = async (e) => {
-                const mobilenet = await posenet.load({
-                    architecture: 'MobileNetV1',
-                    outputStride: 16,
-                    inputResolution: { width: VIDEO_WIDTH, height: VIDEO_HEIGHT },
-                    multiplier: 1,
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    audio: false,
+                    video: {
+                        facingMode: 'user',
+                        width: VIDEO_WIDTH,
+                        height: VIDEO_HEIGHT,
+                    },
                 });
-                this.mobileNet = mobilenet;
-                this.isMobileNetInit = true;
-                this.video.play();
-                console.log('done initializing');
-                this.getPose();
-            };
+                this.video = document.createElement('video');
+                this.video.srcObject = stream;
+                this.video.width = 480;
+                this.video.height = 270;
+
+                this.video.onloadedmetadata = async (e) => {
+                    if (this.isMobileNetInit) {
+                        return;
+                    }
+
+                    this.mobileNet = await posenet.load({
+                        architecture: 'MobileNetV1',
+                        outputStride: 16,
+                        inputResolution: { width: VIDEO_WIDTH, height: VIDEO_HEIGHT },
+                        multiplier: 1,
+                    });
+                    this.isMobileNetInit = true;
+                    this.video.play();
+                    console.log('done initializing');
+                    this.getPose();
+                };
+            } catch (err) {
+                console.log(err);
+                this.isInitialized = false;
+            }
         } else {
             console.log('getUserMedia not supported');
         }
     }
 
-    async getPose() {
+    getPose() {
+        if (!this.canvasVideo) {
+            return;
+        }
         if (this.isMobileNetInit) {
-            await this.estimatePoseOnImage(this.video);
+            this.estimatePoseOnImage(this.video);
         }
         requestAnimationFrame(() => {
             this.getPose();
         });
     }
-    async estimatePoseOnImage(imageElement) {
+
+    estimatePoseOnImage(imageElement) {
         // load the posenet model from a checkpoint
         if (!this.mobileNet) {
             return;
@@ -84,13 +103,12 @@ class VideoUtils {
             this.mobileNet
                 .estimateMultiplePoses(imageElement, {
                     flipHorizontal: true,
-                    maxDetections: 3,
+                    maxDetections: 4,
                     scoreThreshold: 0.5,
                     nmsRadius: 20,
                 })
                 .then((poses) => {
                     this.poses = poses;
-                    console.log(poses);
                 });
         } catch (err) {
             console.error('error in detection');
@@ -134,16 +152,28 @@ class VideoUtils {
     setOptions(target, value) {
         switch (target) {
             case 'brightness':
+                if (!this.canvasVideo) {
+                    return;
+                }
                 GEHelper.setVideoBrightness(this.canvasVideo, value);
                 break;
             case 'opacity':
+                if (!this.canvasVideo) {
+                    return;
+                }
                 GEHelper.setVideoAlpha(this.canvasVideo, value);
                 break;
             case 'hflip':
+                if (!this.canvasVideo) {
+                    return;
+                }
                 this.flipStatus.horizontal = !this.flipStatus.horizontal;
                 GEHelper.hFlipVideoElement(this.canvasVideo);
                 break;
             case 'vflip':
+                if (!this.canvasVideo) {
+                    return;
+                }
                 this.flipStatus.vertical = !this.flipStatus.vertical;
                 GEHelper.vFlipVideoElement(this.canvasVideo);
                 break;

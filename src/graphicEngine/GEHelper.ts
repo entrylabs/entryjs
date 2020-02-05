@@ -10,6 +10,16 @@ import { PIXIScaleAdaptor } from '../class/pixi/atlas/PIXIScaleAdaptor';
 declare let $: any;
 declare let createjs: any;
 
+const INITIAL_VIDEO_PARAMS = {
+    WIDTH: 480,
+    HEIGHT: 270,
+    X: -240,
+    Y: -135,
+    SCALE_X: 0.75,
+    SCALE_Y: 0.75,
+    ALPHA: 0.5,
+};
+
 interface IGraphicsEngineApplication {
     render(): void;
     stage: PIXI.Container | any;
@@ -158,36 +168,42 @@ class _GEHelper extends GEHelperBase {
         }
     }
     // this function  draws video on canvas at the same time
-    getAndDrawVideo(object: any): any {
+    getAndDrawVideo(video: HTMLVideoElement): any {
         let videoElement = null;
+        const { WIDTH, HEIGHT, X, Y, SCALE_X, SCALE_Y, ALPHA } = INITIAL_VIDEO_PARAMS;
+
         if (this._isWebGL) {
-            const videoTexture = PIXI.Texture.fromVideo(object);
+            const videoTexture = PIXI.Texture.fromVideo(video);
             videoElement = new PIXI.Sprite(videoTexture);
-            videoElement.width = 480;
-            videoElement.height = 270;
-            videoElement.x = -240;
-            videoElement.y = -135;
-            videoElement.scale.x = 0.75;
-            videoElement.scale.y = 0.75;
-            videoElement.alpha = 0.5;
+            videoElement.width = WIDTH;
+            videoElement.height = HEIGHT;
+            videoElement.x = X;
+            videoElement.y = Y;
+            videoElement.scale.x = SCALE_X;
+            videoElement.scale.y = SCALE_Y;
+            videoElement.alpha = ALPHA;
             Entry.stage.canvas.addChildAt(videoElement, 2);
             Entry.stage._app.ticker.start();
         } else {
-            videoElement = new createjs.Bitmap(object);
-            videoElement.x = -240;
-            videoElement.y = -135;
-            videoElement.width = 480;
-            videoElement.height = 270;
-            videoElement.scaleX = 0.75;
-            videoElement.scaleY = 0.75;
-            videoElement.alpha = 0.5;
+            videoElement = new createjs.Bitmap(video);
+            videoElement.width = WIDTH;
+            videoElement.height = HEIGHT;
+            videoElement.x = X;
+            videoElement.y = Y;
+            videoElement.scaleX = SCALE_X;
+            videoElement.scaleY = SCALE_Y;
+            videoElement.alpha = ALPHA;
             Entry.stage.canvas.addChildAt(videoElement, 2);
             createjs.Ticker.on('tick', Entry.stage.canvas);
         }
+
         return videoElement;
     }
 
-    turnOffWebcam(canvasVideo: any) {
+    turnOffWebcam(canvasVideo: PIXI.Sprite | createjs.Bitmap) {
+        if (!canvasVideo) {
+            return;
+        }
         if (this._isWebGL) {
             Entry.stage.canvas.removeChild(canvasVideo);
             Entry.stage._app.ticker.start();
@@ -197,7 +213,7 @@ class _GEHelper extends GEHelperBase {
         }
     }
 
-    hFlipVideoElement(canvasVideo: any): any {
+    hFlipVideoElement(canvasVideo: PIXI.Sprite | createjs.Bitmap): any {
         const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = canvasVideo;
         canvasVideo.setTransform(-x, y, -scaleX, scaleY, rotation, skewX, skewY, regX, regY);
         if (this._isWebGL) {
@@ -207,16 +223,17 @@ class _GEHelper extends GEHelperBase {
         }
     }
 
-    vFlipVideoElement(canvasVideo: any): any {
+    vFlipVideoElement(canvasVideo: PIXI.Sprite | createjs.Bitmap): any {
+        const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = canvasVideo;
+        canvasVideo.setTransform(x, -y, scaleX, -scaleY, rotation, skewX, skewY, regX, regY);
         if (this._isWebGL) {
+            Entry.stage._app.ticker.start();
         } else {
-            const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = canvasVideo;
-            canvasVideo.setTransform(x, -y, scaleX, -scaleY, rotation, skewX, skewY, regX, regY);
             createjs.Ticker.on('tick', Entry.stage.canvas);
         }
     }
 
-    setVideoBrightness(canvasVideo: any, value: number): any {
+    setVideoBrightness(canvasVideo: PIXI.Sprite | createjs.Bitmap, value: number): any {
         const target = canvasVideo;
 
         if (this._isWebGL) {
@@ -235,10 +252,11 @@ class _GEHelper extends GEHelperBase {
             return target;
         }
     }
-    setVideoAlpha(canvasVideo: any, value: number): any {
+    setVideoAlpha(canvasVideo: PIXI.Sprite | createjs.Bitmap, value: number): any {
+        canvasVideo.alpha = (100 - value) / 100;
         if (this._isWebGL) {
+            Entry.stage._app.ticker.start();
         } else {
-            canvasVideo.alpha = (100 - value) / 100;
             createjs.Ticker.on('tick', Entry.stage.canvas);
         }
     }

@@ -1,5 +1,6 @@
 import VideoUtils from '../../util/videoUtils';
 import PromiseManager from '../../core/promiseManager';
+import { format } from 'path';
 const _clamp = require('lodash/clamp');
 
 Entry.AI_UTILIZE_BLOCK.video = {
@@ -43,7 +44,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             isNotFor: ['video'],
             events: {},
         },
-        check_webcam: {
+        video_check_webcam: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
@@ -52,7 +53,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             params: [],
             events: {},
             def: {
-                type: 'check_webcam',
+                type: 'video_check_webcam',
             },
             paramsKeyMap: {
                 VALUE: 0,
@@ -71,7 +72,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 py: [],
             },
         },
-        draw_webcam: {
+        video_draw_webcam: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
@@ -80,7 +81,10 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['보이기', 'on'], ['숨기기', 'off']],
+                    options: [
+                        ['보이기', 'on'],
+                        ['숨기기', 'off'],
+                    ],
                     value: 'on',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
@@ -94,7 +98,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             ],
             events: {},
             def: {
-                type: 'draw_webcam',
+                type: 'video_draw_webcam',
             },
             paramsKeyMap: {
                 VALUE: 0,
@@ -102,23 +106,19 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             class: 'video',
             isNotFor: ['video'],
             async func(sprite, script) {
-                const value = script.getField('VALUE');
-                try {
-                    if (!VideoUtils.isInitialized) {
-                        await VideoUtils.initialize();
-                    }
-                    VideoUtils.cameraSwitch(value);
-                    return script.callReturn();
-                } catch (err) {
-                    console.log(err);
+                let value = script.getField('VALUE');
+                if (!VideoUtils.isInitialized) {
+                    await VideoUtils.initialize();
                 }
+                VideoUtils.cameraSwitch(value);
+                return script.callReturn();
             },
             syntax: {
                 js: [],
                 py: [],
             },
         },
-        set_camera_option: {
+        video_set_camera_option: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
@@ -127,7 +127,10 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['밝기', 'brightness'], ['투명도', 'opacity']],
+                    options: [
+                        ['밝기', 'brightness'],
+                        ['투명도', 'opacity'],
+                    ],
                     value: 'brightness',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
@@ -147,7 +150,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             ],
             events: {},
             def: {
-                type: 'set_camera_option',
+                type: 'video_set_camera_option',
             },
             paramsKeyMap: {
                 TARGET: 0,
@@ -177,7 +180,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 py: [],
             },
         },
-        flip_camera: {
+        video_flip_camera: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
@@ -186,7 +189,10 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['좌우', 'hflip'], ['상하', 'vflip']],
+                    options: [
+                        ['좌우', 'hflip'],
+                        ['상하', 'vflip'],
+                    ],
                     value: 'hflip',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
@@ -200,7 +206,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             ],
             events: {},
             def: {
-                type: 'flip_camera',
+                type: 'video_flip_camera',
             },
             paramsKeyMap: {
                 TARGET: 0,
@@ -209,15 +215,148 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             isNotFor: ['video'],
             async func(sprite, script) {
                 const target = script.getField('TARGET');
-                try {
-                    if (!VideoUtils.isInitialized) {
-                        await VideoUtils.initialize();
-                    }
-                    VideoUtils.setOptions(target);
-                    return script.callReturn();
-                } catch (err) {
-                    console.log(err);
+                if (!VideoUtils.isInitialized) {
+                    await VideoUtils.initialize();
                 }
+                VideoUtils.setOptions(target);
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [],
+            },
+        },
+        video_number_of_faces: {
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '인식된 얼굴의 수',
+            params: [],
+            events: {},
+            def: {
+                type: 'video_number_of_faces',
+            },
+            paramsKeyMap: {
+                TARGET: 0,
+            },
+            class: 'video',
+            isNotFor: ['video'],
+            async func(sprite, script) {
+                if (!VideoUtils.isInitialized) {
+                    await VideoUtils.initialize();
+                }
+                return VideoUtils.poses ? VideoUtils.poses.length : 0;
+            },
+            syntax: {
+                js: [],
+                py: [],
+            },
+        },
+        video_face_part_coord: {
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1 번째 얼굴 %2의 %3 좌표',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', 1],
+                        ['2', 2],
+                        ['3', 3],
+                        ['4', 4],
+                    ],
+                    value: 1,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        // ['코', 'nose'],
+                        // ['왼쪽 눈', 'leftEye'],
+                        // ['오른쪽 눈', 'rightEye'],
+                        // ['왼쪽 귀', 'leftEar'],
+                        // ['오른쪽 귀', 'rightEar'],
+                        // ['왼족 어깨', 'leftShoulder'],
+                        // ['오른쪽 어깨', 'rightShoulder'],
+                        // ['왼쪽 팔꿈치', 'leftElbow'],
+                        // ['오른쪽 팔꿈치', 'rightElbow'],
+                        // ['왼쪽 손목', 'leftWrist'],
+                        // ['오른쪽 손목', 'rightWrist'],
+                        // ['왼쪽 엉덩이', 'leftHip'],
+                        // ['오른쪽 엉덩이', 'rightHip'],
+                        // ['왼쪽 무릎', 'leftKnee'],
+                        // ['오른쪽 무릎', 'rightKnee'],
+                        // ['왼쪽 발목', 'leftAnkle'],
+                        // ['오른쪽 발목', 'rightAnkle'],
+
+                        ['코', 0],
+                        ['왼쪽 눈', 1],
+                        ['오른쪽 눈', 2],
+                        ['왼쪽 귀', 3],
+                        ['오른쪽 귀', 4],
+                        ['왼족 어깨', 5],
+                        ['오른쪽 어깨', 6],
+                        ['왼쪽 팔꿈치', 7],
+                        ['오른쪽 팔꿈치', 8],
+                        ['왼쪽 손목', 9],
+                        ['오른쪽 손목', 10],
+                        ['왼쪽 엉덩이', 11],
+                        ['오른쪽 엉덩이', 12],
+                        ['왼쪽 무릎', 13],
+                        ['오른쪽 무릎', 14],
+                        ['왼쪽 발목', 15],
+                        ['오른쪽 발목', 16],
+                    ],
+                    value: 1,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['x', 'x'],
+                        ['y', 'y'],
+                    ],
+                    value: 'x',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+            ],
+            events: {},
+            def: {
+                type: 'video_face_part_coord',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PART: 1,
+                COORD: 2,
+            },
+            class: 'video',
+            isNotFor: ['video'],
+            async func(sprite, script) {
+                if (!VideoUtils.isInitialized) {
+                    await VideoUtils.initialize();
+                }
+                let index = script.getField('INDEX');
+                const part = script.getField('PART');
+                const coord = script.getField('COORD');
+                if (
+                    !VideoUtils.isMobileNetInit ||
+                    !VideoUtils.poses ||
+                    VideoUtils.poses.length < index
+                ) {
+                    return 0;
+                }
+                // offset since value shown starts from 1;
+                index = index - 1;
+                return VideoUtils.poses[index].keypoints[part].position[coord] || 0;
             },
             syntax: {
                 js: [],
