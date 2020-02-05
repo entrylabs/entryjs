@@ -819,9 +819,6 @@ Entry.parseTexttoXML = function(xmlText) {
 
 /**
  * Create html element with some method
- * @param {!string} type
- * @param {string} [elementId=undefined]
- * @return {HTMLElement}
  */
 Entry.createElement = function(type, elementId) {
     const element = type instanceof HTMLElement ? type : document.createElement(type);
