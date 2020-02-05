@@ -1,5 +1,4 @@
 import audioUtils from '../../util/audioUtils';
-import PromiseManager from '../../core/promiseManager';
 
 Entry.AI_UTILIZE_BLOCK.audio = {
     name: 'audio',
