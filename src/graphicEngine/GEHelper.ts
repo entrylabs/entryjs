@@ -168,7 +168,7 @@ class _GEHelper extends GEHelperBase {
         }
     }
     // this function returns corresponding VideoElement,
-    getVideo(video: HTMLVideoElement): any {
+    getVideoElement(video: HTMLVideoElement): any {
         let videoElement = null;
         const { WIDTH, HEIGHT, X, Y, SCALE_X, SCALE_Y, ALPHA } = INITIAL_VIDEO_PARAMS;
 
@@ -196,7 +196,7 @@ class _GEHelper extends GEHelperBase {
         return videoElement;
     }
 
-    drawVideo(videoElement: HTMLVideoElement): any {
+    drawVideoElement(videoElement: HTMLVideoElement): any {
         if (this._isWebGL) {
             Entry.stage.canvas.addChildAt(videoElement, 2);
             Entry.stage._app.ticker.start();

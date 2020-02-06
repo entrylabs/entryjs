@@ -10,7 +10,6 @@ class VideoUtils {
         this.CANVAS_WIDTH = 480;
         this.CANVAS_HEIGHT = 270;
         // 기본적으로 hFlip을 한번 해야 거울과 같이 동작하므로 horizontal flip 인지 아닌지를 확인한다.
-        this.isInitialized = false;
         this.video = null;
         this.canvasVideo = null;
         this.flipStatus = {
@@ -20,23 +19,18 @@ class VideoUtils {
         this.isMobileNetInit = false;
         this.mobileNet = null;
         this.poses = null;
-        this.isVideoInitialized = false;
-        this.initialize();
+        this.isInitialized = false;
     }
 
     reset() {
         console.log('RESET');
-        this.turnOffWebcam();
-        if (this.flipStatus.horizontal) {
+        this.turnOnWebcam();
+        if (!this.flipStatus.horizontal) {
             this.setOptions('hflip');
         }
         if (this.flipStatus.vertical) {
             this.setOptions('vflip');
         }
-        this.flipStatus = {
-            horizontal: false,
-            vertical: false,
-        };
         this.poses = null;
     }
 
@@ -45,15 +39,12 @@ class VideoUtils {
             return;
         }
         this.isInitialized = true;
-        this.video = document.createElement('video');
-        this.video.width = this.CANVAS_WIDTH;
-        this.video.height = this.CANVAS_HEIGHT;
-        this.canvasVideo = GEHelper.getVideo(this.video);
+
         navigator.getUserMedia =
             navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
         if (navigator.getUserMedia) {
             try {
-                this.video.srcObject = await navigator.mediaDevices.getUserMedia({
+                const stream = await navigator.mediaDevices.getUserMedia({
                     audio: false,
                     video: {
                         facingMode: 'user',
@@ -61,11 +52,17 @@ class VideoUtils {
                         height: VIDEO_HEIGHT,
                     },
                 });
-                this.video.play();
-                this.video.onloadedmetadata = async (e) => {
-                    this.isVideoInitialized = true;
+                const video = document.createElement('video');
+                video.srcObject = stream;
+                video.width = this.CANVAS_WIDTH;
+                video.height = this.CANVAS_HEIGHT;
+                this.canvasVideo = GEHelper.getVideoElement(video);
+                video.onloadedmetadata = async (e) => {
                     Entry.addEventListener('dispatchEventDidToggleStop', this.reset.bind(this));
+                    video.play();
+                    this.turnOnWebcam();
                 };
+                this.video = video;
             } catch (err) {
                 console.log(err);
                 this.isInitialized = false;
@@ -76,23 +73,24 @@ class VideoUtils {
     }
 
     async initializePosenet() {
+        console.log('init posenet');
         if (this.isMobileNetInit) {
             return;
         }
-        this.isMobileNetInit = true;
         this.mobileNet = await posenet.load({
             architecture: 'MobileNetV1',
             outputStride: 16,
             inputResolution: { width: VIDEO_WIDTH, height: VIDEO_HEIGHT },
             multiplier: 1,
         });
+        this.isMobileNetInit = true;
         console.log('done initializing');
     }
 
     async estimatePoseOnImage() {
         // load the posenet model from a checkpoint
-        if (!this.mobileNet) {
-            await this.initializePosenet();
+        if (!this.isMobileNetInit) {
+            return [];
         }
         return await new Promise((resolve, reject) => {
             try {
@@ -108,8 +106,12 @@ class VideoUtils {
                         resolve(poses);
                     });
             } catch (err) {
-                console.error('error in detection');
-                resolve([]);
+                // console.error('error in detection');
+                if (this.isMobileNetInit) {
+                    resolve([]);
+                } else {
+                    console.log(err);
+                }
             }
         });
     }
@@ -139,10 +141,7 @@ class VideoUtils {
     }
 
     turnOnWebcam() {
-        if (!this.canvasVideo) {
-            this.canvasVideo = GEHelper.getVideo(this.video);
-        }
-        GEHelper.drawVideo(this.canvasVideo);
+        GEHelper.drawVideoElement(this.canvasVideo);
         if (!this.flipStatus.horizontal) {
             this.setOptions('hflip');
         }
@@ -177,6 +176,18 @@ class VideoUtils {
                 GEHelper.vFlipVideoElement(this.canvasVideo);
                 break;
         }
+    }
+    destroy() {
+        this.video = null;
+        this.canvasVideo = null;
+        this.flipStatus = {
+            horizontal: false,
+            vertical: false,
+        };
+        this.isMobileNetInit = false;
+        this.mobileNet = null;
+        this.poses = null;
+        this.isInitialized = false;
     }
 }
 

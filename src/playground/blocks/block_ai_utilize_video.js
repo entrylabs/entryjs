@@ -3,6 +3,7 @@ import PromiseManager from '../../core/promiseManager';
 import { format } from 'path';
 const _clamp = require('lodash/clamp');
 
+Entry.videoUtils = VideoUtils;
 Entry.AI_UTILIZE_BLOCK.video = {
     name: 'video',
     imageName: 'video.svg',
@@ -16,10 +17,11 @@ Entry.AI_UTILIZE_BLOCK.video = {
     description: Lang.Msgs.ai_utilize_video_description,
     descriptionKey: 'Msgs.ai_utilize_video_description',
     isInitialized: false,
-    init() {
+    async init() {
         if (this.isInitialized) {
             return;
         }
+        await VideoUtils.initialize();
         Entry.AI_UTILIZE_BLOCK.video.isInitialized = true;
     },
 };
