@@ -95,6 +95,10 @@ class DataTable {
                     });
                     Entry.playground.injectTable();
                 }
+                Entry.toast.success(
+                    Lang.DataAnalytics.saved_table_title,
+                    Lang.DataAnalytics.saved_table_content
+                );
             })
             .on('toast', (message) => {
                 const { title, content } = message;
