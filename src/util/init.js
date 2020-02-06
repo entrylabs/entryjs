@@ -12,11 +12,13 @@ require('./utils');
 
 /**
  * Initialize method with options.
- * @param {HTMLDivElement} container for entry workspace or others.
+ * @param {HTMLElement} container for entry workspace or others.
  * @param {Object} options for initialize.
  */
 Entry.init = function(container, options) {
     Entry.assert(typeof options === 'object', 'Init option is not object');
+    Entry.assert(!!container, 'root container must be provided');
+
     this.events_ = {};
     this.interfaceState = {
         menuWidth: 264,
@@ -191,6 +193,9 @@ Entry.initialize_ = function() {
 
     this.variableContainer = new Entry.VariableContainer();
 
+    if (this.type === 'workspace' || this.type === 'phone' || this.type === 'playground') {
+        this.stateManager = new Entry.StateManager();
+    }
     this.commander = new Entry.Commander(this.type, this.doNotSkipAny);
 
     this.scene = new Entry.Scene();
@@ -258,121 +263,139 @@ Entry.initSoundQueue_ = function() {
 /**
  * Initialize html DOM view for entry.
  * This work differently with initialize option.
- * @param {!HTMLElement} container for entry workspace or others.
- * @param {*} option for create dom by type.
+ * @param {HTMLElement} container for entry workspace or others.
+ * @param {string} type for create dom by type.
  */
-Entry.createDom = function(container, option) {
+Entry.createDom = function(container, type) {
     const textCanvasContainer = Entry.createElement('div', 'textCanvasContainer');
     textCanvasContainer.style.display = 'none';
     container.appendChild(textCanvasContainer);
 
-    if (!option || option === 'workspace') {
-        Entry.documentMousedown.attach(this, this.cancelObjectEdit);
+    switch (type) {
+        case 'minimize': {
+            const canvas = _createCanvasElement(['entryCanvasWorkspace', 'minimize']);
+            const canvasWrapper = Entry.createElement('div', 'entryCanvasWrapper');
+            canvasWrapper.appendChild(canvas);
+            container.appendChild(canvasWrapper);
 
-        const sceneView = Entry.createElement('div');
-        container.appendChild(sceneView);
-        this.sceneView = sceneView;
-        this.scene.generateView(this.sceneView, option);
+            this.canvas_ = canvas;
+            this.stage.initStage(this.canvas_);
 
-        const stateManagerView = Entry.createElement('div');
-        this.sceneView.appendChild(stateManagerView);
-        this.stateManagerView = stateManagerView;
-        this.stateManager.generateView(this.stateManagerView, option);
+            const engineView = Entry.createElement('div');
+            container.appendChild(engineView);
+            this.engineView = engineView;
+            this.engine.generateView(this.engineView, type);
+            break;
+        }
+        case 'phone': {
+            this.stateManagerView = Entry.createElement('div');
+            this.stateManager.generateView(this.stateManagerView, type);
 
-        const engineContainer = Entry.createElement('div');
-        engineContainer.classList.add('engineContainer');
-        container.appendChild(engineContainer);
-        const engineView = Entry.createElement('div');
-        engineContainer.appendChild(engineView);
-        this.engineContainer = engineContainer;
-        this.engineView = engineView;
-        this.engine.generateView(this.engineView, option);
+            const engineView = Entry.createElement('div');
+            container.appendChild(engineView);
+            this.engineView = engineView;
+            this.engine.generateView(this.engineView, type);
 
-        const canvas = _createCanvasElement('entryCanvasWorkspace');
-        engineView.insertBefore(canvas, this.engine.buttonWrapper);
+            const canvas = _createCanvasElement('entryCanvasPhone');
 
-        canvas.addEventListener('mousewheel', (evt) => {
-            const mousePosition = Entry.stage.mouseCoordinate;
-            const tempList = Entry.variableContainer.getListById(mousePosition);
-            const wheelDirection = evt.wheelDelta > 0;
+            engineView.insertBefore(canvas, this.engine.footerView_);
+            this.canvas_ = canvas;
+            this.stage.initStage(this.canvas_);
 
-            for (let i = 0; i < tempList.length; i++) {
-                const list = tempList[i];
-                if (wheelDirection) {
-                    if (list.scrollButton_.y >= 46) {
-                        list.scrollButton_.y -= 23;
+            const containerView = Entry.createElement('div');
+            container.appendChild(containerView);
+            this.containerView = containerView;
+            this.container.generateView(this.containerView);
+
+            const playgroundView = Entry.createElement('div');
+            container.appendChild(playgroundView);
+            this.playgroundView = playgroundView;
+            this.playground.generateView(this.playgroundView, type);
+            break;
+        }
+        case 'playground': {
+            const playgroundView = Entry.createElement('div');
+            container.appendChild(playgroundView);
+            this.playgroundView = playgroundView;
+            this.playground.generateView(this.playgroundView, type);
+            break;
+        }
+        case 'invisible': {
+            // 아무런 뷰도 그리지 않는다.
+            break;
+        }
+        case 'workspace':
+        default: {
+            Entry.documentMousedown.attach(this, this.cancelObjectEdit);
+
+            const sceneView = Entry.createElement('div');
+            container.appendChild(sceneView);
+            this.sceneView = sceneView;
+            this.scene.generateView(this.sceneView, type);
+
+            const stateManagerView = Entry.createElement('div');
+            this.sceneView.appendChild(stateManagerView);
+            this.stateManagerView = stateManagerView;
+            this.stateManager.generateView(this.stateManagerView, type);
+
+            const engineContainer = Entry.createElement('div');
+            engineContainer.classList.add('engineContainer');
+            container.appendChild(engineContainer);
+            const engineView = Entry.createElement('div');
+            engineContainer.appendChild(engineView);
+            this.engineContainer = engineContainer;
+            this.engineView = engineView;
+            this.engine.generateView(this.engineView, type);
+
+            const canvas = _createCanvasElement('entryCanvasWorkspace');
+            engineView.insertBefore(canvas, this.engine.buttonWrapper);
+
+            canvas.addEventListener('mousewheel', (evt) => {
+                const mousePosition = Entry.stage.mouseCoordinate;
+                const tempList = Entry.variableContainer.getListById(mousePosition);
+                const wheelDirection = evt.wheelDelta > 0;
+
+                for (let i = 0; i < tempList.length; i++) {
+                    const list = tempList[i];
+                    if (wheelDirection) {
+                        if (list.scrollButton_.y >= 46) {
+                            list.scrollButton_.y -= 23;
+                        } else {
+                            list.scrollButton_.y = 23;
+                        }
                     } else {
-                        list.scrollButton_.y = 23;
+                        list.scrollButton_.y += 23;
                     }
-                } else {
-                    list.scrollButton_.y += 23;
+                    list.updateView();
                 }
-                list.updateView();
-            }
-        });
+            });
 
-        this.canvas_ = canvas;
-        this.extension = new Extension();
-        this.stage.initStage(this.canvas_);
+            this.canvas_ = canvas;
+            this.extension = new Extension();
+            this.stage.initStage(this.canvas_);
 
-        const containerView = Entry.createElement('div');
-        this.propertyPanel.generateView(engineContainer, option);
-        this.containerView = containerView;
-        this.container.generateView(this.containerView);
-        this.propertyPanel.addMode('object', this.container);
+            const containerView = Entry.createElement('div');
+            this.propertyPanel.generateView(engineContainer, type);
+            this.containerView = containerView;
+            this.container.generateView(this.containerView);
+            this.propertyPanel.addMode('object', this.container);
 
-        this.helper.generateView(this.containerView, option);
-        this.propertyPanel.addMode('helper', this.helper);
+            this.helper.generateView(this.containerView, type);
+            this.propertyPanel.addMode('helper', this.helper);
 
-        const introView = Entry.createElement('div');
-        container.appendChild(introView);
-        this.introView = introView;
-        this.intro.generateView(this.introView, option);
+            const introView = Entry.createElement('div');
+            container.appendChild(introView);
+            this.introView = introView;
+            this.intro.generateView(this.introView, type);
 
-        const playgroundView = Entry.createElement('div');
-        container.appendChild(playgroundView);
-        this.playgroundView = playgroundView;
-        this.playground.generateView(this.playgroundView, option);
+            const playgroundView = Entry.createElement('div');
+            container.appendChild(playgroundView);
+            this.playgroundView = playgroundView;
+            this.playground.generateView(this.playgroundView, type);
 
-        this.propertyPanel.select('object');
-        this.helper.bindWorkspace(this.playground.mainWorkspace);
-    } else if (option === 'minimize') {
-        const canvas = _createCanvasElement(['entryCanvasWorkspace', 'minimize']);
-        const canvasWrapper = Entry.createElement('div', 'entryCanvasWrapper');
-        canvasWrapper.appendChild(canvas);
-        container.appendChild(canvasWrapper);
-
-        this.canvas_ = canvas;
-        this.stage.initStage(this.canvas_);
-
-        const engineView = Entry.createElement('div');
-        container.appendChild(engineView);
-        this.engineView = engineView;
-        this.engine.generateView(this.engineView, option);
-    } else if (option === 'phone') {
-        this.stateManagerView = Entry.createElement('div');
-        this.stateManager.generateView(this.stateManagerView, option);
-
-        const engineView = Entry.createElement('div');
-        container.appendChild(engineView);
-        this.engineView = engineView;
-        this.engine.generateView(this.engineView, option);
-
-        const canvas = _createCanvasElement('entryCanvasPhone');
-
-        engineView.insertBefore(canvas, this.engine.footerView_);
-        this.canvas_ = canvas;
-        this.stage.initStage(this.canvas_);
-
-        const containerView = Entry.createElement('div');
-        container.appendChild(containerView);
-        this.containerView = containerView;
-        this.container.generateView(this.containerView);
-
-        const playgroundView = Entry.createElement('div');
-        container.appendChild(playgroundView);
-        this.playgroundView = playgroundView;
-        this.playground.generateView(this.playgroundView, option);
+            this.propertyPanel.select('object');
+            this.helper.bindWorkspace(this.playground.mainWorkspace);
+        }
     }
 };
 

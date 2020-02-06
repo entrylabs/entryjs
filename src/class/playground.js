@@ -50,7 +50,7 @@ Entry.Playground = class Playground {
         /** @type {!Element} */
         this.view_ = playgroundView;
         this.view_.addClass('entryPlayground');
-        if (option === 'workspace') {
+        if (option === 'workspace' || option === 'playground') {
             this.view_.addClass('entryPlaygroundWorkspace');
 
             const tabView = Entry.createElement('div', 'entryCategoryTab')
@@ -1688,9 +1688,13 @@ Entry.Playground = class Playground {
         if (Entry.playground && Entry.playground.view_) {
             this.injectPicture();
             this.injectSound();
-            const board = Entry.playground.mainWorkspace.getBoard();
-            board.clear();
-            board.changeCode(null);
+
+            const mainWS = Entry.getMainWS();
+            if (mainWS) {
+                const board = mainWS.getBoard();
+                board.clear();
+                board.changeCode(null);
+            }
         }
     }
 

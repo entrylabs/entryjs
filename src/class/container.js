@@ -274,10 +274,6 @@ Entry.Container = class Container {
         return true;
     }
 
-    /**
-     * Set objects
-     * @param {!Array.<object model>} objectModels
-     */
     setObjects(objectModels) {
         objectModels.forEach((model) => {
             if (model) {
@@ -289,7 +285,7 @@ Entry.Container = class Container {
         this.updateListView();
         Entry.variableContainer.updateViews();
         const type = Entry.type;
-        if (type === 'workspace' || type === 'phone') {
+        if (type === 'workspace' || type === 'phone' || type === 'playground') {
             const target = this.getCurrentObjects()[0];
             target && this.selectObject(target.id);
         }

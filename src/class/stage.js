@@ -356,7 +356,7 @@ Entry.Stage.prototype.initHandle = function() {
  * object -> handle
  */
 Entry.Stage.prototype.updateObject = function() {
-    if (Entry.type === 'invisible') {
+    if (Entry.type === 'invisible' || Entry.type === 'playground') {
         return;
     }
     Entry.requestUpdate = true;
@@ -657,7 +657,7 @@ Entry.Stage.prototype.initObjectContainers = function() {
         this.objectContainers.push(obj);
         this.selectedObjectContainer = obj;
     }
-    if (Entry.type !== 'invisible') {
+    if (Entry.type !== 'invisible' && Entry.type !== 'playground') {
         this.canvas.addChild(this.selectedObjectContainer);
     }
     this.selectObjectContainer(Entry.scene.selectedScene);

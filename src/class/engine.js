@@ -28,7 +28,7 @@ Entry.Engine = class Engine {
             this.fireEventOnEntity('when_object_click_canceled', entity)
         );
 
-        if (Entry.type !== 'phone') {
+        if (Entry.type !== 'phone' && Entry.type !== 'playground') {
             _addEventListener(
                 'stageMouseMove',
                 _.throttle(this.updateMouseView.bind(this), 100, {

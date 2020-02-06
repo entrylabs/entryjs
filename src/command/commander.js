@@ -1,8 +1,5 @@
 class EntryCommander {
-    constructor(workspaceType) {
-        if (workspaceType === 'workspace' || workspaceType === 'phone') {
-            Entry.stateManager = new Entry.StateManager();
-        }
+    constructor() {
         Entry.do = this.do.bind(this);
 
         Entry.undo = this.undo.bind(this);
