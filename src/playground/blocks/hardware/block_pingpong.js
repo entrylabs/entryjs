@@ -578,12 +578,20 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
                 isNotFor: ['Pingpong_G1'],
                 func: function(sprite, script) {
                     var speed = script.getNumberValue('SPEED');
-                    speed = Math.min(Math.max(speed, 100), 1000);
+                    if (speed > 100) speed = 100;
+                    if (speed < -100) speed = -100;
+
+                    var sps = 0;
+                    if (speed != 0) {
+                        if (speed < 0) sps = speed * 9 - 100;
+                        else sps = speed * 9 + 100;
+                        sps = Math.round(sps);
+                    }
 
                     var packet = Entry.Pingpong_G1.makePacket(0xcc, 0x0004, [2, 0, 0, 2, 0, 0]); // CONTINUOUS STEP_MOTOR
-                    packet.writeInt16BE(speed, 13);
+                    packet.writeInt16BE(sps, 13);
 
-                    var delay_ms = Math.round(((1100 - Math.abs(speed)) / 99) * 10) + 400;
+                    var delay_ms = Math.round(((1100 - Math.abs(sps)) / 99) * 10) + 400;
                     return Entry.Pingpong_G1.postCallReturn(script, packet, delay_ms);
                 },
             },
