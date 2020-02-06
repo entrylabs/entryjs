@@ -36,6 +36,41 @@ class PingpongBase {
         };
 
         //console.log('pingpong base constructor', cubecnt);
+
+		this.lang_defblock = {
+			ko: {
+				pingpong_right: '오른쪽',
+				pingpong_left: '왼쪽',
+				pingpong_circle: '동그라미',
+				pingpong_star: '별',
+				pingpong_rectangle: '네모',
+				pingpong_triangle: '세모',
+
+				pingpong_rotate_cw: '시계',
+				pingpong_rotate_ccw: '반시계',
+
+				pingpong_sensor_proximity: '근접',
+				pingpong_sensor_ain: '아날로그',
+				pingpong_dot_on: '켜기',
+				pingpong_dot_off: '끄기',
+			},
+			en: {
+				pingpong_right: 'right',
+				pingpong_left: 'left',
+				pingpong_circle: 'circle',
+				pingpong_star: 'star',
+				pingpong_rectangle: 'rectangle',
+				pingpong_triangle: 'triangle',
+
+				pingpong_rotate_cw: 'clockwise',
+				pingpong_rotate_ccw: 'counter clockwise',
+
+				pingpong_sensor_proximity: 'proximity',
+				pingpong_sensor_ain: 'ain',
+				pingpong_dot_on: 'ON',
+				pingpong_dot_off: 'OFF',
+			},
+		};
     }
 
     setZero() {
@@ -60,10 +95,10 @@ class PingpongBase {
         ) {
             Entry.engine.fireEvent('pp_when_button_pressed');
 
-            this.prev_sensor_data.c0_BUTTON == pd.c0_BUTTON;
-            this.prev_sensor_data.c1_BUTTON == pd.c1_BUTTON;
-            this.prev_sensor_data.c2_BUTTON == pd.c2_BUTTON;
-            this.prev_sensor_data.c3_BUTTON == pd.c3_BUTTON;
+            this.prev_sensor_data.c0_BUTTON = pd.c0_BUTTON;
+            this.prev_sensor_data.c1_BUTTON = pd.c1_BUTTON;
+            this.prev_sensor_data.c2_BUTTON = pd.c2_BUTTON;
+            this.prev_sensor_data.c3_BUTTON = pd.c3_BUTTON;
         }
 
         var c0_tilt_x = Math.abs(pd.c0_TILT_X) >= this.TILT_THRESHOLD;
@@ -97,7 +132,7 @@ class PingpongBase {
         this.prev_sensor_data.c3_TILT_Y = c3_tilt_y;
     }
 
-    postCallReturn(script, packet, delay_ms = 0) {
+    postCallReturn(script, packet, delay_ms = 400) {
         //console.log(' this.cmdid : ', this.send_cmd_id);
         if (delay_ms <= 0) {
             //FIXME
@@ -181,6 +216,15 @@ class PingpongBase {
 
         return tilt_value;
     }
+
+	_getCubeNoFromBlock(script) {
+        var cube_no = script.getNumberValue('cubeno') - 1;
+		if (cube_no < 0)
+			cube_no = 0;
+		if (cube_no >= this.cube_cnt)
+			cube_no = this.cube_cnt - 1;
+		return cube_no;
+	}
 }
 
 Entry.Pingpong_G2 = new (class extends PingpongBase {
@@ -846,7 +890,7 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 class: 'Pingpong_G2_motor',
                 isNotFor: ['Pingpong_G2'],
                 func: function(sprite, script) {
-                    const cube_id = script.getNumberValue('cubeno');
+                    const cube_id = Entry.Pingpong_G2._getCubeNoFromBlock(script);
                     var angle = script.getNumberValue('DEGREE', script);
 
                     angle = Math.min(Math.max(angle, 0), 180);
@@ -863,6 +907,8 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 statements: [],
                 params: [
                     { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '0' },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '0' },
                     {
                         type: 'Dropdown',
                         options: [
@@ -874,8 +920,6 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                     },
-                    { type: 'Block', accept: 'string', defaultType: 'number', value: '0' },
-                    { type: 'Block', accept: 'string', defaultType: 'number', value: '0' },
                     {
                         type: 'Indicator',
                         img: 'block_icon/hardware_icon.svg',
@@ -887,11 +931,11 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                     params: [null, null, null],
                     type: 'pingpong_g2_set_dot_pixel',
                 },
-                paramsKeyMap: { cubeno: 0, X: 2, Y: 3, onoff: 1 },
+                paramsKeyMap: { cubeno: 0, X: 1, Y: 2, onoff: 3 },
                 class: 'Pingpong_G2_peripheral_LED',
                 isNotFor: ['Pingpong_G2'],
                 func: function(sprite, script) {
-                    const cube_id = script.getNumberValue('cubeno');
+                    const cube_id = Entry.Pingpong_G2._getCubeNoFromBlock(script);
                     var dot_x = script.getNumberValue('X', script);
                     var dot_y = script.getNumberValue('Y', script);
                     var onoff = script.getNumberField('onoff', script);
@@ -913,6 +957,7 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 params: [
                     { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
                     { type: 'Block', accept: 'string', value: 'Hello!' },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '2' },
                     {
                         type: 'Indicator',
                         img: 'block_icon/hardware_icon.svg',
@@ -925,7 +970,7 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 class: 'Pingpong_G2_peripheral_LED',
                 isNotFor: ['Pingpong_G2'],
                 func: function(sprite, script) {
-                    const cube_id = script.getNumberValue('cubeno');
+                    const cube_id = Entry.Pingpong_G2._getCubeNoFromBlock(script);
                     var str = script.getStringValue('STR', script);
                     var duration = script.getNumberValue('DURATION', script);
 
@@ -938,7 +983,7 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                     ]);
 
                     var packet = Entry.Pingpong_G2.makePacket(OPCODE.LEDMATRIX, 0xe3, cube_id, opt);
-                    var delay_ms = period * str.length * 8 * 10 + 400; // add wait for 400ms
+                    var delay_ms = period * (str.length+1) * 8 * 10 + 400; // add wait for 400ms
                     return Entry.Pingpong_G2.postCallReturn(script, packet, delay_ms);
                 },
             },
@@ -961,11 +1006,10 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 class: 'Pingpong_G2_peripheral_LED',
                 isNotFor: ['Pingpong_G2'],
                 func: function(sprite, script) {
-                    const cube_id = script.getNumberValue('cubeno');
-                    var packet = Entry.Pingpong_G2.makePacket(OPCODE.LEDMATRIX, 0xe4, cube_id, [
-                        0x70,
-                        2,
-                    ]);
+                    const cube_id = Entry.Pingpong_G2._getCubeNoFromBlock(script);
+                    //var packet = Entry.Pingpong_G2.makePacket(OPCODE.LEDMATRIX, 0xe4, cube_id, [0x70, 2]);
+                    var opt = [0x70, 1, 0, ' '];
+                    var packet = Entry.Pingpong_G2.makePacket(OPCODE.LEDMATRIX, 0xe3, cube_id, opt);
                     return Entry.Pingpong_G2.postCallReturn(script, packet);
                 },
             },
@@ -990,26 +1034,14 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                         '모터1 속도를 %1 모터2 속도를 %2 (으)로 정하기 %3',
                     pingpong_g2_start_motor_rotate: '%1 모터의 속도를 %2 으로 정하기 %3',
                     pingpong_g2_stop_motor_rotate: '%1 모터 멈추기 %2',
-                    pingpong_g2_set_dot_pixel: '%1 번째 큐브의 LED %2 X:%3 Y:%4 %5',
-                    pingpong_g2_set_dot_string: '%1 번째 큐브의 글자 %2 보여주기 %3',
+                    pingpong_g2_set_dot_pixel: '%1 번째 큐브의 도트 X:%2 Y:%3 %4 %5',
+                    pingpong_g2_set_dot_string: '%1 번째 큐브에 도트 문자열 %2 %3초동안 보여주기 %4',
                     pingpong_g2_set_dot_clear: '%1 번째 큐브의 화면 지우기 %2',
                     pingpong_g2_rotate_servo_mortor: '%1 번째 큐브의 서보모터 %2도로 설정하기 %3',
                 },
                 Blocks: {
-                    pingpong_right: '오른쪽',
-                    pingpong_left: '왼쪽',
-                    pingpong_circle: '동그라미',
-                    pingpong_star: '별',
-                    pingpong_rectangle: '네모',
-                    pingpong_triangle: '세모',
+					...this.lang_defblock.ko,
 
-                    pingpong_rotate_cw: '시계',
-                    pingpong_rotate_ccw: '반시계',
-
-                    pingpong_sensor_proximity: '근접',
-                    pingpong_sensor_ain: '아날로그',
-                    pingpong_dot_on: '켜기',
-                    pingpong_dot_off: '끄기',
                     pingpong_g2_cube_id: [
                         ['1번', 0],
                         ['2번', 1],
@@ -1038,25 +1070,13 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                     pingpong_g2_start_motor_rotate: 'set motor speed to %1 %2',
                     pingpong_g2_stop_motor_rotate: 'stop motor rotate %1',
                     pingpong_g2_rotate_servo_mortor: 'set servo mortor to %1 degrees %2',
-                    pingpong_g2_set_dot_pixel: 'set %3 DOT X:%1 Y:%2 %4',
-                    pingpong_g2_set_dot_string: 'print string %1 during %2 seconds to DOT %3',
-                    pingpong_g2_set_dot_clear: 'clear DOT %1',
+                    pingpong_g2_set_dot_pixel: '%1 cube set DOT X:%2 Y:%3 %4 %5',
+                    pingpong_g2_set_dot_string: 'print %1 cube string %2 during %3 seconds to DOT %4',
+                    pingpong_g2_set_dot_clear: '%1 cube clear DOT %2',
                 },
                 Blocks: {
-                    pingpong_right: 'right',
-                    pingpong_left: 'left',
-                    pingpong_circle: 'circle',
-                    pingpong_star: 'star',
-                    pingpong_rectangle: 'rectangle',
-                    pingpong_triangle: 'triangle',
+					...this.lang_defblock.en,
 
-                    pingpong_rotate_cw: 'clockwise',
-                    pingpong_rotate_ccw: 'counter clockwise',
-
-                    pingpong_sensor_proximity: 'proximity',
-                    pingpong_sensor_ain: 'ain',
-                    pingpong_dot_on: 'ON',
-                    pingpong_dot_off: 'OFF',
                     pingpong_g2_cube_id: [
                         ['1st', 0],
                         ['2nd', 1],
@@ -1506,7 +1526,7 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                     var opt = [2, 0, 0, 2];
                     var cmd = Entry.Pingpong_G3.makePacket(
                         OPCODE.AGGREGATE_STEPS,
-                        0x2004,
+                        0x3004,
                         0xaa,
                         opt
                     );
@@ -1651,7 +1671,7 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                     var opt = [2, 1, 0, 2];
                     var cmd = Entry.Pingpong_G3.makePacket(
                         OPCODE.AGGREGATE_STEPS,
-                        0x2004,
+                        0x3004,
                         0xaa,
                         opt
                     );
@@ -1775,7 +1795,7 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                 class: 'Pingpong_G3_motor',
                 isNotFor: ['Pingpong_G3'],
                 func: function(sprite, script) {
-                    const cube_id = script.getNumberValue('cubeno');
+                    const cube_id = Entry.Pingpong_G3._getCubeNoFromBlock(script);
                     var angle = script.getNumberValue('DEGREE', script);
 
                     angle = Math.min(Math.max(angle, 0), 180);
@@ -1792,6 +1812,8 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                 statements: [],
                 params: [
                     { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '0' },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '0' },
                     {
                         type: 'Dropdown',
                         options: [
@@ -1803,8 +1825,6 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                     },
-                    { type: 'Block', accept: 'string', defaultType: 'number', value: '0' },
-                    { type: 'Block', accept: 'string', defaultType: 'number', value: '0' },
                     {
                         type: 'Indicator',
                         img: 'block_icon/hardware_icon.svg',
@@ -1816,11 +1836,11 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                     params: [null, null, null],
                     type: 'pingpong_g3_set_dot_pixel',
                 },
-                paramsKeyMap: { cubeno: 0, X: 2, Y: 3, onoff: 1 },
+                paramsKeyMap: { cubeno: 0, X: 1, Y: 2, onoff: 3 },
                 class: 'Pingpong_G3_peripheral_LED',
                 isNotFor: ['Pingpong_G3'],
                 func: function(sprite, script) {
-                    const cube_id = script.getNumberValue('cubeno');
+                    const cube_id = Entry.Pingpong_G3._getCubeNoFromBlock(script);
                     var dot_x = script.getNumberValue('X', script);
                     var dot_y = script.getNumberValue('Y', script);
                     var onoff = script.getNumberField('onoff', script);
@@ -1842,6 +1862,7 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                 params: [
                     { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
                     { type: 'Block', accept: 'string', value: 'Hello!' },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '2' },
                     {
                         type: 'Indicator',
                         img: 'block_icon/hardware_icon.svg',
@@ -1854,7 +1875,7 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                 class: 'Pingpong_G3_peripheral_LED',
                 isNotFor: ['Pingpong_G3'],
                 func: function(sprite, script) {
-                    const cube_id = script.getNumberValue('cubeno');
+                    const cube_id = Entry.Pingpong_G3._getCubeNoFromBlock(script);
                     var str = script.getStringValue('STR', script);
                     var duration = script.getNumberValue('DURATION', script);
 
@@ -1890,11 +1911,9 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                 class: 'Pingpong_G3_peripheral_LED',
                 isNotFor: ['Pingpong_G3'],
                 func: function(sprite, script) {
-                    const cube_id = script.getNumberValue('cubeno');
-                    var packet = Entry.Pingpong_G3.makePacket(OPCODE.LEDMATRIX, 0xe4, cube_id, [
-                        0x70,
-                        2,
-                    ]);
+                    const cube_id = Entry.Pingpong_G3._getCubeNoFromBlock(script);
+                    var opt = [0x70, 1, 0, ' '];
+                    var packet = Entry.Pingpong_G3.makePacket(OPCODE.LEDMATRIX, 0xe3, cube_id, opt);
                     return Entry.Pingpong_G3.postCallReturn(script, packet);
                 },
             },
@@ -1919,26 +1938,14 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                         '모터1 속도를 %1 모터2 속도를 %2 모터3 속도를 %3 (으)로 정하기 %4',
                     pingpong_g3_start_motor_rotate: '%1 모터의 속도를 %2 으로 정하기 %3',
                     pingpong_g3_stop_motor_rotate: '%1 모터 멈추기 %2',
-                    pingpong_g3_set_dot_pixel: '%1 번째 큐브의 LED %2 X:%3 Y:%4 %5',
-                    pingpong_g3_set_dot_string: '%1 번째 큐브의 글자 %2 보여주기 %3',
+                    pingpong_g3_set_dot_pixel: '%1 번째 큐브의 도트 X:%2 Y:%3 %4 %5',
+                    pingpong_g3_set_dot_string: '%1 번째 큐브에 도트 문자열 %2 %3초동안 보여주기 %4',
                     pingpong_g3_set_dot_clear: '%1 번째 큐브의 화면 지우기 %2',
                     pingpong_g3_rotate_servo_mortor: '%1 번째 큐브의 서보모터 %2도로 설정하기 %3',
                 },
                 Blocks: {
-                    pingpong_right: '오른쪽',
-                    pingpong_left: '왼쪽',
-                    pingpong_circle: '동그라미',
-                    pingpong_star: '별',
-                    pingpong_rectangle: '네모',
-                    pingpong_triangle: '세모',
+					...this.lang_defblock.ko,
 
-                    pingpong_rotate_cw: '시계',
-                    pingpong_rotate_ccw: '반시계',
-
-                    pingpong_sensor_proximity: '근접',
-                    pingpong_sensor_ain: '아날로그',
-                    pingpong_dot_on: '켜기',
-                    pingpong_dot_off: '끄기',
                     pingpong_g3_cube_id: [
                         ['1번', 0],
                         ['2번', 1],
@@ -1969,25 +1976,13 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                     pingpong_g3_start_motor_rotate: 'set motor speed to %1 %2',
                     pingpong_g3_stop_motor_rotate: 'stop motor rotate %1',
                     pingpong_g3_rotate_servo_mortor: 'set servo mortor to %1 degrees %2',
-                    pingpong_g3_set_dot_pixel: 'set %3 DOT X:%1 Y:%2 %4',
-                    pingpong_g3_set_dot_string: 'print string %1 during %2 seconds to DOT %3',
-                    pingpong_g3_set_dot_clear: 'clear DOT %1',
+                    pingpong_g3_set_dot_pixel: '%1 cube set DOT X:%2 Y:%3 %4 %5',
+                    pingpong_g3_set_dot_string: 'print %1 cube string %2 during %3 seconds to DOT %4',
+                    pingpong_g3_set_dot_clear: '%1 cube clear DOT %2',
                 },
                 Blocks: {
-                    pingpong_right: 'right',
-                    pingpong_left: 'left',
-                    pingpong_circle: 'circle',
-                    pingpong_star: 'star',
-                    pingpong_rectangle: 'rectangle',
-                    pingpong_triangle: 'triangle',
+					...this.lang_defblock.en,
 
-                    pingpong_rotate_cw: 'clockwise',
-                    pingpong_rotate_ccw: 'counter clockwise',
-
-                    pingpong_sensor_proximity: 'proximity',
-                    pingpong_sensor_ain: 'ain',
-                    pingpong_dot_on: 'ON',
-                    pingpong_dot_off: 'OFF',
                     pingpong_g3_cube_id: [
                         ['1st', 0],
                         ['2nd', 1],
@@ -2470,7 +2465,7 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                     var opt = [2, 0, 0, 2];
                     var cmd = Entry.Pingpong_G4.makePacket(
                         OPCODE.AGGREGATE_STEPS,
-                        0x2004,
+                        0x4004,
                         0xaa,
                         opt
                     );
@@ -2632,7 +2627,7 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                     var opt = [2, 1, 0, 2];
                     var cmd = Entry.Pingpong_G4.makePacket(
                         OPCODE.AGGREGATE_STEPS,
-                        0x2004,
+                        0x4004,
                         0xaa,
                         opt
                     );
@@ -2760,7 +2755,7 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                 class: 'Pingpong_G4_motor',
                 isNotFor: ['Pingpong_G4'],
                 func: function(sprite, script) {
-                    const cube_id = script.getNumberValue('cubeno');
+                    const cube_id = Entry.Pingpong_G4._getCubeNoFromBlock(script);
                     var angle = script.getNumberValue('DEGREE', script);
 
                     angle = Math.min(Math.max(angle, 0), 180);
@@ -2777,6 +2772,8 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                 statements: [],
                 params: [
                     { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '0' },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '0' },
                     {
                         type: 'Dropdown',
                         options: [
@@ -2788,8 +2785,6 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                     },
-                    { type: 'Block', accept: 'string', defaultType: 'number', value: '0' },
-                    { type: 'Block', accept: 'string', defaultType: 'number', value: '0' },
                     {
                         type: 'Indicator',
                         img: 'block_icon/hardware_icon.svg',
@@ -2801,11 +2796,11 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                     params: [null, null, null],
                     type: 'pingpong_g4_set_dot_pixel',
                 },
-                paramsKeyMap: { cubeno: 0, X: 2, Y: 3, onoff: 1 },
+                paramsKeyMap: { cubeno: 0, X: 1, Y: 2, onoff: 3 },
                 class: 'Pingpong_G4_peripheral_LED',
                 isNotFor: ['Pingpong_G4'],
                 func: function(sprite, script) {
-                    const cube_id = script.getNumberValue('cubeno');
+                    const cube_id = Entry.Pingpong_G4._getCubeNoFromBlock(script);
                     var dot_x = script.getNumberValue('X', script);
                     var dot_y = script.getNumberValue('Y', script);
                     var onoff = script.getNumberField('onoff', script);
@@ -2827,6 +2822,7 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                 params: [
                     { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
                     { type: 'Block', accept: 'string', value: 'Hello!' },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '2' },
                     {
                         type: 'Indicator',
                         img: 'block_icon/hardware_icon.svg',
@@ -2839,7 +2835,7 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                 class: 'Pingpong_G4_peripheral_LED',
                 isNotFor: ['Pingpong_G4'],
                 func: function(sprite, script) {
-                    const cube_id = script.getNumberValue('cubeno');
+                    const cube_id = Entry.Pingpong_G4._getCubeNoFromBlock(script);
                     var str = script.getStringValue('STR', script);
                     var duration = script.getNumberValue('DURATION', script);
 
@@ -2875,11 +2871,9 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                 class: 'Pingpong_G4_peripheral_LED',
                 isNotFor: ['Pingpong_G4'],
                 func: function(sprite, script) {
-                    const cube_id = script.getNumberValue('cubeno');
-                    var packet = Entry.Pingpong_G4.makePacket(OPCODE.LEDMATRIX, 0xe4, cube_id, [
-                        0x70,
-                        2,
-                    ]);
+                    const cube_id = Entry.Pingpong_G4._getCubeNoFromBlock(script);
+                    var opt = [0x70, 1, 0, ' '];
+                    var packet = Entry.Pingpong_G4.makePacket(OPCODE.LEDMATRIX, 0xe3, cube_id, opt);
                     return Entry.Pingpong_G4.postCallReturn(script, packet);
                 },
             },
@@ -2904,26 +2898,14 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                         '모터1 속도를 %1 모터2 속도를 %2 모터3 속도를 %3 모터4 속도를 %4 (으)로 정하기 %5',
                     pingpong_g4_start_motor_rotate: '%1 모터의 속도를 %2 으로 정하기 %3',
                     pingpong_g4_stop_motor_rotate: '%1 모터 멈추기 %2',
-                    pingpong_g4_set_dot_pixel: '%1 번째 큐브의 LED %2 X:%3 Y:%4 %5',
-                    pingpong_g4_set_dot_string: '%1 번째 큐브의 글자 %2 보여주기 %3',
+                    pingpong_g4_set_dot_pixel: '%1 번째 큐브의 도트 X:%2 Y:%3 %4 %5',
+                    pingpong_g4_set_dot_string: '%1 번째 큐브에 도트 문자열 %2 %3초동안 보여주기 %4',
                     pingpong_g4_set_dot_clear: '%1 번째 큐브의 화면 지우기 %2',
                     pingpong_g4_rotate_servo_mortor: '%1 번째 큐브의 서보모터 %2도로 설정하기 %3',
                 },
                 Blocks: {
-                    pingpong_right: '오른쪽',
-                    pingpong_left: '왼쪽',
-                    pingpong_circle: '동그라미',
-                    pingpong_star: '별',
-                    pingpong_rectangle: '네모',
-                    pingpong_triangle: '세모',
+					...this.lang_defblock.ko,
 
-                    pingpong_rotate_cw: '시계',
-                    pingpong_rotate_ccw: '반시계',
-
-                    pingpong_sensor_proximity: '근접',
-                    pingpong_sensor_ain: '아날로그',
-                    pingpong_dot_on: '켜기',
-                    pingpong_dot_off: '끄기',
                     pingpong_g4_cube_id: [
                         ['1번', 0],
                         ['2번', 1],
@@ -2956,25 +2938,13 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                     pingpong_g4_start_motor_rotate: 'set motor speed to %1 %2',
                     pingpong_g4_stop_motor_rotate: 'stop motor rotate %1',
                     pingpong_g4_rotate_servo_mortor: 'set servo mortor to %1 degrees %2',
-                    pingpong_g4_set_dot_pixel: 'set %3 DOT X:%1 Y:%2 %4',
-                    pingpong_g4_set_dot_string: 'print string %1 during %2 seconds to DOT %3',
-                    pingpong_g4_set_dot_clear: 'clear DOT %1',
+                    pingpong_g4_set_dot_pixel: '%1 cube set DOT X:%2 Y:%3 %4 %5',
+                    pingpong_g4_set_dot_string: 'print %1 cube string %2 during %3 seconds to DOT %4',
+                    pingpong_g4_set_dot_clear: '%1 cube clear DOT %2',
                 },
                 Blocks: {
-                    pingpong_right: 'right',
-                    pingpong_left: 'left',
-                    pingpong_circle: 'circle',
-                    pingpong_star: 'star',
-                    pingpong_rectangle: 'rectangle',
-                    pingpong_triangle: 'triangle',
+					...this.lang_defblock.en,
 
-                    pingpong_rotate_cw: 'clockwise',
-                    pingpong_rotate_ccw: 'counter clockwise',
-
-                    pingpong_sensor_proximity: 'proximity',
-                    pingpong_sensor_ain: 'ain',
-                    pingpong_dot_on: 'ON',
-                    pingpong_dot_off: 'OFF',
                     pingpong_g4_cube_id: [
                         ['1st', 0],
                         ['2nd', 1],

@@ -700,7 +700,7 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
                 //statements: [],
                 params: [
                     { type: 'Block', accept: 'string', value: 'Hello!' },
-                    { type: 'Block', accept: 'string', defaultType: 'number', value: '2.0' },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '2' },
                     {
                         type: 'Indicator',
                         img: 'block_icon/hardware_icon.svg',
@@ -747,7 +747,7 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
                 class: 'Pingpong_G1_peripheral_LED',
                 isNotFor: ['Pingpong_G1'],
                 func: function(sprite, script) {
-                    var packet = Entry.Pingpong_G1.makePacket(0xa2, 0xe4, [0x70, 2]);
+                    var packet = Entry.Pingpong_G1.makePacket(0xa2, 0xe3, [0x70, 1, 0, ' ']);
                     return Entry.Pingpong_G1.postCallReturn(script, packet);
                 },
             },
