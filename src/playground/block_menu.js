@@ -990,9 +990,16 @@ class BlockMenu {
 
         _.result(this._categoryCol, 'remove');
 
-        this.categoryWrapper = Entry.Dom('div', {
-            class: 'entryCategoryListWorkspace',
-        });
+        // 카테고리가 이미 만들어져있는 상태에서 데이터만 새로 추가된 경우,
+        // categoryWrapper 는 살리고 내부 컬럼 엘리먼트만 치환한다.
+        if (!this.categoryWrapper) {
+            this.categoryWrapper = Entry.Dom('div', {
+                class: 'entryCategoryListWorkspace',
+            });
+        } else {
+            this.categoryWrapper.innerHTML = '';
+        }
+
         this._categoryCol = Entry.Dom('ul', {
             class: 'entryCategoryList',
             parent: this.categoryWrapper,
