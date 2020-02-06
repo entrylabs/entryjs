@@ -156,47 +156,51 @@ Entry.Dialog.prototype.createSpeakNotch = function(type) {
     if (type == 'ne') {
         notch.graphics
             .f('#ffffff')
-            .ss(2, 'round')
+            .ss(3, 2)
+            .s('#ffffff')
+            .mt(3, height)
+            .lt(11, height)
+            .ss(2, 1, 1)
             .s(colorSet.dialog || '#4f80ff')
             .mt(2, height)
-            .bt(8, height + 10, 8, height + 10, 14, height)
-            .ss(3, 'round')
-            .s('#ffffff')
-            .mt(4.5, height - 1)
-            .lt(11.5, height - 1);
+            .lt(2, height + 9)
+            .lt(12, height);
     } else if (type == 'nw') {
         notch.graphics
             .f('#ffffff')
-            .ss(2, 'round')
+            .ss(3, 2)
+            .s('#ffffff')
+            .mt(width - 3, height)
+            .lt(width - 11, height)
+            .ss(2, 1, 1)
             .s(colorSet.dialog || '#4f80ff')
             .mt(width - 2, height)
-            .bt(width - 8, height + 10, width - 8, height + 10, width - 14, height)
-            .ss(3, 'round')
-            .s('#ffffff')
-            .mt(width - 4.5, height - 1)
-            .lt(width - 11.5, height - 1);
+            .lt(width - 2, height + 9)
+            .lt(width - 12, height);
     } else if (type == 'se') {
         notch.graphics
             .f('#ffffff')
-            .ss(2, 'round')
+            .ss(3, 2)
+            .s('#ffffff')
+            .mt(3, -padding)
+            .lt(11, -padding)
+            .ss(2, 1, 1)
             .s(colorSet.dialog || '#4f80ff')
             .mt(2, -padding)
-            .bt(8, -padding - 10, 8, -padding - 10, 14, -padding)
-            .ss(3, 'round')
-            .s('#ffffff')
-            .mt(4.5, -padding + 1)
-            .lt(11.5, -padding + 1);
+            .lt(2, -padding - 9)
+            .lt(12, -padding);
     } else if (type == 'sw') {
         notch.graphics
             .f('#ffffff')
-            .ss(2, 'round')
+            .ss(3, 2)
+            .s('#ffffff')
+            .mt(width - 3, -padding)
+            .lt(width - 11, -padding)
+            .ss(2, 1, 1)
             .s(colorSet.dialog || '#4f80ff')
             .mt(this.width - 2, -padding)
-            .bt(width - 8, -padding - 10, width - 8, -padding - 10, width - 14, -padding)
-            .ss(3, 'round')
-            .s('#ffffff')
-            .mt(width - 4.5, -padding + 1)
-            .lt(width - 11.5, -padding + 1);
+            .lt(width - 2, -padding - 9)
+            .lt(width - 12, -padding);
     }
     return notch;
 };
