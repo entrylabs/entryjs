@@ -167,8 +167,8 @@ class _GEHelper extends GEHelperBase {
             return object.hitTest(pt.x, pt.y);
         }
     }
-    // this function  draws video on canvas at the same time
-    getAndDrawVideo(video: HTMLVideoElement): any {
+    // this function returns corresponding VideoElement,
+    getVideo(video: HTMLVideoElement): any {
         let videoElement = null;
         const { WIDTH, HEIGHT, X, Y, SCALE_X, SCALE_Y, ALPHA } = INITIAL_VIDEO_PARAMS;
 
@@ -182,8 +182,6 @@ class _GEHelper extends GEHelperBase {
             videoElement.scale.x = SCALE_X;
             videoElement.scale.y = SCALE_Y;
             videoElement.alpha = ALPHA;
-            Entry.stage.canvas.addChildAt(videoElement, 2);
-            Entry.stage._app.ticker.start();
         } else {
             videoElement = new createjs.Bitmap(video);
             videoElement.width = WIDTH;
@@ -193,11 +191,19 @@ class _GEHelper extends GEHelperBase {
             videoElement.scaleX = SCALE_X;
             videoElement.scaleY = SCALE_Y;
             videoElement.alpha = ALPHA;
-            Entry.stage.canvas.addChildAt(videoElement, 2);
-            createjs.Ticker.on('tick', Entry.stage.canvas);
         }
 
         return videoElement;
+    }
+
+    drawVideo(videoElement: HTMLVideoElement): any {
+        if (this._isWebGL) {
+            Entry.stage.canvas.addChildAt(videoElement, 2);
+            Entry.stage._app.ticker.start();
+        } else {
+            Entry.stage.canvas.addChildAt(videoElement, 2);
+            createjs.Ticker.on('tick', Entry.stage.canvas);
+        }
     }
 
     turnOffWebcam(canvasVideo: PIXI.Sprite | createjs.Bitmap) {

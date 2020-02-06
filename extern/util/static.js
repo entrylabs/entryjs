@@ -398,7 +398,7 @@ EntryStatic.getAllBlocks = function() {
                 'video_draw_webcam',
                 'video_set_camera_option',
                 'video_flip_camera',
-                'video_number_of_faces',
+                'video_number_of_person',
                 'video_body_part_coord',
             ],
         },

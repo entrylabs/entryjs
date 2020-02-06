@@ -106,7 +106,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             class: 'video',
             isNotFor: ['video'],
             async func(sprite, script) {
-                let value = script.getField('VALUE');
+                const value = script.getField('VALUE');
                 if (!VideoUtils.isInitialized) {
                     await VideoUtils.initialize();
                 }
@@ -173,6 +173,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                     return script.callReturn();
                 } catch (err) {
                     console.log(err);
+                    throw err;
                 }
             },
             syntax: {
@@ -226,31 +227,32 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 py: [],
             },
         },
-        video_number_of_faces: {
+        video_number_of_person: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
             statements: [],
-            template: '인식된 얼굴의 수',
+            template: '인식된 사람의 수',
             params: [],
             events: {},
             def: {
-                type: 'video_number_of_faces',
-            },
-            paramsKeyMap: {
-                TARGET: 0,
+                type: 'video_number_of_person',
             },
             class: 'video',
             isNotFor: ['video'],
             async func(sprite, script) {
-                if (!VideoUtils.isInitialized) {
-                    await VideoUtils.initialize();
-                }
-                if (!VideoUtils.isMobileNetInit) {
+                try {
+                    if (!VideoUtils.isInitialized) {
+                        await VideoUtils.initialize();
+                    }
+                    const poses = await VideoUtils.estimatePoseOnImage();
+                    return poses.length || 0;
+                } catch (err) {
                     return 0;
                 }
-                const poses = await VideoUtils.estimatePoseOnImage();
-                return poses.length || 0;
+            },
+            paramsKeyMap: {
+                VALUE: 0,
             },
             syntax: {
                 js: [],
@@ -262,7 +264,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
             statements: [],
-            template: '%1 번째 얼굴 %2의 %3 좌표',
+            template: '%1 번째 얼굴 %2 의 %3 좌표',
             params: [
                 {
                     type: 'Dropdown',
@@ -345,29 +347,34 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             class: 'video',
             isNotFor: ['video'],
             async func(sprite, script) {
-                if (!VideoUtils.isInitialized) {
-                    await VideoUtils.initialize();
-                }
-                if (!VideoUtils.isMobileNetInit) {
-                    return 0;
-                }
-                const index = script.getField('INDEX');
-                const part = script.getField('PART');
-                const coord = script.getField('COORD');
+                try {
+                    if (!VideoUtils.isInitialized) {
+                        await VideoUtils.initialize();
+                    }
+                    const index = script.getField('INDEX');
+                    const part = script.getField('PART');
+                    const coord = script.getField('COORD');
 
-                const poses = await VideoUtils.estimatePoseOnImage();
-                if (poses.length < index) {
+                    const poses = await VideoUtils.estimatePoseOnImage();
+                    if (poses.length < index) {
+                        return 0;
+                    }
+                    // offset since value shown starts from 1;
+                    const rawValue = poses[index - 1].keypoints[part].position[coord];
+                    if (!rawValue) {
+                        return 0;
+                    }
+                    let returningValue = 0;
+                    if (coord === 'x') {
+                        returningValue = rawValue - VideoUtils.CANVAS_WIDTH / 2;
+                    }
+                    returningValue = VideoUtils.CANVAS_HEIGHT / 2 - rawValue;
+
+                    return returningValue.toFixed(1);
+                } catch (err) {
+                    console.log('HERE! ', err);
                     return 0;
                 }
-                // offset since value shown starts from 1;
-                const rawValue = poses[index - 1].keypoints[part].position[coord];
-                if (!rawValue) {
-                    return 0;
-                }
-                if (coord === 'x') {
-                    return rawValue - VideoUtils.CANVAS_WIDTH / 2;
-                }
-                return VideoUtils.CANVAS_HEIGHT / 2 - rawValue;
             },
             syntax: {
                 js: [],
