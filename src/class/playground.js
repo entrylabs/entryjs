@@ -1402,7 +1402,7 @@ Entry.Playground = class Playground {
         this.addPicture(sourcePicture, true);
     }
 
-    selectTable(table) {
+    selectTable(table = {}) {
         const { tables } = this.dataTable;
         tables.forEach(({ view, id }) => {
             if (id === table.id) {
@@ -1938,15 +1938,8 @@ Entry.Playground = class Playground {
         const { delete: delText = '삭제' } = Buttons;
         removeButton.appendTo(element).innerText = delText;
         removeButton.bindOnClick((e) => {
-            try {
-                e.stopPropagation();
-                this._removeTable(table, element);
-            } catch (e) {
-                Entry.toast.alert(
-                    Lang.Workspace.shape_remove_fail,
-                    Lang.Workspace.shape_remove_fail_msg
-                );
-            }
+            e.stopPropagation();
+            this._removeTable(table, element);
         });
     }
 
