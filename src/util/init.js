@@ -446,7 +446,7 @@ Entry.parseOptions = function(options) {
     /** @type {string} */
     this.type = options.type || this.type;
 
-    this.hashId = options.hashId || this.hasId;
+    this.hashId = options.hashId || this.hashId;
 
     if (options.device) {
         this.device = options.device;
