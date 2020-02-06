@@ -54,6 +54,12 @@ class dmetTable {
         this.#fields[index] = name;
     }
 
+    #fillArray(array, length) {
+        const start = array.length;
+        array.length = length;
+        array.fill(0, start, length);
+    }
+
     from(data) {
         const { list = [], data: array = [], value, _id, id = this.#id, fields, ...info } = data;
         this.#object = {};
@@ -64,6 +70,7 @@ class dmetTable {
                 if (Array.isArray(row)) {
                     const key = CommonUtils.generateId();
                     const value = row.map(toNumber);
+                    this.#fillArray(value, fields.length);
                     this.#array.push({ key, value });
                     this.#object[key] = value;
                     this.#origin.push(cloneDeep(value));
