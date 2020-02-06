@@ -3,7 +3,6 @@ import PromiseManager from '../../core/promiseManager';
 import { format } from 'path';
 const _clamp = require('lodash/clamp');
 
-Entry.videoUtils = VideoUtils;
 Entry.AI_UTILIZE_BLOCK.video = {
     name: 'video',
     imageName: 'video.svg',
