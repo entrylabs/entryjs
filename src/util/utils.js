@@ -42,7 +42,7 @@ Entry.loadProject = function(project) {
         for (const type in Entry.AI_UTILIZE_BLOCK_LIST) {
             if (Entry.aiUtilizeBlocks.indexOf(type) > -1) {
                 Entry.AI_UTILIZE_BLOCK[type].init();
-                if (Entry.type === 'workspace') {
+                if (Entry.type === 'workspace' || Entry.type === 'playground') {
                     Entry.playground.blockMenu.unbanClass(type);
                 }
             }
@@ -54,7 +54,7 @@ Entry.loadProject = function(project) {
         for (const type in Entry.EXPANSION_BLOCK_LIST) {
             if (Entry.expansionBlocks.indexOf(type) > -1) {
                 Entry.EXPANSION_BLOCK[type].init();
-                if (Entry.type === 'workspace') {
+                if (Entry.type === 'workspace' || Entry.type === 'playground') {
                     Entry.playground.blockMenu.unbanClass(type);
                 }
             }
