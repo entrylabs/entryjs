@@ -24,7 +24,7 @@ class VideoUtils {
         this.mobileNet = null;
         this.poses = null;
         this.isInitialized = false;
-        this.videoLoadHandler = this.videoLoadHandler.bind(this);
+        this.videoOnLoadHandler = this.videoOnLoadHandler.bind(this);
     }
 
     reset() {
@@ -67,7 +67,7 @@ class VideoUtils {
                 video.height = CANVAS_HEIGHT;
                 this.canvasVideo = GEHelper.getVideoElement(video);
                 this.video = video;
-                video.onloadedmetadata = this.videoLoadHandler;
+                video.onloadedmetadata = this.videoOnLoadHandler;
             } catch (err) {
                 console.log(err);
                 this.isInitialized = false;
@@ -77,7 +77,7 @@ class VideoUtils {
         }
     }
 
-    videoLoadHandler() {
+    videoOnLoadHandler() {
         Entry.addEventListener('dispatchEventDidToggleStop', this.reset.bind(this));
         this.video.play();
         this.turnOnWebcam();
