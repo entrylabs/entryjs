@@ -188,6 +188,79 @@ class PingpongBase {
         return Buffer.concat([header, property]);
     }
 
+    _fillPacketIntoArray(data, opcode, task_id, cube_no, size) {
+        data[0] = 0xff;
+        data[1] = 0xff;
+        data[2] = 0xff;
+
+        if (cube_no <= -1) data[3] = 0xff;
+        else data[3] = cube_no;
+
+        data[4] = task_id / 256;
+        data[5] = task_id % 256;
+
+        data[6] = opcode;
+
+        data[7] = size / 256;
+        data[8] = size % 256;
+    }
+
+    makeSingleStepPacket(cube_no, speed, degree) {
+        var packet = new Uint8Array(9 + 10);
+
+        this._fillPacketIntoArray(packet, OPCODE.SINGLE_STEPS, 0 /*cube_cnt*/, cube_no, 19);
+
+        var sps = this._calcSpsFromSpeed(speed);
+        var step = Math.round(Math.min(Math.max(degree, 0), 360) * 5.5);
+        if (step > 32768) step = 32768;
+
+        packet[9] = 2; // MODE?? MULTIROLE=2, CRCHECK=3
+        packet[10] = 1; // METHOD, CONTINOUS=0, RELATIVE_SINGLE=1, ABSOLUTE_SINGLE=2, sched_steps=3, sched_point=4
+        packet[11] = 0; //step_type; full=0, servo=4
+        packet[12] = 2; //pause_state; PAUSE=1, RESUME=2
+
+        packet[13] = sps / 256;
+        packet[14] = sps % 256;
+        packet[15] = 0;
+        packet[16] = 0;
+        packet[17] = step / 256;
+        packet[18] = step % 256;
+
+        var time_ms = Math.round(((1000 - Math.abs(speed) * 9) / 99) * step) + 400;
+
+        if (cube_no == 0)
+            console.log(
+                'P: speed=%d sps=%d  degree=%d step=%d delay=%d',
+                speed,
+                sps,
+                degree,
+                step,
+                time_ms
+            );
+
+        return [packet, time_ms];
+    }
+
+    makeContStepPacket(cube_no, cube_cnt, speed) {
+        var packet = new Uint8Array(9 + 6);
+
+        this._fillPacketIntoArray(packet, OPCODE.CONTINUOUS_STEPS, 0, cube_no, 15);
+
+        var sps = this._calcSpsFromSpeed(speed);
+
+        packet[9] = 2; // MODE?? MULTIROLE=2, CRCHECK=3
+        packet[10] = 0; // METHOD, CONTINOUS=0, RELATIVE_SINGLE=1, ABSOLUTE_SINGLE=2, sched_steps=3, sched_point=4
+        packet[11] = 0; //step_type; full=0, servo=4
+        packet[12] = 2; //pause_state; PAUSE=1, RESUME=2
+
+        if (sps == 0) packet[12] = 1;
+
+        packet[13] = sps / 256;
+        packet[14] = sps % 256;
+
+        return packet;
+    }
+
     _getTiltValue(cube_no, tilt_dir) {
         var pd = Entry.hw.portData;
         var tilt_value = 0;
@@ -230,7 +303,7 @@ class PingpongBase {
 
         var sps = 0;
         if (speed != 0) {
-            if (speed < 0) sps = speed * 9 - 100;
+            if (speed < 0) sps = 65536 + (speed * 9 - 100);
             else sps = speed * 9 + 100;
             sps = Math.round(sps);
         }
@@ -593,48 +666,19 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                     var degree1 = script.getNumberValue('DEGREE_1');
                     var degree2 = script.getNumberValue('DEGREE_2');
 
-                    var speed1 = 800;
-                    var speed2 = 800;
+                    var speed1 = 80 * (dir1 === 'LEFT' ? -1 : 1);
+                    var speed2 = 80 * (dir2 === 'LEFT' ? -1 : 1);
 
-                    if (dir1 == 'LEFT') {
-                        speed1 *= -1;
-                    }
-                    if (dir2 == 'LEFT') {
-                        speed2 *= -1;
-                    }
+                    var [arr1, delay1] = Entry.Pingpong_G2.makeSingleStepPacket(0, speed1, degree1);
+                    var [arr2, delay2] = Entry.Pingpong_G2.makeSingleStepPacket(1, speed2, degree2);
 
-                    degree1 = Math.min(Math.max(degree1, 0), 360);
-                    degree2 = Math.min(Math.max(degree2, 0), 360);
+                    var packet1 = Buffer.from(arr1);
+                    var packet2 = Buffer.from(arr2);
 
-                    var step1 = Math.round(degree1 * 5.5);
-                    var step2 = Math.round(degree2 * 5.5);
-                    if (step1 > 32768) step1 = 32768;
-                    if (step2 > 32768) step2 = 32768;
-
-                    var opt1 = [2, 1, 0, 2, 0, 0, 0, 0, 0, 0];
-                    var packet1 = Entry.Pingpong_G2.makePacket(
-                        OPCODE.SINGLE_STEPS,
-                        0x0004,
-                        0,
-                        opt1
-                    );
-                    packet1.writeInt16BE(speed1, 13);
-                    packet1.writeUInt16BE(step1, 17);
-
-                    var opt2 = [2, 1, 0, 2, 0, 0, 0, 0, 0, 0];
-                    var packet2 = Entry.Pingpong_G2.makePacket(
-                        OPCODE.SINGLE_STEPS,
-                        0x0004,
-                        1,
-                        opt2
-                    );
-                    packet2.writeInt16BE(speed2, 13);
-                    packet2.writeUInt16BE(step2, 17);
-
-                    var opt = [2, 0, 0, 2];
+                    var opt = [2, 1, 0, 2];
                     var cmd = Entry.Pingpong_G2.makePacket(
                         OPCODE.AGGREGATE_STEPS,
-                        0x2004,
+                        2 << 12,
                         0xaa,
                         opt
                     );
@@ -642,17 +686,7 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
 
                     var packet = Buffer.concat([cmd, packet1, packet2]);
 
-                    /*
-					packet[9] = 2; // mode?? MULTIROLE=2, CRCHECK=3
-					packet[10] = 1; // method, CONTINOUS=0, RELATIVE_SINGLE=1, ABSOLUTE_SINGLE=2, sched_steps=3, sched_point=4
-					packet[11] = 0;	//step_type; full=0, servo=4
-					packet[12] = 2;	//pause_state; PAUSE=1, RESUME=2
-					*/
-
-                    var delay_ms1 = Math.round(((1100 - Math.abs(speed1)) / 99) * step1) + 400;
-                    var delay_ms2 = Math.round(((1100 - Math.abs(speed2)) / 99) * step2) + 400;
-                    var delay_ms = delay_ms1;
-                    if (delay_ms2 > delay_ms1) delay_ms = delay_ms2;
+                    var delay_ms = Math.max(delay1, delay2);
 
                     return Entry.Pingpong_G2.postCallReturn(script, packet, delay_ms);
                 },
@@ -703,30 +737,16 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                     const dir = script.getStringField('DIR');
                     var degree = script.getNumberValue('DEGREE');
 
-                    var speed = 800;
-                    if (dir == 'LEFT') {
-                        speed *= -1;
-                    }
+                    var speed = 80 * (dir === 'LEFT' ? -1 : 1);
 
-                    degree = Math.min(Math.max(degree, 0), 360);
-
-                    var step = Math.round(degree * 5.5);
-                    if (step > 32768) step = 32768;
-
-                    var opt = [2, 1, 0, 2, 0, 0, 0, 0, 0, 0];
-                    var packet = Entry.Pingpong_G2.makePacket(
-                        OPCODE.SINGLE_STEPS,
-                        0x0004,
+                    var [arr, delay] = Entry.Pingpong_G2.makeSingleStepPacket(
                         cube_id,
-                        opt
+                        speed,
+                        degree
                     );
+                    var packet = Buffer.from(arr);
 
-                    packet.writeInt16BE(speed, 13);
-                    packet.writeUInt16BE(step, 17);
-
-                    var delay_ms = Math.round(((1100 - Math.abs(speed)) / 99) * step) + 400;
-
-                    return Entry.Pingpong_G2.postCallReturn(script, packet, delay_ms);
+                    return Entry.Pingpong_G2.postCallReturn(script, packet, delay);
                 },
             },
             pingpong_g2_start_multi_motor_rotate: {
@@ -753,31 +773,19 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                     var speed1 = script.getNumberValue('SPEED_1');
                     var speed2 = script.getNumberValue('SPEED_2');
 
-                    speed1 = Entry.Pingpong_G2._calcSpsFromSpeed(speed1);
-                    speed2 = Entry.Pingpong_G2._calcSpsFromSpeed(speed2);
+                    var sps1 = Entry.Pingpong_G2._calcSpsFromSpeed(speed1);
+                    var sps2 = Entry.Pingpong_G2._calcSpsFromSpeed(speed2);
 
-                    var opt1 = [2, 0, 0, 2, 0, 0];
-                    var packet1 = Entry.Pingpong_G2.makePacket(
-                        OPCODE.CONTINUOUS_STEPS,
-                        0x0004,
-                        0,
-                        opt1
-                    );
-                    packet1.writeInt16BE(speed1, 13);
+                    var opt1 = [2, 0, 0, 2, sps1 / 256, sps1 % 256];
+                    var packet1 = Entry.Pingpong_G2.makePacket(OPCODE.CONTINUOUS_STEPS, 0, 0, opt1);
 
-                    var opt2 = [2, 0, 0, 2, 0, 0];
-                    var packet2 = Entry.Pingpong_G2.makePacket(
-                        OPCODE.CONTINUOUS_STEPS,
-                        0x0004,
-                        1,
-                        opt2
-                    );
-                    packet2.writeInt16BE(speed2, 13);
+                    var opt2 = [2, 0, 0, 2, sps2 / 256, sps2 % 256];
+                    var packet2 = Entry.Pingpong_G2.makePacket(OPCODE.CONTINUOUS_STEPS, 0, 1, opt2);
 
-                    var opt = [2, 1, 0, 2];
+                    var opt = [2, 0, 0, 2];
                     var cmd = Entry.Pingpong_G2.makePacket(
                         OPCODE.AGGREGATE_STEPS,
-                        0x2004,
+                        2 << 12,
                         0xaa,
                         opt
                     );
@@ -785,8 +793,6 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
 
                     var packet = Buffer.concat([cmd, packet1, packet2]);
 
-                    //var delay_ms = Math.round(((1100 - Math.abs(speed1)) / 99) * 10) + 400;
-                    //return Entry.Pingpong_G2.postCallReturn(script, packet, delay_ms);
                     return Entry.Pingpong_G2.postCallReturn(script, packet);
                 },
             },
@@ -825,16 +831,15 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 func: function(sprite, script) {
                     const cube_id = script.getNumberField('CUBEID');
                     var speed = script.getNumberValue('SPEED');
-                    speed = Entry.Pingpong_G2._calcSpsFromSpeed(speed);
+                    var sps = Entry.Pingpong_G2._calcSpsFromSpeed(speed);
 
-                    var opt = [2, 0, 0, 2, 0, 0];
+                    var opt = [2, 0, 0, 2, sps / 256, sps % 256];
                     var packet = Entry.Pingpong_G2.makePacket(
                         OPCODE.CONTINUOUS_STEPS,
-                        0x0004,
+                        0,
                         cube_id,
                         opt
                     );
-                    packet.writeInt16BE(speed, 13);
 
                     var delay_ms = Math.round(((1100 - Math.abs(speed)) / 99) * 10) + 400;
                     return Entry.Pingpong_G2.postCallReturn(script, packet, delay_ms);
@@ -872,7 +877,7 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                     var opt = [2, 0, 0, 1, 0, 0];
                     var packet = Entry.Pingpong_G2.makePacket(
                         OPCODE.CONTINUOUS_STEPS,
-                        0x0004,
+                        0,
                         cube_id,
                         opt
                     );
@@ -1483,65 +1488,22 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                     var degree2 = script.getNumberValue('DEGREE_2');
                     var degree3 = script.getNumberValue('DEGREE_3');
 
-                    var speed1 = 800;
-                    var speed2 = 800;
-                    var speed3 = 800;
+                    var speed1 = 80 * (dir1 === 'LEFT' ? -1 : 1);
+                    var speed2 = 80 * (dir2 === 'LEFT' ? -1 : 1);
+                    var speed3 = 80 * (dir3 === 'LEFT' ? -1 : 1);
 
-                    if (dir1 == 'LEFT') {
-                        speed1 *= -1;
-                    }
-                    if (dir2 == 'LEFT') {
-                        speed2 *= -1;
-                    }
-                    if (dir3 == 'LEFT') {
-                        speed3 *= -1;
-                    }
+                    var [arr1, delay1] = Entry.Pingpong_G3.makeSingleStepPacket(0, speed1, degree1);
+                    var [arr2, delay2] = Entry.Pingpong_G3.makeSingleStepPacket(1, speed2, degree2);
+                    var [arr3, delay3] = Entry.Pingpong_G3.makeSingleStepPacket(2, speed3, degree3);
 
-                    degree1 = Math.min(Math.max(degree1, 0), 360);
-                    degree2 = Math.min(Math.max(degree2, 0), 360);
-                    degree3 = Math.min(Math.max(degree3, 0), 360);
+                    var packet1 = Buffer.from(arr1);
+                    var packet2 = Buffer.from(arr2);
+                    var packet3 = Buffer.from(arr3);
 
-                    var step1 = Math.round(degree1 * 5.5);
-                    var step2 = Math.round(degree2 * 5.5);
-                    var step3 = Math.round(degree3 * 5.5);
-                    if (step1 > 32768) step1 = 32768;
-                    if (step2 > 32768) step2 = 32768;
-                    if (step3 > 32768) step3 = 32768;
-
-                    var opt1 = [2, 1, 0, 2, 0, 0, 0, 0, 0, 0];
-                    var packet1 = Entry.Pingpong_G3.makePacket(
-                        OPCODE.SINGLE_STEPS,
-                        0x0004,
-                        0,
-                        opt1
-                    );
-                    packet1.writeInt16BE(speed1, 13);
-                    packet1.writeUInt16BE(step1, 17);
-
-                    var opt2 = [2, 1, 0, 2, 0, 0, 0, 0, 0, 0];
-                    var packet2 = Entry.Pingpong_G3.makePacket(
-                        OPCODE.SINGLE_STEPS,
-                        0x0004,
-                        1,
-                        opt2
-                    );
-                    packet2.writeInt16BE(speed2, 13);
-                    packet2.writeUInt16BE(step2, 17);
-
-                    var opt3 = [2, 1, 0, 2, 0, 0, 0, 0, 0, 0];
-                    var packet3 = Entry.Pingpong_G3.makePacket(
-                        OPCODE.SINGLE_STEPS,
-                        0x0004,
-                        2,
-                        opt3
-                    );
-                    packet3.writeInt16BE(speed3, 13);
-                    packet3.writeUInt16BE(step3, 17);
-
-                    var opt = [2, 0, 0, 2];
+                    var opt = [2, 1, 0, 2];
                     var cmd = Entry.Pingpong_G3.makePacket(
                         OPCODE.AGGREGATE_STEPS,
-                        0x3004,
+                        3 << 12,
                         0xaa,
                         opt
                     );
@@ -1552,10 +1514,7 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
 
                     var packet = Buffer.concat([cmd, packet1, packet2, packet3]);
 
-                    var delay_ms1 = Math.round(((1100 - Math.abs(speed1)) / 99) * step1) + 400;
-                    var delay_ms2 = Math.round(((1100 - Math.abs(speed2)) / 99) * step2) + 400;
-                    var delay_ms3 = Math.round(((1100 - Math.abs(speed3)) / 99) * step3) + 400;
-                    var delay_ms = Math.max(delay_ms1, delay_ms2, delay_ms3);
+                    var delay_ms = Math.max(delay1, delay2, delay3);
 
                     return Entry.Pingpong_G3.postCallReturn(script, packet, delay_ms);
                 },
@@ -1601,30 +1560,15 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                     const dir = script.getStringField('DIR');
                     var degree = script.getNumberValue('DEGREE');
 
-                    var speed = 800;
-                    if (dir == 'LEFT') {
-                        speed *= -1;
-                    }
-
-                    degree = Math.min(Math.max(degree, 0), 360);
-
-                    var step = Math.round(degree * 5.5);
-                    if (step > 32768) step = 32768;
-
-                    var opt = [2, 1, 0, 2, 0, 0, 0, 0, 0, 0];
-                    var packet = Entry.Pingpong_G3.makePacket(
-                        OPCODE.SINGLE_STEPS,
-                        0x0004,
+                    var speed = 80 * (dir === 'LEFT' ? -1 : 1);
+                    var [arr, delay] = Entry.Pingpong_G3.makeSingleStepPacket(
                         cube_id,
-                        opt
+                        speed,
+                        degree
                     );
+                    var packet = Buffer.from(arr);
 
-                    packet.writeInt16BE(speed, 13);
-                    packet.writeUInt16BE(step, 17);
-
-                    var delay_ms = Math.round(((1100 - Math.abs(speed)) / 99) * step) + 400;
-
-                    return Entry.Pingpong_G3.postCallReturn(script, packet, delay_ms);
+                    return Entry.Pingpong_G3.postCallReturn(script, packet, delay);
                 },
             },
             pingpong_g3_start_multi_motor_rotate: {
@@ -1652,41 +1596,19 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                     var speed1 = script.getNumberValue('SPEED_1');
                     var speed2 = script.getNumberValue('SPEED_2');
                     var speed3 = script.getNumberValue('SPEED_3');
-                    speed1 = Entry.Pingpong_G3._calcSpsFromSpeed(speed1);
-                    speed2 = Entry.Pingpong_G3._calcSpsFromSpeed(speed2);
-                    speed3 = Entry.Pingpong_G3._calcSpsFromSpeed(speed3);
 
-                    var opt1 = [2, 0, 0, 2, 0, 0];
-                    var packet1 = Entry.Pingpong_G3.makePacket(
-                        OPCODE.CONTINUOUS_STEPS,
-                        0x0004,
-                        0,
-                        opt1
-                    );
-                    packet1.writeInt16BE(speed1, 13);
+                    var arr1 = Entry.Pingpong_G3.makeContStepPacket(0, 0, speed1);
+                    var arr2 = Entry.Pingpong_G3.makeContStepPacket(1, 0, speed2);
+                    var arr3 = Entry.Pingpong_G3.makeContStepPacket(2, 0, speed3);
 
-                    var opt2 = [2, 0, 0, 2, 0, 0];
-                    var packet2 = Entry.Pingpong_G3.makePacket(
-                        OPCODE.CONTINUOUS_STEPS,
-                        0x0004,
-                        1,
-                        opt2
-                    );
-                    packet2.writeInt16BE(speed2, 13);
+                    var packet1 = Buffer.from(arr1);
+                    var packet2 = Buffer.from(arr2);
+                    var packet3 = Buffer.from(arr3);
 
-                    var opt3 = [2, 0, 0, 2, 0, 0];
-                    var packet3 = Entry.Pingpong_G3.makePacket(
-                        OPCODE.CONTINUOUS_STEPS,
-                        0x0004,
-                        2,
-                        opt3
-                    );
-                    packet3.writeInt16BE(speed3, 13);
-
-                    var opt = [2, 1, 0, 2];
+                    var opt = [2, 0, 0, 2];
                     var cmd = Entry.Pingpong_G3.makePacket(
                         OPCODE.AGGREGATE_STEPS,
-                        0x3004,
+                        3 << 12,
                         0xaa,
                         opt
                     );
@@ -1697,8 +1619,7 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
 
                     var packet = Buffer.concat([cmd, packet1, packet2, packet3]);
 
-                    var delay_ms = Math.round(((1100 - Math.abs(speed1)) / 99) * 10) + 400;
-                    return Entry.Pingpong_G3.postCallReturn(script, packet, delay_ms);
+                    return Entry.Pingpong_G3.postCallReturn(script, packet);
                 },
             },
             pingpong_g3_start_motor_rotate: {
@@ -1738,17 +1659,15 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                     var speed = script.getNumberValue('SPEED');
                     speed = Entry.Pingpong_G3._calcSpsFromSpeed(speed);
 
-                    var opt = [2, 0, 0, 2, 0, 0];
+                    var opt = [2, 0, 0, 2, speed / 256, speed % 256];
                     var packet = Entry.Pingpong_G3.makePacket(
                         OPCODE.CONTINUOUS_STEPS,
-                        0x0004,
+                        0,
                         cube_id,
                         opt
                     );
-                    packet.writeInt16BE(speed, 13);
 
-                    var delay_ms = Math.round(((1100 - Math.abs(speed)) / 99) * 10) + 400;
-                    return Entry.Pingpong_G3.postCallReturn(script, packet, delay_ms);
+                    return Entry.Pingpong_G3.postCallReturn(script, packet);
                 },
             },
             pingpong_g3_stop_motor_rotate: {
@@ -1774,7 +1693,7 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                     params: [],
                     type: 'pingpong_g3_stop_motor_rotate',
                 },
-                paramsKeyMap: {},
+                paramsKeyMap: { CUBEID: 0 },
                 class: 'Pingpong_G3_motor',
                 isNotFor: ['Pingpong_G3'],
                 func: function(sprite, script) {
@@ -1783,7 +1702,7 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                     var opt = [2, 0, 0, 1, 0, 0];
                     var packet = Entry.Pingpong_G3.makePacket(
                         OPCODE.CONTINUOUS_STEPS,
-                        0x3004,
+                        0,
                         cube_id,
                         opt
                     );
@@ -2407,82 +2326,25 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                     var degree3 = script.getNumberValue('DEGREE_3');
                     var degree4 = script.getNumberValue('DEGREE_4');
 
-                    var speed1 = 800;
-                    var speed2 = 800;
-                    var speed3 = 800;
-                    var speed4 = 800;
+                    var speed1 = 80 * (dir1 === 'LEFT' ? -1 : 1);
+                    var speed2 = 80 * (dir2 === 'LEFT' ? -1 : 1);
+                    var speed3 = 80 * (dir3 === 'LEFT' ? -1 : 1);
+                    var speed4 = 80 * (dir4 === 'LEFT' ? -1 : 1);
 
-                    if (dir1 == 'LEFT') {
-                        speed1 *= -1;
-                    }
-                    if (dir2 == 'LEFT') {
-                        speed2 *= -1;
-                    }
-                    if (dir3 == 'LEFT') {
-                        speed3 *= -1;
-                    }
-                    if (dir4 == 'LEFT') {
-                        speed4 *= -1;
-                    }
+                    var [arr1, delay1] = Entry.Pingpong_G4.makeSingleStepPacket(0, speed1, degree1);
+                    var [arr2, delay2] = Entry.Pingpong_G4.makeSingleStepPacket(1, speed2, degree2);
+                    var [arr3, delay3] = Entry.Pingpong_G4.makeSingleStepPacket(2, speed3, degree3);
+                    var [arr4, delay4] = Entry.Pingpong_G4.makeSingleStepPacket(3, speed4, degree4);
 
-                    degree1 = Math.min(Math.max(degree1, 0), 360);
-                    degree2 = Math.min(Math.max(degree2, 0), 360);
-                    degree3 = Math.min(Math.max(degree3, 0), 360);
-                    degree4 = Math.min(Math.max(degree4, 0), 360);
+                    var packet1 = Buffer.from(arr1);
+                    var packet2 = Buffer.from(arr2);
+                    var packet3 = Buffer.from(arr3);
+                    var packet4 = Buffer.from(arr4);
 
-                    var step1 = Math.round(degree1 * 5.5);
-                    var step2 = Math.round(degree2 * 5.5);
-                    var step3 = Math.round(degree3 * 5.5);
-                    var step4 = Math.round(degree4 * 5.5);
-                    if (step1 > 32768) step1 = 32768;
-                    if (step2 > 32768) step2 = 32768;
-                    if (step3 > 32768) step3 = 32768;
-                    if (step4 > 32768) step4 = 32768;
-
-                    var opt1 = [2, 1, 0, 2, 0, 0, 0, 0, 0, 0];
-                    var packet1 = Entry.Pingpong_G4.makePacket(
-                        OPCODE.SINGLE_STEPS,
-                        0x0004,
-                        0,
-                        opt1
-                    );
-                    packet1.writeInt16BE(speed1, 13);
-                    packet1.writeUInt16BE(step1, 17);
-
-                    var opt2 = [2, 1, 0, 2, 0, 0, 0, 0, 0, 0];
-                    var packet2 = Entry.Pingpong_G4.makePacket(
-                        OPCODE.SINGLE_STEPS,
-                        0x0004,
-                        1,
-                        opt2
-                    );
-                    packet2.writeInt16BE(speed2, 13);
-                    packet2.writeUInt16BE(step2, 17);
-
-                    var opt3 = [2, 1, 0, 2, 0, 0, 0, 0, 0, 0];
-                    var packet3 = Entry.Pingpong_G4.makePacket(
-                        OPCODE.SINGLE_STEPS,
-                        0x0004,
-                        2,
-                        opt3
-                    );
-                    packet3.writeInt16BE(speed3, 13);
-                    packet3.writeUInt16BE(step3, 17);
-
-                    var opt4 = [2, 1, 0, 2, 0, 0, 0, 0, 0, 0];
-                    var packet4 = Entry.Pingpong_G4.makePacket(
-                        OPCODE.SINGLE_STEPS,
-                        0x0004,
-                        3,
-                        opt4
-                    );
-                    packet4.writeInt16BE(speed4, 13);
-                    packet4.writeUInt16BE(step4, 17);
-
-                    var opt = [2, 0, 0, 2];
+                    var opt = [2, 1, 0, 2];
                     var cmd = Entry.Pingpong_G4.makePacket(
                         OPCODE.AGGREGATE_STEPS,
-                        0x4004,
+                        4 << 12,
                         0xaa,
                         opt
                     );
@@ -2497,11 +2359,7 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
 
                     var packet = Buffer.concat([cmd, packet1, packet2, packet3, packet4]);
 
-                    var delay_ms1 = Math.round(((1100 - Math.abs(speed1)) / 99) * step1) + 400;
-                    var delay_ms2 = Math.round(((1100 - Math.abs(speed2)) / 99) * step2) + 400;
-                    var delay_ms3 = Math.round(((1100 - Math.abs(speed3)) / 99) * step3) + 400;
-                    var delay_ms4 = Math.round(((1100 - Math.abs(speed4)) / 99) * step4) + 400;
-                    var delay_ms = Math.max(delay_ms1, delay_ms2, delay_ms3, delay_ms4);
+                    var delay_ms = Math.max(delay1, delay2, delay3, delay4);
 
                     return Entry.Pingpong_G4.postCallReturn(script, packet, delay_ms);
                 },
@@ -2546,31 +2404,16 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                     const cube_id = script.getNumberField('CUBEID');
                     const dir = script.getStringField('DIR');
                     var degree = script.getNumberValue('DEGREE');
+                    var speed = 80 * (dir === 'LEFT' ? -1 : 1);
 
-                    var speed = 800;
-                    if (dir == 'LEFT') {
-                        speed *= -1;
-                    }
-
-                    degree = Math.min(Math.max(degree, 0), 360);
-
-                    var step = Math.round(degree * 5.5);
-                    if (step > 32768) step = 32768;
-
-                    var opt = [2, 1, 0, 2, 0, 0, 0, 0, 0, 0];
-                    var packet = Entry.Pingpong_G4.makePacket(
-                        OPCODE.SINGLE_STEPS,
-                        0x0004,
+                    var [arr, delay] = Entry.Pingpong_G4.makeSingleStepPacket(
                         cube_id,
-                        opt
+                        speed,
+                        degree
                     );
+                    var packet = Buffer.from(arr);
 
-                    packet.writeInt16BE(speed, 13);
-                    packet.writeUInt16BE(step, 17);
-
-                    var delay_ms = Math.round(((1100 - Math.abs(speed)) / 99) * step) + 400;
-
-                    return Entry.Pingpong_G4.postCallReturn(script, packet, delay_ms);
+                    return Entry.Pingpong_G4.postCallReturn(script, packet, delay);
                 },
             },
             pingpong_g4_start_multi_motor_rotate: {
@@ -2605,46 +2448,22 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                     speed3 = Entry.Pingpong_G4._calcSpsFromSpeed(speed3);
                     speed4 = Entry.Pingpong_G4._calcSpsFromSpeed(speed4);
 
-                    var opt1 = [2, 0, 0, 2, 0, 0];
-                    var packet1 = Entry.Pingpong_G4.makePacket(
-                        OPCODE.CONTINUOUS_STEPS,
-                        0x0004,
-                        0,
-                        opt1
-                    );
-                    packet1.writeInt16BE(speed1, 13);
+                    var opt1 = [2, 0, 0, 2, speed1 / 256, speed1 % 256];
+                    var packet1 = Entry.Pingpong_G4.makePacket(OPCODE.CONTINUOUS_STEPS, 0, 0, opt1);
 
-                    var opt2 = [2, 0, 0, 2, 0, 0];
-                    var packet2 = Entry.Pingpong_G4.makePacket(
-                        OPCODE.CONTINUOUS_STEPS,
-                        0x0004,
-                        1,
-                        opt2
-                    );
-                    packet2.writeInt16BE(speed2, 13);
+                    var opt2 = [2, 0, 0, 2, speed2 / 256, speed2 % 256];
+                    var packet2 = Entry.Pingpong_G4.makePacket(OPCODE.CONTINUOUS_STEPS, 0, 1, opt2);
 
-                    var opt3 = [2, 0, 0, 2, 0, 0];
-                    var packet3 = Entry.Pingpong_G4.makePacket(
-                        OPCODE.CONTINUOUS_STEPS,
-                        0x0004,
-                        2,
-                        opt3
-                    );
-                    packet3.writeInt16BE(speed3, 13);
+                    var opt3 = [2, 0, 0, 2, speed3 / 256, speed3 % 256];
+                    var packet3 = Entry.Pingpong_G4.makePacket(OPCODE.CONTINUOUS_STEPS, 0, 2, opt3);
 
-                    var opt4 = [2, 0, 0, 2, 0, 0];
-                    var packet4 = Entry.Pingpong_G4.makePacket(
-                        OPCODE.CONTINUOUS_STEPS,
-                        0x0004,
-                        3,
-                        opt4
-                    );
-                    packet4.writeInt16BE(speed4, 13);
+                    var opt4 = [2, 0, 0, 2, speed4 / 256, speed4 % 256];
+                    var packet4 = Entry.Pingpong_G4.makePacket(OPCODE.CONTINUOUS_STEPS, 0, 3, opt4);
 
-                    var opt = [2, 1, 0, 2];
+                    var opt = [2, 0, 0, 2];
                     var cmd = Entry.Pingpong_G4.makePacket(
                         OPCODE.AGGREGATE_STEPS,
-                        0x4004,
+                        4 << 12,
                         0xaa,
                         opt
                     );
@@ -2659,8 +2478,7 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
 
                     var packet = Buffer.concat([cmd, packet1, packet2, packet3, packet4]);
 
-                    var delay_ms = Math.round(((1100 - Math.abs(speed1)) / 99) * 10) + 400;
-                    return Entry.Pingpong_G4.postCallReturn(script, packet, delay_ms);
+                    return Entry.Pingpong_G4.postCallReturn(script, packet);
                 },
             },
             pingpong_g4_start_motor_rotate: {
@@ -2698,19 +2516,17 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                 func: function(sprite, script) {
                     const cube_id = script.getNumberField('CUBEID');
                     var speed = script.getNumberValue('SPEED');
-                    speed = Entry.Pingpong_G4._calcSpsFromSpeed(speed);
+                    var sps = Entry.Pingpong_G4._calcSpsFromSpeed(speed);
 
-                    var opt = [2, 0, 0, 2, 0, 0];
+                    var opt = [2, 0, 0, 2, sps / 256, sps % 256];
                     var packet = Entry.Pingpong_G4.makePacket(
                         OPCODE.CONTINUOUS_STEPS,
-                        0x0004,
+                        0,
                         cube_id,
                         opt
                     );
-                    packet.writeInt16BE(speed, 13);
 
-                    var delay_ms = Math.round(((1100 - Math.abs(speed)) / 99) * 10) + 400;
-                    return Entry.Pingpong_G4.postCallReturn(script, packet, delay_ms);
+                    return Entry.Pingpong_G4.postCallReturn(script, packet);
                 },
             },
             pingpong_g4_stop_motor_rotate: {
@@ -2736,7 +2552,7 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                     params: [],
                     type: 'pingpong_g4_stop_motor_rotate',
                 },
-                paramsKeyMap: {},
+                paramsKeyMap: { CUBEID: 0 },
                 class: 'Pingpong_G4_motor',
                 isNotFor: ['Pingpong_G4'],
                 func: function(sprite, script) {
@@ -2745,7 +2561,7 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                     var opt = [2, 0, 0, 1, 0, 0];
                     var packet = Entry.Pingpong_G4.makePacket(
                         OPCODE.CONTINUOUS_STEPS,
-                        0x0004,
+                        0,
                         cube_id,
                         opt
                     );
