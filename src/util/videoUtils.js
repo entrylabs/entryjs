@@ -5,11 +5,15 @@ import * as posenet from '@tensorflow-models/posenet';
 const VIDEO_WIDTH = 640;
 const VIDEO_HEIGHT = 360;
 
+// canvasVideo SETTING
+const CANVAS_WIDTH = 480;
+const CANVAS_HEIGHT = 270;
+
 class VideoUtils {
     constructor() {
-        this.CANVAS_WIDTH = 480;
-        this.CANVAS_HEIGHT = 270;
-        // 기본적으로 hFlip을 한번 해야 거울과 같이 동작하므로 horizontal flip 인지 아닌지를 확인한다.
+        //with purpose of utilizing same value outside
+        this.CANVAS_WIDTH = CANVAS_WIDTH;
+        this.CANVAS_HEIGHT = CANVAS_HEIGHT;
         this.video = null;
         this.canvasVideo = null;
         this.flipStatus = {
@@ -20,10 +24,10 @@ class VideoUtils {
         this.mobileNet = null;
         this.poses = null;
         this.isInitialized = false;
+        this.videoLoadHandler = this.videoLoadHandler.bind(this);
     }
 
     reset() {
-        console.log('RESET');
         this.turnOnWebcam();
         if (!this.flipStatus.horizontal) {
             this.setOptions('hflip');
@@ -31,6 +35,9 @@ class VideoUtils {
         if (this.flipStatus.vertical) {
             this.setOptions('vflip');
         }
+        GEHelper.resetCanvasBrightness(this.canvasVideo);
+        GEHelper.setVideoAlpha(this.canvasVideo, 50);
+        GEHelper.tickByEngine();
         this.poses = null;
     }
 
@@ -52,19 +59,15 @@ class VideoUtils {
                         height: VIDEO_HEIGHT,
                     },
                 });
+
                 this.stream = stream;
                 const video = document.createElement('video');
                 video.srcObject = stream;
-                video.width = this.CANVAS_WIDTH;
-                video.height = this.CANVAS_HEIGHT;
+                video.width = CANVAS_WIDTH;
+                video.height = CANVAS_HEIGHT;
                 this.canvasVideo = GEHelper.getVideoElement(video);
-                video.onloadedmetadata = async (e) => {
-                    Entry.addEventListener('dispatchEventDidToggleStop', this.reset.bind(this));
-                    video.play();
-                    this.turnOnWebcam();
-                    this.initializePosenet();
-                };
                 this.video = video;
+                video.onloadedmetadata = this.videoLoadHandler;
             } catch (err) {
                 console.log(err);
                 this.isInitialized = false;
@@ -74,8 +77,14 @@ class VideoUtils {
         }
     }
 
+    videoLoadHandler() {
+        Entry.addEventListener('dispatchEventDidToggleStop', this.reset.bind(this));
+        this.video.play();
+        this.turnOnWebcam();
+        this.initializePosenet();
+    }
+
     async initializePosenet() {
-        console.log('init posenet');
         if (this.isMobileNetInit) {
             return;
         }
@@ -86,7 +95,6 @@ class VideoUtils {
             multiplier: 1,
         });
         this.isMobileNetInit = true;
-        console.log('done initializing');
     }
 
     async estimatePoseOnImage() {
@@ -94,28 +102,21 @@ class VideoUtils {
         if (!this.isMobileNetInit) {
             return [];
         }
-        return await new Promise((resolve, reject) => {
-            try {
-                this.mobileNet
-                    .estimateMultiplePoses(this.video, {
-                        flipHorizontal: true,
-                        maxDetections: 4,
-                        scoreThreshold: 0.5,
-                        nmsRadius: 20,
-                    })
-                    .then((poses) => {
-                        this.poses = poses;
-                        resolve(poses);
-                    });
-            } catch (err) {
-                // console.error('error in detection');
-                if (this.isMobileNetInit) {
-                    resolve([]);
-                } else {
-                    console.log(err);
-                }
+        try {
+            const poses = await this.mobileNet.estimateMultiplePoses(this.video, {
+                flipHorizontal: true,
+                maxDetections: 4,
+                scoreThreshold: 0.5,
+                nmsRadius: 20,
+            });
+            this.poses = poses;
+            return poses;
+        } catch (err) {
+            if (!this.isMobileNetInit) {
+                console.log(err);
             }
-        });
+            return [];
+        }
     }
 
     async checkUserCamAvailable() {
@@ -150,30 +151,22 @@ class VideoUtils {
     }
     // option change
     setOptions(target, value) {
+        console.log('this.setOptions');
+        if (!this.canvasVideo) {
+            return;
+        }
         switch (target) {
             case 'brightness':
-                if (!this.canvasVideo) {
-                    return;
-                }
                 GEHelper.setVideoBrightness(this.canvasVideo, value);
                 break;
             case 'opacity':
-                if (!this.canvasVideo) {
-                    return;
-                }
                 GEHelper.setVideoAlpha(this.canvasVideo, value);
                 break;
             case 'hflip':
-                if (!this.canvasVideo) {
-                    return;
-                }
                 this.flipStatus.horizontal = !this.flipStatus.horizontal;
                 GEHelper.hFlipVideoElement(this.canvasVideo);
                 break;
             case 'vflip':
-                if (!this.canvasVideo) {
-                    return;
-                }
                 this.flipStatus.vertical = !this.flipStatus.vertical;
                 GEHelper.vFlipVideoElement(this.canvasVideo);
                 break;
@@ -182,7 +175,6 @@ class VideoUtils {
 
     // videoUtils.destroy does not actually destroy singletonClass, but instead resets the whole stuff except models to be used
     destroy() {
-        console.log('DESTROY VIDEO UTIL');
         this.turnOffWebcam();
         this.stream.getTracks().forEach((track) => {
             track.stop();

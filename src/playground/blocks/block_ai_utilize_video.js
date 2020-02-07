@@ -1,7 +1,5 @@
 import VideoUtils from '../../util/videoUtils';
-import PromiseManager from '../../core/promiseManager';
-import { format } from 'path';
-const _clamp = require('lodash/clamp');
+import clamp from 'lodash/clamp';
 Entry.videoUtils = VideoUtils;
 Entry.AI_UTILIZE_BLOCK.video = {
     name: 'video',
@@ -158,7 +156,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             isNotFor: ['video'],
             async func(sprite, script) {
                 const target = script.getField('TARGET');
-                const value = _clamp(
+                const value = clamp(
                     script.getNumberValue('VALUE'),
                     target === 'brightness' ? -100 : 0,
                     100
