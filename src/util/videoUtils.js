@@ -52,6 +52,7 @@ class VideoUtils {
                         height: VIDEO_HEIGHT,
                     },
                 });
+                this.stream = stream;
                 const video = document.createElement('video');
                 video.srcObject = stream;
                 video.width = this.CANVAS_WIDTH;
@@ -61,6 +62,7 @@ class VideoUtils {
                     Entry.addEventListener('dispatchEventDidToggleStop', this.reset.bind(this));
                     video.play();
                     this.turnOnWebcam();
+                    this.initializePosenet();
                 };
                 this.video = video;
             } catch (err) {
@@ -177,14 +179,21 @@ class VideoUtils {
                 break;
         }
     }
+
+    // videoUtils.destroy does not actually destroy singletonClass, but instead resets the whole stuff except models to be used
     destroy() {
+        console.log('DESTROY VIDEO UTIL');
+        this.turnOffWebcam();
+        this.stream.getTracks().forEach((track) => {
+            track.stop();
+        });
         this.video = null;
         this.canvasVideo = null;
         this.flipStatus = {
             horizontal: false,
             vertical: false,
         };
-        this.isMobileNetInit = false;
+
         this.mobileNet = null;
         this.poses = null;
         this.isInitialized = false;

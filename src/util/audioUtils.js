@@ -67,7 +67,7 @@ class AudioUtils {
     async initUserMedia() {
         this.incompatBrowserChecker();
         let mediaStream = await this.getMediaStream();
-
+        this.stream = mediaStream;
         if (this.isAudioInitComplete) {
             return;
         }
@@ -203,7 +203,7 @@ class AudioUtils {
             };
         }
         this._audioContext.suspend();
-        this._userMediaStream.getTracks().forEach((track) => {
+        this.stream.getTracks().forEach((track) => {
             track.stop();
         });
         clearTimeout(this._properStopCall);
