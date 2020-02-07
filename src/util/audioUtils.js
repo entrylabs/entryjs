@@ -16,6 +16,8 @@ const VOICE_SERVER_ADDR = {
     path: '/vc',
 };
 
+const DESIRED_SAMPLE_RATE = 16000;
+
 class AudioUtils {
     get currentVolume() {
         return this._currentVolume;
@@ -236,7 +238,6 @@ class AudioUtils {
     }
 
     _handleScriptProcess = (analyserNode) => (audioProcessingEvent) => {
-        const DESIRED_SAMPLE_RATE = 16000;
         const array = new Uint8Array(analyserNode.frequencyBinCount);
         analyserNode.getByteFrequencyData(array);
 
