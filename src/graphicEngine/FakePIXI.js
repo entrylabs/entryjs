@@ -1,15 +1,7 @@
-(function() {
-    if(window.PIXI) {
-        return;
-    }
+import * as PIXI from 'pixi.js';
 
-    const emptyFn = ()=>{};
-    let names = ["Rectangle", "Texture", "Sprite", "RenderTexture", "Matrix", "Graphics", "Container", "TextStyle", "TextMetrics", "Text", "BaseTexture", "Point"];
-    let pixi = {};
-    names.forEach((v)=>{
-        pixi[v] = emptyFn;
-    });
-    window.PIXI = pixi;
+(function() {
+    window.PIXI = PIXI;
 
     /* //PIXI를 통해 참조하는 속성을 찾아내기 위한 함수
     var arr = [];
