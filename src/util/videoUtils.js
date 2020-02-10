@@ -22,6 +22,14 @@ class VideoUtils {
             horizontal: false,
             vertical: false,
         };
+        this.motionStatus = {
+            total: 0,
+            right: 0,
+            left: 0,
+            top: 0,
+            bottom: 0,
+        };
+        this.objectDetected = [];
         this.isMobileNetInit = false;
         this.mobileNet = null;
         this.poses = null;
@@ -115,14 +123,16 @@ class VideoUtils {
                         this.isMobileNetInit = true;
                         break;
                     case 'motion':
-                        if (message.length > 0) console.log('motion:', message);
+                        this.motionStatus = message;
                         break;
+                    case 'coco':
+                        this.objectDetected = message;
                 }
             };
             worker.postMessage({
                 type: 'init',
-                width: VIDEO_WIDTH,
-                height: VIDEO_HEIGHT,
+                width: CANVAS_WIDTH,
+                height: CANVAS_HEIGHT,
             });
 
             const [track] = this.stream.getVideoTracks();
