@@ -340,8 +340,8 @@ Entry.AI_UTILIZE_BLOCK.translate.getBlocks = function() {
             return result;
         }
 
-        if (text.length > 20) {
-            result.message = Lang.Blocks.sentence_over_20_charactor;
+        if (text.length > 3000) {
+            result.message = Lang.Blocks.sentence_over_3000_charactor;
             return result;
         }
 
