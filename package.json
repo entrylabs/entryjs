@@ -53,6 +53,7 @@
         "simplebar": "^3.1.1",
         "uid": "^0.0.2",
         "webpack": "^4.41.4",
+        "worker-loader": "^2.0.0",
         "xss-filters": "^1.2.7"
     },
     "devDependencies": {

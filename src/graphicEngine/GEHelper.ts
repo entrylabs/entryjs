@@ -66,6 +66,7 @@ class _GEHelper extends GEHelperBase {
     public textHelper: _TextHelper;
     public colorFilter: _ColorFilterHelper;
     public brushHelper: _BrushHelper;
+    public inMemoryCanvas: HTMLCanvasElement;
 
     /**  pixi 객체로부터 rotate를 읽을 때 사용할 값 */
     public rotateRead: number = 1;
@@ -206,6 +207,11 @@ class _GEHelper extends GEHelperBase {
                 }
             });
         }
+        if (!this.inMemoryCanvas) {
+            this.inMemoryCanvas = document.createElement('canvas');
+            this.inMemoryCanvas.width = 480;
+            this.inMemoryCanvas.height = 270;
+        }
 
         return videoElement;
     }
@@ -268,6 +274,15 @@ class _GEHelper extends GEHelperBase {
             canvasVideo.uncache();
             canvasVideo.alpha = (100 - value) / 100;
             canvasVideo.cache(0, 0, canvasVideo.image.videoWidth, canvasVideo.image.videoHeight);
+        }
+    }
+
+    getVideoImageData() {
+        if (this.isWebGL) {
+            debugger;
+            Entry.stage.canvas;
+        } else {
+            return Entry.stage.canvas.canvas.getContext('2d').getImageData(0, 0, 480, 270);
         }
     }
 

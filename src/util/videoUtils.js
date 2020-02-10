@@ -1,6 +1,6 @@
 import { GEHelper } from '../graphicEngine/GEHelper';
 import * as posenet from '@tensorflow-models/posenet';
-
+import VideoWorker from './workers/video.worker';
 // input resolution setting
 const VIDEO_WIDTH = 640;
 const VIDEO_HEIGHT = 360;
@@ -8,6 +8,8 @@ const VIDEO_HEIGHT = 360;
 // canvasVideo SETTING
 const CANVAS_WIDTH = 480;
 const CANVAS_HEIGHT = 270;
+
+const worker = new VideoWorker();
 
 class VideoUtils {
     constructor() {
@@ -47,6 +49,12 @@ class VideoUtils {
         }
         this.isInitialized = true;
 
+        if (!this.inMemoryCanvas) {
+            this.inMemoryCanvas = document.createElement('canvas');
+            this.inMemoryCanvas.width = CANVAS_WIDTH;
+            this.inMemoryCanvas.height = CANVAS_HEIGHT;
+        }
+
         navigator.getUserMedia =
             navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
         if (navigator.getUserMedia) {
@@ -77,13 +85,6 @@ class VideoUtils {
         }
     }
 
-    videoOnLoadHandler() {
-        Entry.addEventListener('dispatchEventDidToggleStop', this.reset.bind(this));
-        this.video.play();
-        this.turnOnWebcam();
-        this.initializePosenet();
-    }
-
     async initializePosenet() {
         if (this.isMobileNetInit) {
             return;
@@ -96,27 +97,78 @@ class VideoUtils {
         });
         this.isMobileNetInit = true;
     }
+    videoOnLoadHandler() {
+        Entry.addEventListener('dispatchEventDidToggleStop', this.reset.bind(this));
+        this.video.play();
+        this.turnOnWebcam();
+        if (window.Worker) {
+            if (this.isMobileNetInit) {
+                return;
+            }
+            worker.onmessage = (e) => {
+                const { type, message } = e.data;
+                switch (type) {
+                    case 'pose':
+                        this.poses = message;
+                        break;
+                    case 'init':
+                        this.isMobileNetInit = true;
+                        break;
+                    case 'motion':
+                        if (message.length > 0) console.log('motion:', message);
+                        break;
+                }
+            };
+            worker.postMessage({
+                type: 'init',
+                width: VIDEO_WIDTH,
+                height: VIDEO_HEIGHT,
+            });
+
+            const [track] = this.stream.getVideoTracks();
+            this.imageCapture = new ImageCapture(track);
+            setInterval(() => {
+                if (this.canvasVideo) {
+                    if (this.canvasVideo) {
+                    }
+                    const context = this.inMemoryCanvas.getContext('2d');
+                    context.drawImage(this.video, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+                    const imageData = context.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+                    worker.postMessage({
+                        type: 'estimate',
+                        imageData,
+                    });
+                }
+            }, 100);
+        } else {
+            this.initializePosenet();
+        }
+    }
 
     async estimatePoseOnImage() {
         // load the posenet model from a checkpoint
         if (!this.isMobileNetInit) {
             return [];
         }
-        try {
-            const poses = await this.mobileNet.estimateMultiplePoses(this.video, {
-                flipHorizontal: true,
-                maxDetections: 4,
-                scoreThreshold: 0.5,
-                nmsRadius: 20,
-            });
-            this.poses = poses;
-            return poses;
-        } catch (err) {
-            if (!this.isMobileNetInit) {
-                console.log(err);
+        if (!window.Worker) {
+            try {
+                const poses = await this.mobileNet.estimateMultiplePoses(this.video, {
+                    flipHorizontal: true,
+                    maxDetections: 4,
+                    scoreThreshold: 0.5,
+                    nmsRadius: 20,
+                });
+                this.poses = poses;
+                return poses;
+            } catch (err) {
+                if (!this.isMobileNetInit) {
+                    console.log(err);
+                }
+                return [];
             }
-            return [];
         }
+        return this.poses;
     }
 
     async checkUserCamAvailable() {
