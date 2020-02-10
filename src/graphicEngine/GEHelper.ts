@@ -245,27 +245,30 @@ class _GEHelper extends GEHelperBase {
 
     setVideoBrightness(canvasVideo: PIXI.Sprite | createjs.Bitmap, value: number): any {
         if (this._isWebGL) {
-            const recalculated = (value + 100) / 200;
+            const recalculated = (200 - (value + 100)) / 200;
             const colorMatrix = new PIXI.filters.ColorMatrixFilter();
             canvasVideo.filters = [colorMatrix];
             colorMatrix.brightness(recalculated);
             colorMatrix.enabled = true;
         } else {
-            console.log(value);
-            const recalculated = (value * 255) / 200;
+            const recalculated = (value * 255 - 25500) / 200;
+
             const colorMatrix = new createjs.ColorMatrix().adjustBrightness(recalculated);
             const filter = new createjs.ColorMatrixFilter();
             filter.matrix = colorMatrix;
             canvasVideo.filters = [filter];
-            canvasVideo.uncache();
             canvasVideo.cache(0, 0, canvasVideo.image.videoWidth, canvasVideo.image.videoHeight);
         }
-        this.tickByEngine();
         return canvasVideo;
     }
     setVideoAlpha(canvasVideo: PIXI.Sprite | createjs.Bitmap, value: number): any {
-        canvasVideo.alpha = (100 - value) / 100;
-        this.tickByEngine();
+        if (this.isWebGL) {
+            canvasVideo.alpha = (100 - value) / 100;
+        } else {
+            canvasVideo.uncache();
+            canvasVideo.alpha = (100 - value) / 100;
+            canvasVideo.cache(0, 0, canvasVideo.image.videoWidth, canvasVideo.image.videoHeight);
+        }
     }
 
     getTransformedBounds(sprite: PIXI.Sprite | any): PIXI.Rectangle | any {

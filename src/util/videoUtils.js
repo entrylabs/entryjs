@@ -151,7 +151,6 @@ class VideoUtils {
     }
     // option change
     setOptions(target, value) {
-        console.log('this.setOptions');
         if (!this.canvasVideo) {
             return;
         }

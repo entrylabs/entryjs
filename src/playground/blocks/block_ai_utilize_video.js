@@ -368,7 +368,6 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
 
                     return returningValue.toFixed(1);
                 } catch (err) {
-                    console.log('HERE! ', err);
                     return 0;
                 }
             },
