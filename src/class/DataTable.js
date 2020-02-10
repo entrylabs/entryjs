@@ -74,6 +74,12 @@ class DataTable {
         this.dataAnalytics = new DataAnalytics({ container: this.#view, data: {} })
             .on('submit', (dataAnalytics) => {
                 const { id, table = [[]], charts = [], title } = dataAnalytics;
+                if (!title) {
+                    return Entry.toast.alert(
+                        Lang.DataAnalytics.fail_save_table,
+                        Lang.DataAnalytics.empty_table_name_content
+                    );
+                }
                 if (
                     Entry.playground.isDuplicatedTableName(
                         title,
@@ -81,7 +87,7 @@ class DataTable {
                     )
                 ) {
                     return Entry.toast.alert(
-                        Lang.DataAnalytics.duplicate_table_name_title,
+                        Lang.DataAnalytics.fail_save_table,
                         Lang.DataAnalytics.duplicate_table_name_content
                     );
                 }
