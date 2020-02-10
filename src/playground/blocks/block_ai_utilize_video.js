@@ -260,7 +260,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
             statements: [],
-            template: '%1 번째 얼굴 %2 의 %3 좌표',
+            template: '%1 번째 사람의 %2 의 %3 좌표',
             params: [
                 {
                     type: 'Dropdown',
@@ -296,7 +296,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                         // ['왼쪽 발목', 'leftAnkle'],
                         // ['오른쪽 발목', 'rightAnkle'],
 
-                        ['코', 0],
+                        ['얼굴', 0],
                         ['왼쪽 눈', 1],
                         ['오른쪽 눈', 2],
                         ['왼쪽 귀', 3],
