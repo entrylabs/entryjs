@@ -293,7 +293,7 @@ class _GEHelper extends GEHelperBase {
             ctx.stroke();
         }
     }
-    drawObjectBox(ctx: any, bbox: Array, name: String, flipStatus: any) {
+    drawObjectBox(ctx: any, bbox: Array, name: String, flipStatus={}: any) {
         const { WIDTH, HEIGHT, SCALE_X, SCALE_Y } = INITIAL_VIDEO_PARAMS;
         const TARGET_WIDTH = WIDTH / SCALE_X;
         const TARGET_HEIGHT = HEIGHT / SCALE_Y;

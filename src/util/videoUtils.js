@@ -122,6 +122,14 @@ class VideoUtils {
         requestAnimationFrame(this.startDrawObjectRect.bind(this));
     }
 
+    startDrawFaceRect() {
+        const ctx = Entry.stage.canvas.canvas.getContext('2d');
+        if (this.poses) {
+            this.drawFaceBoxes(ctx, this.poses.predictions);
+        }
+        requestAnimationFrame(this.startDrawFaceRect.bind(this));
+    }
+
     startDrawUserPoints() {
         const ctx = Entry.stage.canvas.canvas.getContext('2d');
         if (this.poses) {
@@ -130,6 +138,7 @@ class VideoUtils {
         }
         requestAnimationFrame(this.startDrawUserPoints.bind(this));
     }
+
     drawHumanPoints(ctx, poses) {
         poses.map((pose) => {
             pose.keypoints.map((item) => {
@@ -150,6 +159,32 @@ class VideoUtils {
             });
         });
     }
+
+    drawFaceBoxes(ctx, poses) {
+        poses.forEach((pose) => {
+            const nose = pose.keypoints[0].position;
+            const leftEye = pose.keypoints[1].position;
+            const rightEye = pose.keypoints[2].position;
+            const leftEar = pose.keypoints[3].position;
+            const rightEar = pose.keypoints[4].position;
+            const mouse = pose.keypoints[21].position;
+
+            const x = this.flipStatus.horizontal
+                ? Math.max(nose.x, leftEye.x, rightEye.x, leftEar.x, rightEar.x)
+                : Math.min(nose.x, leftEye.x, rightEye.x, leftEar.x, rightEar.x);
+
+            const y = leftEye.y * 2 - mouse.y * 0.8;
+            const width = leftEar.x - rightEar.x;
+            const height = Math.abs(leftEye.y - mouse.y) * 2;
+            const bbox = [];
+            bbox[0] = x;
+            bbox[1] = y;
+            bbox[2] = width;
+            bbox[3] = height;
+            GEHelper.drawObjectBox(ctx, bbox, '', {});
+        });
+    }
+
     drawObjectBoxs(ctx, objects) {
         objects.forEach((object) => {
             GEHelper.drawObjectBox(ctx, object.bbox, object.class, this.flipStatus);
@@ -160,8 +195,9 @@ class VideoUtils {
         Entry.addEventListener('dispatchEventDidToggleStop', this.reset.bind(this));
         this.video.play();
         this.turnOnWebcam();
-        this.startDrawUserPoints();
-        this.startDrawObjectRect();
+        this.startDrawFaceRect();
+        // this.startDrawUserPoints();
+        // this.startDrawObjectRect();
         if (window.Worker) {
             if (this.isMobileNetInit) {
                 return;
