@@ -423,7 +423,7 @@ module.exports = {
                         menuName: getSubMenus,
                         targetIndex: 0,
                         needDeepCopy: true,
-                        fontSize: 11,
+                        fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
                         arrowColor: EntryStatic.colorSet.common.WHITE,
                     },
