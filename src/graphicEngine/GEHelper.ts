@@ -293,6 +293,37 @@ class _GEHelper extends GEHelperBase {
             ctx.stroke();
         }
     }
+    drawObjectBox(ctx: any, bbox: Array, name: String, isHFliped: Boolean) {
+        const { WIDTH, HEIGHT, SCALE_X, SCALE_Y } = INITIAL_VIDEO_PARAMS;
+        const x = bbox[0] / SCALE_X;
+        const y = bbox[1] / SCALE_Y;
+        const width = bbox[2] / SCALE_X;
+        const height = bbox[3] / SCALE_Y;
+        if (this._isWebGL) {
+        } else {
+            ctx.beginPath();
+            ctx.font = '30px Arial';
+            if (isHFliped) {
+                ctx.fillText(name, 640 - x - width + 10, y + 50 + 10);
+                ctx.moveTo(640 - x, y);
+                ctx.lineTo(640 - (x + width), y);
+                ctx.lineTo(640 - (x + width), y + height);
+                ctx.lineTo(640 - x, y + height);
+                ctx.lineTo(640 - x, y);
+            } else {
+                ctx.fillText(name, x, y + 10);
+                ctx.moveTo(x, y);
+                ctx.lineTo(x + width, y);
+                ctx.lineTo(x + width, y + height);
+                ctx.lineTo(x, y + height);
+                ctx.lineTo(x, y);
+            }
+
+            ctx.lineWidth = 10;
+            ctx.strokeStyle = 'red';
+            ctx.stroke();
+        }
+    }
 
     getTransformedBounds(sprite: PIXI.Sprite | any): PIXI.Rectangle | any {
         if (this._isWebGL) {

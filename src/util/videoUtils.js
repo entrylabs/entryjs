@@ -29,13 +29,12 @@ class VideoUtils {
             top: 0,
             bottom: 0,
         };
-        this.objectDetected = [];
+        this.objectDetected = null;
         this.isMobileNetInit = false;
         this.mobileNet = null;
         this.poses = null;
         this.isInitialized = false;
         this.videoOnLoadHandler = this.videoOnLoadHandler.bind(this);
-        this.initDrawUserPoints = this.initDrawUserPoints.bind(this);
     }
 
     reset() {
@@ -50,6 +49,14 @@ class VideoUtils {
         GEHelper.setVideoAlpha(this.canvasVideo, 50);
         GEHelper.tickByEngine();
         this.poses = null;
+        this.objectDetected = null;
+        this.motionStatus = {
+            total: 0,
+            right: 0,
+            left: 0,
+            top: 0,
+            bottom: 0,
+        };
     }
 
     async initialize() {
@@ -107,18 +114,23 @@ class VideoUtils {
         this.isMobileNetInit = true;
     }
 
-    initDrawUserPoints() {
+    startDrawObjectRect() {
+        const ctx = Entry.stage.canvas.canvas.getContext('2d');
+        if (this.objectDetected) {
+            this.drawObjectBoxs(ctx, this.objectDetected);
+        }
+        requestAnimationFrame(this.startDrawObjectRect.bind(this));
+    }
+
+    startDrawUserPoints() {
         const ctx = Entry.stage.canvas.canvas.getContext('2d');
         if (this.poses) {
-            this.drawPoints(ctx, this.poses.predictions);
-            this.drawSkeletons(ctx, this.poses.adjacents);
+            this.drawHumanPoints(ctx, this.poses.predictions);
+            this.drawHumanSkeletons(ctx, this.poses.adjacents);
         }
-        requestAnimationFrame(this.initDrawUserPoints.bind(this));
+        requestAnimationFrame(this.startDrawUserPoints.bind(this));
     }
-    drawPoints(ctx, poses) {
-        if (!poses) {
-            return;
-        }
+    drawHumanPoints(ctx, poses) {
         poses.map((pose) => {
             pose.keypoints.map((item) => {
                 GEHelper.drawPosePoint(ctx, item.position);
@@ -126,14 +138,16 @@ class VideoUtils {
         });
     }
 
-    drawSkeletons(ctx, adjacents) {
-        if (!adjacents) {
-            return;
-        }
+    drawHumanSkeletons(ctx, adjacents) {
         adjacents.forEach((adjacentList) => {
             adjacentList.forEach((pair) => {
                 GEHelper.drawPoseSkeleton(ctx, pair[0].position, pair[1].position);
             });
+        });
+    }
+    drawObjectBoxs(ctx, objects) {
+        objects.forEach((object) => {
+            GEHelper.drawObjectBox(ctx, object.bbox, object.class, this.flipStatus.horizontal);
         });
     }
 
@@ -141,7 +155,8 @@ class VideoUtils {
         Entry.addEventListener('dispatchEventDidToggleStop', this.reset.bind(this));
         this.video.play();
         this.turnOnWebcam();
-        this.initDrawUserPoints();
+        // this.startDrawUserPoints();
+        this.startDrawObjectRect();
         if (window.Worker) {
             if (this.isMobileNetInit) {
                 return;
@@ -160,6 +175,7 @@ class VideoUtils {
                         break;
                     case 'coco':
                         this.objectDetected = message;
+                        break;
                 }
             };
             worker.postMessage({
@@ -178,7 +194,7 @@ class VideoUtils {
                     type: 'estimate',
                     imageData,
                 });
-            }, 100);
+            }, 200);
         } else {
             this.initializePosenet();
         }

@@ -10,9 +10,9 @@ const dimension = { width: 0, height: 0 };
 async function processImage(imageData) {
     try {
         // check objects
-        objectDetect(imageData, this);
+        await objectDetect(imageData, this);
         // check Pose
-        poseDetect(imageData, this);
+        await poseDetect(imageData, this);
         //check Motion
         motionDetect(imageData, this);
     } catch (err) {
@@ -23,7 +23,7 @@ async function processImage(imageData) {
 
 async function objectDetect(imageData, context) {
     const predictions = await coco.detect(imageData);
-    //bbox=>[x,y,width,height]
+    // bbox=>[x,y,width,height]
     // console.log('COCO', predictions);
     context.postMessage({ type: 'coco', message: predictions });
 }
@@ -108,16 +108,15 @@ self.onmessage = async function(e) {
     const { type, video } = e.data;
     switch (type) {
         case 'init':
-            const { width, height } = e.data;
-            dimension.width = width;
-            dimension.height = height;
+            dimension.width = e.data.width;
+            dimension.height = e.data.height;
             importScripts('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs');
             importScripts('https://cdn.jsdelivr.net/npm/@tensorflow-models/posenet');
             importScripts('https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd');
             mobileNet = await posenet.load({
                 architecture: 'MobileNetV1',
                 outputStride: 16,
-                inputResolution: { width, height },
+                inputResolution: { width: e.data.width, height: e.data.height },
                 multiplier: 1,
             });
             coco = await cocoSsd.load();
@@ -125,14 +124,11 @@ self.onmessage = async function(e) {
             this.postMessage({ type: 'init', message: 'done' });
             break;
         case 'estimate':
-            const { imageData } = e.data;
             if (mobileNet && coco) {
-                processImage(imageData);
+                processImage(e.data.imageData);
             }
             break;
         case 'option':
-            const { option } = e.data;
-            options = option;
-            console.log(option);
+            options = e.data.option;
     }
 };
