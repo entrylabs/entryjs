@@ -132,39 +132,31 @@ class PingpongBase {
         this.prev_sensor_data.c3_TILT_Y = c3_tilt_y;
     }
 
-    postCallReturn(script, packet, delay_ms = 400) {
-        //console.log(' this.cmdid : ', this.send_cmd_id);
-        if (delay_ms <= 0) {
-            //FIXME
-            Entry.hw.sendQueue.COMMAND = {
-                id: ++this.send_cmd_id,
-                data: packet,
-            };
-            Entry.hw.update();
+    postCallReturn(script, myfunc) {
+        if (myfunc == undefined) return script.callReturn();
 
-            return script.callReturn();
-        }
-
-        if (!script.is_start) {
+        if (script.is_start == undefined) {
             script.is_start = true;
-            script.step_flag = 1;
 
-            //FIXME
-            Entry.hw.sendQueue.COMMAND = {
-                id: ++this.send_cmd_id,
-                data: packet,
-            };
-            Entry.hw.update();
+            var [packet, delay_ms = 400] = myfunc();
+
+            if (packet.length > 0) {
+                //FIXME
+                Entry.hw.sendQueue.COMMAND = {
+                    id: ++this.send_cmd_id,
+                    data: packet,
+                };
+                Entry.hw.update();
+            }
 
             setTimeout(function() {
-                script.step_flag = 0;
+                script.is_start = false;
             }, delay_ms);
             return script;
-        } else if (script.step_flag == 1) {
+        } else if (script.is_start == true) {
             return script;
         } else {
             delete script.is_start;
-            delete script.step_flag;
 
             //Entry.engine.isContinue = false;
             return script.callReturn();
@@ -227,16 +219,6 @@ class PingpongBase {
         packet[18] = step % 256;
 
         var time_ms = Math.round(((1000 - Math.abs(speed) * 9) / 99) * step) + 400;
-
-        if (cube_no == 0)
-            console.log(
-                'P: speed=%d sps=%d  degree=%d step=%d delay=%d',
-                speed,
-                sps,
-                degree,
-                step,
-                time_ms
-            );
 
         return [packet, time_ms];
     }
@@ -661,34 +643,43 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 class: 'Pingpong_G2_motor',
                 isNotFor: ['Pingpong_G2'],
                 func: function(sprite, script) {
-                    const dir1 = script.getStringField('DIR_1');
-                    const dir2 = script.getStringField('DIR_2');
-                    var degree1 = script.getNumberValue('DEGREE_1');
-                    var degree2 = script.getNumberValue('DEGREE_2');
+                    return Entry.Pingpong_G2.postCallReturn(script, () => {
+                        const dir1 = script.getStringField('DIR_1');
+                        const dir2 = script.getStringField('DIR_2');
+                        var degree1 = script.getNumberValue('DEGREE_1');
+                        var degree2 = script.getNumberValue('DEGREE_2');
 
-                    var speed1 = 80 * (dir1 === 'LEFT' ? -1 : 1);
-                    var speed2 = 80 * (dir2 === 'LEFT' ? -1 : 1);
+                        var speed1 = 80 * (dir1 === 'LEFT' ? -1 : 1);
+                        var speed2 = 80 * (dir2 === 'LEFT' ? -1 : 1);
 
-                    var [arr1, delay1] = Entry.Pingpong_G2.makeSingleStepPacket(0, speed1, degree1);
-                    var [arr2, delay2] = Entry.Pingpong_G2.makeSingleStepPacket(1, speed2, degree2);
+                        var [arr1, delay1] = Entry.Pingpong_G2.makeSingleStepPacket(
+                            0,
+                            speed1,
+                            degree1
+                        );
+                        var [arr2, delay2] = Entry.Pingpong_G2.makeSingleStepPacket(
+                            1,
+                            speed2,
+                            degree2
+                        );
 
-                    var packet1 = Buffer.from(arr1);
-                    var packet2 = Buffer.from(arr2);
+                        var packet1 = Buffer.from(arr1);
+                        var packet2 = Buffer.from(arr2);
 
-                    var opt = [2, 1, 0, 2];
-                    var cmd = Entry.Pingpong_G2.makePacket(
-                        OPCODE.AGGREGATE_STEPS,
-                        2 << 12,
-                        0xaa,
-                        opt
-                    );
-                    cmd.writeUInt16BE(cmd.length + packet1.length + packet2.length, 7);
+                        var opt = [2, 1, 0, 2];
+                        var cmd = Entry.Pingpong_G2.makePacket(
+                            OPCODE.AGGREGATE_STEPS,
+                            2 << 12,
+                            0xaa,
+                            opt
+                        );
+                        cmd.writeUInt16BE(cmd.length + packet1.length + packet2.length, 7);
 
-                    var packet = Buffer.concat([cmd, packet1, packet2]);
+                        var packet = Buffer.concat([cmd, packet1, packet2]);
 
-                    var delay_ms = Math.max(delay1, delay2);
-
-                    return Entry.Pingpong_G2.postCallReturn(script, packet, delay_ms);
+                        var delay_ms = Math.max(delay1, delay2);
+                        return [packet, delay_ms];
+                    });
                 },
             },
             pingpong_g2_motor_rotate: {
@@ -733,20 +724,21 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 class: 'Pingpong_G2_motor',
                 isNotFor: ['Pingpong_G2'],
                 func: function(sprite, script) {
-                    const cube_id = script.getNumberField('CUBEID');
-                    const dir = script.getStringField('DIR');
-                    var degree = script.getNumberValue('DEGREE');
+                    return Entry.Pingpong_G2.postCallReturn(script, () => {
+                        const cube_id = script.getNumberField('CUBEID');
+                        const dir = script.getStringField('DIR');
+                        var degree = script.getNumberValue('DEGREE');
 
-                    var speed = 80 * (dir === 'LEFT' ? -1 : 1);
+                        var speed = 80 * (dir === 'LEFT' ? -1 : 1);
 
-                    var [arr, delay] = Entry.Pingpong_G2.makeSingleStepPacket(
-                        cube_id,
-                        speed,
-                        degree
-                    );
-                    var packet = Buffer.from(arr);
-
-                    return Entry.Pingpong_G2.postCallReturn(script, packet, delay);
+                        var [arr, delay] = Entry.Pingpong_G2.makeSingleStepPacket(
+                            cube_id,
+                            speed,
+                            degree
+                        );
+                        var packet = Buffer.from(arr);
+                        return [packet, delay];
+                    });
                 },
             },
             pingpong_g2_start_multi_motor_rotate: {
@@ -770,30 +762,41 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 class: 'Pingpong_G2_motor',
                 isNotFor: ['Pingpong_G2'],
                 func: function(sprite, script) {
-                    var speed1 = script.getNumberValue('SPEED_1');
-                    var speed2 = script.getNumberValue('SPEED_2');
+                    return Entry.Pingpong_G2.postCallReturn(script, () => {
+                        var speed1 = script.getNumberValue('SPEED_1');
+                        var speed2 = script.getNumberValue('SPEED_2');
 
-                    var sps1 = Entry.Pingpong_G2._calcSpsFromSpeed(speed1);
-                    var sps2 = Entry.Pingpong_G2._calcSpsFromSpeed(speed2);
+                        var sps1 = Entry.Pingpong_G2._calcSpsFromSpeed(speed1);
+                        var sps2 = Entry.Pingpong_G2._calcSpsFromSpeed(speed2);
 
-                    var opt1 = [2, 0, 0, 2, sps1 / 256, sps1 % 256];
-                    var packet1 = Entry.Pingpong_G2.makePacket(OPCODE.CONTINUOUS_STEPS, 0, 0, opt1);
+                        var opt1 = [2, 0, 0, 2, sps1 / 256, sps1 % 256];
+                        var packet1 = Entry.Pingpong_G2.makePacket(
+                            OPCODE.CONTINUOUS_STEPS,
+                            0,
+                            0,
+                            opt1
+                        );
 
-                    var opt2 = [2, 0, 0, 2, sps2 / 256, sps2 % 256];
-                    var packet2 = Entry.Pingpong_G2.makePacket(OPCODE.CONTINUOUS_STEPS, 0, 1, opt2);
+                        var opt2 = [2, 0, 0, 2, sps2 / 256, sps2 % 256];
+                        var packet2 = Entry.Pingpong_G2.makePacket(
+                            OPCODE.CONTINUOUS_STEPS,
+                            0,
+                            1,
+                            opt2
+                        );
 
-                    var opt = [2, 0, 0, 2];
-                    var cmd = Entry.Pingpong_G2.makePacket(
-                        OPCODE.AGGREGATE_STEPS,
-                        2 << 12,
-                        0xaa,
-                        opt
-                    );
-                    cmd.writeUInt16BE(cmd.length + packet1.length + packet2.length, 7);
+                        var opt = [2, 0, 0, 2];
+                        var cmd = Entry.Pingpong_G2.makePacket(
+                            OPCODE.AGGREGATE_STEPS,
+                            2 << 12,
+                            0xaa,
+                            opt
+                        );
+                        cmd.writeUInt16BE(cmd.length + packet1.length + packet2.length, 7);
 
-                    var packet = Buffer.concat([cmd, packet1, packet2]);
-
-                    return Entry.Pingpong_G2.postCallReturn(script, packet);
+                        var packet = Buffer.concat([cmd, packet1, packet2]);
+                        return [packet];
+                    });
                 },
             },
             pingpong_g2_start_motor_rotate: {
@@ -829,20 +832,22 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 class: 'Pingpong_G2_motor',
                 isNotFor: ['Pingpong_G2'],
                 func: function(sprite, script) {
-                    const cube_id = script.getNumberField('CUBEID');
-                    var speed = script.getNumberValue('SPEED');
-                    var sps = Entry.Pingpong_G2._calcSpsFromSpeed(speed);
+                    return Entry.Pingpong_G2.postCallReturn(script, () => {
+                        const cube_id = script.getNumberField('CUBEID');
+                        var speed = script.getNumberValue('SPEED');
+                        var sps = Entry.Pingpong_G2._calcSpsFromSpeed(speed);
 
-                    var opt = [2, 0, 0, 2, sps / 256, sps % 256];
-                    var packet = Entry.Pingpong_G2.makePacket(
-                        OPCODE.CONTINUOUS_STEPS,
-                        0,
-                        cube_id,
-                        opt
-                    );
+                        var opt = [2, 0, 0, 2, sps / 256, sps % 256];
+                        var packet = Entry.Pingpong_G2.makePacket(
+                            OPCODE.CONTINUOUS_STEPS,
+                            0,
+                            cube_id,
+                            opt
+                        );
 
-                    var delay_ms = Math.round(((1100 - Math.abs(speed)) / 99) * 10) + 400;
-                    return Entry.Pingpong_G2.postCallReturn(script, packet, delay_ms);
+                        var delay_ms = Math.round(((1100 - Math.abs(speed)) / 99) * 10) + 400;
+                        return [packet, delay_ms];
+                    });
                 },
             },
             pingpong_g2_stop_motor_rotate: {
@@ -872,16 +877,18 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 class: 'Pingpong_G2_motor',
                 isNotFor: ['Pingpong_G2'],
                 func: function(sprite, script) {
-                    const cube_id = script.getNumberField('CUBEID');
+                    return Entry.Pingpong_G2.postCallReturn(script, () => {
+                        const cube_id = script.getNumberField('CUBEID');
 
-                    var opt = [2, 0, 0, 1, 0, 0];
-                    var packet = Entry.Pingpong_G2.makePacket(
-                        OPCODE.CONTINUOUS_STEPS,
-                        0,
-                        cube_id,
-                        opt
-                    );
-                    return Entry.Pingpong_G2.postCallReturn(script, packet);
+                        var opt = [2, 0, 0, 1, 0, 0];
+                        var packet = Entry.Pingpong_G2.makePacket(
+                            OPCODE.CONTINUOUS_STEPS,
+                            0,
+                            cube_id,
+                            opt
+                        );
+                        return [packet];
+                    });
                 },
             },
             pingpong_g2_rotate_servo_mortor: {
@@ -908,14 +915,16 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 class: 'Pingpong_G2_motor',
                 isNotFor: ['Pingpong_G2'],
                 func: function(sprite, script) {
-                    const cube_id = Entry.Pingpong_G2._getCubeNoFromBlock(script);
-                    var angle = script.getNumberValue('DEGREE', script);
+                    return Entry.Pingpong_G2.postCallReturn(script, () => {
+                        const cube_id = Entry.Pingpong_G2._getCubeNoFromBlock(script);
+                        var angle = script.getNumberValue('DEGREE', script);
 
-                    angle = Math.min(Math.max(angle, 0), 180);
+                        angle = Math.min(Math.max(angle, 0), 180);
 
-                    var opt = [2, 0, angle, 1];
-                    var packet = Entry.Pingpong_G2.makePacket(OPCODE.SERVO, 0x00, cube_id, opt);
-                    return Entry.Pingpong_G2.postCallReturn(script, packet, 400);
+                        var opt = [2, 0, angle, 1];
+                        var packet = Entry.Pingpong_G2.makePacket(OPCODE.SERVO, 0x00, cube_id, opt);
+                        return [packet];
+                    });
                 },
             },
             pingpong_g2_set_dot_pixel: {
@@ -953,18 +962,24 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 class: 'Pingpong_G2_peripheral_LED',
                 isNotFor: ['Pingpong_G2'],
                 func: function(sprite, script) {
-                    const cube_id = Entry.Pingpong_G2._getCubeNoFromBlock(script);
-                    var dot_x = script.getNumberValue('X', script);
-                    var dot_y = script.getNumberValue('Y', script);
-                    var onoff = script.getNumberField('onoff', script);
+                    return Entry.Pingpong_G2.postCallReturn(script, () => {
+                        const cube_id = Entry.Pingpong_G2._getCubeNoFromBlock(script);
+                        var dot_x = script.getNumberValue('X', script);
+                        var dot_y = script.getNumberValue('Y', script);
+                        var onoff = script.getNumberField('onoff', script);
 
-                    dot_x = Math.min(Math.max(dot_x, 0), 7);
-                    dot_y = Math.min(Math.max(dot_y, 0), 7);
+                        dot_x = Math.min(Math.max(dot_x, 0), 7);
+                        dot_y = Math.min(Math.max(dot_y, 0), 7);
 
-                    var opt = [0x70, dot_y, dot_x, onoff];
-                    var packet = Entry.Pingpong_G2.makePacket(OPCODE.LEDMATRIX, 0xe1, cube_id, opt);
-
-                    return Entry.Pingpong_G2.postCallReturn(script, packet);
+                        var opt = [0x70, dot_y, dot_x, onoff];
+                        var packet = Entry.Pingpong_G2.makePacket(
+                            OPCODE.LEDMATRIX,
+                            0xe1,
+                            cube_id,
+                            opt
+                        );
+                        return [packet];
+                    });
                 },
             },
             pingpong_g2_set_dot_string: {
@@ -988,21 +1003,28 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 class: 'Pingpong_G2_peripheral_LED',
                 isNotFor: ['Pingpong_G2'],
                 func: function(sprite, script) {
-                    const cube_id = Entry.Pingpong_G2._getCubeNoFromBlock(script);
-                    var str = script.getStringValue('STR', script);
-                    var duration = script.getNumberValue('DURATION', script);
+                    return Entry.Pingpong_G2.postCallReturn(script, () => {
+                        const cube_id = Entry.Pingpong_G2._getCubeNoFromBlock(script);
+                        var str = script.getStringValue('STR', script);
+                        var duration = script.getNumberValue('DURATION', script);
 
-                    var period = Math.round((duration * 100) / (str.length * 8));
-                    period = Math.min(Math.max(period, 1), 200);
+                        var period = Math.round((duration * 100) / (str.length * 8));
+                        period = Math.min(Math.max(period, 1), 200);
 
-                    var opt = Buffer.concat([
-                        Buffer.from([0x70, period, 0]),
-                        Buffer.from(str.substring(0, 20)),
-                    ]);
+                        var opt = Buffer.concat([
+                            Buffer.from([0x70, period, 0]),
+                            Buffer.from(str.substring(0, 20)),
+                        ]);
 
-                    var packet = Entry.Pingpong_G2.makePacket(OPCODE.LEDMATRIX, 0xe3, cube_id, opt);
-                    var delay_ms = period * (str.length + 1) * 8 * 10 + 400; // add wait for 400ms
-                    return Entry.Pingpong_G2.postCallReturn(script, packet, delay_ms);
+                        var packet = Entry.Pingpong_G2.makePacket(
+                            OPCODE.LEDMATRIX,
+                            0xe3,
+                            cube_id,
+                            opt
+                        );
+                        var delay_ms = period * (str.length + 1) * 8 * 10 + 400; // add wait for 400ms
+                        return [packet, delay_ms];
+                    });
                 },
             },
             pingpong_g2_set_dot_clear: {
@@ -1024,11 +1046,18 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 class: 'Pingpong_G2_peripheral_LED',
                 isNotFor: ['Pingpong_G2'],
                 func: function(sprite, script) {
-                    const cube_id = Entry.Pingpong_G2._getCubeNoFromBlock(script);
-                    //var packet = Entry.Pingpong_G2.makePacket(OPCODE.LEDMATRIX, 0xe4, cube_id, [0x70, 2]);
-                    var opt = [0x70, 1, 0, ' '];
-                    var packet = Entry.Pingpong_G2.makePacket(OPCODE.LEDMATRIX, 0xe3, cube_id, opt);
-                    return Entry.Pingpong_G2.postCallReturn(script, packet);
+                    return Entry.Pingpong_G2.postCallReturn(script, () => {
+                        const cube_id = Entry.Pingpong_G2._getCubeNoFromBlock(script);
+                        //var packet = Entry.Pingpong_G2.makePacket(OPCODE.LEDMATRIX, 0xe4, cube_id, [0x70, 2]);
+                        var opt = [0x70, 1, 0, ' '];
+                        var packet = Entry.Pingpong_G2.makePacket(
+                            OPCODE.LEDMATRIX,
+                            0xe3,
+                            cube_id,
+                            opt
+                        );
+                        return [packet];
+                    });
                 },
             },
         };
@@ -1481,42 +1510,55 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                 class: 'Pingpong_G3_motor',
                 isNotFor: ['Pingpong_G3'],
                 func: function(sprite, script) {
-                    const dir1 = script.getStringField('DIR_1');
-                    const dir2 = script.getStringField('DIR_2');
-                    const dir3 = script.getStringField('DIR_3');
-                    var degree1 = script.getNumberValue('DEGREE_1');
-                    var degree2 = script.getNumberValue('DEGREE_2');
-                    var degree3 = script.getNumberValue('DEGREE_3');
+                    return Entry.Pingpong_G3.postCallReturn(script, () => {
+                        const dir1 = script.getStringField('DIR_1');
+                        const dir2 = script.getStringField('DIR_2');
+                        const dir3 = script.getStringField('DIR_3');
+                        var degree1 = script.getNumberValue('DEGREE_1');
+                        var degree2 = script.getNumberValue('DEGREE_2');
+                        var degree3 = script.getNumberValue('DEGREE_3');
 
-                    var speed1 = 80 * (dir1 === 'LEFT' ? -1 : 1);
-                    var speed2 = 80 * (dir2 === 'LEFT' ? -1 : 1);
-                    var speed3 = 80 * (dir3 === 'LEFT' ? -1 : 1);
+                        var speed1 = 80 * (dir1 === 'LEFT' ? -1 : 1);
+                        var speed2 = 80 * (dir2 === 'LEFT' ? -1 : 1);
+                        var speed3 = 80 * (dir3 === 'LEFT' ? -1 : 1);
 
-                    var [arr1, delay1] = Entry.Pingpong_G3.makeSingleStepPacket(0, speed1, degree1);
-                    var [arr2, delay2] = Entry.Pingpong_G3.makeSingleStepPacket(1, speed2, degree2);
-                    var [arr3, delay3] = Entry.Pingpong_G3.makeSingleStepPacket(2, speed3, degree3);
+                        var [arr1, delay1] = Entry.Pingpong_G3.makeSingleStepPacket(
+                            0,
+                            speed1,
+                            degree1
+                        );
+                        var [arr2, delay2] = Entry.Pingpong_G3.makeSingleStepPacket(
+                            1,
+                            speed2,
+                            degree2
+                        );
+                        var [arr3, delay3] = Entry.Pingpong_G3.makeSingleStepPacket(
+                            2,
+                            speed3,
+                            degree3
+                        );
 
-                    var packet1 = Buffer.from(arr1);
-                    var packet2 = Buffer.from(arr2);
-                    var packet3 = Buffer.from(arr3);
+                        var packet1 = Buffer.from(arr1);
+                        var packet2 = Buffer.from(arr2);
+                        var packet3 = Buffer.from(arr3);
 
-                    var opt = [2, 1, 0, 2];
-                    var cmd = Entry.Pingpong_G3.makePacket(
-                        OPCODE.AGGREGATE_STEPS,
-                        3 << 12,
-                        0xaa,
-                        opt
-                    );
-                    cmd.writeUInt16BE(
-                        cmd.length + packet1.length + packet2.length + packet3.length,
-                        7
-                    );
+                        var opt = [2, 1, 0, 2];
+                        var cmd = Entry.Pingpong_G3.makePacket(
+                            OPCODE.AGGREGATE_STEPS,
+                            3 << 12,
+                            0xaa,
+                            opt
+                        );
+                        cmd.writeUInt16BE(
+                            cmd.length + packet1.length + packet2.length + packet3.length,
+                            7
+                        );
 
-                    var packet = Buffer.concat([cmd, packet1, packet2, packet3]);
+                        var packet = Buffer.concat([cmd, packet1, packet2, packet3]);
 
-                    var delay_ms = Math.max(delay1, delay2, delay3);
-
-                    return Entry.Pingpong_G3.postCallReturn(script, packet, delay_ms);
+                        var delay_ms = Math.max(delay1, delay2, delay3);
+                        return [packet, delay_ms];
+                    });
                 },
             },
             pingpong_g3_motor_rotate: {
@@ -1556,19 +1598,20 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                 class: 'Pingpong_G3_motor',
                 isNotFor: ['Pingpong_G3'],
                 func: function(sprite, script) {
-                    const cube_id = script.getNumberField('CUBEID');
-                    const dir = script.getStringField('DIR');
-                    var degree = script.getNumberValue('DEGREE');
+                    return Entry.Pingpong_G3.postCallReturn(script, () => {
+                        const cube_id = script.getNumberField('CUBEID');
+                        const dir = script.getStringField('DIR');
+                        var degree = script.getNumberValue('DEGREE');
 
-                    var speed = 80 * (dir === 'LEFT' ? -1 : 1);
-                    var [arr, delay] = Entry.Pingpong_G3.makeSingleStepPacket(
-                        cube_id,
-                        speed,
-                        degree
-                    );
-                    var packet = Buffer.from(arr);
-
-                    return Entry.Pingpong_G3.postCallReturn(script, packet, delay);
+                        var speed = 80 * (dir === 'LEFT' ? -1 : 1);
+                        var [arr, delay] = Entry.Pingpong_G3.makeSingleStepPacket(
+                            cube_id,
+                            speed,
+                            degree
+                        );
+                        var packet = Buffer.from(arr);
+                        return [packet, delay];
+                    });
                 },
             },
             pingpong_g3_start_multi_motor_rotate: {
@@ -1593,33 +1636,34 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                 class: 'Pingpong_G3_motor',
                 isNotFor: ['Pingpong_G3'],
                 func: function(sprite, script) {
-                    var speed1 = script.getNumberValue('SPEED_1');
-                    var speed2 = script.getNumberValue('SPEED_2');
-                    var speed3 = script.getNumberValue('SPEED_3');
+                    return Entry.Pingpong_G3.postCallReturn(script, () => {
+                        var speed1 = script.getNumberValue('SPEED_1');
+                        var speed2 = script.getNumberValue('SPEED_2');
+                        var speed3 = script.getNumberValue('SPEED_3');
 
-                    var arr1 = Entry.Pingpong_G3.makeContStepPacket(0, 0, speed1);
-                    var arr2 = Entry.Pingpong_G3.makeContStepPacket(1, 0, speed2);
-                    var arr3 = Entry.Pingpong_G3.makeContStepPacket(2, 0, speed3);
+                        var arr1 = Entry.Pingpong_G3.makeContStepPacket(0, 0, speed1);
+                        var arr2 = Entry.Pingpong_G3.makeContStepPacket(1, 0, speed2);
+                        var arr3 = Entry.Pingpong_G3.makeContStepPacket(2, 0, speed3);
 
-                    var packet1 = Buffer.from(arr1);
-                    var packet2 = Buffer.from(arr2);
-                    var packet3 = Buffer.from(arr3);
+                        var packet1 = Buffer.from(arr1);
+                        var packet2 = Buffer.from(arr2);
+                        var packet3 = Buffer.from(arr3);
 
-                    var opt = [2, 0, 0, 2];
-                    var cmd = Entry.Pingpong_G3.makePacket(
-                        OPCODE.AGGREGATE_STEPS,
-                        3 << 12,
-                        0xaa,
-                        opt
-                    );
-                    cmd.writeUInt16BE(
-                        cmd.length + packet1.length + packet2.length + packet3.length,
-                        7
-                    );
+                        var opt = [2, 0, 0, 2];
+                        var cmd = Entry.Pingpong_G3.makePacket(
+                            OPCODE.AGGREGATE_STEPS,
+                            3 << 12,
+                            0xaa,
+                            opt
+                        );
+                        cmd.writeUInt16BE(
+                            cmd.length + packet1.length + packet2.length + packet3.length,
+                            7
+                        );
 
-                    var packet = Buffer.concat([cmd, packet1, packet2, packet3]);
-
-                    return Entry.Pingpong_G3.postCallReturn(script, packet);
+                        var packet = Buffer.concat([cmd, packet1, packet2, packet3]);
+                        return [packet];
+                    });
                 },
             },
             pingpong_g3_start_motor_rotate: {
@@ -1655,19 +1699,20 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                 class: 'Pingpong_G3_motor',
                 isNotFor: ['Pingpong_G3'],
                 func: function(sprite, script) {
-                    const cube_id = script.getNumberField('CUBEID');
-                    var speed = script.getNumberValue('SPEED');
-                    speed = Entry.Pingpong_G3._calcSpsFromSpeed(speed);
+                    return Entry.Pingpong_G3.postCallReturn(script, () => {
+                        const cube_id = script.getNumberField('CUBEID');
+                        var speed = script.getNumberValue('SPEED');
+                        speed = Entry.Pingpong_G3._calcSpsFromSpeed(speed);
 
-                    var opt = [2, 0, 0, 2, speed / 256, speed % 256];
-                    var packet = Entry.Pingpong_G3.makePacket(
-                        OPCODE.CONTINUOUS_STEPS,
-                        0,
-                        cube_id,
-                        opt
-                    );
-
-                    return Entry.Pingpong_G3.postCallReturn(script, packet);
+                        var opt = [2, 0, 0, 2, speed / 256, speed % 256];
+                        var packet = Entry.Pingpong_G3.makePacket(
+                            OPCODE.CONTINUOUS_STEPS,
+                            0,
+                            cube_id,
+                            opt
+                        );
+                        return [packet];
+                    });
                 },
             },
             pingpong_g3_stop_motor_rotate: {
@@ -1697,16 +1742,18 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                 class: 'Pingpong_G3_motor',
                 isNotFor: ['Pingpong_G3'],
                 func: function(sprite, script) {
-                    const cube_id = script.getNumberField('CUBEID');
+                    return Entry.Pingpong_G3.postCallReturn(script, () => {
+                        const cube_id = script.getNumberField('CUBEID');
 
-                    var opt = [2, 0, 0, 1, 0, 0];
-                    var packet = Entry.Pingpong_G3.makePacket(
-                        OPCODE.CONTINUOUS_STEPS,
-                        0,
-                        cube_id,
-                        opt
-                    );
-                    return Entry.Pingpong_G3.postCallReturn(script, packet);
+                        var opt = [2, 0, 0, 1, 0, 0];
+                        var packet = Entry.Pingpong_G3.makePacket(
+                            OPCODE.CONTINUOUS_STEPS,
+                            0,
+                            cube_id,
+                            opt
+                        );
+                        return [packet];
+                    });
                 },
             },
             pingpong_g3_rotate_servo_mortor: {
@@ -1729,14 +1776,16 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                 class: 'Pingpong_G3_motor',
                 isNotFor: ['Pingpong_G3'],
                 func: function(sprite, script) {
-                    const cube_id = Entry.Pingpong_G3._getCubeNoFromBlock(script);
-                    var angle = script.getNumberValue('DEGREE', script);
+                    return Entry.Pingpong_G3.postCallReturn(script, () => {
+                        const cube_id = Entry.Pingpong_G3._getCubeNoFromBlock(script);
+                        var angle = script.getNumberValue('DEGREE', script);
 
-                    angle = Math.min(Math.max(angle, 0), 180);
+                        angle = Math.min(Math.max(angle, 0), 180);
 
-                    var opt = [2, 0, angle, 1];
-                    var packet = Entry.Pingpong_G3.makePacket(OPCODE.SERVO, 0x00, cube_id, opt);
-                    return Entry.Pingpong_G3.postCallReturn(script, packet, 400);
+                        var opt = [2, 0, angle, 1];
+                        var packet = Entry.Pingpong_G3.makePacket(OPCODE.SERVO, 0x00, cube_id, opt);
+                        return [packet];
+                    });
                 },
             },
             pingpong_g3_set_dot_pixel: {
@@ -1774,18 +1823,24 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                 class: 'Pingpong_G3_peripheral_LED',
                 isNotFor: ['Pingpong_G3'],
                 func: function(sprite, script) {
-                    const cube_id = Entry.Pingpong_G3._getCubeNoFromBlock(script);
-                    var dot_x = script.getNumberValue('X', script);
-                    var dot_y = script.getNumberValue('Y', script);
-                    var onoff = script.getNumberField('onoff', script);
+                    return Entry.Pingpong_G3.postCallReturn(script, () => {
+                        const cube_id = Entry.Pingpong_G3._getCubeNoFromBlock(script);
+                        var dot_x = script.getNumberValue('X', script);
+                        var dot_y = script.getNumberValue('Y', script);
+                        var onoff = script.getNumberField('onoff', script);
 
-                    dot_x = Math.min(Math.max(dot_x, 0), 7);
-                    dot_y = Math.min(Math.max(dot_y, 0), 7);
+                        dot_x = Math.min(Math.max(dot_x, 0), 7);
+                        dot_y = Math.min(Math.max(dot_y, 0), 7);
 
-                    var opt = [0x70, dot_y, dot_x, onoff];
-                    var packet = Entry.Pingpong_G3.makePacket(OPCODE.LEDMATRIX, 0xe1, cube_id, opt);
-
-                    return Entry.Pingpong_G3.postCallReturn(script, packet);
+                        var opt = [0x70, dot_y, dot_x, onoff];
+                        var packet = Entry.Pingpong_G3.makePacket(
+                            OPCODE.LEDMATRIX,
+                            0xe1,
+                            cube_id,
+                            opt
+                        );
+                        return [packet];
+                    });
                 },
             },
             pingpong_g3_set_dot_string: {
@@ -1809,21 +1864,28 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                 class: 'Pingpong_G3_peripheral_LED',
                 isNotFor: ['Pingpong_G3'],
                 func: function(sprite, script) {
-                    const cube_id = Entry.Pingpong_G3._getCubeNoFromBlock(script);
-                    var str = script.getStringValue('STR', script);
-                    var duration = script.getNumberValue('DURATION', script);
+                    return Entry.Pingpong_G3.postCallReturn(script, () => {
+                        const cube_id = Entry.Pingpong_G3._getCubeNoFromBlock(script);
+                        var str = script.getStringValue('STR', script);
+                        var duration = script.getNumberValue('DURATION', script);
 
-                    var period = Math.round((duration * 100) / (str.length * 8));
-                    period = Math.min(Math.max(period, 1), 200);
+                        var period = Math.round((duration * 100) / (str.length * 8));
+                        period = Math.min(Math.max(period, 1), 200);
 
-                    var opt = Buffer.concat([
-                        Buffer.from([0x70, period, 0]),
-                        Buffer.from(str.substring(0, 20)),
-                    ]);
+                        var opt = Buffer.concat([
+                            Buffer.from([0x70, period, 0]),
+                            Buffer.from(str.substring(0, 20)),
+                        ]);
 
-                    var packet = Entry.Pingpong_G3.makePacket(OPCODE.LEDMATRIX, 0xe3, cube_id, opt);
-                    var delay_ms = period * str.length * 8 * 10 + 400; // add wait for 400ms
-                    return Entry.Pingpong_G3.postCallReturn(script, packet, delay_ms);
+                        var packet = Entry.Pingpong_G3.makePacket(
+                            OPCODE.LEDMATRIX,
+                            0xe3,
+                            cube_id,
+                            opt
+                        );
+                        var delay_ms = period * str.length * 8 * 10 + 400; // add wait for 400ms
+                        return [packet, delay_ms];
+                    });
                 },
             },
             pingpong_g3_set_dot_clear: {
@@ -1845,10 +1907,17 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                 class: 'Pingpong_G3_peripheral_LED',
                 isNotFor: ['Pingpong_G3'],
                 func: function(sprite, script) {
-                    const cube_id = Entry.Pingpong_G3._getCubeNoFromBlock(script);
-                    var opt = [0x70, 1, 0, ' '];
-                    var packet = Entry.Pingpong_G3.makePacket(OPCODE.LEDMATRIX, 0xe3, cube_id, opt);
-                    return Entry.Pingpong_G3.postCallReturn(script, packet);
+                    return Entry.Pingpong_G3.postCallReturn(script, () => {
+                        const cube_id = Entry.Pingpong_G3._getCubeNoFromBlock(script);
+                        var opt = [0x70, 1, 0, ' '];
+                        var packet = Entry.Pingpong_G3.makePacket(
+                            OPCODE.LEDMATRIX,
+                            0xe3,
+                            cube_id,
+                            opt
+                        );
+                        return [packet];
+                    });
                 },
             },
         };
@@ -2317,51 +2386,68 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                 class: 'Pingpong_G4_motor',
                 isNotFor: ['Pingpong_G4'],
                 func: function(sprite, script) {
-                    const dir1 = script.getStringField('DIR_1');
-                    const dir2 = script.getStringField('DIR_2');
-                    const dir3 = script.getStringField('DIR_3');
-                    const dir4 = script.getStringField('DIR_4');
-                    var degree1 = script.getNumberValue('DEGREE_1');
-                    var degree2 = script.getNumberValue('DEGREE_2');
-                    var degree3 = script.getNumberValue('DEGREE_3');
-                    var degree4 = script.getNumberValue('DEGREE_4');
+                    return Entry.Pingpong_G4.postCallReturn(script, () => {
+                        const dir1 = script.getStringField('DIR_1');
+                        const dir2 = script.getStringField('DIR_2');
+                        const dir3 = script.getStringField('DIR_3');
+                        const dir4 = script.getStringField('DIR_4');
+                        var degree1 = script.getNumberValue('DEGREE_1');
+                        var degree2 = script.getNumberValue('DEGREE_2');
+                        var degree3 = script.getNumberValue('DEGREE_3');
+                        var degree4 = script.getNumberValue('DEGREE_4');
 
-                    var speed1 = 80 * (dir1 === 'LEFT' ? -1 : 1);
-                    var speed2 = 80 * (dir2 === 'LEFT' ? -1 : 1);
-                    var speed3 = 80 * (dir3 === 'LEFT' ? -1 : 1);
-                    var speed4 = 80 * (dir4 === 'LEFT' ? -1 : 1);
+                        var speed1 = 80 * (dir1 === 'LEFT' ? -1 : 1);
+                        var speed2 = 80 * (dir2 === 'LEFT' ? -1 : 1);
+                        var speed3 = 80 * (dir3 === 'LEFT' ? -1 : 1);
+                        var speed4 = 80 * (dir4 === 'LEFT' ? -1 : 1);
 
-                    var [arr1, delay1] = Entry.Pingpong_G4.makeSingleStepPacket(0, speed1, degree1);
-                    var [arr2, delay2] = Entry.Pingpong_G4.makeSingleStepPacket(1, speed2, degree2);
-                    var [arr3, delay3] = Entry.Pingpong_G4.makeSingleStepPacket(2, speed3, degree3);
-                    var [arr4, delay4] = Entry.Pingpong_G4.makeSingleStepPacket(3, speed4, degree4);
+                        var [arr1, delay1] = Entry.Pingpong_G4.makeSingleStepPacket(
+                            0,
+                            speed1,
+                            degree1
+                        );
+                        var [arr2, delay2] = Entry.Pingpong_G4.makeSingleStepPacket(
+                            1,
+                            speed2,
+                            degree2
+                        );
+                        var [arr3, delay3] = Entry.Pingpong_G4.makeSingleStepPacket(
+                            2,
+                            speed3,
+                            degree3
+                        );
+                        var [arr4, delay4] = Entry.Pingpong_G4.makeSingleStepPacket(
+                            3,
+                            speed4,
+                            degree4
+                        );
 
-                    var packet1 = Buffer.from(arr1);
-                    var packet2 = Buffer.from(arr2);
-                    var packet3 = Buffer.from(arr3);
-                    var packet4 = Buffer.from(arr4);
+                        var packet1 = Buffer.from(arr1);
+                        var packet2 = Buffer.from(arr2);
+                        var packet3 = Buffer.from(arr3);
+                        var packet4 = Buffer.from(arr4);
 
-                    var opt = [2, 1, 0, 2];
-                    var cmd = Entry.Pingpong_G4.makePacket(
-                        OPCODE.AGGREGATE_STEPS,
-                        4 << 12,
-                        0xaa,
-                        opt
-                    );
-                    cmd.writeUInt16BE(
-                        cmd.length +
-                            packet1.length +
-                            packet2.length +
-                            packet3.length +
-                            packet4.length,
-                        7
-                    );
+                        var opt = [2, 1, 0, 2];
+                        var cmd = Entry.Pingpong_G4.makePacket(
+                            OPCODE.AGGREGATE_STEPS,
+                            4 << 12,
+                            0xaa,
+                            opt
+                        );
+                        cmd.writeUInt16BE(
+                            cmd.length +
+                                packet1.length +
+                                packet2.length +
+                                packet3.length +
+                                packet4.length,
+                            7
+                        );
 
-                    var packet = Buffer.concat([cmd, packet1, packet2, packet3, packet4]);
+                        var packet = Buffer.concat([cmd, packet1, packet2, packet3, packet4]);
 
-                    var delay_ms = Math.max(delay1, delay2, delay3, delay4);
-
-                    return Entry.Pingpong_G4.postCallReturn(script, packet, delay_ms);
+                        var delay_ms = Math.max(delay1, delay2, delay3, delay4);
+                        return [packet, delay_ms];
+                    });
                 },
             },
             pingpong_g4_motor_rotate: {
@@ -2401,19 +2487,20 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                 class: 'Pingpong_G4_motor',
                 isNotFor: ['Pingpong_G4'],
                 func: function(sprite, script) {
-                    const cube_id = script.getNumberField('CUBEID');
-                    const dir = script.getStringField('DIR');
-                    var degree = script.getNumberValue('DEGREE');
-                    var speed = 80 * (dir === 'LEFT' ? -1 : 1);
+                    return Entry.Pingpong_G4.postCallReturn(script, () => {
+                        const cube_id = script.getNumberField('CUBEID');
+                        const dir = script.getStringField('DIR');
+                        var degree = script.getNumberValue('DEGREE');
+                        var speed = 80 * (dir === 'LEFT' ? -1 : 1);
 
-                    var [arr, delay] = Entry.Pingpong_G4.makeSingleStepPacket(
-                        cube_id,
-                        speed,
-                        degree
-                    );
-                    var packet = Buffer.from(arr);
-
-                    return Entry.Pingpong_G4.postCallReturn(script, packet, delay);
+                        var [arr, delay] = Entry.Pingpong_G4.makeSingleStepPacket(
+                            cube_id,
+                            speed,
+                            degree
+                        );
+                        var packet = Buffer.from(arr);
+                        return [packet, delay];
+                    });
                 },
             },
             pingpong_g4_start_multi_motor_rotate: {
@@ -2439,46 +2526,67 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                 class: 'Pingpong_G4_motor',
                 isNotFor: ['Pingpong_G4'],
                 func: function(sprite, script) {
-                    var speed1 = script.getNumberValue('SPEED_1');
-                    var speed2 = script.getNumberValue('SPEED_2');
-                    var speed3 = script.getNumberValue('SPEED_3');
-                    var speed4 = script.getNumberValue('SPEED_4');
-                    speed1 = Entry.Pingpong_G4._calcSpsFromSpeed(speed1);
-                    speed2 = Entry.Pingpong_G4._calcSpsFromSpeed(speed2);
-                    speed3 = Entry.Pingpong_G4._calcSpsFromSpeed(speed3);
-                    speed4 = Entry.Pingpong_G4._calcSpsFromSpeed(speed4);
+                    return Entry.Pingpong_G4.postCallReturn(script, () => {
+                        var speed1 = script.getNumberValue('SPEED_1');
+                        var speed2 = script.getNumberValue('SPEED_2');
+                        var speed3 = script.getNumberValue('SPEED_3');
+                        var speed4 = script.getNumberValue('SPEED_4');
+                        speed1 = Entry.Pingpong_G4._calcSpsFromSpeed(speed1);
+                        speed2 = Entry.Pingpong_G4._calcSpsFromSpeed(speed2);
+                        speed3 = Entry.Pingpong_G4._calcSpsFromSpeed(speed3);
+                        speed4 = Entry.Pingpong_G4._calcSpsFromSpeed(speed4);
 
-                    var opt1 = [2, 0, 0, 2, speed1 / 256, speed1 % 256];
-                    var packet1 = Entry.Pingpong_G4.makePacket(OPCODE.CONTINUOUS_STEPS, 0, 0, opt1);
+                        var opt1 = [2, 0, 0, 2, speed1 / 256, speed1 % 256];
+                        var packet1 = Entry.Pingpong_G4.makePacket(
+                            OPCODE.CONTINUOUS_STEPS,
+                            0,
+                            0,
+                            opt1
+                        );
 
-                    var opt2 = [2, 0, 0, 2, speed2 / 256, speed2 % 256];
-                    var packet2 = Entry.Pingpong_G4.makePacket(OPCODE.CONTINUOUS_STEPS, 0, 1, opt2);
+                        var opt2 = [2, 0, 0, 2, speed2 / 256, speed2 % 256];
+                        var packet2 = Entry.Pingpong_G4.makePacket(
+                            OPCODE.CONTINUOUS_STEPS,
+                            0,
+                            1,
+                            opt2
+                        );
 
-                    var opt3 = [2, 0, 0, 2, speed3 / 256, speed3 % 256];
-                    var packet3 = Entry.Pingpong_G4.makePacket(OPCODE.CONTINUOUS_STEPS, 0, 2, opt3);
+                        var opt3 = [2, 0, 0, 2, speed3 / 256, speed3 % 256];
+                        var packet3 = Entry.Pingpong_G4.makePacket(
+                            OPCODE.CONTINUOUS_STEPS,
+                            0,
+                            2,
+                            opt3
+                        );
 
-                    var opt4 = [2, 0, 0, 2, speed4 / 256, speed4 % 256];
-                    var packet4 = Entry.Pingpong_G4.makePacket(OPCODE.CONTINUOUS_STEPS, 0, 3, opt4);
+                        var opt4 = [2, 0, 0, 2, speed4 / 256, speed4 % 256];
+                        var packet4 = Entry.Pingpong_G4.makePacket(
+                            OPCODE.CONTINUOUS_STEPS,
+                            0,
+                            3,
+                            opt4
+                        );
 
-                    var opt = [2, 0, 0, 2];
-                    var cmd = Entry.Pingpong_G4.makePacket(
-                        OPCODE.AGGREGATE_STEPS,
-                        4 << 12,
-                        0xaa,
-                        opt
-                    );
-                    cmd.writeUInt16BE(
-                        cmd.length +
-                            packet1.length +
-                            packet2.length +
-                            packet3.length +
-                            packet4.length,
-                        7
-                    );
+                        var opt = [2, 0, 0, 2];
+                        var cmd = Entry.Pingpong_G4.makePacket(
+                            OPCODE.AGGREGATE_STEPS,
+                            4 << 12,
+                            0xaa,
+                            opt
+                        );
+                        cmd.writeUInt16BE(
+                            cmd.length +
+                                packet1.length +
+                                packet2.length +
+                                packet3.length +
+                                packet4.length,
+                            7
+                        );
 
-                    var packet = Buffer.concat([cmd, packet1, packet2, packet3, packet4]);
-
-                    return Entry.Pingpong_G4.postCallReturn(script, packet);
+                        var packet = Buffer.concat([cmd, packet1, packet2, packet3, packet4]);
+                        return [packet];
+                    });
                 },
             },
             pingpong_g4_start_motor_rotate: {
@@ -2514,19 +2622,21 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                 class: 'Pingpong_G4_motor',
                 isNotFor: ['Pingpong_G4'],
                 func: function(sprite, script) {
-                    const cube_id = script.getNumberField('CUBEID');
-                    var speed = script.getNumberValue('SPEED');
-                    var sps = Entry.Pingpong_G4._calcSpsFromSpeed(speed);
+                    return Entry.Pingpong_G4.postCallReturn(script, () => {
+                        const cube_id = script.getNumberField('CUBEID');
+                        var speed = script.getNumberValue('SPEED');
+                        var sps = Entry.Pingpong_G4._calcSpsFromSpeed(speed);
 
-                    var opt = [2, 0, 0, 2, sps / 256, sps % 256];
-                    var packet = Entry.Pingpong_G4.makePacket(
-                        OPCODE.CONTINUOUS_STEPS,
-                        0,
-                        cube_id,
-                        opt
-                    );
+                        var opt = [2, 0, 0, 2, sps / 256, sps % 256];
+                        var packet = Entry.Pingpong_G4.makePacket(
+                            OPCODE.CONTINUOUS_STEPS,
+                            0,
+                            cube_id,
+                            opt
+                        );
 
-                    return Entry.Pingpong_G4.postCallReturn(script, packet);
+                        return [packet];
+                    });
                 },
             },
             pingpong_g4_stop_motor_rotate: {
@@ -2556,16 +2666,18 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                 class: 'Pingpong_G4_motor',
                 isNotFor: ['Pingpong_G4'],
                 func: function(sprite, script) {
-                    const cube_id = script.getNumberField('CUBEID');
+                    return Entry.Pingpong_G4.postCallReturn(script, () => {
+                        const cube_id = script.getNumberField('CUBEID');
 
-                    var opt = [2, 0, 0, 1, 0, 0];
-                    var packet = Entry.Pingpong_G4.makePacket(
-                        OPCODE.CONTINUOUS_STEPS,
-                        0,
-                        cube_id,
-                        opt
-                    );
-                    return Entry.Pingpong_G4.postCallReturn(script, packet);
+                        var opt = [2, 0, 0, 1, 0, 0];
+                        var packet = Entry.Pingpong_G4.makePacket(
+                            OPCODE.CONTINUOUS_STEPS,
+                            0,
+                            cube_id,
+                            opt
+                        );
+                        return [packet];
+                    });
                 },
             },
             pingpong_g4_rotate_servo_mortor: {
@@ -2588,14 +2700,16 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                 class: 'Pingpong_G4_motor',
                 isNotFor: ['Pingpong_G4'],
                 func: function(sprite, script) {
-                    const cube_id = Entry.Pingpong_G4._getCubeNoFromBlock(script);
-                    var angle = script.getNumberValue('DEGREE', script);
+                    return Entry.Pingpong_G4.postCallReturn(script, () => {
+                        const cube_id = Entry.Pingpong_G4._getCubeNoFromBlock(script);
+                        var angle = script.getNumberValue('DEGREE', script);
 
-                    angle = Math.min(Math.max(angle, 0), 180);
+                        angle = Math.min(Math.max(angle, 0), 180);
 
-                    var opt = [2, 0, angle, 1];
-                    var packet = Entry.Pingpong_G4.makePacket(OPCODE.SERVO, 0x00, cube_id, opt);
-                    return Entry.Pingpong_G4.postCallReturn(script, packet, 400);
+                        var opt = [2, 0, angle, 1];
+                        var packet = Entry.Pingpong_G4.makePacket(OPCODE.SERVO, 0x00, cube_id, opt);
+                        return [packet];
+                    });
                 },
             },
             pingpong_g4_set_dot_pixel: {
@@ -2633,18 +2747,24 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                 class: 'Pingpong_G4_peripheral_LED',
                 isNotFor: ['Pingpong_G4'],
                 func: function(sprite, script) {
-                    const cube_id = Entry.Pingpong_G4._getCubeNoFromBlock(script);
-                    var dot_x = script.getNumberValue('X', script);
-                    var dot_y = script.getNumberValue('Y', script);
-                    var onoff = script.getNumberField('onoff', script);
+                    return Entry.Pingpong_G4.postCallReturn(script, () => {
+                        const cube_id = Entry.Pingpong_G4._getCubeNoFromBlock(script);
+                        var dot_x = script.getNumberValue('X', script);
+                        var dot_y = script.getNumberValue('Y', script);
+                        var onoff = script.getNumberField('onoff', script);
 
-                    dot_x = Math.min(Math.max(dot_x, 0), 7);
-                    dot_y = Math.min(Math.max(dot_y, 0), 7);
+                        dot_x = Math.min(Math.max(dot_x, 0), 7);
+                        dot_y = Math.min(Math.max(dot_y, 0), 7);
 
-                    var opt = [0x70, dot_y, dot_x, onoff];
-                    var packet = Entry.Pingpong_G4.makePacket(OPCODE.LEDMATRIX, 0xe1, cube_id, opt);
-
-                    return Entry.Pingpong_G4.postCallReturn(script, packet);
+                        var opt = [0x70, dot_y, dot_x, onoff];
+                        var packet = Entry.Pingpong_G4.makePacket(
+                            OPCODE.LEDMATRIX,
+                            0xe1,
+                            cube_id,
+                            opt
+                        );
+                        return [packet];
+                    });
                 },
             },
             pingpong_g4_set_dot_string: {
@@ -2668,21 +2788,28 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                 class: 'Pingpong_G4_peripheral_LED',
                 isNotFor: ['Pingpong_G4'],
                 func: function(sprite, script) {
-                    const cube_id = Entry.Pingpong_G4._getCubeNoFromBlock(script);
-                    var str = script.getStringValue('STR', script);
-                    var duration = script.getNumberValue('DURATION', script);
+                    return Entry.Pingpong_G4.postCallReturn(script, () => {
+                        const cube_id = Entry.Pingpong_G4._getCubeNoFromBlock(script);
+                        var str = script.getStringValue('STR', script);
+                        var duration = script.getNumberValue('DURATION', script);
 
-                    var period = Math.round((duration * 100) / (str.length * 8));
-                    period = Math.min(Math.max(period, 1), 200);
+                        var period = Math.round((duration * 100) / (str.length * 8));
+                        period = Math.min(Math.max(period, 1), 200);
 
-                    var opt = Buffer.concat([
-                        Buffer.from([0x70, period, 0]),
-                        Buffer.from(str.substring(0, 20)),
-                    ]);
+                        var opt = Buffer.concat([
+                            Buffer.from([0x70, period, 0]),
+                            Buffer.from(str.substring(0, 20)),
+                        ]);
 
-                    var packet = Entry.Pingpong_G4.makePacket(OPCODE.LEDMATRIX, 0xe3, cube_id, opt);
-                    var delay_ms = period * str.length * 8 * 10 + 400; // add wait for 400ms
-                    return Entry.Pingpong_G4.postCallReturn(script, packet, delay_ms);
+                        var packet = Entry.Pingpong_G4.makePacket(
+                            OPCODE.LEDMATRIX,
+                            0xe3,
+                            cube_id,
+                            opt
+                        );
+                        var delay_ms = period * str.length * 8 * 10 + 400; // add wait for 400ms
+                        return [packet, delay_ms];
+                    });
                 },
             },
             pingpong_g4_set_dot_clear: {
@@ -2704,10 +2831,17 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                 class: 'Pingpong_G4_peripheral_LED',
                 isNotFor: ['Pingpong_G4'],
                 func: function(sprite, script) {
-                    const cube_id = Entry.Pingpong_G4._getCubeNoFromBlock(script);
-                    var opt = [0x70, 1, 0, ' '];
-                    var packet = Entry.Pingpong_G4.makePacket(OPCODE.LEDMATRIX, 0xe3, cube_id, opt);
-                    return Entry.Pingpong_G4.postCallReturn(script, packet);
+                    return Entry.Pingpong_G4.postCallReturn(script, () => {
+                        const cube_id = Entry.Pingpong_G4._getCubeNoFromBlock(script);
+                        var opt = [0x70, 1, 0, ' '];
+                        var packet = Entry.Pingpong_G4.makePacket(
+                            OPCODE.LEDMATRIX,
+                            0xe3,
+                            cube_id,
+                            opt
+                        );
+                        return [packet];
+                    });
                 },
             },
         };
