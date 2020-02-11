@@ -35,6 +35,7 @@ class VideoUtils {
         this.poses = null;
         this.isInitialized = false;
         this.videoOnLoadHandler = this.videoOnLoadHandler.bind(this);
+        this.initDrawUserPoints = this.initDrawUserPoints.bind(this);
     }
 
     reset() {
@@ -105,10 +106,42 @@ class VideoUtils {
         });
         this.isMobileNetInit = true;
     }
+
+    initDrawUserPoints() {
+        const ctx = Entry.stage.canvas.canvas.getContext('2d');
+        if (this.poses) {
+            this.drawPoints(ctx, this.poses.predictions);
+            this.drawSkeletons(ctx, this.poses.adjacents);
+        }
+        requestAnimationFrame(this.initDrawUserPoints.bind(this));
+    }
+    drawPoints(ctx, poses) {
+        if (!poses) {
+            return;
+        }
+        poses.map((pose) => {
+            pose.keypoints.map((item) => {
+                GEHelper.drawPosePoint(ctx, item.position);
+            });
+        });
+    }
+
+    drawSkeletons(ctx, adjacents) {
+        if (!adjacents) {
+            return;
+        }
+        adjacents.forEach((adjacentList) => {
+            adjacentList.forEach((pair) => {
+                GEHelper.drawPoseSkeleton(ctx, pair[0].position, pair[1].position);
+            });
+        });
+    }
+
     videoOnLoadHandler() {
         Entry.addEventListener('dispatchEventDidToggleStop', this.reset.bind(this));
         this.video.play();
         this.turnOnWebcam();
+        this.initDrawUserPoints();
         if (window.Worker) {
             if (this.isMobileNetInit) {
                 return;
@@ -138,18 +171,13 @@ class VideoUtils {
             const [track] = this.stream.getVideoTracks();
             this.imageCapture = new ImageCapture(track);
             setInterval(() => {
-                if (this.canvasVideo) {
-                    if (this.canvasVideo) {
-                    }
-                    const context = this.inMemoryCanvas.getContext('2d');
-                    context.drawImage(this.video, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-                    const imageData = context.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
-                    worker.postMessage({
-                        type: 'estimate',
-                        imageData,
-                    });
-                }
+                const context = this.inMemoryCanvas.getContext('2d');
+                context.drawImage(this.video, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+                const imageData = context.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+                worker.postMessage({
+                    type: 'estimate',
+                    imageData,
+                });
             }, 100);
         } else {
             this.initializePosenet();
@@ -163,14 +191,22 @@ class VideoUtils {
         }
         if (!window.Worker) {
             try {
-                const poses = await this.mobileNet.estimateMultiplePoses(this.video, {
-                    flipHorizontal: true,
+                const predictions = await this.mobileNet.estimateMultiplePoses(this.video, {
+                    flipHorizontal: this.flipStatus.horizontal,
                     maxDetections: 4,
                     scoreThreshold: 0.5,
                     nmsRadius: 20,
                 });
-                this.poses = poses;
-                return poses;
+                const adjacents = [];
+
+                predictions.forEach((pose) => {
+                    const adjacentMap = posenet.getAdjacentKeyPoints(pose.keypoints, 0.2);
+                    adjacents.push(adjacentMap);
+                });
+
+                this.poses = { predictions, adjacents };
+
+                return this.poses.predictions;
             } catch (err) {
                 if (!this.isMobileNetInit) {
                     console.log(err);
@@ -225,6 +261,10 @@ class VideoUtils {
                 break;
             case 'hflip':
                 this.flipStatus.horizontal = !this.flipStatus.horizontal;
+                worker.postMessage({
+                    type: 'option',
+                    option: { flipStatus: this.flipStatus },
+                });
                 GEHelper.hFlipVideoElement(this.canvasVideo);
                 break;
             case 'vflip':

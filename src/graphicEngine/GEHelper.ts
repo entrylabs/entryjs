@@ -207,12 +207,6 @@ class _GEHelper extends GEHelperBase {
                 }
             });
         }
-        if (!this.inMemoryCanvas) {
-            this.inMemoryCanvas = document.createElement('canvas');
-            this.inMemoryCanvas.width = 480;
-            this.inMemoryCanvas.height = 270;
-        }
-
         return videoElement;
     }
 
@@ -251,13 +245,13 @@ class _GEHelper extends GEHelperBase {
 
     setVideoBrightness(canvasVideo: PIXI.Sprite | createjs.Bitmap, value: number): any {
         if (this._isWebGL) {
-            const recalculated = (200 - (value + 100)) / 200;
+            const recalculated = (value + 100) / 200;
             const colorMatrix = new PIXI.filters.ColorMatrixFilter();
             canvasVideo.filters = [colorMatrix];
             colorMatrix.brightness(recalculated);
             colorMatrix.enabled = true;
         } else {
-            const recalculated = (value * 255 - 25500) / 200;
+            const recalculated = ((value + 100) * 255 - 25500) / 200;
 
             const colorMatrix = new createjs.ColorMatrix().adjustBrightness(recalculated);
             const filter = new createjs.ColorMatrixFilter();
@@ -277,12 +271,26 @@ class _GEHelper extends GEHelperBase {
         }
     }
 
-    getVideoImageData() {
-        if (this.isWebGL) {
-            debugger;
-            Entry.stage.canvas;
+    drawPosePoint(ctx: any, position: any) {
+        const { x, y } = position;
+        if (this._isWebGL) {
         } else {
-            return Entry.stage.canvas.canvas.getContext('2d').getImageData(0, 0, 480, 270);
+            const R = 5;
+            ctx.beginPath();
+            ctx.arc((x * 4) / 3, (y * 4) / 3, R, 0, 2 * Math.PI, false);
+            ctx.fillStyle = 'blue';
+            ctx.fill();
+        }
+    }
+    drawPoseSkeleton(ctx: any, start: any, end: any) {
+        if (this._isWebGL) {
+        } else {
+            ctx.beginPath();
+            ctx.moveTo((start.x * 4) / 3, (start.y * 4) / 3);
+            ctx.lineTo((end.x * 4) / 3, (end.y * 4) / 3);
+            ctx.lineWidth = 10;
+            ctx.strokeStyle = 'blue';
+            ctx.stroke();
         }
     }
 
