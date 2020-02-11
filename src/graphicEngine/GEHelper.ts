@@ -293,32 +293,43 @@ class _GEHelper extends GEHelperBase {
             ctx.stroke();
         }
     }
-    drawObjectBox(ctx: any, bbox: Array, name: String, isHFliped: Boolean) {
+    drawObjectBox(ctx: any, bbox: Array, name: String, flipStatus: any, videoDimension: any) {
         const { WIDTH, HEIGHT, SCALE_X, SCALE_Y } = INITIAL_VIDEO_PARAMS;
         const x = bbox[0] / SCALE_X;
         const y = bbox[1] / SCALE_Y;
         const width = bbox[2] / SCALE_X;
         const height = bbox[3] / SCALE_Y;
+
+        const textpoint = { x: x + width - 10, y: y + 60 };
+        const cp1 = { x, y };
+        const cp2 = { x: x + width, y };
+        const cp3 = { x: x + width, y: y + height };
+        const cp4 = { x, y: y + height };
+        if (flipStatus.horizontal) {
+            textpoint.x = videoDimension.VIDEO_WIDTH - textpoint.x - 100;
+            cp1.x = videoDimension.VIDEO_WIDTH - cp1.x;
+            cp2.x = videoDimension.VIDEO_WIDTH - cp2.x;
+            cp3.x = videoDimension.VIDEO_WIDTH - cp3.x;
+            cp4.x = videoDimension.VIDEO_WIDTH - cp4.x;
+        }
+        if (flipStatus.vertical) {
+            textpoint.y = videoDimension.VIDEO_HEIGHT - textpoint.y;
+            cp1.y = videoDimension.VIDEO_HEIGHT - cp1.y;
+            cp2.y = videoDimension.VIDEO_HEIGHT - cp2.y;
+            cp3.y = videoDimension.VIDEO_HEIGHT - cp3.y;
+            cp4.y = videoDimension.VIDEO_HEIGHT - cp4.y;
+        }
+
         if (this._isWebGL) {
         } else {
             ctx.beginPath();
             ctx.font = '30px Arial';
-            if (isHFliped) {
-                ctx.fillText(name, 640 - x - width + 10, y + 50 + 10);
-                ctx.moveTo(640 - x, y);
-                ctx.lineTo(640 - (x + width), y);
-                ctx.lineTo(640 - (x + width), y + height);
-                ctx.lineTo(640 - x, y + height);
-                ctx.lineTo(640 - x, y);
-            } else {
-                ctx.fillText(name, x, y + 10);
-                ctx.moveTo(x, y);
-                ctx.lineTo(x + width, y);
-                ctx.lineTo(x + width, y + height);
-                ctx.lineTo(x, y + height);
-                ctx.lineTo(x, y);
-            }
-
+            ctx.fillText(name, textpoint.x, textpoint.y + 10);
+            ctx.moveTo(cp1.x, cp1.y);
+            ctx.lineTo(cp2.x, cp2.y);
+            ctx.lineTo(cp3.x, cp3.y);
+            ctx.lineTo(cp4.x, cp4.y);
+            ctx.lineTo(cp1.x, cp1.y);
             ctx.lineWidth = 10;
             ctx.strokeStyle = 'red';
             ctx.stroke();

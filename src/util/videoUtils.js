@@ -147,7 +147,10 @@ class VideoUtils {
     }
     drawObjectBoxs(ctx, objects) {
         objects.forEach((object) => {
-            GEHelper.drawObjectBox(ctx, object.bbox, object.class, this.flipStatus.horizontal);
+            GEHelper.drawObjectBox(ctx, object.bbox, object.class, this.flipStatus || {}, {
+                VIDEO_WIDTH,
+                VIDEO_HEIGHT,
+            });
         });
     }
 
