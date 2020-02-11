@@ -293,31 +293,33 @@ class _GEHelper extends GEHelperBase {
             ctx.stroke();
         }
     }
-    drawObjectBox(ctx: any, bbox: Array, name: String, flipStatus: any, videoDimension: any) {
+    drawObjectBox(ctx: any, bbox: Array, name: String, flipStatus: any) {
         const { WIDTH, HEIGHT, SCALE_X, SCALE_Y } = INITIAL_VIDEO_PARAMS;
+        const TARGET_WIDTH = WIDTH / SCALE_X;
+        const TARGET_HEIGHT = HEIGHT / SCALE_Y;
         const x = bbox[0] / SCALE_X;
         const y = bbox[1] / SCALE_Y;
         const width = bbox[2] / SCALE_X;
         const height = bbox[3] / SCALE_Y;
 
-        const textpoint = { x: x + width - 10, y: y + 60 };
+        const textpoint = { x: x + 20, y: y + 20 };
         const cp1 = { x, y };
         const cp2 = { x: x + width, y };
         const cp3 = { x: x + width, y: y + height };
         const cp4 = { x, y: y + height };
         if (flipStatus.horizontal) {
-            textpoint.x = videoDimension.VIDEO_WIDTH - textpoint.x - 100;
-            cp1.x = videoDimension.VIDEO_WIDTH - cp1.x;
-            cp2.x = videoDimension.VIDEO_WIDTH - cp2.x;
-            cp3.x = videoDimension.VIDEO_WIDTH - cp3.x;
-            cp4.x = videoDimension.VIDEO_WIDTH - cp4.x;
+            textpoint.x = TARGET_WIDTH - textpoint.x - width + 40;
+            cp1.x = TARGET_WIDTH - cp1.x;
+            cp2.x = TARGET_WIDTH - cp2.x;
+            cp3.x = TARGET_WIDTH - cp3.x;
+            cp4.x = TARGET_WIDTH - cp4.x;
         }
         if (flipStatus.vertical) {
-            textpoint.y = videoDimension.VIDEO_HEIGHT - textpoint.y;
-            cp1.y = videoDimension.VIDEO_HEIGHT - cp1.y;
-            cp2.y = videoDimension.VIDEO_HEIGHT - cp2.y;
-            cp3.y = videoDimension.VIDEO_HEIGHT - cp3.y;
-            cp4.y = videoDimension.VIDEO_HEIGHT - cp4.y;
+            textpoint.y = TARGET_HEIGHT - textpoint.y - height + 40;
+            cp1.y = TARGET_HEIGHT - cp1.y;
+            cp2.y = TARGET_HEIGHT - cp2.y;
+            cp3.y = TARGET_HEIGHT - cp3.y;
+            cp4.y = TARGET_HEIGHT - cp4.y;
         }
 
         if (this._isWebGL) {

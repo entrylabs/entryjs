@@ -1,7 +1,7 @@
 import { GEHelper } from '../graphicEngine/GEHelper';
 import * as posenet from '@tensorflow-models/posenet';
 import VideoWorker from './workers/video.worker';
-// input resolution setting
+// input resolution setting, this regards of the position of posenet and cocoSSD
 const VIDEO_WIDTH = 640;
 const VIDEO_HEIGHT = 360;
 
@@ -141,16 +141,18 @@ class VideoUtils {
     drawHumanSkeletons(ctx, adjacents) {
         adjacents.forEach((adjacentList) => {
             adjacentList.forEach((pair) => {
-                GEHelper.drawPoseSkeleton(ctx, pair[0].position, pair[1].position);
+                GEHelper.drawPoseSkeleton(
+                    ctx,
+                    pair[0].position,
+                    pair[1].position,
+                    this.flipStatus.vertical
+                );
             });
         });
     }
     drawObjectBoxs(ctx, objects) {
         objects.forEach((object) => {
-            GEHelper.drawObjectBox(ctx, object.bbox, object.class, this.flipStatus || {}, {
-                VIDEO_WIDTH,
-                VIDEO_HEIGHT,
-            });
+            GEHelper.drawObjectBox(ctx, object.bbox, object.class, this.flipStatus);
         });
     }
 
@@ -158,7 +160,7 @@ class VideoUtils {
         Entry.addEventListener('dispatchEventDidToggleStop', this.reset.bind(this));
         this.video.play();
         this.turnOnWebcam();
-        // this.startDrawUserPoints();
+        this.startDrawUserPoints();
         this.startDrawObjectRect();
         if (window.Worker) {
             if (this.isMobileNetInit) {
@@ -219,7 +221,21 @@ class VideoUtils {
                 const adjacents = [];
 
                 predictions.forEach((pose) => {
-                    const adjacentMap = posenet.getAdjacentKeyPoints(pose.keypoints, 0.2);
+                    const btwnEyes = {
+                        x: (pose.keypoints[1].position.x + pose.keypoints[2].position.x) / 2,
+                        y: (pose.keypoints[1].position.y + pose.keypoints[2].position.y) / 2,
+                    };
+                    const nose = pose.keypoints[0].position;
+                    const mouse = {
+                        score: '-1',
+                        part: 'mouse',
+                        position: {
+                            x: nose.x * 2 - btwnEyes.x,
+                            y: nose.y * 2 - btwnEyes.y,
+                        },
+                    };
+                    pose.keypoints[21] = mouse;
+                    const adjacentMap = posenet.getAdjacentKeyPoints(pose.keypoints, 0.1);
                     adjacents.push(adjacentMap);
                 });
 
@@ -233,7 +249,7 @@ class VideoUtils {
                 return [];
             }
         }
-        return this.poses;
+        return this.poses.predictions;
     }
 
     async checkUserCamAvailable() {
@@ -299,6 +315,7 @@ class VideoUtils {
         this.stream.getTracks().forEach((track) => {
             track.stop();
         });
+        worker.terminate();
         this.video = null;
         this.canvasVideo = null;
         this.flipStatus = {

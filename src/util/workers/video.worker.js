@@ -39,7 +39,21 @@ async function poseDetect(imageData, context) {
     const adjacents = [];
 
     predictions.forEach((pose) => {
-        const adjacentMap = posenet.getAdjacentKeyPoints(pose.keypoints, 0.2);
+        const btwnEyes = {
+            x: (pose.keypoints[1].position.x + pose.keypoints[2].position.x) / 2,
+            y: (pose.keypoints[1].position.y + pose.keypoints[2].position.y) / 2,
+        };
+        const nose = pose.keypoints[0].position;
+        const mouse = {
+            score: '-1',
+            part: 'mouse',
+            position: {
+                x: nose.x * 2 - btwnEyes.x,
+                y: nose.y * 2 - btwnEyes.y,
+            },
+        };
+        pose.keypoints[21] = mouse;
+        const adjacentMap = posenet.getAdjacentKeyPoints(pose.keypoints, 0.1);
         adjacents.push(adjacentMap);
     });
 

@@ -297,6 +297,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                         // ['오른쪽 발목', 'rightAnkle'],
 
                         ['얼굴', 0],
+                        ['입', 21],
                         ['왼쪽 눈', 1],
                         ['오른쪽 눈', 2],
                         ['왼쪽 귀', 3],
