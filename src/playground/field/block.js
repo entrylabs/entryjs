@@ -369,10 +369,6 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         return block;
     }
 
-    spliceBlock() {
-        // this.updateValueBlock();
-    }
-
     _updateBG() {
         if (this.magneting) {
             this._bg = this.svgGroup.elem('path', {
