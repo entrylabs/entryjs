@@ -37,10 +37,11 @@ class EntryFunc {
     }
 
     static edit(func) {
+        let funcElement = func;
         if (typeof func === 'string') {
-            func = Entry.variableContainer.getFunction(/(func_)?(.*)/.exec(func)[2]);
+            funcElement = Entry.variableContainer.getFunction(/(func_)?(.*)/.exec(func)[2]);
         }
-        if (!func) {
+        if (!funcElement) {
             console.error('no function');
             return;
         }
@@ -49,22 +50,22 @@ class EntryFunc {
 
         this.cancelEdit();
 
-        this.targetFunc = func;
+        this.targetFunc = funcElement;
         EntryFunc.isEdit = true;
         Entry.getMainWS().blockMenu.deleteRendered('variable');
-        if (this.initEditView(func.content) === false) {
+        if (this.initEditView(funcElement.content) === false) {
             EntryFunc.isEdit = false;
             return;
         } // edit fail
-        this.bindFuncChangeEvent(func);
+        this.bindFuncChangeEvent(funcElement);
         this.updateMenu();
         setTimeout(() => {
-            const schema = Entry.block[`func_${func.id}`];
+            const schema = Entry.block[`func_${funcElement.id}`];
             if (schema && schema.paramsBackupEvent) {
                 schema.paramsBackupEvent.notify();
             }
 
-            this._backupContent = func.content.stringify();
+            this._backupContent = funcElement.content.stringify();
         }, 0);
     }
 
@@ -245,18 +246,18 @@ class EntryFunc {
     }
 
     static createParamBlock(type, blockPrototype, originalType) {
-        originalType = /string/gi.test(originalType)
+        const originalTypeFullName = /string/gi.test(originalType)
             ? 'function_param_string'
             : 'function_param_boolean';
-        let blockSchema = function() {};
-        blockSchema.prototype = blockPrototype;
-        blockSchema = new blockSchema();
-        blockSchema.changeEvent = new Entry.Event();
-        blockSchema.template = Lang.template[originalType];
-        blockSchema.fontColor = blockPrototype.fontColor || '#FFF';
+        let BlockSchema = function() {};
+        BlockSchema.prototype = blockPrototype;
+        BlockSchema = new BlockSchema();
+        BlockSchema.changeEvent = new Entry.Event();
+        BlockSchema.template = Lang.template[originalTypeFullName];
+        BlockSchema.fontColor = blockPrototype.fontColor || '#FFF';
 
-        Entry.block[type] = blockSchema;
-        return blockSchema;
+        Entry.block[type] = BlockSchema;
+        return BlockSchema;
     }
 
     static updateMenu() {
@@ -311,9 +312,9 @@ class EntryFunc {
         return { block, description };
     }
 
-    static generateWsBlock(targetFunc, isRestore) {
+    static generateWsBlock(target, isRestore) {
         this.unbindFuncChangeEvent();
-        targetFunc = targetFunc ? targetFunc : this.targetFunc;
+        const targetFunc = target ? target : this.targetFunc;
         const defBlock = targetFunc.content.getEventMap('funcDef')[0];
 
         if (!defBlock) {
