@@ -1,4 +1,5 @@
-import { debounce, get as _get } from 'lodash';
+import debounce from 'lodash/debounce';
+import _get from 'lodash/get';
 import Hammer from 'hammerjs';
 
 Entry.BlockView = class BlockView {

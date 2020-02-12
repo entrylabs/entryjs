@@ -1,4 +1,4 @@
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 
 Entry.Tooltip = function(data, opts) {
     this.init(data, opts);

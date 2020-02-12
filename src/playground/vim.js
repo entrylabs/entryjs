@@ -1,4 +1,4 @@
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 
 class Vim {
     static MAZE_MODE = 1;

@@ -1,4 +1,4 @@
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 
 Entry.Scroller = class Scroller {
     get SCROLL_WIDTH() {

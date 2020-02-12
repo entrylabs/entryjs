@@ -1,5 +1,5 @@
 import { Destroyer } from '../util/destroyer/Destroyer';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 
 Entry.Workspace = class Workspace {
     schema = {
