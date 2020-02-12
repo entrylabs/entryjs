@@ -2,7 +2,7 @@ let mobileNet;
 let coco;
 
 const previousFrame = [];
-const BRIGHTNESS_THRESHOLD = 5;
+const BRIGHTNESS_THRESHOLD = 10;
 const SAMPLE_SIZE = 20;
 let options = {};
 const dimension = { width: 0, height: 0 };
@@ -33,7 +33,7 @@ async function poseDetect(imageData, context) {
     const predictions = await mobileNet.estimateMultiplePoses(imageData, {
         flipHorizontal: currentFlipStatus,
         maxDetections: 4,
-        scoreThreshold: 0.5,
+        scoreThreshold: 0.6,
         nmsRadius: 20,
     });
     const adjacents = [];
@@ -65,7 +65,7 @@ function motionDetect(imageData, context) {
     const { width, height } = dimension;
     const data = imageData.data;
     const motion = [];
-    const motionScores = { total: 0, left: 0, right: 0, top: 0, bottom: 0 };
+    const motions = { total: 0, maxPoint: { score: 0, x: -1, y: -1 } };
     for (let y = 0; y < height; y += SAMPLE_SIZE) {
         for (let x = 0; x < width; x += SAMPLE_SIZE) {
             const pos = (x + y + width) * 4;
@@ -78,6 +78,8 @@ function motionDetect(imageData, context) {
             const rDiff = Math.abs(currentPos.r - r);
             const gDiff = Math.abs(currentPos.g - g);
             const bDiff = Math.abs(currentPos.b - b);
+            const areaMotionScore = rDiff + gDiff + bDiff;
+
             if (
                 rDiff > BRIGHTNESS_THRESHOLD ||
                 gDiff > BRIGHTNESS_THRESHOLD ||
@@ -90,31 +92,17 @@ function motionDetect(imageData, context) {
                     g: gDiff,
                     b: bDiff,
                 });
+                if (motions.maxPoint.score < areaMotionScore) {
+                    motions.maxPoint.x = x;
+                    motions.maxPoint.y = y;
+                    motions.maxPoint.score = areaMotionScore;
+                }
             }
-            // area calc => (640 *360)/400  = 576, Mult 1000 for scale up
-            const areaMotionScore = ((rDiff + gDiff + bDiff) / (3 * 255 * 576)) * 1000;
-            motionScores.total += areaMotionScore;
-            if (x < width / 2) {
-                motionScores.right = motionScores.right + areaMotionScore;
-            } else {
-                motionScores.left = motionScores.left + areaMotionScore;
-            }
-
-            if (y < height / 2) {
-                motionScores.top = motionScores.top + areaMotionScore;
-            } else {
-                motionScores.bottom = motionScores.bottom + areaMotionScore;
-            }
+            motions.total += areaMotionScore;
             previousFrame[pos] = { r, g, b };
         }
     }
-    motionScores.total = motionScores.total.toFixed(2);
-    motionScores.right = motionScores.right.toFixed(2);
-    motionScores.left = motionScores.left.toFixed(2);
-    motionScores.bottom = motionScores.bottom.toFixed(2);
-    motionScores.top = motionScores.top.toFixed(2);
-    // console.log('MOTION', motionScores);
-    context.postMessage({ type: 'motion', message: motionScores });
+    context.postMessage({ type: 'motion', message: motions });
 }
 
 // worker 메시지 수신 listener
@@ -124,16 +112,19 @@ self.onmessage = async function(e) {
         case 'init':
             dimension.width = e.data.width;
             dimension.height = e.data.height;
-            importScripts('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs');
-            importScripts('https://cdn.jsdelivr.net/npm/@tensorflow-models/posenet');
-            importScripts('https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd');
+            importScripts(`${self.location.origin}/aimodules/tfjscore.js`);
+            importScripts(`${self.location.origin}/aimodules/posenet.js`);
+            importScripts(`${self.location.origin}/aimodules/cocossd.js`);
+            console.log('loadDone');
             mobileNet = await posenet.load({
                 architecture: 'MobileNetV1',
                 outputStride: 16,
                 inputResolution: { width: e.data.width, height: e.data.height },
                 multiplier: 1,
             });
-            coco = await cocoSsd.load();
+            coco = await cocoSsd.load({
+                base: 'lite_mobilenet_v2',
+            });
 
             this.postMessage({ type: 'init', message: 'done' });
             break;
@@ -144,5 +135,6 @@ self.onmessage = async function(e) {
             break;
         case 'option':
             options = e.data.option;
+            break;
     }
 };

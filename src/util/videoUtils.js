@@ -1,6 +1,7 @@
 import { GEHelper } from '../graphicEngine/GEHelper';
 import * as posenet from '@tensorflow-models/posenet';
 import VideoWorker from './workers/video.worker';
+import clamp from 'lodash/clamp';
 // input resolution setting, this regards of the position of posenet and cocoSSD
 const VIDEO_WIDTH = 640;
 const VIDEO_HEIGHT = 360;
@@ -22,19 +23,20 @@ class VideoUtils {
             horizontal: false,
             vertical: false,
         };
-        this.motionStatus = {
-            total: 0,
-            right: 0,
-            left: 0,
-            top: 0,
-            bottom: 0,
-        };
+        // motion related
+        this.motions = { total: 0, maxMotionScorePoint: { score: 0, x: -1, y: -1 } };
+        this.motionPoint = { x: 0, y: 0 };
+        this.motionDirection = { x: 0, y: 0 };
+        /////////////////////////////////
         this.objectDetected = null;
         this.isMobileNetInit = false;
         this.mobileNet = null;
         this.poses = null;
         this.isInitialized = false;
         this.videoOnLoadHandler = this.videoOnLoadHandler.bind(this);
+
+        //only for webGL
+        this.subCanvas = null;
     }
 
     reset() {
@@ -115,89 +117,34 @@ class VideoUtils {
     }
 
     startDrawObjectRect() {
-        const ctx = Entry.stage.canvas.canvas.getContext('2d');
         if (this.objectDetected) {
-            this.drawObjectBoxs(ctx, this.objectDetected);
+            GEHelper.drawObjectBox(this.objectDetected, this.flipStatus);
         }
         requestAnimationFrame(this.startDrawObjectRect.bind(this));
     }
 
     startDrawFaceRect() {
-        const ctx = Entry.stage.canvas.canvas.getContext('2d');
         if (this.poses) {
-            this.drawFaceBoxes(ctx, this.poses.predictions);
+            GEHelper.drawFaceBoxes(this.poses.predictions, this.flipStatus);
         }
         requestAnimationFrame(this.startDrawFaceRect.bind(this));
     }
 
     startDrawUserPoints() {
-        const ctx = Entry.stage.canvas.canvas.getContext('2d');
         if (this.poses) {
-            this.drawHumanPoints(ctx, this.poses.predictions);
-            this.drawHumanSkeletons(ctx, this.poses.adjacents);
+            GEHelper.drawHumanPoints(this.poses.predictions, this.flipStatus);
+            GEHelper.drawHumanSkeletons(this.poses.adjacents, this.flipStatus);
         }
         requestAnimationFrame(this.startDrawUserPoints.bind(this));
-    }
-
-    drawHumanPoints(ctx, poses) {
-        poses.map((pose) => {
-            pose.keypoints.map((item) => {
-                GEHelper.drawPosePoint(ctx, item.position);
-            });
-        });
-    }
-
-    drawHumanSkeletons(ctx, adjacents) {
-        adjacents.forEach((adjacentList) => {
-            adjacentList.forEach((pair) => {
-                GEHelper.drawPoseSkeleton(
-                    ctx,
-                    pair[0].position,
-                    pair[1].position,
-                    this.flipStatus.vertical
-                );
-            });
-        });
-    }
-
-    drawFaceBoxes(ctx, poses) {
-        poses.forEach((pose) => {
-            const nose = pose.keypoints[0].position;
-            const leftEye = pose.keypoints[1].position;
-            const rightEye = pose.keypoints[2].position;
-            const leftEar = pose.keypoints[3].position;
-            const rightEar = pose.keypoints[4].position;
-            const mouse = pose.keypoints[21].position;
-
-            const x = this.flipStatus.horizontal
-                ? Math.max(nose.x, leftEye.x, rightEye.x, leftEar.x, rightEar.x)
-                : Math.min(nose.x, leftEye.x, rightEye.x, leftEar.x, rightEar.x);
-
-            const y = leftEye.y * 2 - mouse.y * 0.8;
-            const width = leftEar.x - rightEar.x;
-            const height = Math.abs(leftEye.y - mouse.y) * 2;
-            const bbox = [];
-            bbox[0] = x;
-            bbox[1] = y;
-            bbox[2] = width;
-            bbox[3] = height;
-            GEHelper.drawObjectBox(ctx, bbox, '', {});
-        });
-    }
-
-    drawObjectBoxs(ctx, objects) {
-        objects.forEach((object) => {
-            GEHelper.drawObjectBox(ctx, object.bbox, object.class, this.flipStatus);
-        });
     }
 
     videoOnLoadHandler() {
         Entry.addEventListener('dispatchEventDidToggleStop', this.reset.bind(this));
         this.video.play();
         this.turnOnWebcam();
-        this.startDrawFaceRect();
+        // this.startDrawFaceRect(); // done
         // this.startDrawUserPoints();
-        // this.startDrawObjectRect();
+        this.startDrawObjectRect();
         if (window.Worker) {
             if (this.isMobileNetInit) {
                 return;
@@ -212,7 +159,32 @@ class VideoUtils {
                         this.isMobileNetInit = true;
                         break;
                     case 'motion':
-                        this.motionStatus = message;
+                        this.motions = message;
+                        const {
+                            maxPoint: { score, x, y },
+                        } = message;
+                        if (score > 0 && x > 0 && y > 0) {
+                            // previous
+                            const { x, y } = this.motionPoint;
+                            this.motionPoint.x = x;
+                            this.motionPoint.y = y;
+                            // console.log(this.motionPoint);
+                            const motionX = this.motionPoint.x - x;
+                            const motionY = this.motionPoint.y - y;
+                            if (motionX < 200) {
+                                this.motionDirection.x = motionX;
+                            }
+                            if (motionY < 100) {
+                                this.motionDirection.y = motionY;
+                            }
+
+                            // console.log(this.motionDirection);
+                        } else {
+                            this.motionPoint.x = 0;
+                            this.motionPoint.y = 0;
+                            // console.log('NO MOTION');
+                        }
+
                         break;
                     case 'coco':
                         this.objectDetected = message;
@@ -251,7 +223,7 @@ class VideoUtils {
                 const predictions = await this.mobileNet.estimateMultiplePoses(this.video, {
                     flipHorizontal: this.flipStatus.horizontal,
                     maxDetections: 4,
-                    scoreThreshold: 0.5,
+                    scoreThreshold: 0.7,
                     nmsRadius: 20,
                 });
                 const adjacents = [];

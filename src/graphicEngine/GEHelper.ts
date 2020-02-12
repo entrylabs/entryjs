@@ -6,6 +6,7 @@ import { EaselResManager } from './EaselResManager';
 import { PIXISprite } from '../class/pixi/plugins/PIXISprite';
 import { PIXIBrushAdaptor } from '../class/pixi/etc/PIXIBrushAdaptor';
 import { PIXIScaleAdaptor } from '../class/pixi/atlas/PIXIScaleAdaptor';
+import { connectedPartIndices } from '@tensorflow-models/posenet/dist/keypoints';
 
 declare let $: any;
 declare let createjs: any;
@@ -76,6 +77,11 @@ class _GEHelper extends GEHelperBase {
 
     public Ticker: ITicker;
     private _isInitialized: boolean;
+
+    /**  pixi Graphics로 비디오 감지 표현하기 위한 PIXI.Graphics */
+    public poseIndicatorGraphic: PIXI.Graphics | createjs.Graphics;
+    public faceIndicatorGraphic: PIXI.Graphics | createjs.Graphics;
+    public objectIndicatorGraphic: PIXI.Graphics | createjs.Graphics;
 
     /**
      * issues/9422#issuecomment-2678582
@@ -210,8 +216,25 @@ class _GEHelper extends GEHelperBase {
         return videoElement;
     }
 
+    createNewIndicatorGraphic() {
+        const graphic = this.newGraphic();
+        graphic.width = 640;
+        graphic.height = 360;
+        graphic.x = INITIAL_VIDEO_PARAMS.X;
+        graphic.y = INITIAL_VIDEO_PARAMS.Y;
+        return graphic;
+    }
+
     drawVideoElement(videoElement: HTMLVideoElement): any {
         Entry.stage.canvas.addChildAt(videoElement, 2);
+
+        this.poseIndicatorGraphic = this.createNewIndicatorGraphic();
+        this.faceIndicatorGraphic = this.createNewIndicatorGraphic();
+        this.objectIndicatorGraphic = this.createNewIndicatorGraphic();
+        Entry.stage.canvas.addChild(this.poseIndicatorGraphic);
+        Entry.stage.canvas.addChild(this.faceIndicatorGraphic);
+        Entry.stage.canvas.addChild(this.objectIndicatorGraphic);
+
         this.tickByEngine();
     }
 
@@ -234,6 +257,7 @@ class _GEHelper extends GEHelperBase {
         canvasVideo.setTransform(x, -y, scaleX, -scaleY, rotation, skewX, skewY, regX, regY);
         this.tickByEngine();
     }
+
     resetCanvasBrightness(canvasVideo: PIXI.Sprite | createjs.Bitmap) {
         if (this._isWebGL) {
             canvasVideo.filters[0].enabled = false;
@@ -261,6 +285,7 @@ class _GEHelper extends GEHelperBase {
         }
         return canvasVideo;
     }
+
     setVideoAlpha(canvasVideo: PIXI.Sprite | createjs.Bitmap, value: number): any {
         if (this.isWebGL) {
             canvasVideo.alpha = (100 - value) / 100;
@@ -271,70 +296,167 @@ class _GEHelper extends GEHelperBase {
         }
     }
 
-    drawPosePoint(ctx: any, position: any) {
-        const { x, y } = position;
+    drawHumanPoints(poses: Array<any>, flipStatus: any) {
+        const R = 5;
+        let handler = this.poseIndicatorGraphic;
         if (this._isWebGL) {
         } else {
-            const R = 5;
-            ctx.beginPath();
-            ctx.arc((x * 4) / 3, (y * 4) / 3, R, 0, 2 * Math.PI, false);
-            ctx.fillStyle = 'blue';
-            ctx.fill();
+            handler = this.poseIndicatorGraphic.graphics;
+        }
+        handler.clear();
+
+        poses.map((pose: any) => {
+            pose.keypoints.map((item: any) => {
+                const { x, y } = item.position;
+                const recalculatedY = flipStatus.vertical ? INITIAL_VIDEO_PARAMS.HEIGHT - y : y;
+
+                handler.beginFill(0x0000ff);
+                handler.drawCircle(x, recalculatedY, R);
+                handler.endFill();
+            });
+        });
+    }
+
+    drawHumanSkeletons(adjacents: Array<any>, flipStatus: any) {
+        let coordList: any = [];
+        let handler = this.poseIndicatorGraphic;
+        adjacents.forEach((adjacentList: any) => {
+            adjacentList.forEach((pair: any) => {
+                const start = pair[0].position;
+                const end = pair[1].position;
+                if (flipStatus.vertical) {
+                    start.y = INITIAL_VIDEO_PARAMS.HEIGHT - start.y;
+                    end.y = INITIAL_VIDEO_PARAMS.HEIGHT - end.y;
+                }
+                coordList.push({ start, end });
+            });
+        });
+
+        console.log(flipStatus.vertical);
+        if (this._isWebGL) {
+            handler.lineStyle(5, 0x0000ff);
+            coordList.forEach((coord: any) => {
+                const { start, end } = coord;
+                handler.moveTo(start.x, start.y).lineTo(end.x, end.y);
+            });
+        } else {
+            handler = handler.graphics;
+            handler.setStrokeStyle(8, 'round').beginStroke('blue');
+            coordList.forEach((coord: any) => {
+                const { start, end } = coord;
+                handler.moveTo(start.x, start.y).lineTo(end.x, end.y);
+            });
         }
     }
-    drawPoseSkeleton(ctx: any, start: any, end: any) {
+
+    drawFaceBoxes(poses: Array<any>, flipStatus: any) {
+        let handler = this.faceIndicatorGraphic;
+        let faceBoxList: Array = [];
+        const { WIDTH, HEIGHT } = INITIAL_VIDEO_PARAMS;
+
+        poses.forEach((pose) => {
+            const nose = pose.keypoints[0].position;
+            const leftEye = pose.keypoints[1].position;
+            const rightEye = pose.keypoints[2].position;
+            const leftEar = pose.keypoints[3].position;
+            const rightEar = pose.keypoints[4].position;
+            const mouse = pose.keypoints[21].position;
+
+            const X_MAX = Math.max(nose.x, leftEye.x, rightEye.x, leftEar.x, rightEar.x);
+            const X_MIN = Math.min(nose.x, leftEye.x, rightEye.x, leftEar.x, rightEar.x);
+
+            const width = X_MIN - X_MAX;
+            const height = Math.abs(leftEye.y - mouse.y) * 2;
+            const x = flipStatus.horizontal ? X_MAX : X_MIN - width;
+            let y = leftEye.y * 2 - mouse.y * 0.9;
+            if (flipStatus.vertical) {
+                y = HEIGHT - y - height;
+            }
+            const bbox = [];
+            bbox[0] = x;
+            bbox[1] = y;
+            bbox[2] = width;
+            bbox[3] = height;
+            faceBoxList.push(bbox);
+        });
         if (this._isWebGL) {
+            handler.clear();
+            handler.lineStyle(5, 0xff0000);
+            faceBoxList.forEach((item: any) => {
+                handler.drawRect(item[0], item[1], item[2], item[3]);
+            });
         } else {
-            ctx.beginPath();
-            ctx.moveTo((start.x * 4) / 3, (start.y * 4) / 3);
-            ctx.lineTo((end.x * 4) / 3, (end.y * 4) / 3);
-            ctx.lineWidth = 10;
-            ctx.strokeStyle = 'blue';
-            ctx.stroke();
+            handler = this.faceIndicatorGraphic.graphics;
+            handler.clear();
+            faceBoxList.forEach((item: any) => {
+                handler
+                    .setStrokeStyle(8, 'round')
+                    .beginStroke('red')
+                    .drawRect(item[0], item[1], item[2], item[3]);
+            });
         }
     }
-    drawObjectBox(ctx: any, bbox: Array, name: String, flipStatus={}: any) {
-        const { WIDTH, HEIGHT, SCALE_X, SCALE_Y } = INITIAL_VIDEO_PARAMS;
-        const TARGET_WIDTH = WIDTH / SCALE_X;
-        const TARGET_HEIGHT = HEIGHT / SCALE_Y;
-        const x = bbox[0] / SCALE_X;
-        const y = bbox[1] / SCALE_Y;
-        const width = bbox[2] / SCALE_X;
-        const height = bbox[3] / SCALE_Y;
 
-        const textpoint = { x: x + 20, y: y + 20 };
-        const cp1 = { x, y };
-        const cp2 = { x: x + width, y };
-        const cp3 = { x: x + width, y: y + height };
-        const cp4 = { x, y: y + height };
-        if (flipStatus.horizontal) {
-            textpoint.x = TARGET_WIDTH - textpoint.x - width + 40;
-            cp1.x = TARGET_WIDTH - cp1.x;
-            cp2.x = TARGET_WIDTH - cp2.x;
-            cp3.x = TARGET_WIDTH - cp3.x;
-            cp4.x = TARGET_WIDTH - cp4.x;
-        }
-        if (flipStatus.vertical) {
-            textpoint.y = TARGET_HEIGHT - textpoint.y - height + 40;
-            cp1.y = TARGET_HEIGHT - cp1.y;
-            cp2.y = TARGET_HEIGHT - cp2.y;
-            cp3.y = TARGET_HEIGHT - cp3.y;
-            cp4.y = TARGET_HEIGHT - cp4.y;
-        }
+    drawObjectBox(objects: Array<any>, flipStatus: any) {
+        let objectsList: any = [];
+
+        objects.forEach((object: any) => {
+            const bbox = object.bbox;
+            const name = object.class || '';
+
+            let x = bbox[0];
+            let y = bbox[1];
+            const width = bbox[2];
+            const height = bbox[3];
+            const textpoint = { x: x + 20, y: y + 20 };
+
+            if (flipStatus.horizontal) {
+                textpoint.x = INITIAL_VIDEO_PARAMS.WIDTH - textpoint.x - width + 40;
+                x = INITIAL_VIDEO_PARAMS.WIDTH - x - width;
+            }
+            if (flipStatus.vertical) {
+                textpoint.y = INITIAL_VIDEO_PARAMS.HEIGHT - textpoint.y - height + 40;
+                y = INITIAL_VIDEO_PARAMS.HEIGHT - y - height;
+            }
+            objectsList.push({ textpoint, name, x, y, width, height });
+        });
+
+        let handler = this.objectIndicatorGraphic;
 
         if (this._isWebGL) {
+            handler.clear();
+            handler.lineStyle(5, 0xff0000);
+            objectsList.forEach((target: any) => {
+                const { textpoint, name, x, y, width, height } = target;
+                if (name) {
+                    const text = new PIXI.Text('name', {
+                        fontFamily: 'Arial',
+                        fontSize: 30,
+                        fill: '0x000000',
+                        align: 'center',
+                    });
+                    text.x = textpoint.x;
+                    handler.addChild(text);
+                }
+
+                handler.drawRect(x, y, width, height);
+            });
         } else {
-            ctx.beginPath();
-            ctx.font = '30px Arial';
-            ctx.fillText(name, textpoint.x, textpoint.y + 10);
-            ctx.moveTo(cp1.x, cp1.y);
-            ctx.lineTo(cp2.x, cp2.y);
-            ctx.lineTo(cp3.x, cp3.y);
-            ctx.lineTo(cp4.x, cp4.y);
-            ctx.lineTo(cp1.x, cp1.y);
-            ctx.lineWidth = 10;
-            ctx.strokeStyle = 'red';
-            ctx.stroke();
+            handler = this.objectIndicatorGraphic.graphics;
+            handler.clear();
+            objectsList.forEach((target: any) => {
+                const { textpoint, name, x, y, width, height } = target;
+
+                if (name) {
+                    const ctx = Entry.stage.canvas.canvas.getContext('2d');
+                    ctx.font = '30px Arial';
+                    ctx.fillText(name, textpoint.x, textpoint.y + 10);
+                }
+                handler
+                    .setStrokeStyle(8, 'round')
+                    .beginStroke('red')
+                    .drawRect(x, y, width, height);
+            });
         }
     }
 
