@@ -408,16 +408,14 @@ class _GEHelper extends GEHelperBase {
             let y = bbox[1];
             const width = bbox[2];
             const height = bbox[3];
-            const textpoint = { x: x + 20, y: y + 20 };
 
             if (flipStatus.horizontal) {
-                textpoint.x = INITIAL_VIDEO_PARAMS.WIDTH - textpoint.x - width + 40;
                 x = INITIAL_VIDEO_PARAMS.WIDTH - x - width;
             }
             if (flipStatus.vertical) {
-                textpoint.y = INITIAL_VIDEO_PARAMS.HEIGHT - textpoint.y - height + 40;
                 y = INITIAL_VIDEO_PARAMS.HEIGHT - y - height;
             }
+            const textpoint = { x: x + 20, y: y + 20 };
             objectsList.push({ textpoint, name, x, y, width, height });
         });
 
