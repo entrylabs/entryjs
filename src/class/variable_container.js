@@ -601,9 +601,9 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('attr_box')
             .appendTo(localList);
 
-        const { globalV, localV } = _.groupBy(this.variables_, ({ object_ }) => {
-            return object_ ? 'localV' : 'globalV';
-        });
+        const { globalV, localV } = _.groupBy(this.variables_, ({ object_ }) =>
+            object_ ? 'localV' : 'globalV'
+        );
 
         const gLength = (globalV || []).length;
         const lLength = (localV || []).length;
@@ -683,9 +683,9 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('attr_box')
             .appendTo(localList);
 
-        const { localV, globalV } = _.groupBy(this.lists_, ({ object_ }) => {
-            return object_ ? 'localV' : 'globalV';
-        });
+        const { localV, globalV } = _.groupBy(this.lists_, ({ object_ }) =>
+            object_ ? 'localV' : 'globalV'
+        );
 
         const gLength = (globalV || []).length;
         const lLength = (localV || []).length;
@@ -2989,6 +2989,7 @@ Entry.VariableContainer = class VariableContainer {
         this._messageRefs = [];
         this._functionRefs = [];
 
+        Entry.Func.reset();
         playground.reloadPlayground();
         this.updateList();
     }
@@ -3148,7 +3149,7 @@ Entry.VariableContainer = class VariableContainer {
         const variables = this.variables_;
         const variableJSON = v.toJSON();
         variableJSON.variableType = type;
-        let newVariable = Entry.Variable.create(variableJSON);
+        const newVariable = Entry.Variable.create(variableJSON);
         variables.splice(variables.indexOf(v), 0, newVariable);
         if (value !== undefined) {
             variableJSON.value = value;
