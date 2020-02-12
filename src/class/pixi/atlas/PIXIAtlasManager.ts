@@ -1,3 +1,4 @@
+import { Sprite } from 'pixi.js';
 import { SceneBins } from './SceneBins';
 import { AtlasCanvasViewer } from './AtlasCanvasViewer';
 import { AtlasImageLoader, ImageLoaderHandler } from './loader/AtlasImageLoader';
@@ -11,7 +12,6 @@ import { clog } from '../utils/logs';
 import { IGEResManager } from '../../../graphicEngine/IGEResManager';
 
 declare let _:any;
-
 
 type SceneBinsMap = {[key:string]: ISceneTextures};
 
@@ -54,7 +54,7 @@ export class PIXIAtlasManager implements IGEResManager {
         this._activatedScene.activate();
     }
 
-    reqResource(spriteNullable:PIXI.Sprite, sceneID:string, pic:IRawPicture, callback:ImageLoaderHandler):void {
+    reqResource(spriteNullable:Sprite, sceneID:string, pic:IRawPicture, callback:ImageLoaderHandler):void {
         var bin:ISceneTextures = this._getSceneBin(sceneID);
         bin.addPicInfo(pic);
         let tex = bin.getTexture(PIXIAtlasHelper.getRawPath(pic));

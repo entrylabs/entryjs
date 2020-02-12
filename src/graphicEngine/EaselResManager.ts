@@ -5,52 +5,54 @@ import { AtlasImageLoadingInfo } from '../class/pixi/atlas/loader/AtlasImageLoad
 import { PIXIAtlasHelper } from '../class/pixi/atlas/PIXIAtlasHelper';
 
 export class EaselResManager implements IGEResManager {
+    private _imgLoader: AtlasImageLoader;
+    private _MAX_TEX_RECT = { x: 0, y: 0, width: 99999, height: 99999 };
 
-    private _imgLoader:AtlasImageLoader;
-    private _MAX_TEX_RECT = {x:0, y:0, width:99999, height:99999 };
-
-    INIT():void {
+    INIT(): void {
         this._imgLoader = new AtlasImageLoader(this._onImageLoad.bind(this));
     }
 
-    private _onImageLoad(info:AtlasImageLoadingInfo):void {
+    private _onImageLoad(info: AtlasImageLoadingInfo): void {
         //do nothing
     }
 
-    imageRemoved(reason:string):void {
+    imageRemoved(reason: string): void {
         this._imgLoader.requestSync();
     }
 
-    activateScene(sceneID:string):void {
+    activateScene(sceneID: string): void {
         //do nothing
     }
 
-    reqResource(spriteNullable:PIXI.Sprite | any, sceneID:string, pic:IRawPicture, callback:ImageLoaderHandler|null):void {
+    reqResource(
+        spriteNullable: PIXI.Sprite | any,
+        sceneID: string,
+        pic: IRawPicture,
+        callback: ImageLoaderHandler | null
+    ): void {
         const loader = this._imgLoader;
-        let path = PIXIAtlasHelper.getRawPath(pic);
+        const path = PIXIAtlasHelper.getRawPath(pic);
         let info = loader.getImageInfo(path);
-        if(!info) {
-            let rect = PIXIAtlasHelper.getNewImageRect(pic, this._MAX_TEX_RECT);
-            loader.load(pic,  rect);
+        if (!info) {
+            const rect = PIXIAtlasHelper.getNewImageRect(pic, this._MAX_TEX_RECT);
+            loader.load(pic, rect);
             info = loader.getImageInfo(path);
         }
-        if(spriteNullable) {
+        if (spriteNullable) {
             spriteNullable.image = info.source();
         }
-        if(!info.isReady) {
+        if (!info.isReady) {
             info.addCallback(callback);
         } else {
             callback && callback(info);
         }
-
     }
 
-    clearProject():void {
+    clearProject(): void {
         this._imgLoader.empty();
     }
 
-    removeScene(sceneID:string):void {
+    removeScene(sceneID: string): void {
         this._imgLoader.requestSync();
     }
-
 }

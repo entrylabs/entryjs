@@ -74,8 +74,7 @@ export class SceneTextures implements ISceneTextures {
 
     private _newTexture(path: string, rect: ImageRect): EntryTexture {
         let baseTex: EntryBaseTexture = new EntryBaseTexture();
-        baseTex.width = rect.width;
-        baseTex.height = rect.height;
+        baseTex.setSize(rect.width, rect.height);
         baseTex.mipmap = this._option.mipmap;
         baseTex.scaleMode = this._option.scaleMode;
         let tex = new EntryTexture(baseTex, rect);

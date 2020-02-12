@@ -1,34 +1,34 @@
-import BaseTexture = PIXI.BaseTexture;
+import { BaseTexture } from 'pixi.js';
 import { AtlasCanvasViewer } from '../AtlasCanvasViewer';
 
 export class AtlasBaseTexture extends BaseTexture {
+    private _canvas: HTMLCanvasElement;
+    private _ctx: CanvasRenderingContext2D;
+    private _activated: boolean;
 
-    private _canvas:HTMLCanvasElement;
-    private _ctx:CanvasRenderingContext2D;
-    private _activated:boolean;
-
-    constructor(private _viewer?:AtlasCanvasViewer, scaleMode?: number) {
+    constructor(private _viewer?: AtlasCanvasViewer, scaleMode?: number) {
         super(null, scaleMode);
     }
 
-    get activated():boolean { return this._activated; }
-
-    setCanvas(canvas:HTMLCanvasElement) {
-        this.source = canvas;
-        this._canvas = canvas;
-        this._ctx = canvas.getContext("2d");
+    get activated(): boolean {
+        return this._activated;
     }
 
-    getCanvas():HTMLCanvasElement {
+    setCanvas(canvas: HTMLCanvasElement) {
+        this.source = canvas;
+        this._canvas = canvas;
+        this._ctx = canvas.getContext('2d');
+    }
+
+    getCanvas(): HTMLCanvasElement {
         return this._canvas;
     }
 
-    cleanCanvas():void {
+    cleanCanvas(): void {
         this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
     }
 
-
-    activate(MAX_SIZE:number) {
+    activate(MAX_SIZE: number) {
         this._activated = true;
         this._canvas.width = MAX_SIZE;
         this._canvas.height = MAX_SIZE;
@@ -51,7 +51,7 @@ export class AtlasBaseTexture extends BaseTexture {
 
     dispose() {
         super.dispose();
-        if(this._viewer) {
+        if (this._viewer) {
             this._viewer.removeCanvas(this._canvas);
         }
     }
