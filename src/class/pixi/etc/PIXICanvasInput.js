@@ -71,7 +71,7 @@ import * as PIXI from 'pixi.js';
         self._renderCanvas.setAttribute('height', self.outerH);
         self._renderCtx = self._renderCanvas.getContext('2d');
 
-        var texture = PIXI.Texture.fromCanvas(self._renderCanvas);
+        var texture = PIXI.Texture.from(self._renderCanvas);
         self._pixiView = new PIXI.Sprite( texture );
         self._pixiView.interactive = false;
 
