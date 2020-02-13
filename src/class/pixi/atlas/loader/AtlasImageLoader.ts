@@ -5,7 +5,8 @@ import { TimeoutTimer } from '../../utils/TimeoutTimer';
 import { PIXIAtlasHelper } from '../PIXIAtlasHelper';
 import { ImageRect } from '../../../maxrect-packer/geom/ImageRect';
 import { clog } from '../../utils/logs';
-import each from 'lodash-es/each';
+// @ts-ignore
+import each from 'lodash/each';
 
 const TIME_OUT_DELAY: number = 1000;
 

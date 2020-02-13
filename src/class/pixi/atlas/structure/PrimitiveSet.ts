@@ -1,4 +1,5 @@
-import each from 'lodash-es/each';
+// @ts-ignore
+import each from 'lodash/each';
 
 export class PrimitiveSet {
     private _map: any = {};

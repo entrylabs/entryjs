@@ -1,4 +1,5 @@
-import each from 'lodash-es/each';
+// @ts-ignore
+import each from 'lodash/each';
 
 export class PrimitiveMap<T> {
     private _map: { [key: string]: T } = {};
