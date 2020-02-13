@@ -23,9 +23,7 @@ function getCreatejsEvent(): IEventType {
     };
 }
 
-
 class _GEDragHelper {
-
     types: IEventType;
     private _isWebGL: boolean;
     public handleDrag: (target: any) => void;
@@ -98,7 +96,6 @@ class _GEDragHelper {
     private _handleCreateJs(target: any) {
         //do nothing;
     }
-
 }
 
 export let GEDragHelper = new _GEDragHelper();

@@ -2,17 +2,15 @@
  * createjs 의 rendeeing 방식을 따라 하기 위해 fontProperty를 사용안함.
  * 뷰의 스케일 조정을 하더라도 깔끔하게 보이기 위해 fontScale 를 추가하여 텍스쳐의 크기를 조절함.
  */
-
+import { TextMetrics, Text } from 'pixi.js';
 import PIXITextStyle from './PIXITextStyle';
 import { PIXIGlobal } from '../init/PIXIGlobal';
 
-let TextMetrics = PIXI.TextMetrics;
 let $textCanvasContainer;
 
-export class PIXIText extends PIXI.Text {
-
+export class PIXIText extends Text {
     constructor(text, style) {
-        let canvas = document.createElement('canvas');
+        const canvas = document.createElement('canvas');
         if (!$textCanvasContainer) {
             $textCanvasContainer = $('#textCanvasContainer');
         }
@@ -22,25 +20,21 @@ export class PIXIText extends PIXI.Text {
         this.setFontScaleY(1);
         PIXIGlobal.fontLoadChecker.manage(this);
     }
-    
-    set style(style) // eslint-disable-line require-jsdoc
-    {
+
+    set style(style) {
+        // eslint-disable-line require-jsdoc
         style = style || {};
 
-        if (style instanceof PIXITextStyle)
-        {
+        if (style instanceof PIXITextStyle) {
             this._style = style;
-        }
-        else
-        {
+        } else {
             this._style = new PIXITextStyle(style);
         }
 
         this.localStyleID = -1;
         this.dirty = true;
     }
-    get style()
-    {
+    get style() {
         return super.style;
     }
 
@@ -74,19 +68,19 @@ export class PIXIText extends PIXI.Text {
     /** @deprecated */
     get measuredWidth() {
         this.updateText(true);
-        console.warn("[deprecated] - PIXIText.measuredWidth");
+        console.warn('[deprecated] - PIXIText.measuredWidth');
         return this._measuredWidth;
     }
     /** @deprecated */
     get measuredHeight() {
         this.updateText(true);
-        console.warn("[deprecated] - PIXIText.measuredHeight");
+        console.warn('[deprecated] - PIXIText.measuredHeight');
         return this._measuredHeight;
     }
     /** @deprecated */
     get measuredLineHeight() {
         this.updateText(true);
-        console.warn("[deprecated] - PIXIText.measuredLineHeight");
+        console.warn('[deprecated] - PIXIText.measuredLineHeight');
         return this._measuredLineHeight;
     }
 
@@ -96,20 +90,16 @@ export class PIXIText extends PIXI.Text {
      * @private
      * @param {boolean} respectDirty - Whether to abort updating the text if the Text isn't dirty and the function is called.
      */
-    updateText(respectDirty)
-    {
-
+    updateText(respectDirty) {
         const style = this._style;
 
         // check if style has changed..
-        if (this.localStyleID !== style.styleID)
-        {
+        if (this.localStyleID !== style.styleID) {
             this.dirty = true;
             this.localStyleID = style.styleID;
         }
 
-        if (!this.dirty && respectDirty)
-        {
+        if (!this.dirty && respectDirty) {
             return;
         }
 
@@ -149,22 +139,19 @@ export class PIXIText extends PIXI.Text {
         let linePositionX;
         let linePositionY;
 
-        if (style.dropShadow)
-        {
+        if (style.dropShadow) {
             context.fillStyle = style.dropShadowColor;
             context.globalAlpha = style.dropShadowAlpha;
             context.shadowBlur = style.dropShadowBlur;
 
-            if (style.dropShadowBlur > 0)
-            {
+            if (style.dropShadowBlur > 0) {
                 context.shadowColor = style.dropShadowColor;
             }
 
             const xShadowOffset = Math.cos(style.dropShadowAngle) * style.dropShadowDistance;
             const yShadowOffset = Math.sin(style.dropShadowAngle) * style.dropShadowDistance;
 
-            for (let i = 0; i < lines.length; i++)
-            {
+            for (let i = 0; i < lines.length; i++) {
                 linePositionX = style.strokeThickness / 2;
                 linePositionY = ((style.strokeThickness / 2) + (i * lineHeight)) + fontProperties.ascent;
 
@@ -177,15 +164,13 @@ export class PIXIText extends PIXI.Text {
                     linePositionX += (maxLineWidth - lineWidths[i]) / 2;
                 }
 
-                if (style.fill)
-                {
+                if (style.fill) {
                     this.drawLetterSpacing(
                         lines[i],
                         linePositionX + xShadowOffset + style.padding, linePositionY + yShadowOffset + style.padding
                     );
 
-                    if (style.stroke && style.strokeThickness)
-                    {
+                    if (style.stroke && style.strokeThickness) {
                         context.strokeStyle = style.dropShadowColor;
                         this.drawLetterSpacing(
                             lines[i],
@@ -209,27 +194,21 @@ export class PIXIText extends PIXI.Text {
         const MAX_HEIGHT = style.maxHeight < 0 ? 0xffff : style.maxHeight - H_LH;
         const PAD = style.padding;
         // draw lines line by line
-        for (let i = 0; i < lines.length; i++)
-        {
+        for (let i = 0; i < lines.length; i++) {
             linePositionX = style.strokeThickness / 2;
             linePositionY = ((style.strokeThickness / 2) + (i * lineHeight)) + H_LH;
 
-            if( WORD_WRAP && (linePositionY > MAX_HEIGHT) )
-            {
+            if (WORD_WRAP && linePositionY > MAX_HEIGHT) {
                 break;
             }
 
-            if (style.align === 'right')
-            {
+            if (style.align === 'right') {
                 linePositionX += maxLineWidth - lineWidths[i];
-            }
-            else if (style.align === 'center')
-            {
+            } else if (style.align === 'center') {
                 linePositionX += (maxLineWidth - lineWidths[i]) / 2;
             }
 
-            if (style.stroke && style.strokeThickness)
-            {
+            if (style.stroke && style.strokeThickness) {
                 this.drawLetterSpacing(
                     lines[i],
                     linePositionX + style.padding,
@@ -238,8 +217,7 @@ export class PIXIText extends PIXI.Text {
                 );
             }
 
-            if (style.fill)
-            {
+            if (style.fill) {
                 this.drawLetterSpacing(
                     lines[i],
                     linePositionX + style.padding,
@@ -249,22 +227,31 @@ export class PIXIText extends PIXI.Text {
 
             //취소선 추가
             if (style.cancelLine) {
-                this._drawLineAt(context, linePositionX + PAD, linePositionY + PAD, lineWidths[i], 0);
+                this._drawLineAt(
+                    context,
+                    linePositionX + PAD,
+                    linePositionY + PAD,
+                    lineWidths[i],
+                    0
+                );
             }
 
             //밑줄
             if (style.underLine) {
-                this._drawLineAt(context, linePositionX + PAD, linePositionY + PAD, lineWidths[i], lineHeight * 0.4);
+                this._drawLineAt(
+                    context,
+                    linePositionX + PAD,
+                    linePositionY + PAD,
+                    lineWidths[i],
+                    lineHeight * 0.4
+                );
             }
-            
         }
 
         this.updateTexture();
     }
 
-
-    updateTexture()
-    {
+    updateTexture() {
         const canvas = this.canvas;
 
 
@@ -294,11 +281,8 @@ export class PIXIText extends PIXI.Text {
 
         baseTexture.hasLoaded = true;
         baseTexture.resolution = this.resolution;
-
-        baseTexture.realWidth = canvas.width;
-        baseTexture.realHeight = canvas.height;
-        baseTexture.width = canvas.width / this.resolution;
-        baseTexture.height = canvas.height / this.resolution;
+        baseTexture.setRealSize(canvas.width, canvas.height);
+        baseTexture.setSize(canvas.width, canvas.height, this.resolution);
 
         texture.trim.width = texture._frame.width = canvas.width / this.resolution;
         texture.trim.height = texture._frame.height = canvas.height / this.resolution;
@@ -332,7 +316,7 @@ export class PIXIText extends PIXI.Text {
     destroy() {
         $(this.canvas).remove();
         PIXIGlobal.fontLoadChecker.unmanage(this);
-        super.destroy({children:false, baseTexture:true, texture: true});
+        super.destroy({ children: false, baseTexture: true, texture: true });
     }
 }
 

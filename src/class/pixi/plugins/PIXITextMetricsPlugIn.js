@@ -1,17 +1,12 @@
+import { TextMetrics } from 'pixi.js';
 
 export function PIXITextMetricsPlugIn() {
-
-    let TextMetrics = PIXI.TextMetrics;
-
-    let TextMetrics__orgWordWrap = PIXI.TextMetrics.wordWrap;
+    const WordWrap = TextMetrics.wordWrap;
     TextMetrics.__breakAllWordWrap = __breakAllWordWrap;
 
     TextMetrics.wordWrap = function(text, style, canvas = TextMetrics._canvas) {
-        return style.wordBreakAll ? TextMetrics.__breakAllWordWrap(text, style, canvas) : TextMetrics__orgWordWrap(text, style, canvas);
+        return style.wordBreakAll ? TextMetrics.__breakAllWordWrap(text, style, canvas) : WordWrap(text, style, canvas);
     };
-
-
-
 
     /**
      *
@@ -134,7 +129,6 @@ export function PIXITextMetricsPlugIn() {
     }
 
 
-
     //createjs와 동일한 글씨 크기 측정을 위해
     /**
      *
@@ -153,8 +147,7 @@ export function PIXITextMetricsPlugIn() {
     }
 
     //createjs와 동일한 글씨 크기 측정을 위해
-    TextMetrics.measureText = function(text, style, wordWrap, canvas = TextMetrics._canvas)
-    {
+    TextMetrics.measureText = function(text, style, wordWrap, canvas = TextMetrics._canvas) {
         wordWrap = (wordWrap === undefined || wordWrap === null) ? style.wordWrap : wordWrap;
         const font = style.toFontString();
         // const fontProperties = TextMetrics.measureFont(font); //skip for performance
@@ -168,16 +161,15 @@ export function PIXITextMetricsPlugIn() {
         const lineWidths = new Array(lines.length);
         let maxLineWidth = 0;
 
-        for (let i = 0; i < lines.length; i++)
-        {
+        for (let i = 0; i < lines.length; i++) {
             const lineWidth = context.measureText(lines[i]).width + ((lines[i].length - 1) * style.letterSpacing);
 
             lineWidths[i] = lineWidth;
             maxLineWidth = Math.max(maxLineWidth, lineWidth);
         }
-        let width = maxLineWidth + style.strokeThickness;
-        const lineHeight = style.lineHeight || _getMeasuredWidth(font, "M") * 1.2;
-        let height = lineHeight * lines.length;
+        const width = maxLineWidth + style.strokeThickness;
+        const lineHeight = style.lineHeight || _getMeasuredWidth(font, 'M') * 1.2;
+        const height = lineHeight * lines.length;
 
         return new TextMetrics(
             text,
@@ -191,5 +183,4 @@ export function PIXITextMetricsPlugIn() {
             fontProperties
         );
     };
-
 }
