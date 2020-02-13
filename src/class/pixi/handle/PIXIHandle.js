@@ -4,12 +4,15 @@
 
 'use strict';
 
-import { Container, Graphics } from 'pixi.js';
 import { PIXIHandleEdge } from './PIXIHandleEdge';
 import { PIXIDragHelper } from '../helper/PIXIDragHelper';
 import { PIXIGlobal } from '../init/PIXIGlobal';
 
-export const PIXIHandle = function(canvas) {
+export var PIXIHandle = function(canvas) {
+    if (typeof PIXI != 'object') {
+        throw 'PIXI is not founded';
+    }
+
     this.canvas = canvas;
     this._baseAsset = PIXIGlobal.baseAsset;
     this.color = '#c1c7cd';
@@ -152,10 +155,10 @@ export const PIXIHandle = function(canvas) {
     p.createHandle = function() {
         var handle = this;
         var BASE_ASSET = this._baseAsset;
-        var container = new Container();
+        var container = new PIXI.Container();
 
         //border
-        var border = new Graphics();
+        var border = new PIXI.Graphics();
         container.addChild(border);
         this.border = border;
 

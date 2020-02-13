@@ -17,7 +17,9 @@ let style = (viewerHeight:number)=>{return `<style>
 
 let dom = `<div class='atlas-canvas-container'></div>`;
 
+declare let $:any;
 export class AtlasCanvasViewer {
+
     private $style:any;
     private $container:any;
     private attached:boolean;

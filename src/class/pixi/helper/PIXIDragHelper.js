@@ -16,18 +16,18 @@ export class PIXIDragHelper {
 
         function _onUp(e){
             target.emit(C.UP, CE(e));
-            target.off('pointermove', _onMove);
+            target.off("pointermove", _onMove);
         }
 
         function _onDown(e) {
             target.emit(C.DOWN, CE(e));
-            target.on('pointermove', _onMove);
+            target.on("pointermove", _onMove);
         }
 
-        target.on('pointerdown', _onDown);
-        target.on('pointerup', _onUp);
-        target.on('pointerupoutside', _onUp);
-        target.on('pointercancel', _onUp);
+        target.on("pointerdown", _onDown);
+        target.on("pointerup", _onUp);
+        target.on("pointerupoutside", _onUp);
+        target.on("pointercancel", _onUp);
     }
 
     static _convertEvent(e) {
@@ -38,12 +38,14 @@ export class PIXIDragHelper {
             stageX: g.x,
             stageY: g.y,
             rawX: g.x,
-            rawY: g.y,
+            rawY: g.y
         };
     }
+
 }
 
-PIXIDragHelper.DOWN = '__pointerdown';
-PIXIDragHelper.MOVE = '__pointermove';
-PIXIDragHelper.UP = '__pointerup';
-PIXIDragHelper.OVER = 'pointerover';
+PIXIDragHelper.DOWN = "__pointerdown";
+PIXIDragHelper.MOVE = "__pointermove";
+PIXIDragHelper.UP = "__pointerup";
+PIXIDragHelper.OVER = "pointerover";
+
