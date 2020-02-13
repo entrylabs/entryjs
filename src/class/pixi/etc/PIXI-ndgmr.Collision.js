@@ -62,7 +62,7 @@ class CollisionCanvas {
         var fr = tex.frame;
         if (!fr || fr.width === 0 || fr.height === 0) return;
         if (!tex.baseTexture) return;
-        var source = tex.baseTexture.source;
+        var { source } = tex.baseTexture.resource || {};
         if (!source) return;
 
         var IR = intersectRect;

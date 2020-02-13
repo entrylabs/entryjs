@@ -88,7 +88,7 @@ export default class PIXIHelper {
             width = bounds.width,
             height = bounds.height;
         let mtx = PIXITempStore.matrix1;
-        target.localTransform.copy(mtx);
+        target.localTransform.copyTo(mtx);
 
         if (x || y) {
             var mat2 = PIXITempStore.matrix2.identity().translate(-x,-y);
