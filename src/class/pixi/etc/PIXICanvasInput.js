@@ -7,7 +7,7 @@
  *
  *  MIT License
  */
-import * as PIXI from 'pixi.js';
+
 (function() {
     // create a buffer that stores all inputs so that tabbing
     // between them is made possible.

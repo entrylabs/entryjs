@@ -14,6 +14,7 @@ require('./core/model');
 require('./core/observer');
 require('./core/svg');
 require('core-js/fn/object/values');
+require('./graphicEngine/FakePIXI');
 require('./css/entry.less');
 require('./class/time_wait');
 require('./class/container');

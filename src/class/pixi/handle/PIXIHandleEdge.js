@@ -1,10 +1,8 @@
-import { Container } from 'pixi.js';
-
-export class PIXIHandleEdge extends Container {
+export class PIXIHandleEdge extends PIXI.Container {
     constructor(baseAsset) {
         super();
-        const spriteFactory = () => {
-            const sp = baseAsset.newSprite('handle/border');
+        var spriteFactory = ()=>{
+            var sp = baseAsset.newSprite("handle/border");
             sp.pivot.set(0, 4);
             this.addChild(sp);
             return sp;
@@ -16,8 +14,8 @@ export class PIXIHandleEdge extends Container {
     }
 
     renderEdge(w, h) {
-        const hw = w / 2;
-        const hh = h / 2;
+        var hw = w / 2;
+        var hh = h / 2;
 
         this._top.width = w;
         this._top.position.set(-hw, -hh);
@@ -26,11 +24,12 @@ export class PIXIHandleEdge extends Container {
         this._bottom.position.set(-hw, hh);
 
         this._left.width = h;
-        this._left.rotation = Math.PI / 2;
+        this._left.rotation = Math.PI/2;
         this._left.position.set(-hw, -hh);
 
         this._right.width = h;
-        this._right.rotation = Math.PI / 2;
+        this._right.rotation = Math.PI/2;
         this._right.position.set(hw, -hh);
+
     }
 }

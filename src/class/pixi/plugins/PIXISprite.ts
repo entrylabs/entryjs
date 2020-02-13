@@ -6,45 +6,51 @@
  *
  * 그래서 setFilterAndCache() 로 비슷하게 구현.
  */
-import { Texture, Sprite, RenderTexture, Matrix, Renderer } from 'pixi.js';
+
+import Texture = PIXI.Texture;
+import DestroyOptions = PIXI.DestroyOptions;
+import Sprite = PIXI.Sprite;
+import WebGLRenderer = PIXI.WebGLRenderer;
+import RenderTexture = PIXI.RenderTexture;
 import { EntryTextureBase } from '../atlas/texture/EntryTextureBase';
 
+
 class FilterData {
-    private _orgTex: EntryTextureBase | RenderTexture;
-    private _renderTex: RenderTexture;
 
-    filters: any[];
-    invalidate: boolean;
+    private _orgTex:EntryTextureBase|RenderTexture;
+    private _renderTex:RenderTexture;
 
-    setOrgTex(orgTex: EntryTextureBase) {
+    filters:any[];
+    invalidate:boolean;
+
+    constructor() {
+    }
+
+    setOrgTex(orgTex:EntryTextureBase) {
         this._orgTex = orgTex;
     }
 
-    isSameRenderTex(tex: any): boolean {
+    isSameRenderTex(tex:any):boolean {
         return tex == this._renderTex;
     }
 
-    get orgTex(): EntryTextureBase | RenderTexture {
-        return this._orgTex;
-    }
 
-    getRenderTexture(width: number, height: number): RenderTexture {
-        if (!this._renderTex) {
-            this._renderTex = RenderTexture.create({ width, height });
-            return;
+    get orgTex():EntryTextureBase|RenderTexture { return this._orgTex; }
+
+    getRenderTexture(w:number, h:number):RenderTexture {
+        if(!this._renderTex) {
+            return this._renderTex = RenderTexture.create(w, h);
         }
-        const tex = this._renderTex;
-        if (tex.width != width || tex.height != height) {
+        var tex = this._renderTex;
+        if(tex.width != w || tex.height != h) {
             this.destroyRenderTexture();
-            return this.getRenderTexture(width, height);
+            return this.getRenderTexture(w, h);
         }
         return this._renderTex;
     }
 
     destroyRenderTexture() {
-        if (!this._renderTex) {
-            return;
-        }
+        if(!this._renderTex) return;
         this._renderTex.destroy(true);
         this._renderTex = null;
     }
@@ -57,10 +63,16 @@ class FilterData {
 }
 
 var EMPTY_SP = new Sprite();
-var MAT:any = new Matrix();
+var MAT:any = new PIXI.Matrix();
 
 export class PIXISprite extends Sprite {
-    private _filterData: FilterData;
+
+
+    constructor(texture?:PIXI.Texture) {
+        super(texture);
+    }
+
+    private _filterData:FilterData;
     // public _filterData:FilterData;
 
     //PIXIPixelPerfectInteractionPlugIn 에서 호출함.
@@ -68,7 +80,7 @@ export class PIXISprite extends Sprite {
         return (this._filterData && this._filterData.orgTex) || this.texture;
     }
 
-    setFilterAndCache(filters: any[] | null) {
+    setFilterAndCache(filters:any[] | null) {
         if (!filters || !filters.length) {
             if (this._filterData) {
                 this.texture = this._filterData.orgTex;
@@ -76,10 +88,10 @@ export class PIXISprite extends Sprite {
                 this._filterData = null;
             }
         } else {
-            if (!this._filterData) {
+            if(!this._filterData) {
                 this._filterData = new FilterData();
                 this._filterData.setOrgTex(this.texture as EntryTextureBase);
-            } else if (!this._filterData.isSameRenderTex(this.texture)) {
+            } else if(!this._filterData.isSameRenderTex(this.texture)) {
                 this._filterData.setOrgTex(this.texture as EntryTextureBase);
             }
             this._filterData.filters = filters;
@@ -92,49 +104,53 @@ export class PIXISprite extends Sprite {
      * set texture 를 override 하지 못해서...
      */
     refreshFilter() {
-        if (!this._filterData) return;
-        if (!this._filterData.filters) return;
+        if(!this._filterData) return;
+        if(!this._filterData.filters) return;
         this.setFilterAndCache(this._filterData.filters);
     }
 
-    destroy(options?: any) {
+    destroy(options?:DestroyOptions | boolean) {
         super.destroy(options);
-        if (this._filterData) {
+        if(this._filterData) {
             this._filterData.destroy();
             this._filterData = null;
         }
     }
 
-    renderWebGL(renderer: Renderer): void {
+    renderWebGL(renderer:WebGLRenderer):void {
         if (this._filterData && this._filterData.invalidate) {
             this._filterData.invalidate = false;
             this._initFilterCache(renderer);
         }
-        super.render(renderer);
+        super.renderWebGL(renderer);
     }
 
-    private _initFilterCache(renderer: Renderer) {
-        const fd: FilterData = this._filterData;
-        const tex: Texture = fd.orgTex;
+    private _initFilterCache(renderer:WebGLRenderer) {
+        var fd:FilterData = this._filterData;
+        var tex:Texture = fd.orgTex;
 
-        const w = tex.orig.width;
-        const h = tex.orig.height;
-        const renderTex: RenderTexture = fd.getRenderTexture(w, h);
-        if (fd.orgTex instanceof EntryTextureBase) {
-            // filter 된 sprite 를 도장찍기 하면 sprite.texture 의 type 는 RenderTexture 가 된다.
+        var w = tex.orig.width;
+        var h = tex.orig.height;
+        var renderTex:RenderTexture = fd.getRenderTexture(w, h);
+        if(fd.orgTex instanceof EntryTextureBase) {// filter 된 sprite 를 도장찍기 하면 sprite.texture 의 type 는 RenderTexture 가 된다.
             fd.orgTex.assignTextureScaleFactor(renderTex);
         }
-        const sp = EMPTY_SP;
+        var sp = EMPTY_SP;
         sp.filters = this._filterData.filters;
         sp.texture = tex;
 
-        // TODO. 구현필요.
-        // const cachedRenderTarget = renderer._activeRenderTarget;
-        // renderer.currentRenderer.flush();
-        // renderer.render(sp, renderTex, true, MAT , false);
-        // renderer.bindRenderTarget(cachedRenderTarget);
+        const cachedRenderTarget = renderer._activeRenderTarget;
+        renderer.currentRenderer.flush();
+        renderer.render(sp, renderTex, true, MAT , false);
+        renderer.bindRenderTarget(cachedRenderTarget);
 
         this.texture = renderTex;
         sp.texture = null;
     }
+
+
 }
+
+
+
+

@@ -1,5 +1,3 @@
-import { Graphics } from 'pixi.js';
-
 /**
  * PIXI.Graphics을 createjs.Shape와 비슷한 인터페이스로 구현하기 위한 함수
  *
@@ -146,7 +144,7 @@ GP.cp = GP.closePath;
 GP.es = GP.endStroke;
 
 export function PIXIGraphicOverride() {
-    const p = Graphics.prototype;
+    const p = PIXI.Graphics.prototype;
 
     Object.defineProperties(p, {
         graphics: {

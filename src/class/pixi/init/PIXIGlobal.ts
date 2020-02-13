@@ -1,7 +1,6 @@
-import { Application, utils as PIXIUtils } from 'pixi.js';
 import { PIXIBaseAsset } from './PIXIBaseAsset';
-import { PIXICollision as ndgmr } from '../etc/PIXI-ndgmr.Collision';
-import '../etc/PIXICanvasInput';
+let ndgmr = require('./../etc/PIXI-ndgmr.Collision').PIXICollision;
+require('./../etc/PIXICanvasInput');
 
 import { PIXIAtlasManager } from '../atlas/PIXIAtlasManager';
 import { PIXIZeroAlphaNoneInteractionPlugins } from '../plugins/PIXIZeroAlphaNoneInteractionPlugins';
@@ -38,9 +37,9 @@ class _PIXIGlobal {
         PIXIGraphicOverride();
     }
 
-    getNewApp(canvas: HTMLCanvasElement): Application {
-        PIXIUtils.skipHello();
-        let app = new Application({
+    getNewApp(canvas: HTMLCanvasElement): PIXI.Application {
+        PIXI.utils.skipHello();
+        let app = new PIXI.Application({
             view: canvas,
             width: canvas.width,
             height: canvas.height,
@@ -54,7 +53,7 @@ class _PIXIGlobal {
     }
 
     private _isWebGLSupported() {
-        if (PIXIUtils.isWebGLSupported()) return;
+        if (PIXI.utils.isWebGLSupported()) return;
         throw new Error('webgl not supported');
     }
 }

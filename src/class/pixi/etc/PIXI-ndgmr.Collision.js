@@ -32,8 +32,10 @@
  * A Pixel Perfect Collision Detection for entryjs PIXI.Sprite-Object
  *
  **/
-import * as PIXI from 'pixi.js';
-const ndgmr = {};
+
+export let PIXICollision = {};
+const ndgmr = PIXICollision;
+
 
 //--------- Class CollisionCanvas -------
 class CollisionCanvas {
@@ -302,7 +304,7 @@ var _compareAlphaValues = function(imageData1, imageData2, width, height, alphaT
     return null;
 };
 
-export const PIXICollision = ndgmr;
+
 
 
 

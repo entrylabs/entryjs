@@ -10,6 +10,8 @@ interface ISimpleRect {
     height: number;
 }
 
+declare let _: any;
+
 class _PIXIAtlasHelper {
     /**
      * rawData.fileurl || rawData.filename

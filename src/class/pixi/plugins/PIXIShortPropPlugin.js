@@ -1,57 +1,32 @@
-import { DisplayObject, Container } from 'pixi.js';
-
 export function PIXIShortPropPlugin() {
-    Object.defineProperties(DisplayObject.prototype, {
+
+    Object.defineProperties(PIXI.DisplayObject.prototype, {
         scaleX: {
-            get() {
-                return this.scale.x;
-            },
-            set(v) {
-                this.scale.x = v;
-            },
+            get: function(){ return this.scale.x; },
+            set: function(v){ this.scale.x = v; },
         },
         scaleY: {
-            get() {
-                return this.scale.y;
-            },
-            set(v) {
-                this.scale.y = v;
-            },
+            get: function() { return this.scale.y; },
+            set: function(v) { this.scale.y = v; },
         },
         regX: {
-            get() {
-                return this.pivot.x;
-            },
-            set(v) {
-                this.pivot.x = v;
-            },
+            get: function() { return this.pivot.x; },
+            set: function(v) { this.pivot.x = v; },
         },
         regY: {
-            get() {
-                return this.pivot.y;
-            },
-            set(v) {
-                this.pivot.y = v;
-            },
+            get: function() { return this.pivot.y; },
+            set: function(v) { this.pivot.y = v; },
         },
         mouseEnabled: {
-            get() {
-                return this.interactive;
-            },
-            set(v) {
-                this.interactive = v;
-            },
+            get: function() { return this.interactive; },
+            set: function(v) { this.interactive = v; }
         },
     });
 
-    Object.defineProperties(Container.prototype, {
+    Object.defineProperties(PIXI.Container.prototype, {
         mouseChildren: {
-            get() {
-                return this.interactiveChildren;
-            },
-            set(v) {
-                this.interactiveChildren = v;
-            },
-        },
+            get: function() { return this.interactiveChildren; },
+            set: function(v) { this.interactiveChildren = v; }
+        }
     });
 }

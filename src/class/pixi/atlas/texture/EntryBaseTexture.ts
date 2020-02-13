@@ -1,14 +1,9 @@
-import { BaseTexture, resources } from 'pixi.js';
-
-export class EntryBaseTexture extends BaseTexture {
+export class EntryBaseTexture extends PIXI.BaseTexture {
     private _hasSource: boolean;
-
     updateSource(src: HTMLImageElement | HTMLCanvasElement) {
         if (this._hasSource) return;
         this._hasSource = true;
-        const source = resources.autoDetectResource(src);
-        this.setResource(source);
-        this.update();
+        this.loadSource(src);
     }
 
     dispose(): void {
