@@ -45,7 +45,6 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
         this.blockMenuBlocks = [
             'pingpong_g1_when_button_pressed',
             'pingpong_g1_is_button_pressed',
-            'pingpong_g1_when_moved',
             'pingpong_g1_when_tilted',
             'pingpong_g1_is_tilted',
             'pingpong_g1_get_tilt_value',
@@ -91,10 +90,6 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
             Entry.engine.fireEvent('pp_when_button_pressed');
         }
 
-        if (Math.abs(pd.MOVE_Z) >= this.MOVE_THRESHOLD) {
-            //this.prev_sensor_data.MOVE_Z = MOVE_Z;
-            Entry.engine.fireEvent('pp_when_moved');
-        }
         if (
             Math.abs(pd.TILT_X) >= this.TILT_THRESHOLD ||
             Math.abs(pd.TILT_Y) >= this.TILT_THRESHOLD
@@ -185,54 +180,6 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
                         return this.die();
                     }
                     return script.callReturn();
-                },
-            },
-            pingpong_g1_when_moved: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                skeleton: 'basic_event',
-                statements: [],
-                params: [
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/start_icon_hardware.svg',
-                        size: 14,
-                        position: { x: 0, y: -2 },
-                    },
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.pingpong_left, 'LEFT'],
-                            [Lang.Blocks.pingpong_right, 'RIGHT'],
-                        ],
-                        value: 'LEFT',
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null],
-                    type: 'pingpong_g1_when_moved',
-                },
-                paramsKeyMap: {
-                    DIRECTION: 1,
-                },
-                class: 'Pingpong_G1',
-                isNotFor: ['Pingpong_G1'],
-                event: 'pp_when_moved',
-                func(sprite, script) {
-                    const dir = script.getStringField('DIRECTION');
-                    const pd = Entry.hw.portData;
-
-                    if (
-                        (dir == 'LEFT' && pd.MOVE_Z * -1 >= Entry.Pingpong_G1.MOVE_THRESHOLD) ||
-                        (dir == 'RIGHT' && pd.MOVE_Z >= Entry.Pingpong_G1.MOVE_THRESHOLD)
-                    ) {
-                        return script.callReturn();
-                    }
-                    return this.die();
                 },
             },
             pingpong_g1_when_tilted: {
@@ -773,7 +720,6 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
             ko: {
                 template: {
                     pingpong_g1_when_button_pressed: '%1 큐브 단추를 눌렀을 때',
-                    pingpong_g1_when_moved: '%1 큐브가 %2 방향으로 움직였을 때',
                     pingpong_g1_when_tilted: '%1 큐브가 %2 방향으로 기울였을 때',
                     pingpong_g1_is_button_pressed: '큐브 단추를 눌렀는가?',
                     pingpong_g1_is_tilted: '큐브가 %1 방향으로 기울여졌는가?',
@@ -808,7 +754,6 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
             en: {
                 template: {
                     pingpong_g1_when_button_pressed: '%1 Button pressed',
-                    pingpong_g1_when_moved: '%1 When cube moved to %2',
                     pingpong_g1_when_tilted: '%1 Tilted to %2',
                     pingpong_g1_is_button_pressed: 'button pressed?',
                     pingpong_g1_is_tilted: 'cube tilted to %1',
