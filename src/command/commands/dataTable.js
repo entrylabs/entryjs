@@ -9,11 +9,14 @@ import DataTable from '../../class/DataTable';
 
     c[COMMAND_TYPES.dataTableAddSource] = {
         do(table) {
-            DataTable.unbanBlock();
             DataTable.tables.push(table);
-            Entry.playground.reloadPlayground();
-            Entry.playground.refreshPlayground();
-            Entry.playground.selectTable(table);
+            const isWorkspace = Entry.type === 'workspace';
+            if (isWorkspace) {
+                DataTable.unbanBlock();
+                Entry.playground.reloadPlayground();
+                Entry.playground.refreshPlayground();
+                Entry.playground.selectTable(table);
+            }
         },
         state(table) {
             return [table];
@@ -35,12 +38,15 @@ import DataTable from '../../class/DataTable';
                 return;
             }
             DataTable.tables.splice(index, 1);
-            Entry.playground.reloadPlayground();
-            Entry.playground.refreshPlayground();
-            if (table === DataTable.selected) {
-                Entry.playground.selectTable(DataTable.tables[0]);
+            const isWorkspace = Entry.type === 'workspace';
+            if (isWorkspace) {
+                Entry.playground.reloadPlayground();
+                Entry.playground.refreshPlayground();
+                if (table === DataTable.selected) {
+                    Entry.playground.selectTable(DataTable.tables[0]);
+                }
+                !DataTable.tables.length && DataTable.banAllBlock();
             }
-            !DataTable.tables.length && DataTable.banAllBlock();
         },
         state(table) {
             return [table];

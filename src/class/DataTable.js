@@ -43,7 +43,8 @@ class DataTable {
     }
 
     addSource(table) {
-        Entry.do('playgroundChangeViewMode', 'table');
+        const isWorkspace = Entry.type === 'workspace';
+        isWorkspace && Entry.do('playgroundChangeViewMode', 'table');
         let data = table || { name: Lang.Workspace.data_table };
         data.name = Entry.getOrderedName(data.name, this.#tables, 'name');
         const isDataTableSource = data instanceof DataTableSource;
