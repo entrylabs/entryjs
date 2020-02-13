@@ -1,4 +1,4 @@
-import { BaseTexture } from 'pixi.js';
+import { BaseTexture, resources } from 'pixi.js';
 import { AtlasCanvasViewer } from '../AtlasCanvasViewer';
 
 export class AtlasBaseTexture extends BaseTexture {
@@ -7,7 +7,7 @@ export class AtlasBaseTexture extends BaseTexture {
     private _activated: boolean;
 
     constructor(private _viewer?: AtlasCanvasViewer, scaleMode?: number) {
-        super(null, scaleMode);
+        super(null, { scaleMode });
     }
 
     get activated(): boolean {
@@ -15,7 +15,8 @@ export class AtlasBaseTexture extends BaseTexture {
     }
 
     setCanvas(canvas: HTMLCanvasElement) {
-        this.source = canvas;
+        const resource = new resources.CanvasResource(canvas);
+        this.setResource(resource);
         this._canvas = canvas;
         this._ctx = canvas.getContext('2d');
     }
@@ -32,7 +33,7 @@ export class AtlasBaseTexture extends BaseTexture {
         this._activated = true;
         this._canvas.width = MAX_SIZE;
         this._canvas.height = MAX_SIZE;
-        this.hasLoaded = true;
+        // this.hasLoaded = true; deprecated v5
         this._viewer.add(this._canvas);
     }
 

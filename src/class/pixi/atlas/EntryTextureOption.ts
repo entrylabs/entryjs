@@ -3,8 +3,6 @@ import { Rectangle, SCALE_MODES, MIPMAP_MODES } from 'pixi.js';
 import { MaxRectsPacker } from '../../maxrect-packer/maxrects_packer';
 import { clog } from '../utils/logs';
 
-declare let $: any;
-
 interface ITexOption {}
 
 interface IAtlasOption extends ITexOption {
@@ -71,8 +69,8 @@ export class EntryTextureOption {
     private computeMaxTextureSize(LIMIT: number): number {
         const canvas: HTMLCanvasElement = PIXIHelper.getOffScreenCanvas(true);
         // @ts-ignore
-        // eslint-disable-next-line max-len
-        const ctx: WebGLRenderingContext = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        const ctx: WebGLRenderingContext =
+            canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
         let size = ctx ? ctx.getParameter(ctx.MAX_TEXTURE_SIZE) : 2048;
         size = Math.min(size, LIMIT);
         clog(`Max texture size : ${size}`);

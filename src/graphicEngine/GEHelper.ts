@@ -7,7 +7,6 @@ import { EaselResManager } from './EaselResManager';
 import { PIXIBrushAdaptor } from '../class/pixi/etc/PIXIBrushAdaptor';
 import { PIXIScaleAdaptor } from '../class/pixi/atlas/PIXIScaleAdaptor';
 
-declare let $: any;
 declare let createjs: any;
 
 interface IGraphicsEngineApplication {
@@ -218,17 +217,16 @@ class _GEHelper extends GEHelperBase {
     newSpriteWithCallback(url: string, callback?: () => void) {
         const img = new Image();
         if (callback) {
-            const $img = $(img);
             const handle = () => {
-                $img.off('load', handle);
+                img.removeEventListener('load', handle);
                 callback();
             };
-            $img.on('load', handle);
+            img.addEventListener('load', handle);
         }
         img.src = url;
         if (this._isWebGL) {
-            // @ts-ignore
-            return PIXI.Sprite.from(img);
+            const texture = PIXI.Texture.from(img);
+            return PIXI.Sprite.from(texture);
         } else {
             return new createjs.Bitmap(img);
         }

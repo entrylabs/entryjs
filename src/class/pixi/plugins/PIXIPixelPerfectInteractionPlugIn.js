@@ -70,13 +70,14 @@ export function PIXIPixelPerfectInteractionPlugIn() {
 
         x += frame.x;
         y += frame.y;
-        const { source } = tex.baseTexture.resource;
+        const { resource } = tex.baseTexture;
+        const { source } = resource || {};
         if (!source) {
             return false;
         }
         const ctx = hitTestConText;
         ctx.clearRect(0, 0, 1, 1);
-        ctx.drawImage(tex.baseTexture.resource.source, x, y, 1, 1, 0, 0, 1, 1);
+        ctx.drawImage(source, x, y, 1, 1, 0, 0, 1, 1);
         const rgba = ctx.getImageData(0, 0, 1, 1);
         return rgba.data[3] > this.pixelPerfectAlpha;
     }; //end p._checkPixel
