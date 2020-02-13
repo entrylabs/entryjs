@@ -180,7 +180,7 @@ export function PIXITextMetricsPlugIn() {
             lineWidths,
             lineHeight + style.leading,
             maxLineWidth,
-            fontProperties,
+            fontProperties
         );
     };
 }

@@ -57,19 +57,21 @@ export function PIXIPixelPerfectInteractionPlugIn() {
 
     p._pixelHasAlpha = function(x, y, tex) {
         //add method into PIXI.Sprite
+        let left = x;
+        let top = y;
         const { frame } = tex;
         const anchor = this.anchor;
 
         if (anchor.x !== 0) {
-            x -= -frame.width * anchor.x;
+            left -= -frame.width * anchor.x;
         }
 
         if (anchor.y !== 0) {
-            y -= -frame.height * anchor.y;
+            top -= -frame.height * anchor.y;
         }
 
-        x += frame.x;
-        y += frame.y;
+        left += frame.x;
+        top += frame.y;
         const { resource } = tex.baseTexture;
         const { source } = resource || {};
         if (!source) {
@@ -77,7 +79,7 @@ export function PIXIPixelPerfectInteractionPlugIn() {
         }
         const ctx = hitTestConText;
         ctx.clearRect(0, 0, 1, 1);
-        ctx.drawImage(source, x, y, 1, 1, 0, 0, 1, 1);
+        ctx.drawImage(source, left, top, 1, 1, 0, 0, 1, 1);
         const rgba = ctx.getImageData(0, 0, 1, 1);
         return rgba.data[3] > this.pixelPerfectAlpha;
     }; //end p._checkPixel

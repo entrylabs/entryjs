@@ -198,7 +198,7 @@ export class PIXIText extends Text {
             linePositionX = style.strokeThickness / 2;
             linePositionY = ((style.strokeThickness / 2) + (i * lineHeight)) + H_LH;
 
-            if( WORD_WRAP && (linePositionY > MAX_HEIGHT) ) {
+            if (WORD_WRAP && linePositionY > MAX_HEIGHT) {
                 break;
             }
 
