@@ -2,10 +2,10 @@
 
 const Buffer = require('buffer').Buffer;
 
-Entry.Pingpong_G1 = new (class PingpongG1 {
+Entry.PingpongG1 = new (class PingpongG1 {
     constructor() {
         this.id = '35.1';
-        this.name = 'Pingpong_G1';
+        this.name = 'PingpongG1';
         this.url = 'https://www.roborisen.com';
         this.imageName = 'pingpong_g1.png';
         //this.delayTime: 30,
@@ -65,7 +65,7 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
 
         /*
 		Entry.hw.sendQueue.COMMAND = {
-			id: ++Entry.Pingpong_G1.send_cmd_id,
+			id: ++Entry.PingpongG1.send_cmd_id,
 			data:  this.makePacket(0xCE, 0, [2, 0,0,1,50]),	// LED to green
 		};
 		Entry.hw.update();
@@ -170,8 +170,8 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
                     params: [],
                     type: 'pingpong_g1_when_button_pressed',
                 },
-                class: 'Pingpong_G1',
-                isNotFor: ['Pingpong_G1'],
+                class: 'PingpongG1',
+                isNotFor: ['PingpongG1'],
                 event: 'pp_when_button_pressed',
                 func(sprite, script) {
                     const buttonData = Entry.hw.portData.BUTTON;
@@ -216,8 +216,8 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
                 paramsKeyMap: {
                     TILT_DIR: 1,
                 },
-                class: 'Pingpong_G1',
-                isNotFor: ['Pingpong_G1'],
+                class: 'PingpongG1',
+                isNotFor: ['PingpongG1'],
                 event: 'pp_when_tilted',
                 func(sprite, script) {
                     const tiltDir = script.getStringField('TILT_DIR');
@@ -241,7 +241,7 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
                             break;
                     }
 
-                    if (tiltValue >= Entry.Pingpong_G1.TILT_THRESHOLD) {
+                    if (tiltValue >= Entry.PingpongG1.TILT_THRESHOLD) {
                         return script.callReturn();
                     } else {
                         return this.die();
@@ -259,11 +259,11 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
                     type: 'pingpong_g1_is_button_pressed',
                 },
                 //paramsKeyMap: { },
-                class: 'Pingpong_G1',
-                isNotFor: ['Pingpong_G1'],
+                class: 'PingpongG1',
+                isNotFor: ['PingpongG1'],
                 func(sprite, script) {
                     const pd = Entry.hw.portData;
-                    //return Entry.Pingpong_G1.sensor_data.BUTTON == 1;
+                    //return Entry.PingpongG1.sensor_data.BUTTON == 1;
                     return pd.BUTTON == 1;
                 },
             },
@@ -292,8 +292,8 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
                 paramsKeyMap: {
                     TILT_DIR: 0,
                 },
-                class: 'Pingpong_G1',
-                isNotFor: ['Pingpong_G1'],
+                class: 'PingpongG1',
+                isNotFor: ['PingpongG1'],
                 func(sprite, script) {
                     const tiltDir = script.getStringField('TILT_DIR', script);
                     const pd = Entry.hw.portData;
@@ -314,7 +314,7 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
                         default:
                             break;
                     }
-                    return tiltValue >= Entry.Pingpong_G1.TILT_THRESHOLD;
+                    return tiltValue >= Entry.PingpongG1.TILT_THRESHOLD;
                 },
             },
             pingpong_g1_get_tilt_value: {
@@ -363,8 +363,8 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
                     type: 'pingpong_g1_get_tilt_value',
                 },
                 paramsKeyMap: { DIR: 0 },
-                class: 'Pingpong_G1',
-                isNotFor: ['Pingpong_G1'],
+                class: 'PingpongG1',
+                isNotFor: ['PingpongG1'],
                 func(sprite, script) {
                     const dir = script.getStringField('DIR', script);
                     const pd = Entry.hw.portData;
@@ -407,8 +407,8 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
                 ],
                 def: { params: [], type: 'pingpong_g1_get_sensor_value' },
                 paramsKeyMap: { SENSOR: 0 },
-                class: 'Pingpong_G1',
-                isNotFor: ['Pingpong_G1'],
+                class: 'PingpongG1',
+                isNotFor: ['PingpongG1'],
                 func(sprite, script) {
                     const sensorType = script.getStringField('SENSOR', script);
                     const pd = Entry.hw.portData;
@@ -463,8 +463,8 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
                     type: 'pingpong_g1_motor_rotate',
                 },
                 paramsKeyMap: { DIR: 0, DEGREE: 1 },
-                class: 'Pingpong_G1_motor',
-                isNotFor: ['Pingpong_G1'],
+                class: 'PingpongG1_motor',
+                isNotFor: ['PingpongG1'],
                 func(sprite, script) {
                     const dir = script.getStringField('DIR');
                     let degree = script.getNumberValue('DEGREE');
@@ -483,14 +483,14 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
                     }
 
                     const opt = [2, 1, 0, 2, 0, 0, 0, 0, 0, 0];
-                    const packet = Entry.Pingpong_G1.makePacket(0xc1, 0x0004, opt); // SETP_MOTOR
+                    const packet = Entry.PingpongG1.makePacket(0xc1, 0x0004, opt); // SETP_MOTOR
 
                     packet.writeInt16BE(speed, 13);
                     packet.writeUInt16BE(step, 17);
 
                     const waitTime = Math.round(((1100 - Math.abs(speed)) / 99) * step) + 400;
 
-                    return Entry.Pingpong_G1.postCallReturn(script, packet, waitTime);
+                    return Entry.PingpongG1.postCallReturn(script, packet, waitTime);
                 },
             },
 
@@ -520,8 +520,8 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
                     type: 'pingpong_g1_start_motor_rotate',
                 },
                 paramsKeyMap: { SPEED: 0 },
-                class: 'Pingpong_G1_motor',
-                isNotFor: ['Pingpong_G1'],
+                class: 'PingpongG1_motor',
+                isNotFor: ['PingpongG1'],
                 func(sprite, script) {
                     let speed = script.getNumberValue('SPEED');
                     if (speed > 100) {
@@ -541,11 +541,11 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
                         sps = Math.round(sps);
                     }
 
-                    const packet = Entry.Pingpong_G1.makePacket(0xcc, 0x0004, [2, 0, 0, 2, 0, 0]);
+                    const packet = Entry.PingpongG1.makePacket(0xcc, 0x0004, [2, 0, 0, 2, 0, 0]);
                     packet.writeInt16BE(sps, 13);
 
                     const waitTime = Math.round(((1100 - Math.abs(sps)) / 99) * 10) + 400;
-                    return Entry.Pingpong_G1.postCallReturn(script, packet, waitTime);
+                    return Entry.PingpongG1.postCallReturn(script, packet, waitTime);
                 },
             },
             pingpong_g1_stop_motor_rotate: {
@@ -564,11 +564,11 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
                     type: 'pingpong_g1_stop_motor_rotate',
                 },
                 paramsKeyMap: {},
-                class: 'Pingpong_G1_motor',
-                isNotFor: ['Pingpong_G1'],
+                class: 'PingpongG1_motor',
+                isNotFor: ['PingpongG1'],
                 func(sprite, script) {
-                    const packet = Entry.Pingpong_G1.makePacket(0xcc, 0x0004, [2, 0, 0, 1, 0, 0]);
-                    return Entry.Pingpong_G1.postCallReturn(script, packet);
+                    const packet = Entry.PingpongG1.makePacket(0xcc, 0x0004, [2, 0, 0, 1, 0, 0]);
+                    return Entry.PingpongG1.postCallReturn(script, packet);
                 },
             },
 
@@ -592,15 +592,15 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
                 //events: {},
                 def: { params: [{ type: 'angle' }], type: 'pingpong_g1_rotate_servo_mortor' },
                 paramsKeyMap: { DEGREE: 0 },
-                class: 'Pingpong_G1_motor',
-                isNotFor: ['Pingpong_G1'],
+                class: 'PingpongG1_motor',
+                isNotFor: ['PingpongG1'],
                 func(sprite, script) {
                     let angle = script.getNumberValue('DEGREE', script);
 
                     angle = Math.min(Math.max(angle, 0), 180);
 
-                    const packet = Entry.Pingpong_G1.makePacket(0xe1, 0x00, [2, 0, angle, 1]);
-                    return Entry.Pingpong_G1.postCallReturn(script, packet, 400);
+                    const packet = Entry.PingpongG1.makePacket(0xe1, 0x00, [2, 0, angle, 1]);
+                    return Entry.PingpongG1.postCallReturn(script, packet, 400);
                 },
             },
 
@@ -635,8 +635,8 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
                     type: 'pingpong_g1_set_dot_pixel',
                 },
                 paramsKeyMap: { X: 0, Y: 1, onoff: 2 },
-                class: 'Pingpong_G1_peripheral_LED',
-                isNotFor: ['Pingpong_G1'],
+                class: 'PingpongG1_peripheral_LED',
+                isNotFor: ['PingpongG1'],
                 func(sprite, script) {
                     let dotX = script.getNumberValue('X', script);
                     let dotY = script.getNumberValue('Y', script);
@@ -645,13 +645,13 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
                     dotX = Math.min(Math.max(dotX, 0), 7);
                     dotY = Math.min(Math.max(dotY, 0), 7);
 
-                    const packet = Entry.Pingpong_G1.makePacket(0xa2, 0xe1, [
+                    const packet = Entry.PingpongG1.makePacket(0xa2, 0xe1, [
                         0x70,
                         dotY,
                         dotX,
                         onoff,
                     ]); // turn on
-                    return Entry.Pingpong_G1.postCallReturn(script, packet);
+                    return Entry.PingpongG1.postCallReturn(script, packet);
                 },
             },
             pingpong_g1_set_dot_string: {
@@ -671,8 +671,8 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
                 //events: {},
                 def: { params: [null, null], type: 'pingpong_g1_set_dot_string' },
                 paramsKeyMap: { STR: 0, DURATION: 1 },
-                class: 'Pingpong_G1_peripheral_LED',
-                isNotFor: ['Pingpong_G1'],
+                class: 'PingpongG1_peripheral_LED',
+                isNotFor: ['PingpongG1'],
                 func(sprite, script) {
                     const str = script.getStringValue('STR', script);
                     const duration = script.getNumberValue('DURATION', script);
@@ -685,9 +685,9 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
                         Buffer.from(str.substring(0, 20)),
                     ]);
 
-                    const packet = Entry.Pingpong_G1.makePacket(0xa2, 0xe3, opt);
+                    const packet = Entry.PingpongG1.makePacket(0xa2, 0xe3, opt);
                     const waitTime = period * str.length * 8 * 10 + 400; // add wait for 400ms
-                    return Entry.Pingpong_G1.postCallReturn(script, packet, waitTime);
+                    return Entry.PingpongG1.postCallReturn(script, packet, waitTime);
                 },
             },
             pingpong_g1_set_dot_clear: {
@@ -705,11 +705,11 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
                 //events: {},
                 def: { params: [], type: 'pingpong_g1_set_dot_clear' },
                 paramsKeyMap: {},
-                class: 'Pingpong_G1_peripheral_LED',
-                isNotFor: ['Pingpong_G1'],
+                class: 'PingpongG1_peripheral_LED',
+                isNotFor: ['PingpongG1'],
                 func(sprite, script) {
-                    const packet = Entry.Pingpong_G1.makePacket(0xa2, 0xe3, [0x70, 1, 0, ' ']);
-                    return Entry.Pingpong_G1.postCallReturn(script, packet);
+                    const packet = Entry.PingpongG1.makePacket(0xa2, 0xe3, [0x70, 1, 0, ' ']);
+                    return Entry.PingpongG1.postCallReturn(script, packet);
                 },
             },
         };
@@ -844,4 +844,4 @@ Entry.Pingpong_G1 = new (class PingpongG1 {
     };
 })();
 
-module.exports = Entry.Pingpong_G1;
+module.exports = Entry.PingpongG1;

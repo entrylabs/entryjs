@@ -347,12 +347,12 @@ class PingpongBase {
     }
 }
 
-Entry.Pingpong_G2 = new (class extends PingpongBase {
+Entry.PingpongG2 = new (class extends PingpongBase {
     constructor() {
         super(2);
 
         this.id = '35.2';
-        this.name = 'Pingpong_G2';
+        this.name = 'PingpongG2';
         this.url = 'https://www.roborisen.com';
         this.imageName = 'pingpong_g2.png';
         this.title = {
@@ -409,8 +409,8 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 paramsKeyMap: {
                     CUBEID: 1,
                 },
-                class: 'Pingpong_G2',
-                isNotFor: ['Pingpong_G2'],
+                class: 'PingpongG2',
+                isNotFor: ['PingpongG2'],
                 event: 'pp_when_button_pressed',
                 func(sprite, script) {
                     const cubeId = script.getNumberField('CUBEID');
@@ -465,15 +465,15 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                     CUBEID: 1,
                     TILT_DIR: 2,
                 },
-                class: 'Pingpong_G2',
-                isNotFor: ['Pingpong_G2'],
+                class: 'PingpongG2',
+                isNotFor: ['PingpongG2'],
                 event: 'pp_when_tilted',
                 func(sprite, script) {
                     const cubeId = script.getNumberField('CUBEID');
                     const tiltDir = script.getStringField('TILT_DIR');
 
-                    const tiltValue = Entry.Pingpong_G2._getTiltValue(cubeId, tiltDir);
-                    if (tiltValue >= Entry.Pingpong_G2.TILT_THRESHOLD) {
+                    const tiltValue = Entry.PingpongG2._getTiltValue(cubeId, tiltDir);
+                    if (tiltValue >= Entry.PingpongG2.TILT_THRESHOLD) {
                         return script.callReturn();
                     }
 
@@ -502,8 +502,8 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 paramsKeyMap: {
                     CUBEID: 0,
                 },
-                class: 'Pingpong_G2',
-                isNotFor: ['Pingpong_G2'],
+                class: 'PingpongG2',
+                isNotFor: ['PingpongG2'],
                 func(sprite, script) {
                     const cubeId = script.getNumberField('CUBEID');
                     const pd = Entry.hw.portData;
@@ -545,15 +545,15 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                     CUBEID: 0,
                     TILT_DIR: 1,
                 },
-                class: 'Pingpong_G2',
-                isNotFor: ['Pingpong_G2'],
+                class: 'PingpongG2',
+                isNotFor: ['PingpongG2'],
                 func(sprite, script) {
                     const cubeId = script.getNumberField('CUBEID');
                     const tiltDir = script.getStringField('TILT_DIR', script);
 
-                    const tiltValue = Entry.Pingpong_G2._getTiltValue(cubeId, tiltDir);
+                    const tiltValue = Entry.PingpongG2._getTiltValue(cubeId, tiltDir);
 
-                    return tiltValue >= Entry.Pingpong_G2.TILT_THRESHOLD;
+                    return tiltValue >= Entry.PingpongG2.TILT_THRESHOLD;
                 },
             },
             pingpong_g2_get_tilt_value: {
@@ -589,13 +589,13 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                     type: 'pingpong_g2_get_tilt_value',
                 },
                 paramsKeyMap: { CUBEID: 0, DIR: 1 },
-                class: 'Pingpong_G2',
-                isNotFor: ['Pingpong_G2'],
+                class: 'PingpongG2',
+                isNotFor: ['PingpongG2'],
                 func(sprite, script) {
                     const cubeId = script.getNumberField('CUBEID');
                     const tiltDir = script.getStringField('DIR', script);
 
-                    return Entry.Pingpong_G2._getTiltValue(cubeId, tiltDir);
+                    return Entry.PingpongG2._getTiltValue(cubeId, tiltDir);
                 },
             },
             pingpong_g2_get_sensor_value: {
@@ -625,8 +625,8 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 ],
                 def: { params: [], type: 'pingpong_g2_get_sensor_value' },
                 paramsKeyMap: { CUBEID: 0, SENSOR: 1 },
-                class: 'Pingpong_G2',
-                isNotFor: ['Pingpong_G2'],
+                class: 'PingpongG2',
+                isNotFor: ['PingpongG2'],
                 func(sprite, script) {
                     const cubeId = script.getNumberField('CUBEID');
                     const sensorType = script.getStringField('SENSOR', script);
@@ -697,10 +697,10 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                     type: 'pingpong_g2_multi_motor_rotate',
                 },
                 paramsKeyMap: { DIR_1: 0, DEGREE_1: 1, DIR_2: 2, DEGREE_2: 3 },
-                class: 'Pingpong_G2_motor',
-                isNotFor: ['Pingpong_G2'],
+                class: 'PingpongG2_motor',
+                isNotFor: ['PingpongG2'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G2.postCallReturn(script, () => {
+                    return Entry.PingpongG2.postCallReturn(script, () => {
                         const dir1 = script.getStringField('DIR_1');
                         const dir2 = script.getStringField('DIR_2');
                         const degree1 = script.getNumberValue('DEGREE_1');
@@ -709,12 +709,12 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                         const speed1 = 80 * (dir1 === 'LEFT' ? -1 : 1);
                         const speed2 = 80 * (dir2 === 'LEFT' ? -1 : 1);
 
-                        const [arr1, delay1] = Entry.Pingpong_G2.makeSingleStepPacket(
+                        const [arr1, delay1] = Entry.PingpongG2.makeSingleStepPacket(
                             0,
                             speed1,
                             degree1
                         );
-                        const [arr2, delay2] = Entry.Pingpong_G2.makeSingleStepPacket(
+                        const [arr2, delay2] = Entry.PingpongG2.makeSingleStepPacket(
                             1,
                             speed2,
                             degree2
@@ -724,7 +724,7 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                         const packet2 = Buffer.from(arr2);
 
                         const opt = [2, 1, 0, 2];
-                        const cmd = Entry.Pingpong_G2.makePacket(
+                        const cmd = Entry.PingpongG2.makePacket(
                             OPCODE.AGGREGATE_STEPS,
                             2 << 12,
                             0xaa,
@@ -778,17 +778,17 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                     type: 'pingpong_g2_motor_rotate',
                 },
                 paramsKeyMap: { CUBEID: 0, DIR: 1, DEGREE: 2 },
-                class: 'Pingpong_G2_motor',
-                isNotFor: ['Pingpong_G2'],
+                class: 'PingpongG2_motor',
+                isNotFor: ['PingpongG2'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G2.postCallReturn(script, () => {
+                    return Entry.PingpongG2.postCallReturn(script, () => {
                         const cubeId = script.getNumberField('CUBEID');
                         const dir = script.getStringField('DIR');
                         const degree = script.getNumberValue('DEGREE');
 
                         const speed = 80 * (dir === 'LEFT' ? -1 : 1);
 
-                        const [arr, waitTime] = Entry.Pingpong_G2.makeSingleStepPacket(
+                        const [arr, waitTime] = Entry.PingpongG2.makeSingleStepPacket(
                             cubeId,
                             speed,
                             degree
@@ -816,18 +816,18 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                     type: 'pingpong_g2_start_multi_motor_rotate',
                 },
                 paramsKeyMap: { SPEED_1: 0, SPEED_2: 1 },
-                class: 'Pingpong_G2_motor',
-                isNotFor: ['Pingpong_G2'],
+                class: 'PingpongG2_motor',
+                isNotFor: ['PingpongG2'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G2.postCallReturn(script, () => {
+                    return Entry.PingpongG2.postCallReturn(script, () => {
                         const speed1 = script.getNumberValue('SPEED_1');
                         const speed2 = script.getNumberValue('SPEED_2');
 
-                        const sps1 = Entry.Pingpong_G2._calcSpsFromSpeed(speed1);
-                        const sps2 = Entry.Pingpong_G2._calcSpsFromSpeed(speed2);
+                        const sps1 = Entry.PingpongG2._calcSpsFromSpeed(speed1);
+                        const sps2 = Entry.PingpongG2._calcSpsFromSpeed(speed2);
 
                         const opt1 = [2, 0, 0, 2, sps1 / 256, sps1 % 256];
-                        const packet1 = Entry.Pingpong_G2.makePacket(
+                        const packet1 = Entry.PingpongG2.makePacket(
                             OPCODE.CONTINUOUS_STEPS,
                             0,
                             0,
@@ -835,7 +835,7 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                         );
 
                         const opt2 = [2, 0, 0, 2, sps2 / 256, sps2 % 256];
-                        const packet2 = Entry.Pingpong_G2.makePacket(
+                        const packet2 = Entry.PingpongG2.makePacket(
                             OPCODE.CONTINUOUS_STEPS,
                             0,
                             1,
@@ -843,7 +843,7 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                         );
 
                         const opt = [2, 0, 0, 2];
-                        const cmd = Entry.Pingpong_G2.makePacket(
+                        const cmd = Entry.PingpongG2.makePacket(
                             OPCODE.AGGREGATE_STEPS,
                             2 << 12,
                             0xaa,
@@ -886,16 +886,16 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                     type: 'pingpong_g2_start_motor_rotate',
                 },
                 paramsKeyMap: { CUBEID: 0, SPEED: 1 },
-                class: 'Pingpong_G2_motor',
-                isNotFor: ['Pingpong_G2'],
+                class: 'PingpongG2_motor',
+                isNotFor: ['PingpongG2'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G2.postCallReturn(script, () => {
+                    return Entry.PingpongG2.postCallReturn(script, () => {
                         const cubeId = script.getNumberField('CUBEID');
                         const speed = script.getNumberValue('SPEED');
-                        const sps = Entry.Pingpong_G2._calcSpsFromSpeed(speed);
+                        const sps = Entry.PingpongG2._calcSpsFromSpeed(speed);
 
                         const opt = [2, 0, 0, 2, sps / 256, sps % 256];
-                        const packet = Entry.Pingpong_G2.makePacket(
+                        const packet = Entry.PingpongG2.makePacket(
                             OPCODE.CONTINUOUS_STEPS,
                             0,
                             cubeId,
@@ -931,14 +931,14 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                     type: 'pingpong_g2_stop_motor_rotate',
                 },
                 paramsKeyMap: { CUBEID: 0 },
-                class: 'Pingpong_G2_motor',
-                isNotFor: ['Pingpong_G2'],
+                class: 'PingpongG2_motor',
+                isNotFor: ['PingpongG2'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G2.postCallReturn(script, () => {
+                    return Entry.PingpongG2.postCallReturn(script, () => {
                         const cubeId = script.getNumberField('CUBEID');
 
                         const opt = [2, 0, 0, 1, 0, 0];
-                        const packet = Entry.Pingpong_G2.makePacket(
+                        const packet = Entry.PingpongG2.makePacket(
                             OPCODE.CONTINUOUS_STEPS,
                             0,
                             cubeId,
@@ -969,22 +969,17 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 events: {},
                 def: { params: [null, { type: 'angle' }], type: 'pingpong_g2_rotate_servo_mortor' },
                 paramsKeyMap: { cubeno: 0, DEGREE: 1 },
-                class: 'Pingpong_G2_motor',
-                isNotFor: ['Pingpong_G2'],
+                class: 'PingpongG2_motor',
+                isNotFor: ['PingpongG2'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G2.postCallReturn(script, () => {
-                        const cubeId = Entry.Pingpong_G2._getCubeNoFromBlock(script);
+                    return Entry.PingpongG2.postCallReturn(script, () => {
+                        const cubeId = Entry.PingpongG2._getCubeNoFromBlock(script);
                         let angle = script.getNumberValue('DEGREE', script);
 
                         angle = Math.min(Math.max(angle, 0), 180);
 
                         const opt = [2, 0, angle, 1];
-                        const packet = Entry.Pingpong_G2.makePacket(
-                            OPCODE.SERVO,
-                            0x00,
-                            cubeId,
-                            opt
-                        );
+                        const packet = Entry.PingpongG2.makePacket(OPCODE.SERVO, 0x00, cubeId, opt);
                         return [packet];
                     });
                 },
@@ -1021,11 +1016,11 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                     type: 'pingpong_g2_set_dot_pixel',
                 },
                 paramsKeyMap: { cubeno: 0, X: 1, Y: 2, onoff: 3 },
-                class: 'Pingpong_G2_peripheral_LED',
-                isNotFor: ['Pingpong_G2'],
+                class: 'PingpongG2_peripheral_LED',
+                isNotFor: ['PingpongG2'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G2.postCallReturn(script, () => {
-                        const cubeId = Entry.Pingpong_G2._getCubeNoFromBlock(script);
+                    return Entry.PingpongG2.postCallReturn(script, () => {
+                        const cubeId = Entry.PingpongG2._getCubeNoFromBlock(script);
                         let dotX = script.getNumberValue('X', script);
                         let dotY = script.getNumberValue('Y', script);
                         const onoff = script.getNumberField('onoff', script);
@@ -1034,7 +1029,7 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                         dotY = Math.min(Math.max(dotY, 0), 7);
 
                         const opt = [0x70, dotY, dotX, onoff];
-                        const packet = Entry.Pingpong_G2.makePacket(
+                        const packet = Entry.PingpongG2.makePacket(
                             OPCODE.LEDMATRIX,
                             0xe1,
                             cubeId,
@@ -1062,11 +1057,11 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 events: {},
                 def: { params: [null, null], type: 'pingpong_g2_set_dot_string' },
                 paramsKeyMap: { cubeno: 0, STR: 1, DURATION: 2 },
-                class: 'Pingpong_G2_peripheral_LED',
-                isNotFor: ['Pingpong_G2'],
+                class: 'PingpongG2_peripheral_LED',
+                isNotFor: ['PingpongG2'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G2.postCallReturn(script, () => {
-                        const cubeId = Entry.Pingpong_G2._getCubeNoFromBlock(script);
+                    return Entry.PingpongG2.postCallReturn(script, () => {
+                        const cubeId = Entry.PingpongG2._getCubeNoFromBlock(script);
                         const str = script.getStringValue('STR', script);
                         const duration = script.getNumberValue('DURATION', script);
 
@@ -1078,7 +1073,7 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                             Buffer.from(str.substring(0, 20)),
                         ]);
 
-                        const packet = Entry.Pingpong_G2.makePacket(
+                        const packet = Entry.PingpongG2.makePacket(
                             OPCODE.LEDMATRIX,
                             0xe3,
                             cubeId,
@@ -1106,13 +1101,13 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
                 events: {},
                 def: { params: [], type: 'pingpong_g2_set_dot_clear' },
                 paramsKeyMap: { cubeno: 0 },
-                class: 'Pingpong_G2_peripheral_LED',
-                isNotFor: ['Pingpong_G2'],
+                class: 'PingpongG2_peripheral_LED',
+                isNotFor: ['PingpongG2'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G2.postCallReturn(script, () => {
-                        const cubeId = Entry.Pingpong_G2._getCubeNoFromBlock(script);
+                    return Entry.PingpongG2.postCallReturn(script, () => {
+                        const cubeId = Entry.PingpongG2._getCubeNoFromBlock(script);
                         const opt = [0x70, 1, 0, ' '];
-                        const packet = Entry.Pingpong_G2.makePacket(
+                        const packet = Entry.PingpongG2.makePacket(
                             OPCODE.LEDMATRIX,
                             0xe3,
                             cubeId,
@@ -1189,12 +1184,12 @@ Entry.Pingpong_G2 = new (class extends PingpongBase {
     }
 })();
 
-Entry.Pingpong_G3 = new (class extends PingpongBase {
+Entry.PingpongG3 = new (class extends PingpongBase {
     constructor() {
         super(3);
 
         this.id = '35.3';
-        this.name = 'Pingpong_G3';
+        this.name = 'PingpongG3';
         this.url = 'https://www.roborisen.com';
         this.imageName = 'pingpong_g2.png';
         this.title = {
@@ -1251,8 +1246,8 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                 paramsKeyMap: {
                     CUBEID: 1,
                 },
-                class: 'Pingpong_G3',
-                isNotFor: ['Pingpong_G3'],
+                class: 'PingpongG3',
+                isNotFor: ['PingpongG3'],
                 event: 'pp_when_button_pressed',
                 func(sprite, script) {
                     const cubeId = script.getNumberField('CUBEID');
@@ -1311,15 +1306,15 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                     CUBEID: 1,
                     TILT_DIR: 2,
                 },
-                class: 'Pingpong_G3',
-                isNotFor: ['Pingpong_G3'],
+                class: 'PingpongG3',
+                isNotFor: ['PingpongG3'],
                 event: 'pp_when_tilted',
                 func(sprite, script) {
                     const cubeId = script.getNumberField('CUBEID');
                     const tiltDir = script.getStringField('TILT_DIR');
 
-                    const tiltValue = Entry.Pingpong_G3._getTiltValue(cubeId, tiltDir);
-                    if (tiltValue >= Entry.Pingpong_G3.TILT_THRESHOLD) {
+                    const tiltValue = Entry.PingpongG3._getTiltValue(cubeId, tiltDir);
+                    if (tiltValue >= Entry.PingpongG3.TILT_THRESHOLD) {
                         return script.callReturn();
                     }
 
@@ -1348,8 +1343,8 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                 paramsKeyMap: {
                     CUBEID: 0,
                 },
-                class: 'Pingpong_G3',
-                isNotFor: ['Pingpong_G3'],
+                class: 'PingpongG3',
+                isNotFor: ['PingpongG3'],
                 func(sprite, script) {
                     const cubeId = script.getNumberField('CUBEID');
                     const pd = Entry.hw.portData;
@@ -1395,15 +1390,15 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                     CUBEID: 0,
                     TILT_DIR: 1,
                 },
-                class: 'Pingpong_G3',
-                isNotFor: ['Pingpong_G3'],
+                class: 'PingpongG3',
+                isNotFor: ['PingpongG3'],
                 func(sprite, script) {
                     const cubeId = script.getNumberField('CUBEID');
                     const tiltDir = script.getStringField('TILT_DIR', script);
 
-                    const tiltValue = Entry.Pingpong_G3._getTiltValue(cubeId, tiltDir);
+                    const tiltValue = Entry.PingpongG3._getTiltValue(cubeId, tiltDir);
 
-                    return tiltValue >= Entry.Pingpong_G3.TILT_THRESHOLD;
+                    return tiltValue >= Entry.PingpongG3.TILT_THRESHOLD;
                 },
             },
             pingpong_g3_get_tilt_value: {
@@ -1439,13 +1434,13 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                     type: 'pingpong_g3_get_tilt_value',
                 },
                 paramsKeyMap: { CUBEID: 0, DIR: 1 },
-                class: 'Pingpong_G3',
-                isNotFor: ['Pingpong_G3'],
+                class: 'PingpongG3',
+                isNotFor: ['PingpongG3'],
                 func(sprite, script) {
                     const cubeId = script.getNumberField('CUBEID');
                     const tiltDir = script.getStringField('DIR', script);
 
-                    return Entry.Pingpong_G3._getTiltValue(cubeId, tiltDir);
+                    return Entry.PingpongG3._getTiltValue(cubeId, tiltDir);
                 },
             },
             pingpong_g3_get_sensor_value: {
@@ -1475,8 +1470,8 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                 ],
                 def: { params: [], type: 'pingpong_g3_get_sensor_value' },
                 paramsKeyMap: { CUBEID: 0, SENSOR: 1 },
-                class: 'Pingpong_G3',
-                isNotFor: ['Pingpong_G3'],
+                class: 'PingpongG3',
+                isNotFor: ['PingpongG3'],
                 func(sprite, script) {
                     const cubeId = script.getNumberField('CUBEID');
                     const sensorType = script.getStringField('SENSOR', script);
@@ -1565,10 +1560,10 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                     DIR_3: 4,
                     DEGREE_3: 5,
                 },
-                class: 'Pingpong_G3_motor',
-                isNotFor: ['Pingpong_G3'],
+                class: 'PingpongG3_motor',
+                isNotFor: ['PingpongG3'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G3.postCallReturn(script, () => {
+                    return Entry.PingpongG3.postCallReturn(script, () => {
                         const dir1 = script.getStringField('DIR_1');
                         const dir2 = script.getStringField('DIR_2');
                         const dir3 = script.getStringField('DIR_3');
@@ -1580,17 +1575,17 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                         const speed2 = 80 * (dir2 === 'LEFT' ? -1 : 1);
                         const speed3 = 80 * (dir3 === 'LEFT' ? -1 : 1);
 
-                        const [arr1, delay1] = Entry.Pingpong_G3.makeSingleStepPacket(
+                        const [arr1, delay1] = Entry.PingpongG3.makeSingleStepPacket(
                             0,
                             speed1,
                             degree1
                         );
-                        const [arr2, delay2] = Entry.Pingpong_G3.makeSingleStepPacket(
+                        const [arr2, delay2] = Entry.PingpongG3.makeSingleStepPacket(
                             1,
                             speed2,
                             degree2
                         );
-                        const [arr3, delay3] = Entry.Pingpong_G3.makeSingleStepPacket(
+                        const [arr3, delay3] = Entry.PingpongG3.makeSingleStepPacket(
                             2,
                             speed3,
                             degree3
@@ -1601,7 +1596,7 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                         const packet3 = Buffer.from(arr3);
 
                         const opt = [2, 1, 0, 2];
-                        const cmd = Entry.Pingpong_G3.makePacket(
+                        const cmd = Entry.PingpongG3.makePacket(
                             OPCODE.AGGREGATE_STEPS,
                             3 << 12,
                             0xaa,
@@ -1653,16 +1648,16 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                     type: 'pingpong_g3_motor_rotate',
                 },
                 paramsKeyMap: { CUBEID: 0, DIR: 1, DEGREE: 2 },
-                class: 'Pingpong_G3_motor',
-                isNotFor: ['Pingpong_G3'],
+                class: 'PingpongG3_motor',
+                isNotFor: ['PingpongG3'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G3.postCallReturn(script, () => {
+                    return Entry.PingpongG3.postCallReturn(script, () => {
                         const cubeId = script.getNumberField('CUBEID');
                         const dir = script.getStringField('DIR');
                         const degree = script.getNumberValue('DEGREE');
 
                         const speed = 80 * (dir === 'LEFT' ? -1 : 1);
-                        const [arr, waitTime] = Entry.Pingpong_G3.makeSingleStepPacket(
+                        const [arr, waitTime] = Entry.PingpongG3.makeSingleStepPacket(
                             cubeId,
                             speed,
                             degree
@@ -1691,24 +1686,24 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                     type: 'pingpong_g3_start_multi_motor_rotate',
                 },
                 paramsKeyMap: { SPEED_1: 0, SPEED_2: 1, SPEED_3: 2 },
-                class: 'Pingpong_G3_motor',
-                isNotFor: ['Pingpong_G3'],
+                class: 'PingpongG3_motor',
+                isNotFor: ['PingpongG3'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G3.postCallReturn(script, () => {
+                    return Entry.PingpongG3.postCallReturn(script, () => {
                         const speed1 = script.getNumberValue('SPEED_1');
                         const speed2 = script.getNumberValue('SPEED_2');
                         const speed3 = script.getNumberValue('SPEED_3');
 
-                        const arr1 = Entry.Pingpong_G3.makeContStepPacket(0, 0, speed1);
-                        const arr2 = Entry.Pingpong_G3.makeContStepPacket(1, 0, speed2);
-                        const arr3 = Entry.Pingpong_G3.makeContStepPacket(2, 0, speed3);
+                        const arr1 = Entry.PingpongG3.makeContStepPacket(0, 0, speed1);
+                        const arr2 = Entry.PingpongG3.makeContStepPacket(1, 0, speed2);
+                        const arr3 = Entry.PingpongG3.makeContStepPacket(2, 0, speed3);
 
                         const packet1 = Buffer.from(arr1);
                         const packet2 = Buffer.from(arr2);
                         const packet3 = Buffer.from(arr3);
 
                         const opt = [2, 0, 0, 2];
-                        const cmd = Entry.Pingpong_G3.makePacket(
+                        const cmd = Entry.PingpongG3.makePacket(
                             OPCODE.AGGREGATE_STEPS,
                             3 << 12,
                             0xaa,
@@ -1754,16 +1749,16 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                     type: 'pingpong_g3_start_motor_rotate',
                 },
                 paramsKeyMap: { CUBEID: 0, SPEED: 1 },
-                class: 'Pingpong_G3_motor',
-                isNotFor: ['Pingpong_G3'],
+                class: 'PingpongG3_motor',
+                isNotFor: ['PingpongG3'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G3.postCallReturn(script, () => {
+                    return Entry.PingpongG3.postCallReturn(script, () => {
                         const cubeId = script.getNumberField('CUBEID');
                         let speed = script.getNumberValue('SPEED');
-                        speed = Entry.Pingpong_G3._calcSpsFromSpeed(speed);
+                        speed = Entry.PingpongG3._calcSpsFromSpeed(speed);
 
                         const opt = [2, 0, 0, 2, speed / 256, speed % 256];
-                        const packet = Entry.Pingpong_G3.makePacket(
+                        const packet = Entry.PingpongG3.makePacket(
                             OPCODE.CONTINUOUS_STEPS,
                             0,
                             cubeId,
@@ -1797,14 +1792,14 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                     type: 'pingpong_g3_stop_motor_rotate',
                 },
                 paramsKeyMap: { CUBEID: 0 },
-                class: 'Pingpong_G3_motor',
-                isNotFor: ['Pingpong_G3'],
+                class: 'PingpongG3_motor',
+                isNotFor: ['PingpongG3'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G3.postCallReturn(script, () => {
+                    return Entry.PingpongG3.postCallReturn(script, () => {
                         const cubeId = script.getNumberField('CUBEID');
 
                         const opt = [2, 0, 0, 1, 0, 0];
-                        const packet = Entry.Pingpong_G3.makePacket(
+                        const packet = Entry.PingpongG3.makePacket(
                             OPCODE.CONTINUOUS_STEPS,
                             0,
                             cubeId,
@@ -1831,22 +1826,17 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                 events: {},
                 def: { params: [null, { type: 'angle' }], type: 'pingpong_g3_rotate_servo_mortor' },
                 paramsKeyMap: { cubeno: 0, DEGREE: 1 },
-                class: 'Pingpong_G3_motor',
-                isNotFor: ['Pingpong_G3'],
+                class: 'PingpongG3_motor',
+                isNotFor: ['PingpongG3'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G3.postCallReturn(script, () => {
-                        const cubeId = Entry.Pingpong_G3._getCubeNoFromBlock(script);
+                    return Entry.PingpongG3.postCallReturn(script, () => {
+                        const cubeId = Entry.PingpongG3._getCubeNoFromBlock(script);
                         let angle = script.getNumberValue('DEGREE', script);
 
                         angle = Math.min(Math.max(angle, 0), 180);
 
                         const opt = [2, 0, angle, 1];
-                        const packet = Entry.Pingpong_G3.makePacket(
-                            OPCODE.SERVO,
-                            0x00,
-                            cubeId,
-                            opt
-                        );
+                        const packet = Entry.PingpongG3.makePacket(OPCODE.SERVO, 0x00, cubeId, opt);
                         return [packet];
                     });
                 },
@@ -1883,11 +1873,11 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                     type: 'pingpong_g3_set_dot_pixel',
                 },
                 paramsKeyMap: { cubeno: 0, X: 1, Y: 2, onoff: 3 },
-                class: 'Pingpong_G3_peripheral_LED',
-                isNotFor: ['Pingpong_G3'],
+                class: 'PingpongG3_peripheral_LED',
+                isNotFor: ['PingpongG3'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G3.postCallReturn(script, () => {
-                        const cubeId = Entry.Pingpong_G3._getCubeNoFromBlock(script);
+                    return Entry.PingpongG3.postCallReturn(script, () => {
+                        const cubeId = Entry.PingpongG3._getCubeNoFromBlock(script);
                         let dotX = script.getNumberValue('X', script);
                         let dotY = script.getNumberValue('Y', script);
                         const onoff = script.getNumberField('onoff', script);
@@ -1896,7 +1886,7 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                         dotY = Math.min(Math.max(dotY, 0), 7);
 
                         const opt = [0x70, dotY, dotX, onoff];
-                        const packet = Entry.Pingpong_G3.makePacket(
+                        const packet = Entry.PingpongG3.makePacket(
                             OPCODE.LEDMATRIX,
                             0xe1,
                             cubeId,
@@ -1924,11 +1914,11 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                 events: {},
                 def: { params: [null, null], type: 'pingpong_g3_set_dot_string' },
                 paramsKeyMap: { cubeno: 0, STR: 1, DURATION: 2 },
-                class: 'Pingpong_G3_peripheral_LED',
-                isNotFor: ['Pingpong_G3'],
+                class: 'PingpongG3_peripheral_LED',
+                isNotFor: ['PingpongG3'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G3.postCallReturn(script, () => {
-                        const cubeId = Entry.Pingpong_G3._getCubeNoFromBlock(script);
+                    return Entry.PingpongG3.postCallReturn(script, () => {
+                        const cubeId = Entry.PingpongG3._getCubeNoFromBlock(script);
                         const str = script.getStringValue('STR', script);
                         const duration = script.getNumberValue('DURATION', script);
 
@@ -1940,7 +1930,7 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                             Buffer.from(str.substring(0, 20)),
                         ]);
 
-                        const packet = Entry.Pingpong_G3.makePacket(
+                        const packet = Entry.PingpongG3.makePacket(
                             OPCODE.LEDMATRIX,
                             0xe3,
                             cubeId,
@@ -1967,13 +1957,13 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
                 events: {},
                 def: { params: [], type: 'pingpong_g3_set_dot_clear' },
                 paramsKeyMap: { cubeno: 0 },
-                class: 'Pingpong_G3_peripheral_LED',
-                isNotFor: ['Pingpong_G3'],
+                class: 'PingpongG3_peripheral_LED',
+                isNotFor: ['PingpongG3'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G3.postCallReturn(script, () => {
-                        const cubeId = Entry.Pingpong_G3._getCubeNoFromBlock(script);
+                    return Entry.PingpongG3.postCallReturn(script, () => {
+                        const cubeId = Entry.PingpongG3._getCubeNoFromBlock(script);
                         const opt = [0x70, 1, 0, ' '];
-                        const packet = Entry.Pingpong_G3.makePacket(
+                        const packet = Entry.PingpongG3.makePacket(
                             OPCODE.LEDMATRIX,
                             0xe3,
                             cubeId,
@@ -2051,12 +2041,12 @@ Entry.Pingpong_G3 = new (class extends PingpongBase {
     }
 })();
 
-Entry.Pingpong_G4 = new (class extends PingpongBase {
+Entry.PingpongG4 = new (class extends PingpongBase {
     constructor() {
         super(4);
 
         this.id = '35.4';
-        this.name = 'Pingpong_G4';
+        this.name = 'PingpongG4';
         this.url = 'https://www.roborisen.com';
         this.imageName = 'pingpong_g4.png';
         this.title = {
@@ -2113,8 +2103,8 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                 paramsKeyMap: {
                     CUBEID: 1,
                 },
-                class: 'Pingpong_G4',
-                isNotFor: ['Pingpong_G4'],
+                class: 'PingpongG4',
+                isNotFor: ['PingpongG4'],
                 event: 'pp_when_button_pressed',
                 func(sprite, script) {
                     const cubeId = script.getNumberField('CUBEID');
@@ -2123,7 +2113,8 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                     if (
                         (cubeId == 0 && pd.c0_BUTTON == 1) ||
                         (cubeId == 1 && pd.c1_BUTTON == 1) ||
-                        (cubeId == 2 && pd.c2_BUTTON == 1)
+                        (cubeId == 2 && pd.c2_BUTTON == 1) ||
+                        (cubeId == 3 && pd.c3_BUTTON == 1)
                     ) {
                         return script.callReturn();
                     }
@@ -2173,15 +2164,15 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                     CUBEID: 1,
                     TILT_DIR: 2,
                 },
-                class: 'Pingpong_G4',
-                isNotFor: ['Pingpong_G4'],
+                class: 'PingpongG4',
+                isNotFor: ['PingpongG4'],
                 event: 'pp_when_tilted',
                 func(sprite, script) {
                     const cubeId = script.getNumberField('CUBEID');
                     const tiltDir = script.getStringField('TILT_DIR');
 
-                    const tiltValue = Entry.Pingpong_G4._getTiltValue(cubeId, tiltDir);
-                    if (tiltValue >= Entry.Pingpong_G4.TILT_THRESHOLD) {
+                    const tiltValue = Entry.PingpongG4._getTiltValue(cubeId, tiltDir);
+                    if (tiltValue >= Entry.PingpongG4.TILT_THRESHOLD) {
                         return script.callReturn();
                     }
 
@@ -2210,8 +2201,8 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                 paramsKeyMap: {
                     CUBEID: 0,
                 },
-                class: 'Pingpong_G4',
-                isNotFor: ['Pingpong_G4'],
+                class: 'PingpongG4',
+                isNotFor: ['PingpongG4'],
                 func(sprite, script) {
                     const cubeId = script.getNumberField('CUBEID');
                     const pd = Entry.hw.portData;
@@ -2258,15 +2249,15 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                     CUBEID: 0,
                     TILT_DIR: 1,
                 },
-                class: 'Pingpong_G4',
-                isNotFor: ['Pingpong_G4'],
+                class: 'PingpongG4',
+                isNotFor: ['PingpongG4'],
                 func(sprite, script) {
                     const cubeId = script.getNumberField('CUBEID');
                     const tiltDir = script.getStringField('TILT_DIR', script);
 
-                    const tiltValue = Entry.Pingpong_G4._getTiltValue(cubeId, tiltDir);
+                    const tiltValue = Entry.PingpongG4._getTiltValue(cubeId, tiltDir);
 
-                    return tiltValue >= Entry.Pingpong_G4.TILT_THRESHOLD;
+                    return tiltValue >= Entry.PingpongG4.TILT_THRESHOLD;
                 },
             },
             pingpong_g4_get_tilt_value: {
@@ -2302,13 +2293,13 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                     type: 'pingpong_g4_get_tilt_value',
                 },
                 paramsKeyMap: { CUBEID: 0, DIR: 1 },
-                class: 'Pingpong_G4',
-                isNotFor: ['Pingpong_G4'],
+                class: 'PingpongG4',
+                isNotFor: ['PingpongG4'],
                 func(sprite, script) {
                     const cubeId = script.getNumberField('CUBEID');
                     const tiltDir = script.getStringField('DIR', script);
 
-                    return Entry.Pingpong_G4._getTiltValue(cubeId, tiltDir);
+                    return Entry.PingpongG4._getTiltValue(cubeId, tiltDir);
                 },
             },
             pingpong_g4_get_sensor_value: {
@@ -2338,8 +2329,8 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                 ],
                 def: { params: [], type: 'pingpong_g4_get_sensor_value' },
                 paramsKeyMap: { CUBEID: 0, SENSOR: 1 },
-                class: 'Pingpong_G4',
-                isNotFor: ['Pingpong_G4'],
+                class: 'PingpongG4',
+                isNotFor: ['PingpongG4'],
                 func(sprite, script) {
                     const cubeId = script.getNumberField('CUBEID');
                     const sensorType = script.getStringField('SENSOR', script);
@@ -2441,10 +2432,10 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                     DIR_4: 6,
                     DEGREE_4: 7,
                 },
-                class: 'Pingpong_G4_motor',
-                isNotFor: ['Pingpong_G4'],
+                class: 'PingpongG4_motor',
+                isNotFor: ['PingpongG4'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G4.postCallReturn(script, () => {
+                    return Entry.PingpongG4.postCallReturn(script, () => {
                         const dir1 = script.getStringField('DIR_1');
                         const dir2 = script.getStringField('DIR_2');
                         const dir3 = script.getStringField('DIR_3');
@@ -2459,22 +2450,22 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                         const speed3 = 80 * (dir3 === 'LEFT' ? -1 : 1);
                         const speed4 = 80 * (dir4 === 'LEFT' ? -1 : 1);
 
-                        const [arr1, delay1] = Entry.Pingpong_G4.makeSingleStepPacket(
+                        const [arr1, delay1] = Entry.PingpongG4.makeSingleStepPacket(
                             0,
                             speed1,
                             degree1
                         );
-                        const [arr2, delay2] = Entry.Pingpong_G4.makeSingleStepPacket(
+                        const [arr2, delay2] = Entry.PingpongG4.makeSingleStepPacket(
                             1,
                             speed2,
                             degree2
                         );
-                        const [arr3, delay3] = Entry.Pingpong_G4.makeSingleStepPacket(
+                        const [arr3, delay3] = Entry.PingpongG4.makeSingleStepPacket(
                             2,
                             speed3,
                             degree3
                         );
-                        const [arr4, delay4] = Entry.Pingpong_G4.makeSingleStepPacket(
+                        const [arr4, delay4] = Entry.PingpongG4.makeSingleStepPacket(
                             3,
                             speed4,
                             degree4
@@ -2486,7 +2477,7 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                         const packet4 = Buffer.from(arr4);
 
                         const opt = [2, 1, 0, 2];
-                        const cmd = Entry.Pingpong_G4.makePacket(
+                        const cmd = Entry.PingpongG4.makePacket(
                             OPCODE.AGGREGATE_STEPS,
                             4 << 12,
                             0xaa,
@@ -2542,16 +2533,16 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                     type: 'pingpong_g4_motor_rotate',
                 },
                 paramsKeyMap: { CUBEID: 0, DIR: 1, DEGREE: 2 },
-                class: 'Pingpong_G4_motor',
-                isNotFor: ['Pingpong_G4'],
+                class: 'PingpongG4_motor',
+                isNotFor: ['PingpongG4'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G4.postCallReturn(script, () => {
+                    return Entry.PingpongG4.postCallReturn(script, () => {
                         const cubeId = script.getNumberField('CUBEID');
                         const dir = script.getStringField('DIR');
                         const degree = script.getNumberValue('DEGREE');
                         const speed = 80 * (dir === 'LEFT' ? -1 : 1);
 
-                        const [arr, waitTime] = Entry.Pingpong_G4.makeSingleStepPacket(
+                        const [arr, waitTime] = Entry.PingpongG4.makeSingleStepPacket(
                             cubeId,
                             speed,
                             degree
@@ -2581,21 +2572,21 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                     type: 'pingpong_g4_start_multi_motor_rotate',
                 },
                 paramsKeyMap: { SPEED_1: 0, SPEED_2: 1, SPEED_3: 2, SPEED_4: 3 },
-                class: 'Pingpong_G4_motor',
-                isNotFor: ['Pingpong_G4'],
+                class: 'PingpongG4_motor',
+                isNotFor: ['PingpongG4'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G4.postCallReturn(script, () => {
+                    return Entry.PingpongG4.postCallReturn(script, () => {
                         let speed1 = script.getNumberValue('SPEED_1');
                         let speed2 = script.getNumberValue('SPEED_2');
                         let speed3 = script.getNumberValue('SPEED_3');
                         let speed4 = script.getNumberValue('SPEED_4');
-                        speed1 = Entry.Pingpong_G4._calcSpsFromSpeed(speed1);
-                        speed2 = Entry.Pingpong_G4._calcSpsFromSpeed(speed2);
-                        speed3 = Entry.Pingpong_G4._calcSpsFromSpeed(speed3);
-                        speed4 = Entry.Pingpong_G4._calcSpsFromSpeed(speed4);
+                        speed1 = Entry.PingpongG4._calcSpsFromSpeed(speed1);
+                        speed2 = Entry.PingpongG4._calcSpsFromSpeed(speed2);
+                        speed3 = Entry.PingpongG4._calcSpsFromSpeed(speed3);
+                        speed4 = Entry.PingpongG4._calcSpsFromSpeed(speed4);
 
                         const opt1 = [2, 0, 0, 2, speed1 / 256, speed1 % 256];
-                        const packet1 = Entry.Pingpong_G4.makePacket(
+                        const packet1 = Entry.PingpongG4.makePacket(
                             OPCODE.CONTINUOUS_STEPS,
                             0,
                             0,
@@ -2603,7 +2594,7 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                         );
 
                         const opt2 = [2, 0, 0, 2, speed2 / 256, speed2 % 256];
-                        const packet2 = Entry.Pingpong_G4.makePacket(
+                        const packet2 = Entry.PingpongG4.makePacket(
                             OPCODE.CONTINUOUS_STEPS,
                             0,
                             1,
@@ -2611,7 +2602,7 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                         );
 
                         const opt3 = [2, 0, 0, 2, speed3 / 256, speed3 % 256];
-                        const packet3 = Entry.Pingpong_G4.makePacket(
+                        const packet3 = Entry.PingpongG4.makePacket(
                             OPCODE.CONTINUOUS_STEPS,
                             0,
                             2,
@@ -2619,7 +2610,7 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                         );
 
                         const opt4 = [2, 0, 0, 2, speed4 / 256, speed4 % 256];
-                        const packet4 = Entry.Pingpong_G4.makePacket(
+                        const packet4 = Entry.PingpongG4.makePacket(
                             OPCODE.CONTINUOUS_STEPS,
                             0,
                             3,
@@ -2627,7 +2618,7 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                         );
 
                         const opt = [2, 0, 0, 2];
-                        const cmd = Entry.Pingpong_G4.makePacket(
+                        const cmd = Entry.PingpongG4.makePacket(
                             OPCODE.AGGREGATE_STEPS,
                             4 << 12,
                             0xaa,
@@ -2677,16 +2668,16 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                     type: 'pingpong_g4_start_motor_rotate',
                 },
                 paramsKeyMap: { CUBEID: 0, SPEED: 1 },
-                class: 'Pingpong_G4_motor',
-                isNotFor: ['Pingpong_G4'],
+                class: 'PingpongG4_motor',
+                isNotFor: ['PingpongG4'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G4.postCallReturn(script, () => {
+                    return Entry.PingpongG4.postCallReturn(script, () => {
                         const cubeId = script.getNumberField('CUBEID');
                         const speed = script.getNumberValue('SPEED');
-                        const sps = Entry.Pingpong_G4._calcSpsFromSpeed(speed);
+                        const sps = Entry.PingpongG4._calcSpsFromSpeed(speed);
 
                         const opt = [2, 0, 0, 2, sps / 256, sps % 256];
-                        const packet = Entry.Pingpong_G4.makePacket(
+                        const packet = Entry.PingpongG4.makePacket(
                             OPCODE.CONTINUOUS_STEPS,
                             0,
                             cubeId,
@@ -2721,14 +2712,14 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                     type: 'pingpong_g4_stop_motor_rotate',
                 },
                 paramsKeyMap: { CUBEID: 0 },
-                class: 'Pingpong_G4_motor',
-                isNotFor: ['Pingpong_G4'],
+                class: 'PingpongG4_motor',
+                isNotFor: ['PingpongG4'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G4.postCallReturn(script, () => {
+                    return Entry.PingpongG4.postCallReturn(script, () => {
                         const cubeId = script.getNumberField('CUBEID');
 
                         const opt = [2, 0, 0, 1, 0, 0];
-                        const packet = Entry.Pingpong_G4.makePacket(
+                        const packet = Entry.PingpongG4.makePacket(
                             OPCODE.CONTINUOUS_STEPS,
                             0,
                             cubeId,
@@ -2755,22 +2746,17 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                 events: {},
                 def: { params: [null, { type: 'angle' }], type: 'pingpong_g4_rotate_servo_mortor' },
                 paramsKeyMap: { cubeno: 0, DEGREE: 1 },
-                class: 'Pingpong_G4_motor',
-                isNotFor: ['Pingpong_G4'],
+                class: 'PingpongG4_motor',
+                isNotFor: ['PingpongG4'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G4.postCallReturn(script, () => {
-                        const cubeId = Entry.Pingpong_G4._getCubeNoFromBlock(script);
+                    return Entry.PingpongG4.postCallReturn(script, () => {
+                        const cubeId = Entry.PingpongG4._getCubeNoFromBlock(script);
                         let angle = script.getNumberValue('DEGREE', script);
 
                         angle = Math.min(Math.max(angle, 0), 180);
 
                         const opt = [2, 0, angle, 1];
-                        const packet = Entry.Pingpong_G4.makePacket(
-                            OPCODE.SERVO,
-                            0x00,
-                            cubeId,
-                            opt
-                        );
+                        const packet = Entry.PingpongG4.makePacket(OPCODE.SERVO, 0x00, cubeId, opt);
                         return [packet];
                     });
                 },
@@ -2807,11 +2793,11 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                     type: 'pingpong_g4_set_dot_pixel',
                 },
                 paramsKeyMap: { cubeno: 0, X: 1, Y: 2, onoff: 3 },
-                class: 'Pingpong_G4_peripheral_LED',
-                isNotFor: ['Pingpong_G4'],
+                class: 'PingpongG4_peripheral_LED',
+                isNotFor: ['PingpongG4'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G4.postCallReturn(script, () => {
-                        const cubeId = Entry.Pingpong_G4._getCubeNoFromBlock(script);
+                    return Entry.PingpongG4.postCallReturn(script, () => {
+                        const cubeId = Entry.PingpongG4._getCubeNoFromBlock(script);
                         let dotX = script.getNumberValue('X', script);
                         let dotY = script.getNumberValue('Y', script);
                         const onoff = script.getNumberField('onoff', script);
@@ -2820,7 +2806,7 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                         dotY = Math.min(Math.max(dotY, 0), 7);
 
                         const opt = [0x70, dotY, dotX, onoff];
-                        const packet = Entry.Pingpong_G4.makePacket(
+                        const packet = Entry.PingpongG4.makePacket(
                             OPCODE.LEDMATRIX,
                             0xe1,
                             cubeId,
@@ -2848,11 +2834,11 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                 events: {},
                 def: { params: [null, null], type: 'pingpong_g4_set_dot_string' },
                 paramsKeyMap: { cubeno: 0, STR: 1, DURATION: 2 },
-                class: 'Pingpong_G4_peripheral_LED',
-                isNotFor: ['Pingpong_G4'],
+                class: 'PingpongG4_peripheral_LED',
+                isNotFor: ['PingpongG4'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G4.postCallReturn(script, () => {
-                        const cubeId = Entry.Pingpong_G4._getCubeNoFromBlock(script);
+                    return Entry.PingpongG4.postCallReturn(script, () => {
+                        const cubeId = Entry.PingpongG4._getCubeNoFromBlock(script);
                         const str = script.getStringValue('STR', script);
                         const duration = script.getNumberValue('DURATION', script);
 
@@ -2864,7 +2850,7 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                             Buffer.from(str.substring(0, 20)),
                         ]);
 
-                        const packet = Entry.Pingpong_G4.makePacket(
+                        const packet = Entry.PingpongG4.makePacket(
                             OPCODE.LEDMATRIX,
                             0xe3,
                             cubeId,
@@ -2891,13 +2877,13 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
                 events: {},
                 def: { params: [], type: 'pingpong_g4_set_dot_clear' },
                 paramsKeyMap: { cubeno: 0 },
-                class: 'Pingpong_G4_peripheral_LED',
-                isNotFor: ['Pingpong_G4'],
+                class: 'PingpongG4_peripheral_LED',
+                isNotFor: ['PingpongG4'],
                 func(sprite, script) {
-                    return Entry.Pingpong_G4.postCallReturn(script, () => {
-                        const cubeId = Entry.Pingpong_G4._getCubeNoFromBlock(script);
+                    return Entry.PingpongG4.postCallReturn(script, () => {
+                        const cubeId = Entry.PingpongG4._getCubeNoFromBlock(script);
                         const opt = [0x70, 1, 0, ' '];
-                        const packet = Entry.Pingpong_G4.makePacket(
+                        const packet = Entry.PingpongG4.makePacket(
                             OPCODE.LEDMATRIX,
                             0xe3,
                             cubeId,
@@ -2989,4 +2975,4 @@ Entry.Pingpong_G4 = new (class extends PingpongBase {
     }
 })();
 
-module.exports = [Entry.Pingpong_G2, Entry.Pingpong_G3, Entry.Pingpong_G4];
+module.exports = [Entry.PingpongG2, Entry.PingpongG3, Entry.PingpongG4];
