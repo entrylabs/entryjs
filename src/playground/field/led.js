@@ -3,7 +3,6 @@
 'use strict';
 
 import { LedPicker } from '@entrylabs/tool';
-import Extension from '../../extensions/extension';
 
 /*
  *

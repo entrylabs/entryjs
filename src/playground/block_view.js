@@ -556,7 +556,7 @@ Entry.BlockView = class BlockView {
                 this.longPressTimer = setTimeout(() => {
                     if (this.longPressTimer) {
                         this.longPressTimer = null;
-                        this.onMouseUp();
+                        this.onMouseUp(e);
                         this._rightClick(e, 'longPress');
                     }
                 }, 700);
