@@ -1,7 +1,6 @@
 import { GEHelper } from '../graphicEngine/GEHelper';
 import * as posenet from '@tensorflow-models/posenet';
 import VideoWorker from './workers/video.worker';
-import clamp from 'lodash/clamp';
 // input resolution setting, this regards of the position of posenet and cocoSSD
 const VIDEO_WIDTH = 640;
 const VIDEO_HEIGHT = 360;
@@ -24,22 +23,40 @@ class VideoUtils {
             vertical: false,
         };
         // motion related
-        this.motions = { total: 0, maxMotionScorePoint: { score: 0, x: -1, y: -1 } };
+        this.motions = { total: 0, maxPoint: { score: 0, x: -1, y: -1 } };
         this.motionPoint = { x: 0, y: 0 };
         this.motionDirection = { x: 0, y: 0 };
         /////////////////////////////////
         this.objectDetected = null;
-        this.isMobileNetInit = false;
+        this.initialized = false;
         this.mobileNet = null;
-        this.poses = null;
+        this.poses = { predictions: [], adjacents: [], faceCountByScore: 0 };
         this.isInitialized = false;
         this.videoOnLoadHandler = this.videoOnLoadHandler.bind(this);
 
         //only for webGL
         this.subCanvas = null;
-    }
 
+        this.indicatorStatus = {
+            pose: false,
+            face: false,
+            object: false,
+        };
+    }
+    showIndicator(type) {
+        this.indicatorStatus[type] = true;
+    }
+    removeIndicator(type) {
+        this.indicatorStatus[type] = false;
+        GEHelper.resetHandlers();
+    }
     reset() {
+        this.indicatorStatus = {
+            pose: false,
+            face: false,
+            object: false,
+        };
+        GEHelper.resetHandlers();
         this.turnOnWebcam();
         if (!this.flipStatus.horizontal) {
             this.setOptions('hflip');
@@ -47,9 +64,11 @@ class VideoUtils {
         if (this.flipStatus.vertical) {
             this.setOptions('vflip');
         }
+
         GEHelper.resetCanvasBrightness(this.canvasVideo);
         GEHelper.setVideoAlpha(this.canvasVideo, 50);
         GEHelper.tickByEngine();
+
         this.poses = null;
         this.objectDetected = null;
         this.motionStatus = {
@@ -65,6 +84,7 @@ class VideoUtils {
         if (this.isInitialized) {
             return;
         }
+
         this.isInitialized = true;
 
         if (!this.inMemoryCanvas) {
@@ -72,6 +92,13 @@ class VideoUtils {
             this.inMemoryCanvas.width = CANVAS_WIDTH;
             this.inMemoryCanvas.height = CANVAS_HEIGHT;
         }
+        // //test
+        // this.tempCanvas = document.createElement('canvas');
+        // this.tempCanvas.width = CANVAS_WIDTH;
+        // this.tempCanvas.height = CANVAS_HEIGHT;
+        // let tempTarget = document.getElementsByClassName('uploadInput')[0];
+        // tempTarget.parentNode.insertBefore(this.tempCanvas, tempTarget);
+        // //test
 
         navigator.getUserMedia =
             navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
@@ -116,22 +143,30 @@ class VideoUtils {
         this.isMobileNetInit = true;
     }
 
+    test() {
+        this.indicatorStatus = {
+            pose: true,
+            face: true,
+            object: true,
+        };
+    }
+
     startDrawObjectRect() {
-        if (this.objectDetected) {
+        if (this.objectDetected && this.indicatorStatus.object) {
             GEHelper.drawObjectBox(this.objectDetected, this.flipStatus);
         }
         requestAnimationFrame(this.startDrawObjectRect.bind(this));
     }
 
     startDrawFaceRect() {
-        if (this.poses) {
-            GEHelper.drawFaceBoxes(this.poses.predictions, this.flipStatus);
+        if (this.poses && this.indicatorStatus.face) {
+            const result = GEHelper.drawFaceBoxes(this.poses.predictions, this.flipStatus);
         }
         requestAnimationFrame(this.startDrawFaceRect.bind(this));
     }
 
     startDrawUserPoints() {
-        if (this.poses) {
+        if (this.poses && this.indicatorStatus.pose) {
             GEHelper.drawHumanPoints(this.poses.predictions, this.flipStatus);
             GEHelper.drawHumanSkeletons(this.poses.adjacents, this.flipStatus);
         }
@@ -139,124 +174,84 @@ class VideoUtils {
     }
 
     videoOnLoadHandler() {
-        Entry.addEventListener('dispatchEventDidToggleStop', this.reset.bind(this));
+        Entry.addEventListener('beforeStop', this.reset.bind(this));
         this.video.play();
-        this.turnOnWebcam();
-        // this.startDrawFaceRect(); // done
-        // this.startDrawUserPoints();
+        this.startDrawFaceRect();
+        this.startDrawUserPoints();
         this.startDrawObjectRect();
-        if (window.Worker) {
-            if (this.isMobileNetInit) {
-                return;
-            }
-            worker.onmessage = (e) => {
-                const { type, message } = e.data;
-                switch (type) {
-                    case 'pose':
-                        this.poses = message;
-                        break;
-                    case 'init':
-                        this.isMobileNetInit = true;
-                        break;
-                    case 'motion':
-                        this.motions = message;
-                        const {
-                            maxPoint: { score, x, y },
-                        } = message;
-                        if (score > 0 && x > 0 && y > 0) {
-                            // previous
-                            const { x, y } = this.motionPoint;
-                            this.motionPoint.x = x;
-                            this.motionPoint.y = y;
-                            // console.log(this.motionPoint);
-                            const motionX = this.motionPoint.x - x;
-                            const motionY = this.motionPoint.y - y;
-                            if (motionX < 200) {
-                                this.motionDirection.x = motionX;
-                            }
-                            if (motionY < 100) {
-                                this.motionDirection.y = motionY;
-                            }
 
-                            // console.log(this.motionDirection);
-                        } else {
-                            this.motionPoint.x = 0;
-                            this.motionPoint.y = 0;
-                            // console.log('NO MOTION');
+        if (this.initialized) {
+            return;
+        }
+        worker.onmessage = (e) => {
+            const { type, message } = e.data;
+            switch (type) {
+                case 'pose':
+                    this.poses = message;
+                    break;
+                case 'init':
+                    this.initialized = true;
+                    this.turnOnWebcam();
+                    break;
+                case 'motion':
+                    this.motions = message;
+                    const {
+                        maxPoint: { score, x, y },
+                    } = message;
+                    if (score > 0 && x > 0 && y > 0) {
+                        const prevX = this.motionPoint.x;
+                        const prevY = this.motionPoint.y;
+                        const motionScalarX = Math.abs(prevX - x);
+                        const motionScalarY = Math.abs(prevY - y);
+                        this.motionDirection.x = motionScalarX;
+                        this.motionDirection.y = motionScalarY;
+                        if (prevX > x) {
+                            this.motionDirection.x *= -1;
                         }
 
-                        break;
-                    case 'coco':
-                        this.objectDetected = message;
-                        break;
-                }
-            };
-            worker.postMessage({
-                type: 'init',
-                width: CANVAS_WIDTH,
-                height: CANVAS_HEIGHT,
-            });
+                        if (prevY > y) {
+                            this.motionDirection.y *= -1;
+                        }
+                        this.motionPoint.x = x;
+                        this.motionPoint.y = y;
+                    }
 
-            const [track] = this.stream.getVideoTracks();
-            this.imageCapture = new ImageCapture(track);
-            setInterval(() => {
-                const context = this.inMemoryCanvas.getContext('2d');
-                context.drawImage(this.video, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-                const imageData = context.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-                worker.postMessage({
-                    type: 'estimate',
-                    imageData,
-                });
-            }, 200);
-        } else {
-            this.initializePosenet();
-        }
+                    break;
+                case 'coco':
+                    this.objectDetected = message;
+                    break;
+            }
+        };
+        worker.postMessage({
+            type: 'init',
+            width: CANVAS_WIDTH,
+            height: CANVAS_HEIGHT,
+        });
+
+        const [track] = this.stream.getVideoTracks();
+        this.imageCapture = new ImageCapture(track);
+
+        setInterval(() => {
+            // const tempCtx = this.tempCanvas.getContext('2d');
+            // if (this.motions.maxPoint) {
+            //     const { x, y } = this.motions.maxPoint;
+            //     tempCtx.clearRect(0, 0, this.tempCanvas.width, this.tempCanvas.height);
+
+            //     tempCtx.fillStyle = `rgb(${255},${0},${0})`;
+            //     tempCtx.fillRect(x, y, 10, 10);
+            // }
+
+            const context = this.inMemoryCanvas.getContext('2d');
+            context.drawImage(this.video, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+            const imageData = context.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+            worker.postMessage({
+                type: 'estimate',
+                imageData,
+            });
+        }, 100);
     }
 
     async estimatePoseOnImage() {
-        // load the posenet model from a checkpoint
-        if (!this.isMobileNetInit) {
-            return [];
-        }
-        if (!window.Worker) {
-            try {
-                const predictions = await this.mobileNet.estimateMultiplePoses(this.video, {
-                    flipHorizontal: this.flipStatus.horizontal,
-                    maxDetections: 4,
-                    scoreThreshold: 0.7,
-                    nmsRadius: 20,
-                });
-                const adjacents = [];
-
-                predictions.forEach((pose) => {
-                    const btwnEyes = {
-                        x: (pose.keypoints[1].position.x + pose.keypoints[2].position.x) / 2,
-                        y: (pose.keypoints[1].position.y + pose.keypoints[2].position.y) / 2,
-                    };
-                    const nose = pose.keypoints[0].position;
-                    const mouse = {
-                        score: '-1',
-                        part: 'mouse',
-                        position: {
-                            x: nose.x * 2 - btwnEyes.x,
-                            y: nose.y * 2 - btwnEyes.y,
-                        },
-                    };
-                    pose.keypoints[21] = mouse;
-                    const adjacentMap = posenet.getAdjacentKeyPoints(pose.keypoints, 0.1);
-                    adjacents.push(adjacentMap);
-                });
-
-                this.poses = { predictions, adjacents };
-
-                return this.poses.predictions;
-            } catch (err) {
-                if (!this.isMobileNetInit) {
-                    console.log(err);
-                }
-                return [];
-            }
-        }
         return this.poses.predictions;
     }
 

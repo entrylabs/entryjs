@@ -296,6 +296,26 @@ class _GEHelper extends GEHelperBase {
         }
     }
 
+    resetHandlers() {
+        if (
+            !this.faceIndicatorGraphic ||
+            !this.poseIndicatorGraphic ||
+            !this.objectIndicatorGraphic.graphics
+        ) {
+            return;
+        }
+        if (this.isWebGL) {
+            this.faceIndicatorGraphic.clear();
+            this.poseIndicatorGraphic.clear();
+            this.objectIndicatorGraphic.clear();
+        } else {
+            this.faceIndicatorGraphic.graphics.clear();
+            this.poseIndicatorGraphic.graphics.clear();
+            this.objectIndicatorGraphic.graphics.clear();
+        }
+        this.tickByEngine();
+    }
+
     drawHumanPoints(poses: Array<any>, flipStatus: any) {
         const R = 5;
         let handler = this.poseIndicatorGraphic;
@@ -332,7 +352,6 @@ class _GEHelper extends GEHelperBase {
             });
         });
 
-        console.log(flipStatus.vertical);
         if (this._isWebGL) {
             handler.lineStyle(5, 0x0000ff);
             coordList.forEach((coord: any) => {
@@ -353,8 +372,12 @@ class _GEHelper extends GEHelperBase {
         let handler = this.faceIndicatorGraphic;
         let faceBoxList: Array = [];
         const { WIDTH, HEIGHT } = INITIAL_VIDEO_PARAMS;
-
+        const FACE_THRESHOLD = 0.7;
         poses.forEach((pose) => {
+            // check face score threshold
+            if (pose.keypoints[0].score <= FACE_THRESHOLD) {
+                return;
+            }
             const nose = pose.keypoints[0].position;
             const leftEye = pose.keypoints[1].position;
             const rightEye = pose.keypoints[2].position;
@@ -427,13 +450,10 @@ class _GEHelper extends GEHelperBase {
             objectsList.forEach((target: any) => {
                 const { textpoint, name, x, y, width, height } = target;
                 if (name) {
-                    const text = new PIXI.Text('name', {
-                        fontFamily: 'Arial',
-                        fontSize: 30,
-                        fill: '0x000000',
-                        align: 'center',
-                    });
+                    const text = new PIXI.Text(name);
                     text.x = textpoint.x;
+                    text.y = textpoint.y;
+
                     handler.addChild(text);
                 }
 

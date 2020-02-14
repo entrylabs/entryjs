@@ -2,8 +2,10 @@ let mobileNet;
 let coco;
 
 const previousFrame = [];
-const BRIGHTNESS_THRESHOLD = 10;
-const SAMPLE_SIZE = 20;
+const BRIGHTNESS_THRESHOLD = 30;
+const SAMPLE_SIZE = 10;
+
+const FACE_TRESHOLD = 0.7;
 let options = {};
 const dimension = { width: 0, height: 0 };
 
@@ -37,8 +39,11 @@ async function poseDetect(imageData, context) {
         nmsRadius: 20,
     });
     const adjacents = [];
-
+    let faceCountByScore = 0;
     predictions.forEach((pose) => {
+        if (pose.keypoints[0].score > FACE_TRESHOLD) {
+            faceCountByScore++;
+        }
         const btwnEyes = {
             x: (pose.keypoints[1].position.x + pose.keypoints[2].position.x) / 2,
             y: (pose.keypoints[1].position.y + pose.keypoints[2].position.y) / 2,
@@ -58,17 +63,17 @@ async function poseDetect(imageData, context) {
     });
 
     // console.log('POSE', predictions);
-    context.postMessage({ type: 'pose', message: { predictions, adjacents } });
+    context.postMessage({ type: 'pose', message: { predictions, adjacents, faceCountByScore } });
 }
 
 function motionDetect(imageData, context) {
     const { width, height } = dimension;
     const data = imageData.data;
     const motion = [];
-    const motions = { total: 0, maxPoint: { score: 0, x: -1, y: -1 } };
+    const motions = { total: 0, maxPoint: { score: 0, x: -10, y: -10 } };
     for (let y = 0; y < height; y += SAMPLE_SIZE) {
-        for (let x = 0; x < width; x += SAMPLE_SIZE) {
-            const pos = (x + y + width) * 4;
+        for (let x = 0; x <= width; x += SAMPLE_SIZE) {
+            const pos = (x + y * width) * 4;
             const r = data[pos];
             const g = data[pos + 1];
             const b = data[pos + 2];
@@ -78,30 +83,33 @@ function motionDetect(imageData, context) {
             const rDiff = Math.abs(currentPos.r - r);
             const gDiff = Math.abs(currentPos.g - g);
             const bDiff = Math.abs(currentPos.b - b);
-            const areaMotionScore = rDiff + gDiff + bDiff;
+            const areaMotionScore = rDiff + gDiff + bDiff / (SAMPLE_SIZE * SAMPLE_SIZE);
 
+            // motion.push({
+            //     x,
+            //     y,
+            //     r,
+            //     g,
+            //     b,
+            // });
             if (
-                rDiff > BRIGHTNESS_THRESHOLD ||
-                gDiff > BRIGHTNESS_THRESHOLD ||
-                bDiff > BRIGHTNESS_THRESHOLD
+                rDiff > BRIGHTNESS_THRESHOLD
+                // ||
+                // gDiff > BRIGHTNESS_THRESHOLD ||
+                // bDiff > BRIGHTNESS_THRESHOLD
             ) {
-                motion.push({
-                    x,
-                    y,
-                    r: rDiff,
-                    g: gDiff,
-                    b: bDiff,
-                });
                 if (motions.maxPoint.score < areaMotionScore) {
                     motions.maxPoint.x = x;
                     motions.maxPoint.y = y;
                     motions.maxPoint.score = areaMotionScore;
                 }
             }
+
             motions.total += areaMotionScore;
             previousFrame[pos] = { r, g, b };
         }
     }
+    // motions.motion = motion;
     context.postMessage({ type: 'motion', message: motions });
 }
 

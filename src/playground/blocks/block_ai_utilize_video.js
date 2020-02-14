@@ -223,32 +223,189 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 py: [],
             },
         },
-        video_number_of_person: {
+        video_toggle_ind: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-            skeleton: 'basic_string_field',
+            skeleton: 'basic',
             statements: [],
-            template: '인식된 사람의 수',
-            params: [],
+            template: '인식된 %1 %2 %3',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['사람', 'pose'],
+                        ['얼굴', 'face'],
+                        ['사물', 'object'],
+                    ],
+                    value: 'pose',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['보이기', 'on'],
+                        ['숨기기', 'off'],
+                    ],
+                    value: 'on',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/ai_utilize_icon.svg',
+                    size: 11,
+                },
+            ],
             events: {},
             def: {
-                type: 'video_number_of_person',
+                type: 'video_toggle_ind',
+            },
+            paramsKeyMap: {
+                CRITERIA: 0,
+                OPTION: 1,
             },
             class: 'video',
             isNotFor: ['video'],
             async func(sprite, script) {
+                const criteria = script.getField('CRITERIA');
+                const option = script.getField('OPTION');
+                if (option === 'on') {
+                    VideoUtils.showIndicator(criteria);
+                } else {
+                    VideoUtils.removeIndicator(criteria);
+                }
+            },
+            syntax: {
+                js: [],
+                py: [],
+            },
+        },
+        video_number_detect: {
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '인식된 %1 의 수',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['사람', 'pose'],
+                        ['얼굴', 'face'],
+                        ['사물', 'object'],
+                    ],
+                    value: 'pose',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+            ],
+            events: {},
+            def: {
+                type: 'video_number_detect',
+            },
+            class: 'video',
+            isNotFor: ['video'],
+            async func(sprite, script) {
+                const target = script.getField('TARGET');
+                switch (target) {
+                    case 'face':
+                        return VideoUtils.poses.faceCountByScore || 0;
+                    case 'pose':
+                        return VideoUtils.poses.predictions.length || 0;
+                    case 'object':
+                        return VideoUtils.objectDetected.length || 0;
+                }
+            },
+            paramsKeyMap: {
+                TARGET: 0,
+            },
+            syntax: {
+                js: [],
+                py: [],
+            },
+        },
+        video_motion_value: {
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1 에서 감지한 %2 값',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [['자신', 'self']],
+                    value: 'self',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['움직임', 'total'],
+                        ['x 방향 움직임', 'x'],
+                        ['y 방향 움직임', 'y'],
+                        ['움직임 x 위치', 'x_pos'],
+                        ['움직임 y 위치', 'y_pos'],
+                    ],
+                    value: 'total',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+            ],
+            events: {},
+            def: {
+                type: 'video_motion_value',
+            },
+            class: 'video',
+            isNotFor: ['video'],
+            async func(sprite, script) {
+                const target = script.getField('TARGET');
+                const type = script.getField('TYPE');
                 try {
-                    if (!VideoUtils.isInitialized) {
-                        await VideoUtils.initialize();
+                    switch (type) {
+                        case 'total':
+                            return clamp(VideoUtils.motions.total / 10, 0, 100000).toString();
+                        case 'x':
+                            let rawX = VideoUtils.motionDirection.x;
+                            if (VideoUtils.flipStatus.horizontal) {
+                                rawX *= -1;
+                            }
+                            return rawX.toString();
+                        case 'y':
+                            let rawY = VideoUtils.motionDirection.y;
+                            if (VideoUtils.flipStatus.vertical) {
+                                rawY *= -1;
+                            }
+                            return rawY.toString();
+                        case 'x_pos':
+                            let posX = VideoUtils.motionPoint.x - VideoUtils.CANVAS_WIDTH / 2;
+                            if (VideoUtils.flipStatus.horizontal) {
+                                posX *= -1;
+                            }
+                            return posX.toString();
+                        case 'y_pos':
+                            let posY = VideoUtils.motionPoint.y - VideoUtils.CANVAS_HEIGHT / 2;
+                            if (!VideoUtils.flipStatus.vertical) {
+                                posY *= -1;
+                            }
+                            return posY.toString();
+
+                        default:
+                            return 0;
                     }
-                    const poses = await VideoUtils.estimatePoseOnImage();
-                    return poses.length || 0;
                 } catch (err) {
                     return 0;
                 }
             },
             paramsKeyMap: {
-                VALUE: 0,
+                TARGET: 0,
+                TYPE: 1,
             },
             syntax: {
                 js: [],
@@ -344,33 +501,26 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             class: 'video',
             isNotFor: ['video'],
             async func(sprite, script) {
-                try {
-                    if (!VideoUtils.isInitialized) {
-                        await VideoUtils.initialize();
-                    }
-                    const index = script.getField('INDEX');
-                    const part = script.getField('PART');
-                    const coord = script.getField('COORD');
+                const index = script.getField('INDEX');
+                const part = script.getField('PART');
+                const coord = script.getField('COORD');
 
-                    const poses = await VideoUtils.estimatePoseOnImage();
-                    if (poses.length < index) {
-                        return 0;
-                    }
-                    // offset since value shown starts from 1;
-                    const rawValue = poses[index - 1].keypoints[part].position[coord];
-                    if (!rawValue) {
-                        return 0;
-                    }
-                    let returningValue = 0;
-                    if (coord === 'x') {
-                        returningValue = rawValue - VideoUtils.CANVAS_WIDTH / 2;
-                    }
-                    returningValue = VideoUtils.CANVAS_HEIGHT / 2 - rawValue;
-
-                    return returningValue.toFixed(1);
-                } catch (err) {
+                const poses = VideoUtils.poses.predictions;
+                if (poses.length < index) {
                     return 0;
                 }
+                // offset since value shown starts from 1;
+                const rawValue = poses[index - 1].keypoints[part].position[coord];
+                if (!rawValue) {
+                    return 0;
+                }
+                let returningValue = 0;
+                if (coord === 'x') {
+                    returningValue = rawValue - VideoUtils.CANVAS_WIDTH / 2;
+                }
+                returningValue = VideoUtils.CANVAS_HEIGHT / 2 - rawValue;
+
+                return returningValue.toFixed(1);
             },
             syntax: {
                 js: [],
