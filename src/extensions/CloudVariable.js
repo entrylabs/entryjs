@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import { dmet, dmetList, dmetVariable } from './dmet';
+import { dmet, dmetList, dmetVariable, dmetTable } from './dmet';
 import singleInstance from '../core/singleInstance';
 
 class CloudVariableExtension {
@@ -113,6 +113,8 @@ class CloudVariableExtension {
             await this.#createVariable(name, id_);
         } else if (type === 'list') {
             await this.#createList(name, id_);
+        } else if (type === 'table') {
+            await this.#createTable(name, id_);
         }
         // Entry.dispatchEvent('saveVariable');
     }
@@ -151,6 +153,26 @@ class CloudVariableExtension {
             this.#cvSocket.emit('create', list, (isCreate, list) => {
                 if (isCreate) {
                     this.createDmet(list);
+                }
+                resolve();
+            });
+        });
+    }
+
+    #createTable(name, id) {
+        if (!this.#cvSocket) {
+            return;
+        }
+        const table = new dmetTable(
+            {
+                name,
+            },
+            id
+        );
+        return new Promise((resolve) => {
+            this.#cvSocket.emit('create', table, (isCreate, table) => {
+                if (isCreate) {
+                    this.createDmet(table);
                 }
                 resolve();
             });

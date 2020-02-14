@@ -1,6 +1,5 @@
 'use strict';
 
-const _includes = require('lodash/includes');
 const hardware = require('./hardware/index');
 const _union = require('lodash/union');
 const _flatten = require('lodash/flatten');
@@ -17,8 +16,8 @@ const basicBlockList = [
     require('./block_calc'),
     require('./block_variable'),
     require('./block_func'),
-    require('./block_analysis'),
     require('./block_ai'),
+    require('./block_analysis'),
 ];
 
 Entry.AI_UTILIZE_BLOCK = {};

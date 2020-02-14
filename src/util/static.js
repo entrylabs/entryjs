@@ -117,6 +117,9 @@ Entry.STATIC = {
         separateComment: 1209,
         connectComment: 1210,
         writeComment: 1211,
+
+        dataTableAddSource: 1301,
+        dataTableRemoveSource: 1302,
         //TODO commands development
     },
 
@@ -133,6 +136,8 @@ Entry.STATIC = {
         playgroundClickAddSound: 703,
         playgroundClickAddPictureCancel: 704,
         playgroundClickAddSoundCancel: 705,
+        playgroundClickAddTable: 706,
+        playgroundClickAddTableCancel: 707,
 
         variableContainerSelectFilter: 801,
         variableContainerClickVariableAddButton: 802,

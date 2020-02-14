@@ -372,10 +372,6 @@ EntryStatic.getAllBlocks = function() {
             blocks: ['functionAddButton'],
         },
         {
-            category: 'analysis',
-            blocks: ['analysis_noti_img', 'analysis_noti_text'],
-        },
-        {
             category: 'ai_utilize',
             blocks: [
                 'aiUtilizeBlockAddButton',
@@ -394,6 +390,21 @@ EntryStatic.getAllBlocks = function() {
                 'get_translated_string',
                 'check_language',
             ],
+        },
+        {
+            category: 'analysis',
+            blocks: [
+                'analizyDataAddButton',
+                'append_row_to_table',
+                'insert_row_to_table',
+                'delete_row_from_table',
+                'set_value_from_table',
+                'get_table_count',
+                'get_value_from_table',
+                'calc_values_from_table',
+                'open_table_chart',
+                'close_table_chart',
+            ]
         },
         {
             category: 'expansion',
@@ -814,6 +825,7 @@ EntryStatic.colorSet = {
             JUDGE: '#4562f5',
             CALC: '#f4af18',
             VARIABLE: '#dd47d8',
+            ANALYSIS: '#25aeff',
             FUNC: '#de5c04',
             HARDWARE: '#00b6b1',
             EXPANSION: '#ef6d6d',
@@ -831,6 +843,7 @@ EntryStatic.colorSet = {
             JUDGE: '#99adff',
             CALC: '#ffde82',
             VARIABLE: '#f778f3',
+            ANALYSIS: '#d6e9f4',
             FUNC: '#ff7b22',
             HARDWARE: '#78d5d3',
             EXPANSION: '#ffaeae',
@@ -848,6 +861,7 @@ EntryStatic.colorSet = {
             JUDGE: '#1b3ad8',
             CALC: '#ff7f00',
             VARIABLE: '#b819b3',
+            ANALYSIS: '#1592ff',
             FUNC: '#a14100',
             HARDWARE: '#008380',
             EXPANSION: '#c63f3f',
