@@ -4,7 +4,6 @@ import { PIXICollision as ndgmr } from '../etc/PIXI-ndgmr.Collision';
 import '../etc/PIXICanvasInput';
 
 import { PIXIAtlasManager } from '../atlas/PIXIAtlasManager';
-import { PIXIZeroAlphaNoneInteractionPlugins } from '../plugins/PIXIZeroAlphaNoneInteractionPlugins';
 import { PIXIPixelPerfectInteractionPlugIn } from '../plugins/PIXIPixelPerfectInteractionPlugIn';
 import { PIXITempStore } from '../etc/PIXITempStore';
 import { PIXITextMetricsPlugIn } from '../plugins/PIXITextMetricsPlugIn';
@@ -32,7 +31,6 @@ class _PIXIGlobal {
         this.atlasManager = new PIXIAtlasManager();
         PIXIShortPropPlugin();
         pixiGetChildAt();
-        PIXIZeroAlphaNoneInteractionPlugins();
         PIXIPixelPerfectInteractionPlugIn();
         PIXITextMetricsPlugIn();
         PIXIGraphicOverride();

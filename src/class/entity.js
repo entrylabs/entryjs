@@ -1151,6 +1151,11 @@ Entry.EntityObject = class EntityObject {
             if (~diffEffects.indexOf('alpha')) {
                 e.alpha = adjust(e.alpha, 0, 1);
                 obj.alpha = e.alpha;
+                if (obj.alpha < 0.001) {
+                    obj.interactive = false;
+                } else {
+                    obj.interactive = true;
+                }
             }
             if (GEHelper.isWebGL) {
                 obj.setFilterAndCache(f);
