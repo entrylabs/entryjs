@@ -3,7 +3,7 @@
 import { GEHelper } from '../graphicEngine/GEHelper';
 import _uniq from 'lodash/uniq';
 import FontFaceOnload from 'fontfaceonload';
-import DataTable from '../class/DataTable';;
+import DataTable from '../class/DataTable';
 
 Entry.Utils = {};
 
