@@ -40,12 +40,11 @@ class _PIXIGlobal {
 
     getNewApp(canvas: HTMLCanvasElement): Application {
         PIXIUtils.skipHello();
-        let app = new Application({
+        const app = new Application({
             view: canvas,
             width: canvas.width,
             height: canvas.height,
             autoStart: false,
-            // autoStart: true,
             antialias: true,
             transparent: true,
         });

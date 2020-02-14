@@ -286,8 +286,8 @@ class _ColorFilterHelper extends GEHelperBase {
     newColorMatrixFilter(matrixValue: number[]) {
         if (this._isWebGL) {
             matrixValue.length = 20; // pixi matrix 는 5 * 4
-            let m = new PIXI.filters.ColorMatrixFilter();
-            m.matrix = matrixValue;
+            const m = new PIXI.filters.ColorMatrixFilter();
+            m._loadMatrix(matrixValue, false);
             return m;
         } else {
             //createjs matrix 는 5*5

@@ -31,7 +31,7 @@ class FilterData {
     getRenderTexture(width: number, height: number): RenderTexture {
         if (!this._renderTex) {
             this._renderTex = RenderTexture.create({ width, height });
-            return;
+            return this._renderTex;
         }
         const tex = this._renderTex;
         if (tex.width != width || tex.height != height) {
@@ -105,7 +105,7 @@ export class PIXISprite extends Sprite {
         }
     }
 
-    renderWebGL(renderer: Renderer): void {
+    render(renderer: Renderer): void {
         if (this._filterData && this._filterData.invalidate) {
             this._filterData.invalidate = false;
             this._initFilterCache(renderer);
@@ -120,6 +120,9 @@ export class PIXISprite extends Sprite {
         const w = tex.orig.width;
         const h = tex.orig.height;
         const renderTex: RenderTexture = fd.getRenderTexture(w, h);
+        if (!renderTex) {
+            return;
+        }
         if (fd.orgTex instanceof EntryTextureBase) {
             // filter 된 sprite 를 도장찍기 하면 sprite.texture 의 type 는 RenderTexture 가 된다.
             fd.orgTex.assignTextureScaleFactor(renderTex);
@@ -128,11 +131,10 @@ export class PIXISprite extends Sprite {
         sp.filters = this._filterData.filters;
         sp.texture = tex;
 
-        // TODO. 구현필요.
-        // const cachedRenderTarget = renderer._activeRenderTarget;
-        // renderer.currentRenderer.flush();
-        // renderer.render(sp, renderTex, true, MAT , false);
-        // renderer.bindRenderTarget(cachedRenderTarget);
+        const cachedRenderTarget = renderer.renderTexture.current;
+        renderer.batch.flush();
+        renderer.render(sp, renderTex, true, MAT, false);
+        renderer.renderTexture.bind(cachedRenderTarget);
 
         this.texture = renderTex;
         sp.texture = null;

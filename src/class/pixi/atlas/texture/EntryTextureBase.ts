@@ -13,10 +13,12 @@ export class EntryTextureBase extends Texture {
     }
 
     assignTextureScaleFactor(target: RenderTexture) {
-        const tex: any = target;
-        //textureScaleFactor 변수 네이밍을 여기저기서 쓰지 않으려고 메서드를 만듬.
-        tex.textureScaleFactorX = this.textureScaleFactorX;
-        tex.textureScaleFactorY = this.textureScaleFactorY;
+        if (target) {
+            const tex: any = target;
+            //textureScaleFactor 변수 네이밍을 여기저기서 쓰지 않으려고 메서드를 만듬.
+            tex.textureScaleFactorX = this.textureScaleFactorX;
+            tex.textureScaleFactorY = this.textureScaleFactorY;
+        }
     }
 
 
