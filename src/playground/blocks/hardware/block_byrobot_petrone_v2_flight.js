@@ -275,12 +275,12 @@ Entry.byrobot_petrone_v2_flight =
         {
             // 전송
             Entry.hw.setDigitalPortValue('target', target);
-            Entry.hw.setDigitalPortValue('display_clearall_pixel', pixel);
+            Entry.hw.setDigitalPortValue('display_clear_all_pixel', pixel);
 
             Entry.hw.update();
 
             delete Entry.hw.sendQueue['target'];
-            delete Entry.hw.sendQueue['display_clearall_pixel'];
+            delete Entry.hw.sendQueue['display_clear_all_pixel'];
         }
         else
         {

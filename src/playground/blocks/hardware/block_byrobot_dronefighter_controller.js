@@ -13,7 +13,8 @@
  *  장치와 연관된 변수 및 함수 정의
  ***************************************************************************************/
 
-Entry.byrobot_dronefighter_controller = {
+Entry.byrobot_dronefighter_controller =
+{
     id: 'F.1',
     name: 'byrobot_dronefighter_controller',
     url: 'http://www.byrobot.co.kr/',

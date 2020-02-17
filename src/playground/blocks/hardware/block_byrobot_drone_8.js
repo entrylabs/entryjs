@@ -17,13 +17,13 @@
 
 Entry.byrobot_drone_8 =
 {
-    id: 'F.B',
+    id: 'F.7',
     name: 'byrobot_drone_8',
     url: 'http://www.byrobot.co.kr/',
     imageName: 'byrobot_drone_8.png',
     title: {
-        "en": "BYROBOT Drone 8",
-        "ko": "바이로봇 드론 8"
+        "en": "BYROBOT Coding Drone",
+        "ko": "바이로봇 코딩 드론"
     },
 
 
@@ -294,12 +294,12 @@ Entry.byrobot_drone_8 =
         {
             // 전송
             Entry.hw.setDigitalPortValue('target', target);
-            Entry.hw.setDigitalPortValue('display_clearall_pixel', pixel);
+            Entry.hw.setDigitalPortValue('display_clear_all_pixel', pixel);
 
             Entry.hw.update();
 
             delete Entry.hw.sendQueue['target'];
-            delete Entry.hw.sendQueue['display_clearall_pixel'];
+            delete Entry.hw.sendQueue['display_clear_all_pixel'];
         }
         else
         {

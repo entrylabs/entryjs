@@ -17,13 +17,13 @@
 
 Entry.byrobot_controller_4 =
 {
-    id: 'F.8',
+    id: 'F.9',
     name: 'byrobot_controller_4',
     url: 'http://www.byrobot.co.kr/',
     imageName: 'byrobot_controller_4.png',
     title: {
-        "en": "BYROBOT Controller 4",
-        "ko": "바이로봇 조종기 4"
+        "en": "BYROBOT E-DRONE Controller",
+        "ko": "바이로봇 E-DRONE 조종기"
     },
 
 

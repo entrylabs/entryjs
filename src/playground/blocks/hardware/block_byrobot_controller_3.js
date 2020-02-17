@@ -17,13 +17,13 @@
 
 Entry.byrobot_controller_3 =
 {
-    id: 'F.7',
+    id: 'F.B',
     name: 'byrobot_controller_3',
     url: 'http://www.byrobot.co.kr/',
     imageName: 'byrobot_controller_3.png',
     title: {
-        "en": "BYROBOT Controller 3",
-        "ko": "바이로봇 조종기 3"
+        "en": "BYROBOT XTS-65 Controller",
+        "ko": "바이로봇 XTS-65 조종기"
     },
 
 

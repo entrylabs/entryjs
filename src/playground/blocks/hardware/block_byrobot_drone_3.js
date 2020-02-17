@@ -17,13 +17,13 @@
 
 Entry.byrobot_drone_3 =
 {
-    id: 'F.9',
+    id: 'F.A',
     name: 'byrobot_drone_3',
     url: 'http://www.byrobot.co.kr/',
     imageName: 'byrobot_drone_3.png',
     title: {
-        "en": "BYROBOT Drone 3",
-        "ko": "바이로봇 드론 3"
+        "en": "BYROBOT XTS-65",
+        "ko": "바이로봇 XTS-65"
     },
 
 
