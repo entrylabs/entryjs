@@ -313,7 +313,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 const target = script.getField('TARGET');
                 switch (target) {
                     case 'face':
-                        return VideoUtils.poses.faceCountByScore || 0;
+                        return VideoUtils.faces.length || 0;
                     case 'pose':
                         return VideoUtils.poses.predictions.length || 0;
                     case 'object':

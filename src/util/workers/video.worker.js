@@ -1,11 +1,14 @@
-let mobileNet;
-let coco;
+const posenet = require('@tensorflow-models/posenet');
+const cocoSsd = require('@tensorflow-models/coco-ssd');
+
+// instances, used as flag, handler class if each instances are loaded or not
+let mobileNet = null;
+let coco = null;
 
 const previousFrame = [];
 const BRIGHTNESS_THRESHOLD = 30;
 const SAMPLE_SIZE = 10;
 
-const FACE_TRESHOLD = 0.7;
 let options = {};
 const dimension = { width: 0, height: 0 };
 
@@ -25,8 +28,6 @@ async function processImage(imageData) {
 
 async function objectDetect(imageData, context) {
     const predictions = await coco.detect(imageData);
-    // bbox=>[x,y,width,height]
-    // console.log('COCO', predictions);
     context.postMessage({ type: 'coco', message: predictions });
 }
 
@@ -39,11 +40,7 @@ async function poseDetect(imageData, context) {
         nmsRadius: 20,
     });
     const adjacents = [];
-    let faceCountByScore = 0;
     predictions.forEach((pose) => {
-        if (pose.keypoints[0].score > FACE_TRESHOLD) {
-            faceCountByScore++;
-        }
         const btwnEyes = {
             x: (pose.keypoints[1].position.x + pose.keypoints[2].position.x) / 2,
             y: (pose.keypoints[1].position.y + pose.keypoints[2].position.y) / 2,
@@ -63,7 +60,7 @@ async function poseDetect(imageData, context) {
     });
 
     // console.log('POSE', predictions);
-    context.postMessage({ type: 'pose', message: { predictions, adjacents, faceCountByScore } });
+    context.postMessage({ type: 'pose', message: { predictions, adjacents } });
 }
 
 function motionDetect(imageData, context) {
@@ -115,14 +112,12 @@ function motionDetect(imageData, context) {
 
 // worker 메시지 수신 listener
 self.onmessage = async function(e) {
-    const { type, video } = e.data;
+    const { type } = e.data;
     switch (type) {
         case 'init':
             dimension.width = e.data.width;
             dimension.height = e.data.height;
-            importScripts(`${self.location.origin}/aimodules/tfjscore.js`);
-            importScripts(`${self.location.origin}/aimodules/posenet.js`);
-            importScripts(`${self.location.origin}/aimodules/cocossd.js`);
+
             console.log('loadDone');
             mobileNet = await posenet.load({
                 architecture: 'MobileNetV1',

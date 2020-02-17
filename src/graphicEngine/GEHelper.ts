@@ -300,7 +300,7 @@ class _GEHelper extends GEHelperBase {
         if (
             !this.faceIndicatorGraphic ||
             !this.poseIndicatorGraphic ||
-            !this.objectIndicatorGraphic.graphics
+            !this.objectIndicatorGraphic
         ) {
             return;
         }
@@ -368,54 +368,41 @@ class _GEHelper extends GEHelperBase {
         }
     }
 
-    drawFaceBoxes(poses: Array<any>, flipStatus: any) {
+    drawFaceBoxes(faces: Array<any>, flipStatus: any) {
         let handler = this.faceIndicatorGraphic;
         let faceBoxList: Array = [];
         const { WIDTH, HEIGHT } = INITIAL_VIDEO_PARAMS;
-        const FACE_THRESHOLD = 0.7;
-        poses.forEach((pose) => {
-            // check face score threshold
-            if (pose.keypoints[0].score <= FACE_THRESHOLD) {
-                return;
+        faces.forEach((face) => {
+            const target = face.alignedRect.box;
+
+            let x = target.x * INITIAL_VIDEO_PARAMS.SCALE_X;
+            let y = target.y * INITIAL_VIDEO_PARAMS.SCALE_X;
+            const width = target.width * INITIAL_VIDEO_PARAMS.SCALE_X;
+            const height = target.height * INITIAL_VIDEO_PARAMS.SCALE_X;
+            if (flipStatus.horizontal) {
+                x = INITIAL_VIDEO_PARAMS.WIDTH - x - width;
             }
-            const nose = pose.keypoints[0].position;
-            const leftEye = pose.keypoints[1].position;
-            const rightEye = pose.keypoints[2].position;
-            const leftEar = pose.keypoints[3].position;
-            const rightEar = pose.keypoints[4].position;
-            const mouse = pose.keypoints[21].position;
-
-            const X_MAX = Math.max(nose.x, leftEye.x, rightEye.x, leftEar.x, rightEar.x);
-            const X_MIN = Math.min(nose.x, leftEye.x, rightEye.x, leftEar.x, rightEar.x);
-
-            const width = X_MIN - X_MAX;
-            const height = Math.abs(leftEye.y - mouse.y) * 2;
-            const x = flipStatus.horizontal ? X_MAX : X_MIN - width;
-            let y = leftEye.y * 2 - mouse.y * 0.9;
             if (flipStatus.vertical) {
-                y = HEIGHT - y - height;
+                y = INITIAL_VIDEO_PARAMS.HEIGHT - y - height;
             }
-            const bbox = [];
-            bbox[0] = x;
-            bbox[1] = y;
-            bbox[2] = width;
-            bbox[3] = height;
-            faceBoxList.push(bbox);
+            faceBoxList.push({ x, y, width, height });
         });
         if (this._isWebGL) {
             handler.clear();
             handler.lineStyle(5, 0xff0000);
             faceBoxList.forEach((item: any) => {
-                handler.drawRect(item[0], item[1], item[2], item[3]);
+                const { x, y, width, height } = item;
+                handler.drawRect(x, y, width, height);
             });
         } else {
-            handler = this.faceIndicatorGraphic.graphics;
+            handler = handler.graphics;
             handler.clear();
             faceBoxList.forEach((item: any) => {
+                const { x, y, width, height } = item;
                 handler
                     .setStrokeStyle(8, 'round')
                     .beginStroke('red')
-                    .drawRect(item[0], item[1], item[2], item[3]);
+                    .drawRect(x, y, width, height);
             });
         }
     }
@@ -460,7 +447,7 @@ class _GEHelper extends GEHelperBase {
                 handler.drawRect(x, y, width, height);
             });
         } else {
-            handler = this.objectIndicatorGraphic.graphics;
+            handler = handler.graphics;
             handler.clear();
             objectsList.forEach((target: any) => {
                 const { textpoint, name, x, y, width, height } = target;

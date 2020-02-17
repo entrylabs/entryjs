@@ -1,6 +1,8 @@
 import { GEHelper } from '../graphicEngine/GEHelper';
 import * as posenet from '@tensorflow-models/posenet';
 import VideoWorker from './workers/video.worker';
+import * as faceapi from 'face-api.js';
+
 // input resolution setting, this regards of the position of posenet and cocoSSD
 const VIDEO_WIDTH = 640;
 const VIDEO_HEIGHT = 360;
@@ -30,9 +32,12 @@ class VideoUtils {
         this.objectDetected = null;
         this.initialized = false;
         this.mobileNet = null;
-        this.poses = { predictions: [], adjacents: [], faceCountByScore: 0 };
+        this.poses = { predictions: [], adjacents: [] };
         this.isInitialized = false;
         this.videoOnLoadHandler = this.videoOnLoadHandler.bind(this);
+
+        //face models
+        this.faces = [];
 
         //only for webGL
         this.subCanvas = null;
@@ -92,6 +97,7 @@ class VideoUtils {
             this.inMemoryCanvas.width = CANVAS_WIDTH;
             this.inMemoryCanvas.height = CANVAS_HEIGHT;
         }
+
         // //test
         // this.tempCanvas = document.createElement('canvas');
         // this.tempCanvas.width = CANVAS_WIDTH;
@@ -112,7 +118,11 @@ class VideoUtils {
                         height: VIDEO_HEIGHT,
                     },
                 });
-
+                await Promise.all([
+                    faceapi.nets.ssdMobilenetv1.loadFromUri(`/aimodules/weights`),
+                    faceapi.nets.faceLandmark68Net.loadFromUri(`/aimodules/weights`),
+                ]);
+                this.faceModelLoaded = true;
                 this.stream = stream;
                 const video = document.createElement('video');
                 video.srcObject = stream;
@@ -151,38 +161,29 @@ class VideoUtils {
         };
     }
 
-    startDrawObjectRect() {
+    startDrawIndicators() {
         if (this.objectDetected && this.indicatorStatus.object) {
             GEHelper.drawObjectBox(this.objectDetected, this.flipStatus);
         }
-        requestAnimationFrame(this.startDrawObjectRect.bind(this));
-    }
-
-    startDrawFaceRect() {
-        if (this.poses && this.indicatorStatus.face) {
-            const result = GEHelper.drawFaceBoxes(this.poses.predictions, this.flipStatus);
+        if (this.faces && this.indicatorStatus.face) {
+            const result = GEHelper.drawFaceBoxes(this.faces, this.flipStatus);
         }
-        requestAnimationFrame(this.startDrawFaceRect.bind(this));
-    }
-
-    startDrawUserPoints() {
         if (this.poses && this.indicatorStatus.pose) {
             GEHelper.drawHumanPoints(this.poses.predictions, this.flipStatus);
             GEHelper.drawHumanSkeletons(this.poses.adjacents, this.flipStatus);
         }
-        requestAnimationFrame(this.startDrawUserPoints.bind(this));
+        requestAnimationFrame(this.startDrawIndicators.bind(this));
     }
 
     videoOnLoadHandler() {
         Entry.addEventListener('beforeStop', this.reset.bind(this));
         this.video.play();
-        this.startDrawFaceRect();
-        this.startDrawUserPoints();
-        this.startDrawObjectRect();
+        this.startDrawIndicators();
 
         if (this.initialized) {
             return;
         }
+
         worker.onmessage = (e) => {
             const { type, message } = e.data;
             switch (type) {
@@ -227,6 +228,7 @@ class VideoUtils {
             width: CANVAS_WIDTH,
             height: CANVAS_HEIGHT,
         });
+        // this.faceWorker.postMessage({ type: 'init' });
 
         const [track] = this.stream.getVideoTracks();
         this.imageCapture = new ImageCapture(track);
@@ -249,6 +251,17 @@ class VideoUtils {
                 imageData,
             });
         }, 100);
+        setInterval(() => {
+            if (this.faceModelLoaded) {
+                faceapi
+                    .detectAllFaces(this.video)
+                    .withFaceLandmarks()
+                    .then((result) => {
+                        console.log(result);
+                        this.faces = result;
+                    });
+            }
+        }, 300);
     }
 
     async estimatePoseOnImage() {
