@@ -372,6 +372,21 @@ EntryStatic.getAllBlocks = function() {
             blocks: ['functionAddButton'],
         },
         {
+            category: 'analysis',
+            blocks: [
+                'analizyDataAddButton',
+                'append_row_to_table',
+                'insert_row_to_table',
+                'delete_row_from_table',
+                'set_value_from_table',
+                'get_table_count',
+                'get_value_from_table',
+                'calc_values_from_table',
+                'open_table_chart',
+                'close_table_chart',
+            ],
+        },
+        {
             category: 'ai_utilize',
             blocks: [
                 'aiUtilizeBlockAddButton',
@@ -390,21 +405,6 @@ EntryStatic.getAllBlocks = function() {
                 'get_translated_string',
                 'check_language',
             ],
-        },
-        {
-            category: 'analysis',
-            blocks: [
-                'analizyDataAddButton',
-                'append_row_to_table',
-                'insert_row_to_table',
-                'delete_row_from_table',
-                'set_value_from_table',
-                'get_table_count',
-                'get_value_from_table',
-                'calc_values_from_table',
-                'open_table_chart',
-                'close_table_chart',
-            ]
         },
         {
             category: 'expansion',
