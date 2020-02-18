@@ -402,6 +402,8 @@ EntryStatic.getAllBlocks = function() {
                 'video_number_detect',
                 'video_toggle_ind',
                 'video_body_part_coord',
+                'video_face_part_coord',
+                'video_detected_face_info',
             ],
         },
         {

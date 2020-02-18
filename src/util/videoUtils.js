@@ -97,13 +97,13 @@ class VideoUtils {
             this.inMemoryCanvas.height = CANVAS_HEIGHT;
         }
 
-        // //test
+        // //motion test
         // this.tempCanvas = document.createElement('canvas');
         // this.tempCanvas.width = CANVAS_WIDTH;
         // this.tempCanvas.height = CANVAS_HEIGHT;
         // let tempTarget = document.getElementsByClassName('uploadInput')[0];
         // tempTarget.parentNode.insertBefore(this.tempCanvas, tempTarget);
-        // //test
+        // //motion test
 
         navigator.getUserMedia =
             navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
@@ -242,7 +242,7 @@ class VideoUtils {
         const captured = await this.imageCapture.grabFrame();
         worker.postMessage({ type: 'estimate', image: captured }, [captured]);
 
-        // //test
+        // //motion test
         // const tempCtx = this.tempCanvas.getContext('2d');
         // if (this.motions && this.motions.motion) {
         //     tempCtx.clearRect(0, 0, this.tempCanvas.width, this.tempCanvas.height);
@@ -263,10 +263,10 @@ class VideoUtils {
         //     tempCtx.fillStyle = `rgb(${255},${0},${0})`;
         //     tempCtx.fillRect(x, y, 10, 10);
         // }
-        // //test
+        // //motion test
         setTimeout(() => {
             requestAnimationFrame(this.sendImageToWorker.bind(this));
-        }, 150);
+        }, 100);
     }
 
     async checkUserCamAvailable() {

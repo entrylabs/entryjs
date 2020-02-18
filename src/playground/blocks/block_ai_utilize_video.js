@@ -328,6 +328,72 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 py: [],
             },
         },
+        video_detected_face_info: {
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1 번째 얼굴의 %2',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', 0],
+                        ['2', 1],
+                        ['3', 2],
+                        ['4', 3],
+                    ],
+                    value: 0,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['성별', 'gender'],
+                        ['나이', 'age'],
+                    ],
+                    value: 'gender',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+            ],
+            events: {},
+            def: {
+                type: 'video_detected_face_info',
+            },
+            class: 'video',
+            isNotFor: ['video'],
+            async func(sprite, script) {
+                const index = script.getField('INDEX');
+                const info = script.getField('INFO');
+                const faces = VideoUtils.faces;
+                if (faces.length <= index) {
+                    return 0;
+                }
+
+                const target = VideoUtils.faces[index];
+                if (!target) {
+                    return 0;
+                }
+                switch (info) {
+                    case 'gender':
+                        return target.gender;
+                    case 'age':
+                        return target.age.toFixed(0).toString();
+                }
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                INFO: 1,
+            },
+            syntax: {
+                js: [],
+                py: [],
+            },
+        },
         video_motion_value: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
@@ -412,6 +478,104 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 py: [],
             },
         },
+        video_face_part_coord: {
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1 번째 얼굴의 %2 의 %3 좌표',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', 0],
+                        ['2', 1],
+                        ['3', 2],
+                        ['4', 3],
+                    ],
+                    value: 0,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        // 왼쪽 눈, 오른쪽 눈, 코, 왼쪽 입꼬리, 오른쪽 입꼬리
+                        //36,45
+                        ['왼쪽 눈', 36],
+                        ['오른쪽 눈', 45],
+                        ['코', 30],
+                        ['왼쪽 입꼬리', 48],
+                        ['오른쪽 입꼬리', 54],
+                    ],
+                    value: 45,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['x', '_x'],
+                        ['y', '_y'],
+                    ],
+                    value: '_x',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+            ],
+            events: {},
+            def: {
+                type: 'video_face_part_coord',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PART: 1,
+                COORD: 2,
+            },
+            class: 'video',
+            isNotFor: ['video'],
+            async func(sprite, script) {
+                const index = script.getField('INDEX');
+                const part = script.getField('PART');
+                const coord = script.getField('COORD');
+                const faces = VideoUtils.faces;
+
+                if (faces.length <= index) {
+                    return 0;
+                }
+
+                // offset since value shown starts from 1;
+                const rawValue = faces[index].landmarks._positions[part][coord];
+
+                if (!rawValue) {
+                    return 0;
+                }
+                let returningValue = 0;
+                if (coord === '_x') {
+                    returningValue = rawValue - VideoUtils.CANVAS_WIDTH / 2;
+                    if (VideoUtils.flipStatus.horizontal) {
+                        returningValue *= -1;
+                    }
+                } else {
+                    returningValue = VideoUtils.CANVAS_HEIGHT / 2 - rawValue;
+                    if (VideoUtils.flipStatus.vertical) {
+                        returningValue *= -1;
+                    }
+                }
+
+                return returningValue.toFixed(1);
+
+                // return rawValue.toFixed(1);
+            },
+            syntax: {
+                js: [],
+                py: [],
+            },
+        },
+
         video_body_part_coord: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
@@ -422,12 +586,12 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['1', 1],
-                        ['2', 2],
-                        ['3', 3],
-                        ['4', 4],
+                        ['1', 0],
+                        ['2', 1],
+                        ['3', 2],
+                        ['4', 3],
                     ],
-                    value: 1,
+                    value: 0,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                     arrowColor: EntryStatic.colorSet.common.WHITE,
@@ -436,25 +600,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         // ['코', 'nose'],
-                        // ['왼쪽 눈', 'leftEye'],
-                        // ['오른쪽 눈', 'rightEye'],
-                        // ['왼쪽 귀', 'leftEar'],
-                        // ['오른쪽 귀', 'rightEar'],
-                        // ['왼족 어깨', 'leftShoulder'],
-                        // ['오른쪽 어깨', 'rightShoulder'],
-                        // ['왼쪽 팔꿈치', 'leftElbow'],
-                        // ['오른쪽 팔꿈치', 'rightElbow'],
-                        // ['왼쪽 손목', 'leftWrist'],
-                        // ['오른쪽 손목', 'rightWrist'],
-                        // ['왼쪽 엉덩이', 'leftHip'],
-                        // ['오른쪽 엉덩이', 'rightHip'],
-                        // ['왼쪽 무릎', 'leftKnee'],
-                        // ['오른쪽 무릎', 'rightKnee'],
-                        // ['왼쪽 발목', 'leftAnkle'],
-                        // ['오른쪽 발목', 'rightAnkle'],
-
                         ['얼굴', 0],
-                        ['입', 21],
                         ['왼쪽 눈', 1],
                         ['오른쪽 눈', 2],
                         ['왼쪽 귀', 3],
@@ -510,7 +656,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                     return 0;
                 }
                 // offset since value shown starts from 1;
-                const rawValue = poses[index - 1].keypoints[part].position[coord];
+                const rawValue = poses[index].keypoints[part].position[coord];
 
                 if (!rawValue) {
                     return 0;
