@@ -371,14 +371,15 @@ class _GEHelper extends GEHelperBase {
     drawFaceBoxes(faces: Array<any>, flipStatus: any) {
         let handler = this.faceIndicatorGraphic;
         let faceBoxList: Array = [];
+
         const { WIDTH, HEIGHT } = INITIAL_VIDEO_PARAMS;
         faces.forEach((face) => {
-            const target = face.alignedRect.box;
+            const target = face.alignedRect._box;
 
-            let x = target.x * INITIAL_VIDEO_PARAMS.SCALE_X;
-            let y = target.y * INITIAL_VIDEO_PARAMS.SCALE_X;
-            const width = target.width * INITIAL_VIDEO_PARAMS.SCALE_X;
-            const height = target.height * INITIAL_VIDEO_PARAMS.SCALE_X;
+            let x = target._x;
+            let y = target._y;
+            const width = target._width;
+            const height = target._height;
             if (flipStatus.horizontal) {
                 x = INITIAL_VIDEO_PARAMS.WIDTH - x - width;
             }
@@ -387,6 +388,7 @@ class _GEHelper extends GEHelperBase {
             }
             faceBoxList.push({ x, y, width, height });
         });
+
         if (this._isWebGL) {
             handler.clear();
             handler.lineStyle(5, 0xff0000);

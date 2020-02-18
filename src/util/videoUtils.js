@@ -1,7 +1,6 @@
 import { GEHelper } from '../graphicEngine/GEHelper';
 import * as posenet from '@tensorflow-models/posenet';
 import VideoWorker from './workers/video.worker';
-import * as faceapi from 'face-api.js';
 
 // input resolution setting, this regards of the position of posenet and cocoSSD
 const VIDEO_WIDTH = 640;
@@ -25,7 +24,7 @@ class VideoUtils {
             vertical: false,
         };
         // motion related
-        this.motions = { total: 0, maxPoint: { score: 0, x: -1, y: -1 } };
+        this.motions = { total: 0, maxPoint: { score: 0, x: -1, y: -1 }, motion: [] };
         this.motionPoint = { x: 0, y: 0 };
         this.motionDirection = { x: 0, y: 0 };
         /////////////////////////////////
@@ -118,10 +117,7 @@ class VideoUtils {
                         height: VIDEO_HEIGHT,
                     },
                 });
-                await Promise.all([
-                    faceapi.nets.ssdMobilenetv1.loadFromUri(`/aimodules/weights`),
-                    faceapi.nets.faceLandmark68Net.loadFromUri(`/aimodules/weights`),
-                ]);
+
                 this.faceModelLoaded = true;
                 this.stream = stream;
                 const video = document.createElement('video');
@@ -183,6 +179,8 @@ class VideoUtils {
         if (this.initialized) {
             return;
         }
+        const [track] = this.stream.getVideoTracks();
+        this.imageCapture = new ImageCapture(track);
 
         worker.onmessage = (e) => {
             const { type, message } = e.data;
@@ -216,56 +214,59 @@ class VideoUtils {
                         this.motionPoint.x = x;
                         this.motionPoint.y = y;
                     }
-
+                    break;
+                case 'face':
+                    this.faces = message;
                     break;
                 case 'coco':
                     this.objectDetected = message;
                     break;
             }
         };
-        worker.postMessage({
-            type: 'init',
-            width: CANVAS_WIDTH,
-            height: CANVAS_HEIGHT,
-        });
-        // this.faceWorker.postMessage({ type: 'init' });
 
-        const [track] = this.stream.getVideoTracks();
-        this.imageCapture = new ImageCapture(track);
+        const offCanvas = new OffscreenCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
 
-        setInterval(() => {
-            // const tempCtx = this.tempCanvas.getContext('2d');
-            // if (this.motions.maxPoint) {
-            //     const { x, y } = this.motions.maxPoint;
-            //     tempCtx.clearRect(0, 0, this.tempCanvas.width, this.tempCanvas.height);
-
-            //     tempCtx.fillStyle = `rgb(${255},${0},${0})`;
-            //     tempCtx.fillRect(x, y, 10, 10);
-            // }
-
-            const context = this.inMemoryCanvas.getContext('2d');
-            context.drawImage(this.video, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-            const imageData = context.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-            worker.postMessage({
-                type: 'estimate',
-                imageData,
-            });
-        }, 100);
-        setInterval(() => {
-            if (this.faceModelLoaded) {
-                faceapi
-                    .detectAllFaces(this.video)
-                    .withFaceLandmarks()
-                    .then((result) => {
-                        console.log(result);
-                        this.faces = result;
-                    });
-            }
-        }, 300);
+        worker.postMessage(
+            {
+                type: 'init',
+                width: CANVAS_WIDTH,
+                height: CANVAS_HEIGHT,
+                offCanvas,
+            },
+            [offCanvas]
+        );
+        this.sendImageToWorker();
     }
 
-    async estimatePoseOnImage() {
-        return this.poses.predictions;
+    async sendImageToWorker() {
+        const captured = await this.imageCapture.grabFrame();
+        worker.postMessage({ type: 'estimate', image: captured }, [captured]);
+
+        // //test
+        // const tempCtx = this.tempCanvas.getContext('2d');
+        // if (this.motions && this.motions.motion) {
+        //     tempCtx.clearRect(0, 0, this.tempCanvas.width, this.tempCanvas.height);
+        //     this.motions.motion.forEach(({ x, y, r, g, b }) => {
+        //         tempCtx.fillStyle = `rgb(${r},${g},${b})`;
+        //         tempCtx.fillRect(x, y, 10, 10);
+        //     });
+        //     const { x, y } = this.motions.maxPoint;
+
+        //     tempCtx.fillStyle = `rgb(${255},${0},${0})`;
+        //     tempCtx.fillRect(x, y, 10, 10);
+        // }
+        ///////////////////////////
+        // if (this.motions.maxPoint) {
+        //     const { x, y } = this.motions.maxPoint;
+        //     tempCtx.clearRect(0, 0, this.tempCanvas.width, this.tempCanvas.height);
+
+        //     tempCtx.fillStyle = `rgb(${255},${0},${0})`;
+        //     tempCtx.fillRect(x, y, 10, 10);
+        // }
+        // //test
+        setTimeout(() => {
+            requestAnimationFrame(this.sendImageToWorker.bind(this));
+        }, 150);
     }
 
     async checkUserCamAvailable() {

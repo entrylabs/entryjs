@@ -511,14 +511,19 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 }
                 // offset since value shown starts from 1;
                 const rawValue = poses[index - 1].keypoints[part].position[coord];
+
                 if (!rawValue) {
                     return 0;
                 }
                 let returningValue = 0;
                 if (coord === 'x') {
                     returningValue = rawValue - VideoUtils.CANVAS_WIDTH / 2;
+                } else {
+                    returningValue = VideoUtils.CANVAS_HEIGHT / 2 - rawValue;
+                    if (VideoUtils.flipStatus.vertical) {
+                        returningValue *= -1;
+                    }
                 }
-                returningValue = VideoUtils.CANVAS_HEIGHT / 2 - rawValue;
 
                 return returningValue.toFixed(1);
             },
