@@ -259,7 +259,6 @@ class VideoUtils {
     }
 
     motionDetect() {
-        console.log('motionDetect');
         const context = this.inMemoryCanvas.getContext('2d');
         context.drawImage(this.video, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         const imageData = context.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);

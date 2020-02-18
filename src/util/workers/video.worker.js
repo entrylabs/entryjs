@@ -24,14 +24,10 @@ const tinyFaceDetectOption = new faceapi.TinyFaceDetectorOptions({ inputSize: 32
 
 async function processImage() {
     try {
-        // check objects
         objectDetect(this);
-        // check Pose
         poseDetect(this);
-        // check face
         faceDetect(this);
         // //check Motion
-        // motionDetect(this);
     } catch (err) {
         console.log('estimation error', err);
         return [];
@@ -47,7 +43,6 @@ async function objectDetect(context) {
     }
 
     const predictions = await coco.detect(offCanvas);
-    // console.log('COCO', predictions);
     context.postMessage({ type: 'coco', message: predictions });
 }
 
@@ -60,7 +55,6 @@ async function faceDetect(context) {
         .withFaceLandmarks()
         .withAgeAndGender()
         .withFaceExpressions();
-    // console.log('FACE', predictions);
 
     context.postMessage({ type: 'face', message: predictions });
 }
@@ -81,11 +75,9 @@ async function poseDetect(context) {
         const adjacentMap = posenet.getAdjacentKeyPoints(pose.keypoints, 0.1);
         adjacents.push(adjacentMap);
     });
-    // console.log('POSE', predictions);
     context.postMessage({ type: 'pose', message: { predictions, adjacents } });
 }
 
-// worker 메시지 수신 listener
 self.onmessage = async function(e) {
     const { type } = e.data;
     switch (type) {
