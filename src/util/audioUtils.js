@@ -12,7 +12,7 @@ const STATUS_CODE = {
 };
 
 const VOICE_SERVER_ADDR = {
-    hostname: window.location.hostname,
+    hostname: Entry.baseUrl,
     path: '/vc',
 };
 
