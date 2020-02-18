@@ -502,6 +502,11 @@ Entry.parseOptions = function(options) {
         this.dataTableEnable = true;
     }
 
+    this.hardwareEnable = options.hardwareEnable;
+    if (this.hardwareEnable === undefined) {
+        this.hardwareEnable = true;
+    }
+
     this.listEnable = options.listEnable;
     if (this.listEnable === undefined) {
         this.listEnable = true;
