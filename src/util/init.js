@@ -499,7 +499,7 @@ Entry.parseOptions = function(options) {
 
     this.dataTableEnable = options.dataTableEnable;
     if (this.dataTableEnable === undefined) {
-        this.dataTableEnable = true;
+        this.dataTableEnable = false;
     }
 
     this.hardwareEnable = options.hardwareEnable;
