@@ -10,6 +10,10 @@ const VIDEO_HEIGHT = 360;
 const CANVAS_WIDTH = 480;
 const CANVAS_HEIGHT = 270;
 
+const previousFrame = [];
+const BRIGHTNESS_THRESHOLD = 30;
+const SAMPLE_SIZE = 30;
+
 const worker = new VideoWorker();
 
 class VideoUtils {
@@ -197,23 +201,7 @@ class VideoUtils {
                     const {
                         maxPoint: { score, x, y },
                     } = message;
-                    if (score > 0 && x > 0 && y > 0) {
-                        const prevX = this.motionPoint.x;
-                        const prevY = this.motionPoint.y;
-                        const motionScalarX = Math.abs(prevX - x);
-                        const motionScalarY = Math.abs(prevY - y);
-                        this.motionDirection.x = motionScalarX;
-                        this.motionDirection.y = motionScalarY;
-                        if (prevX > x) {
-                            this.motionDirection.x *= -1;
-                        }
 
-                        if (prevY > y) {
-                            this.motionDirection.y *= -1;
-                        }
-                        this.motionPoint.x = x;
-                        this.motionPoint.y = y;
-                    }
                     break;
                 case 'face':
                     this.faces = message;
@@ -236,6 +224,7 @@ class VideoUtils {
             [offCanvas]
         );
         this.sendImageToWorker();
+        this.motionDetect();
     }
 
     async sendImageToWorker() {
@@ -266,7 +255,69 @@ class VideoUtils {
         // //motion test
         setTimeout(() => {
             requestAnimationFrame(this.sendImageToWorker.bind(this));
-        }, 100);
+        }, 50);
+    }
+
+    motionDetect() {
+        console.log('motionDetect');
+        const context = this.inMemoryCanvas.getContext('2d');
+        context.drawImage(this.video, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        const imageData = context.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        const data = imageData.data;
+        const motion = [];
+        const motions = { total: 0, maxPoint: { score: 0, x: -10, y: -10 }, motion: [] };
+        for (let y = 0; y < CANVAS_HEIGHT; y += SAMPLE_SIZE) {
+            for (let x = 0; x <= CANVAS_WIDTH; x += SAMPLE_SIZE) {
+                const pos = (x + y * CANVAS_WIDTH) * 4;
+                const r = data[pos];
+                const g = data[pos + 1];
+                const b = data[pos + 2];
+                // const a = data[pos + 3];
+
+                const currentPos = previousFrame[pos] || { r: 0, g: 0, b: 0, a: 0 };
+                const rDiff = Math.abs(currentPos.r - r);
+                const gDiff = Math.abs(currentPos.g - g);
+                const bDiff = Math.abs(currentPos.b - b);
+                const areaMotionScore = rDiff + gDiff + bDiff / (SAMPLE_SIZE * SAMPLE_SIZE);
+
+                motion.push({
+                    x,
+                    y,
+                    r,
+                    g,
+                    b,
+                });
+                if (rDiff > BRIGHTNESS_THRESHOLD) {
+                    if (motions.maxPoint.score < areaMotionScore) {
+                        motions.maxPoint.x = x;
+                        motions.maxPoint.y = y;
+                        motions.maxPoint.score = areaMotionScore;
+                    }
+                }
+                motions.total += areaMotionScore;
+                previousFrame[pos] = { r, g, b };
+            }
+        }
+        this.motions = motions;
+        const { score, x, y } = motions.maxPoint;
+        if (score > 0 && x > 0 && y > 0) {
+            const prevX = this.motionPoint.x;
+            const prevY = this.motionPoint.y;
+            const motionScalarX = Math.abs(prevX - x);
+            const motionScalarY = Math.abs(prevY - y);
+            this.motionDirection.x = motionScalarX;
+            this.motionDirection.y = motionScalarY;
+            if (prevX > x) {
+                this.motionDirection.x *= -1;
+            }
+
+            if (prevY > y) {
+                this.motionDirection.y *= -1;
+            }
+            this.motionPoint.x = x;
+            this.motionPoint.y = y;
+        }
+        setTimeout(this.motionDetect.bind(this), 50);
     }
 
     async checkUserCamAvailable() {
