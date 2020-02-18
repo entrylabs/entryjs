@@ -2373,16 +2373,10 @@ Entry.byrobot_drone_4.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.common_light_mode_hold,            '2'],   // BodyHold            = 0x22
-                        [Lang.Blocks.common_light_mode_flicker,         '3'],   // BodyFlicker         = 0x23
-                        [Lang.Blocks.common_light_mode_flicker_double,  '4'],   // BodyFlickerDouble   = 0x24
-                        [Lang.Blocks.common_light_mode_dimming,         '5'],   // BodyDimming         = 0x25
-                        [Lang.Blocks.common_light_mode_sunrise,         '6'],   // BodyS8unrise        = 0x26
-                        [Lang.Blocks.common_light_mode_sunset,          '7'],   // BodySunset          = 0x27
-                        [Lang.Blocks.common_light_mode_rainbow,         '8'],   // BodyRainbow         = 0x28
-                        [Lang.Blocks.common_light_mode_rainbow2,        '9'],   // BodyRainbow2        = 0x29
+                        [Lang.Blocks.drone_light_color_body, '18'], // EyeHold = 0x12
+                        [Lang.Blocks.drone_light_color_arm, '66'],  // ArmHold = 0x42
                     ],
-                    value: '2',
+                    value: '18',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2390,6 +2384,19 @@ Entry.byrobot_drone_4.getBlocks = function() {
                 { type: 'Block', accept: 'string' },
                 { type: 'Block', accept: 'string' },
                 { type: 'Block', accept: 'string' },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.common_light_mode_hold, '0'],              // EyeHold = 0x12,          // ArmHold = 0x42
+                        [Lang.Blocks.common_light_mode_flicker, '1'],           // EyeFlicker = 0x13,       // ArmFlicker = 0x43
+                        [Lang.Blocks.common_light_mode_flicker_double, '2'],    // EyeFlickerDouble = 0x14, // ArmFlickerDouble = 0x44
+                        [Lang.Blocks.common_light_mode_dimming, '3'],           // EyeDimming = 0x15,       // ArmDimming = 0x45
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
                 { type: 'Block', accept: 'string' },
                 { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
             ],
@@ -2400,6 +2407,7 @@ Entry.byrobot_drone_4.getBlocks = function() {
                     { type: 'text', params: ['255'] },
                     { type: 'text', params: ['255'] },
                     { type: 'text', params: ['255'] },
+                    null,
                     { type: 'text', params: ['250'] },
                     null,
                 ],
@@ -2410,15 +2418,17 @@ Entry.byrobot_drone_4.getBlocks = function() {
                 RED: 1,
                 GREEN: 2,
                 BLUE: 3,
-                INTERVAL: 4,
+                MODESUB: 4,
+                INTERVAL: 5,
             },
             class: 'drone_light',
             isNotFor: ['byrobot_drone_4'],
             func(sprite, script) {
-                const mode     = 0x20 + parseInt(script.getField('MODE'), 10);
-                const red      = script.getNumberValue('RED');
-                const green    = script.getNumberValue('GREEN');
-                const blue     = script.getNumberValue('BLUE');
+                const mode =
+                    parseInt(script.getField('MODE'), 10) + parseInt(script.getField('MODESUB'), 10);
+                const red = script.getNumberValue('RED');
+                const green = script.getNumberValue('GREEN');
+                const blue = script.getNumberValue('BLUE');
                 const interval = script.getNumberValue('INTERVAL');
                 return Entry.byrobot_drone_4.setLightModeColor(script, 0x10, mode, interval, red, green, blue);
             },
@@ -2433,16 +2443,10 @@ Entry.byrobot_drone_4.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.common_light_mode_hold,            '2'],   // BodyHold            = 0x22
-                        [Lang.Blocks.common_light_mode_flicker,         '3'],   // BodyFlicker         = 0x23
-                        [Lang.Blocks.common_light_mode_flicker_double,  '4'],   // BodyFlickerDouble   = 0x24
-                        [Lang.Blocks.common_light_mode_dimming,         '5'],   // BodyDimming         = 0x25
-                        [Lang.Blocks.common_light_mode_sunrise,         '6'],   // BodyS8unrise        = 0x26
-                        [Lang.Blocks.common_light_mode_sunset,          '7'],   // BodySunset          = 0x27
-                        [Lang.Blocks.common_light_mode_rainbow,         '8'],   // BodyRainbow         = 0x28
-                        [Lang.Blocks.common_light_mode_rainbow2,        '9'],   // BodyRainbow2        = 0x29
+                        [Lang.Blocks.drone_light_color_body, '18'], // EyeHold = 0x12
+                        [Lang.Blocks.drone_light_color_arm, '66'], // ArmHold = 0x42
                     ],
-                    value: '2',
+                    value: '18',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2450,21 +2454,27 @@ Entry.byrobot_drone_4.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.common_light_color_red,            'red'],
-                        [Lang.Blocks.common_light_color_green,          'green'],
-                        [Lang.Blocks.common_light_color_blue,           'blue'],
-                        [Lang.Blocks.common_light_color_yellow,         'yellow'],
-                        [Lang.Blocks.common_light_color_magenta,        'magenta'],
-                        [Lang.Blocks.common_light_color_cyan,           'cyan'],
-                        [Lang.Blocks.common_light_color_white,          'white'],
-                        [Lang.Blocks.common_light_color_sunset,         'sunset'],
-                        [Lang.Blocks.common_light_color_cottoncandy,    'cottonCandy'],
-                        [Lang.Blocks.common_light_color_muscat,         'muscat'],
+                        [Lang.Blocks.common_light_color_sunset, 'sunset'],
+                        [Lang.Blocks.common_light_color_cottoncandy, 'cottonCandy'],
+                        [Lang.Blocks.common_light_color_muscat, 'muscat'],
                         [Lang.Blocks.common_light_color_strawberrymilk, 'strawberryMilk'],
-                        [Lang.Blocks.common_light_color_emerald,        'emerald'],
-                        [Lang.Blocks.common_light_color_lavender,       'lavender'],
+                        [Lang.Blocks.common_light_color_emerald, 'emerald'],
+                        [Lang.Blocks.common_light_color_lavender, 'lavender'],
                     ],
-                    value: 'red',
+                    value: 'sunset',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.common_light_mode_hold, '0'],              // EyeHold = 0x12,          // ArmHold = 0x42
+                        [Lang.Blocks.common_light_mode_flicker, '1'],           // EyeFlicker = 0x13,       // ArmFlicker = 0x43
+                        [Lang.Blocks.common_light_mode_flicker_double, '2'],    // EyeFlickerDouble = 0x14, // ArmFlickerDouble = 0x44
+                        [Lang.Blocks.common_light_mode_dimming, '3'],           // EyeDimming = 0x15,       // ArmDimming = 0x45
+                    ],
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2474,21 +2484,36 @@ Entry.byrobot_drone_4.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [null, null, { type: 'text', params: ['250'] }, null],
+                params: [null, null, null, { type: 'text', params: ['250'] }, null],
                 type: 'drone_light_color_select',
             },
             paramsKeyMap: {
                 MODE: 0,
-                COLOR: 1,
-                INTERVAL: 2,
+                SELECT: 1,
+                MODESUB: 2,
+                INTERVAL: 3,
             },
             class: 'drone_light',
             isNotFor: ['byrobot_drone_4'],
             func(sprite, script) {
-                const mode     = 0x20 + parseInt(script.getField('MODE'), 10);
+                const mode =
+                    parseInt(script.getField('MODE'), 10) + parseInt(script.getField('MODESUB'), 10);
+                const select = script.getField('SELECT');
                 const interval = script.getNumberValue('INTERVAL');
-                const color    = Entry.byrobot_drone_4.getRgbFromString(script.getField('COLOR'));
-                return Entry.byrobot_drone_4.setLightModeColor(script, 0x10, mode, interval, color.r, color.g, color.b);
+                let red = 0;
+                let green = 0;
+                let blue = 0;
+
+                switch (select) {
+                    case 'sunset':         { red = 255; green = 100;    blue = 0;   }   break;
+                    case 'cottonCandy':    { red = 20;  green = 250;    blue = 150; }   break;
+                    case 'muscat':         { red = 70;  green = 255;    blue = 0;   }   break;
+                    case 'strawberryMilk': { red = 150; green = 60;     blue = 20;  }   break;
+                    case 'emerald':        { red = 0;   green = 255;    blue = 30;  }   break;
+                    case 'lavender':       { red = 80;  green = 0;      blue = 200; }   break;
+                }
+
+                return Entry.byrobot_drone_4.setLightModeColor(script, 0x10, mode, interval, red, green, blue);
             },
         },
 
