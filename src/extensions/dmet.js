@@ -20,6 +20,7 @@ class dmetTable {
     #array = [];
     #origin = [];
     #fields = [];
+    #originFields = [];
     #info = {};
     #maxRow = 100;
     #maxCol = 100;
@@ -28,6 +29,10 @@ class dmetTable {
 
     get fields() {
         return this.#fields;
+    }
+
+    get originFields() {
+        return this.#originFields;
     }
 
     get value() {
@@ -88,6 +93,7 @@ class dmetTable {
         this._id = _id;
         this.#id = id;
         this.#fields = fields;
+        this.#originFields = [...fields];
         this.#info = info;
     }
 
@@ -136,7 +142,6 @@ class dmetTable {
                 return row;
             }
         } else if (typeof key === 'string') {
-            // key = `{row key}_{index}`
             const [rowKey, ...keys] = key.split(this.#keyDelimter);
             if (keys.length) {
                 return get(this.#object[rowKey], `[${keys.map(x => x - 1).join('][')}]`);
@@ -159,7 +164,7 @@ class dmetTable {
         return [];
     }
 
-    #skipOperation = ['append', 'insert'];
+    #skipOperation =  ['appendRow', 'appendCol', 'insertRow', 'insertCol'];
 
     getOperation({ type, key, index, data, newKey } = {}) {
         if (this.#skipOperation.indexOf(type) === -1 && typeof index === 'number') {
@@ -168,19 +173,17 @@ class dmetTable {
         }
         let attach = {};
         switch (type) {
-            case 'append':
+            case 'appendRow':
+            case 'appendCol':
+            case 'insertRow':
+            case 'insertCol':
                 attach = {
                     index,
                     data,
                 };
                 break;
-            case 'insert':
-                attach = {
-                    index,
-                    data,
-                };
-                break;
-            case 'delete':
+            case 'deleteCol':
+            case 'deleteRow':
                 attach = { index };
                 break;
             case 'replace':
@@ -206,44 +209,84 @@ class dmetTable {
         const { type } = operation;
         this.__isUpdate = true;
         switch (type) {
-            case 'append':
-                return this.#append(operation);
-            case 'insert':
-                return this.#insert(operation);
-            case 'delete':
-                return this.#delete(operation);
+            case 'appendCol':
+                return this.#appendCol(operation);
+            case 'appendRow':
+                return this.#appendRow(operation);
+            case 'insertRow':
+                return this.#insertRow(operation);
+            case 'insertCol':
+                return this.#insertCol(operation);
+            case 'deleteCol':
+                return this.#deleteCol(operation);
+            case 'deleteRow':
+                return this.#deleteRow(operation);
             case 'replace':
                 return this.#replace(operation);
         }
     }
 
-    #getDefaultData() {
-        return new Array(this.fields.length).fill(0);
+    #getDefaultData(isRow = true) {
+        if (isRow) {
+            return new Array(this.fields.length).fill(0);
+        }
+        return new Array(this.#array.length).fill(0);
     }
 
-    #append({ key = CommonUtils.generateId(), index = this.#array.length + 1, data = this.#getDefaultData() } = {}) {
+    #appendCol({ index, data = this.#getDefaultData(false) } = {}) {
+        this.fields.push('');
+        this.#array.forEach(({ value }, idx) => {
+            value.push(0);
+        });
+        return this.getOperation({ type: 'appendCol', index, data });
+    }
+
+    #insertCol({ index, data = this.#getDefaultData(false) } = {}) {
+        if (index < 1 || index > this.fields.length + 1) {
+            throw { message: `error: insertCol ${index}` };
+        }
+        this.fields.splice(index - 1, 0, 'insertCol');
+        this.#array.forEach(({ value }, idx) => {
+            value.splice(index - 1, 0, 0);
+        });
+        return this.getOperation({ type: 'insertCol', index, data });
+    }
+
+    #deleteCol({ index }) {
+        if(!index) {
+            throw { message: `error: deleteCol : ${index}` };
+        }
+        this.fields.splice(index - 1, 1);
+        this.#array.forEach(({ value }, idx) => {
+            value.splice(index - 1, 1);
+        });
+        return this.getOperation({ type: 'deleteCol', index });
+
+    }
+
+    #appendRow({ key = CommonUtils.generateId(), data = this.#getDefaultData()} = {}) {
+        const index = this.#array.length + 1;
         if (Array.isArray(data)) {
             this.#object[key] = data;
             this.#array.splice(index, 0, { key, value: data });
         } else {
-            console.warn('data is not array', key, data);
+            console.warn('appendRow : ', key, data);
         }
-        return this.getOperation({ type: 'append', key, index, data });
+        return this.getOperation({ type: 'appendRow', key, index, data });
     }
 
-    #insert({ key = CommonUtils.generateId(), index, data = this.#getDefaultData() } = {}) {
+    #insertRow({ key = CommonUtils.generateId(), index, data = this.#getDefaultData() } = {}) {
         let value = toNumber(data);
-        let { value: row, x, y } = this.getRow(index);
-        if (row && y > -1) {
-            row.splice(y, 0, value);
-        } else {
+        if (Array.isArray(data) || index > this.#array.length + 1 || index < 0) {
             this.#object[key] = Array.isArray(data) ? data : [value];
-            this.#array.splice(x, 0, { key, value: this.#object[key] });
+            this.#array.splice(index - 1, 0, { key, value: this.#object[key] });
+        } else {
+            console.warn('insert row : ', key, data, index);
         }
-        return this.getOperation({ type: 'insert', key, index, data: value });
+        return this.getOperation({ type: 'insertRow', key, index, data: value });
     }
 
-    #delete({ key, index }) {
+    #deleteRow({ key, index }) {
         if (!key) {
             key = index;
         }
@@ -257,7 +300,7 @@ class dmetTable {
             delete this.#object[objKey];
             this.#array.splice(x, 1);
         }
-        return this.getOperation({ type: 'delete', key });
+        return this.getOperation({ type: 'deleteRow', key });
     }
 
     #replace({ key, index, data, newKey = CommonUtils.generateId() }) {

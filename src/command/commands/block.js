@@ -175,6 +175,10 @@
                 blockArgument = block;
             }
             this.editor.board.insert(blockArgument, targetBlock, count);
+            const rerender = block._schema.params.find(({ type, menuName }) => type === 'DropdownDynamic' && _.isFunction(menuName));
+            if (rerender) {
+                block.view.reDraw();
+            }
         },
         state(block, targetBlock, count) {
             block = this.editor.board.findBlock(block);
