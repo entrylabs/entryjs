@@ -497,6 +497,11 @@ Entry.parseOptions = function(options) {
         this.variableEnable = true;
     }
 
+    this.dataTableEnable = options.dataTableEnable;
+    if (this.dataTableEnable === undefined) {
+        this.dataTableEnable = true;
+    }
+
     this.listEnable = options.listEnable;
     if (this.listEnable === undefined) {
         this.listEnable = true;

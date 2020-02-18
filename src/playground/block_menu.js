@@ -15,7 +15,7 @@ const BETA_LIST = ['ai_utilize', 'analysis'];
 class BlockMenu {
     constructor(dom, align, categoryData, scroll, readOnly) {
         Entry.Model(this, false);
-        const { options = {} } = Entry;
+        const { options = {}, dataTableEnable } = Entry;
         const { disableHardware = false } = options;
 
         this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
@@ -56,14 +56,18 @@ class BlockMenu {
         this._clearCategory();
 
         // disableHardware 인 경우, 하드웨어 카테고리와 실과형 로봇카테고리 전부를 제외한다.
-        this._categoryData = _.remove(
-            categoryData,
-            ({ category }) =>
-                !(
-                    disableHardware &&
-                    (category === HW || practicalCourseCategoryList.indexOf(category) > -1)
-                )
-        );
+        // dataTableEnable 이 false 인 경우, anlaysis 카테고리를 제외한다.
+        this._categoryData = _.remove(categoryData, ({ category }) => {
+            if (!dataTableEnable && category === 'analysis') {
+                return false;
+            }
+
+            if (disableHardware && [...practicalCourseCategoryList, HW].indexOf(category) > -1) {
+                return false;
+            }
+
+            return true;
+        });
 
         this._generateView(this._categoryData);
 
