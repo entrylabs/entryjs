@@ -2,6 +2,7 @@
 
 import { GEHelper } from '../graphicEngine/GEHelper';
 import _uniq from 'lodash/uniq';
+import _intersection from 'lodash/intersection';
 import FontFaceOnload from 'fontfaceonload';
 import DataTable from '../class/DataTable';
 
@@ -2248,28 +2249,19 @@ Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
         data[index].blocks.push(b);
     });
 
-    const allBlocksInfo = EntryStatic.getAllBlocks();
-    for (let i = 0; i < allBlocksInfo.length; i++) {
-        const info = allBlocksInfo[i];
-        const category = info.category;
-        const blocks = info.blocks;
-        if (category === 'func') {
-            allBlocksInfo.splice(i, 1);
-            continue;
-        }
-        const selectedBlocks = data[i].blocks;
-        const sorted = [];
-
-        blocks.forEach((b) => {
-            if (selectedBlocks.indexOf(b) > -1) {
-                sorted.push(b);
+    const allBlocks = EntryStatic.getAllBlocks();
+    return allBlocks
+        .map((block) => {
+            const { category, blocks } = block;
+            if (category === 'func') {
+                return { blocks: [] };
             }
-        });
-
-        data[i].blocks = sorted;
-    }
-
-    return data;
+            return {
+                category,
+                blocks: _intersection(blockArr, blocks),
+            };
+        })
+        .filter(({ blocks }) => blocks.length);
 };
 
 Entry.Utils.blur = function() {
