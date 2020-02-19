@@ -118,6 +118,7 @@ class DataTable {
             Lang.DataAnalytics.saved_table_content
         );
         delete this.tempDataAnalytics;
+        Entry.playground.reloadPlayground();
         return true;
     };
 
