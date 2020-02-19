@@ -420,8 +420,8 @@ Entry.byrobot_controller_4.blockMenuBlocks = [
 Entry.byrobot_controller_4.getBlocks = function()
 {
     return {
-        value_button:
-        {
+
+        controller_value_button: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -442,7 +442,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'value_button', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'controller_value_button', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
             },
             paramsKeyMap: {
                 DEVICE: 0,
