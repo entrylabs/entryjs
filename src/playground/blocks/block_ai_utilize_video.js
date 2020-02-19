@@ -564,6 +564,8 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                         ['코', 30],
                         ['왼쪽 입꼬리', 54],
                         ['오른쪽 입꼬리', 48],
+                        ['윗 입술', 62],
+                        ['아랫 입술', 66],
                     ],
                     value: 45,
                     fontSize: 11,

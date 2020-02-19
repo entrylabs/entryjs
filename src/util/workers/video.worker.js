@@ -40,7 +40,7 @@ async function processImage() {
     }
     setTimeout(() => {
         processImage();
-    }, 30);
+    }, 50);
 }
 
 async function objectDetect(context) {

@@ -6,15 +6,18 @@
 import { GEHelper } from '../graphicEngine/GEHelper';
 import VideoWorker from './workers/video.worker';
 
-// input resolution setting, this regards of the position of posenet and cocoSSD
+// webcam input resolution setting
 const VIDEO_WIDTH = 640;
 const VIDEO_HEIGHT = 360;
 
-// canvasVideo SETTING
+// canvasVideo SETTING, used in all canvas'
 const CANVAS_WIDTH = 480;
 const CANVAS_HEIGHT = 270;
 
+// ** MOTION DETECTION
+// motion detection prevFrame info
 const previousFrame = [];
+// motion detection parameters
 const BRIGHTNESS_THRESHOLD = 30;
 const SAMPLE_SIZE = 30;
 
@@ -82,13 +85,7 @@ class VideoUtils {
 
         this.poses = null;
         this.objectDetected = null;
-        this.motionStatus = {
-            total: 0,
-            right: 0,
-            left: 0,
-            top: 0,
-            bottom: 0,
-        };
+        this.faces = [];
         this.disableAllModels();
     }
 
@@ -143,14 +140,6 @@ class VideoUtils {
         } else {
             console.log('getUserMedia not supported');
         }
-    }
-
-    test() {
-        this.indicatorStatus = {
-            pose: true,
-            face: true,
-            object: true,
-        };
     }
 
     startDrawIndicators() {
@@ -256,11 +245,13 @@ class VideoUtils {
         }, 50);
     }
 
+    // ** MOTION DETECTION
     motionDetect() {
         if (!this.inMemoryCanvas) {
             return;
         }
         const context = this.inMemoryCanvas.getContext('2d');
+        context.clearRect(0, 0, this.inMemoryCanvas.width, this.inMemoryCanvas.height);
         context.drawImage(this.video, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         const imageData = context.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         const data = imageData.data;

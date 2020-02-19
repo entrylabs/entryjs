@@ -67,7 +67,6 @@ class _GEHelper extends GEHelperBase {
     public textHelper: _TextHelper;
     public colorFilter: _ColorFilterHelper;
     public brushHelper: _BrushHelper;
-    public inMemoryCanvas: HTMLCanvasElement;
 
     /**  pixi 객체로부터 rotate를 읽을 때 사용할 값 */
     public rotateRead: number = 1;
@@ -88,6 +87,11 @@ class _GEHelper extends GEHelperBase {
      * 최종 좌표 결정 단계에서 약간의 오차를 주어 이 현상을 막음.
      */
     public rndPosition: () => number;
+
+    /**
+     * 비디오 블록용 컨테이너, index = 2 , 기존의 오브젝트 컨테이너 = index3;
+     */
+    private videoContainer: PIXI.Container | createjs.Container;
 
     INIT(isWebGL: boolean) {
         super.INIT(isWebGL);
@@ -183,6 +187,14 @@ class _GEHelper extends GEHelperBase {
         }
     }
 
+    getNewContainer(): any {
+        if (this._isWebGL) {
+            return new PIXI.Container();
+        } else {
+            return new createjs.Container();
+        }
+    }
+
     // this function returns corresponding VideoElement,
     getVideoElement(video: HTMLVideoElement): any {
         console.log('getVideoElement');
@@ -226,14 +238,24 @@ class _GEHelper extends GEHelperBase {
     }
 
     drawVideoElement(videoElement: HTMLVideoElement): any {
-        Entry.stage.canvas.addChildAt(videoElement, 2);
+        if (!this.videoContainer) {
+            this.videoContainer = Entry.stage.canvas.getChildAt(2);
+        }
 
-        this.poseIndicatorGraphic = this.createNewIndicatorGraphic();
-        this.faceIndicatorGraphic = this.createNewIndicatorGraphic();
-        this.objectIndicatorGraphic = this.createNewIndicatorGraphic();
-        Entry.stage.canvas.addChild(this.poseIndicatorGraphic);
-        Entry.stage.canvas.addChild(this.faceIndicatorGraphic);
-        Entry.stage.canvas.addChild(this.objectIndicatorGraphic);
+        this.videoContainer.addChild(videoElement);
+        // Entry.stage.canvas.addChildAt(videoElement, 2);
+        if (!this.poseIndicatorGraphic) {
+            this.poseIndicatorGraphic = this.createNewIndicatorGraphic();
+            Entry.stage.canvas.addChild(this.poseIndicatorGraphic);
+        }
+        if (!this.faceIndicatorGraphic) {
+            this.faceIndicatorGraphic = this.createNewIndicatorGraphic();
+            Entry.stage.canvas.addChild(this.faceIndicatorGraphic);
+        }
+        if (!this.objectIndicatorGraphic) {
+            this.objectIndicatorGraphic = this.createNewIndicatorGraphic();
+            Entry.stage.canvas.addChild(this.objectIndicatorGraphic);
+        }
 
         this.tickByEngine();
     }
@@ -242,7 +264,10 @@ class _GEHelper extends GEHelperBase {
         if (!canvasVideo) {
             return;
         }
-        Entry.stage.canvas.removeChild(canvasVideo);
+        debugger;
+        const targetContainer = Entry.stage.canvas.getChildAt(2);
+        targetContainer.removeChild(canvasVideo);
+
         this.tickByEngine();
     }
 
@@ -260,8 +285,10 @@ class _GEHelper extends GEHelperBase {
 
     resetCanvasBrightness(canvasVideo: PIXI.Sprite | createjs.Bitmap) {
         if (this._isWebGL) {
-            canvasVideo.filters[0].enabled = false;
-            canvasVideo.filters = [];
+            if (canvasVideo.filters && canvasVideo.filters[0]) {
+                canvasVideo.filters[0].enabled = false;
+                canvasVideo.filters = [];
+            }
         } else {
             canvasVideo.uncache();
         }
@@ -276,10 +303,10 @@ class _GEHelper extends GEHelperBase {
             colorMatrix.enabled = true;
         } else {
             const recalculated = ((value + 100) * 255 - 25500) / 200;
-
             const colorMatrix = new createjs.ColorMatrix().adjustBrightness(recalculated);
             const filter = new createjs.ColorMatrixFilter();
             filter.matrix = colorMatrix;
+            canvasVideo.uncache();
             canvasVideo.filters = [filter];
             canvasVideo.cache(0, 0, canvasVideo.image.videoWidth, canvasVideo.image.videoHeight);
         }
@@ -287,13 +314,7 @@ class _GEHelper extends GEHelperBase {
     }
 
     setVideoAlpha(canvasVideo: PIXI.Sprite | createjs.Bitmap, value: number): any {
-        if (this.isWebGL) {
-            canvasVideo.alpha = (100 - value) / 100;
-        } else {
-            canvasVideo.uncache();
-            canvasVideo.alpha = (100 - value) / 100;
-            canvasVideo.cache(0, 0, canvasVideo.image.videoWidth, canvasVideo.image.videoHeight);
-        }
+        canvasVideo.alpha = (100 - value) / 100;
     }
 
     resetHandlers() {
@@ -308,6 +329,11 @@ class _GEHelper extends GEHelperBase {
             this.faceIndicatorGraphic.clear();
             this.poseIndicatorGraphic.clear();
             this.objectIndicatorGraphic.clear();
+            const handler = this.objectIndicatorGraphic;
+            while (handler.children.length > 0) {
+                const child = handler.getChildAt(0);
+                handler.removeChild(child);
+            }
         } else {
             this.faceIndicatorGraphic.graphics.clear();
             this.poseIndicatorGraphic.graphics.clear();
@@ -435,14 +461,23 @@ class _GEHelper extends GEHelperBase {
 
         if (this._isWebGL) {
             handler.clear();
+            while (handler.children.length > 0) {
+                const child = handler.getChildAt(0);
+                handler.removeChild(child);
+            }
             handler.lineStyle(5, 0xff0000);
             objectsList.forEach((target: any) => {
                 const { textpoint, name, x, y, width, height } = target;
                 if (name) {
-                    const text = new PIXI.Text(name);
+                    const text = PIXIHelper.text(
+                        name.toString(),
+                        '20px Nanum Gothic',
+                        '',
+                        'middle',
+                        'center'
+                    );
                     text.x = textpoint.x;
                     text.y = textpoint.y;
-
                     handler.addChild(text);
                 }
 
