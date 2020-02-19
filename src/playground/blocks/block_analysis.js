@@ -471,7 +471,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'get_table_fields',
                     },
                 ],
                 events: {},

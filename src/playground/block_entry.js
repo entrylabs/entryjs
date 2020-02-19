@@ -1842,7 +1842,7 @@ function getBlocks() {
                     menuName() {
                         const value = this.getTargetValue('dataTables');
                         if (!value) {
-                            return [];
+                            return Entry.container.getDropdownList('table_fields');
                         }
                         const { fields = [] } = DataTable.getSource(value) || {};
                         return fields.map((label, index) => [label, index + 1]);
