@@ -409,6 +409,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                     options: [
                         ['성별', 'gender'],
                         ['나이', 'age'],
+                        ['감정', 'emotion'],
                     ],
                     value: 'gender',
                     fontSize: 11,
@@ -439,6 +440,17 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                         return target.gender;
                     case 'age':
                         return target.age.toFixed(0).toString();
+                    case 'emotion':
+                        let emotion = '';
+                        let maxVal = 0;
+                        for (const status in target.expressions) {
+                            const emotionVal = target.expressions[status];
+                            if (emotionVal > maxVal) {
+                                maxVal = emotionVal;
+                                emotion = status;
+                            }
+                        }
+                        return emotion;
                 }
             },
             paramsKeyMap: {

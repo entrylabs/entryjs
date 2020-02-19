@@ -264,7 +264,6 @@ class _GEHelper extends GEHelperBase {
         if (!canvasVideo) {
             return;
         }
-        debugger;
         const targetContainer = Entry.stage.canvas.getChildAt(2);
         targetContainer.removeChild(canvasVideo);
 
@@ -400,6 +399,7 @@ class _GEHelper extends GEHelperBase {
 
         const { WIDTH, HEIGHT } = INITIAL_VIDEO_PARAMS;
         faces.forEach((face) => {
+            console.log(face);
             const target = face.alignedRect._box;
 
             let x = target._x;
