@@ -108,6 +108,7 @@ require('./util/weather_forecast');
 require('./command/commands/block');
 require('./command/commands/comment');
 require('./command/commands/container');
+require('./command/commands/dataTable');
 require('./command/commands/engine');
 require('./command/commands/function');
 require('./command/commands/object');

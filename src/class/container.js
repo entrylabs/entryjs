@@ -741,6 +741,14 @@ Entry.Container = class Container {
                 }
                 break;
             }
+            case 'tables': {
+                const { dataTable = {} } = Entry.playground;
+                const { tables } = dataTable;
+                if (tables) {
+                    result = tables.map((table) => [table.name, table.id]);
+                }
+                break;
+            }
             case 'scenes':
                 result = Entry.scene.getScenes().map(({ name, id }) => [name, id]);
                 break;

@@ -1,10 +1,276 @@
-import cuid from 'cuid';
-import uid from 'uid';
 import isPlainObject from 'lodash/isPlainObject';
 import mapValues from 'lodash/mapValues';
+import get from 'lodash/get';
+import set from 'lodash/set';
+import cloneDeep from 'lodash/cloneDeep';
+import CommonUtils, { toNumber } from '../util/common';
 
-function generateId() {
-    return uid(8) + cuid();
+class dmetTable {
+    constructor(array = [], id) {
+        this.#id = id;
+        this.from(array);
+    }
+
+    _id = undefined;
+    __isUpdate = false;
+    #id = '';
+    #key = CommonUtils.generateId();
+    #object = {};
+    #array = [];
+    #origin = [];
+    #fields = [];
+    #info = {};
+    #maxRow = 100;
+    #maxCol = 100;
+    #variableType = 'table';
+    #keyDelimter = '_';
+
+    get fields() {
+        return this.#fields;
+    }
+
+    get value() {
+        return this.#object;
+    }
+
+    get array() {
+        return this.#array;
+    }
+
+    get isDmet() {
+        return true;
+    }
+
+    get variableType() {
+        return this.#variableType;
+    }
+
+    get origin() {
+        return this.#origin;
+    }
+
+    setLabel(index, name) {
+        this.#fields[index] = name;
+    }
+
+    #fillArray(array, length) {
+        const start = array.length;
+        array.length = length;
+        array.fill(0, start, length);
+    }
+
+    from(data) {
+        const { list = [], data: array = [], value, _id, id = this.#id, fields, ...info } = data;
+        this.#object = {};
+        this.#array = [];
+        this.#origin = [];
+        if (Array.isArray(array)) {
+            array.forEach((row = []) => {
+                if (Array.isArray(row)) {
+                    const key = CommonUtils.generateId();
+                    const value = row.map(toNumber);
+                    this.#fillArray(value, fields.length);
+                    this.#array.push({ key, value });
+                    this.#object[key] = value;
+                    this.#origin.push(cloneDeep(value));
+                } else if (typeof row === 'object' && row.key) {
+                    const newRow = {
+                        key: row.key,
+                        value: row.value.map(toNumber)
+                    };
+                    this.#array.push(newRow);
+                    this.#object[row.key] = newRow.value;
+                    this.#origin.push(cloneDeep(newRow.value));
+                }
+            });
+        }
+        this._id = _id;
+        this.#id = id;
+        this.#fields = fields;
+        this.#info = info;
+    }
+
+    toJSON() {
+        return {
+            _id: this._id || undefined,
+            id: this.#id,
+            key: this.#key,
+            data: this.#array,
+            origin: this.#origin,
+            fields: this.#fields,
+            isDmet: true,
+            variableType: this.variableType,
+        };
+    }
+
+    getRow(key) {
+        if (Array.isArray(key)) {
+            const [row, col = 0] = key;
+            const result = this.#array[row - 1] || {};
+            return { ...result, x: row - 1, y: col - 1 };
+        } else if (typeof key === 'number') {
+            const result = this.#array[key - 1] || {};
+            return { ...result, x: key - 1 };
+        } else if (typeof key === 'string') {
+            const [rowKey, col = 0] = key.split(this.#keyDelimter);
+            return {
+                key: rowKey,
+                value: this.#object[rowKey],
+                x: this.getIndex(rowKey),
+                y: col - 1,
+            };
+        }
+        throw { message: `not found tableData ${key} id: ${this.#id}` };
+    }
+
+    getValue(key) {
+        if (typeof key === 'number') {
+            return this.#array[key - 1].value;
+        } else if (Array.isArray(key)) {
+            const [rowKey, ...keys] = key;
+            const { value: row } = this.#array[rowKey - 1] || {};
+            if (keys.length && row) {
+                return get(row, `[${keys.map(x => x - 1).join('][')}]`);
+            } else {
+                return row;
+            }
+        } else if (typeof key === 'string') {
+            // key = `{row key}_{index}`
+            const [rowKey, ...keys] = key.split(this.#keyDelimter);
+            if (keys.length) {
+                return get(this.#object[rowKey], `[${keys.map(x => x - 1).join('][')}]`);
+            }
+            return this.#object[rowKey];
+        }
+        throw { message: `not found tableData ${key} id: ${this.#id}` };
+    }
+
+    getIndex(key) {
+        if (Array.isArray(key)) {
+            return key;
+        } else if (typeof key === 'string') {
+            const [rowKey, ...keys] = key.split(this.#keyDelimter);
+            const rowIndex = this.#array.findIndex((x) => x.key === rowKey);
+            if (rowIndex >= 0) {
+                return [rowIndex, ...keys];
+            }
+        }
+        return [];
+    }
+
+    #skipOperation = ['append', 'insert'];
+
+    getOperation({ type, key, index, data, newKey } = {}) {
+        if (this.#skipOperation.indexOf(type) === -1 && typeof index === 'number') {
+            const data = this.getRow(index);
+            key = data.key;
+        }
+        let attach = {};
+        switch (type) {
+            case 'append':
+                attach = {
+                    index,
+                    data,
+                };
+                break;
+            case 'insert':
+                attach = {
+                    index,
+                    data,
+                };
+                break;
+            case 'delete':
+                attach = { index };
+                break;
+            case 'replace':
+                attach = {
+                    data,
+                    index,
+                    newKey,
+                };
+                break;
+        }
+
+        return {
+            _id: this._id || undefined,
+            id: this.#id,
+            variableType: this.variableType,
+            key,
+            type,
+            ...attach,
+        };
+    }
+
+    exec(operation) {
+        const { type } = operation;
+        this.__isUpdate = true;
+        switch (type) {
+            case 'append':
+                return this.#append(operation);
+            case 'insert':
+                return this.#insert(operation);
+            case 'delete':
+                return this.#delete(operation);
+            case 'replace':
+                return this.#replace(operation);
+        }
+    }
+
+    #getDefaultData() {
+        return new Array(this.fields.length).fill(0);
+    }
+
+    #append({ key = CommonUtils.generateId(), index = this.#array.length + 1, data = this.#getDefaultData() } = {}) {
+        if (Array.isArray(data)) {
+            this.#object[key] = data;
+            this.#array.splice(index, 0, { key, value: data });
+        } else {
+            console.warn('data is not array', key, data);
+        }
+        return this.getOperation({ type: 'append', key, index, data });
+    }
+
+    #insert({ key = CommonUtils.generateId(), index, data = this.#getDefaultData() } = {}) {
+        let value = toNumber(data);
+        let { value: row, x, y } = this.getRow(index);
+        if (row && y > -1) {
+            row.splice(y, 0, value);
+        } else {
+            this.#object[key] = Array.isArray(data) ? data : [value];
+            this.#array.splice(x, 0, { key, value: this.#object[key] });
+        }
+        return this.getOperation({ type: 'insert', key, index, data: value });
+    }
+
+    #delete({ key, index }) {
+        if (!key) {
+            key = index;
+        }
+        let { value: row, key: objKey, x, y } = this.getRow(key);
+        if (!row || (y > -1 && !row[y])) {
+            throw { message: 'not found data' };
+        }
+        if (y > -1) {
+            delete row[y];
+        } else {
+            delete this.#object[objKey];
+            this.#array.splice(x, 1);
+        }
+        return this.getOperation({ type: 'delete', key });
+    }
+
+    #replace({ key, index, data, newKey = CommonUtils.generateId() }) {
+        const value = toNumber(data);
+        if (!key) {
+            key = index;
+        }
+        let { value: row, key: objKey, x, y } = this.getRow(key);
+        if (!row) {
+            throw { message: 'not found row' };
+        }
+        row[y] = value;
+        return this.getOperation({ type: 'replace', key, index, data: value, newKey });
+    }
 }
 
 class dmetList {
@@ -16,10 +282,11 @@ class dmetList {
     _id = undefined;
     __isUpdate = false;
     #id = '';
-    #key = generateId();
+    #key = CommonUtils.generateId();
     #object = {};
     #array = [];
     #info = {};
+    #variableType = 'list';
 
     get value() {
         return this.#array;
@@ -42,12 +309,12 @@ class dmetList {
     }
 
     get variableType() {
-        return 'list';
+        return this.#variableType;
     }
 
     set #data(array) {
         this.#array = array.map((data) => {
-            const key = generateId();
+            const key = CommonUtils.generateId();
             const item = {
                 key,
                 data,
@@ -77,7 +344,7 @@ class dmetList {
                     this.#object[key] = data;
                     return data;
                 });
-            } else {                
+            } else {
                 this.#array = [];
                 this.#object = {};
             }
@@ -153,7 +420,7 @@ class dmetList {
         return {
             _id: this._id || undefined,
             id: this.#id,
-            variableType: 'list',
+            variableType: this.variableType,
             key,
             type,
             ...attach,
@@ -182,13 +449,13 @@ class dmetList {
             key: this.#key,
             array: this.#array,
             isDmet: true,
-            variableType: 'list',
+            variableType: this.variableType,
         };
     }
 
     #append({ key, data } = {}) {
         if (!key) {
-            key = generateId();
+            key = CommonUtils.generateId();
         }
         const newData = {
             key,
@@ -201,7 +468,7 @@ class dmetList {
 
     #insert({ key, index, data } = {}) {
         if (!key) {
-            key = generateId();
+            key = CommonUtils.generateId();
         }
         const newData = {
             key,
@@ -219,7 +486,7 @@ class dmetList {
             }
             const oldData = this.get(key);
             if (!oldData) {
-                return;
+                throw { message: 'not found data' };
             }
             const oldIndex = this.getIndex(key);
             delete this.#object[oldData.key];
@@ -228,7 +495,7 @@ class dmetList {
         } catch (e) {}
     }
 
-    #replace({ key, data, newKey = generateId() }) {
+    #replace({ key, data, newKey = CommonUtils.generateId() }) {
         try {
             const item = this.get(key);
             if (!item) {
@@ -251,10 +518,10 @@ class dmetVariable {
 
     _id = undefined;
     #id = '';
-    #key = generateId();
+    #key = CommonUtils.generateId();
     #info = {};
     #value = '';
-    valueType = 'variable';
+    #variableType = 'variable';
 
     get value() {
         return this.#value;
@@ -269,7 +536,7 @@ class dmetVariable {
     }
 
     get variableType() {
-        return this.valueType;
+        return this.#variableType;
     }
 
     toJSON() {
@@ -280,7 +547,7 @@ class dmetVariable {
             key: this.#key,
             value: this.value,
             isDmet: true,
-            variableType: this.valueType,
+            variableType: this.variableType,
         };
     }
 
@@ -321,7 +588,7 @@ class dmetVariable {
                 return {
                     _id: this._id,
                     id: this.#id,
-                    variableType: this.valueType,
+                    variableType: this.variableType,
                     type,
                     value,
                 };
@@ -340,7 +607,7 @@ class dmetVariable {
 class dmetSlideVariable extends dmetVariable {
     constructor(variable, id) {
         super(variable, id);
-        this.valueType = 'slide';
+        this.variableType = 'slide';
     }
 }
 
@@ -350,9 +617,10 @@ class dmet {
     }
 
     #original = { list: {}, variable: {} };
-    #id = generateId();
+    #id = CommonUtils.generateId();
     #list = {};
     #variable = {};
+    #table = {};
 
     get list() {
         return this.#list;
@@ -360,6 +628,10 @@ class dmet {
 
     get variable() {
         return this.#variable;
+    }
+
+    get table() {
+        return this.#table;
     }
 
     get id() {
@@ -385,6 +657,7 @@ class dmet {
         return {
             id: this.#id,
             list: this.list,
+            table: this.table,
             variable: this.variable,
             isDmet: true,
         };
@@ -403,6 +676,9 @@ class dmet {
                 } else if (variableType === 'list') {
                     const result = new dmetList(variable);
                     this.#list[result.id] = result;
+                } else if (variableType === 'table') {
+                    const result = new dmetTable(variable);
+                    this.#table[result.id] = result;
                 }
             });
         } else if (isPlainObject(variables) && variables.isDmet) {
@@ -411,6 +687,9 @@ class dmet {
             });
             this.#variable = mapValues(variables.variable, (variable) => {
                 return new dmetVariable(variable);
+            });
+            this.#table = mapValues(variables.table, (list) => {
+                return new dmetTable(list);
             });
             this.#id = variables.id;
         }
@@ -424,6 +703,8 @@ class dmet {
                 return this.#variable[id];
             case 'list':
                 return this.#list[id];
+            case 'table':
+                return this.#table[id];
             case 'default':
                 return undefined;
         }
@@ -440,6 +721,8 @@ class dmet {
             this.#variable[id] = new dmetSlideVariable(object);
         } else if (variableType === 'list') {
             this.#list[id] = new dmetList(object);
+        } else if (variableType === 'table') {
+            this.#table[id] = new dmetTable(object);
         }
     }
 
@@ -468,6 +751,8 @@ class dmet {
                 return this.#variable[id].exec(operation);
             } else if (variableType === 'list') {
                 return this.#list[id].exec(operation);
+            } else if (variableType === 'table') {
+                return this.#table[id].exec(operation);
             }
         } finally {
             this.notify();
@@ -475,4 +760,4 @@ class dmet {
     }
 }
 
-export { dmetList, dmetVariable, dmet };
+export { dmetList, dmetVariable, dmet, dmetTable };

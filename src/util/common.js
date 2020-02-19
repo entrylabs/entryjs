@@ -1,4 +1,8 @@
 import fetch from 'isomorphic-fetch';
+import _isNaN from 'lodash/isNaN';
+import _toNumber from 'lodash/toNumber';
+import _cuid from 'cuid';
+import _uid from 'uid';
 
 const _memoize = require('lodash/memoize');
 const _assign = require('lodash/assign');
@@ -36,6 +40,19 @@ const Common = {
         const data = await response.json();
         return { data };
     }),
+    toNumber: (str) => {
+        if (typeof str === 'number') {
+            return str;
+        }
+        const result = _toNumber(str);
+        if (_isNaN(result)) {
+            return str;
+        }
+        return result;
+    },
+    generateId() {
+        return _uid(8) + _cuid();
+    },
 };
 
 module.exports = Common;
