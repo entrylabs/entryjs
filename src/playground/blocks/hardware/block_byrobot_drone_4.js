@@ -3577,7 +3577,7 @@ Entry.byrobot_drone_4.getBlocks = function()
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['0.02'] },
+                    { type: 'text', params: ['0.1'] },
                     { type: 'text', params: ['0.2'] },
                     { type: 'text', params: ['1'] },
                     null,

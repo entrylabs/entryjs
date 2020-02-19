@@ -31,16 +31,16 @@ Entry.byrobot_controller_4 =
     setZero()
     {
         // 초기화
-        this.transferBufferClear();
+        Entry.byrobot_drone_4.transferBufferClear();
 
         // 한 번에 명령을 전송하면 hw까지 제대로 전달되지 않는 경우가 있어
         // 명령을 각각 분리하여 전송하게 함(2017.01.03)
         for (let i = 0; i < 1; i++)
         {
-            this.transferVibrator(0, 0, 0, 0);
-            this.transferbuzzer(0, 0, 0);
-            this.transferLightManual(0x20, 0xffff, 0); // LED 초기화(모두 꺼짐)
-            this.transferLightModeColor(0x20, 0x21, 200, 255, 0, 0); // LED 초기화(조종기)
+            Entry.byrobot_drone_4.transferVibrator(0, 0, 0, 0);
+            Entry.byrobot_drone_4.transferbuzzer(0, 0, 0);
+            Entry.byrobot_drone_4.transferLightManual(0x20, 0xff, 0);   // LED 초기화(모두 꺼짐)
+            Entry.byrobot_drone_4.transferLightModeColor(0x20, 0x21, 200, 255, 0, 0); // LED 초기화(조종기)
         }
     },
 
@@ -55,1130 +55,23 @@ Entry.byrobot_controller_4 =
 
         // 모니터 화면 상단에 차례대로 나열하는 값
         listPorts: {
-            joystick_left_x:                {name: 'Left Joystick X',          type: 'input', pos: { x: 0, y: 0 }},
-            joystick_left_y:                {name: 'Left Joystick Y',          type: 'input', pos: { x: 0, y: 0 }},
-            joystick_left_direction:        {name: 'Left Joystick Direction',  type: 'input', pos: { x: 0, y: 0 }},
-            joystick_left_event:            {name: 'Left Joystick Event',      type: 'input', pos: { x: 0, y: 0 }},
-            joystick_right_x:               {name: 'Right Joystick X',         type: 'input', pos: { x: 0, y: 0 }},
-            joystick_right_y:               {name: 'Right Joystick Y',         type: 'input', pos: { x: 0, y: 0 }},
-            joystick_right_direction:       {name: 'Right Joystick Direction', type: 'input', pos: { x: 0, y: 0 }},
-            joystick_right_event:           {name: 'Right Joystick Event',     type: 'input', pos: { x: 0, y: 0 }},
-            button_button:                  {name: 'Button',                   type: 'input', pos: { x: 0, y: 0 }},
-            button_event:                   {name: 'Button Event',             type: 'input', pos: { x: 0, y: 0 }},
-            entryhw_countTransferReserved:  {name: 'Transfer Buffer',          type: 'output', pos: { x: 0, y: 0 }},
+            joystick_left_x:                            { name: 'Left Joystick X',          type: 'input', pos: { x: 0, y: 0 } },
+            joystick_left_y:                            { name: 'Left Joystick Y',          type: 'input', pos: { x: 0, y: 0 } },
+            joystick_left_direction:                    { name: 'Left Joystick Direction',  type: 'input', pos: { x: 0, y: 0 } },
+            joystick_left_event:                        { name: 'Left Joystick Event',      type: 'input', pos: { x: 0, y: 0 } },
+            joystick_right_x:                           { name: 'Right Joystick X',         type: 'input', pos: { x: 0, y: 0 } },
+            joystick_right_y:                           { name: 'Right Joystick Y',         type: 'input', pos: { x: 0, y: 0 } },
+            joystick_right_direction:                   { name: 'Right Joystick Direction', type: 'input', pos: { x: 0, y: 0 } },
+            joystick_right_event:                       { name: 'Right Joystick Event',     type: 'input', pos: { x: 0, y: 0 } },
+            button_button:                              { name: 'Button',                   type: 'input', pos: { x: 0, y: 0 } },
+            button_event:                               { name: 'Button Event',             type: 'input', pos: { x: 0, y: 0 } },
+            entryhw_countTransferReserved:              { name: 'Transfer Buffer',          type: 'output', pos: { x: 0, y: 0 } },
         },
 
         // 모니터 화면 지정 위치와 선으로 연결하여 표시하는 값
         ports: {},
 
         mode: 'both', // 표시 모드
-    },
-
-    /***************************************************************************************
-     *  시간 지연 함수
-     ***************************************************************************************/
-
-    // 시간 지연
-    checkFinish(script, ms)
-    {
-        const _ms = this.fit(0, ms, 60000);
-
-        if (!script.isStart)
-        {
-            script.isStart = true;
-            script.timeFlag = 1;
-
-            const fps = Entry.FPS || 60;
-            const timeValue = (60 / fps) * _ms;
-
-            setTimeout(() => {
-                script.timeFlag = 0;
-            }, timeValue);
-
-            return 'Start';
-        }
-        else if (script.timeFlag == 1)
-        {
-            return 'Running';
-        }
-        else
-        {
-            delete script.timeFlag;
-            delete script.isStart;
-            Entry.engine.isContinue = false;
-            return 'Finish';
-        }
-    },
-
-    /***************************************************************************************
-     *  기능 함수
-     ***************************************************************************************/
-
-    transferBufferClear()
-    {
-        Entry.hw.setDigitalPortValue('buffer_clear', 0);
-        Entry.hw.update();
-        delete Entry.hw.sendQueue.buffer_clear;
-    },
-
-    fit(min, value, max)
-    {
-        return Math.max(Math.min(value, max), min);
-    },
-
-    /***************************************************************************************
-     *  데이터 전송 함수 (Entry -> Hardware)
-     ***************************************************************************************/
-
-    // 데이터 전송
-    transferLightManual(target, flags, brightness)
-    {
-        Entry.hw.setDigitalPortValue('target', target);
-        Entry.hw.setDigitalPortValue('light_manual_flags', flags);
-        Entry.hw.setDigitalPortValue('light_manual_brightness', brightness);
-
-        Entry.hw.update();
-
-        delete Entry.hw.sendQueue.target;
-        delete Entry.hw.sendQueue.light_manual_flags;
-        delete Entry.hw.sendQueue.light_manual_brightness;
-    },
-
-    transferLightMode(target, mode, interval)
-    {
-        Entry.hw.setDigitalPortValue('target', target);
-        Entry.hw.setDigitalPortValue('light_mode_mode', mode);
-        Entry.hw.setDigitalPortValue('light_mode_interval', interval);
-
-        Entry.hw.update();
-
-        delete Entry.hw.sendQueue.target;
-        delete Entry.hw.sendQueue.light_mode_mode;
-        delete Entry.hw.sendQueue.light_mode_interval;
-    },
-
-    transferLightModeColor(target, mode, interval, red, green, blue)
-    {
-        Entry.hw.setDigitalPortValue('target', target);
-        Entry.hw.setDigitalPortValue('light_mode_mode', mode);
-        Entry.hw.setDigitalPortValue('light_mode_interval', interval);
-        Entry.hw.setDigitalPortValue('light_color_r', red);
-        Entry.hw.setDigitalPortValue('light_color_g', green);
-        Entry.hw.setDigitalPortValue('light_color_b', blue);
-
-        Entry.hw.update();
-
-        delete Entry.hw.sendQueue.target;
-        delete Entry.hw.sendQueue.light_mode_mode;
-        delete Entry.hw.sendQueue.light_mode_interval;
-        delete Entry.hw.sendQueue.light_color_r;
-        delete Entry.hw.sendQueue.light_color_g;
-        delete Entry.hw.sendQueue.light_color_b;
-    },
-
-    transferLightEvent(target, event, interval, repeat)
-    {
-        Entry.hw.setDigitalPortValue('target', target);
-        Entry.hw.setDigitalPortValue('light_event_event', event);
-        Entry.hw.setDigitalPortValue('light_event_interval', interval);
-        Entry.hw.setDigitalPortValue('light_event_repeat', repeat);
-
-        Entry.hw.update();
-
-        delete Entry.hw.sendQueue.target;
-        delete Entry.hw.sendQueue.light_event_event;
-        delete Entry.hw.sendQueue.light_event_interval;
-        delete Entry.hw.sendQueue.light_event_repeat;
-    },
-
-    transferLightEventColor(target, event, interval, repeat, red, green, blue)
-    {
-        Entry.hw.setDigitalPortValue('target', target);
-        Entry.hw.setDigitalPortValue('light_event_event', event);
-        Entry.hw.setDigitalPortValue('light_event_interval', interval);
-        Entry.hw.setDigitalPortValue('light_event_repeat', repeat);
-        Entry.hw.setDigitalPortValue('light_color_r', red);
-        Entry.hw.setDigitalPortValue('light_color_g', green);
-        Entry.hw.setDigitalPortValue('light_color_b', blue);
-
-        Entry.hw.update();
-
-        delete Entry.hw.sendQueue.target;
-        delete Entry.hw.sendQueue.light_event_event;
-        delete Entry.hw.sendQueue.light_event_interval;
-        delete Entry.hw.sendQueue.light_event_repeat;
-        delete Entry.hw.sendQueue.light_color_r;
-        delete Entry.hw.sendQueue.light_color_g;
-        delete Entry.hw.sendQueue.light_color_b;
-    },
-
-    transferDisplayClearAll(target, pixel)
-    {
-        Entry.hw.setDigitalPortValue('target', target);
-        Entry.hw.setDigitalPortValue('display_clear_all_pixel', pixel);
-
-        Entry.hw.update();
-
-        delete Entry.hw.sendQueue.target;
-        delete Entry.hw.sendQueue.display_clear_all_pixel;
-    },
-
-    transferDisplayClear(target, pixel, x, y, width, height)
-    {
-        Entry.hw.setDigitalPortValue('target', target);
-        Entry.hw.setDigitalPortValue('display_clear_x', x);
-        Entry.hw.setDigitalPortValue('display_clear_y', y);
-        Entry.hw.setDigitalPortValue('display_clear_width', width);
-        Entry.hw.setDigitalPortValue('display_clear_height', height);
-        Entry.hw.setDigitalPortValue('display_clear_pixel', pixel);
-
-        Entry.hw.update();
-
-        delete Entry.hw.sendQueue.target;
-        delete Entry.hw.sendQueue.display_clear_x;
-        delete Entry.hw.sendQueue.display_clear_y;
-        delete Entry.hw.sendQueue.display_clear_width;
-        delete Entry.hw.sendQueue.display_clear_height;
-        delete Entry.hw.sendQueue.display_clear_pixel;
-    },
-
-    transferDisplayInvert(target, x, y, width, height)
-    {
-        Entry.hw.setDigitalPortValue('target', target);
-        Entry.hw.setDigitalPortValue('display_invert_x', x);
-        Entry.hw.setDigitalPortValue('display_invert_y', y);
-        Entry.hw.setDigitalPortValue('display_invert_width', width);
-        Entry.hw.setDigitalPortValue('display_invert_height', height);
-
-        Entry.hw.update();
-
-        delete Entry.hw.sendQueue.target;
-        delete Entry.hw.sendQueue.display_invert_x;
-        delete Entry.hw.sendQueue.display_invert_y;
-        delete Entry.hw.sendQueue.display_invert_width;
-        delete Entry.hw.sendQueue.display_invert_height;
-    },
-
-    transferDisplayDrawPoint(target, x, y, pixel)
-    {
-        Entry.hw.setDigitalPortValue('target', target);
-        Entry.hw.setDigitalPortValue('display_draw_point_x', x);
-        Entry.hw.setDigitalPortValue('display_draw_point_y', y);
-        Entry.hw.setDigitalPortValue('display_draw_point_pixel', pixel);
-
-        Entry.hw.update();
-
-        delete Entry.hw.sendQueue.target;
-        delete Entry.hw.sendQueue.display_draw_point_x;
-        delete Entry.hw.sendQueue.display_draw_point_y;
-        delete Entry.hw.sendQueue.display_draw_point_pixel;
-    },
-
-    transferDisplayDrawLine(target, x1, y1, x2, y2, pixel, line)
-    {
-        Entry.hw.setDigitalPortValue('target', target);
-        Entry.hw.setDigitalPortValue('display_draw_line_x1', x1);
-        Entry.hw.setDigitalPortValue('display_draw_line_y1', y1);
-        Entry.hw.setDigitalPortValue('display_draw_line_x2', x2);
-        Entry.hw.setDigitalPortValue('display_draw_line_y2', y2);
-        Entry.hw.setDigitalPortValue('display_draw_line_pixel', pixel);
-        Entry.hw.setDigitalPortValue('display_draw_line_line', line);
-
-        Entry.hw.update();
-
-        delete Entry.hw.sendQueue.target;
-        delete Entry.hw.sendQueue.display_draw_line_x1;
-        delete Entry.hw.sendQueue.display_draw_line_y1;
-        delete Entry.hw.sendQueue.display_draw_line_x2;
-        delete Entry.hw.sendQueue.display_draw_line_y2;
-        delete Entry.hw.sendQueue.display_draw_line_pixel;
-        delete Entry.hw.sendQueue.display_draw_line_line;
-    },
-
-    transferDisplayDrawRect(target, x, y, width, height, pixel, flagFill, line)
-    {
-        Entry.hw.setDigitalPortValue('target', target);
-        Entry.hw.setDigitalPortValue('display_draw_rect_x', x);
-        Entry.hw.setDigitalPortValue('display_draw_rect_y', y);
-        Entry.hw.setDigitalPortValue('display_draw_rect_width', width);
-        Entry.hw.setDigitalPortValue('display_draw_rect_height', height);
-        Entry.hw.setDigitalPortValue('display_draw_rect_pixel', pixel);
-        Entry.hw.setDigitalPortValue('display_draw_rect_flagfill', flagFill);
-        Entry.hw.setDigitalPortValue('display_draw_rect_line', line);
-
-        Entry.hw.update();
-
-        delete Entry.hw.sendQueue.target;
-        delete Entry.hw.sendQueue.display_draw_rect_x;
-        delete Entry.hw.sendQueue.display_draw_rect_y;
-        delete Entry.hw.sendQueue.display_draw_rect_width;
-        delete Entry.hw.sendQueue.display_draw_rect_height;
-        delete Entry.hw.sendQueue.display_draw_rect_pixel;
-        delete Entry.hw.sendQueue.display_draw_rect_flagfill;
-        delete Entry.hw.sendQueue.display_draw_rect_line;
-    },
-
-    transferDisplayDrawCircle(target, x, y, radius, pixel, flagFill)
-    {
-        Entry.hw.setDigitalPortValue('target', target);
-        Entry.hw.setDigitalPortValue('display_draw_circle_x', x);
-        Entry.hw.setDigitalPortValue('display_draw_circle_y', y);
-        Entry.hw.setDigitalPortValue('display_draw_circle_radius', radius);
-        Entry.hw.setDigitalPortValue('display_draw_circle_pixel', pixel);
-        Entry.hw.setDigitalPortValue('display_draw_circle_flagfill', flagFill);
-
-        Entry.hw.update();
-
-        delete Entry.hw.sendQueue.target;
-        delete Entry.hw.sendQueue.display_draw_circle_x;
-        delete Entry.hw.sendQueue.display_draw_circle_y;
-        delete Entry.hw.sendQueue.display_draw_circle_radius;
-        delete Entry.hw.sendQueue.display_draw_circle_pixel;
-        delete Entry.hw.sendQueue.display_draw_circle_flagfill;
-    },
-
-    transferDisplayDrawString(target, x, y, font, pixel, string)
-    {
-        Entry.hw.setDigitalPortValue('target', target);
-        Entry.hw.setDigitalPortValue('display_draw_string_x', x);
-        Entry.hw.setDigitalPortValue('display_draw_string_y', y);
-        Entry.hw.setDigitalPortValue('display_draw_string_font', font);
-        Entry.hw.setDigitalPortValue('display_draw_string_pixel', pixel);
-        Entry.hw.setDigitalPortValue('display_draw_string_string', string);
-
-        Entry.hw.update();
-
-        delete Entry.hw.sendQueue.target;
-        delete Entry.hw.sendQueue.display_draw_string_x;
-        delete Entry.hw.sendQueue.display_draw_string_y;
-        delete Entry.hw.sendQueue.display_draw_string_font;
-        delete Entry.hw.sendQueue.display_draw_string_pixel;
-        delete Entry.hw.sendQueue.display_draw_string_string;
-    },
-
-    transferDisplayDrawStringAlign(target, xStart, xEnd, y, align, font, pixel, string)
-    {
-        Entry.hw.setDigitalPortValue('target', target);
-        Entry.hw.setDigitalPortValue('display_draw_string_align_x_start', xStart);
-        Entry.hw.setDigitalPortValue('display_draw_string_align_x_end', xEnd);
-        Entry.hw.setDigitalPortValue('display_draw_string_align_y', y);
-        Entry.hw.setDigitalPortValue('display_draw_string_align_align', align);
-        Entry.hw.setDigitalPortValue('display_draw_string_align_font', font);
-        Entry.hw.setDigitalPortValue('display_draw_string_align_pixel', pixel);
-        Entry.hw.setDigitalPortValue('display_draw_string_align_string', string);
-
-        Entry.hw.update();
-
-        delete Entry.hw.sendQueue.target;
-        delete Entry.hw.sendQueue.display_draw_string_align_x_start;
-        delete Entry.hw.sendQueue.display_draw_string_align_x_end;
-        delete Entry.hw.sendQueue.display_draw_string_align_y;
-        delete Entry.hw.sendQueue.display_draw_string_align_align;
-        delete Entry.hw.sendQueue.display_draw_string_align_font;
-        delete Entry.hw.sendQueue.display_draw_string_align_pixel;
-        delete Entry.hw.sendQueue.display_draw_string_align_string;
-    },
-
-    transferbuzzer(mode, value, time)
-    {
-        Entry.hw.setDigitalPortValue('target', 0x20);
-        Entry.hw.setDigitalPortValue('buzzer_mode', mode);
-        Entry.hw.setDigitalPortValue('buzzer_value', value);
-        Entry.hw.setDigitalPortValue('buzzer_time', time);
-
-        Entry.hw.update();
-
-        delete Entry.hw.sendQueue.target;
-        delete Entry.hw.sendQueue.buzzer_mode;
-        delete Entry.hw.sendQueue.buzzer_value;
-        delete Entry.hw.sendQueue.buzzer_time;
-    },
-
-    transferVibrator(mode, timeOn, timeOff, timeRun)
-    {
-        Entry.hw.setDigitalPortValue('target', 0x20);
-        Entry.hw.setDigitalPortValue('vibrator_mode', mode);
-        Entry.hw.setDigitalPortValue('vibrator_on', timeOn);
-        Entry.hw.setDigitalPortValue('vibrator_off', timeOff);
-        Entry.hw.setDigitalPortValue('vibrator_total', timeRun);
-
-        Entry.hw.update();
-
-        delete Entry.hw.sendQueue.target;
-        delete Entry.hw.sendQueue.vibrator_mode;
-        delete Entry.hw.sendQueue.vibrator_on;
-        delete Entry.hw.sendQueue.vibrator_off;
-        delete Entry.hw.sendQueue.vibrator_total;
-    },
-
-    transferMotorSingle(motorIndex, motorRotation, motorSpeed)
-    {
-        Entry.hw.setDigitalPortValue('target', 0x10);
-        Entry.hw.setDigitalPortValue('motorsingle_target', motorIndex);
-        Entry.hw.setDigitalPortValue('motorsingle_rotation', motorRotation);
-        Entry.hw.setDigitalPortValue('motorsingle_value', motorSpeed);
-
-        Entry.hw.update();
-
-        delete Entry.hw.sendQueue.target;
-        delete Entry.hw.sendQueue.motorsingle_target;
-        delete Entry.hw.sendQueue.motorsingle_rotation;
-        delete Entry.hw.sendQueue.motorsingle_value;
-    },
-
-    transferCommand(target, command, option)
-    {
-        Entry.hw.setDigitalPortValue('target', target);
-        Entry.hw.setDigitalPortValue('command_command', command);
-        Entry.hw.setDigitalPortValue('command_option', option);
-
-        Entry.hw.update();
-
-        delete Entry.hw.sendQueue.target;
-        delete Entry.hw.sendQueue.command_command;
-        delete Entry.hw.sendQueue.command_option;
-    },
-
-    transferControlQuad(roll, pitch, yaw, throttle)
-    {
-        Entry.hw.setDigitalPortValue('target', 0x10);
-        Entry.hw.setDigitalPortValue('control_quad8_roll', roll);
-        Entry.hw.setDigitalPortValue('control_quad8_pitch', pitch);
-        Entry.hw.setDigitalPortValue('control_quad8_yaw', yaw);
-        Entry.hw.setDigitalPortValue('control_quad8_throttle', throttle);
-
-        Entry.hw.update();
-
-        delete Entry.hw.sendQueue.target;
-        delete Entry.hw.sendQueue.control_quad8_roll;
-        delete Entry.hw.sendQueue.control_quad8_pitch;
-        delete Entry.hw.sendQueue.control_quad8_yaw;
-        delete Entry.hw.sendQueue.control_quad8_throttle;
-    },
-
-    transferControlPosition(x, y, z, velocity, heading, rotationalVelocity)
-    {
-        Entry.hw.setDigitalPortValue('target', 0x10);
-        Entry.hw.setDigitalPortValue('control_position_x', x);
-        Entry.hw.setDigitalPortValue('control_position_y', y);
-        Entry.hw.setDigitalPortValue('control_position_z', z);
-        Entry.hw.setDigitalPortValue('control_position_velocity', velocity);
-        Entry.hw.setDigitalPortValue('control_position_heading', heading);
-        Entry.hw.setDigitalPortValue('control_position_rotational_velocity', rotationalVelocity);
-
-        Entry.hw.update();
-
-        delete Entry.hw.sendQueue.target;
-        delete Entry.hw.sendQueue.control_position_x;
-        delete Entry.hw.sendQueue.control_position_y;
-        delete Entry.hw.sendQueue.control_position_z;
-        delete Entry.hw.sendQueue.control_position_velocity;
-        delete Entry.hw.sendQueue.control_position_heading;
-        delete Entry.hw.sendQueue.control_position_rotational_velocity;
-    },
-
-    /***************************************************************************************
-     *  블럭 연동 함수
-     ***************************************************************************************/
-
-    // 데이터 읽기
-    getData(script, device)
-    {
-        return Entry.hw.portData[device];
-    },
-
-    getRgbFromString(stringColor)
-    {
-        let red = 0;
-        let green = 0;
-        let blue = 0;
-
-        switch (stringColor)
-        {
-            case 'red':             { red = 255;  green = 0;    blue = 0;   }   break;
-            case 'green':           { red = 0;    green = 255;  blue = 0;   }   break;
-            case 'blue':            { red = 0;    green = 0;    blue = 255; }   break;
-            case 'cyan':            { red = 0;    green = 255;  blue = 255; }   break;
-            case 'magenta':         { red = 255;  green = 0;    blue = 255; }   break;
-            case 'yellow':          { red = 255;  green = 255;  blue = 0;   }   break;
-            case 'white':           { red = 255;  green = 255;  blue = 255; }   break;
-            case 'sunset':          { red = 255;  green = 100;  blue = 0;   }   break;
-            case 'cottonCandy':     { red = 20;   green = 250;  blue = 150; }   break;
-            case 'muscat':          { red = 70;   green = 255;  blue = 0;   }   break;
-            case 'strawberryMilk':  { red = 150;  green = 60;   blue = 20;  }   break;
-            case 'emerald':         { red = 0;    green = 255;  blue = 30;  }   break;
-            case 'lavender':        { red = 80;   green = 0;    blue = 200; }   break;
-        }
-
-        return { r:red, g:green, b:blue };
-    },
-
-    // LED 수동 설정
-    setLightManual(script, target, flags, brightness)
-    {
-        switch (this.checkFinish(script, 40))
-        {
-            case 'Start':
-                {
-                    this.transferLightManual(target, flags, brightness);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    // LED 모드 설정
-    setLightMode(script, target, mode, interval)
-    {
-        switch (this.checkFinish(script, 40))
-        {
-            case 'Start':
-                {
-                    this.transferLightMode(target, mode, interval);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    // LED 모드 설정, RGB
-    setLightModeColor(script, target, mode, interval, red, green, blue)
-    {
-        switch (this.checkFinish(script, 40))
-        {
-            case 'Start':
-                {
-                    this.transferLightModeColor(target, mode, interval, red, green, blue);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    // LED 이벤트 설정
-    setLightEvent(script, target, mode, interval, repeat)
-    {
-        switch (this.checkFinish(script, 40))
-        {
-            case 'Start':
-                {
-                    this.transferLightEvent(target, mode, interval, repeat);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    // LED 이벤트 설정, RGB
-    setLightEventColor(script, target, mode, interval, repeat, red, green, blue)
-    {
-        switch (this.checkFinish(script, 40))
-        {
-            case 'Start':
-                {
-                    this.transferLightEventColor(target, mode, interval, repeat, red, green, blue);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    // 화면 전체 지우기, 선택 영역 지우기
-    setDisplayClearAll(script, target, pixel)
-    {
-        switch (this.checkFinish(script, 40))
-        {
-            case 'Start':
-                {
-                    this.transferDisplayClearAll(target, pixel);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    // 화면 전체 지우기, 선택 영역 지우기
-    setDisplayClear(script, target, pixel, x, y, width, height)
-    {
-        switch (this.checkFinish(script, 40))
-        {
-            case 'Start':
-                {
-                    this.transferDisplayClear(target, pixel, x, y, width, height);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    // 선택 영역 반전
-    setDisplayInvert(script, target, x, y, width, height)
-    {
-        switch (this.checkFinish(script, 40))
-        {
-            case 'Start':
-                {
-                    this.transferDisplayInvert(target, x, y, width, height);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    // 화면에 점 찍기
-    setDisplayDrawPoint(script, target, x, y, pixel)
-    {
-        switch (this.checkFinish(script, 40))
-        {
-            case 'Start':
-                {
-                    this.transferDisplayDrawPoint(target, x, y, pixel);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    // 화면에 선 그리기
-    setDisplayDrawLine(script, target, x1, y1, x2, y2, pixel, line)
-    {
-        switch (this.checkFinish(script, 40))
-        {
-            case 'Start':
-                {
-                    this.transferDisplayDrawLine(target, x1, y1, x2, y2, pixel, line);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    // 화면에 사각형 그리기
-    setDisplayDrawRect(script, target, x, y, width, height, pixel, flagFill, line)
-    {
-        switch (this.checkFinish(script, 40))
-        {
-            case 'Start':
-                {
-                    this.transferDisplayDrawRect(target, x, y, width, height, pixel, flagFill, line);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    // 화면에 원 그리기
-    setDisplayDrawCircle(script, target, x, y, radius, pixel, flagFill)
-    {
-        switch (this.checkFinish(script, 40)) {
-            case 'Start':
-                {
-                    this.transferDisplayDrawCircle(target, x, y, radius, pixel, flagFill);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    // 화면에 문자열 쓰기
-    setDisplayDrawString(script, target, x, y, font, pixel, string)
-    {
-        switch (this.checkFinish(script, 40)) {
-            case 'Start':
-                {
-                    this.transferDisplayDrawString(target, x, y, font, pixel, string);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    // 화면에 문자열 정렬하여 그리기
-    setDisplayDrawStringAlign(script, target, xStart, xEnd, y, align, font, pixel, string)
-    {
-        switch (this.checkFinish(script, 40)) {
-            case 'Start':
-                {
-                    this.transferDisplayDrawStringAlign(target, xStart, xEnd, y, align, font, pixel, string);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    // 버저 설정(함수 호출 시 시간은 모두 ms 단위 사용)
-    /*
-        MuteInstantally     = 1,    // 묵음 즉시 적용
-        MuteContinually     = 2,    // 묵음 예약
-
-        ScaleInstantally    = 3,    // 음계 즉시 적용
-        ScaleContinually    = 4,    // 음계 예약
-
-        HzInstantally       = 5,    // 주파수 즉시 적용
-        HzContinually       = 6,    // 주파수 예약
-     */
-    // 정지
-    setBuzzerStop(script)
-    {
-        switch (this.checkFinish(script, 40))
-        {
-            case 'Start':
-                {
-                    this.transferbuzzer(0, 0, 0);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    // 묵음
-    setBuzzerMute(script, time, flagDelay, flagInstantly)
-    {
-        let timeDelay = 40;
-        if (flagDelay)
-        {
-            timeDelay = time;
-        }
-
-        switch (this.checkFinish(script, timeDelay))
-        {
-            case 'Start':
-                {
-                    let mode = 2; // 묵음 연속
-                    if (flagInstantly)
-                    {
-                        mode = 1;
-                    } // 묵음 즉시
-
-                    this.transferbuzzer(mode, 0xee, time);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    setBuzzerScale(script, octave, scale, time, flagDelay, flagInstantly)
-    {
-        let timeDelay = 40;
-        if (flagDelay)
-        {
-            timeDelay = time;
-        }
-
-        switch (this.checkFinish(script, timeDelay))
-        {
-            case 'Start':
-                {
-                    let mode = 4; // Scale 연속
-                    if (flagInstantly)
-                    {
-                        mode = 3;
-                    } // Scale 즉시
-
-                    const scalecalc = octave * 12 + scale;
-
-                    this.transferbuzzer(mode, scalecalc, time);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    setBuzzerHz(script, hz, time, flagDelay, flagInstantly)
-    {
-        let timeDelay = 40;
-        if (flagDelay)
-        {
-            timeDelay = time;
-        }
-
-        switch (this.checkFinish(script, timeDelay))
-        {
-            case 'Start':
-                {
-                    let mode = 6; // Hz 연속
-                    if (flagInstantly)
-                    {
-                        mode = 5;
-                    } // Hz 즉시
-                    this.transferbuzzer(mode, hz, time);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    // 진동 제어
-    /*
-        Stop            = 0,    // 정지
-        Instantally     = 1,    // 즉시 적용
-        Continually     = 2,    // 예약
-     */
-    setVibratorStop(script)
-    {
-        switch (this.checkFinish(script, 40))
-        {
-            case 'Start':
-                {
-                    this.transferVibrator(0, 0, 0, 0);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    setVibrator(script, timeOn, timeOff, timeRun, flagDelay, flagInstantly)
-    {
-        let timeDelay = 40;
-        if (flagDelay)
-        {
-            timeDelay = timeRun;
-        }
-
-        switch (this.checkFinish(script, timeDelay))
-        {
-            case 'Start':
-                {
-                    let mode = 2; // 예약
-                    if (flagInstantly)
-                    {
-                        mode = 1;
-                    } // 즉시
-
-                    this.transferVibrator(mode, timeOn, timeOff, timeRun);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    sendCommand(script, target, command, option = 0)
-    {
-        switch (this.checkFinish(script, 40))
-        {
-            case 'Start':
-                {
-                    this.transferCommand(target, command, option);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    sendStop(script)
-    {
-        return this.sendCommand(script, 0x10, 0x01);
-    },
-
-    setMotorSingle(script, motorIndex, motorRotation, motorSpeed)
-    {
-        switch (this.checkFinish(script, 40))
-        {
-            case 'Start':
-                {
-                    this.transferMotorSingle(motorIndex, motorRotation, motorSpeed);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    setEventFlight(script, eventFlight, time)
-    {
-        switch (this.checkFinish(script, time))
-        {
-            case 'Start':
-                {
-                    this.transferControlQuad(0, 0, 0, 0); // 기존 입력되었던 조종기 방향 초기화 (수직으로 이륙, 착륙 하도록)
-                    this.transferCommand(0x10, 0x07, eventFlight); // 0x07 : CommandType::FlightEvent
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    sendControlQuadSingle(script, controlTarget, value, time, flagDelay)
-    {
-        let timeDelay = 40;
-        if (flagDelay)
-        {
-            timeDelay = time;
-        }
-
-        switch (this.checkFinish(script, timeDelay))
-        {
-            case 'Start':
-                {
-                    Entry.hw.setDigitalPortValue('target', 0x10);
-                    Entry.hw.setDigitalPortValue(controlTarget, value);
-
-                    Entry.hw.update();
-
-                    delete Entry.hw.sendQueue.target;
-                    delete Entry.hw.sendQueue[controlTarget];
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                if (flagDelay)
-                {
-                    // 블럭을 빠져나갈 때 변경했던 값을 초기화
-
-                    // 전송
-                    Entry.hw.setDigitalPortValue('target', 0x10);
-                    Entry.hw.setDigitalPortValue(controlTarget, 0);
-
-                    Entry.hw.update();
-
-                    delete Entry.hw.sendQueue.target;
-                    delete Entry.hw.sendQueue[controlTarget];
-                }
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    sendControlQuad(script, roll, pitch, yaw, throttle, time, flagDelay)
-    {
-        let timeDelay = 40;
-        if (flagDelay)
-        {
-            timeDelay = time;
-        }
-
-        switch (this.checkFinish(script, timeDelay))
-        {
-            case 'Start':
-                {
-                    this.transferControlQuad(roll, pitch, yaw, throttle);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                if (flagDelay)
-                {
-                    this.transferControlQuad(0, 0, 0, 0);
-                }
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
-    },
-
-    sendControlPosition(script, x, y, z, velocity, heading, rotationalVelocity)
-    {
-        const timeDelay = 40;
-
-        switch (this.checkFinish(script, timeDelay))
-        {
-            case 'Start':
-                {
-                    this.transferControlPosition(x, y, z, velocity, heading, rotationalVelocity);
-                }
-                return script;
-
-            case 'Running':
-                return script;
-
-            case 'Finish':
-                return script.callReturn();
-
-            default:
-                return script.callReturn();
-        }
     },
 };
 
@@ -1768,7 +661,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             isNotFor: ['byrobot_controller_4'],
             func(sprite, script)
             {
-                return Entry.byrobot_controller_4.setLightManual(script, 0x20, 0xffff, 0);
+                return Entry.byrobot_drone_4.setLightManual(script, 0x20, 0xffff, 0);
             },
         },
 
@@ -1832,8 +725,8 @@ Entry.byrobot_controller_4.getBlocks = function()
             {
                 const mode      = 0x21;
                 const interval  = parseInt(script.getField('BRIGHTNESS'), 10);
-                const color     = Entry.byrobot_controller_4.getRgbFromString(script.getField('COLOR'));
-                return Entry.byrobot_controller_4.setLightModeColor(script, 0x20, mode, interval, color.r, color.g, color.b);
+                const color     = Entry.byrobot_drone_4.getRgbFromString(script.getField('COLOR'));
+                return Entry.byrobot_drone_4.setLightModeColor(script, 0x20, mode, interval, color.r, color.g, color.b);
             },
         },
 
@@ -1866,7 +759,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             {
                 const flags      = script.getNumberValue('FLAGS');
                 const brightness = script.getNumberValue('BRIGHTNESS');
-                return Entry.byrobot_controller_4.setLightManual(script, 0x20, flags, brightness);
+                return Entry.byrobot_drone_4.setLightManual(script, 0x20, flags, brightness);
             },
         },
 
@@ -1927,7 +820,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                 const red       = script.getNumberValue('RED');
                 const green     = script.getNumberValue('GREEN');
                 const blue      = script.getNumberValue('BLUE');
-                return Entry.byrobot_controller_4.setLightModeColor(script, 0x20, mode, interval, red, green, blue);
+                return Entry.byrobot_drone_4.setLightModeColor(script, 0x20, mode, interval, red, green, blue);
             },
         },
 
@@ -1995,8 +888,8 @@ Entry.byrobot_controller_4.getBlocks = function()
             {
                 const mode     = 0x20 + parseInt(script.getField('MODE'), 10);
                 const interval = script.getNumberValue('INTERVAL');
-                const color    = Entry.byrobot_controller_4.getRgbFromString(script.getField('COLOR'));
-                return Entry.byrobot_controller_4.setLightModeColor(script, 0x20, mode, interval, color.r, color.g, color.b);
+                const color    = Entry.byrobot_drone_4.getRgbFromString(script.getField('COLOR'));
+                return Entry.byrobot_drone_4.setLightModeColor(script, 0x20, mode, interval, color.r, color.g, color.b);
             },
         },
 
@@ -2032,7 +925,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             func(sprite, script)
             {
                 const pixel = parseInt(script.getField('PIXEL'), 10);
-                return Entry.byrobot_controller_4.setDisplayClearAll(script, 0x20, pixel);
+                return Entry.byrobot_drone_4.setDisplayClearAll(script, 0x20, pixel);
             },
         },
 
@@ -2087,7 +980,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                 const width = script.getNumberValue('WIDTH');
                 const height = script.getNumberValue('HEIGHT');
                 const pixel = parseInt(script.getField('PIXEL'), 10);
-                return Entry.byrobot_controller_4.setDisplayClear(script, 0x20, pixel, x, y, width, height);
+                return Entry.byrobot_drone_4.setDisplayClear(script, 0x20, pixel, x, y, width, height);
             },
         },
 
@@ -2129,7 +1022,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                 const y = script.getNumberValue('Y');
                 const width = script.getNumberValue('WIDTH');
                 const height = script.getNumberValue('HEIGHT');
-                return Entry.byrobot_controller_4.setDisplayInvert(script, 0x20, x, y, width, height);
+                return Entry.byrobot_drone_4.setDisplayInvert(script, 0x20, x, y, width, height);
             },
         },
 
@@ -2176,7 +1069,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                 const x     = script.getNumberValue('X');
                 const y     = script.getNumberValue('Y');
                 const pixel = parseInt(script.getField('PIXEL'), 10);
-                return Entry.byrobot_controller_4.setDisplayDrawPoint(script, 0x20, x, y, pixel);
+                return Entry.byrobot_drone_4.setDisplayDrawPoint(script, 0x20, x, y, pixel);
             },
         },
 
@@ -2246,7 +1139,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                 const y2    = script.getNumberValue('Y2');
                 const pixel = parseInt(script.getField('PIXEL'), 10);
                 const line  = parseInt(script.getField('LINE'), 10);
-                return Entry.byrobot_controller_4.setDisplayDrawLine(script, 0x20, x1, y1, x2, y2, pixel, line);
+                return Entry.byrobot_drone_4.setDisplayDrawLine(script, 0x20, x1, y1, x2, y2, pixel, line);
             },
         },
 
@@ -2330,7 +1223,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                 const pixel    = parseInt(script.getField('PIXEL'), 10);
                 const flagFill = parseInt(script.getField('FLAGFILL'), 10);
                 const line     = parseInt(script.getField('LINE'), 10);
-                return Entry.byrobot_controller_4.setDisplayDrawRect(script, 0x20, x, y, width, height, pixel, flagFill, line);
+                return Entry.byrobot_drone_4.setDisplayDrawRect(script, 0x20, x, y, width, height, pixel, flagFill, line);
             },
         },
 
@@ -2395,7 +1288,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                 const radius   = script.getNumberValue('RADIUS');
                 const pixel    = parseInt(script.getField('PIXEL'), 10);
                 const flagFill = parseInt(script.getField('FLAGFILL'), 10);
-                return Entry.byrobot_controller_4.setDisplayDrawCircle(script, 0x20, x, y, radius, pixel, flagFill);
+                return Entry.byrobot_drone_4.setDisplayDrawCircle(script, 0x20, x, y, radius, pixel, flagFill);
             },
         },
 
@@ -2460,7 +1353,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                 const font   = parseInt(script.getField('FONT'), 10);
                 const pixel  = parseInt(script.getField('PIXEL'), 10);
                 const string = script.getStringValue('STRING');
-                return Entry.byrobot_controller_4.setDisplayDrawString(script, 0x20, x, y, font, pixel, string);
+                return Entry.byrobot_drone_4.setDisplayDrawString(script, 0x20, x, y, font, pixel, string);
             },
         },
 
@@ -2544,7 +1437,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                 const font      = parseInt(script.getField('FONT'), 10);
                 const pixel     = parseInt(script.getField('PIXEL'), 10);
                 const string    = script.getStringValue('STRING');
-                return Entry.byrobot_controller_4.setDisplayDrawStringAlign(script, 0x20, xStart, xEnd, y, align, font, pixel, string);
+                return Entry.byrobot_drone_4.setDisplayDrawStringAlign(script, 0x20, xStart, xEnd, y, align, font, pixel, string);
             },
         },
 
@@ -2564,7 +1457,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             isNotFor: ['byrobot_controller_4'],
             func(sprite, script)
             {
-                return Entry.byrobot_controller_4.setBuzzerStop(script);
+                return Entry.byrobot_drone_4.setBuzzerStop(script);
             },
         },
 
@@ -2623,9 +1516,9 @@ Entry.byrobot_controller_4.getBlocks = function()
                 const scale = parseInt(script.getField('SCALE'), 10);
 
                 if (scale == -1) {
-                    return Entry.byrobot_controller_4.setBuzzerMute(script, 60000, false, true);
+                    return Entry.byrobot_drone_4.setBuzzerMute(script, 60000, false, true);
                 } else {
-                    return Entry.byrobot_controller_4.setBuzzerScale(script, octave, scale, 60000, false, true);
+                    return Entry.byrobot_drone_4.setBuzzerScale(script, octave, scale, 60000, false, true);
                 }
             },
         },
@@ -2688,9 +1581,9 @@ Entry.byrobot_controller_4.getBlocks = function()
                 const time = script.getNumberValue('TIME') * 1000;
 
                 if (scale == -1) {
-                    return Entry.byrobot_controller_4.setBuzzerMute(script, time, true, true);
+                    return Entry.byrobot_drone_4.setBuzzerMute(script, time, true, true);
                 } else {
-                    return Entry.byrobot_controller_4.setBuzzerScale(script, octave, scale, time, true, true);
+                    return Entry.byrobot_drone_4.setBuzzerScale(script, octave, scale, time, true, true);
                 }
             },
         },
@@ -2753,9 +1646,9 @@ Entry.byrobot_controller_4.getBlocks = function()
                 const time   = script.getNumberValue('TIME') * 1000;
 
                 if (scale == -1) {
-                    return Entry.byrobot_controller_4.setBuzzerMute(script, time, false, false);
+                    return Entry.byrobot_drone_4.setBuzzerMute(script, time, false, false);
                 } else {
-                    return Entry.byrobot_controller_4.setBuzzerScale(script, octave, scale, time, false, false);
+                    return Entry.byrobot_drone_4.setBuzzerScale(script, octave, scale, time, false, false);
                 }
             },
         },
@@ -2782,7 +1675,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             func(sprite, script)
             {
                 const hz = script.getNumberValue('HZ');
-                return Entry.byrobot_controller_4.setBuzzerHz(script, hz, 60000, false, true);
+                return Entry.byrobot_drone_4.setBuzzerHz(script, hz, 60000, false, true);
             },
         },
 
@@ -2811,7 +1704,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             {
                 const hz   = script.getNumberValue('HZ');
                 const time = script.getNumberValue('TIME') * 1000;
-                return Entry.byrobot_controller_4.setBuzzerHz(script, hz, time, true, true);
+                return Entry.byrobot_drone_4.setBuzzerHz(script, hz, time, true, true);
             },
         },
 
@@ -2840,7 +1733,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             {
                 const hz   = script.getNumberValue('HZ');
                 const time = script.getNumberValue('TIME') * 1000;
-                return Entry.byrobot_controller_4.setBuzzerHz(script, hz, time, false, false);
+                return Entry.byrobot_drone_4.setBuzzerHz(script, hz, time, false, false);
             },
         },
 
@@ -2860,7 +1753,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             isNotFor: ['byrobot_controller_4'],
             func(sprite, script)
             {
-                return Entry.byrobot_controller_4.setVibratorStop(script);
+                return Entry.byrobot_drone_4.setVibratorStop(script);
             },
         },
 
@@ -2886,7 +1779,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             func(sprite, script)
             {
                 const timeOn = script.getNumberValue('TIMEON') * 1000;
-                return Entry.byrobot_controller_4.setVibrator(script, timeOn, 0, timeOn, true, true);
+                return Entry.byrobot_drone_4.setVibrator(script, timeOn, 0, timeOn, true, true);
             },
         },
 
@@ -2912,7 +1805,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             func(sprite, script)
             {
                 const timeOn = script.getNumberValue('TIMEON') * 1000;
-                return Entry.byrobot_controller_4.setVibrator(script, timeOn, 0, timeOn, false, false);
+                return Entry.byrobot_drone_4.setVibrator(script, timeOn, 0, timeOn, false, false);
             },
         },
 
@@ -2949,7 +1842,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                 const timeOn  = script.getNumberValue('TIMEON') * 1000;
                 const timeOff = script.getNumberValue('TIMEOFF') * 1000;
                 const timeRun = script.getNumberValue('TIMERUN') * 1000;
-                return Entry.byrobot_controller_4.setVibrator(script, timeOn, timeOff, timeRun, true, true);
+                return Entry.byrobot_drone_4.setVibrator(script, timeOn, timeOff, timeRun, true, true);
             },
         },
 
@@ -2967,7 +1860,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['0.02'] },
+                    { type: 'text', params: ['0.1'] },
                     { type: 'text', params: ['0.2'] },
                     { type: 'text', params: ['1'] },
                     null,
@@ -2986,7 +1879,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                 const timeOn  = script.getNumberValue('TIMEON') * 1000;
                 const timeOff = script.getNumberValue('TIMEOFF') * 1000;
                 const timeRun = script.getNumberValue('TIMERUN') * 1000;
-                return Entry.byrobot_controller_4.setVibrator(script, timeOn, timeOff, timeRun, false, false);
+                return Entry.byrobot_drone_4.setVibrator(script, timeOn, timeOff, timeRun, false, false);
             },
         },
 
