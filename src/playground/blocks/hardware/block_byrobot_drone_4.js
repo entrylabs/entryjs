@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable brace-style */
 /* eslint-disable max-len */
 'use strict';
 
@@ -15,7 +16,8 @@
  *  장치 기본 정의
  ***************************************************************************************/
 
-Entry.byrobot_drone_4 = {
+Entry.byrobot_drone_4 =
+{
     id: 'F.8',
     name: 'byrobot_drone_4',
     url: 'http://www.byrobot.co.kr/',
@@ -26,13 +28,15 @@ Entry.byrobot_drone_4 = {
     },
 
     // 엔트리 정지시 하드웨어 초기화 로직
-    setZero() {
+    setZero()
+    {
         // 초기화
         this.transferBufferClear();
 
         // 한 번에 명령을 전송하면 hw까지 제대로 전달되지 않는 경우가 있어
         // 명령을 각각 분리하여 전송하게 함(2017.01.03)
-        for (let i = 0; i < 1; i++) {
+        for (let i = 0; i < 1; i++)
+        {
             this.transferCommand(0x10, 0x01, 0); // 드론, command = 0x01 (Stop)
             this.transferVibrator(0, 0, 0, 0);
             this.transferbuzzer(0, 0, 0);
@@ -99,10 +103,12 @@ Entry.byrobot_drone_4 = {
      ***************************************************************************************/
 
     // 시간 지연
-    checkFinish(script, ms) {
+    checkFinish(script, ms)
+    {
         const _ms = this.fit(0, ms, 60000);
 
-        if (!script.isStart) {
+        if (!script.isStart)
+        {
             script.isStart = true;
             script.timeFlag = 1;
 
@@ -114,9 +120,13 @@ Entry.byrobot_drone_4 = {
             }, timeValue);
 
             return 'Start';
-        } else if (script.timeFlag == 1) {
+        }
+        else if (script.timeFlag == 1)
+        {
             return 'Running';
-        } else {
+        }
+        else
+        {
             delete script.timeFlag;
             delete script.isStart;
             Entry.engine.isContinue = false;
@@ -128,13 +138,15 @@ Entry.byrobot_drone_4 = {
      *  기능 함수
      ***************************************************************************************/
 
-    transferBufferClear() {
+    transferBufferClear()
+    {
         Entry.hw.setDigitalPortValue('buffer_clear', 0);
         Entry.hw.update();
         delete Entry.hw.sendQueue.buffer_clear;
     },
 
-    fit(min, value, max) {
+    fit(min, value, max)
+    {
         return Math.max(Math.min(value, max), min);
     },
 
@@ -143,7 +155,8 @@ Entry.byrobot_drone_4 = {
      ***************************************************************************************/
 
     // 데이터 전송
-    transferLightManual(target, flags, brightness) {
+    transferLightManual(target, flags, brightness)
+    {
         Entry.hw.setDigitalPortValue('target', target);
         Entry.hw.setDigitalPortValue('light_manual_flags', flags);
         Entry.hw.setDigitalPortValue('light_manual_brightness', brightness);
@@ -155,7 +168,8 @@ Entry.byrobot_drone_4 = {
         delete Entry.hw.sendQueue.light_manual_brightness;
     },
 
-    transferLightMode(target, mode, interval) {
+    transferLightMode(target, mode, interval)
+    {
         Entry.hw.setDigitalPortValue('target', target);
         Entry.hw.setDigitalPortValue('light_mode_mode', mode);
         Entry.hw.setDigitalPortValue('light_mode_interval', interval);
@@ -167,7 +181,8 @@ Entry.byrobot_drone_4 = {
         delete Entry.hw.sendQueue.light_mode_interval;
     },
 
-    transferLightModeColor(target, mode, interval, red, green, blue) {
+    transferLightModeColor(target, mode, interval, red, green, blue)
+    {
         Entry.hw.setDigitalPortValue('target', target);
         Entry.hw.setDigitalPortValue('light_mode_mode', mode);
         Entry.hw.setDigitalPortValue('light_mode_interval', interval);
@@ -185,7 +200,8 @@ Entry.byrobot_drone_4 = {
         delete Entry.hw.sendQueue.light_color_b;
     },
 
-    transferLightEvent(target, event, interval, repeat) {
+    transferLightEvent(target, event, interval, repeat)
+    {
         Entry.hw.setDigitalPortValue('target', target);
         Entry.hw.setDigitalPortValue('light_event_event', event);
         Entry.hw.setDigitalPortValue('light_event_interval', interval);
@@ -199,7 +215,8 @@ Entry.byrobot_drone_4 = {
         delete Entry.hw.sendQueue.light_event_repeat;
     },
 
-    transferLightEventColor(target, event, interval, repeat, red, green, blue) {
+    transferLightEventColor(target, event, interval, repeat, red, green, blue)
+    {
         Entry.hw.setDigitalPortValue('target', target);
         Entry.hw.setDigitalPortValue('light_event_event', event);
         Entry.hw.setDigitalPortValue('light_event_interval', interval);
@@ -219,7 +236,8 @@ Entry.byrobot_drone_4 = {
         delete Entry.hw.sendQueue.light_color_b;
     },
 
-    transferDisplayClearAll(target, pixel) {
+    transferDisplayClearAll(target, pixel)
+    {
         Entry.hw.setDigitalPortValue('target', target);
         Entry.hw.setDigitalPortValue('display_clear_all_pixel', pixel);
 
@@ -229,7 +247,8 @@ Entry.byrobot_drone_4 = {
         delete Entry.hw.sendQueue.display_clear_all_pixel;
     },
 
-    transferDisplayClear(target, pixel, x, y, width, height) {
+    transferDisplayClear(target, pixel, x, y, width, height)
+    {
         Entry.hw.setDigitalPortValue('target', target);
         Entry.hw.setDigitalPortValue('display_clear_x', x);
         Entry.hw.setDigitalPortValue('display_clear_y', y);
@@ -247,7 +266,8 @@ Entry.byrobot_drone_4 = {
         delete Entry.hw.sendQueue.display_clear_pixel;
     },
 
-    transferDisplayInvert(target, x, y, width, height) {
+    transferDisplayInvert(target, x, y, width, height)
+    {
         Entry.hw.setDigitalPortValue('target', target);
         Entry.hw.setDigitalPortValue('display_invert_x', x);
         Entry.hw.setDigitalPortValue('display_invert_y', y);
@@ -263,7 +283,8 @@ Entry.byrobot_drone_4 = {
         delete Entry.hw.sendQueue.display_invert_height;
     },
 
-    transferDisplayDrawPoint(target, x, y, pixel) {
+    transferDisplayDrawPoint(target, x, y, pixel)
+    {
         Entry.hw.setDigitalPortValue('target', target);
         Entry.hw.setDigitalPortValue('display_draw_point_x', x);
         Entry.hw.setDigitalPortValue('display_draw_point_y', y);
@@ -277,7 +298,8 @@ Entry.byrobot_drone_4 = {
         delete Entry.hw.sendQueue.display_draw_point_pixel;
     },
 
-    transferDisplayDrawLine(target, x1, y1, x2, y2, pixel, line) {
+    transferDisplayDrawLine(target, x1, y1, x2, y2, pixel, line)
+    {
         Entry.hw.setDigitalPortValue('target', target);
         Entry.hw.setDigitalPortValue('display_draw_line_x1', x1);
         Entry.hw.setDigitalPortValue('display_draw_line_y1', y1);
@@ -297,7 +319,8 @@ Entry.byrobot_drone_4 = {
         delete Entry.hw.sendQueue.display_draw_line_line;
     },
 
-    transferDisplayDrawRect(target, x, y, width, height, pixel, flagFill, line) {
+    transferDisplayDrawRect(target, x, y, width, height, pixel, flagFill, line)
+    {
         Entry.hw.setDigitalPortValue('target', target);
         Entry.hw.setDigitalPortValue('display_draw_rect_x', x);
         Entry.hw.setDigitalPortValue('display_draw_rect_y', y);
@@ -319,7 +342,8 @@ Entry.byrobot_drone_4 = {
         delete Entry.hw.sendQueue.display_draw_rect_line;
     },
 
-    transferDisplayDrawCircle(target, x, y, radius, pixel, flagFill) {
+    transferDisplayDrawCircle(target, x, y, radius, pixel, flagFill)
+    {
         Entry.hw.setDigitalPortValue('target', target);
         Entry.hw.setDigitalPortValue('display_draw_circle_x', x);
         Entry.hw.setDigitalPortValue('display_draw_circle_y', y);
@@ -337,7 +361,8 @@ Entry.byrobot_drone_4 = {
         delete Entry.hw.sendQueue.display_draw_circle_flagfill;
     },
 
-    transferDisplayDrawString(target, x, y, font, pixel, string) {
+    transferDisplayDrawString(target, x, y, font, pixel, string)
+    {
         Entry.hw.setDigitalPortValue('target', target);
         Entry.hw.setDigitalPortValue('display_draw_string_x', x);
         Entry.hw.setDigitalPortValue('display_draw_string_y', y);
@@ -355,7 +380,8 @@ Entry.byrobot_drone_4 = {
         delete Entry.hw.sendQueue.display_draw_string_string;
     },
 
-    transferDisplayDrawStringAlign(target, xStart, xEnd, y, align, font, pixel, string) {
+    transferDisplayDrawStringAlign(target, xStart, xEnd, y, align, font, pixel, string)
+    {
         Entry.hw.setDigitalPortValue('target', target);
         Entry.hw.setDigitalPortValue('display_draw_string_align_x_start', xStart);
         Entry.hw.setDigitalPortValue('display_draw_string_align_x_end', xEnd);
@@ -377,7 +403,8 @@ Entry.byrobot_drone_4 = {
         delete Entry.hw.sendQueue.display_draw_string_align_string;
     },
 
-    transferbuzzer(mode, value, time) {
+    transferbuzzer(mode, value, time)
+    {
         Entry.hw.setDigitalPortValue('target', 0x20);
         Entry.hw.setDigitalPortValue('buzzer_mode', mode);
         Entry.hw.setDigitalPortValue('buzzer_value', value);
@@ -391,7 +418,8 @@ Entry.byrobot_drone_4 = {
         delete Entry.hw.sendQueue.buzzer_time;
     },
 
-    transferVibrator(mode, timeOn, timeOff, timeRun) {
+    transferVibrator(mode, timeOn, timeOff, timeRun)
+    {
         Entry.hw.setDigitalPortValue('target', 0x20);
         Entry.hw.setDigitalPortValue('vibrator_mode', mode);
         Entry.hw.setDigitalPortValue('vibrator_on', timeOn);
@@ -407,7 +435,8 @@ Entry.byrobot_drone_4 = {
         delete Entry.hw.sendQueue.vibrator_total;
     },
 
-    transferMotorSingle(motorIndex, motorRotation, motorSpeed) {
+    transferMotorSingle(motorIndex, motorRotation, motorSpeed)
+    {
         Entry.hw.setDigitalPortValue('target', 0x10);
         Entry.hw.setDigitalPortValue('motorsingle_target', motorIndex);
         Entry.hw.setDigitalPortValue('motorsingle_rotation', motorRotation);
@@ -421,7 +450,8 @@ Entry.byrobot_drone_4 = {
         delete Entry.hw.sendQueue.motorsingle_value;
     },
 
-    transferCommand(target, command, option) {
+    transferCommand(target, command, option)
+    {
         Entry.hw.setDigitalPortValue('target', target);
         Entry.hw.setDigitalPortValue('command_command', command);
         Entry.hw.setDigitalPortValue('command_option', option);
@@ -433,7 +463,8 @@ Entry.byrobot_drone_4 = {
         delete Entry.hw.sendQueue.command_option;
     },
 
-    transferControlQuad(roll, pitch, yaw, throttle) {
+    transferControlQuad(roll, pitch, yaw, throttle)
+    {
         Entry.hw.setDigitalPortValue('target', 0x10);
         Entry.hw.setDigitalPortValue('control_quad8_roll', roll);
         Entry.hw.setDigitalPortValue('control_quad8_pitch', pitch);
@@ -449,7 +480,8 @@ Entry.byrobot_drone_4 = {
         delete Entry.hw.sendQueue.control_quad8_throttle;
     },
 
-    transferControlPosition(x, y, z, velocity, heading, rotationalVelocity) {
+    transferControlPosition(x, y, z, velocity, heading, rotationalVelocity)
+    {
         Entry.hw.setDigitalPortValue('target', 0x10);
         Entry.hw.setDigitalPortValue('control_position_x', x);
         Entry.hw.setDigitalPortValue('control_position_y', y);
@@ -474,16 +506,19 @@ Entry.byrobot_drone_4 = {
      ***************************************************************************************/
 
     // 데이터 읽기
-    getData(script, device) {
+    getData(script, device)
+    {
         return Entry.hw.portData[device];
     },
 
-    getRgbFromString(stringColor) {
+    getRgbFromString(stringColor)
+    {
         let red = 0;
         let green = 0;
         let blue = 0;
 
-        switch (stringColor) {
+        switch (stringColor)
+        {
             case 'red':             { red = 255;  green = 0;    blue = 0;   }   break;
             case 'green':           { red = 0;    green = 255;  blue = 0;   }   break;
             case 'blue':            { red = 0;    green = 0;    blue = 255; }   break;
@@ -503,8 +538,10 @@ Entry.byrobot_drone_4 = {
     },
 
     // LED 수동 설정
-    setLightManual(script, target, flags, brightness) {
-        switch (this.checkFinish(script, 40)) {
+    setLightManual(script, target, flags, brightness)
+    {
+        switch (this.checkFinish(script, 40))
+        {
             case 'Start':
                 {
                     this.transferLightManual(target, flags, brightness);
@@ -523,8 +560,10 @@ Entry.byrobot_drone_4 = {
     },
 
     // LED 모드 설정
-    setLightMode(script, target, mode, interval) {
-        switch (this.checkFinish(script, 40)) {
+    setLightMode(script, target, mode, interval)
+    {
+        switch (this.checkFinish(script, 40))
+        {
             case 'Start':
                 {
                     this.transferLightMode(target, mode, interval);
@@ -543,8 +582,10 @@ Entry.byrobot_drone_4 = {
     },
 
     // LED 모드 설정, RGB
-    setLightModeColor(script, target, mode, interval, red, green, blue) {
-        switch (this.checkFinish(script, 40)) {
+    setLightModeColor(script, target, mode, interval, red, green, blue)
+    {
+        switch (this.checkFinish(script, 40))
+        {
             case 'Start':
                 {
                     this.transferLightModeColor(target, mode, interval, red, green, blue);
@@ -563,8 +604,10 @@ Entry.byrobot_drone_4 = {
     },
 
     // LED 이벤트 설정
-    setLightEvent(script, target, mode, interval, repeat) {
-        switch (this.checkFinish(script, 40)) {
+    setLightEvent(script, target, mode, interval, repeat)
+    {
+        switch (this.checkFinish(script, 40))
+        {
             case 'Start':
                 {
                     this.transferLightEvent(target, mode, interval, repeat);
@@ -583,8 +626,10 @@ Entry.byrobot_drone_4 = {
     },
 
     // LED 이벤트 설정, RGB
-    setLightEventColor(script, target, mode, interval, repeat, red, green, blue) {
-        switch (this.checkFinish(script, 40)) {
+    setLightEventColor(script, target, mode, interval, repeat, red, green, blue)
+    {
+        switch (this.checkFinish(script, 40))
+        {
             case 'Start':
                 {
                     this.transferLightEventColor(target, mode, interval, repeat, red, green, blue);
@@ -603,8 +648,10 @@ Entry.byrobot_drone_4 = {
     },
 
     // 화면 전체 지우기, 선택 영역 지우기
-    setDisplayClearAll(script, target, pixel) {
-        switch (this.checkFinish(script, 40)) {
+    setDisplayClearAll(script, target, pixel)
+    {
+        switch (this.checkFinish(script, 40))
+        {
             case 'Start':
                 {
                     this.transferDisplayClearAll(target, pixel);
@@ -623,8 +670,10 @@ Entry.byrobot_drone_4 = {
     },
 
     // 화면 전체 지우기, 선택 영역 지우기
-    setDisplayClear(script, target, pixel, x, y, width, height) {
-        switch (this.checkFinish(script, 40)) {
+    setDisplayClear(script, target, pixel, x, y, width, height)
+    {
+        switch (this.checkFinish(script, 40))
+        {
             case 'Start':
                 {
                     this.transferDisplayClear(target, pixel, x, y, width, height);
@@ -643,8 +692,10 @@ Entry.byrobot_drone_4 = {
     },
 
     // 선택 영역 반전
-    setDisplayInvert(script, target, x, y, width, height) {
-        switch (this.checkFinish(script, 40)) {
+    setDisplayInvert(script, target, x, y, width, height)
+    {
+        switch (this.checkFinish(script, 40))
+        {
             case 'Start':
                 {
                     this.transferDisplayInvert(target, x, y, width, height);
@@ -663,8 +714,10 @@ Entry.byrobot_drone_4 = {
     },
 
     // 화면에 점 찍기
-    setDisplayDrawPoint(script, target, x, y, pixel) {
-        switch (this.checkFinish(script, 40)) {
+    setDisplayDrawPoint(script, target, x, y, pixel)
+    {
+        switch (this.checkFinish(script, 40))
+        {
             case 'Start':
                 {
                     this.transferDisplayDrawPoint(target, x, y, pixel);
@@ -683,8 +736,10 @@ Entry.byrobot_drone_4 = {
     },
 
     // 화면에 선 그리기
-    setDisplayDrawLine(script, target, x1, y1, x2, y2, pixel, line) {
-        switch (this.checkFinish(script, 40)) {
+    setDisplayDrawLine(script, target, x1, y1, x2, y2, pixel, line)
+    {
+        switch (this.checkFinish(script, 40))
+        {
             case 'Start':
                 {
                     this.transferDisplayDrawLine(target, x1, y1, x2, y2, pixel, line);
@@ -703,8 +758,10 @@ Entry.byrobot_drone_4 = {
     },
 
     // 화면에 사각형 그리기
-    setDisplayDrawRect(script, target, x, y, width, height, pixel, flagFill, line) {
-        switch (this.checkFinish(script, 40)) {
+    setDisplayDrawRect(script, target, x, y, width, height, pixel, flagFill, line)
+    {
+        switch (this.checkFinish(script, 40))
+        {
             case 'Start':
                 {
                     this.transferDisplayDrawRect(target, x, y, width, height, pixel, flagFill, line);
@@ -723,7 +780,8 @@ Entry.byrobot_drone_4 = {
     },
 
     // 화면에 원 그리기
-    setDisplayDrawCircle(script, target, x, y, radius, pixel, flagFill) {
+    setDisplayDrawCircle(script, target, x, y, radius, pixel, flagFill)
+    {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
@@ -743,7 +801,8 @@ Entry.byrobot_drone_4 = {
     },
 
     // 화면에 문자열 쓰기
-    setDisplayDrawString(script, target, x, y, font, pixel, string) {
+    setDisplayDrawString(script, target, x, y, font, pixel, string)
+    {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
@@ -763,7 +822,8 @@ Entry.byrobot_drone_4 = {
     },
 
     // 화면에 문자열 정렬하여 그리기
-    setDisplayDrawStringAlign(script, target, xStart, xEnd, y, align, font, pixel, string) {
+    setDisplayDrawStringAlign(script, target, xStart, xEnd, y, align, font, pixel, string)
+    {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
@@ -794,8 +854,10 @@ Entry.byrobot_drone_4 = {
         HzContinually       = 6,    // 주파수 예약
      */
     // 정지
-    setBuzzerStop(script) {
-        switch (this.checkFinish(script, 40)) {
+    setBuzzerStop(script)
+    {
+        switch (this.checkFinish(script, 40))
+        {
             case 'Start':
                 {
                     this.transferbuzzer(0, 0, 0);
@@ -814,17 +876,21 @@ Entry.byrobot_drone_4 = {
     },
 
     // 묵음
-    setBuzzerMute(script, time, flagDelay, flagInstantly) {
+    setBuzzerMute(script, time, flagDelay, flagInstantly)
+    {
         let timeDelay = 40;
-        if (flagDelay) {
+        if (flagDelay)
+        {
             timeDelay = time;
         }
 
-        switch (this.checkFinish(script, timeDelay)) {
+        switch (this.checkFinish(script, timeDelay))
+        {
             case 'Start':
                 {
                     let mode = 2; // 묵음 연속
-                    if (flagInstantly) {
+                    if (flagInstantly)
+                    {
                         mode = 1;
                     } // 묵음 즉시
 
@@ -843,17 +909,21 @@ Entry.byrobot_drone_4 = {
         }
     },
 
-    setBuzzerScale(script, octave, scale, time, flagDelay, flagInstantly) {
+    setBuzzerScale(script, octave, scale, time, flagDelay, flagInstantly)
+    {
         let timeDelay = 40;
-        if (flagDelay) {
+        if (flagDelay)
+        {
             timeDelay = time;
         }
 
-        switch (this.checkFinish(script, timeDelay)) {
+        switch (this.checkFinish(script, timeDelay))
+        {
             case 'Start':
                 {
                     let mode = 4; // Scale 연속
-                    if (flagInstantly) {
+                    if (flagInstantly)
+                    {
                         mode = 3;
                     } // Scale 즉시
 
@@ -874,17 +944,21 @@ Entry.byrobot_drone_4 = {
         }
     },
 
-    setBuzzerHz(script, hz, time, flagDelay, flagInstantly) {
+    setBuzzerHz(script, hz, time, flagDelay, flagInstantly)
+    {
         let timeDelay = 40;
-        if (flagDelay) {
+        if (flagDelay)
+        {
             timeDelay = time;
         }
 
-        switch (this.checkFinish(script, timeDelay)) {
+        switch (this.checkFinish(script, timeDelay))
+        {
             case 'Start':
                 {
                     let mode = 6; // Hz 연속
-                    if (flagInstantly) {
+                    if (flagInstantly)
+                    {
                         mode = 5;
                     } // Hz 즉시
                     this.transferbuzzer(mode, hz, time);
@@ -908,8 +982,10 @@ Entry.byrobot_drone_4 = {
         Instantally     = 1,    // 즉시 적용
         Continually     = 2,    // 예약
      */
-    setVibratorStop(script) {
-        switch (this.checkFinish(script, 40)) {
+    setVibratorStop(script)
+    {
+        switch (this.checkFinish(script, 40))
+        {
             case 'Start':
                 {
                     this.transferVibrator(0, 0, 0, 0);
@@ -927,17 +1003,21 @@ Entry.byrobot_drone_4 = {
         }
     },
 
-    setVibrator(script, timeOn, timeOff, timeRun, flagDelay, flagInstantly) {
+    setVibrator(script, timeOn, timeOff, timeRun, flagDelay, flagInstantly)
+    {
         let timeDelay = 40;
-        if (flagDelay) {
+        if (flagDelay)
+        {
             timeDelay = timeRun;
         }
 
-        switch (this.checkFinish(script, timeDelay)) {
+        switch (this.checkFinish(script, timeDelay))
+        {
             case 'Start':
                 {
                     let mode = 2; // 예약
-                    if (flagInstantly) {
+                    if (flagInstantly)
+                    {
                         mode = 1;
                     } // 즉시
 
@@ -956,8 +1036,10 @@ Entry.byrobot_drone_4 = {
         }
     },
 
-    sendCommand(script, target, command, option = 0) {
-        switch (this.checkFinish(script, 40)) {
+    sendCommand(script, target, command, option = 0)
+    {
+        switch (this.checkFinish(script, 40))
+        {
             case 'Start':
                 {
                     this.transferCommand(target, command, option);
@@ -975,12 +1057,15 @@ Entry.byrobot_drone_4 = {
         }
     },
 
-    sendStop(script) {
+    sendStop(script)
+    {
         return this.sendCommand(script, 0x10, 0x01);
     },
 
-    setMotorSingle(script, motorIndex, motorRotation, motorSpeed) {
-        switch (this.checkFinish(script, 40)) {
+    setMotorSingle(script, motorIndex, motorRotation, motorSpeed)
+    {
+        switch (this.checkFinish(script, 40))
+        {
             case 'Start':
                 {
                     this.transferMotorSingle(motorIndex, motorRotation, motorSpeed);
@@ -998,8 +1083,10 @@ Entry.byrobot_drone_4 = {
         }
     },
 
-    setEventFlight(script, eventFlight, time) {
-        switch (this.checkFinish(script, time)) {
+    setEventFlight(script, eventFlight, time)
+    {
+        switch (this.checkFinish(script, time))
+        {
             case 'Start':
                 {
                     this.transferControlQuad(0, 0, 0, 0); // 기존 입력되었던 조종기 방향 초기화 (수직으로 이륙, 착륙 하도록)
@@ -1018,13 +1105,16 @@ Entry.byrobot_drone_4 = {
         }
     },
 
-    sendControlQuadSingle(script, controlTarget, value, time, flagDelay) {
+    sendControlQuadSingle(script, controlTarget, value, time, flagDelay)
+    {
         let timeDelay = 40;
-        if (flagDelay) {
+        if (flagDelay)
+        {
             timeDelay = time;
         }
 
-        switch (this.checkFinish(script, timeDelay)) {
+        switch (this.checkFinish(script, timeDelay))
+        {
             case 'Start':
                 {
                     Entry.hw.setDigitalPortValue('target', 0x10);
@@ -1041,7 +1131,8 @@ Entry.byrobot_drone_4 = {
                 return script;
 
             case 'Finish':
-                if (flagDelay) {
+                if (flagDelay)
+                {
                     // 블럭을 빠져나갈 때 변경했던 값을 초기화
 
                     // 전송
@@ -1060,13 +1151,16 @@ Entry.byrobot_drone_4 = {
         }
     },
 
-    sendControlQuad(script, roll, pitch, yaw, throttle, time, flagDelay) {
+    sendControlQuad(script, roll, pitch, yaw, throttle, time, flagDelay)
+    {
         let timeDelay = 40;
-        if (flagDelay) {
+        if (flagDelay)
+        {
             timeDelay = time;
         }
 
-        switch (this.checkFinish(script, timeDelay)) {
+        switch (this.checkFinish(script, timeDelay))
+        {
             case 'Start':
                 {
                     this.transferControlQuad(roll, pitch, yaw, throttle);
@@ -1077,7 +1171,8 @@ Entry.byrobot_drone_4 = {
                 return script;
 
             case 'Finish':
-                if (flagDelay) {
+                if (flagDelay)
+                {
                     this.transferControlQuad(0, 0, 0, 0);
                 }
                 return script.callReturn();
@@ -1087,10 +1182,12 @@ Entry.byrobot_drone_4 = {
         }
     },
 
-    sendControlPosition(script, x, y, z, velocity, heading, rotationalVelocity) {
+    sendControlPosition(script, x, y, z, velocity, heading, rotationalVelocity)
+    {
         const timeDelay = 40;
 
-        switch (this.checkFinish(script, timeDelay)) {
+        switch (this.checkFinish(script, timeDelay))
+        {
             case 'Start':
                 {
                     this.transferControlPosition(x, y, z, velocity, heading, rotationalVelocity);
@@ -1674,7 +1771,8 @@ Entry.byrobot_drone_4.blockMenuBlocks = [
 /***************************************************************************************
  *  엔트리 블록 정의
  ***************************************************************************************/
-Entry.byrobot_drone_4.getBlocks = function() {
+Entry.byrobot_drone_4.getBlocks = function()
+{
     return {
         drone_value_attitude: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1705,7 +1803,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'monitor', // 같은 이름인 객체들이 그룹으로 형성됨
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
         },
@@ -1742,7 +1841,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'monitor', // 같은 이름인 객체들이 그룹으로 형성됨
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
         },
@@ -1778,7 +1878,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'monitor', // 같은 이름인 객체들이 그룹으로 형성됨
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
         },
@@ -1816,7 +1917,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'monitor', // 같은 이름인 객체들이 그룹으로 형성됨
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
         },
@@ -1849,7 +1951,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'monitor', // 같은 이름인 객체들이 그룹으로 형성됨
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
         },
@@ -1888,7 +1991,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'monitor', // 같은 이름인 객체들이 그룹으로 형성됨
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
         },
@@ -1932,7 +2036,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'boolean_input',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const read = Entry.hw.portData;
                 const button = 'button_button'; // paramsKeyMap에 정의된 이름 사용
                 const buttonevent = 'button_event'; // paramsKeyMap에 정의된 이름 사용
@@ -1994,7 +2099,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'boolean_input',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const read = Entry.hw.portData;
                 const device = script.getField('DEVICE'); // paramsKeyMap에 정의된 이름 사용
 
@@ -2020,7 +2126,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             paramsKeyMap: {},
             class: 'controller_light',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 return Entry.byrobot_drone_4.setLightManual(script, 0x20, 0xffff, 0);
             },
         },
@@ -2081,7 +2188,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'controller_light',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const mode      = 0x21;
                 const interval  = parseInt(script.getField('BRIGHTNESS'), 10);
                 const color     = Entry.byrobot_drone_4.getRgbFromString(script.getField('COLOR'));
@@ -2114,7 +2222,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'controller_light',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const flags      = script.getNumberValue('FLAGS');
                 const brightness = script.getNumberValue('BRIGHTNESS');
                 return Entry.byrobot_drone_4.setLightManual(script, 0x20, flags, brightness);
@@ -2171,7 +2280,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'controller_light',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const mode      = 0x20 + parseInt(script.getField('MODE'), 10);
                 const interval  = script.getNumberValue('INTERVAL');
                 const red       = script.getNumberValue('RED');
@@ -2241,7 +2351,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'controller_light',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const mode     = 0x20 + parseInt(script.getField('MODE'), 10);
                 const interval = script.getNumberValue('INTERVAL');
                 const color    = Entry.byrobot_drone_4.getRgbFromString(script.getField('COLOR'));
@@ -2263,7 +2374,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             paramsKeyMap: {},
             class: 'drone_light',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 return Entry.byrobot_drone_4.setLightManual(script, 0x10, 0xff, 0);
             },
         },
@@ -2324,7 +2436,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'drone_light',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const mode      = 0x22;
                 const interval  = parseInt(script.getField('BRIGHTNESS'), 10);
                 const color     = Entry.byrobot_drone_4.getRgbFromString(script.getField('COLOR'));
@@ -2357,7 +2470,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'drone_light',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const flags = script.getNumberValue('FLAGS');
                 const brightness = script.getNumberValue('BRIGHTNESS');
                 return Entry.byrobot_drone_4.setLightManual(script, 0x10, flags, brightness);
@@ -2414,7 +2528,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'drone_light',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const mode     = 0x20 + parseInt(script.getField('MODE'), 10);
                 const red      = script.getNumberValue('RED');
                 const green    = script.getNumberValue('GREEN');
@@ -2484,7 +2599,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'drone_light',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const mode     = 0x20 + parseInt(script.getField('MODE'), 10);
                 const interval = script.getNumberValue('INTERVAL');
                 const color    = Entry.byrobot_drone_4.getRgbFromString(script.getField('COLOR'));
@@ -2521,7 +2637,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'controller_display',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const pixel = parseInt(script.getField('PIXEL'), 10);
                 return Entry.byrobot_drone_4.setDisplayClearAll(script, 0x20, pixel);
             },
@@ -2571,7 +2688,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'controller_display',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const x = script.getNumberValue('X');
                 const y = script.getNumberValue('Y');
                 const width = script.getNumberValue('WIDTH');
@@ -2613,7 +2731,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'controller_display',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const x = script.getNumberValue('X');
                 const y = script.getNumberValue('Y');
                 const width = script.getNumberValue('WIDTH');
@@ -2660,7 +2779,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'controller_display',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const x     = script.getNumberValue('X');
                 const y     = script.getNumberValue('Y');
                 const pixel = parseInt(script.getField('PIXEL'), 10);
@@ -2726,7 +2846,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'controller_display',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const x1    = script.getNumberValue('X1');
                 const y1    = script.getNumberValue('Y1');
                 const x2    = script.getNumberValue('X2');
@@ -2808,7 +2929,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'controller_display',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const x        = script.getNumberValue('X');
                 const y        = script.getNumberValue('Y');
                 const width    = script.getNumberValue('WIDTH');
@@ -2874,7 +2996,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'controller_display',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const x        = script.getNumberValue('X');
                 const y        = script.getNumberValue('Y');
                 const radius   = script.getNumberValue('RADIUS');
@@ -2938,7 +3061,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'controller_display',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const x      = script.getNumberValue('X');
                 const y      = script.getNumberValue('Y');
                 const font   = parseInt(script.getField('FONT'), 10);
@@ -3019,7 +3143,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'controller_display',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const xStart    = script.getNumberValue('XSTART');
                 const xEnd      = script.getNumberValue('XEND');
                 const y         = script.getNumberValue('Y');
@@ -3045,7 +3170,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             paramsKeyMap: {},
             class: 'buzzer',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 return Entry.byrobot_drone_4.setBuzzerStop(script);
             },
         },
@@ -3099,7 +3225,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'buzzer',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const octave = parseInt(script.getField('OCTAVE'), 10);
                 const scale = parseInt(script.getField('SCALE'), 10);
 
@@ -3162,7 +3289,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'buzzer',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const octave = parseInt(script.getField('OCTAVE'), 10);
                 const scale = parseInt(script.getField('SCALE'), 10);
                 const time = script.getNumberValue('TIME') * 1000;
@@ -3226,7 +3354,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'buzzer',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const octave = parseInt(script.getField('OCTAVE'), 10);
                 const scale  = parseInt(script.getField('SCALE'), 10);
                 const time   = script.getNumberValue('TIME') * 1000;
@@ -3258,7 +3387,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'buzzer',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const hz = script.getNumberValue('HZ');
                 return Entry.byrobot_drone_4.setBuzzerHz(script, hz, 60000, false, true);
             },
@@ -3285,7 +3415,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'buzzer',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const hz   = script.getNumberValue('HZ');
                 const time = script.getNumberValue('TIME') * 1000;
                 return Entry.byrobot_drone_4.setBuzzerHz(script, hz, time, true, true);
@@ -3313,7 +3444,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'buzzer',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const hz   = script.getNumberValue('HZ');
                 const time = script.getNumberValue('TIME') * 1000;
                 return Entry.byrobot_drone_4.setBuzzerHz(script, hz, time, false, false);
@@ -3334,7 +3466,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             paramsKeyMap: {},
             class: 'vibrator',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 return Entry.byrobot_drone_4.setVibratorStop(script);
             },
         },
@@ -3358,7 +3491,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'vibrator',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const timeOn = script.getNumberValue('TIMEON') * 1000;
                 return Entry.byrobot_drone_4.setVibrator(script, timeOn, 0, timeOn, true, true);
             },
@@ -3383,7 +3517,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'vibrator',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const timeOn = script.getNumberValue('TIMEON') * 1000;
                 return Entry.byrobot_drone_4.setVibrator(script, timeOn, 0, timeOn, false, false);
             },
@@ -3417,7 +3552,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'vibrator',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const timeOn  = script.getNumberValue('TIMEON') * 1000;
                 const timeOff = script.getNumberValue('TIMEOFF') * 1000;
                 const timeRun = script.getNumberValue('TIMERUN') * 1000;
@@ -3453,7 +3589,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'vibrator',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const timeOn  = script.getNumberValue('TIMEON') * 1000;
                 const timeOff = script.getNumberValue('TIMEOFF') * 1000;
                 const timeRun = script.getNumberValue('TIMERUN') * 1000;
@@ -3475,7 +3612,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             paramsKeyMap: {},
             class: 'motor',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 return Entry.byrobot_drone_4.sendStop(script);
             },
         },
@@ -3508,7 +3646,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'motor',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const motorIndex    = parseInt(script.getField('MOTORINDEX'), 10);
                 const motorRotation = (motorIndex % 2) + 1;
                 const motorSpeed    = script.getNumberValue('MOTORSPEED');
@@ -3538,7 +3677,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'motor',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const motorIndex    = script.getNumberValue('MOTORINDEX') - 1;
                 const motorRotation = (motorIndex % 2) + 1;
                 const motorSpeed    = script.getNumberValue('MOTORSPEED');
@@ -3587,7 +3727,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'motor',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const motorIndex    = parseInt(script.getField('MOTORINDEX'), 10);
                 const motorRotation = parseInt(script.getField('MOTORROTATION'), 10);
                 const motorSpeed    = script.getNumberValue('MOTORSPEED');
@@ -3610,7 +3751,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             paramsKeyMap: {},
             class: 'control_flight',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 return Entry.byrobot_drone_4.setEventFlight(script, 0x11, 200); // 0x11 : FlightEvent::TakeOff
             },
         },
@@ -3629,7 +3771,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             paramsKeyMap: {},
             class: 'control_flight',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 return Entry.byrobot_drone_4.setEventFlight(script, 0x12, 200); // 0x12 : FlightEvent::Landing
             },
         },
@@ -3648,7 +3791,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             paramsKeyMap: {},
             class: 'control_flight',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 return Entry.byrobot_drone_4.sendStop(script);
             },
         },
@@ -3682,7 +3826,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'control_flight',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const headless = script.getField('HEADLESS');
                 return Entry.byrobot_drone_4.sendCommand(script, 0x10, 0x03, headless);
             },
@@ -3702,7 +3847,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             paramsKeyMap: {},
             class: 'control_flight',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 return Entry.byrobot_drone_4.sendCommand(script, 0x10, 0x07, 0xA0); // 0x22 : CommandType::FlightEvent  // 0xA0 : FlightEvent::ResetHeading
             },
         },
@@ -3740,7 +3886,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'control_flight',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const controlTarget = script.getField('CONTROLTARGET');
                 const value = script.getNumberValue('VALUE');
 
@@ -3788,7 +3935,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'control_flight',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const controlTarget = script.getField('CONTROLTARGET');
                 const value = script.getNumberValue('VALUE');
                 const time = script.getNumberValue('TIME') * 1000;
@@ -3828,7 +3976,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'control_flight',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const roll     = script.getNumberValue('ROLL');
                 const pitch    = script.getNumberValue('PITCH');
                 const yaw      = script.getNumberValue('YAW');
@@ -3872,7 +4021,8 @@ Entry.byrobot_drone_4.getBlocks = function() {
             },
             class: 'control_flight',
             isNotFor: ['byrobot_drone_4'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const roll      = script.getNumberValue('ROLL');
                 const pitch     = script.getNumberValue('PITCH');
                 const yaw       = script.getNumberValue('YAW');
