@@ -180,74 +180,71 @@ Entry.byrobot_controller_4.setLanguage = function() {
             },
 
             template: {
-                controller_buzzer_hz            : '%1 Hz 소리를 연주 %2',
-                controller_buzzer_hz_delay      : '%1 Hz 소리를 %2 초 연주 %3',
-                controller_buzzer_hz_reserve    : '%1 Hz 소리를 %2 초 예약 %3',
-                controller_buzzer_off           : '버저 끄기 %1',
-                controller_buzzer_scale         : '%1 옥타브 %2 을(를) 연주 %3',
-                controller_buzzer_scale_delay   : '%1 옥타브 %2 을(를) %3 초 연주 %4',
-                controller_buzzer_scale_reserve : '%1 옥타브 %2 을(를) %3 초 예약 %4',
-                controller_display_clear        : '지우기 x %1, y %2, 너비 %3, 높이 %4 %5 %6',
-                controller_display_clear_all    : '조종기 화면 전체 지우기%1 %2',
-                controller_display_draw_circle  : '원 x %1, y %2, 반지름 %3 %4 %5 %6',
-                controller_display_draw_line    : '선 x1 %1, y1 %2, x2 %3, y2 %4 %5 %6 %7',
-                controller_display_draw_point   : '점 그리기 x %1, y %2 %3 %4',
-                controller_display_draw_rect    : '사각형 x %1, y %2, 너비 %3, 높이 %4 %5 %6 %7 %8',
-                controller_display_draw_string  : '문자열 x %1, y %2 %3 %4 입력 %5 %6',
-                controller_display_draw_string_align: '문자열 정렬 x1 %1, x2 %2, y %3 %4 %5 %6 입력 %7 %8',
-                controller_display_invert       : '색반전 x %1, y %2, 너비 %3, 높이 %4 %5',
-                controller_if_button_press      : '조종기 %1 눌렀을 때',
-                controller_if_joystick_direction: '조종기 %1 조이스틱 %2 움직였을 때',
-                controller_light_color_input    : '조종기 LED 색지정 R %1, G %2, B %3 %4 %5 %6',
-                controller_light_color_select   : '조종기 LED의 RGB 조합 예시 %1 %2 %3 %4',
-                controller_light_color_preset   : '조종기 LED %1 %2 %3',
-                controller_light_manual_single_input: '조종기 LED %1 밝기 %2 %3',
-                controller_light_manual_single_off  : '조종기 LED 끄기 %1',
-                controller_value_button         : '%1',
-                controller_value_joystick       : '%1',
-                controller_vibrator_delay       : '진동 %1 초 켜기, %2 초 끄기를 %3 초 실행 %4',
-                controller_vibrator_off         : '진동 끄기 %1',
-                controller_vibrator_on_delay    : '진동 %1 초 켜기 %2',
-                controller_vibrator_on_reserve  : '진동 %1 초 예약 %2',
-                controller_vibrator_reserve     : '진동 %1 초 켜기, %2 초 끄기를 %3 초 예약 %4',
+                "buzzer_hz":                   "%1 Hz 소리를 연주 %2",
+                "buzzer_hz_delay":             "%1 Hz 소리를 %2 초 연주 %3",
+                "buzzer_hz_reserve":           "%1 Hz 소리를 %2 초 예약 %3",
+                "buzzer_off":                  "버저 끄기 %1",
+                "buzzer_scale":                "%1 옥타브 %2 을(를) 연주 %3",
+                "buzzer_scale_delay":          "%1 옥타브 %2 을(를) %3 초 연주 %4",
+                "buzzer_scale_reserve":        "%1 옥타브 %2 을(를) %3 초 예약 %4",
+                "display_clear":               "지우기 x %1, y %2, 너비 %3, 높이 %4 %5 %6",
+                "display_clear_all":           "조종기 화면 전체 지우기%1 %2",
+                "display_draw_circle":         "원 x %1, y %2, 반지름 %3 %4 %5 %6",
+                "display_draw_line":           "선 x1 %1, y1 %2, x2 %3, y2 %4 %5 %6 %7",
+                "display_draw_point":          "점 그리기 x %1, y %2 %3 %4",
+                "display_draw_rect":           "사각형 x %1, y %2, 너비 %3, 높이 %4 %5 %6 %7 %8",
+                "display_draw_string":         "문자열 x %1, y %2 %3 %4 입력 %5 %6",
+                "display_draw_string_align":   "문자열 정렬 x1 %1, x2 %2, y %3 %4 %5 %6 입력 %7 %8",
+                "if_button_press":             "조종기 %1 눌렀을 때",
+                "if_joystick_direction":       "조종기 %1 조이스틱 %2 움직였을 때",
+                "light_controller_color_input":           "조종기 LED 색지정 R %1, G %2, B %3 %4 %5 %6",
+                "light_controller_color_select":          "조종기 LED의 RGB 조합 예시 %1 %2 %3 %4",
+                "light_controller_color_preset":          "조종기 LED %1 %2 %3",
+                "light_controller_manual_single_input":   "조종기 LED %1 밝기 %2 %3",
+                "light_controller_manual_single_off":     "조종기 LED 끄기 %1",
+                "value_button":                "%1",
+                "value_joystick":              "%1",
+                "vibrator_delay":              "진동 %1 초 켜기, %2 초 끄기를 %3 초 실행 %4",
+                "vibrator_off":                "진동 끄기 %1",
+                "vibrator_on_delay":           "진동 %1 초 켜기 %2",
+                "vibrator_on_reserve":         "진동 %1 초 예약 %2",
+                "vibrator_reserve":            "진동 %1 초 켜기, %2 초 끄기를 %3 초 예약 %4",
             },
 
             Helper: {
-                controller_buzzer_hz            : "<br>지정한 주파수의 소리를 계속해서 연주합니다(최대 60초). 권장 사용 범위는 250 ~ 8000 입니다. 4옥타브를 기준으로 도(261), 도#(277), 레(293), 레#(311), 미(329), 파(349), 파#(370), 솔(392), 솔#(415), 라(440), 라#(466), 시(493)입니다. 여기에서 한 옥타브를 올라갈 때마다 주파수 값이 두 배가 됩니다. 한 옥타브를 내려갈 때에는 주파수 값이 절반이 됩니다. 예를 들면 3옥타브의 도는 130.8128Hz, 4옥타브의 도는 261.6256Hz, 5옥타브의 도는 523.2511Hz 입니다. 이 블럭을 만났을 경우 소리가 켜져있거나 예약된 소리가 있다면 모두 삭제합니다. 이 블럭은 연주 명령을 실행 후 바로 다음 블럭으로 넘어갑니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#주파수</font> <font color='peru'>#즉시</font>",
-                controller_buzzer_hz_delay      : "<br>지정한 주파수의 소리를 지정한 시간동안 연주합니다. 권장 사용 범위는 250 ~ 8000 입니다. 4옥타브를 기준으로 도(261), 도#(277), 레(293), 레#(311), 미(329), 파(349), 파#(370), 솔(392), 솔#(415), 라(440), 라#(466), 시(493)입니다. 여기에서 한 옥타브를 올라갈 때마다 주파수 값이 두 배가 됩니다. 한 옥타브를 내려갈 때에는 주파수 값이 절반이 됩니다. 예를 들면 3옥타브의 도는 130.8128Hz, 4옥타브의 도는 261.6256Hz, 5옥타브의 도는 523.2511Hz 입니다. 이 블럭을 만났을 경우 소리가 켜져있거나 예약된 소리가 있다면 모두 삭제합니다. 이 블럭을 사용하면 소리가 끝날때까지 다음 블럭으로 넘어가지 않습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#음계</font> <font color='peru'>#즉시</font> <font color='blueviolet'>#시간지연</font>",
-                controller_buzzer_hz_reserve    : "<br>지정한 주파수의 소리를 지정한 시간동안 연주하도록 예약합니다. 권장 사용 범위는 250 ~ 8000 입니다. 4옥타브를 기준으로 도(261), 도#(277), 레(293), 레#(311), 미(329), 파(349), 파#(370), 솔(392), 솔#(415), 라(440), 라#(466), 시(493)입니다. 여기에서 한 옥타브를 올라갈 때마다 주파수 값이 두 배가 됩니다. 한 옥타브를 내려갈 때에는 주파수 값이 절반이 됩니다. 예를 들면 3옥타브의 도는 130.8128Hz, 4옥타브의 도는 261.6256Hz, 5옥타브의 도는 523.2511Hz 입니다. 이 블럭은 소리가 나도록 예약하고, 바로 다음 블럭으로 넘어갑니다. 예약은 최대 12개까지 누적할 수 있습니다. 이 블럭은 주로 버저 소리와 함께 다른 행동을 동시에 할 때 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#주파수</font> <font color='peru'>#예약</font>",
-                controller_buzzer_off           : "<br>버저 작동을 중단합니다. 예약된 소리가 있다면 모두 삭제합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저끄기</font>",
-                controller_buzzer_scale         : "<br>지정한 옥타브의 음을 계속해서 연주합니다(최대 60초). 이 블럭을 만났을 경우 소리가 켜져있거나 예약된 소리가 있다면 모두 삭제합니다. 이 블럭은 연주 명령을 실행 후 바로 다음 블럭으로 넘어갑니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#음계</font> <font color='peru'>#즉시</font>",
-                controller_buzzer_scale_delay   : "<br>지정한 옥타브의 음을 지정한 시간동안 연주합니다. 이 블럭을 만났을 경우 소리가 켜져있거나 예약된 소리가 있다면 모두 삭제합니다. 이 블럭을 사용하면 소리가 끝날때까지 다음 블럭으로 넘어가지 않습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#음계</font> <font color='peru'>#즉시</font> <font color='blueviolet'>#시간지연</font>",
-                controller_buzzer_scale_reserve : "<br>지정한 옥타브의 음을 지정한 시간동안 연주하도록 예약합니다. 이 블럭은 소리가 나도록 예약하고 바로 다음 블럭으로 넘어갑니다. 예약은 최대 12개까지 누적할 수 있습니다. 이 블럭은 주로 버저 소리와 함께 다른 행동을 동시에 할 때 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#음계</font> <font color='peru'>#예약</font>",
-                controller_display_clear        : "<br>조종기 OLED 화면의 선택한 영역을 지웁니다. x, y 좌표값과 너비, 높이를 지정합니다. 좌표(x, y) = (가로, 세로) 화면상의 위치입니다. 사용 가능한 값의 범위는 x값과 너비는 (0~128), y값과 높이는 (0~64)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
-                controller_display_clear_all    : "<br>조종기 OLED 화면 전체를 지웁니다. 흰색/검은색 중에서 원하는 색을 선택할 수 있습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
-                controller_display_draw_circle  : "<br>조종기 OLED 화면에서 지정한 위치에 원을 그립니다.<br><br>☆★ (x, y)좌표에 관한 설명은 [조종기 화면 점 찍기]블럭을 참조해주세요. ★☆<br><br>x, y 좌표값과 반지름을 지정합니다. 원의 중심 = (x, y),<br>반지름은 원의 크기를 결정합니다.<br><br>★☆사용 가능한 값의 범위는 x값은 (-50~178), y값은 (-50~114), 반지름은 (1~200)입니다.☆★<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
-                controller_display_draw_line    : "<br>조종기 OLED 화면에서 지정한 위치에 선을 그립니다.<br><br>☆★ (x, y)좌표에 관한 설명은 [조종기 화면 점 찍기]블럭을 참조해주세요. ★☆<br><br>시작점 = (x1, y1), 끝나는점 = (x2, y2)<br>선 그리기는 시작점과 끝나는점을 이어주는 기능입니다.<br>사용 가능한 값의 범위는 x값은 (0~128), y값은 (0~64)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
-                controller_display_draw_point   : "<br>조종기 OLED 화면에서 지정한 위치에 점을 찍습니다. 흰색/검은색 중에서 원하는 색을 선택할 수 있습니다. x, y 좌표값으로 지정합니다. 좌표(x, y) = (가로, 세로) 화면상의 위치입니다. 사용 가능한 값의 범위는 x값은 (0~128), y값은 (0~64)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
-                controller_display_draw_rect    : "<br>조종기 OLED 화면에서 지정한 위치에 사각형을 그립니다.<br><br>☆★ (x, y)좌표에 관한 설명은 [조종기 화면 점 찍기]블럭을 참조해주세요. ★☆<br><br>x, y 좌표값과 너비, 높이를 지정합니다. 시작점 = (x, y), 사용 가능한 값의 범위는 x값과 너비는 (0~128), y값과 높이는 (0~64)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
-                controller_display_draw_string  : "<br>조종기 OLED 화면에서 지정한 위치에 문자열을 씁니다.<br><br>☆★ (x, y)좌표에 관한 설명은 [조종기 화면 점 찍기]블럭을 참조해주세요. ★☆<br><br>글자 입력은 영문자 알파벳 대문자, 소문자와 숫자, 공백(space), 특수문자만 가능합니다.(한글은 아직 지원되지 않습니다.)<br>x, y 좌표값과 글자 크기, 색을 지정합니다. 시작점 = (x, y), 사용 가능한 값의 범위는 x값은 (0~120), y값과 높이는 (0~60)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
-                controller_display_draw_string_align    : "<br>조종기 OLED 화면에서 지정한 위치에 문자열을 정렬하여 그립니다.<br><br>☆★ (x, y)좌표에 관한 설명은 [조종기 화면 점 찍기]블럭을 참조해주세요. ★☆<br><br>글자 입력은 영문자 알파벳 대문자, 소문자와 숫자, 공백(space), 특수문자만 가능합니다.(한글은 아직 지원되지 않습니다.)<br>x, y 좌표값과 정렬 방향, 글자 크기, 색을 지정합니다. 시작점 = (x1, y), 끝나는점 = (x2, y), 사용 가능한 값의 범위는 x값은 (0~128), y값은 (0~60)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
-                controller_display_invert       : "<br>조종기 OLED 화면에서 선택한 영역의 색을 반전시킵니다. x, y 좌표값과 너비, 높이를 지정합니다. 좌표(x, y) = (가로, 세로) 화면상의 위치입니다. 사용 가능한 값의 범위는 x값과 너비는 (0~128), y값과 높이는 (0~64)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
-                controller_if_button_press      : "<br>지정한 조종기의 버튼이 눌러졌을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
-                controller_if_joystick_direction: "<br>조종기의 조이스틱을 지정한 방향으로 움직였을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
-                controller_light_color_input    : "<br>빛의 삼원색인 Red, Green, Blue 값을 지정하여 조종기 LED의 색상을 원하는대로 만들 수 있습니다.<br>10진수(0 ~ 255) 값을 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
-                controller_light_color_select   : "<br>RGB 색지정 블록을 이용해서 만들 수 있는<br> 조종기 LED 예시입니다.<br>RGB 색지정 블록을 이용해서 멋진 색깔을<br> 다양하게 만들어보세요.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
-                controller_light_color_preset   : "<br>조종기 LED를 조작하는데 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
-                controller_light_manual_single_input    : "<br>조종기 LED를 조작하는데 사용합니다.<br>2진수(0b00000001 ~ 0b00000111), 10진수(32 ~ 224), 16진수(0x20 ~ 0xE0) 값을 사용할 수 있습니다.  2진수로 표현한 값에서 각각의 비트는 LED의 Red, Green, Blue 색을 선택하는 스위치 역할을 합니다.  밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다. 값이 커질수록 더 밝아집니다. <br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
-                controller_light_manual_single_off      : "<br>조종기의 모든 LED를 끕니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED끄기</font>",
-                controller_value_button         : "<br>조종기에서 눌러진 버튼과 관련된 이벤트를 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
-                controller_value_joystick       : "<br>조종기의 조이스틱과 관련된 입력 값을 반환합니다. 각 축의 범위는 -100 ~ 100 입니다.<br><br>조이스틱 방향은 가로x세로 = 3x3 = 총9방향입니다.<br>위(왼쪽=17, 가운데=18, 오른쪽=20)<br>중간(왼쪽=33, 센터=34, 오른쪽=36)<br>아래(왼쪽=65, 가운데=66, 오른쪽=68)<br>기본값은 센터=34입니다.<br><br>조이스틱 이벤트는 값이 있을때 2, 없으면 0, 진입 1, 벗어남 3입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
-                controller_vibrator_delay       : "<br>진동을 지정한 시간동안 켜고 끄는 것을 지정한 시간동안 반복합니다. 이 블럭을 만났을 경우 진동이 켜져있거나 예약된 진동이 있다면 모두 삭제합니다. 이 블럭은 지정한 시간이 끝날 때까지 다음 블럭으로 넘어가지 않습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동</font> <font color='forestgreen'>#즉시</font> <font color='peru'>#시간지연</font>",
-                controller_vibrator_off         : "<br>진동을 끕니다. 예약된 진동이 있다면 모두 삭제합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동끄기</font>",
-                controller_vibrator_on_delay    : "<br>진동을 지정한 시간동안 켭니다. 이 블럭을 만났을 경우 진동이 켜져있거나 예약된 진동이 있다면 모두 삭제합니다. 이 블럭은 지정한 시간이 끝날 때까지 다음 블럭으로 넘어가지 않습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동</font> <font color='forestgreen'>#즉시</font> <font color='peru'>#시간지연</font>",
-                controller_vibrator_on_reserve  : "<br>진동을 지정한 시간동안 켜는 것을 예약합니다. 이 블럭은 명령을 전달 후 바로 다음 블럭으로 넘어갑니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동</font> <font color='forestgreen'>#예약</font>",
-                controller_vibrator_reserve     : "<br>진동을 지정한 시간동안 켜고 끄는 것을 지정한 시간동안 반복하도록 예약합니다. 이 블럭은 명령을 전달 후 바로 다음 블럭으로 넘어갑니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동</font> <font color='forestgreen'>#예약</font>",
-            },
+                "buzzer_hz":                   "<br>지정한 주파수의 소리를 계속해서 연주합니다(최대 60초). 권장 사용 범위는 250 ~ 8000 입니다. 4옥타브를 기준으로 도(261), 도#(277), 레(293), 레#(311), 미(329), 파(349), 파#(370), 솔(392), 솔#(415), 라(440), 라#(466), 시(493)입니다. 여기에서 한 옥타브를 올라갈 때마다 주파수 값이 두 배가 됩니다. 한 옥타브를 내려갈 때에는 주파수 값이 절반이 됩니다. 예를 들면 3옥타브의 도는 130.8128Hz, 4옥타브의 도는 261.6256Hz, 5옥타브의 도는 523.2511Hz 입니다. 이 블럭을 만났을 경우 소리가 켜져있거나 예약된 소리가 있다면 모두 삭제합니다. 이 블럭은 연주 명령을 실행 후 바로 다음 블럭으로 넘어갑니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#주파수</font> <font color='peru'>#즉시</font>",
+                "buzzer_hz_delay":             "<br>지정한 주파수의 소리를 지정한 시간동안 연주합니다. 권장 사용 범위는 250 ~ 8000 입니다. 4옥타브를 기준으로 도(261), 도#(277), 레(293), 레#(311), 미(329), 파(349), 파#(370), 솔(392), 솔#(415), 라(440), 라#(466), 시(493)입니다. 여기에서 한 옥타브를 올라갈 때마다 주파수 값이 두 배가 됩니다. 한 옥타브를 내려갈 때에는 주파수 값이 절반이 됩니다. 예를 들면 3옥타브의 도는 130.8128Hz, 4옥타브의 도는 261.6256Hz, 5옥타브의 도는 523.2511Hz 입니다. 이 블럭을 만났을 경우 소리가 켜져있거나 예약된 소리가 있다면 모두 삭제합니다. 이 블럭을 사용하면 소리가 끝날때까지 다음 블럭으로 넘어가지 않습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#음계</font> <font color='peru'>#즉시</font> <font color='blueviolet'>#시간지연</font>",
+                "buzzer_hz_reserve":           "<br>지정한 주파수의 소리를 지정한 시간동안 연주하도록 예약합니다. 권장 사용 범위는 250 ~ 8000 입니다. 4옥타브를 기준으로 도(261), 도#(277), 레(293), 레#(311), 미(329), 파(349), 파#(370), 솔(392), 솔#(415), 라(440), 라#(466), 시(493)입니다. 여기에서 한 옥타브를 올라갈 때마다 주파수 값이 두 배가 됩니다. 한 옥타브를 내려갈 때에는 주파수 값이 절반이 됩니다. 예를 들면 3옥타브의 도는 130.8128Hz, 4옥타브의 도는 261.6256Hz, 5옥타브의 도는 523.2511Hz 입니다. 이 블럭은 소리가 나도록 예약하고, 바로 다음 블럭으로 넘어갑니다. 예약은 최대 12개까지 누적할 수 있습니다. 이 블럭은 주로 버저 소리와 함께 다른 행동을 동시에 할 때 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#주파수</font> <font color='peru'>#예약</font>",
+                "buzzer_off":                  "<br>버저 작동을 중단합니다. 예약된 소리가 있다면 모두 삭제합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저끄기</font>",
+                "buzzer_scale":                "<br>지정한 옥타브의 음을 계속해서 연주합니다(최대 60초). 이 블럭을 만났을 경우 소리가 켜져있거나 예약된 소리가 있다면 모두 삭제합니다. 이 블럭은 연주 명령을 실행 후 바로 다음 블럭으로 넘어갑니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#음계</font> <font color='peru'>#즉시</font>",
+                "buzzer_scale_delay":          "<br>지정한 옥타브의 음을 지정한 시간동안 연주합니다. 이 블럭을 만났을 경우 소리가 켜져있거나 예약된 소리가 있다면 모두 삭제합니다. 이 블럭을 사용하면 소리가 끝날때까지 다음 블럭으로 넘어가지 않습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#음계</font> <font color='peru'>#즉시</font> <font color='blueviolet'>#시간지연</font>",
+                "buzzer_scale_reserve":        "<br>지정한 옥타브의 음을 지정한 시간동안 연주하도록 예약합니다. 이 블럭은 소리가 나도록 예약하고 바로 다음 블럭으로 넘어갑니다. 예약은 최대 12개까지 누적할 수 있습니다. 이 블럭은 주로 버저 소리와 함께 다른 행동을 동시에 할 때 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#음계</font> <font color='peru'>#예약</font>",
+                "display_clear":               "<br>조종기 OLED 화면의 선택한 영역을 지웁니다. x, y 좌표값과 너비, 높이를 지정합니다. 좌표(x, y) = (가로, 세로) 화면상의 위치입니다. 사용 가능한 값의 범위는 x값과 너비는 (0~128), y값과 높이는 (0~64)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
+                "display_clear_all":           "<br>조종기 OLED 화면 전체를 지웁니다. 흰색/검은색 중에서 원하는 색을 선택할 수 있습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
+                "display_draw_circle":         "<br>조종기 OLED 화면에서 지정한 위치에 원을 그립니다.<br><br>☆★ (x, y)좌표에 관한 설명은 [조종기 화면 점 찍기]블럭을 참조해주세요. ★☆<br><br>x, y 좌표값과 반지름을 지정합니다. 원의 중심 = (x, y),<br>반지름은 원의 크기를 결정합니다.<br><br>★☆사용 가능한 값의 범위는 x값은 (-50~178), y값은 (-50~114), 반지름은 (1~200)입니다.☆★<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
+                "display_draw_line":           "<br>조종기 OLED 화면에서 지정한 위치에 선을 그립니다.<br><br>☆★ (x, y)좌표에 관한 설명은 [조종기 화면 점 찍기]블럭을 참조해주세요. ★☆<br><br>시작점 = (x1, y1), 끝나는점 = (x2, y2)<br>선 그리기는 시작점과 끝나는점을 이어주는 기능입니다.<br>사용 가능한 값의 범위는 x값은 (0~128), y값은 (0~64)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
+                "display_draw_point":          "<br>조종기 OLED 화면에서 지정한 위치에 점을 찍습니다. 흰색/검은색 중에서 원하는 색을 선택할 수 있습니다. x, y 좌표값으로 지정합니다. 좌표(x, y) = (가로, 세로) 화면상의 위치입니다. 사용 가능한 값의 범위는 x값은 (0~128), y값은 (0~64)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
+                "display_draw_rect":           "<br>조종기 OLED 화면에서 지정한 위치에 사각형을 그립니다.<br><br>☆★ (x, y)좌표에 관한 설명은 [조종기 화면 점 찍기]블럭을 참조해주세요. ★☆<br><br>x, y 좌표값과 너비, 높이를 지정합니다. 시작점 = (x, y), 사용 가능한 값의 범위는 x값과 너비는 (0~128), y값과 높이는 (0~64)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
+                "display_draw_string":         "<br>조종기 OLED 화면에서 지정한 위치에 문자열을 씁니다.<br><br>☆★ (x, y)좌표에 관한 설명은 [조종기 화면 점 찍기]블럭을 참조해주세요. ★☆<br><br>글자 입력은 영문자 알파벳 대문자, 소문자와 숫자, 공백(space), 특수문자만 가능합니다.(한글은 아직 지원되지 않습니다.)<br>x, y 좌표값과 글자 크기, 색을 지정합니다. 시작점 = (x, y), 사용 가능한 값의 범위는 x값은 (0~120), y값과 높이는 (0~60)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
+                "display_draw_string_align":   "<br>조종기 OLED 화면에서 지정한 위치에 문자열을 정렬하여 그립니다.<br><br>☆★ (x, y)좌표에 관한 설명은 [조종기 화면 점 찍기]블럭을 참조해주세요. ★☆<br><br>글자 입력은 영문자 알파벳 대문자, 소문자와 숫자, 공백(space), 특수문자만 가능합니다.(한글은 아직 지원되지 않습니다.)<br>x, y 좌표값과 정렬 방향, 글자 크기, 색을 지정합니다. 시작점 = (x1, y), 끝나는점 = (x2, y), 사용 가능한 값의 범위는 x값은 (0~128), y값은 (0~60)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
+                "if_button_press":             "<br>지정한 조종기의 버튼이 눌러졌을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
+                "if_joystick_direction":       "<br>조종기의 조이스틱을 지정한 방향으로 움직였을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
+                "light_controller_color_input":           "<br>빛의 삼원색인 Red, Green, Blue 값을 지정하여 조종기 LED의 색상을 원하는대로 만들 수 있습니다.<br>10진수(0 ~ 255) 값을 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
+                "light_controller_color_select":          "<br>RGB 색지정 블록을 이용해서 만들 수 있는<br> 조종기 LED 예시입니다.<br>RGB 색지정 블록을 이용해서 멋진 색깔을<br> 다양하게 만들어보세요.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
+                "light_controller_color_preset":         "<br>조종기 LED를 조작하는데 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
+                "light_controller_manual_single_input":   "<br>조종기 LED를 조작하는데 사용합니다.<br>2진수(0b00000001 ~ 0b00000111), 10진수(32 ~ 224), 16진수(0x20 ~ 0xE0) 값을 사용할 수 있습니다.  2진수로 표현한 값에서 각각의 비트는 LED의 Red, Green, Blue 색을 선택하는 스위치 역할을 합니다.  밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다. 값이 커질수록 더 밝아집니다. <br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
+                "light_controller_manual_single_off":     "<br>조종기의 모든 LED를 끕니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED끄기</font>",
+                "value_button":                "<br>조종기에서 눌러진 버튼과 관련된 이벤트를 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
+                "value_joystick":              "<br>조종기의 조이스틱과 관련된 입력 값을 반환합니다. 각 축의 범위는 -100 ~ 100 입니다.<br><br>조이스틱 방향은 가로x세로 = 3x3 = 총9방향입니다.<br>위(왼쪽=17, 가운데=18, 오른쪽=20)<br>중간(왼쪽=33, 센터=34, 오른쪽=36)<br>아래(왼쪽=65, 가운데=66, 오른쪽=68)<br>기본값은 센터=34입니다.<br><br>조이스틱 이벤트는 값이 있을때 2, 없으면 0, 진입 1, 벗어남 3입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
+                "vibrator_delay":              "<br>진동을 지정한 시간동안 켜고 끄는 것을 지정한 시간동안 반복합니다. 이 블럭을 만났을 경우 진동이 켜져있거나 예약된 진동이 있다면 모두 삭제합니다. 이 블럭은 지정한 시간이 끝날 때까지 다음 블럭으로 넘어가지 않습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동</font> <font color='forestgreen'>#즉시</font> <font color='peru'>#시간지연</font>",
+                "vibrator_off":                "<br>진동을 끕니다. 예약된 진동이 있다면 모두 삭제합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동끄기</font>",
+                "vibrator_on_delay":           "<br>진동을 지정한 시간동안 켭니다. 이 블럭을 만났을 경우 진동이 켜져있거나 예약된 진동이 있다면 모두 삭제합니다. 이 블럭은 지정한 시간이 끝날 때까지 다음 블럭으로 넘어가지 않습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동</font> <font color='forestgreen'>#즉시</font> <font color='peru'>#시간지연</font>",
+                "vibrator_on_reserve":         "<br>진동을 지정한 시간동안 켜는 것을 예약합니다. 이 블럭은 명령을 전달 후 바로 다음 블럭으로 넘어갑니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동</font> <font color='forestgreen'>#예약</font>",
+                "vibrator_reserve":            "<br>진동을 지정한 시간동안 켜고 끄는 것을 지정한 시간동안 반복하도록 예약합니다. 이 블럭은 명령을 전달 후 바로 다음 블럭으로 넘어갑니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동</font> <font color='forestgreen'>#예약</font>",
+            }
         },
 
         en: {
-            // en.js에 작성하던 내용
             Blocks: {
                 common_light_color_cottoncandy: 'cotton candy',
                 common_light_color_emerald: 'emerald',
@@ -341,108 +338,79 @@ Entry.byrobot_controller_4.setLanguage = function() {
             },
 
             template: {
-                controller_buzzer_hz: 'play Buzzer %1 Hz sound %2',
-                controller_buzzer_hz_delay: 'play Buzzer %1 Hz sound for %2 second %3',
-                controller_buzzer_hz_reserve: 'reserve to play Buzzer %1 Hz for %2 second %3',
-                controller_buzzer_off: 'turn off the buzzer %1',
-                controller_buzzer_scale: 'play %1 octave %2 %3',
-                controller_buzzer_scale_delay: 'play %1 octave %2 for %3 second %4',
-                controller_buzzer_scale_reserve: 'reserve to play %1 octave %2 for %3 second %4',
-                controller_display_clear: 'clear controller display x:%1, y:%2, width:%3, height:%4, color:%5 %6',
-                controller_display_clear_all: 'clear controller display with %1 color %2',
-                controller_display_draw_circle: 'draw a circle x:%1, y:%2, radius:%3, %4, %5, %6',
-                controller_display_draw_line: 'draw a line x1:%1, y1:%2, x2:%3, y2:%4, %5, %6 %7',
-                controller_display_draw_point: 'draw a point in controller display  x:%1, y:%2, color:%3 %4',
-                controller_display_draw_rect: 'draw a rectangle in controller display x:%1, y:%2, width:%3, height:%4, %5, %6, %7 %8',
-                controller_display_draw_string: 'draw a string in controller display x:%1, y:%2, font size:%3, %4, input:%5, %6',
-                controller_display_draw_string_align: 'draw aligned string in controller display x1:%1, x2:%2, y:%3, align:%4, font size:%5, %6, input:%7, %8',
-                controller_display_invert: 'invert controller display x:%1, y:%2, width:%3, height:%4 %5',
-                controller_if_button_press: 'when press %1',
-                controller_if_joystick_direction: 'when %1 stick move to %2',
-                controller_light_color_input: 'Controller LED R %1, G %2, B %3 %4 %5 %6',
-                controller_light_color_select: 'Controller LED Preset %1 %2 %3 %4',
-                controller_light_color_preset: 'Controller LED %1 %2 %3',
-                controller_light_manual_single_input: 'Controller LED %1 Lightness %2 %3',
-                controller_light_manual_single_off: 'Controller LED Off %1',
-                controller_value_button: '%1',
-                controller_value_joystick: '%1',
-                controller_vibrator_off: 'Vibrator Off %1',
-                controller_vibrator_delay: 'Vibrator %1 sec On, %2 sec Off for %3 sec run %4',
-                controller_vibrator_on_delay: 'Vibrator %1 sec on %2',
-                controller_vibrator_on_reserve: 'Vibrator %1 sec reserve %2',
-                controller_vibrator_reserve: 'Vibrator %1 sec On, %2 sec Off for %3 sec reserve %4',
+                "buzzer_hz": "play %1 Hz sound %2",
+                "buzzer_hz_delay": "play %1 Hz sound for %2 second %3",
+                "buzzer_hz_reserve": "reserve to play %1 Hz sound for %2 second %3",
+                "buzzer_off": "turn off the buzzer %1",
+                "buzzer_scale": "play %1 octave %2 %3",
+                "buzzer_scale_delay": "play %1 octave %2 for %3 second %4",
+                "buzzer_scale_reserve": "reserve to play %1 octave %2 for %3 second %4",
+                "display_clear": "clear controller display x:%1, y:%2, width:%3, height:%4, color:%5 %6",
+                "display_clear_all": "clear controller display with %1 color %2",
+                "display_draw_circle": "draw a circle in controller display x:%1, y:%2, radius:%3, %4, %5, %6",
+                "display_draw_line": "draw a line in controller display x1:%1, y1:%2, x2:%3, y2:%4, %5, %6 %7",
+                "display_draw_point": "draw a point in controller display  x:%1, y:%2, color:%3 %4",
+                "display_draw_rect": "draw a rectangle in controller display x:%1, y:%2, width:%3, height:%4, %5, %6, %7 %8",
+                "display_draw_string": "draw a string in controller display x:%1, y:%2, font size:%3, %4, input:%5, %6",
+                "display_draw_string_align": "draw aligned string in controller display x1:%1, x2:%2, y:%3, align:%4, font size:%5, %6, input:%7, %8",
+                "if_button_press": "when press %1",
+                "if_joystick_direction": "when %1 stick move to %2",
+                "light_controller_color_input": "decide the color values of controller LED R %1, G %2, B %3 %4 %5",
+                "light_controller_color_select": "RGB combination examples of controller LED %1 %2 %3",
+                "light_controller_color_preset": "change the state of %1 controller LED to %2 %3",
+                "light_controller_manual_single_input": "change the brightness of %1 controller LED to %2 %3",
+                "light_controller_manual_single_off": "turn off all controller LEDs %1",
+                "value_button": "%1",
+                "value_joystick": "%1",
+                "vibrator_delay": "vibration %1 second on, %2 second off for %3 seconds %4",
+                "vibrator_off": "turn off the vibrator %1",
+                "vibrator_on_delay": "turn on the vibrator for %1 second %2",
+                "vibrator_on_reserve": "reserve turn on the vibrator for %1 second %2",
+                "vibrator_reserve": "reserve vibration %1 second on, %2 second off for %3 seconds %4",
             },
-
+            
             Helper: {
-                controller_buzzer_hz: '',
-                controller_buzzer_hz_delay: '',
-                controller_buzzer_hz_reserve: '',
-                controller_buzzer_off: '',
-                controller_buzzer_scale: '',
-                controller_buzzer_scale_delay: '',
-                controller_buzzer_scale_reserve: '',
-                controller_display_clear: '',
-                controller_display_clear_all: '',
-                controller_display_draw_circle: '',
-                controller_display_draw_line: '',
-                controller_display_draw_point: '',
-                controller_display_draw_rect: '',
-                controller_display_draw_string: '',
-                controller_display_draw_string_align: '',
-                controller_display_invert: '',
-                controller_if_button_press: '',
-                controller_if_joystick_direction: '',
-                controller_light_color_input: '',
-                controller_light_color_select: '',
-                controller_light_color_preset: '',
-                controller_light_manual_single_input: '',
-                controller_light_manual_single_off: '',
-                controller_value_button: '',
-                controller_value_joystick: '',
-                controller_vibrator_delay: '',
-                controller_vibrator_off: '',
-                controller_vibrator_on_delay: '',
-                controller_vibrator_on_reserve: '',
-                controller_vibrator_reserve: '',
-            },
-        },
+
+            }
+        }
     };
 };
+
+
 
 /***************************************************************************************
  *  엔트리에 등록할 블록들의 블록명
  ***************************************************************************************/
 Entry.byrobot_controller_4.blockMenuBlocks = [
-    'controller_value_button',
-    'controller_value_joystick',
-    'controller_if_button_press',
-    'controller_if_joystick_direction',
-    'controller_light_manual_single_off',
-    'controller_light_manual_single_input',
-    'controller_light_color_preset',
-    'controller_light_color_input',
-    'controller_light_color_select',
-    'controller_display_clear_all',
-    'controller_display_clear',
-    'controller_display_invert',
-    'controller_display_draw_point',
-    'controller_display_draw_line',
-    'controller_display_draw_rect',
-    'controller_display_draw_circle',
-    'controller_display_draw_string',
-    'controller_display_draw_string_align',
-    'controller_buzzer_off',
-    'controller_buzzer_scale',
-    'controller_buzzer_scale_delay',
-    'controller_buzzer_scale_reserve',
-    'controller_buzzer_hz',
-    'controller_buzzer_hz_delay',
-    'controller_buzzer_hz_reserve',
-    'controller_vibrator_off',
-    'controller_vibrator_on_delay',
-    'controller_vibrator_on_reserve',
-    'controller_vibrator_delay',
-    'controller_vibrator_reserve',
+    'value_button',
+    'value_joystick',
+    'if_button_press',
+    'if_joystick_direction',
+    'light_controller_manual_single_off',
+    'light_controller_manual_single_input',
+    'light_controller_color_preset',
+    'light_controller_color_input',
+    'light_controller_color_select',
+    'display_clear_all',
+    'display_clear',
+    'display_draw_point',
+    'display_draw_line',
+    'display_draw_rect',
+    'display_draw_circle',
+    'display_draw_string',
+    'display_draw_string_align',
+    'buzzer_off',
+    'buzzer_scale',
+    'buzzer_scale_delay',
+    'buzzer_scale_reserve',
+    'buzzer_hz',
+    'buzzer_hz_delay',
+    'buzzer_hz_reserve',
+    'vibrator_off',
+    'vibrator_on_delay',
+    'vibrator_on_reserve',
+    'vibrator_delay',
+    'vibrator_reserve',
 ];
 
 
@@ -452,8 +420,8 @@ Entry.byrobot_controller_4.blockMenuBlocks = [
 Entry.byrobot_controller_4.getBlocks = function()
 {
     return {
-
-        controller_value_button: {
+        value_button:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -474,7 +442,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'controller_value_button', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'value_button', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -487,7 +455,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_value_joystick: {
+
+        value_joystick:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -514,7 +484,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'controller_value_joystick', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'value_joystick', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -527,7 +497,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_if_button_press: {
+
+        if_button_press:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -559,12 +531,12 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'controller_if_button_press',
+                type: 'if_button_press',
             },
             paramsKeyMap: {
                 BUTTON: 0,
             },
-            class: 'boolean_input',
+            class: 'byrobot_controller_4_boolean_input',
             isNotFor: ['byrobot_controller_4'],
             func(sprite, script)
             {
@@ -581,7 +553,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             syntax: { js: [], py: [] },
         },
 
-        controller_if_joystick_direction: {
+        if_joystick_direction: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -621,7 +593,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [null, null],
-                type: 'controller_if_joystick_direction',
+                type: 'if_joystick_direction',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -645,7 +617,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_light_manual_single_off: {
+
+        light_controller_manual_single_off:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -654,7 +628,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'controller_light_manual_single_off',
+                type: 'light_controller_manual_single_off',
             },
             paramsKeyMap: {},
             class: 'controller_light',
@@ -665,7 +639,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_light_color_preset: {
+
+        light_controller_color_preset:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -713,7 +689,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [null, null, null],
-                type: 'controller_light_color_preset',
+                type: 'light_controller_color_preset',
             },
             paramsKeyMap: {
                 COLOR: 0,
@@ -730,7 +706,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_light_manual_single_input: {
+
+        light_controller_manual_single_input:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -747,7 +725,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                     { type: 'text', params: ['255'] },
                     null,
                 ],
-                type: 'controller_light_manual_single_input',
+                type: 'light_controller_manual_single_input',
             },
             paramsKeyMap: {
                 FLAGS: 0,
@@ -763,7 +741,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_light_color_input: {
+
+        light_controller_color_input:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -802,7 +782,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                     { type: 'text', params: ['250'] },
                     null,
                 ],
-                type: 'controller_light_color_input',
+                type: 'light_controller_color_input',
             },
             paramsKeyMap: {
                 RED: 0,
@@ -824,7 +804,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_light_color_select: {
+
+        light_controller_color_select:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -875,7 +857,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [null, null, { type: 'text', params: ['250'] }, null],
-                type: 'controller_light_color_select',
+                type: 'light_controller_color_select',
             },
             paramsKeyMap: {
                 COLOR: 0,
@@ -893,7 +875,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_display_clear_all: {
+
+        display_clear_all:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -905,7 +889,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                         [Lang.Blocks.controller_display_pixel_black, '0'],
                         [Lang.Blocks.controller_display_pixel_white, '1'],
                     ],
-                    value: '0',
+                    value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -915,7 +899,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [null, null],
-                type: 'controller_display_clear_all',
+                type: 'display_clear_all',
             },
             paramsKeyMap: {
                 PIXEL: 0,
@@ -929,7 +913,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_display_clear: {
+
+        display_clear:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -962,7 +948,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                     null,
                     null,
                 ],
-                type: 'controller_display_clear',
+                type: 'display_clear',
             },
             paramsKeyMap: {
                 X: 0,
@@ -1026,7 +1012,8 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_display_draw_point: {
+        display_draw_point:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1055,7 +1042,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                     null,
                     null,
                 ],
-                type: 'controller_display_draw_point',
+                type: 'display_draw_point',
             },
             paramsKeyMap: {
                 X: 0,
@@ -1073,7 +1060,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_display_draw_line: {
+
+        display_draw_line:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1119,7 +1108,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                     null,
                     null,
                 ],
-                type: 'controller_display_draw_line',
+                type: 'display_draw_line',
             },
             paramsKeyMap: {
                 X1: 0,
@@ -1143,7 +1132,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_display_draw_rect: {
+
+        display_draw_rect:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1201,7 +1192,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                     null,
                     null,
                 ],
-                type: 'controller_display_draw_rect',
+                type: 'display_draw_rect',
             },
             paramsKeyMap: {
                 X: 0,
@@ -1227,7 +1218,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_display_draw_circle: {
+
+        display_draw_circle:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1270,7 +1263,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                     null,
                     null,
                 ],
-                type: 'controller_display_draw_circle',
+                type: 'display_draw_circle',
             },
             paramsKeyMap: {
                 X: 0,
@@ -1292,7 +1285,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_display_draw_string: {
+
+        display_draw_string:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1335,7 +1330,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                     { type: 'text', params: ['HELLO'] },
                     null,
                 ],
-                type: 'controller_display_draw_string',
+                type: 'display_draw_string',
             },
             paramsKeyMap: {
                 X: 0,
@@ -1357,7 +1352,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_display_draw_string_align: {
+
+        display_draw_string_align:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1415,7 +1412,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                     { type: 'text', params: ['DRONE'] },
                     null,
                 ],
-                type: 'controller_display_draw_string_align',
+                type: 'display_draw_string_align',
             },
             paramsKeyMap: {
                 XSTART: 0,
@@ -1441,16 +1438,20 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_buzzer_off: {
+
+        buzzer_off:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [{ type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 }],
+            params: [
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
+            ],
             events: {},
             def: {
                 params: [null],
-                type: 'controller_buzzer_off',
+                type: 'buzzer_off',
             },
             paramsKeyMap: {},
             class: 'buzzer',
@@ -1461,7 +1462,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_buzzer_scale: {
+
+        buzzer_scale:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1469,7 +1472,13 @@ Entry.byrobot_controller_4.getBlocks = function()
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['4', '3'], ['5', '4'], ['6', '5'], ['7', '6'], ['8', '7']],
+                    options: [
+                        ['4', '3'],
+                        ['5', '4'],
+                        ['6', '5'],
+                        ['7', '6'],
+                        ['8', '7'],
+                    ],
                     value: '4',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1502,7 +1511,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [null, null, null],
-                type: 'controller_buzzer_scale',
+                type: 'buzzer_scale',
             },
             paramsKeyMap: {
                 OCTAVE: 0,
@@ -1523,7 +1532,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_buzzer_scale_delay: {
+
+        buzzer_scale_delay:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1531,7 +1542,13 @@ Entry.byrobot_controller_4.getBlocks = function()
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['4', '3'], ['5', '4'], ['6', '5'], ['7', '6'], ['8', '7']],
+                    options: [
+                        ['4', '3'],
+                        ['5', '4'],
+                        ['6', '5'],
+                        ['7', '6'],
+                        ['8', '7'],
+                    ],
                     value: '4',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1564,8 +1581,13 @@ Entry.byrobot_controller_4.getBlocks = function()
             ],
             events: {},
             def: {
-                params: [null, null, { type: 'text', params: ['1'] }, null],
-                type: 'controller_buzzer_scale_delay',
+                params: [
+                    null,
+                    null,
+                    { type: 'text', params: ['1'] },
+                    null,
+                ],
+                type: 'buzzer_scale_delay',
             },
             paramsKeyMap: {
                 OCTAVE: 0,
@@ -1588,7 +1610,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_buzzer_scale_reserve: {
+
+        buzzer_scale_reserve:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1596,7 +1620,13 @@ Entry.byrobot_controller_4.getBlocks = function()
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['4', '3'], ['5', '4'], ['6', '5'], ['7', '6'], ['8', '7']],
+                    options: [
+                        ['4', '3'],
+                        ['5', '4'],
+                        ['6', '5'],
+                        ['7', '6'],
+                        ['8', '7'],
+                    ],
                     value: '4',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1629,8 +1659,13 @@ Entry.byrobot_controller_4.getBlocks = function()
             ],
             events: {},
             def: {
-                params: [null, null, { type: 'text', params: ['1'] }, null],
-                type: 'controller_buzzer_scale_reserve',
+                params: [
+                    null,
+                    null,
+                    { type: 'text', params: ['1'] },
+                    null,
+                ],
+                type: 'buzzer_scale_reserve',
             },
             paramsKeyMap: {
                 OCTAVE: 0,
@@ -1653,7 +1688,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_buzzer_hz: {
+
+        buzzer_hz:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1665,7 +1702,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [{ type: 'text', params: ['1000'] }, null],
-                type: 'controller_buzzer_hz',
+                type: 'buzzer_hz',
             },
             paramsKeyMap: {
                 HZ: 0,
@@ -1679,7 +1716,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_buzzer_hz_delay: {
+
+        buzzer_hz_delay:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1692,7 +1731,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [{ type: 'text', params: ['1000'] }, { type: 'text', params: ['1'] }, null],
-                type: 'controller_buzzer_hz_delay',
+                type: 'buzzer_hz_delay',
             },
             paramsKeyMap: {
                 HZ: 0,
@@ -1708,7 +1747,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_buzzer_hz_reserve: {
+
+        buzzer_hz_reserve:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1720,8 +1761,12 @@ Entry.byrobot_controller_4.getBlocks = function()
             ],
             events: {},
             def: {
-                params: [{ type: 'text', params: ['1000'] }, { type: 'text', params: ['1'] }, null],
-                type: 'controller_buzzer_hz_reserve',
+                params: [
+                    { type: 'text', params: ['1000'] },
+                    { type: 'text', params: ['1'] },
+                    null,
+                ],
+                type: 'buzzer_hz_reserve',
             },
             paramsKeyMap: {
                 HZ: 0,
@@ -1737,7 +1782,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_vibrator_off: {
+
+        vibrator_off:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1746,7 +1793,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'controller_vibrator_off',
+                type: 'vibrator_off',
             },
             paramsKeyMap: {},
             class: 'vibrator',
@@ -1757,7 +1804,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_vibrator_on_delay: {
+
+        vibrator_on_delay:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1769,7 +1818,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [{ type: 'text', params: ['1'] }, null],
-                type: 'controller_vibrator_on_delay',
+                type: 'vibrator_on_delay',
             },
             paramsKeyMap: {
                 TIMEON: 0,
@@ -1783,7 +1832,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_vibrator_on_reserve: {
+
+        vibrator_on_reserve:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1795,7 +1846,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [{ type: 'text', params: ['1'] }, null],
-                type: 'controller_vibrator_on_reserve',
+                type: 'vibrator_on_reserve',
             },
             paramsKeyMap: {
                 TIMEON: 0,
@@ -1809,7 +1860,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_vibrator_delay: {
+
+        vibrator_delay:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1828,7 +1881,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                     { type: 'text', params: ['1'] },
                     null,
                 ],
-                type: 'controller_vibrator_delay',
+                type: 'vibrator_delay',
             },
             paramsKeyMap: {
                 TIMEON: 0,
@@ -1846,7 +1899,9 @@ Entry.byrobot_controller_4.getBlocks = function()
             },
         },
 
-        controller_vibrator_reserve: {
+
+        vibrator_reserve:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1865,7 +1920,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                     { type: 'text', params: ['1'] },
                     null,
                 ],
-                type: 'controller_vibrator_reserve',
+                type: 'vibrator_reserve',
             },
             paramsKeyMap: {
                 TIMEON: 0,
