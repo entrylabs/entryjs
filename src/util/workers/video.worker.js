@@ -16,6 +16,12 @@ let mobileNet = null;
 let coco = null;
 let faceLoaded = false;
 
+let modelStatus = {
+    pose: false,
+    object: false,
+    face: false,
+};
+
 let options = {};
 const dimension = { width: 0, height: 0 };
 let offCanvas = null;
@@ -38,7 +44,7 @@ async function processImage() {
 }
 
 async function objectDetect(context) {
-    if (!coco) {
+    if (!coco || !modelStatus.object) {
         return;
     }
 
@@ -47,7 +53,7 @@ async function objectDetect(context) {
 }
 
 async function faceDetect(context) {
-    if (!faceLoaded) {
+    if (!faceLoaded || !modelStatus.face) {
         return;
     }
     const predictions = await faceapi
@@ -60,7 +66,7 @@ async function faceDetect(context) {
 }
 
 async function poseDetect(context) {
-    if (!mobileNet) {
+    if (!mobileNet || !modelStatus.pose) {
         return;
     }
     const currentFlipStatus = options.flipStatus ? options.flipStatus.horizontal : true;
@@ -133,5 +139,18 @@ self.onmessage = async function(e) {
         case 'option':
             options = e.data.option;
             break;
+
+        case 'handle':
+            const { target, mode } = e.data;
+            const targetMode = mode === 'on' ? true : false;
+            modelStatus[target] = targetMode;
+            break;
+
+        case 'handleOff':
+            modelStatus = {
+                pose: false,
+                object: false,
+                face: false,
+            };
     }
 };

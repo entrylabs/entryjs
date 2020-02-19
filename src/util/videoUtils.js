@@ -1,5 +1,9 @@
+/**
+ * nt11576 Lee.Jaewon
+ * commented area with "motion test" is for the motion detection testing canvas to test the cv, uncomment all codes labeled "motion test"
+ */
+
 import { GEHelper } from '../graphicEngine/GEHelper';
-import * as posenet from '@tensorflow-models/posenet';
 import VideoWorker from './workers/video.worker';
 
 // input resolution setting, this regards of the position of posenet and cocoSSD
@@ -34,7 +38,6 @@ class VideoUtils {
         /////////////////////////////////
         this.objectDetected = null;
         this.initialized = false;
-        this.mobileNet = null;
         this.poses = { predictions: [], adjacents: [] };
         this.isInitialized = false;
         this.videoOnLoadHandler = this.videoOnLoadHandler.bind(this);
@@ -86,6 +89,7 @@ class VideoUtils {
             top: 0,
             bottom: 0,
         };
+        this.disableAllModels();
     }
 
     async initialize() {
@@ -95,6 +99,7 @@ class VideoUtils {
 
         this.isInitialized = true;
 
+        // this canvas is for motion calculation
         if (!this.inMemoryCanvas) {
             this.inMemoryCanvas = document.createElement('canvas');
             this.inMemoryCanvas.width = CANVAS_WIDTH;
@@ -140,19 +145,6 @@ class VideoUtils {
         }
     }
 
-    async initializePosenet() {
-        if (this.isMobileNetInit) {
-            return;
-        }
-        this.mobileNet = await posenet.load({
-            architecture: 'MobileNetV1',
-            outputStride: 16,
-            inputResolution: { width: VIDEO_WIDTH, height: VIDEO_HEIGHT },
-            multiplier: 1,
-        });
-        this.isMobileNetInit = true;
-    }
-
     test() {
         this.indicatorStatus = {
             pose: true,
@@ -189,25 +181,18 @@ class VideoUtils {
         worker.onmessage = (e) => {
             const { type, message } = e.data;
             switch (type) {
-                case 'pose':
-                    this.poses = message;
-                    break;
                 case 'init':
                     this.initialized = true;
                     this.turnOnWebcam();
-                    break;
-                case 'motion':
-                    this.motions = message;
-                    const {
-                        maxPoint: { score, x, y },
-                    } = message;
-
                     break;
                 case 'face':
                     this.faces = message;
                     break;
                 case 'coco':
                     this.objectDetected = message;
+                    break;
+                case 'pose':
+                    this.poses = message;
                     break;
             }
         };
@@ -225,6 +210,19 @@ class VideoUtils {
         );
         this.sendImageToWorker();
         this.motionDetect();
+    }
+
+    manageModel(target, mode) {
+        worker.postMessage({
+            type: 'handle',
+            target,
+            mode,
+        });
+    }
+    disableAllModels() {
+        worker.postMessage({
+            type: 'handleOff',
+        });
     }
 
     async sendImageToWorker() {
@@ -259,11 +257,17 @@ class VideoUtils {
     }
 
     motionDetect() {
+        if (!this.inMemoryCanvas) {
+            return;
+        }
         const context = this.inMemoryCanvas.getContext('2d');
         context.drawImage(this.video, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         const imageData = context.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         const data = imageData.data;
-        const motion = [];
+        // // motion test
+        // const motion = [];
+        // // motion test
+
         const motions = { total: 0, maxPoint: { score: 0, x: -10, y: -10 }, motion: [] };
         for (let y = 0; y < CANVAS_HEIGHT; y += SAMPLE_SIZE) {
             for (let x = 0; x <= CANVAS_WIDTH; x += SAMPLE_SIZE) {
@@ -278,14 +282,15 @@ class VideoUtils {
                 const gDiff = Math.abs(currentPos.g - g);
                 const bDiff = Math.abs(currentPos.b - b);
                 const areaMotionScore = rDiff + gDiff + bDiff / (SAMPLE_SIZE * SAMPLE_SIZE);
-
-                motion.push({
-                    x,
-                    y,
-                    r,
-                    g,
-                    b,
-                });
+                // // motion test
+                // motion.push({
+                //     x,
+                //     y,
+                //     r,
+                //     g,
+                //     b,
+                // });
+                // // motion test
                 if (rDiff > BRIGHTNESS_THRESHOLD) {
                     if (motions.maxPoint.score < areaMotionScore) {
                         motions.maxPoint.x = x;
@@ -297,7 +302,7 @@ class VideoUtils {
                 previousFrame[pos] = { r, g, b };
             }
         }
-        this.motions = motions;
+
         const { score, x, y } = motions.maxPoint;
         if (score > 0 && x > 0 && y > 0) {
             const prevX = this.motionPoint.x;
@@ -316,6 +321,9 @@ class VideoUtils {
             this.motionPoint.x = x;
             this.motionPoint.y = y;
         }
+
+        this.motions = motions;
+
         setTimeout(this.motionDetect.bind(this), 80);
     }
 
@@ -378,6 +386,7 @@ class VideoUtils {
 
     // videoUtils.destroy does not actually destroy singletonClass, but instead resets the whole stuff except models to be used
     destroy() {
+        this.disableAllModels();
         this.turnOffWebcam();
         this.stream.getTracks().forEach((track) => {
             track.stop();
@@ -385,12 +394,12 @@ class VideoUtils {
         worker.terminate();
         this.video = null;
         this.canvasVideo = null;
+        this.inMemoryCanvas = null;
         this.flipStatus = {
             horizontal: false,
             vertical: false,
         };
 
-        this.mobileNet = null;
         this.poses = null;
         this.isInitialized = false;
     }

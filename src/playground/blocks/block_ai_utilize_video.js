@@ -223,6 +223,62 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 py: [],
             },
         },
+        video_toggle_model: {
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic',
+            statements: [],
+            template: '%1 인식 %2 하기 %3',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['사람', 'pose'],
+                        ['얼굴', 'face'],
+                        ['사물', 'object'],
+                    ],
+                    value: 'pose',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['시작', 'on'],
+                        ['종료', 'off'],
+                    ],
+                    value: 'on',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/ai_utilize_icon.svg',
+                    size: 11,
+                },
+            ],
+            events: {},
+            def: {
+                type: 'video_toggle_model',
+            },
+            paramsKeyMap: {
+                TARGET: 0,
+                MODE: 1,
+            },
+            class: 'video',
+            isNotFor: ['video'],
+            async func(sprite, script) {
+                const target = script.getField('TARGET');
+                const mode = script.getField('MODE');
+                VideoUtils.manageModel(target, mode);
+            },
+            syntax: {
+                js: [],
+                py: [],
+            },
+        },
         video_toggle_ind: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,

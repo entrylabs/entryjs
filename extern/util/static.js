@@ -399,6 +399,7 @@ EntryStatic.getAllBlocks = function() {
                 'video_flip_camera',
                 'video_set_camera_option',
                 'video_motion_value',
+                'video_toggle_model',
                 'video_number_detect',
                 'video_toggle_ind',
                 'video_body_part_coord',
