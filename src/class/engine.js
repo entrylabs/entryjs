@@ -348,7 +348,6 @@ Entry.Engine = class Engine {
             );
             this.audioShadePanel_.appendChild(audioShadeMainCircle);
             const micImage = Entry.createElement('img', 'audioShadeImg').addClass('audioShadeImg');
-            micImage.src = '/lib/entry-js/images/ic-audio-sensing-mic.svg';
             audioShadeMainCircle.appendChild(micImage);
 
             const audioShadeText = Entry.createElement('div', 'audioShadeText').addClass(
