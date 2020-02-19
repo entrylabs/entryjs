@@ -316,7 +316,7 @@ class VideoUtils {
             this.motionPoint.x = x;
             this.motionPoint.y = y;
         }
-        setTimeout(this.motionDetect.bind(this), 50);
+        setTimeout(this.motionDetect.bind(this), 80);
     }
 
     async checkUserCamAvailable() {
