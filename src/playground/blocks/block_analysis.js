@@ -311,7 +311,8 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'get_table_fields',
+                        base: 'get_table_fields',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Block',
@@ -472,7 +473,8 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'get_table_fields',
+                        base: 'get_table_fields',
+                        defaultType: 'number',
                     },
                 ],
                 events: {},
@@ -530,7 +532,8 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'get_table_fields',
+                        base: 'get_table_fields',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Dropdown',
