@@ -96,7 +96,6 @@ class DataTable {
                     Entry.playground.dataTable.getSource(id).setArray({
                         chart: charts,
                         fields: table[0],
-                        chart: charts,
                         data: table.slice(1),
                         name: title,
                     });
@@ -106,6 +105,7 @@ class DataTable {
                     Lang.DataAnalytics.saved_table_title,
                     Lang.DataAnalytics.saved_table_content
                 );
+                Entry.playground.reloadPlayground();
             })
             .on('toast', (message) => {
                 const { title, content } = message;
