@@ -363,7 +363,7 @@ class _GEHelper extends GEHelperBase {
     }
 
     drawHumanSkeletons(adjacents: Array<any>, flipStatus: any) {
-        let coordList: any = [];
+        const coordList: any = [];
         let handler = this.poseIndicatorGraphic;
         adjacents.forEach((adjacentList: any) => {
             adjacentList.forEach((pair: any) => {
@@ -379,60 +379,60 @@ class _GEHelper extends GEHelperBase {
 
         if (this._isWebGL) {
             handler.lineStyle(5, 0x0000ff);
-            coordList.forEach((coord: any) => {
-                const { start, end } = coord;
-                handler.moveTo(start.x, start.y).lineTo(end.x, end.y);
-            });
         } else {
             handler = handler.graphics;
             handler.setStrokeStyle(8, 'round').beginStroke('blue');
-            coordList.forEach((coord: any) => {
-                const { start, end } = coord;
-                handler.moveTo(start.x, start.y).lineTo(end.x, end.y);
-            });
         }
+        coordList.forEach((coord: any) => {
+            const { start, end } = coord;
+            handler.moveTo(start.x, start.y).lineTo(end.x, end.y);
+        });
     }
 
-    drawFaceBoxes(faces: Array<any>, flipStatus: any) {
+    drawFaceBoxes(faces: any, flipStatus: any) {
         let handler = this.faceIndicatorGraphic;
-        let faceBoxList: Array = [];
 
         const { WIDTH, HEIGHT } = INITIAL_VIDEO_PARAMS;
-        faces.forEach((face) => {
-            console.log(face);
-            const target = face.alignedRect._box;
-
-            let x = target._x;
-            let y = target._y;
-            const width = target._width;
-            const height = target._height;
-            if (flipStatus.horizontal) {
-                x = INITIAL_VIDEO_PARAMS.WIDTH - x - width;
-            }
-            if (flipStatus.vertical) {
-                y = INITIAL_VIDEO_PARAMS.HEIGHT - y - height;
-            }
-            faceBoxList.push({ x, y, width, height });
-        });
 
         if (this._isWebGL) {
             handler.clear();
-            handler.lineStyle(5, 0xff0000);
-            faceBoxList.forEach((item: any) => {
-                const { x, y, width, height } = item;
-                handler.drawRect(x, y, width, height);
-            });
+            handler.lineStyle(2, 0xff0000);
         } else {
             handler = handler.graphics;
             handler.clear();
-            faceBoxList.forEach((item: any) => {
-                const { x, y, width, height } = item;
-                handler
-                    .setStrokeStyle(8, 'round')
-                    .beginStroke('red')
-                    .drawRect(x, y, width, height);
-            });
+            handler.setStrokeStyle(2, 'round').beginStroke('red');
         }
+        faces.forEach((face: { landmarks: { _positions: any[] } }) => {
+            face.landmarks._positions.forEach((item, i) => {
+                if (
+                    i === 0 ||
+                    i === 17 ||
+                    i === 27 ||
+                    i === 31 ||
+                    i === 36 ||
+                    i === 42 ||
+                    i === 48
+                ) {
+                    return;
+                }
+
+                const prev = face.landmarks._positions[i - 1];
+
+                let { _x, _y } = item;
+                let prevX = prev._x;
+                let prevY = prev._y;
+                if (flipStatus.horizontal) {
+                    _x = WIDTH - _x;
+                    prevX = WIDTH - prevX;
+                }
+                if (flipStatus.vertical) {
+                    _y = HEIGHT - _y;
+                    prevY = HEIGHT - prevY;
+                }
+
+                handler.moveTo(prevX, prevY).lineTo(_x, _y);
+            });
+        });
     }
 
     drawObjectBox(objects: Array<any>, flipStatus: any) {

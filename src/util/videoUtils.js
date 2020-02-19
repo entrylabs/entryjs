@@ -39,7 +39,7 @@ class VideoUtils {
         this.motionPoint = { x: 0, y: 0 };
         this.motionDirection = { x: 0, y: 0 };
         /////////////////////////////////
-        this.objectDetected = null;
+        this.objects = null;
         this.initialized = false;
         this.poses = { predictions: [], adjacents: [] };
         this.isInitialized = false;
@@ -83,9 +83,10 @@ class VideoUtils {
         GEHelper.setVideoAlpha(this.canvasVideo, 50);
         GEHelper.tickByEngine();
 
-        this.poses = null;
-        this.objectDetected = null;
+        this.poses = { predictions: [], adjacents: [] };
         this.faces = [];
+        this.objects = [];
+        this.objects = [];
         this.disableAllModels();
     }
 
@@ -143,11 +144,11 @@ class VideoUtils {
     }
 
     startDrawIndicators() {
-        if (this.objectDetected && this.indicatorStatus.object) {
-            GEHelper.drawObjectBox(this.objectDetected, this.flipStatus);
+        if (this.objects && this.indicatorStatus.object) {
+            GEHelper.drawObjectBox(this.objects, this.flipStatus);
         }
         if (this.faces && this.indicatorStatus.face) {
-            const result = GEHelper.drawFaceBoxes(this.faces, this.flipStatus);
+            GEHelper.drawFaceBoxes(this.faces, this.flipStatus);
         }
         if (this.poses && this.indicatorStatus.pose) {
             GEHelper.drawHumanPoints(this.poses.predictions, this.flipStatus);
@@ -178,7 +179,7 @@ class VideoUtils {
                     this.faces = message;
                     break;
                 case 'coco':
-                    this.objectDetected = message;
+                    this.objects = message;
                     break;
                 case 'pose':
                     this.poses = message;
