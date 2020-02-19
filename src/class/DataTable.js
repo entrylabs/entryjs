@@ -61,7 +61,17 @@ class DataTable {
         }
     }
 
-    selectTable(table = {}) {
+    async selectTable(table = {}) {
+        if (this.tempDataAnalytics) {
+            const temp = { ...this.tempDataAnalytics };
+            if (await entrylms.confirm(Lang.Menus.save_modified_table)) {
+                const result = this.saveTable(temp);
+                if (!result) {
+                    return;
+                }
+            }
+            delete this.tempDataAnalytics;
+        }
         const json = table.toJSON && table.toJSON();
         const { tab } = table;
         this.selected = table;
@@ -69,47 +79,57 @@ class DataTable {
             table: { ...json, tab },
         });
         delete table.tab;
+        return table;
     }
+
+    saveTable = (dataAnalytics) => {
+        const { id, table = [[]], charts = [], title } = dataAnalytics;
+        if (!title) {
+            Entry.toast.alert(
+                Lang.DataAnalytics.fail_save_table,
+                Lang.DataAnalytics.empty_table_name_content
+            );
+            return;
+        }
+        if (
+            Entry.playground.isDuplicatedTableName(
+                title,
+                _.findIndex(this.tables, (table) => table.id === id)
+            )
+        ) {
+            Entry.toast.alert(
+                Lang.DataAnalytics.fail_save_table,
+                Lang.DataAnalytics.duplicate_table_name_content
+            );
+            return;
+        }
+        if (this.getSource(id)) {
+            this.getSource(id).setArray({
+                chart: charts,
+                fields: table[0],
+                chart: charts,
+                data: table.slice(1),
+                name: title,
+            });
+            Entry.playground.injectTable();
+        }
+        Entry.toast.success(
+            Lang.DataAnalytics.saved_table_title,
+            Lang.DataAnalytics.saved_table_content
+        );
+        delete this.tempDataAnalytics;
+        return true;
+    };
 
     #generateView() {
         this.dataAnalytics = new DataAnalytics({ container: this.#view, data: {} })
-            .on('submit', (dataAnalytics) => {
-                const { id, table = [[]], charts = [], title } = dataAnalytics;
-                if (!title) {
-                    return Entry.toast.alert(
-                        Lang.DataAnalytics.fail_save_table,
-                        Lang.DataAnalytics.empty_table_name_content
-                    );
-                }
-                if (
-                    Entry.playground.isDuplicatedTableName(
-                        title,
-                        _.findIndex(this.tables, (table) => table.id === id)
-                    )
-                ) {
-                    return Entry.toast.alert(
-                        Lang.DataAnalytics.fail_save_table,
-                        Lang.DataAnalytics.duplicate_table_name_content
-                    );
-                }
-                if (Entry.playground.dataTable.getSource(id)) {
-                    Entry.playground.dataTable.getSource(id).setArray({
-                        chart: charts,
-                        fields: table[0],
-                        chart: charts,
-                        data: table.slice(1),
-                        name: title,
-                    });
-                    Entry.playground.injectTable();
-                }
-                Entry.toast.success(
-                    Lang.DataAnalytics.saved_table_title,
-                    Lang.DataAnalytics.saved_table_content
-                );
-            })
+            .on('submit', this.saveTable)
             .on('toast', (message) => {
                 const { title, content } = message;
                 Entry.toast.alert(title, content);
+            })
+            .on('change', (dataAnalytics) => {
+                this.tempDataAnalytics = dataAnalytics;
             });
     }
 
