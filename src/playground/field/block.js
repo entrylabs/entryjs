@@ -178,6 +178,8 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         if (this._originBlock) {
             blockType = this._originBlock.type;
             delete this._originBlock;
+        } else if (this._content.base) {
+            blockType = this._content.base;
         } else if (this._content.defaultType) {
             blockType = this._content.defaultType;
         } else {
