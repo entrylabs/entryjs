@@ -1209,7 +1209,6 @@ Entry.byrobot_drone_4 =
 /***************************************************************************************
  *  언어 적용
  ***************************************************************************************/
-//
 Entry.byrobot_drone_4.setLanguage = function() {
     return {
         ko: {
@@ -2104,9 +2103,12 @@ Entry.byrobot_drone_4.getBlocks = function()
                 const read = Entry.hw.portData;
                 const device = script.getField('DEVICE'); // paramsKeyMap에 정의된 이름 사용
 
-                if (read[device] == script.getField('DIRECTION')) {
+                if (read[device] == script.getField('DIRECTION'))
+                {
                     return true;
-                } else {
+                }
+                else
+                {
                     return false;
                 }
             },
@@ -4032,6 +4034,7 @@ Entry.byrobot_drone_4.getBlocks = function()
                 return Entry.byrobot_drone_4.sendControlQuad(script, roll, pitch, yaw, throttle, time, true);
             },
         },
+
     };
 };
 
