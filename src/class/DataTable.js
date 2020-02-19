@@ -1,7 +1,7 @@
 import _find from 'lodash/find';
 import _findIndex from 'lodash/findIndex';
 import DataTableSource from './source/DataTableSource';
-import { ModalChart, DataAnalytics } from '@entrylabs/tool';
+import { DataAnalytics, ModalChart } from '@entrylabs/tool';
 
 class DataTable {
     #tables = [];

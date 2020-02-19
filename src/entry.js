@@ -100,6 +100,8 @@ require('./util/toast');
 require('./util/tooltip');
 require('./util/tvCast');
 require('./util/virtualScroll');
+require('./util/htmlElementPatcher');
+require('./util/eventHandler');
 require('./util/utils');
 require('./util/youtube');
 require('./util/weather_forecast');
