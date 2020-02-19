@@ -111,7 +111,7 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function() {
                 menuName() {
                     const value = this.getTargetValue('disaster');
                     if (!value) {
-                        return [];
+                        return [[Lang.Blocks.no_target, 'null']];
                     }
                     return categoryMap[value].sub.map((category) => [
                         Lang.Blocks[`behaviorConduct${category}`],

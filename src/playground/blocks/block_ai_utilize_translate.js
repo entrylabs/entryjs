@@ -249,7 +249,7 @@ Entry.AI_UTILIZE_BLOCK.translate.getBlocks = function() {
                 menuName() {
                     const value = this.getTargetValue('translate');
                     if (!value) {
-                        return [];
+                        return [[Lang.Blocks.no_target, 'null']];
                     }
                     const langCodeMap = getInitialCodeMap();
                     const convertedLangCode = replaceLanguageCode(value);

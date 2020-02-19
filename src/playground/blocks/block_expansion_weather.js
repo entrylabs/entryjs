@@ -61,7 +61,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                 menuName() {
                     const value = this.getTargetValue('weather');
                     if (!value) {
-                        return [];
+                        return [[Lang.Blocks.no_target, 'null']];
                     }
                     return getCityOptions(value);
                 },

@@ -115,7 +115,7 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
                 menuName() {
                     const value = this.getTargetValue('lifesafety');
                     if (!value) {
-                        return [];
+                        return [[Lang.Blocks.no_target, 'null']];
                     }
                     return categoryMap[value].sub.map((category) => [
                         Lang.Blocks[`behaviorConduct${category}`],
