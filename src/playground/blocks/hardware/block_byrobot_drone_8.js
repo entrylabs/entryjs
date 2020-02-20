@@ -2835,7 +2835,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                         [Lang.Blocks.drone_control_quad_yaw,      'control_quad8_yaw'],
                         [Lang.Blocks.drone_control_quad_throttle, 'control_quad8_throttle'],
                     ],
-                    value: 'control_throttle',
+                    value: 'control_quad8_throttle',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,

@@ -693,10 +693,10 @@ Entry.byrobot_controller_4.getBlocks = function()
             isNotFor: ['byrobot_controller_4'],
             func(sprite, script)
             {
-                const mode      = 0x21;
-                const interval  = parseInt(script.getField('BRIGHTNESS'), 10);
-                const color     = Entry.byrobot_drone_base.getRgbFromString(script.getField('COLOR'));
-                return Entry.byrobot_drone_base.setLightModeColor(script, 0x20, mode, interval, color.r, color.g, color.b);
+                const mode        = 0x21;
+                const interval    = parseInt(script.getField('BRIGHTNESS'), 10);
+                const colorString = script.getField('COLOR');
+                return Entry.byrobot_drone_base.setLightModeColorString(script, 0x20, mode, interval, colorString);
             },
         },
 
