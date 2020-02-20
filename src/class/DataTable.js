@@ -103,11 +103,12 @@ class DataTable {
             );
             return;
         }
-        if (this.getSource(id)) {
-            this.getSource(id).setArray({
+        const source = this.getSource(id);
+        if (source) {
+            source.modal = null;
+            source.setArray({
                 chart: charts,
                 fields: table[0],
-                chart: charts,
                 data: table.slice(1),
                 name: title,
             });
