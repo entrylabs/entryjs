@@ -1,3 +1,6 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable brace-style */
+/* eslint-disable max-len */
 'use strict';
 
 /***************************************************************************************
@@ -24,12 +27,12 @@ Entry.byrobot_dronefighter_flight = {
     },
 
     // 초기화
-    setZero: function() {
+    setZero() {
         // 초기화
 
         // 한 번에 명령을 전송하면 hw까지 제대로 전달되지 않는 경우가 있어
         // 명령을 각각 분리하여 전송하게 함(2017.01.03)
-        for (var i = 0; i < 1; i++) {
+        for (let i = 0; i < 1; i++) {
             this.transferCommand(0x10, 0x24, 0);
             this.transferVibrator(0, 0, 0, 0);
             this.transferbuzzer(0, 0, 0);
@@ -47,28 +50,28 @@ Entry.byrobot_dronefighter_flight = {
 
         // 모니터 화면 상단에 차례대로 나열하는 값
         listPorts: {
-            state_modeVehicle:              {name: 'Vehicle Mode',              type: 'input',  pos: { x: 0, y: 0 }},
-            state_modeFlight:               {name: 'Flight Mode',               type: 'input',  pos: { x: 0, y: 0 },},
-            state_coordinate:               {name: 'Headless',                  type: 'input',  pos: { x: 0, y: 0 },},
-            state_modeDrive:                {name: 'Drive Mode',                type: 'input',  pos: { x: 0, y: 0 }},
-            state_battery:                  {name: 'Battery',                   type: 'input',  pos: { x: 0, y: 0 }},
-            attitude_roll:                  {name: 'Roll',                      type: 'input',  pos: { x: 0, y: 0 }},
-            attitude_pitch:                 {name: 'Pitch',                     type: 'input',  pos: { x: 0, y: 0 }},
-            attitude_yaw:                   {name: 'Yaw',                       type: 'input',  pos: { x: 0, y: 0 }},
-            irmessage_irdata:               {name: 'IR Data',                   type: 'input',  pos: { x: 0, y: 0 }},
-            joystick_left_x:                {name: 'Left Joystick X',           type: 'input',  pos: { x: 0, y: 0 }},
-            joystick_left_y:                {name: 'Left Joystick Y',           type: 'input',  pos: { x: 0, y: 0 }},
-            joystick_left_direction:        {name: 'Left Joystick Direction',   type: 'input',  pos: { x: 0, y: 0 }},
-            joystick_left_event:            {name: 'Left Joystick Event',       type: 'input',  pos: { x: 0, y: 0 }},
-            joystick_left_command:          {name: 'Left Joystick Command',     type: 'input',  pos: { x: 0, y: 0 }},
-            joystick_right_x:               {name: 'Right Joystick X',          type: 'input',  pos: { x: 0, y: 0 }},
-            joystick_right_y:               {name: 'Right Joystick Y',          type: 'input',  pos: { x: 0, y: 0 }},
-            joystick_right_direction:       {name: 'Right Joystick Direction',  type: 'input',  pos: { x: 0, y: 0 }},
-            joystick_right_event:           {name: 'Right Joystick Event',      type: 'input',  pos: { x: 0, y: 0 }},
-            joystick_right_command:         {name: 'Right Joystick Command',    type: 'input',  pos: { x: 0, y: 0 }},
-            button_button:                  {name: 'Button',                    type: 'input',  pos: { x: 0, y: 0 }},
-            button_event:                   {name: 'Button Event',              type: 'input',  pos: { x: 0, y: 0 }},
-            entryhw_countTransferReserved:  {name: 'Transfer Buffer',           type: 'output', pos: { x: 0, y: 0 }},
+            state_modeVehicle:              { name: 'Vehicle Mode',              type: 'input',  pos: { x: 0, y: 0 } },
+            state_modeFlight:               { name: 'Flight Mode',               type: 'input',  pos: { x: 0, y: 0 }, },
+            state_coordinate:               { name: 'Headless',                  type: 'input',  pos: { x: 0, y: 0 }, },
+            state_modeDrive:                { name: 'Drive Mode',                type: 'input',  pos: { x: 0, y: 0 } },
+            state_battery:                  { name: 'Battery',                   type: 'input',  pos: { x: 0, y: 0 } },
+            attitude_roll:                  { name: 'Roll',                      type: 'input',  pos: { x: 0, y: 0 } },
+            attitude_pitch:                 { name: 'Pitch',                     type: 'input',  pos: { x: 0, y: 0 } },
+            attitude_yaw:                   { name: 'Yaw',                       type: 'input',  pos: { x: 0, y: 0 } },
+            irmessage_irdata:               { name: 'IR Data',                   type: 'input',  pos: { x: 0, y: 0 } },
+            joystick_left_x:                { name: 'Left Joystick X',           type: 'input',  pos: { x: 0, y: 0 } },
+            joystick_left_y:                { name: 'Left Joystick Y',           type: 'input',  pos: { x: 0, y: 0 } },
+            joystick_left_direction:        { name: 'Left Joystick Direction',   type: 'input',  pos: { x: 0, y: 0 } },
+            joystick_left_event:            { name: 'Left Joystick Event',       type: 'input',  pos: { x: 0, y: 0 } },
+            joystick_left_command:          { name: 'Left Joystick Command',     type: 'input',  pos: { x: 0, y: 0 } },
+            joystick_right_x:               { name: 'Right Joystick X',          type: 'input',  pos: { x: 0, y: 0 } },
+            joystick_right_y:               { name: 'Right Joystick Y',          type: 'input',  pos: { x: 0, y: 0 } },
+            joystick_right_direction:       { name: 'Right Joystick Direction',  type: 'input',  pos: { x: 0, y: 0 } },
+            joystick_right_event:           { name: 'Right Joystick Event',      type: 'input',  pos: { x: 0, y: 0 } },
+            joystick_right_command:         { name: 'Right Joystick Command',    type: 'input',  pos: { x: 0, y: 0 } },
+            button_button:                  { name: 'Button',                    type: 'input',  pos: { x: 0, y: 0 } },
+            button_event:                   { name: 'Button Event',              type: 'input',  pos: { x: 0, y: 0 } },
+            entryhw_countTransferReserved:  { name: 'Transfer Buffer',           type: 'output', pos: { x: 0, y: 0 } },
         },
 
         // 모니터 화면 지정 위치와 선으로 연결하여 표시하는 값
@@ -80,15 +83,15 @@ Entry.byrobot_dronefighter_flight = {
     // functions
 
     // 시간 지연
-    checkFinish: function(script, ms) {
+    checkFinish(script, ms) {
         if (!script.isStart) {
             script.isStart = true;
             script.timeFlag = 1;
 
-            var fps = Entry.FPS || 60;
-            var timeValue = 60 / fps * ms;
+            const fps = Entry.FPS || 60;
+            const timeValue = 60 / fps * ms;
 
-            setTimeout(function() {
+            setTimeout(() => {
                 script.timeFlag = 0;
             }, timeValue);
 
@@ -104,7 +107,7 @@ Entry.byrobot_dronefighter_flight = {
     },
 
     // 데이터 전송
-    transferLightManual: function(target, flags, brightness) {
+    transferLightManual(target, flags, brightness) {
         // 범위 조정
         target = Math.max(target, 0);
         target = Math.min(target, 255);
@@ -120,12 +123,12 @@ Entry.byrobot_dronefighter_flight = {
 
         Entry.hw.update();
 
-        delete Entry.hw.sendQueue['target'];
-        delete Entry.hw.sendQueue['light_manual_flags'];
-        delete Entry.hw.sendQueue['light_manual_brightness'];
+        delete Entry.hw.sendQueue.target;
+        delete Entry.hw.sendQueue.light_manual_flags;
+        delete Entry.hw.sendQueue.light_manual_brightness;
     },
 
-    transferbuzzer: function(mode, value, time) {
+    transferbuzzer(mode, value, time) {
         // 전송
         Entry.hw.setDigitalPortValue('target', 0x11);
         Entry.hw.setDigitalPortValue('buzzer_mode', mode);
@@ -134,13 +137,13 @@ Entry.byrobot_dronefighter_flight = {
 
         Entry.hw.update();
 
-        delete Entry.hw.sendQueue['target'];
-        delete Entry.hw.sendQueue['buzzer_mode'];
-        delete Entry.hw.sendQueue['buzzer_value'];
-        delete Entry.hw.sendQueue['buzzer_time'];
+        delete Entry.hw.sendQueue.target;
+        delete Entry.hw.sendQueue.buzzer_mode;
+        delete Entry.hw.sendQueue.buzzer_value;
+        delete Entry.hw.sendQueue.buzzer_time;
     },
 
-    transferVibrator: function(mode, timeOn, timeOff, timeRun) {
+    transferVibrator(mode, timeOn, timeOff, timeRun) {
         // 범위 조정
         timeOn = Math.max(timeOn, 1);
         timeOn = Math.min(timeOn, 60000);
@@ -156,14 +159,14 @@ Entry.byrobot_dronefighter_flight = {
 
         Entry.hw.update();
 
-        delete Entry.hw.sendQueue['target'];
-        delete Entry.hw.sendQueue['vibrator_mode'];
-        delete Entry.hw.sendQueue['vibrator_on'];
-        delete Entry.hw.sendQueue['vibrator_off'];
-        delete Entry.hw.sendQueue['vibrator_total'];
+        delete Entry.hw.sendQueue.target;
+        delete Entry.hw.sendQueue.vibrator_mode;
+        delete Entry.hw.sendQueue.vibrator_on;
+        delete Entry.hw.sendQueue.vibrator_off;
+        delete Entry.hw.sendQueue.vibrator_total;
     },
 
-    transferIrMessage: function(irmessage) {
+    transferIrMessage(irmessage) {
         // 범위 조정
         irmessage = Math.max(irmessage, 0);
         irmessage = Math.min(irmessage, 127);
@@ -174,11 +177,11 @@ Entry.byrobot_dronefighter_flight = {
 
         Entry.hw.update();
 
-        delete Entry.hw.sendQueue['target'];
-        delete Entry.hw.sendQueue['irmessage_data'];
+        delete Entry.hw.sendQueue.target;
+        delete Entry.hw.sendQueue.irmessage_data;
     },
 
-    transferMotorSingle: function(motorIndex, motorDirection, motorSpeed) {
+    transferMotorSingle(motorIndex, motorDirection, motorSpeed) {
         // 범위 조정
         motorSpeed = Math.max(motorSpeed, 0);
         motorSpeed = Math.min(motorSpeed, 4096);
@@ -191,13 +194,13 @@ Entry.byrobot_dronefighter_flight = {
 
         Entry.hw.update();
 
-        delete Entry.hw.sendQueue['target'];
-        delete Entry.hw.sendQueue['motorsingle_target'];
-        delete Entry.hw.sendQueue['motorsingle_direction'];
-        delete Entry.hw.sendQueue['motorsingle_value'];
+        delete Entry.hw.sendQueue.target;
+        delete Entry.hw.sendQueue.motorsingle_target;
+        delete Entry.hw.sendQueue.motorsingle_direction;
+        delete Entry.hw.sendQueue.motorsingle_value;
     },
 
-    transferCommand: function(target, command, option) {
+    transferCommand(target, command, option) {
         // 전송
         Entry.hw.setDigitalPortValue('target', target);
         Entry.hw.setDigitalPortValue('command_command', command);
@@ -205,12 +208,12 @@ Entry.byrobot_dronefighter_flight = {
 
         Entry.hw.update();
 
-        delete Entry.hw.sendQueue['target'];
-        delete Entry.hw.sendQueue['command_command'];
-        delete Entry.hw.sendQueue['command_option'];
+        delete Entry.hw.sendQueue.target;
+        delete Entry.hw.sendQueue.command_command;
+        delete Entry.hw.sendQueue.command_option;
     },
 
-    transferControlDouble: function(wheel, accel) {
+    transferControlDouble(wheel, accel) {
         // 범위 조정
         wheel = Math.max(wheel, -100);
         wheel = Math.min(wheel, 100);
@@ -224,12 +227,12 @@ Entry.byrobot_dronefighter_flight = {
 
         Entry.hw.update();
 
-        delete Entry.hw.sendQueue['target'];
-        delete Entry.hw.sendQueue['control_wheel'];
-        delete Entry.hw.sendQueue['control_accel'];
+        delete Entry.hw.sendQueue.target;
+        delete Entry.hw.sendQueue.control_wheel;
+        delete Entry.hw.sendQueue.control_accel;
     },
 
-    transferControlQuad: function(roll, pitch, yaw, throttle) {
+    transferControlQuad(roll, pitch, yaw, throttle) {
         // 범위 조정
         roll = Math.max(roll, -100);
         roll = Math.min(roll, 100);
@@ -249,22 +252,22 @@ Entry.byrobot_dronefighter_flight = {
 
         Entry.hw.update();
 
-        delete Entry.hw.sendQueue['target'];
-        delete Entry.hw.sendQueue['control_roll'];
-        delete Entry.hw.sendQueue['control_pitch'];
-        delete Entry.hw.sendQueue['control_yaw'];
-        delete Entry.hw.sendQueue['control_throttle'];
+        delete Entry.hw.sendQueue.target;
+        delete Entry.hw.sendQueue.control_roll;
+        delete Entry.hw.sendQueue.control_pitch;
+        delete Entry.hw.sendQueue.control_yaw;
+        delete Entry.hw.sendQueue.control_throttle;
     },
 
     // functions for block
 
     // 데이터 읽기
-    getData: function(script, device) {
+    getData(script, device) {
         return Entry.hw.portData[device];
     },
 
     // LED 수동 설정
-    setLightManual: function(script, target, flags, brightness) {
+    setLightManual(script, target, flags, brightness) {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
@@ -295,7 +298,7 @@ Entry.byrobot_dronefighter_flight = {
         HzContinually       = 6,    // 주파수 예약
      */
     // 정지
-    setBuzzerStop: function(script) {
+    setBuzzerStop(script) {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
@@ -315,18 +318,18 @@ Entry.byrobot_dronefighter_flight = {
     },
 
     // 묵음
-    setBuzzerMute: function(script, time, flagDelay, flagInstantly) {
+    setBuzzerMute(script, time, flagDelay, flagInstantly) {
         time = Math.max(time, 0);
         time = Math.min(time, 60000);
 
-        var timeDelay = 40;
-        if (flagDelay) timeDelay = time;
+        let timeDelay = 40;
+        if (flagDelay) {timeDelay = time;}
 
         switch (this.checkFinish(script, timeDelay)) {
             case 'Start':
                 {
-                    var mode = 2; // 묵음 연속
-                    if (flagInstantly) mode = 1; // 묵음 즉시
+                    let mode = 2; // 묵음 연속
+                    if (flagInstantly) {mode = 1;} // 묵음 즉시
 
                     this.transferbuzzer(mode, 0xee, time);
                 }
@@ -343,20 +346,20 @@ Entry.byrobot_dronefighter_flight = {
         }
     },
 
-    setBuzzerScale: function(script, octave, scale, time, flagDelay, flagInstantly) {
+    setBuzzerScale(script, octave, scale, time, flagDelay, flagInstantly) {
         time = Math.max(time, 0);
         time = Math.min(time, 60000);
 
-        var timeDelay = 40;
-        if (flagDelay) timeDelay = time;
+        let timeDelay = 40;
+        if (flagDelay) {timeDelay = time;}
 
         switch (this.checkFinish(script, timeDelay)) {
             case 'Start':
                 {
-                    var mode = 4; // Scale 연속
-                    if (flagInstantly) mode = 3; // Scale 즉시
+                    let mode = 4; // Scale 연속
+                    if (flagInstantly) {mode = 3;} // Scale 즉시
 
-                    var scalecalc = octave * 12 + scale;
+                    const scalecalc = octave * 12 + scale;
 
                     this.transferbuzzer(mode, scalecalc, time);
                 }
@@ -373,18 +376,18 @@ Entry.byrobot_dronefighter_flight = {
         }
     },
 
-    setBuzzerHz: function(script, hz, time, flagDelay, flagInstantly) {
+    setBuzzerHz(script, hz, time, flagDelay, flagInstantly) {
         time = Math.max(time, 0);
         time = Math.min(time, 60000);
 
-        var timeDelay = 40;
-        if (flagDelay) timeDelay = time;
+        let timeDelay = 40;
+        if (flagDelay) {timeDelay = time;}
 
         switch (this.checkFinish(script, timeDelay)) {
             case 'Start':
                 {
-                    var mode = 6; // Hz 연속
-                    if (flagInstantly) mode = 5; // Hz 즉시
+                    let mode = 6; // Hz 연속
+                    if (flagInstantly) {mode = 5;} // Hz 즉시
 
                     // 범위 조정
                     hz = Math.max(hz, 1);
@@ -411,7 +414,7 @@ Entry.byrobot_dronefighter_flight = {
         Instantally     = 1,    // 즉시 적용
         Continually     = 2,    // 예약
      */
-    setVibratorStop: function(script) {
+    setVibratorStop(script) {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
@@ -430,18 +433,18 @@ Entry.byrobot_dronefighter_flight = {
         }
     },
 
-    setVibrator: function(script, timeOn, timeOff, timeRun, flagDelay, flagInstantly) {
+    setVibrator(script, timeOn, timeOff, timeRun, flagDelay, flagInstantly) {
         timeRun = Math.max(timeRun, 0);
         timeRun = Math.min(timeRun, 60000);
 
-        var timeDelay = 40;
-        if (flagDelay) timeDelay = timeRun;
+        let timeDelay = 40;
+        if (flagDelay) {timeDelay = timeRun;}
 
         switch (this.checkFinish(script, timeDelay)) {
             case 'Start':
                 {
-                    var mode = 2; // 예약
-                    if (flagInstantly) mode = 1; // 즉시
+                    let mode = 2; // 예약
+                    if (flagInstantly) {mode = 1;} // 즉시
 
                     this.transferVibrator(mode, timeOn, timeOff, timeRun);
                 }
@@ -458,7 +461,7 @@ Entry.byrobot_dronefighter_flight = {
         }
     },
 
-    sendIrMessage: function(script, irmessage) {
+    sendIrMessage(script, irmessage) {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
@@ -477,11 +480,11 @@ Entry.byrobot_dronefighter_flight = {
         }
     },
 
-    sendStop: function(script) {
+    sendStop(script) {
         return this.sendCommand(script, 0x10, 0x24, 0);
     },
 
-    sendCommand: function(script, target, command, option) {
+    sendCommand(script, target, command, option) {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
@@ -500,7 +503,7 @@ Entry.byrobot_dronefighter_flight = {
         }
     },
 
-    setMotorSingle: function(script, motorIndex, motorDirection, motorSpeed) {
+    setMotorSingle(script, motorIndex, motorDirection, motorSpeed) {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
@@ -530,7 +533,7 @@ Entry.byrobot_dronefighter_flight = {
 
         Test = 0x30,        ///< 테스트
      */
-    setModeVehicle: function(script, modeVehicle) {
+    setModeVehicle(script, modeVehicle) {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
@@ -552,7 +555,7 @@ Entry.byrobot_dronefighter_flight = {
         }
     },
 
-    setEventFlight: function(script, eventFlight, time) {
+    setEventFlight(script, eventFlight, time) {
         switch (this.checkFinish(script, time)) {
             case 'Start':
                 {
@@ -572,9 +575,9 @@ Entry.byrobot_dronefighter_flight = {
         }
     },
 
-    sendControlQuadSingle: function(script, controlTarget, value, time, flagDelay) {
-        var timeDelay = 40;
-        if (flagDelay) timeDelay = time;
+    sendControlQuadSingle(script, controlTarget, value, time, flagDelay) {
+        let timeDelay = 40;
+        if (flagDelay) {timeDelay = time;}
 
         switch (this.checkFinish(script, timeDelay)) {
             case 'Start':
@@ -589,7 +592,7 @@ Entry.byrobot_dronefighter_flight = {
 
                     Entry.hw.update();
 
-                    delete Entry.hw.sendQueue['target'];
+                    delete Entry.hw.sendQueue.target;
                     delete Entry.hw.sendQueue[controlTarget];
                 }
                 return script;
@@ -605,7 +608,7 @@ Entry.byrobot_dronefighter_flight = {
 
                     Entry.hw.update();
 
-                    delete Entry.hw.sendQueue['target'];
+                    delete Entry.hw.sendQueue.target;
                     delete Entry.hw.sendQueue[controlTarget];
                 }
                 return script.callReturn();
@@ -615,9 +618,9 @@ Entry.byrobot_dronefighter_flight = {
         }
     },
 
-    sendControlQuad: function(script, roll, pitch, yaw, throttle, time, flagDelay) {
-        var timeDelay = 40;
-        if (flagDelay) timeDelay = time;
+    sendControlQuad(script, roll, pitch, yaw, throttle, time, flagDelay) {
+        let timeDelay = 40;
+        if (flagDelay) {timeDelay = time;}
 
         switch (this.checkFinish(script, timeDelay)) {
             case 'Start':
@@ -646,7 +649,7 @@ Entry.byrobot_dronefighter_flight = {
  *  언어 적용
  ***************************************************************************************/
 // 
-Entry.byrobot_dronefighter_flight.setLanguage = function ()
+Entry.byrobot_dronefighter_flight.setLanguage = function()
 {
     return {
         ko: {
@@ -1051,7 +1054,7 @@ Entry.byrobot_dronefighter_flight.setLanguage = function ()
 
             }
         }
-    }
+    };
 };
 
 
@@ -1132,7 +1135,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_monitor', // 같은 이름인 객체들이 그룹으로 형성됨
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
         },
@@ -1176,7 +1179,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_monitor', // 같은 이름인 객체들이 그룹으로 형성됨
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
         },
@@ -1211,7 +1214,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_monitor', // 같은 이름인 객체들이 그룹으로 형성됨
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
         },
@@ -1281,7 +1284,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_monitor', // 같은 이름인 객체들이 그룹으로 형성됨
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
         },
@@ -1327,14 +1330,14 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_boolean_input',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var read = Entry.hw.portData;
-                var button = 'button_button'; // paramsKeyMap에 정의된 이름 사용
-                var buttonevent = 'button_event'; // paramsKeyMap에 정의된 이름 사용
+            func(sprite, script) {
+                const read = Entry.hw.portData;
+                const button = 'button_button'; // paramsKeyMap에 정의된 이름 사용
+                const buttonevent = 'button_event'; // paramsKeyMap에 정의된 이름 사용
 
                 if (read[button] == script.getField('BUTTON') && read[buttonevent] == 2)
-                    return true;
-                else return false;
+                    {return true;}
+                else {return false;}
             },
             syntax: { js: [], py: [] },
         },
@@ -1406,13 +1409,13 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_boolean_input',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var read = Entry.hw.portData;
+            func(sprite, script) {
+                const read = Entry.hw.portData;
 
-                var device = script.getField('DEVICE'); // paramsKeyMap에 정의된 이름 사용
+                const device = script.getField('DEVICE'); // paramsKeyMap에 정의된 이름 사용
 
-                if (read[device] == script.getField('DIRECTION')) return true;
-                else return false;
+                if (read[device] == script.getField('DIRECTION')) {return true;}
+                else {return false;}
             },
         },
         byrobot_dronefighter_flight_controller_light_manual_single_off: {
@@ -1435,7 +1438,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             paramsKeyMap: {},
             class: 'byrobot_dronefighter_flight_controller_light',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 return Entry.byrobot_dronefighter_flight.setLightManual(script, 0x11, 0xff, 0);
             },
         },
@@ -1495,9 +1498,9 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_controller_light',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var flags = parseInt(script.getField('FLAGS'));
-                var brightness = parseInt(script.getField('BRIGHTNESS'));
+            func(sprite, script) {
+                const flags = parseInt(script.getField('FLAGS'));
+                const brightness = parseInt(script.getField('BRIGHTNESS'));
                 return Entry.byrobot_dronefighter_flight.setLightManual(
                     script,
                     0x11,
@@ -1547,9 +1550,9 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_controller_light',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var flags = script.getNumberValue('FLAGS');
-                var brightness = script.getNumberValue('BRIGHTNESS');
+            func(sprite, script) {
+                const flags = script.getNumberValue('FLAGS');
+                const brightness = script.getNumberValue('BRIGHTNESS');
                 return Entry.byrobot_dronefighter_flight.setLightManual(
                     script,
                     0x11,
@@ -1578,7 +1581,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             paramsKeyMap: {},
             class: 'byrobot_dronefighter_flight_drone_light',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 return Entry.byrobot_dronefighter_flight.setLightManual(script, 0x10, 0xff, 0);
             },
         },
@@ -1636,9 +1639,9 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_drone_light',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var flags = parseInt(script.getField('FLAGS'));
-                var brightness = parseInt(script.getField('BRIGHTNESS'));
+            func(sprite, script) {
+                const flags = parseInt(script.getField('FLAGS'));
+                const brightness = parseInt(script.getField('BRIGHTNESS'));
                 return Entry.byrobot_dronefighter_flight.setLightManual(
                     script,
                     0x10,
@@ -1688,9 +1691,9 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_drone_light',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var flags = script.getNumberValue('FLAGS');
-                var brightness = script.getNumberValue('BRIGHTNESS');
+            func(sprite, script) {
+                const flags = script.getNumberValue('FLAGS');
+                const brightness = script.getNumberValue('BRIGHTNESS');
                 return Entry.byrobot_dronefighter_flight.setLightManual(
                     script,
                     0x10,
@@ -1719,7 +1722,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             paramsKeyMap: {},
             class: 'byrobot_dronefighter_flight_buzzer',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 return Entry.byrobot_dronefighter_flight.setBuzzerStop(script);
             },
         },
@@ -1776,26 +1779,26 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_buzzer',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var octave = parseInt(script.getField('OCTAVE'));
-                var scale = parseInt(script.getField('SCALE'));
+            func(sprite, script) {
+                const octave = parseInt(script.getField('OCTAVE'));
+                const scale = parseInt(script.getField('SCALE'));
 
                 if (scale == -1)
-                    return Entry.byrobot_dronefighter_flight.setBuzzerMute(
+                    {return Entry.byrobot_dronefighter_flight.setBuzzerMute(
                         script,
                         60000,
                         false,
                         true
-                    );
+                    );}
                 else
-                    return Entry.byrobot_dronefighter_flight.setBuzzerScale(
+                    {return Entry.byrobot_dronefighter_flight.setBuzzerScale(
                         script,
                         octave,
                         scale,
                         60000,
                         false,
                         true
-                    );
+                    );}
             },
         },
         byrobot_dronefighter_flight_controller_buzzer_scale_delay: {
@@ -1864,27 +1867,27 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_buzzer',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var octave = parseInt(script.getField('OCTAVE'));
-                var scale = parseInt(script.getField('SCALE'));
-                var time = parseInt(script.getNumberValue('TIME') * 1000);
+            func(sprite, script) {
+                const octave = parseInt(script.getField('OCTAVE'));
+                const scale = parseInt(script.getField('SCALE'));
+                const time = parseInt(script.getNumberValue('TIME') * 1000);
 
                 if (scale == -1)
-                    return Entry.byrobot_dronefighter_flight.setBuzzerMute(
+                    {return Entry.byrobot_dronefighter_flight.setBuzzerMute(
                         script,
                         time,
                         true,
                         true
-                    );
+                    );}
                 else
-                    return Entry.byrobot_dronefighter_flight.setBuzzerScale(
+                    {return Entry.byrobot_dronefighter_flight.setBuzzerScale(
                         script,
                         octave,
                         scale,
                         time,
                         true,
                         true
-                    );
+                    );}
             },
         },
         byrobot_dronefighter_flight_controller_buzzer_scale_reserve: {
@@ -1953,27 +1956,27 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_buzzer',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var octave = parseInt(script.getField('OCTAVE'));
-                var scale = parseInt(script.getField('SCALE'));
-                var time = parseInt(script.getNumberValue('TIME') * 1000);
+            func(sprite, script) {
+                const octave = parseInt(script.getField('OCTAVE'));
+                const scale = parseInt(script.getField('SCALE'));
+                const time = parseInt(script.getNumberValue('TIME') * 1000);
 
                 if (scale == -1)
-                    return Entry.byrobot_dronefighter_flight.setBuzzerMute(
+                    {return Entry.byrobot_dronefighter_flight.setBuzzerMute(
                         script,
                         time,
                         false,
                         false
-                    );
+                    );}
                 else
-                    return Entry.byrobot_dronefighter_flight.setBuzzerScale(
+                    {return Entry.byrobot_dronefighter_flight.setBuzzerScale(
                         script,
                         octave,
                         scale,
                         time,
                         false,
                         false
-                    );
+                    );}
             },
         },
         byrobot_dronefighter_flight_controller_buzzer_hz: {
@@ -2008,8 +2011,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_buzzer',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var hz = parseInt(script.getNumberValue('HZ', script));
+            func(sprite, script) {
+                const hz = parseInt(script.getNumberValue('HZ', script));
                 return Entry.byrobot_dronefighter_flight.setBuzzerHz(
                     script,
                     hz,
@@ -2060,9 +2063,9 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_buzzer',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var hz = parseInt(script.getNumberValue('HZ', script));
-                var time = parseInt(script.getNumberValue('TIME') * 1000);
+            func(sprite, script) {
+                const hz = parseInt(script.getNumberValue('HZ', script));
+                const time = parseInt(script.getNumberValue('TIME') * 1000);
                 return Entry.byrobot_dronefighter_flight.setBuzzerHz(script, hz, time, true, true);
             },
         },
@@ -2107,9 +2110,9 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_buzzer',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var hz = parseInt(script.getNumberValue('HZ', script));
-                var time = parseInt(script.getNumberValue('TIME') * 1000);
+            func(sprite, script) {
+                const hz = parseInt(script.getNumberValue('HZ', script));
+                const time = parseInt(script.getNumberValue('TIME') * 1000);
                 return Entry.byrobot_dronefighter_flight.setBuzzerHz(
                     script,
                     hz,
@@ -2139,7 +2142,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             paramsKeyMap: {},
             class: 'byrobot_dronefighter_flight_vibrator',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 return Entry.byrobot_dronefighter_flight.setVibratorStop(script);
             },
         },
@@ -2175,8 +2178,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_vibrator',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
+            func(sprite, script) {
+                const timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
                 return Entry.byrobot_dronefighter_flight.setVibrator(
                     script,
                     timeOn,
@@ -2219,8 +2222,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_vibrator',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
+            func(sprite, script) {
+                const timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
                 return Entry.byrobot_dronefighter_flight.setVibrator(
                     script,
                     timeOn,
@@ -2281,10 +2284,10 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_vibrator',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
-                var timeOff = parseInt(script.getNumberValue('TIMEOFF') * 1000);
-                var timeRun = parseInt(script.getNumberValue('TIMERUN') * 1000);
+            func(sprite, script) {
+                const timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
+                const timeOff = parseInt(script.getNumberValue('TIMEOFF') * 1000);
+                const timeRun = parseInt(script.getNumberValue('TIMERUN') * 1000);
                 return Entry.byrobot_dronefighter_flight.setVibrator(
                     script,
                     timeOn,
@@ -2345,10 +2348,10 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_vibrator',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
-                var timeOff = parseInt(script.getNumberValue('TIMEOFF') * 1000);
-                var timeRun = parseInt(script.getNumberValue('TIMERUN') * 1000);
+            func(sprite, script) {
+                const timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
+                const timeOff = parseInt(script.getNumberValue('TIMEOFF') * 1000);
+                const timeRun = parseInt(script.getNumberValue('TIMERUN') * 1000);
                 return Entry.byrobot_dronefighter_flight.setVibrator(
                     script,
                     timeOn,
@@ -2391,8 +2394,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_irmessage',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var irmessage = script.getNumberValue('IRMESSAGE', script);
+            func(sprite, script) {
+                const irmessage = script.getNumberValue('IRMESSAGE', script);
                 return Entry.byrobot_dronefighter_flight.sendIrMessage(script, irmessage);
             },
         },
@@ -2416,7 +2419,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             paramsKeyMap: {},
             class: 'byrobot_dronefighter_flight_motor',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 return Entry.byrobot_dronefighter_flight.sendStop(script);
             },
         },
@@ -2462,10 +2465,10 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_motor',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var motorIndex = parseInt(script.getField('MOTORINDEX'));
-                var motorDirection = 1;
-                var motorSpeed = parseInt(script.getNumberValue('MOTORSPEED', script));
+            func(sprite, script) {
+                const motorIndex = parseInt(script.getField('MOTORINDEX'));
+                const motorDirection = 1;
+                const motorSpeed = parseInt(script.getNumberValue('MOTORSPEED', script));
 
                 return Entry.byrobot_dronefighter_flight.setMotorSingle(
                     script,
@@ -2516,10 +2519,10 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_motor',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var motorIndex = parseInt(script.getNumberValue('MOTORINDEX', script)) - 1;
-                var motorDirection = 1;
-                var motorSpeed = parseInt(script.getNumberValue('MOTORSPEED', script));
+            func(sprite, script) {
+                const motorIndex = parseInt(script.getNumberValue('MOTORINDEX', script)) - 1;
+                const motorDirection = 1;
+                const motorSpeed = parseInt(script.getNumberValue('MOTORSPEED', script));
 
                 return Entry.byrobot_dronefighter_flight.setMotorSingle(
                     script,
@@ -2549,7 +2552,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             paramsKeyMap: {},
             class: 'byrobot_dronefighter_flight_control_flight',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 return Entry.byrobot_dronefighter_flight.setModeVehicle(script, 0x10); // 0x10 : Mode::Vehicle::Flight
             },
         },
@@ -2573,7 +2576,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             paramsKeyMap: {},
             class: 'byrobot_dronefighter_flight_control_flight',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 return Entry.byrobot_dronefighter_flight.setEventFlight(script, 0x11, 200); // 0x11 : FlightEvent::TakeOff
             },
         },
@@ -2597,7 +2600,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             paramsKeyMap: {},
             class: 'byrobot_dronefighter_flight_control_flight',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 return Entry.byrobot_dronefighter_flight.setEventFlight(script, 0x12, 200); // 0x12 : FlightEvent::Landing
             },
         },
@@ -2621,7 +2624,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             paramsKeyMap: {},
             class: 'byrobot_dronefighter_flight_control_flight',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 return Entry.byrobot_dronefighter_flight.sendStop(script);
             },
         },
@@ -2658,8 +2661,8 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_control_flight',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var coordinate = script.getField('COORDINATE');
+            func(sprite, script) {
+                const coordinate = script.getField('COORDINATE');
                 return Entry.byrobot_dronefighter_flight.sendCommand(
                     script,
                     0x10,
@@ -2688,7 +2691,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             paramsKeyMap: {},
             class: 'byrobot_dronefighter_flight_control_flight',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 return Entry.byrobot_dronefighter_flight.sendCommand(script, 0x10, 0x22, 0xa0); // 0x22 : CommandType::FlightEvent  // 0xA0 : FlightEvent::ResetHeading
             },
         },
@@ -2745,9 +2748,9 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_control_flight',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var controlTarget = script.getField('CONTROLTARGET');
-                var value = parseInt(script.getNumberValue('VALUE', script));
+            func(sprite, script) {
+                const controlTarget = script.getField('CONTROLTARGET');
+                const value = parseInt(script.getNumberValue('VALUE', script));
 
                 return Entry.byrobot_dronefighter_flight.sendControlQuadSingle(
                     script,
@@ -2820,10 +2823,10 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_control_flight',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var controlTarget = script.getField('CONTROLTARGET');
-                var value = parseInt(script.getNumberValue('VALUE', script));
-                var time = parseInt(script.getNumberValue('TIME', script) * 1000);
+            func(sprite, script) {
+                const controlTarget = script.getField('CONTROLTARGET');
+                const value = parseInt(script.getNumberValue('VALUE', script));
+                const time = parseInt(script.getNumberValue('TIME', script) * 1000);
 
                 return Entry.byrobot_dronefighter_flight.sendControlQuadSingle(
                     script,
@@ -2893,11 +2896,11 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_control_flight',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var roll = parseInt(script.getNumberValue('ROLL', script));
-                var pitch = parseInt(script.getNumberValue('PITCH', script));
-                var yaw = parseInt(script.getNumberValue('YAW', script));
-                var throttle = parseInt(script.getNumberValue('THROTTLE', script));
+            func(sprite, script) {
+                const roll = parseInt(script.getNumberValue('ROLL', script));
+                const pitch = parseInt(script.getNumberValue('PITCH', script));
+                const yaw = parseInt(script.getNumberValue('YAW', script));
+                const throttle = parseInt(script.getNumberValue('THROTTLE', script));
 
                 return Entry.byrobot_dronefighter_flight.sendControlQuad(
                     script,
