@@ -1449,6 +1449,19 @@ Entry.Playground = class Playground {
         this.dataTable.changeItemPosition(start, end);
         this.injectTable();
     }
+
+    checkChangeTable() {
+        if (!this.dataTable.tempDataAnalytics) {
+            return;
+        }
+        entrylms.confirm(Lang.Menus.save_modified_table).then((result) => {
+            if (result) {
+                this.dataTable.saveTable(this.dataTable.tempDataAnalytics);
+            }
+            delete this.dataTable.tempDataAnalytics;
+        });
+    }
+
     /**
      * Move picture in this.object.pictures
      * this method is for sortable
@@ -1681,6 +1694,8 @@ Entry.Playground = class Playground {
         if (viewType === 'table') {
             this.initSortableTableWidget();
             this.injectTable();
+        } else {
+            this.checkChangeTable();
         }
 
         if (
