@@ -94,12 +94,12 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         this.setValue(this.getOptionCheckedValue(), reDraw);
     }
 
-    getTargetValue(key) {
+    getTargetValue(key, useParent = false) {
         if (!key) {
             return;
         }
-        const block = this._block.thread._block || this._block;
-        const { _schema, params: values = [] } = block;
+        const block = useParent ? this._block.thread._block : this._block;
+        const { _schema, params: values = [] } = block || {};
         const { params = [] } = _schema || {};
         const idx = params.findIndex(({ dropdownSync }) => dropdownSync === key);
         return values[idx || 0];
@@ -143,7 +143,11 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
             this.applyValue(item[1]);
             this.destroyOption();
             const { view = {} } = this._block.getThread();
-            view.reDraw && view.reDraw();
+            if (view.reDraw) {
+                view.reDraw();
+            } else {
+                this._block.view.reDraw();
+            }
         });
         this.optionDomCreated();
     }
