@@ -294,12 +294,11 @@ class EntryFunc {
             if (reg.test(templateChunk)) {
                 const paramIndex = Number(templateChunk.split('%')[1]) - 1;
                 const param = blockSchema.params[paramIndex];
-                if (param.type === 'Indicator') {
-                } else if (param.accept === 'boolean') {
+                if (param.accept === 'boolean') {
                     description +=
                         Lang.template.function_param_boolean + (booleanIndex ? booleanIndex : '');
                     booleanIndex++;
-                } else {
+                } else if (param.type !== 'Indicator') {
                     description +=
                         Lang.template.function_param_string + (stringIndex ? stringIndex : '');
                     stringIndex++;
