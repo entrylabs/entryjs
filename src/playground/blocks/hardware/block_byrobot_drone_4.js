@@ -357,7 +357,6 @@ Entry.byrobot_drone_4.setLanguage = function() {
         },
 
         en: {
-            // en.js에 작성하던 내용
             Blocks: {
                 common_light_color_cottoncandy: 'cotton candy',
                 common_light_color_emerald: 'emerald',
@@ -1515,7 +1514,7 @@ Entry.byrobot_drone_4.getBlocks = function()
                         [Lang.Blocks.controller_display_pixel_black, '0'],
                         [Lang.Blocks.controller_display_pixel_white, '1'],
                     ],
-                    value: '0',
+                    value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1983,7 +1982,7 @@ Entry.byrobot_drone_4.getBlocks = function()
                         [Lang.Blocks.controller_display_align_center, '1'],
                         [Lang.Blocks.controller_display_align_right, '2'],
                     ],
-                    value: '0',
+                    value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2079,7 +2078,13 @@ Entry.byrobot_drone_4.getBlocks = function()
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['4', '3'], ['5', '4'], ['6', '5'], ['7', '6'], ['8', '7']],
+                    options: [
+                        ['4', '3'],
+                        ['5', '4'],
+                        ['6', '5'],
+                        ['7', '6'],
+                        ['8', '7'],
+                    ],
                     value: '4',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2141,7 +2146,13 @@ Entry.byrobot_drone_4.getBlocks = function()
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['4', '3'], ['5', '4'], ['6', '5'], ['7', '6'], ['8', '7']],
+                    options: [
+                        ['4', '3'],
+                        ['5', '4'],
+                        ['6', '5'],
+                        ['7', '6'],
+                        ['8', '7'],
+                    ],
                     value: '4',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2174,7 +2185,12 @@ Entry.byrobot_drone_4.getBlocks = function()
             ],
             events: {},
             def: {
-                params: [null, null, { type: 'text', params: ['1'] }, null],
+                params: [
+                    null,
+                    null,
+                    { type: 'text', params: ['1'] },
+                    null,
+                ],
                 type: 'byrobot_drone_4_controller_buzzer_scale_delay',
             },
             paramsKeyMap: {
@@ -2206,7 +2222,13 @@ Entry.byrobot_drone_4.getBlocks = function()
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['4', '3'], ['5', '4'], ['6', '5'], ['7', '6'], ['8', '7']],
+                    options: [
+                        ['4', '3'],
+                        ['5', '4'],
+                        ['6', '5'],
+                        ['7', '6'],
+                        ['8', '7'],
+                    ],
                     value: '4',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2239,7 +2261,12 @@ Entry.byrobot_drone_4.getBlocks = function()
             ],
             events: {},
             def: {
-                params: [null, null, { type: 'text', params: ['1'] }, null],
+                params: [
+                    null,
+                    null,
+                    { type: 'text', params: ['1'] },
+                    null,
+                ],
                 type: 'byrobot_drone_4_controller_buzzer_scale_reserve',
             },
             paramsKeyMap: {
@@ -2330,7 +2357,11 @@ Entry.byrobot_drone_4.getBlocks = function()
             ],
             events: {},
             def: {
-                params: [{ type: 'text', params: ['1000'] }, { type: 'text', params: ['1'] }, null],
+                params: [
+                    { type: 'text', params: ['1000'] },
+                    { type: 'text', params: ['1'] },
+                    null,
+                ],
                 type: 'byrobot_drone_4_controller_buzzer_hz_reserve',
             },
             paramsKeyMap: {
@@ -2757,9 +2788,9 @@ Entry.byrobot_drone_4.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.drone_control_quad_roll, 'control_quad8_roll'],
-                        [Lang.Blocks.drone_control_quad_pitch, 'control_quad8_pitch'],
-                        [Lang.Blocks.drone_control_quad_yaw, 'control_quad8_yaw'],
+                        [Lang.Blocks.drone_control_quad_roll,     'control_quad8_roll'],
+                        [Lang.Blocks.drone_control_quad_pitch,    'control_quad8_pitch'],
+                        [Lang.Blocks.drone_control_quad_yaw,      'control_quad8_yaw'],
                         [Lang.Blocks.drone_control_quad_throttle, 'control_quad8_throttle'],
                     ],
                     value: 'control_throttle',
@@ -2799,9 +2830,9 @@ Entry.byrobot_drone_4.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.drone_control_quad_roll, 'control_quad8_roll'],
-                        [Lang.Blocks.drone_control_quad_pitch, 'control_quad8_pitch'],
-                        [Lang.Blocks.drone_control_quad_yaw, 'control_quad8_yaw'],
+                        [Lang.Blocks.drone_control_quad_roll,     'control_quad8_roll'],
+                        [Lang.Blocks.drone_control_quad_pitch,    'control_quad8_pitch'],
+                        [Lang.Blocks.drone_control_quad_yaw,      'control_quad8_yaw'],
                         [Lang.Blocks.drone_control_quad_throttle, 'control_quad8_throttle'],
                     ],
                     value: 'control_quad8_throttle',
