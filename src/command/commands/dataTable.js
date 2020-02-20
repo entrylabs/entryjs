@@ -11,7 +11,8 @@ import DataTable from '../../class/DataTable';
         do(table) {
             DataTable.tables.push(table);
             const isWorkspace = Entry.type === 'workspace';
-            if (isWorkspace) {
+            const isTableMode = Entry.playground.getViewMode() === 'table';
+            if (isWorkspace && isTableMode) {
                 DataTable.unbanBlock();
                 Entry.playground.reloadPlayground();
                 Entry.playground.refreshPlayground();
@@ -39,7 +40,8 @@ import DataTable from '../../class/DataTable';
             }
             DataTable.tables.splice(index, 1);
             const isWorkspace = Entry.type === 'workspace';
-            if (isWorkspace) {
+            const isTableMode = Entry.playground.getViewMode() === 'table';
+            if (isWorkspace && isTableMode) {
                 Entry.playground.reloadPlayground();
                 Entry.playground.refreshPlayground();
                 if (table === DataTable.selected) {
