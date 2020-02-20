@@ -1272,7 +1272,7 @@ Entry.Playground = class Playground {
         if (!view) {
             return;
         }
-        const { tables } = this.dataTable;
+        const { tables, selected } = this.dataTable;
         tables.forEach((table) => {
             if (!table.view) {
                 this.generateTableElement(table);
@@ -1280,6 +1280,9 @@ Entry.Playground = class Playground {
                 table.view.name.value = table.name;
             }
         });
+        if (!selected && tables.length) {
+            this.selectTable(tables[0]);
+        }
         this.updateTableView();
     }
 
