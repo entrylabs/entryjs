@@ -1,4 +1,4 @@
-import debounce from 'lodash/lodash';
+import debounce from 'lodash/debounce';
 
 Entry.Board = class Board {
     constructor(option) {
