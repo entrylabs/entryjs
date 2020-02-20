@@ -42,9 +42,11 @@ class DataTable {
         return _findIndex(this.#tables, { id });
     }
 
-    addSource(table) {
+    addSource(table, shouldTableMode = true) {
         const isWorkspace = Entry.type === 'workspace';
-        isWorkspace && Entry.do('playgroundChangeViewMode', 'table');
+        if(shouldTableMode && isWorkspace) {
+            Entry.do('playgroundChangeViewMode', 'table');
+        }
         let data = table || { name: Lang.Workspace.data_table };
         data.name = Entry.getOrderedName(data.name, this.#tables, 'name');
         const isDataTableSource = data instanceof DataTableSource;
@@ -141,7 +143,7 @@ class DataTable {
 
     setTables(tables = []) {
         tables.forEach((table) => {
-            this.addSource(table);
+            this.addSource(table, false);
         });
     }
 
