@@ -1402,17 +1402,19 @@ Entry.Playground = class Playground {
         this.addPicture(sourcePicture, true);
     }
 
-    selectTable(table = {}) {
+    async selectTable(table = {}) {
         const { tables } = this.dataTable;
-        tables.forEach(({ view, id }) => {
-            if (id === table.id) {
-                view.addClass('entryTableSelected');
-            } else {
-                view.removeClass('entryTableSelected');
-            }
-        });
-        this.dataTable.selectTable(table);
-        Entry.dispatchEvent('tableSelected', table);
+
+        if (await this.dataTable.selectTable(table)) {
+            tables.forEach(({ view, id }) => {
+                if (id === table.id) {
+                    view.addClass('entryTableSelected');
+                } else {
+                    view.removeClass('entryTableSelected');
+                }
+            });
+            Entry.dispatchEvent('tableSelected', table);
+        }
     }
     /**
      * Select picture
@@ -1930,7 +1932,7 @@ Entry.Playground = class Playground {
         nameView.value = table.name;
         nameView.id = table.id;
         table.view.name = nameView;
-        Entry.attachEventListener(nameView, 'blur', this.tableNameViewBlur);
+        Entry.attachEventListener(nameView, 'blur', this.tableNameViewBlur(table.id));
         Entry.attachEventListener(nameView, 'focus', (e) => {
             this.nameView = e.target;
             this.nameViewFocus = true;
@@ -1962,13 +1964,10 @@ Entry.Playground = class Playground {
         return false;
     }
 
-    tableNameViewBlur = (event) => {
+    tableNameViewBlur = (tableId) => (event) => {
         const { target = {} } = event;
         const { value = '' } = target;
-        const selectedIndex = _.findIndex(
-            this.dataTable.tables,
-            (table) => table.id === this.dataTable.dataAnalytics.data.table.id
-        );
+        const selectedIndex = _.findIndex(this.dataTable.tables, (table) => table.id === tableId);
         if (value.trim() === '') {
             return entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
                 target.focus();
@@ -1979,6 +1978,9 @@ Entry.Playground = class Playground {
             return entrylms.alert(Lang.Workspace.name_already_exists).on('hide', () => {
                 target.focus();
             });
+        }
+        if (DataTable.getSource(target.id).name === value) {
+            return;
         }
         DataTable.setTableName(target.id, value);
         Entry.playground.reloadPlayground();
