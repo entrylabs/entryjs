@@ -34,6 +34,7 @@ class DataTableSource {
         this.tab = tab;
         // 정지시 data 초기화.
         Entry.addEventListener('stop', () => {
+            this.modal = null;
             this.#data.from({
                 ...source,
                 data: this.#data.origin,
