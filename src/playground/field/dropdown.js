@@ -194,7 +194,11 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
             this.applyValue(item[1]);
             this.destroyOption();
             const { view = {} } = this._block.getThread();
-            view.reDraw && view.reDraw();
+            if (view.reDraw) {
+                view.reDraw();
+            } else {
+                this._block.view.reDraw();
+            }
         });
         this.optionDomCreated();
     }

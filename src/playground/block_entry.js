@@ -1840,7 +1840,7 @@ function getBlocks() {
                     type: 'DropdownDynamic',
                     value: null,
                     menuName() {
-                        const value = this.getTargetValue('dataTables');
+                        const value = this.getTargetValue('dataTables', true);
                         if (!value) {
                             return [[Lang.Blocks.no_target, 'null']];
                         }

@@ -311,7 +311,6 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
-                        blockType: 'get_table_fields',
                         defaultType: 'number',
                     },
                     {
@@ -473,7 +472,6 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
-                        blockType: 'get_table_fields',
                         defaultType: 'number',
                     },
                 ],
@@ -532,7 +530,6 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
-                        blockType: 'get_table_fields',
                         defaultType: 'number',
                     },
                     {
