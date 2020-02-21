@@ -5,7 +5,7 @@
 
 import { GEHelper } from '../graphicEngine/GEHelper';
 import VideoWorker from './workers/video.worker';
-
+import clamp from 'lodash/clamp';
 // webcam input resolution setting
 const VIDEO_WIDTH = 640;
 const VIDEO_HEIGHT = 360;
@@ -15,11 +15,9 @@ const CANVAS_WIDTH = 480;
 const CANVAS_HEIGHT = 270;
 
 // ** MOTION DETECTION
-// motion detection prevFrame info
-const previousFrame = [];
 // motion detection parameters
-const BRIGHTNESS_THRESHOLD = 30;
-const SAMPLE_SIZE = 30;
+const BRIGHTNESS_THRESHOLD = 50;
+const SAMPLE_SIZE = 15;
 
 const worker = new VideoWorker();
 
@@ -35,9 +33,15 @@ class VideoUtils {
             vertical: false,
         };
         // motion related
-        this.motions = { total: 0, maxPoint: { score: 0, x: -1, y: -1 }, motion: [] };
+        this.motions = [...Array(CANVAS_HEIGHT / SAMPLE_SIZE)].map((e) =>
+            Array(CANVAS_WIDTH / SAMPLE_SIZE)
+        );
         this.motionPoint = { x: 0, y: 0 };
-        this.motionDirection = { x: 0, y: 0 };
+        this.motionDirection = [...Array(CANVAS_HEIGHT / SAMPLE_SIZE)].map((e) =>
+            Array(CANVAS_WIDTH / SAMPLE_SIZE)
+        );
+        this.totalMotions = 0;
+        this.totalMotionDirection = { x: 0, y: 0 };
         /////////////////////////////////
         this.objects = null;
         this.initialized = false;
@@ -104,11 +108,11 @@ class VideoUtils {
         }
 
         // //motion test
-        // this.tempCanvas = document.createElement('canvas');
-        // this.tempCanvas.width = CANVAS_WIDTH;
-        // this.tempCanvas.height = CANVAS_HEIGHT;
-        // let tempTarget = document.getElementsByClassName('uploadInput')[0];
-        // tempTarget.parentNode.insertBefore(this.tempCanvas, tempTarget);
+        this.tempCanvas = document.createElement('canvas');
+        this.tempCanvas.width = CANVAS_WIDTH;
+        this.tempCanvas.height = CANVAS_HEIGHT;
+        const tempTarget = document.getElementsByClassName('uploadInput')[0];
+        tempTarget.parentNode.insertBefore(this.tempCanvas, tempTarget);
         // //motion test
 
         navigator.getUserMedia =
@@ -160,7 +164,7 @@ class VideoUtils {
         Entry.addEventListener('beforeStop', this.reset.bind(this));
         this.video.play();
         this.startDrawIndicators();
-
+        this.turnOnWebcam();
         if (this.initialized) {
             return;
         }
@@ -169,13 +173,12 @@ class VideoUtils {
 
         worker.onmessage = (e) => {
             const { type, message } = e.data;
-            if (Entry.engine.state !== 'run') {
+            if (Entry.engine.state !== 'run' && type !== 'init') {
                 return;
             }
             switch (type) {
                 case 'init':
                     this.initialized = true;
-                    this.turnOnWebcam();
                     break;
                 case 'face':
                     this.faces = message;
@@ -222,26 +225,20 @@ class VideoUtils {
         worker.postMessage({ type: 'estimate', image: captured }, [captured]);
 
         // //motion test
-        // const tempCtx = this.tempCanvas.getContext('2d');
-        // if (this.motions && this.motions.motion) {
-        //     tempCtx.clearRect(0, 0, this.tempCanvas.width, this.tempCanvas.height);
-        //     this.motions.motion.forEach(({ x, y, r, g, b }) => {
-        //         tempCtx.fillStyle = `rgb(${r},${g},${b})`;
-        //         tempCtx.fillRect(x, y, 10, 10);
-        //     });
-        //     const { x, y } = this.motions.maxPoint;
+        const tempCtx = this.tempCanvas.getContext('2d');
+        tempCtx.clearRect(0, 0, this.tempCanvas.width, this.tempCanvas.height);
+        this.motions.forEach((row, j) => {
+            row.forEach((col, i) => {
+                const { r, g, b, rDiff, gDiff, bDiff } = col;
+                tempCtx.fillStyle = `rgb(${rDiff},${gDiff},${bDiff})`;
+                tempCtx.fillRect(i * SAMPLE_SIZE, j * SAMPLE_SIZE, SAMPLE_SIZE, SAMPLE_SIZE);
+            });
+        });
+        // previousFrame.forEach(({ x, y, r, g, b }) => {
+        //     tempCtx.fillStyle = `rgb(${r},${g},${b})`;
+        //     tempCtx.fillRect(x, y, SAMPLE_SIZE, SAMPLE_SIZE);
+        // });
 
-        //     tempCtx.fillStyle = `rgb(${255},${0},${0})`;
-        //     tempCtx.fillRect(x, y, 10, 10);
-        // }
-        ///////////////////////////
-        // if (this.motions.maxPoint) {
-        //     const { x, y } = this.motions.maxPoint;
-        //     tempCtx.clearRect(0, 0, this.tempCanvas.width, this.tempCanvas.height);
-
-        //     tempCtx.fillStyle = `rgb(${255},${0},${0})`;
-        //     tempCtx.fillRect(x, y, 10, 10);
-        // }
         // //motion test
         setTimeout(() => {
             requestAnimationFrame(this.sendImageToWorker.bind(this));
@@ -258,65 +255,74 @@ class VideoUtils {
         context.drawImage(this.video, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         const imageData = context.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         const data = imageData.data;
-        // // motion test
-        // const motion = [];
-        // // motion test
-
-        const motions = { total: 0, maxPoint: { score: 0, x: -10, y: -10 }, motion: [] };
+        this.totalMotions = 0;
+        let totalMotionDirectionX = 0;
+        let totalMotionDirectionY = 0;
         for (let y = 0; y < CANVAS_HEIGHT; y += SAMPLE_SIZE) {
-            for (let x = 0; x <= CANVAS_WIDTH; x += SAMPLE_SIZE) {
+            for (let x = 0; x < CANVAS_WIDTH; x += SAMPLE_SIZE) {
                 const pos = (x + y * CANVAS_WIDTH) * 4;
                 const r = data[pos];
                 const g = data[pos + 1];
                 const b = data[pos + 2];
                 // const a = data[pos + 3];
-
-                const currentPos = previousFrame[pos] || { r: 0, g: 0, b: 0, a: 0 };
+                // diffScheme;
+                const yIndex = y / SAMPLE_SIZE;
+                const xIndex = x / SAMPLE_SIZE;
+                const currentPos = this.motions[yIndex][xIndex] || { r: 0, g: 0, b: 0 };
                 const rDiff = Math.abs(currentPos.r - r);
                 const gDiff = Math.abs(currentPos.g - g);
                 const bDiff = Math.abs(currentPos.b - b);
                 const areaMotionScore = rDiff + gDiff + bDiff / (SAMPLE_SIZE * SAMPLE_SIZE);
-                // // motion test
-                // motion.push({
-                //     x,
-                //     y,
-                //     r,
-                //     g,
-                //     b,
-                // });
-                // // motion test
-                if (rDiff > BRIGHTNESS_THRESHOLD) {
-                    if (motions.maxPoint.score < areaMotionScore) {
-                        motions.maxPoint.x = x;
-                        motions.maxPoint.y = y;
-                        motions.maxPoint.score = areaMotionScore;
+
+                const xLength = this.motions[0].length;
+                const yLength = this.motions.length;
+                const mostSimilar = { x: 0, y: 0, diff: 99999999 };
+                for (let scopeY = yIndex - 2; scopeY <= yIndex + 2; scopeY++) {
+                    for (let scopeX = xIndex - 2; scopeX <= xIndex + 2; scopeX++) {
+                        // find min diff for the direction change
+                        const clampedX = clamp(scopeX, 0, xLength - 1);
+                        const clampedY = clamp(scopeY, 0, yLength - 1);
+                        const valuesNearPos = this.motions[clampedY][clampedX] || {
+                            r: 0,
+                            g: 0,
+                            b: 0,
+                        };
+                        const rDiffScope = Math.abs(valuesNearPos.r - r);
+                        const gDiffScope = Math.abs(valuesNearPos.g - g);
+                        const bDiffScope = Math.abs(valuesNearPos.b - b);
+                        const diff = rDiffScope + gDiffScope + bDiffScope;
+                        if (diff < mostSimilar.diff) {
+                            mostSimilar.x = clampedX;
+                            mostSimilar.y = clampedY;
+                            mostSimilar.diff = diff;
+                        }
                     }
                 }
-                motions.total += areaMotionScore;
-                previousFrame[pos] = { r, g, b };
+                // console.log('x : ', mostSimilar.x - xIndex, ' Y: ', mostSimilar.y - yIndex);
+                this.totalMotions += areaMotionScore;
+                totalMotionDirectionX += mostSimilar.x - xIndex;
+                totalMotionDirectionY += mostSimilar.y - yIndex;
+
+                this.motions[yIndex][xIndex] = {
+                    r,
+                    g,
+                    b,
+                    rDiff,
+                    gDiff,
+                    bDiff,
+                };
+
+                this.motionDirection[yIndex][xIndex] = {
+                    x: mostSimilar.x - xIndex,
+                    y: mostSimilar.y - yIndex,
+                };
             }
+
+            this.totalMotionDirection = {
+                x: totalMotionDirectionX,
+                y: totalMotionDirectionY,
+            };
         }
-
-        const { score, x, y } = motions.maxPoint;
-        if (score > 0 && x > 0 && y > 0) {
-            const prevX = this.motionPoint.x;
-            const prevY = this.motionPoint.y;
-            const motionScalarX = Math.abs(prevX - x);
-            const motionScalarY = Math.abs(prevY - y);
-            this.motionDirection.x = motionScalarX;
-            this.motionDirection.y = motionScalarY;
-            if (prevX > x) {
-                this.motionDirection.x *= -1;
-            }
-
-            if (prevY > y) {
-                this.motionDirection.y *= -1;
-            }
-            this.motionPoint.x = x;
-            this.motionPoint.y = y;
-        }
-
-        this.motions = motions;
 
         setTimeout(this.motionDetect.bind(this), 80);
     }

@@ -405,7 +405,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                                 emotion = status;
                             }
                         }
-                        return emotion;
+                        return Lang.video_emotion_params[emotion];
                 }
             },
             paramsKeyMap: {
@@ -437,8 +437,6 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                         ['움직임', 'total'],
                         ['x 방향 움직임', 'x'],
                         ['y 방향 움직임', 'y'],
-                        ['움직임 x 위치', 'x_pos'],
-                        ['움직임 y 위치', 'y_pos'],
                     ],
                     value: 'total',
                     fontSize: 11,
@@ -458,31 +456,19 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 try {
                     switch (type) {
                         case 'total':
-                            return clamp(VideoUtils.motions.total / 10, 0, 100000).toString();
+                            return clamp(VideoUtils.totalMotions / 10, 0, 100000).toString();
                         case 'x':
-                            let rawX = VideoUtils.motionDirection.x;
-                            if (VideoUtils.flipStatus.horizontal) {
+                            let rawX = VideoUtils.totalMotionDirection.x;
+                            if (!VideoUtils.flipStatus.horizontal) {
                                 rawX *= -1;
                             }
                             return rawX.toString();
                         case 'y':
-                            let rawY = VideoUtils.motionDirection.y;
+                            let rawY = VideoUtils.totalMotionDirection.y;
                             if (VideoUtils.flipStatus.vertical) {
                                 rawY *= -1;
                             }
                             return rawY.toString();
-                        case 'x_pos':
-                            let posX = VideoUtils.motionPoint.x - VideoUtils.CANVAS_WIDTH / 2;
-                            if (VideoUtils.flipStatus.horizontal) {
-                                posX *= -1;
-                            }
-                            return posX.toString();
-                        case 'y_pos':
-                            let posY = VideoUtils.motionPoint.y - VideoUtils.CANVAS_HEIGHT / 2;
-                            if (!VideoUtils.flipStatus.vertical) {
-                                posY *= -1;
-                            }
-                            return posY.toString();
 
                         default:
                             return 0;
