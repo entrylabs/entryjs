@@ -26,6 +26,34 @@ class DataTable {
         return this.#tables;
     }
 
+    getTables(blockList = []) {
+        return _.union(
+            blockList
+                .filter((block) => {
+                    const { _schema = {}, data = {} } = block || {};
+                    if (!data.type) {
+                        return false;
+                    }
+                    const { isFor, isNotFor = [] } = _schema;
+                    const [key] = isNotFor;
+                    return key && isFor && key === 'analysis';
+                })
+                .map((block) => {
+                    const { params = [] } = block.data || {};
+                    return params.filter((param) => {
+                        if (typeof param !== 'string') {
+                            return false;
+                        }
+                        return _find(this.#tables, { id: param });
+                    });
+                })
+                .flat()
+        ).map((tableId) => {
+            const table = this.getSource(tableId);
+            return table.toJSON();
+        });
+    }
+
     getSource(id) {
         if (!id) {
             console.warn('empty argument');

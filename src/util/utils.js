@@ -1785,6 +1785,7 @@ Entry.Utils.addNewBlock = function(item) {
         functions,
         messages,
         variables,
+        tables = [],
         expansionBlocks = [],
         aiUtilizeBlocks = [],
     } = item;
@@ -1808,6 +1809,7 @@ Entry.Utils.addNewBlock = function(item) {
             variable.object = _.get(Entry, ['container', 'selectedObject', 'id'], '');
         }
     });
+    DataTable.setTables(tables);
     handleOptionalBlocksActive(item);
 
     Entry.variableContainer.appendMessages(messages);
@@ -1829,6 +1831,7 @@ Entry.Utils.addNewObject = function(sprite) {
             functions,
             messages,
             variables,
+            tables = [],
             expansionBlocks = [],
             aiUtilizeBlocks = [],
         } = sprite;
@@ -1841,6 +1844,7 @@ Entry.Utils.addNewObject = function(sprite) {
             return entrylms.alert(Lang.Menus.object_import_syntax_error);
         }
         const objectIdMap = {};
+        DataTable.setTables(tables);
         handleOptionalBlocksActive(sprite);
         variables.forEach((variable) => {
             const { object } = variable;
