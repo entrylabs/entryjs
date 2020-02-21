@@ -8,7 +8,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
         this.name = 'PingpongG1';
         this.url = 'https://www.roborisen.com';
         this.imageName = 'pingpong_g1.png';
-        //this.delayTime: 30,
+        this.delayTime = 50;
         this.title = {
             ko: '핑퐁 G1',
             en: 'Pingpong G1',
@@ -61,26 +61,28 @@ Entry.PingpongG1 = new (class PingpongG1 {
     }
 
     setZero() {
-        // all cube stop
-        Entry.hw.sendQueue.COMMAND = {
-            id: ++this.send_cmd_id,
-            data: this.makePacket(0xcc, 0x0004, [2, 0, 0, 1, 0, 0]),
-        };
-        Entry.hw.update();
-
         // all LED clear
+        this.sendCommand(this.makePacket(0xa2, 0xe3, [0x70, 1, 0, ' ']));
+        setTimeout(() => {
+            // all cube stop
+            this.sendCommand(this.makePacket(0xcc, 0x0004, [2, 0, 0, 1, 0, 0]));
+            setTimeout(()=> {
+                Entry.hw.sendQueue.COMMAND = {
+                    id: -1,
+                };
+                Entry.hw.update();
+
+                this.send_cmd_id = 0;
+            }, this.delayTime);
+        },  this.delayTime);
+    }
+
+    sendCommand(packet) {
         Entry.hw.sendQueue.COMMAND = {
             id: ++this.send_cmd_id,
-            data: this.makePacket(0xa2, 0xe3, [0x70, 1, 0, ' ']),
+            data: packet,
         };
         Entry.hw.update();
-
-        Entry.hw.sendQueue.COMMAND = {
-            id: -1,
-        };
-        Entry.hw.update();
-
-        this.send_cmd_id = 0;
     }
 
     afterReceive(pd) {
@@ -104,15 +106,9 @@ Entry.PingpongG1 = new (class PingpongG1 {
         }
     }
 
-    postCallReturn(script, packet, waitTime = 0) {
+    postCallReturn(script, packet, waitTime = this.delayTime) {
         if (waitTime <= 0) {
-            //FIXME
-            Entry.hw.sendQueue.COMMAND = {
-                id: ++this.send_cmd_id,
-                data: packet,
-            };
-            Entry.hw.update();
-
+            this.sendCommand(packet);
             return script.callReturn();
         }
 
@@ -120,12 +116,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
             script.is_start = true;
             script.step_flag = 1;
 
-            //FIXME
-            Entry.hw.sendQueue.COMMAND = {
-                id: ++this.send_cmd_id,
-                data: packet,
-            };
-            Entry.hw.update();
+            this.sendCommand(packet);
 
             setTimeout(() => {
                 script.step_flag = 0;
