@@ -323,9 +323,9 @@ Entry.byrobot_drone_base =
         delete Entry.hw.sendQueue.display_draw_string_align_string;
     },
 
-    transferbuzzer(mode, value, time)
+    transferbuzzer(target, mode, value, time)
     {
-        Entry.hw.sendQueue.target = 0x20;
+        Entry.hw.sendQueue.target = target;
         Entry.hw.sendQueue.buzzer_mode = mode;
         Entry.hw.sendQueue.buzzer_value = value;
         Entry.hw.sendQueue.buzzer_time = time;
@@ -338,9 +338,9 @@ Entry.byrobot_drone_base =
         delete Entry.hw.sendQueue.buzzer_time;
     },
 
-    transferVibrator(mode, timeOn, timeOff, timeRun)
+    transferVibrator(target, mode, timeOn, timeOff, timeRun)
     {
-        Entry.hw.sendQueue.target = 0x20;
+        Entry.hw.sendQueue.target = target;
         Entry.hw.sendQueue.vibrator_mode = mode;
         Entry.hw.sendQueue.vibrator_on = timeOn;
         Entry.hw.sendQueue.vibrator_off = timeOff;
@@ -355,9 +355,10 @@ Entry.byrobot_drone_base =
         delete Entry.hw.sendQueue.vibrator_total;
     },
 
-    transferMotorSingle(motorIndex, motorRotation, motorSpeed)
+
+    transferMotorSingle(target, motorIndex, motorRotation, motorSpeed)
     {
-        Entry.hw.sendQueue.target = 0x10;
+        Entry.hw.sendQueue.target = target;
         Entry.hw.sendQueue.motorsingle_target = motorIndex;
         Entry.hw.sendQueue.motorsingle_rotation = motorRotation;
         Entry.hw.sendQueue.motorsingle_value = motorSpeed;
@@ -383,9 +384,9 @@ Entry.byrobot_drone_base =
         delete Entry.hw.sendQueue.command_option;
     },
 
-    transferControlQuad(roll, pitch, yaw, throttle)
+    transferControlQuad(target, roll, pitch, yaw, throttle)
     {
-        Entry.hw.sendQueue.target = 0x10;
+        Entry.hw.sendQueue.target = target;
         Entry.hw.sendQueue.control_quad8_roll = roll;
         Entry.hw.sendQueue.control_quad8_pitch = pitch;
         Entry.hw.sendQueue.control_quad8_yaw = yaw;
@@ -400,9 +401,9 @@ Entry.byrobot_drone_base =
         delete Entry.hw.sendQueue.control_quad8_throttle;
     },
 
-    transferControlPosition(x, y, z, velocity, heading, rotationalVelocity)
+    transferControlPosition(target, x, y, z, velocity, heading, rotationalVelocity)
     {
-        Entry.hw.sendQueue.target = 0x10;
+        Entry.hw.sendQueue.target = target;
         Entry.hw.sendQueue.control_position_x = x;
         Entry.hw.sendQueue.control_position_y = y;
         Entry.hw.sendQueue.control_position_z = z;
@@ -422,7 +423,7 @@ Entry.byrobot_drone_base =
     },
 
     /***************************************************************************************
-     *  블럭 연동 함수
+     *  기능
      ***************************************************************************************/
 
     // 데이터 읽기
@@ -456,6 +457,10 @@ Entry.byrobot_drone_base =
 
         return { r:red, g:green, b:blue };
     },
+
+    /***************************************************************************************
+     *  블럭 연동 함수
+     ***************************************************************************************/
 
     // LED 수동 설정
     setLightManual(script, target, flags, brightness)
@@ -530,7 +535,7 @@ Entry.byrobot_drone_base =
         {
             case 'Start':
                 {
-                    const color = Entry.byrobot_drone_base.getRgbFromString(stringColor);
+                    const color = this.getRgbFromString(stringColor);
                     this.transferLightModeColor(target, mode, interval, color.r, color.g, color.b);
                 }
                 return script;
@@ -597,7 +602,7 @@ Entry.byrobot_drone_base =
         {
             case 'Start':
                 {
-                    const color = Entry.byrobot_drone_base.getRgbFromString(stringColor);
+                    const color = this.getRgbFromString(stringColor);
                     this.transferLightEventColor(target, mode, interval, repeat, color.r, color.g, color.b);
                 }
                 return script;
@@ -790,7 +795,8 @@ Entry.byrobot_drone_base =
     // 화면에 문자열 정렬하여 그리기
     setDisplayDrawStringAlign(script, target, xStart, xEnd, y, align, font, pixel, string)
     {
-        switch (this.checkFinish(script, 40)) {
+        switch (this.checkFinish(script, 40))
+        {
             case 'Start':
                 {
                     this.transferDisplayDrawStringAlign(target, xStart, xEnd, y, align, font, pixel, string);
@@ -820,13 +826,13 @@ Entry.byrobot_drone_base =
         HzContinually       = 6,    // 주파수 예약
      */
     // 정지
-    setBuzzerStop(script)
+    setBuzzerStop(script, target)
     {
         switch (this.checkFinish(script, 40))
         {
             case 'Start':
                 {
-                    this.transferbuzzer(0, 0, 0);
+                    this.transferbuzzer(target, 0, 0, 0);
                 }
                 return script;
 
@@ -842,12 +848,12 @@ Entry.byrobot_drone_base =
     },
 
     // 묵음
-    setBuzzerMute(script, time, flagDelay, flagInstantly)
+    setBuzzerMute(script, target, time, flagDelay, flagInstantly)
     {
         let timeDelay = 40;
         if (flagDelay)
         {
-            timeDelay = time;
+            timeDelay = Math.max(timeDelay, time);
         }
 
         switch (this.checkFinish(script, timeDelay))
@@ -860,7 +866,7 @@ Entry.byrobot_drone_base =
                         mode = 1;
                     } // 묵음 즉시
 
-                    this.transferbuzzer(mode, 0xee, time);
+                    this.transferbuzzer(target, mode, 0xee, time);
                 }
                 return script;
 
@@ -875,12 +881,12 @@ Entry.byrobot_drone_base =
         }
     },
 
-    setBuzzerScale(script, octave, scale, time, flagDelay, flagInstantly)
+    setBuzzerScale(script, target, octave, scale, time, flagDelay, flagInstantly)
     {
         let timeDelay = 40;
         if (flagDelay)
         {
-            timeDelay = time;
+            timeDelay = Math.max(timeDelay, time);
         }
 
         switch (this.checkFinish(script, timeDelay))
@@ -895,7 +901,7 @@ Entry.byrobot_drone_base =
 
                     const scalecalc = octave * 12 + scale;
 
-                    this.transferbuzzer(mode, scalecalc, time);
+                    this.transferbuzzer(target, mode, scalecalc, time);
                 }
                 return script;
 
@@ -910,12 +916,12 @@ Entry.byrobot_drone_base =
         }
     },
 
-    setBuzzerHz(script, hz, time, flagDelay, flagInstantly)
+    setBuzzerHz(script, target, hz, time, flagDelay, flagInstantly)
     {
         let timeDelay = 40;
         if (flagDelay)
         {
-            timeDelay = time;
+            timeDelay = Math.max(timeDelay, time);
         }
 
         switch (this.checkFinish(script, timeDelay))
@@ -927,7 +933,7 @@ Entry.byrobot_drone_base =
                     {
                         mode = 5;
                     } // Hz 즉시
-                    this.transferbuzzer(mode, hz, time);
+                    this.transferbuzzer(target, mode, hz, time);
                 }
                 return script;
 
@@ -948,13 +954,13 @@ Entry.byrobot_drone_base =
         Instantally     = 1,    // 즉시 적용
         Continually     = 2,    // 예약
      */
-    setVibratorStop(script)
+    setVibratorStop(script, target)
     {
         switch (this.checkFinish(script, 40))
         {
             case 'Start':
                 {
-                    this.transferVibrator(0, 0, 0, 0);
+                    this.transferVibrator(target, 0, 0, 0, 0);
                 }
                 return script;
 
@@ -969,12 +975,12 @@ Entry.byrobot_drone_base =
         }
     },
 
-    setVibrator(script, timeOn, timeOff, timeRun, flagDelay, flagInstantly)
+    setVibrator(script, target, timeOn, timeOff, timeRun, flagDelay, flagInstantly)
     {
         let timeDelay = 40;
         if (flagDelay)
         {
-            timeDelay = timeRun;
+            timeDelay = Math.max(timeDelay, timeRun);
         }
 
         switch (this.checkFinish(script, timeDelay))
@@ -984,10 +990,10 @@ Entry.byrobot_drone_base =
                     let mode = 2; // 예약
                     if (flagInstantly)
                     {
-                        mode = 1;
-                    } // 즉시
+                        mode = 1; // 즉시
+                    }
 
-                    this.transferVibrator(mode, timeOn, timeOff, timeRun);
+                    this.transferVibrator(target, mode, timeOn, timeOff, timeRun);
                 }
                 return script;
 
@@ -1000,6 +1006,11 @@ Entry.byrobot_drone_base =
             default:
                 return script.callReturn();
         }
+    },
+
+    sendStop(script, target)
+    {
+        return this.sendCommand(script, target, 0x10, 0x01);
     },
 
     sendCommand(script, target, command, option = 0)
@@ -1023,18 +1034,13 @@ Entry.byrobot_drone_base =
         }
     },
 
-    sendStop(script)
-    {
-        return this.sendCommand(script, 0x10, 0x01);
-    },
-
-    setMotorSingle(script, motorIndex, motorRotation, motorSpeed)
+    setMotorSingle(script, target, motorIndex, motorRotation, motorSpeed)
     {
         switch (this.checkFinish(script, 40))
         {
             case 'Start':
                 {
-                    this.transferMotorSingle(motorIndex, motorRotation, motorSpeed);
+                    this.transferMotorSingle(target, motorIndex, motorRotation, motorSpeed);
                 }
                 return script;
 
@@ -1049,14 +1055,15 @@ Entry.byrobot_drone_base =
         }
     },
 
-    setEventFlight(script, eventFlight, time)
+
+    setEventFlight(script, target, eventFlight, time)
     {
         switch (this.checkFinish(script, time))
         {
             case 'Start':
                 {
                     this.transferControlQuad(0, 0, 0, 0); // 기존 입력되었던 조종기 방향 초기화 (수직으로 이륙, 착륙 하도록)
-                    this.transferCommand(0x10, 0x07, eventFlight); // 0x07 : CommandType::FlightEvent
+                    this.transferCommand(target, 0x07, eventFlight); // 0x07 : CommandType::FlightEvent
                 }
                 return script;
 
@@ -1072,19 +1079,19 @@ Entry.byrobot_drone_base =
     },
 
 
-    sendControlQuadSingle(script, controlTarget, value, time, flagDelay)
+    sendControlQuadSingle(script, target, controlTarget, value, time, flagDelay)
     {
         let timeDelay = 40;
         if (flagDelay)
         {
-            timeDelay = time;
+            timeDelay = Math.max(timeDelay, time);
         }
 
         switch (this.checkFinish(script, timeDelay))
         {
             case 'Start':
                 {
-                    Entry.hw.sendQueue.target = 0x10;
+                    Entry.hw.sendQueue.target = target;
                     Entry.hw.sendQueue[controlTarget] = value;
 
                     Entry.hw.update();
@@ -1103,7 +1110,7 @@ Entry.byrobot_drone_base =
                     // 블럭을 빠져나갈 때 변경했던 값을 초기화
 
                     // 전송
-                    Entry.hw.sendQueue.target = 0x10;
+                    Entry.hw.sendQueue.target = target;
                     Entry.hw.sendQueue[controlTarget] = 0;
 
                     Entry.hw.update();
@@ -1119,19 +1126,19 @@ Entry.byrobot_drone_base =
     },
 
 
-    sendControlQuad(script, roll, pitch, yaw, throttle, time, flagDelay)
+    sendControlQuad(script, target, roll, pitch, yaw, throttle, time, flagDelay)
     {
         let timeDelay = 40;
         if (flagDelay)
         {
-            timeDelay = time;
+            timeDelay = Math.max(timeDelay, time);
         }
 
         switch (this.checkFinish(script, timeDelay))
         {
             case 'Start':
                 {
-                    this.transferControlQuad(roll, pitch, yaw, throttle);
+                    this.transferControlQuad(target, roll, pitch, yaw, throttle);
                 }
                 return script;
 
@@ -1141,7 +1148,7 @@ Entry.byrobot_drone_base =
             case 'Finish':
                 if (flagDelay)
                 {
-                    this.transferControlQuad(0, 0, 0, 0);
+                    this.transferControlQuad(target, 0, 0, 0, 0);
                 }
                 return script.callReturn();
 
@@ -1150,15 +1157,21 @@ Entry.byrobot_drone_base =
         }
     },
 
-    sendControlPosition(script, x, y, z, velocity, heading, rotationalVelocity)
+
+    sendControlPosition(script, target, x, y, z, velocity, heading, rotationalVelocity, flagDelay)
     {
-        const timeDelay = 40;
+        let timeDelay = 40;
+        if (flagDelay)
+        {
+            timeDelay = Math.max(timeDelay, time);
+        }
 
         switch (this.checkFinish(script, timeDelay))
         {
             case 'Start':
                 {
-                    this.transferControlPosition(x, y, z, velocity, heading, rotationalVelocity);
+                    this.transferControlQuad(target, 0, 0, 0, 0);
+                    this.transferControlPosition(target, x, y, z, velocity, heading, rotationalVelocity);
                 }
                 return script;
 
