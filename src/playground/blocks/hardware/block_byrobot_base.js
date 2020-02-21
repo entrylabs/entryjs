@@ -1079,7 +1079,7 @@ Entry.byrobot_base =
     },
 
 
-    sendControlQuadSingle(script, target, controlTarget, value, time, flagDelay)
+    sendControlQuadSingle(script, target, controlTarget, value, time = 40, flagDelay = false)
     {
         let timeDelay = 40;
         if (flagDelay)
@@ -1124,7 +1124,7 @@ Entry.byrobot_base =
     },
 
 
-    sendControlQuad(script, target, roll, pitch, yaw, throttle, time, flagDelay)
+    sendControlQuad(script, target, roll, pitch, yaw, throttle, time = 40, flagDelay = false)
     {
         let timeDelay = 40;
         if (flagDelay)
@@ -1156,7 +1156,7 @@ Entry.byrobot_base =
     },
 
 
-    sendControlPosition(script, target, x, y, z, velocity, heading, rotationalVelocity, flagDelay)
+    sendControlPosition(script, target, x, y, z, velocity, heading, rotationalVelocity, time = 40, flagDelay = false)
     {
         let timeDelay = 40;
         if (flagDelay)

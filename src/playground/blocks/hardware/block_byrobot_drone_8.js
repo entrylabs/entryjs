@@ -42,8 +42,8 @@ Entry.byrobot_drone_8 =
             Entry.byrobot_base.transferbuzzer(0x20, 0, 0, 0);
             Entry.byrobot_base.transferLightManual(0x10, 0xffff, 0); // LED 초기화(모두 꺼짐)
             Entry.byrobot_base.transferLightManual(0x20, 0xffff, 0); // LED 초기화(모두 꺼짐)
-            Entry.byrobot_base.transferLightModeColor(0x10, 0x21, 200, 255, 0, 0); // LED 초기화(드론)
-            Entry.byrobot_base.transferLightModeColor(0x20, 0x21, 200, 255, 0, 0); // LED 초기화(조종기)
+            Entry.byrobot_base.transferLightModeColor(0x10, 0x22, 200, 255, 0, 0); // LED 초기화(드론)
+            Entry.byrobot_base.transferLightModeColor(0x20, 0x22, 200, 255, 0, 0); // LED 초기화(조종기)
         }
     },
 
@@ -261,7 +261,6 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 byrobot_drone_8_controller_display_draw_rect    : '사각형 x %1, y %2, 너비 %3, 높이 %4 %5 %6 %7 %8',
                 byrobot_drone_8_controller_display_draw_string  : '문자열 x %1, y %2 %3 %4 입력 %5 %6',
                 byrobot_drone_8_controller_display_draw_string_align: '문자열 정렬 x1 %1, x2 %2, y %3 %4 %5 %6 입력 %7 %8',
-                byrobot_drone_8_controller_display_invert       : '색반전 x %1, y %2, 너비 %3, 높이 %4 %5',
                 byrobot_drone_8_controller_if_button_press      : '조종기 %1 눌렀을 때',
                 byrobot_drone_8_controller_if_joystick_direction: '조종기 %1 조이스틱 %2 움직였을 때',
                 byrobot_drone_8_controller_light_color_input    : '조종기 LED 색지정 R %1, G %2, B %3 %4 %5 %6',
@@ -316,7 +315,6 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 byrobot_drone_8_controller_display_draw_rect    : "<br>조종기 OLED 화면에서 지정한 위치에 사각형을 그립니다.<br><br>☆★ (x, y)좌표에 관한 설명은 [조종기 화면 점 찍기]블럭을 참조해주세요. ★☆<br><br>x, y 좌표값과 너비, 높이를 지정합니다. 시작점 = (x, y), 사용 가능한 값의 범위는 x값과 너비는 (0~128), y값과 높이는 (0~64)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
                 byrobot_drone_8_controller_display_draw_string  : "<br>조종기 OLED 화면에서 지정한 위치에 문자열을 씁니다.<br><br>☆★ (x, y)좌표에 관한 설명은 [조종기 화면 점 찍기]블럭을 참조해주세요. ★☆<br><br>글자 입력은 영문자 알파벳 대문자, 소문자와 숫자, 공백(space), 특수문자만 가능합니다.(한글은 아직 지원되지 않습니다.)<br>x, y 좌표값과 글자 크기, 색을 지정합니다. 시작점 = (x, y), 사용 가능한 값의 범위는 x값은 (0~120), y값과 높이는 (0~60)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
                 byrobot_drone_8_controller_display_draw_string_align    : "<br>조종기 OLED 화면에서 지정한 위치에 문자열을 정렬하여 그립니다.<br><br>☆★ (x, y)좌표에 관한 설명은 [조종기 화면 점 찍기]블럭을 참조해주세요. ★☆<br><br>글자 입력은 영문자 알파벳 대문자, 소문자와 숫자, 공백(space), 특수문자만 가능합니다.(한글은 아직 지원되지 않습니다.)<br>x, y 좌표값과 정렬 방향, 글자 크기, 색을 지정합니다. 시작점 = (x1, y), 끝나는점 = (x2, y), 사용 가능한 값의 범위는 x값은 (0~128), y값은 (0~60)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
-                byrobot_drone_8_controller_display_invert       : "<br>조종기 OLED 화면에서 선택한 영역의 색을 반전시킵니다. x, y 좌표값과 너비, 높이를 지정합니다. 좌표(x, y) = (가로, 세로) 화면상의 위치입니다. 사용 가능한 값의 범위는 x값과 너비는 (0~128), y값과 높이는 (0~64)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
                 byrobot_drone_8_controller_if_button_press      : "<br>지정한 조종기의 버튼이 눌러졌을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
                 byrobot_drone_8_controller_if_joystick_direction: "<br>조종기의 조이스틱을 지정한 방향으로 움직였을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
                 byrobot_drone_8_controller_light_color_input    : "<br>빛의 삼원색인 Red, Green, Blue 값을 지정하여 조종기 LED의 색상을 원하는대로 만들 수 있습니다.<br>10진수(0 ~ 255) 값을 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
@@ -503,7 +501,6 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 byrobot_drone_8_controller_display_draw_rect: 'draw a rectangle in controller display x:%1, y:%2, width:%3, height:%4, %5, %6, %7 %8',
                 byrobot_drone_8_controller_display_draw_string: 'draw a string in controller display x:%1, y:%2, font size:%3, %4, input:%5, %6',
                 byrobot_drone_8_controller_display_draw_string_align: 'draw aligned string in controller display x1:%1, x2:%2, y:%3, align:%4, font size:%5, %6, input:%7, %8',
-                byrobot_drone_8_controller_display_invert: 'invert controller display x:%1, y:%2, width:%3, height:%4 %5',
                 byrobot_drone_8_controller_if_button_press: 'when press %1',
                 byrobot_drone_8_controller_if_joystick_direction: 'when %1 stick move to %2',
                 byrobot_drone_8_controller_light_color_input: 'Controller LED R %1, G %2, B %3 %4 %5 %6',
@@ -558,7 +555,6 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 byrobot_drone_8_controller_display_draw_rect: '',
                 byrobot_drone_8_controller_display_draw_string: '',
                 byrobot_drone_8_controller_display_draw_string_align: '',
-                byrobot_drone_8_controller_display_invert: '',
                 byrobot_drone_8_controller_if_button_press: '',
                 byrobot_drone_8_controller_if_joystick_direction: '',
                 byrobot_drone_8_controller_light_color_input: '',
@@ -637,7 +633,6 @@ Entry.byrobot_drone_8.blockMenuBlocks = [
     'byrobot_drone_8_controller_light_color_select',
     'byrobot_drone_8_controller_display_clear_all',
     'byrobot_drone_8_controller_display_clear',
-    'byrobot_drone_8_controller_display_invert',
     'byrobot_drone_8_controller_display_draw_point',
     'byrobot_drone_8_controller_display_draw_line',
     'byrobot_drone_8_controller_display_draw_rect',
@@ -1084,7 +1079,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
-                const mode        = 0x21;
+                const mode        = 0x22;
                 const interval    = parseInt(script.getField('BRIGHTNESS'), 10);
                 const colorString = script.getField('COLOR');
                 return Entry.byrobot_base.setLightModeColorString(script, 0x20, mode, interval, colorString);
@@ -1514,7 +1509,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                         [Lang.Blocks.controller_display_pixel_black, '0'],
                         [Lang.Blocks.controller_display_pixel_white, '1'],
                     ],
-                    value: '0',
+                    value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1593,48 +1588,6 @@ Entry.byrobot_drone_8.getBlocks = function()
             },
         },
 
-        byrobot_drone_8_controller_display_invert: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
-            ],
-            events: {},
-            def: {
-                params: [
-                    { type: 'text', params: ['32'] },
-                    { type: 'text', params: ['16'] },
-                    { type: 'text', params: ['64'] },
-                    { type: 'text', params: ['32'] },
-                    null,
-                    null,
-                ],
-                type: 'byrobot_drone_8_controller_display_invert',
-            },
-            paramsKeyMap: {
-                X: 0,
-                Y: 1,
-                WIDTH: 2,
-                HEIGHT: 3,
-            },
-            class: 'controller_display',
-            isNotFor: ['byrobot_drone_8'],
-            func(sprite, script)
-            {
-                const x = script.getNumberValue('X');
-                const y = script.getNumberValue('Y');
-                const width = script.getNumberValue('WIDTH');
-                const height = script.getNumberValue('HEIGHT');
-                return Entry.byrobot_base.setDisplayInvert(script, 0x20, x, y, width, height);
-            },
-        },
-
         byrobot_drone_8_controller_display_draw_point: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1649,7 +1602,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                         [Lang.Blocks.controller_display_pixel_black, '0'],
                         [Lang.Blocks.controller_display_pixel_white, '1'],
                     ],
-                    value: '1',
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1698,7 +1651,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                         [Lang.Blocks.controller_display_pixel_black, '0'],
                         [Lang.Blocks.controller_display_pixel_white, '1'],
                     ],
-                    value: '1',
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1768,7 +1721,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                         [Lang.Blocks.controller_display_pixel_black, '0'],
                         [Lang.Blocks.controller_display_pixel_white, '1'],
                     ],
-                    value: '1',
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1851,7 +1804,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                         [Lang.Blocks.controller_display_pixel_black, '0'],
                         [Lang.Blocks.controller_display_pixel_white, '1'],
                     ],
-                    value: '1',
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1926,7 +1879,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                         [Lang.Blocks.controller_display_pixel_black, '0'],
                         [Lang.Blocks.controller_display_pixel_white, '1'],
                     ],
-                    value: '1',
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2004,7 +1957,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                         [Lang.Blocks.controller_display_pixel_black, '0'],
                         [Lang.Blocks.controller_display_pixel_white, '1'],
                     ],
-                    value: '1',
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,

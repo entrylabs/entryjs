@@ -40,7 +40,7 @@ Entry.byrobot_controller_4 =
             Entry.byrobot_base.transferVibrator(0x20, 0, 0, 0, 0);
             Entry.byrobot_base.transferbuzzer(0x20, 0, 0, 0);
             Entry.byrobot_base.transferLightManual(0x20, 0xffff, 0); // LED 초기화(모두 꺼짐)
-            Entry.byrobot_base.transferLightModeColor(0x20, 0x21, 200, 255, 0, 0); // LED 초기화(조종기)
+            Entry.byrobot_base.transferLightModeColor(0x20, 0x22, 200, 255, 0, 0); // LED 초기화(조종기)
         }
     },
 
@@ -693,7 +693,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             isNotFor: ['byrobot_controller_4'],
             func(sprite, script)
             {
-                const mode        = 0x21;
+                const mode        = 0x22;
                 const interval    = parseInt(script.getField('BRIGHTNESS'), 10);
                 const colorString = script.getField('COLOR');
                 return Entry.byrobot_base.setLightModeColorString(script, 0x20, mode, interval, colorString);
@@ -974,7 +974,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                         [Lang.Blocks.controller_display_pixel_black, '0'],
                         [Lang.Blocks.controller_display_pixel_white, '1'],
                     ],
-                    value: '1',
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1024,7 +1024,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                         [Lang.Blocks.controller_display_pixel_black, '0'],
                         [Lang.Blocks.controller_display_pixel_white, '1'],
                     ],
-                    value: '1',
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1095,7 +1095,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                         [Lang.Blocks.controller_display_pixel_black, '0'],
                         [Lang.Blocks.controller_display_pixel_white, '1'],
                     ],
-                    value: '1',
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1179,7 +1179,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                         [Lang.Blocks.controller_display_pixel_black, '0'],
                         [Lang.Blocks.controller_display_pixel_white, '1'],
                     ],
-                    value: '1',
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1255,7 +1255,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                         [Lang.Blocks.controller_display_pixel_black, '0'],
                         [Lang.Blocks.controller_display_pixel_white, '1'],
                     ],
-                    value: '1',
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1334,7 +1334,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                         [Lang.Blocks.controller_display_pixel_black, '0'],
                         [Lang.Blocks.controller_display_pixel_white, '1'],
                     ],
-                    value: '1',
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
