@@ -522,16 +522,16 @@ Entry.byrobot_dronefighter_flight = {
         }
     },
     /*
-        None = 0,           ///< 없음
+        None = 0,           // 없음
 
-        Flight = 0x10,      ///< 비행(가드 포함)
-        FlightNoGuard,      ///< 비행(가드 없음)
-        FlightFPV,          ///< 비행(FPV)
+        Flight = 0x10,      // 비행(가드 포함)
+        FlightNoGuard,      // 비행(가드 없음)
+        FlightFPV,          // 비행(FPV)
 
-        Drive = 0x20,       ///< 주행
-        DriveFPV,           ///< 주행(FPV)
+        Drive = 0x20,       // 주행
+        DriveFPV,           // 주행(FPV)
 
-        Test = 0x30,        ///< 테스트
+        Test = 0x30,        // 테스트
      */
     setModeVehicle(script, modeVehicle) {
         switch (this.checkFinish(script, 40)) {
