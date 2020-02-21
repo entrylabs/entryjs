@@ -145,7 +145,7 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             },
             class: 'audio',
             isNotFor: ['audio'],
-            async func(sprite, script) {
+            func(sprite, script) {
                 return AudioUtils.currentVolume;
             },
             syntax: {
