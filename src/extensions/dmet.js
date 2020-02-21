@@ -232,8 +232,16 @@ class dmetTable {
         return new Array(this.#array.length).fill(0);
     }
 
+    #getNewColName() {
+        return Entry.getOrderedName(
+            Lang.DataAnalytics.new_attribute,
+            this.fields.map((name) => ({ name })),
+            'name'
+        );
+    }
+
     #appendCol({ index, data = this.#getDefaultData(false) } = {}) {
-        this.fields.push('');
+        this.fields.push(this.#getNewColName());
         this.#array.forEach(({ value }, idx) => {
             value.push(0);
         });
@@ -244,7 +252,7 @@ class dmetTable {
         if (index < 1 || index > this.fields.length + 1) {
             throw { message: `error: insertCol ${index}` };
         }
-        this.fields.splice(index - 1, 0, 'insertCol');
+        this.fields.splice(index - 1, 0, this.#getNewColName());
         this.#array.forEach(({ value }, idx) => {
             value.splice(index - 1, 0, 0);
         });
