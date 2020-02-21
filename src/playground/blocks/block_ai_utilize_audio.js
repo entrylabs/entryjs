@@ -1,4 +1,4 @@
-import audioUtils from '../../util/audioUtils';
+import AudioUtils from '../../util/audioUtils';
 
 Entry.AI_UTILIZE_BLOCK.audio = {
     name: 'audio',
@@ -13,10 +13,8 @@ Entry.AI_UTILIZE_BLOCK.audio = {
     description: Lang.Msgs.ai_utilize_audio_description,
     descriptionKey: 'Msgs.ai_utilize_audio_description',
     isInitialized: false,
-    init() {
-        if (this.isInitialized) {
-            return;
-        }
+    async init() {
+        await AudioUtils.initUserMedia();
         Entry.AI_UTILIZE_BLOCK.audio.isInitialized = true;
     },
 };
@@ -57,8 +55,8 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             class: 'audio',
             isNotFor: ['audio'],
             async func(sprite, script) {
-                audioUtils.incompatBrowserChecker();
-                return await audioUtils.checkUserMicAvailable();
+                AudioUtils.incompatBrowserChecker();
+                return await AudioUtils.checkUserMicAvailable();
             },
             syntax: {
                 js: [],
@@ -88,14 +86,13 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             class: 'audio',
             isNotFor: ['audio'],
             async func(sprite, script) {
-                await audioUtils.initUserMedia();
-                if (audioUtils.isRecording) {
+                if (AudioUtils.isRecording) {
                     throw new Entry.Utils.AsyncError();
                 }
                 try {
-                    audioUtils.isRecording = true;
+                    AudioUtils.isRecording = true;
                     Entry.container.enableSttValue();
-                    const result = await audioUtils.startRecord(60 * 1000);
+                    const result = await AudioUtils.startRecord(60 * 1000);
                     Entry.dispatchEvent('audioRecordingDone');
                     Entry.container.setSttValue(result || 0);
                 } catch (e) {
@@ -125,7 +122,6 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             class: 'audio',
             isNotFor: ['audio'],
             async func(sprite, script) {
-                await audioUtils.initUserMedia();
                 return Entry.container.getSttValue();
             },
             syntax: {
@@ -150,8 +146,7 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             class: 'audio',
             isNotFor: ['audio'],
             async func(sprite, script) {
-                await audioUtils.initUserMedia();
-                return audioUtils.currentVolume;
+                return AudioUtils.currentVolume;
             },
             syntax: {
                 js: [],
