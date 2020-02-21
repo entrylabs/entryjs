@@ -21,6 +21,110 @@ Entry.AI_UTILIZE_BLOCK.video = {
 };
 
 Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
+    const params = {
+        getCommonIndicator() {
+            return {
+                type: 'Indicator',
+                img: 'block_icon/ai_utilize_icon.svg',
+                size: 11,
+            };
+        },
+        getNumbers() {
+            return {
+                type: 'Dropdown',
+                options: [
+                    ['1', 0],
+                    ['2', 1],
+                    ['3', 2],
+                    ['4', 3],
+                ],
+                value: 0,
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
+        getOnOff() {
+            return {
+                type: 'Dropdown',
+                options: [
+                    [Lang.Blocks.video_show_video, 'on'],
+                    [Lang.Blocks.video_hide_video, 'off'],
+                ],
+                value: 'on',
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
+        getVideoEffectOptions() {
+            return {
+                type: 'Dropdown',
+                options: [
+                    [Lang.Blocks.video_brightness, 'brightness'],
+                    [Lang.Blocks.video_transparency, 'transparency'],
+                ],
+                value: 'brightness',
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
+        getVideoFlipOptions() {
+            return {
+                type: 'Dropdown',
+                options: [
+                    [Lang.Blocks.video_left_right, 'hflip'],
+                    [Lang.Blocks.video_top_bototm, 'vflip'],
+                ],
+                value: 'hflip',
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
+        getAiModelOptions() {
+            return {
+                type: 'Dropdown',
+                options: [
+                    [Lang.Blocks.video_human, 'pose'],
+                    [Lang.Blocks.video_face, 'face'],
+                    [Lang.Blocks.video_object, 'object'],
+                ],
+                value: 'pose',
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
+        getSwitchOptions() {
+            return {
+                type: 'Dropdown',
+                options: [
+                    [Lang.Blocks.video_start, 'on'],
+                    [Lang.Blocks.video_end, 'off'],
+                ],
+                value: 'on',
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
+        getFaceInfoOptions() {
+            return {
+                type: 'Dropdown',
+                options: [
+                    [Lang.Blocks.video_gender, 'gender'],
+                    [Lang.Blocks.video_age, 'age'],
+                    [Lang.Blocks.video_emotion, 'emotion'],
+                ],
+                value: 'gender',
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
+    };
     return {
         video_title: {
             skeleton: 'basic_text',
@@ -45,7 +149,6 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
             statements: [],
-            template: '비디오가 연결되었는가?',
             params: [],
             events: {},
             def: {
@@ -73,25 +176,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
             statements: [],
-            template: '비디오 화면 %1 %2',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['보이기', 'on'],
-                        ['숨기기', 'off'],
-                    ],
-                    value: 'on',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-                    arrowColor: EntryStatic.colorSet.common.WHITE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/ai_utilize_icon.svg',
-                    size: 11,
-                },
-            ],
+            params: [params.getOnOff(), params.getCommonIndicator()],
             events: {},
             def: {
                 type: 'video_draw_webcam',
@@ -119,30 +204,15 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
             statements: [],
-            template: '비디오 %1 효과를 %2 으로 정하기 %3',
             params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['밝기', 'brightness'],
-                        ['투명도', 'opacity'],
-                    ],
-                    value: 'brightness',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-                    arrowColor: EntryStatic.colorSet.common.WHITE,
-                },
+                params.getVideoEffectOptions(),
                 {
                     type: 'Block',
                     accept: 'string',
                     defaultType: 'number',
                     value: '0',
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/ai_utilize_icon.svg',
-                    size: 11,
-                },
+                params.getCommonIndicator(),
             ],
             events: {},
             def: {
@@ -182,25 +252,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
             statements: [],
-            template: '비디오 화면 %1 뒤집기 %2',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['좌우', 'hflip'],
-                        ['상하', 'vflip'],
-                    ],
-                    value: 'hflip',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-                    arrowColor: EntryStatic.colorSet.common.WHITE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/ai_utilize_icon.svg',
-                    size: 11,
-                },
-            ],
+            params: [params.getVideoFlipOptions(), params.getCommonIndicator()],
             events: {},
             def: {
                 type: 'video_flip_camera',
@@ -228,36 +280,10 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
             statements: [],
-            template: '%1 인식 %2 하기 %3',
             params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['사람', 'pose'],
-                        ['얼굴', 'face'],
-                        ['사물', 'object'],
-                    ],
-                    value: 'pose',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-                    arrowColor: EntryStatic.colorSet.common.WHITE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['시작', 'on'],
-                        ['종료', 'off'],
-                    ],
-                    value: 'on',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-                    arrowColor: EntryStatic.colorSet.common.WHITE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/ai_utilize_icon.svg',
-                    size: 11,
-                },
+                params.getAiModelOptions(),
+                params.getSwitchOptions(),
+                params.getCommonIndicator(),
             ],
             events: {},
             def: {
@@ -284,37 +310,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
             statements: [],
-            template: '인식된 %1 %2 %3',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['사람', 'pose'],
-                        ['얼굴', 'face'],
-                        ['사물', 'object'],
-                    ],
-                    value: 'pose',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-                    arrowColor: EntryStatic.colorSet.common.WHITE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['보이기', 'on'],
-                        ['숨기기', 'off'],
-                    ],
-                    value: 'on',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-                    arrowColor: EntryStatic.colorSet.common.WHITE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/ai_utilize_icon.svg',
-                    size: 11,
-                },
-            ],
+            params: [params.getAiModelOptions(), params.getOnOff(), params.getCommonIndicator()],
             events: {},
             def: {
                 type: 'video_toggle_ind',
@@ -344,21 +340,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
             statements: [],
-            template: '인식된 %1 의 수',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['사람', 'pose'],
-                        ['얼굴', 'face'],
-                        ['사물', 'object'],
-                    ],
-                    value: 'pose',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-                    arrowColor: EntryStatic.colorSet.common.WHITE,
-                },
-            ],
+            params: [params.getAiModelOptions()],
             events: {},
             def: {
                 type: 'video_number_detect',
@@ -389,34 +371,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
             statements: [],
-            template: '%1 번째 얼굴의 %2',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['1', 0],
-                        ['2', 1],
-                        ['3', 2],
-                        ['4', 3],
-                    ],
-                    value: 0,
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-                    arrowColor: EntryStatic.colorSet.common.WHITE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['성별', 'gender'],
-                        ['나이', 'age'],
-                        ['감정', 'emotion'],
-                    ],
-                    value: 'gender',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-                    arrowColor: EntryStatic.colorSet.common.WHITE,
-                },
-            ],
+            params: [params.getNumbers(), params.getFaceInfoOptions()],
             events: {},
             def: {
                 type: 'video_detected_face_info',
@@ -467,7 +422,6 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
             statements: [],
-            template: '%1 에서 감지한 %2 값',
             params: [
                 {
                     type: 'Dropdown',
@@ -551,7 +505,6 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
             statements: [],
-            template: '%1 번째 얼굴의 %2 의 %3 좌표',
             params: [
                 {
                     type: 'Dropdown',
@@ -569,8 +522,6 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        // 왼쪽 눈, 오른쪽 눈, 코, 왼쪽 입꼬리, 오른쪽 입꼬리
-                        //36,45
                         ['왼쪽 눈', 45],
                         ['오른쪽 눈', 36],
                         ['코', 30],
@@ -651,7 +602,6 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
             statements: [],
-            template: '%1 번째 사람의 %2 의 %3 좌표',
             params: [
                 {
                     type: 'Dropdown',

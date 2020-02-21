@@ -358,7 +358,7 @@ class VideoUtils {
             case 'brightness':
                 GEHelper.setVideoBrightness(this.canvasVideo, value);
                 break;
-            case 'opacity':
+            case 'transparency':
                 GEHelper.setVideoAlpha(this.canvasVideo, value);
                 break;
             case 'hflip':
