@@ -1,5 +1,7 @@
 import _find from 'lodash/find';
 import _findIndex from 'lodash/findIndex';
+import _uniq from 'lodash/uniq';
+import _flatten from 'lodash/flatten';
 import DataTableSource from './source/DataTableSource';
 import { DataAnalytics, ModalChart } from '@entrylabs/tool';
 
@@ -27,27 +29,28 @@ class DataTable {
     }
 
     getTables(blockList = []) {
-        return _.union(
-            blockList
-                .filter((block) => {
-                    const { _schema = {}, data = {} } = block || {};
-                    if (!data.type) {
-                        return false;
-                    }
-                    const { isFor, isNotFor = [] } = _schema;
-                    const [key] = isNotFor;
-                    return key && isFor && key === 'analysis';
-                })
-                .map((block) => {
-                    const { params = [] } = block.data || {};
-                    return params.filter((param) => {
-                        if (typeof param !== 'string') {
+        return _uniq(
+            _flatten(
+                blockList
+                    .filter((block) => {
+                        const { _schema = {}, data = {} } = block || {};
+                        if (!data.type) {
                             return false;
                         }
-                        return _find(this.#tables, { id: param });
-                    });
-                })
-                .flat()
+                        const { isFor, isNotFor = [] } = _schema;
+                        const [key] = isNotFor;
+                        return key && isFor && key === 'analysis';
+                    })
+                    .map((block) => {
+                        const { params = [] } = block.data || {};
+                        return params.filter((param) => {
+                            if (typeof param !== 'string') {
+                                return false;
+                            }
+                            return _find(this.#tables, { id: param });
+                        });
+                    })
+            )
         ).map((tableId) => {
             const table = this.getSource(tableId);
             return table.toJSON();
