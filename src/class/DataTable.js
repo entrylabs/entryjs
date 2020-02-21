@@ -44,7 +44,7 @@ class DataTable {
 
     addSource(table, shouldTableMode = true) {
         const isWorkspace = Entry.type === 'workspace';
-        if(shouldTableMode && isWorkspace) {
+        if (shouldTableMode && isWorkspace) {
             Entry.do('playgroundChangeViewMode', 'table');
         }
         let data = table || { name: Lang.Workspace.data_table };
@@ -66,13 +66,13 @@ class DataTable {
     async selectTable(table = {}) {
         if (this.tempDataAnalytics) {
             const temp = { ...this.tempDataAnalytics };
-            if (await entrylms.confirm(Lang.Menus.save_modified_table)) {
+            const confirm = await entrylms.confirm(Lang.Menus.save_modified_table);
+            if (confirm) {
                 const result = this.saveTable(temp);
                 if (!result) {
                     return;
                 }
             }
-            delete this.tempDataAnalytics;
         }
         const json = table.toJSON && table.toJSON();
         const { tab } = table;
@@ -81,6 +81,7 @@ class DataTable {
             table: { ...json, tab },
         });
         delete table.tab;
+        delete this.tempDataAnalytics;
         return table;
     }
 
