@@ -1108,8 +1108,6 @@ Entry.byrobot_drone_base =
                 if (flagDelay)
                 {
                     // 블럭을 빠져나갈 때 변경했던 값을 초기화
-
-                    // 전송
                     Entry.hw.sendQueue.target = target;
                     Entry.hw.sendQueue[controlTarget] = 0;
 
