@@ -1,6 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable brace-style */
-/* eslint-disable max-len */
 'use strict';
 
 
@@ -31,14 +28,14 @@ Entry.byrobot_petrone_v2_drive =
 
 
     // 엔트리 정지시 하드웨어 초기화 로직
-    setZero()
+    setZero: function()
     {
         // 초기화
         this.transferBufferClear();
 
         // 한 번에 명령을 전송하면 hw까지 제대로 전달되지 않는 경우가 있어
         // 명령을 각각 분리하여 전송하게 함(2017.01.03)
-        for (let i = 0; i < 1; i++)
+        for (var i = 0; i < 1; i++)
         {
             this.transferCommand(0x30, 0x24, 0);       // 드론, command = 0x24 (Stop)
             this.transferVibrator(0, 0, 0, 0);
@@ -98,42 +95,1172 @@ Entry.byrobot_petrone_v2_drive =
             button_event:                   {name: Lang.Blocks.byrobot_petrone_v2_controller_button_event,              type: 'input',  pos: { x: 0, y: 0 }},
             entryhw_countTransferReserved:  {name: Lang.Blocks.byrobot_petrone_v2_entryhw_count_transfer_reserved,      type: 'output', pos: { x: 0, y: 0 }},
             // */
-            state_modeVehicle:              { name: 'Vehicle Mode',                  type: 'input',  pos: { x: 0, y: 0 } },
-            state_modeDrive:                { name: 'Drive Mode',                    type: 'input',  pos: { x: 0, y: 0 } },
-            state_battery:                  { name: 'Battery',                       type: 'input',  pos: { x: 0, y: 0 } },
-            imu_angleRoll:                  { name: 'Roll',                          type: 'input',  pos: { x: 0, y: 0 } },
-            imu_anglePitch:                 { name: 'Pitch',                         type: 'input',  pos: { x: 0, y: 0 } },
-            imu_angleYaw:                   { name: 'Yaw',                           type: 'input',  pos: { x: 0, y: 0 } },
-            imu_accX:                       { name: 'Accel X',                       type: 'input',  pos: { x: 0, y: 0 } },
-            imu_accY:                       { name: 'Accel Y',                       type: 'input',  pos: { x: 0, y: 0 } },
-            imu_accZ:                       { name: 'Accel Z',                       type: 'input',  pos: { x: 0, y: 0 } },
-            imu_gyroRoll:                   { name: 'Gyro Roll',                     type: 'input',  pos: { x: 0, y: 0 } },
-            imu_gyroPitch:                  { name: 'Gyro Pitch',                    type: 'input',  pos: { x: 0, y: 0 } },
-            imu_gyroYaw:                    { name: 'Gyro Yaw',                      type: 'input',  pos: { x: 0, y: 0 } },
-            pressure_temperature:           { name: 'Temperature(from Pressure)',    type: 'input',  pos: { x: 0, y: 0 } },
-            pressure_pressure:              { name: 'Pressure',                      type: 'input',  pos: { x: 0, y: 0 } },
-            imageflow_positionX:            { name: 'Position X',                    type: 'input',  pos: { x: 0, y: 0 } },
-            imageflow_positionY:            { name: 'Position Y',                    type: 'input',  pos: { x: 0, y: 0 } },
-            range_bottom:                   { name: 'Ground Range',                  type: 'input',  pos: { x: 0, y: 0 } },
-            irmessage_direction:            { name: 'IR Direction',                  type: 'input',  pos: { x: 0, y: 0 } },
-            irmessage_irdata:               { name: 'IR Data',                       type: 'input',  pos: { x: 0, y: 0 } },
-            joystick_left_x:                { name: 'Left Joystick X',               type: 'input',  pos: { x: 0, y: 0 } },
-            joystick_left_y:                { name: 'Left Joystick Y',               type: 'input',  pos: { x: 0, y: 0 } },
-            joystick_left_direction:        { name: 'Left Joystick Direction',       type: 'input',  pos: { x: 0, y: 0 } },
-            joystick_left_event:            { name: 'Left Joystick Event',           type: 'input',  pos: { x: 0, y: 0 } },
-            joystick_right_x:               { name: 'Right Joystick X',              type: 'input',  pos: { x: 0, y: 0 } },
-            joystick_right_y:               { name: 'Right Joystick Y',              type: 'input',  pos: { x: 0, y: 0 } },
-            joystick_right_direction:       { name: 'Right Joystick Direction',      type: 'input',  pos: { x: 0, y: 0 } },
-            joystick_right_event:           { name: 'Right Joystick Event',          type: 'input',  pos: { x: 0, y: 0 } },
-            button_button:                  { name: 'Button',                        type: 'input',  pos: { x: 0, y: 0 } },
-            button_event:                   { name: 'Button Event',                  type: 'input',  pos: { x: 0, y: 0 } },
-            entryhw_countTransferReserved:  { name: 'Transfer Buffer',               type: 'output', pos: { x: 0, y: 0 } },
+            state_modeVehicle:              {name: 'Vehicle Mode',                  type: 'input',  pos: { x: 0, y: 0 }},
+            state_modeDrive:                {name: 'Drive Mode',                    type: 'input',  pos: { x: 0, y: 0 }},
+            state_battery:                  {name: 'Battery',                       type: 'input',  pos: { x: 0, y: 0 }},
+            imu_angleRoll:                  {name: 'Roll',                          type: 'input',  pos: { x: 0, y: 0 }},
+            imu_anglePitch:                 {name: 'Pitch',                         type: 'input',  pos: { x: 0, y: 0 }},
+            imu_angleYaw:                   {name: 'Yaw',                           type: 'input',  pos: { x: 0, y: 0 }},
+            imu_accX:                       {name: 'Accel X',                       type: 'input',  pos: { x: 0, y: 0 }},
+            imu_accY:                       {name: 'Accel Y',                       type: 'input',  pos: { x: 0, y: 0 }},
+            imu_accZ:                       {name: 'Accel Z',                       type: 'input',  pos: { x: 0, y: 0 }},
+            imu_gyroRoll:                   {name: 'Gyro Roll',                     type: 'input',  pos: { x: 0, y: 0 }},
+            imu_gyroPitch:                  {name: 'Gyro Pitch',                    type: 'input',  pos: { x: 0, y: 0 }},
+            imu_gyroYaw:                    {name: 'Gyro Yaw',                      type: 'input',  pos: { x: 0, y: 0 }},
+            pressure_temperature:           {name: 'Temperature(from Pressure)',    type: 'input',  pos: { x: 0, y: 0 }},
+            pressure_pressure:              {name: 'Pressure',                      type: 'input',  pos: { x: 0, y: 0 }},
+            imageflow_positionX:            {name: 'Position X',                    type: 'input',  pos: { x: 0, y: 0 }},
+            imageflow_positionY:            {name: 'Position Y',                    type: 'input',  pos: { x: 0, y: 0 }},
+            range_bottom:                   {name: 'Ground Range',                  type: 'input',  pos: { x: 0, y: 0 }},
+            irmessage_direction:            {name: 'IR Direction',                  type: 'input',  pos: { x: 0, y: 0 }},
+            irmessage_irdata:               {name: 'IR Data',                       type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_left_x:                {name: 'Left Joystick X',               type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_left_y:                {name: 'Left Joystick Y',               type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_left_direction:        {name: 'Left Joystick Direction',       type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_left_event:            {name: 'Left Joystick Event',           type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_right_x:               {name: 'Right Joystick X',              type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_right_y:               {name: 'Right Joystick Y',              type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_right_direction:       {name: 'Right Joystick Direction',      type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_right_event:           {name: 'Right Joystick Event',          type: 'input',  pos: { x: 0, y: 0 }},
+            button_button:                  {name: 'Button',                        type: 'input',  pos: { x: 0, y: 0 }},
+            button_event:                   {name: 'Button Event',                  type: 'input',  pos: { x: 0, y: 0 }},
+            entryhw_countTransferReserved:  {name: 'Transfer Buffer',               type: 'output', pos: { x: 0, y: 0 }},
         },
 
         // 모니터 화면 지정 위치와 선으로 연결하여 표시하는 값
         ports: {},
 
         mode: 'both', // 표시 모드
+    },
+
+
+    /***************************************************************************************
+     *  시간 지연 함수
+     ***************************************************************************************/
+
+
+    // 시간 지연
+    checkFinish: function(script, ms)
+    {
+        if (!script.isStart)
+        {
+            script.isStart = true;
+            script.timeFlag = 1;
+
+            var fps = Entry.FPS || 60;
+            var timeValue = 60 / fps * ms;
+
+            setTimeout(function() {
+                script.timeFlag = 0;
+            }, timeValue);
+
+            return 'Start';
+        }
+        else if (script.timeFlag == 1)
+        {
+            return 'Running';
+        }
+        else
+        {
+            delete script.timeFlag;
+            delete script.isStart;
+            Entry.engine.isContinue = false;
+            return 'Finish';
+        }
+    },
+
+
+    /***************************************************************************************
+     *  기능 함수
+     ***************************************************************************************/
+
+
+    transferBufferClear: function()
+    {
+        Entry.hw.setDigitalPortValue('buffer_clear', 0);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['buffer_clear'];
+    },
+
+
+    fit: function(min, value, max)
+    {
+        return Math.max(Math.min(value, max), min);
+    },
+
+
+
+    /***************************************************************************************
+     *  데이터 전송 함수 (Entry -> Hardware)
+     ***************************************************************************************/
+
+    // 데이터 전송
+    transferLightManual: function(target, flags, brightness)
+    {
+        // 범위 조정
+        target      = this.fit(0, target, 255);
+        flags       = this.fit(0, flags, 255);
+        brightness  = this.fit(0, brightness, 255);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('light_manual_flags', flags);
+        Entry.hw.setDigitalPortValue('light_manual_brightness', brightness);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['light_manual_flags'];
+        delete Entry.hw.sendQueue['light_manual_brightness'];
+    },
+
+
+    transferLightMode: function(target, mode, interval)
+    {
+        // 범위 조정
+        target = Math.max(target, 0);
+        target = Math.min(target, 255);
+        mode = Math.max(mode, 0);
+        mode = Math.min(mode, 255);
+        interval = Math.max(interval, 0);
+        interval = Math.min(interval, 65535);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('light_mode_mode', mode);
+        Entry.hw.setDigitalPortValue('light_mode_interval', interval);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['light_mode_mode'];
+        delete Entry.hw.sendQueue['light_mode_interval'];
+    },
+
+
+    transferLightModeColor: function(target, mode, interval, red, green, blue)
+    {
+        // 범위 조정
+        target      = this.fit(0, target,   255);
+        mode        = this.fit(0, mode,     255);
+        interval    = this.fit(0, interval, 65535);
+        red         = this.fit(0, red,      255);
+        green       = this.fit(0, green,    255);
+        blue        = this.fit(0, blue,     255);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target',              target);
+        Entry.hw.setDigitalPortValue('light_mode_mode',     mode);
+        Entry.hw.setDigitalPortValue('light_mode_interval', interval);
+        Entry.hw.setDigitalPortValue('light_color_r',       red);
+        Entry.hw.setDigitalPortValue('light_color_g',       green);
+        Entry.hw.setDigitalPortValue('light_color_b',       blue);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['light_mode_mode'];
+        delete Entry.hw.sendQueue['light_mode_interval'];
+        delete Entry.hw.sendQueue['light_color_r'];
+        delete Entry.hw.sendQueue['light_color_g'];
+        delete Entry.hw.sendQueue['light_color_b'];
+    },
+
+
+    transferDisplayClear: function(target, pixel, clearAll, x, y, width, height)
+    {
+        if (clearAll)
+        {
+            // 전송
+            Entry.hw.setDigitalPortValue('target', target);
+            Entry.hw.setDigitalPortValue('display_clearall_pixel', pixel);
+
+            Entry.hw.update();
+
+            delete Entry.hw.sendQueue['target'];
+            delete Entry.hw.sendQueue['display_clearall_pixel'];
+        }
+        else
+        {
+            // 범위 조정
+            x      = this.fit(0, x, 128);
+            y      = this.fit(0, y, 64);
+            width  = this.fit(0, width, 128);
+            height = this.fit(0, height, 64);
+
+            // 전송
+            Entry.hw.setDigitalPortValue('target', target);
+            Entry.hw.setDigitalPortValue('display_clear_x', x);
+            Entry.hw.setDigitalPortValue('display_clear_y', y);
+            Entry.hw.setDigitalPortValue('display_clear_width', width);
+            Entry.hw.setDigitalPortValue('display_clear_height', height);
+            Entry.hw.setDigitalPortValue('display_clear_pixel', pixel);
+
+            Entry.hw.update();
+
+            delete Entry.hw.sendQueue['target'];
+            delete Entry.hw.sendQueue['display_clear_x'];
+            delete Entry.hw.sendQueue['display_clear_y'];
+            delete Entry.hw.sendQueue['display_clear_width'];
+            delete Entry.hw.sendQueue['display_clear_height'];
+            delete Entry.hw.sendQueue['display_clear_pixel'];
+        }
+    },
+
+
+    transferDisplayInvert: function(target, x, y, width, height)
+    {
+        // 범위 조정
+        x      = this.fit(0, x, 128);
+        y      = this.fit(0, y, 64);
+        width  = this.fit(0, width, 128);
+        height = this.fit(0, height, 64);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('display_invert_x', x);
+        Entry.hw.setDigitalPortValue('display_invert_y', y);
+        Entry.hw.setDigitalPortValue('display_invert_width', width);
+        Entry.hw.setDigitalPortValue('display_invert_height', height);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['display_invert_x'];
+        delete Entry.hw.sendQueue['display_invert_y'];
+        delete Entry.hw.sendQueue['display_invert_width'];
+        delete Entry.hw.sendQueue['display_invert_height'];
+    },
+
+
+    transferDisplayDrawPoint: function(target, x, y, pixel)
+    {
+        // 범위 조정
+        x = this.fit(0, x, 128);
+        y = this.fit(0, y, 64);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('display_draw_point_x', x);
+        Entry.hw.setDigitalPortValue('display_draw_point_y', y);
+        Entry.hw.setDigitalPortValue('display_draw_point_pixel', pixel);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['display_draw_point_x'];
+        delete Entry.hw.sendQueue['display_draw_point_y'];
+        delete Entry.hw.sendQueue['display_draw_point_pixel'];
+    },
+
+
+    transferDisplayDrawLine: function(target, x1, y1, x2, y2, pixel, line)
+    {
+        // 범위 조정
+        x1 = this.fit(0, x1, 128);
+        y1 = this.fit(0, y1, 64);
+        x2 = this.fit(0, x2, 128);
+        y2 = this.fit(0, y2, 64);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('display_draw_line_x1', x1);
+        Entry.hw.setDigitalPortValue('display_draw_line_y1', y1);
+        Entry.hw.setDigitalPortValue('display_draw_line_x2', x2);
+        Entry.hw.setDigitalPortValue('display_draw_line_y2', y2);
+        Entry.hw.setDigitalPortValue('display_draw_line_pixel', pixel);
+        Entry.hw.setDigitalPortValue('display_draw_line_line', line);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['display_draw_line_x1'];
+        delete Entry.hw.sendQueue['display_draw_line_y1'];
+        delete Entry.hw.sendQueue['display_draw_line_x2'];
+        delete Entry.hw.sendQueue['display_draw_line_y2'];
+        delete Entry.hw.sendQueue['display_draw_line_pixel'];
+        delete Entry.hw.sendQueue['display_draw_line_line'];
+    },
+
+
+    transferDisplayDrawRect: function(target, x, y, width, height, pixel, flagFill, line)
+    {
+        // 범위 조정
+        x      = this.fit(0, x, 128);
+        y      = this.fit(0, y, 64);
+        width  = this.fit(0, width, 128);
+        height = this.fit(0, height, 64);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('display_draw_rect_x', x);
+        Entry.hw.setDigitalPortValue('display_draw_rect_y', y);
+        Entry.hw.setDigitalPortValue('display_draw_rect_width', width);
+        Entry.hw.setDigitalPortValue('display_draw_rect_height', height);
+        Entry.hw.setDigitalPortValue('display_draw_rect_pixel', pixel);
+        Entry.hw.setDigitalPortValue('display_draw_rect_flagfill', flagFill);
+        Entry.hw.setDigitalPortValue('display_draw_rect_line', line);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['display_draw_rect_x'];
+        delete Entry.hw.sendQueue['display_draw_rect_y'];
+        delete Entry.hw.sendQueue['display_draw_rect_width'];
+        delete Entry.hw.sendQueue['display_draw_rect_height'];
+        delete Entry.hw.sendQueue['display_draw_rect_pixel'];
+        delete Entry.hw.sendQueue['display_draw_rect_flagfill'];
+        delete Entry.hw.sendQueue['display_draw_rect_line'];
+    },
+
+
+    transferDisplayDrawCircle: function(target, x, y, radius, pixel, flagFill)
+    {
+        // 범위 조정
+        x      = this.fit(-50, x, 178);
+        y      = this.fit(-50, y, 114);
+        radius = this.fit(1, radius, 200);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('display_draw_circle_x', x);
+        Entry.hw.setDigitalPortValue('display_draw_circle_y', y);
+        Entry.hw.setDigitalPortValue('display_draw_circle_radius', radius);
+        Entry.hw.setDigitalPortValue('display_draw_circle_pixel', pixel);
+        Entry.hw.setDigitalPortValue('display_draw_circle_flagfill', flagFill);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['display_draw_circle_x'];
+        delete Entry.hw.sendQueue['display_draw_circle_y'];
+        delete Entry.hw.sendQueue['display_draw_circle_radius'];
+        delete Entry.hw.sendQueue['display_draw_circle_pixel'];
+        delete Entry.hw.sendQueue['display_draw_circle_flagfill'];
+    },
+
+
+    transferDisplayDrawString: function(target, x, y, font, pixel, string)
+    {
+        // 범위 조정
+        x = this.fit(0, x, 120);
+        y = this.fit(0, y, 60);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('display_draw_string_x', x);
+        Entry.hw.setDigitalPortValue('display_draw_string_y', y);
+        Entry.hw.setDigitalPortValue('display_draw_string_font', font);
+        Entry.hw.setDigitalPortValue('display_draw_string_pixel', pixel);
+        Entry.hw.setDigitalPortValue('display_draw_string_string', string);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['display_draw_string_x'];
+        delete Entry.hw.sendQueue['display_draw_string_y'];
+        delete Entry.hw.sendQueue['display_draw_string_font'];
+        delete Entry.hw.sendQueue['display_draw_string_pixel'];
+        delete Entry.hw.sendQueue['display_draw_string_string'];
+    },
+
+
+    transferDisplayDrawStringAlign: function(target, xStart, xEnd, y, align, font, pixel, string)
+    {
+        // 범위 조정
+        xStart = this.fit(0, xStart, 124);
+        xEnd   = this.fit(0, xEnd, 128)
+        y      = this.fit(0, y, 60);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('display_draw_string_align_x_start', xStart);
+        Entry.hw.setDigitalPortValue('display_draw_string_align_x_end', xEnd);
+        Entry.hw.setDigitalPortValue('display_draw_string_align_y', y);
+        Entry.hw.setDigitalPortValue('display_draw_string_align_align', align);
+        Entry.hw.setDigitalPortValue('display_draw_string_align_font', font);
+        Entry.hw.setDigitalPortValue('display_draw_string_align_pixel', pixel);
+        Entry.hw.setDigitalPortValue('display_draw_string_align_string', string);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['display_draw_string_align_x_start'];
+        delete Entry.hw.sendQueue['display_draw_string_align_x_end'];
+        delete Entry.hw.sendQueue['display_draw_string_align_y'];
+        delete Entry.hw.sendQueue['display_draw_string_align_align'];
+        delete Entry.hw.sendQueue['display_draw_string_align_font'];
+        delete Entry.hw.sendQueue['display_draw_string_align_pixel'];
+        delete Entry.hw.sendQueue['display_draw_string_align_string'];
+    },
+
+
+    transferbuzzer: function(mode, value, time)
+    {
+        // 전송
+        Entry.hw.setDigitalPortValue('target', 0x31);
+        Entry.hw.setDigitalPortValue('buzzer_mode', mode);
+        Entry.hw.setDigitalPortValue('buzzer_value', value);
+        Entry.hw.setDigitalPortValue('buzzer_time', time);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['buzzer_mode'];
+        delete Entry.hw.sendQueue['buzzer_value'];
+        delete Entry.hw.sendQueue['buzzer_time'];
+    },
+
+
+    transferVibrator: function(mode, timeOn, timeOff, timeRun)
+    {
+        // 범위 조정
+        timeOn  = this.fit(1, timeOn, 60000);
+        timeOff = this.fit(1, timeOff, 60000);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', 0x31);
+        Entry.hw.setDigitalPortValue('vibrator_mode', mode);
+        Entry.hw.setDigitalPortValue('vibrator_on', timeOn);
+        Entry.hw.setDigitalPortValue('vibrator_off', timeOff);
+        Entry.hw.setDigitalPortValue('vibrator_total', timeRun);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['vibrator_mode'];
+        delete Entry.hw.sendQueue['vibrator_on'];
+        delete Entry.hw.sendQueue['vibrator_off'];
+        delete Entry.hw.sendQueue['vibrator_total'];
+    },
+
+
+    transferIrMessage: function(irdirection, irmessage)
+    {
+        // 범위 조정
+        irmessage = this.fit(-2147483647, irmessage, 2147483647);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', 0x30);
+        Entry.hw.setDigitalPortValue('irmessage_direction', irdirection);
+        Entry.hw.setDigitalPortValue('irmessage_irdata', irmessage);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['irmessage_direction'];
+        delete Entry.hw.sendQueue['irmessage_irdata'];
+    },
+
+
+    transferMotorSingle: function(motorIndex, motorRotation, motorSpeed)
+    {
+        // 범위 조정
+        motorSpeed = this.fit(0, motorSpeed, 4096);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', 0x30);
+        Entry.hw.setDigitalPortValue('motorsingle_target', motorIndex);
+        Entry.hw.setDigitalPortValue('motorsingle_rotation', motorRotation);
+        Entry.hw.setDigitalPortValue('motorsingle_value', motorSpeed);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['motorsingle_target'];
+        delete Entry.hw.sendQueue['motorsingle_rotation'];
+        delete Entry.hw.sendQueue['motorsingle_value'];
+    },
+
+
+    transferCommand: function(target, command, option)
+    {
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('command_command', command);
+        Entry.hw.setDigitalPortValue('command_option', option);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['command_command'];
+        delete Entry.hw.sendQueue['command_option'];
+    },
+
+
+    transferControlDouble: function(wheel, accel)
+    {
+        // 범위 조정
+        wheel = this.fit(-100, wheel, 100);
+        accel = this.fit(-100, accel, 100);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', 0x30);
+        Entry.hw.setDigitalPortValue('control_wheel', wheel);
+        Entry.hw.setDigitalPortValue('control_accel', accel);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['control_wheel'];
+        delete Entry.hw.sendQueue['control_accel'];
+    },
+
+
+    transferControlQuad: function(roll, pitch, yaw, throttle)
+    {
+        // 범위 조정
+        roll     = this.fit(-100, roll, 100);
+        pitch    = this.fit(-100, pitch, 100);
+        yaw      = this.fit(-100, yaw, 100);
+        throttle = this.fit(-100, throttle, 100);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', 0x30);
+        Entry.hw.setDigitalPortValue('control_roll', roll);
+        Entry.hw.setDigitalPortValue('control_pitch', pitch);
+        Entry.hw.setDigitalPortValue('control_yaw', yaw);
+        Entry.hw.setDigitalPortValue('control_throttle', throttle);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['control_roll'];
+        delete Entry.hw.sendQueue['control_pitch'];
+        delete Entry.hw.sendQueue['control_yaw'];
+        delete Entry.hw.sendQueue['control_throttle'];
+    },
+
+
+    /***************************************************************************************
+     *  블럭 연동 함수
+     ***************************************************************************************/
+
+    // 데이터 읽기
+    getData: function(script, device)
+    {
+        return Entry.hw.portData[device];
+    },
+
+
+    // LED 수동 설정
+    setLightManual: function(script, target, flags, brightness)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferLightManual(target, flags, brightness);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // LED 수동 설정 - RGB 값 직접 지정
+    setLightModeColor: function(script, target, mode, interval, red, green, blue)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferLightModeColor(target, mode, interval, red, green, blue);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // OLED - 화면 전체 지우기, 선택 영역 지우기
+    setDisplayClear: function(script, target, pixel, clearAll, x, y, width, height)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferDisplayClear(target, pixel, clearAll, x, y, width, height);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // OLED - 선택 영역 반전
+    setDisplayInvert: function(script, target, x, y, width, height)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferDisplayInvert(target, x, y, width, height);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // OLED - 화면에 점 찍기
+    setDisplayDrawPoint: function(script, target, x, y, pixel)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferDisplayDrawPoint(target, x, y, pixel);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // OLED - 화면에 선 그리기
+    setDisplayDrawLine: function(script, target, x1, y1, x2, y2, pixel, line)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferDisplayDrawLine(target, x1, y1, x2, y2, pixel, line);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // OLED - 화면에 사각형 그리기
+    setDisplayDrawRect: function(script, target, x, y, width, height, pixel, flagFill, line)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferDisplayDrawRect(target, x, y, width, height, pixel, flagFill, line);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // OLED - 화면에 원 그리기
+    setDisplayDrawCircle: function(script, target, x, y, radius, pixel, flagFill)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferDisplayDrawCircle(target, x, y, radius, pixel, flagFill);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // OLED - 화면에 문자열 쓰기
+    setDisplayDrawString: function(script, target, x, y, font, pixel, string)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferDisplayDrawString(target, x, y, font, pixel, string);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // OLED - 화면에 문자열 정렬하여 그리기
+    setDisplayDrawStringAlign: function(script, target, xStart, xEnd, y, align, font, pixel, string)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferDisplayDrawStringAlign(target, xStart, xEnd, y, align, font, pixel, string);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // 버저 설정(함수 호출 시 시간은 모두 ms 단위 사용)
+    /*
+        MuteInstantally     = 1,    // 묵음 즉시 적용
+        MuteContinually     = 2,    // 묵음 예약
+
+        ScaleInstantally    = 3,    // 음계 즉시 적용
+        ScaleContinually    = 4,    // 음계 예약
+
+        HzInstantally       = 5,    // 주파수 즉시 적용
+        HzContinually       = 6,    // 주파수 예약
+     */
+    // 정지
+    setBuzzerStop: function(script)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferbuzzer(0, 0, 0);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // 묵음
+    setBuzzerMute: function(script, time, flagDelay, flagInstantly)
+    {
+        time = this.fit(0, time, 60000);
+
+        var timeDelay = 40;
+        if (flagDelay) timeDelay = time;
+
+        switch (this.checkFinish(script, timeDelay))
+        {
+            case 'Start':
+                {
+                    var mode = 2; // 묵음 연속
+                    if (flagInstantly) mode = 1; // 묵음 즉시
+
+                    this.transferbuzzer(mode, 0xee, time);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    setBuzzerScale: function(script, octave, scale, time, flagDelay, flagInstantly)
+    {
+        time = this.fit(0, time, 60000);
+
+        var timeDelay = 40;
+        if (flagDelay) timeDelay = time;
+
+        switch (this.checkFinish(script, timeDelay))
+        {
+            case 'Start':
+                {
+                    var mode = 4; // Scale 연속
+                    if (flagInstantly) mode = 3; // Scale 즉시
+
+                    var scalecalc = octave * 12 + scale;
+
+                    this.transferbuzzer(mode, scalecalc, time);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    setBuzzerHz: function(script, hz, time, flagDelay, flagInstantly)
+    {
+        time = this.fit(0, time, 60000);
+
+        var timeDelay = 40;
+        if (flagDelay) timeDelay = time;
+
+        switch (this.checkFinish(script, timeDelay))
+        {
+            case 'Start':
+                {
+                    var mode = 6; // Hz 연속
+                    if (flagInstantly) mode = 5; // Hz 즉시
+
+                    // 범위 조정
+                    hz = this.fit(1, hz, 63999);
+
+                    this.transferbuzzer(mode, hz, time);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // 진동 제어
+    /*
+        Stop            = 0,    // 정지
+        Instantally     = 1,    // 즉시 적용
+        Continually     = 2,    // 예약
+     */
+    setVibratorStop: function(script)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferVibrator(0, 0, 0, 0);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    setVibrator: function(script, timeOn, timeOff, timeRun, flagDelay, flagInstantly)
+    {
+        timeRun = this.fit(0, timeRun, 60000);
+
+        var timeDelay = 40;
+        if (flagDelay) timeDelay = timeRun;
+
+        switch (this.checkFinish(script, timeDelay))
+        {
+            case 'Start':
+                {
+                    var mode = 2; // 예약
+                    if (flagInstantly) mode = 1; // 즉시
+
+                    this.transferVibrator(mode, timeOn, timeOff, timeRun);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    sendCommand: function(script, target, command, option)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferCommand(target, command, option);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    sendIrMessage: function(script, irdirection, irmessage)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferIrMessage(irdirection, irmessage);
+                    // Light Event (transferLightEvent 만들어야 할 듯)
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    sendStop: function(script)
+    {
+        return this.sendCommand(script, 0x30, 0x24, 0);
+    },
+
+
+    setMotorSingle: function(script, motorIndex, motorRotation, motorSpeed)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferMotorSingle(motorIndex, motorRotation, motorSpeed);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    /*
+        None = 0,           // 없음
+
+        Flight = 0x10,      // 비행(가드 포함)
+        FlightNoGuard,      // 비행(가드 없음)
+        FlightFPV,          // 비행(FPV)
+
+        Drive = 0x20,       // 주행
+        DriveFPV,           // 주행(FPV)
+
+        Test = 0x30,        // 테스트
+     */
+    setModeVehicle: function(script, modeVehicle)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferCommand(0x30, 0x10, modeVehicle);
+
+                    this.transferControlDouble(0, 0);
+                    this.transferControlQuad(0, 0, 0, 0);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    sendControlDoubleSingle: function(script, controlTarget, value, time, flagDelay)
+    {
+        var timeDelay = 40;
+        if (flagDelay) timeDelay = time;
+
+        switch (this.checkFinish(script, timeDelay))
+        {
+            case 'Start':
+                {
+                    switch (controlTarget)
+                    {
+                        case 'control_wheel':
+                            {
+                                // 범위 조정
+                                value = this.fit(-100, value, 100);
+                            }
+                            break;
+
+                        case 'control_accel':
+                            {
+                                // 범위 조정
+                                value = this.fit(-100, value, 100);
+                            }
+                            break;
+                    }
+
+                    // 전송
+                    Entry.hw.setDigitalPortValue('target', 0x30);
+                    Entry.hw.setDigitalPortValue(controlTarget, value);
+
+                    Entry.hw.update();
+
+                    delete Entry.hw.sendQueue['target'];
+                    delete Entry.hw.sendQueue[controlTarget];
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                if (flagDelay)
+                {
+                    // 블럭을 빠져나갈 때 변경했던 값을 초기화
+
+                    // 전송
+                    Entry.hw.setDigitalPortValue('target', 0x30);
+                    Entry.hw.setDigitalPortValue(controlTarget, 0);
+
+                    Entry.hw.update();
+
+                    delete Entry.hw.sendQueue['target'];
+                    delete Entry.hw.sendQueue[controlTarget];
+                }
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    sendControlDouble: function(script, wheel, accel, time, flagDelay)
+    {
+        var timeDelay = 40;
+        if (flagDelay) timeDelay = time;
+
+        switch (this.checkFinish(script, timeDelay))
+        {
+            case 'Start':
+                {
+                    this.transferControlDouble(wheel, accel);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                if (flagDelay)
+                {
+                    this.transferControlDouble(0, 0);
+                }
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
     },
 };
 
@@ -143,7 +1270,7 @@ Entry.byrobot_petrone_v2_drive =
  *  언어 적용
  ***************************************************************************************/
 // 
-Entry.byrobot_petrone_v2_drive.setLanguage = function()
+Entry.byrobot_petrone_v2_drive.setLanguage = function ()
 {
     return {
         ko: {
@@ -558,7 +1685,7 @@ Entry.byrobot_petrone_v2_drive.setLanguage = function()
 
             }
         }
-    };
+    }
 };
 
 
@@ -659,7 +1786,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_monitor', // 같은 이름인 객체들이 그룹으로 형성됨
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
+            func: function(sprite, script) {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
         },
@@ -698,7 +1825,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_monitor', // 같은 이름인 객체들이 그룹으로 형성됨
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
+            func: function(sprite, script) {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
         },
@@ -736,7 +1863,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_monitor', // 같은 이름인 객체들이 그룹으로 형성됨
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
+            func: function(sprite, script) {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
         },
@@ -773,7 +1900,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_monitor', // 같은 이름인 객체들이 그룹으로 형성됨
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
+            func: function(sprite, script) {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
         },
@@ -808,7 +1935,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_monitor', // 같은 이름인 객체들이 그룹으로 형성됨
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
+            func: function(sprite, script) {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
         },
@@ -849,7 +1976,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_monitor', // 같은 이름인 객체들이 그룹으로 형성됨
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
+            func: function(sprite, script) {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
         },
@@ -895,17 +2022,17 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_boolean_input',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const read = Entry.hw.portData;
-                const button = 'button_button'; // paramsKeyMap에 정의된 이름 사용
-                const buttonevent = 'button_event'; // paramsKeyMap에 정의된 이름 사용
+            func: function(sprite, script) {
+                var read = Entry.hw.portData;
+                var button = 'button_button'; // paramsKeyMap에 정의된 이름 사용
+                var buttonevent = 'button_event'; // paramsKeyMap에 정의된 이름 사용
 
                 if (
                     read[button] == script.getField('BUTTON') &&
                     read[buttonevent] == 2
                 )
-                    {return true;}
-                else {return false;}
+                    return true;
+                else return false;
             },
             syntax: { js: [], py: [] },
         },
@@ -960,13 +2087,13 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_boolean_input',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const read = Entry.hw.portData;
+            func: function(sprite, script) {
+                var read = Entry.hw.portData;
 
-                const device = script.getField('DEVICE'); // paramsKeyMap에 정의된 이름 사용
+                var device = script.getField('DEVICE'); // paramsKeyMap에 정의된 이름 사용
 
-                if (read[device] == script.getField('DIRECTION')) {return true;}
-                else {return false;}
+                if (read[device] == script.getField('DIRECTION')) return true;
+                else return false;
             },
         },
 
@@ -978,7 +2105,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -988,7 +2115,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             paramsKeyMap: {},
             class: 'byrobot_petrone_v2_drive_controller_light',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
+            func: function(sprite, script) {
                 return Entry.byrobot_petrone_v2_drive.setLightManual(script, 0x31, 0xff, 0);
             },
         },
@@ -1032,7 +2159,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -1045,13 +2172,13 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_controller_light',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const mode = 0x12;
-                const interval = parseInt(script.getField('BRIGHTNESS'));
-                const select = script.getField('FLAGS');
-                let red = 0;
-                let green = 0;
-                let blue = 0;
+            func: function(sprite, script) {
+                var mode = 0x12;
+                var interval = parseInt(script.getField('BRIGHTNESS'));
+                var select = script.getField('FLAGS');
+                var red = 0;
+                var green = 0;
+                var blue = 0;
 
                 switch (select)
                 {
@@ -1076,15 +2203,15 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['0b11100000'] },
-                    { type: 'text', params: ['255'] },
+                    {type: 'text', params: ['0b11100000']},
+                    {type: 'text', params: ['255']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_controller_light_manual_single_input',
@@ -1095,9 +2222,9 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_controller_light',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const flags = script.getNumberValue('FLAGS');
-                const brightness = script.getNumberValue('BRIGHTNESS');
+            func: function(sprite, script) {
+                var flags = script.getNumberValue('FLAGS');
+                var brightness = script.getNumberValue('BRIGHTNESS');
                 return Entry.byrobot_petrone_v2_controller.setLightManual(script, 0x31, flags, brightness);
             },
         },
@@ -1110,9 +2237,9 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
                 {
                     type: 'Dropdown',
                     options: [
@@ -1126,17 +2253,17 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['255'] },
-                    { type: 'text', params: ['255'] },
-                    { type: 'text', params: ['255'] },
+                    {type: 'text', params: ['255']},
+                    {type: 'text', params: ['255']},
+                    {type: 'text', params: ['255']},
                     null,
-                    { type: 'text', params: ['500'] },
+                    {type: 'text', params: ['500']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_controller_light_color_input',
@@ -1150,12 +2277,12 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_controller_light',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const mode = 0x12 + parseInt(script.getField('MODE'));
-                const interval = script.getNumberValue('INTERVAL');
-                const red = script.getNumberValue('RED');
-                const green = script.getNumberValue('GREEN');
-                const blue = script.getNumberValue('BLUE');
+            func: function(sprite, script) {
+                var mode = 0x12 + parseInt(script.getField('MODE'));
+                var interval = script.getNumberValue('INTERVAL');
+                var red = script.getNumberValue('RED');
+                var green = script.getNumberValue('GREEN');
+                var blue = script.getNumberValue('BLUE');
                 return Entry.byrobot_petrone_v2_controller.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
             },
         },
@@ -1196,15 +2323,15 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
                     null,
                     null,
-                    { type: 'text', params: ['500'] },
+                    {type: 'text', params: ['500']},
                     null
                 ],
                 type: 'byrobot_petrone_v2_drive_controller_light_color_select',
@@ -1216,13 +2343,13 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_controller_light',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const mode = 0x12 + parseInt(script.getField('MODE'));
-                const interval = script.getNumberValue('INTERVAL');
-                const select = script.getField('SELECT');
-                let red = 0;
-                let green = 0;
-                let blue = 0;
+            func: function(sprite, script) {
+                var mode = 0x12 + parseInt(script.getField('MODE'));
+                var interval = script.getNumberValue('INTERVAL');
+                var select = script.getField('SELECT');
+                var red = 0;
+                var green = 0;
+                var blue = 0;
 
                 switch (select)
                 {
@@ -1246,7 +2373,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -1256,7 +2383,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             paramsKeyMap: {},
             class: 'byrobot_petrone_v2_drive_drone_light',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
+            func: function(sprite, script) {
                 return Entry.byrobot_petrone_v2_drive.setLightManual(script, 0x30, 0xff, 0);
             },
         },
@@ -1299,7 +2426,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -1312,13 +2439,13 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_drone_light',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                let mode = 0x12;
-                const interval = parseInt(script.getField('BRIGHTNESS'));
-                const select = script.getField('FLAGS');
-                let red = 0;
-                let green = 0;
-                let blue = 0;
+            func: function(sprite, script) {
+                var mode = 0x12;
+                var interval = parseInt(script.getField('BRIGHTNESS'));
+                var select = script.getField('FLAGS');
+                var red = 0;
+                var green = 0;
+                var blue = 0;
 
                 switch (select)
                 {
@@ -1342,15 +2469,15 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['0b11111100'] },
-                    { type: 'text', params: ['255'] },
+                    {type: 'text', params: ['0b11111100']},
+                    {type: 'text', params: ['255']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_drone_light_manual_single_input',
@@ -1361,9 +2488,9 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_drone_light',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const flags = script.getNumberValue('FLAGS');
-                const brightness = script.getNumberValue('BRIGHTNESS');
+            func: function(sprite, script) {
+                var flags = script.getNumberValue('FLAGS');
+                var brightness = script.getNumberValue('BRIGHTNESS');
                 return Entry.byrobot_petrone_v2_drive.setLightManual(script, 0x30, flags, brightness);
             },
         },
@@ -1379,17 +2506,17 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_eye, '0x12'], // EyeHold = 0x12
-                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_arm, '0x42'], // ArmHold = 0x42
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_eye, '18'], // EyeHold = 0x12
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_arm, '66'], // ArmHold = 0x42
                     ],
-                    value: '0x12',
+                    value: '18',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
                 {
                     type: 'Dropdown',
                     options: [
@@ -1403,18 +2530,18 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
                     null,
-                    { type: 'text', params: ['255'] },
-                    { type: 'text', params: ['255'] },
-                    { type: 'text', params: ['255'] },
+                    {type: 'text', params: ['255']},
+                    {type: 'text', params: ['255']},
+                    {type: 'text', params: ['255']},
                     null,
-                    { type: 'text', params: ['500'] },
+                    {type: 'text', params: ['500']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_drone_light_color_input',
@@ -1429,12 +2556,12 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_drone_light',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const mode = parseInt(script.getField('MODE')) + parseInt(script.getField('MODESUB'));
-                const red = script.getNumberValue('RED');
-                const green = script.getNumberValue('GREEN');
-                const blue = script.getNumberValue('BLUE');
-                const interval = script.getNumberValue('INTERVAL');
+            func: function(sprite, script) {
+                var mode = parseInt(script.getField('MODE')) + parseInt(script.getField('MODESUB'));
+                var red = script.getNumberValue('RED');
+                var green = script.getNumberValue('GREEN');
+                var blue = script.getNumberValue('BLUE');
+                var interval = script.getNumberValue('INTERVAL');
                 return Entry.byrobot_petrone_v2_drive.setLightModeColor(script, 0x30, mode, interval, red, green, blue);
             },
         },
@@ -1486,8 +2613,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -1495,7 +2622,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     null,
                     null,
                     null,
-                    { type: 'text', params: ['500'] },
+                    {type: 'text', params: ['500']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_drone_light_color_select',
@@ -1508,13 +2635,13 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_drone_light',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const mode = parseInt(script.getField('MODE')) + parseInt(script.getField('MODESUB'));
-                const interval = script.getNumberValue('INTERVAL');
-                const select = script.getField('SELECT');
-                let red = 0;
-                let green = 0;
-                let blue = 0;
+            func: function(sprite, script) {
+                var mode = parseInt(script.getField('MODE')) + parseInt(script.getField('MODESUB'));
+                var interval = script.getNumberValue('INTERVAL');
+                var select = script.getField('SELECT');
+                var red = 0;
+                var green = 0;
+                var blue = 0;
 
                 switch (select)
                 {
@@ -1549,7 +2676,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -1561,8 +2688,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_controller_display',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const pixel = parseInt(script.getField('PIXEL'));
+            func: function(sprite, script) {
+                var pixel = parseInt(script.getField('PIXEL'));
                 return Entry.byrobot_petrone_v2_drive.setDisplayClear(script, 0x31, pixel, true, 0, 0, 0, 0);
             },
         },
@@ -1575,10 +2702,10 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
                 {
                     type: 'Dropdown',
                     options: [
@@ -1590,15 +2717,15 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['64'] },
-                    { type: 'text', params: ['32'] },
-                    { type: 'text', params: ['32'] },
-                    { type: 'text', params: ['16'] },
+                    {type: 'text', params: ['64']},
+                    {type: 'text', params: ['32']},
+                    {type: 'text', params: ['32']},
+                    {type: 'text', params: ['16']},
                     null,
                     null,
                 ],
@@ -1613,12 +2740,12 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_controller_display',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const x = script.getNumberValue('X');
-                const y = script.getNumberValue('Y');
-                const width = script.getNumberValue('WIDTH');
-                const height = script.getNumberValue('HEIGHT');
-                const pixel = parseInt(script.getField('PIXEL'));
+            func: function(sprite, script) {
+                var x = script.getNumberValue('X');
+                var y = script.getNumberValue('Y');
+                var width = script.getNumberValue('WIDTH');
+                var height = script.getNumberValue('HEIGHT');
+                var pixel = parseInt(script.getField('PIXEL'));
                 return Entry.byrobot_petrone_v2_drive.setDisplayClear(script, 0x31, pixel, false, x, y, width, height);
             },
         },
@@ -1631,19 +2758,19 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['32'] },
-                    { type: 'text', params: ['16'] },
-                    { type: 'text', params: ['64'] },
-                    { type: 'text', params: ['32'] },
+                    {type: 'text', params: ['32']},
+                    {type: 'text', params: ['16']},
+                    {type: 'text', params: ['64']},
+                    {type: 'text', params: ['32']},
                     null,
                     null,
                 ],
@@ -1657,11 +2784,11 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_controller_display',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const x = script.getNumberValue('X');
-                const y = script.getNumberValue('Y');
-                const width = script.getNumberValue('WIDTH');
-                const height = script.getNumberValue('HEIGHT');
+            func: function(sprite, script) {
+                var x = script.getNumberValue('X');
+                var y = script.getNumberValue('Y');
+                var width = script.getNumberValue('WIDTH');
+                var height = script.getNumberValue('HEIGHT');
                 return Entry.byrobot_petrone_v2_drive.setDisplayInvert(script, 0x31, x, y, width, height);
             },
         },
@@ -1674,8 +2801,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
                 {
                     type: 'Dropdown',
                     options: [
@@ -1687,13 +2814,13 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['64'] },
-                    { type: 'text', params: ['32'] },
+                    {type: 'text', params: ['64']},
+                    {type: 'text', params: ['32']},
                     null,
                     null,
                 ],
@@ -1706,10 +2833,10 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_controller_display',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const x = script.getNumberValue('X');
-                const y = script.getNumberValue('Y');
-                const pixel = parseInt(script.getField('PIXEL'));
+            func: function(sprite, script) {
+                var x = script.getNumberValue('X');
+                var y = script.getNumberValue('Y');
+                var pixel = parseInt(script.getField('PIXEL'));
                 return Entry.byrobot_petrone_v2_drive.setDisplayDrawPoint(script, 0x31, x, y, pixel);
             },
         },
@@ -1722,10 +2849,10 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
                 {
                     type: 'Dropdown',
                     options: [
@@ -1749,15 +2876,15 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['32'] },
-                    { type: 'text', params: ['16'] },
-                    { type: 'text', params: ['96'] },
-                    { type: 'text', params: ['48'] },
+                    {type: 'text', params: ['32']},
+                    {type: 'text', params: ['16']},
+                    {type: 'text', params: ['96']},
+                    {type: 'text', params: ['48']},
                     null,
                     null,
                     null,
@@ -1774,13 +2901,13 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_controller_display',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const x1 = script.getNumberValue('X1');
-                const y1 = script.getNumberValue('Y1');
-                const x2 = script.getNumberValue('X2');
-                const y2 = script.getNumberValue('Y2');
-                const pixel = parseInt(script.getField('PIXEL'));
-                const line = parseInt(script.getField('LINE'));
+            func: function(sprite, script) {
+                var x1 = script.getNumberValue('X1');
+                var y1 = script.getNumberValue('Y1');
+                var x2 = script.getNumberValue('X2');
+                var y2 = script.getNumberValue('Y2');
+                var pixel = parseInt(script.getField('PIXEL'));
+                var line = parseInt(script.getField('LINE'));
                 return Entry.byrobot_petrone_v2_drive.setDisplayDrawLine(script, 0x31, x1, y1, x2, y2, pixel, line);
             },
         },
@@ -1793,10 +2920,10 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
                 {
                     type: 'Dropdown',
                     options: [
@@ -1831,15 +2958,15 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['64'] },
-                    { type: 'text', params: ['32'] },
-                    { type: 'text', params: ['32'] },
-                    { type: 'text', params: ['16'] },
+                    {type: 'text', params: ['64']},
+                    {type: 'text', params: ['32']},
+                    {type: 'text', params: ['32']},
+                    {type: 'text', params: ['16']},
                     null,
                     null,
                     null,
@@ -1858,14 +2985,14 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_controller_display',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const x = script.getNumberValue('X');
-                const y = script.getNumberValue('Y');
-                const width = script.getNumberValue('WIDTH');
-                const height = script.getNumberValue('HEIGHT');
-                const pixel = parseInt(script.getField('PIXEL'));
-                const flagFill = parseInt(script.getField('FLAGFILL'));
-                const line = parseInt(script.getField('LINE'));
+            func: function(sprite, script) {
+                var x = script.getNumberValue('X');
+                var y = script.getNumberValue('Y');
+                var width = script.getNumberValue('WIDTH');
+                var height = script.getNumberValue('HEIGHT');
+                var pixel = parseInt(script.getField('PIXEL'));
+                var flagFill = parseInt(script.getField('FLAGFILL'));
+                var line = parseInt(script.getField('LINE'));
                 return Entry.byrobot_petrone_v2_drive.setDisplayDrawRect(script, 0x31, x, y, width, height, pixel, flagFill, line);
             },
         },
@@ -1878,9 +3005,9 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
                 {
                     type: 'Dropdown',
                     options: [
@@ -1903,14 +3030,14 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['64'] },
-                    { type: 'text', params: ['32'] },
-                    { type: 'text', params: ['24'] },
+                    {type: 'text', params: ['64']},
+                    {type: 'text', params: ['32']},
+                    {type: 'text', params: ['24']},
                     null,
                     null,
                     null,
@@ -1926,12 +3053,12 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_controller_display',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const x = script.getNumberValue('X');
-                const y = script.getNumberValue('Y');
-                const radius = script.getNumberValue('RADIUS');
-                const pixel = parseInt(script.getField('PIXEL'));
-                const flagFill = parseInt(script.getField('FLAGFILL'));
+            func: function(sprite, script) {
+                var x = script.getNumberValue('X');
+                var y = script.getNumberValue('Y');
+                var radius = script.getNumberValue('RADIUS');
+                var pixel = parseInt(script.getField('PIXEL'));
+                var flagFill = parseInt(script.getField('FLAGFILL'));
                 return Entry.byrobot_petrone_v2_drive.setDisplayDrawCircle(script, 0x31, x, y, radius, pixel, flagFill);
             },
         },
@@ -1944,8 +3071,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
                 {
                     type: 'Dropdown',
                     options: [
@@ -1968,17 +3095,17 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['4'] },
-                    { type: 'text', params: ['24'] },
+                    {type: 'text', params: ['4']},
+                    {type: 'text', params: ['24']},
                     null,
                     null,
-                    { type: 'text', params: ['HELLO'] },
+                    {type: 'text', params: ['{Petrone V2}']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_controller_display_draw_string',
@@ -1992,12 +3119,12 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_controller_display',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const x = script.getNumberValue('X');
-                const y = script.getNumberValue('Y');
-                const font = parseInt(script.getField('FONT'));
-                const pixel = parseInt(script.getField('PIXEL'));
-                const string = script.getStringValue('STRING');
+            func: function(sprite, script) {
+                var x = script.getNumberValue('X');
+                var y = script.getNumberValue('Y');
+                var font = parseInt(script.getField('FONT'));
+                var pixel = parseInt(script.getField('PIXEL'));
+                var string = script.getStringValue('STRING');
                 return Entry.byrobot_petrone_v2_drive.setDisplayDrawString(script, 0x31, x, y, font, pixel, string);
             },
         },
@@ -2010,9 +3137,9 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
                 {
                     type: 'Dropdown',
                     options: [
@@ -2047,19 +3174,19 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['0'] },
-                    { type: 'text', params: ['128'] },
-                    { type: 'text', params: ['24'] },
+                    {type: 'text', params: ['0']},
+                    {type: 'text', params: ['128']},
+                    {type: 'text', params: ['24']},
                     null,
                     null,
                     null,
-                    { type: 'text', params: ['DRONE'] },
+                    {type: 'text', params: ['BYROBOT & U']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_controller_display_draw_string_align',
@@ -2075,14 +3202,14 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_controller_display',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const xStart = script.getNumberValue('XSTART');
-                const xEnd = script.getNumberValue('XEND');
-                const y = script.getNumberValue('Y');
-                const align = parseInt(script.getField('ALIGN'));
-                const font = parseInt(script.getField('FONT'));
-                const pixel = parseInt(script.getField('PIXEL'));
-                const string = script.getStringValue('STRING');
+            func: function(sprite, script) {
+                var xStart = script.getNumberValue('XSTART');
+                var xEnd = script.getNumberValue('XEND');
+                var y = script.getNumberValue('Y');
+                var align = parseInt(script.getField('ALIGN'));
+                var font = parseInt(script.getField('FONT'));
+                var pixel = parseInt(script.getField('PIXEL'));
+                var string = script.getStringValue('STRING');
                 return Entry.byrobot_petrone_v2_drive.setDisplayDrawStringAlign(script, 0x31, xStart, xEnd, y, align, font, pixel, string);
             },
         },
@@ -2095,7 +3222,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -2105,7 +3232,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             paramsKeyMap: {},
             class: 'byrobot_petrone_v2_drive_buzzer',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
+            func: function(sprite, script) {
                 return Entry.byrobot_petrone_v2_drive.setBuzzerStop(script);
             },
         },
@@ -2154,7 +3281,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -2167,14 +3294,14 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_buzzer',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const octave = parseInt(script.getField('OCTAVE'));
-                const scale = parseInt(script.getField('SCALE'));
+            func: function(sprite, script) {
+                var octave = parseInt(script.getField('OCTAVE'));
+                var scale = parseInt(script.getField('SCALE'));
 
                 if (scale == -1)
-                    {return Entry.byrobot_petrone_v2_drive.setBuzzerMute(script, 60000, false, true);}
+                    return Entry.byrobot_petrone_v2_drive.setBuzzerMute(script, 60000, false, true);
                 else
-                    {return Entry.byrobot_petrone_v2_drive.setBuzzerScale(script, octave, scale, 60000, false, true);}
+                    return Entry.byrobot_petrone_v2_drive.setBuzzerScale(script, octave, scale, 60000, false, true);
             },
         },
 
@@ -2222,15 +3349,15 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
                     null,
                     null,
-                    { type: 'text', params: ['1'] },
+                    {type: 'text', params: ['1']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_controller_buzzer_scale_delay',
@@ -2242,15 +3369,15 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_buzzer',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const octave = parseInt(script.getField('OCTAVE'));
-                const scale = parseInt(script.getField('SCALE'));
-                const time = parseInt(script.getNumberValue('TIME') * 1000);
+            func: function(sprite, script) {
+                var octave = parseInt(script.getField('OCTAVE'));
+                var scale = parseInt(script.getField('SCALE'));
+                var time = parseInt(script.getNumberValue('TIME') * 1000);
 
                 if (scale == -1)
-                    {return Entry.byrobot_petrone_v2_drive.setBuzzerMute(script, time, true, true);}
+                    return Entry.byrobot_petrone_v2_drive.setBuzzerMute(script, time, true, true);
                 else
-                    {return Entry.byrobot_petrone_v2_drive.setBuzzerScale(script, octave, scale, time, true, true);}
+                    return Entry.byrobot_petrone_v2_drive.setBuzzerScale(script, octave, scale, time, true, true);
             },
         },
 
@@ -2298,15 +3425,15 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
                     null,
                     null,
-                    { type: 'text', params: ['1'] },
+                    {type: 'text', params: ['1']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_controller_buzzer_scale_reserve',
@@ -2318,15 +3445,15 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_buzzer',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const octave = parseInt(script.getField('OCTAVE'));
-                const scale = parseInt(script.getField('SCALE'));
-                const time = parseInt(script.getNumberValue('TIME') * 1000);
+            func: function(sprite, script) {
+                var octave = parseInt(script.getField('OCTAVE'));
+                var scale = parseInt(script.getField('SCALE'));
+                var time = parseInt(script.getNumberValue('TIME') * 1000);
 
                 if (scale == -1)
-                    {return Entry.byrobot_petrone_v2_drive.setBuzzerMute(script, time, false, false);}
+                    return Entry.byrobot_petrone_v2_drive.setBuzzerMute(script, time, false, false);
                 else
-                    {return Entry.byrobot_petrone_v2_drive.setBuzzerScale(script, octave, scale, time, false, false);}
+                    return Entry.byrobot_petrone_v2_drive.setBuzzerScale(script, octave, scale, time, false, false);
             },
         },
 
@@ -2338,13 +3465,13 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['1000'] },
+                    {type: 'text', params: ['1000']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_controller_buzzer_hz',
@@ -2354,8 +3481,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_buzzer',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const hz = parseInt(script.getNumberValue('HZ', script));
+            func: function(sprite, script) {
+                var hz = parseInt(script.getNumberValue('HZ', script));
                 return Entry.byrobot_petrone_v2_drive.setBuzzerHz(script, hz, 60000, false, true);
             },
         },
@@ -2368,15 +3495,15 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['1000'] },
-                    { type: 'text', params: ['1'] },
+                    {type: 'text', params: ['1000']},
+                    {type: 'text', params: ['1']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_controller_buzzer_hz_delay',
@@ -2387,9 +3514,9 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_buzzer',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const hz = parseInt(script.getNumberValue('HZ', script));
-                const time = parseInt(script.getNumberValue('TIME') * 1000);
+            func: function(sprite, script) {
+                var hz = parseInt(script.getNumberValue('HZ', script));
+                var time = parseInt(script.getNumberValue('TIME') * 1000);
                 return Entry.byrobot_petrone_v2_drive.setBuzzerHz(script, hz, time, true, true);
             },
         },
@@ -2402,15 +3529,15 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['1000'] },
-                    { type: 'text', params: ['1'] },
+                    {type: 'text', params: ['1000']},
+                    {type: 'text', params: ['1']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_controller_buzzer_hz_reserve',
@@ -2421,9 +3548,9 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_buzzer',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const hz = parseInt(script.getNumberValue('HZ', script));
-                const time = parseInt(script.getNumberValue('TIME') * 1000);
+            func: function(sprite, script) {
+                var hz = parseInt(script.getNumberValue('HZ', script));
+                var time = parseInt(script.getNumberValue('TIME') * 1000);
                 return Entry.byrobot_petrone_v2_drive.setBuzzerHz(script, hz, time, false, false);
             },
         },
@@ -2436,7 +3563,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -2446,7 +3573,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             paramsKeyMap: {},
             class: 'byrobot_petrone_v2_drive_vibrator',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
+            func: function(sprite, script) {
                 return Entry.byrobot_petrone_v2_drive.setVibratorStop(script);
             },
         },
@@ -2459,13 +3586,13 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['1'] },
+                    {type: 'text', params: ['1']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_controller_vibrator_on_delay',
@@ -2475,8 +3602,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_vibrator',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
+            func: function(sprite, script) {
+                var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
                 return Entry.byrobot_petrone_v2_drive.setVibrator(script, timeOn, 0, timeOn, true, true);
             },
         },
@@ -2489,13 +3616,13 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['1'] },
+                    {type: 'text', params: ['1']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_controller_vibrator_on_reserve',
@@ -2505,8 +3632,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_vibrator',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
+            func: function(sprite, script) {
+                var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
                 return Entry.byrobot_petrone_v2_drive.setVibrator(script, timeOn, 0, timeOn, false, false);
             },
         },
@@ -2519,17 +3646,17 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['0.02'] },
-                    { type: 'text', params: ['0.2'] },
-                    { type: 'text', params: ['1'] },
+                    {type: 'text', params: ['0.02']},
+                    {type: 'text', params: ['0.2']},
+                    {type: 'text', params: ['1']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_controller_vibrator_delay',
@@ -2541,10 +3668,10 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_vibrator',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
-                const timeOff = parseInt(script.getNumberValue('TIMEOFF') * 1000);
-                const timeRun = parseInt(script.getNumberValue('TIMERUN') * 1000);
+            func: function(sprite, script) {
+                var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
+                var timeOff = parseInt(script.getNumberValue('TIMEOFF') * 1000);
+                var timeRun = parseInt(script.getNumberValue('TIMERUN') * 1000);
                 return Entry.byrobot_petrone_v2_drive.setVibrator(script, timeOn, timeOff, timeRun, true, true);
             },
         },
@@ -2557,17 +3684,17 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['0.02'] },
-                    { type: 'text', params: ['0.2'] },
-                    { type: 'text', params: ['1'] },
+                    {type: 'text', params: ['0.02']},
+                    {type: 'text', params: ['0.2']},
+                    {type: 'text', params: ['1']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_controller_vibrator_reserve',
@@ -2579,10 +3706,10 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_vibrator',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
-                const timeOff = parseInt(script.getNumberValue('TIMEOFF') * 1000);
-                const timeRun = parseInt(script.getNumberValue('TIMERUN') * 1000);
+            func: function(sprite, script) {
+                var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
+                var timeOff = parseInt(script.getNumberValue('TIMEOFF') * 1000);
+                var timeRun = parseInt(script.getNumberValue('TIMERUN') * 1000);
                 return Entry.byrobot_petrone_v2_drive.setVibrator(script, timeOn, timeOff, timeRun, false, false);
             },
         },
@@ -2595,13 +3722,13 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['0'] },
+                    {type: 'text', params: ['0']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_drone_irmessage',
@@ -2611,9 +3738,9 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_irmessage',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const irdirection = 0;
-                const irmessage = script.getNumberValue('IRMESSAGE', script);
+            func: function(sprite, script) {
+                var irdirection = 0;
+                var irmessage = script.getNumberValue('IRMESSAGE', script);
                 return Entry.byrobot_petrone_v2_drive.sendIrMessage(script, irdirection, irmessage);
             },
         },
@@ -2626,7 +3753,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -2636,7 +3763,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             paramsKeyMap: {},
             class: 'byrobot_petrone_v2_drive_motor',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
+            func: function(sprite, script) {
                 return Entry.byrobot_petrone_v2_drive.sendStop(script);
             },
         },
@@ -2656,14 +3783,14 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
                     null,
-                    { type: 'text', params: ['3000'] },
+                    {type: 'text', params: ['3000']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_drone_motorsingle',
@@ -2674,10 +3801,10 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_motor',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const motorIndex = parseInt(script.getField('MOTORINDEX'));
-                const motorRotation = motorIndex % 2 + 1;
-                const motorSpeed = parseInt(
+            func: function(sprite, script) {
+                var motorIndex = parseInt(script.getField('MOTORINDEX'));
+                var motorRotation = motorIndex % 2 + 1;
+                var motorSpeed = parseInt(
                     script.getNumberValue('MOTORSPEED', script)
                 );
 
@@ -2693,15 +3820,15 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['1'] },
-                    { type: 'text', params: ['3000'] },
+                    {type: 'text', params: ['1']},
+                    {type: 'text', params: ['3000']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_drone_motorsingle_input',
@@ -2712,11 +3839,11 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_motor',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const motorIndex =
+            func: function(sprite, script) {
+                var motorIndex =
                     parseInt(script.getNumberValue('MOTORINDEX', script)) - 1;
-                const motorRotation = motorIndex % 2 + 1;
-                const motorSpeed = parseInt(
+                var motorRotation = motorIndex % 2 + 1;
+                var motorSpeed = parseInt(
                     script.getNumberValue('MOTORSPEED', script)
                 );
 
@@ -2751,15 +3878,15 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
                     null,
                     null,
-                    { type: 'text', params: ['3000'] },
+                    {type: 'text', params: ['3000']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_drone_motorsingle_rotation',
@@ -2771,10 +3898,10 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_motor',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const motorIndex = parseInt(script.getField('MOTORINDEX'));
-                const motorRotation = parseInt(script.getField('MOTORROTATION'));
-                const motorSpeed = parseInt(
+            func: function(sprite, script) {
+                var motorIndex = parseInt(script.getField('MOTORINDEX'));
+                var motorRotation = parseInt(script.getField('MOTORROTATION'));
+                var motorSpeed = parseInt(
                     script.getNumberValue('MOTORSPEED', script)
                 );
 
@@ -2801,7 +3928,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -2813,8 +3940,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_control_drive',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const vehicle = script.getField('VEHICLE');
+            func: function(sprite, script) {
+                var vehicle = script.getField('VEHICLE');
                 return Entry.byrobot_petrone_v2_drive.setModeVehicle(script, vehicle);
             },
         },
@@ -2827,7 +3954,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
@@ -2837,7 +3964,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             paramsKeyMap: {},
             class: 'byrobot_petrone_v2_drive_control_drive',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
+            func: function(sprite, script) {
                 return Entry.byrobot_petrone_v2_drive.sendStop(script);
             },
         },
@@ -2861,14 +3988,14 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
                     null,
-                    { type: 'number', params: ['0'] },
+                    {type: 'number', params: ['0']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_drone_control_double_one',
@@ -2879,9 +4006,9 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_control_drive',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const controlTarget = script.getField('CONTROLTARGET');
-                const value = parseInt(script.getNumberValue('VALUE', script));
+            func: function(sprite, script) {
+                var controlTarget = script.getField('CONTROLTARGET');
+                var value = parseInt(script.getNumberValue('VALUE', script));
 
                 return Entry.byrobot_petrone_v2_drive.sendControlDoubleSingle(script, controlTarget, value, 0, false);
             },
@@ -2906,16 +4033,16 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
                     null,
-                    { type: 'number', params: ['100'] },
-                    { type: 'number', params: ['1'] },
+                    {type: 'number', params: ['100']},
+                    {type: 'number', params: ['1']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_drone_control_double_one_delay',
@@ -2927,10 +4054,10 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_control_drive',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const controlTarget = script.getField('CONTROLTARGET');
-                const value = parseInt(script.getNumberValue('VALUE', script));
-                const time = parseInt(
+            func: function(sprite, script) {
+                var controlTarget = script.getField('CONTROLTARGET');
+                var value = parseInt(script.getNumberValue('VALUE', script));
+                var time = parseInt(
                     script.getNumberValue('TIME', script) * 1000
                 );
 
@@ -2946,15 +4073,15 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    { type: 'number', params: ['0'] },
-                    { type: 'number', params: ['0'] },
+                    {type: 'number', params: ['0']},
+                    {type: 'number', params: ['0']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_drone_control_double',
@@ -2965,9 +4092,9 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_control_drive',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const wheel = parseInt(script.getNumberValue('WHEEL', script));
-                const accel = parseInt(script.getNumberValue('ACCEL', script));
+            func: function(sprite, script) {
+                var wheel = parseInt(script.getNumberValue('WHEEL', script));
+                var accel = parseInt(script.getNumberValue('ACCEL', script));
 
                 return Entry.byrobot_petrone_v2_drive.sendControlDouble(script, wheel, accel, 0, false);
             },
@@ -2981,17 +4108,17 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Block', accept: 'string'},
+                {type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12},
             ],
             events: {},
             def: {
                 params: [
-                    { type: 'number', params: ['0'] },
-                    { type: 'number', params: ['0'] },
-                    { type: 'number', params: ['1'] },
+                    {type: 'number', params: ['0']},
+                    {type: 'number', params: ['0']},
+                    {type: 'number', params: ['1']},
                     null,
                 ],
                 type: 'byrobot_petrone_v2_drive_drone_control_double_delay',
@@ -3003,10 +4130,10 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function()
             },
             class: 'byrobot_petrone_v2_drive_control_drive',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func(sprite, script) {
-                const wheel = parseInt(script.getNumberValue('WHEEL', script));
-                const accel = parseInt(script.getNumberValue('ACCEL', script));
-                const time = parseInt(
+            func: function(sprite, script) {
+                var wheel = parseInt(script.getNumberValue('WHEEL', script));
+                var accel = parseInt(script.getNumberValue('ACCEL', script));
+                var time = parseInt(
                     script.getNumberValue('TIME', script) * 1000
                 );
 
