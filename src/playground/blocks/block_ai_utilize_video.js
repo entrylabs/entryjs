@@ -425,7 +425,10 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['자신', 'self']],
+                    options: [
+                        ['자신', 'self'],
+                        ['실행화면', 'screen'],
+                    ],
                     value: 'self',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
@@ -453,7 +456,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             async func(sprite, script) {
                 const target = script.getField('TARGET');
                 const type = script.getField('TYPE');
-                try {
+                if (target === 'screen') {
                     switch (type) {
                         case 'total':
                             return clamp(VideoUtils.totalMotions / 10, 0, 100000).toString();
@@ -469,12 +472,27 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                                 rawY *= -1;
                             }
                             return rawY.toString();
-
                         default:
                             return 0;
                     }
-                } catch (err) {
-                    return 0;
+                } else {
+                    const detected = VideoUtils.motionDetect(sprite);
+                    switch (type) {
+                        case 'total':
+                            return clamp(detected.total / 10, 0, 100000).toString();
+                        case 'x':
+                            let rawX = detected.direction.x;
+                            if (!VideoUtils.flipStatus.horizontal) {
+                                rawX *= -1;
+                            }
+                            return rawX.toString();
+                        case 'x':
+                            let rawY = detected.direction.y;
+                            if (VideoUtils.flipStatus.vertical) {
+                                rawY *= -1;
+                            }
+                            return rawY.toString();
+                    }
                 }
             },
             paramsKeyMap: {

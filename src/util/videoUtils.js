@@ -16,7 +16,6 @@ const CANVAS_HEIGHT = 270;
 
 // ** MOTION DETECTION
 // motion detection parameters
-const BRIGHTNESS_THRESHOLD = 50;
 const SAMPLE_SIZE = 15;
 
 const worker = new VideoWorker();
@@ -108,11 +107,11 @@ class VideoUtils {
         }
 
         // //motion test
-        this.tempCanvas = document.createElement('canvas');
-        this.tempCanvas.width = CANVAS_WIDTH;
-        this.tempCanvas.height = CANVAS_HEIGHT;
-        const tempTarget = document.getElementsByClassName('uploadInput')[0];
-        tempTarget.parentNode.insertBefore(this.tempCanvas, tempTarget);
+        // this.tempCanvas = document.createElement('canvas');
+        // this.tempCanvas.width = CANVAS_WIDTH;
+        // this.tempCanvas.height = CANVAS_HEIGHT;
+        // const tempTarget = document.getElementsByClassName('uploadInput')[0];
+        // tempTarget.parentNode.insertBefore(this.tempCanvas, tempTarget);
         // //motion test
 
         navigator.getUserMedia =
@@ -225,18 +224,14 @@ class VideoUtils {
         worker.postMessage({ type: 'estimate', image: captured }, [captured]);
 
         // //motion test
-        const tempCtx = this.tempCanvas.getContext('2d');
-        tempCtx.clearRect(0, 0, this.tempCanvas.width, this.tempCanvas.height);
-        this.motions.forEach((row, j) => {
-            row.forEach((col, i) => {
-                const { r, g, b, rDiff, gDiff, bDiff } = col;
-                tempCtx.fillStyle = `rgb(${rDiff},${gDiff},${bDiff})`;
-                tempCtx.fillRect(i * SAMPLE_SIZE, j * SAMPLE_SIZE, SAMPLE_SIZE, SAMPLE_SIZE);
-            });
-        });
-        // previousFrame.forEach(({ x, y, r, g, b }) => {
-        //     tempCtx.fillStyle = `rgb(${r},${g},${b})`;
-        //     tempCtx.fillRect(x, y, SAMPLE_SIZE, SAMPLE_SIZE);
+        // const tempCtx = this.tempCanvas.getContext('2d');
+        // tempCtx.clearRect(0, 0, this.tempCanvas.width, this.tempCanvas.height);
+        // this.motions.forEach((row, j) => {
+        //     row.forEach((col, i) => {
+        //         const { r, g, b, rDiff, gDiff, bDiff } = col;
+        //         tempCtx.fillStyle = `rgb(${rDiff},${gDiff},${bDiff})`;
+        //         tempCtx.fillRect(i * SAMPLE_SIZE, j * SAMPLE_SIZE, SAMPLE_SIZE, SAMPLE_SIZE);
+        //     });
         // });
 
         // //motion test
@@ -250,6 +245,12 @@ class VideoUtils {
         if (!this.inMemoryCanvas) {
             return;
         }
+        /*
+            let minX = CANVAS_WIDTH / 2 + x - (width * scaleX) / 2;
+            let maxX = CANVAS_WIDTH / 2 + x + (width * scaleX) / 2;
+            let minY = CANVAS_HEIGHT / 2 - y - (height * scaleY) / 2;
+            let maxY = CANVAS_HEIGHT / 2 - y + (height * scaleY) / 2;
+        */
         const context = this.inMemoryCanvas.getContext('2d');
         context.clearRect(0, 0, this.inMemoryCanvas.width, this.inMemoryCanvas.height);
         context.drawImage(this.video, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
