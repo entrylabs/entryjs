@@ -11,12 +11,12 @@ import DataTable from '../../class/DataTable';
         do(table) {
             DataTable.tables.push(table);
             const isWorkspace = Entry.type === 'workspace';
-            const isTableMode = Entry.playground.getViewMode() === 'table';
-            if (isWorkspace && isTableMode) {
+            if (isWorkspace) {
+                const isTableMode = Entry.playground.getViewMode() === 'table';
                 DataTable.unbanBlock();
                 Entry.playground.reloadPlayground();
                 Entry.playground.refreshPlayground();
-                Entry.playground.selectTable(table);
+                isTableMode && Entry.playground.selectTable(table);
             }
         },
         state(table) {
@@ -40,11 +40,11 @@ import DataTable from '../../class/DataTable';
             }
             DataTable.tables.splice(index, 1);
             const isWorkspace = Entry.type === 'workspace';
-            const isTableMode = Entry.playground.getViewMode() === 'table';
-            if (isWorkspace && isTableMode) {
+            if (isWorkspace) {
+                const isTableMode = Entry.playground.getViewMode() === 'table';
                 Entry.playground.reloadPlayground();
                 Entry.playground.refreshPlayground();
-                if (table === DataTable.selected) {
+                if (isTableMode && table === DataTable.selected) {
                     Entry.playground.selectTable(DataTable.tables[0]);
                 }
                 !DataTable.tables.length && DataTable.banAllBlock();
