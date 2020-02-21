@@ -64,14 +64,14 @@ Entry.PingpongG1 = new (class PingpongG1 {
         // all cube stop
         Entry.hw.sendQueue.COMMAND = {
             id: ++this.send_cmd_id,
-            data: this.makePacket(OPCODE.CONTINUOUS_STEPS, 0, -1, [2, 0, 0, 1, 0, 0]),
+            data: this.makePacket(0xcc, 0x0004, [2, 0, 0, 1, 0, 0]),
         };
         Entry.hw.update();
 
         // all LED clear
         Entry.hw.sendQueue.COMMAND = {
             id: ++this.send_cmd_id,
-            data: this.makePacket(OPCODE.LEDMATRIX, 0xe3, -1, [0x70, 1, 0, ' ']),
+            data: this.makePacket(0xa2, 0xe3, [0x70, 1, 0, ' ']),
         };
         Entry.hw.update();
 
