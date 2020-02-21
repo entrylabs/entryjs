@@ -1462,6 +1462,12 @@ Entry.Playground = class Playground {
                 this.dataTable.saveTable(this.dataTable.tempDataAnalytics);
             }
             delete this.dataTable.tempDataAnalytics;
+
+            if (this.dataTable.selected) {
+                this.dataTable.dataAnalytics.setData({
+                    table: { ...this.dataTable.selected.toJSON() },
+                });
+            }
         });
     }
 
