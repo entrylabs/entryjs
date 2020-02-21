@@ -169,6 +169,7 @@ Entry.initialize_ = function() {
     this._destroyer = this._destroyer || new Destroyer();
     this._destroyer.destroy();
 
+    GEHelper.INIT(this.options.useWebGL);
     this.stage = new Entry.Stage();
     this._destroyer.add(this.stage);
 
@@ -224,8 +225,6 @@ Entry.initialize_ = function() {
     } else if (this.type === 'workspace' || this.type === 'phone') {
         this.reporter = new Entry.Reporter(true);
     }
-
-    GEHelper.INIT(this.options.useWebGL);
 };
 
 Entry.disposeContainer = function() {
