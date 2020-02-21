@@ -542,14 +542,14 @@ Entry.Engine = class Engine {
      * 매 틱당 실행되며, canvas, object 를 업데이트한다.
      * 추가로, 하드웨어의 데이터도 업데이트한다.
      */
-    update() {
+    update = () => {
         if (Entry.engine.isState('run')) {
             Entry.container.mapObjectOnScene(this.computeFunction);
             if (Entry.hw.communicationType !== 'manual') {
                 Entry.hw.update();
             }
         }
-    }
+    };
 
     /**
      * Compute function for map. (Ntry 에 동일한 명칭의 함수가 있어 그대로 둠)
