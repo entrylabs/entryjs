@@ -64,9 +64,9 @@ Entry.byrobot_petrone_v2_base =
         {
             case 'Start':
                 {
-                    Entry.byrobot_drone_base.transferCommand(target, 0x10, modeVehicle);
+                    Entry.byrobot_base.transferCommand(target, 0x10, modeVehicle);
 
-                    Entry.byrobot_drone_base.transferControlQuad(target, 0, 0, 0, 0);
+                    Entry.byrobot_base.transferControlQuad(target, 0, 0, 0, 0);
                     this.transferControlDouble(target, 0, 0);
                 }
                 return script;
@@ -89,8 +89,8 @@ Entry.byrobot_petrone_v2_base =
         {
             case 'Start':
                 {
-                    Entry.byrobot_drone_base.transferControlQuad(target, 0, 0, 0, 0); // 기존 입력되었던 조종기 방향 초기화 (수직으로 이륙, 착륙 하도록)
-                    Entry.byrobot_drone_base.transferCommand(target, 0x22, eventFlight); // 0x22 : CommandType::FlightEvent
+                    Entry.byrobot_base.transferControlQuad(target, 0, 0, 0, 0); // 기존 입력되었던 조종기 방향 초기화 (수직으로 이륙, 착륙 하도록)
+                    Entry.byrobot_base.transferCommand(target, 0x22, eventFlight); // 0x22 : CommandType::FlightEvent
                 }
                 return script;
 
@@ -109,7 +109,7 @@ Entry.byrobot_petrone_v2_base =
 
     sendStop(script, target)
     {
-        return Entry.byrobot_drone_base.sendCommand(script, target, 0x24, 0);
+        return Entry.byrobot_base.sendCommand(script, target, 0x24, 0);
     },
 
 

@@ -30,14 +30,15 @@ Entry.byrobot_dronefighter_controller =
     // 초기화
     setZero() {
         // 초기화
+        Entry.byrobot_drone_base.transferBufferClear();
 
         // 한 번에 명령을 전송하면 hw까지 제대로 전달되지 않는 경우가 있어
         // 명령을 각각 분리하여 전송하게 함(2017.01.03)
         for (let i = 0; i < 1; i++) {
-            this.transferVibrator(0, 0, 0, 0);
-            this.transferbuzzer(0, 0, 0);
-            this.transferLightManual(0x11, 0xff, 0);
-            this.transferCommand(0x11, 0x81, 0);
+            Entry.byrobot_drone_base.transferVibrator(0x11, 0, 0, 0, 0);
+            Entry.byrobot_drone_base.transferbuzzer(0x11, 0, 0, 0);
+            Entry.byrobot_drone_base.transferLightManual(0x11, 0xff, 0);
+            Entry.byrobot_drone_base.transferCommand(0x11, 0x81, 0);
         }
     },
 
@@ -534,6 +535,7 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
                 return read[device];
             },
         },
+
         byrobot_dronefighter_controller_value_joystick: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -543,46 +545,16 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x,
-                            'joystick_left_x',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y,
-                            'joystick_left_y',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_dronefighter_controller_joystick_left_direction,
-                            'joystick_left_direction',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_dronefighter_controller_joystick_left_event,
-                            'joystick_left_event',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_dronefighter_controller_joystick_left_command,
-                            'joystick_left_command',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_dronefighter_controller_joystick_right_x,
-                            'joystick_right_x',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_dronefighter_controller_joystick_right_y,
-                            'joystick_right_y',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_dronefighter_controller_joystick_right_direction,
-                            'joystick_right_direction',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_dronefighter_controller_joystick_right_event,
-                            'joystick_right_event',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_dronefighter_controller_joystick_right_command,
-                            'joystick_right_command',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x,          'joystick_left_x',],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y,          'joystick_left_y',],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_left_direction,  'joystick_left_direction',],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_left_event,      'joystick_left_event',],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_left_command,    'joystick_left_command',],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_right_x,         'joystick_right_x',],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_right_y,         'joystick_right_y',],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_right_direction, 'joystick_right_direction',],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_right_event,     'joystick_right_event',],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_right_command,   'joystick_right_command',],
                     ],
                     value: 'joystick_left_x', // 초기 선택항목 지정
                     fontSize: 11,
@@ -606,6 +578,7 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
                 return read[device];
             },
         },
+
         byrobot_dronefighter_controller_if_button_press: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -654,10 +627,16 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
                 const buttonevent = 'button_event'; // paramsKeyMap에 정의된 이름 사용
 
                 if (read[button] == script.getField('BUTTON') && read[buttonevent] == 2)
-                    {return true;}
-                else {return false;}
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             },
         },
+
         byrobot_dronefighter_controller_if_joystick_direction: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -679,35 +658,15 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left_up,
-                            '17',
-                        ],
-                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_up, '18'],
-                        [
-                            Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right_up,
-                            '20',
-                        ],
-                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left, '33'],
-                        [
-                            Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_center,
-                            '34',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right,
-                            '36',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_direction_left_down,
-                            '65',
-                        ],
-                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_down, '66'],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_direction_right_down,
-                            '68',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left_up,    '17'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_up,         '18'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right_up,   '20'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left,       '33'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_center,     '34'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right,      '36'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left_down,  '65'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_down,       '66'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right_down, '68'],
                     ],
                     value: '34',
                     fontSize: 11,
@@ -731,10 +690,17 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
 
                 const device = script.getField('DEVICE'); // paramsKeyMap에 정의된 이름 사용
 
-                if (read[device] == script.getField('DIRECTION')) {return true;}
-                else {return false;}
+                if (read[device] == script.getField('DIRECTION'))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             },
         },
+
         byrobot_dronefighter_controller_light_manual_single_off: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -756,9 +722,10 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
             class: 'byrobot_dronefighter_controller_light',
             isNotFor: ['byrobot_dronefighter_controller'],
             func(sprite, script) {
-                return Entry.byrobot_dronefighter_controller.setLightManual(script, 0x11, 0xff, 0);
+                return Entry.byrobot_base.setLightManual(script, 0x11, 0xff, 0);
             },
         },
+
         byrobot_dronefighter_controller_light_manual_single: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -816,16 +783,12 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
             class: 'byrobot_dronefighter_controller_light',
             isNotFor: ['byrobot_dronefighter_controller'],
             func(sprite, script) {
-                const flags = parseInt(script.getField('FLAGS'));
-                const brightness = parseInt(script.getField('BRIGHTNESS'));
-                return Entry.byrobot_dronefighter_controller.setLightManual(
-                    script,
-                    0x11,
-                    flags,
-                    brightness
-                );
+                const flags = parseInt(script.getField('FLAGS'), 10);
+                const brightness = parseInt(script.getField('BRIGHTNESS'), 10);
+                return Entry.byrobot_base.setLightManual(script, 0x11, flags, brightness);
             },
         },
+
         byrobot_dronefighter_controller_light_manual_single_input: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -867,17 +830,14 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_controller_light',
             isNotFor: ['byrobot_dronefighter_controller'],
-            func(sprite, script) {
+            func(sprite, script)
+            {
                 const flags = script.getNumberValue('FLAGS');
                 const brightness = script.getNumberValue('BRIGHTNESS');
-                return Entry.byrobot_dronefighter_controller.setLightManual(
-                    script,
-                    0x11,
-                    flags,
-                    brightness
-                );
+                return Entry.byrobot_base.setLightManual(script, 0x11, flags, brightness);
             },
         },
+
         byrobot_dronefighter_controller_buzzer_off: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -899,9 +859,10 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
             class: 'byrobot_dronefighter_controller_buzzer',
             isNotFor: ['byrobot_dronefighter_controller'],
             func(sprite, script) {
-                return Entry.byrobot_dronefighter_controller.setBuzzerStop(script);
+                return Entry.byrobot_base.setBuzzerStop(script, 0x11);
             },
         },
+
         byrobot_dronefighter_controller_buzzer_scale: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -956,25 +917,17 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
             class: 'byrobot_dronefighter_controller_buzzer',
             isNotFor: ['byrobot_dronefighter_controller'],
             func(sprite, script) {
-                const octave = parseInt(script.getField('OCTAVE'));
-                const scale = parseInt(script.getField('SCALE'));
+                const octave = parseInt(script.getField('OCTAVE'), 10);
+                const scale = parseInt(script.getField('SCALE'), 10);
 
                 if (scale == -1)
-                    {return Entry.byrobot_dronefighter_controller.setBuzzerMute(
-                        script,
-                        60000,
-                        false,
-                        true
-                    );}
+                {
+                    return Entry.byrobot_base.setBuzzerMute(script, 0x11, 60000, false, true);
+                }
                 else
-                    {return Entry.byrobot_dronefighter_controller.setBuzzerScale(
-                        script,
-                        octave,
-                        scale,
-                        60000,
-                        false,
-                        true
-                    );}
+                {
+                    return Entry.byrobot_base.setBuzzerScale(script, 0x11, octave, scale, 60000, false, true);
+                }
             },
         },
         byrobot_dronefighter_controller_buzzer_scale_delay: {
@@ -1044,28 +997,21 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
             class: 'byrobot_dronefighter_controller_buzzer',
             isNotFor: ['byrobot_dronefighter_controller'],
             func(sprite, script) {
-                const octave = parseInt(script.getField('OCTAVE'));
-                const scale = parseInt(script.getField('SCALE'));
-                const time = parseInt(script.getNumberValue('TIME') * 1000);
+                const octave = parseInt(script.getField('OCTAVE'), 10);
+                const scale = parseInt(script.getField('SCALE'), 10);
+                const time = parseInt(script.getNumberValue('TIME'), 10) * 1000;
 
                 if (scale == -1)
-                    {return Entry.byrobot_dronefighter_controller.setBuzzerMute(
-                        script,
-                        time,
-                        true,
-                        true
-                    );}
+                {
+                    return Entry.byrobot_base.setBuzzerMute(script, 0x11, time, true, true);
+                }
                 else
-                    {return Entry.byrobot_dronefighter_controller.setBuzzerScale(
-                        script,
-                        octave,
-                        scale,
-                        time,
-                        true,
-                        true
-                    );}
+                {
+                    return Entry.byrobot_base.setBuzzerScale(script, 0x11, octave, scale, time, true, true);
+                }
             },
         },
+
         byrobot_dronefighter_controller_buzzer_scale_reserve: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1133,19 +1079,19 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
             class: 'byrobot_dronefighter_controller_buzzer',
             isNotFor: ['byrobot_dronefighter_controller'],
             func(sprite, script) {
-                const octave = parseInt(script.getField('OCTAVE'));
-                const scale = parseInt(script.getField('SCALE'));
-                const time = parseInt(script.getNumberValue('TIME') * 1000);
+                const octave = parseInt(script.getField('OCTAVE'), 10);
+                const scale = parseInt(script.getField('SCALE'), 10);
+                const time = parseInt(script.getNumberValue('TIME'), 10) * 1000;
 
                 if (scale == -1)
-                    {return Entry.byrobot_dronefighter_controller.setBuzzerMute(
+                    {return Entry.byrobot_base.setBuzzerMute(
                         script,
                         time,
                         false,
                         false
                     );}
                 else
-                    {return Entry.byrobot_dronefighter_controller.setBuzzerScale(
+                    {return Entry.byrobot_base.setBuzzerScale(
                         script,
                         octave,
                         scale,
@@ -1189,7 +1135,7 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
             isNotFor: ['byrobot_dronefighter_controller'],
             func(sprite, script) {
                 const hz = parseInt(script.getNumberValue('HZ', script));
-                return Entry.byrobot_dronefighter_controller.setBuzzerHz(
+                return Entry.byrobot_base.setBuzzerHz(
                     script,
                     hz,
                     60000,
@@ -1242,7 +1188,7 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
             func(sprite, script) {
                 const hz = parseInt(script.getNumberValue('HZ', script));
                 const time = parseInt(script.getNumberValue('TIME') * 1000);
-                return Entry.byrobot_dronefighter_controller.setBuzzerHz(
+                return Entry.byrobot_base.setBuzzerHz(
                     script,
                     hz,
                     time,
@@ -1295,7 +1241,7 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
             func(sprite, script) {
                 const hz = parseInt(script.getNumberValue('HZ', script));
                 const time = parseInt(script.getNumberValue('TIME') * 1000);
-                return Entry.byrobot_dronefighter_controller.setBuzzerHz(
+                return Entry.byrobot_base.setBuzzerHz(
                     script,
                     hz,
                     time,
@@ -1325,7 +1271,7 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
             class: 'byrobot_dronefighter_controller_vibrator',
             isNotFor: ['byrobot_dronefighter_controller'],
             func(sprite, script) {
-                return Entry.byrobot_dronefighter_controller.setVibratorStop(script);
+                return Entry.byrobot_base.setVibratorStop(script);
             },
         },
         byrobot_dronefighter_controller_vibrator_on_delay: {
@@ -1362,7 +1308,7 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
             isNotFor: ['byrobot_dronefighter_controller'],
             func(sprite, script) {
                 const timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
-                return Entry.byrobot_dronefighter_controller.setVibrator(
+                return Entry.byrobot_base.setVibrator(
                     script,
                     timeOn,
                     0,
@@ -1405,8 +1351,8 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
             class: 'byrobot_dronefighter_controller_vibrator',
             isNotFor: ['byrobot_dronefighter_controller'],
             func(sprite, script) {
-                const timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
-                return Entry.byrobot_dronefighter_controller.setVibrator(
+                const timeOn = parseInt(script.getNumberValue('TIMEON'), 10) * 1000;
+                return Entry.byrobot_base.setVibrator(
                     script,
                     timeOn,
                     0,
@@ -1467,10 +1413,10 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
             class: 'byrobot_dronefighter_controller_vibrator',
             isNotFor: ['byrobot_dronefighter_controller'],
             func(sprite, script) {
-                const timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
-                const timeOff = parseInt(script.getNumberValue('TIMEOFF') * 1000);
-                const timeRun = parseInt(script.getNumberValue('TIMERUN') * 1000);
-                return Entry.byrobot_dronefighter_controller.setVibrator(
+                const timeOn = parseInt(script.getNumberValue('TIMEON'), 10) * 1000;
+                const timeOff = parseInt(script.getNumberValue('TIMEOFF'), 10) * 1000;
+                const timeRun = parseInt(script.getNumberValue('TIMERUN'), 10) * 1000;
+                return Entry.byrobot_base.setVibrator(
                     script,
                     timeOn,
                     timeOff,
@@ -1531,10 +1477,10 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
             class: 'byrobot_dronefighter_controller_vibrator',
             isNotFor: ['byrobot_dronefighter_controller'],
             func(sprite, script) {
-                const timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
-                const timeOff = parseInt(script.getNumberValue('TIMEOFF') * 1000);
-                const timeRun = parseInt(script.getNumberValue('TIMERUN') * 1000);
-                return Entry.byrobot_dronefighter_controller.setVibrator(
+                const timeOn = parseInt(script.getNumberValue('TIMEON'), 10) * 1000;
+                const timeOff = parseInt(script.getNumberValue('TIMEOFF'), 10) * 1000;
+                const timeRun = parseInt(script.getNumberValue('TIMERUN'), 10) * 1000;
+                return Entry.byrobot_base.setVibrator(
                     script,
                     timeOn,
                     timeOff,
@@ -1590,8 +1536,8 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
             class: 'byrobot_dronefighter_controller_userinterface',
             isNotFor: ['byrobot_dronefighter_controller'],
             func(sprite, script) {
-                const preset = parseInt(script.getField('PRESET'));
-                return Entry.byrobot_dronefighter_controller.sendCommand(
+                const preset = parseInt(script.getField('PRESET'), 10);
+                return Entry.byrobot_base.sendCommand(
                     script,
                     0x11,
                     0x80,
@@ -1796,17 +1742,15 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
             class: 'byrobot_dronefighter_controller_userinterface',
             isNotFor: ['byrobot_dronefighter_controller'],
             func(sprite, script) {
-                const uicommand = parseInt(script.getField('COMMAND'));
-                const uifunction = parseInt(script.getField('FUNCTION'));
-                return Entry.byrobot_dronefighter_controller.setUserInterface(
+                const uicommand = parseInt(script.getField('COMMAND'), 10);
+                const uifunction = parseInt(script.getField('FUNCTION'), 10);
+                return Entry.byrobot_base.setUserInterface(
                     script,
                     uicommand,
                     uifunction
                 );
             },
         },
-        /* BYROBOT DroneFighter Controller End */
-        //endregion byrobot 바이로봇
     };
 };
 

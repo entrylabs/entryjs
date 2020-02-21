@@ -16,7 +16,7 @@
  *  장치 기본 정의
  ***************************************************************************************/
 
-Entry.byrobot_drone_base =
+Entry.byrobot_base =
 {
     /***************************************************************************************
      *  시간 지연 함수
@@ -1010,7 +1010,7 @@ Entry.byrobot_drone_base =
 
     sendStop(script, target)
     {
-        return this.sendCommand(script, target, 0x10, 0x01);
+        return this.sendCommand(script, target, 0x01);
     },
 
     sendCommand(script, target, command, option = 0)
@@ -1186,5 +1186,5 @@ Entry.byrobot_drone_base =
 };
 
 
-module.exports = Entry.byrobot_drone_base;
+module.exports = Entry.byrobot_base;
 

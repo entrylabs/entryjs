@@ -31,19 +31,19 @@ Entry.byrobot_drone_3_8 =
     setZero()
     {
         // 초기화
-        Entry.byrobot_drone_base.transferBufferClear();
+        Entry.byrobot_base.transferBufferClear();
 
         // 한 번에 명령을 전송하면 hw까지 제대로 전달되지 않는 경우가 있어
         // 명령을 각각 분리하여 전송하게 함(2017.01.03)
         for (let i = 0; i < 1; i++)
         {
-            Entry.byrobot_drone_base.transferCommand(0x10, 0x01, 0); // 드론, command = 0x01 (Stop)
-            Entry.byrobot_drone_base.transferVibrator(0, 0, 0, 0);
-            Entry.byrobot_drone_base.transferbuzzer(0, 0, 0);
-            Entry.byrobot_drone_base.transferLightManual(0x10, 0xffff, 0); // LED 초기화(모두 꺼짐)
-            Entry.byrobot_drone_base.transferLightManual(0x20, 0xffff, 0); // LED 초기화(모두 꺼짐)
-            Entry.byrobot_drone_base.transferLightModeColor(0x10, 0x21, 200, 255, 0, 0); // LED 초기화(드론)
-            Entry.byrobot_drone_base.transferLightModeColor(0x20, 0x21, 200, 255, 0, 0); // LED 초기화(조종기)
+            Entry.byrobot_base.transferCommand(0x10, 0x01, 0); // 드론, command = 0x01 (Stop)
+            Entry.byrobot_base.transferVibrator(0x20, 0, 0, 0, 0);
+            Entry.byrobot_base.transferbuzzer(0x20, 0, 0, 0);
+            Entry.byrobot_base.transferLightManual(0x10, 0xffff, 0); // LED 초기화(모두 꺼짐)
+            Entry.byrobot_base.transferLightManual(0x20, 0xffff, 0); // LED 초기화(모두 꺼짐)
+            Entry.byrobot_base.transferLightModeColor(0x10, 0x21, 200, 255, 0, 0); // LED 초기화(드론)
+            Entry.byrobot_base.transferLightModeColor(0x20, 0x21, 200, 255, 0, 0); // LED 초기화(조종기)
         }
     },
 
@@ -997,7 +997,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
             isNotFor: ['byrobot_drone_3_8'],
             func(sprite, script)
             {
-                return Entry.byrobot_drone_base.setLightManual(script, 0x20, 0xffff, 0);
+                return Entry.byrobot_base.setLightManual(script, 0x20, 0xffff, 0);
             },
         },
 
@@ -1062,7 +1062,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
                 const mode        = 0x21;
                 const interval    = parseInt(script.getField('BRIGHTNESS'), 10);
                 const colorString = script.getField('COLOR');
-                return Entry.byrobot_drone_base.setLightModeColorString(script, 0x20, mode, interval, colorString);
+                return Entry.byrobot_base.setLightModeColorString(script, 0x20, mode, interval, colorString);
             },
         },
 
@@ -1095,7 +1095,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
             {
                 const flags      = script.getNumberValue('FLAGS');
                 const brightness = script.getNumberValue('BRIGHTNESS');
-                return Entry.byrobot_drone_base.setLightManual(script, 0x20, flags, brightness);
+                return Entry.byrobot_base.setLightManual(script, 0x20, flags, brightness);
             },
         },
 
@@ -1156,7 +1156,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
                 const red       = script.getNumberValue('RED');
                 const green     = script.getNumberValue('GREEN');
                 const blue      = script.getNumberValue('BLUE');
-                return Entry.byrobot_drone_base.setLightModeColor(script, 0x20, mode, interval, red, green, blue);
+                return Entry.byrobot_base.setLightModeColor(script, 0x20, mode, interval, red, green, blue);
             },
         },
 
@@ -1225,7 +1225,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
                 const mode        = 0x20 + parseInt(script.getField('MODE'), 10);
                 const interval    = script.getNumberValue('INTERVAL');
                 const colorString = script.getField('COLOR');
-                return Entry.byrobot_drone_base.setLightModeColorString(script, 0x20, mode, interval, colorString);
+                return Entry.byrobot_base.setLightModeColorString(script, 0x20, mode, interval, colorString);
             },
         },
 
@@ -1245,7 +1245,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
             isNotFor: ['byrobot_drone_3_8'],
             func(sprite, script)
             {
-                return Entry.byrobot_drone_base.setLightManual(script, 0x10, 0xff, 0);
+                return Entry.byrobot_base.setLightManual(script, 0x10, 0xff, 0);
             },
         },
 
@@ -1310,7 +1310,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
                 const mode        = 0x22;
                 const interval    = parseInt(script.getField('BRIGHTNESS'), 10);
                 const colorString = script.getField('COLOR');
-                return Entry.byrobot_drone_base.setLightModeColorString(script, 0x10, mode, interval, colorString);
+                return Entry.byrobot_base.setLightModeColorString(script, 0x10, mode, interval, colorString);
             },
         },
 
@@ -1343,7 +1343,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
             {
                 const flags = script.getNumberValue('FLAGS');
                 const brightness = script.getNumberValue('BRIGHTNESS');
-                return Entry.byrobot_drone_base.setLightManual(script, 0x10, flags, brightness);
+                return Entry.byrobot_base.setLightManual(script, 0x10, flags, brightness);
             },
         },
 
@@ -1404,7 +1404,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
                 const green    = script.getNumberValue('GREEN');
                 const blue     = script.getNumberValue('BLUE');
                 const interval = script.getNumberValue('INTERVAL');
-                return Entry.byrobot_drone_base.setLightModeColor(script, 0x10, mode, interval, red, green, blue);
+                return Entry.byrobot_base.setLightModeColor(script, 0x10, mode, interval, red, green, blue);
             },
         },
 
@@ -1473,7 +1473,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
                 const mode        = 0x20 + parseInt(script.getField('MODE'), 10);
                 const interval    = script.getNumberValue('INTERVAL');
                 const colorString = script.getField('COLOR');
-                return Entry.byrobot_drone_base.setLightModeColorString(script, 0x10, mode, interval, colorString);
+                return Entry.byrobot_base.setLightModeColorString(script, 0x10, mode, interval, colorString);
             },
         },
 
@@ -1493,7 +1493,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
             isNotFor: ['byrobot_drone_3_8'],
             func(sprite, script)
             {
-                return Entry.byrobot_drone_base.setBuzzerStop(script);
+                return Entry.byrobot_base.setBuzzerStop(script, 0x20);
             },
         },
 
@@ -1558,9 +1558,9 @@ Entry.byrobot_drone_3_8.getBlocks = function()
                 const scale = parseInt(script.getField('SCALE'), 10);
 
                 if (scale == -1) {
-                    return Entry.byrobot_drone_base.setBuzzerMute(script, 60000, false, true);
+                    return Entry.byrobot_base.setBuzzerMute(script, 0x20, 60000, false, true);
                 } else {
-                    return Entry.byrobot_drone_base.setBuzzerScale(script, octave, scale, 60000, false, true);
+                    return Entry.byrobot_base.setBuzzerScale(script, 0x20, octave, scale, 60000, false, true);
                 }
             },
         },
@@ -1634,9 +1634,9 @@ Entry.byrobot_drone_3_8.getBlocks = function()
                 const time = script.getNumberValue('TIME') * 1000;
 
                 if (scale == -1) {
-                    return Entry.byrobot_drone_base.setBuzzerMute(script, time, true, true);
+                    return Entry.byrobot_base.setBuzzerMute(script, 0x20, time, true, true);
                 } else {
-                    return Entry.byrobot_drone_base.setBuzzerScale(script, octave, scale, time, true, true);
+                    return Entry.byrobot_base.setBuzzerScale(script, 0x20, octave, scale, time, true, true);
                 }
             },
         },
@@ -1710,9 +1710,9 @@ Entry.byrobot_drone_3_8.getBlocks = function()
                 const time   = script.getNumberValue('TIME') * 1000;
 
                 if (scale == -1) {
-                    return Entry.byrobot_drone_base.setBuzzerMute(script, time, false, false);
+                    return Entry.byrobot_base.setBuzzerMute(script, 0x20, time, false, false);
                 } else {
-                    return Entry.byrobot_drone_base.setBuzzerScale(script, octave, scale, time, false, false);
+                    return Entry.byrobot_base.setBuzzerScale(script, 0x20, octave, scale, time, false, false);
                 }
             },
         },
@@ -1739,7 +1739,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
             func(sprite, script)
             {
                 const hz = script.getNumberValue('HZ');
-                return Entry.byrobot_drone_base.setBuzzerHz(script, hz, 60000, false, true);
+                return Entry.byrobot_base.setBuzzerHz(script, 0x20, hz, 60000, false, true);
             },
         },
 
@@ -1768,7 +1768,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
             {
                 const hz   = script.getNumberValue('HZ');
                 const time = script.getNumberValue('TIME') * 1000;
-                return Entry.byrobot_drone_base.setBuzzerHz(script, hz, time, true, true);
+                return Entry.byrobot_base.setBuzzerHz(script, 0x20, hz, time, true, true);
             },
         },
 
@@ -1801,7 +1801,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
             {
                 const hz   = script.getNumberValue('HZ');
                 const time = script.getNumberValue('TIME') * 1000;
-                return Entry.byrobot_drone_base.setBuzzerHz(script, hz, time, false, false);
+                return Entry.byrobot_base.setBuzzerHz(script, 0x20, hz, time, false, false);
             },
         },
 
@@ -1821,7 +1821,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
             isNotFor: ['byrobot_drone_3_8'],
             func(sprite, script)
             {
-                return Entry.byrobot_drone_base.sendStop(script);
+                return Entry.byrobot_base.sendStop(script, 0x10);
             },
         },
 
@@ -1859,7 +1859,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
                 const motorRotation = (motorIndex % 2) + 1;
                 const motorSpeed    = script.getNumberValue('MOTORSPEED');
 
-                return Entry.byrobot_drone_base.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
+                return Entry.byrobot_base.setMotorSingle(script, 0x10, motorIndex, motorRotation, motorSpeed);
             },
         },
 
@@ -1890,7 +1890,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
                 const motorRotation = (motorIndex % 2) + 1;
                 const motorSpeed    = script.getNumberValue('MOTORSPEED');
 
-                return Entry.byrobot_drone_base.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
+                return Entry.byrobot_base.setMotorSingle(script, 0x10, motorIndex, motorRotation, motorSpeed);
             },
         },
 
@@ -1940,7 +1940,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
                 const motorRotation = parseInt(script.getField('MOTORROTATION'), 10);
                 const motorSpeed    = script.getNumberValue('MOTORSPEED');
 
-                return Entry.byrobot_drone_base.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
+                return Entry.byrobot_base.setMotorSingle(script, 0x10, motorIndex, motorRotation, motorSpeed);
             },
         },
 
@@ -1960,7 +1960,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
             isNotFor: ['byrobot_drone_3_8'],
             func(sprite, script)
             {
-                return Entry.byrobot_drone_base.setEventFlight(script, 0x11, 200); // 0x11 : FlightEvent::TakeOff
+                return Entry.byrobot_base.setEventFlight(script, 0x10, 0x11, 200); // 0x11 : FlightEvent::TakeOff
             },
         },
 
@@ -1980,7 +1980,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
             isNotFor: ['byrobot_drone_3_8'],
             func(sprite, script)
             {
-                return Entry.byrobot_drone_base.setEventFlight(script, 0x12, 200); // 0x12 : FlightEvent::Landing
+                return Entry.byrobot_base.setEventFlight(script, 0x10, 0x12, 200); // 0x12 : FlightEvent::Landing
             },
         },
 
@@ -2000,7 +2000,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
             isNotFor: ['byrobot_drone_3_8'],
             func(sprite, script)
             {
-                return Entry.byrobot_drone_base.sendStop(script);
+                return Entry.byrobot_base.sendStop(script, 0x10);
             },
         },
 
@@ -2036,7 +2036,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
             func(sprite, script)
             {
                 const headless = script.getField('HEADLESS');
-                return Entry.byrobot_drone_base.sendCommand(script, 0x10, 0x03, headless);
+                return Entry.byrobot_base.sendCommand(script, 0x10, 0x03, headless);
             },
         },
 
@@ -2056,7 +2056,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
             isNotFor: ['byrobot_drone_3_8'],
             func(sprite, script)
             {
-                return Entry.byrobot_drone_base.sendCommand(script, 0x10, 0x07, 0xA0); // 0x22 : CommandType::FlightEvent  // 0xA0 : FlightEvent::ResetHeading
+                return Entry.byrobot_base.sendCommand(script, 0x10, 0x07, 0xA0); // 0x22 : CommandType::FlightEvent  // 0xA0 : FlightEvent::ResetHeading
             },
         },
 
@@ -2098,7 +2098,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
                 const controlTarget = script.getField('CONTROLTARGET');
                 const value = script.getNumberValue('VALUE');
 
-                return Entry.byrobot_drone_base.sendControlQuadSingle(script, controlTarget, value, 0, false);
+                return Entry.byrobot_base.sendControlQuadSingle(script, 0x10, controlTarget, value, 0, false);
             },
         },
 
@@ -2148,7 +2148,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
                 const value = script.getNumberValue('VALUE');
                 const time = script.getNumberValue('TIME') * 1000;
 
-                return Entry.byrobot_drone_base.sendControlQuadSingle(script, controlTarget, value, time, true);
+                return Entry.byrobot_base.sendControlQuadSingle(script, 0x10, controlTarget, value, time, true);
             },
         },
 
@@ -2190,7 +2190,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
                 const yaw      = script.getNumberValue('YAW');
                 const throttle = script.getNumberValue('THROTTLE');
 
-                return Entry.byrobot_drone_base.sendControlQuad(script, roll, pitch, yaw, throttle, 0, false);
+                return Entry.byrobot_base.sendControlQuad(script, 0x10, roll, pitch, yaw, throttle, 0, false);
             },
         },
 
@@ -2236,7 +2236,7 @@ Entry.byrobot_drone_3_8.getBlocks = function()
                 const throttle  = script.getNumberValue('THROTTLE');
                 const time      = script.getNumberValue('TIME') * 1000;
 
-                return Entry.byrobot_drone_base.sendControlQuad(script, roll, pitch, yaw, throttle, time, true);
+                return Entry.byrobot_base.sendControlQuad(script, 0x10, roll, pitch, yaw, throttle, time, true);
             },
         },
 
