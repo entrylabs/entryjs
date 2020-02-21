@@ -70,6 +70,7 @@ class VideoUtils {
             face: false,
             object: false,
         };
+        this.disableAllModels();
         GEHelper.resetHandlers();
         this.turnOnWebcam();
         if (!this.flipStatus.horizontal) {
@@ -86,8 +87,6 @@ class VideoUtils {
         this.poses = { predictions: [], adjacents: [] };
         this.faces = [];
         this.objects = [];
-        this.objects = [];
-        this.disableAllModels();
     }
 
     async initialize() {
@@ -170,6 +169,9 @@ class VideoUtils {
 
         worker.onmessage = (e) => {
             const { type, message } = e.data;
+            if (Entry.engine.state !== 'run') {
+                return;
+            }
             switch (type) {
                 case 'init':
                     this.initialized = true;
