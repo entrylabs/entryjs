@@ -729,7 +729,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                     pingpong_g1_is_top_shape: '큐브 윗면에 %1 모양이 있는가?',
                     pingpong_g1_set_dot_pixel: '도트 X:%1 Y:%2 %3 %4',
                     pingpong_g1_set_dot_string: '도트에 문자열 %1  %2초동안 출력 %3',
-                    pingpong_g1_set_dot_clear: '도트 화면 삭제 %1',
+                    pingpong_g1_set_dot_clear: '도트 화면 지우기 %1',
                 },
                 Blocks: {
                     pingpong_right: '오른쪽',
