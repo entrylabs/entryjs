@@ -38,8 +38,8 @@ Entry.krc =
     },
 	
     Static: {
-//        krc_BLOCK_COLOR: '#00979D', // gray(#848484)
-//        krc_ARROW_COLOR_HW: '#00979D',
+//        krc_BLOCK_COLOR: "#00979D", // gray(#848484)
+//        krc_ARROW_COLOR_HW: "#00979D",
 
     },
 	
@@ -147,13 +147,13 @@ Entry.krc.getBlocks = function() {
         "krc_digital_port_onoff_list": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
-			fontColor: '#fff',
-            skeleton: 'basic_string_field',
+			fontColor: "#fff",
+            skeleton: "basic_string_field",
             statements: [],
-            template: '%1',
+            template: "%1",
             params: [
                 {
-                    type: 'Dropdown',
+                    type: "Dropdown",
                     options: [
                         [Lang.Blocks.On_block, "1"],
                         [Lang.Blocks.Off_block, "0"],
@@ -178,13 +178,13 @@ Entry.krc.getBlocks = function() {
        "krc_backlight_onoff_list": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
-			fontColor: '#fff',
-            skeleton: 'basic_string_field',
+			fontColor: "#fff",
+            skeleton: "basic_string_field",
             statements: [],
-            template: '%1',
+            template: "%1",
             params: [
                 {
-                    type: 'Dropdown',
+                    type: "Dropdown",
                     options: [
                         [Lang.Blocks.Backlight_on, "0"],
                         [Lang.Blocks.Backlight_off, "1"],
@@ -211,16 +211,16 @@ Entry.krc.getBlocks = function() {
        "krc_digital_port_list": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
-			fontColor: '#fff',			
-            skeleton: 'basic_string_field',
+			fontColor: "#fff",			
+            skeleton: "basic_string_field",
             statements: [],
-            template: '%1',
+            template: "%1",
             params: [
                 {
-                    type: 'Dropdown',
+                    type: "Dropdown",
                     options: [
                         ["D1", "9"],
-                        ["'D2", "10"],
+                        ["D2", "10"],
                         ["A1", "1"],
                         ["A2", "2"],
                         ["A3", "3"],
@@ -257,13 +257,13 @@ Entry.krc.getBlocks = function() {
         "krc_servo_port_list": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
-			fontColor: '#fff',			
-            skeleton: 'basic_string_field',
+			fontColor: "#fff",			
+            skeleton: "basic_string_field",
             statements: [],
-            template: '%1',
+            template: "%1",
             params: [
                 {
-                    type: 'Dropdown',
+                    type: "Dropdown",
                     options: [
                         ["S1", "1"],
                         ["S2", "2"],
@@ -295,13 +295,13 @@ Entry.krc.getBlocks = function() {
         "krc_all_onoff_list": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
-			fontColor: '#fff',
-            skeleton: 'basic_string_field',
+			fontColor: "#fff",
+            skeleton: "basic_string_field",
             statements: [],
-            template: '%1',
+            template: "%1",
             params: [
                 {
-                    type: 'Dropdown',
+                    type: "Dropdown",
                     options: [
                         [Lang.Blocks.AllOff_block, "2"],
                         [Lang.Blocks.AllOn_block, "3"],
@@ -326,8 +326,8 @@ Entry.krc.getBlocks = function() {
         "krc_analog_port_list": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
-			fontColor: '#fff',			
-            skeleton: 'basic_string_field',
+			fontColor: "#fff",			
+            skeleton: "basic_string_field",
             statements: [],
             template: "%1",
             params: [
@@ -367,17 +367,17 @@ Entry.krc.getBlocks = function() {
 		"krc_buzzer_onoff": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
-			fontColor: '#fff',			
-            skeleton: 'basic',
+			fontColor: "#fff",			
+            skeleton: "basic",
             statements: [],
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: "Block",
+                    accept: "string",
                 },
                 {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
+                    type: "Indicator",
+                    img: "block_icon/hardware_icon.svg",
                     size: 12,
                 },
             ],
@@ -385,7 +385,7 @@ Entry.krc.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'text',
+                        type: "text",
                         params: ["1"],
                     },
                     null,
@@ -473,21 +473,21 @@ Entry.krc.getBlocks = function() {
 		{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
-			fontColor: '#fff',			
-            skeleton: 'basic',
+			fontColor: "#fff",			
+            skeleton: "basic",
             statements: [],
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: "Block",
+                    accept: "string",
                 },
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: "Block",
+                    accept: "string",
                 },				
                 {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
+                    type: "Indicator",
+                    img: "block_icon/hardware_icon.svg",
                     size: 12,
                 },
             ],
@@ -495,16 +495,16 @@ Entry.krc.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'number',
+                        type: "number",
 						params: ["0"],
                     },
                     {
-                        type: 'number',
+                        type: "number",
 						params: ["0"],
                     },				
                     null,
                 ],
-                type: 'krc_set_motor_speed',
+                type: "krc_set_motor_speed",
             },
             paramsKeyMap: {
                 LSPEED: 0,
@@ -557,7 +557,9 @@ Entry.krc.getBlocks = function() {
                         return script.callReturn();
                     }
                 }
-                else return script.callReturn();
+                else {
+                    return script.callReturn();
+                }
             },
             syntax: { js: [], py: [] },
         },
@@ -567,13 +569,13 @@ Entry.krc.getBlocks = function() {
 		{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,		
-			fontColor: '#fff',			
-            skeleton: 'basic',
+			fontColor: "#fff",			
+            skeleton: "basic",
             statements: [],
             params: [
                 {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
+                    type: "Indicator",
+                    img: "block_icon/hardware_icon.svg",
                     size: 12,
                 },
             ],
@@ -582,7 +584,7 @@ Entry.krc.getBlocks = function() {
                 params: [
                     null,
                 ],
-                type: 'krc_motor_stop',
+                type: "krc_motor_stop",
             },
             paramsKeyMap: {
                 //PORT: 0,
@@ -621,25 +623,25 @@ Entry.krc.getBlocks = function() {
 		{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
-			fontColor: '#fff',			
-            skeleton: 'basic',
+			fontColor: "#fff",			
+            skeleton: "basic",
             statements: [],
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: "Block",
+                    accept: "string",
                 },
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: "Block",
+                    accept: "string",
                 },	
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: "Block",
+                    accept: "string",
                 },			
                 {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
+                    type: "Indicator",
+                    img: "block_icon/hardware_icon.svg",
                     size: 12,
                 },
             ],
@@ -647,19 +649,19 @@ Entry.krc.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'krc_servo_port_list',
+                        type: "krc_servo_port_list",
                     },
                     {
-                        type: 'number',
+                        type: "number",
 						params: ["0"],
                     },
                     {
-                        type: 'number',
+                        type: "number",
 						params: ["100"],
                     },				
                     null,
                 ],
-                type: 'krc_set_servo',
+                type: "krc_set_servo",
             },
             paramsKeyMap: 
 			{
@@ -705,21 +707,21 @@ Entry.krc.getBlocks = function() {
 		"krc_digital_onoff": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
-			fontColor: '#fff',			
-            skeleton: 'basic',
+			fontColor: "#fff",			
+            skeleton: "basic",
             statements: [],
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: "Block",
+                    accept: "string",
                 },
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: "Block",
+                    accept: "string",
                 },				
                 {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
+                    type: "Indicator",
+                    img: "block_icon/hardware_icon.svg",
                     size: 12,
                 },
             ],
@@ -745,7 +747,7 @@ Entry.krc.getBlocks = function() {
            func: function(sprite, script) 
 		   {
                 var port = script.getNumberValue("PORT");
-                var value = script.getNumberValue('VALUE');
+                var value = script.getNumberValue("VALUE");
 				
                 if (!Entry.hw.sendQueue["SET"]) {
                     Entry.hw.sendQueue["SET"] = {};
@@ -765,14 +767,14 @@ Entry.krc.getBlocks = function() {
         "krc_get_digital_value": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
-            fontColor: '#fff',
-            skeleton: 'basic_boolean_field',
+            fontColor: "#fff",
+            skeleton: "basic_boolean_field",
             statements: [],
             template: Lang.template.krc_get_digital_value,
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: "Block",
+                    accept: "string",
                 },
             ],
             events: {},
@@ -813,18 +815,18 @@ Entry.krc.getBlocks = function() {
         "krc_get_analog_value": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
+            fontColor: "#fff",
+            skeleton: "basic_string_field",
             template: Lang.template.krc_get_analog_value,
             statements: [],
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: "Block",
+                    accept: "string",
                 },
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: "Block",
+                    accept: "string",
                 },				
             ],
             events: {},
@@ -834,7 +836,7 @@ Entry.krc.getBlocks = function() {
                         type: "krc_analog_port_list",
                     },				
                 ],
-                type: 'krc_get_analog_value',
+                type: "krc_get_analog_value",
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -857,19 +859,19 @@ Entry.krc.getBlocks = function() {
         "krc_get_usonic_value": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
+            fontColor: "#fff",
+            skeleton: "basic_string_field",
             template: Lang.template.krc_get_usonic_value,
             statements: [],
 
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: "Block",
+                    accept: "string",
                 },
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: "Block",
+                    accept: "string",
                 },				
             ],
             events: {},
@@ -879,7 +881,7 @@ Entry.krc.getBlocks = function() {
                         type: "krc_analog_port_list",
                     },	
                 ],
-                type: 'krc_get_usonic_value',
+                type: "krc_get_usonic_value",
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -900,25 +902,25 @@ Entry.krc.getBlocks = function() {
         {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
-			fontColor: '#fff',			
-            skeleton: 'basic',
+			fontColor: "#fff",			
+            skeleton: "basic",
             statements: [],
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: "Block",
+                    accept: "string",
                 },	
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: "Block",
+                    accept: "string",
                 },	
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: "Block",
+                    accept: "string",
                 },							
                 {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
+                    type: "Indicator",
+                    img: "block_icon/hardware_icon.svg",
                     size: 12,
                 },
             ],
@@ -926,20 +928,20 @@ Entry.krc.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'number',
+                        type: "number",
 						params: ["0"],
                     },
                     {
-                        type: 'number',
+                        type: "number",
 						params: ["0"],
                     },
                     {
-                        type: 'text', 
-                        params: ['Hello'],
+                        type: "text", 
+                        params: ["Hello"],
                     },
                     null,
                 ],
-                type: 'krc_set_lcd_string',
+                type: "krc_set_lcd_string",
             },
             paramsKeyMap: {
                 COLUMN: 0,
@@ -952,17 +954,17 @@ Entry.krc.getBlocks = function() {
 			{
                 
          //       var sq = Entry.hw.sendQueue;
-                var line = script.getValue('LINE', script);
-                var column = script.getValue('COLUMN', script);
-                var string = script.getValue('STRING', script);
+                var line = script.getValue("LINE", script);
+                var column = script.getValue("COLUMN", script);
+                var string = script.getValue("STRING", script);
                 var text = [];
 
                 if (!script.isStart) {
-                    if (typeof string === 'string') {
+                    if (typeof string === "string") {
                         for (var i = 0; i < string.length; i++) {
                             text[i] = Entry.memaker.toByte(string[i]);
                         }
-                    } else if (typeof string === 'number') {
+                    } else if (typeof string === "number") {
                         var num_to_string = string.toString();
                         for (var i = 0; i < num_to_string.length; i++) {
                             text[i] = Entry.memaker.toByte(num_to_string[i]);
@@ -1020,17 +1022,17 @@ Entry.krc.getBlocks = function() {
        "krc_set_lcd_backlight": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
-			fontColor: '#fff',			
-            skeleton: 'basic',
+			fontColor: "#fff",			
+            skeleton: "basic",
             statements: [],
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: "Block",
+                    accept: "string",
                 },
                 {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
+                    type: "Indicator",
+                    img: "block_icon/hardware_icon.svg",
                     size: 12,
                 },
             ],
@@ -1038,11 +1040,11 @@ Entry.krc.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'krc_backlight_onoff_list',
+                        type: "krc_backlight_onoff_list",
                     },					
                     null,
                 ],
-                type: 'krc_set_lcd_backlight',
+                type: "krc_set_lcd_backlight",
             },
             paramsKeyMap: {  
 				VALUE: 0,
@@ -1051,7 +1053,7 @@ Entry.krc.getBlocks = function() {
             isNotFor: ["KRC"],
            func: function(sprite, script) 
 		   {
-                var value = script.getNumberValue('VALUE');
+                var value = script.getNumberValue("VALUE");
 				
                 if (!Entry.hw.sendQueue["SET"]) {
                     Entry.hw.sendQueue["SET"] = {};
@@ -1075,13 +1077,13 @@ Entry.krc.getBlocks = function() {
         {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
-			fontColor: '#fff',			
-            skeleton: 'basic',
+			fontColor: "#fff",			
+            skeleton: "basic",
             statements: [],
             params: [
                 {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
+                    type: "Indicator",
+                    img: "block_icon/hardware_icon.svg",
                     size: 12,
                 },
             ],
@@ -1125,57 +1127,57 @@ Entry.krc.getBlocks = function() {
         "krc_get_analog_mapping": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
+            fontColor: "#fff",
+            skeleton: "basic_string_field",
             template: Lang.template.krc_get_analog_mapping,
             statements: [],
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: "Block",
+                    accept: "string",
                 },
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: "Block",
+                    accept: "string",
                 },
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: "Block",
+                    accept: "string",
                 },
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: "Block",
+                    accept: "string",
                 },
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: "Block",
+                    accept: "string",
                 },
             ],
             events: {},
             def: {
                 params: [
                     {
-                        type: 'number',
-                        params: ['0'],
+                        type: "number",
+                        params: ["0"],
                     },					
                     {
-                        type: 'number',
-                        params: ['0'],
+                        type: "number",
+                        params: ["0"],
                     },
                     {
-                        type: 'number',
-                        params: ['1023'],
+                        type: "number",
+                        params: ["1023"],
                     },
                     {
-                        type: 'number',
-                        params: ['0'],
+                        type: "number",
+                        params: ["0"],
                     },
                     {
-                        type: 'number',
-                        params: ['100'],
+                        type: "number",
+                        params: ["100"],
                     },
                 ],
-                type: 'krc_get_analog_mapping',
+                type: "krc_get_analog_mapping",
             },
             paramsKeyMap: {
 				IDATA: 0,
