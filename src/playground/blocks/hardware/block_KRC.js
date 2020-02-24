@@ -172,7 +172,7 @@ Entry.krc.getBlocks = function() {
                 PORT: 0,
             },
             func: function(sprite, script) {
-                return script.getField('PORT');
+                return script.getField("PORT");
             },
         },	
        "krc_backlight_onoff_list": {
@@ -203,7 +203,7 @@ Entry.krc.getBlocks = function() {
                 PORT: 0,
             },
             func: function(sprite, script) {
-                return script.getField('PORT');
+                return script.getField("PORT");
             },
         },	
 		
@@ -251,7 +251,7 @@ Entry.krc.getBlocks = function() {
                 PORT: 0,
             },
             func: function(sprite, script) {
-                return script.getStringField('PORT');
+                return script.getStringField("PORT");
             },
         },
         "krc_servo_port_list": {
@@ -320,7 +320,7 @@ Entry.krc.getBlocks = function() {
                 VALUE: 0,
             },
             func: (sprite, script) => {
-                return script.getField('VALUE');
+                return script.getField("VALUE");
             },
         },
         "krc_analog_port_list": {
@@ -329,21 +329,21 @@ Entry.krc.getBlocks = function() {
 			fontColor: '#fff',			
             skeleton: 'basic_string_field',
             statements: [],
-            template: '%1',
+            template: "%1",
             params: [
                 {
-                    type: 'Dropdown',
+                    type: "Dropdown",
                     options: [
-                        ['A1', '0'],
-                        ['A2', '1'],
-                        ['A3', '2'],
-                        ['A4', '3'],
-                        ['A5', '4'],
-                        ['A6', '5'],
-                        ['A7', '6'],
-                        ['A8', '7'],
+                        ["A1", "0"],
+                        ["A2", "1"],
+                        ["A3", "2"],
+                        ["A4", "3"],
+                        ["A5", "4"],
+                        ["A6", "5"],
+                        ["A7", "6"],
+                        ["A8", "7"],
                     ],
-                    value: '0',
+                    value: "0",
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -357,7 +357,7 @@ Entry.krc.getBlocks = function() {
                 PORT: 0,
             },
             func: function(sprite, script) {
-                return script.getField('PORT');
+                return script.getField("PORT");
             },
         },
 
@@ -390,29 +390,29 @@ Entry.krc.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'krc_buzzer_onoff',
+                type: "krc_buzzer_onoff",
             },
             paramsKeyMap: {
                 VALUE: 0,
             },
-            class: 'krc_LV1',
-            isNotFor: ['KRC'],
+            class: "krc_LV1",
+            isNotFor: ["KRC"],
             func: function(sprite, script) 
 			{
                 var port = 10;
-                var duration = script.getNumberValue('VALUE');	// 길이	
+                var duration = script.getNumberValue("VALUE");	// 길이	
 //                var octave = 5;    // 옥타브
                 var value = 2400;//698;   // 음 주파수
 //                var mode = 1;
                 
                 if (!script.isStart) 
 				{
-                    if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
+                    if (!Entry.hw.sendQueue["SET"]) {
+                    Entry.hw.sendQueue["SET"] = {};
                     }
                     if (duration == 0) // 음 길이가 0 이면
 					{
-                        Entry.hw.sendQueue['SET'][port] = 
+                        Entry.hw.sendQueue["SET"][port] = 
 						{
                             type: Entry.krc.sensorTypes.TONE,
                             data: 0,
@@ -420,13 +420,13 @@ Entry.krc.getBlocks = function() {
                         };
                         return script.callReturn();
                     }
-                    if(duration > 300)
+                    if (duration > 300)
                         duration = 300;
                     duration = duration * 1000;
                     script.isStart = true;  // 출력 시작 플래그 셋
                     script.timeFlag = 1;    // 시간플래그 셋
 
-                    Entry.hw.sendQueue['SET'][port] = 
+                    Entry.hw.sendQueue["SET"][port] = 
 					{
                         type: Entry.krc.sensorTypes.TONE,
                         data: 
@@ -452,7 +452,7 @@ Entry.krc.getBlocks = function() {
 				{
                     delete script.timeFlag;
                     delete script.isStart;
-                    Entry.hw.sendQueue['SET'][port] = 
+                    Entry.hw.sendQueue["SET"][port] = 
 					{
                         type: Entry.krc.sensorTypes.TONE,
                         data: 0,
@@ -510,14 +510,13 @@ Entry.krc.getBlocks = function() {
                 LSPEED: 0,
 				RSPEED: 1,
             },
-            class: 'krc_LV1',
-            isNotFor: ['KRC'],
+            class: "krc_LV1",
+            isNotFor: ["KRC"],
             func: function(sprite, script) 
 			{
                 var lspeed = script.getNumberValue("LSPEED", script);
                 var rspeed = script.getNumberValue("RSPEED", script);
-                var port = 3;
-                		
+                var port = 3;               		
                 lspeed = Math.min(100, lspeed);
                 lspeed = Math.max(-100, lspeed);		
                 rspeed = Math.min(100, rspeed);
@@ -527,10 +526,10 @@ Entry.krc.getBlocks = function() {
                 {
                     if (!script.isStart) 
                     {
-                        if (!Entry.hw.sendQueue['SET']) {
-                            Entry.hw.sendQueue['SET'] = {};
+                        if (!Entry.hw.sendQueue["SET"]) {
+                            Entry.hw.sendQueue["SET"] = {};
                         }
-                        Entry.hw.sendQueue['SET'][port] = 
+                        Entry.hw.sendQueue["SET"][port] = 
                         {
                             type: Entry.krc.sensorTypes.MOTOR,
                             data: [lspeed, rspeed],
@@ -558,8 +557,7 @@ Entry.krc.getBlocks = function() {
                         return script.callReturn();
                     }
                 }
-                else
-                    return script.callReturn();
+                else return script.callReturn();
             },
             syntax: { js: [], py: [] },
         },
@@ -589,21 +587,21 @@ Entry.krc.getBlocks = function() {
             paramsKeyMap: {
                 //PORT: 0,
             },
-            class: 'krc_LV1',
-            isNotFor: ['KRC'],
+            class: "krc_LV1",
+            isNotFor: ["KRC"],
             func: function(sprite, script) 
 			{
-                var port = 19;//script.getNumberValue('PORT', script);
+                var port = 19;//script.getNumberValue("PORT", script);
 				//port += 2;
 				var lspeed = 0;
                 var rspeed = 0;
                 
                 if(!(LmotorSpeed == 0) || !(RmotorSpeed == 0))
                 {
-                    if (!Entry.hw.sendQueue['SET']) {
-                        Entry.hw.sendQueue['SET'] = {};
+                    if (!Entry.hw.sendQueue["SET"]) {
+                        Entry.hw.sendQueue["SET"] = {};
                     }
-                    Entry.hw.sendQueue['SET'][port] = 
+                    Entry.hw.sendQueue["SET"][port] = 
                     {
                         type: Entry.krc.sensorTypes.MOTOR,
                         data: [lspeed, rspeed],
@@ -669,13 +667,13 @@ Entry.krc.getBlocks = function() {
                 ANGLE: 1,
                 SPEED: 2,
             },
-            class: 'krc_LV1',
-            isNotFor: ['KRC'],
+            class: "krc_LV1",
+            isNotFor: ["KRC"],
             func: function(sprite, script) 
 			{
-                var port = script.getNumberValue('PORT', script);
-                var angle = script.getNumberValue('ANGLE', script);
-                var speed = script.getNumberValue('SPEED', script);
+                var port = script.getNumberValue("PORT", script);
+                var angle = script.getNumberValue("ANGLE", script);
+                var speed = script.getNumberValue("SPEED", script);
 //				port += 2;
 //				var mode = 1;
 				
@@ -686,10 +684,10 @@ Entry.krc.getBlocks = function() {
                 speed *= speed*255;
                 //angle += 1;
 				
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
+                if (!Entry.hw.sendQueue["SET"]) {
+                    Entry.hw.sendQueue["SET"] = {};
                 }
-                Entry.hw.sendQueue['SET'][port] = 
+                Entry.hw.sendQueue["SET"][port] = 
 				{
                     type: Entry.krc.sensorTypes.SERVO,
                     data: [angle,speed],
@@ -729,30 +727,30 @@ Entry.krc.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'krc_digital_port_list',      
+                        type: "krc_digital_port_list",      
                     },
                     {
-                        type: 'krc_digital_port_onoff_list',
+                        type: "krc_digital_port_onoff_list",
                     },					
                     null,
                 ],
-                type: 'krc_digital_onoff',
+                type: "krc_digital_onoff",
             },
             paramsKeyMap: {   // 실제 블록의 로직인 func에서 key값으로 사용할 파라미터의 인덱스 번호
                 PORT: 0,
 				VALUE: 1,
             },
-            class: 'krc_LV3',    // 블록을 묶는 그룹 이름. 이 값이 다르면 사이에 가로줄이 생깁니다
-            isNotFor: ['KRC'],
+            class: "krc_LV3",    // 블록을 묶는 그룹 이름. 이 값이 다르면 사이에 가로줄이 생깁니다
+            isNotFor: ["KRC"],
            func: function(sprite, script) 
 		   {
-                var port = script.getNumberValue('PORT');
+                var port = script.getNumberValue("PORT");
                 var value = script.getNumberValue('VALUE');
 				
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
+                if (!Entry.hw.sendQueue["SET"]) {
+                    Entry.hw.sendQueue["SET"] = {};
                 }
-                Entry.hw.sendQueue['SET'][port] = {
+                Entry.hw.sendQueue["SET"][port] = {
                     type: Entry.krc.sensorTypes.DIGITAL,    /// 출력 디바이스
                     data: value,
                     time: new Date().getTime(),
@@ -781,25 +779,25 @@ Entry.krc.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'krc_digital_port_list',
+                        type: "krc_digital_port_list",
                     },
                 ],
-                type: 'krc_get_digital_value',
+                type: "krc_get_digital_value",
             },
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'krc_LV3',
-            isNotFor: ['KRC'],
+            class: "krc_LV3",
+            isNotFor: ["KRC"],
             func: function(sprite, script) 
 			{		
-                var port = script.getNumberValue('PORT');
+                var port = script.getNumberValue("PORT");
                 var DIGITAL = Entry.hw.portData.DIGITAL;
 				
-                if (!Entry.hw.sendQueue['GET']) {
-                    Entry.hw.sendQueue['GET'] = {};
+                if (!Entry.hw.sendQueue["GET"]) {
+                    Entry.hw.sendQueue["GET"] = {};
                 }
-                Entry.hw.sendQueue['GET'][ 
+                Entry.hw.sendQueue["GET"][ 
                     Entry.krc.sensorTypes.DIGITAL
                 ] = {
                     port: port,
@@ -833,7 +831,7 @@ Entry.krc.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'krc_analog_port_list',
+                        type: "krc_analog_port_list",
                     },				
                 ],
                 type: 'krc_get_analog_value',
@@ -842,11 +840,11 @@ Entry.krc.getBlocks = function() {
                 PORT: 0,
 //				TYPE: 1,
             },
-            class: 'krc_LV3',
-            isNotFor: ['KRC'],
+            class: "krc_LV3",
+            isNotFor: ["KRC"],
             func: function(sprite, script) 
 			{
-                var btn_index = script.getNumberValue('PORT');				
+                var btn_index = script.getNumberValue("PORT");				
                 var ANALOG = Entry.hw.portData.ANALOG;
 
                 return ANALOG[btn_index];
@@ -878,7 +876,7 @@ Entry.krc.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'krc_analog_port_list',
+                        type: "krc_analog_port_list",
                     },	
                 ],
                 type: 'krc_get_usonic_value',
@@ -886,10 +884,10 @@ Entry.krc.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'krc_LV3',
-            isNotFor: ['KRC'],
+            class: "krc_LV3",
+            isNotFor: ["KRC"],
             func: function(sprite, script) {
-                var btn_index = script.getNumberValue('PORT');				
+                var btn_index = script.getNumberValue("PORT");				
                 var ANALOG = Entry.hw.portData.ANALOG;
 
                 return ((ANALOG[btn_index]*4)*3)/10;
@@ -948,8 +946,8 @@ Entry.krc.getBlocks = function() {
                 LINE: 1,
                 STRING: 2,
             },
-            class: 'krc_LV5',
-            isNotFor: ['KRC'],
+            class: "krc_LV5",
+            isNotFor: ["KRC"],
             func: function(sprite, script) 
 			{
                 
@@ -973,8 +971,8 @@ Entry.krc.getBlocks = function() {
                         text[0] = string;
                     }
 
-                    if (!Entry.hw.sendQueue['SET']) {
-                        Entry.hw.sendQueue['SET'] = {};
+                    if (!Entry.hw.sendQueue["SET"]) {
+                        Entry.hw.sendQueue["SET"] = {};
                     }
 
                     script.isStart = true;
@@ -982,7 +980,7 @@ Entry.krc.getBlocks = function() {
                     //var fps = Entry.FPS || 60;
                    // var timeValue = 60 / fps * 50;
 
-                    Entry.hw.sendQueue['SET'][3] = {
+                    Entry.hw.sendQueue["SET"][3] = {
                         type: Entry.krc.sensorTypes.LCD_SET,
                         data: {
                             line: line,
@@ -1049,16 +1047,16 @@ Entry.krc.getBlocks = function() {
             paramsKeyMap: {  
 				VALUE: 0,
             },
-            class: 'krc_LV5', 
-            isNotFor: ['KRC'],
+            class: "krc_LV5", 
+            isNotFor: ["KRC"],
            func: function(sprite, script) 
 		   {
                 var value = script.getNumberValue('VALUE');
 				
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
+                if (!Entry.hw.sendQueue["SET"]) {
+                    Entry.hw.sendQueue["SET"] = {};
                 }
-                Entry.hw.sendQueue['SET'][1] = {
+                Entry.hw.sendQueue["SET"][1] = {
                     type: Entry.krc.sensorTypes.LCD_SET,    
                     data: [
                         value,
@@ -1092,21 +1090,21 @@ Entry.krc.getBlocks = function() {
                 params: [
                     null,
                 ],
-                type: 'krc_set_lcd_clear',
+                type: "krc_set_lcd_clear",
             },
             paramsKeyMap: {
 
             },
-            class: 'krc_LV5',
-            isNotFor: ['KRC'],
+            class: "krc_LV5",
+            isNotFor: ["KRC"],
             func: function(sprite, script) 
 			{
                 //var port = 0;
 
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
+                if (!Entry.hw.sendQueue["SET"]) {
+                    Entry.hw.sendQueue["SET"] = {};
                 }
-                Entry.hw.sendQueue['SET'][4] = {
+                Entry.hw.sendQueue["SET"][4] = {
                     type: Entry.krc.sensorTypes.LCD_SET,
                     data: [
                         4,
@@ -1186,15 +1184,15 @@ Entry.krc.getBlocks = function() {
                 VALUE4: 3,
                 VALUE5: 4,
             },
-            class: 'krc_ANA',
-            isNotFor: ['KRC'],
+            class: "krc_ANA",
+            isNotFor: ["KRC"],
             func: function(sprite, script) 
 			{
-                var result = script.getNumberValue('IDATA', script);				
-                var value2 = script.getNumberValue('VALUE2', script);
-                var value3 = script.getNumberValue('VALUE3', script);
-                var value4 = script.getNumberValue('VALUE4', script);
-                var value5 = script.getNumberValue('VALUE5', script);
+                var result = script.getNumberValue("IDATA", script);				
+                var value2 = script.getNumberValue("VALUE2", script);
+                var value3 = script.getNumberValue("VALUE3", script);
+                var value4 = script.getNumberValue("VALUE4", script);
+                var value5 = script.getNumberValue("VALUE5", script);
 			
 				
                 if (value2 > value3) {
