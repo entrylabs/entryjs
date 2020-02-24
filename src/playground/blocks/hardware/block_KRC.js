@@ -1,11 +1,15 @@
-'use strict';
+"use strict";
+
+var delay_time = 0;
+var lmotor_speed = 0;
+var rmotor_speed = 0;
 
 Entry.krc = 
 {
-	id: '3A.2',	
-    name: 'KRC',
-    url: 'http://www.kairobot.co.kr/',
-    imageName: 'KRC.png',
+	id: "3A.2",	
+    name: "KRC",
+    url: "http://www.kairobot.co.kr/",
+    imageName: "KRC.png",
     title: 
 	{
         "ko": "KRC-S", 
@@ -135,11 +139,8 @@ Entry.krc.setLanguage = function() {    // 블록 이름  번역
                 Backlight_off: "OFF",
             }
         }
-    }
+    };
 };
-var delay_time = 0;
-var lmotor_speed = 0;
-var rmotor_speed = 0;
 
 Entry.krc.getBlocks = function() {
     return {
@@ -218,22 +219,22 @@ Entry.krc.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['D1', '9'],
-                        ['D2', '10'],
-                        ['A1', '1'],
-                        ['A2', '2'],
-                        ['A3', '3'],
-                        ['A4', '4'],
-                        ['A5', '5'],
-                        ['A6', '6'],
-                        ['A7', '7'],
-                        ['A8', '8'],
-                        ['S1', '11'],
-                        ['S2', '12'],
-                        ['S3', '13'],
-                        ['S4', '14'],
-                        ['S5', '15'],
-                        ['S6', '16'],
+                        ["D1", "9"],
+                        ["'D2", "10"],
+                        ["A1", "1"],
+                        ["A2", "2"],
+                        ["A3", "3"],
+                        ["A4", "4"],
+                        ["A5", "5"],
+                        ["A6", "6"],
+                        ["A7", "7"],
+                        ["A8", "8"],
+                        ["S1", "11"],
+                        ["S2", "12"],
+                        ["S3", "13"],
+                        ["S4", "14"],
+                        ["S5", "15"],
+                        ["S6", "6"],
                     ],
                     value: '9',       // 기본 표시값
                     fontSize: 11,
