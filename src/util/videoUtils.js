@@ -1,11 +1,12 @@
 /**
  * nt11576 Lee.Jaewon
- * commented area with "motion test" is for the motion detection testing canvas to test the cv, uncomment all codes labeled "motion test"
+ * commented area with "motion test" is for the motion detection testing canvas to test the computer vision, uncomment all codes labeled "motion test"
  */
 
 import { GEHelper } from '../graphicEngine/GEHelper';
 import VideoWorker from './workers/video.worker';
 import clamp from 'lodash/clamp';
+
 // webcam input resolution setting
 const VIDEO_WIDTH = 640;
 const VIDEO_HEIGHT = 360;
@@ -24,43 +25,45 @@ const worker = new VideoWorker();
 
 class VideoUtils {
     constructor() {
-        //with purpose of utilizing same value outside
+        // with purpose of utilizing same value outside
         this.CANVAS_WIDTH = CANVAS_WIDTH;
         this.CANVAS_HEIGHT = CANVAS_HEIGHT;
+
+        // component references
         this.video = null;
         this.canvasVideo = null;
+
+        // video status
         this.flipStatus = {
             horizontal: false,
             vertical: false,
         };
-        // motion related
-        this.motions = [...Array(CANVAS_HEIGHT / SAMPLE_SIZE)].map((e) =>
-            Array(CANVAS_WIDTH / SAMPLE_SIZE)
-        );
-        this.motionPoint = { x: 0, y: 0 };
-        this.motionDirection = [...Array(CANVAS_HEIGHT / SAMPLE_SIZE)].map((e) =>
-            Array(CANVAS_WIDTH / SAMPLE_SIZE)
-        );
-        this.totalMotions = 0;
-        this.totalMotionDirection = { x: 0, y: 0 };
-        /////////////////////////////////
-        this.objects = null;
-        this.initialized = false;
-        this.poses = { predictions: [], adjacents: [] };
-        this.isInitialized = false;
-        this.videoOnLoadHandler = this.videoOnLoadHandler.bind(this);
 
-        //face models
-        this.faces = [];
-
-        //only for webGL
-        this.subCanvas = null;
-
+        // detection indicator status
         this.indicatorStatus = {
             pose: false,
             face: false,
             object: false,
         };
+
+        // motion related, array indicates the samples on the image
+        // this.motions are the RGB data for the samples on the image
+        this.motions = [...Array(CANVAS_HEIGHT / SAMPLE_SIZE)].map((e) =>
+            Array(CANVAS_WIDTH / SAMPLE_SIZE)
+        );
+        this.motionPoint = { x: 0, y: 0 };
+        this.totalMotions = 0;
+        this.totalMotionDirection = { x: 0, y: 0 };
+        /////////////////////////////////
+
+        // detection data
+        this.objects = null;
+        this.poses = { predictions: [], adjacents: [] };
+        this.faces = [];
+
+        this.isInitialized = false;
+
+        this.videoOnLoadHandler = this.videoOnLoadHandler.bind(this);
     }
     showIndicator(type) {
         this.indicatorStatus[type] = true;
@@ -166,9 +169,6 @@ class VideoUtils {
         this.video.play();
         this.startDrawIndicators();
         this.turnOnWebcam();
-        if (this.initialized) {
-            return;
-        }
         const [track] = this.stream.getVideoTracks();
         this.imageCapture = new ImageCapture(track);
 
@@ -179,7 +179,6 @@ class VideoUtils {
             }
             switch (type) {
                 case 'init':
-                    this.initialized = true;
                     break;
                 case 'face':
                     this.faces = message;
@@ -229,7 +228,6 @@ class VideoUtils {
         //         tempCtx.fillRect(i * SAMPLE_SIZE, j * SAMPLE_SIZE, SAMPLE_SIZE, SAMPLE_SIZE);
         //     });
         // });
-
         // //motion test
         setTimeout(() => {
             requestAnimationFrame(this.sendImageToWorker.bind(this));
@@ -341,11 +339,6 @@ class VideoUtils {
                     rDiff,
                     gDiff,
                     bDiff,
-                };
-
-                this.motionDirection[yIndex][xIndex] = {
-                    x: mostSimilar.x - xIndex,
-                    y: mostSimilar.y - yIndex,
                 };
             }
         }

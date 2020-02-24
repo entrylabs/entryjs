@@ -1,32 +1,37 @@
+/**
+ * nt11576 Lee.Jaewon
+ * This is worker thread for detection purpose without blocking main thread to avoid delayed UI update
+ */
 const posenet = require('@tensorflow-models/posenet');
 const cocoSsd = require('@tensorflow-models/coco-ssd');
 const faceapi = require('face-api.js');
 faceapi.env.setEnv(faceapi.env.createNodejsEnv());
-
 faceapi.env.monkeyPatch({
     Canvas: OffscreenCanvas,
-    createCanvasElement: () => {
-        return new OffscreenCanvas(480, 270);
-    },
+    createCanvasElement: () => new OffscreenCanvas(480, 270),
 });
 
 // instances, used as flag, handler class if each instances are loaded or not
-let isInitialized = false;
 let mobileNet = null;
 let coco = null;
 let faceLoaded = false;
 
+// flags if selected model(s) should estimate
 let modelStatus = {
     pose: false,
     object: false,
     face: false,
 };
 
+// video Status
 let options = {};
 const dimension = { width: 0, height: 0 };
-const offCanvas = new OffscreenCanvas(480, 270);
 
+// face detection option
 const tinyFaceDetectOption = new faceapi.TinyFaceDetectorOptions({ inputSize: 320 });
+
+// canvas drawing imageFrame passed from main thread
+const offCanvas = new OffscreenCanvas(480, 270);
 
 async function processImage() {
     try {
@@ -55,6 +60,7 @@ async function faceDetect(context) {
     if (!faceLoaded || !modelStatus.face) {
         return;
     }
+
     const predictions = await faceapi
         .detectAllFaces(offCanvas, tinyFaceDetectOption)
         .withFaceLandmarks()
@@ -68,6 +74,7 @@ async function poseDetect(context) {
     if (!mobileNet || !modelStatus.pose) {
         return;
     }
+
     const currentFlipStatus = options.flipStatus ? options.flipStatus.horizontal : true;
     const predictions = await mobileNet.estimateMultiplePoses(offCanvas, {
         flipHorizontal: currentFlipStatus,
@@ -77,6 +84,7 @@ async function poseDetect(context) {
     });
     const adjacents = [];
     predictions.forEach((pose) => {
+        // neck estimation by calculation, based on midst of shoulders and nose
         const leftShoulder = pose.keypoints[5];
         const rightShoulder = pose.keypoints[6];
         const nose = pose.keypoints[0];
@@ -88,6 +96,7 @@ async function poseDetect(context) {
                 2,
         };
         pose.keypoints[21] = { part: 'neck', position: neckPos, score: -1 };
+        //---------------------------------------
         const adjacentMap = posenet.getAdjacentKeyPoints(pose.keypoints, 0.1);
         adjacents.push(adjacentMap);
     });
@@ -100,7 +109,7 @@ self.onmessage = async function(e) {
         case 'init':
             dimension.width = e.data.width;
             dimension.height = e.data.height;
-            console.log('loadDone');
+
             posenet
                 .load({
                     architecture: 'MobileNetV1',
@@ -109,15 +118,19 @@ self.onmessage = async function(e) {
                     multiplier: 1,
                 })
                 .then((mobileNetLoaded) => {
+                    console.log('posenet loaded');
                     mobileNet = mobileNetLoaded;
                 });
+
             cocoSsd
                 .load({
                     base: 'lite_mobilenet_v2',
                 })
                 .then((cocoLoaded) => {
+                    console.log('coco loaded');
                     coco = cocoLoaded;
                 });
+
             Promise.all([
                 faceapi.nets.tinyFaceDetector.loadFromUri(
                     `${self.location.origin}/aimodules/weights`
@@ -130,19 +143,17 @@ self.onmessage = async function(e) {
                     `${self.location.origin}/aimodules/weights`
                 ),
             ]).then(() => {
+                console.log('face model loaded');
                 faceLoaded = true;
             });
-
+            console.log('video worker loaded');
             this.postMessage({ type: 'init', message: 'done' });
+            processImage();
             break;
         case 'estimate':
             const image = e.data.image;
             const ctx = offCanvas.getContext('2d');
             ctx.drawImage(image, 0, 0, dimension.width, dimension.height);
-            if (!isInitialized) {
-                isInitialized = true;
-                processImage(image);
-            }
             break;
         case 'option':
             options = e.data.option;
@@ -160,5 +171,6 @@ self.onmessage = async function(e) {
                 object: false,
                 face: false,
             };
+            break;
     }
 };

@@ -1,6 +1,6 @@
 import VideoUtils from '../../util/videoUtils';
 import clamp from 'lodash/clamp';
-Entry.videoUtils = VideoUtils;
+
 Entry.AI_UTILIZE_BLOCK.video = {
     name: 'video',
     imageName: 'video.svg',
