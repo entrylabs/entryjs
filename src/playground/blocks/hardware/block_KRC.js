@@ -1,6 +1,6 @@
 "use strict";
 
-var delay_time = 0;
+var DelayTime = 0;
 var lmotor_speed = 0;
 var rmotor_speed = 0;
 
@@ -60,21 +60,21 @@ Entry.krc =
 };
 
 Entry.krc.blockMenuBlocks = [    /// 하드웨어 블록 등록 , 여기에 등록된 블록이 순서대로 나열되며 설정한 이름으로 화면에 보임
-        'krc_buzzer_onoff',			            // 스피커 삐 소리
-        'krc_set_motor_speed',                  // DC모터 속도제어
-        'krc_motor_stop',            // DC모터 정지하기	
-        'krc_set_servo',                        // 서보모터 제어
+        "krc_buzzer_onoff",			            // 스피커 삐 소리
+        "krc_set_motor_speed",                  // DC모터 속도제어
+        "krc_motor_stop",            // DC모터 정지하기	
+        "krc_set_servo",                        // 서보모터 제어
 
-        'krc_digital_onoff',                   /// 디지털 포트 제어
-        'krc_get_digital_value',	            //디지탈 입력
-        'krc_get_analog_value',                 // 아날로그 입력
-        'krc_get_usonic_value',              //초음파센서 읽기
+        "krc_digital_onoff",                   /// 디지털 포트 제어
+        "krc_get_digital_value",	            //디지탈 입력
+        "krc_get_analog_value",                 // 아날로그 입력
+        "krc_get_usonic_value",              //초음파센서 읽기
        
-        'krc_set_lcd_string',
-        'krc_set_lcd_backlight',
-        'krc_set_lcd_clear',
+        "krc_set_lcd_string",
+        "krc_set_lcd_backlight",
+        "krc_set_lcd_clear",
 
-		'krc_get_analog_mapping',
+		"krc_get_analog_mapping",
 
 		
 ];
@@ -155,10 +155,10 @@ Entry.krc.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.On_block, '1'],
-                        [Lang.Blocks.Off_block, '0'],
+                        [Lang.Blocks.On_block, "1"],
+                        [Lang.Blocks.Off_block, "0"],
                     ],					
-                    value: '1',
+                    value: "1",
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -186,10 +186,10 @@ Entry.krc.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.Backlight_on, '0'],
-                        [Lang.Blocks.Backlight_off, '1'],
+                        [Lang.Blocks.Backlight_on, "0"],
+                        [Lang.Blocks.Backlight_off, "1"],
                     ],					
-                    value: '0',
+                    value: "0",
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -236,7 +236,7 @@ Entry.krc.getBlocks = function() {
                         ["S5", "15"],
                         ["S6", "6"],
                     ],
-                    value: '9',       // 기본 표시값
+                    value: "9",       // 기본 표시값
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -265,15 +265,15 @@ Entry.krc.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['S1', '1'],
-                        ['S2', '2'],
-                        ['S3', '3'],
-                        ['S4', '4'],
-                        ['S5', '5'],
-                        ['S6', '6'],
-                        ['S7', '7'],
+                        ["S1", "1"],
+                        ["S2", "2"],
+                        ["S3", "3"],
+                        ["S4", "4"],
+                        ["S5", "5"],
+                        ["S6", "6"],
+                        ["S7", "7"],
                     ],
-                    value: '1',       // 기본 표시값
+                    value: "1",       // 기본 표시값
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -288,7 +288,7 @@ Entry.krc.getBlocks = function() {
                 PORT: 0,
             },
             func: function(sprite, script) {
-                return script.getStringField('PORT');
+                return script.getStringField("PORT");
             },
         },
 
@@ -303,10 +303,10 @@ Entry.krc.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.AllOff_block, '2'],
-                        [Lang.Blocks.AllOn_block, '3'],
+                        [Lang.Blocks.AllOff_block, "2"],
+                        [Lang.Blocks.AllOn_block, "3"],
                     ],					
-                    value: '2',
+                    value: "2",
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -543,7 +543,7 @@ Entry.krc.getBlocks = function() {
                         setTimeout(function() 
                         {
                             script.timeFlag = 0;
-                        }, delay_time );
+                        }, DelayTime );
                         return script;
                     }
                     else if (script.timeFlag == 1) 
@@ -1003,7 +1003,7 @@ Entry.krc.getBlocks = function() {
 
                     setTimeout(function() {
                         script.timeFlag = 0;
-                    }, delay_time);
+                    }, DelayTime);
                     return script;
                 } else if (script.timeFlag == 1) {
                     return script;
