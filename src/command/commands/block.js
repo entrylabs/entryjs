@@ -176,7 +176,8 @@ import isFunction from 'lodash/isFunction';
                 blockArgument = block;
             }
             this.editor.board.insert(blockArgument, targetBlock, count);
-            const shouldRerender = block._schema.params.find(
+            const { params = [] } = block._schema || {};
+            const shouldRerender = params.find(
                 ({ type, menuName }) => type === 'DropdownDynamic' && isFunction(menuName)
             );
             if (shouldRerender) {
@@ -374,7 +375,8 @@ import isFunction from 'lodash/isFunction';
                 blockView._toGlobalCoordinate(dragMode);
             }
             block.doSeparate(blockArgument);
-            const shouldRerender = block._schema.params.find(
+            const { params = [] } = block._schema || {};
+            const shouldRerender = params.find(
                 ({ type, menuName }) => type === 'DropdownDynamic' && isFunction(menuName)
             );
             if (shouldRerender) {
