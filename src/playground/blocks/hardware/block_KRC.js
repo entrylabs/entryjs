@@ -1,8 +1,8 @@
 "use strict";
 
-var DelayTime = 0;
-var LmotorSpeed = 0;
-var RmotorSpeed = 0;
+let DelayTime = 0;
+let LmotorSpeed = 0;
+let RmotorSpeed = 0;
 
 Entry.krc = 
 {
@@ -240,7 +240,7 @@ Entry.krc.getBlocks = function() {
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+//                    arrowColor: EntryStatic.ARROW_COLOR_HW,
                 },
             ],
             events: {},
@@ -277,7 +277,7 @@ Entry.krc.getBlocks = function() {
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+ //                   arrowColor: EntryStatic.ARROW_COLOR_HW,
                 },
             ],
             events: {},
@@ -399,10 +399,10 @@ Entry.krc.getBlocks = function() {
             isNotFor: ["KRC"],
             func: function(sprite, script) 
 			{
-                var port = 10;
-                var duration = script.getNumberValue("VALUE");	// 길이	
+                const port = 10;
+                let duration = script.getNumberValue("VALUE");	// 길이	
 //                var octave = 5;    // 옥타브
-                var value = 2400;//698;   // 음 주파수
+                const value2 = 2400;//698;   // 음 주파수
 //                var mode = 1;
                 
                 if (!script.isStart) 
@@ -410,7 +410,7 @@ Entry.krc.getBlocks = function() {
                     if (!Entry.hw.sendQueue["SET"]) {
                     Entry.hw.sendQueue["SET"] = {};
                     }
-                    if (duration == 0) // 음 길이가 0 이면
+                    if (duration === 0) // 음 길이가 0 이면
 					{
                         Entry.hw.sendQueue["SET"][port] = 
 						{
@@ -420,8 +420,9 @@ Entry.krc.getBlocks = function() {
                         };
                         return script.callReturn();
                     }
-                    if (duration > 300)
+                    if (duration > 300) {
                         duration = 300;
+                    }
                     duration = duration * 1000;
                     script.isStart = true;  // 출력 시작 플래그 셋
                     script.timeFlag = 1;    // 시간플래그 셋
@@ -431,7 +432,7 @@ Entry.krc.getBlocks = function() {
                         type: Entry.krc.sensorTypes.TONE,
                         data: 
 						{
-                            value: value,
+                            value: value2,
                             duration: duration/10,
                         },
                         time: new Date().getTime(),
@@ -461,7 +462,6 @@ Entry.krc.getBlocks = function() {
                     Entry.engine.isContinue = false;
                     return script.callReturn();
                 }
-            				
             },
             syntax: { js: [], py: [] },
         },
@@ -522,7 +522,7 @@ Entry.krc.getBlocks = function() {
                 rspeed = Math.min(100, rspeed);
                 rspeed = Math.max(-100, rspeed);		
                 
-                if(!(LmotorSpeed == lspeed) || !(RmotorSpeed == rspeed))
+                if(!(LmotorSpeed === lspeed) || !(RmotorSpeed === rspeed))
                 {
                     if (!script.isStart) 
                     {
@@ -545,7 +545,7 @@ Entry.krc.getBlocks = function() {
                         }, DelayTime );
                         return script;
                     }
-                    else if (script.timeFlag == 1) 
+                    else if (script.timeFlag === 1) 
                     {
                         return script;
                     } 
@@ -598,7 +598,7 @@ Entry.krc.getBlocks = function() {
 				var lspeed = 0;
                 var rspeed = 0;
                 
-                if(!(LmotorSpeed == 0) || !(RmotorSpeed == 0))
+                if(!(LmotorSpeed === 0) || !(RmotorSpeed === 0))
                 {
                     if (!Entry.hw.sendQueue["SET"]) {
                         Entry.hw.sendQueue["SET"] = {};
@@ -673,9 +673,9 @@ Entry.krc.getBlocks = function() {
             isNotFor: ["KRC"],
             func: function(sprite, script) 
 			{
-                var port = script.getNumberValue("PORT", script);
-                var angle = script.getNumberValue("ANGLE", script);
-                var speed = script.getNumberValue("SPEED", script);
+                const port = script.getNumberValue("PORT", script);
+                let angle = script.getNumberValue("ANGLE", script);
+                let speed = script.getNumberValue("SPEED", script);
 //				port += 2;
 //				var mode = 1;
 				
@@ -744,10 +744,9 @@ Entry.krc.getBlocks = function() {
             },
             class: "krc_LV3",    // 블록을 묶는 그룹 이름. 이 값이 다르면 사이에 가로줄이 생깁니다
             isNotFor: ["KRC"],
-           func: function(sprite, script) 
-		   {
-                var port = script.getNumberValue("PORT");
-                var value = script.getNumberValue("VALUE");
+           func: function(sprite, script) {
+                const port = script.getNumberValue("PORT");
+                const value = script.getNumberValue("VALUE");
 				
                 if (!Entry.hw.sendQueue["SET"]) {
                     Entry.hw.sendQueue["SET"] = {};
@@ -793,8 +792,8 @@ Entry.krc.getBlocks = function() {
             isNotFor: ["KRC"],
             func: function(sprite, script) 
 			{		
-                var port = script.getNumberValue("PORT");
-                var DIGITAL = Entry.hw.portData.DIGITAL;
+                const port2 = script.getNumberValue("PORT");
+                const DIGITAL = Entry.hw.portData.DIGITAL;
 				
                 if (!Entry.hw.sendQueue["GET"]) {
                     Entry.hw.sendQueue["GET"] = {};
@@ -802,7 +801,7 @@ Entry.krc.getBlocks = function() {
                 Entry.hw.sendQueue["GET"][ 
                     Entry.krc.sensorTypes.DIGITAL
                 ] = {
-                    port: port,
+                    port: port2,
                     time: new Date().getTime(),
                 };
 		
@@ -846,8 +845,8 @@ Entry.krc.getBlocks = function() {
             isNotFor: ["KRC"],
             func: function(sprite, script) 
 			{
-                var btn_index = script.getNumberValue("PORT");				
-                var ANALOG = Entry.hw.portData.ANALOG;
+                const btn_index = script.getNumberValue("PORT");				
+                const ANALOG = Entry.hw.portData.ANALOG;
 
                 return ANALOG[btn_index];
             },
