@@ -3,6 +3,7 @@
 import { GEHelper } from '../graphicEngine/GEHelper';
 import _uniq from 'lodash/uniq';
 import FontFaceOnload from 'fontfaceonload';
+import DataTable from '../class/DataTable';
 
 Entry.Utils = {};
 
@@ -41,6 +42,7 @@ Entry.loadProject = function(project) {
     Entry.variableContainer.setVariables(Entry.Utils.combineCloudVariable(project));
     Entry.variableContainer.setMessages(project.messages);
     Entry.variableContainer.setFunctions(project.functions);
+    DataTable.setTables(project.tables);
     Entry.scene.addScenes(project.scenes);
     Entry.stage.initObjectContainers();
     Entry.container.setObjects(project.objects);
@@ -128,6 +130,7 @@ Entry.clearProject = function() {
     Entry.container.clear();
     Entry.scene.clear();
     Entry.stateManager.clear();
+    DataTable.clear();
     GEHelper.resManager.clearProject();
     if (Entry.Loader) {
         Entry.Loader.loaded = false;
@@ -152,6 +155,7 @@ Entry.exportProject = function(project) {
     project.variables = Entry.variableContainer.getVariableJSON();
     project.messages = Entry.variableContainer.getMessageJSON();
     project.functions = Entry.variableContainer.getFunctionJSON();
+    project.tables = DataTable.getTableJSON();
     project.speed = Entry.FPS;
     project.interface = Entry.captureInterfaceState();
     project.expansionBlocks = Entry.expansionBlocks;
@@ -1873,6 +1877,7 @@ Entry.Utils.addNewBlock = function(item) {
         functions,
         messages,
         variables,
+        tables = [],
         expansionBlocks = [],
         aiUtilizeBlocks = [],
     } = item;
@@ -1896,6 +1901,7 @@ Entry.Utils.addNewBlock = function(item) {
             variable.object = _.get(Entry, ['container', 'selectedObject', 'id'], '');
         }
     });
+    DataTable.setTables(tables);
     handleOptionalBlocksActive(item);
 
     Entry.variableContainer.appendMessages(messages);
@@ -1917,6 +1923,7 @@ Entry.Utils.addNewObject = function(sprite) {
             functions,
             messages,
             variables,
+            tables = [],
             expansionBlocks = [],
             aiUtilizeBlocks = [],
         } = sprite;
@@ -1929,6 +1936,7 @@ Entry.Utils.addNewObject = function(sprite) {
             return entrylms.alert(Lang.Menus.object_import_syntax_error);
         }
         const objectIdMap = {};
+        DataTable.setTables(tables);
         handleOptionalBlocksActive(sprite);
         variables.forEach((variable) => {
             const { object } = variable;
