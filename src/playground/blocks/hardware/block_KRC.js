@@ -1,8 +1,8 @@
 "use strict";
 
 var DelayTime = 0;
-var lmotor_speed = 0;
-var rmotor_speed = 0;
+var LmotorSpeed = 0;
+var RmotorSpeed = 0;
 
 Entry.krc = 
 {
@@ -16,7 +16,7 @@ Entry.krc =
         "en": "KRC-S"
     },
 
-    setZero: function() {    ///  하드웨어 초기화 로직
+    setZero: function () {    ///  하드웨어 초기화 로직
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
                 GET: {},
@@ -32,8 +32,8 @@ Entry.krc =
             });   
         }
         Entry.hw.update();
-        lmotor_speed = 0;
-        rmotor_speed = 0;
+        LmotorSpeed = 0;
+        RmotorSpeed = 0;
 
     },
 	
@@ -102,12 +102,12 @@ Entry.krc.setLanguage = function() {    // 블록 이름  번역
 				
             },
             Blocks: {
-                On_block: "켜짐(HIGH, 5V)",
-                Off_block: "꺼짐(LOW, 0V)",
-                AllOn_block: "모두 켜짐",
-                AllOff_block: "모두 꺼짐",
-                Backlight_on: "켜기",
-                Backlight_off: "끄기",
+                "On_block": "켜짐(HIGH, 5V)",
+                "Off_block": "꺼짐(LOW, 0V)",
+                "AllOn_block": "모두 켜짐",
+                "AllOff_block": "모두 꺼짐",
+                "Backlight_on": "켜기",
+                "Backlight_off": "끄기",
             }
         },
         en: {
@@ -131,12 +131,12 @@ Entry.krc.setLanguage = function() {    // 블록 이름  번역
 								
             },
             Blocks: {
-                On_block: "On(HIGH, 5V)",
-                Off_block: "Off(LOW, 0V)",
-                AllOn_block: "ALL ON",
-                AllOff_block: "ALL OFF",
-                Backlight_on: "ON",
-                Backlight_off: "OFF",
+                "On_block": "On(HIGH, 5V)",
+                "Off_block": "Off(LOW, 0V)",
+                "AllOn_block": "ALL ON",
+                "AllOff_block": "ALL OFF",
+                "Backlight_on": "ON",
+                "Backlight_off": "OFF",
             }
         }
     };
@@ -144,7 +144,7 @@ Entry.krc.setLanguage = function() {    // 블록 이름  번역
 
 Entry.krc.getBlocks = function() {
     return {
-        krc_digital_port_onoff_list: {
+        "krc_digital_port_onoff_list": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
 			fontColor: '#fff',
@@ -175,7 +175,7 @@ Entry.krc.getBlocks = function() {
                 return script.getField('PORT');
             },
         },	
-        krc_backlight_onoff_list: {
+       "krc_backlight_onoff_list": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
 			fontColor: '#fff',
@@ -208,7 +208,7 @@ Entry.krc.getBlocks = function() {
         },	
 		
         
-        krc_digital_port_list: {
+       "krc_digital_port_list": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
 			fontColor: '#fff',			
@@ -254,7 +254,7 @@ Entry.krc.getBlocks = function() {
                 return script.getStringField('PORT');
             },
         },
-        krc_servo_port_list: {
+        "krc_servo_port_list": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
 			fontColor: '#fff',			
@@ -292,7 +292,7 @@ Entry.krc.getBlocks = function() {
             },
         },
 
-        krc_all_onoff_list: {
+        "krc_all_onoff_list": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
 			fontColor: '#fff',
@@ -319,11 +319,11 @@ Entry.krc.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
-            func: function(sprite, script) {
+            func: (sprite, script) => {
                 return script.getField('VALUE');
             },
         },
-        krc_analog_port_list: {
+        "krc_analog_port_list": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
 			fontColor: '#fff',			
@@ -364,7 +364,7 @@ Entry.krc.getBlocks = function() {
         
 
 		// 1. 삐소리
-		krc_buzzer_onoff: {
+		"krc_buzzer_onoff": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
 			fontColor: '#fff',			
@@ -386,7 +386,7 @@ Entry.krc.getBlocks = function() {
                 params: [
                     {
                         type: 'text',
-                        params: ['1'],
+                        params: ["1"],
                     },
                     null,
                 ],
@@ -469,7 +469,7 @@ Entry.krc.getBlocks = function() {
 		
         
         // 3. DC 모터 속도 정하기		
-		krc_set_motor_speed: 
+		"krc_set_motor_speed": 
 		{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
@@ -514,8 +514,8 @@ Entry.krc.getBlocks = function() {
             isNotFor: ['KRC'],
             func: function(sprite, script) 
 			{
-                var lspeed = script.getNumberValue('LSPEED', script);
-                var rspeed = script.getNumberValue('RSPEED', script);
+                var lspeed = script.getNumberValue("LSPEED", script);
+                var rspeed = script.getNumberValue("RSPEED", script);
                 var port = 3;
                 		
                 lspeed = Math.min(100, lspeed);
@@ -523,7 +523,7 @@ Entry.krc.getBlocks = function() {
                 rspeed = Math.min(100, rspeed);
                 rspeed = Math.max(-100, rspeed);		
                 
-                if(!(lmotor_speed == lspeed) || !(rmotor_speed == rspeed))
+                if(!(LmotorSpeed == lspeed) || !(RmotorSpeed == rspeed))
                 {
                     if (!script.isStart) 
                     {
@@ -536,8 +536,8 @@ Entry.krc.getBlocks = function() {
                             data: [lspeed, rspeed],
                             time: new Date().getTime(),
                         };
-                        lmotor_speed = lspeed;
-                        rmotor_speed = rspeed;
+                        LmotorSpeed = lspeed;
+                        RmotorSpeed = rspeed;
                         script.isStart = true;  // 출력 시작 플래그 셋
                         script.timeFlag = 1;    // 시간플래그 셋
                         setTimeout(function() 
@@ -565,7 +565,7 @@ Entry.krc.getBlocks = function() {
         },
 		
 		// 4. DC 모터 정지하기		
-		krc_motor_stop: 
+		"krc_motor_stop": 
 		{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,		
@@ -598,7 +598,7 @@ Entry.krc.getBlocks = function() {
 				var lspeed = 0;
                 var rspeed = 0;
                 
-                if(!(lmotor_speed == 0) || !(rmotor_speed == 0))
+                if(!(LmotorSpeed == 0) || !(RmotorSpeed == 0))
                 {
                     if (!Entry.hw.sendQueue['SET']) {
                         Entry.hw.sendQueue['SET'] = {};
@@ -611,15 +611,15 @@ Entry.krc.getBlocks = function() {
                     };
                 }
 
-                lmotor_speed = 0;
-                rmotor_speed = 0;
+                LmotorSpeed = 0;
+                RmotorSpeed = 0;
                 return script.callReturn();
             },
             syntax: { js: [], py: [] },
         },
 
         // 5.  서보 모터 각도 설정하기		
-		krc_set_servo: 
+		"krc_set_servo": 
 		{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
@@ -704,7 +704,7 @@ Entry.krc.getBlocks = function() {
         
 
         // 10. 디지털  출력
-		krc_digital_onoff: {
+		"krc_digital_onoff": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
 			fontColor: '#fff',			
@@ -764,7 +764,7 @@ Entry.krc.getBlocks = function() {
 
 		
 		// 11. 디지털입력		
-        krc_get_digital_value: {
+        "krc_get_digital_value": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
             fontColor: '#fff',
@@ -812,7 +812,7 @@ Entry.krc.getBlocks = function() {
         },	
         
         // 12. 아날로그 읽기
-        krc_get_analog_value: {
+        "krc_get_analog_value": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
             fontColor: '#fff',
@@ -856,7 +856,7 @@ Entry.krc.getBlocks = function() {
 
 
         // 15. 초음파 센서 값		
-        krc_get_usonic_value: {
+        "krc_get_usonic_value": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
             fontColor: '#fff',
@@ -898,7 +898,7 @@ Entry.krc.getBlocks = function() {
         },
 
         // 21. LCD글자출력
-        krc_set_lcd_string:
+        "krc_set_lcd_string":
         {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
@@ -1019,7 +1019,7 @@ Entry.krc.getBlocks = function() {
         },
 
        // . LCD 백라이트 
-       krc_set_lcd_backlight: {
+       "krc_set_lcd_backlight": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
 			fontColor: '#fff',			
@@ -1073,7 +1073,7 @@ Entry.krc.getBlocks = function() {
         },
 
         // 23. LCD 지우기
-		krc_set_lcd_clear: 
+		"krc_set_lcd_clear": 
         {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
@@ -1124,7 +1124,7 @@ Entry.krc.getBlocks = function() {
    
 		
 		// 3. 소리/빛/가변저항 - 2) mapping 값			
-        krc_get_analog_mapping: {
+        "krc_get_analog_mapping": {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
             fontColor: '#fff',
