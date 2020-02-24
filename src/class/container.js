@@ -6,7 +6,7 @@
 
 import { Draggable } from '@entrylabs/tool';
 import { GEHelper } from '../graphicEngine/GEHelper';
-
+import DataTable from './DataTable';
 /**
  * Class for a container.
  * This have view for objects.
@@ -647,9 +647,11 @@ Entry.Container = class Container {
 
     /**
      * generate list for dropdown dynamic
+     * obj param for renderview.changeCode
      * @param {string} menuName
+     * @param {string} obj
      */
-    getDropdownList(menuName) {
+    getDropdownList(menuName, obj) {
         let result = [];
         switch (menuName) {
             case 'sprites':
@@ -693,7 +695,7 @@ Entry.Container = class Container {
                 ];
                 break;
             case 'pictures': {
-                const object = Entry.playground.object || object;
+                const object = Entry.playground.object || obj;
                 if (!object) {
                     break;
                 }
@@ -704,14 +706,14 @@ Entry.Container = class Container {
                 result = Entry.variableContainer.messages_.map(({ name, id }) => [name, id]);
                 break;
             case 'variables': {
-                const object = Entry.playground.object;
+                const object = Entry.playground.object || obj;
                 if (!object) {
                     break;
                 }
                 Entry.variableContainer.variables_.forEach((variable) => {
                     if (
                         variable.object_ &&
-                        Entry.playground.object &&
+                        object &&
                         (variable.object_ != Entry.playground.object.id || Entry.Func.isEdit)
                     ) {
                         return;
@@ -725,7 +727,7 @@ Entry.Container = class Container {
                 break;
             }
             case 'lists': {
-                const object = Entry.playground.object;
+                const object = Entry.playground.object || obj;
                 if (!object) {
                     break;
                 }
@@ -747,8 +749,7 @@ Entry.Container = class Container {
                 break;
             }
             case 'tables': {
-                const { dataTable = {} } = Entry.playground;
-                const { tables } = dataTable;
+                const { tables } = DataTable;
                 if (tables) {
                     result = tables.map((table) => [table.name, table.id]);
                 }
@@ -758,7 +759,7 @@ Entry.Container = class Container {
                 result = Entry.scene.getScenes().map(({ name, id }) => [name, id]);
                 break;
             case 'sounds': {
-                const object = Entry.playground.object;
+                const object = Entry.playground.object || obj;
                 if (!object) {
                     break;
                 }
