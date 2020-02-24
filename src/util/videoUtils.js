@@ -193,17 +193,11 @@ class VideoUtils {
             }
         };
 
-        const offCanvas = new OffscreenCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
-
-        worker.postMessage(
-            {
-                type: 'init',
-                width: CANVAS_WIDTH,
-                height: CANVAS_HEIGHT,
-                offCanvas,
-            },
-            [offCanvas]
-        );
+        worker.postMessage({
+            type: 'init',
+            width: CANVAS_WIDTH,
+            height: CANVAS_HEIGHT,
+        });
         this.sendImageToWorker();
         this.motionDetect();
     }

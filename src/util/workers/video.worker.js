@@ -24,7 +24,7 @@ let modelStatus = {
 
 let options = {};
 const dimension = { width: 0, height: 0 };
-let offCanvas = null;
+let offCanvas = new OffscreenCanvas(480, 270);
 
 const tinyFaceDetectOption = new faceapi.TinyFaceDetectorOptions({ inputSize: 320 });
 
@@ -33,7 +33,6 @@ async function processImage() {
         objectDetect(this);
         poseDetect(this);
         faceDetect(this);
-        // //check Motion
     } catch (err) {
         console.log('estimation error', err);
         return [];
@@ -101,8 +100,6 @@ self.onmessage = async function(e) {
         case 'init':
             dimension.width = e.data.width;
             dimension.height = e.data.height;
-            offCanvas = e.data.offCanvas;
-
             console.log('loadDone');
             posenet
                 .load({
