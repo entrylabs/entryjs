@@ -481,13 +481,13 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                         case 'total':
                             return clamp(detected.total / 10, 0, 100000).toString();
                         case 'x':
-                            let rawX = detected.direction.x;
+                            let rawX = detected.x;
                             if (!VideoUtils.flipStatus.horizontal) {
                                 rawX *= -1;
                             }
                             return rawX.toString();
                         case 'x':
-                            let rawY = detected.direction.y;
+                            let rawY = detected.y;
                             if (VideoUtils.flipStatus.vertical) {
                                 rawY *= -1;
                             }

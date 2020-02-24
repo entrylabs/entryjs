@@ -243,10 +243,37 @@ class VideoUtils {
     }
 
     // ** MOTION DETECTION
-    motionDetect() {
+    motionDetect(sprite) {
         if (!this.inMemoryCanvas) {
             return;
         }
+        let minX = 0;
+        let maxX = CANVAS_WIDTH;
+        let minY = 0;
+        let maxY = CANVAS_HEIGHT;
+
+        if (sprite) {
+            const { x, y, width, height, scaleX, scaleY } = sprite;
+            minX = CANVAS_WIDTH / 2 + x - (width * scaleX) / 2;
+            maxX = CANVAS_WIDTH / 2 + x + (width * scaleX) / 2;
+            minY = CANVAS_HEIGHT / 2 - y - (height * scaleY) / 2;
+            maxY = CANVAS_HEIGHT / 2 - y + (height * scaleY) / 2;
+            if (this.flipStatus.horizontal) {
+                const tempMinX = minX;
+                minX = CANVAS_WIDTH - maxX;
+                maxX = CANVAS_WIDTH - tempMinX;
+            }
+            if (this.flipStatus.vertical) {
+                const tempMinY = minY;
+                minY = CANVAS_WIDTH - maxY;
+                maxY = CANVAS_WIDTH - tempMinY;
+            }
+            minX = Math.floor(minX / SAMPLE_SIZE) * SAMPLE_SIZE;
+            maxX = Math.floor(maxX / SAMPLE_SIZE) * SAMPLE_SIZE;
+            minY = Math.floor(minY / SAMPLE_SIZE) * SAMPLE_SIZE;
+            maxY = Math.floor(maxY / SAMPLE_SIZE) * SAMPLE_SIZE;
+        }
+
         /*
             let minX = CANVAS_WIDTH / 2 + x - (width * scaleX) / 2;
             let maxX = CANVAS_WIDTH / 2 + x + (width * scaleX) / 2;
@@ -261,8 +288,8 @@ class VideoUtils {
         this.totalMotions = 0;
         let totalMotionDirectionX = 0;
         let totalMotionDirectionY = 0;
-        for (let y = 0; y < CANVAS_HEIGHT; y += SAMPLE_SIZE) {
-            for (let x = 0; x < CANVAS_WIDTH; x += SAMPLE_SIZE) {
+        for (let y = minY; y < maxY; y += SAMPLE_SIZE) {
+            for (let x = minX; x < maxX; x += SAMPLE_SIZE) {
                 const pos = (x + y * CANVAS_WIDTH) * 4;
                 const r = data[pos];
                 const g = data[pos + 1];
@@ -317,7 +344,9 @@ class VideoUtils {
                 if (mostSimilar.y > 1) {
                     totalMotionDirectionY += mostSimilar.y - yIndex;
                 }
-
+                if (sprite) {
+                    continue;
+                }
                 this.motions[yIndex][xIndex] = {
                     r,
                     g,
@@ -332,8 +361,16 @@ class VideoUtils {
                     y: mostSimilar.y - yIndex,
                 };
             }
-
+            if (sprite) {
+                continue;
+            }
             this.totalMotionDirection = {
+                x: totalMotionDirectionX,
+                y: totalMotionDirectionY,
+            };
+        }
+        if (sprite) {
+            return {
                 x: totalMotionDirectionX,
                 y: totalMotionDirectionY,
             };
