@@ -954,20 +954,20 @@ Entry.krc.getBlocks = function() {
 			{
                 
          //       var sq = Entry.hw.sendQueue;
-                var line = script.getValue("LINE", script);
-                var column = script.getValue("COLUMN", script);
+                var line2 = script.getValue("LINE", script);
+                var column2 = script.getValue("COLUMN", script);
                 var string = script.getValue("STRING", script);
                 var text = [];
 
                 if (!script.isStart) {
                     if (typeof string === "string") {
-                        for (var i = 0; i < string.length; i++) {
-                            text[i] = Entry.memaker.toByte(string[i]);
+                        for (var i9 = 0; i9 < string.length; i9++) {
+                            text[i9] = Entry.memaker.toByte(string[i9]);
                         }
                     } else if (typeof string === "number") {
-                        var num_to_string = string.toString();
-                        for (var i = 0; i < num_to_string.length; i++) {
-                            text[i] = Entry.memaker.toByte(num_to_string[i]);
+                        var NumToString = string.toString();
+                        for (let i = 0; i < NumToString.length; i++) {
+                            text[i] = Entry.memaker.toByte(NumToString[i]);
                         }
                     } else {
                         text[0] = string;
@@ -985,8 +985,8 @@ Entry.krc.getBlocks = function() {
                     Entry.hw.sendQueue["SET"][3] = {
                         type: Entry.krc.sensorTypes.LCD_SET,
                         data: {
-                            line: line,
-                            column: column,
+                            line: line2,
+                            column: column2,
                             text0: text[0],
                             text1: text[1],
                             text2: text[2],
@@ -1005,7 +1005,7 @@ Entry.krc.getBlocks = function() {
                         script.timeFlag = 0;
                     }, DelayTime);
                     return script;
-                } else if (script.timeFlag == 1) {
+                } else if (script.timeFlag === 1) {
                     return script;
                 } else {
                     delete script.timeFlag;
@@ -1051,8 +1051,7 @@ Entry.krc.getBlocks = function() {
             },
             class: "krc_LV5", 
             isNotFor: ["KRC"],
-           func: function(sprite, script) 
-		   {
+           func: function (sprite, script) {
                 var value = script.getNumberValue("VALUE");
 				
                 if (!Entry.hw.sendQueue["SET"]) {
@@ -1188,22 +1187,22 @@ Entry.krc.getBlocks = function() {
             },
             class: "krc_ANA",
             isNotFor: ["KRC"],
-            func: function(sprite, script) 
+            func: function (sprite, script) 
 			{
                 var result = script.getNumberValue("IDATA", script);				
                 var value2 = script.getNumberValue("VALUE2", script);
                 var value3 = script.getNumberValue("VALUE3", script);
                 var value4 = script.getNumberValue("VALUE4", script);
                 var value5 = script.getNumberValue("VALUE5", script);
-			
+                var swap;
 				
                 if (value2 > value3) {
-                    var swap = value2;
+                    swap = value2;
                     value2 = value3;
                     value3 = swap;
                 }
                 if (value4 > value5) {
-                    var swap = value4;
+                    swap = value4;
                     value4 = value5;
                     value5 = swap;
                 }
