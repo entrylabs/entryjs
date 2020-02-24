@@ -16,7 +16,7 @@ Entry.krc =
         "en": "KRC-S"
     },
 
-    setZero: function () {    ///  하드웨어 초기화 로직
+    setZero: () => {    ///  하드웨어 초기화 로직
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
                 GET: {},
@@ -26,7 +26,7 @@ Entry.krc =
 		else 
 		{
             var keySet = Object.keys(Entry.hw.sendQueue.SET);
-            keySet.forEach(function(key) {
+            keySet.forEach((key) => {
                 Entry.hw.sendQueue.SET[key].data = 0;
                 Entry.hw.sendQueue.SET[key].time = new Date().getTime();
             });   
@@ -961,8 +961,8 @@ Entry.krc.getBlocks = function() {
 
                 if (!script.isStart) {
                     if (typeof string === "string") {
-                        for (var i9 = 0; i9 < string.length; i9++) {
-                            text[i9] = Entry.memaker.toByte(string[i9]);
+                        for (let i = 0; i < string.length; i++) {
+                            text[i] = Entry.memaker.toByte(string[i]);
                         }
                     } else if (typeof string === "number") {
                         var NumToString = string.toString();
