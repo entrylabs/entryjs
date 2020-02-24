@@ -24,7 +24,7 @@ let modelStatus = {
 
 let options = {};
 const dimension = { width: 0, height: 0 };
-let offCanvas = new OffscreenCanvas(480, 270);
+const offCanvas = new OffscreenCanvas(480, 270);
 
 const tinyFaceDetectOption = new faceapi.TinyFaceDetectorOptions({ inputSize: 320 });
 
