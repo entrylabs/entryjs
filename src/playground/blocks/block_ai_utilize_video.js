@@ -124,6 +124,65 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 arrowColor: EntryStatic.colorSet.common.WHITE,
             };
         },
+        getFaceCoords() {
+            return {
+                type: 'Dropdown',
+                options: [
+                    [Lang.video_body_coord_params.left_eye, 45],
+                    [Lang.video_body_coord_params.right_eye, 36],
+                    [Lang.video_body_coord_params.nose, 30],
+                    [Lang.video_body_coord_params.left_mouth, 54],
+                    [Lang.video_body_coord_params.right_mouth, 48],
+                    [Lang.video_body_coord_params.upper_lip, 62],
+                    [Lang.video_body_coord_params.lower_lip, 66],
+                ],
+                value: 45,
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
+        getBodyCoords() {
+            return {
+                type: 'Dropdown',
+                options: [
+                    [Lang.video_body_coord_params.face, 0],
+                    [Lang.video_body_coord_params.left_eye, 1],
+                    [Lang.video_body_coord_params.right_eye, 2],
+                    [Lang.video_body_coord_params.left_ear, 3],
+                    [Lang.video_body_coord_params.right_ear, 4],
+                    [Lang.video_body_coord_params.left_shoulder, 5],
+                    [Lang.video_body_coord_params.right_shoulder, 6],
+                    [Lang.video_body_coord_params.left_elbow, 7],
+                    [Lang.video_body_coord_params.right_elbow, 8],
+                    [Lang.video_body_coord_params.left_wrist, 9],
+                    [Lang.video_body_coord_params.right_wrist, 10],
+                    [Lang.video_body_coord_params.left_hip, 11],
+                    [Lang.video_body_coord_params.right_hip, 12],
+                    [Lang.video_body_coord_params.left_knee, 13],
+                    [Lang.video_body_coord_params.right_knee, 14],
+                    [Lang.video_body_coord_params.left_ankle, 15],
+                    [Lang.video_body_coord_params.right_ankle, 16],
+                ],
+                value: 1,
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
+        getCoordXYOptions() {
+            return {
+                type: 'Dropdown',
+                options: [
+                    ['x', 'x'],
+                    ['y', 'y'],
+                ],
+                value: 'x',
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
     };
     return {
         video_title: {
@@ -426,8 +485,8 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['자신', 'self'],
-                        ['실행화면', 'screen'],
+                        [Lang.Blocks.video_motion_onself, 'self'],
+                        [Lang.Blocks.video_motion_onscreen, 'screen'],
                     ],
                     value: 'self',
                     fontSize: 11,
@@ -437,9 +496,9 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['움직임', 'total'],
-                        ['x 방향 움직임', 'x'],
-                        ['y 방향 움직임', 'y'],
+                        [Lang.Blocks.video_motion_scale, 'total'],
+                        [Lang.Blocks.video_motion_direction_horizontal, 'x'],
+                        [Lang.Blocks.video_motion_direction_vertical, 'y'],
                     ],
                     value: 'total',
                     fontSize: 11,
@@ -456,44 +515,41 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             async func(sprite, script) {
                 const target = script.getField('TARGET');
                 const type = script.getField('TYPE');
-                if (target === 'screen') {
-                    switch (type) {
-                        case 'total':
-                            return clamp(VideoUtils.totalMotions / 10, 0, 100000).toString();
-                        case 'x':
-                            let rawX = VideoUtils.totalMotionDirection.x;
-                            if (!VideoUtils.flipStatus.horizontal) {
-                                rawX *= -1;
-                            }
-                            return rawX.toString();
-                        case 'y':
-                            let rawY = VideoUtils.totalMotionDirection.y;
-                            if (VideoUtils.flipStatus.vertical) {
-                                rawY *= -1;
-                            }
-                            return rawY.toString();
-                        default:
-                            return 0;
-                    }
-                } else {
-                    const detected = VideoUtils.motionDetect(sprite);
-                    switch (type) {
-                        case 'total':
-                            return clamp(detected.total / 10, 0, 100000).toString();
-                        case 'x':
-                            let rawX = detected.x;
-                            if (!VideoUtils.flipStatus.horizontal) {
-                                rawX *= -1;
-                            }
-                            return rawX.toString();
-                        case 'x':
-                            let rawY = detected.y;
-                            if (VideoUtils.flipStatus.vertical) {
-                                rawY *= -1;
-                            }
-                            return rawY.toString();
-                    }
+                let detected = VideoUtils.totalMotions;
+                if (target === 'self') {
+                    detected = VideoUtils.motionDetect(sprite);
                 }
+                if (type === 'total') {
+                    return clamp(detected.total / 10, 0, 100000).toString();
+                }
+                let rawX = detected.totalMotionDirection.x;
+                if (!VideoUtils.flipStatus.horizontal) {
+                    rawX *= -1;
+                }
+
+                let rawY = detected.totalMotionDirection.y;
+                if (VideoUtils.flipStatus.vertical) {
+                    rawY *= -1;
+                }
+                const absX = Math.abs(rawX);
+                const absY = Math.abs(rawY);
+                if (absX < 20 && absY < 20) {
+                    return 0;
+                }
+                if (type === 'x') {
+                    if (rawX > 0) {
+                        return '오른쪽';
+                    }
+                    return '왼쪽';
+                    // return rawX.toString();
+                } else if (type === 'y') {
+                    if (rawY > 0) {
+                        return '위';
+                    }
+                    return '아래';
+                    // return rawY.toString();
+                }
+                return 0;
             },
             paramsKeyMap: {
                 TARGET: 0,
@@ -509,48 +565,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
             statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['1', 0],
-                        ['2', 1],
-                        ['3', 2],
-                        ['4', 3],
-                    ],
-                    value: 0,
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-                    arrowColor: EntryStatic.colorSet.common.WHITE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['왼쪽 눈', 45],
-                        ['오른쪽 눈', 36],
-                        ['코', 30],
-                        ['왼쪽 입꼬리', 54],
-                        ['오른쪽 입꼬리', 48],
-                        ['윗 입술', 62],
-                        ['아랫 입술', 66],
-                    ],
-                    value: 45,
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-                    arrowColor: EntryStatic.colorSet.common.WHITE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['x', '_x'],
-                        ['y', '_y'],
-                    ],
-                    value: '_x',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-                    arrowColor: EntryStatic.colorSet.common.WHITE,
-                },
-            ],
+            params: [params.getNumbers(), params.getFaceCoords(), params.getCoordXYOptions()],
             events: {},
             def: {
                 type: 'video_face_part_coord',
@@ -573,7 +588,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 }
 
                 // offset since value shown starts from 1;
-                const rawValue = faces[index].landmarks._positions[part][coord];
+                const rawValue = faces[index].landmarks._positions[part][`_${coord}`];
 
                 if (!rawValue) {
                     return 0;
@@ -600,65 +615,12 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 py: [],
             },
         },
-
         video_body_part_coord: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
             statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['1', 0],
-                        ['2', 1],
-                        ['3', 2],
-                        ['4', 3],
-                    ],
-                    value: 0,
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-                    arrowColor: EntryStatic.colorSet.common.WHITE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        // ['코', 'nose'],
-                        ['얼굴', 0],
-                        ['왼쪽 눈', 1],
-                        ['오른쪽 눈', 2],
-                        ['왼쪽 귀', 3],
-                        ['오른쪽 귀', 4],
-                        ['왼쪽 어깨', 5],
-                        ['오른쪽 어깨', 6],
-                        ['왼쪽 팔꿈치', 7],
-                        ['오른쪽 팔꿈치', 8],
-                        ['왼쪽 손목', 9],
-                        ['오른쪽 손목', 10],
-                        ['왼쪽 엉덩이', 11],
-                        ['오른쪽 엉덩이', 12],
-                        ['왼쪽 무릎', 13],
-                        ['오른쪽 무릎', 14],
-                        ['왼쪽 발목', 15],
-                        ['오른쪽 발목', 16],
-                    ],
-                    value: 1,
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-                    arrowColor: EntryStatic.colorSet.common.WHITE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['x', 'x'],
-                        ['y', 'y'],
-                    ],
-                    value: 'x',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-                    arrowColor: EntryStatic.colorSet.common.WHITE,
-                },
-            ],
+            params: [params.getNumbers(), params.getBodyCoords(), params.getCoordXYOptions()],
             events: {},
             def: {
                 type: 'video_body_part_coord',

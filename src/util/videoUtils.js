@@ -274,18 +274,12 @@ class VideoUtils {
             maxY = Math.floor(maxY / SAMPLE_SIZE) * SAMPLE_SIZE;
         }
 
-        /*
-            let minX = CANVAS_WIDTH / 2 + x - (width * scaleX) / 2;
-            let maxX = CANVAS_WIDTH / 2 + x + (width * scaleX) / 2;
-            let minY = CANVAS_HEIGHT / 2 - y - (height * scaleY) / 2;
-            let maxY = CANVAS_HEIGHT / 2 - y + (height * scaleY) / 2;
-        */
         const context = this.inMemoryCanvas.getContext('2d');
         context.clearRect(0, 0, this.inMemoryCanvas.width, this.inMemoryCanvas.height);
         context.drawImage(this.video, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         const imageData = context.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         const data = imageData.data;
-        this.totalMotions = 0;
+        let areaMotion = 0;
         let totalMotionDirectionX = 0;
         let totalMotionDirectionY = 0;
         for (let y = minY; y < maxY; y += SAMPLE_SIZE) {
@@ -312,7 +306,6 @@ class VideoUtils {
                 const maxScanY = clamp(yIndex + BOUNDARY_OFFSET, 0, yLength - 1);
                 const minScanX = clamp(xIndex - BOUNDARY_OFFSET, 0, xLength - 1);
                 const maxScanX = clamp(xIndex + BOUNDARY_OFFSET, 0, xLength - 1);
-
                 for (let scopeY = minScanY; scopeY <= maxScanY; scopeY++) {
                     for (let scopeX = minScanX; scopeX <= maxScanX; scopeX++) {
                         const valuesNearPos = this.motions[scopeY][scopeX] || {
@@ -335,7 +328,6 @@ class VideoUtils {
                         }
                     }
                 }
-                this.totalMotions += areaMotionScore;
 
                 //reduce noise of small motions
                 if (mostSimilar.x > 1) {
@@ -347,6 +339,7 @@ class VideoUtils {
                 if (sprite) {
                     continue;
                 }
+                areaMotion += areaMotionScore;
                 this.motions[yIndex][xIndex] = {
                     r,
                     g,
@@ -361,21 +354,19 @@ class VideoUtils {
                     y: mostSimilar.y - yIndex,
                 };
             }
-            if (sprite) {
-                continue;
-            }
-            this.totalMotionDirection = {
-                x: totalMotionDirectionX,
-                y: totalMotionDirectionY,
-            };
         }
-        if (sprite) {
-            return {
+        const result = {
+            total: areaMotion,
+            totalMotionDirection: {
                 x: totalMotionDirectionX,
                 y: totalMotionDirectionY,
-            };
+            },
+        };
+        if (sprite) {
+            return result;
         }
 
+        this.totalMotions = result;
         setTimeout(this.motionDetect.bind(this), 200);
     }
 
