@@ -147,6 +147,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 type: 'Dropdown',
                 options: [
                     [Lang.video_body_coord_params.face, 0],
+                    [Lang.video_body_coord_params.neck, 21],
                     [Lang.video_body_coord_params.left_eye, 1],
                     [Lang.video_body_coord_params.right_eye, 2],
                     [Lang.video_body_coord_params.left_ear, 3],

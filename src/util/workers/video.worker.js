@@ -78,6 +78,14 @@ async function poseDetect(context) {
     });
     const adjacents = [];
     predictions.forEach((pose) => {
+        const leftShoulder = pose.keypoints[5];
+        const rightShoulder = pose.keypoints[6];
+        const nose = pose.keypoints[0];
+        const neckPos = {
+            x: ((leftShoulder.position.x + rightShoulder.position.x) / 2 + nose.position.x) / 2,
+            y: ((leftShoulder.position.y + rightShoulder.position.y) / 2 + nose.position.y) / 2,
+        };
+        pose.keypoints[21] = { part: 'neck', position: neckPos, score: -1 };
         const adjacentMap = posenet.getAdjacentKeyPoints(pose.keypoints, 0.1);
         adjacents.push(adjacentMap);
     });
