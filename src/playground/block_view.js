@@ -150,8 +150,7 @@ Entry.BlockView = class BlockView {
         this._path = this.pathGroup.elem('path');
 
         let fillColor = this._schema.color;
-        const { deletable } = this.block;
-        const emphasized = true;
+        const { deletable, emphasized } = this.block;
 
         if (deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || emphasized) {
             fillColor = this._schema.emphasizedColor || Entry.Utils.getEmphasizeColor(fillColor);
