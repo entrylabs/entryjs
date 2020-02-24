@@ -42,34 +42,7 @@ declare interface ISkeleton {
     statementPos?: (blockView: any) => Point[];
 }
 
-declare module Entry {
-    // 엔트리 내 클래스들
-    export var skeleton: { [name: string]: ISkeleton };
-    export var options: EntryOptions;
-    export var toast: ToastLegacy;
-    export var playground: Playground;
-    export var workspace: UnknownAny;
-    export var propertyPanel: PropertyPanel;
-    export var HW: Hardware; // hw.ts
-    export var container: Container;
-    export var stage: Stage;
-    export var Utils: UnknownAny;
-
-    // 엔트리에서 네임스페이스에 할당되어있는 특정 객체들
-    export var HARDWARE_LIST: { [hardwareName: string]: HardwareModule };
-    export var events_: any;
-    export var requestUpdate: boolean;
-    export var mediaFilePath: string;
-    export var TEXT_ALIGNS: string[];
-    export var TEXT_ALIGN_LEFT: number;
-    export var TEXT_ALIGN_CENTER: number;
-    export var TEXT_ALIGN_RIGHT: number;
-
-    // 엔트리에서 네임스페이스에 할당되어있는 특정 함수들
-    export var addEventListener: (type: string, listener: () => void) => void;
-    export var dispatchEvent: (eventName: string, ...args: any) => void;
-    export var getMainWS: () => UnknownAny | undefined;
-
+declare module IEntry {
     export interface Container {
         getAllObjects(): UnknownAny[];
     }
@@ -96,12 +69,12 @@ declare module Entry {
     /**
      * 과거 엔트리 토스트
      */
-    type ToastLegacyFunction = (title: string, message: string, isNotAutoDispose?: boolean) => void;
+    type WSToastFunction = (title: string, message: string, isNotAutoDispose?: boolean) => void;
 
-    export interface ToastLegacy {
-        alert: ToastLegacyFunction;
-        warning: ToastLegacyFunction;
-        success: ToastLegacyFunction;
+    export interface WorkspaceToast {
+        alert: WSToastFunction;
+        warning: WSToastFunction;
+        success: WSToastFunction;
     }
 
     /**

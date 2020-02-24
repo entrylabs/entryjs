@@ -14,7 +14,7 @@ enum HardwareStatement {
     hardwareConnected = 'hardwareConnected',
 }
 
-class Hardware implements Entry.Hardware {
+class Hardware implements IEntry.Hardware {
     get httpsServerAddress() {
         return 'https://hw.playentry.org:23518';
     } // 하드웨어 프로그램 접속용 주소
@@ -38,11 +38,11 @@ class Hardware implements Entry.Hardware {
     public sendQueue: UnknownAny;
 
     // 현재 연결된 모듈 컨트롤용
-    public hwModule?: Entry.HardwareModule;
+    public hwModule?: IEntry.HardwareModule;
     public communicationType: string; // 'manual' || 'auto'
     private currentDeviceKey?: string;
     private hwModuleType: HardwareModuleType;
-    private hwMonitor?: Entry.HardwareMonitor;
+    private hwMonitor?: IEntry.HardwareMonitor;
 
     // 하드웨어 설치여부 확인용
     private ieLauncher: { set: () => void };
@@ -270,7 +270,7 @@ class Hardware implements Entry.Hardware {
      * 현재 보여지고 있는 하드웨어 블록들을 전부 숨김처리한다.
      * @param moduleObject
      */
-    setExternalModule(moduleObject: Entry.HardwareModule) {
+    setExternalModule(moduleObject: IEntry.HardwareModule) {
         this.hwModule = moduleObject;
         this.hwModuleType = HardwareModuleType.module;
         this._banClassAllHardware();

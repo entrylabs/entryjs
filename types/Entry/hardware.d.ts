@@ -19,11 +19,7 @@ type WebSocketMessage = {
     type: 'utf8';
 };
 
-declare module Entry {
-    export var HWMonitor: HardwareMonitor;
-    export var moduleManager: any; //TODO
-    export var popupHelper: any; //TODO
-
+declare module IEntry {
     /**
      * 외부에 노출될 수 있는 하드웨어 클래스 내 변수 및 함수 정의
      */
@@ -52,7 +48,6 @@ declare module Entry {
         communicationType?: string;
         sendMessage?: (hw: Hardware) => void;
         setZero: () => void;
-        communicationType: string;
 
         //TODO afterSend, dataHandler 의 목적이 모호하므로 추후 개선 필요
         afterReceive?: (portData: HardwareMessageData) => void; // 데이터 수신 이후
