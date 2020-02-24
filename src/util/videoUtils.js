@@ -17,6 +17,8 @@ const CANVAS_HEIGHT = 270;
 // ** MOTION DETECTION
 // motion detection parameters
 const SAMPLE_SIZE = 15;
+const BOUNDARY_OFFSET = 4;
+const SAME_COORDINATE_COMPENSATION = 10;
 
 const worker = new VideoWorker();
 
@@ -278,12 +280,15 @@ class VideoUtils {
                 const xLength = this.motions[0].length;
                 const yLength = this.motions.length;
                 const mostSimilar = { x: 0, y: 0, diff: 99999999 };
-                for (let scopeY = yIndex - 2; scopeY <= yIndex + 2; scopeY++) {
-                    for (let scopeX = xIndex - 2; scopeX <= xIndex + 2; scopeX++) {
-                        // find min diff for the direction change
-                        const clampedX = clamp(scopeX, 0, xLength - 1);
-                        const clampedY = clamp(scopeY, 0, yLength - 1);
-                        const valuesNearPos = this.motions[clampedY][clampedX] || {
+
+                const minScanY = clamp(yIndex - BOUNDARY_OFFSET, 0, yLength - 1);
+                const maxScanY = clamp(yIndex + BOUNDARY_OFFSET, 0, yLength - 1);
+                const minScanX = clamp(xIndex - BOUNDARY_OFFSET, 0, xLength - 1);
+                const maxScanX = clamp(xIndex + BOUNDARY_OFFSET, 0, xLength - 1);
+
+                for (let scopeY = minScanY; scopeY <= maxScanY; scopeY++) {
+                    for (let scopeX = minScanX; scopeX <= maxScanX; scopeX++) {
+                        const valuesNearPos = this.motions[scopeY][scopeX] || {
                             r: 0,
                             g: 0,
                             b: 0,
@@ -291,18 +296,27 @@ class VideoUtils {
                         const rDiffScope = Math.abs(valuesNearPos.r - r);
                         const gDiffScope = Math.abs(valuesNearPos.g - g);
                         const bDiffScope = Math.abs(valuesNearPos.b - b);
-                        const diff = rDiffScope + gDiffScope + bDiffScope;
+                        let diff = rDiffScope + gDiffScope + bDiffScope;
+                        // compensation only if scope is looking for the same coordination in case of reducing noise when no movement has been detected.
+                        if (yIndex === scopeY && xIndex === scopeX) {
+                            diff = diff - SAME_COORDINATE_COMPENSATION;
+                        }
                         if (diff < mostSimilar.diff) {
-                            mostSimilar.x = clampedX;
-                            mostSimilar.y = clampedY;
+                            mostSimilar.x = scopeX;
+                            mostSimilar.y = scopeY;
                             mostSimilar.diff = diff;
                         }
                     }
                 }
-                // console.log('x : ', mostSimilar.x - xIndex, ' Y: ', mostSimilar.y - yIndex);
                 this.totalMotions += areaMotionScore;
-                totalMotionDirectionX += mostSimilar.x - xIndex;
-                totalMotionDirectionY += mostSimilar.y - yIndex;
+
+                //reduce noise of small motions
+                if (mostSimilar.x > 1) {
+                    totalMotionDirectionX += mostSimilar.x - xIndex;
+                }
+                if (mostSimilar.y > 1) {
+                    totalMotionDirectionY += mostSimilar.y - yIndex;
+                }
 
                 this.motions[yIndex][xIndex] = {
                     r,
@@ -325,7 +339,7 @@ class VideoUtils {
             };
         }
 
-        setTimeout(this.motionDetect.bind(this), 80);
+        setTimeout(this.motionDetect.bind(this), 200);
     }
 
     async checkUserCamAvailable() {
