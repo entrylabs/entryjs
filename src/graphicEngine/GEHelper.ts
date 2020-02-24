@@ -389,7 +389,7 @@ class _GEHelper extends GEHelperBase {
         });
     }
 
-    drawFaceBoxes(faces: any, flipStatus: any) {
+    drawFaceEdges(faces: any, flipStatus: any) {
         let handler = this.faceIndicatorGraphic;
 
         const { WIDTH, HEIGHT } = INITIAL_VIDEO_PARAMS;

@@ -152,7 +152,7 @@ class VideoUtils {
             GEHelper.drawObjectBox(this.objects, this.flipStatus);
         }
         if (this.faces && this.indicatorStatus.face) {
-            GEHelper.drawFaceBoxes(this.faces, this.flipStatus);
+            GEHelper.drawFaceEdges(this.faces, this.flipStatus);
         }
         if (this.poses && this.indicatorStatus.pose) {
             GEHelper.drawHumanPoints(this.poses.predictions, this.flipStatus);

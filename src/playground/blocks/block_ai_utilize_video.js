@@ -538,17 +538,9 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                     return 0;
                 }
                 if (type === 'x') {
-                    if (rawX > 0) {
-                        return '오른쪽';
-                    }
-                    return '왼쪽';
-                    // return rawX.toString();
+                    return rawX.toFixed(1).toString();
                 } else if (type === 'y') {
-                    if (rawY > 0) {
-                        return '위';
-                    }
-                    return '아래';
-                    // return rawY.toString();
+                    return rawY.toFixed(1).toString();
                 }
                 return 0;
             },
@@ -595,7 +587,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                     return 0;
                 }
                 let returningValue = 0;
-                if (coord === '_x') {
+                if (coord === 'x') {
                     returningValue = rawValue - VideoUtils.CANVAS_WIDTH / 2;
                     if (VideoUtils.flipStatus.horizontal) {
                         returningValue *= -1;
