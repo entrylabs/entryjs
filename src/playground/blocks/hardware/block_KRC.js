@@ -1,19 +1,18 @@
-"use strict";
+'use strict';
 
-let DelayTime = 0;
+const DelayTime = 0;
 let LmotorSpeed = 0;
 let RmotorSpeed = 0;
 
 Entry.krc = 
 {
-	id: "3A.2",	
-    name: "KRC",
-    url: "http://www.kairobot.co.kr/",
-    imageName: "KRC.png",
-    title: 
-	{
-        "ko": "KRC-S", 
-        "en": "KRC-S"
+	id: '3A.2',	
+    name: 'KRC',
+    url: 'http://www.kairobot.co.kr/',
+    imageName: 'KRC.png',
+    title: {
+        "ko": "KRC_S", 
+        "en": "KRC_S"
     },
 
     setZero: () => {    ///  하드웨어 초기화 로직
@@ -445,7 +444,7 @@ Entry.krc.getBlocks = function() {
                     return script;
 
                 }
-                else if (script.timeFlag == 1) 
+                else if (script.timeFlag === 1) 
 				{
                     return script;
                 } 
@@ -673,7 +672,7 @@ Entry.krc.getBlocks = function() {
             isNotFor: ["KRC"],
             func: function(sprite, script) 
 			{
-                const port = script.getNumberValue("PORT", script);
+                var port = script.getNumberValue("PORT", script);
                 let angle = script.getNumberValue("ANGLE", script);
                 let speed = script.getNumberValue("SPEED", script);
 //				port += 2;
@@ -745,7 +744,7 @@ Entry.krc.getBlocks = function() {
             class: "krc_LV3",    // 블록을 묶는 그룹 이름. 이 값이 다르면 사이에 가로줄이 생깁니다
             isNotFor: ["KRC"],
            func: function(sprite, script) {
-                const port = script.getNumberValue("PORT");
+                var port = script.getNumberValue("PORT");
                 const value = script.getNumberValue("VALUE");
 				
                 if (!Entry.hw.sendQueue["SET"]) {
@@ -792,7 +791,7 @@ Entry.krc.getBlocks = function() {
             isNotFor: ["KRC"],
             func: function(sprite, script) 
 			{		
-                const port2 = script.getNumberValue("PORT");
+                var port2 = script.getNumberValue("PORT");
                 const DIGITAL = Entry.hw.portData.DIGITAL;
 				
                 if (!Entry.hw.sendQueue["GET"]) {
@@ -845,7 +844,7 @@ Entry.krc.getBlocks = function() {
             isNotFor: ["KRC"],
             func: function(sprite, script) 
 			{
-                const btn_index = script.getNumberValue("PORT");				
+                var btn_index = script.getNumberValue("PORT");				
                 const ANALOG = Entry.hw.portData.ANALOG;
 
                 return ANALOG[btn_index];
@@ -1050,7 +1049,7 @@ Entry.krc.getBlocks = function() {
             },
             class: "krc_LV5", 
             isNotFor: ["KRC"],
-           func: function (sprite, script) {
+           func: (sprite, script) => {
                 var value = script.getNumberValue("VALUE");
 				
                 if (!Entry.hw.sendQueue["SET"]) {
@@ -1186,8 +1185,7 @@ Entry.krc.getBlocks = function() {
             },
             class: "krc_ANA",
             isNotFor: ["KRC"],
-            func: function (sprite, script) 
-			{
+            func: (sprite, script) => {
                 var result = script.getNumberValue("IDATA", script);				
                 var value2 = script.getNumberValue("VALUE2", script);
                 var value3 = script.getNumberValue("VALUE3", script);
