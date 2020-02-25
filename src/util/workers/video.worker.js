@@ -110,7 +110,7 @@ self.onmessage = async function(e) {
             dimension.width = e.data.width;
             dimension.height = e.data.height;
             const weightsUrl = `${self.location.origin}/lib/entry-js/weights`;
-            console.log(weightsUrl);
+
             posenet
                 .load({
                     architecture: 'MobileNetV1',
