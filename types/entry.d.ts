@@ -17,13 +17,19 @@ declare class Entry {
 
     // 엔트리에서 네임스페이스에 할당되어있는 특정 객체들
     static HARDWARE_LIST: { [hardwareName: string]: IEntry.HardwareModule };
+    static EXTERNAL_MODULE_LIST?: string[];
     static events_: any;
     static requestUpdate: boolean;
-    static mediaFilePath: string;
     static TEXT_ALIGNS: string[];
     static TEXT_ALIGN_LEFT: number;
     static TEXT_ALIGN_CENTER: number;
     static TEXT_ALIGN_RIGHT: number;
+    static block: { [blockName: string]: IEntry.EntryBlock };
+    static hw: IEntry.Hardware; // HW instance
+
+    // from init option
+    static mediaFilePath: string;
+    static moduleBaseUrl: string;
 
     // 엔트리에서 네임스페이스에 할당되어있는 특정 함수들
     static addEventListener: (type: string, listener: () => void) => void;

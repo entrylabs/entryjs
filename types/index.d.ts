@@ -84,5 +84,10 @@ declare module IEntry {
         disableHardware?: boolean;
     }
 
+    export interface ExternalModuleManager {
+        loadExternalModule(moduleName: string): Promise<void>;
+        registerHardwareModule(moduleObject: HardwareModule): void;
+    }
+
     // Entry namespace 에 필요한 객체가 있으면 추가해주세요.
 }
