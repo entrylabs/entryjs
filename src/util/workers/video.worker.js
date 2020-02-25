@@ -109,7 +109,8 @@ self.onmessage = async function(e) {
         case 'init':
             dimension.width = e.data.width;
             dimension.height = e.data.height;
-
+            const weightsUrl = `${self.location.origin}/lib/entry-js/weights`;
+            console.log(weightsUrl);
             posenet
                 .load({
                     architecture: 'MobileNetV1',
@@ -132,16 +133,10 @@ self.onmessage = async function(e) {
                 });
 
             Promise.all([
-                faceapi.nets.tinyFaceDetector.loadFromUri(
-                    `${self.location.origin}/aimodules/weights`
-                ),
-                faceapi.nets.faceLandmark68Net.loadFromUri(
-                    `${self.location.origin}/aimodules/weights`
-                ),
-                faceapi.nets.ageGenderNet.loadFromUri(`${self.location.origin}/aimodules/weights`),
-                faceapi.nets.faceExpressionNet.loadFromUri(
-                    `${self.location.origin}/aimodules/weights`
-                ),
+                faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
+                faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
+                faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
+                faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
             ]).then(() => {
                 console.log('face model loaded');
                 faceLoaded = true;
