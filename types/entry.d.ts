@@ -1,5 +1,5 @@
 declare class Entry {
-    static HW: new () => IEntry.HardwareModule;
+    static HW: new () => IEntry.Hardware;
     static SVG: any;
     static moduleManager: any; //TODO
     static popupHelper: any; //TODO
@@ -27,6 +27,7 @@ declare class Entry {
 
     // 엔트리에서 네임스페이스에 할당되어있는 특정 함수들
     static addEventListener: (type: string, listener: () => void) => void;
-    static dispatchEvent: (eventName: string, ...args: any) => void;
-    static getMainWS: () => UnknownAny | undefined;
+    static dispatchEvent(eventName: string, ...args: any): void;
+    static getMainWS(): UnknownAny | undefined;
+    static assert(predicate: any, message: string): void;
 }

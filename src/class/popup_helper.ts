@@ -1,10 +1,14 @@
 require('../util/utils');
 
-Entry.popupHelper = class PopupHelper {
-    constructor(reset) {
-        this.popupList = {};
-        this.nextPopupList = [];
-        this.nowContent;
+export default class PopupHelper {
+    private popupList: any = {};
+    private nextPopupList: string[] = [];
+    private nowContent: any = undefined;
+    private body_: any;
+    private window_: any;
+    private popupWrapper_: any;
+
+    constructor(reset: boolean) {
         if (reset) {
             $('.entryPopup.popupHelper').remove();
             window.popupHelper = null;
@@ -18,25 +22,25 @@ Entry.popupHelper = class PopupHelper {
             'entryPopupHelperLeftSpan',
             'entryPopupHelperRightSpan',
         ];
+
         this.body_ = Entry.Dom('div', {
             classes: ['entryPopup', 'hiddenPopup', 'popupHelper'],
         });
-        const that = this;
 
-        function popupClickEvent(e) {
-            if (that.nowContent && ignoreCloseType.indexOf(that.nowContent.prop('type')) > -1) {
+        const popupClickEvent = (e: JQuery.ClickEvent) => {
+            if (this.nowContent && ignoreCloseType.indexOf(this.nowContent.prop('type')) > -1) {
                 return;
             }
             const $target = $(e.target);
             spanArea.forEach((className) => {
                 if ($target.hasClass(className)) {
-                    that.hide();
+                    this.hide();
                 }
             });
-            if (e.target == that) {
-                that.hide();
+            if (e.target == this) {
+                this.hide();
             }
-        }
+        };
 
         this.body_.bindOnClick(popupClickEvent);
 
@@ -78,7 +82,7 @@ Entry.popupHelper = class PopupHelper {
         }
     }
 
-    addPopup(key, popupObject) {
+    addPopup(key: string, popupObject: any) {
         const content_ = Entry.Dom('div');
 
         const titleButton_ = Entry.Dom('div', {
@@ -92,8 +96,6 @@ Entry.popupHelper = class PopupHelper {
                 this.hide();
             }
         });
-
-        const self = this;
 
         const popupWrapper_ = Entry.Dom('div', {
             class: 'entryPopupHelperWrapper',
@@ -111,22 +113,26 @@ Entry.popupHelper = class PopupHelper {
 
         content_.addClass(key);
         content_.append(popupWrapper_);
+
+        // @ts-ignore
         content_.popupWrapper_ = popupWrapper_;
         content_.prop('type', popupObject.type);
 
         if (typeof popupObject.setPopupLayout === 'function') {
             popupObject.setPopupLayout(content_);
         }
+
+        // @ts-ignore
         content_._obj = popupObject;
 
         this.popupList[key] = content_;
     }
 
-    hasPopup(key) {
+    hasPopup(key: string) {
         return !!this.popupList[key];
     }
 
-    remove(key) {
+    remove(key: string) {
         if (key) {
             this.window_.find(`> .${key}`).remove();
         } else if (this.window_.children().length > 0) {
@@ -145,12 +151,13 @@ Entry.popupHelper = class PopupHelper {
         }
     }
 
-    resize(e) {}
+    // 왜있는 함수인지 알수없음 레거시임. 문제없는 경우 삭제해도 됨
+    resize(e: any) {}
 
-    show(key, isNext) {
+    show(key: string, isNext?: boolean) {
         const that = this;
 
-        function showContent(key) {
+        function showContent(key: string) {
             that.window_.append(that.popupList[key]);
             that.nowContent = that.popupList[key];
             that.body_.removeClass('hiddenPopup');
@@ -185,7 +192,10 @@ Entry.popupHelper = class PopupHelper {
         }
     }
 
-    addClass(className) {
+    addClass(className?: string) {
         className && this.body_.addClass(className);
     }
-};
+}
+
+// Entry Legacy 에서 사용 중
+Entry.popupHelper = PopupHelper;

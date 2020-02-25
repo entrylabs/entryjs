@@ -2,7 +2,7 @@
 
 import HardwareSocketMessageHandler from './hardware/hardwareSocketMessageHandler';
 import HardwareMonitor from './hardware/hardwareMonitor';
-import '../playground/blocks';
+import PopupHelper from './popup_helper';
 
 enum HardwareModuleType {
     builtIn = 'builtin',
@@ -821,7 +821,7 @@ class Hardware implements IEntry.Hardware {
             if (window.popupHelper) {
                 this.popupHelper = window.popupHelper;
             } else {
-                this.popupHelper = new Entry.popupHelper(true);
+                this.popupHelper = new PopupHelper(true);
             }
         }
 
@@ -882,5 +882,4 @@ class Hardware implements IEntry.Hardware {
     }
 }
 
-// @ts-ignore
 Entry.HW = Hardware;
