@@ -55,7 +55,7 @@ Entry.init = function(container, options) {
     setDefaultTheme(options);
 
     Entry.paintMode = options.paintMode || 'literallycanvas';
-    this.createDom(container, this.type);
+    container && this.createDom(container, this.type);
     this.loadInterfaceState();
     this.overridePrototype();
     this.maxCloneLimit = 360;
