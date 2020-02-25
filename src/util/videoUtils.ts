@@ -7,8 +7,6 @@ import { GEHelper } from '../graphicEngine/GEHelper';
 import VideoWorker from './workers/video.worker';
 import { clamp } from 'lodash';
 
-declare let createjs: any;
-
 class MediaUtilsClass {
     constructor() {}
     initialize() {}
@@ -50,8 +48,6 @@ interface DetectedObject {
     class: String;
 }
 
-const worker = new VideoWorker();
-
 class VideoUtils extends MediaUtilsClass {
     // canvasVideo SETTING, used in all canvas'
     public CANVAS_WIDTH: number = 480;
@@ -83,7 +79,7 @@ class VideoUtils extends MediaUtilsClass {
     public faces: Array<any>;
 
     public isInitialized: boolean;
-
+    public worker: Worker = new VideoWorker();
     private stream: MediaStream;
     private imageCapture: any; // capturing class ImageCapture
 
@@ -176,7 +172,7 @@ class VideoUtils extends MediaUtilsClass {
         const [track] = this.stream.getVideoTracks();
         this.imageCapture = new ImageCapture(track);
 
-        worker.onmessage = (e: { data: { type: String; message: Array<any> | any } }) => {
+        this.worker.onmessage = (e: { data: { type: String; message: Array<any> | any } }) => {
             const { type, message } = e.data;
             if (Entry.engine.state !== 'run' && type !== 'init') {
                 return;
@@ -196,7 +192,7 @@ class VideoUtils extends MediaUtilsClass {
             }
         };
 
-        worker.postMessage({
+        this.worker.postMessage({
             type: 'init',
             width: this.CANVAS_WIDTH,
             height: this.CANVAS_HEIGHT,
@@ -219,7 +215,7 @@ class VideoUtils extends MediaUtilsClass {
     }
     async sendImageToWorker() {
         const captured = await this.imageCapture.grabFrame();
-        worker.postMessage({ type: 'estimate', image: captured }, [captured]);
+        this.worker.postMessage({ type: 'estimate', image: captured }, [captured]);
 
         // //motion test
         // const tempCtx = this.tempCanvas.getContext('2d');
@@ -396,7 +392,7 @@ class VideoUtils extends MediaUtilsClass {
                 break;
             case 'hflip':
                 this.flipStatus.horizontal = !this.flipStatus.horizontal;
-                worker.postMessage({
+                this.worker.postMessage({
                     type: 'option',
                     option: { flipStatus: this.flipStatus },
                 });
@@ -409,7 +405,7 @@ class VideoUtils extends MediaUtilsClass {
         }
     }
     manageModel(target: String, mode: String) {
-        worker.postMessage({
+        this.worker.postMessage({
             type: 'handle',
             target,
             mode,
@@ -455,7 +451,7 @@ class VideoUtils extends MediaUtilsClass {
         this.stream.getTracks().forEach((track) => {
             track.stop();
         });
-        worker.terminate();
+        this.worker.terminate();
         this.video = null;
         this.canvasVideo = null;
         this.inMemoryCanvas = null;
@@ -468,7 +464,7 @@ class VideoUtils extends MediaUtilsClass {
         this.isInitialized = false;
     }
     disableAllModels() {
-        worker.postMessage({
+        this.worker.postMessage({
             type: 'handleOff',
         });
     }

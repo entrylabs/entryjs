@@ -27,12 +27,8 @@ let modelStatus = {
 };
 
 // video Status
-let options: {
-    flipStatus: {
-        horizontal: boolean;
-        vertical: boolean;
-    };
-};
+let options: any;
+
 const dimension = { width: 0, height: 0 };
 
 // face detection option
@@ -110,8 +106,16 @@ async function poseDetect(context: any) {
     context.postMessage({ type: 'pose', message: { predictions, adjacents } });
 }
 
-self.onmessage = async function(e: {
-    data: { type: String; width: number; height: number; option: any };
+ctx.onmessage = async function(e: {
+    data: {
+        type: String;
+        width: number;
+        height: number;
+        option: any;
+        image: ImageBitmap;
+        target: String;
+        mode: String;
+    };
 }) {
     const { type } = e.data;
     switch (type) {
