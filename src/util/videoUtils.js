@@ -97,11 +97,33 @@ class VideoUtils {
         this.objects = [];
     }
 
+    async compatabilityChecker() {
+        if (!navigator.getUserMedia) {
+            throw new Entry.Utils.IncompatibleError();
+        }
+        if (!this.stream) {
+            try {
+                await navigator.mediaDevices.getUserMedia({
+                    audio: false,
+                    video: {
+                        facingMode: 'user',
+                        width: VIDEO_WIDTH,
+                        height: VIDEO_HEIGHT,
+                    },
+                });
+            } catch (err) {
+                throw new Entry.Utils.IncompatibleError('IncompatibleError', [
+                    Lang.Workspace.check_webcam_error,
+                ]);
+            }
+        }
+    }
+
     async initialize() {
         if (this.isInitialized) {
             return;
         }
-
+        await this.compatabilityChecker();
         this.isInitialized = true;
 
         // this canvas is for motion calculation

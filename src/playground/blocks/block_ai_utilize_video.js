@@ -358,6 +358,9 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             async func(sprite, script) {
                 const target = script.getField('TARGET');
                 const mode = script.getField('MODE');
+                if (!VideoUtils.isInitialized) {
+                    await VideoUtils.initialize();
+                }
                 VideoUtils.manageModel(target, mode);
             },
             syntax: {
@@ -384,6 +387,9 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             async func(sprite, script) {
                 const criteria = script.getField('CRITERIA');
                 const option = script.getField('OPTION');
+                if (!VideoUtils.isInitialized) {
+                    await VideoUtils.initialize();
+                }
                 if (option === 'on') {
                     VideoUtils.showIndicator(criteria);
                 } else {
@@ -409,6 +415,9 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             isNotFor: ['video'],
             async func(sprite, script) {
                 const target = script.getField('TARGET');
+                if (!VideoUtils.isInitialized) {
+                    await VideoUtils.initialize();
+                }
                 switch (target) {
                     case 'face':
                         return VideoUtils.faces.length || 0;
@@ -442,6 +451,9 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 const index = script.getField('INDEX');
                 const info = script.getField('INFO');
                 const faces = VideoUtils.faces;
+                if (!VideoUtils.isInitialized) {
+                    await VideoUtils.initialize();
+                }
                 if (faces.length <= index) {
                     return 0;
                 }
@@ -517,6 +529,9 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 const target = script.getField('TARGET');
                 const type = script.getField('TYPE');
                 let detected = VideoUtils.totalMotions;
+                if (!VideoUtils.isInitialized) {
+                    await VideoUtils.initialize();
+                }
                 if (target === 'self') {
                     detected = VideoUtils.motionDetect(sprite);
                 }
@@ -575,7 +590,9 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 const part = script.getField('PART');
                 const coord = script.getField('COORD');
                 const faces = VideoUtils.faces;
-
+                if (!VideoUtils.isInitialized) {
+                    await VideoUtils.initialize();
+                }
                 if (faces.length <= index) {
                     return 0;
                 }
@@ -629,8 +646,10 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 const index = script.getField('INDEX');
                 const part = script.getField('PART');
                 const coord = script.getField('COORD');
-
                 const poses = VideoUtils.poses.predictions;
+                if (!VideoUtils.isInitialized) {
+                    await VideoUtils.initialize();
+                }
                 if (poses.length < index) {
                     return 0;
                 }
