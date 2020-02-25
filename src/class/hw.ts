@@ -1,6 +1,7 @@
 ﻿'use strict';
 
 import HardwareSocketMessageHandler from './hardware/hardwareSocketMessageHandler';
+import HardwareMonitor from './hw_monitor';
 import '../playground/blocks';
 
 enum HardwareModuleType {
@@ -42,7 +43,7 @@ class Hardware implements IEntry.Hardware {
     public communicationType: string; // 'manual' || 'auto'
     private currentDeviceKey?: string;
     private hwModuleType: HardwareModuleType;
-    private hwMonitor?: IEntry.HardwareMonitor;
+    private hwMonitor?: HardwareMonitor;
 
     // 하드웨어 설치여부 확인용
     private ieLauncher: { set: () => void };
@@ -580,7 +581,7 @@ class Hardware implements IEntry.Hardware {
 
     private _setHardwareMonitorTemplate() {
         if (!this.hwMonitor) {
-            this.hwMonitor = new Entry.HWMonitor(this.hwModule);
+            this.hwMonitor = new HardwareMonitor(this.hwModule);
         } else {
             this.hwMonitor.setHwModule(this.hwModule);
             this.hwMonitor.initView();

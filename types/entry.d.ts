@@ -1,9 +1,9 @@
 declare class Entry {
-    static HWMonitor: IEntry.HardwareMonitor;
+    static HW: new () => IEntry.HardwareModule;
+    static SVG: any;
     static moduleManager: any; //TODO
     static popupHelper: any; //TODO
 
-    static HW: new () => IEntry.Hardware;
     // 엔트리 내 클래스들
     static skeleton: { [name: string]: ISkeleton };
     static options: IEntry.EntryOptions;

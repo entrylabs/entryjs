@@ -54,18 +54,4 @@ declare module IEntry {
         afterSend?: (sendQueue: HardwareMessageData) => void; // 데이서 송신 이후
         dataHandler?: (data: HardwareMessageData) => void;
     }
-
-    /**
-     * 하드웨어 모니터 프로퍼티 패널 오브젝트
-     * 하드웨어가 연결되면 필요여부에 따라 프로퍼티패널에 하드웨어 모니터가 노출됨
-     */
-    export interface HardwareMonitor {
-        new (hwModule: HardwareModule): HardwareMonitor;
-        initView: () => void;
-        generateView: () => void;
-        generateListView: () => void;
-        toggleMode: (mode: string) => void; // 'list' || 'both'?
-        setHwModule: (hwModule: HardwareModule) => void;
-        update: (portData: UnknownAny, sendQueue: UnknownAny) => void;
-    }
 }
