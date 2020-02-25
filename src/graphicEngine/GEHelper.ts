@@ -3,7 +3,6 @@ import { PIXIGlobal } from '../class/pixi/init/PIXIGlobal';
 import { GEDragHelper } from './GEDragHelper';
 import { IGEResManager } from './IGEResManager';
 import { EaselResManager } from './EaselResManager';
-import { PIXISprite } from '../class/pixi/plugins/PIXISprite';
 import { PIXIBrushAdaptor } from '../class/pixi/etc/PIXIBrushAdaptor';
 import { PIXIScaleAdaptor } from '../class/pixi/atlas/PIXIScaleAdaptor';
 import { connectedPartIndices } from '@tensorflow-models/posenet/dist/keypoints';
@@ -36,7 +35,7 @@ class CreateJsApplication implements IGraphicsEngineApplication {
     stage: any;
 
     constructor(canvas: HTMLCanvasElement) {
-        let stage = new createjs.Stage(canvas.id);
+        const stage = new createjs.Stage(canvas.id);
         createjs.Touch.enable(stage);
         stage.enableMouseOver(10);
         stage.mouseMoveOutside = true;
@@ -139,9 +138,9 @@ class _GEHelper extends GEHelperBase {
 
     cloneStamp(entity: any): any {
         if (this._isWebGL) {
-            let orgObj = entity.object;
+            const orgObj = entity.object;
             const orgTex = orgObj.internal_getOriginalTex && orgObj.internal_getOriginalTex();
-            let object = PIXIHelper.sprite('StampEntity', orgTex || orgObj.texture);
+            const object = PIXIHelper.sprite('StampEntity', orgTex || orgObj.texture);
             object.visible = orgObj.visible;
             object.interactive = false;
             object.interactiveChildren = false;
@@ -158,7 +157,7 @@ class _GEHelper extends GEHelperBase {
             );
             return object;
         } else {
-            let object = entity.object.clone();
+            const object = entity.object.clone();
             object.mouseEnabled = false;
             object.tickEnabled = false;
             object.filters = null;
@@ -168,9 +167,9 @@ class _GEHelper extends GEHelperBase {
 
     hitTestMouse(object: any): boolean {
         if (this._isWebGL) {
-            let pixiApp: PIXI.Application = Entry.stage._app;
-            let im = pixiApp.renderer.plugins.interaction;
-            let hitObject = im.hitTest(im.mouse.global, object);
+            const pixiApp: PIXI.Application = Entry.stage._app;
+            const im = pixiApp.renderer.plugins.interaction;
+            const hitObject = im.hitTest(im.mouse.global, object);
             return !!hitObject;
         } else {
             const stage = Entry.stage.canvas;
@@ -534,7 +533,7 @@ class _GEHelper extends GEHelperBase {
         if (this._isWebGL) {
             return PIXI.Texture.fromImage(path);
         } else {
-            let img: HTMLImageElement = new Image();
+            const img: HTMLImageElement = new Image();
             img.src = path;
             return img;
         }
@@ -561,7 +560,7 @@ class _GEHelper extends GEHelperBase {
     }
 
     newSpriteWithCallback(url: string, callback?: () => void) {
-        let img = new Image();
+        const img = new Image();
         if (callback) {
             const $img = $(img);
             const handle = () => {
@@ -651,12 +650,12 @@ class _ColorFilterHelper extends GEHelperBase {
     newColorMatrixFilter(matrixValue: number[]) {
         if (this._isWebGL) {
             matrixValue.length = 20; // pixi matrix 는 5 * 4
-            let m = new PIXI.filters.ColorMatrixFilter();
+            const m = new PIXI.filters.ColorMatrixFilter();
             m.matrix = matrixValue;
             return m;
         } else {
             //createjs matrix 는 5*5
-            let cm = new createjs.ColorMatrix();
+            const cm = new createjs.ColorMatrix();
             cm.copy(matrixValue);
             return new createjs.ColorMatrixFilter(cm);
         }
@@ -703,7 +702,7 @@ class _TextHelper extends GEHelperBase {
         if (this._isWebGL) {
             return PIXIHelper.text(str, font, color, textBaseline, textAlign);
         } else {
-            let t = new createjs.Text(str, font, color);
+            const t = new createjs.Text(str, font, color);
             textBaseline ? (t.textBaseline = textBaseline) : 0;
             textAlign ? (t.textAlign = textAlign) : 0;
             return t;
@@ -722,7 +721,7 @@ class _BrushHelper extends GEHelperBase {
 
     newShape(brush: PIXIBrushAdaptor | any) {
         if (this._isWebGL) {
-            let shape = PIXIHelper.newPIXIGraphics();
+            const shape = PIXIHelper.newPIXIGraphics();
             brush.internal_setShape(shape);
             return shape;
         } else {
