@@ -1,7 +1,7 @@
 ﻿'use strict';
 
 import HardwareSocketMessageHandler from './hardware/hardwareSocketMessageHandler';
-import HardwareMonitor from './hw_monitor';
+import HardwareMonitor from './hardware/hardwareMonitor';
 import '../playground/blocks';
 
 enum HardwareModuleType {
