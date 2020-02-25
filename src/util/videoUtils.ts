@@ -8,7 +8,6 @@ import VideoWorker from './workers/video.worker.ts';
 import { clamp } from 'lodash';
 
 class MediaUtilsClass {
-    constructor() {}
     initialize() {}
     reset() {}
     destroy() {}

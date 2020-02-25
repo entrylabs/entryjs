@@ -5,6 +5,8 @@
 
 const ctx: Worker = self as any;
 
+type IndicatorType = 'pose' | 'face' | 'object';
+
 const posenet = require('@tensorflow-models/posenet');
 const cocoSsd = require('@tensorflow-models/coco-ssd');
 const faceapi = require('face-api.js');
@@ -113,7 +115,7 @@ ctx.onmessage = async function(e: {
         height: number;
         option: any;
         image: ImageBitmap;
-        target: String;
+        target: IndicatorType;
         mode: String;
     };
 }) {
