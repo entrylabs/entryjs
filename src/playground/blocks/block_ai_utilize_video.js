@@ -538,12 +538,12 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 if (type === 'total') {
                     return clamp(detected.total / 10, 0, 100000).toString();
                 }
-                let rawX = detected.totalMotionDirection.x;
+                let rawX = detected.direction.x;
                 if (!VideoUtils.flipStatus.horizontal) {
                     rawX *= -1;
                 }
 
-                let rawY = detected.totalMotionDirection.y;
+                let rawY = detected.direction.y;
                 if (VideoUtils.flipStatus.vertical) {
                     rawY *= -1;
                 }
