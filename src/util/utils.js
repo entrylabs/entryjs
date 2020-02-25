@@ -279,21 +279,6 @@ Entry.cancelObjectEdit = function({ target, type }) {
     object.editObjectValues(false);
 };
 
-Entry.generateFunctionSchema = function(functionId) {
-    functionId = `func_${functionId}`;
-    if (Entry.block[functionId]) {
-        return;
-    }
-    let BlockSchema = function() {};
-    const blockPrototype = Entry.block.function_general;
-    BlockSchema.prototype = blockPrototype;
-    BlockSchema = new BlockSchema();
-    BlockSchema.changeEvent = new Entry.Event();
-    BlockSchema.template = Lang.template.function_general;
-
-    Entry.block[functionId] = BlockSchema;
-};
-
 Entry.getMainWS = function() {
     let ret;
     if (Entry.mainWorkspace) {
