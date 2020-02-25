@@ -2,6 +2,9 @@
  * nt11576 Lee.Jaewon
  * This is worker thread for detection purpose without blocking main thread to avoid delayed UI update
  */
+
+const ctx: Worker = self as any;
+
 const posenet = require('@tensorflow-models/posenet');
 const cocoSsd = require('@tensorflow-models/coco-ssd');
 const faceapi = require('face-api.js');
@@ -12,9 +15,9 @@ faceapi.env.monkeyPatch({
 });
 
 // instances, used as flag, handler class if each instances are loaded or not
-let mobileNet = null;
-let coco = null;
-let faceLoaded = false;
+let mobileNet: any = null;
+let coco: any = null;
+let faceLoaded: boolean = false;
 
 // flags if selected model(s) should estimate
 let modelStatus = {
@@ -24,7 +27,12 @@ let modelStatus = {
 };
 
 // video Status
-let options = {};
+let options: {
+    flipStatus: {
+        horizontal: boolean;
+        vertical: boolean;
+    };
+};
 const dimension = { width: 0, height: 0 };
 
 // face detection option
@@ -40,14 +48,13 @@ async function processImage() {
         faceDetect(this);
     } catch (err) {
         console.log('estimation error', err);
-        return [];
     }
     setTimeout(() => {
         processImage();
     }, 50);
 }
 
-async function objectDetect(context) {
+async function objectDetect(context: any) {
     if (!coco || !modelStatus.object) {
         return;
     }
@@ -56,7 +63,7 @@ async function objectDetect(context) {
     context.postMessage({ type: 'coco', message: predictions });
 }
 
-async function faceDetect(context) {
+async function faceDetect(context: any) {
     if (!faceLoaded || !modelStatus.face) {
         return;
     }
@@ -70,7 +77,7 @@ async function faceDetect(context) {
     context.postMessage({ type: 'face', message: predictions });
 }
 
-async function poseDetect(context) {
+async function poseDetect(context: any) {
     if (!mobileNet || !modelStatus.pose) {
         return;
     }
@@ -82,8 +89,8 @@ async function poseDetect(context) {
         scoreThreshold: 0.6,
         nmsRadius: 20,
     });
-    const adjacents = [];
-    predictions.forEach((pose) => {
+    const adjacents: Array<any> = [];
+    predictions.forEach((pose: any) => {
         // neck estimation by calculation, based on midst of shoulders and nose
         const leftShoulder = pose.keypoints[5];
         const rightShoulder = pose.keypoints[6];
@@ -103,7 +110,9 @@ async function poseDetect(context) {
     context.postMessage({ type: 'pose', message: { predictions, adjacents } });
 }
 
-self.onmessage = async function(e) {
+self.onmessage = async function(e: {
+    data: { type: String; width: number; height: number; option: any };
+}) {
     const { type } = e.data;
     switch (type) {
         case 'init':
@@ -118,7 +127,7 @@ self.onmessage = async function(e) {
                     inputResolution: { width: e.data.width, height: e.data.height },
                     multiplier: 1,
                 })
-                .then((mobileNetLoaded) => {
+                .then((mobileNetLoaded: any) => {
                     console.log('posenet loaded');
                     mobileNet = mobileNetLoaded;
                 });
@@ -127,7 +136,7 @@ self.onmessage = async function(e) {
                 .load({
                     base: 'lite_mobilenet_v2',
                 })
-                .then((cocoLoaded) => {
+                .then((cocoLoaded: any) => {
                     console.log('coco loaded');
                     coco = cocoLoaded;
                 });
