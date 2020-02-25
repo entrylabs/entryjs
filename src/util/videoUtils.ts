@@ -4,7 +4,7 @@
  */
 
 import { GEHelper } from '../graphicEngine/GEHelper';
-import VideoWorker from './workers/video.worker';
+import VideoWorker from './workers/video.worker.ts';
 import { clamp } from 'lodash';
 
 class MediaUtilsClass {
@@ -15,38 +15,39 @@ class MediaUtilsClass {
     compatabilityChecker() {} // throws error if failed
 }
 
-interface FlipStatus {
+type FlipStatus = {
     horizontal: boolean;
     vertical: boolean;
-}
+};
 
-interface ModelStatus {
+type ModelStatus = {
     pose: boolean;
     face: boolean;
     object: boolean;
-}
+};
 
-interface MotionElement {
+type MotionElement = {
     total: number;
     direction: {
         x: number;
         y: number;
     };
-}
+};
 
-interface Pixel {
+type Pixel = {
     r: number;
     g: number;
     b: number;
     rDiff: number;
     gDiff: number;
     bDiff: number;
-}
+};
 
-interface DetectedObject {
+type DetectedObject = {
     bbox: Array<number>;
     class: String;
-}
+};
+type IndicatorType = 'pose' | 'face' | 'object';
 
 class VideoUtils extends MediaUtilsClass {
     // canvasVideo SETTING, used in all canvas'
@@ -65,58 +66,35 @@ class VideoUtils extends MediaUtilsClass {
     public canvasVideo: PIXI.Sprite | createjs.Bitmap;
     public inMemoryCanvas: HTMLCanvasElement;
 
-    public flipStatus: FlipStatus;
-    public indicatorStatus: ModelStatus;
+    public flipStatus: FlipStatus = {
+        horizontal: false,
+        vertical: false,
+    };
+    public indicatorStatus: ModelStatus = {
+        pose: false,
+        face: false,
+        object: false,
+    };
 
     // detected parts
-    public motions: Array<Array<Pixel>>;
-    public totalMotions: MotionElement;
-    public objects: Array<DetectedObject>;
+    public motions: Pixel[][] = [...Array(this.CANVAS_HEIGHT / this._SAMPLE_SIZE)].map((e) =>
+        Array(this.CANVAS_WIDTH / this._SAMPLE_SIZE)
+    );
+    public totalMotions: MotionElement = { total: 0, direction: { x: 0, y: 0 } };
+    public objects: DetectedObject[] = [];
     public poses: {
-        predictions: Array<any>;
-        adjacents: Array<any>;
+        predictions: any[];
+        adjacents: any[];
     };
-    public faces: Array<any>;
+    public faces: any[] = [];
 
-    public isInitialized: boolean;
+    public isInitialized: boolean = false;
     public worker: Worker = new VideoWorker();
     private stream: MediaStream;
     private imageCapture: any; // capturing class ImageCapture
 
     constructor() {
         super();
-        // component references
-        this.video = null;
-        this.canvasVideo = null;
-
-        // video status
-        this.flipStatus = {
-            horizontal: false,
-            vertical: false,
-        };
-
-        // detection indicator status
-        this.indicatorStatus = {
-            pose: false,
-            face: false,
-            object: false,
-        };
-
-        // motion related, array indicates the samples on the image
-        // this.motions are the RGB data for the samples on the image
-        this.motions = [...Array(this.CANVAS_HEIGHT / this._SAMPLE_SIZE)].map((e) =>
-            Array(this.CANVAS_WIDTH / this._SAMPLE_SIZE)
-        );
-
-        this.totalMotions = { total: 0, direction: { x: 0, y: 0 } };
-        /////////////////////////////////
-
-        // detection data
-        this.objects = null;
-        this.poses = { predictions: [], adjacents: [] };
-        this.faces = [];
-
-        this.isInitialized = false;
         this.videoOnLoadHandler = this.videoOnLoadHandler.bind(this);
     }
     async initialize() {
@@ -411,10 +389,10 @@ class VideoUtils extends MediaUtilsClass {
             mode,
         });
     }
-    showIndicator(type: String) {
+    showIndicator(type: IndicatorType) {
         this.indicatorStatus[type] = true;
     }
-    removeIndicator(type: String) {
+    removeIndicator(type: IndicatorType) {
         this.indicatorStatus[type] = false;
         GEHelper.resetHandlers();
     }
