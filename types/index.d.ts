@@ -42,6 +42,13 @@ declare interface ISkeleton {
     statementPos?: (blockView: any) => Point[];
 }
 
+declare interface MediaUtilsInterface {
+    initialize(): void;
+    reset(): void;
+    destroy(): void;
+    compatabilityChecker(): void; // throws error if failed
+}
+
 declare module Entry {
     // 엔트리 내 클래스들
     export var skeleton: { [name: string]: ISkeleton };

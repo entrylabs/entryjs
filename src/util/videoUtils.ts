@@ -7,13 +7,6 @@ import { GEHelper } from '../graphicEngine/GEHelper';
 import VideoWorker from './workers/video.worker.ts';
 import { clamp } from 'lodash';
 
-class MediaUtilsClass {
-    initialize() {}
-    reset() {}
-    destroy() {}
-    compatabilityChecker() {} // throws error if failed
-}
-
 type FlipStatus = {
     horizontal: boolean;
     vertical: boolean;
@@ -48,7 +41,7 @@ type DetectedObject = {
 };
 type IndicatorType = 'pose' | 'face' | 'object';
 
-class VideoUtils extends MediaUtilsClass {
+class VideoUtils implements MediaUtilsInterface {
     // canvasVideo SETTING, used in all canvas'
     public CANVAS_WIDTH: number = 480;
     public CANVAS_HEIGHT: number = 270;
@@ -93,7 +86,6 @@ class VideoUtils extends MediaUtilsClass {
     private imageCapture: any; // capturing class ImageCapture
 
     constructor() {
-        super();
         this.videoOnLoadHandler = this.videoOnLoadHandler.bind(this);
     }
     async initialize() {
