@@ -706,7 +706,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 isNotFor: ['PingpongG1'],
                 func(sprite, script) {
                     const packet = Entry.PingpongG1.makePacket(0xa2, 0xe3, [0x70, 1, 0, ' ']);
-                    return Entry.PingpongG1.postCallReturn(script, packet);
+                    return Entry.PingpongG1.postCallReturn(script, packet, 400);
                 },
             },
         };
