@@ -193,11 +193,12 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
         }).on('select', (item) => {
             this.applyValue(item[1]);
             this.destroyOption();
-            $(this._blockView.contentSvgGroup).trigger('optionChanged', {
-                block: this._block,
-                value: this.getValue(),
-                index: this._index,
-            });
+            const { view = {} } = this._block.getThread();
+            if (view.reDraw) {
+                view.reDraw();
+            } else {
+                this._block.view.reDraw();
+            }
         });
         this.optionDomCreated();
     }

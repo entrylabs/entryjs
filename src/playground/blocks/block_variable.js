@@ -1062,7 +1062,7 @@ module.exports = {
                         throw new Error('can not remove value from array');
                     }
 
-                    list.deleteValue(value - 1);
+                    list.deleteValue(+value);
                     return script.callReturn();
                 },
                 syntax: {
