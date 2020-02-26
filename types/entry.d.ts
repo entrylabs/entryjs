@@ -1,7 +1,7 @@
 /// <reference path="./index.d.ts" />
 
 declare var Entry: {
-    HW: new () => any;
+    HW: new () => IEntry.Hardware;
     BlockView: any;
     Dom: EntryDomConstructor;
     SVG: any;
@@ -29,7 +29,7 @@ declare var Entry: {
     TEXT_ALIGN_CENTER: number;
     TEXT_ALIGN_RIGHT: number;
     block: { [blockName: string]: any };
-    hw: any; // HW instance
+    hw: IEntry.Hardware; // HW instance
 
     // from init option
     mediaFilePath: string;
@@ -41,4 +41,4 @@ declare var Entry: {
     dispatchEvent(eventName: string, ...args: any): void;
     getMainWS(): UnknownAny | undefined;
     assert(predicate: any, message: string): void;
-};
+}

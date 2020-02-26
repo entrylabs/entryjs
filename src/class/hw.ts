@@ -15,7 +15,7 @@ enum HardwareStatement {
     hardwareConnected = 'hardwareConnected',
 }
 
-export default class Hardware {
+export default class Hardware implements IEntry.Hardware {
     get httpsServerAddress() {
         return 'https://hw.playentry.org:23518';
     } // 하드웨어 프로그램 접속용 주소
