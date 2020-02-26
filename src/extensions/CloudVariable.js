@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import { dmet, dmetList, dmetVariable, dmetTable } from './dmet';
+import { dmet, dmetList, dmetTable, dmetVariable } from './dmet';
 import singleInstance from '../core/singleInstance';
 
 class CloudVariableExtension {

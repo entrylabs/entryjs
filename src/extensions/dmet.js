@@ -3,8 +3,7 @@ import mapValues from 'lodash/mapValues';
 import get from 'lodash/get';
 import set from 'lodash/set';
 import cloneDeep from 'lodash/cloneDeep';
-import { toNumber } from '../util/common';
-import CommonUtils from '../util/common';
+import CommonUtils, { toNumber } from '../util/common';
 
 class dmetTable {
     constructor(array = [], id) {

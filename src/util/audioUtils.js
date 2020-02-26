@@ -31,6 +31,7 @@ class AudioUtils {
         this._currentVolume = -1;
         this._audioChunks = [];
         this.result = null;
+        this.startedRecording = false;
     }
 
     async checkUserMicAvailable() {
@@ -146,7 +147,7 @@ class AudioUtils {
 
             this._stopMediaRecorder();
             this._mediaRecorder.start();
-
+            this.startedRecording = true;
             Entry.engine.toggleAudioShadePanel();
             this._socketClient.on('message', (e) => {
                 switch (e) {
@@ -188,7 +189,11 @@ class AudioUtils {
             return;
         }
         Entry.dispatchEvent('audioRecordProcessing');
-        Entry.engine.toggleAudioProgressPanel();
+        if (this.startedRecording) {
+            Entry.engine.toggleAudioProgressPanel();
+        }
+        this.startedRecording = false;
+
         if (option.silent) {
             this._mediaRecorder.onstop = () => {
                 console.log('silent stop');
