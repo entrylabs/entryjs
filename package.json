@@ -70,6 +70,7 @@
         "@babel/preset-env": "^7.8.4",
         "@babel/runtime": "^7.8.4",
         "@egjs/visible": "^2.1.0",
+        "@types/audiobuffer-to-wav": "^1.0.0",
         "@types/jquery": "^3.3.31",
         "@types/lodash": "^4.14.136",
         "@types/node": "^11.9.5",

@@ -8,7 +8,7 @@ const DEFAULT_ADDR = {
     path: '/vc',
 };
 
-export function voiceApiConnect(addr = DEFAULT_ADDR, language = 'Kor', cb) {
+export function voiceApiConnect(addr = DEFAULT_ADDR, language = 'Kor') {
     return new Promise((resolve, reject) => {
         const client = io(`https://${addr.hostname}`, {
             path: addr.path,
