@@ -21,7 +21,7 @@ const createEntryDom: EntryDomConstructor = function(tag, options) {
 
     options.id && dom.attr('id', options.id);
     options.class && dom.addClass(options.class);
-    options.classes && options.classes.forEach(dom.addClass);
+    options.classes && options.classes.forEach(dom.addClass.bind(dom));
     options.text && dom.text(options.text);
     options.src && dom.attr('src', options.src);
     options.href && dom.attr('href', options.href);
