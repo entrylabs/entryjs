@@ -20,6 +20,55 @@ faceapi.env.monkeyPatch({
 let mobileNet: any = null;
 let coco: any = null;
 let faceLoaded: boolean = false;
+const weightsUrl = `${self.location.origin}/lib/entry-js/weights`;
+
+// load model right after mount
+posenet
+    .load({
+        architecture: 'MobileNetV1',
+        outputStride: 16,
+        inputResolution: { width: 480, height: 270 },
+        multiplier: 0.5,
+    })
+    .then((mobileNetLoaded: any) => {
+        mobileNet = mobileNetLoaded;
+        console.log('posenet pre sample');
+        // load sample
+        mobileNet.estimateMultiplePoses(offCanvas, {
+            flipHorizontal: false,
+            maxDetections: 4,
+            scoreThreshold: 0.6,
+            nmsRadius: 20,
+        });
+    });
+
+cocoSsd
+    .load({
+        base: 'lite_mobilenet_v2',
+    })
+    .then((cocoLoaded: any) => {
+        coco = cocoLoaded;
+        console.log('coco pre sample');
+        // load sample
+        coco.detect(offCanvas);
+    });
+
+Promise.all([
+    faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
+    faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
+    faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
+    faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
+]).then(() => {
+    faceLoaded = true;
+    console.log('face pre sample');
+
+    // load sample
+    faceapi
+        .detectAllFaces(offCanvas, tinyFaceDetectOption)
+        .withFaceLandmarks()
+        .withAgeAndGender()
+        .withFaceExpressions();
+});
 
 // flags if selected model(s) should estimate
 let modelStatus = {
@@ -71,7 +120,6 @@ async function faceDetect(context: any) {
         .withFaceLandmarks()
         .withAgeAndGender()
         .withFaceExpressions();
-
     context.postMessage({ type: 'face', message: predictions });
 }
 
@@ -102,7 +150,7 @@ async function poseDetect(context: any) {
         };
         pose.keypoints[21] = { part: 'neck', position: neckPos, score: -1 };
         //---------------------------------------
-        const adjacentMap = posenet.getAdjacentKeyPoints(pose.keypoints, 0.1);
+        const adjacentMap = posenet.getAdjacentKeyPoints(pose.keypoints, 0.05);
         adjacents.push(adjacentMap);
     });
     context.postMessage({ type: 'pose', message: { predictions, adjacents } });
@@ -124,38 +172,6 @@ ctx.onmessage = async function(e: {
         case 'init':
             dimension.width = e.data.width;
             dimension.height = e.data.height;
-            const weightsUrl = `${self.location.origin}/lib/entry-js/weights`;
-
-            posenet
-                .load({
-                    architecture: 'MobileNetV1',
-                    outputStride: 16,
-                    inputResolution: { width: e.data.width, height: e.data.height },
-                    multiplier: 1,
-                })
-                .then((mobileNetLoaded: any) => {
-                    console.log('posenet loaded');
-                    mobileNet = mobileNetLoaded;
-                });
-
-            cocoSsd
-                .load({
-                    base: 'lite_mobilenet_v2',
-                })
-                .then((cocoLoaded: any) => {
-                    console.log('coco loaded');
-                    coco = cocoLoaded;
-                });
-
-            Promise.all([
-                faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
-                faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
-                faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
-                faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
-            ]).then(() => {
-                console.log('face model loaded');
-                faceLoaded = true;
-            });
             console.log('video worker loaded');
             this.postMessage({ type: 'init', message: 'done' });
             processImage();
