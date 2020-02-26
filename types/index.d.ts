@@ -53,7 +53,7 @@ declare interface EntryDomOptions {
 }
 
 declare interface EntryDom extends JQuery {
-    bindOnClick: (e: any) => this;
+    bindOnClick?: (e: any) => this;
 }
 
 declare type EntryDomConstructor = (
