@@ -1,39 +1,44 @@
-declare class Entry {
-    static HW: new () => IEntry.Hardware;
-    static SVG: any;
-    static moduleManager: any; //TODO
-    static popupHelper: any; //TODO
+/// <reference path="./index.d.ts" />
+
+declare var Entry: {
+    HW: new () => any;
+    BlockView: any;
+    Dom: EntryDomConstructor;
+    SVG: any;
+    moduleManager: any; //TODO
+    popupHelper: any; //TODO
 
     // 엔트리 내 클래스들
-    static skeleton: { [name: string]: ISkeleton };
-    static options: IEntry.EntryOptions;
-    static toast: IEntry.WorkspaceToast;
-    static playground: IEntry.Playground;
-    static workspace: UnknownAny;
-    static propertyPanel: IEntry.PropertyPanel;
-    static container: IEntry.Container;
-    static stage: IEntry.Stage;
-    static Utils: UnknownAny;
+    skeleton: { [name: string]: ISkeleton };
+    options: IEntry.EntryOptions;
+    toast: IEntry.WorkspaceToast;
+    playground: IEntry.Playground;
+    workspace: UnknownAny;
+    propertyPanel: IEntry.PropertyPanel;
+    container: IEntry.Container;
+    stage: IEntry.Stage;
+    Utils: UnknownAny;
 
     // 엔트리에서 네임스페이스에 할당되어있는 특정 객체들
-    static HARDWARE_LIST: { [hardwareName: string]: IEntry.HardwareModule };
-    static EXTERNAL_MODULE_LIST?: string[];
-    static events_: any;
-    static requestUpdate: boolean;
-    static TEXT_ALIGNS: string[];
-    static TEXT_ALIGN_LEFT: number;
-    static TEXT_ALIGN_CENTER: number;
-    static TEXT_ALIGN_RIGHT: number;
-    static block: { [blockName: string]: IEntry.EntryBlock };
-    static hw: IEntry.Hardware; // HW instance
+    HARDWARE_LIST: { [hardwareName: string]: any };
+    EXTERNAL_MODULE_LIST?: string[];
+    events_: any;
+    requestUpdate: boolean;
+    TEXT_ALIGNS: string[];
+    TEXT_ALIGN_LEFT: number;
+    TEXT_ALIGN_CENTER: number;
+    TEXT_ALIGN_RIGHT: number;
+    block: { [blockName: string]: any };
+    hw: any; // HW instance
 
     // from init option
-    static mediaFilePath: string;
-    static moduleBaseUrl: string;
+    mediaFilePath: string;
+    moduleBaseUrl: string;
 
     // 엔트리에서 네임스페이스에 할당되어있는 특정 함수들
-    static addEventListener: (type: string, listener: () => void) => void;
-    static dispatchEvent(eventName: string, ...args: any): void;
-    static getMainWS(): UnknownAny | undefined;
-    static assert(predicate: any, message: string): void;
-}
+    addEventListener(type: string, listener: () => void): void;
+    removeEventListener(eventName: string, listener: () => void): void;
+    dispatchEvent(eventName: string, ...args: any): void;
+    getMainWS(): UnknownAny | undefined;
+    assert(predicate: any, message: string): void;
+};

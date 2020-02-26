@@ -48,7 +48,8 @@ module.exports = {
             {
                 test: /\.tsx?$/,
                 loader: 'ts-loader',
-                options: { transpileOnly: process.env.NODE_ENV !== 'development' },
+                exclude: /node_modules/,
+                options: { transpileOnly: process.env.NODE_ENV === 'production' },
             },
             {
                 test: /\.(css|less)$/,

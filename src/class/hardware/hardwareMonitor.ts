@@ -1,5 +1,3 @@
-'use strict';
-
 const hwMonitorSvgTemplate =
     '<svg id="hwMonitor" width="100%" height="100%"' +
     'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>';
