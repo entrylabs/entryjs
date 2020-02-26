@@ -436,11 +436,9 @@ class _GEHelper extends GEHelperBase {
 
     drawObjectBox(objects: Array<any>, flipStatus: any) {
         let objectsList: any = [];
-
         objects.forEach((object: any) => {
             const bbox = object.bbox;
-            const name = object.class || '';
-
+            const name = object.class ? Lang.video_object_params[object.class] : '';
             let x = bbox[0];
             let y = bbox[1];
             const width = bbox[2];
@@ -468,13 +466,7 @@ class _GEHelper extends GEHelperBase {
             objectsList.forEach((target: any) => {
                 const { textpoint, name, x, y, width, height } = target;
                 if (name) {
-                    const text = PIXIHelper.text(
-                        name.toString(),
-                        '20px Nanum Gothic',
-                        '',
-                        'middle',
-                        'center'
-                    );
+                    const text = PIXIHelper.text(name, '20px Nanum Gothic', '', 'middle', 'center');
                     text.x = textpoint.x;
                     text.y = textpoint.y;
                     handler.addChild(text);
@@ -491,7 +483,7 @@ class _GEHelper extends GEHelperBase {
                 if (name) {
                     const ctx = Entry.stage.canvas.canvas.getContext('2d');
                     ctx.font = '30px Arial';
-                    ctx.fillText(name, textpoint.x, textpoint.y + 10);
+                    ctx.fillText(name, textpoint.x, textpoint.y);
                 }
                 handler
                     .setStrokeStyle(8, 'round')
