@@ -1,5 +1,9 @@
 /// <reference path="./index.d.ts" />
 
+/**
+ * 엔트리 실제 인스턴스에 대한 정의
+ */
+
 declare var Entry: {
     HW: new () => IEntry.Hardware;
     BlockView: any;
