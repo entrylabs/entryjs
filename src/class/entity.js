@@ -1336,10 +1336,10 @@ Entry.EntityObject = class EntityObject {
 
     // 기존 스펙으로 롤백(#11434)
     eraseBrush() {
-        var brush = this.brush;
+        const brush = this.brush;
         if (brush) {
-            var stroke = brush._stroke.style;
-            var style = brush._strokeStyle.width;
+            const stroke = brush._stroke.style;
+            const style = brush._strokeStyle.width;
             brush
                 .clear()
                 .setStrokeStyle(style)
