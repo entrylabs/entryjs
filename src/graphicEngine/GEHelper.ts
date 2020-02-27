@@ -482,7 +482,7 @@ class _GEHelper extends GEHelperBase {
 
                 if (name) {
                     handler.append({
-                        exec: function(ctx, shape) {
+                        exec: (ctx: any) => {
                             ctx.font = '20px Nanum Gothic';
                             ctx.fillText(name, textpoint.x - 5, textpoint.y + 5);
                         },
