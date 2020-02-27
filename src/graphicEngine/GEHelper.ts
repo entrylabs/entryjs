@@ -255,7 +255,6 @@ class _GEHelper extends GEHelperBase {
             this.objectIndicatorGraphic = this.createNewIndicatorGraphic();
             Entry.stage.canvas.addChild(this.objectIndicatorGraphic);
         }
-
         this.tickByEngine();
     }
 
@@ -265,20 +264,16 @@ class _GEHelper extends GEHelperBase {
         }
         const targetContainer = Entry.stage.canvas.getChildAt(2);
         targetContainer.removeChild(canvasVideo);
-
-        this.tickByEngine();
     }
 
     hFlipVideoElement(canvasVideo: PIXI.Sprite | createjs.Bitmap): any {
         const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = canvasVideo;
         canvasVideo.setTransform(-x, y, -scaleX, scaleY, rotation, skewX, skewY, regX, regY);
-        this.tickByEngine();
     }
 
     vFlipVideoElement(canvasVideo: PIXI.Sprite | createjs.Bitmap): any {
         const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = canvasVideo;
         canvasVideo.setTransform(x, -y, scaleX, -scaleY, rotation, skewX, skewY, regX, regY);
-        this.tickByEngine();
     }
 
     resetCanvasBrightness(canvasVideo: PIXI.Sprite | createjs.Bitmap) {
@@ -293,19 +288,14 @@ class _GEHelper extends GEHelperBase {
     }
 
     setVideoBrightness(canvasVideo: PIXI.Sprite | createjs.Bitmap, value: number): any {
+        const filter = this.colorFilter.brightness(value);
         if (this._isWebGL) {
-            const recalculated = (value + 100) / 200;
-            const colorMatrix = new PIXI.filters.ColorMatrixFilter();
-            canvasVideo.filters = [colorMatrix];
-            colorMatrix.brightness(recalculated);
-            colorMatrix.enabled = true;
+            canvasVideo.filters = [filter];
+            filter.enabled = true;
         } else {
-            const recalculated = (((value - 30) / 200) * 255) / 2;
-            const colorMatrix = new createjs.ColorMatrix().adjustBrightness(recalculated);
-            const filter = new createjs.ColorMatrixFilter();
-            filter.matrix = colorMatrix;
             canvasVideo.uncache();
             canvasVideo.filters = [filter];
+            canvasVideo.tickEnabled = true;
             canvasVideo.cache(0, 0, canvasVideo.image.videoWidth, canvasVideo.image.videoHeight);
         }
         return canvasVideo;
@@ -337,7 +327,6 @@ class _GEHelper extends GEHelperBase {
             this.poseIndicatorGraphic.graphics.clear();
             this.objectIndicatorGraphic.graphics.clear();
         }
-        this.tickByEngine();
     }
 
     drawHumanPoints(poses: Array<any>, flipStatus: any) {

@@ -406,7 +406,6 @@ class VideoUtils implements MediaUtilsInterface {
 
         GEHelper.resetCanvasBrightness(this.canvasVideo);
         GEHelper.setVideoAlpha(this.canvasVideo, 50);
-        GEHelper.tickByEngine();
 
         this.poses = { predictions: [], adjacents: [] };
         this.faces = [];
