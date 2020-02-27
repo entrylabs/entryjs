@@ -1334,11 +1334,17 @@ Entry.EntityObject = class EntityObject {
         this.brush = null;
     }
 
-    /*
-     * erase brush
-     */
+    // 기존 스펙으로 롤백(#11434)
     eraseBrush() {
-        this._removeShapes();
+        var brush = this.brush;
+        if (brush) {
+            var stroke = brush._stroke.style;
+            var style = brush._strokeStyle.width;
+            brush
+                .clear()
+                .setStrokeStyle(style)
+                .beginStroke(stroke);
+        }
         Entry.requestUpdate = true;
     }
 
