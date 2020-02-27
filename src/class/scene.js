@@ -617,6 +617,9 @@ Entry.Scene = class {
     }
 
     isMax() {
+        if (typeof this.maxCount !== 'number' || this.maxCount != 20) {
+            this.maxCount = 20;
+        }
         return this.scenes_.length >= this.maxCount;
     }
 
