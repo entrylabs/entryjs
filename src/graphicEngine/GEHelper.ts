@@ -300,7 +300,7 @@ class _GEHelper extends GEHelperBase {
             colorMatrix.brightness(recalculated);
             colorMatrix.enabled = true;
         } else {
-            const recalculated = ((value + 100) * 255 - 25500) / 200;
+            const recalculated = (((value - 30) / 200) * 255) / 2;
             const colorMatrix = new createjs.ColorMatrix().adjustBrightness(recalculated);
             const filter = new createjs.ColorMatrixFilter();
             filter.matrix = colorMatrix;
