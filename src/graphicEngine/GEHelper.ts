@@ -481,9 +481,12 @@ class _GEHelper extends GEHelperBase {
                 const { textpoint, name, x, y, width, height } = target;
 
                 if (name) {
-                    const ctx = Entry.stage.canvas.canvas.getContext('2d');
-                    ctx.font = '30px Arial';
-                    ctx.fillText(name, textpoint.x, textpoint.y);
+                    handler.append({
+                        exec: function(ctx, shape) {
+                            ctx.font = '20px Nanum Gothic';
+                            ctx.fillText(name, textpoint.x - 5, textpoint.y + 5);
+                        },
+                    });
                 }
                 handler
                     .setStrokeStyle(8, 'round')
