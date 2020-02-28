@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const DelayTime = 0;
 let LmotorSpeed = 0;
@@ -6,7 +6,7 @@ let RmotorSpeed = 0;
 
 Entry.krc = 
 {
-	id: "3A.2",	
+	id: '3A.2',	
     name: "KRC",
     url: "http://www.kairobot.co.kr/",
     imageName: "KRC.png",
