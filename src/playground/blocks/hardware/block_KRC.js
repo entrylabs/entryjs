@@ -24,8 +24,8 @@ Entry.krc =
         } else {
             let keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach((key) => {
-                Entry.hw.sendQueue.SET[key].data = 0;
-                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                Entry.hw.sendQueue.SET[parseInt(key)].data = 0;
+                Entry.hw.sendQueue.SET[parseInt(key)].time = new Date().getTime();
             });   
         }
         Entry.hw.update();
@@ -284,7 +284,7 @@ Entry.krc.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            func: function(sprite, script) {
+            func: (sprite, script) => {
                 return script.getStringField("PORT");
             },
         },
@@ -588,8 +588,7 @@ Entry.krc.getBlocks = function() {
             },
             class: "krc_LV1",
             isNotFor: ["KRC"],
-            func: function(sprite, script) 
-			{
+            func: (sprite, script) => {
                 var port = 19;//script.getNumberValue("PORT", script);
 				//port += 2;
 				var lspeed = 0;
@@ -685,7 +684,7 @@ Entry.krc.getBlocks = function() {
                 if (!Entry.hw.sendQueue["SET"]) {
                     Entry.hw.sendQueue["SET"] = {};
                 }
-                Entry.hw.sendQueue["SET"][port] = 
+                Entry.hw.sendQueue["SET"][parseInt(port)] = 
 				{
                     type: Entry.krc.sensorTypes.SERVO,
                     data: [angle,speed],
@@ -747,7 +746,7 @@ Entry.krc.getBlocks = function() {
                 if (!Entry.hw.sendQueue["SET"]) {
                     Entry.hw.sendQueue["SET"] = {};
                 }
-                Entry.hw.sendQueue["SET"][port] = {
+                Entry.hw.sendQueue["SET"][parseInt(port)] = {
                     type: Entry.krc.sensorTypes.DIGITAL,    /// 출력 디바이스
                     data: value,
                     time: new Date().getTime(),
@@ -800,7 +799,7 @@ Entry.krc.getBlocks = function() {
                     time: new Date().getTime(),
                 };
 		
-				return DIGITAL[port];
+				return DIGITAL[parseInt(port)];
             },
             syntax: { js: [], py: [] },
         },	
@@ -885,7 +884,7 @@ Entry.krc.getBlocks = function() {
                 const BtnIndex = script.getNumberValue("PORT");				
                 const ANALOG = Entry.hw.portData.ANALOG;
 
-                return ((ANALOG[BtnIndex]*4)*3)/10;
+                return ((ANALOG[parseInt(BtnIndex)]*4)*3)/10;
             },
             syntax: { js: [], py: [] },
         },
@@ -954,12 +953,12 @@ Entry.krc.getBlocks = function() {
                 if (!script.isStart) {
                     if (typeof string === "string") {
                         for (let i = 0; i < string.length; i++) {
-                            text[i] = Entry.memaker.toByte(string[i]);
+                            text[i] = Entry.memaker.toByte(string[parseInt(i)]);
                         }
                     } else if (typeof string === "number") {
                         var NumToString = string.toString();
                         for (let i = 0; i < NumToString.length; i++) {
-                            text[i] = Entry.memaker.toByte(NumToString[i]);
+                            text[i] = Entry.memaker.toByte(NumToString[parseInt(i)]);
                         }
                     } else {
                         text[0] = string;
