@@ -353,7 +353,7 @@ Entry.krc.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            func: function(sprite, script) {
+            func: (sprite, script) => {
                 return script.getField("PORT");
             },
         },
@@ -668,8 +668,7 @@ Entry.krc.getBlocks = function() {
             },
             class: "krc_LV1",
             isNotFor: ["KRC"],
-            func: function(sprite, script) 
-			{
+            func: (sprite, script) => {
                 var port = script.getNumberValue("PORT", script);
                 let angle = script.getNumberValue("ANGLE", script);
                 let speed = script.getNumberValue("SPEED", script);
@@ -843,7 +842,7 @@ Entry.krc.getBlocks = function() {
                 var BtnIndex = script.getNumberValue("PORT");				
                 const ANALOG = Entry.hw.portData.ANALOG;
 
-                return ANALOG[BtnIndex];
+                return ANALOG[parseInt(BtnIndex)];
             },
             syntax: { js: [], py: [] },
         },
