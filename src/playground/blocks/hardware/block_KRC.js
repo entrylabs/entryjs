@@ -14,7 +14,8 @@ Entry.krc = {
         en: 'KRC_S',
     },
 
-    setZero: () => {          ///  하드웨어 초기화 로직
+    setZero: () => { 
+        //  하드웨어 초기화 로직
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
                 GET: {},
@@ -32,8 +33,8 @@ Entry.krc = {
         RmotorSpeed = 0;
     },
     Static: {
-//        krc_BLOCK_COLOR: '#00979D', // gray(#848484)
-//        krc_ARROW_COLOR_HW: '#00979D',
+        //        krc_BLOCK_COLOR: '#00979D', // gray(#848484)
+        //        krc_ARROW_COLOR_HW: '#00979D',
     },
     sensorTypes: {
         ALIVE: 0,
@@ -46,27 +47,27 @@ Entry.krc = {
         MOTOR: 12,
         USONIC_SET: 33,
         LCD_SET: 40,
-       },
-    BlockState: {},	
+    },
+    BlockState: {},
 };
 
 Entry.krc.blockMenuBlocks = [
-/// 하드웨어 블록 등록 , 여기에 등록된 블록이 순서대로 나열되며 설정한 이름으로 화면에 보임
-        'krc_buzzer_onoff',// 스피커 삐 소리
-        'krc_set_motor_speed',                  // DC모터 속도제어
-        'krc_motor_stop',            // DC모터 정지하기	
-        'krc_set_servo',                        // 서보모터 제어
+    /// 하드웨어 블록 등록 , 여기에 등록된 블록이 순서대로 나열되며 설정한 이름으로 화면에 보임
+    'krc_buzzer_onoff',// 스피커 삐 소리
+    'krc_set_motor_speed',                  // DC모터 속도제어
+    'krc_motor_stop',            // DC모터 정지하기	
+    'krc_set_servo',                        // 서보모터 제어
+    
+    'krc_digital_onoff',                   /// 디지털 포트 제어
+    'krc_get_digital_value',	            //디지탈 입력
+    'krc_get_analog_value',                 // 아날로그 입력
+    'krc_get_usonic_value',              //초음파센서 읽기
+    
+    'krc_set_lcd_string',
+    'krc_set_lcd_backlight',
+    'krc_set_lcd_clear',
 
-        'krc_digital_onoff',                   /// 디지털 포트 제어
-        'krc_get_digital_value',	            //디지탈 입력
-        'krc_get_analog_value',                 // 아날로그 입력
-        'krc_get_usonic_value',              //초음파센서 읽기
-       
-        'krc_set_lcd_string',
-        'krc_set_lcd_backlight',
-        'krc_set_lcd_clear',
-
-		'krc_get_analog_mapping',
+	'krc_get_analog_mapping',
 
 		
 ];
