@@ -14,7 +14,7 @@ Entry.krc = {
         en: 'KRC_S',
     },
 
-    setZero: () => {///  하드웨어 초기화 로직
+    setZero: () => {          ///  하드웨어 초기화 로직
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
                 GET: {},
@@ -31,13 +31,10 @@ Entry.krc = {
         LmotorSpeed = 0;
         RmotorSpeed = 0;
     },
-	
     Static: {
 //        krc_BLOCK_COLOR: '#00979D', // gray(#848484)
 //        krc_ARROW_COLOR_HW: '#00979D',
-
     },
-	
     sensorTypes: {
         ALIVE: 0,
         DIGITAL: 1,
@@ -50,7 +47,6 @@ Entry.krc = {
         USONIC_SET: 33,
         LCD_SET: 40,
        },
- 
     BlockState: {},	
 };
 
