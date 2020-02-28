@@ -408,7 +408,7 @@ Entry.krc.getBlocks = function() {
                     }
                     if (duration === 0) // 음 길이가 0 이면
 					{
-                        Entry.hw.sendQueue["SET"][port] = 
+                        Entry.hw.sendQueue["SET"][parseInt(port)] = 
 						{
                             type: Entry.krc.sensorTypes.TONE,
                             data: 0,
@@ -449,7 +449,7 @@ Entry.krc.getBlocks = function() {
 				{
                     delete script.timeFlag;
                     delete script.isStart;
-                    Entry.hw.sendQueue["SET"][port] = 
+                    Entry.hw.sendQueue["SET"][parseInt(port)] = 
 					{
                         type: Entry.krc.sensorTypes.TONE,
                         data: 0,
