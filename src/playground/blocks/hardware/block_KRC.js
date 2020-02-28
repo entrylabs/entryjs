@@ -1,6 +1,6 @@
 "use strict";
 
-let DelayTime = 0;
+const DelayTime = 0;
 let LmotorSpeed = 0;
 let RmotorSpeed = 0;
 
@@ -962,8 +962,10 @@ Entry.krc.getBlocks = function() {
                         }
                     } else if (typeof string === "number") {
                         var NumToString = string.toString();
+                        var td;
                         for (let i = 0; i < NumToString.length; i++) {
-                            text[i] = Entry.memaker.toByte(NumToString[i]);
+                            td = Entry.memaker.toByte(NumToString[i]);
+                            text[i] = td;
                         }
                     } else {
                         text[0] = string;
@@ -1094,8 +1096,7 @@ Entry.krc.getBlocks = function() {
             },
             class: "krc_LV5",
             isNotFor: ["KRC"],
-            func: function(sprite, script) 
-			{
+            func: (sprite, script) => {
                 //var port = 0;
 
                 if (!Entry.hw.sendQueue["SET"]) {
