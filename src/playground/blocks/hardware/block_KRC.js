@@ -423,7 +423,7 @@ Entry.krc.getBlocks = function() {
                     script.isStart = true;  // 출력 시작 플래그 셋
                     script.timeFlag = 1;    // 시간플래그 셋
 
-                    Entry.hw.sendQueue["SET"][port] = 
+                    Entry.hw.sendQueue["SET"][parseInt(port)] = 
 					{
                         type: Entry.krc.sensorTypes.TONE,
                         data: 
