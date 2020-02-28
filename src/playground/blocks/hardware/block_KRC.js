@@ -168,7 +168,7 @@ Entry.krc.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            func: function(sprite, script) {
+            func: (sprite, script) => {
                 return script.getField("PORT");
             },
         },	
@@ -199,7 +199,7 @@ Entry.krc.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            func: function(sprite, script) {
+            func: (sprite, script) => {
                 return script.getField("PORT");
             },
         },	
@@ -247,7 +247,7 @@ Entry.krc.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            func: function(sprite, script) {
+            func: (sprite, script) => {
                 return script.getStringField("PORT");
             },
         },
@@ -394,8 +394,7 @@ Entry.krc.getBlocks = function() {
             },
             class: "krc_LV1",
             isNotFor: ["KRC"],
-            func: function(sprite, script) 
-			{
+            func: (sprite, script) => {
                 const port = 10;
                 let duration = script.getNumberValue("VALUE");	// 길이	
 //                var octave = 5;    // 옥타브
@@ -509,8 +508,7 @@ Entry.krc.getBlocks = function() {
             },
             class: "krc_LV1",
             isNotFor: ["KRC"],
-            func: function(sprite, script) 
-			{
+            func: (sprite, script) => {
                 var lspeed = script.getNumberValue("LSPEED", script);
                 var rspeed = script.getNumberValue("RSPEED", script);
                 var port = 3;               		
@@ -599,7 +597,7 @@ Entry.krc.getBlocks = function() {
                     if (!Entry.hw.sendQueue["SET"]) {
                         Entry.hw.sendQueue["SET"] = {};
                     }
-                    Entry.hw.sendQueue["SET"][port] = 
+                    Entry.hw.sendQueue["SET"][parseInt(port)] = 
                     {
                         type: Entry.krc.sensorTypes.MOTOR,
                         data: [lspeed, rspeed],
@@ -953,12 +951,12 @@ Entry.krc.getBlocks = function() {
                 if (!script.isStart) {
                     if (typeof string === "string") {
                         for (let i = 0; i < string.length; i++) {
-                            text[i] = Entry.memaker.toByte(string[parseInt(i)]);
+                            text[parseInt(i)] = Entry.memaker.toByte(string[parseInt(i)]);
                         }
                     } else if (typeof string === "number") {
                         var NumToString = string.toString();
                         for (let i = 0; i < NumToString.length; i++) {
-                            text[i] = Entry.memaker.toByte(NumToString[parseInt(i)]);
+                            text[parseInt(i)] = Entry.memaker.toByte(NumToString[parseInt(i)]);
                         }
                     } else {
                         text[0] = string;
