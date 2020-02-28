@@ -95,9 +95,7 @@ Entry.krc.setLanguage = function() {    // 블록 이름  번역
                 'krc_set_lcd_backlight': 'lcd 후광(백라이트) %1 하기 %2',
                 'krc_set_lcd_clear': 'lcd 지우기 %1',
 
-
 				'krc_get_analog_mapping': ' %1 값 %2 ~ %3 에서 %4 ~ %5 으로 변환값', 
-				
             },
             Blocks: {
                 'On_block': '켜짐(HIGH, 5V)',
