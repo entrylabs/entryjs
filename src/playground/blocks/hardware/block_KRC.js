@@ -884,9 +884,9 @@ Entry.krc.getBlocks = function() {
             },
             class: "krc_LV3",
             isNotFor: ["KRC"],
-            func: function(sprite, script) {
-                var btn_index = script.getNumberValue("PORT");				
-                var ANALOG = Entry.hw.portData.ANALOG;
+            func: (sprite, script) => {
+                const btn_index = script.getNumberValue("PORT");				
+                const ANALOG = Entry.hw.portData.ANALOG;
 
                 return ((ANALOG[btn_index]*4)*3)/10;
             },
@@ -946,14 +946,13 @@ Entry.krc.getBlocks = function() {
             },
             class: "krc_LV5",
             isNotFor: ["KRC"],
-            func: function(sprite, script) 
-			{
+            func: (sprite, script) => {
                 
          //       var sq = Entry.hw.sendQueue;
                 var line2 = script.getValue("LINE", script);
                 var column2 = script.getValue("COLUMN", script);
                 var string = script.getValue("STRING", script);
-                var text = [];
+                let text = [];
 
                 if (!script.isStart) {
                     if (typeof string === "string") {
@@ -962,10 +961,8 @@ Entry.krc.getBlocks = function() {
                         }
                     } else if (typeof string === "number") {
                         var NumToString = string.toString();
-                        var td;
                         for (let i = 0; i < NumToString.length; i++) {
-                            td = Entry.memaker.toByte(NumToString[i]);
-                            text[i] = td;
+                            text[i] = Entry.memaker.toByte(NumToString[i]);
                         }
                     } else {
                         text[0] = string;
