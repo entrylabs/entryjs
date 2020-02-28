@@ -524,7 +524,7 @@ Entry.krc.getBlocks = function() {
                         if (!Entry.hw.sendQueue["SET"]) {
                             Entry.hw.sendQueue["SET"] = {};
                         }
-                        Entry.hw.sendQueue["SET"][port] = 
+                        Entry.hw.sendQueue["SET"][parseInt(port)] = 
                         {
                             type: Entry.krc.sensorTypes.MOTOR,
                             data: [lspeed, rspeed],
