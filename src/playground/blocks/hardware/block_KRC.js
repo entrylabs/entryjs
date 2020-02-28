@@ -1,15 +1,15 @@
-'use strict';
+"use strict";
 
-const DelayTime = 0;
+let DelayTime = 0;
 let LmotorSpeed = 0;
 let RmotorSpeed = 0;
 
 Entry.krc = 
 {
-	id: '3A.2',	
-    name: 'KRC',
-    url: 'http://www.kairobot.co.kr/',
-    imageName: 'KRC.png',
+	id: "3A.2",	
+    name: "KRC",
+    url: "http://www.kairobot.co.kr/",
+    imageName: "KRC.png",
     title: {
         "ko": "KRC_S", 
         "en": "KRC_S"
@@ -21,10 +21,8 @@ Entry.krc =
                 GET: {},
                 SET: {},
             };
-        } 
-		else 
-		{
-            var keySet = Object.keys(Entry.hw.sendQueue.SET);
+        } else {
+            let keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach((key) => {
                 Entry.hw.sendQueue.SET[key].data = 0;
                 Entry.hw.sendQueue.SET[key].time = new Date().getTime();
@@ -1213,19 +1211,6 @@ Entry.krc.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-			
-		
-
-		
-   
-       
-
-		
-	
-				
-		
-		
-		
     };
 };
 
