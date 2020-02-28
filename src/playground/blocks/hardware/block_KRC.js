@@ -741,7 +741,7 @@ Entry.krc.getBlocks = function() {
             },
             class: "krc_LV3",    // 블록을 묶는 그룹 이름. 이 값이 다르면 사이에 가로줄이 생깁니다
             isNotFor: ["KRC"],
-           func: function(sprite, script) {
+           func: (sprite, script) => {
                 var port = script.getNumberValue("PORT");
                 const value = script.getNumberValue("VALUE");
 				
@@ -787,8 +787,7 @@ Entry.krc.getBlocks = function() {
             },
             class: "krc_LV3",
             isNotFor: ["KRC"],
-            func: function(sprite, script) 
-			{		
+            func: (sprite, script) => {		
                 var port2 = script.getNumberValue("PORT");
                 const DIGITAL = Entry.hw.portData.DIGITAL;
 				
@@ -840,12 +839,11 @@ Entry.krc.getBlocks = function() {
             },
             class: "krc_LV3",
             isNotFor: ["KRC"],
-            func: function(sprite, script) 
-			{
-                var btn_index = script.getNumberValue("PORT");				
+            func: (sprite, script) => {
+                var BtnIndex = script.getNumberValue("PORT");				
                 const ANALOG = Entry.hw.portData.ANALOG;
 
-                return ANALOG[btn_index];
+                return ANALOG[BtnIndex];
             },
             syntax: { js: [], py: [] },
         },
@@ -885,10 +883,10 @@ Entry.krc.getBlocks = function() {
             class: "krc_LV3",
             isNotFor: ["KRC"],
             func: (sprite, script) => {
-                const btn_index = script.getNumberValue("PORT");				
+                const BtnIndex = script.getNumberValue("PORT");				
                 const ANALOG = Entry.hw.portData.ANALOG;
 
-                return ((ANALOG[btn_index]*4)*3)/10;
+                return ((ANALOG[BtnIndex]*4)*3)/10;
             },
             syntax: { js: [], py: [] },
         },
