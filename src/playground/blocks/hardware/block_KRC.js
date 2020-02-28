@@ -1,19 +1,17 @@
-
 'use strict';
 
 const DelayTime = 0;
 let LmotorSpeed = 0;
 let RmotorSpeed = 0;
 
-Entry.krc = 
-{
-	id: '3A.2',	
+Entry.krc = {
+	id: '3A.2',
     name: 'KRC',
     url: 'http://www.kairobot.co.kr/',
     imageName: 'KRC.png',
     title: {
-        'ko': 'KRC_S', 
-        'en': 'KRC_S'
+        'ko': 'KRC_S',
+        'en': 'KRC_S',
     },
 
     setZero: () => {    ///  하드웨어 초기화 로직
@@ -23,7 +21,7 @@ Entry.krc =
                 SET: {},
             };
         } else {
-            let keySet = Object.keys(Entry.hw.sendQueue.SET);
+            const keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach((key) => {
                 Entry.hw.sendQueue.SET[parseInt(key)].data = 0;
                 Entry.hw.sendQueue.SET[parseInt(key)].time = new Date().getTime();
