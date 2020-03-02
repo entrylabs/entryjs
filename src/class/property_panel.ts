@@ -1,10 +1,13 @@
-class PropertyPanel {
-    constructor() {
-        this.modes = {};
-        this.selected = null;
-    }
+class PropertyPanel implements IEntry.PropertyPanel {
+    public modes: any = {};
+    public selected: string = undefined;
 
-    generateView(parentDom) {
+    private _view: EntryDom;
+    private _tabView: EntryDom;
+    private _contentView: EntryDom;
+    private _cover: EntryDom & { _isVisible?: boolean };
+
+    generateView(parentDom: HTMLElement) {
         const container = $(parentDom);
         this._view = Entry.Dom('div', {
             class: 'propertyPanel',
@@ -30,10 +33,10 @@ class PropertyPanel {
             class: 'entryObjectSelectedImgWorkspace',
             parent: container,
         });
-        this.initializeSplitter(splitter);
+        this._initializeSplitter(splitter);
     }
 
-    addMode(mode, contentObj) {
+    addMode(mode: string, contentObj: any) {
         if (this.modes[mode]) {
             this.removeMode(mode);
         }
@@ -71,7 +74,7 @@ class PropertyPanel {
         }
     }
 
-    removeMode(mode) {
+    removeMode(mode: string) {
         this._removeDom(mode);
 
         const keys = Object.keys(this.modes);
@@ -80,7 +83,7 @@ class PropertyPanel {
         }
     }
 
-    resize(canvasSize) {
+    resize(canvasSize: number) {
         const selected = this.selected;
         if (!selected) {
             return;
@@ -110,7 +113,7 @@ class PropertyPanel {
         }
     }
 
-    select(modeName) {
+    select(modeName: string) {
         for (const key in this.modes) {
             const mode = this.modes[key];
             mode.tabDom.removeClass('selected');
@@ -130,7 +133,7 @@ class PropertyPanel {
         this.selected = modeName;
     }
 
-    initializeSplitter(splitter) {
+    private _initializeSplitter(splitter: EntryDom) {
         splitter.bind('mousedown touchstart', (e) => {
             e.preventDefault();
             if (Entry.disposeEvent) {
@@ -141,7 +144,7 @@ class PropertyPanel {
             this._cover._isVisible = true;
             container.splitterEnable = true;
             if (Entry.documentMousemove) {
-                container.resizeEvent = Entry.documentMousemove.attach(this, (e) => {
+                container.resizeEvent = Entry.documentMousemove.attach(this, (e: any) => {
                     if (container.splitterEnable) {
                         Entry.resizeElement({
                             canvasWidth: e.clientX || e.x,
@@ -149,7 +152,7 @@ class PropertyPanel {
                     }
                 });
             }
-            $(document).bind('mouseup.container:splitter touchend.container:splitter', (e) => {
+            $(document).bind('mouseup.container:splitter touchend.container:splitter', () => {
                 const container = Entry.container;
                 const listener = container.resizeEvent;
                 if (listener) {
@@ -166,7 +169,7 @@ class PropertyPanel {
         });
     }
 
-    _removeDom(mode) {
+    private _removeDom(mode: string) {
         if (this.modes[mode]) {
             this.modes[mode].tabDom.remove();
             this.modes[mode].contentDom.remove();

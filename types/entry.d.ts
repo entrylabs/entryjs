@@ -7,6 +7,7 @@
 declare var Entry: {
     HW: new () => IEntry.Hardware;
     Intro: new () => IEntry.Intro;
+    PropertyPanel: new () => IEntry.PropertyPanel;
     BlockView: any;
     Dom: EntryDomConstructor;
     SVG: any;
@@ -35,6 +36,8 @@ declare var Entry: {
     TEXT_ALIGN_RIGHT: number;
     block: { [blockName: string]: any };
     hw: IEntry.Hardware; // HW instance
+    disposeEvent: any; // Entry.Event instance
+    documentMousemove: any; // Entry.Event instance
 
     // from init option
     mediaFilePath: string;
@@ -46,4 +49,5 @@ declare var Entry: {
     dispatchEvent(eventName: string, ...args: any): void;
     getMainWS(): UnknownAny | undefined;
     assert(predicate: any, message: string): void;
-}
+    resizeElement(interfaceModel: any): void;
+};

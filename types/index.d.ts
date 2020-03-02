@@ -80,6 +80,8 @@ declare module IEntry {
     export const Dom: EntryDomConstructor;
 
     export interface Container {
+        resizeEvent: any; // Entry.Event
+        splitterEnable?: boolean;
         getAllObjects(): UnknownAny[];
     }
 
@@ -92,8 +94,10 @@ declare module IEntry {
      * 오브젝트, 도움말, 하드웨어등의 정보를 가지고있는 좌측하단 패널
      */
     export interface PropertyPanel {
-        removeMode: (mode: string) => void;
-        addMode: (modeKey: string, element: UnknownAny) => void;
+        select(modeName: string): void;
+        resize(canvasSize: number): void;
+        removeMode(mode: string): void;
+        addMode(modeKey: string, element: UnknownAny): void;
         selected: string;
     }
 
