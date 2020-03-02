@@ -24,16 +24,16 @@ class AudioUtils implements MediaUtilsInterface {
     }
     public isRecording: boolean = false;
     public startedRecording: boolean = false;
+    public isInitialized: boolean = false; // 유저 인풋 연결 확인
 
-    private isInitialized: boolean = false; // 유저 인풋 연결 확인
     private _userMediaStream: MediaStream = null;
     private _mediaRecorder: MediaRecorder = null;
     private _currentVolume: number = -1;
-    private isAudioSupport: boolean = false;
-    private resolveFunc: Function = null;
+    private _isAudioSupport: boolean = false;
+    private _resolveFunc: Function = null;
     private _audioContext: AudioContext = null;
-    private _socketClient: any = null; // socket.io-client instance
-    private _properStopCall: any = null; // setTimeout Function to handle proper stop Call
+    private _socketClient: SocketIOClient.Socket = null; // socket.io-client instance
+    private _properStopCall: ReturnType<typeof setTimeout> = null; // setTimeout Function to handle proper stop Call
 
     async checkUserMicAvailable() {
         try {
@@ -59,10 +59,10 @@ class AudioUtils implements MediaUtilsInterface {
 
     incompatBrowserChecker() {
         // IE/safari CHECKER
-        if (!this.isAudioSupport) {
-            this.isAudioSupport = this._isBrowserSupportAudio(); // 브라우저 지원 확인
+        if (!this._isAudioSupport) {
+            this._isAudioSupport = this._isBrowserSupportAudio(); // 브라우저 지원 확인
         }
-        if (!this.isAudioSupport) {
+        if (!this._isAudioSupport) {
             this.isRecording = false;
             this.stopRecord();
             throw new Entry.Utils.IncompatibleError();
@@ -71,8 +71,8 @@ class AudioUtils implements MediaUtilsInterface {
 
     improperStop() {
         this.stopRecord();
-        if (this.resolveFunc) {
-            this.resolveFunc('');
+        if (this._resolveFunc) {
+            this._resolveFunc('');
         }
     }
 
@@ -80,7 +80,7 @@ class AudioUtils implements MediaUtilsInterface {
         //getMediaStream 은 만약 stream 이 없는 경우
         await this.getMediaStream();
         return await new Promise(async (resolve, reject) => {
-            this.resolveFunc = resolve;
+            this._resolveFunc = resolve;
             if (!this.isInitialized) {
                 console.log('audio not initialized');
                 resolve(0);
@@ -173,15 +173,7 @@ class AudioUtils implements MediaUtilsInterface {
         return tracks && tracks.some((track) => track.readyState === 'live');
     }
 
-    _connectNodes(
-        ...connectableNodes: (
-            | MediaStreamAudioSourceNode
-            | AnalyserNode
-            | BiquadFilterNode
-            | ScriptProcessorNode
-            | MediaStreamAudioDestinationNode
-        )[]
-    ) {
+    _connectNodes(...connectableNodes: AudioNode[]) {
         for (let i = 0; i < connectableNodes.length - 1; i++) {
             if (connectableNodes[i].connect) {
                 connectableNodes[i].connect(connectableNodes[i + 1]);
@@ -251,15 +243,15 @@ class AudioUtils implements MediaUtilsInterface {
     destroy(): void {
         throw new Error('Method not implemented.');
     }
-    async compatabilityChecker(): any {
+    async compatabilityChecker(): Promise<MediaStream> {
         this.incompatBrowserChecker();
         const mediaStream = await this.getMediaStream();
         return mediaStream;
     }
 
-    _handleScriptProcess = (analyserNode: any) => (audioProcessingEvent: {
-        inputBuffer: any;
-        outputBuffer: any;
+    _handleScriptProcess = (analyserNode: AnalyserNode) => (audioProcessingEvent: {
+        inputBuffer: AudioBuffer;
+        outputBuffer: AudioBuffer;
     }) => {
         const array = new Uint8Array(analyserNode.frequencyBinCount);
         analyserNode.getByteFrequencyData(array);
@@ -305,7 +297,7 @@ class AudioUtils implements MediaUtilsInterface {
                 return;
             }
             // socket.io로 서버 전송
-            if (this._socketClient && this._socketClient.readyState === this._socketClient.OPEN) {
+            if (this._socketClient) {
                 this._socketClient.send(toWav(e.renderedBuffer));
             }
         };
