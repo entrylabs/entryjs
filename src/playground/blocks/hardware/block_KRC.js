@@ -94,7 +94,7 @@ Entry.krc.setLanguage = function() {
                 krc_set_lcd_backlight: 'lcd 후광(백라이트) %1 하기 %2',
                 krc_set_lcd_clear: 'lcd 지우기 %1',
 
-				krc_get_analog_mapping: ' %1 값 %2 ~ %3 에서 %4 ~ %5 으로 변환값',
+                krc_get_analog_mapping: ' %1 값 %2 ~ %3 에서 %4 ~ %5 으로 변환값',
             },
             Blocks: {
                 On_block: '켜짐(HIGH, 5V)',
@@ -119,11 +119,9 @@ Entry.krc.setLanguage = function() {
 
                 krc_set_lcd_string: 'lcd Display %3 on line %1 and line %2 %4',
                 krc_set_lcd_backlight: 'Enter lcd backlight %1 %2',
-                krc_set_lcd_clear: 'Clear lcd %1',		
-
+                krc_set_lcd_clear: 'Clear lcd %1',
 
                 krc_get_analog_mapping: '%1 value %2 to %3 ; to %4 to %5 conversion value ',
-
             },
             Blocks: {
                 On_block: 'On(HIGH, 5V)',
@@ -166,7 +164,7 @@ Entry.krc.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            func: (sprite, script) => {
+            func(sprite, script) {
                 return script.getField('PORT');
             },
         },
