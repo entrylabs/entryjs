@@ -397,11 +397,11 @@ Entry.krc.getBlocks = function() {
 
 
                 if (!script.isStart) {
-                    if (!Entry.hw.sendQueue[SET]) {
-                        Entry.hw.sendQueue[SET] = {};
+                    if (!Entry.hw.sendQueue.SET) {
+                        Entry.hw.sendQueue.SET = {};
                     }
                     if (duration === 0) { // 음 길이가 0 이면
-                        Entry.hw.sendQueue[SET][parseInt(port)] = {
+                        Entry.hw.sendQueue.SET[parseInt(port)] = {
                             type: Entry.krc.sensorTypes.TONE,
                             data: 0,
                             time: new Date().getTime(),
@@ -415,7 +415,7 @@ Entry.krc.getBlocks = function() {
                     script.isStart = true;// 출력 시작 플래그 셋
                     script.timeFlag = 1;// 시간플래그 셋
 
-                    Entry.hw.sendQueue[SET][parseInt(port)] = {
+                    Entry.hw.sendQueue.SET[parseInt(port)] = {
                         type: Entry.krc.sensorTypes.TONE,
                         data: {
                             value: value2,
@@ -434,7 +434,7 @@ Entry.krc.getBlocks = function() {
 				else {// 설정 시간이 지나면 출력 리셋
                     delete script.timeFlag;
                     delete script.isStart;
-                    Entry.hw.sendQueue[SET][parseInt(port)] = {
+                    Entry.hw.sendQueue.SET[parseInt(port)] = {
                         type: Entry.krc.sensorTypes.TONE,
                         data: 0,
                         time: new Date().getTime(),
@@ -978,11 +978,11 @@ Entry.krc.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
 
-        // . LCD 백라이트 
-        krc_set_lcd_backlight : {
+        // . LCD 백라이트
+        krc_set_lcd_backlight: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-			fontColor: '#fff',
+            fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1007,21 +1007,19 @@ Entry.krc.getBlocks = function() {
                 type: 'krc_set_lcd_backlight',
             },
             paramsKeyMap: {
-				VALUE: 0,
+                VALUE: 0,
             },
             class: 'krc_LV5',
             isNotFor: ['KRC'],
             func: (sprite, script) => {
                 const value = script.getNumberValue('VALUE');
 
-                if (!Entry.hw.sendQueue[SET]) {
-                    Entry.hw.sendQueue[SET] = {};
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
                 }
-                Entry.hw.sendQueue[SET][1] = {
+                Entry.hw.sendQueue.SET[1] = {
                     type: Entry.krc.sensorTypes.LCD_SET,
-                    data: [
-                        value, 1, 1
-                    ],
+                    data: [value, 1, 1],
                     time: new Date().getTime(),
                 };
                 return script.callReturn();
@@ -1030,11 +1028,11 @@ Entry.krc.getBlocks = function() {
         },
 
         // 23. LCD 지우기
-        'krc_set_lcd_clear': 
+        krc_set_lcd_clear: 
         {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-			fontColor: '#fff',
+            fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1046,24 +1044,23 @@ Entry.krc.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    null
-                ],
+                params: [null],
                 type: 'krc_set_lcd_clear',
             },
-            paramsKeyMap: { },
+            paramsKeyMap: {
+                
+            },
             class: 'krc_LV5',
             isNotFor: ['KRC'],
             func: (sprite, script) => {
                 //var port = 0;
 
-                if (!Entry.hw.sendQueue[SET]) {
-                    Entry.hw.sendQueue[SET] = {};
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
                 }
-                Entry.hw.sendQueue[SET][4] = {
+                Entry.hw.sendQueue.SET[4] = {
                     type: Entry.krc.sensorTypes.LCD_SET,
-                    data: [
-                        4, 4, 4
+                    data: [4, 4, 4
                     ],
                     time: new Date().getTime(),
                 };
