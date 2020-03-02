@@ -58,22 +58,21 @@ Entry.krc.blockMenuBlocks = [
     'krc_set_motor_speed',
     // DC모터 속도제어
     'krc_motor_stop',
-    // DC모터 정지하기	
-    'krc_set_servo',// 서보모터 제어
-    //
+    // DC모터 정지하기
+    'krc_set_servo',
+    // 서보모터 제어
     'krc_digital_onoff',
     /// 디지털 포트 제어
-    'krc_get_digital_value',	            //디지탈 입력
-    'krc_get_analog_value',                 // 아날로그 입력
-    'krc_get_usonic_value',              //초음파센서 읽기
-    
+    'krc_get_digital_value',
+    //디지탈 입력
+    'krc_get_analog_value',
+    // 아날로그 입력
+    'krc_get_usonic_value',
+    //초음파센서 읽기
     'krc_set_lcd_string',
     'krc_set_lcd_backlight',
     'krc_set_lcd_clear',
-
-	'krc_get_analog_mapping',
-
-		
+    'krc_get_analog_mapping',
 ];
 
 Entry.krc.setLanguage = function() {    // 블록 이름  번역
