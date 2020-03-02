@@ -24,7 +24,7 @@ Entry.krc = {
         } else {
             const keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach((key) => {
-                Entry.hw.sendQueue.SET[parseInt(key)].data = 0;
+                Entry.hw.sendQueue.SET.key.data = 0;
                 Entry.hw.sendQueue.SET[parseInt(key)].time = new Date().getTime();
             });
         }
@@ -195,7 +195,7 @@ Entry.krc.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            func: (sprite, script) => {
+            func(sprite, script) {
                 return script.getField('PORT');
             },
         },	
