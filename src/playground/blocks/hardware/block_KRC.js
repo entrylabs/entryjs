@@ -518,10 +518,9 @@ Entry.krc.getBlocks = function() {
                             script.timeFlag = 0;
                         }, DelayTime);
                         return script;
-                    }
-                    else if (script.timeFlag === 1) { return script;
-                    }
-                    else {
+                    } else if (script.timeFlag === 1) {
+                        return script;
+                    } else {
                         // 설정 시간이 지나면 출력 리셋
                         delete script.timeFlag;
                         delete script.isStart;
@@ -535,8 +534,8 @@ Entry.krc.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
 
-		// 4. DC 모터 정지하기
-		krc_motor_stop: 
+        // 4. DC 모터 정지하기
+        krc_motor_stop: 
 		{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -552,8 +551,7 @@ Entry.krc.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    null
+                params: [null
                 ],
                 type: 'krc_motor_stop',
             },
@@ -569,11 +567,10 @@ Entry.krc.getBlocks = function() {
                 const rspeed = 0;
 
                 if (!(LmotorSpeed === 0) || !(RmotorSpeed === 0)) {
-                    if (!Entry.hw.sendQueue[SET]) {
-                        Entry.hw.sendQueue[SET] = {};
+                    if (!Entry.hw.sendQueue.SET) {
+                        Entry.hw.sendQueue.SET = {};
                     }
-                    Entry.hw.sendQueue[SET][parseInt(port)] =
-                    {
+                    Entry.hw.sendQueue.SET.port = {
                         type: Entry.krc.sensorTypes.MOTOR,
                         data: [lspeed, rspeed],
                         time: new Date().getTime(),
@@ -588,15 +585,14 @@ Entry.krc.getBlocks = function() {
         },
 
         // 5.  서보 모터 각도 설정하기
-		krc_set_servo: 
+        krc_set_servo: 
 		{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
 			fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
-            params: [
-                {
+            params: [ {
                     type: 'Block',
                     accept: 'string',
                 },
@@ -633,7 +629,7 @@ Entry.krc.getBlocks = function() {
                 type: 'krc_set_servo',
             },
             paramsKeyMap:
-			{
+            {
                 PORT: 0,
                 ANGLE: 1,
                 SPEED: 2,
@@ -651,14 +647,13 @@ Entry.krc.getBlocks = function() {
                 angle = Math.max(0, angle);
                 speed = Math.min(100, speed);
                 speed = Math.max(0, speed);
-                speed *= speed*255;
+                speed *= speed * 255;
                 //angle += 1;
 
-                if (!Entry.hw.sendQueue[SET]) {
-                    Entry.hw.sendQueue[SET] = {};
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
                 }
-                Entry.hw.sendQueue[SET][parseInt(port)] = 
-				{
+                Entry.hw.sendQueue.SET.port = {
                     type: Entry.krc.sensorTypes.SERVO,
                     data: [angle, speed],
                     time: new Date().getTime(),
@@ -668,7 +663,6 @@ Entry.krc.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
 
-        
 
         // 10. 디지털  출력
         krc_digital_onoff: {
@@ -718,7 +712,7 @@ Entry.krc.getBlocks = function() {
                 if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
                 }
-                Entry.hw.sendQueue.SET[parseInt(port)] = {
+                Entry.hw.sendQueue.SET.port = {
                     type: Entry.krc.sensorTypes.DIGITAL,
                     /// 출력 디바이스
                     data: value,
@@ -764,11 +758,11 @@ Entry.krc.getBlocks = function() {
                 if (!Entry.hw.sendQueue.GET) {
                     Entry.hw.sendQueue.GET = {};
                 }
-                Entry.hw.sendQueue['GET'][Entry.krc.sensorTypes.DIGITAL] = {
+                Entry.hw.sendQueue.GET[Entry.krc.sensorTypes.DIGITAL] = {
                     port: port2,
                     time: new Date().getTime(),
                 };
-                return DIGITAL['port'];
+                return DIGITAL.port;
             },
             syntax: { js: [], py: [] },
         },
@@ -851,7 +845,7 @@ Entry.krc.getBlocks = function() {
                 const BtnIndex = script.getNumberValue('PORT');
                 const ANALOG = Entry.hw.portData.ANALOG;
 
-                return ((ANALOG.parseInt(BtnIndex) * 4) * 3) / 10;
+                return ANALOG.BtnIndex * 4 * 3 / 10;
             },
             syntax: { js: [], py: [] },
         },
