@@ -1,23 +1,3 @@
-Skip to content
-Search or jump to…
-
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@pillpill 
-entrylabs
-/
-entryjs
-15
-46234
- Code Issues 2 Pull requests 10 Actions Projects 0 Wiki Security Insights
-entryjs/src/playground/blocks/hardware/block_KRC.js
-@pillpill pillpill Update block_KRC.js
-e5b0977 3 days ago
-2420 lines (2256 sloc)  80 KB
-  
 
 "use strict";
 
@@ -2438,15 +2418,3 @@ Entry.krc.getBlocks = function() {
 };
 
 module.exports = Entry.krc;
-© 2020 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Help
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
