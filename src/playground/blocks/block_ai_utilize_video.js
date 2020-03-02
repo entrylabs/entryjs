@@ -424,7 +424,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                     case 'pose':
                         return VideoUtils.poses.predictions.length || 0;
                     case 'object':
-                        return VideoUtils.objectDetected.length || 0;
+                        return VideoUtils.objects.length || 0;
                 }
             },
             paramsKeyMap: {

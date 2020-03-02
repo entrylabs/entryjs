@@ -36,7 +36,7 @@ const offCanvas = new OffscreenCanvas(WIDTH, HEIGHT);
 // 얼굴 인식 모델 옵션
 const tinyFaceDetectOption = new faceapi.TinyFaceDetectorOptions({ inputSize: 320 });
 
-// 각각의 모델 pre-load, pre sample
+// 각각의 모델 pre-load
 posenet
     .load({
         architecture: 'MobileNetV1',
