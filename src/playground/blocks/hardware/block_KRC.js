@@ -865,7 +865,7 @@ Entry.krc.getBlocks = function() {
         {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-			fontColor: '#fff',
+            fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -918,7 +918,7 @@ Entry.krc.getBlocks = function() {
                 const line2 = script.getValue('LINE', script);
                 const column2 = script.getValue('COLUMN', script);
                 const string = script.getValue('STRING', script);
-                let text = [];
+                const text = [];
 
                 if (!script.isStart) {
                     if (typeof string === 'string') {
@@ -928,14 +928,14 @@ Entry.krc.getBlocks = function() {
                     } else if (typeof string === 'number') {
                         const NumToString = string.toString();
                         for (let i = 0; i < NumToString.length; i++) {
-                            text[parseInt(i)] = Entry.memaker.toByte(NumToString[parseInt(i)]);
+                            text.i = Entry.memaker.toByte(NumToString.i);
                         }
                     } else {
                         text[0] = string;
                     }
 
-                    if (!Entry.hw.sendQueue[SET]) {
-                        Entry.hw.sendQueue[SET] = {};
+                    if (!Entry.hw.sendQueue.SET) {
+                        Entry.hw.sendQueue.SET = {};
                     }
 
                     script.isStart = true;
@@ -943,7 +943,7 @@ Entry.krc.getBlocks = function() {
                     //var fps = Entry.FPS || 60;
                     // var timeValue = 60 / fps * 50;
 
-                    Entry.hw.sendQueue[SET][3] = {
+                    Entry.hw.sendQueue.SET[3] = {
                         type: Entry.krc.sensorTypes.LCD_SET,
                         data: {
                             line: line2,
@@ -962,7 +962,7 @@ Entry.krc.getBlocks = function() {
                         time: new Date().getTime(),
                     };
 
-                    setTimeout( () => {
+                    setTimeout(() => {
                         script.timeFlag = 0;
                     }, DelayTime);
                     return script;
@@ -1028,8 +1028,7 @@ Entry.krc.getBlocks = function() {
         },
 
         // 23. LCD 지우기
-        krc_set_lcd_clear: 
-        {
+        krc_set_lcd_clear: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -1047,9 +1046,9 @@ Entry.krc.getBlocks = function() {
                 params: [null],
                 type: 'krc_set_lcd_clear',
             },
-            paramsKeyMap: {
+            //paramsKeyMap: {
                 
-            },
+            //},
             class: 'krc_LV5',
             isNotFor: ['KRC'],
             func: (sprite, script) => {
@@ -1060,8 +1059,7 @@ Entry.krc.getBlocks = function() {
                 }
                 Entry.hw.sendQueue.SET[4] = {
                     type: Entry.krc.sensorTypes.LCD_SET,
-                    data: [4, 4, 4
-                    ],
+                    data: [4, 4, 4],
                     time: new Date().getTime(),
                 };
                 return script.callReturn();
