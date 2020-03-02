@@ -75,7 +75,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 type: 'Dropdown',
                 options: [
                     [Lang.Blocks.video_left_right, 'hflip'],
-                    [Lang.Blocks.video_top_bototm, 'vflip'],
+                    [Lang.Blocks.video_top_bottom, 'vflip'],
                 ],
                 value: 'hflip',
                 fontSize: 11,
@@ -425,6 +425,42 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                         return VideoUtils.poses.predictions.length || 0;
                     case 'object':
                         return VideoUtils.objectDetected.length || 0;
+                }
+            },
+            paramsKeyMap: {
+                TARGET: 0,
+            },
+            syntax: {
+                js: [],
+                py: [],
+            },
+        },
+        video_is_model_loaded: {
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_boolean_field',
+            template: '%1 인식이 로드 되었는가?',
+            statements: [],
+            params: [params.getAiModelOptions()],
+            events: {},
+            def: {
+                type: 'video_is_model_loaded',
+            },
+            class: 'video',
+            isNotFor: ['video'],
+            async func(sprite, script) {
+                const target = script.getField('TARGET');
+                if (!VideoUtils.isInitialized) {
+                    await VideoUtils.initialize();
+                    return false;
+                }
+                switch (target) {
+                    case 'face':
+                        return VideoUtils.faces && VideoUtils.faces.length > 0;
+                    case 'pose':
+                        return !!VideoUtils.poses;
+                    case 'object':
+                        return VideoUtils.objects && VideoUtils.objects.length > 0;
                 }
             },
             paramsKeyMap: {

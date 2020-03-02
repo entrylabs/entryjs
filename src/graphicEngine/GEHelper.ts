@@ -5,7 +5,6 @@ import { IGEResManager } from './IGEResManager';
 import { EaselResManager } from './EaselResManager';
 import { PIXIBrushAdaptor } from '../class/pixi/etc/PIXIBrushAdaptor';
 import { PIXIScaleAdaptor } from '../class/pixi/atlas/PIXIScaleAdaptor';
-import { connectedPartIndices } from '@tensorflow-models/posenet/dist/keypoints';
 
 declare let $: any;
 declare let createjs: any;

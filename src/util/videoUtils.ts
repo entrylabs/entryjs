@@ -201,9 +201,7 @@ class VideoUtils implements MediaUtilsInterface {
         //     });
         // });
         // //motion test
-        setTimeout(() => {
-            requestAnimationFrame(this.sendImageToWorker.bind(this));
-        }, 50);
+        requestAnimationFrame(this.sendImageToWorker.bind(this));
     }
     /**
      * MOTION DETECT CALCULATION BASED ON COMPUTER VISION
@@ -444,8 +442,9 @@ class VideoUtils implements MediaUtilsInterface {
             horizontal: false,
             vertical: false,
         };
-
-        this.poses = null;
+        this.objects = [];
+        this.poses = { predictions: [], adjacents: [] };
+        this.faces = [];
         this.isInitialized = false;
     }
     disableAllModels() {

@@ -407,6 +407,7 @@ EntryStatic.getAllBlocks = function() {
                 'video_title',
                 'video_draw_webcam',
                 'video_check_webcam',
+                'video_is_model_loaded',
                 'video_flip_camera',
                 'video_set_camera_option',
                 'video_motion_value',

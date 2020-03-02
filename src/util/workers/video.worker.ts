@@ -1,11 +1,19 @@
 /**
  * nt11576 Lee.Jaewon
- * This is worker thread for detection purpose without blocking main thread to avoid delayed UI update
+ * This is worker thread for video detection purpose without blocking main thread to avoid delayed UI update
+ */
+
+// load model right after mount
+/**
+ * preload를 위해 매직 넘버를 사용할수 밖에 없는 환경, 480,270 은 videoUtils.ts의 캔버스 크기
  */
 
 const ctx: Worker = self as any;
 
 type IndicatorType = 'pose' | 'face' | 'object';
+
+const WIDTH = 480;
+const HEIGHT = 270;
 
 const posenet = require('@tensorflow-models/posenet');
 const cocoSsd = require('@tensorflow-models/coco-ssd');
@@ -13,33 +21,39 @@ const faceapi = require('face-api.js');
 faceapi.env.setEnv(faceapi.env.createNodejsEnv());
 faceapi.env.monkeyPatch({
     Canvas: OffscreenCanvas,
-    createCanvasElement: () => new OffscreenCanvas(480, 270),
+    createCanvasElement: () => new OffscreenCanvas(WIDTH, HEIGHT),
 });
 
-// instances, used as flag, handler class if each instances are loaded or not
+// instances, used as flag of handler class if each instances are loaded or not
 let mobileNet: any = null;
 let coco: any = null;
 let faceLoaded: boolean = false;
 const weightsUrl = `${self.location.origin}/lib/entry-js/weights`;
 
-// load model right after mount
+// 메인 스레드에서 전달받은 이미지 프레임 반영용 캔버스
+const offCanvas = new OffscreenCanvas(WIDTH, HEIGHT);
+
+// 얼굴 인식 모델 옵션
+const tinyFaceDetectOption = new faceapi.TinyFaceDetectorOptions({ inputSize: 320 });
+
+// 각각의 모델 pre-load, pre sample
 posenet
     .load({
         architecture: 'MobileNetV1',
         outputStride: 16,
-        inputResolution: { width: 480, height: 270 },
+        inputResolution: { width: WIDTH, height: HEIGHT },
         multiplier: 0.5,
     })
     .then((mobileNetLoaded: any) => {
         mobileNet = mobileNetLoaded;
         console.log('posenet pre sample');
-        // load sample
-        mobileNet.estimateMultiplePoses(offCanvas, {
-            flipHorizontal: false,
-            maxDetections: 4,
-            scoreThreshold: 0.6,
-            nmsRadius: 20,
-        });
+        // // load sample
+        // mobileNet.estimateMultiplePoses(offCanvas, {
+        //     flipHorizontal: false,
+        //     maxDetections: 4,
+        //     scoreThreshold: 0.6,
+        //     nmsRadius: 20,
+        // });
     });
 
 cocoSsd
@@ -48,9 +62,9 @@ cocoSsd
     })
     .then((cocoLoaded: any) => {
         coco = cocoLoaded;
-        console.log('coco pre sample');
-        // load sample
-        coco.detect(offCanvas);
+        // console.log('coco pre sample');
+        // // load sample
+        // coco.detect(offCanvas);
     });
 
 Promise.all([
@@ -60,14 +74,14 @@ Promise.all([
     faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
 ]).then(() => {
     faceLoaded = true;
-    console.log('face pre sample');
+    // console.log('face pre sample');
 
-    // load sample
-    faceapi
-        .detectAllFaces(offCanvas, tinyFaceDetectOption)
-        .withFaceLandmarks()
-        .withAgeAndGender()
-        .withFaceExpressions();
+    // // load sample
+    // faceapi
+    //     .detectAllFaces(offCanvas, tinyFaceDetectOption)
+    //     .withFaceLandmarks()
+    //     .withAgeAndGender()
+    //     .withFaceExpressions();
 });
 
 // flags if selected model(s) should estimate
@@ -82,23 +96,14 @@ let options: any;
 
 const dimension = { width: 0, height: 0 };
 
-// face detection option
-const tinyFaceDetectOption = new faceapi.TinyFaceDetectorOptions({ inputSize: 320 });
-
-// canvas drawing imageFrame passed from main thread
-const offCanvas = new OffscreenCanvas(480, 270);
-
 async function processImage() {
     try {
-        objectDetect(this);
-        poseDetect(this);
-        faceDetect(this);
+        // await Promise.all([]);
+        objectDetect(this), poseDetect(this), faceDetect(this);
     } catch (err) {
         console.log('estimation error', err);
     }
-    setTimeout(() => {
-        processImage();
-    }, 50);
+    requestAnimationFrame(processImage);
 }
 
 async function objectDetect(context: any) {
@@ -137,7 +142,7 @@ async function poseDetect(context: any) {
     });
     const adjacents: Array<any> = [];
     predictions.forEach((pose: any) => {
-        // neck estimation by calculation, based on midst of shoulders and nose
+        // 어깨 위치와 코 위치를 기반으로 한 목 위치 계산
         const leftShoulder = pose.keypoints[5];
         const rightShoulder = pose.keypoints[6];
         const nose = pose.keypoints[0];
@@ -176,16 +181,20 @@ ctx.onmessage = async function(e: {
             this.postMessage({ type: 'init', message: 'done' });
             processImage();
             break;
+
         case 'estimate':
+            // 이미지를 메인 스레드에서 전달 받은경우 이미지 프레임을 offScreenCanvas에 그린다
             const image = e.data.image;
             const ctx = offCanvas.getContext('2d');
             ctx.drawImage(image, 0, 0, dimension.width, dimension.height);
             break;
+
         case 'option':
             options = e.data.option;
             break;
 
         case 'handle':
+            // 이미지 값을 전달해야하는지 여부에 대한 플래그값 조절
             const { target, mode } = e.data;
             const targetMode = mode === 'on' ? true : false;
             modelStatus[target] = targetMode;
