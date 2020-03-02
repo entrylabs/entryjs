@@ -380,8 +380,6 @@ class _GEHelper extends GEHelperBase {
     drawFaceEdges(faces: any, flipStatus: any) {
         let handler = this.faceIndicatorGraphic;
 
-        const { WIDTH, HEIGHT } = INITIAL_VIDEO_PARAMS;
-
         if (this._isWebGL) {
             handler.clear();
             handler.lineStyle(2, 0xff0000);
@@ -391,7 +389,8 @@ class _GEHelper extends GEHelperBase {
             handler.setStrokeStyle(2, 'round').beginStroke('red');
         }
         faces.forEach((face: { landmarks: { _positions: any[] } }) => {
-            face.landmarks._positions.forEach((item, i) => {
+            const positions = face.landmarks._positions;
+            positions.forEach((item, i) => {
                 if (
                     i === 0 ||
                     i === 17 ||
@@ -405,22 +404,42 @@ class _GEHelper extends GEHelperBase {
                 }
 
                 const prev = face.landmarks._positions[i - 1];
-
-                let { _x, _y } = item;
-                let prevX = prev._x;
-                let prevY = prev._y;
-                if (flipStatus.horizontal) {
-                    _x = WIDTH - _x;
-                    prevX = WIDTH - prevX;
-                }
-                if (flipStatus.vertical) {
-                    _y = HEIGHT - _y;
-                    prevY = HEIGHT - prevY;
-                }
-
-                handler.moveTo(prevX, prevY).lineTo(_x, _y);
+                this.drawEdge(prev, item, handler, flipStatus);
             });
+            // compensation for missing edges
+            this.drawEdge(positions[42], positions[47], handler, flipStatus);
+            this.drawEdge(positions[41], positions[36], handler, flipStatus);
+            this.drawEdge(positions[60], positions[67], handler, flipStatus);
+            this.drawEdge(positions[0], positions[17], handler, flipStatus);
+            this.drawEdge(positions[16], positions[26], handler, flipStatus);
+            this.drawEdge(positions[27], positions[31], handler, flipStatus);
+            this.drawEdge(positions[27], positions[35], handler, flipStatus);
+            this.drawEdge(positions[30], positions[31], handler, flipStatus);
+            this.drawEdge(positions[30], positions[35], handler, flipStatus);
         });
+    }
+
+    drawEdge(
+        pos1: { _x: number; _y: number },
+        pos2: { _x: number; _y: number },
+        handler: PIXI.Graphics | createjs.Graphics,
+        flipStatus: any
+    ) {
+        const { WIDTH, HEIGHT } = INITIAL_VIDEO_PARAMS;
+
+        let { _x, _y } = pos2;
+        let prevX = pos1._x;
+        let prevY = pos1._y;
+        if (flipStatus.horizontal) {
+            _x = WIDTH - _x;
+            prevX = WIDTH - prevX;
+        }
+        if (flipStatus.vertical) {
+            _y = HEIGHT - _y;
+            prevY = HEIGHT - prevY;
+        }
+
+        handler.moveTo(prevX, prevY).lineTo(_x, _y);
     }
 
     drawObjectBox(objects: Array<any>, flipStatus: any) {
