@@ -352,7 +352,7 @@ Entry.krc.getBlocks = function() {
         },
 
         // 1. 삐소리
-		krc_buzzer_onoff: {
+        krc_buzzer_onoff: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -398,7 +398,7 @@ Entry.krc.getBlocks = function() {
                     }
                     if (duration === 0) {
                         // 음 길이가 0 이면
-                        Entry.hw.sendQueue.SET[parseInt(port)] = {
+                        Entry.hw.sendQueue.SET.port = {
                             type: Entry.krc.sensorTypes.TONE,
                             data: 0,
                             time: new Date().getTime(),
@@ -414,7 +414,7 @@ Entry.krc.getBlocks = function() {
                     script.timeFlag = 1;
                     // 시간플래그 셋
 
-                    Entry.hw.sendQueue.SET[parseInt(port)] = {
+                    Entry.hw.sendQueue.SET.port = {
                         type: Entry.krc.sensorTypes.TONE,
                         data: {
                             value: value2,
@@ -427,13 +427,14 @@ Entry.krc.getBlocks = function() {
                         script.timeFlag = 0;
                     }, duration + 32);
                     return script;
-                } else if (script.timeFlag === 1) {
+                }
+                else if (script.timeFlag === 1) {
                     return script;
                 } 
 				else {// 설정 시간이 지나면 출력 리셋
                     delete script.timeFlag;
                     delete script.isStart;
-                    Entry.hw.sendQueue.SET[parseInt(port)] = {
+                    Entry.hw.sendQueue.SET.port = {
                         type: Entry.krc.sensorTypes.TONE,
                         data: 0,
                         time: new Date().getTime(),
@@ -446,11 +447,11 @@ Entry.krc.getBlocks = function() {
         },
 
         // 3. DC 모터 속도 정하기
-		krc_set_motor_speed: 
+        krc_set_motor_speed: 
 		{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-			fontColor: '#fff',
+            fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -489,9 +490,10 @@ Entry.krc.getBlocks = function() {
             },
             class: 'krc_LV1',
             isNotFor: ['KRC'],
-            func: (sprite, script) => {
+            func(sprite, script) {
                 let rspeed = script.getNumberValue('RSPEED', script);
-                let port = 3;
+                let lspeed = script.getNumberValue('LSPEED', script);
+                const port = 3;
                 lspeed = Math.min(100, lspeed);
                 lspeed = Math.max(-100, lspeed);
                 rspeed = Math.min(100, rspeed);
@@ -510,16 +512,19 @@ Entry.krc.getBlocks = function() {
                         };
                         LmotorSpeed = lspeed;
                         RmotorSpeed = rspeed;
-                        script.isStart = true;// 출력 시작 플래그 셋
-                        script.timeFlag = 1;// 시간플래그 셋
+                        script.isStart = true;
+                        // 출력 시작 플래그 셋
+                        script.timeFlag = 1;
+                        // 시간플래그 셋
                         setTimeout(() => {
                             script.timeFlag = 0;
                         }, DelayTime);
                         return script;
                     }
-                    else if (script.timeFlag === 1) {
-                        return script;
-                    } else {// 설정 시간이 지나면 출력 리셋
+                    else if (script.timeFlag === 1) { return script;
+                    }
+                    else {
+                        // 설정 시간이 지나면 출력 리셋
                         delete script.timeFlag;
                         delete script.isStart;
                         Entry.engine.isContinue = false;
