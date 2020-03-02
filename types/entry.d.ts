@@ -6,6 +6,7 @@
 
 declare var Entry: {
     HW: new () => IEntry.Hardware;
+    Intro: new () => IEntry.Intro;
     BlockView: any;
     Dom: EntryDomConstructor;
     SVG: any;

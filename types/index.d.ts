@@ -184,5 +184,13 @@ declare module IEntry {
             position?: { x: number; y: number };
         };
     }
+
+    export interface Intro {
+        modes: any;
+        selected: any;
+        generateView(introView: any): void;
+        setView(view: any): void;
+        removeView(): void;
+    }
     // Entry namespace 에 필요한 객체가 있으면 추가해주세요.
 }
