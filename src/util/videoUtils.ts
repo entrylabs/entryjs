@@ -264,7 +264,7 @@ class VideoUtils implements MediaUtilsInterface {
 
                 const yIndex = y / this._SAMPLE_SIZE;
                 const xIndex = x / this._SAMPLE_SIZE;
-                if (yIndex > yLength - 1 || xIndex > xLength - 1 || xIndex < 0) {
+                if (yIndex > yLength - 1 || xIndex > xLength - 1 || xIndex < 0 || yIndex < 0) {
                     continue;
                 }
                 const currentPos = this.motions[yIndex][xIndex] || { r: 0, g: 0, b: 0 };
@@ -277,7 +277,7 @@ class VideoUtils implements MediaUtilsInterface {
                 const mostSimilar = { x: 0, y: 0, diff: 99999999 };
 
                 /**
-                 * 주변 픽셀 검사로 방향 체크, 가장 비슷한 픽셀 위치로 이동했다 가정
+                 * 주변 픽셀 검사로 방향 체크, 가장 값이 비슷한 픽셀 위치로 이동했다 가정
                  * */
                 // clamp를 통해서 out of bounds 검사
                 const minScanY = clamp(yIndex - this._BOUNDARY_OFFSET, 0, yLength - 1);
