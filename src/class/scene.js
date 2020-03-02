@@ -14,7 +14,7 @@ Entry.Scene = class {
     constructor() {
         this.scenes_ = [];
         this.selectedScene = null;
-        this.maxCount = 20;
+        this.maxCount = this.getMaxSceneCount() || 20;
         $(window).on('resize', this.resize.bind(this));
 
         this.disposeEvent = Entry.disposeEvent.attach(this, (e) => {
@@ -616,11 +616,12 @@ Entry.Scene = class {
         return scenes[scenes.indexOf(this.selectedScene) + 1];
     }
 
+    getMaxSceneCount() {
+        return 20;
+    }
+
     isMax() {
-        if (typeof this.maxCount !== 'number' || this.maxCount != 20) {
-            this.maxCount = 20;
-        }
-        return this.scenes_.length >= this.maxCount;
+        return this.scenes_.length >= this.getMaxSceneCount();
     }
 
     clear() {
