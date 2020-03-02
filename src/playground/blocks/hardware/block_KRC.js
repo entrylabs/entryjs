@@ -1075,27 +1075,24 @@ Entry.krc.getBlocks = function() {
             events: {},
             def: {
                 params: [
-                    null,
+                    null
                 ],
                 type: 'krc_set_lcd_clear',
             },
             paramsKeyMap: {
-
             },
             class: 'krc_LV5',
             isNotFor: ['KRC'],
             func: (sprite, script) => {
                 //var port = 0;
 
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
+                if (!Entry.hw.sendQueue["SET"]) {
+                    Entry.hw.sendQueue["SET"] = {};
                 }
-                Entry.hw.sendQueue['SET'][4] = {
+                Entry.hw.sendQueue["SET"][4] = {
                     type: Entry.krc.sensorTypes.LCD_SET,
                     data: [
-                        4,
-                        4,
-                        4,
+                        4, 4, 4,
                     ],
                     time: new Date().getTime(),
                 };
@@ -1103,14 +1100,10 @@ Entry.krc.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-
-
-   
-		
 		// 3. 소리/빛/가변저항 - 2) mapping 값			
-        'krc_get_analog_mapping': {
+        krc_get_analog_mapping: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: Lang.template.krc_get_analog_mapping,
@@ -1143,7 +1136,7 @@ Entry.krc.getBlocks = function() {
                     {
                         type: 'number',
                         params: ['0'],
-                    },					
+                    },
                     {
                         type: 'number',
                         params: ['0'],
@@ -1164,7 +1157,7 @@ Entry.krc.getBlocks = function() {
                 type: 'krc_get_analog_mapping',
             },
             paramsKeyMap: {
-				IDATA: 0,
+                IDATA: 0,
                 VALUE2: 1,
                 VALUE3: 2,
                 VALUE4: 3,
@@ -1173,13 +1166,12 @@ Entry.krc.getBlocks = function() {
             class: 'krc_ANA',
             isNotFor: ['KRC'],
             func: (sprite, script) => {
-                var result = script.getNumberValue('IDATA', script);				
-                var value2 = script.getNumberValue('VALUE2', script);
-                var value3 = script.getNumberValue('VALUE3', script);
-                var value4 = script.getNumberValue('VALUE4', script);
-                var value5 = script.getNumberValue('VALUE5', script);
-                var swap;
-				
+                let result = script.getNumberValue('IDATA', script);
+                const value2 = script.getNumberValue('VALUE2', script);
+                let value3 = script.getNumberValue('VALUE3', script);
+                let value4 = script.getNumberValue('VALUE4', script);
+                let value5 = script.getNumberValue('VALUE5', script);
+                let swap;
                 if (value2 > value3) {
                     swap = value2;
                     value2 = value3;
