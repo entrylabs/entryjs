@@ -447,8 +447,7 @@ Entry.krc.getBlocks = function() {
         },
 
         // 3. DC 모터 속도 정하기
-        krc_set_motor_speed: 
-		{
+        krc_set_motor_speed: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -501,11 +500,10 @@ Entry.krc.getBlocks = function() {
 
                 if (!(LmotorSpeed === lspeed) || !(RmotorSpeed === rspeed)) {
                     if (!script.isStart) {
-                        if (!Entry.hw.sendQueue[SET]) {
-                            Entry.hw.sendQueue[SET] = {};
+                        if (!Entry.hw.sendQueue.SET) {
+                            Entry.hw.sendQueue.SET = {};
                         }
-                        Entry.hw.sendQueue[SET][parseInt(port)] = 
-                        {
+                        Entry.hw.sendQueue.SET.port = {
                             type: Entry.krc.sensorTypes.MOTOR,
                             data: [lspeed, rspeed],
                             time: new Date().getTime(),
