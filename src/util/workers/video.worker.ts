@@ -47,13 +47,6 @@ posenet
     .then((mobileNetLoaded: any) => {
         mobileNet = mobileNetLoaded;
         console.log('posenet pre sample');
-        // // load sample
-        // mobileNet.estimateMultiplePoses(offCanvas, {
-        //     flipHorizontal: false,
-        //     maxDetections: 4,
-        //     scoreThreshold: 0.6,
-        //     nmsRadius: 20,
-        // });
     });
 
 cocoSsd
@@ -62,9 +55,6 @@ cocoSsd
     })
     .then((cocoLoaded: any) => {
         coco = cocoLoaded;
-        // console.log('coco pre sample');
-        // // load sample
-        // coco.detect(offCanvas);
     });
 
 Promise.all([
@@ -74,14 +64,6 @@ Promise.all([
     faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
 ]).then(() => {
     faceLoaded = true;
-    // console.log('face pre sample');
-
-    // // load sample
-    // faceapi
-    //     .detectAllFaces(offCanvas, tinyFaceDetectOption)
-    //     .withFaceLandmarks()
-    //     .withAgeAndGender()
-    //     .withFaceExpressions();
 });
 
 // flags if selected model(s) should estimate
