@@ -671,10 +671,10 @@ Entry.krc.getBlocks = function() {
         
 
         // 10. 디지털  출력
-		krc_digital_onoff: {
+        krc_digital_onoff: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-			fontColor: '#fff',
+            fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -705,21 +705,22 @@ Entry.krc.getBlocks = function() {
                 ],
                 type: 'krc_digital_onoff',
             },
-            paramsKeyMap: {// 실제 블록의 로직인 func에서 key값으로 사용할 파라미터의 인덱스 번호
+            paramsKeyMap: {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'krc_LV3',// 블록을 묶는 그룹 이름. 이 값이 다르면 사이에 가로줄이 생깁니다
+            class: 'krc_LV3', // 블록을 묶는 그룹 이름. 이 값이 다르면 사이에 가로줄이 생깁니다
             isNotFor: ['KRC'],
             func: (sprite, script) => {
                 const port = script.getNumberValue('PORT');
                 const value = script.getNumberValue('VALUE');
 
-                if (!Entry.hw.sendQueue[SET]) {
-                    Entry.hw.sendQueue[SET] = {};
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
                 }
-                Entry.hw.sendQueue[SET][parseInt(port)] = {
-                    type: Entry.krc.sensorTypes.DIGITAL,/// 출력 디바이스
+                Entry.hw.sendQueue.SET[parseInt(port)] = {
+                    type: Entry.krc.sensorTypes.DIGITAL,
+                    /// 출력 디바이스
                     data: value,
                     time: new Date().getTime(),
                 };
@@ -728,8 +729,7 @@ Entry.krc.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
 
-
-		// 11. 디지털입력		
+        // 11. 디지털입력
         krc_get_digital_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -757,20 +757,18 @@ Entry.krc.getBlocks = function() {
             },
             class: 'krc_LV3',
             isNotFor: ['KRC'],
-            func: (sprite, script) => {		
+            func: (sprite, script) => {
                 const port2 = script.getNumberValue('PORT');
                 const DIGITAL = Entry.hw.portData.DIGITAL;
 
-                if (!Entry.hw.sendQueue[GET]) {
-                    Entry.hw.sendQueue[GET] = {};
+                if (!Entry.hw.sendQueue.GET) {
+                    Entry.hw.sendQueue.GET = {};
                 }
-                Entry.hw.sendQueue[GET][
-                    Entry.krc.sensorTypes.DIGITAL
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.krc.sensorTypes.DIGITAL] = {
                     port: port2,
                     time: new Date().getTime(),
                 };
-                return DIGITAL[parseInt(port)];
+                return DIGITAL['port'];
             },
             syntax: { js: [], py: [] },
         },
@@ -804,7 +802,6 @@ Entry.krc.getBlocks = function() {
             },
             paramsKeyMap: {
                 PORT: 0,
-            //	TYPE: 1,
             },
             class: 'krc_LV3',
             isNotFor: ['KRC'],
@@ -812,11 +809,10 @@ Entry.krc.getBlocks = function() {
                 const BtnIndex = script.getNumberValue('PORT');
                 const ANALOG = Entry.hw.portData.ANALOG;
 
-                return ANALOG[parseInt(BtnIndex)];
+                return ANALOG.BtnIndex;
             },
             syntax: { js: [], py: [] },
         },
-
 
         // 15. 초음파 센서 값
         krc_get_usonic_value: {
@@ -855,14 +851,13 @@ Entry.krc.getBlocks = function() {
                 const BtnIndex = script.getNumberValue('PORT');
                 const ANALOG = Entry.hw.portData.ANALOG;
 
-                return ((ANALOG[parseInt(BtnIndex)]*4)*3)/10;
+                return ((ANALOG.parseInt(BtnIndex) * 4) * 3) / 10;
             },
             syntax: { js: [], py: [] },
         },
 
         // 21. LCD글자출력
-        krc_set_lcd_string:
-        {
+        krc_set_lcd_string: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -923,12 +918,8 @@ Entry.krc.getBlocks = function() {
                 if (!script.isStart) {
                     if (typeof string === 'string') {
                         for (let i = 0; i < string.length; i++) {
-                            text[parseInt(i)] = Entry.memaker.toByte(string[parseInt(i)]);
-                        }
-                    } else if (typeof string === 'number') {
-                        const NumToString = string.toString();
-                        for (let i = 0; i < NumToString.length; i++) {
-                            text.i = Entry.memaker.toByte(NumToString.i);
+                            //text[parseInt(i)] = Entry.memaker.toByte(string[parseInt(i)]);
+                            text.i = Entry.memaker.toByte(string.i);
                         }
                     } else {
                         text[0] = string;
@@ -1046,9 +1037,6 @@ Entry.krc.getBlocks = function() {
                 params: [null],
                 type: 'krc_set_lcd_clear',
             },
-            //paramsKeyMap: {
-                
-            //},
             class: 'krc_LV5',
             isNotFor: ['KRC'],
             func: (sprite, script) => {
