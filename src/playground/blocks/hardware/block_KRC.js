@@ -25,7 +25,7 @@ Entry.krc = {
             const keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach((key) => {
                 Entry.hw.sendQueue.SET.key.data = 0;
-                Entry.hw.sendQueue.SET[parseInt(key)].time = new Date().getTime();
+                Entry.hw.sendQueue.SET.key.time = new Date().getTime();
             });
         }
         Entry.hw.update();
@@ -198,13 +198,13 @@ Entry.krc.getBlocks = function() {
             func(sprite, script) {
                 return script.getField('PORT');
             },
-        },	
+        },
 
 
-       krc_digital_port_list: {
+        krc_digital_port_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-			fontColor: '#fff',
+            fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -242,14 +242,14 @@ Entry.krc.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            func: (sprite, script) => {
+            func(sprite, script) {
                 return script.getStringField('PORT');
             },
         },
         krc_servo_port_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-			fontColor: '#fff',
+            fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -278,12 +278,12 @@ Entry.krc.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            func: (sprite, script) => {
+            func(sprite, script) {
                 return script.getStringField('PORT');
             },
         },
 
-        'krc_all_onoff_list': {
+        krc_all_onoff_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -310,14 +310,14 @@ Entry.krc.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
-            func: (sprite, script) => {
+            func(sprite, script) {
                 return script.getField('VALUE');
             },
         },
         krc_analog_port_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-			fontColor: '#fff',
+            fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -347,18 +347,17 @@ Entry.krc.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            func: (sprite, script) => {
+            func(sprite, script) {
                 return script.getField('PORT');
             },
         },
 
 
-
-		// 1. 삐소리
+        // 1. 삐소리
 		krc_buzzer_onoff: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-			fontColor: '#fff',
+            fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -390,15 +389,17 @@ Entry.krc.getBlocks = function() {
             isNotFor: ['KRC'],
             func: (sprite, script) => {
                 const port = 10;
-                let duration = script.getNumberValue('VALUE'); // 길이
-                const value2 = 2400; //698;   // 음 주파수
-
+                let duration = script.getNumberValue('VALUE');
+                // 길이
+                const value2 = 2400;
+                //698;   // 음 주파수
 
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue.SET) {
                         Entry.hw.sendQueue.SET = {};
                     }
-                    if (duration === 0) { // 음 길이가 0 이면
+                    if (duration === 0) {
+                        // 음 길이가 0 이면
                         Entry.hw.sendQueue.SET[parseInt(port)] = {
                             type: Entry.krc.sensorTypes.TONE,
                             data: 0,
