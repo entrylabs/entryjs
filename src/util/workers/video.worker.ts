@@ -8,17 +8,24 @@
  * preload를 위해 매직 넘버를 사용할수 밖에 없는 환경, 480,270 은 videoUtils.ts의 캔버스 크기
  */
 
+import * as posenet from '@tensorflow-models/posenet';
+import * as cocoSsd from '@tensorflow-models/coco-ssd';
+import * as faceapi from 'face-api.js';
+
 const ctx: Worker = self as any;
 
 type IndicatorType = 'pose' | 'face' | 'object';
 
+type FlipStatus = {
+    horizontal: boolean;
+    vertical: boolean;
+};
+
 const WIDTH = 480;
 const HEIGHT = 270;
 
-const posenet = require('@tensorflow-models/posenet');
-const cocoSsd = require('@tensorflow-models/coco-ssd');
-const faceapi = require('face-api.js');
 faceapi.env.setEnv(faceapi.env.createNodejsEnv());
+// MonkeyPatch때문에 생기는 TypeError, 의도된 방향이므로 수정 하지 말것
 faceapi.env.monkeyPatch({
     Canvas: OffscreenCanvas,
     createCanvasElement: () => new OffscreenCanvas(WIDTH, HEIGHT),
@@ -74,30 +81,32 @@ let modelStatus = {
 };
 
 // video Status
-let options: any;
+let options: {
+    flipStatus: FlipStatus;
+};
 
 const dimension = { width: 0, height: 0 };
 
 async function processImage() {
     try {
         // await Promise.all([]);
-        objectDetect(this), poseDetect(this), faceDetect(this);
+        objectDetect(), poseDetect(), faceDetect();
     } catch (err) {
         console.log('estimation error', err);
     }
     requestAnimationFrame(processImage);
 }
 
-async function objectDetect(context: any) {
+async function objectDetect() {
     if (!coco || !modelStatus.object) {
         return;
     }
 
     const predictions = await coco.detect(offCanvas);
-    context.postMessage({ type: 'coco', message: predictions });
+    ctx.postMessage({ type: 'coco', message: predictions });
 }
 
-async function faceDetect(context: any) {
+async function faceDetect() {
     if (!faceLoaded || !modelStatus.face) {
         return;
     }
@@ -107,10 +116,10 @@ async function faceDetect(context: any) {
         .withFaceLandmarks()
         .withAgeAndGender()
         .withFaceExpressions();
-    context.postMessage({ type: 'face', message: predictions });
+    ctx.postMessage({ type: 'face', message: predictions });
 }
 
-async function poseDetect(context: any) {
+async function poseDetect() {
     if (!mobileNet || !modelStatus.pose) {
         return;
     }
@@ -122,8 +131,8 @@ async function poseDetect(context: any) {
         scoreThreshold: 0.6,
         nmsRadius: 20,
     });
-    const adjacents: Array<any> = [];
-    predictions.forEach((pose: any) => {
+    const adjacents: posenet.Keypoint[][][] = [];
+    predictions.forEach((pose: posenet.Pose) => {
         // 어깨 위치와 코 위치를 기반으로 한 목 위치 계산
         const leftShoulder = pose.keypoints[5];
         const rightShoulder = pose.keypoints[6];
@@ -140,7 +149,7 @@ async function poseDetect(context: any) {
         const adjacentMap = posenet.getAdjacentKeyPoints(pose.keypoints, 0.05);
         adjacents.push(adjacentMap);
     });
-    context.postMessage({ type: 'pose', message: { predictions, adjacents } });
+    ctx.postMessage({ type: 'pose', message: { predictions, adjacents } });
 }
 
 ctx.onmessage = async function(e: {
@@ -148,7 +157,7 @@ ctx.onmessage = async function(e: {
         type: String;
         width: number;
         height: number;
-        option: any;
+        option: { flipStatus: FlipStatus };
         image: ImageBitmap;
         target: IndicatorType;
         mode: String;

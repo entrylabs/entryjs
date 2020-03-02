@@ -5,6 +5,8 @@
 
 import { GEHelper } from '../graphicEngine/GEHelper';
 import VideoWorker from './workers/video.worker.ts';
+import * as posenet from '@tensorflow-models/posenet';
+import * as faceapi from 'face-api.js';
 import { clamp } from 'lodash';
 
 type FlipStatus = {
@@ -77,16 +79,27 @@ class VideoUtils implements MediaUtilsInterface {
     public totalMotions: MotionElement = { total: 0, direction: { x: 0, y: 0 } };
     public objects: DetectedObject[] = [];
     public poses: {
-        predictions: any[];
-        adjacents: any[];
+        predictions: posenet.Pose[];
+        adjacents: posenet.Keypoint[][][];
     };
-    public faces: any[] = [];
+    public faces: faceapi.WithFaceExpressions<
+        faceapi.WithAge<
+            faceapi.WithGender<
+                faceapi.WithFaceLandmarks<
+                    {
+                        detection: faceapi.FaceDetection;
+                    },
+                    faceapi.FaceLandmarks68
+                >
+            >
+        >
+    >[] = [];
 
     // 로컬 스코프
     public isInitialized: boolean = false;
     public worker: Worker = new VideoWorker();
     private stream: MediaStream;
-    private imageCapture: any; // capturing class ImageCapture
+    private imageCapture: typeof ImageCapture;
 
     constructor() {
         this.videoOnLoadHandler = this.videoOnLoadHandler.bind(this);
@@ -145,7 +158,7 @@ class VideoUtils implements MediaUtilsInterface {
         const [track] = this.stream.getVideoTracks();
         this.imageCapture = new ImageCapture(track);
 
-        this.worker.onmessage = (e: { data: { type: String; message: Array<any> | any } }) => {
+        this.worker.onmessage = (e: { data: { type: String; message: any } }) => {
             const { type, message } = e.data;
             if (Entry.engine.state !== 'run' && type !== 'init') {
                 return;
