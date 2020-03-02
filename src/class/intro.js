@@ -1,34 +1,32 @@
 /**
- * @fileoverview PropertyPanel shows project's property
+ * 프로퍼티 패널쪽에서 프로젝트의 속성을 보여주는 뷰를 담당
+ * @use entry-lms
  */
-'use strict';
+class EntryIntro {
+    constructor() {
+        this.modes = {};
+        this.selected = undefined;
+    }
 
-Entry.Intro = function() {
-    this.modes = {};
-    this.selected = null;
-};
-
-(function(p) {
-    /**
-     * Generate View
-     */
-    p.generateView = function(introView, option) {
+    generateView(introView) {
         this.view_ = introView;
         this.view_.addClass('entryPlaygroundIntro');
-    };
+    }
 
-    p.setView = function(view) {
+    setView(view) {
         if (this.view_.firstChild) {
             this.view_.removeChild(this.view_.firstChild);
         }
         this.view_.addClass('active');
         view.appendTo(this.view_);
-    };
+    }
 
-    p.removeView = function(mode) {
+    removeView() {
         if (this.view_.firstChild) {
             this.view_.removeChild(this.view_.firstChild);
         }
         this.view_.removeClass('active');
-    };
-})(Entry.Intro.prototype);
+    }
+}
+
+Entry.Intro = EntryIntro;
