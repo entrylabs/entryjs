@@ -427,11 +427,9 @@ Entry.krc.getBlocks = function() {
                         script.timeFlag = 0;
                     }, duration + 32);
                     return script;
-                }
-                else if (script.timeFlag === 1) {
+                } else if (script.timeFlag === 1) {
                     return script;
-                } 
-				else {// 설정 시간이 지나면 출력 리셋
+                } else {
                     delete script.timeFlag;
                     delete script.isStart;
                     Entry.hw.sendQueue.SET.port = {
@@ -628,8 +626,7 @@ Entry.krc.getBlocks = function() {
                 ],
                 type: 'krc_set_servo',
             },
-            paramsKeyMap:
-            {
+            paramsKeyMap: {
                 PORT: 0,
                 ANGLE: 1,
                 SPEED: 2,
@@ -844,8 +841,7 @@ Entry.krc.getBlocks = function() {
             func: (sprite, script) => {
                 const BtnIndex = script.getNumberValue('PORT');
                 const ANALOG = Entry.hw.portData.ANALOG;
-
-                return ANALOG.BtnIndex * 4 * 3 / 10;
+                return (ANALOG.BtnIndex * 4 * 3) / 10;
             },
             syntax: { js: [], py: [] },
         },
