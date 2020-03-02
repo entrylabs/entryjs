@@ -200,7 +200,6 @@ Entry.krc.getBlocks = function() {
             },
         },
 
-
         krc_digital_port_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -352,7 +351,6 @@ Entry.krc.getBlocks = function() {
             },
         },
 
-
         // 1. 삐소리
 		krc_buzzer_onoff: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -411,8 +409,10 @@ Entry.krc.getBlocks = function() {
                         duration = 300;
                     }
                     duration = duration * 1000;
-                    script.isStart = true;// 출력 시작 플래그 셋
-                    script.timeFlag = 1;// 시간플래그 셋
+                    script.isStart = true;
+                    // 출력 시작 플래그 셋
+                    script.timeFlag = 1;
+                    // 시간플래그 셋
 
                     Entry.hw.sendQueue.SET[parseInt(port)] = {
                         type: Entry.krc.sensorTypes.TONE,
@@ -444,8 +444,6 @@ Entry.krc.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-
-
 
         // 3. DC 모터 속도 정하기
 		krc_set_motor_speed: 
