@@ -89,7 +89,6 @@ const dimension = { width: 0, height: 0 };
 
 async function processImage() {
     try {
-        // await Promise.all([]);
         objectDetect(), poseDetect(), faceDetect();
     } catch (err) {
         console.log('estimation error', err);
@@ -128,7 +127,7 @@ async function poseDetect() {
     const predictions = await mobileNet.estimateMultiplePoses(offCanvas, {
         flipHorizontal: currentFlipStatus,
         maxDetections: 4,
-        scoreThreshold: 0.6,
+        scoreThreshold: 0.8,
         nmsRadius: 20,
     });
     const adjacents: posenet.Keypoint[][][] = [];
@@ -187,7 +186,7 @@ ctx.onmessage = async function(e: {
         case 'handle':
             // 이미지 값을 전달해야하는지 여부에 대한 플래그값 조절
             const { target, mode } = e.data;
-            const targetMode = mode === 'on' ? true : false;
+            const targetMode = mode === 'on';
             modelStatus[target] = targetMode;
             break;
 

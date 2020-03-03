@@ -5,8 +5,8 @@
 
 import { GEHelper } from '../graphicEngine/GEHelper';
 import VideoWorker from './workers/video.worker.ts';
+// type을 위해서 import
 import * as posenet from '@tensorflow-models/posenet';
-import * as faceapi from 'face-api.js';
 import { clamp } from 'lodash';
 
 type FlipStatus = {
@@ -82,18 +82,22 @@ class VideoUtils implements MediaUtilsInterface {
         predictions: posenet.Pose[];
         adjacents: posenet.Keypoint[][][];
     };
-    public faces: faceapi.WithFaceExpressions<
-        faceapi.WithAge<
-            faceapi.WithGender<
-                faceapi.WithFaceLandmarks<
-                    {
-                        detection: faceapi.FaceDetection;
-                    },
-                    faceapi.FaceLandmarks68
-                >
-            >
-        >
-    >[] = [];
+    public faces: any = [];
+    /**
+     * 아래는 faces 의 type, 너무 길고, 라이브러리에서 typed 되어 나오는 값이므로 any로 지정하였음.
+     */
+    // faceapi.WithFaceExpressions<
+    //     faceapi.WithAge<
+    //         faceapi.WithGender<
+    //             faceapi.WithFaceLandmarks<
+    //                 {
+    //                     detection: faceapi.FaceDetection;
+    //                 },
+    //                 faceapi.FaceLandmarks68
+    //             >
+    //         >
+    //     >
+    // >[]
 
     // 로컬 스코프
     public isInitialized: boolean = false;
