@@ -7,6 +7,7 @@
 import { Draggable } from '@entrylabs/tool';
 import { GEHelper } from '../graphicEngine/GEHelper';
 import DataTable from './DataTable';
+
 /**
  * Class for a container.
  * This have view for objects.

@@ -103,11 +103,13 @@ Entry.Playground = class Playground {
             this.generateSoundView(soundView);
             this.soundView_ = soundView;
 
-            const tableView = Entry.createElement('div', 'dataTable')
-                .addClass('entryPlaygroundTableWorkspace entryRemove')
-                .appendTo(this.view_);
-            this.generateTableView(tableView);
-            this.tableView_ = tableView;
+            if (Entry.dataTableEnable) {
+                const tableView = Entry.createElement('div', 'dataTable')
+                    .addClass('entryPlaygroundTableWorkspace entryRemove')
+                    .appendTo(this.view_);
+                this.generateTableView(tableView);
+                this.tableView_ = tableView;
+            }
 
             const defaultView = Entry.createElement('div', 'entryDefault')
                 .addClass('entryPlaygroundDefaultWorkspace')
@@ -219,15 +221,17 @@ Entry.Playground = class Playground {
         this.tabViewElements.variable = variableTab;
         this.variableTab = variableTab;
 
-        const tableTab = Entry.createElement('li', 'dataTableTab')
-            .addClass('entryTabListItemWorkspace dataTableTabWorkspace')
-            .appendTo(tabList)
-            .bindOnClick(() => {
-                Entry.do('playgroundChangeViewMode', 'table', this.selectedViewMode);
-            });
-        tableTab.innerHTML = Lang.Workspace.tab_table;
-        this.tabViewElements.table = tableTab;
-        this.tableTab = tableTab;
+        if (Entry.dataTableEnable) {
+            const tableTab = Entry.createElement('li', 'dataTableTab')
+                .addClass('entryTabListItemWorkspace dataTableTabWorkspace')
+                .appendTo(tabList)
+                .bindOnClick(() => {
+                    Entry.do('playgroundChangeViewMode', 'table', this.selectedViewMode);
+                });
+            tableTab.innerHTML = Lang.Workspace.tab_table;
+            this.tabViewElements.table = tableTab;
+            this.tableTab = tableTab;
+        }
     }
 
     createButtonTabView(tabButtonView) {
@@ -1234,6 +1238,7 @@ Entry.Playground = class Playground {
         _.result(this.blockMenu, 'clearRendered');
         this.reloadPlayground();
     }
+
     /**
      * Inject object
      * @param {?Entry.EntryObject} object
@@ -1376,9 +1381,9 @@ Entry.Playground = class Playground {
         const picture = Entry.playground.object.getPicture(pictureId);
         const { imageType = 'png' } = picture;
         /**
-            Logic in try phrase will be disregarded after renewal.
-            nt11576
-        */
+         Logic in try phrase will be disregarded after renewal.
+         nt11576
+         */
         try {
             if (picture.fileurl) {
                 saveAs(
@@ -1419,6 +1424,7 @@ Entry.Playground = class Playground {
             Entry.dispatchEvent('tableSelected', table);
         }
     }
+
     /**
      * Select picture
      * @param {picture}

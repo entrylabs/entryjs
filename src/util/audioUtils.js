@@ -11,10 +11,10 @@ const STATUS_CODE = {
     NOT_RECOGNIZED: 'NOT_RECOGNIZED',
 };
 
-const VOICE_SERVER_ADDR = {
-    hostname: window.location.hostname,
+const getVoiceServerAddress = () => ({
+    hostname: Entry.baseUrl,
     path: '/vc',
-};
+});
 
 const DESIRED_SAMPLE_RATE = 16000;
 
@@ -42,6 +42,7 @@ class AudioUtils {
             return false;
         }
     }
+
     async getMediaStream() {
         try {
             return await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -136,9 +137,13 @@ class AudioUtils {
             }
 
             try {
-                this._socketClient = await voiceApiConnect(VOICE_SERVER_ADDR, language, (data) => {
-                    this.result = data;
-                });
+                this._socketClient = await voiceApiConnect(
+                    getVoiceServerAddress(),
+                    language,
+                    (data) => {
+                        this.result = data;
+                    }
+                );
             } catch (err) {
                 console.log(err);
             }
@@ -176,6 +181,7 @@ class AudioUtils {
             this._mediaRecorder.stop();
         }
     }
+
     /**
      * 녹음을 종료한다. silent = true 인 경우 API 콜을 하지 않기 위해 리스너를 먼저 제거하고 stop 한다.
      * @param {object=} option

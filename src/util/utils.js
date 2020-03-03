@@ -33,7 +33,7 @@ Entry.loadProject = function(project) {
     Entry.variableContainer.setVariables(Entry.Utils.combineCloudVariable(project));
     Entry.variableContainer.setMessages(project.messages);
     Entry.variableContainer.setFunctions(project.functions);
-    DataTable.setTables(project.tables);
+    this.dataTableEnable && DataTable.setTables(project.tables);
     Entry.scene.addScenes(project.scenes);
     Entry.stage.initObjectContainers();
     Entry.container.setObjects(project.objects);
