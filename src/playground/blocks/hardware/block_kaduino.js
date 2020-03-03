@@ -695,7 +695,8 @@ Entry.kaduino.getBlocks = function() {
                         };
                         return script.callReturn();
                     }
-
+                    if(duration > 300)
+                        duration = 300;
                     duration = duration * 1000;
                     script.isStart = true;  // 출력 시작 플래그 셋
                     script.timeFlag = 1;    // 시간플래그 셋
@@ -706,7 +707,7 @@ Entry.kaduino.getBlocks = function() {
                         data: 
 						{
                             value: value,
-                            duration: duration,
+                            duration: duration/10,
                         },
                         time: new Date().getTime(),
                     };
@@ -828,7 +829,8 @@ Entry.kaduino.getBlocks = function() {
                     if (octave < 0) octave = 0;
                     else if (octave > 8) octave = 8;
                     if (note != 0) value = Entry.kaduino.toneMap[note][octave];
-
+                    if(duration > 300)
+                        duration = 300;
                     duration = duration * 1000;
                     script.isStart = true;
                     script.timeFlag = 1;
@@ -839,7 +841,7 @@ Entry.kaduino.getBlocks = function() {
                         data: 
 						{
                             value: value,
-                            duration: duration,
+                            duration: duration/10,
                         },
                         time: new Date().getTime(),
                     };
