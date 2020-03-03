@@ -2,12 +2,12 @@
 
 Entry.freelinker = {
     id: '25.2',
-    name: 'FreeLinker2',
+    name: 'freelinker2',
     url: 'http://www.koreadigital.com/kr/main.asp',
     imageName: 'FreeLinker2.png',
     title: {
         'ko': '프리링커2',
-        'en': 'FreeLinker2',
+        'en': 'freelinker2',
     },
     /*setZero: function() {
 
