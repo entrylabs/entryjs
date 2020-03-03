@@ -13,7 +13,7 @@ require('./core/event');
 require('./core/model');
 require('./core/observer');
 require('./core/svg');
-require('core-js/fn/object/values');
+require('core-js/stable/object/values');
 require('./graphicEngine/FakePIXI');
 require('./css/entry.less');
 require('./class/time_wait');
