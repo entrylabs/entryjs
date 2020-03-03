@@ -16,6 +16,8 @@ const getVoiceServerAddress = () => ({
     path: '/vc',
 });
 
+const DESIRED_SAMPLE_RATE = 16000;
+
 class AudioUtils {
     get currentVolume() {
         return this._currentVolume;
@@ -29,6 +31,7 @@ class AudioUtils {
         this._currentVolume = -1;
         this._audioChunks = [];
         this.result = null;
+        this.startedRecording = false;
     }
 
     async checkUserMicAvailable() {
@@ -81,7 +84,7 @@ class AudioUtils {
                     window.AudioContext = window.webkitAudioContext;
                 }
             }
-            const audioContext = new window.AudioContext({ sampleRate: 16000 });
+            const audioContext = new window.AudioContext();
             const streamSrc = audioContext.createMediaStreamSource(mediaStream);
             const analyserNode = audioContext.createAnalyser();
             const biquadFilter = audioContext.createBiquadFilter();
@@ -105,10 +108,6 @@ class AudioUtils {
             // ex)'localhost:4001'
             return true;
         } catch (e) {
-            if (e.message === 'Operation is not supported') {
-                throw new Entry.Utils.IncompatibleError();
-            }
-
             console.error('error occurred while init audio input', e);
             this.isAudioInitComplete = false;
             return false;
@@ -153,7 +152,7 @@ class AudioUtils {
 
             this._stopMediaRecorder();
             this._mediaRecorder.start();
-
+            this.startedRecording = true;
             Entry.engine.toggleAudioShadePanel();
             this._socketClient.on('message', (e) => {
                 switch (e) {
@@ -196,7 +195,11 @@ class AudioUtils {
             return;
         }
         Entry.dispatchEvent('audioRecordProcessing');
-        Entry.engine.toggleAudioProgressPanel();
+        if (this.startedRecording) {
+            Entry.engine.toggleAudioProgressPanel();
+        }
+        this.startedRecording = false;
+
         if (option.silent) {
             this._mediaRecorder.onstop = () => {
                 console.log('silent stop');
@@ -261,13 +264,41 @@ class AudioUtils {
                 outputData[sample] = inputData[sample];
             }
         }
-        // console.log(this._currentVolume);
-        if (this.isRecording) {
-            // websocket 으로 서버 전송
-            if (this._socketClient && this._socketClient.readyState === this._socketClient.OPEN) {
-                this._socketClient.send(toWav(outputBuffer));
-            }
+        if (!this.isRecording) {
+            return;
         }
+
+        ///// RESAMPLE
+        // offline context 로 44100hz 에서 16000hz로 resample
+        const offlineCtx = new OfflineAudioContext(
+            outputBuffer.numberOfChannels,
+            outputBuffer.duration * DESIRED_SAMPLE_RATE,
+            DESIRED_SAMPLE_RATE
+        );
+        const cloneBuffer = offlineCtx.createBuffer(
+            outputBuffer.numberOfChannels,
+            outputBuffer.length,
+            outputBuffer.sampleRate
+        );
+        // Copy the source data into the offline AudioBuffer
+        for (let channel = 0; channel < outputBuffer.numberOfChannels; channel++) {
+            cloneBuffer.copyToChannel(outputBuffer.getChannelData(channel), channel);
+        }
+        // Play it from the beginning.
+        const source = offlineCtx.createBufferSource();
+        source.buffer = cloneBuffer;
+        source.connect(offlineCtx.destination);
+        offlineCtx.oncomplete = (e) => {
+            if (!this.isRecording) {
+                return;
+            }
+            // socket.io로 서버 전송
+            if (this._socketClient && this._socketClient.readyState === this._socketClient.OPEN) {
+                this._socketClient.send(toWav(e.renderedBuffer));
+            }
+        };
+        offlineCtx.startRendering();
+        source.start(0);
     };
 }
 

@@ -28,6 +28,11 @@ Entry.Stage = function() {
 
     /** @type {PIXI.Application | CreateJsApplication} */
     this._app = null;
+
+    this.background = GEHelper.newGraphic();
+    this.background.graphics.beginFill('#ffffff').drawRect(-480, -240, 960, 480);
+    this.variableContainer = GEHelper.newContainer('variableContainer');
+    this.dialogContainer = GEHelper.newContainer('dialogContainer');
 };
 
 /**
@@ -40,11 +45,6 @@ Entry.Stage.prototype.initStage = function(canvas) {
     this.canvas.x = 960 / 1.5 / 2;
     this.canvas.y = 540 / 1.5 / 2;
     this.canvas.scaleX = this.canvas.scaleY = 2 / 1.5;
-
-    this.background = GEHelper.newGraphic();
-    this.background.graphics.beginFill('#ffffff').drawRect(-480, -240, 960, 480);
-    this.variableContainer = GEHelper.newContainer('variableContainer');
-    this.dialogContainer = GEHelper.newContainer('dialogContainer');
 
     this.canvas.addChild(this.background);
     this.canvas.addChild(this.variableContainer);
@@ -275,10 +275,10 @@ Entry.Stage.prototype.setEntityIndex = function({ object }, index) {
  * sort Z index of objects
  */
 Entry.Stage.prototype.sortZorder = function() {
-    let objects = Entry.container.getCurrentObjects().slice(),
-        length = objects.length,
-        container = this.selectedObjectContainer,
-        index = 0;
+    const objects = Entry.container.getCurrentObjects().slice();
+    const length = objects.length;
+    const container = this.selectedObjectContainer;
+    let index = 0;
 
     for (let i = length - 1; i >= 0; i--) {
         const {
@@ -356,7 +356,7 @@ Entry.Stage.prototype.initHandle = function() {
  * object -> handle
  */
 Entry.Stage.prototype.updateObject = function() {
-    if (Entry.type === 'invisible') {
+    if (Entry.type === 'invisible' || Entry.type === 'playground') {
         return;
     }
     Entry.requestUpdate = true;
@@ -395,7 +395,8 @@ Entry.Stage.prototype.updateObject = function() {
         const entity = object.entity;
         this.handle.setWidth(entity.getScaleX() * entity.getWidth());
         this.handle.setHeight(entity.getScaleY() * entity.getHeight());
-        let regX, regY;
+        let regX;
+        let regY;
         if (entity.type == 'textBox') {
             // maybe 0.
             if (entity.getLineBreak()) {
@@ -560,24 +561,23 @@ Entry.Stage.prototype.showInputField = function() {
     Entry.requestUpdateTwice = true;
 
     function _createInputField() {
-        const scale = 1 / 1.5;
-        const posX = 202 * scale;
-        const posY = 450 * scale;
+        const posX = 15;
+        const posY = 275;
         const isWebGL = GEHelper.isWebGL;
         const classRef = isWebGL ? window.PIXICanvasInput : CanvasInput;
         const inputField = new classRef({
             canvas: document.getElementById('entryCanvas'),
-            fontSize: 30 * scale,
+            fontSize: 20,
             fontFamily: EntryStatic.fontFamily || 'NanumGothic',
-            fontColor: '#212121',
-            width: Math.round(556 * scale),
-            height: 26 * scale,
-            padding: 8 * scale,
-            borderWidth: 1 * scale,
-            borderColor: '#000',
-            borderRadius: 3,
+            fontColor: '#2c313d',
+            width: 520,
+            height: 24,
+            padding: 13,
+            borderWidth: 2,
+            borderColor: '#e2e2e2',
+            borderRadius: 10,
             boxShadow: 'none',
-            innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
+            innerShadow: 'none',
             x: posX,
             y: posY,
             readonly: false,
@@ -602,15 +602,13 @@ Entry.Stage.prototype.showInputField = function() {
 
     function _createSubmitButton() {
         const { confirm_button } = EntryStatic.images || {};
-        const path = confirm_button || `${Entry.mediaFilePath}confirm_button.png`;
+        const path = confirm_button || `${Entry.mediaFilePath}stage/submit.svg`;
         const inputSubmitButton = GEHelper.newSpriteWithCallback(path, () => {
             Entry.requestUpdate = true;
         });
         inputSubmitButton.mouseEnabled = true;
-        inputSubmitButton.scaleX = 0.23;
-        inputSubmitButton.scaleY = 0.23;
-        inputSubmitButton.x = 160;
-        inputSubmitButton.y = 89;
+        inputSubmitButton.x = 190;
+        inputSubmitButton.y = 71.5;
         inputSubmitButton.cursor = 'pointer';
 
         const eventType = isWebGL ? 'pointerdown' : 'mousedown';
@@ -657,7 +655,7 @@ Entry.Stage.prototype.initObjectContainers = function() {
         this.objectContainers.push(obj);
         this.selectedObjectContainer = obj;
     }
-    if (Entry.type !== 'invisible') {
+    if (Entry.type !== 'invisible' && Entry.type !== 'playground') {
         this.canvas.addChild(this.selectedObjectContainer);
     }
     this.selectObjectContainer(Entry.scene.selectedScene);

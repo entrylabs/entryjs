@@ -1,7 +1,9 @@
 import _find from 'lodash/find';
 import _findIndex from 'lodash/findIndex';
+import _uniq from 'lodash/uniq';
+import _flatten from 'lodash/flatten';
 import DataTableSource from './source/DataTableSource';
-import { ModalChart, DataAnalytics } from '@entrylabs/tool';
+import { DataAnalytics, ModalChart } from '@entrylabs/tool';
 
 class DataTable {
     #tables = [];
@@ -26,6 +28,35 @@ class DataTable {
         return this.#tables;
     }
 
+    getTables(blockList = []) {
+        return _uniq(
+            _flatten(
+                blockList
+                    .filter((block) => {
+                        const { _schema = {}, data = {} } = block || {};
+                        if (!data.type) {
+                            return false;
+                        }
+                        const { isFor, isNotFor = [] } = _schema;
+                        const [key] = isNotFor;
+                        return key && isFor && key === 'analysis';
+                    })
+                    .map((block) => {
+                        const { params = [] } = block.data || {};
+                        return params.filter((param) => {
+                            if (typeof param !== 'string') {
+                                return false;
+                            }
+                            return _find(this.#tables, { id: param });
+                        });
+                    })
+            )
+        ).map((tableId) => {
+            const table = this.getSource(tableId);
+            return table.toJSON();
+        });
+    }
+
     getSource(id) {
         if (!id) {
             console.warn('empty argument');
@@ -42,9 +73,11 @@ class DataTable {
         return _findIndex(this.#tables, { id });
     }
 
-    addSource(table) {
+    addSource(table, shouldTableMode = true) {
         const isWorkspace = Entry.type === 'workspace';
-        isWorkspace && Entry.do('playgroundChangeViewMode', 'table');
+        if (shouldTableMode && isWorkspace) {
+            Entry.do('playgroundChangeViewMode', 'table');
+        }
         let data = table || { name: Lang.Workspace.data_table };
         data.name = Entry.getOrderedName(data.name, this.#tables, 'name');
         const isDataTableSource = data instanceof DataTableSource;
@@ -61,7 +94,17 @@ class DataTable {
         }
     }
 
-    selectTable(table = {}) {
+    async selectTable(table = {}) {
+        if (this.tempDataAnalytics) {
+            const temp = { ...this.tempDataAnalytics };
+            const confirm = await entrylms.confirm(Lang.Menus.save_modified_table);
+            if (confirm) {
+                const result = this.saveTable(temp);
+                if (!result) {
+                    return;
+                }
+            }
+        }
         const json = table.toJSON && table.toJSON();
         const { tab } = table;
         this.selected = table;
@@ -69,47 +112,60 @@ class DataTable {
             table: { ...json, tab },
         });
         delete table.tab;
+        delete this.tempDataAnalytics;
+        return table;
     }
+
+    saveTable = (dataAnalytics) => {
+        const { id, table = [[]], charts = [], title } = dataAnalytics;
+        if (!title) {
+            Entry.toast.alert(
+                Lang.DataAnalytics.fail_save_table,
+                Lang.DataAnalytics.empty_table_name_content
+            );
+            return;
+        }
+        if (
+            Entry.playground.isDuplicatedTableName(
+                title,
+                _.findIndex(this.tables, (table) => table.id === id)
+            )
+        ) {
+            Entry.toast.alert(
+                Lang.DataAnalytics.fail_save_table,
+                Lang.DataAnalytics.duplicate_table_name_content
+            );
+            return;
+        }
+        const source = this.getSource(id);
+        if (source) {
+            source.modal = null;
+            source.setArray({
+                chart: charts,
+                fields: table[0],
+                data: table.slice(1),
+                name: title,
+            });
+            Entry.playground.injectTable();
+        }
+        Entry.toast.success(
+            Lang.DataAnalytics.saved_table_title,
+            Lang.DataAnalytics.saved_table_content
+        );
+        delete this.tempDataAnalytics;
+        Entry.playground.reloadPlayground();
+        return true;
+    };
 
     #generateView() {
         this.dataAnalytics = new DataAnalytics({ container: this.#view, data: {} })
-            .on('submit', (dataAnalytics) => {
-                const { id, table = [[]], charts = [], title } = dataAnalytics;
-                if (!title) {
-                    return Entry.toast.alert(
-                        Lang.DataAnalytics.fail_save_table,
-                        Lang.DataAnalytics.empty_table_name_content
-                    );
-                }
-                if (
-                    Entry.playground.isDuplicatedTableName(
-                        title,
-                        _.findIndex(this.tables, (table) => table.id === id)
-                    )
-                ) {
-                    return Entry.toast.alert(
-                        Lang.DataAnalytics.fail_save_table,
-                        Lang.DataAnalytics.duplicate_table_name_content
-                    );
-                }
-                if (Entry.playground.dataTable.getSource(id)) {
-                    Entry.playground.dataTable.getSource(id).setArray({
-                        chart: charts,
-                        fields: table[0],
-                        chart: charts,
-                        data: table.slice(1),
-                        name: title,
-                    });
-                    Entry.playground.injectTable();
-                }
-                Entry.toast.success(
-                    Lang.DataAnalytics.saved_table_title,
-                    Lang.DataAnalytics.saved_table_content
-                );
-            })
+            .on('submit', this.saveTable)
             .on('toast', (message) => {
                 const { title, content } = message;
                 Entry.toast.alert(title, content);
+            })
+            .on('change', (dataAnalytics) => {
+                this.tempDataAnalytics = dataAnalytics;
             });
     }
 
@@ -119,7 +175,7 @@ class DataTable {
 
     setTables(tables = []) {
         tables.forEach((table) => {
-            this.addSource(table);
+            this.addSource(table, false);
         });
     }
 

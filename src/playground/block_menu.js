@@ -1,8 +1,3 @@
-'use strict';
-/*
- *
- * @param {object} dom which to inject playground
- */
 import Visible from '@egjs/visible';
 import debounce from 'lodash/debounce';
 
@@ -17,10 +12,10 @@ class BlockMenu {
         Entry.Model(this, false);
         const { hardwareEnable, dataTableEnable } = Entry;
 
-        this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
+        this.reDraw = debounce(this.reDraw, 100);
         this._dAlign = this.align;
-        this._setDynamic = Entry.Utils.debounce(this._setDynamic, 150);
-        this._dSelectMenu = Entry.Utils.debounce(this.selectMenu, 0);
+        this._setDynamic = debounce(this._setDynamic, 150);
+        this._dSelectMenu = debounce(this.selectMenu, 0);
 
         this._align = align || 'CENTER';
         this.setAlign(this._align);
@@ -106,7 +101,7 @@ class BlockMenu {
             Entry.keyPressed.attach(this, this._captureKeyEvent);
         }
         if (Entry.windowResized) {
-            Entry.windowResized.attach(this, Entry.Utils.debounce(this.updateOffset, 200));
+            Entry.windowResized.attach(this, debounce(this.updateOffset, 200));
         }
 
         Entry.addEventListener(
@@ -998,9 +993,16 @@ class BlockMenu {
 
         _.result(this._categoryCol, 'remove');
 
-        this.categoryWrapper = Entry.Dom('div', {
-            class: 'entryCategoryListWorkspace',
-        });
+        // 카테고리가 이미 만들어져있는 상태에서 데이터만 새로 추가된 경우,
+        // categoryWrapper 는 살리고 내부 컬럼 엘리먼트만 치환한다.
+        if (!this.categoryWrapper) {
+            this.categoryWrapper = Entry.Dom('div', {
+                class: 'entryCategoryListWorkspace',
+            });
+        } else {
+            this.categoryWrapper.innerHTML = '';
+        }
+
         this._categoryCol = Entry.Dom('ul', {
             class: 'entryCategoryList',
             parent: this.categoryWrapper,

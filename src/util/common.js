@@ -41,6 +41,9 @@ const Common = {
         if (typeof str === 'number') {
             return str;
         }
+        if (Array.isArray(str)) {
+            return str.map((x) => Common.toNumber(x));
+        }
         const result = _toNumber(str);
         if (_isNaN(result)) {
             return str;

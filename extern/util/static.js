@@ -801,7 +801,7 @@ EntryStatic.colorSet = {
             START: '#FFFFFF',
             FLOW: '#3A71BC',
             MOVING: '#8641B6',
-            LOOKS: '#D8234E',
+            LOOKS: '#FFFFFF',
             TEXT: '#DC9C32',
             SOUND: '#83A617',
             JUDGE: '#89A1F7',
@@ -816,10 +816,10 @@ EntryStatic.colorSet = {
     block: {
         default: {
             START: '#00b400',
-            FLOW: '#17a6d1',
+            FLOW: '#19baea',
             MOVING: '#ad3efb',
             LOOKS: '#ff3a61',
-            BRUSH: '#fc7e01',
+            BRUSH: '#ff9b00',
             TEXT: '#e43500',
             SOUND: '#67b100',
             JUDGE: '#4562f5',
@@ -834,10 +834,10 @@ EntryStatic.colorSet = {
         },
         lighten: {
             START: '#3bce3b',
-            FLOW: '#3bce3b',
+            FLOW: '#6dddfe',
             MOVING: '#bd65fb',
             LOOKS: '#ff5577',
-            BRUSH: '#ff9831',
+            BRUSH: '#ffb250',
             TEXT: '#ff6739',
             SOUND: '#7ecc12',
             JUDGE: '#99adff',
@@ -852,10 +852,10 @@ EntryStatic.colorSet = {
         },
         darken: {
             START: '#009400',
-            FLOW: '#007ca2',
+            FLOW: '#1498c0',
             MOVING: '#8b19db',
             LOOKS: '#c72042',
-            BRUSH: '#c72042',
+            BRUSH: '#fc6500',
             TEXT: '#ad2800',
             SOUND: '#508a00',
             JUDGE: '#1b3ad8',
@@ -870,7 +870,7 @@ EntryStatic.colorSet = {
         },
         emphasize: {
             '#00b400': '#5BC982', //START
-            '#17a6d1': '#62A5F4', //FLOW
+            '#19baea': '#62A5F4', //FLOW
             '#ad3efb': '#C08FF7', //MOVING
             '#ff3a61': '#F46487', //LOOKS
             '#fc7e01': '#FFB05A', //BRUSH

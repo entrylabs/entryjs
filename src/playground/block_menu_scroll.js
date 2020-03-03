@@ -1,12 +1,4 @@
-/*
- *
- */
-'use strict';
-
-/*
- *
- * @param {object} board
- */
+import debounce from 'lodash/debounce';
 
 class BlockMenuScroller {
     get SCROLL_WIDTH() {
@@ -16,9 +8,8 @@ class BlockMenuScroller {
         return 2.5;
     }
     constructor(board) {
-        var that = this;
         this.board = board;
-        this.board.changeEvent.attach(this, this._reset);
+        this.board.changeEvent.attach(this, this.#reset);
 
         this.svgGroup = null;
 
@@ -29,17 +20,16 @@ class BlockMenuScroller {
         this._visible = true;
         this._opacity = -1;
 
-        this.mouseHandler = function() {
-            that.onMouseDown.apply(that, arguments);
-        };
-
         this.createScrollBar();
         this.setOpacity(0);
-        this._addControl();
+
+        $(this.vScrollbar).bind('mousedown', this.#onMouseDown.bind(this));
 
         this._domHeight = 0;
-        this._dResizeScrollBar = Entry.Utils.debounce(this.resizeScrollBar, 50);
-        if (Entry.windowResized) Entry.windowResized.attach(this, this._dResizeScrollBar);
+        this._dResizeScrollBar = debounce(this.resizeScrollBar, 50);
+        if (Entry.windowResized) {
+            Entry.windowResized.attach(this, this._dResizeScrollBar);
+        }
     }
 
     createScrollBar() {
@@ -61,23 +51,26 @@ class BlockMenuScroller {
     }
 
     resizeScrollBar() {
-        this._updateRatio();
+        this.#updateRatio();
 
-        var dom = this.board.blockMenuContainer;
-        var newHeight = dom.height();
+        const dom = this.board.blockMenuContainer;
+        const newHeight = dom.height();
         if (newHeight !== this._domHeight) {
             this._domHeight = newHeight;
             return this.board.align();
         }
-        if (!this._visible || this.vRatio === 0) return;
+        if (!this._visible || this.vRatio === 0) {
+            return;
+        }
 
-        if (this.vRatio === 0) return;
-        var that = this;
+        if (this.vRatio === 0) {
+            return;
+        }
 
         const width = this.SCROLL_WIDTH;
         this.vScrollbar.attr({
             width,
-            height: dom.height() / that.vRatio,
+            height: dom.height() / this.vRatio,
             x: dom.width() - 13,
         });
     }
@@ -88,35 +81,31 @@ class BlockMenuScroller {
     }
 
     scroll(dy) {
-        if (!this.isVisible()) return;
-        var dest = this._adjustValue(dy);
+        if (!this.isVisible()) {
+            return;
+        }
+        const dest = this.#adjustValue(dy);
 
         dy = dest - this.vY;
-        if (dy === 0) return;
+        if (dy === 0) {
+            return;
+        }
 
         this.board.code.moveBy(0, -dy * this.vRatio);
         this.updateScrollBar(dy);
     }
 
     scrollByPx(px) {
-        if (!this.vRatio) this._updateRatio();
+        if (!this.vRatio) {
+            this.#updateRatio();
+        }
         this.scroll(px / this.vRatio);
     }
 
-    //adjust value by dy for min/max value
-    _adjustValue(dy) {
-        var domHeight = this.board.svgDom.height();
-        var limitBottom = domHeight - domHeight / this.vRatio;
-        var newY = this.vY + dy;
-
-        newY = Math.max(0, newY);
-        newY = Math.min(limitBottom, newY);
-
-        return newY;
-    }
-
     setVisible(visible) {
-        if (visible == this.isVisible()) return;
+        if (visible === this.isVisible()) {
+            return;
+        }
         this._visible = visible;
         this.svgGroup.attr({
             display: visible === true ? 'block' : 'none',
@@ -128,7 +117,9 @@ class BlockMenuScroller {
     }
 
     setOpacity(value) {
-        if (this._opacity == value) return;
+        if (this._opacity == value) {
+            return;
+        }
         this.vScrollbar.attr({
             opacity: value,
         });
@@ -139,19 +130,21 @@ class BlockMenuScroller {
         return this._visible;
     }
 
-    _updateRatio() {
-        var board = this.board,
-            bRect = board.svgBlockGroup.getBBox(),
-            svgDom = board.svgDom,
-            realHeight = board.blockMenuContainer.height();
+    #updateRatio() {
+        const board = this.board;
+        const bRect = board.svgBlockGroup.getBBox();
+        const realHeight = board.blockMenuContainer.height();
 
-        var vRatio = (bRect.height + 20) / realHeight;
+        const vRatio = (bRect.height + 20) / realHeight;
         this.vRatio = vRatio;
-        if (vRatio <= 1) this.setVisible(false);
-        else this.setVisible(true);
+        if (vRatio <= 1) {
+            this.setVisible(false);
+        } else {
+            this.setVisible(true);
+        }
     }
 
-    _reset() {
+    #reset() {
         this.vY = 0;
         this.vScrollbar.attr({
             y: this.vY,
@@ -159,57 +152,78 @@ class BlockMenuScroller {
         this._dResizeScrollBar();
     }
 
-    onMouseDown(e) {
-        var that = this;
-        if (e.stopPropagation) e.stopPropagation();
-        if (e.preventDefault) e.preventDefault();
+    //adjust value by dy for min/max value
+    #adjustValue(dy) {
+        const domHeight = this.board.svgDom.height();
+        const limitBottom = domHeight - domHeight / this.vRatio;
+        let newY = this.vY + dy;
 
-        if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
-            if (Entry.documentMousedown) Entry.documentMousedown.notify(e);
+        newY = Math.max(0, newY);
+        newY = Math.min(limitBottom, newY);
 
-            var mouseEvent;
+        return newY;
+    }
+
+    #onMouseDown(e) {
+        const onMouseMove = (e) => {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+
+            let mouseEvent;
             if (e.originalEvent && e.originalEvent.touches) {
                 mouseEvent = e.originalEvent.touches[0];
-            } else mouseEvent = e;
+            } else {
+                mouseEvent = e;
+            }
 
-            var doc = $(document);
+            const dragInstance = this.dragInstance;
+            this.scroll(mouseEvent.pageY - dragInstance.offsetY);
+
+            dragInstance.set({
+                offsetY: mouseEvent.pageY,
+            });
+        };
+        const onMouseUp = () => {
+            $(document).unbind('.scroll');
+            delete this.dragInstance;
+        };
+
+        if (e.stopPropagation) {
+            e.stopPropagation();
+        }
+        if (e.preventDefault) {
+            e.preventDefault();
+        }
+
+        if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
+            if (Entry.documentMousedown) {
+                Entry.documentMousedown.notify(e);
+            }
+
+            let mouseEvent;
+            if (e.originalEvent && e.originalEvent.touches) {
+                mouseEvent = e.originalEvent.touches[0];
+            } else {
+                mouseEvent = e;
+            }
+
+            const doc = $(document);
             doc.bind('mousemove.scroll', onMouseMove);
             doc.bind('mouseup.scroll', onMouseUp);
-            that.dragInstance = new Entry.DragInstance({
+            this.dragInstance = new Entry.DragInstance({
                 startY: mouseEvent.pageY,
                 offsetY: mouseEvent.pageY,
             });
         }
 
-        function onMouseMove(e) {
-            if (e.stopPropagation) e.stopPropagation();
-            if (e.preventDefault) e.preventDefault();
-
-            var mouseEvent;
-            if (e.originalEvent && e.originalEvent.touches) {
-                mouseEvent = e.originalEvent.touches[0];
-            } else mouseEvent = e;
-
-            var dragInstance = that.dragInstance;
-            that.scroll(mouseEvent.pageY - dragInstance.offsetY);
-
-            dragInstance.set({
-                offsetY: mouseEvent.pageY,
-            });
-        }
-
-        function onMouseUp(e) {
-            $(document).unbind('.scroll');
-            delete that.dragInstance;
-        }
         e.stopPropagation();
     }
-
-    _addControl() {
-        var that = this;
-        $(this.vScrollbar).bind('mousedown', that.mouseHandler);
-    }
 }
+
 Entry.BlockMenuScroller = BlockMenuScroller;
 
 (function(p) {})(Entry.BlockMenuScroller.prototype);

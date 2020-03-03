@@ -1,5 +1,4 @@
-'use strict';
-
+import debounce from 'lodash/debounce';
 import _get from 'lodash/get';
 import Hammer from 'hammerjs';
 
@@ -28,7 +27,7 @@ Entry.BlockView = class BlockView {
         const that = this;
         Entry.Model(this, false);
         this.block = block;
-        this._lazyUpdatePos = Entry.Utils.debounce(block._updatePos.bind(block), 200);
+        this._lazyUpdatePos = debounce(block._updatePos.bind(block), 200);
         this.mouseUpEvent = new Entry.Event(this);
         this.disableMouseEvent = false;
 

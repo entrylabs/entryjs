@@ -1,6 +1,8 @@
 'use strict';
 
-import { get, isMatch, pick } from 'lodash';
+import get from 'lodash/get';
+import isMatch from 'lodash/isMatch';
+import pick from 'lodash/pick';
 
 function scriptCheck(script) {
     if (script.length !== 1 || script[0].length !== 2) {

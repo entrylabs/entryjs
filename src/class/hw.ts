@@ -211,28 +211,38 @@ class Hardware implements Entry.Hardware {
             this.socket.io.reconnection(true);
             this.socket.connect();
         } else {
-            connectHttpsWebSocket(this.httpsServerAddress)
-                .catch(() => {
-                    if (this.programConnected || this.socket) {
-                        return;
-                    }
-                    return connectHttpsWebSocket(this.httpsServerAddress2);
-                })
-                .catch(() => {
-                    if (this.programConnected || this.socket) {
-                        return;
+            const connectionTries = [this.httpsServerAddress, this.httpsServerAddress2];
+
+            // http 혹은 파일시스템 프로토콜에서 동작하는 경우, 로컬호스트 를 최우선 연결시도 한다.
+            if (['http:', 'file:'].indexOf(location.protocol) > -1) {
+                connectionTries.unshift(this.httpServerAddress);
+            } else {
+                connectionTries.push(this.httpServerAddress);
+            }
+
+            connectionTries
+                .reduce<Promise<boolean>>(async (prevPromise, address) => {
+                    const prevResult = await prevPromise;
+                    if (prevResult) {
+                        return true;
                     }
 
-                    if (['http:', 'file:'].indexOf(location.protocol) > -1) {
-                        return connectHttpsWebSocket(this.httpServerAddress);
+                    try {
+                        await connectHttpsWebSocket(address);
+                        return true;
+                    } catch (e) {
+                        return !!(this.programConnected || this.socket);
+                    }
+                }, undefined)
+                .then((result) => {
+                    // 하드웨어 소켓 연결 시도 결과 반환 로직
+                    if (!result) {
+                        console.warn('All hardware socket connection failed');
+                        this._setSocketClosed();
                     }
                 })
                 .catch(() => {
-                    if (this.programConnected || this.socket) {
-                        return;
-                    }
-                    console.warn('All hardware socket connection failed');
-                    this._setSocketClosed();
+                    console.error('Error occurred while try to connect hardware socket');
                 });
         }
     }
@@ -537,7 +547,8 @@ class Hardware implements Entry.Hardware {
         if (data.company === undefined) {
             return;
         }
-        const key = `${Entry.Utils.convertIntToHex(data.company)}.${Entry.Utils.convertIntToHex(
+
+        const key = `${this._convertHexToString(data.company)}.${this._convertHexToString(
             data.model
         )}`;
 
@@ -565,6 +576,14 @@ class Hardware implements Entry.Hardware {
             descMsg = window.Lang.Msgs.hw_connection_success_desc2;
         }
         Entry.toast.success(window.Lang.Msgs.hw_connection_success, descMsg);
+    }
+
+    openHardwareDownloadPopup() {
+        if (Entry.events_.openHardWareDownloadModal) {
+            Entry.dispatchEvent('openHardWareDownloadModal');
+        } else {
+            this.popupHelper.show('hwDownload', true);
+        }
     }
 
     private _setHardwareMonitorTemplate() {
@@ -764,6 +783,7 @@ class Hardware implements Entry.Hardware {
                 window.onblur = null;
             }, 3000);
         }
+
         /**
          * safari 브라우저에서 ${customUrl} 인식하여 페이지 이동 처리되서 분기처리(미설치 안내팝업)
          *
@@ -791,14 +811,6 @@ class Hardware implements Entry.Hardware {
             setTimeout(() => {
                 document.getElementsByTagName('body')[0].removeChild(iFrame);
             }, 500);
-        }
-    }
-
-    openHardwareDownloadPopup() {
-        if (Entry.events_.openHardWareDownloadModal) {
-            Entry.dispatchEvent('openHardWareDownloadModal');
-        } else {
-            this.popupHelper.show('hwDownload', true);
         }
     }
 
@@ -866,6 +878,14 @@ class Hardware implements Entry.Hardware {
                 popup.append(content);
             },
         });
+    }
+
+    private _convertHexToString(num: number | string) {
+        if (typeof num === 'string') {
+            return num.toUpperCase();
+        }
+
+        return num.toString(16).toUpperCase();
     }
 }
 

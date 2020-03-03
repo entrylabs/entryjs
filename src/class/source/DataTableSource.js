@@ -14,6 +14,7 @@ class DataTableSource {
     #source;
     modal;
     tab = 'summary';
+
     constructor(source = {}) {
         const {
             name,
@@ -22,6 +23,7 @@ class DataTableSource {
             chart,
             data,
             tab = 'summary',
+            fields = [],
         } = source;
         this.#name = name;
         this.#id = id;
@@ -32,14 +34,26 @@ class DataTableSource {
         this.tab = tab;
         // 정지시 data 초기화.
         Entry.addEventListener('stop', () => {
-            this.#data.from({ ...source, data: this.#data.origin });
+            this.modal = null;
+            this.#data.from({
+                ...source,
+                data: this.#data.origin,
+                fields: this.#data.originFields,
+            });
         });
 
         const apply = () => {
             if (this.modal && this.modal.isShow) {
+                const find = (x) => this.fields.findIndex((y) => y === this.#data.originFields[x]);
+                const chart = this.#chart.map(({ xIndex, yIndex, categoryIndexes, ...infos }) => ({
+                    xIndex: find(xIndex),
+                    yIndex: find(yIndex),
+                    categoryIndexes: categoryIndexes.map((x) => find(x)).filter(x => x !== -1),
+                    ...infos,
+                }));
                 this.modal.setData({
                     source: {
-                        chart: this.chart,
+                        chart,
                         fields: this.fields,
                         origin: this.rows,
                         tab: this.tab,
@@ -99,10 +113,10 @@ class DataTableSource {
         return !!(isExist === 0 || isExist === null || isExist);
     }
 
-    appendValue(index, data) {
+    appendRow(data) {
         return new Promise(async (resolve, reject) => {
             try {
-                const appendOp = this.#data.getOperation({ type: 'append', index, data });
+                const appendOp = this.#data.getOperation({ type: 'appendRow', data });
                 this.#data.exec(appendOp);
                 resolve();
                 this.applyChart();
@@ -112,10 +126,49 @@ class DataTableSource {
         });
     }
 
-    deleteValue(index) {
+    appendCol(data) {
         return new Promise(async (resolve, reject) => {
             try {
-                const deleteOp = this.#data.getOperation({ type: 'delete', index });
+                const appendOp = this.#data.getOperation({ type: 'appendCol', data });
+                this.#data.exec(appendOp);
+                resolve();
+                this.applyChart();
+            } catch (e) {
+                reject(e);
+            }
+        });
+    }
+
+    insertRow(index, data) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const insertOp = this.#data.getOperation({ type: 'insertRow', index, data });
+                this.#data.exec(insertOp);
+                resolve();
+                this.applyChart();
+            } catch (e) {
+                reject(e);
+            }
+        });
+    }
+
+    insertCol(index, data) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const insertOp = this.#data.getOperation({ type: 'insertCol', index, data });
+                this.#data.exec(insertOp);
+                resolve();
+                this.applyChart();
+            } catch (e) {
+                reject(e);
+            }
+        });
+    }
+
+    deleteCol(index) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const deleteOp = this.#data.getOperation({ type: 'deleteCol', index });
                 this.#data.exec(deleteOp);
                 resolve();
                 this.applyChart();
@@ -125,11 +178,11 @@ class DataTableSource {
         });
     }
 
-    insertValue(index, data) {
+    deleteRow(index) {
         return new Promise(async (resolve, reject) => {
             try {
-                const insertOp = this.#data.getOperation({ type: 'insert', index, data });
-                this.#data.exec(insertOp);
+                const deleteOp = this.#data.getOperation({ type: 'deleteRow', index });
+                this.#data.exec(deleteOp);
                 resolve();
                 this.applyChart();
             } catch (e) {

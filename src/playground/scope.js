@@ -191,8 +191,10 @@ class Scope {
             return schema.func.call(this, entity, this);
         } else {
             return Promise.all(values).then(async (values) => {
-                this.values = values;
-                return await schema.func.call(this, entity, this);
+                if (Entry.engine.state !== 'stop' && this.block) {
+                    this.values = values;
+                    return await schema.func.call(this, entity, this);
+                }
             });
         }
     }
