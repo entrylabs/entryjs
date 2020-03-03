@@ -210,6 +210,7 @@ class DataTable {
     }
 
     createChart(source) {
+        const { fields, rows, tab, chart } = source;
         const tables = this.#tables.map(({ id, name }) => [name, id]);
         const container = Entry.Dom('div', {
             class: 'entry-table-chart',
@@ -218,7 +219,7 @@ class DataTable {
         return new ModalChart({
             data: {
                 tables,
-                source,
+                source: { fields, origin: rows, tab, chart },
                 setTable: (selected) => {
                     const [tableName, tableId] = selected;
                     this.showChart(tableId);
