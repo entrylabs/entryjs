@@ -549,7 +549,8 @@ export default class Hardware implements IEntry.Hardware {
         if (data.company === undefined) {
             return;
         }
-        const key = `${Entry.Utils.convertIntToHex(data.company)}.${Entry.Utils.convertIntToHex(
+
+        const key = `${this._convertHexToString(data.company)}.${this._convertHexToString(
             data.model
         )}`;
 
@@ -577,6 +578,14 @@ export default class Hardware implements IEntry.Hardware {
             descMsg = window.Lang.Msgs.hw_connection_success_desc2;
         }
         Entry.toast.success(window.Lang.Msgs.hw_connection_success, descMsg);
+    }
+
+    openHardwareDownloadPopup() {
+        if (Entry.events_.openHardWareDownloadModal) {
+            Entry.dispatchEvent('openHardWareDownloadModal');
+        } else {
+            this.popupHelper.show('hwDownload', true);
+        }
     }
 
     private _setHardwareMonitorTemplate() {
@@ -807,14 +816,6 @@ export default class Hardware implements IEntry.Hardware {
         }
     }
 
-    openHardwareDownloadPopup() {
-        if (Entry.events_.openHardWareDownloadModal) {
-            Entry.dispatchEvent('openHardWareDownloadModal');
-        } else {
-            this.popupHelper.show('hwDownload', true);
-        }
-    }
-
     private _hwPopupCreate() {
         const hw = this;
         if (!this.popupHelper) {
@@ -879,6 +880,14 @@ export default class Hardware implements IEntry.Hardware {
                 popup.append(content);
             },
         });
+    }
+
+    private _convertHexToString(num: number | string) {
+        if (typeof num === 'string') {
+            return num.toUpperCase();
+        }
+
+        return num.toString(16).toUpperCase();
     }
 }
 

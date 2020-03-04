@@ -3,7 +3,7 @@ import _findIndex from 'lodash/findIndex';
 import _uniq from 'lodash/uniq';
 import _flatten from 'lodash/flatten';
 import DataTableSource from './source/DataTableSource';
-import { ModalChart, DataAnalytics } from '@entrylabs/tool';
+import { DataAnalytics, ModalChart } from '@entrylabs/tool';
 
 class DataTable {
     #tables = [];

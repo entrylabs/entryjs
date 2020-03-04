@@ -50,4 +50,5 @@ declare var Entry: {
     getMainWS(): UnknownAny | undefined;
     assert(predicate: any, message: string): void;
     resizeElement(interfaceModel: any): void;
+    loadExternalModules(project: any): Promise<void>;
 };

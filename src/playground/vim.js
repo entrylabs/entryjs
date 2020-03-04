@@ -1,58 +1,61 @@
-'use strict';
+import debounce from 'lodash/debounce';
 
-Entry.Vim = function(dom, textType) {
-    //Definition For Textmode
-    if (typeof dom === 'string') dom = $('#' + dom);
-    else dom = $(dom);
+class Vim {
+    static MAZE_MODE = 1;
+    static WORKSPACE_MODE = 2;
 
-    if (dom.prop('tagName') !== 'DIV')
-        return console.error('Dom is not div element');
+    static TEXT_TYPE_JS = 0;
+    static TEXT_TYPE_PY = 1;
 
-    this._parentView = dom;
-    this.createDom(dom);
+    static PARSER_TYPE_JS_TO_BLOCK = 0;
+    static PARSER_TYPE_PY_TO_BLOCK = 1;
+    static PARSER_TYPE_BLOCK_TO_JS = 2;
+    static PARSER_TYPE_BLOCK_TO_PY = 3;
 
-    this._parser = new Entry.Parser(null, null, this.codeMirror);
+    static INEDITABLE_LINE_PY = 3;
 
-    Entry.addEventListener('hwChanged', function(e) {
-        if (Entry.hw.hwModule) {
-            var name = Entry.hw.hwModule.name;
-            name = name[0].toUpperCase() + name.slice(1);
-            if (name == 'ArduinoExt') name = 'Arduino';
-            Entry.Vim.PYTHON_IMPORT_HW = '\nimport ' + name + '\n';
-            Entry.Vim.INEDITABLE_LINE_PY = 4;
+    static PYTHON_IMPORT_ENTRY = 'import Entry';
+    static PYTHON_IMPORT_HW = '';
+
+    constructor(dom) {
+        if (typeof dom === 'string') {
+            dom = $(`#${dom}`);
         } else {
-            Entry.Vim.PYTHON_IMPORT_HW = '';
-            Entry.Vim.INEDITABLE_LINE_PY = 3;
+            dom = $(dom);
         }
-    });
-};
 
-Entry.Vim.MAZE_MODE = 1;
-Entry.Vim.WORKSPACE_MODE = 2;
+        if (dom.prop('tagName') !== 'DIV') {
+            return console.error('Dom is not div element');
+        }
 
-Entry.Vim.TEXT_TYPE_JS = 0;
-Entry.Vim.TEXT_TYPE_PY = 1;
+        this._parentView = dom;
+        this.createDom(dom);
 
-Entry.Vim.PARSER_TYPE_JS_TO_BLOCK = 0;
-Entry.Vim.PARSER_TYPE_PY_TO_BLOCK = 1;
-Entry.Vim.PARSER_TYPE_BLOCK_TO_JS = 2;
-Entry.Vim.PARSER_TYPE_BLOCK_TO_PY = 3;
+        this._parser = new Entry.Parser(null, null, this.codeMirror);
 
-Entry.Vim.INEDITABLE_LINE_PY = 3;
+        Entry.addEventListener('hwChanged', (e) => {
+            if (Entry.hw.hwModule) {
+                let name = Entry.hw.hwModule.name;
+                name = name[0].toUpperCase() + name.slice(1);
+                if (name === 'ArduinoExt') {
+                    name = 'Arduino';
+                }
+                Vim.PYTHON_IMPORT_HW = `\nimport ${name}\n`;
+                Vim.INEDITABLE_LINE_PY = 4;
+            } else {
+                Vim.PYTHON_IMPORT_HW = '';
+                Vim.INEDITABLE_LINE_PY = 3;
+            }
+        });
+    }
 
-Entry.Vim.PYTHON_IMPORT_ENTRY = 'import Entry';
-Entry.Vim.PYTHON_IMPORT_HW = '';
+    createDom(dom) {
+        const parent = dom;
 
-(function(p) {
-    p.createDom = function(dom) {
-        var parent, _self, target;
-        parent = dom;
         this.view = Entry.Dom('div', {
-            parent: parent,
+            parent,
             class: 'entryVimBoard',
         });
-
-        var that = this;
 
         this.codeMirror = CodeMirror(this.view[0], {
             lineNumbers: true,
@@ -64,10 +67,8 @@ Entry.Vim.PYTHON_IMPORT_HW = '';
             styleActiveLine: true,
             extraKeys: {
                 'Ctrl-Space': 'autocomplete',
-                Tab: function(cm) {
-                    var spaces = Array(cm.getOption('indentUnit') + 1).join(
-                        ' '
-                    );
+                Tab(cm) {
+                    const spaces = Array(cm.getOption('indentUnit') + 1).join(' ');
                     cm.replaceSelection(spaces);
                 },
             },
@@ -76,279 +77,240 @@ Entry.Vim.PYTHON_IMPORT_HW = '';
             viewportMargin: 10,
         });
 
-        var dShowHint = Entry.Utils.debounce(
-            function() {
-                if (Entry.isTextMode) {
-                    this.codeMirror.showHint({
-                        completeSingle: false,
-                        globalScope: this._getAssistScope(),
-                    });
-                }
-            }.bind(this),
-            250
-        );
+        const dShowHint = debounce(() => {
+            if (Entry.isTextMode) {
+                this.codeMirror.showHint({
+                    completeSingle: false,
+                    globalScope: this.#getAssistScope(),
+                });
+            }
+        }, 250);
 
-        this.codeMirror.on(
-            'keydown',
-            function(cm, event) {
-                if (Entry && Entry.keyPressed) {
-                    Entry.keyPressed.notify(event, true);
-                }
-                if (event.key.length === 1) {
-                    dShowHint();
-                }
-            }.bind(this)
-        );
+        this.codeMirror.on('keydown', (cm, event) => {
+            if (Entry && Entry.keyPressed) {
+                Entry.keyPressed.notify(event, true);
+            }
+            if (event.key.length === 1) {
+                dShowHint();
+            }
+        });
 
-        var dClear = Entry.Utils.debounce(
-            function() {
-                var input =
-                    this.codeMirror.display && this.codeMirror.display.input
-                        ? this.codeMirror.display.input
-                        : undefined;
-                if (input && input.composing) {
-                    input.poll();
-                    input.composing.range.clear();
-                    input.composing = null;
-                }
-            }.bind(this),
-            250
-        );
+        const dClear = debounce(() => {
+            const input =
+                this.codeMirror.display && this.codeMirror.display.input
+                    ? this.codeMirror.display.input
+                    : undefined;
+            if (input && input.composing) {
+                input.poll();
+                input.composing.range.clear();
+                input.composing = null;
+            }
+        }, 250);
 
-        this.codeMirror.on(
-            'keyup',
-            function(cm, event) {
-                //i.e composition bug
-                dClear();
+        this.codeMirror.on('keyup', (cm, event) => {
+            //i.e composition bug
+            dClear();
 
-                if (event.key === 'Backspace') dShowHint();
-            }.bind(this)
-        );
+            if (event.key === 'Backspace') {
+                dShowHint();
+            }
+        });
 
         this.doc = this.codeMirror.getDoc();
 
-        _self = this;
-        target = this.view[0];
+        const target = this.view[0];
+        target.removeEventListener('dragEnd', this.#handleDragEnd);
+        target.removeEventListener('dragOver', this.#handleDragOver);
+        target.addEventListener('dragEnd', this.#handleDragEnd);
+        target.addEventListener('dragOver', this.#handleDragOver);
+    }
 
-        function eventDragEnd(e) {
-            var block = e.block;
-
-            if (!block) return;
-
-            var codeMirror = _self.codeMirror;
-            var textCode = _self.getCodeToText(block, Entry.Parser.PARSE_BLOCK);
-
-            codeMirror.display.dragFunctions.leave(e);
-            codeMirror.display.scroller.dispatchEvent(
-                Entry.Utils.createMouseEvent('mousedown', e)
-            );
-
-            var testArr = textCode.split('\n');
-            var max = testArr.length - 1;
-            var statementCursorLine = _self.doc.getCursor().line;
-            testArr.forEach(function(text, i) {
-                if (i != max) text += '\n';
-                codeMirror.replaceSelection(text);
-            });
-
-            //set cursor for statement block
-            if (block.statements && block.statements.length) {
-                statementCursorLine++;
-                codeMirror.setCursor(statementCursorLine);
-                if (codeMirror.getLine(statementCursorLine)) {
-                    codeMirror.replaceSelection('\n');
-                    codeMirror.setCursor(statementCursorLine);
-                }
-                CodeMirror.commands.indentAuto(codeMirror);
-            }
-
-            codeMirror.display.scroller.dispatchEvent(
-                Entry.Utils.createMouseEvent('mouseup', e)
-            );
-        }
-
-        function eventDragOver(e) {
-            _self.codeMirror.display.dragFunctions.over(e);
-        }
-
-        target.removeEventListener('dragEnd', eventDragEnd);
-        target.removeEventListener('dragOver', eventDragOver);
-        target.addEventListener('dragEnd', eventDragEnd);
-        target.addEventListener('dragOver', eventDragOver);
-    };
-
-    p.hide = function() {
+    hide() {
         this.view.addClass('entryRemove');
         this.view.remove();
-    };
+    }
 
-    p.show = function() {
+    show() {
         this.view.removeClass('entryRemove');
         this._parentView.append(this.view);
-    };
+    }
 
-    p.clearText = function() {
+    clearText() {
         this.codeMirror.setValue('');
-    };
+    }
 
-    p.textToCode = function(textType) {
-        var type = textType;
-        if (type === Entry.Vim.TEXT_TYPE_JS) {
-            this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
-            this._parser.setParser(
-                this._mode,
-                this._parserType,
-                this.codeMirror
-            );
-        } else if (type === Entry.Vim.TEXT_TYPE_PY) {
-            this._parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
-            this._parser.setParser(
-                this._mode,
-                this._parserType,
-                this.codeMirror
-            );
+    textToCode(textType) {
+        const type = textType;
+        if (type === Vim.TEXT_TYPE_JS) {
+            this._parserType = Vim.PARSER_TYPE_JS_TO_BLOCK;
+            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+        } else if (type === Vim.TEXT_TYPE_PY) {
+            this._parserType = Vim.PARSER_TYPE_PY_TO_BLOCK;
+            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
         }
 
-        var textCode = this.codeMirror.getValue();
-        var cursor = this.doc.getCursor();
+        let textCode = this.codeMirror.getValue();
+        const cursor = this.doc.getCursor();
         textCode = textCode.replace(/\t/gm, '    ');
         this.codeMirror.setValue(textCode);
         this.doc.setCursor(cursor);
-        var code = this._parser.parse(textCode);
-        return code;
-    };
+        return this._parser.parse(textCode);
+    }
 
-    p.codeToText = function(code, mode) {
-        var codeDescription;
-        if (mode) this._mode = mode.runType;
+    codeToText(code, mode) {
+        let doc;
+        let textCode;
+        let codeDescription;
+        if (mode) {
+            this._mode = mode.runType;
+        }
 
-        var textType = mode.textType;
+        const textType = mode.textType;
         this._oldParserType = mode.textType;
 
-        if (textType === Entry.Vim.TEXT_TYPE_JS) {
-            this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
-            if (this._oldParserType != this._parserType)
-                this._parser.setParser(
-                    this._mode,
-                    this._parserType,
-                    this.codeMirror
-                );
+        if (textType === Vim.TEXT_TYPE_JS) {
+            this._parserType = Vim.PARSER_TYPE_BLOCK_TO_JS;
+            if (this._oldParserType !== this._parserType) {
+                this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+            }
             this._oldParserType = this._parserType;
-        } else if (textType === Entry.Vim.TEXT_TYPE_PY) {
-            this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
-            if (this._oldParserType != this._parserType)
-                this._parser.setParser(
-                    this._mode,
-                    this._parserType,
-                    this.codeMirror
-                );
+        } else if (textType === Vim.TEXT_TYPE_PY) {
+            this._parserType = Vim.PARSER_TYPE_BLOCK_TO_PY;
+            if (this._oldParserType !== this._parserType) {
+                this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+            }
             this._oldParserType = this._parserType;
         }
 
-        if (Entry.playground) this._currentObject = Entry.playground.object;
+        if (Entry.playground) {
+            this._currentObject = Entry.playground.object;
+        }
 
         this._parser._hasDeclaration = false;
 
-        if (textType == Entry.Vim.TEXT_TYPE_PY) {
+        if (textType === Vim.TEXT_TYPE_PY) {
             if (this._currentObject) {
-                codeDescription =
-                    '# ' +
-                    this._currentObject.name +
-                    Lang.TextCoding.python_code;
-                var textCode = this._parser.parse(
-                    code,
-                    Entry.Parser.PARSE_GENERAL
-                );
+                codeDescription = `# ${this._currentObject.name}${Lang.TextCoding.python_code}`;
+                textCode = this._parser.parse(code, Entry.Parser.PARSE_GENERAL);
 
-                if (textType === Entry.Vim.TEXT_TYPE_PY) {
+                if (textType === Vim.TEXT_TYPE_PY) {
                     textCode = codeDescription
                         .concat('\n\n')
-                        .concat(Entry.Vim.PYTHON_IMPORT_ENTRY)
-                        .concat(Entry.Vim.PYTHON_IMPORT_HW)
+                        .concat(Vim.PYTHON_IMPORT_ENTRY)
+                        .concat(Vim.PYTHON_IMPORT_HW)
                         .concat('\n\n')
                         .concat(textCode);
                 }
                 this.codeMirror.setValue(textCode);
-                if (textType == Entry.Vim.TEXT_TYPE_PY)
+                if (textType === Vim.TEXT_TYPE_PY) {
                     this.codeMirror
                         .getDoc()
                         .markText(
                             { line: 0, ch: 0 },
-                            { line: Entry.Vim.INEDITABLE_LINE_PY, ch: 0 },
+                            { line: Vim.INEDITABLE_LINE_PY, ch: 0 },
                             { readOnly: true, inclusiveLeft: true }
                         );
+                }
 
-                var doc = this.codeMirror.getDoc();
+                doc = this.codeMirror.getDoc();
                 doc.setCursor({ line: doc.lastLine() - 1 });
             } else {
                 this.clearText();
             }
-        } else if (textType == Entry.Vim.TEXT_TYPE_JS) {
-            var textCode = this._parser.parse(code, Entry.Parser.PARSE_GENERAL);
+        } else if (textType === Vim.TEXT_TYPE_JS) {
+            textCode = this._parser.parse(code, Entry.Parser.PARSE_GENERAL);
             this.codeMirror.setValue(textCode);
-            var doc = this.codeMirror.getDoc();
+            doc = this.codeMirror.getDoc();
             doc.setCursor({ line: doc.lastLine() - 1 });
         }
 
-        if (Entry.isTextMode) this._parser._onRunError = false;
-    };
-
-    p.getCodeToText = function(code, parseType) {
-        var textType = this.workspace.oldTextType;
-
-        if (textType === Entry.Vim.TEXT_TYPE_JS) {
-            this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
-            this._parser.setParser(
-                this._mode,
-                this._parserType,
-                this.codeMirror
-            );
-        } else if (textType === Entry.Vim.TEXT_TYPE_PY) {
-            this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
-            this._parser.setParser(
-                this._mode,
-                this._parserType,
-                this.codeMirror
-            );
+        if (Entry.isTextMode) {
+            this._parser._onRunError = false;
         }
+    }
+
+    getCodeToText(code, parseType) {
+        this.#setParserUsingOldTextType();
 
         return parseType
             ? this._parser.parse(code, parseType)
             : this._parser.parse(code, Entry.Parser.PARSE_SYNTAX);
-    };
+    }
 
-    p.setParserAvailableCode = function(blockMenuCode, boardCode) {
+    setParserAvailableCode(blockMenuCode, boardCode) {
         this._parser.setAvailableCode(blockMenuCode, boardCode);
-    };
+    }
 
-    p.getBlockSyntax = function(datum) {
-        var syntax = null;
-        var textType = this.workspace.oldTextType;
-        if (textType === Entry.Vim.TEXT_TYPE_JS) {
-            this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
-            this._parser.setParser(
-                this._mode,
-                this._parserType,
-                this.codeMirror
-            );
-        } else if (textType === Entry.Vim.TEXT_TYPE_PY) {
-            this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
-            this._parser.setParser(
-                this._mode,
-                this._parserType,
-                this.codeMirror
-            );
+    getBlockSyntax(datum) {
+        let syntax = null;
+        this.#setParserUsingOldTextType();
+
+        if (this._parser._execParser) {
+            syntax = this._parser._execParser.searchSyntax(datum);
         }
 
-        if (this._parser._execParser)
-            syntax = this._parser._execParser.searchSyntax(datum);
-
         return syntax;
+    }
+
+    #getAssistScope() {
+        const execParser = this._parser._execParser;
+        if (execParser && execParser.getAssistScope) {
+            return execParser.getAssistScope();
+        }
+    }
+
+    #setParserUsingOldTextType() {
+        const textType = this.workspace.oldTextType;
+
+        if (textType === Vim.TEXT_TYPE_JS) {
+            this._parserType = Vim.PARSER_TYPE_BLOCK_TO_JS;
+            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+        } else if (textType === Vim.TEXT_TYPE_PY) {
+            this._parserType = Vim.PARSER_TYPE_BLOCK_TO_PY;
+            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+        }
+    }
+
+    #handleDragEnd = (e) => {
+        const block = e.block;
+
+        if (!block) {
+            return;
+        }
+
+        const codeMirror = this.codeMirror;
+        const textCode = this.getCodeToText(block, Entry.Parser.PARSE_BLOCK);
+
+        codeMirror.display.dragFunctions.leave(e);
+        codeMirror.display.scroller.dispatchEvent(Entry.Utils.createMouseEvent('mousedown', e));
+
+        const testArr = textCode.split('\n');
+        const max = testArr.length - 1;
+        let statementCursorLine = this.doc.getCursor().line;
+        testArr.forEach((text, i) => {
+            if (i !== max) {
+                text += '\n';
+            }
+            codeMirror.replaceSelection(text);
+        });
+
+        //set cursor for statement block
+        if (block.statements && block.statements.length) {
+            statementCursorLine++;
+            codeMirror.setCursor(statementCursorLine);
+            if (codeMirror.getLine(statementCursorLine)) {
+                codeMirror.replaceSelection('\n');
+                codeMirror.setCursor(statementCursorLine);
+            }
+            CodeMirror.commands.indentAuto(codeMirror);
+        }
+
+        codeMirror.display.scroller.dispatchEvent(Entry.Utils.createMouseEvent('mouseup', e));
     };
 
-    p._getAssistScope = function() {
-        var execParser = this._parser._execParser;
-        if (execParser && execParser.getAssistScope)
-            return execParser.getAssistScope();
+    #handleDragOver = (e) => {
+        this.codeMirror.display.dragFunctions.over(e);
     };
-})(Entry.Vim.prototype);
+}
+
+Entry.Vim = Vim;

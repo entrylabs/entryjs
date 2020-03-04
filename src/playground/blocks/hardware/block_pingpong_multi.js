@@ -1123,7 +1123,7 @@ Entry.PingpongG2 = new (class extends PingpongBase {
                             cubeId,
                             opt
                         );
-                        return [packet];
+                        return [packet, 400];
                     });
                 },
             },
@@ -1979,7 +1979,7 @@ Entry.PingpongG3 = new (class extends PingpongBase {
                             cubeId,
                             opt
                         );
-                        return [packet];
+                        return [packet, 400];
                     });
                 },
             },
@@ -2899,7 +2899,7 @@ Entry.PingpongG4 = new (class extends PingpongBase {
                             cubeId,
                             opt
                         );
-                        return [packet];
+                        return [packet, 400];
                     });
                 },
             },

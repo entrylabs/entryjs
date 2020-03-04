@@ -7,6 +7,7 @@
 import { Draggable } from '@entrylabs/tool';
 import { GEHelper } from '../graphicEngine/GEHelper';
 import DataTable from './DataTable';
+
 /**
  * Class for a container.
  * This have view for objects.
@@ -63,7 +64,6 @@ Entry.Container = class Container {
     /**
      * Control bar view generator.
      * @param {!Element} containerView containerView from Entry.
-     * @param {?string} option for choose type of view.
      */
     generateView(containerView) {
         this._view = containerView;
@@ -275,10 +275,6 @@ Entry.Container = class Container {
         return true;
     }
 
-    /**
-     * Set objects
-     * @param {!Array.<object model>} objectModels
-     */
     setObjects(objectModels) {
         objectModels.forEach((model) => {
             if (model) {
@@ -290,7 +286,7 @@ Entry.Container = class Container {
         this.updateListView();
         Entry.variableContainer.updateViews();
         const type = Entry.type;
-        if (type === 'workspace' || type === 'phone') {
+        if (type === 'workspace' || type === 'phone' || type === 'playground') {
             const target = this.getCurrentObjects()[0];
             target && this.selectObject(target.id);
         }

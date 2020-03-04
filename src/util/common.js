@@ -1,5 +1,4 @@
 import fetch from 'isomorphic-fetch';
-import _parseInt from 'lodash/parseInt';
 import _isNaN from 'lodash/isNaN';
 import _toNumber from 'lodash/toNumber';
 import _cuid from 'cuid';
