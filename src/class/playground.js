@@ -1460,7 +1460,7 @@ Entry.Playground = class Playground {
     }
 
     checkChangeTable() {
-        if (this.dataTable && !this.dataTable.tempDataAnalytics) {
+        if (!this.dataTable || !this.dataTable.tempDataAnalytics) {
             return;
         }
         entrylms.confirm(Lang.Menus.save_modified_table).then((result) => {
