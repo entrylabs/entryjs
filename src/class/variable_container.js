@@ -1002,6 +1002,24 @@ Entry.VariableContainer = class VariableContainer {
         });
     }
 
+    async removeBlocksInFunctionByTypeAsync(blockType) {
+        await Promise.all(
+            Object.values(this.functions_).map(async (func) => {
+                await Entry.Utils.runTimeout(() => {
+                    Entry.do('funcEditStart', func.id).isPass(true);
+                });
+                await Promise.all(
+                    func.content.getBlockList(false, blockType).map(async (b, index) => {
+                        Entry.Utils.runTimeout(() => {
+                            Entry.do('destroyBlock', b).isPass(true);
+                        });
+                    })
+                );
+                Entry.do('funcEditEnd', 'save').isPass(true);
+            })
+        );
+    }
+
     isUsedBlockTypeInFunction(blockType) {
         return Object.values(this.functions_).some(
             (func) => func.content.getBlockList(false, blockType).length
@@ -1164,17 +1182,26 @@ Entry.VariableContainer = class VariableContainer {
         func.listElement = view;
     }
 
-    destroyFunction(func) {
+    async destroyFunction(func) {
+        console.time('1');
         if (Entry.Func.targetFunc) {
             Entry.do('funcEditEnd', 'cancel');
         }
+        console.timeEnd('1');
+        console.time('2');
         const currentObjectId = Entry.playground.object.id;
         Entry.do('selectObject', currentObjectId);
         const functionType = `func_${func.id}`;
-        Entry.Utils.removeBlockByType(functionType, () => {
-            Entry.do('funcRemove', func).isPass(true);
-        });
+        console.timeEnd('2');
+        console.time('3');
+        await Entry.Utils.removeBlockByTypeAsync(functionType);
+        console.timeEnd('3');
+        console.time('4');
+        Entry.do('funcRemove', func).isPass(true);
+        console.timeEnd('4');
+        console.time('5');
         Entry.do('selectObject', currentObjectId).isPass(true);
+        console.timeEnd('5');
     }
 
     /**

@@ -2684,6 +2684,44 @@ Entry.Utils.removeBlockByType = function(blockType, callback) {
     }
 };
 
+const runTimeout = (func) => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            func();
+            resolve();
+        });
+    });
+};
+
+Entry.Utils.runTimeout = runTimeout;
+
+Entry.Utils.removeBlockByTypeAsync = async (blockType, callback) => {
+    Entry.dispatchEvent('removeFunctionsStart');
+
+    const objects = Entry.container.getAllObjects();
+    await Promise.all(
+        objects.map(async ({ id, script }) => {
+            await runTimeout(() => {
+                Entry.do('selectObject', id).isPass(true);
+            });
+            await Promise.all(
+                script.getBlockList(false, blockType).map(async (b, index) => {
+                    await runTimeout(() => {
+                        Entry.do('destroyBlock', b).isPass(true);
+                    });
+                })
+            );
+        })
+    );
+    console.time('rr');
+    await Entry.variableContainer.removeBlocksInFunctionByTypeAsync(blockType);
+    console.timeEnd('rr');
+    Entry.dispatchEvent('removeFunctionsEnd');
+    if (callback) {
+        callback();
+    }
+};
+
 Entry.Utils.isUsedBlockType = function(blockType) {
     const objects = Entry.container.getAllObjects();
     const usedInObject = objects.some(
