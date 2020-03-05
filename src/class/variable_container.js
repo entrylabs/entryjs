@@ -1004,19 +1004,20 @@ Entry.VariableContainer = class VariableContainer {
 
     async removeBlocksInFunctionByTypeAsync(blockType) {
         await Promise.all(
-            Object.values(this.functions_).map(async (func) => {
-                await Entry.Utils.runTimeout(() => {
+            Object.values(this.functions_).map(
+                Entry.Utils.runAsyncCurry(async (func) => {
                     Entry.do('funcEditStart', func.id).isPass(true);
-                });
-                await Promise.all(
-                    func.content.getBlockList(false, blockType).map(async (b, index) => {
-                        Entry.Utils.runTimeout(() => {
-                            Entry.do('destroyBlock', b).isPass(true);
-                        });
-                    })
-                );
-                Entry.do('funcEditEnd', 'save').isPass(true);
-            })
+                    await Promise.all(
+                        func.content.getBlockList(false, blockType).map(
+                            Entry.Utils.runAsyncCurry((b, index) => {
+                                Entry.do('destroyBlock', b).isPass(true);
+                            })
+                        )
+                    );
+                    Entry.do('funcEditEnd', 'save').isPass(true);
+                    Entry.dispatchEvent('removeFunctionsRun');
+                })
+            )
         );
     }
 

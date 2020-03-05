@@ -2684,38 +2684,42 @@ Entry.Utils.removeBlockByType = function(blockType, callback) {
     }
 };
 
-const runTimeout = (func) => {
+Entry.Utils.sleep = (time = 0) => {
     return new Promise((resolve) => {
-        setTimeout(() => {
-            func();
-            resolve();
-        });
+        setTimeout(resolve, time);
     });
 };
 
-Entry.Utils.runTimeout = runTimeout;
+Entry.Utils.runAsync = async (func) => {
+    await Entry.Utils.sleep();
+    await func();
+};
+
+Entry.Utils.runAsyncCurry = (func) => async (...args) => {
+    await Entry.Utils.sleep();
+    await func(...args);
+};
 
 Entry.Utils.removeBlockByTypeAsync = async (blockType, callback) => {
     Entry.dispatchEvent('removeFunctionsStart');
 
     const objects = Entry.container.getAllObjects();
     await Promise.all(
-        objects.map(async ({ id, script }) => {
-            await runTimeout(() => {
+        objects.map(
+            Entry.Utils.runAsyncCurry(async ({ id, script }) => {
                 Entry.do('selectObject', id).isPass(true);
-            });
-            await Promise.all(
-                script.getBlockList(false, blockType).map(async (b, index) => {
-                    await runTimeout(() => {
-                        Entry.do('destroyBlock', b).isPass(true);
-                    });
-                })
-            );
-        })
+                await Promise.all(
+                    script.getBlockList(false, blockType).map(
+                        Entry.Utils.runAsyncCurry(async (b, index) => {
+                            Entry.do('destroyBlock', b).isPass(true);
+                        })
+                    )
+                );
+                Entry.dispatchEvent('removeFunctionsRun');
+            })
+        )
     );
-    console.time('rr');
     await Entry.variableContainer.removeBlocksInFunctionByTypeAsync(blockType);
-    console.timeEnd('rr');
     Entry.dispatchEvent('removeFunctionsEnd');
     if (callback) {
         callback();
