@@ -93,7 +93,9 @@ class _GEHelper extends GEHelperBase {
 
     INIT(isWebGL: boolean) {
         super.INIT(isWebGL);
-        if (this._isInitialized) return;
+        if (this._isInitialized) {
+            return;
+        }
         this._isInitialized = true;
         GEDragHelper.INIT(isWebGL);
         (this.colorFilter = new _ColorFilterHelper()).INIT(isWebGL);
@@ -101,9 +103,7 @@ class _GEHelper extends GEHelperBase {
         (this.brushHelper = new _BrushHelper()).INIT(isWebGL);
         if (this._isWebGL) {
             // this.rndPosition = ()=>{ return Math.random() * 0.8 - 0.4; };
-            this.rndPosition = () => {
-                return 0;
-            };
+            this.rndPosition = () => 0;
             this.rotateRead = 180 / Math.PI;
             this.rotateWrite = Math.PI / 180;
             PIXIGlobal.initOnce();
@@ -113,9 +113,7 @@ class _GEHelper extends GEHelperBase {
                 setFPS: emptyFn,
             };
         } else {
-            this.rndPosition = () => {
-                return 0;
-            };
+            this.rndPosition = () => 0;
             this.resManager = new EaselResManager();
             this.Ticker = {
                 reset: createjs.Ticker.reset,
@@ -442,7 +440,7 @@ class _GEHelper extends GEHelperBase {
     }
 
     drawObjectBox(objects: Array<any>, flipStatus: any) {
-        let objectsList: any = [];
+        const objectsList: any = [];
         objects.forEach((object: any) => {
             const bbox = object.bbox;
             const name = object.class ? Lang.video_object_params[object.class] : '';

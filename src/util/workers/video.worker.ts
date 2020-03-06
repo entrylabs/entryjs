@@ -43,36 +43,6 @@ const offCanvas = new OffscreenCanvas(WIDTH, HEIGHT);
 // 얼굴 인식 모델 옵션
 const tinyFaceDetectOption = new faceapi.TinyFaceDetectorOptions({ inputSize: 320 });
 
-// 각각의 모델 pre-load
-posenet
-    .load({
-        architecture: 'MobileNetV1',
-        outputStride: 16,
-        inputResolution: { width: WIDTH, height: HEIGHT },
-        multiplier: 0.5,
-    })
-    .then((mobileNetLoaded: any) => {
-        mobileNet = mobileNetLoaded;
-        console.log('posenet pre sample');
-    });
-
-cocoSsd
-    .load({
-        base: 'lite_mobilenet_v2',
-    })
-    .then((cocoLoaded: any) => {
-        coco = cocoLoaded;
-    });
-
-Promise.all([
-    faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
-    faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
-    faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
-    faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
-]).then(() => {
-    faceLoaded = true;
-});
-
 // flags if selected model(s) should estimate
 let modelStatus = {
     pose: false,
@@ -93,20 +63,25 @@ async function processImage() {
     } catch (err) {
         console.log('estimation error', err);
     }
-    requestAnimationFrame(processImage);
+    setTimeout(() => {
+        processImage();
+    }, 50);
 }
 
 async function objectDetect() {
-    if (!coco || !modelStatus.object) {
+    if (!coco) {
         return;
     }
 
     const predictions = await coco.detect(offCanvas);
+    if (!modelStatus.object) {
+        return;
+    }
     ctx.postMessage({ type: 'coco', message: predictions });
 }
 
 async function faceDetect() {
-    if (!faceLoaded || !modelStatus.face) {
+    if (!faceLoaded) {
         return;
     }
 
@@ -115,11 +90,14 @@ async function faceDetect() {
         .withFaceLandmarks()
         .withAgeAndGender()
         .withFaceExpressions();
+    if (!modelStatus.face) {
+        return;
+    }
     ctx.postMessage({ type: 'face', message: predictions });
 }
 
 async function poseDetect() {
-    if (!mobileNet || !modelStatus.pose) {
+    if (!mobileNet) {
         return;
     }
 
@@ -130,6 +108,9 @@ async function poseDetect() {
         scoreThreshold: 0.8,
         nmsRadius: 20,
     });
+    if (!modelStatus.pose) {
+        return;
+    }
     const adjacents: posenet.Keypoint[][][] = [];
     predictions.forEach((pose: posenet.Pose) => {
         // 어깨 위치와 코 위치를 기반으로 한 목 위치 계산
@@ -167,8 +148,40 @@ ctx.onmessage = async function(e: {
         case 'init':
             dimension.width = e.data.width;
             dimension.height = e.data.height;
+            // 각각의 모델 pre-load
+            posenet
+                .load({
+                    architecture: 'MobileNetV1',
+                    outputStride: 16,
+                    inputResolution: { width: WIDTH, height: HEIGHT },
+                    multiplier: 0.5,
+                })
+                .then((mobileNetLoaded: any) => {
+                    mobileNet = mobileNetLoaded;
+                    console.log('posenet pre sample');
+                    this.postMessage({ type: 'init', message: 'pose' });
+                });
+
+            cocoSsd
+                .load({
+                    base: 'lite_mobilenet_v2',
+                })
+                .then((cocoLoaded: any) => {
+                    coco = cocoLoaded;
+                    this.postMessage({ type: 'init', message: 'object' });
+                });
+
+            Promise.all([
+                faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
+                faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
+                faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
+                faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
+            ]).then(() => {
+                faceLoaded = true;
+                this.postMessage({ type: 'init', message: 'face' });
+            });
+
             console.log('video worker loaded');
-            this.postMessage({ type: 'init', message: 'done' });
             processImage();
             break;
 

@@ -72,6 +72,12 @@ class VideoUtils implements MediaUtilsInterface {
         object: false,
     };
 
+    public modelLoadStatus: ModelStatus = {
+        pose: false,
+        face: false,
+        object: false,
+    };
+
     // 감지된 요소들
     public motions: Pixel[][] = [...Array(this.CANVAS_HEIGHT / this._SAMPLE_SIZE)].map((e) =>
         Array(this.CANVAS_WIDTH / this._SAMPLE_SIZE)
@@ -169,6 +175,8 @@ class VideoUtils implements MediaUtilsInterface {
             }
             switch (type) {
                 case 'init':
+                    const name: 'pose' | 'face' | 'object' = message;
+                    this.modelLoadStatus[name] = true;
                     break;
                 case 'face':
                     this.faces = message;
@@ -201,7 +209,9 @@ class VideoUtils implements MediaUtilsInterface {
             GEHelper.drawHumanPoints(this.poses.predictions, this.flipStatus);
             GEHelper.drawHumanSkeletons(this.poses.adjacents, this.flipStatus);
         }
-        requestAnimationFrame(this.startDrawIndicators.bind(this));
+        setTimeout(() => {
+            requestAnimationFrame(this.startDrawIndicators.bind(this));
+        }, 50);
     }
     async sendImageToWorker() {
         const captured = await this.imageCapture.grabFrame();
@@ -218,7 +228,9 @@ class VideoUtils implements MediaUtilsInterface {
         //     });
         // });
         // //motion test
-        requestAnimationFrame(this.sendImageToWorker.bind(this));
+        setTimeout(() => {
+            requestAnimationFrame(this.sendImageToWorker.bind(this));
+        }, 50);
     }
     /**
      * MOTION DETECT CALCULATION BASED ON COMPUTER VISION
