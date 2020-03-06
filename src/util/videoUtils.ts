@@ -18,6 +18,7 @@ type ModelStatus = {
     pose: boolean;
     face: boolean;
     object: boolean;
+    warmup: boolean;
 };
 
 type MotionElement = {
@@ -70,12 +71,14 @@ class VideoUtils implements MediaUtilsInterface {
         pose: false,
         face: false,
         object: false,
+        warmup: false,
     };
 
     public modelLoadStatus: ModelStatus = {
         pose: false,
         face: false,
         object: false,
+        warmup: false,
     };
 
     // 감지된 요소들
@@ -145,7 +148,15 @@ class VideoUtils implements MediaUtilsInterface {
                     height: this._VIDEO_HEIGHT,
                 },
             });
-
+            console.log('TRIGGER ENABLING LOAD SCREEN');
+            this.worker.postMessage({
+                type: 'init',
+                width: this.CANVAS_WIDTH,
+                height: this.CANVAS_HEIGHT,
+            });
+            const [track] = stream.getVideoTracks();
+            this.imageCapture = new ImageCapture(track);
+            this.sendImageToWorker();
             const video = document.createElement('video');
             video.srcObject = stream;
             video.width = this.CANVAS_WIDTH;
@@ -165,9 +176,6 @@ class VideoUtils implements MediaUtilsInterface {
         this.video.play();
         this.startDrawIndicators();
         this.turnOnWebcam();
-        const [track] = this.stream.getVideoTracks();
-        this.imageCapture = new ImageCapture(track);
-
         this.worker.onmessage = (e: { data: { type: String; message: any } }) => {
             const { type, message } = e.data;
             if (Entry.engine.state !== 'run' && type !== 'init') {
@@ -175,7 +183,10 @@ class VideoUtils implements MediaUtilsInterface {
             }
             switch (type) {
                 case 'init':
-                    const name: 'pose' | 'face' | 'object' = message;
+                    const name: 'pose' | 'face' | 'object' | 'warmup' = message;
+                    if (message === 'warmup') {
+                        console.log('TRIGGER DISABLING LOAD SCREEN');
+                    }
                     this.modelLoadStatus[name] = true;
                     break;
                 case 'face':
@@ -190,12 +201,6 @@ class VideoUtils implements MediaUtilsInterface {
             }
         };
 
-        this.worker.postMessage({
-            type: 'init',
-            width: this.CANVAS_WIDTH,
-            height: this.CANVAS_HEIGHT,
-        });
-        this.sendImageToWorker();
         this.motionDetect(null);
     }
     startDrawIndicators() {
@@ -228,9 +233,7 @@ class VideoUtils implements MediaUtilsInterface {
         //     });
         // });
         // //motion test
-        setTimeout(() => {
-            requestAnimationFrame(this.sendImageToWorker.bind(this));
-        }, 50);
+        requestAnimationFrame(this.sendImageToWorker.bind(this));
     }
     /**
      * MOTION DETECT CALCULATION BASED ON COMPUTER VISION
@@ -397,9 +400,6 @@ class VideoUtils implements MediaUtilsInterface {
             return;
         }
         switch (target) {
-            case 'brightness':
-                GEHelper.setVideoBrightness(this.canvasVideo, value);
-                break;
             case 'transparency':
                 GEHelper.setVideoAlpha(this.canvasVideo, value);
                 break;

@@ -50,10 +50,10 @@ const dimension = { width: 0, height: 0 };
 async function processImage(repeat: boolean) {
     try {
         if (!repeat) {
-            await objectDetect(), await poseDetect(), await faceDetect();
+            await objectDetect(true), await poseDetect(true), await faceDetect(true);
             return;
         }
-        objectDetect(), poseDetect(), faceDetect();
+        objectDetect(false), poseDetect(false), faceDetect(false);
     } catch (err) {
         console.log('estimation error', err);
     }
@@ -62,18 +62,28 @@ async function processImage(repeat: boolean) {
     }, 50);
 }
 
-async function objectDetect() {
-    if (!coco || !modelStatus.object) {
+//pre run for better performance on loading
+async function warmup() {
+    for (let i = 0; i < 10; i++) {
+        await processImage(false);
+        console.log('warmup', (i + 1) * 10, '% done');
+    }
+    ctx.postMessage({ type: 'init', message: 'warmup' });
+}
+
+async function objectDetect(force: boolean) {
+    if ((!coco || !modelStatus.object) && !force) {
         return;
     }
 
     const predictions = await coco.detect(offCanvas, 4);
-
-    ctx.postMessage({ type: 'coco', message: predictions });
+    if (!force) {
+        ctx.postMessage({ type: 'coco', message: predictions });
+    }
 }
 
-async function faceDetect() {
-    if (!faceLoaded || !modelStatus.face) {
+async function faceDetect(force: boolean) {
+    if ((!faceLoaded || !modelStatus.face) && !force) {
         return;
     }
 
@@ -82,20 +92,13 @@ async function faceDetect() {
         .withFaceLandmarks()
         .withAgeAndGender()
         .withFaceExpressions();
-
-    ctx.postMessage({ type: 'face', message: predictions });
-}
-
-async function warmup() {
-    for (let i = 0; i < 100; i++) {
-        await processImage(false);
-        console.log('warmup', i + 1, '% done');
+    if (!force) {
+        ctx.postMessage({ type: 'face', message: predictions });
     }
-    return true;
 }
 
-async function poseDetect() {
-    if (!mobileNet || !modelStatus.pose) {
+async function poseDetect(force: boolean) {
+    if ((!mobileNet || !modelStatus.pose) && !force) {
         return;
     }
 
@@ -127,7 +130,9 @@ async function poseDetect() {
         const adjacentMap = posenet.getAdjacentKeyPoints(pose.keypoints, 0.02);
         adjacents.push(adjacentMap);
     });
-    ctx.postMessage({ type: 'pose', message: { predictions, adjacents } });
+    if (!force) {
+        ctx.postMessage({ type: 'pose', message: { predictions, adjacents } });
+    }
 }
 
 ctx.onmessage = async function(e: {
