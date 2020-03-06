@@ -25,7 +25,7 @@ Entry.krc = {
             const keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach((key) => {
                 Entry.hw.sendQueue.SET[parseInt(key)].data = 0;
-                Entry.hw.sendQueue.SET[parseInt(key)].time = new Date().getTime();
+                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
             });
         }
         Entry.hw.update();
@@ -55,7 +55,7 @@ Entry.krc.blockMenuBlocks = [
     /// 하드웨어 블록 등록 , 여기에 등록된 블록이 순서대로 나열되며 설정한 이름으로 화면에 보임
     'KrcBuzzerOnOff',
     // 스피커 삐 소리
-    'KrcSetMotorSpeed',  
+    'KrcSetMotorSpeed',
     // DC모터 속도제어
     'KrcMotorStop',
     // DC모터 정지하기
@@ -533,8 +533,7 @@ Entry.krc.getBlocks = function() {
         },
 
         // 4. DC 모터 정지하기
-        KrcMotorStop:
-        {
+        KrcMotorStop: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -549,9 +548,7 @@ Entry.krc.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    null
-                ],
+                params: [null],
                 type: 'KrcMotorStop',
             },
             paramsKeyMap: {
@@ -584,8 +581,7 @@ Entry.krc.getBlocks = function() {
         },
 
         // 5.  서보 모터 각도 설정하기
-        KrcSetServo:
-        {
+        KrcSetServo: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -911,7 +907,7 @@ Entry.krc.getBlocks = function() {
                 if (!script.isStart) {
                     if (typeof string === 'string') {
                         for (let i = 0; i < string.length; i++) {
-                            buf =  Entry.memaker.toByte(string[i]);
+                            buf = Entry.memaker.toByte(string[i]);
                             text[i] = buf;
                             //text[i] = Entry.memaker.toByte(string[i]);
                             //text.i = Entry.memaker.toByte(string.i);
