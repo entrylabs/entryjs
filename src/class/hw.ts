@@ -1,7 +1,8 @@
 ﻿'use strict';
 
 import HardwareSocketMessageHandler from './hardware/hardwareSocketMessageHandler';
-import '../playground/blocks';
+import HardwareMonitor from './hardware/hardwareMonitor';
+import PopupHelper from './popup_helper';
 
 enum HardwareModuleType {
     builtIn = 'builtin',
@@ -14,7 +15,7 @@ enum HardwareStatement {
     hardwareConnected = 'hardwareConnected',
 }
 
-class Hardware implements Entry.Hardware {
+export default class Hardware implements IEntry.Hardware {
     get httpsServerAddress() {
         return 'https://hw.playentry.org:23518';
     } // 하드웨어 프로그램 접속용 주소
@@ -38,11 +39,11 @@ class Hardware implements Entry.Hardware {
     public sendQueue: UnknownAny;
 
     // 현재 연결된 모듈 컨트롤용
-    public hwModule?: Entry.HardwareModule;
+    public hwModule?: IEntry.HardwareModule;
     public communicationType: string; // 'manual' || 'auto'
     private currentDeviceKey?: string;
     private hwModuleType: HardwareModuleType;
-    private hwMonitor?: Entry.HardwareMonitor;
+    private hwMonitor?: HardwareMonitor;
 
     // 하드웨어 설치여부 확인용
     private ieLauncher: { set: () => void };
@@ -270,7 +271,7 @@ class Hardware implements Entry.Hardware {
      * 현재 보여지고 있는 하드웨어 블록들을 전부 숨김처리한다.
      * @param moduleObject
      */
-    setExternalModule(moduleObject: Entry.HardwareModule) {
+    setExternalModule(moduleObject: IEntry.HardwareModule) {
         this.hwModule = moduleObject;
         this.hwModuleType = HardwareModuleType.module;
         this._banClassAllHardware();
@@ -589,7 +590,7 @@ class Hardware implements Entry.Hardware {
 
     private _setHardwareMonitorTemplate() {
         if (!this.hwMonitor) {
-            this.hwMonitor = new Entry.HWMonitor(this.hwModule);
+            this.hwMonitor = new HardwareMonitor(this.hwModule);
         } else {
             this.hwMonitor.setHwModule(this.hwModule);
             this.hwMonitor.initView();
@@ -821,7 +822,7 @@ class Hardware implements Entry.Hardware {
             if (window.popupHelper) {
                 this.popupHelper = window.popupHelper;
             } else {
-                this.popupHelper = new Entry.popupHelper(true);
+                this.popupHelper = new PopupHelper(true);
             }
         }
 
@@ -890,5 +891,4 @@ class Hardware implements Entry.Hardware {
     }
 }
 
-// @ts-ignore
 Entry.HW = Hardware;
