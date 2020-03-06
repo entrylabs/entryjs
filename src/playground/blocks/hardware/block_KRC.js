@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 const DelayTime = 0;
 let LmotorSpeed = 0;
@@ -24,8 +24,8 @@ Entry.krc = {
         } else {
             const keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach((key) => {
-                Entry.hw.sendQueue.SET[key].data = 0;
-                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                Entry.hw.sendQueue.SET[parseInt(key)].data = 0;
+                Entry.hw.sendQueue.SET[parseInt(key)].time = new Date().getTime();
             });
         }
         Entry.hw.update();
