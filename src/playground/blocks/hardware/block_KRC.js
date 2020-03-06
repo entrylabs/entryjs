@@ -53,9 +53,9 @@ Entry.krc = {
 
 Entry.krc.blockMenuBlocks = [
     /// 하드웨어 블록 등록 , 여기에 등록된 블록이 순서대로 나열되며 설정한 이름으로 화면에 보임
-    'KrcBuzzerOnOff',
+    `KrcBuzzerOnOff`,
     // 스피커 삐 소리
-    'KrcSetMotorSpeed',
+    `KrcSetMotorSpeed`,  
     // DC모터 속도제어
     'KrcMotorStop',
     // DC모터 정지하기
