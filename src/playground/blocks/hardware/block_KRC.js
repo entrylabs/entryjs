@@ -648,7 +648,7 @@ Entry.krc.getBlocks = function() {
                 if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
                 }
-                Entry.hw.sendQueue.SET[port] = {
+                Entry.hw.sendQueue.SET[parseInt(port)] = {
                     type: Entry.krc.sensorTypes.SERVO,
                     data: [angle, speed],
                     time: new Date().getTime(),
