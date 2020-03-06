@@ -706,7 +706,7 @@ Entry.krc.getBlocks = function() {
                 if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
                 }
-                Entry.hw.sendQueue.SET[port] = {
+                Entry.hw.sendQueue.SET[parseInt(port)] = {
                     type: Entry.krc.sensorTypes.DIGITAL,
                     /// 출력 디바이스
                     data: value,
@@ -907,8 +907,8 @@ Entry.krc.getBlocks = function() {
                 if (!script.isStart) {
                     if (typeof string === "string") {
                         for (let i = 0; i < string.length; i++) {
-                            buf = Entry.memaker.toByte(string[i]);
-                            text[i] = buf;
+                            buf = Entry.memaker.toByte(string[parseInt(i)]);
+                            text[parseInt(i)] = buf;
                             //text[i] = Entry.memaker.toByte(string[i]);
                             //text.i = Entry.memaker.toByte(string.i);
                         }
