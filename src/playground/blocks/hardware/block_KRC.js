@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const DelayTime = 0;
 let LmotorSpeed = 0;
@@ -25,7 +25,10 @@ Entry.krc = {
             const keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach((key) => {
                 Entry.hw.sendQueue.SET[parseInt(key)].data = 0;
-                Entry.hw.sendQueue.SET[parseInt(key)].time = new Date().getTime();
+                Entry.hw.sendQueue.SET[key] = 
+                {
+                    time = new Date().getTime(),
+                };
             });
         }
         Entry.hw.update();
@@ -533,8 +536,8 @@ Entry.krc.getBlocks = function() {
         },
 
         // 4. DC 모터 정지하기
-        KrcMotorStop: 
-		{
+        KrcMotorStop:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -583,14 +586,15 @@ Entry.krc.getBlocks = function() {
         },
 
         // 5.  서보 모터 각도 설정하기
-        KrcSetServo: 
-		{
+        KrcSetServo:
+        {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-			fontColor: '#fff',
+            fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
-            params: [ {
+            params: [
+                {
                     type: 'Block',
                     accept: 'string',
                 },
@@ -659,7 +663,6 @@ Entry.krc.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-
 
         // 10. 디지털  출력
         KrcDigitalOnOff: {
@@ -1044,7 +1047,7 @@ Entry.krc.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-        // 3. 소리/빛/가변저항 - 2) mapping 값			
+        // 3. 소리/빛/가변저항 - 2) mapping 값
         KrcGetAnalogMapping: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
