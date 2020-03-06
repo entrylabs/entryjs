@@ -602,13 +602,15 @@ Entry.Stage.prototype.showInputField = function() {
 
     function _createSubmitButton() {
         const { confirm_button } = EntryStatic.images || {};
-        const path = confirm_button || `${Entry.mediaFilePath}stage/submit.svg`;
+        const path = confirm_button || `${Entry.mediaFilePath}stage/submit.png`;
         const inputSubmitButton = GEHelper.newSpriteWithCallback(path, () => {
             Entry.requestUpdate = true;
         });
         inputSubmitButton.mouseEnabled = true;
         inputSubmitButton.x = 190;
         inputSubmitButton.y = 71.5;
+        inputSubmitButton.scaleX = 0.84;
+        inputSubmitButton.scaleY = 0.84;
         inputSubmitButton.cursor = 'pointer';
 
         const eventType = isWebGL ? 'pointerdown' : 'mousedown';
