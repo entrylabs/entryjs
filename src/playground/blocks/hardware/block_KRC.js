@@ -549,7 +549,8 @@ Entry.krc.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [null
+                params: [
+                    null
                 ],
                 type: 'KrcMotorStop',
             },
@@ -724,8 +725,8 @@ Entry.krc.getBlocks = function() {
         KrcGetDgitalValue: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: "#fff",
-            skeleton: "basic_boolean_field",
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
             statements: [],
             template: Lang.template.KrcGetDgitalValue,
             params: [
@@ -903,13 +904,13 @@ Entry.krc.getBlocks = function() {
                 const line2 = script.getValue('LINE', script);
                 const column2 = script.getValue('COLUMN', script);
                 const string = script.getValue('STRING', script);
-                let text = [];
+                const text = [];
 
                 if (!script.isStart) {
                     if (typeof string === 'string') {
                         for (let i = 0; i < string.length; i++) {
-                            text[parseInt(i)] = Entry.memaker.toByte(string[parseInt(i)]);
-                            text.i = Entry.memaker.toByte(string.i);
+                            text[i] = Entry.memaker.toByte(string[i]);
+                            //text.i = Entry.memaker.toByte(string.i);
                         }
                     } else {
                         text[0] = string;
