@@ -69,19 +69,17 @@ async function processImage() {
 }
 
 async function objectDetect() {
-    if (!coco) {
+    if (!coco || !modelStatus.object) {
         return;
     }
 
     const predictions = await coco.detect(offCanvas);
-    if (!modelStatus.object) {
-        return;
-    }
+
     ctx.postMessage({ type: 'coco', message: predictions });
 }
 
 async function faceDetect() {
-    if (!faceLoaded) {
+    if (!faceLoaded || !modelStatus.face) {
         return;
     }
 
@@ -90,14 +88,12 @@ async function faceDetect() {
         .withFaceLandmarks()
         .withAgeAndGender()
         .withFaceExpressions();
-    if (!modelStatus.face) {
-        return;
-    }
+
     ctx.postMessage({ type: 'face', message: predictions });
 }
 
 async function poseDetect() {
-    if (!mobileNet) {
+    if (!mobileNet || !modelStatus.pose) {
         return;
     }
 
@@ -108,9 +104,7 @@ async function poseDetect() {
         scoreThreshold: 0.8,
         nmsRadius: 20,
     });
-    if (!modelStatus.pose) {
-        return;
-    }
+
     const adjacents: posenet.Keypoint[][][] = [];
     predictions.forEach((pose: posenet.Pose) => {
         // 어깨 위치와 코 위치를 기반으로 한 목 위치 계산
