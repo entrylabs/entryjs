@@ -1111,11 +1111,11 @@ Entry.krc.getBlocks = function() {
             class: "krc_ANA",
             isNotFor: ["KRC"],
             func: (sprite, script) => {
-                let result = script.getNumberValue("IDATA", script);
-                let value2 = script.getNumberValue("VALUE2", script);
-                let value3 = script.getNumberValue("VALUE3", script);
-                let value4 = script.getNumberValue("VALUE4", script);
-                let value5 = script.getNumberValue("VALUE5", script);
+                let result = script.getNumberValue('IDATA', script);
+                let value2 = script.getNumberValue('VALUE2', script);
+                let value3 = script.getNumberValue('VALUE3', script);
+                let value4 = script.getNumberValue('VALUE4', script);
+                let value5 = script.getNumberValue('VALUE5', script);
                 let swap;
                 if (value2 > value3) {
                     swap = value2;
