@@ -53,9 +53,9 @@ Entry.krc = {
 
 Entry.krc.blockMenuBlocks = [
     /// 하드웨어 블록 등록 , 여기에 등록된 블록이 순서대로 나열되며 설정한 이름으로 화면에 보임
-    `KrcBuzzerOnOff`,
+    'KrcBuzzerOnOff',
     // 스피커 삐 소리
-    `KrcSetMotorSpeed`,  
+    'KrcSetMotorSpeed',  
     // DC모터 속도제어
     'KrcMotorStop',
     // DC모터 정지하기
@@ -724,8 +724,8 @@ Entry.krc.getBlocks = function() {
         KrcGetDgitalValue: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_boolean_field',
+            fontColor: "#fff",
+            skeleton: "basic_boolean_field",
             statements: [],
             template: Lang.template.KrcGetDgitalValue,
             params: [
@@ -908,7 +908,7 @@ Entry.krc.getBlocks = function() {
                 if (!script.isStart) {
                     if (typeof string === 'string') {
                         for (let i = 0; i < string.length; i++) {
-                            //text[parseInt(i)] = Entry.memaker.toByte(string[parseInt(i)]);
+                            text[parseInt(i)] = Entry.memaker.toByte(string[parseInt(i)]);
                             text.i = Entry.memaker.toByte(string.i);
                         }
                     } else {
