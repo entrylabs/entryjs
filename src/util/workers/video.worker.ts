@@ -159,7 +159,7 @@ ctx.onmessage = async function(e: {
             await posenet
                 .load({
                     architecture: 'MobileNetV1',
-                    outputStride: 8,
+                    outputStride: 16,
                     inputResolution: dimension,
                     multiplier: 0.5,
                 })
