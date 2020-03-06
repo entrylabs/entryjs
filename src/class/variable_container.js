@@ -1002,22 +1002,25 @@ Entry.VariableContainer = class VariableContainer {
         });
     }
 
+    removeBlocksInFunctionByType2(blockType) {
+        Object.values(this.functions_).forEach((func) => {
+            func.content.getBlockList(false, blockType).forEach((block, index) => {
+                block.destroy();
+            });
+        });
+    }
+
     async removeBlocksInFunctionByTypeAsync(blockType) {
         await Promise.all(
-            Object.values(this.functions_).map(
-                Entry.Utils.runAsyncCurry(async (func) => {
-                    Entry.do('funcEditStart', func.id).isPass(true);
-                    await Promise.all(
-                        func.content.getBlockList(false, blockType).map(
-                            Entry.Utils.runAsyncCurry((b, index) => {
-                                Entry.do('destroyBlock', b).isPass(true);
-                            })
-                        )
-                    );
-                    Entry.do('funcEditEnd', 'save').isPass(true);
-                    Entry.dispatchEvent('removeFunctionsRun');
-                })
-            )
+            Object.values(this.functions_).map(async (func) => {
+                await Promise.all(
+                    func.content.getBlockList(false, blockType).map(
+                        Entry.Utils.runAsyncCurry((block) => {
+                            block.destroy();
+                        })
+                    )
+                );
+            })
         );
     }
 
@@ -1184,25 +1187,15 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     async destroyFunction(func) {
-        console.time('1');
         if (Entry.Func.targetFunc) {
             Entry.do('funcEditEnd', 'cancel');
         }
-        console.timeEnd('1');
-        console.time('2');
         const currentObjectId = Entry.playground.object.id;
         Entry.do('selectObject', currentObjectId);
         const functionType = `func_${func.id}`;
-        console.timeEnd('2');
-        console.time('3');
         await Entry.Utils.removeBlockByTypeAsync(functionType);
-        console.timeEnd('3');
-        console.time('4');
         Entry.do('funcRemove', func).isPass(true);
-        console.timeEnd('4');
-        console.time('5');
         Entry.do('selectObject', currentObjectId).isPass(true);
-        console.timeEnd('5');
     }
 
     /**
