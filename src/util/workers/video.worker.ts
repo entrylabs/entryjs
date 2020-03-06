@@ -21,16 +21,6 @@ type FlipStatus = {
     vertical: boolean;
 };
 
-const WIDTH = 480;
-const HEIGHT = 270;
-
-faceapi.env.setEnv(faceapi.env.createNodejsEnv());
-// MonkeyPatch때문에 생기는 TypeError, 의도된 방향이므로 수정 하지 말것
-faceapi.env.monkeyPatch({
-    Canvas: OffscreenCanvas,
-    createCanvasElement: () => new OffscreenCanvas(WIDTH, HEIGHT),
-});
-
 // instances, used as flag of handler class if each instances are loaded or not
 let mobileNet: any = null;
 let coco: any = null;
@@ -38,10 +28,10 @@ let faceLoaded: boolean = false;
 const weightsUrl = `${self.location.origin}/lib/entry-js/weights`;
 
 // 메인 스레드에서 전달받은 이미지 프레임 반영용 캔버스
-const offCanvas = new OffscreenCanvas(WIDTH, HEIGHT);
+let offCanvas: OffscreenCanvas = null;
 
 // 얼굴 인식 모델 옵션
-const tinyFaceDetectOption = new faceapi.TinyFaceDetectorOptions({ inputSize: 320 });
+const tinyFaceDetectOption = new faceapi.TinyFaceDetectorOptions({ inputSize: 160 });
 
 // flags if selected model(s) should estimate
 let modelStatus = {
@@ -57,14 +47,18 @@ let options: {
 
 const dimension = { width: 0, height: 0 };
 
-async function processImage() {
+async function processImage(repeat: boolean) {
     try {
+        if (!repeat) {
+            await objectDetect(), await poseDetect(), await faceDetect();
+            return;
+        }
         objectDetect(), poseDetect(), faceDetect();
     } catch (err) {
         console.log('estimation error', err);
     }
     setTimeout(() => {
-        processImage();
+        processImage(true);
     }, 50);
 }
 
@@ -73,7 +67,7 @@ async function objectDetect() {
         return;
     }
 
-    const predictions = await coco.detect(offCanvas);
+    const predictions = await coco.detect(offCanvas, 4);
 
     ctx.postMessage({ type: 'coco', message: predictions });
 }
@@ -92,6 +86,14 @@ async function faceDetect() {
     ctx.postMessage({ type: 'face', message: predictions });
 }
 
+async function warmup() {
+    for (let i = 0; i < 100; i++) {
+        await processImage(false);
+        console.log('warmup', i + 1, '% done');
+    }
+    return true;
+}
+
 async function poseDetect() {
     if (!mobileNet || !modelStatus.pose) {
         return;
@@ -101,8 +103,10 @@ async function poseDetect() {
     const predictions = await mobileNet.estimateMultiplePoses(offCanvas, {
         flipHorizontal: currentFlipStatus,
         maxDetections: 4,
-        scoreThreshold: 0.8,
-        nmsRadius: 20,
+        scoreThreshold: 0.75,
+        nmsRadius: 10,
+        multiplier: 0.5,
+        quantBytes: 1,
     });
 
     const adjacents: posenet.Keypoint[][][] = [];
@@ -120,7 +124,7 @@ async function poseDetect() {
         };
         pose.keypoints[21] = { part: 'neck', position: neckPos, score: -1 };
         //---------------------------------------
-        const adjacentMap = posenet.getAdjacentKeyPoints(pose.keypoints, 0.05);
+        const adjacentMap = posenet.getAdjacentKeyPoints(pose.keypoints, 0.02);
         adjacents.push(adjacentMap);
     });
     ctx.postMessage({ type: 'pose', message: { predictions, adjacents } });
@@ -142,12 +146,21 @@ ctx.onmessage = async function(e: {
         case 'init':
             dimension.width = e.data.width;
             dimension.height = e.data.height;
+
+            faceapi.env.setEnv(faceapi.env.createNodejsEnv());
+            // MonkeyPatch때문에 생기는 TypeError, 의도된 방향이므로 수정 하지 말것
+            faceapi.env.monkeyPatch({
+                Canvas: OffscreenCanvas,
+                createCanvasElement: () => new OffscreenCanvas(dimension.width, dimension.height),
+            });
+
+            offCanvas = new OffscreenCanvas(dimension.width, dimension.height);
             // 각각의 모델 pre-load
-            posenet
+            await posenet
                 .load({
                     architecture: 'MobileNetV1',
-                    outputStride: 16,
-                    inputResolution: { width: WIDTH, height: HEIGHT },
+                    outputStride: 8,
+                    inputResolution: dimension,
                     multiplier: 0.5,
                 })
                 .then((mobileNetLoaded: any) => {
@@ -156,7 +169,7 @@ ctx.onmessage = async function(e: {
                     this.postMessage({ type: 'init', message: 'pose' });
                 });
 
-            cocoSsd
+            await cocoSsd
                 .load({
                     base: 'lite_mobilenet_v2',
                 })
@@ -165,7 +178,7 @@ ctx.onmessage = async function(e: {
                     this.postMessage({ type: 'init', message: 'object' });
                 });
 
-            Promise.all([
+            await Promise.all([
                 faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
                 faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
                 faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
@@ -174,9 +187,9 @@ ctx.onmessage = async function(e: {
                 faceLoaded = true;
                 this.postMessage({ type: 'init', message: 'face' });
             });
-
+            await warmup();
             console.log('video worker loaded');
-            processImage();
+            processImage(true);
             break;
 
         case 'estimate':
