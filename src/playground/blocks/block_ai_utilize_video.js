@@ -422,7 +422,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_boolean_field',
-            template: '%1 인식이 로드 되었는가?',
+            template: '%1 인식이 되었는가?',
             statements: [],
             params: [params.getAiModelOptions()],
             events: {},
@@ -437,7 +437,14 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                     await VideoUtils.initialize();
                     return false;
                 }
-                return VideoUtils.modelLoadStatus[target];
+                switch (target) {
+                    case 'face':
+                        return VideoUtils.faces && VideoUtils.faces.length > 0;
+                    case 'pose':
+                        return !!VideoUtils.poses;
+                    case 'object':
+                        return VideoUtils.objects && VideoUtils.objects.length > 0;
+                }
             },
             paramsKeyMap: {
                 TARGET: 0,
