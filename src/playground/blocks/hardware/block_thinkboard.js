@@ -31,7 +31,7 @@ Entry.ThinkBoard =
                 {             
                     Entry.hw.sendQueue.SET[key].data[0] = 0;          
                     Entry.hw.sendQueue.SET[key].data[1] = 0;                                          
-                }
+                }                             
                 else Entry.hw.sendQueue.SET[key].data = 0;                                                                  
                 Entry.hw.sendQueue.SET[key].time = new Date().getTime();
             });                                 
@@ -1085,7 +1085,7 @@ Entry.ThinkBoard.getBlocks = function() {
                     time: new Date().getTime(),
                 };
 
-                return Entry.hw.portData.USONIC[port] || 0;
+                return Math.round(Entry.hw.portData.USONIC[port]);// || 0;
             },
             syntax: { js: [], py: [] },
         },
@@ -1158,10 +1158,10 @@ Entry.ThinkBoard.getBlocks = function() {
                 var port = script.getValue('PORT', script);
                 var result = 0;
 				
-                var value2 = script.getNumberValue('VALUE2', script);
-                var value3 = script.getNumberValue('VALUE3', script);
-                var value4 = script.getNumberValue('VALUE4', script);
-                var value5 = script.getNumberValue('VALUE5', script);
+                var v1 = script.getNumberValue('VALUE2', script);
+                var v2 = script.getNumberValue('VALUE3', script);
+                var v3 = script.getNumberValue('VALUE4', script);
+                var v4 = script.getNumberValue('VALUE5', script);
 
                if (!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
@@ -1179,23 +1179,28 @@ Entry.ThinkBoard.getBlocks = function() {
                 };               
                 result = Entry.hw.portData.USONIC[port];
 
-                if (value2 > value3) {
-                    var swap = value2;
-                    value2 = value3;
-                    value3 = swap;
+                if (v1 > v2) {
+                    let swap = v1;
+                    v1 = v2;
+                    v2 = swap;
                 }
-                if (value4 > value5) {
-                    var swap = value4;
-                    value4 = value5;
-                    value5 = swap;
+                if (v3 > v4) {
+                    var swap = v3;
+                    v3 = v4;
+                    v4 = swap;
                 }
-                result -= value2;
-                result = result * ((value5 - value4) / (value3 - value2));
-                result += value4;
-                result = Math.min(value5, result);
-                result = Math.max(value4, result);
+
+                result -= v1;
+                result = result * ((v4 - v3) / (v2 - v1));	
+		
+                if(v3<0) result = result - (v3*(-1));
+                else result += v3;	
                 
-                return Math.round(result);
+                result = Math.min(v4, result);	
+                result = Math.max(v3, result);
+                
+                let val = Math.round(result);	
+                return val;
             },
             syntax: { js: [], py: [] },
         },
@@ -1292,12 +1297,12 @@ Entry.ThinkBoard.getBlocks = function() {
                 var temp;
                 switch(type)
                 {
-                    case 0: temp = Entry.hw.portData.TEMP[0];        // humidity
-                                break;
-                    case 1: temp = Entry.hw.portData.TEMP[1];        // temp_F
+                    case 0: temp = Entry.hw.portData.TEMP[1+port*2];        // humidity
+                                break;                            
+                    case 1: temp = Entry.hw.portData.TEMP[0+port*2];        // temp_F
                                 temp = Math.round(temp*1.8+32);                                               
                                 break;                
-                    case 2: temp = Entry.hw.portData.TEMP[1];        // temp_C              
+                    case 2: temp = Entry.hw.portData.TEMP[0+port*2];        // temp_C              
                                 break;                                                
                 }
                 return temp || 0;                
@@ -1725,21 +1730,25 @@ Entry.ThinkBoard.getBlocks = function() {
             func: function(sprite, script) 
 			{
                 var port = script.getNumberValue('PORT');	
-                var mode = 0;       
-                
+                var mode = 0x10;               
+
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                     }
                     delete Entry.hw.sendQueue['SET'][port];
-
+               
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
                 Entry.hw.sendQueue['GET'][Entry.ThinkBoard.sensorTypes.SERVO] = 
 				{
-                    port: [port, mode],
+                    port: port,
                     time: new Date().getTime(),
-                };
+                };          
+
+                // LEEJC debug
+//                console.log('Entry.hw.portData.SERVO[port]: %s', Entry.hw.portData.SERVO[port]);
+
                 return Entry.hw.portData.SERVO[port] || 0;
             },
             syntax: { js: [], py: [] },
@@ -1792,9 +1801,9 @@ Entry.ThinkBoard.getBlocks = function() {
             func: function(sprite, script) 
 			{
                 var port = script.getNumberValue('PORT', script);
-                var mode = 2;                
+                var mode = 0x11;                
                 var angle = script.getNumberValue('ANGLE', script);
-                
+                   
                 angle = Math.min(180, angle);
                 angle = Math.max(0, angle);
 				
@@ -1807,6 +1816,7 @@ Entry.ThinkBoard.getBlocks = function() {
                     data: [mode, angle],
                     time: new Date().getTime(),
                 };
+
                 return script.callReturn();
             },
             syntax: { js: [], py: [] },
@@ -1857,9 +1867,9 @@ Entry.ThinkBoard.getBlocks = function() {
             func: function(sprite, script) 
 			{
                 var port = script.getNumberValue('PORT', script);
-                var mode = 3;                
-                var dir = script.getNumberValue('DIR', script);
-                
+                var mode = 0x12;                
+                var dir = script.getNumberValue('DIR', script);                      
+
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                 }
@@ -1911,9 +1921,9 @@ Entry.ThinkBoard.getBlocks = function() {
             func: function(sprite, script) 
 			{
                 var port = script.getNumberValue('PORT', script);
-                var mode = 4;                
-				var angle = 0;
-                
+                var mode = 0x13;                
+				var angle = 0;                 
+
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                 }
