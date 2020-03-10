@@ -13,7 +13,6 @@ Entry.Kingcoding = {
         //정지시 초기화 부분
 
         //200210 setDigitalPortValue 추후 지원 않을 예정임으로 변경
-        console.log('init');
         Entry.hw.sendQueue.MOTOR1 = 0;
         Entry.hw.sendQueue.MOTOR2 = 0;
         Entry.hw.sendQueue.LED = 0;
