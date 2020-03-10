@@ -71,12 +71,12 @@
 
                 Entry.addEventListener('hwChanged', function() {
                     if (
-                        (Entry.hw.connected && Entry.hw.hwModule && lastHwConnected) ||
+                        (Entry.hw.programConnected && Entry.hw.hwModule && lastHwConnected) ||
                         !isMiniMode
                     ) {
                         return;
                     }
-                    if (Entry.hw.connected && Entry.hw.hwModule) {
+                    if (Entry.hw.programConnected && Entry.hw.hwModule) {
                         if (EntryStatic.hwMiniSupportList.indexOf(Entry.hw.hwModule.name) > -1) {
                             hwCategoryList.forEach(function(categoryName) {
                                 Entry.playground.blockMenu.unbanCategory(categoryName);

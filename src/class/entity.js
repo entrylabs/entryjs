@@ -654,6 +654,10 @@ Entry.EntityObject = class EntityObject {
                 lineHeight = this.fontSize;
                 break;
             }
+            case 'DungGeunMo': {
+                lineHeight = this.fontSize;
+                break;
+            }
             default: {
                 lineHeight = 0;
                 break;
@@ -1014,11 +1018,31 @@ Entry.EntityObject = class EntityObject {
             if (~diffEffects.indexOf('hsv')) {
                 /* eslint-disable */
                 let matrixValue = [
-                    1, 0, 0, 0, 0,
-                    0, 1, 0, 0, 0,
-                    0, 0, 1, 0, 0,
-                    0, 0, 0, 1, 0,
-                    0, 0, 0, 0, 1,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
                 ];
                 /* eslint-enable */
 
@@ -1035,27 +1059,87 @@ Entry.EntityObject = class EntityObject {
                 if (v > 0 && v <= 0.33) {
                     /* eslint-disable */
                     matrixValue = [
-                        1, 0, 0, 0, 0,
-                        0, cosVal, sinVal, 0, 0,
-                        0, -1 * sinVal, cosVal, 0, 0,
-                        0, 0, 0, 1, 0,
-                        0, 0, 0, 0, 1,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        cosVal,
+                        sinVal,
+                        0,
+                        0,
+                        0,
+                        -1 * sinVal,
+                        cosVal,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
                     ];
                 } else if (v <= 0.66) {
                     matrixValue = [
-                        cosVal, 0, sinVal, 0, 0,
-                        1, 0, 0, 0, 0,
-                        sinVal, 0, cosVal, 0, 0,
-                        0, 0, 0, 1, 0,
-                        0, 0, 0, 0, 1,
+                        cosVal,
+                        0,
+                        sinVal,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        sinVal,
+                        0,
+                        cosVal,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
                     ];
                 } else if (v <= 0.99) {
                     matrixValue = [
-                        cosVal, sinVal, 0, 0, 0,
-                        -1 * sinVal, cosVal, 0, 0, 0,
-                        0, 0, 1, 0, 0,
-                        0, 0, 0, 1, 0,
-                        0, 0, 0, 0, 1,
+                        cosVal,
+                        sinVal,
+                        0,
+                        0,
+                        0,
+                        -1 * sinVal,
+                        cosVal,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
                     ];
                 }
                 /* eslint-enable */
@@ -1381,7 +1465,7 @@ Entry.EntityObject = class EntityObject {
             this._scaleAdaptor = null;
         }
 
-        if (this.stamps) {
+        if (this.stamps && this.stamps.length) {
             this.removeStamps();
         }
 

@@ -14,19 +14,32 @@ import { GEHelper } from '../graphicEngine/GEHelper';
  * @constructor
  */
 Entry.Dialog = function(entity, message, mode, isStamp) {
-    if (entity.dialog) entity.dialog.remove();
+    if (entity.isEngineStop) {
+        return;
+    }
+    if (entity.dialog) {
+        entity.dialog.remove();
+    }
     entity.dialog = this;
     this.parent = entity;
     this.padding = 10;
     this.border = 2;
-    if (typeof message == 'number') message = String(message);
-    if (Entry.console) Entry.console.print(message, mode);
-    var messageChunks = message.match(/.{1,15}/g);
+    if (typeof message == 'number') {
+        message = String(message);
+    }
+    if (Entry.console) {
+        Entry.console.print(message, mode);
+    }
+    const messageChunks = message.match(/.{1,15}/g);
     message = messageChunks.join('\n');
     this.message_ = message;
     this.mode_ = mode;
-    if (mode === 'speak' || mode === 'ask') this.generateSpeak();
-    if (!isStamp) Entry.stage.loadDialog(this);
+    if (mode === 'speak' || mode === 'ask') {
+        this.generateSpeak();
+    }
+    if (!isStamp) {
+        Entry.stage.loadDialog(this);
+    }
 };
 
 /**
@@ -35,7 +48,7 @@ Entry.Dialog = function(entity, message, mode, isStamp) {
 Entry.Dialog.prototype.generateSpeak = function() {
     this.object = GEHelper.newContainer('[dialog] container');
     const fontFamily = EntryStatic.fontFamily || 'NanumGothic';
-    var text = GEHelper.textHelper.newText(
+    const text = GEHelper.textHelper.newText(
         this.message_,
         `15px ${fontFamily}`,
         '#000000',
@@ -50,14 +63,14 @@ Entry.Dialog.prototype.generateSpeak = function() {
         bound = text.getTransformedBounds();
     }
 
-    var height = bound.height;
-    var width = bound.width >= 10 ? bound.width : 17;
-    var rect = GEHelper.newGraphic();
+    const height = bound.height;
+    const width = bound.width >= 10 ? bound.width : 17;
+    const rect = GEHelper.newGraphic();
     const colorSet = EntryStatic.colorSet.canvas || {};
     rect.graphics
-        .f(colorSet.dialogBG || '#f5f5f5')
+        .f(colorSet.dialogBG || '#ffffff')
         .ss(2, 'round')
-        .s(colorSet.dialog || '#6FC0DD')
+        .s(colorSet.dialog || '#4f80ff')
         .rr(
             -this.padding,
             -this.padding,
@@ -82,7 +95,7 @@ Entry.Dialog.prototype.generateSpeak = function() {
  */
 Entry.Dialog.prototype.update = function() {
     const parentObj = this.parent.object;
-    var bound = GEHelper.calcParentBound(parentObj);
+    let bound = GEHelper.calcParentBound(parentObj);
     if (!bound && this.parent.type === 'textBox') {
         if (!this._isNoContentTried) {
             this.parent.setText(' ');
@@ -93,7 +106,7 @@ Entry.Dialog.prototype.update = function() {
             return;
         }
     }
-    var notchType = '';
+    let notchType = '';
 
     if (bound.y - 20 - this.border > -135) {
         this.object.y = Math.max(
@@ -134,41 +147,61 @@ Entry.Dialog.prototype.update = function() {
  * @return {createjs.Shape}
  */
 Entry.Dialog.prototype.createSpeakNotch = function(type) {
-    var notch = GEHelper.newGraphic();
+    const notch = GEHelper.newGraphic();
     notch.type = type;
     const colorSet = EntryStatic.colorSet.canvas || {};
-    if (type == 'ne')
+    const height = this.height + this.padding;
+    const padding = this.padding;
+    const width = this.width;
+    if (type == 'ne') {
         notch.graphics
-            .f('#f5f5f5')
-            .ss(2, 'round')
-            .s(colorSet.dialog || '#6FC0DD')
-            .mt(0, this.height + this.padding - 1.5)
-            .lt(-10, this.height + this.padding + 20)
-            .lt(20, this.height + this.padding - 1.5);
-    else if (type == 'nw')
+            .f('#ffffff')
+            .ss(3, 2)
+            .s('#ffffff')
+            .mt(3, height)
+            .lt(11, height)
+            .ss(2, 1, 1)
+            .s(colorSet.dialog || '#4f80ff')
+            .mt(2, height)
+            .lt(2, height + 9)
+            .lt(12, height);
+    } else if (type == 'nw') {
         notch.graphics
-            .f('#f5f5f5')
-            .ss(2, 'round')
-            .s(colorSet.dialog || '#6FC0DD')
-            .mt(this.width, this.height + this.padding - 1.5)
-            .lt(this.width + 10, this.height + this.padding + 20)
-            .lt(this.width - 20, this.height + this.padding - 1.5);
-    else if (type == 'se')
+            .f('#ffffff')
+            .ss(3, 2)
+            .s('#ffffff')
+            .mt(width - 3, height)
+            .lt(width - 11, height)
+            .ss(2, 1, 1)
+            .s(colorSet.dialog || '#4f80ff')
+            .mt(width - 2, height)
+            .lt(width - 2, height + 9)
+            .lt(width - 12, height);
+    } else if (type == 'se') {
         notch.graphics
-            .f('#f5f5f5')
-            .ss(2, 'round')
-            .s(colorSet.dialog || '#6FC0DD')
-            .mt(0, -this.padding + 1.5)
-            .lt(-10, -this.padding - 20)
-            .lt(20, -this.padding + 1.5);
-    else if (type == 'sw')
+            .f('#ffffff')
+            .ss(3, 2)
+            .s('#ffffff')
+            .mt(3, -padding)
+            .lt(11, -padding)
+            .ss(2, 1, 1)
+            .s(colorSet.dialog || '#4f80ff')
+            .mt(2, -padding)
+            .lt(2, -padding - 9)
+            .lt(12, -padding);
+    } else if (type == 'sw') {
         notch.graphics
-            .f('#f5f5f5')
-            .ss(2, 'round')
-            .s(colorSet.dialog || '#6FC0DD')
-            .mt(this.width, -this.padding + 1.5)
-            .lt(this.width + 10, -this.padding - 20)
-            .lt(this.width - 20, -this.padding + 1.5);
+            .f('#ffffff')
+            .ss(3, 2)
+            .s('#ffffff')
+            .mt(width - 3, -padding)
+            .lt(width - 11, -padding)
+            .ss(2, 1, 1)
+            .s(colorSet.dialog || '#4f80ff')
+            .mt(this.width - 2, -padding)
+            .lt(width - 2, -padding - 9)
+            .lt(width - 12, -padding);
+    }
     return notch;
 };
 

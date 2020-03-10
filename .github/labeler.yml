@@ -1,3 +1,0 @@
-enhancement: "feature/**/*"
-issue: "issue/**/*"
-hardware: "*:develop-*"

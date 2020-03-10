@@ -1,8 +1,3 @@
-'use strict';
-/*
- *
- * @param {object} dom which to inject playground
- */
 import Visible from '@egjs/visible';
 import debounce from 'lodash/debounce';
 
@@ -10,6 +5,7 @@ const VARIABLE = 'variable';
 const HW = 'arduino';
 const practicalCourseCategoryList = ['hw_motor', 'hw_melody', 'hw_sensor', 'hw_led', 'hw_robot'];
 const splitterHPadding = EntryStatic.splitterHPadding || 20;
+const BETA_LIST = ['ai_utilize', 'analysis'];
 
 class BlockMenu {
     constructor(dom, align, categoryData, scroll, readOnly) {
@@ -17,10 +13,10 @@ class BlockMenu {
         const { options = {} } = Entry;
         const { disableHardware = false } = options;
 
-        this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
+        this.reDraw = debounce(this.reDraw, 100);
         this._dAlign = this.align;
-        this._setDynamic = Entry.Utils.debounce(this._setDynamic, 150);
-        this._dSelectMenu = Entry.Utils.debounce(this.selectMenu, 0);
+        this._setDynamic = debounce(this._setDynamic, 150);
+        this._dSelectMenu = debounce(this.selectMenu, 0);
 
         this._align = align || 'CENTER';
         this.setAlign(this._align);
@@ -102,7 +98,7 @@ class BlockMenu {
             Entry.keyPressed.attach(this, this._captureKeyEvent);
         }
         if (Entry.windowResized) {
-            Entry.windowResized.attach(this, Entry.Utils.debounce(this.updateOffset, 200));
+            Entry.windowResized.attach(this, debounce(this.updateOffset, 200));
         }
 
         Entry.addEventListener(
@@ -527,7 +523,6 @@ class BlockMenu {
         }
 
         const sorted = [[], []];
-
         this._categoryData.forEach(({ category, blocks: threads }) => {
             if (category === 'func') {
                 const funcThreads = this.code
@@ -535,7 +530,6 @@ class BlockMenu {
                     .map((t) => t.getFirstBlock().type);
                 threads = funcThreads.length ? funcThreads : threads;
             }
-
             const inVisible =
                 threads.reduce(
                     (count, type) => (this.checkBanClass(Entry.block[type]) ? count - 1 : count),
@@ -996,9 +990,16 @@ class BlockMenu {
 
         _.result(this._categoryCol, 'remove');
 
-        this.categoryWrapper = Entry.Dom('div', {
-            class: 'entryCategoryListWorkspace',
-        });
+        // 카테고리가 이미 만들어져있는 상태에서 데이터만 새로 추가된 경우,
+        // categoryWrapper 는 살리고 내부 컬럼 엘리먼트만 치환한다.
+        if (!this.categoryWrapper) {
+            this.categoryWrapper = Entry.Dom('div', {
+                class: 'entryCategoryListWorkspace',
+            });
+        } else {
+            this.categoryWrapper.innerHTML = '';
+        }
+
         this._categoryCol = Entry.Dom('ul', {
             class: 'entryCategoryList',
             parent: this.categoryWrapper,
@@ -1077,7 +1078,7 @@ class BlockMenu {
     }
 
     _generateCategoryElement(name, visible) {
-        return (this._categoryElems[name] = Entry.Dom('li', {
+        this._categoryElems[name] = Entry.Dom('li', {
             id: `entryCategory${name}`,
             classes: [
                 'entryCategoryElementWorkspace',
@@ -1091,7 +1092,17 @@ class BlockMenu {
                     this.align();
                 });
             })
-            .text(Lang.Blocks[name.toUpperCase()]));
+            .text(Lang.Blocks[name.toUpperCase()]);
+        if (BETA_LIST.includes(name)) {
+            this._categoryElems[name][0].appendChild(
+                Entry.Dom('div', {
+                    id: `entryCategory${name}BetaTag`,
+                    classes: ['entryCategoryBetaTag'],
+                })[0]
+            );
+        }
+
+        return this._categoryElems[name];
     }
 
     updateOffset() {

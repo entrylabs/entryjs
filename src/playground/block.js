@@ -547,6 +547,7 @@ Entry.Block = class Block {
 
     doDestroy(animate) {
         this.destroy(animate);
+        this.thread && this.thread.updateValueBlock();
         this.getCode().changeEvent.notify();
         return this;
     }
@@ -618,6 +619,10 @@ Entry.Block = class Block {
 
     getNextBlock() {
         return this.thread.getNextBlock(this) || null;
+    }
+
+    getFirstBlock() {
+        return this.thread.getFirstBlock();
     }
 
     getLastBlock() {
@@ -780,7 +785,7 @@ Entry.Block = class Block {
                 let l = this.params[i];
                 let r = target.params[i];
                 //entry-js로 변경되며서 null로 오던 것이 undefined로 와서 맞춰 줌.
-                if(l === undefined) l = null;
+                if (l === undefined) l = null;
                 l = typeof l === 'number' ? `${l}` : l;
                 r = typeof r === 'number' ? `${r}` : r;
                 if (l === 'positive') {

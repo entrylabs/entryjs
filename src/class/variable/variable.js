@@ -2,6 +2,7 @@
 
 import { GEHelper } from '../../graphicEngine/GEHelper';
 import { GEDragHelper } from '../../graphicEngine/GEDragHelper';
+import CloudVariable from '../../extensions/CloudVariable';
 
 /**
  * 기본 변수블록 객체
@@ -38,6 +39,7 @@ class Variable {
         /** @type {boolean} */
         this.isCloud_ = variable.isCloud || false;
         this.cloudDate = variable.cloudDate || false;
+        this.cloudVariable = CloudVariable.getInstance();
 
         this._nameWidth = null;
         this._valueWidth = null;
@@ -75,7 +77,7 @@ class Variable {
      */
     generateView(variableIndex) {
         const type = this.type;
-        if (type === 'variable' || type === 'timer' || type === 'answer') {
+        if (type === 'variable' || type === 'timer' || type === 'answer' || type === 'stt') {
             this.view_ = GEHelper.newContainer();
             this.rect_ = GEHelper.newGraphic();
             this.view_.addChild(this.rect_);
@@ -417,7 +419,7 @@ class Variable {
         if (!this.isCloud_) {
             this.setValue(variableModel.value);
         }
-
+        
         this.setName(variableModel.name);
         this.setX(variableModel.x);
         this.setY(variableModel.y);
