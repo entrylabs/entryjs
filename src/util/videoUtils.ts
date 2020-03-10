@@ -148,7 +148,8 @@ class VideoUtils implements MediaUtilsInterface {
                     height: this._VIDEO_HEIGHT,
                 },
             });
-            console.log('TRIGGER ENABLING LOAD SCREEN');
+            // console.log('TRIGGER ENABLING LOAD SCREEN');
+            Entry.engine.toggleVideoLoadingPanel();
             this.worker.postMessage({
                 type: 'init',
                 width: this.CANVAS_WIDTH,
@@ -185,7 +186,8 @@ class VideoUtils implements MediaUtilsInterface {
                 case 'init':
                     const name: 'pose' | 'face' | 'object' | 'warmup' = message;
                     if (message === 'warmup') {
-                        console.log('TRIGGER DISABLING LOAD SCREEN');
+                        // console.log('TRIGGER DISABLING LOAD SCREEN');
+                        Entry.engine.toggleVideoLoadingPanel();
                     }
                     this.modelLoadStatus[name] = true;
                     break;
@@ -437,6 +439,7 @@ class VideoUtils implements MediaUtilsInterface {
             pose: false,
             face: false,
             object: false,
+            warmup: null,
         };
         this.disableAllModels();
         GEHelper.resetHandlers();

@@ -171,7 +171,7 @@ ctx.onmessage = async function(e: {
                     })
                     .then((mobileNetLoaded: any) => {
                         mobileNet = mobileNetLoaded;
-                        console.log('posenet pre sample');
+                        console.log('posenet model loaded');
                         this.postMessage({ type: 'init', message: 'pose' });
                     }),
                 cocoSsd
@@ -180,6 +180,7 @@ ctx.onmessage = async function(e: {
                     })
                     .then((cocoLoaded: any) => {
                         coco = cocoLoaded;
+                        console.log('coco model loaded');
                         this.postMessage({ type: 'init', message: 'object' });
                     }),
                 faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),

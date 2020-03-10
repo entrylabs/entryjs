@@ -807,6 +807,47 @@
     }
 }
 
+//videoLoadShade
+.videoLoadingDotted {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    -moz-flex-direction: column;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.4);
+
+    font-family: NanumGothicOTF;
+    font-size: 16px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    color: #ffffff;
+    letter-spacing: -0.1px;
+
+    .dottedLoading {
+        width: 60px;
+        height: 60px;
+        background: url('loading.gif');
+        background-size: cover;
+    }
+    .text {
+        font-size: 16px;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        color: #ffffff;
+    }
+}
+
 //audioShade
 .audioShadeCirclebox {
     position: absolute;

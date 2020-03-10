@@ -126,7 +126,7 @@ Entry.Playground = class Playground {
                 .addClass('entryPlaygroundBackPackView')
                 .appendTo(this.view_);
             this.backPackView = backPackView;
-            this.createPackPackView(backPackView);
+            this.createBackPackView(backPackView);
 
             const resizeHandle = Entry.createElement('div')
                 .addClass('entryPlaygroundResizeWorkspace', 'entryRemove')
@@ -262,7 +262,7 @@ Entry.Playground = class Playground {
         }
     }
 
-    createPackPackView(backPackView) {
+    createBackPackView(backPackView) {
         this.backPack = new Backpack({
             isShow: false,
             data: {
