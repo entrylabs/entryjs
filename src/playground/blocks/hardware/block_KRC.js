@@ -907,8 +907,8 @@ Entry.krc.getBlocks = function() {
                 if (!script.isStart) {
                     if (typeof string === 'string') {
                         for (let i = 0; i < string.length; i++) {
-                            buf = Entry.memaker.toByte(string[parseInt(i)]);
-                            text[parseInt(i)] = buf;
+                            buf = Entry.memaker.toByte(string[parseInt(i,10)]);
+                            text[parseInt(i,10)] = buf;
                             //text[i] = Entry.memaker.toByte(string[i]);
                             //text.i = Entry.memaker.toByte(string.i);
                         }
