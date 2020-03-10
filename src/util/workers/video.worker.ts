@@ -161,29 +161,27 @@ ctx.onmessage = async function(e: {
 
             offCanvas = new OffscreenCanvas(dimension.width, dimension.height);
             // 각각의 모델 pre-load
-            await posenet
-                .load({
-                    architecture: 'MobileNetV1',
-                    outputStride: 16,
-                    inputResolution: dimension,
-                    multiplier: 0.5,
-                })
-                .then((mobileNetLoaded: any) => {
-                    mobileNet = mobileNetLoaded;
-                    console.log('posenet pre sample');
-                    this.postMessage({ type: 'init', message: 'pose' });
-                });
-
-            await cocoSsd
-                .load({
-                    base: 'lite_mobilenet_v2',
-                })
-                .then((cocoLoaded: any) => {
-                    coco = cocoLoaded;
-                    this.postMessage({ type: 'init', message: 'object' });
-                });
-
             await Promise.all([
+                posenet
+                    .load({
+                        architecture: 'MobileNetV1',
+                        outputStride: 16,
+                        inputResolution: dimension,
+                        multiplier: 0.5,
+                    })
+                    .then((mobileNetLoaded: any) => {
+                        mobileNet = mobileNetLoaded;
+                        console.log('posenet pre sample');
+                        this.postMessage({ type: 'init', message: 'pose' });
+                    }),
+                cocoSsd
+                    .load({
+                        base: 'lite_mobilenet_v2',
+                    })
+                    .then((cocoLoaded: any) => {
+                        coco = cocoLoaded;
+                        this.postMessage({ type: 'init', message: 'object' });
+                    }),
                 faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
                 faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
                 faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
