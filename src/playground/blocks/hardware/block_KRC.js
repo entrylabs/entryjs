@@ -24,8 +24,8 @@ Entry.krc = {
         } else {
             const keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach((key) => {
-                Entry.hw.sendQueue.SET[parseInt(key)].data = 0;
-                Entry.hw.sendQueue.SET[parseInt(key)].time = new Date().getTime();
+                Entry.hw.sendQueue.SET[parseInt(key, 10)].data = 0;
+                Entry.hw.sendQueue.SET[parseInt(key, 10)].time = new Date().getTime();
             });
         }
         Entry.hw.update();
@@ -398,7 +398,7 @@ Entry.krc.getBlocks = function() {
                     }
                     if (duration === 0) {
                         // 음 길이가 0 이면
-                        Entry.hw.sendQueue.SET[parseInt(port)] = {
+                        Entry.hw.sendQueue.SET[parseInt(port, 10)] = {
                             type: Entry.krc.sensorTypes.TONE,
                             data: 0,
                             time: new Date().getTime(),
@@ -414,7 +414,7 @@ Entry.krc.getBlocks = function() {
                     script.timeFlag = 1;
                     // 시간플래그 셋
 
-                    Entry.hw.sendQueue.SET[parseInt(port)] = {
+                    Entry.hw.sendQueue.SET[parseInt(port, 10)] = {
                         type: Entry.krc.sensorTypes.TONE,
                         data: {
                             value: value2,
@@ -432,7 +432,7 @@ Entry.krc.getBlocks = function() {
                 } else {
                     delete script.timeFlag;
                     delete script.isStart;
-                    Entry.hw.sendQueue.SET[parseInt(port)] = {
+                    Entry.hw.sendQueue.SET[parseInt(port, 10)] = {
                         type: Entry.krc.sensorTypes.TONE,
                         data: 0,
                         time: new Date().getTime(),
@@ -501,7 +501,7 @@ Entry.krc.getBlocks = function() {
                         if (!Entry.hw.sendQueue.SET) {
                             Entry.hw.sendQueue.SET = {};
                         }
-                        Entry.hw.sendQueue.SET[parseInt(port)] = {
+                        Entry.hw.sendQueue.SET[parseInt(port, 10)] = {
                             type: Entry.krc.sensorTypes.MOTOR,
                             data: [lspeed, rspeed],
                             time: new Date().getTime(),
@@ -566,7 +566,7 @@ Entry.krc.getBlocks = function() {
                     if (!Entry.hw.sendQueue.SET) {
                         Entry.hw.sendQueue.SET = {};
                     }
-                    Entry.hw.sendQueue.SET[parseInt(port)] = {
+                    Entry.hw.sendQueue.SET[parseInt(port, 10)] = {
                         type: Entry.krc.sensorTypes.MOTOR,
                         data: [lspeed, rspeed],
                         time: new Date().getTime(),
