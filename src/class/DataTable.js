@@ -138,12 +138,13 @@ class DataTable {
             return;
         }
         const source = this.getSource(id);
+        const data = ((this.tempDataAnalytics && this.tempDataAnalytics.table) || table).slice(1);
         if (source) {
             source.modal = null;
             source.setArray({
+                data,
                 chart: charts,
                 fields: table[0],
-                data: table.slice(1),
                 name: title,
             });
             Entry.playground.injectTable();
