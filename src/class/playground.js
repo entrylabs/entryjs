@@ -1980,37 +1980,6 @@ Entry.Playground = class Playground {
             e.stopPropagation();
             this._removeTable(table, element);
         });
-
-        Entry.Utils.disableContextmenu(table.view);
-        Entry.ContextMenu.onContextmenu(table.view, (coordinate) => {
-            const options = [
-                {
-                    text: Lang.Workspace.context_rename,
-                    callback() {
-                        nameView.focus();
-                    },
-                },
-                {
-                    text: Lang.Workspace.context_duplicate,
-                    callback: () => {
-                        this.dataTable.addSource(table.clone());
-                    },
-                },
-                {
-                    text: Lang.Workspace.context_remove,
-                    callback: () => {
-                        this._removeTable(table, element);
-                    },
-                },
-                {
-                    text: Lang.Workspace.context_download,
-                    callback() {
-                        console.log('download', table);
-                    },
-                },
-            ];
-            Entry.ContextMenu.show(options, 'workspace-contextmenu', coordinate);
-        });
     }
 
     isDuplicatedTableName(name, selectedIndex = -1) {
