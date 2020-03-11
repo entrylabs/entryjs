@@ -1,6 +1,7 @@
 import { dmetTable } from '../../extensions/dmet';
 import CloudVariable from '../../extensions/CloudVariable';
 import _throttle from 'lodash/throttle';
+import _cloneDeep from 'lodash/cloneDeep';
 
 class DataTableSource {
     #id;
@@ -218,6 +219,15 @@ class DataTableSource {
             isCloud: this.#isCloud,
             cloudDate: this.#cloudDate,
         };
+    }
+
+    clone() {
+        return {
+            name: this.#name,
+            fields: [...this.fields],
+            data: _cloneDeep(this.#data.origin),
+            chart: [...this.#chart],
+        }
     }
 }
 

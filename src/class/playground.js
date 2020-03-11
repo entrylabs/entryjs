@@ -1463,17 +1463,20 @@ Entry.Playground = class Playground {
         if (!this.dataTable || !this.dataTable.tempDataAnalytics) {
             return;
         }
-        entrylms.confirm(Lang.Menus.save_modified_table).then((result) => {
-            if (result) {
-                this.dataTable.saveTable(this.dataTable.tempDataAnalytics);
-            }
-            delete this.dataTable.tempDataAnalytics;
+        return new Promise((resolve) => {
+            entrylms.confirm(Lang.Menus.save_modified_table).then((result) => {
+                if (result) {
+                    this.dataTable.saveTable(this.dataTable.tempDataAnalytics);
+                }
+                delete this.dataTable.tempDataAnalytics;
 
-            if (this.dataTable.selected) {
-                this.dataTable.dataAnalytics.setData({
-                    table: { ...this.dataTable.selected.toJSON() },
-                });
-            }
+                if (this.dataTable.selected) {
+                    this.dataTable.dataAnalytics.setData({
+                        table: { ...this.dataTable.selected.toJSON() },
+                    });
+                }
+                resolve(result);
+            });
         });
     }
 
@@ -1976,6 +1979,37 @@ Entry.Playground = class Playground {
         removeButton.bindOnClick((e) => {
             e.stopPropagation();
             this._removeTable(table, element);
+        });
+
+        Entry.Utils.disableContextmenu(table.view);
+        Entry.ContextMenu.onContextmenu(table.view, (coordinate) => {
+            const options = [
+                {
+                    text: Lang.Workspace.context_rename,
+                    callback() {
+                        nameView.focus();
+                    },
+                },
+                {
+                    text: Lang.Workspace.context_duplicate,
+                    callback: () => {
+                        this.dataTable.addSource(table.clone());
+                    },
+                },
+                {
+                    text: Lang.Workspace.context_remove,
+                    callback: () => {
+                        this._removeTable(table, element);
+                    },
+                },
+                {
+                    text: Lang.Workspace.context_download,
+                    callback() {
+                        console.log('download', table);
+                    },
+                },
+            ];
+            Entry.ContextMenu.show(options, 'workspace-contextmenu', coordinate);
         });
     }
 
