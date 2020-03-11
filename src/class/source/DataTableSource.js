@@ -48,7 +48,7 @@ class DataTableSource {
                 const chart = this.#chart.map(({ xIndex, yIndex, categoryIndexes, ...infos }) => ({
                     xIndex: find(xIndex),
                     yIndex: find(yIndex),
-                    categoryIndexes: categoryIndexes.map((x) => find(x)).filter(x => x !== -1),
+                    categoryIndexes: categoryIndexes.map((x) => find(x)).filter((x) => x !== -1),
                     ...infos,
                 }));
                 this.modal.setData({
