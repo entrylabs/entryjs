@@ -1463,17 +1463,20 @@ Entry.Playground = class Playground {
         if (!this.dataTable || !this.dataTable.tempDataAnalytics) {
             return;
         }
-        entrylms.confirm(Lang.Menus.save_modified_table).then((result) => {
-            if (result) {
-                this.dataTable.saveTable(this.dataTable.tempDataAnalytics);
-            }
-            delete this.dataTable.tempDataAnalytics;
+        return new Promise((resolve) => {
+            entrylms.confirm(Lang.Menus.save_modified_table).then((result) => {
+                if (result) {
+                    this.dataTable.saveTable(this.dataTable.tempDataAnalytics);
+                }
+                delete this.dataTable.tempDataAnalytics;
 
-            if (this.dataTable.selected) {
-                this.dataTable.dataAnalytics.setData({
-                    table: { ...this.dataTable.selected.toJSON() },
-                });
-            }
+                if (this.dataTable.selected) {
+                    this.dataTable.dataAnalytics.setData({
+                        table: { ...this.dataTable.selected.toJSON() },
+                    });
+                }
+                resolve(result);
+            });
         });
     }
 
