@@ -3,6 +3,10 @@ import { GEHelper } from '../../graphicEngine/GEHelper';
 import { GEDragHelper } from '../../graphicEngine/GEDragHelper';
 
 class ListVariable extends Variable {
+    get LIST_MAX_LENGTH() {
+        return 5000;
+    }
+
     constructor(variable) {
         Entry.assert(variable.variableType === 'list', 'Invalid variable type given');
         super(variable);
@@ -167,9 +171,12 @@ class ListVariable extends Variable {
         if (!this.array_) {
             this.array_ = [];
         }
-        this.array_.push({
-            data: value,
-        });
+
+        if (this.array_.length < this.LIST_MAX_LENGTH) {
+            this.array_.push({
+                data: value,
+            });
+        }
         this.updateView();
     }
 
