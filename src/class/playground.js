@@ -1285,9 +1285,6 @@ Entry.Playground = class Playground {
                 table.view.name.value = table.name;
             }
         });
-        if (!selected && tables.length) {
-            this.selectTable(tables[0]);
-        }
         this.updateTableView();
     }
 
