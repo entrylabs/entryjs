@@ -2716,10 +2716,7 @@ Entry.Utils.runAsyncCurry = (func, time = 0) => async (...args) => {
 
 Entry.Utils.removeBlockByTypeAsync = async (blockType, callback) => {
     Entry.dispatchEvent('removeFunctionsStart');
-    await Entry.Utils.sleep(100);
     await Entry.variableContainer.removeBlocksInFunctionByTypeAsync(blockType);
-    Entry.dispatchEvent('removeFunctionsRun');
-    await Entry.Utils.sleep(30);
     const objects = Entry.container.getAllObjects();
     await Promise.all(
         objects.map(async ({ script }) => {
@@ -2732,8 +2729,6 @@ Entry.Utils.removeBlockByTypeAsync = async (blockType, callback) => {
             );
         })
     );
-    Entry.dispatchEvent('removeFunctionsRun');
-    await Entry.Utils.sleep(100);
     Entry.dispatchEvent('removeFunctionsEnd');
     if (callback) {
         callback();
