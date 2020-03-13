@@ -142,6 +142,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
     });
 
     this.initWall();
+    this.initVideoContainer();
     this.render();
     this.dropper = Extension.getExtension('Dropper');
 };
@@ -539,6 +540,11 @@ Entry.Stage.prototype.initWall = function() {
     this.wall = wall;
 };
 
+Entry.Stage.prototype.initVideoContainer = function() {
+    const videoContainer = GEHelper.getNewContainer();
+    this.canvas.addChildAt(videoContainer, 2);
+};
+
 /**
  * show inputfield from the canvas
  */
@@ -680,7 +686,7 @@ Entry.Stage.prototype.selectObjectContainer = function(scene) {
     containers.forEach(canvas.removeChild.bind(canvas));
 
     this.selectedObjectContainer = newContainer;
-    canvas.addChildAt(newContainer, 2);
+    canvas.addChildAt(newContainer, 3);
 };
 
 /**

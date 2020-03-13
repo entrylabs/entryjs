@@ -212,7 +212,7 @@ class AudioUtils {
             };
         }
         this._audioContext.suspend();
-        this._userMediaStream.getTracks().forEach((track) => {
+        this.stream.getTracks().forEach((track) => {
             track.stop();
         });
         clearTimeout(this._properStopCall);

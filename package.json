@@ -34,11 +34,16 @@
     "license": "MIT",
     "dependencies": {
         "@entrylabs/event": "^1.0.3",
+        "@tensorflow-models/coco-ssd": "^2.0.1",
+        "@tensorflow-models/posenet": "^2.2.1",
+        "@tensorflow/tfjs-converter": "^1.5.2",
+        "@tensorflow/tfjs-core": "^1.5.2",
         "audiobuffer-to-wav": "^1.0.0",
         "autoprefixer": "^9.4.3",
         "core-js": "^3.6.4",
         "cuid": "^2.1.6",
         "events": "^3.0.0",
+        "face-api.js": "^0.22.1",
         "file-saver": "^2.0.2",
         "fontfaceonload": "^1.0.2",
         "hammerjs": "^2.0.8",
@@ -52,6 +57,7 @@
         "simplebar": "^3.1.1",
         "uid": "^0.0.2",
         "webpack": "^4.41.4",
+        "worker-loader": "^2.0.0",
         "xss-filters": "^1.2.7"
     },
     "devDependencies": {

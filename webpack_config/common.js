@@ -22,6 +22,15 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /\.worker\.ts$/,
+                use: {
+                    loader: 'worker-loader',
+                    options: {
+                        inline: true,
+                    },
+                },
+            },
+            {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 use: [

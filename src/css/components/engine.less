@@ -807,6 +807,54 @@
     }
 }
 
+//videoLoadShade
+.videoLoadingDotted {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    -moz-flex-direction: column;
+    align-items: center;
+    background-color: rgba(214, 233, 244, 0.95);
+
+    font-family: NanumGothicOTF;
+    font-size: 16px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    color: #ffffff;
+    letter-spacing: -0.1px;
+
+    .dottedLoading {
+        width: 125px;
+        height: 166px;
+        margin: 2% auto;
+        background: url('@{image_url}entrybot-loading-spritesheet.png');
+        background-size: cover;
+        animation: play 0.8s steps(6) infinite;
+    }
+    @keyframes play {
+        100% {
+            background-position: -752px;
+        }
+    }
+    .text {
+        font-size: 16px;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        color: #ffffff;
+    }
+}
+
 //audioShade
 .audioShadeCirclebox {
     position: absolute;
