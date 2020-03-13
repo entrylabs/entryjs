@@ -325,13 +325,14 @@ Entry.Engine = class Engine {
         }
     }
 
-    toggleVideoLoadingPanel() {
+    toggleLoadingPanel() {
         if (!this.videoLoadingPanel_) {
             this.videoLoadingPanel_ = Entry.createElement('div', 'videoLoadingPanel').addClass(
                 'videoLoadingDotted'
             );
-            const dottedImage = Entry.createElement('img', 'dottedLoading').addClass('image');
-            dottedImage.src = '/lib/entry-tool/src/assets/entry/images/loading.gif';
+            const dottedImage = Entry.createElement('div', 'dottedLoading').addClass(
+                'dottedLoading'
+            );
 
             this.videoLoadingPanel_.style.zIndex = 1000;
             const loadingText = Entry.createElement('span', 'videoModelLoadingText').addClass(

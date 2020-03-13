@@ -149,7 +149,7 @@ class VideoUtils implements MediaUtilsInterface {
                 },
             });
             // console.log('TRIGGER ENABLING LOAD SCREEN');
-            Entry.engine.toggleVideoLoadingPanel();
+            Entry.engine.toggleLoadingPanel();
             this.worker.postMessage({
                 type: 'init',
                 width: this.CANVAS_WIDTH,
@@ -187,7 +187,7 @@ class VideoUtils implements MediaUtilsInterface {
                     const name: 'pose' | 'face' | 'object' | 'warmup' = message;
                     if (message === 'warmup') {
                         // console.log('TRIGGER DISABLING LOAD SCREEN');
-                        Entry.engine.toggleVideoLoadingPanel();
+                        Entry.engine.toggleLoadingPanel();
                     }
                     this.modelLoadStatus[name] = true;
                     break;

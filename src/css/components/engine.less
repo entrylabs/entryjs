@@ -821,7 +821,7 @@
     justify-content: center;
     -moz-flex-direction: column;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(214, 233, 244, 0.95);
 
     font-family: NanumGothicOTF;
     font-size: 16px;
@@ -833,10 +833,17 @@
     letter-spacing: -0.1px;
 
     .dottedLoading {
-        width: 60px;
-        height: 60px;
-        background: url('loading.gif');
+        width: 125px;
+        height: 166px;
+        margin: 2% auto;
+        background: url('@{image_url}entrybot-loading-spritesheet.png');
         background-size: cover;
+        animation: play 0.8s steps(6) infinite;
+    }
+    @keyframes play {
+        100% {
+            background-position: -752px;
+        }
     }
     .text {
         font-size: 16px;
