@@ -371,7 +371,7 @@ class ListVariable extends Variable {
     }
 
     syncModel_(variableModel) {
-        if (!this.isCloud_) {
+        if (!this.isCloud_ || !this.isRealTime_) {
             this.array_ = variableModel.array;
         }
         this.setWidth(variableModel.width);

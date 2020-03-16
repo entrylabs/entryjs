@@ -38,6 +38,7 @@ class Variable {
         this.object_ = variable.object || null;
         /** @type {boolean} */
         this.isCloud_ = variable.isCloud || false;
+        this.isRealTime_ = variable.isRealTime || false;
         this.cloudDate = variable.cloudDate || false;
         this.cloudVariable = CloudVariable.getInstance();
 
@@ -416,15 +417,16 @@ class Variable {
      * @protected
      */
     syncModel_(variableModel) {
-        if (!this.isCloud_) {
+        if (!this.isCloud_ || !this.isRealTime_) {
             this.setValue(variableModel.value);
         }
-        
+
         this.setName(variableModel.name);
         this.setX(variableModel.x);
         this.setY(variableModel.y);
         this.setVisible(variableModel.visible);
         this.isCloud_ = variableModel.isCloud;
+        this.isRealTime_ = variableModel.isRealTime;
         this.cloudDate = variableModel.cloudDate;
     }
 
@@ -440,6 +442,7 @@ class Variable {
         json.value = this.value_;
         json.variableType = this.type;
         json.isCloud = this.isCloud_;
+        json.isRealTime = this.isRealTime_;
         json.cloudDate = this.cloudDate;
         json.object = this.object_;
         json.x = this.x_;

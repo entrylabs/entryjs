@@ -49,7 +49,10 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
             return [oldType, newType];
         },
         log(newType, oldType = 'all') {
-            return [['newType', newType], ['oldType', oldType]];
+            return [
+                ['newType', newType],
+                ['oldType', oldType],
+            ];
         },
         recordable: RECORDABLE.SUPPORT,
         undo: 'variableContainerSelectFilter',
@@ -218,10 +221,15 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
             return [id, name];
         },
         log(id, newName) {
-            return [['id', id], ['newName', newName]];
+            return [
+                ['id', id],
+                ['newName', newName],
+            ];
         },
         restrict(data, domQuery, callback) {
-            const { tooltip: { title, content } } = data;
+            const {
+                tooltip: { title, content },
+            } = data;
 
             callback();
             const VC = getVC();
@@ -253,7 +261,9 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
             VC.updateVariableAddView('variable');
         },
         state() {
-            const { variableAddPanel: { object, isCloud } } = getVC();
+            const {
+                variableAddPanel: { object, isCloud },
+            } = getVC();
             return [object ? 'local' : 'global', isCloud];
         },
         log(type) {
@@ -265,17 +275,29 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
     };
 
     c[variableAddSetCloud] = {
-        do(value) {
+        do(type) {
             const VC = getVC();
-            VC.variableAddPanel.info.isCloud = value;
+            let isCloud;
+            let isRealTime;
+            if (type === 'cloud') {
+                isCloud = true;
+            } else if (type === 'real_time') {
+                isRealTime = true;
+            }
+            VC.variableAddPanel.info.isCloud = isCloud;
+            VC.variableAddPanel.info.isRealTime = isRealTime;
             VC.updateVariableAddView('variable');
         },
         state() {
-            const { variableAddPanel: { info: { isCloud } } } = getVC();
-            return [isCloud];
+            const {
+                variableAddPanel: {
+                    info: { isCloud, isRealTime },
+                },
+            } = getVC();
+            return [isCloud, isRealTime];
         },
-        log(value) {
-            return [['value', value]];
+        log(type) {
+            return [['type', type]];
         },
         recordable: RECORDABLE.SUPPORT,
         undo: 'variableAddSetCloud',
@@ -295,7 +317,10 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
             return [id, variable.isVisible()];
         },
         log(id, value) {
-            return [['id', id], ['value', value]];
+            return [
+                ['id', id],
+                ['value', value],
+            ];
         },
         recordable: RECORDABLE.SUPPORT,
         undo: 'variableSetVisibility',
@@ -316,7 +341,10 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
             return [id, variable.getValue()];
         },
         log(id, value) {
-            return [['id', id], ['value', value]];
+            return [
+                ['id', id],
+                ['value', value],
+            ];
         },
         restrict({ tooltip }, domQuery, callback) {
             const { title: tooltipTitle, content: tooltipContent } = tooltip;
@@ -341,7 +369,10 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
             return [id, variable.getType(), variable.getValue()];
         },
         log(id, value) {
-            return [['id', id], ['value', value]];
+            return [
+                ['id', id],
+                ['value', value],
+            ];
         },
         recordable: RECORDABLE.SUPPORT,
         undo: 'variableSetSlidable',
@@ -363,7 +394,10 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
         log(id) {
             const VC = getVC();
             const variable = VC.getVariable(id);
-            return [['id', id], ['value', variable.getMinValue()]];
+            return [
+                ['id', id],
+                ['value', variable.getMinValue()],
+            ];
         },
         recordable: RECORDABLE.SUPPORT,
         undo: 'variableSetMinValue',
@@ -385,7 +419,10 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
         log(id) {
             const VC = getVC();
             const variable = VC.getVariable(id);
-            return [['id', id], ['value', variable.getMaxValue()]];
+            return [
+                ['id', id],
+                ['value', variable.getMaxValue()],
+            ];
         },
         recordable: RECORDABLE.SUPPORT,
         undo: 'variableSetMaxValue',
@@ -509,7 +546,9 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
             VC.updateVariableAddView('list');
         },
         state() {
-            const { listAddPanel: { object, isCloud } } = getVC();
+            const {
+                listAddPanel: { object, isCloud },
+            } = getVC();
             return [object ? 'local' : 'global', isCloud];
         },
         log(type) {
@@ -521,17 +560,29 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
     };
 
     c[listAddSetCloud] = {
-        do(value) {
+        do(type) {
             const VC = getVC();
-            VC.listAddPanel.info.isCloud = value;
+            let isCloud;
+            let isRealTime;
+            if (type === 'cloud') {
+                isCloud = true;
+            } else if (type === 'real_time') {
+                isRealTime = true;
+            }
+            VC.listAddPanel.info.isCloud = isCloud;
+            VC.listAddPanel.info.isRealTime = isRealTime;
             VC.updateVariableAddView('list');
         },
         state() {
-            const { listAddPanel: { info: { isCloud } } } = getVC();
-            return [isCloud];
+            const {
+                listAddPanel: {
+                    info: { isCloud, isRealTime },
+                },
+            } = getVC();
+            return [isCloud, isRealTime];
         },
-        log(value) {
-            return [['value', value]];
+        log(type) {
+            return [['type', type]];
         },
         recordable: RECORDABLE.SUPPORT,
         undo: 'listAddSetCloud',
@@ -554,7 +605,10 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
             ];
         },
         log(id, value) {
-            return [['id', id], ['value', value]];
+            return [
+                ['id', id],
+                ['value', value],
+            ];
         },
         restrict: _listActiveRestrictor,
         recordable: RECORDABLE.SUPPORT,
@@ -617,7 +671,11 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
             return [id, idx, array_[idx].data];
         },
         log(id, idx, data) {
-            return [['id', id], ['idx', idx], ['data', data]];
+            return [
+                ['id', id],
+                ['idx', idx],
+                ['data', data],
+            ];
         },
         recordable: RECORDABLE.SUPPORT,
         undo: 'listSetDefaultValue',
@@ -733,7 +791,10 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
             ];
         },
         log(id, value) {
-            return [['id', id], ['value', value]];
+            return [
+                ['id', id],
+                ['value', value],
+            ];
         },
         restrict({ tooltip, content }, domQuery, callback) {
             _updateSelected(content);
@@ -764,7 +825,10 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
             ];
         },
         log(id, value) {
-            return [['id', id], ['value', value]];
+            return [
+                ['id', id],
+                ['value', value],
+            ];
         },
         restrict({ tooltip, content }, domQuery, callback) {
             _updateSelected(content);
