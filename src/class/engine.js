@@ -338,7 +338,7 @@ Entry.Engine = class Engine {
             const loadingText = Entry.createElement('span', 'videoModelLoadingText').addClass(
                 'text'
             );
-            loadingText.innerHTML = Lang.Msgs.ai_utilize_video_loading;
+            loadingText.innerHTML = Lang.Msgs.loading_plz_wait;
 
             this.videoLoadingPanel_.appendChild(dottedImage);
             this.videoLoadingPanel_.appendChild(loadingText);
