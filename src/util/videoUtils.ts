@@ -148,8 +148,7 @@ class VideoUtils implements MediaUtilsInterface {
                     height: this._VIDEO_HEIGHT,
                 },
             });
-            // console.log('TRIGGER ENABLING LOAD SCREEN');
-            Entry.engine.toggleLoadingPanel();
+
             this.worker.postMessage({
                 type: 'init',
                 width: this.CANVAS_WIDTH,
@@ -172,11 +171,14 @@ class VideoUtils implements MediaUtilsInterface {
             this.isInitialized = false;
         }
     }
+
     videoOnLoadHandler() {
         Entry.addEventListener('beforeStop', this.reset.bind(this));
         this.video.play();
         this.startDrawIndicators();
         this.turnOnWebcam();
+        Entry.dispatchEvent('showLoadingScreen');
+
         this.worker.onmessage = (e: { data: { type: String; message: any } }) => {
             const { type, message } = e.data;
             if (Entry.engine.state !== 'run' && type !== 'init') {
@@ -186,8 +188,7 @@ class VideoUtils implements MediaUtilsInterface {
                 case 'init':
                     const name: 'pose' | 'face' | 'object' | 'warmup' = message;
                     if (message === 'warmup') {
-                        // console.log('TRIGGER DISABLING LOAD SCREEN');
-                        Entry.engine.toggleLoadingPanel();
+                        Entry.dispatchEvent('hideLoadingScreen');
                     }
                     this.modelLoadStatus[name] = true;
                     break;
@@ -202,7 +203,6 @@ class VideoUtils implements MediaUtilsInterface {
                     break;
             }
         };
-
         this.motionDetect(null);
     }
     startDrawIndicators() {

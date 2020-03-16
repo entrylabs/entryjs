@@ -325,37 +325,6 @@ Entry.Engine = class Engine {
         }
     }
 
-    toggleLoadingPanel() {
-        if (!this.videoLoadingPanel_) {
-            this.videoLoadingPanel_ = Entry.createElement('div', 'videoLoadingPanel').addClass(
-                'videoLoadingDotted'
-            );
-            const dottedImage = Entry.createElement('div', 'dottedLoading').addClass(
-                'dottedLoading'
-            );
-
-            this.videoLoadingPanel_.style.zIndex = 1000;
-            const loadingText = Entry.createElement('span', 'videoModelLoadingText').addClass(
-                'text'
-            );
-            loadingText.innerHTML = Lang.Msgs.ai_utilize_video_loading;
-
-            this.videoLoadingPanel_.appendChild(dottedImage);
-            this.videoLoadingPanel_.appendChild(loadingText);
-            this.minimizedView_ = document.querySelector('#entryCanvasWrapper');
-            if (this.view_.classList[0] === 'entryEngine') {
-                this.minimizedView_.insertBefore(
-                    this.videoLoadingPanel_,
-                    Entry.stage.canvas.canvas
-                );
-            } else {
-                document.body.appendChild(this.videoLoadingPanel_);
-            }
-        } else {
-            this.videoLoadingPanel_.remove();
-        }
-    }
-
     toggleAudioShadePanel() {
         if (this.audioShadePanelOn) {
             this.audioShadePanelOn = false;
@@ -379,7 +348,7 @@ Entry.Engine = class Engine {
             );
             this.audioShadePanel_.appendChild(audioShadeMainCircle);
             const micImage = Entry.createElement('img', 'audioShadeImg').addClass('audioShadeImg');
-            micImage.src = `${Entry.mediaFilePath}ic-audio-sensing-mic.svg`
+            micImage.src = `${Entry.mediaFilePath}ic-audio-sensing-mic.svg`;
             audioShadeMainCircle.appendChild(micImage);
 
             const audioShadeText = Entry.createElement('div', 'audioShadeText').addClass(
