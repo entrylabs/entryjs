@@ -1002,6 +1002,28 @@ Entry.VariableContainer = class VariableContainer {
         });
     }
 
+    removeBlocksInFunctionByType2(blockType) {
+        Object.values(this.functions_).forEach((func) => {
+            func.content.getBlockList(false, blockType).forEach((block, index) => {
+                block.destroy();
+            });
+        });
+    }
+
+    async removeBlocksInFunctionByTypeAsync(blockType) {
+        await Promise.all(
+            Object.values(this.functions_).map(async (func) => {
+                await Promise.all(
+                    func.content.getBlockList(false, blockType).map(
+                        Entry.Utils.runAsyncCurry((block) => {
+                            block.destroy();
+                        })
+                    )
+                );
+            })
+        );
+    }
+
     isUsedBlockTypeInFunction(blockType) {
         return Object.values(this.functions_).some(
             (func) => func.content.getBlockList(false, blockType).length
@@ -1164,16 +1186,15 @@ Entry.VariableContainer = class VariableContainer {
         func.listElement = view;
     }
 
-    destroyFunction(func) {
+    async destroyFunction(func) {
         if (Entry.Func.targetFunc) {
             Entry.do('funcEditEnd', 'cancel');
         }
         const currentObjectId = Entry.playground.object.id;
         Entry.do('selectObject', currentObjectId);
         const functionType = `func_${func.id}`;
-        Entry.Utils.removeBlockByType(functionType, () => {
-            Entry.do('funcRemove', func).isPass(true);
-        });
+        await Entry.Utils.removeBlockByTypeAsync(functionType);
+        Entry.do('funcRemove', func).isPass(true);
         Entry.do('selectObject', currentObjectId).isPass(true);
     }
 

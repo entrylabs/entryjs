@@ -2684,6 +2684,57 @@ Entry.Utils.removeBlockByType = function(blockType, callback) {
     }
 };
 
+Entry.Utils.removeBlockByType2 = function(blockType, callback) {
+    Entry.variableContainer.removeBlocksInFunctionByType(blockType);
+    const objects = Entry.container.getAllObjects();
+    objects.forEach(({ id, script }) => {
+        script.getBlockList(false, blockType).forEach((block, index) => {
+            block.destroy();
+        });
+    });
+
+    if (callback) {
+        callback();
+    }
+};
+
+Entry.Utils.sleep = (time = 0) => {
+    return new Promise((resolve) => {
+        setTimeout(resolve, time);
+    });
+};
+
+Entry.Utils.runAsync = async (func) => {
+    await Entry.Utils.sleep();
+    await func();
+};
+
+Entry.Utils.runAsyncCurry = (func, time = 0) => async (...args) => {
+    await Entry.Utils.sleep(time);
+    await func(...args);
+};
+
+Entry.Utils.removeBlockByTypeAsync = async (blockType, callback) => {
+    Entry.dispatchEvent('removeFunctionsStart');
+    await Entry.variableContainer.removeBlocksInFunctionByTypeAsync(blockType);
+    const objects = Entry.container.getAllObjects();
+    await Promise.all(
+        objects.map(async ({ script }) => {
+            await Promise.all(
+                script.getBlockList(false, blockType).map(
+                    Entry.Utils.runAsyncCurry(async (block) => {
+                        block.destroy();
+                    })
+                )
+            );
+        })
+    );
+    Entry.dispatchEvent('removeFunctionsEnd');
+    if (callback) {
+        callback();
+    }
+};
+
 Entry.Utils.isUsedBlockType = function(blockType) {
     const objects = Entry.container.getAllObjects();
     const usedInObject = objects.some(
