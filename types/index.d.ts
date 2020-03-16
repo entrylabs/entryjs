@@ -196,5 +196,11 @@ declare module IEntry {
         setView(view: any): void;
         removeView(): void;
     }
+
+    export interface PDF {
+        getView(): HTMLDivElement;
+        resize(): void;
+        // generateView
+    }
     // Entry namespace 에 필요한 객체가 있으면 추가해주세요.
 }

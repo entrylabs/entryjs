@@ -8,6 +8,7 @@ declare var Entry: {
     HW: new () => IEntry.Hardware;
     Intro: new () => IEntry.Intro;
     PropertyPanel: new () => IEntry.PropertyPanel;
+    Pdf: new (filename: string) => IEntry.PDF;
     BlockView: any;
     Dom: EntryDomConstructor;
     SVG: any;
@@ -51,4 +52,8 @@ declare var Entry: {
     assert(predicate: any, message: string): void;
     resizeElement(interfaceModel: any): void;
     loadExternalModules(project: any): Promise<void>;
+    createElement<K extends keyof HTMLElementTagNameMap>(
+        type: HTMLElement | K,
+        elementId?: string
+    ): HTMLElementTagNameMap[K];
 };
